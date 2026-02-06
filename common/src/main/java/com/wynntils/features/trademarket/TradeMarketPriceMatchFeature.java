@@ -7,10 +7,12 @@ package com.wynntils.features.trademarket;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.models.account.AccountModel;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.trademarket.TradeMarketModel;
@@ -35,6 +37,13 @@ public class TradeMarketPriceMatchFeature extends Feature {
 
     private boolean sendPriceMessage = false;
     private long priceToSend = 0;
+
+    public TradeMarketPriceMatchFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(
+                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onSellDialogueUpdated(TradeMarketSellDialogueUpdatedEvent e) {

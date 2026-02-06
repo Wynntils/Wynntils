@@ -4,65 +4,104 @@
  */
 package com.wynntils.features.commands;
 
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.components.Handlers;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.mc.event.CommandSentEvent;
-import com.wynntils.mc.event.CommandsAddedEvent;
-import java.util.ArrayList;
+import com.wynntils.mc.event.CommandSuggestionEvent;
 import java.util.List;
-import java.util.Objects;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMMANDS)
 public class CommandAliasesFeature extends Feature {
     @Persisted
-    private final HiddenConfig<List<CommandAlias>> aliases = new HiddenConfig<>(new ArrayList<>(List.of(
-            new CommandAlias("guild attack", List.of("gu a", "guild a")),
-            new CommandAlias("guild manage", List.of("gu m", "gu man", "guild m", "guild man")),
-            new CommandAlias("guild territory", List.of("gu t", "gu terr", "guild t", "guild terr")),
-            new CommandAlias("partyfinder", List.of("pf")))));
+    private final HiddenConfig<List<RootAlias>> rootAliases =
+            new HiddenConfig<>(List.of(new RootAlias("partyfinder", List.of("pf"))));
+
+    @Persisted
+    private final HiddenConfig<List<ArgumentAlias>> argumentAliases = new HiddenConfig<>(List.of(
+            new ArgumentAlias(List.of("guild", "gu", "guilds"), "attack", List.of("a")),
+            new ArgumentAlias(List.of("guild", "gu", "guilds"), "manage", List.of("m", "man")),
+            new ArgumentAlias(List.of("guild", "gu", "guilds"), "territory", List.of("t", "terr"))));
+
+    public CommandAliasesFeature() {
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+    }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onCommandSent(CommandSentEvent e) {
         String message = e.getCommand();
+        if (message.isEmpty()) return;
 
-        for (CommandAlias commandAlias : aliases.get()) {
-            if (commandAlias.aliases().stream().anyMatch(alias -> Objects.equals(alias, message))) {
-                e.setCanceled(true);
-                Handlers.Command.sendCommandImmediately(commandAlias.originalCommand());
+        String[] parts = message.split(" ");
+
+        boolean changed = false;
+
+        for (RootAlias rootAlias : rootAliases.get()) {
+            if (rootAlias.aliases().contains(parts[0])) {
+                parts[0] = rootAlias.original();
+                changed = true;
                 break;
             }
+        }
+
+        if (parts.length > 1) {
+            for (ArgumentAlias argumentAlias : argumentAliases.get()) {
+                if (!argumentAlias.roots().contains(parts[0])) continue;
+
+                for (int i = 1; i < parts.length; i++) {
+                    if (argumentAlias.aliases().contains(parts[i])) {
+                        parts[i] = argumentAlias.original();
+                        changed = true;
+                    }
+                }
+            }
+        }
+
+        if (changed) {
+            e.setCanceled(true);
+            Handlers.Command.sendCommandImmediately(String.join(" ", parts));
         }
     }
 
     @SubscribeEvent
-    public void onCommandsAdded(CommandsAddedEvent event) {
-        RootCommandNode<SharedSuggestionProvider> root = event.getRoot();
+    public void onCommandSuggestions(CommandSuggestionEvent.Modify event) {
+        String input = event.getInput();
 
-        for (CommandAlias commandAlias : aliases.get()) {
-            for (String alias : commandAlias.aliases()) {
-                String[] parts = alias.split(" ");
-                LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal(parts[0]);
-
-                for (int i = 1; i < parts.length; i++) {
-                    builder.then(Commands.literal(parts[i]));
+        if (!event.getInput().contains(" ")) {
+            for (RootAlias rootAlias : rootAliases.get()) {
+                for (String alias : rootAlias.aliases()) {
+                    if (alias.startsWith(event.getInput())) {
+                        event.addSuggestion(alias);
+                    }
                 }
+            }
 
-                Managers.Command.addNode(root, builder.build());
+            return;
+        }
+
+        int lastSpace = input.lastIndexOf(' ');
+        String root = input.substring(0, lastSpace);
+        String currentArg = input.substring(lastSpace + 1);
+
+        for (ArgumentAlias argumentAlias : argumentAliases.get()) {
+            if (!argumentAlias.roots().contains(root)) continue;
+
+            for (String alias : argumentAlias.aliases()) {
+                if (currentArg.isEmpty() || alias.startsWith(currentArg)) {
+                    event.addSuggestion(alias);
+                }
             }
         }
     }
 
-    private record CommandAlias(String originalCommand, List<String> aliases) {}
+    private record RootAlias(String original, List<String> aliases) {}
+
+    private record ArgumentAlias(List<String> roots, String original, List<String> aliases) {}
 }

@@ -7,10 +7,12 @@ package com.wynntils.features.ui;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
@@ -71,6 +73,13 @@ public class BulkBuyFeature extends Feature {
     private ItemStack bulkBoughtItemStack = null; // Item we're buying
     private int bulkBoughtAmount = 0; // Amount remaining that we need to buy
     private int bulkBoughtPrice = 0; // Price of a single item
+
+    public BulkBuyFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(
+                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onShopOpened(SetSlotEvent.Post e) {

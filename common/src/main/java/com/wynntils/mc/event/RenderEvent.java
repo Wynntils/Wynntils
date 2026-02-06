@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
@@ -49,7 +49,9 @@ public abstract class RenderEvent extends Event {
         CROSSHAIR,
         HEALTH_BAR,
         FOOD_BAR,
-        PLAYER_TAB_LIST
+        PLAYER_TAB_LIST,
+        SCOREBOARD,
+        SELECTED_ITEM
     }
 
     public static class Pre extends RenderEvent implements ICancellableEvent {

@@ -5,10 +5,12 @@
 package com.wynntils.features.combat;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.utils.mc.McUtils;
@@ -33,6 +35,12 @@ public class ContentTrackerFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> hideOriginalMarker = new Config<>(true);
+
+    public ContentTrackerFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onTrackerUpdate(ActivityTrackerUpdatedEvent event) {

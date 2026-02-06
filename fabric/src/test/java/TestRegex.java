@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 import com.wynntils.core.WynntilsMod;
@@ -157,6 +157,8 @@ public class TestRegex {
                 "§#fddd5cff\uE01E\uE002 Wanytails has thrown a §#f3e6b2ffProfession Speed Bomb§#fddd5cff on §#f3e6b2ff§nNA3");
         p.shouldMatch(
                 "§#fddd5cff\uE001 Wanytails has thrown a §#f3e6b2ffCombat Experience Bomb§#fddd5cff on §#f3e6b2ff§nNA3");
+        p.shouldMatch(
+                "§#fddd5cff\uE001 xX_NoScope_Xx has thrown a §#f3e6b2ffProfession Experience Bomb§#fddd5cff  on §#f3e6b2ff§nEU5");
     }
 
     @Test
@@ -562,6 +564,21 @@ public class TestRegex {
         p.shouldMatch("\uDB00\uDC25§#ffff33ff§lYellow Beacon§r\uDB00\uDC46§#ff9500ff§lOrange Beacon");
         p.shouldMatch("\uDB00\uDC72§#ffff33ff§lYellow Beacon");
         p.shouldMatch("\uDB00\uDC60§#ff0000ff§lVibrant Red Beacon");
+    }
+
+    @Test
+    public void LootrunModel_ORANGE_AMOUNT_PATTERN() {
+        PatternTester p = new PatternTester(LootrunModel.class, "ORANGE_AMOUNT_PATTERN");
+        p.shouldMatch("§7\uDB00\uDC2DReward Pulls\uDB00\uDC50for 5 Challenges");
+        p.shouldMatch("§7\uDB00\uDC70for 5 Challenges");
+        p.shouldMatch("§7\uDB00\uDC4D\uDB00\uDC70for 5 Challenges");
+    }
+
+    @Test
+    public void LootrunModel_RAINBOW_AMOUNT_PATTERN() {
+        PatternTester p = new PatternTester(LootrunModel.class, "RAINBOW_AMOUNT_PATTERN");
+        p.shouldMatch("§7\uDB00\uDC1Ethis Challenge only\uDB00\uDC3Bnext 10 Challenges");
+        p.shouldMatch("§7\uDB00\uDC6Anext 20 Challenges");
     }
 
     @Test

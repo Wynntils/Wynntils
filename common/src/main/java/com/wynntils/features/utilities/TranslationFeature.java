@@ -7,7 +7,7 @@ package com.wynntils.features.utilities;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -25,7 +25,6 @@ import java.util.concurrent.CompletableFuture;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
-@StartDisabled
 @ConfigCategory(Category.UTILITIES)
 public class TranslationFeature extends Feature {
     @Persisted
@@ -49,6 +48,10 @@ public class TranslationFeature extends Feature {
     @Persisted
     private final Config<TranslationService.TranslationServices> translationService =
             new Config<>(TranslationService.TranslationServices.GOOGLEAPI);
+
+    public TranslationFeature() {
+        super(ProfileDefault.DISABLED);
+    }
 
     @SubscribeEvent
     public void onChat(ChatMessageEvent.Match e) {

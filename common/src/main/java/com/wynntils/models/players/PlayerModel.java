@@ -18,12 +18,15 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.mc.event.PlayerTeamEvent;
-import com.wynntils.models.players.type.WynnPlayerInfo;
+import com.wynntils.models.players.type.wynnplayer.CharacterData;
+import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.services.secrets.type.WynntilsSecret;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.TimedSet;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,8 +43,9 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class PlayerModel extends Model {
-    private static final Gson PLAYER_GSON = new GsonBuilder()
+    public static final Gson PLAYER_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(WynnPlayerInfo.class, new WynnPlayerInfo.WynnPlayerInfoDeserializer())
+            .registerTypeHierarchyAdapter(CharacterData.class, new CharacterData.CharacterDataDeserializer())
             .create();
     private static final String ATHENA_USER_NOT_FOUND = "User not found";
     private static final Pattern GHOST_WORLD_PATTERN = Pattern.compile("^_([A-Z]+)(\\d+)$");
@@ -145,9 +149,7 @@ public final class PlayerModel extends Model {
             clearGhostCache();
 
             // Lookup self info here as PlayerJoinedWorldEvent will only be posted for self when off world
-            Player player = McUtils.player();
-            if (player == null || player.getUUID() == null) return;
-            loadUser(player.getUUID(), player.getScoreboardName());
+            loadSelf();
         }
     }
 
@@ -182,6 +184,21 @@ public final class PlayerModel extends Model {
 
         int world = Integer.parseInt(matcher.group(2));
         ghosts.put(uuid, world);
+    }
+
+    public void loadSelf() {
+        Player player = McUtils.player();
+        if (player == null) return;
+
+        UUID uuid = player.getUUID();
+        if (uuid == null) return;
+
+        // Remove old user data
+        users.remove(uuid);
+        usersWithoutWynntilsAccount.remove(uuid);
+        userFailures.remove(uuid);
+
+        loadUser(uuid, player.getScoreboardName());
     }
 
     private void loadUser(UUID uuid, String userName) {
@@ -238,7 +255,36 @@ public final class PlayerModel extends Model {
     public CompletableFuture<WynnPlayerInfo> getPlayer(String username) {
         CompletableFuture<WynnPlayerInfo> future = new CompletableFuture<>();
 
-        ApiResponse apiResponse = Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_PLAYER, Map.of("username", username));
+        Map<String, String> authHeader = new HashMap<>();
+        String apiToken = Services.Secrets.getSecret(WynntilsSecret.WYNNCRAFT_API_TOKEN);
+        if (!apiToken.isEmpty()) {
+            authHeader.put("Authorization", "Bearer " + apiToken);
+        }
+
+        ApiResponse apiResponse =
+                Managers.Net.callApi(UrlId.DATA_WYNNCRAFT_PLAYER, Map.of("username", username), authHeader);
+        apiResponse.handleJsonObject(
+                json -> {
+                    Type type = new TypeToken<WynnPlayerInfo>() {}.getType();
+
+                    future.complete(PLAYER_GSON.fromJson(json, type));
+                },
+                onError -> future.complete(null));
+
+        return future;
+    }
+
+    public CompletableFuture<WynnPlayerInfo> getPlayerFullInfo(String identifier) {
+        CompletableFuture<WynnPlayerInfo> future = new CompletableFuture<>();
+
+        Map<String, String> authHeader = new HashMap<>();
+        String apiToken = Services.Secrets.getSecret(WynntilsSecret.WYNNCRAFT_API_TOKEN);
+        if (!apiToken.isEmpty()) {
+            authHeader.put("Authorization", "Bearer " + apiToken);
+        }
+
+        ApiResponse apiResponse = Managers.Net.callApi(
+                UrlId.DATA_WYNNCRAFT_PLAYER_FULL_RESULTS, Map.of("identifier", identifier), authHeader);
         apiResponse.handleJsonObject(
                 json -> {
                     Type type = new TypeToken<WynnPlayerInfo>() {}.getType();

@@ -83,7 +83,6 @@ public abstract class GuiMixin {
             method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
             at = @At("HEAD"))
     private void onRenderGuiPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        // FIXME: This is a temporary fix. We should integrate overlays into Gui's LayeredDraw order
         if (McUtils.options().hideGui) return;
         MixinHelper.post(new RenderEvent.Pre(
                 guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
@@ -93,7 +92,6 @@ public abstract class GuiMixin {
             method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
             at = @At("RETURN"))
     private void onRenderGuiPost(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        // FIXME: This is a temporary fix. We should integrate overlays into Gui's LayeredDraw order
         if (McUtils.options().hideGui) return;
         MixinHelper.post(new RenderEvent.Post(
                 guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderEvent.ElementType.GUI));
@@ -146,6 +144,39 @@ public abstract class GuiMixin {
 
         RenderEvent.Pre event = new RenderEvent.Pre(
                 guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderEvent.ElementType.HEALTH_BAR);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(
+            method =
+                    "renderScoreboardSidebar(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
+            at = @At("HEAD"),
+            cancellable = true)
+    private void onRenderScoreboardSidebarPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        if (!MixinHelper.onWynncraft()) return;
+
+        RenderEvent.Pre event = new RenderEvent.Pre(
+                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderEvent.ElementType.SCOREBOARD);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(
+            method = "renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;)V",
+            at = @At("HEAD"),
+            cancellable = true)
+    private void onRenderSelectedItemNamePre(GuiGraphics guiGraphics, CallbackInfo ci) {
+        if (!MixinHelper.onWynncraft()) return;
+
+        RenderEvent.Pre event = new RenderEvent.Pre(
+                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderEvent.ElementType.SELECTED_ITEM);
         MixinHelper.post(event);
 
         if (event.isCanceled()) {

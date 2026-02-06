@@ -14,6 +14,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.screens.maps.MainMapScreen;
@@ -76,6 +77,7 @@ public class WynntilsCommand extends Command {
         return base.then(Commands.literal("clearcaches")
                         .then(Commands.literal("run").executes(this::doClearCaches))
                         .executes(this::clearCaches))
+                .then(Commands.literal("crowdsourcing").executes(this::openCrowdsourceMenu))
                 .then(Commands.literal("debug")
                         .then(Commands.literal("profile")
                                 .then(Commands.literal("reset").executes(this::profileReset))
@@ -90,6 +92,7 @@ public class WynntilsCommand extends Command {
                 .then(Commands.literal("map").executes(this::openMap))
                 .then(Commands.literal("menu").executes(this::openMenu))
                 .then(Commands.literal("reauth").executes(this::reauth))
+                .then(Commands.literal("refetch").executes(this::refetch))
                 .then(Commands.literal("reloadcaches").executes(this::reloadCaches))
                 .then(Commands.literal("rescan").executes(this::rescan))
                 .then(Commands.literal("secrets").executes(this::secrets))
@@ -177,6 +180,17 @@ public class WynntilsCommand extends Command {
         Models.Player.reset();
         // No need to try to re-connect to Hades, we will do that automatically when we get the new token
 
+        return 1;
+    }
+
+    private int refetch(CommandContext<CommandSourceStack> context) {
+        context.getSource()
+                .sendSuccess(
+                        () -> Component.translatable("command.wynntils.refetching")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
+
+        Models.Player.loadSelf();
         return 1;
     }
 
@@ -392,6 +406,10 @@ public class WynntilsCommand extends Command {
 
     private int secrets(CommandContext<CommandSourceStack> context) {
         return openScreen(SecretsScreen.create());
+    }
+
+    private int openCrowdsourceMenu(CommandContext<CommandSourceStack> context) {
+        return openScreen(WynntilsCrowdSourcingSettingsScreen.create());
     }
 
     private int openGuildMap(CommandContext<CommandSourceStack> context) {

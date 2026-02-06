@@ -1,19 +1,16 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.commands;
 
-import com.mojang.brigadier.tree.CommandNode;
-import com.mojang.brigadier.tree.LiteralCommandNode;
-import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.CommandsAddedEvent;
+import com.wynntils.core.persisted.config.ConfigProfile;
+import com.wynntils.mc.event.CommandSuggestionEvent;
 import java.util.Set;
-import net.minecraft.commands.SharedSuggestionProvider;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMMANDS)
@@ -38,20 +35,12 @@ public class FilterAdminCommandsFeature extends Feature {
             "wcl",
             "wynnproxy");
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onCommandPacket(CommandsAddedEvent event) {
-        RootCommandNode<SharedSuggestionProvider> root = event.getRoot();
+    public FilterAdminCommandsFeature() {
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+    }
 
-        RootCommandNode<SharedSuggestionProvider> newRoot = new RootCommandNode<>();
-        for (CommandNode<SharedSuggestionProvider> child : root.getChildren()) {
-            // Only add literal nodes, not argument nodes
-            if (child instanceof LiteralCommandNode<SharedSuggestionProvider> literalChild) {
-                if (!FILTERED_COMMANDS.contains(literalChild.getName())) {
-                    newRoot.addChild(literalChild);
-                }
-            }
-        }
-
-        event.setRoot(newRoot);
+    @SubscribeEvent
+    public void onModifySuggestions(CommandSuggestionEvent.Modify event) {
+        FILTERED_COMMANDS.forEach(event::removeSuggestion);
     }
 }

@@ -1,16 +1,19 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.wrappedscreen.event.WrappedScreenOpenEvent;
 import com.wynntils.mc.event.ArmSwingEvent;
@@ -134,6 +137,12 @@ public class WynntilsContentBookFeature extends Feature {
 
     private boolean shiftClickedBookItem = false;
 
+    public WynntilsContentBookFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
+
     @SubscribeEvent
     public void onSwing(ArmSwingEvent event) {
         handleClick(event);
@@ -157,6 +166,7 @@ public class WynntilsContentBookFeature extends Feature {
     @SubscribeEvent
     public void onWrappedScreenOpen(WrappedScreenOpenEvent event) {
         if (event.getWrappedScreenClass() != WynntilsContentBookScreen.class) return;
+        if (Models.WorldState.inCharacterWardrobe()) return;
 
         boolean shouldOpen = false;
 
@@ -183,6 +193,8 @@ public class WynntilsContentBookFeature extends Feature {
     }
 
     private void handleClick(ICancellableEvent cancellableEvent) {
+        if (Models.WorldState.inCharacterWardrobe()) return;
+
         shiftClickedBookItem = McUtils.player().isShiftKeyDown();
 
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);

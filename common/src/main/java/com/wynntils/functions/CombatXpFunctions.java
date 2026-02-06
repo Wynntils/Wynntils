@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -7,9 +7,13 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.models.players.type.wynnplayer.CharacterData;
+import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class CombatXpFunctions {
     public static class CappedLevelFunction extends Function<CappedValue> {
@@ -112,6 +116,28 @@ public class CombatXpFunctions {
         @Override
         public Double getValue(FunctionArguments arguments) {
             return Models.CombatXp.getXp().getPercentage();
+        }
+    }
+
+    public static class XpOverflowFunction extends Function<Long> {
+        @Override
+        public Long getValue(FunctionArguments arguments) {
+            if (!Models.CombatXp.getCombatLevel().isAtCap()) return 0L;
+
+            WynnPlayerInfo playerInfo = Models.Account.getPlayerInfo();
+            CharacterData characterData;
+            // Use the id we parsed to find the active character instead of what the API has as the active
+            // character as that will be outdated until the next call to the API
+            Optional<UUID> activeCharacterUuid = playerInfo.characters().keySet().stream()
+                    .filter(uuid -> uuid.toString().startsWith(Models.Character.getId()))
+                    .findFirst();
+
+            if (activeCharacterUuid.isEmpty()) return 0L;
+
+            characterData = playerInfo.characters().get(activeCharacterUuid.get());
+            if (characterData == null) return 0L;
+
+            return characterData.xp();
         }
     }
 }

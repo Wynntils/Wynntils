@@ -65,7 +65,8 @@ public record ItemMaterial(ItemStack itemStack) {
             itemId = alternativeName != null ? alternativeName : toIdString;
         }
 
-        return fromItemId(itemId, damageCode);
+        ItemStack itemStack = createItemStackFromDamage(getItem(itemId), damageCode);
+        return new ItemMaterial(itemStack);
     }
 
     private static ItemStack createItemStack(Item item, float modelValue) {
@@ -73,6 +74,14 @@ public record ItemMaterial(ItemStack itemStack) {
 
         CustomModelData customModelData = new CustomModelData(List.of(modelValue), List.of(), List.of(), List.of());
         itemStack.set(DataComponents.CUSTOM_MODEL_DATA, customModelData);
+        itemStack.set(DataComponents.UNBREAKABLE, new Unbreakable(false));
+        return itemStack;
+    }
+
+    private static ItemStack createItemStackFromDamage(Item item, int damageValue) {
+        ItemStack itemStack = new ItemStack(item);
+
+        itemStack.set(DataComponents.DAMAGE, damageValue);
         itemStack.set(DataComponents.UNBREAKABLE, new Unbreakable(false));
         return itemStack;
     }

@@ -21,7 +21,12 @@ import com.wynntils.core.json.JsonTypeWrapper;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.PersistedOwner;
 import com.wynntils.core.persisted.PersistedValue;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.persisted.upfixers.UpfixerType;
+import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
+import com.wynntils.models.character.actionbar.segments.CharacterCreationSegment;
+import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.screens.settings.ConfigProfileScreen;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
@@ -36,6 +41,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Stream;
+import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.network.chat.Component;
+import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -45,6 +53,17 @@ public final class ConfigManager extends Manager {
     private static final File DEFAULT_CONFIG = new File(CONFIG_DIR, "default" + FILE_SUFFIX);
     private static final String OVERLAY_GROUPS_JSON_KEY = "overlayGroups";
     private static final Set<Config<?>> CONFIGS = new TreeSet<>();
+
+    @Persisted
+    private final Storage<ConfigProfile> selectedProfile = new Storage<>(ConfigProfile.DEFAULT);
+
+    // This is for whether the toast has been sent for existing users or if the user was detected as a new player
+    @Persisted
+    private final Storage<Boolean> hasPromptedProfile = new Storage<>(false);
+
+    // This is for ConfigProfileScreen to know whether to display the 1 time welcome prompt or not
+    @Persisted
+    public final Storage<Boolean> showWelcomeScreen = new Storage<>(true);
 
     private final File userConfigFile;
     private JsonObject configObject;
@@ -179,6 +198,25 @@ public final class ConfigManager extends Manager {
         }
     }
 
+    @SubscribeEvent
+    public void onActionBarUpdate(ActionBarUpdatedEvent event) {
+        event.runIfPresent(CharacterCreationSegment.class, this::checkForNewPlayer);
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        if (hasPromptedProfile.get()) return;
+        if (!event.isFirstJoinWorld()) return;
+
+        McUtils.mc()
+                .getToastManager()
+                .addToast(new SystemToast(
+                        new SystemToast.SystemToastId(10000L),
+                        Component.translatable("core.wynntils.profiles.toastTitle"),
+                        Component.translatable("core.wynntils.profiles.toastMessage")));
+        hasPromptedProfile.store(true);
+    }
+
     private static List<Config<?>> getConfigList() {
         // This breaks the concept of "manager holds all config holders at all times". Instead we get the group
         // overlays' configs from the overlay instance itself, to save us some trouble.
@@ -244,6 +282,26 @@ public final class ConfigManager extends Manager {
 
         WynntilsMod.info("Creating default config file with " + configJson.size() + " config values.");
         Managers.Json.savePreciousJson(DEFAULT_CONFIG, configJson);
+    }
+
+    public ConfigProfile getSelectedProfile() {
+        return selectedProfile.get();
+    }
+
+    public void setSelectedProfile(ConfigProfile profile) {
+        if (profile == null || profile == selectedProfile.get()) return;
+
+        selectedProfile.store(profile);
+        applyProfileDefaults();
+        saveConfig();
+    }
+
+    private void applyProfileDefaults() {
+        for (Config<?> config : getConfigList()) {
+            if (!config.userEdited()) {
+                config.reset();
+            }
+        }
     }
 
     private List<Config<?>> getConfigOptions(PersistedOwner owner) {
@@ -348,5 +406,13 @@ public final class ConfigManager extends Manager {
         if (typedValue != null) {
             config.setValue(typedValue);
         }
+    }
+
+    private void checkForNewPlayer(CharacterCreationSegment segment) {
+        if (!segment.isFirstCharacter()) return;
+        if (hasPromptedProfile.get()) return;
+
+        hasPromptedProfile.store(true);
+        McUtils.setScreen(ConfigProfileScreen.create(null, ConfigProfile.NEW_PLAYER));
     }
 }

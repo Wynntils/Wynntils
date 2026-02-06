@@ -19,9 +19,9 @@ public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
 
     protected boolean selectedTab = false;
     protected Texture tagTexture;
+    protected Texture iconTexture;
 
     private final OffsetDirection offsetDirection;
-    private final Texture iconTexture;
     private final int offsetX;
     private final int offsetY;
 

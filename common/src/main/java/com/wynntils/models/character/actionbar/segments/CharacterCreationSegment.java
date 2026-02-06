@@ -7,8 +7,16 @@ package com.wynntils.models.character.actionbar.segments;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 
 public class CharacterCreationSegment extends ActionBarSegment {
-    public CharacterCreationSegment(String segmentText) {
+    private final boolean firstCharacter;
+
+    public CharacterCreationSegment(String segmentText, boolean firstCharacter) {
         super(segmentText);
+
+        this.firstCharacter = firstCharacter;
+    }
+
+    public boolean isFirstCharacter() {
+        return firstCharacter;
     }
 
     @Override

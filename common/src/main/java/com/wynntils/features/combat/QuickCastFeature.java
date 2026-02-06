@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -7,12 +7,14 @@ package com.wynntils.features.combat;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.TickEvent;
@@ -73,6 +75,10 @@ public class QuickCastFeature extends Feature {
     private int lastSpellTick = 0;
     private int packetCountdown = 0;
 
+    public QuickCastFeature() {
+        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+    }
+
     @SubscribeEvent
     public void onSwing(ArmSwingEvent event) {
         lastSpellTick = McUtils.player().tickCount;
@@ -87,6 +93,8 @@ public class QuickCastFeature extends Feature {
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
+        if (Models.WorldState.inCharacterWardrobe()) return;
+
         lastSpellTick = McUtils.player().tickCount;
 
         if (!blockAttacks.get()) return;

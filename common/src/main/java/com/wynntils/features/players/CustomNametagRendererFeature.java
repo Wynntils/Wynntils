@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.players;
@@ -8,10 +8,12 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.mc.event.EntityNameTagRenderEvent;
 import com.wynntils.mc.event.GetCameraEntityEvent;
@@ -90,6 +92,12 @@ public class CustomNametagRendererFeature extends Feature {
     private final Config<Float> customNametagScale = new Config<>(0.5f);
 
     private Player hitPlayerCache = null;
+
+    public CustomNametagRendererFeature() {
+        super(new ProfileDefault.Builder()
+                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onPlayerNameTagRender(PlayerNametagRenderEvent event) {
@@ -235,7 +243,7 @@ public class CustomNametagRendererFeature extends Feature {
         }
 
         AccountType accountType = user.accountType();
-        if (accountType.getComponent() != null) {
+        if (accountType != null && accountType.getComponent() != null) {
             nametags.add(
                     new CustomNametag(accountType.getComponent(), customNametagScale.get() * ACCOUNT_TYPE_MULTIPLIER));
         }

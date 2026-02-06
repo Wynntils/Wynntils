@@ -7,7 +7,6 @@ package com.wynntils.core.consumers.features;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -96,6 +95,7 @@ import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.overlays.GuardianAngelsTrackerOverlayFeature;
 import com.wynntils.features.overlays.HeldItemCooldownOverlayFeature;
+import com.wynntils.features.overlays.HeldItemNameOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
 import com.wynntils.features.overlays.LootrunOverlaysFeature;
 import com.wynntils.features.overlays.MantleShieldTrackerOverlayFeature;
@@ -104,6 +104,7 @@ import com.wynntils.features.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.overlays.PartyMembersOverlayFeature;
 import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
 import com.wynntils.features.overlays.RaidProgressFeature;
+import com.wynntils.features.overlays.ScoreboardOverlayFeature;
 import com.wynntils.features.overlays.ServerUptimeInfoOverlayFeature;
 import com.wynntils.features.overlays.ShamanMaskOverlayFeature;
 import com.wynntils.features.overlays.ShamanTotemTimerOverlayFeature;
@@ -308,6 +309,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GuardianAngelsTrackerOverlayFeature());
         registerFeature(new HeldItemCooldownOverlayFeature());
+        registerFeature(new HeldItemNameOverlayFeature());
         registerFeature(new InfoBoxFeature());
         registerFeature(new LootrunOverlaysFeature());
         registerFeature(new MantleShieldTrackerOverlayFeature());
@@ -316,6 +318,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new PartyMembersOverlayFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());
         registerFeature(new RaidProgressFeature());
+        registerFeature(new ScoreboardOverlayFeature());
         registerFeature(new ServerUptimeInfoOverlayFeature());
         registerFeature(new ShamanMaskOverlayFeature());
         registerFeature(new ShamanTotemTimerOverlayFeature());
@@ -460,8 +463,6 @@ public final class FeatureManager extends Manager {
     }
 
     private void initializeFeature(Feature feature) {
-        Class<? extends Feature> featureClass = feature.getClass();
-
         // Set feature category
         ConfigCategory configCategory = feature.getClass().getAnnotation(ConfigCategory.class);
         Category category = configCategory != null ? configCategory.value() : Category.UNCATEGORIZED;
@@ -470,10 +471,6 @@ public final class FeatureManager extends Manager {
         // Register commands and key binds
         commands.discoverCommands(feature);
         Managers.KeyBind.discoverKeyBinds(feature);
-
-        // Determine if feature should be enabled & set default enabled value for user features
-        boolean startDisabled = featureClass.isAnnotationPresent(StartDisabled.class);
-        feature.userEnabled.store(!startDisabled);
 
         Managers.Overlay.discoverOverlays(feature);
         Managers.Overlay.discoverOverlayGroups(feature);

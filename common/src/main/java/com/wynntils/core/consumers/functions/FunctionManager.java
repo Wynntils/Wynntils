@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions;
@@ -474,6 +474,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.CommanderDurationFunction());
         registerFunction(new CharacterFunctions.EquippedAspectFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveGoalFunction());
+        registerFunction(new CharacterFunctions.GuildObjectiveEventBonusFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveScoreFunction());
         registerFunction(new CharacterFunctions.HasNoGuiFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
@@ -483,6 +484,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.IdFunction());
         registerFunction(new CharacterFunctions.IsAspectEquippedFunction());
         registerFunction(new CharacterFunctions.IsRidingHorseFunction());
+        registerFunction(new CharacterFunctions.LeaderboardPositionFunction());
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
         registerFunction(new CharacterFunctions.ManaPctFunction());
@@ -492,6 +494,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.OphanimHealingPercentFunction());
         registerFunction(new CharacterFunctions.OphanimOrb());
         registerFunction(new CharacterFunctions.PersonalObjectiveGoalFunction());
+        registerFunction(new CharacterFunctions.PersonalObjectiveEventBonusFunction());
         registerFunction(new CharacterFunctions.PersonalObjectiveScoreFunction());
         registerFunction(new CharacterFunctions.SprintFunction());
 
@@ -515,6 +518,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatXpFunctions.CappedXpFunction());
         registerFunction(new CombatXpFunctions.LevelFunction());
         registerFunction(new CombatXpFunctions.XpFunction());
+        registerFunction(new CombatXpFunctions.XpOverflowFunction());
         registerFunction(new CombatXpFunctions.XpPctFunction());
         registerFunction(new CombatXpFunctions.XpPerMinuteFunction());
         registerFunction(new CombatXpFunctions.XpPerMinuteRawFunction());
@@ -542,6 +546,8 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new GuildFunctions.CappedGuildLevelProgressFunction());
         registerFunction(new GuildFunctions.CappedGuildObjectivesProgressFunction());
+        registerFunction(new GuildFunctions.ContributedGuildXpFunction());
+        registerFunction(new GuildFunctions.ContributionRankFunction());
         registerFunction(new GuildFunctions.GuildLevelFunction());
         registerFunction(new GuildFunctions.GuildNameFunction());
         registerFunction(new GuildFunctions.GuildRankFunction());
@@ -573,6 +579,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.EmeraldBlockFunction());
         registerFunction(new InventoryFunctions.EmeraldStringFunction());
         registerFunction(new InventoryFunctions.EmeraldsFunction());
+        registerFunction(new InventoryFunctions.EquippedArmorNameFunction());
         registerFunction(new InventoryFunctions.HeldItemCooldownFunction());
         registerFunction(new InventoryFunctions.HeldItemCurrentDurabilityFunction());
         registerFunction(new InventoryFunctions.HeldItemMaxDurabilityFunction());
