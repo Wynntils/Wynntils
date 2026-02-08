@@ -223,15 +223,15 @@ public class ItemScreenshotFeature extends Feature {
                         I18n.get("feature.wynntils.itemScreenshot.save.error", itemStack.getHoverName(), filename));
             }
 
-            if (SystemUtils.isMac()) {
-                McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.mac")
+            if (SystemUtils.isMac() || SystemUtils.isWayland()) {
+                McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.osWarning")
                         .withStyle(ChatFormatting.GRAY));
                 return;
             }
-        } else if (SystemUtils.isMac()) {
-            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.mac2")
+        } else if (SystemUtils.isMac() || SystemUtils.isWayland()) {
+            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.osWarning2")
                     .withStyle(ChatFormatting.GRAY)
-                    .append(Component.translatable("feature.wynntils.itemScreenshot.copy.mac.clickHere")
+                    .append(Component.translatable("feature.wynntils.itemScreenshot.copy.osWarning.clickHere")
                             .withStyle(ChatFormatting.GRAY)
                             .withStyle(ChatFormatting.UNDERLINE)
                             .withStyle(style -> style.withClickEvent(new ClickEvent.RunCommand(
