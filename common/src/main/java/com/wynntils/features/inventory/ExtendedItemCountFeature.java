@@ -31,6 +31,9 @@ public class ExtendedItemCountFeature extends Feature {
     @Persisted
     private final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
 
+    @Persisted
+    private final Config<Boolean> showLevel = new Config<>(true);
+
     private boolean isInventory;
 
     public ExtendedItemCountFeature() {
@@ -57,7 +60,8 @@ public class ExtendedItemCountFeature extends Feature {
 
         WynnItem wynnItem = wynnItemOpt.get();
 
-        if (wynnItem instanceof LeveledItemProperty leveledItem
+        if (showLevel.get()
+                && wynnItem instanceof LeveledItemProperty leveledItem
                 && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)
                 && isInventory) {
             event.setCountString(String.valueOf(leveledItem.getLevel()));

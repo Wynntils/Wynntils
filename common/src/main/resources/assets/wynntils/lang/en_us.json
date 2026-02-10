@@ -594,6 +594,8 @@
   "feature.wynntils.extendedItemCount.inventoryTextOverlayEnabled.description": "Should we draw extended item counts for items in the inventory?",
   "feature.wynntils.extendedItemCount.inventoryTextOverlayEnabled.name": "Extended Inventory Item Counts",
   "feature.wynntils.extendedItemCount.name": "Extended Item Count",
+  "feature.wynntils.extendedItemCount.showLevel.description": "Should item levels be shown when holding ctrl?",
+  "feature.wynntils.extendedItemCount.showLevel.name": "Hold Ctrl to Show Level",
   "feature.wynntils.extendedSeasonLeaderboard.description": "Adds data to the season leaderboard to show more information.",
   "feature.wynntils.extendedSeasonLeaderboard.guildHighlightColor.description": "If the Highlight Own Guild option is enabled, what color should it be highlighted?",
   "feature.wynntils.extendedSeasonLeaderboard.guildHighlightColor.name": "Guild Highlight Color",
