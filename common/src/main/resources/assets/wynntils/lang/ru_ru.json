@@ -3138,7 +3138,6 @@
   "screens.wynntils.update.ignorePermenantly": "Игнорировать это обновление",
   "screens.wynntils.update.ignorePermenantlyTooltip": "Не запрашивать для %s снова и подключиться к Wynncraft",
   "screens.wynntils.update.title": "Доступен Wynntils %s",
-  "screens.wynntils.update.titleScreen": "Вернуться к начальному экрану",
   "screens.wynntils.update.update": "Обновить",
   "screens.wynntils.update.updateExit": "Обновить и выйти",
   "screens.wynntils.update.updateExitTooltip": "Установить обновление и выйти из Minecraft. Обновление будет доступно при следующем запуске",
