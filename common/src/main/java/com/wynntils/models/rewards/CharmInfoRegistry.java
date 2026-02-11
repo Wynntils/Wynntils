@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.rewards;
@@ -151,11 +151,6 @@ public class CharmInfoRegistry {
             int max = levelRangeJson.get("max").getAsInt();
 
             return new CharmRequirements(level, RangedValue.of(min, max));
-        }
-
-        private TomeType parseTomeType(JsonObject json) {
-            String tomeType = JsonUtils.getNullableJsonString(json, "tomeType");
-            return TomeType.fromString(tomeType);
         }
     }
 }

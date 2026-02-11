@@ -5,7 +5,7 @@
 package com.wynntils.screens.guides.widgets.filters;
 
 import com.wynntils.core.components.Services;
-import com.wynntils.models.rewards.TomeType;
+import com.wynntils.models.rewards.type.TomeType;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
 import com.wynntils.services.itemfilter.statproviders.TomeTypeStatProvider;
