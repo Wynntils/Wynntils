@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.athena;
@@ -124,7 +124,13 @@ public class CompatibilityService extends Service {
         }
 
         // TODO: Replace with Athena call
-        compatibilityTier = CompatibilityTier.COMPATIBLE;
+        //  Temporary to force old clients to not work on Fruma (v2.2)
+        if (wynncraftVersion.versionGroup().equals("2")
+                && wynncraftVersion.majorVersion().equals("2")) {
+            compatibilityTier = CompatibilityTier.INCOMPATIBLE;
+        } else {
+            compatibilityTier = CompatibilityTier.COMPATIBLE;
+        }
 
         if (compatibilityTier.shouldScreenPrompt() && !isCompatible()) {
             // This has to be done on the main thread
