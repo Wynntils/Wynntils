@@ -155,7 +155,7 @@ public final class UrlManager extends Manager {
         // Verify that arguments match with what is specified
         assert (arguments.keySet().equals(new HashSet<>(urlInfo.arguments())))
                 : "Arguments mismatch for " + urlInfo.url + ", expected: " + urlInfo.arguments() + " got: "
-                + arguments.keySet();
+                        + arguments.keySet();
 
         String url;
         if (urlInfo.path().isPresent()) {
@@ -362,8 +362,7 @@ public final class UrlManager extends Manager {
         }
 
         if (urlMapper.urls().isEmpty()) {
-            throw new IllegalStateException(
-                    """
+            throw new IllegalStateException("""
                                  URL list is empty after merging. This means all three of the URL sources failed to load.
                                  If you have set a custom url loading mode, this means that it failed to load.
                                  Otherwise, this is a critical error, try contacting the developers.
