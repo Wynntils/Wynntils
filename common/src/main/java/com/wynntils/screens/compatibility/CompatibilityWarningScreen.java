@@ -76,7 +76,7 @@ public final class CompatibilityWarningScreen extends WynntilsScreen {
 
         ModUpdateInfo updateInfo = Services.Update.getModUpdateInfo();
         boolean updateButtonActive = true;
-        Component updateTooltip = Component.literal("Go to update screen");
+        Component updateTooltip = Component.translatable("screens.wynntils.compatibility.updateScreen");
 
         if (updateInfo == null) {
             updateButtonActive = false;
