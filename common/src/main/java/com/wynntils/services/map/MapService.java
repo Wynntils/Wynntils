@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map;
@@ -66,7 +66,8 @@ public final class MapService extends Service {
     }
 
     private void loadMapPart(MapPartProfile mapPart, String fileName) {
-        Download dl = Managers.Net.download(URI.create(mapPart.url), "maps/" + fileName, mapPart.md5);
+        Download dl = Managers.Net.download(
+                URI.create(Managers.Url.getDownloadSourceUrl() + mapPart.path), "maps/" + fileName, mapPart.md5);
         dl.handleInputStream(
                 inputStream -> {
                     try {
@@ -81,5 +82,5 @@ public final class MapService extends Service {
                 onError -> WynntilsMod.warn("Error occurred while downloading map image of " + mapPart.name, onError));
     }
 
-    private record MapPartProfile(String name, String url, int x1, int z1, int x2, int z2, String md5) {}
+    private record MapPartProfile(String name, String url, String path, int x1, int z1, int x2, int z2, String md5) {}
 }

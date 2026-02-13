@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
@@ -9,6 +9,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.event.NetResultProcessedEvent;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +29,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 public final class NetManager extends Manager {
     static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
-    private static final int REQUEST_TIMEOUT_MILLIS = 10000;
     private static final File CACHE_DIR = WynntilsMod.getModStorageDir("cache");
     private static final String USER_AGENT = String.format(
             "Wynntils Artemis\\%s+MC-%s (%s) %s",
@@ -35,6 +36,9 @@ public final class NetManager extends Manager {
             SharedConstants.getCurrentVersion().getName(),
             WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client",
             WynntilsMod.getModLoader());
+
+    @Persisted
+    private final Storage<Integer> timeoutMillis = new Storage<>(10000);
 
     public NetManager() {
         super(List.of());
@@ -73,7 +77,13 @@ public final class NetManager extends Manager {
      */
     public Download download(UrlId urlId) {
         UrlManager.UrlInfo urlInfo = Managers.Url.getUrlInfo(urlId);
-        URI uri = URI.create(urlInfo.url());
+        URI uri;
+        if (urlInfo.path().isPresent()) {
+            uri = URI.create(
+                    Managers.Url.getDownloadSourceUrl() + urlInfo.path().get());
+        } else {
+            uri = URI.create(urlInfo.url());
+        }
         String localFileName = urlId.getId();
         File localFile = new File(CACHE_DIR, localFileName);
 
@@ -118,10 +128,18 @@ public final class NetManager extends Manager {
         openLink(uri);
     }
 
+    public int getTimeoutMillis() {
+        return timeoutMillis.get();
+    }
+
+    public void setTimeoutMillis(int timeoutMillis) {
+        this.timeoutMillis.store(timeoutMillis);
+    }
+
     private HttpRequest createGetRequest(URI uri, Map<String, String> headers) {
         HttpRequest.Builder builder = HttpRequest.newBuilder()
                 .uri(uri)
-                .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
+                .timeout(Duration.ofMillis(timeoutMillis.get()))
                 .header("User-Agent", USER_AGENT);
 
         headers.forEach(builder::header);
@@ -132,7 +150,7 @@ public final class NetManager extends Manager {
     private HttpRequest createPostRequest(URI uri, Map<String, String> headers, JsonObject jsonArgs) {
         HttpRequest.Builder builder = HttpRequest.newBuilder()
                 .uri(uri)
-                .timeout(Duration.ofMillis(REQUEST_TIMEOUT_MILLIS))
+                .timeout(Duration.ofMillis(timeoutMillis.get()))
                 .header("User-Agent", USER_AGENT)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(jsonArgs.toString()));
@@ -157,7 +175,13 @@ public final class NetManager extends Manager {
             JsonObject jsonArgs = new JsonObject();
             arguments.forEach(jsonArgs::addProperty);
 
-            URI uri = URI.create(urlInfo.url());
+            URI uri;
+            if (urlInfo.path().isPresent()) {
+                uri = URI.create(
+                        Managers.Url.getDownloadSourceUrl() + urlInfo.path().get());
+            } else {
+                uri = URI.create(urlInfo.url());
+            }
             HttpRequest request = createPostRequest(uri, headers, jsonArgs);
             return new ApiResponse(urlId.toString(), request, new NetResultProcessedEvent.ForUrlId(urlId));
         }
