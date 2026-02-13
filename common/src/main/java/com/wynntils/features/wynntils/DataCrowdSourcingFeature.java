@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -14,7 +14,7 @@ import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.ConfirmedBoolean;
+import com.wynntils.utils.type.OptionalBoolean;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +29,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.WYNNTILS)
 public class DataCrowdSourcingFeature extends Feature {
     @Persisted
-    public final HiddenConfig<Map<CrowdSourcedDataType, ConfirmedBoolean>> crowdSourcedDataTypeEnabledMap =
+    public final HiddenConfig<Map<CrowdSourcedDataType, OptionalBoolean>> crowdSourcedDataTypeEnabledMap =
             new HiddenConfig<>(new TreeMap<>());
 
     public DataCrowdSourcingFeature() {
@@ -43,7 +43,7 @@ public class DataCrowdSourcingFeature extends Feature {
     public void onWorldChange(WorldStateEvent event) {
         if (!event.isFirstJoinWorld()) return;
 
-        Map<CrowdSourcedDataType, ConfirmedBoolean> enabledMap = crowdSourcedDataTypeEnabledMap.get();
+        Map<CrowdSourcedDataType, OptionalBoolean> enabledMap = crowdSourcedDataTypeEnabledMap.get();
         List<CrowdSourcedDataType> nonConfirmedDataTypes = Arrays.stream(CrowdSourcedDataType.values())
                 .filter(dataType -> !enabledMap.containsKey(dataType))
                 .toList();

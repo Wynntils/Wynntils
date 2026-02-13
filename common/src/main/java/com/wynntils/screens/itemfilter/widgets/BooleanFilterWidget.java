@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemfilter.widgets;
@@ -7,7 +7,7 @@ package com.wynntils.screens.itemfilter.widgets;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.services.itemfilter.filters.BooleanStatFilter;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
-import com.wynntils.utils.type.ConfirmedBoolean;
+import com.wynntils.utils.type.OptionalBoolean;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
@@ -15,7 +15,7 @@ public class BooleanFilterWidget extends GeneralFilterWidget {
     private final WynntilsCheckbox trueCheckbox;
     private final WynntilsCheckbox falseCheckbox;
 
-    private ConfirmedBoolean state = ConfirmedBoolean.UNCONFIRMED;
+    private OptionalBoolean state = OptionalBoolean.NULL;
 
     protected BooleanFilterWidget(int x, int y, StatProviderAndFilterPair filterPair, ProviderFilterListWidget parent) {
         super(x, y, 195, 145, Component.literal("Boolean Filter Widget"), parent);
@@ -25,11 +25,11 @@ public class BooleanFilterWidget extends GeneralFilterWidget {
                 getY() + 35,
                 20,
                 Component.translatable("screens.wynntils.itemFilter.booleanTrue"),
-                this.state == ConfirmedBoolean.TRUE,
+                this.state == OptionalBoolean.TRUE,
                 150,
                 (checkbox, b) -> {
                     if (b) {
-                        toggleState(ConfirmedBoolean.TRUE);
+                        toggleState(OptionalBoolean.TRUE);
                     }
                 });
 
@@ -38,21 +38,21 @@ public class BooleanFilterWidget extends GeneralFilterWidget {
                 getY() + 90,
                 20,
                 Component.translatable("screens.wynntils.itemFilter.booleanFalse"),
-                this.state == ConfirmedBoolean.FALSE,
+                this.state == OptionalBoolean.FALSE,
                 150,
                 (checkbox, b) -> {
                     if (b) {
-                        toggleState(ConfirmedBoolean.FALSE);
+                        toggleState(OptionalBoolean.FALSE);
                     }
                 });
 
         if (filterPair != null) {
             if (filterPair.statFilter().matches(true)) {
-                state = ConfirmedBoolean.TRUE;
+                state = OptionalBoolean.TRUE;
                 trueCheckbox.selected = true;
                 falseCheckbox.selected = false;
             } else if (filterPair.statFilter().matches(false)) {
-                state = ConfirmedBoolean.FALSE;
+                state = OptionalBoolean.FALSE;
                 trueCheckbox.selected = false;
                 falseCheckbox.selected = true;
             }
@@ -83,23 +83,23 @@ public class BooleanFilterWidget extends GeneralFilterWidget {
 
     @Override
     protected StatProviderAndFilterPair getFilterPair() {
-        if (state == ConfirmedBoolean.UNCONFIRMED) return null;
+        if (state == OptionalBoolean.NULL) return null;
 
         BooleanStatFilter statFilter =
-                new BooleanStatFilter.BooleanStatFilterFactory().fromBoolean(state == ConfirmedBoolean.TRUE);
+                new BooleanStatFilter.BooleanStatFilterFactory().fromBoolean(state == OptionalBoolean.TRUE);
 
         return new StatProviderAndFilterPair(parent.getProvider(), statFilter);
     }
 
-    private void toggleState(ConfirmedBoolean newState) {
+    private void toggleState(OptionalBoolean newState) {
         // Update the state and disable the opposite checkbox if necessary
         if (state == newState) {
-            state = ConfirmedBoolean.UNCONFIRMED;
-        } else if (newState == ConfirmedBoolean.TRUE) {
-            state = ConfirmedBoolean.TRUE;
+            state = OptionalBoolean.NULL;
+        } else if (newState == OptionalBoolean.TRUE) {
+            state = OptionalBoolean.TRUE;
             falseCheckbox.selected = false;
         } else {
-            state = ConfirmedBoolean.FALSE;
+            state = OptionalBoolean.FALSE;
             trueCheckbox.selected = false;
         }
 
