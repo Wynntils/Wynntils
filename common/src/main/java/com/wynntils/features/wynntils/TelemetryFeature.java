@@ -19,7 +19,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.ConfirmedBoolean;
+import com.wynntils.utils.type.OptionalBoolean;
 import java.util.Locale;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
@@ -32,7 +32,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 @ConfigCategory(Category.WYNNTILS)
 public class TelemetryFeature extends Feature {
     @Persisted
-    private final Config<ConfirmedBoolean> crashReports = new Config<>(ConfirmedBoolean.UNCONFIRMED);
+    private final Config<OptionalBoolean> crashReports = new Config<>(OptionalBoolean.NULL);
 
     public TelemetryFeature() {
         super(ProfileDefault.onlyDefault());
@@ -40,7 +40,7 @@ public class TelemetryFeature extends Feature {
 
     @SubscribeEvent
     public void onCrash(WynntilsCrashEvent event) {
-        if (crashReports.get() != ConfirmedBoolean.TRUE) return;
+        if (crashReports.get() != OptionalBoolean.TRUE) return;
         // Only send telemetry for released versions
         if (WynntilsMod.isDevelopmentEnvironment()) return;
         if (WynntilsMod.getVersion().contains("SNAPSHOT")) return;
@@ -65,7 +65,7 @@ public class TelemetryFeature extends Feature {
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
         if (event.getNewState() != WorldState.WORLD) return;
-        if (crashReports.get() != ConfirmedBoolean.UNCONFIRMED) return;
+        if (crashReports.get() != OptionalBoolean.NULL) return;
 
         MutableComponent component = Component.literal("Wynntils Telemetry\n").withStyle(ChatFormatting.AQUA);
         component.append(Component.literal("""

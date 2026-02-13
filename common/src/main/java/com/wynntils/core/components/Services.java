@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
 
+import com.wynntils.services.athena.CompatibilityService;
 import com.wynntils.services.athena.UpdateService;
 import com.wynntils.services.athena.WynntilsAccountService;
 import com.wynntils.services.chat.ChatTabService;
@@ -32,6 +33,7 @@ import com.wynntils.services.translation.TranslationService;
 
 public final class Services {
     public static final ChatTabService ChatTab = new ChatTabService();
+    public static final CompatibilityService Compatibility = new CompatibilityService();
     public static final CosmeticsService Cosmetics = new CosmeticsService();
     public static final CustomModelService CustomModel = new CustomModelService();
     public static final DestinationService Destination = new DestinationService();

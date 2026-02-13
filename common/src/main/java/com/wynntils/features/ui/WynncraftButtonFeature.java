@@ -117,7 +117,7 @@ public class WynncraftButtonFeature extends Feature {
             if (Managers.Download.graphState().error() && cancelAutoJoin.get() && !ignoreFailedDownloads.get()) {
                 WynntilsMod.warn("Downloads have failed, auto join is cancelled.");
                 return;
-            } else if (Services.Update.shouldPromptUpdate()) {
+            } else if (Services.Update.shouldPromptUpdate() && cancelAutoJoin.get()) {
                 WynntilsMod.info("Cancelling auto join, update available");
                 return;
             }

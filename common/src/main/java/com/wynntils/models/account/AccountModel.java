@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.account;
@@ -22,7 +22,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.ConfirmedBoolean;
+import com.wynntils.utils.type.OptionalBoolean;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
@@ -53,7 +53,7 @@ public final class AccountModel extends Model {
     private final Storage<Long> silverbullExpiresAt = new Storage<>(0L);
 
     @Persisted
-    private final Storage<ConfirmedBoolean> silverbullSubscriber = new Storage<>(ConfirmedBoolean.UNCONFIRMED);
+    private final Storage<OptionalBoolean> silverbullSubscriber = new Storage<>(OptionalBoolean.NULL);
 
     private static final int PLAYER_INFO_UPDATE_MS = 60000;
     private ScheduledFuture<?> scheduledFuture;
@@ -69,7 +69,7 @@ public final class AccountModel extends Model {
         StyledText message = e.getMessage().trim();
 
         if (message.matches(SILVERBULL_JOIN_PATTERN) || message.matches(SILVERBULL_UPDATE_PATTERN)) {
-            silverbullSubscriber.store(ConfirmedBoolean.TRUE);
+            silverbullSubscriber.store(OptionalBoolean.TRUE);
         }
     }
 
@@ -93,7 +93,7 @@ public final class AccountModel extends Model {
     }
 
     public boolean isSilverbullSubscriber() {
-        return silverbullSubscriber.get() == ConfirmedBoolean.TRUE;
+        return silverbullSubscriber.get() == OptionalBoolean.TRUE;
     }
 
     public WynnPlayerInfo getPlayerInfo() {
@@ -110,8 +110,8 @@ public final class AccountModel extends Model {
                 .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME));
 
         if (forceParseUnexpired
-                || silverbullSubscriber.get() == ConfirmedBoolean.UNCONFIRMED
-                || (silverbullSubscriber.get() != ConfirmedBoolean.FALSE
+                || silverbullSubscriber.get() == OptionalBoolean.NULL
+                || (silverbullSubscriber.get() != OptionalBoolean.FALSE
                         && System.currentTimeMillis() > silverbullExpiresAt.get())) {
             // Open Cosmetics Menu
             queryBuilder.then(QueryStep.clickOnSlot(COSMETICS_SLOT)
@@ -130,9 +130,9 @@ public final class AccountModel extends Model {
         ItemStack silverbullItem = container.items().get(SILVERBULL_SLOT);
 
         Matcher status = LoreUtils.matchLoreLine(silverbullItem, 6, SILVERBULL_PATTERN);
-        silverbullSubscriber.store(status.matches() ? ConfirmedBoolean.FALSE : ConfirmedBoolean.TRUE);
+        silverbullSubscriber.store(status.matches() ? OptionalBoolean.FALSE : OptionalBoolean.TRUE);
         WynntilsMod.info("Parsed Silverbull subscription status: " + silverbullSubscriber.get());
-        if (silverbullSubscriber.get() != ConfirmedBoolean.TRUE) return;
+        if (silverbullSubscriber.get() != OptionalBoolean.TRUE) return;
 
         Matcher expiry = LoreUtils.matchLoreLine(silverbullItem, 7, SILVERBULL_DURATION_PATTERN);
         if (!expiry.matches()) {
