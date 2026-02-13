@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.compatibility;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
@@ -27,8 +26,9 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public final class CompatibilityWarningScreen extends WynntilsScreen {
     private final CompatibilityTier compatibilityTier;
@@ -99,18 +99,14 @@ public final class CompatibilityWarningScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-
-        PoseStack poseStack = guiGraphics.pose();
-
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.literal("Outdated Wynntils")
-                                .withStyle(Style.EMPTY.withFont(
-                                        ResourceLocation.withDefaultNamespace("language/wynncraft")))),
+                                .withStyle(Style.EMPTY.withFont(new FontDescription.Resource(
+                                        Identifier.withDefaultNamespace("language/wynncraft"))))),
                         this.width / 2f,
                         offsetY + 20,
                         CommonColors.RED,
@@ -121,7 +117,7 @@ public final class CompatibilityWarningScreen extends WynntilsScreen {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable(
                                 compatibilityTier.getWarningKey(),
                                 WynntilsMod.getVersion(),
