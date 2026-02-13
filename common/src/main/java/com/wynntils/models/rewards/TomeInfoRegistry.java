@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.rewards;
@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.Dependency;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
@@ -20,6 +21,7 @@ import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeRequirements;
+import com.wynntils.models.rewards.type.TomeType;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.AbstractItemInfoDeserializer;
@@ -47,9 +49,13 @@ public class TomeInfoRegistry {
     public void registerDownloads(DownloadRegistry registry) {
         registry.registerDownload(
                         UrlId.DATA_STATIC_TOMES,
-                        Dependency.multi(
-                                Models.WynnItem,
-                                Set.of(UrlId.DATA_STATIC_ITEM_OBTAIN_V2, UrlId.DATA_STATIC_MATERIAL_CONVERSION)))
+                        Dependency.complex(Set.of(
+                                Dependency.simple(Services.CustomModel, UrlId.DATA_STATIC_MODEL_DATA),
+                                Dependency.multi(
+                                        Models.WynnItem,
+                                        Set.of(
+                                                UrlId.DATA_STATIC_ITEM_OBTAIN_V2,
+                                                UrlId.DATA_STATIC_MATERIAL_CONVERSION)))))
                 .handleJsonObject(this::loadTomeInfoRegistry);
     }
 

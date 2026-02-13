@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
 
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.TomeItem;
-import com.wynntils.models.rewards.TomeType;
+import com.wynntils.models.rewards.type.TomeType;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.utils.EnumUtils;
