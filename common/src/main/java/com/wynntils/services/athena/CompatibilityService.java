@@ -20,6 +20,7 @@ import com.wynntils.services.athena.type.CompatibilityTier;
 import com.wynntils.services.athena.type.WynncraftVersion;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.ConfirmedBoolean;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 import net.minecraft.client.gui.components.toasts.SystemToast;
@@ -40,6 +41,8 @@ public class CompatibilityService extends Service {
 
     private long toastExpire = 0L;
     private SystemToast warningToast = null;
+
+    private ConfirmedBoolean isCompatible = ConfirmedBoolean.UNCONFIRMED;
 
     // Wynncraft version to ignore incompatibility checks for, Wynntils version used
     @Persisted
@@ -90,16 +93,33 @@ public class CompatibilityService extends Service {
     }
 
     public boolean isCompatible() {
-        // Not reached character selection screen yet
-        if (wynncraftVersion == null) return true;
-        if (compatibilityTier == CompatibilityTier.INCOMPATIBLE) return false;
-        if (compatibilityTier == CompatibilityTier.UNKNOWN
-                || compatibilityTier == CompatibilityTier.COMPATIBLE
-                || compatibilityTier == CompatibilityTier.MINOR_ERRORS) return true;
+        if (isCompatible == ConfirmedBoolean.UNCONFIRMED) {
+            // Not reached character selection screen yet
+            if (wynncraftVersion == null) return true;
 
-        // CompatibilityTier.MAJOR_ERRORS
-        return overrideIncompatibility.get().a().equals(wynncraftVersion.toString())
-                && overrideIncompatibility.get().b().equals(WynntilsMod.getVersion());
+            if (compatibilityTier == CompatibilityTier.INCOMPATIBLE) {
+                isCompatible = ConfirmedBoolean.FALSE;
+                return false;
+            }
+            if (compatibilityTier == CompatibilityTier.UNKNOWN
+                    || compatibilityTier == CompatibilityTier.COMPATIBLE
+                    || compatibilityTier == CompatibilityTier.MINOR_ERRORS) {
+                isCompatible = ConfirmedBoolean.TRUE;
+                return true;
+            }
+
+            // CompatibilityTier.MAJOR_ERRORS
+            if (overrideIncompatibility.get().a().equals(wynncraftVersion.toString())
+                    && overrideIncompatibility.get().b().equals(WynntilsMod.getVersion())) {
+                isCompatible = ConfirmedBoolean.TRUE;
+                return true;
+            } else {
+                isCompatible = ConfirmedBoolean.FALSE;
+                return false;
+            }
+        }
+
+        return isCompatible == ConfirmedBoolean.TRUE;
     }
 
     public void setOverrideIncompatibility() {
@@ -115,6 +135,7 @@ public class CompatibilityService extends Service {
         if (segment.getWynncraftVersion().equals(wynncraftVersion)) return;
 
         wynncraftVersion = segment.getWynncraftVersion();
+        isCompatible = ConfirmedBoolean.UNCONFIRMED;
 
         if (WynntilsMod.isDevelopmentEnvironment()
                 || WynntilsMod.isDevelopmentBuild()
