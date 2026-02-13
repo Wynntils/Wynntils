@@ -66,7 +66,8 @@ public final class MapService extends Service {
     }
 
     private void loadMapPart(MapPartProfile mapPart, String fileName) {
-        Download dl = Managers.Net.download(URI.create(mapPart.path), "maps/" + fileName, mapPart.md5);
+        Download dl = Managers.Net.download(
+                URI.create(Managers.Url.getDownloadSourceUrl() + mapPart.path), "maps/" + fileName, mapPart.md5);
         dl.handleInputStream(
                 inputStream -> {
                     try {
