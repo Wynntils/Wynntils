@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.crowdsource;
@@ -17,7 +17,7 @@ import com.wynntils.crowdsource.NpcLocationDataCollector;
 import com.wynntils.crowdsource.ProfessionNodeLocationDataCollector;
 import com.wynntils.crowdsource.ProfessionStationLocationDataCollector;
 import com.wynntils.features.wynntils.DataCrowdSourcingFeature;
-import com.wynntils.utils.type.ConfirmedBoolean;
+import com.wynntils.utils.type.OptionalBoolean;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +40,7 @@ public class CrowdSourcedDataManager extends Manager {
     }
 
     public <T> void putData(CrowdSourcedDataType crowdSourcedDataType, T crowdSourcedData) {
-        if (getDataCollectionState(crowdSourcedDataType) != ConfirmedBoolean.TRUE) return;
+        if (getDataCollectionState(crowdSourcedDataType) != OptionalBoolean.TRUE) return;
 
         collectedData.get().putData(CURRENT_GAME_VERSION, crowdSourcedDataType, crowdSourcedData);
         collectedData.touched();
@@ -52,13 +52,13 @@ public class CrowdSourcedDataManager extends Manager {
                 .getData(CURRENT_GAME_VERSION, crowdSourcedDataType, crowdSourcedDataType.getDataClass());
     }
 
-    public ConfirmedBoolean getDataCollectionState(CrowdSourcedDataType crowdSourcedDataType) {
-        if (!isDataCollectionEnabled()) return ConfirmedBoolean.FALSE;
+    public OptionalBoolean getDataCollectionState(CrowdSourcedDataType crowdSourcedDataType) {
+        if (!isDataCollectionEnabled()) return OptionalBoolean.FALSE;
 
-        ConfirmedBoolean collectionEnabledForType = Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class)
+        OptionalBoolean collectionEnabledForType = Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class)
                 .crowdSourcedDataTypeEnabledMap
                 .get()
-                .getOrDefault(crowdSourcedDataType, ConfirmedBoolean.UNCONFIRMED);
+                .getOrDefault(crowdSourcedDataType, OptionalBoolean.NULL);
 
         return collectionEnabledForType;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.widgets.filters;
@@ -18,7 +18,7 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.type.ConfirmedBoolean;
+import com.wynntils.utils.type.OptionalBoolean;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -109,7 +109,7 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
 
     private static class ProfessionTypeButton extends GuideFilterButton<ProfessionStatProvider> {
         private final ProfessionType professionType;
-        private ConfirmedBoolean state;
+        private OptionalBoolean state;
 
         protected ProfessionTypeButton(
                 int x, int y, ProfessionType professionType, Texture texture, ItemSearchQuery searchQuery) {
@@ -123,13 +123,13 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
         protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             RenderUtils.drawTexturedRect(guiGraphics.pose(), texture, getX(), getY());
 
-            if (!isHovered && state == ConfirmedBoolean.UNCONFIRMED) return;
+            if (!isHovered && state == OptionalBoolean.NULL) return;
 
             CustomColor color = CommonColors.WHITE;
 
-            if (state == ConfirmedBoolean.TRUE) {
+            if (state == OptionalBoolean.TRUE) {
                 color = CommonColors.LIGHT_GREEN;
-            } else if (state == ConfirmedBoolean.FALSE) {
+            } else if (state == OptionalBoolean.FALSE) {
                 color = CommonColors.RED;
             }
 
@@ -157,13 +157,13 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
             if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT || button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                if (state != ConfirmedBoolean.TRUE) {
-                    state = ConfirmedBoolean.TRUE;
-                } else if (state != ConfirmedBoolean.FALSE) {
-                    state = ConfirmedBoolean.FALSE;
+                if (state != OptionalBoolean.TRUE) {
+                    state = OptionalBoolean.TRUE;
+                } else if (state != OptionalBoolean.FALSE) {
+                    state = OptionalBoolean.FALSE;
                 }
             } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-                state = ConfirmedBoolean.UNCONFIRMED;
+                state = OptionalBoolean.NULL;
             }
 
             return super.mouseClicked(mouseX, mouseY, button);
@@ -183,22 +183,22 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
 
             if (filterPairOpt.isPresent()) {
                 if (filterPairOpt.get().statFilter().matches(true)) {
-                    state = ConfirmedBoolean.TRUE;
+                    state = OptionalBoolean.TRUE;
                 } else if (filterPairOpt.get().statFilter().matches(false)) {
-                    state = ConfirmedBoolean.FALSE;
+                    state = OptionalBoolean.FALSE;
                 }
             } else {
-                state = ConfirmedBoolean.UNCONFIRMED;
+                state = OptionalBoolean.NULL;
             }
         }
 
         @Override
         protected StatProviderAndFilterPair getFilterPair(ProfessionStatProvider provider) {
-            if (state == ConfirmedBoolean.UNCONFIRMED) return null;
+            if (state == OptionalBoolean.NULL) return null;
 
             return new StatProviderAndFilterPair(
                     provider,
-                    new BooleanStatFilter.BooleanStatFilterFactory().fromBoolean(state == ConfirmedBoolean.TRUE));
+                    new BooleanStatFilter.BooleanStatFilterFactory().fromBoolean(state == OptionalBoolean.TRUE));
         }
 
         @Override
