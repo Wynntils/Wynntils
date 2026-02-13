@@ -89,7 +89,8 @@ public class InventoryFunctions {
             if (accessoryStack.isEmpty()) return "NONE";
 
             StyledText hoverName = StyledText.fromComponent(accessoryStack.getHoverName());
-            return hoverName.getString(StyleType.NONE);
+            String itemName = hoverName.getString(StyleType.NONE);
+            return itemName.equals("Accessory Slot") ? "NONE" : itemName;
         }
 
         @Override
