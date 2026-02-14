@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
@@ -97,17 +97,19 @@ public final class RenderedStringUtils {
         }
     }
 
-    public static String substringMaxWidth(String input, int maxWidth) {
+    public static StyledText substringMaxWidth(StyledText input, int maxWidth) {
         Font font = McUtils.mc().font;
-        if (font.width(input) <= maxWidth) return input;
+        Component component = input.getComponent();
+        if (font.width(component) <= maxWidth) return input;
 
         StringBuilder builder = new StringBuilder();
-        for (char c : input.toCharArray()) {
+        for (char c : component.getString().toCharArray()) {
             if (font.width(builder.toString() + c) > maxWidth) break;
             builder.append(c);
         }
 
-        return builder.toString();
+        int length = builder.toString().length();
+        return input.substring(0, length);
     }
 
     public static Component getPercentageComponent(int count, int totalCount, int tickCount) {

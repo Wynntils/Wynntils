@@ -25,16 +25,17 @@ import com.wynntils.utils.type.Pair;
 import java.util.List;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class CompatibilityService extends Service {
     private static final long TOAST_DISPLAY_TIME = 10000L;
-    private static final ResourceLocation WYNNTILS_KEYBIND_FONT =
-            ResourceLocation.fromNamespaceAndPath("wynntils", "keybind");
+    private static final FontDescription WYNNTILS_KEYBIND_FONT =
+            new FontDescription.Resource(Identifier.fromNamespaceAndPath("wynntils", "keybind"));
 
     private CompatibilityTier compatibilityTier = null;
     private WynncraftVersion wynncraftVersion = null;
@@ -145,10 +146,10 @@ public class CompatibilityService extends Service {
         }
 
         // TODO: Replace with Athena call
-        //  Temporary to force old clients to not work on Fruma (v2.2)
+        //  Temporary to force old clients to have a warning on Fruma (v2.2)
         if (wynncraftVersion.versionGroup().equals("2")
                 && wynncraftVersion.majorVersion().equals("2")) {
-            compatibilityTier = CompatibilityTier.INCOMPATIBLE;
+            compatibilityTier = CompatibilityTier.MAJOR_ERRORS;
         } else {
             compatibilityTier = CompatibilityTier.COMPATIBLE;
         }

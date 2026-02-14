@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem;
@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
@@ -258,6 +259,18 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         switch (iconFormat) {
             case "attribute" -> {
                 JsonObject value = icon.get("value").getAsJsonObject();
+
+                if (value.has("name")) {
+                    Optional<Float> modelDataOpt =
+                            Services.CustomModel.getFloat(value.get("name").getAsString());
+
+                    if (modelDataOpt.isPresent()) {
+                        return ItemMaterial.fromItemId(
+                                value.get("id").getAsString(),
+                                modelDataOpt.get().intValue());
+                    }
+                }
+
                 JsonElement customModelData = value.get("customModelData");
 
                 int customModelDataInt;

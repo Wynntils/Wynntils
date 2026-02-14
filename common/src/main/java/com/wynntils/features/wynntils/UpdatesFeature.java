@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -13,7 +13,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.services.athena.type.UpdateResult;
 import com.wynntils.utils.mc.McUtils;
@@ -33,7 +32,7 @@ public class UpdatesFeature extends Feature {
     private final Config<Boolean> autoUpdate = new Config<>(false);
 
     public UpdatesFeature() {
-        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+        super(ProfileDefault.ENABLED);
     }
 
     @SubscribeEvent
@@ -83,7 +82,7 @@ public class UpdatesFeature extends Feature {
         MutableComponent clickable = Component.translatable("feature.wynntils.updates.reminder.clickable");
         clickable.setStyle(clickable
                 .getStyle()
-                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils update"))
+                .withClickEvent(new ClickEvent.RunCommand("/wynntils update"))
                 .withUnderlined(true)
                 .withBold(true));
 

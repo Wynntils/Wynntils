@@ -1,17 +1,17 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.tooltips;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -64,7 +64,6 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemCompareFeature extends Feature {
@@ -84,12 +83,10 @@ public class ItemCompareFeature extends Feature {
     private final Config<Boolean> centerItemName = new Config<>(false);
 
     @RegisterKeyBind
-    private final KeyBind holdToCompareKeyBind =
-            new KeyBind("Hold to compare", GLFW.GLFW_KEY_KP_ENTER, false, null, null);
+    private final KeyBind holdToCompareKeyBind = KeyBindDefinition.HOLD_TO_COMPARE.create(null, null);
 
     @RegisterKeyBind
-    private final KeyBind selectCompareKeyBind =
-            new KeyBind("Select for comparing", GLFW.GLFW_KEY_KP_ADD, true, null, this::onSelectKeyPress);
+    private final KeyBind selectCompareKeyBind = KeyBindDefinition.SELECT_FOR_COMPARING.create(this::onSelectKeyPress);
 
     private final List<Pair<WynnItem, ItemStack>> selectedItems = new ArrayList<>();
     private static final int COMPARE_ITEM_PAD = 6;
@@ -104,7 +101,7 @@ public class ItemCompareFeature extends Feature {
 
     public ItemCompareFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
                 .build());
     }
 
@@ -124,7 +121,7 @@ public class ItemCompareFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onTooltipRenderEvent(TooltipRenderEvent event) {
+    public void onTooltipRenderEvent(TooltipRenderEvent.Position event) {
         if (!changePositioner) return;
 
         event.setPositioner(PassiveTooltipPositioner.INSTANCE);
@@ -133,12 +130,12 @@ public class ItemCompareFeature extends Feature {
     @SubscribeEvent
     public void onSlotRenderEvent(SlotRenderEvent.Pre event) {
         Slot slot = event.getSlot();
-        drawSelectionArc(event.getPoseStack(), slot.getItem(), slot.x, slot.y, false);
+        drawSelectionArc(event.getGuiGraphics(), slot.getItem(), slot.x, slot.y);
     }
 
     @SubscribeEvent
     public void onHotbarSlotRenderEvent(HotbarSlotRenderEvent.Pre event) {
-        drawSelectionArc(event.getPoseStack(), event.getItemStack(), event.getX(), event.getY(), true);
+        drawSelectionArc(event.getGuiGraphics(), event.getItemStack(), event.getX(), event.getY());
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -165,7 +162,8 @@ public class ItemCompareFeature extends Feature {
         if (!isItemStackSelected(hoveredItemStack)) {
             switch (hoveredGearItemProperty.getGearType()) {
                 case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> {
-                    List<ItemStack> armors = McUtils.inventory().armor;
+                    List<ItemStack> armors =
+                            new ArrayList<>(McUtils.inventory().equipment.items.values());
 
                     Optional<ItemStack> matchingArmorOpt = armors.stream()
                             .filter(itemStack -> isMatchingType(itemStack, hoveredGearItemProperty))
@@ -206,7 +204,7 @@ public class ItemCompareFeature extends Feature {
                         });
                     }
                 }
-                    // TODO: allow comparing with equipped/selected tomes and selected charms
+                // TODO: allow comparing with equipped/selected tomes and selected charms
             }
         }
 
@@ -227,14 +225,10 @@ public class ItemCompareFeature extends Feature {
         Window window = McUtils.mc().getWindow();
         GuiGraphics guiGraphics = event.getGuiGraphics();
         Font font = FontRenderer.getInstance().getFont();
-        final PoseStack poseStack = guiGraphics.pose();
         float universalScale = Managers.Feature.getFeatureInstance(TooltipFittingFeature.class)
                 .universalScale
                 .get();
         int twoPad = COMPARE_ITEM_PAD * 2;
-
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 300);
 
         List<Component> hoveredLines = new ArrayList<>(event.getTooltips());
         if (removeFlavourText.get()) {
@@ -351,28 +345,31 @@ public class ItemCompareFeature extends Feature {
         event.setCanceled(true);
 
         changePositioner = true;
-        poseStack.pushPose();
-        poseStack.scale(hoveredScaleFactor, hoveredScaleFactor, 1);
-        guiGraphics.renderTooltip(
-                font, hoveredLines, hoveredItemStack.getTooltipImage(), (int) (hoveredX / hoveredScaleFactor), (int)
-                        (hoveredY / hoveredScaleFactor));
-        poseStack.popPose();
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().scale(hoveredScaleFactor, hoveredScaleFactor);
+        RenderUtils.renderTooltip(
+                guiGraphics,
+                font,
+                hoveredLines,
+                hoveredItemStack.getTooltipImage(),
+                (int) (hoveredX / hoveredScaleFactor),
+                (int) (hoveredY / hoveredScaleFactor));
+        guiGraphics.pose().popMatrix();
 
         for (Tooltip tooltip : tooltips) {
-            poseStack.pushPose();
+            guiGraphics.pose().pushMatrix();
             float scaleFactor = tooltip.getScaleFactor();
-            poseStack.scale(scaleFactor, scaleFactor, 1);
-            guiGraphics.renderTooltip(
+            guiGraphics.pose().scale(scaleFactor, scaleFactor);
+            RenderUtils.renderTooltip(
+                    guiGraphics,
                     font,
                     tooltip.getLines(),
                     tooltip.getVisualTooltipComponent(),
                     (int) (tooltip.getX() / scaleFactor),
                     (int) (tooltip.getY() / scaleFactor));
-            poseStack.popPose();
+            guiGraphics.pose().popMatrix();
         }
         changePositioner = false;
-
-        poseStack.popPose();
     }
 
     private boolean isMatchingType(WynnItem wynnItem, GearTypeItemProperty gearItemReference) {
@@ -434,11 +431,11 @@ public class ItemCompareFeature extends Feature {
         return I18n.get(key);
     }
 
-    private void drawSelectionArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
+    private void drawSelectionArc(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
         if (isItemStackSelected(itemStack)) {
-            RenderUtils.drawArc(poseStack, CommonColors.LIGHT_BLUE, slotX, slotY, hotbar ? 0 : 200, 1, 6, 8);
+            RenderUtils.drawArc(guiGraphics, CommonColors.LIGHT_BLUE, slotX, slotY, 1, 6, 8);
         }
     }
 

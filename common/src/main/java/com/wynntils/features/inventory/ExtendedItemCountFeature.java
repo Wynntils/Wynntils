@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -11,7 +11,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.ItemCountOverlayRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -32,10 +31,13 @@ public class ExtendedItemCountFeature extends Feature {
     @Persisted
     private final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
 
+    @Persisted
+    private final Config<Boolean> showLevel = new Config<>(true);
+
     private boolean isInventory;
 
     public ExtendedItemCountFeature() {
-        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+        super(ProfileDefault.ENABLED);
     }
 
     @SubscribeEvent
@@ -58,7 +60,8 @@ public class ExtendedItemCountFeature extends Feature {
 
         WynnItem wynnItem = wynnItemOpt.get();
 
-        if (wynnItem instanceof LeveledItemProperty leveledItem
+        if (showLevel.get()
+                && wynnItem instanceof LeveledItemProperty leveledItem
                 && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)
                 && isInventory) {
             event.setCountString(String.valueOf(leveledItem.getLevel()));

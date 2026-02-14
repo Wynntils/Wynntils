@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.colorpicker;
@@ -144,9 +144,7 @@ public final class ColorPickerScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.COLOR_PICKER_BACKGROUND, offsetX, offsetY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.COLOR_PICKER_BACKGROUND, offsetX, offsetY);
 
         renderSelectedColor(guiGraphics, offsetX + 11, offsetY + 15);
 
@@ -217,6 +215,6 @@ public final class ColorPickerScreen extends WynntilsScreen {
     }
 
     private void renderSelectedColor(GuiGraphics guiGraphics, int x, int y) {
-        RenderUtils.drawRect(guiGraphics.pose(), color, x, y, 0, 82, 66);
+        RenderUtils.drawRect(guiGraphics, color, x, y, 82, 66);
     }
 }

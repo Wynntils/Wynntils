@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -146,7 +145,7 @@ public class ContainerSearchFeature extends Feature {
 
     public ContainerSearchFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
                 .build());
     }
 
@@ -174,7 +173,7 @@ public class ContainerSearchFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void onRenderSlot(SlotRenderEvent.CountPre e) {
+    public void onRenderSlot(SlotRenderEvent.Post e) {
         ItemStack itemStack = e.getSlot().getItem();
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
@@ -182,9 +181,7 @@ public class ContainerSearchFeature extends Feature {
         Boolean result = wynnItemOpt.get().getData().get(WynnItemData.SEARCHED_KEY);
         if (result == null || !result) return;
 
-        RenderSystem.enableDepthTest();
-        RenderUtils.drawArc(e.getPoseStack(), highlightColor.get(), e.getSlot().x, e.getSlot().y, 100, 1f, 6, 8);
-        RenderSystem.disableDepthTest();
+        RenderUtils.drawArc(e.getGuiGraphics(), highlightColor.get(), e.getSlot().x, e.getSlot().y, 1f, 6, 8);
     }
 
     @SubscribeEvent

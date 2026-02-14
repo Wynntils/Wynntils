@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.item;
@@ -102,11 +102,13 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
             // For crafted items, the max values can be used to calculate the current values (from the overall
             // effectiveness).
             identifications = identificationsData.possibleValues().stream()
-                    .map(statPossibleValues -> new StatActualValue(
-                            statPossibleValues.statType(),
-                            Math.round(statPossibleValues.range().high() * effectStrength / 100f),
-                            0,
-                            RangedValue.NONE))
+                    .map(statPossibleValues -> {
+                        int max = statPossibleValues.range().high();
+                        // Negative stats do not decay, they always stay at the max
+                        int value = (max <= 0) ? max : Math.round(max * effectStrength / 100f);
+
+                        return new StatActualValue(statPossibleValues.statType(), value, 0, RangedValue.NONE);
+                    })
                     .toList();
         }
 

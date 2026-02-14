@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guildlog.widgets;
@@ -43,11 +43,11 @@ public class LogDateWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics.pose(), Texture.LOG_DATE_ENTRY, getX(), getY());
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.LOG_DATE_ENTRY, getX(), getY());
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         renderText,
                         getX() + 4,
                         getY() + height / 2f,

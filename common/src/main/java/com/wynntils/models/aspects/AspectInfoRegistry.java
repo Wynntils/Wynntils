@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.aspects;
@@ -11,6 +11,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.net.Dependency;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
@@ -38,7 +40,10 @@ public class AspectInfoRegistry {
     private Map<ClassType, Map<String, AspectInfo>> aspectInfoLookup = Map.of();
 
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_STATIC_ASPECTS).handleJsonObject(this::handleAspects);
+        registry.registerDownload(
+                        UrlId.DATA_STATIC_ASPECTS,
+                        Dependency.simple(Services.CustomModel, UrlId.DATA_STATIC_MODEL_DATA))
+                .handleJsonObject(this::handleAspects);
     }
 
     public AspectInfo getFromClassAndDisplayName(ClassType classType, String aspectName) {

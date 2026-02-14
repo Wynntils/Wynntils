@@ -1,16 +1,19 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.colorpicker.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.screens.colorpicker.ColorPickerScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.type.RenderDirection;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
@@ -38,67 +41,70 @@ public class SaturationBrightnessWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.fillSidewaysGradient(
-                guiGraphics.pose(),
-                getX(),
-                getY(),
-                getX() + width,
-                getY() + height,
-                0,
-                CommonColors.WHITE,
-                color.withAlpha(255));
         RenderUtils.fillGradient(
-                guiGraphics.pose(),
+                guiGraphics,
                 getX(),
                 getY(),
                 getX() + width,
                 getY() + height,
-                0,
+                CommonColors.WHITE,
+                color.withAlpha(255),
+                RenderDirection.HORIZONTAL);
+        RenderUtils.fillGradient(
+                guiGraphics,
+                getX(),
+                getY(),
+                getX() + width,
+                getY() + height,
                 CommonColors.WHITE.withAlpha(0),
-                CommonColors.BLACK);
+                CommonColors.BLACK,
+                RenderDirection.VERTICAL);
 
         RenderUtils.drawRectBorders(
-                guiGraphics.pose(),
+                guiGraphics,
                 CommonColors.BLACK,
                 getX() + cursorX - 2,
                 getY() + cursorY - 2,
                 getX() + cursorX + 2,
                 getY() + cursorY + 2,
-                2,
                 1);
+
+        if (this.isHovered) {
+            guiGraphics.requestCursor(cursorHeld ? CursorTypes.RESIZE_ALL : CursorTypes.POINTING_HAND);
+        }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!isMouseOver(mouseX, mouseY)) return false;
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!isMouseOver(event.x(), event.y())) return false;
 
-        cursorX = (int) (mouseX - getX());
-        cursorY = (int) (mouseY - getY());
+        cursorX = (int) (event.x() - getX());
+        cursorY = (int) (event.y() - getY());
 
         cursorHeld = true;
 
         updateValue(cursorX, cursorY);
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (!cursorHeld) return false;
 
-        cursorX = Mth.clamp((int) (mouseX - getX()), 0, getWidth());
-        cursorY = Mth.clamp((int) (mouseY - getY()), 0, getHeight());
+        cursorX = Mth.clamp((int) (event.x() - getX()), 0, getWidth());
+        cursorY = Mth.clamp((int) (event.y() - getY()), 0, getHeight());
 
         updateValue(cursorX, cursorY);
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         cursorHeld = false;
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     public void setColor(CustomColor color) {

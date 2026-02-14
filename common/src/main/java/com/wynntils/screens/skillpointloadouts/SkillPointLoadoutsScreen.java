@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.skillpointloadouts;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.SavableSkillPointSet;
@@ -36,10 +35,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
@@ -181,20 +183,17 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
-
         // region Loadout headers
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.WHITE,
                 dividedWidth * 4,
                 dividedHeight * 8,
-                0,
                 dividedWidth * 30 - dividedWidth * 4,
                 1);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.loadoutName")),
                         dividedWidth * 4,
                         dividedHeight * 8,
@@ -205,11 +204,12 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         for (int i = 0; i < 5; i++) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(Component.literal(Skill.values()[i].getSymbol())
                                     .withStyle(Style.EMPTY
                                             .withColor(Skill.values()[i].getColorCode())
-                                            .withFont(ResourceLocation.withDefaultNamespace("common")))),
+                                            .withFont(new FontDescription.Resource(
+                                                    Identifier.withDefaultNamespace("common"))))),
                             dividedWidth * (21 + i * 2),
                             dividedHeight * 8,
                             CommonColors.WHITE,
@@ -221,17 +221,16 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
 
         // region Summary
         RenderUtils.drawRectBorders(
-                poseStack,
+                guiGraphics,
                 CommonColors.WHITE,
                 dividedWidth * 34,
                 dividedHeight * 8,
                 dividedWidth * 60,
                 dividedHeight * 28,
-                1,
                 1);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.summary")),
                         dividedWidth * 34,
                         dividedHeight * 8,
@@ -242,11 +241,12 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         for (int i = 0; i < 5; i++) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(Component.literal(Skill.values()[i].getSymbol())
                                     .withStyle(Style.EMPTY
                                             .withColor(Skill.values()[i].getColorCode())
-                                            .withFont(ResourceLocation.withDefaultNamespace("common")))),
+                                            .withFont(new FontDescription.Resource(
+                                                    Identifier.withDefaultNamespace("common"))))),
                             dividedWidth * (51 + i * 2),
                             dividedHeight * 8,
                             CommonColors.WHITE,
@@ -260,7 +260,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         for (int i = 0; i < summaryParts.size(); i++) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(summaryParts.get(i).key().get()),
                             dividedWidth * 35,
                             dividedHeight * (10 + i * 2),
@@ -271,7 +271,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
             for (int j = 0; j < 5; j++) {
                 FontRenderer.getInstance()
                         .renderText(
-                                poseStack,
+                                guiGraphics,
                                 StyledText.fromString(Skill.values()[j].getColorCode() + ""
                                         + summaryParts.get(i).value().apply(Skill.values()[j])),
                                 dividedWidth * (51 + j * 2),
@@ -286,7 +286,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         if (hasSaveNameConflict) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.saveNameConflict")),
                             dividedWidth * 35,
                             dividedHeight * 23,
@@ -300,17 +300,16 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         // region Selected loadout
         if (selectedLoadout != null) {
             RenderUtils.drawRectBorders(
-                    poseStack,
+                    guiGraphics,
                     CommonColors.WHITE,
                     dividedWidth * 34,
                     dividedHeight * 34,
                     dividedWidth * 60,
                     dividedHeight * 56,
-                    1,
                     1);
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(selectedLoadout.key()),
                             dividedWidth * 34,
                             dividedHeight * 34,
@@ -321,11 +320,12 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
             for (int i = 0; i < 5; i++) {
                 FontRenderer.getInstance()
                         .renderText(
-                                poseStack,
+                                guiGraphics,
                                 StyledText.fromComponent(Component.literal(Skill.values()[i].getSymbol())
                                         .withStyle(Style.EMPTY
                                                 .withColor(Skill.values()[i].getColorCode())
-                                                .withFont(ResourceLocation.withDefaultNamespace("common")))),
+                                                .withFont(new FontDescription.Resource(
+                                                        Identifier.withDefaultNamespace("common"))))),
                                 dividedWidth * (51 + i * 2),
                                 dividedHeight * 34,
                                 CommonColors.WHITE,
@@ -335,7 +335,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
             }
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get(
                                     "screens.wynntils.skillPointLoadouts.assigned",
                                     selectedLoadout.value().getSkillPointsSum())),
@@ -348,7 +348,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
             for (int i = 0; i < 5; i++) {
                 FontRenderer.getInstance()
                         .renderText(
-                                poseStack,
+                                guiGraphics,
                                 StyledText.fromString(Skill.values()[i].getColorCode() + ""
                                         + selectedLoadout.value().getSkillPointsAsArray()[i]),
                                 dividedWidth * (51 + i * 2),
@@ -363,7 +363,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 if (selectedLoadout.value().weapon() != null) {
                     FontRenderer.getInstance()
                             .renderText(
-                                    poseStack,
+                                    guiGraphics,
                                     StyledText.fromString(
                                             selectedLoadout.value().weapon()),
                                     dividedWidth * 35,
@@ -397,7 +397,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                                     TextShadow.NORMAL)));
                 }
                 FontRenderer.getInstance()
-                        .renderTexts(poseStack, dividedWidth * 35, dividedHeight * startingHeight, tasks);
+                        .renderTexts(guiGraphics, dividedWidth * 35, dividedHeight * startingHeight, tasks);
 
                 tasks = new ArrayList<>();
                 for (int i = 0; i < selectedLoadout.value().accessoryNames().size(); i++) {
@@ -423,7 +423,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
 
                 FontRenderer.getInstance()
                         .renderTexts(
-                                poseStack,
+                                guiGraphics,
                                 dividedWidth
                                         * (selectedLoadout.value().armourNames().isEmpty()
                                                 ? 35
@@ -433,7 +433,7 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
             } else {
                 FontRenderer.getInstance()
                         .renderText(
-                                poseStack,
+                                guiGraphics,
                                 StyledText.fromString(I18n.get("screens.wynntils.skillPointLoadouts.notBuild")),
                                 dividedWidth * 35,
                                 dividedHeight * 42,
@@ -459,26 +459,31 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
         }
         // Only render from 8 to 56 for scrollable area
         // -/+ 1 to not overlap/cut off content
-        RenderUtils.createRectMask(
-                poseStack,
+        RenderUtils.enableScissor(
+                guiGraphics,
                 (int) (dividedWidth * 4) - 1,
                 (int) (dividedHeight * 8) + 1,
                 (int) (dividedWidth * 26) + 1,
                 (int) (dividedHeight * 48) + 1);
         loadoutWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
-        RenderUtils.clearMask();
+        RenderUtils.disableScissor(guiGraphics);
         // endregion
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         for (LoadoutWidget widget : loadoutWidgets) {
-            if (widget.isMouseOver(mouseX, mouseY)) {
-                widget.mouseClicked(mouseX, mouseY, button);
+            if (widget.isMouseOver(event.x(), event.y())) {
+                widget.mouseClicked(event, isDoubleClick);
                 return true;
             }
         }
-        return super.doMouseClicked(mouseX, mouseY, button);
+
+        if (scrollBar.isMouseOver(event.x(), event.y())) {
+            scrollBar.mouseClicked(event, isDoubleClick);
+        }
+
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     // baseYPosition - dividedHeight * maxScrollOffset * scrollPercent = dividedHeight * 52
@@ -513,17 +518,17 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_DELETE && deleteButton.active) {
-            deleteButton.onPress();
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_DELETE && deleteButton.active) {
+            deleteButton.onPress(event);
             return true;
-        } else if (keyCode == GLFW.GLFW_KEY_END) {
+        } else if (event.key() == GLFW.GLFW_KEY_END) {
             doScroll(Float.NEGATIVE_INFINITY);
-        } else if (keyCode == GLFW.GLFW_KEY_HOME) {
+        } else if (event.key() == GLFW.GLFW_KEY_HOME) {
             doScroll(Float.POSITIVE_INFINITY);
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     public void setSelectedLoadout(Pair<String, SavableSkillPointSet> loadout) {

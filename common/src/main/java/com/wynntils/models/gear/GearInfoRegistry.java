@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear;
@@ -11,6 +11,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.Dependency;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
@@ -43,6 +44,7 @@ public class GearInfoRegistry {
         registry.registerDownload(
                         UrlId.DATA_STATIC_GEAR,
                         Dependency.complex(Set.of(
+                                Dependency.simple(Services.CustomModel, UrlId.DATA_STATIC_MODEL_DATA),
                                 Dependency.simple(Models.Set, UrlId.DATA_STATIC_ITEM_SETS),
                                 Dependency.simple(Models.WynnItem, UrlId.DATA_STATIC_ITEM_OBTAIN_V2))))
                 .handleJsonObject(this::handleGearInfo);

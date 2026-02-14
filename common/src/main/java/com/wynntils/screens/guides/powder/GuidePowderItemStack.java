@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.powder;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.components.Services;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.PowderTierInfo;
 import com.wynntils.models.items.items.game.PowderItem;
@@ -17,8 +16,9 @@ import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -48,7 +48,8 @@ public final class GuidePowderItemStack extends GuideItemStack {
         return Component.empty()
                 .withStyle(Style.EMPTY.withColor(element.getLightColor()))
                 .append(Component.literal(String.valueOf(element.getSymbol()))
-                        .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))))
+                        .withStyle(Style.EMPTY.withFont(
+                                new FontDescription.Resource(Identifier.withDefaultNamespace("common")))))
                 .append(Component.literal(" " + element.getName() + " Powder " + MathUtils.toRoman(tier)));
     }
 
@@ -58,14 +59,7 @@ public final class GuidePowderItemStack extends GuideItemStack {
         tooltip.add(getHoverName());
         tooltip.addAll(generatedTooltip);
 
-        tooltip.add(Component.empty());
-        if (Services.Favorites.isFavorite(this)) {
-            tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
-                    .withStyle(ChatFormatting.YELLOW));
-        } else {
-            tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
-                    .withStyle(ChatFormatting.GREEN));
-        }
+        appendFavoriteInfo(tooltip);
 
         return tooltip;
     }
@@ -92,7 +86,7 @@ public final class GuidePowderItemStack extends GuideItemStack {
                         + powderTierInfo.min() + "-" + powderTierInfo.max() + " " + element.getLightColor()))
                 .append(Component.literal(String.valueOf(element.getSymbol()))
                         .withStyle(Style.EMPTY
-                                .withFont(ResourceLocation.withDefaultNamespace("common"))
+                                .withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("common")))
                                 .withColor(element.getLightColor())))
                 .append(Component.literal(
                         element.getLightColor() + " " + name + " " + ChatFormatting.GRAY + "Damage")));
@@ -102,7 +96,7 @@ public final class GuidePowderItemStack extends GuideItemStack {
                         + ChatFormatting.GRAY + " to " + element.getLightColor()))
                 .append(Component.literal(String.valueOf(element.getSymbol()))
                         .withStyle(Style.EMPTY
-                                .withFont(ResourceLocation.withDefaultNamespace("common"))
+                                .withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("common")))
                                 .withColor(element.getLightColor())))
                 .append(Component.literal(element.getLightColor() + " " + name)));
         itemLore.add(Component.empty());
@@ -112,7 +106,7 @@ public final class GuidePowderItemStack extends GuideItemStack {
                         + powderTierInfo.addedDefence() + " " + element.getLightColor()))
                 .append(Component.literal(String.valueOf(element.getSymbol()))
                         .withStyle(Style.EMPTY
-                                .withFont(ResourceLocation.withDefaultNamespace("common"))
+                                .withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("common")))
                                 .withColor(element.getLightColor())))
                 .append(Component.literal(
                         element.getLightColor() + " " + name + " " + ChatFormatting.GRAY + "Defence")));
@@ -121,7 +115,7 @@ public final class GuidePowderItemStack extends GuideItemStack {
                         + powderTierInfo.removedDefence() + " " + opposingElement.getLightColor()))
                 .append(Component.literal(String.valueOf(opposingElement.getSymbol()))
                         .withStyle(Style.EMPTY
-                                .withFont(ResourceLocation.withDefaultNamespace("common"))
+                                .withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("common")))
                                 .withColor(opposingElement.getLightColor())))
                 .append(Component.literal(opposingElement.getLightColor() + " "
                         + StringUtils.capitalizeFirst(opposingElement.name().toLowerCase(Locale.ROOT)) + " "

@@ -1,20 +1,18 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.overlays;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.Overlay;
-import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
+import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.war.event.GuildWarTowerEffectEvent;
 import com.wynntils.overlays.TowerAuraTimerOverlay;
@@ -24,6 +22,8 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.type.RenderElementType;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.neoforged.bus.api.EventPriority;
@@ -34,10 +34,10 @@ public class TowerEffectOverlayFeature extends Feature {
     private static final SoundEvent AURA_SOUND = SoundEvents.ANVIL_LAND;
     private static final SoundEvent VOLLEY_SOUND = SoundEvents.BLAZE_SHOOT;
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @RegisterOverlay
     private final Overlay auraTimerOverlay = new TowerAuraTimerOverlay();
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @RegisterOverlay
     private final Overlay volleyTimerOverlay = new TowerVolleyTimerOverlay();
 
     // Sound configs
@@ -73,10 +73,7 @@ public class TowerEffectOverlayFeature extends Feature {
     private final Config<Float> volleyVignetteIntensity = new Config<>(0.4f);
 
     public TowerEffectOverlayFeature() {
-        super(new ProfileDefault.Builder()
-                .disableFor(
-                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
-                .build());
+        super(ProfileDefault.onlyDefault());
     }
 
     @SubscribeEvent
@@ -95,23 +92,23 @@ public class TowerEffectOverlayFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderGui(RenderEvent.Post event) {
-        if (event.getType() != RenderEvent.ElementType.GUI) return;
+        if (event.getType() != RenderElementType.GUI_POST) return;
 
         if (vignetteOnAura.get()) {
-            renderAuraVignette(event.getPoseStack());
+            renderAuraVignette(event.getGuiGraphics());
         }
 
         if (vignetteOnVolley.get()) {
-            renderVolleyVignette(event.getPoseStack());
+            renderVolleyVignette(event.getGuiGraphics());
         }
     }
 
-    private void renderAuraVignette(PoseStack poseStack) {
+    private void renderAuraVignette(GuiGraphics guiGraphics) {
         long remainingTimeUntilAura = Models.GuildWarTower.getRemainingTimeUntilAura();
         if (remainingTimeUntilAura <= 0) return;
 
         RenderUtils.renderVignetteOverlay(
-                poseStack,
+                guiGraphics,
                 auraVignetteColor.get(),
                 MathUtils.map(
                         remainingTimeUntilAura,
@@ -121,12 +118,12 @@ public class TowerEffectOverlayFeature extends Feature {
                         auraVignetteIntensity.get()));
     }
 
-    private void renderVolleyVignette(PoseStack poseStack) {
+    private void renderVolleyVignette(GuiGraphics guiGraphics) {
         long remainingTimeUntilVolley = Models.GuildWarTower.getRemainingTimeUntilVolley();
         if (remainingTimeUntilVolley <= 0) return;
 
         RenderUtils.renderVignetteOverlay(
-                poseStack,
+                guiGraphics,
                 volleyVignetteColor.get(),
                 MathUtils.map(
                         remainingTimeUntilVolley,

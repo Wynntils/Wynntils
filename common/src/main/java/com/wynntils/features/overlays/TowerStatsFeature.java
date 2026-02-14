@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.overlays;
@@ -7,14 +7,12 @@ package com.wynntils.features.overlays;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.Overlay;
-import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
+import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.war.event.GuildWarEvent;
 import com.wynntils.models.war.type.WarBattleInfo;
 import com.wynntils.models.war.type.WarTowerState;
@@ -32,17 +30,14 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class TowerStatsFeature extends Feature {
     private static final int SEPARATOR_LENGTH = 40;
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @RegisterOverlay
     public final Overlay towerStatsOverlay = new TowerStatsOverlay();
 
     @Persisted
     private final Config<Boolean> printTowerStatsOnEnd = new Config<>(true);
 
     public TowerStatsFeature() {
-        super(new ProfileDefault.Builder()
-                .disableFor(
-                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
-                .build());
+        super(ProfileDefault.onlyDefault());
     }
 
     @SubscribeEvent
@@ -84,9 +79,9 @@ public class TowerStatsFeature extends Feature {
                 .withStyle(ChatFormatting.STRIKETHROUGH));
 
         String messageString = StyledText.fromComponent(message).getStringWithoutFormatting();
-        message = message.withStyle(style -> style.withHoverEvent(
-                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to copy to clipboard.")))
-                .withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, messageString)));
+        message = message.withStyle(
+                style -> style.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to copy to clipboard.")))
+                        .withClickEvent(new ClickEvent.CopyToClipboard(messageString)));
 
         McUtils.sendMessageToClient(message);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -18,6 +18,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.RenderElementType;
 import java.util.Optional;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -44,16 +45,16 @@ public class LowHealthVignetteFeature extends Feature {
 
     public LowHealthVignetteFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER)
                 .build());
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderGui(RenderEvent.Post event) {
-        if (!shouldRender || event.getType() != RenderEvent.ElementType.GUI) return;
+        if (!shouldRender || event.getType() != RenderElementType.GUI_POST) return;
         if (!Models.WorldState.onWorld()) return;
 
-        RenderUtils.renderVignetteOverlay(event.getPoseStack(), color.get(), value);
+        RenderUtils.renderVignetteOverlay(event.getGuiGraphics(), color.get(), value);
     }
 
     @SubscribeEvent

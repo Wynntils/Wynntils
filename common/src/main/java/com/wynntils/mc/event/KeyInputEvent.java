@@ -1,38 +1,39 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
+import net.minecraft.client.input.KeyEvent;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
 public class KeyInputEvent extends Event implements ICancellableEvent {
     private final int action;
-    private final int key;
-    private final int modifiers;
-    private final int scanCode;
+    private final KeyEvent keyEvent;
 
-    public KeyInputEvent(int key, int scanCode, int action, int modifiers) {
+    public KeyInputEvent(KeyEvent keyEvent, int action) {
         this.action = action;
-        this.key = key;
-        this.modifiers = modifiers;
-        this.scanCode = scanCode;
+        this.keyEvent = keyEvent;
     }
 
     public int getAction() {
         return this.action;
     }
 
+    public KeyEvent getKeyEvent() {
+        return this.keyEvent;
+    }
+
     public int getKey() {
-        return this.key;
+        return this.keyEvent.key();
     }
 
     public int getModifiers() {
-        return this.modifiers;
+        return this.keyEvent.modifiers();
     }
 
     public int getScanCode() {
-        return this.scanCode;
+        return this.keyEvent.scancode();
     }
 }

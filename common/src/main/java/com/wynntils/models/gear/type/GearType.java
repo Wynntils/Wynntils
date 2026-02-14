@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear.type;
@@ -213,8 +213,10 @@ public enum GearType {
     }
 
     public boolean isAccessory() {
-        // Flint and steel is used for crafted items, normal items are horse armor
-        return defaultItem == Items.FLINT_AND_STEEL || defaultItem == Items.POTION;
+        return switch (this) {
+            case RING, BRACELET, NECKLACE -> true;
+            default -> false;
+        };
     }
 
     public boolean isArmor() {

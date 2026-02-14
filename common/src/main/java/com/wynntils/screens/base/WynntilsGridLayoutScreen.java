@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base;
@@ -47,6 +47,6 @@ public abstract class WynntilsGridLayoutScreen extends WynntilsScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        //        RenderUtils.renderDebugGrid(guiGraphics.pose(), GRID_DIVISIONS, dividedWidth, dividedHeight);
+        //        RenderUtils.renderDebugGrid(guiGraphics, GRID_DIVISIONS, dividedWidth, dividedHeight);
     }
 }

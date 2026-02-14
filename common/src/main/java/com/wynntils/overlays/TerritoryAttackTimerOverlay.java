@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -14,9 +14,9 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.models.territories.GuildAttackScoreboardPart;
 import com.wynntils.models.territories.TerritoryAttackTimer;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -24,7 +24,6 @@ import java.util.Comparator;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -61,12 +60,10 @@ public class TerritoryAttackTimerOverlay extends Overlay {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        BufferedFontRenderer.getInstance()
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        FontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        guiGraphics.pose(),
-                        bufferSource,
+                        guiGraphics,
                         this.getRenderX(),
                         this.getRenderY(),
                         Models.GuildAttackTimer.getAttackTimers().stream()
@@ -81,12 +78,10 @@ public class TerritoryAttackTimerOverlay extends Overlay {
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        BufferedFontRenderer.getInstance()
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        FontRenderer.getInstance()
                 .renderTextWithAlignment(
-                        guiGraphics.pose(),
-                        bufferSource,
+                        guiGraphics,
                         this.getRenderX(),
                         this.getRenderY(),
                         new TextRenderTask(

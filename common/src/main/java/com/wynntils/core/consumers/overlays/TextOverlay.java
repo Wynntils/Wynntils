@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
@@ -11,13 +11,12 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 
 /**
  * An overlay, which main purpose is to display function templates.
@@ -61,25 +60,21 @@ public abstract class TextOverlay extends DynamicOverlay {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        renderTemplate(guiGraphics, bufferSource, cachedLines, getTextScale());
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        renderTemplate(guiGraphics, cachedLines, getTextScale());
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        renderTemplate(guiGraphics, bufferSource, calculateTemplateValue(getPreviewTemplate()), getTextScale());
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        renderTemplate(guiGraphics, calculateTemplateValue(getPreviewTemplate()), getTextScale());
     }
 
-    private void renderTemplate(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, StyledText[] lines, float textScale) {
+    private void renderTemplate(GuiGraphics guiGraphics, StyledText[] lines, float textScale) {
         float renderX = this.getRenderX();
         float renderY = this.getRenderY();
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
-                        bufferSource,
+                        guiGraphics,
                         lines,
                         renderX,
                         renderX + this.getWidth(),

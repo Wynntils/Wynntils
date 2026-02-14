@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -17,7 +17,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class ShamanMaskOverlay extends TextOverlay {
@@ -50,13 +49,12 @@ public class ShamanMaskOverlay extends TextOverlay {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         ShamanMaskType currentMaskType = Models.ShamanMask.getCurrentMaskType();
 
         if (currentMaskType == ShamanMaskType.NONE && !displayNone.get()) return;
 
-        super.render(guiGraphics, bufferSource, deltaTracker, window);
+        super.render(guiGraphics, deltaTracker, window);
     }
 
     @Override

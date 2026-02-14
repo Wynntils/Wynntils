@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.partymanagement.widgets;
@@ -7,6 +7,7 @@ package com.wynntils.screens.partymanagement.widgets;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class CreateLeaveButton extends WynntilsButton {
@@ -23,7 +24,7 @@ public class CreateLeaveButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         if (Models.Party.isInParty()) {
             Models.Party.partyLeave();
         } else {

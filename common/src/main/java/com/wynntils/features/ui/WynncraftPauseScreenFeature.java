@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.PauseMenuInitEvent;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.maps.GuildMapScreen;
@@ -34,7 +35,16 @@ public class WynncraftPauseScreenFeature extends Feature {
     private static final String REPORT_BUGS = "menu.reportBugs";
 
     public WynncraftPauseScreenFeature() {
-        super(ProfileDefault.ENABLED);
+        // We don't use ProfileDefault.ENABLED for this as it is one method of accessing the Wynntils menu that
+        // has minimal impact on gameplay so we want it enabled for BLANK_SLATE
+        super(new ProfileDefault.Builder()
+                .enabledFor(
+                        ConfigProfile.DEFAULT,
+                        ConfigProfile.NEW_PLAYER,
+                        ConfigProfile.LITE,
+                        ConfigProfile.MINIMAL,
+                        ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     @SubscribeEvent

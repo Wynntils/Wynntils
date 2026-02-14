@@ -1,21 +1,22 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.guides.aspect.WynntilsAspectGuideScreen;
+import com.wynntils.screens.guides.augment.WynntilsAugmentsGuideScreen;
 import com.wynntils.screens.guides.charm.WynntilsCharmGuideScreen;
 import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
 import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
 import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
 import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
+import com.wynntils.screens.guides.rune.WynntilsRunesGuideScreen;
 import com.wynntils.screens.guides.sets.WynntilsSetsGuideScreen;
 import com.wynntils.screens.guides.tome.WynntilsTomeGuideScreen;
 import com.wynntils.screens.guides.widgets.ExportButton;
@@ -43,7 +44,9 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
             WynntilsAspectGuideScreen.create(),
             WynntilsEmeraldPouchGuideScreen.create(),
             WynntilsPowderGuideScreen.create(),
-            WynntilsSetsGuideScreen.create());
+            WynntilsSetsGuideScreen.create(),
+            WynntilsAugmentsGuideScreen.create(),
+            WynntilsRunesGuideScreen.create());
 
     private WynntilsGuidesListScreen() {
         super(Component.translatable("screens.wynntils.wynntilsGuides.name"));
@@ -126,19 +129,17 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        renderBackgroundTexture(guiGraphics);
 
-        renderBackgroundTexture(poseStack);
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.name"));
 
-        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.name"));
-
-        renderVersion(poseStack);
+        renderVersion(guiGraphics);
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsGuides.screenDescription"), "");
+        renderDescription(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.screenDescription"), "");
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(guiGraphics, currentPage + 1, maxPage + 1);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }

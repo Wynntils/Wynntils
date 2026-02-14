@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -14,6 +14,7 @@ import com.wynntils.mc.event.AddGuiMessageLineEvent;
 import com.wynntils.mc.event.ChatComponentRenderEvent;
 import com.wynntils.mc.extension.GuiMessageExtension;
 import com.wynntils.mc.extension.GuiMessageLineExtension;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import java.time.format.DateTimeFormatter;
@@ -55,7 +56,7 @@ public class ChatTimestampFeature extends Feature {
         GuiMessageExtension messageExtension = (GuiMessageExtension) (Object) event.getMessage();
         ((GuiMessageLineExtension) (Object) event.getLine()).setCreated(messageExtension.getCreated());
 
-        if (event.getIndex() != 0 || formatter == null) return;
+        if (formatter == null) return;
 
         GuiMessageLineExtension extension = (GuiMessageLineExtension) (Object) event.getLine();
 
@@ -89,41 +90,33 @@ public class ChatTimestampFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onChatComponentMapMouseX(ChatComponentRenderEvent.MapMouseX event) {
-        if (timestampWidth != 0) {
-            // Account for the translation so that hover/click events work properly
-            event.setX(event.getX() - (4 + timestampWidth));
-        }
-    }
-
-    @SubscribeEvent
     public void onChatComponentRenderBackground(ChatComponentRenderEvent.Background event) {
         if (timestampWidth == 0) return;
 
-        event.getGuiGraphics().pose().pushPose();
-        event.getGuiGraphics().pose().translate((float) -(timestampWidth + 4), 0f, 0f);
+        event.getGuiGraphics().pose().pushMatrix();
+        event.getGuiGraphics().pose().translate((float) -(timestampWidth + 4), 0f);
 
         event.getGuiGraphics()
                 .fill(
                         -2,
-                        event.getRenderX() - event.getLineHeight(),
+                        event.getRenderY() + event.getLineHeight(),
                         timestampWidth - 2,
-                        event.getRenderX(),
-                        event.getOpacity() << 24);
+                        event.getRenderY(),
+                        CommonColors.BLACK.withAlpha(event.getOpacity()).asInt());
 
-        event.getGuiGraphics().pose().popPose();
+        event.getGuiGraphics().pose().popMatrix();
     }
 
     @SubscribeEvent
-    public void onnChatComponentRenderText(ChatComponentRenderEvent.Text event) {
+    public void onChatComponentRenderText(ChatComponentRenderEvent.Text event) {
         if (timestampWidth == 0) return;
 
         GuiMessageLineExtension extension = (GuiMessageLineExtension) (Object) event.getLine();
 
         if (extension.getTimestamp().isEmpty()) return;
 
-        event.getGuiGraphics().pose().pushPose();
-        event.getGuiGraphics().pose().translate(-(extension.getTimestamp().get().b() + 4f), 0f, 0f);
+        event.getGuiGraphics().pose().pushMatrix();
+        event.getGuiGraphics().pose().translate(-(extension.getTimestamp().get().b() + 4f), 0f);
 
         event.getGuiGraphics()
                 .drawString(
@@ -131,8 +124,8 @@ public class ChatTimestampFeature extends Feature {
                         extension.getTimestamp().get().a(),
                         0,
                         event.getRenderY(),
-                        16777215 + (event.getTextOpacity() << 24));
+                        (event.getTextOpacity()));
 
-        event.getGuiGraphics().pose().popPose();
+        event.getGuiGraphics().pose().popMatrix();
     }
 }

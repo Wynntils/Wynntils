@@ -1,0 +1,76 @@
+/*
+ * Copyright © Wynntils 2023-2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.screens.maps.widgets;
+
+import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.maps.WaypointManagementScreen;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.network.chat.Component;
+
+public class WaypointSortButton extends WynntilsButton {
+    private final Component title;
+    private final WaypointManagementScreen managementScreen;
+    private final WaypointManagementScreen.WaypointSortType sortType;
+
+    private boolean ascending = true;
+    private StyledText titleToRender;
+
+    public WaypointSortButton(
+            int x,
+            int y,
+            int width,
+            int height,
+            Component title,
+            WaypointManagementScreen managementScreen,
+            WaypointManagementScreen.WaypointSortType sortType) {
+        super(x, y, width, height, title);
+
+        this.title = title;
+        this.managementScreen = managementScreen;
+        this.sortType = sortType;
+
+        titleToRender = StyledText.fromComponent(title);
+    }
+
+    @Override
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.drawRect(
+                guiGraphics, CommonColors.BLACK.withAlpha(isHovered ? 0.5f : 0.3f), getX(), getY(), width, height);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        titleToRender,
+                        getX() + 1,
+                        getY() + 1,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        TextShadow.NORMAL);
+    }
+
+    @Override
+    public void onPress(InputWithModifiers input) {
+        managementScreen.toggleSortType(sortType, this);
+    }
+
+    public void setSelected(boolean selected) {
+        if (!selected) {
+            titleToRender = StyledText.fromComponent(title);
+            ascending = true;
+        } else {
+            titleToRender = StyledText.fromComponent(title).append(ascending ? " ʌ" : " v");
+            ascending = !ascending;
+        }
+    }
+}

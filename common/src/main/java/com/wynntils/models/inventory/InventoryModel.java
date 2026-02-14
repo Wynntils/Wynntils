@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.inventory;
@@ -56,7 +56,8 @@ public final class InventoryModel extends Model {
      * @return List of all equipped armor, accessories, and held item that meets requirements
      */
     public List<ItemStack> getEquippedItems() {
-        List<ItemStack> returnable = new ArrayList<>(McUtils.inventory().armor);
+        List<ItemStack> returnable =
+                new ArrayList<>(McUtils.inventory().equipment.items.values());
         Collections.reverse(returnable); // Reverse so that helmet is first
 
         for (int i : InventoryAccessory.getSlots()) {

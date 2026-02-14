@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.screens.maps.PoiCreationScreen;
+import com.wynntils.screens.maps.WaypointManagementScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -13,15 +14,17 @@ import com.wynntils.utils.render.Texture;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class IconButton extends AbstractWidget {
-    private final boolean selected;
     private final float iconRenderX;
     private final float iconRenderY;
     private final float iconWidth;
     private final float iconHeight;
     private final Texture mapIcon;
+
+    private boolean selected;
 
     public IconButton(int x, int y, int width, Texture mapIcon, boolean selected) {
         super(x, y, width, 20, Component.literal("Icon Button"));
@@ -41,31 +44,36 @@ public class IconButton extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         RenderUtils.drawRect(
-                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
+                guiGraphics, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), width, height);
 
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                mapIcon.resource(),
+                guiGraphics,
+                mapIcon.identifier(),
                 iconRenderX,
                 iconRenderY,
-                1,
                 iconWidth,
                 iconHeight,
                 mapIcon.width(),
                 mapIcon.height());
 
         if (selected) {
-            RenderUtils.drawRect(poseStack, CommonColors.LIGHT_BLUE.withAlpha(35), getX(), getY(), 1, width, height);
+            RenderUtils.drawRect(guiGraphics, CommonColors.LIGHT_BLUE.withAlpha(35), getX(), getY(), width, height);
+        }
+
+        if (this.isHovered) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (McUtils.screen() instanceof PoiCreationScreen poiCreationScreen) {
             poiCreationScreen.setSelectedIcon(mapIcon);
+        } else if (McUtils.screen() instanceof WaypointManagementScreen waypointManagementScreen) {
+            this.selected = !selected;
+
+            waypointManagementScreen.toggleIcon(mapIcon, selected);
         }
 
         return true;
