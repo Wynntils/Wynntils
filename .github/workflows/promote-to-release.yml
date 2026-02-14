@@ -18,14 +18,20 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PRIVATE_TOKEN }}
 
       - name: Merge main into release
-        uses: mtanzi/action-automerge@v1
-        id: merge
-        with:
-          github_token: ${{ secrets.PRIVATE_TOKEN }}
-          source: 'main'
-          target: 'release'
+        run: |
+          git config user.name "WynntilsBot"
+          git config user.email "admin@wynntils.com"
+  
+          git fetch origin main release
+  
+          git checkout release
+          git merge -X theirs origin/main --no-edit
+          git push origin release
 
   clear-changelog:
     needs: promote-release
