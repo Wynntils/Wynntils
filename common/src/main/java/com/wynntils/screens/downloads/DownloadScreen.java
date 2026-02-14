@@ -1,18 +1,21 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.downloads;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.DownloadDependencyGraph;
 import com.wynntils.core.net.QueuedDownload;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.screens.base.WynntilsGridLayoutScreen;
+import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.downloads.widgets.DownloadWidget;
+import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
@@ -28,6 +31,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -45,10 +49,19 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
 
     private final Component infoText;
     private List<DownloadWidget> downloadWidgets = new ArrayList<>();
+    private int clearCount = 3;
     private int scrollY;
     private int scrollOffset = 0;
     private int widgetHeight;
     private boolean draggingScroll = false;
+
+    private Button clearCachesButton;
+    private Button incrementTimeoutButton;
+    private Button decrementTimeoutButton;
+    private TextInputBoxWidget customInput;
+    private WynntilsCheckbox cdnCheckbox;
+    private WynntilsCheckbox githubCheckbox;
+    private WynntilsCheckbox customCheckbox;
 
     private DownloadScreen(Screen previousScreen, ServerData serverData) {
         super(Component.translatable("screens.wynntils.downloads.name"));
@@ -73,28 +86,117 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
     protected void doInit() {
         super.doInit();
 
-        this.addRenderableWidget(
-                new Button.Builder(Component.translatable("screens.wynntils.downloads.back"), (button -> onClose()))
-                        .pos((int) (dividedWidth * 5), (int) (dividedHeight * 37))
-                        .size((int) (dividedWidth * 6), 20)
-                        .build());
-
         if (serverData != null) {
-            this.addRenderableWidget(new Button.Builder(
-                            Component.translatable("screens.wynntils.downloads.connect"), (button -> connectToServer()))
-                    .pos((int) dividedWidth, (int) (dividedHeight * 31))
-                    .size((int) (dividedWidth * 14), 20)
-                    .build());
-
             this.addRenderableWidget(new WynntilsCheckbox(
                     (int) (dividedWidth * 2),
-                    (int) (dividedHeight * 25),
+                    (int) (dividedHeight * 12),
                     20,
                     Component.translatable("screens.wynntils.downloads.dontShowAgain"),
                     false,
                     (int) (dividedWidth * 10),
                     (c, b) -> toggleShowAgain(b)));
+
+            this.addRenderableWidget(new Button.Builder(
+                            Component.translatable("screens.wynntils.downloads.connect"), (button -> connectToServer()))
+                    .pos((int) dividedWidth, (int) (dividedHeight * 18))
+                    .size((int) (dividedWidth * 14), 20)
+                    .build());
         }
+
+        this.addRenderableWidget(
+                new Button.Builder(Component.translatable("screens.wynntils.downloads.back"), (button -> onClose()))
+                        .pos((int) (dividedWidth * 5), (int) (dividedHeight * 24))
+                        .size((int) (dividedWidth * 6), 20)
+                        .build());
+
+        cdnCheckbox = new WynntilsCheckbox(
+                (int) (dividedWidth * 4),
+                (int) (dividedHeight * 29),
+                20,
+                Component.literal("Wynntils CDN"),
+                Managers.Url.getDownloadSourceUrl().equals(Managers.Url.WYNNTILS_CDN_URL),
+                (int) (dividedWidth * 7),
+                (c, b) -> changeDownloadSource(Managers.Url.WYNNTILS_CDN_URL),
+                List.of(Component.translatable("screens.wynntils.downloads.cdnTooltip")));
+        this.addRenderableWidget(cdnCheckbox);
+
+        githubCheckbox = new WynntilsCheckbox(
+                (int) (dividedWidth * 4),
+                (int) (dividedHeight * 34),
+                20,
+                Component.literal("GitHub"),
+                Managers.Url.getDownloadSourceUrl().equals(Managers.Url.STATIC_STORAGE_GITHUB_URL),
+                (int) (dividedWidth * 7),
+                (c, b) -> changeDownloadSource(Managers.Url.STATIC_STORAGE_GITHUB_URL),
+                List.of(Component.translatable("screens.wynntils.downloads.githubTooltip")));
+        this.addRenderableWidget(githubCheckbox);
+
+        customCheckbox = new WynntilsCheckbox(
+                (int) (dividedWidth * 4),
+                (int) (dividedHeight * 40 + 20),
+                20,
+                Component.translatable("screens.wynntils.downloads.customSource"),
+                Managers.Url.usingCustomDownloadSource(),
+                (int) (dividedWidth * 7),
+                (c, b) -> changeDownloadSource(customInput.getTextBoxInput()),
+                List.of(Component.translatable("screens.wynntils.downloads.customCheckboxTooltip")));
+        this.addRenderableWidget(customCheckbox);
+
+        customInput = new TextInputBoxWidget(
+                (int) (dividedWidth * 2),
+                (int) (dividedHeight * 39),
+                (int) (dividedWidth * 12),
+                20,
+                (s) -> {
+                    if (customCheckbox.selected) {
+                        changeDownloadSource(s);
+                    } else {
+                        Managers.Url.setCustomSourceUrl(s);
+                    }
+                },
+                this,
+                customInput);
+        customInput.setTextBoxInput(Managers.Url.getCustomSourceUrl());
+        customInput.setTooltip(Tooltip.create(Component.translatable("screens.wynntils.downloads.customInputTooltip")));
+        this.addRenderableWidget(customInput);
+
+        decrementTimeoutButton = new Button.Builder(Component.literal("-"), (b -> adjustTimeout(-1000)))
+                .pos((int) (dividedWidth * 5), (int) (dividedHeight * 52))
+                .size(20, 20)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.downloads.timeoutDecrease")))
+                .build();
+        this.addRenderableWidget(decrementTimeoutButton);
+
+        incrementTimeoutButton = new Button.Builder(Component.literal("+"), (b -> adjustTimeout(1000)))
+                .pos((int) (dividedWidth * 9), (int) (dividedHeight * 52))
+                .size(20, 20)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.downloads.timeoutIncrease")))
+                .build();
+        this.addRenderableWidget(incrementTimeoutButton);
+
+        decrementTimeoutButton.active = Managers.Net.getTimeoutMillis() > 1000;
+        incrementTimeoutButton.active = Managers.Net.getTimeoutMillis() < 30000;
+
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.downloads.reloadCaches")
+                                .withStyle(ChatFormatting.BLUE),
+                        (b -> Managers.Url.loadUrls()))
+                .pos((int) dividedWidth, (int) (dividedHeight * 56))
+                .size((int) (dividedWidth * 14), 20)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.downloads.reloadCachesTooltip")))
+                .build());
+
+        clearCachesButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.downloads.clearCaches", clearCount)
+                                .withStyle(ChatFormatting.RED),
+                        (b -> {
+                            tryClearCaches();
+                        }))
+                .pos((int) dividedWidth, (int) (dividedHeight * 56 + 20))
+                .size((int) (dividedWidth * 14), 20)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.downloads.clearCachesTooltip")))
+                .build();
+        this.addRenderableWidget(clearCachesButton);
 
         widgetHeight = (int) (dividedHeight * 3.5f);
 
@@ -185,6 +287,28 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL,
                         0.8f);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.downloads.timeout")),
+                        dividedWidth * 8,
+                        dividedHeight * 50,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(String.valueOf(Managers.Net.getTimeoutMillis() / 1000)),
+                        dividedWidth * 8,
+                        dividedHeight * 52 + 10,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
     }
 
     @Override
@@ -275,6 +399,37 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         Managers.Feature.getFeatureInstance(WynncraftButtonFeature.class)
                 .ignoreFailedDownloads
                 .store(show);
+    }
+
+    private void changeDownloadSource(String url) {
+        Managers.Url.setDownloadSource(url);
+
+        cdnCheckbox.selected = Managers.Url.getDownloadSourceUrl().equals(Managers.Url.WYNNTILS_CDN_URL);
+        githubCheckbox.selected = Managers.Url.getDownloadSourceUrl().equals(Managers.Url.STATIC_STORAGE_GITHUB_URL);
+        customCheckbox.selected = Managers.Url.usingCustomDownloadSource();
+    }
+
+    private void adjustTimeout(int adjustment) {
+        int timeout = Managers.Net.getTimeoutMillis();
+        timeout += adjustment;
+        Managers.Net.setTimeoutMillis(timeout);
+
+        decrementTimeoutButton.active = timeout > 1000;
+        incrementTimeoutButton.active = timeout < 30000;
+    }
+
+    private void tryClearCaches() {
+        clearCount -= 1;
+
+        if (clearCount <= 0) {
+            FileUtils.deleteFolder(Managers.Net.getCacheDir());
+            FileUtils.deleteFolder(Services.Update.getUpdatesFolder());
+
+            System.exit(0);
+        } else {
+            clearCachesButton.setMessage(Component.translatable("screens.wynntils.downloads.clearCaches", clearCount)
+                    .withStyle(ChatFormatting.RED));
+        }
     }
 
     private void scroll(int newOffset) {

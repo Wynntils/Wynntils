@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2025.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -118,7 +118,7 @@ public class WynncraftButtonFeature extends Feature {
             if (Managers.Download.graphState().error() && cancelAutoJoin.get() && !ignoreFailedDownloads.get()) {
                 WynntilsMod.warn("Downloads have failed, auto join is cancelled.");
                 return;
-            } else if (Services.Update.shouldPromptUpdate()) {
+            } else if (Services.Update.shouldPromptUpdate() && cancelAutoJoin.get()) {
                 WynntilsMod.info("Cancelling auto join, update available");
                 return;
             }

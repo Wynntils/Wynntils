@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
@@ -11,6 +11,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.event.UrlProcessingFinishedEvent;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.properties.Property;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.StringUtils;
@@ -98,11 +100,22 @@ import java.util.function.Function;
  * </p>
  */
 public final class UrlManager extends Manager {
+    public static final String WYNNTILS_CDN_URL = "https://cdn.wynntils.com/static/";
+    public static final String STATIC_STORAGE_GITHUB_URL =
+            "https://raw.githubusercontent.com/Wynntils/Static-Storage/refs/heads/main/";
+
     private final Property<URI> urlListOverride = createProperty(URI.class, "override.link");
     private final Property<Boolean> ignoreCache = createProperty(Boolean.class, "ignore.cache", false);
     private final Property<Boolean> debugLogs = createProperty(Boolean.class, "log.debug", false);
     private final Property<UrlMapperType> urlMapperForceType = createProperty(UrlMapperType.class, "force.type");
     private final Map<UrlMapperType, UrlMapper> urlMappersByType = new ConcurrentHashMap<>();
+
+    @Persisted
+    private final Storage<String> downloadSourceUrl = new Storage<>(WYNNTILS_CDN_URL);
+
+    // This is used for storing the custom url even when not in use
+    @Persisted
+    private final Storage<String> customSourceurl = new Storage<>("");
 
     private UrlMapper urlMapper = UrlMapper.EMPTY;
 
@@ -144,10 +157,17 @@ public final class UrlManager extends Manager {
                 : "Arguments mismatch for " + urlInfo.url + ", expected: " + urlInfo.arguments() + " got: "
                         + arguments.keySet();
 
+        String url;
+        if (urlInfo.path().isPresent()) {
+            url = downloadSourceUrl.get() + urlInfo.path().get();
+        } else {
+            url = urlInfo.url();
+        }
+
         // Replace %{argKey} with arg value in URL string
         return arguments.keySet().stream()
                 .reduce(
-                        urlInfo.url(),
+                        url,
                         (str, argKey) -> str.replaceAll(
                                 "%\\{" + argKey + "\\}",
                                 // First encode with specified encoder (if any), then finish by
@@ -191,7 +211,12 @@ public final class UrlManager extends Manager {
                 throw new RuntimeException("Missing DATA_STATIC_URLS from cached and bundled urls.json");
             }
 
-            URI uri = URI.create(urlInfo.url());
+            URI uri;
+            if (urlInfo.path().isPresent()) {
+                uri = URI.create(getDownloadSourceUrl() + urlInfo.path().get());
+            } else {
+                uri = URI.create(urlInfo.url());
+            }
             downloadAndReadRemoteUrls(uri);
         } else {
             // Start by reading the URLs from the resource embedded in the mod, so we have something to rely on
@@ -205,6 +230,41 @@ public final class UrlManager extends Manager {
             // Then trigger a (re-)download from the net to the cache
             downloadAndReadRemoteUrls(urlListOverride.get());
         }
+    }
+
+    public String getDownloadSourceUrl() {
+        String url = downloadSourceUrl.get();
+
+        if (url.isEmpty()) {
+            return WYNNTILS_CDN_URL;
+        }
+
+        return downloadSourceUrl.get();
+    }
+
+    public boolean usingCustomDownloadSource() {
+        return !downloadSourceUrl.get().equals(WYNNTILS_CDN_URL)
+                && !downloadSourceUrl.get().equals(STATIC_STORAGE_GITHUB_URL);
+    }
+
+    public void setDownloadSource(String newSource) {
+        if (newSource.isEmpty()) {
+            downloadSourceUrl.store(WYNNTILS_CDN_URL);
+        } else {
+            downloadSourceUrl.store(newSource);
+
+            if (usingCustomDownloadSource()) {
+                customSourceurl.store(newSource);
+            }
+        }
+    }
+
+    public String getCustomSourceUrl() {
+        return customSourceurl.get();
+    }
+
+    public void setCustomSourceUrl(String newSource) {
+        customSourceurl.store(newSource);
     }
 
     private void readEmbeddedUrls() {
@@ -444,6 +504,7 @@ public final class UrlManager extends Manager {
                     urlId.get(),
                     new UrlInfo(
                             urlProfile.url,
+                            Optional.ofNullable(urlProfile.path),
                             arguments,
                             Method.from(urlProfile.method),
                             Encoding.from(urlProfile.encoding),
@@ -492,9 +553,15 @@ public final class UrlManager extends Manager {
         }
     }
 
-    public record UrlInfo(String url, List<String> arguments, Method method, Encoding encoding, Optional<String> md5) {
+    public record UrlInfo(
+            String url,
+            Optional<String> path,
+            List<String> arguments,
+            Method method,
+            Encoding encoding,
+            Optional<String> md5) {
         public UrlInfo withoutMd5() {
-            return new UrlInfo(url, arguments, method, encoding, Optional.empty());
+            return new UrlInfo(url, path, arguments, method, encoding, Optional.empty());
         }
     }
 
@@ -502,6 +569,7 @@ public final class UrlManager extends Manager {
         int version;
         String id;
         String url;
+        String path;
         String method;
         List<String> arguments;
         String md5;

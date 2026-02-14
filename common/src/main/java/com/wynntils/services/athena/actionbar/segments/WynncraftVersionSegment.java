@@ -1,11 +1,11 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.worlds.actionbar.segments;
+package com.wynntils.services.athena.actionbar.segments;
 
 import com.wynntils.handlers.actionbar.ActionBarSegment;
-import com.wynntils.models.worlds.type.WynncraftVersion;
+import com.wynntils.services.athena.type.WynncraftVersion;
 
 public class WynncraftVersionSegment extends ActionBarSegment {
     private final WynncraftVersion wynncraftVersion;

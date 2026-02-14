@@ -197,7 +197,7 @@
   },
   {
     "id": "dataStaticItemSets",
-    "md5": "20c4ae47b41d05d9cc5faa78af0ce25e",
+    "md5": "932f38585cba5fe98502a393a5729a41",
     "path": "Data-Storage/item_sets.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/item_sets.json"
   },
@@ -221,7 +221,7 @@
   },
   {
     "id": "dataStaticMaps",
-    "md5": "8d96152542e03ccad186a993ca1cf9c8",
+    "md5": "96913e54566a0f088ec799c5c5795bac",
     "path": "Reference/maps.json",
     "url": "https://cdn.wynntils.com/static/Reference/maps.json"
   },
@@ -239,19 +239,19 @@
   },
   {
     "id": "dataStaticModelData",
-    "md5": "05e6ddb47b88e0cb98c4908f4ce7b1f4",
+    "md5": "9b5af016be0dc1d8f6f7e09898d4627c",
     "path": "Data-Storage/model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/model_data.json"
   },
   {
     "id": "dataStaticPlaceMapFeatures",
-    "md5": "fba1ef5092add312b243e5dde3ab9004",
+    "md5": "152da6dd432af0306b7d84868b050cd0",
     "path": "Reference/place_mapfeatures.json",
     "url": "https://cdn.wynntils.com/static/Reference/place_mapfeatures.json"
   },
   {
     "id": "dataStaticPlaces",
-    "md5": "c1907ba6d7c8851be2c6cf3062d17de5",
+    "md5": "d25458ae7f877a250463428e62a78468",
     "path": "Reference/places.json",
     "url": "https://cdn.wynntils.com/static/Reference/places.json"
   },
