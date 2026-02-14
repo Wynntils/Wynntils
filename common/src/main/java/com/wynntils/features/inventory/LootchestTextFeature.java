@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -13,7 +12,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
@@ -24,7 +22,9 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import net.minecraft.client.gui.GuiGraphics;
 import net.neoforged.bus.api.SubscribeEvent;
+import org.joml.Matrix3x2fStack;
 
 @ConfigCategory(Category.INVENTORY)
 public class LootchestTextFeature extends Feature {
@@ -35,10 +35,7 @@ public class LootchestTextFeature extends Feature {
     private final Config<String> inventoryTextTemplate = new Config<>("§8Dry: {dry_streak}");
 
     public LootchestTextFeature() {
-        super(new ProfileDefault.Builder()
-                .disableFor(
-                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
-                .build());
+        super(ProfileDefault.onlyDefault());
     }
 
     @SubscribeEvent
@@ -53,25 +50,25 @@ public class LootchestTextFeature extends Feature {
         int inventoryLabelX = event.getScreen().inventoryLabelX;
         int inventoryLabelY = event.getScreen().inventoryLabelY;
 
-        PoseStack poseStack = event.getPoseStack();
+        Matrix3x2fStack matrixStack = event.getGuiGraphics().pose();
 
-        poseStack.pushPose();
-        poseStack.translate(startX, startY, 200);
+        matrixStack.pushMatrix();
+        matrixStack.translate(startX, startY);
 
-        renderTitleTemplate(event.getPoseStack(), width - titleLabelX, titleLabelY);
-        renderInventoryTemplate(event.getPoseStack(), width - inventoryLabelX, inventoryLabelY);
+        renderTitleTemplate(event.getGuiGraphics(), width - titleLabelX, titleLabelY);
+        renderInventoryTemplate(event.getGuiGraphics(), width - inventoryLabelX, inventoryLabelY);
 
-        poseStack.popPose();
+        matrixStack.popMatrix();
     }
 
-    private void renderTitleTemplate(PoseStack poseStack, int x, int y) {
+    private void renderTitleTemplate(GuiGraphics guiGraphics, int x, int y) {
         String titleTemplateResult = Arrays.stream(Managers.Function.doFormatLines(titleTextTemplate.get()))
                 .map(StyledText::getString)
                 .collect(Collectors.joining(" "));
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(titleTemplateResult),
                         x,
                         y,
@@ -82,14 +79,14 @@ public class LootchestTextFeature extends Feature {
                         TextShadow.NONE);
     }
 
-    private void renderInventoryTemplate(PoseStack poseStack, int x, int y) {
+    private void renderInventoryTemplate(GuiGraphics guiGraphics, int x, int y) {
         String inventoryTemplateResult = Arrays.stream(Managers.Function.doFormatLines(inventoryTextTemplate.get()))
                 .map(StyledText::getString)
                 .collect(Collectors.joining(" "));
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(inventoryTemplateResult),
                         x,
                         y,

@@ -1,10 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 // If a texture is currently in a specific category but you want to use
 // it elsewhere, please move it to a more appropriate location
@@ -174,6 +174,7 @@ public enum Texture {
     HELP_ICON("icons/generic/help_icon.png", 10, 16),
     INFO("icons/generic/info.png", 25, 25),
     ITEM_LOCK("icons/generic/item_lock_icon.png", 16, 16),
+    MAP("icons/generic/map_icon.png", 14, 14),
     NEXT("icons/generic/next.png", 16, 16),
     OVERLAY_EXTRA_ICON("icons/generic/overlay_extra_icon.png", 16, 16),
     PREVIOUS("icons/generic/previous.png", 16, 16),
@@ -183,6 +184,7 @@ public enum Texture {
     SHARE_ICON("icons/generic/share_icon.png", 16, 14),
     SIGN_ICON("icons/generic/sign_icon.png", 17, 18),
     SMALL_ADD_ICON("icons/generic/small_add_icon.png", 16, 16),
+    TREASURY("icons/generic/treasury.png", 16, 14),
     UP_COLORED_ICON("icons/generic/up_colored.png", 16, 16),
     WAYPOINT_FOCUS_ICON("icons/generic/waypoint_focus_icon.png", 12, 16),
     WAYPOINT_MANAGER_ICON("icons/generic/waypoint_manager_icon.png", 12, 16),
@@ -315,11 +317,15 @@ public enum Texture {
 
     // Map Components
     CIRCLE_MASK("map/map_components/circle_mask.png", 256, 256),
-    MAP_BUTTONS_BACKGROUND("map/map_components/map_buttons_background.png", 144, 26),
+    MAP_BUTTONS_BACKGROUND_LEFT("map/map_components/map_buttons_background_left.png", 2, 26),
+    MAP_BUTTONS_BACKGROUND_MIDDLE("map/map_components/map_buttons_background_middle.png", 20, 26),
+    MAP_BUTTONS_BACKGROUND_RIGHT("map/map_components/map_buttons_background_right.png", 2, 26),
     MAP_INFO_NAME_BOX("map/map_components/map_info_name_box.png", 200, 20),
     MAP_INFO_TOOLTIP_CENTER("map/map_components/map_info_tooltip_center.png", 200, 5),
     MAP_INFO_TOOLTIP_TOP("map/map_components/map_info_tooltip_top.png", 200, 10),
     MAP_POINTERS("map/map_components/map_pointers.png", 256, 256),
+    ZOOM_BAR("map/map_components/zoom_bar.png", 4, 10),
+    ZOOM_HANDLE("map/map_components/zoom_handle.png", 12, 5),
     // endregion
 
     // region Overlays
@@ -372,6 +378,7 @@ public enum Texture {
     ITEM_FILTER_BACKGROUND("ui_components/item_filter_background.png", 358, 206),
     ITEM_SHARING_BACKGROUND("ui_components/item_sharing_background.png", 250, 100),
     LIST_SEARCH("ui_components/list_search.png", 133, 23),
+    OVERLAY_ORDERING_BACKGROUND("ui_components/overlay_ordering_background.png", 234, 206),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 358, 206),
     PLAYER_VIEWER_BACKGROUND("ui_components/player_viewer_background.png", 126, 88),
     QUICK_JUMP_BUTTON("ui_components/quick_jump_button.png", 16, 32),
@@ -379,24 +386,26 @@ public enum Texture {
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
     SCROLL_BUTTON("ui_components/scroll_button.png", 7, 17),
     SETTINGS_WARNING_BACKGROUND("ui_components/settings_warning_background.png", 153, 106),
-    WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 400, 256),
     SCROLLBAR_BACKGROUND("ui_components/generic_container_scrollbar.png", 25, 136),
     SCROLLBAR_BUTTON("ui_components/scroll_button_container.png", 12, 15),
-    VIGNETTE("ui_components/vignette.png", 512, 512);
+    VIGNETTE("ui_components/vignette.png", 512, 512),
+    WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 358, 206),
+    WIDGET_BACKGROUND_LONG("ui_components/widget_background_long.png", 198, 20),
+    WOOD_STRIP("ui_components/wood_strip.png", 198, 20);
     // endregion
 
-    private final ResourceLocation resource;
+    private final Identifier identifier;
     private final int width;
     private final int height;
 
     Texture(String name, int width, int height) {
-        this.resource = ResourceLocation.fromNamespaceAndPath("wynntils", "textures/" + name);
+        this.identifier = Identifier.fromNamespaceAndPath("wynntils", "textures/" + name);
         this.width = width;
         this.height = height;
     }
 
-    public ResourceLocation resource() {
-        return resource;
+    public Identifier identifier() {
+        return identifier;
     }
 
     public int width() {

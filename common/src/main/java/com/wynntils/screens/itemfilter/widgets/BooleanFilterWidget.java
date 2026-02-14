@@ -9,6 +9,7 @@ import com.wynntils.services.itemfilter.filters.BooleanStatFilter;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.type.OptionalBoolean;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class BooleanFilterWidget extends GeneralFilterWidget {
@@ -66,11 +67,11 @@ public class BooleanFilterWidget extends GeneralFilterWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (trueCheckbox.isMouseOver(mouseX, mouseY)) {
-            return trueCheckbox.mouseClicked(mouseX, mouseY, button);
-        } else if (falseCheckbox.isMouseOver(mouseX, mouseY)) {
-            return falseCheckbox.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (trueCheckbox.isMouseOver(event.x(), event.y())) {
+            return trueCheckbox.mouseClicked(event, isDoubleClick);
+        } else if (falseCheckbox.isMouseOver(event.x(), event.y())) {
+            return falseCheckbox.mouseClicked(event, isDoubleClick);
         }
 
         return false;

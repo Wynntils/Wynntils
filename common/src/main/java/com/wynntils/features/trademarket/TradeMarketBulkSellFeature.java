@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.trademarket;
@@ -12,7 +12,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.trademarket.event.TradeMarketChatInputEvent;
 import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent;
@@ -22,6 +21,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.function.Supplier;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -42,10 +42,7 @@ public class TradeMarketBulkSellFeature extends Feature {
     private int amountToSend = 0;
 
     public TradeMarketBulkSellFeature() {
-        super(new ProfileDefault.Builder()
-                .disableFor(
-                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
-                .build());
+        super(ProfileDefault.onlyDefault());
     }
 
     @SubscribeEvent
@@ -127,7 +124,7 @@ public class TradeMarketBulkSellFeature extends Feature {
         }
 
         @Override
-        public void onPress() {
+        public void onPress(InputWithModifiers input) {
             amountToSend = amountSupplier.get();
             sendAmountMessage = true;
 

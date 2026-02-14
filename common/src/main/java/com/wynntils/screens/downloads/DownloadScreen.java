@@ -4,7 +4,7 @@
  */
 package com.wynntils.screens.downloads;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.net.DownloadDependencyGraph;
@@ -35,6 +35,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.network.chat.Component;
@@ -211,11 +212,10 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.downloads.name")
                                 .withStyle(ChatFormatting.UNDERLINE)),
                         dividedWidth * 32,
@@ -240,11 +240,10 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         RenderUtils.disableScissor(guiGraphics);
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.LIGHT_GRAY,
                 (dividedWidth * 48),
                 (int) (dividedHeight * WIDGET_TOP_Y),
-                0,
                 6,
                 WIDGETS_PER_PAGE * widgetHeight);
 
@@ -252,17 +251,16 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                 + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, (WIDGETS_PER_PAGE * widgetHeight) - 20));
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 draggingScroll ? CommonColors.BLACK : CommonColors.GRAY,
                 (dividedWidth * 48),
                 scrollY,
-                0,
                 6,
                 20);
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.downloads.info")
                                 .withStyle(ChatFormatting.UNDERLINE)),
                         (dividedWidth * 56),
@@ -275,7 +273,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(infoText),
                         (dividedWidth * 50),
                         (dividedWidth * 63),
@@ -290,7 +288,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.downloads.timeout")),
                         dividedWidth * 8,
                         dividedHeight * 50,
@@ -301,7 +299,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(String.valueOf(Managers.Net.getTimeoutMillis() / 1000)),
                         dividedWidth * 8,
                         dividedHeight * 52 + 10,
@@ -309,14 +307,21 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
+
+        if (draggingScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (MathUtils.isInside(
+                mouseX, mouseY, (int) (dividedWidth * 48), (int) ((dividedWidth * 48) + 6), scrollY, scrollY + 20)) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!draggingScroll) {
             if (MathUtils.isInside(
-                    (int) mouseX,
-                    (int) mouseY,
+                    (int) event.x(),
+                    (int) event.y(),
                     (int) (dividedWidth * 48),
                     (int) ((dividedWidth * 48) + 6),
                     scrollY,
@@ -328,14 +333,14 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         }
 
         for (GuiEventListener listener : this.children) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseClicked(mouseX, mouseY, button);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseClicked(event, isDoubleClick);
             }
         }
 
         for (DownloadWidget downloadWidget : this.downloadWidgets) {
-            if (downloadWidget.isMouseOver(mouseX, mouseY)) {
-                return downloadWidget.mouseClicked(mouseX, mouseY, button);
+            if (downloadWidget.isMouseOver(event.x(), event.y())) {
+                return downloadWidget.mouseClicked(event, isDoubleClick);
             }
         }
 
@@ -343,13 +348,13 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (draggingScroll) {
             int scrollAreaStartY = (int) ((dividedHeight * WIDGET_TOP_Y) + 10);
             int scrollAreaHeight = (WIDGETS_PER_PAGE - 1) * widgetHeight;
 
             int newOffset = Math.round(MathUtils.map(
-                    (float) mouseY, scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
+                    (float) event.y(), scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
 
             newOffset = Math.max(0, Math.min(newOffset, getMaxScrollOffset()));
 
@@ -359,8 +364,8 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         }
 
         for (GuiEventListener listener : this.children) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseDragged(event, dragX, dragY);
             }
         }
 
@@ -368,12 +373,12 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
 
         for (GuiEventListener listener : this.children) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseReleased(mouseX, mouseY, button);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseReleased(event);
             }
         }
 

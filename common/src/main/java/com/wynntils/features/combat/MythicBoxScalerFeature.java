@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -12,7 +12,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.GroundItemEntityTransformEvent;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +26,7 @@ public class MythicBoxScalerFeature extends Feature {
     private final Config<Float> scale = new Config<>(1.5f);
 
     public MythicBoxScalerFeature() {
-        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+        super(ProfileDefault.ENABLED);
     }
 
     @SubscribeEvent

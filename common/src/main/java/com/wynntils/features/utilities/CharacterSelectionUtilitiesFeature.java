@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -11,7 +11,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.RenderEvent;
@@ -19,6 +18,7 @@ import com.wynntils.models.containers.containers.CharacterSelectionContainer;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.RenderElementType;
 import java.util.List;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.KeyMapping;
@@ -33,7 +33,7 @@ public class CharacterSelectionUtilitiesFeature extends Feature {
     private final Config<Boolean> hideCrosshair = new Config<>(true);
 
     public CharacterSelectionUtilitiesFeature() {
-        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+        super(ProfileDefault.ENABLED);
     }
 
     @SubscribeEvent
@@ -44,7 +44,7 @@ public class CharacterSelectionUtilitiesFeature extends Feature {
         List<Integer> validSlots = Models.CharacterSelection.getValidCharacterSlots();
 
         for (int i = 0; i < Math.min(keyHotbarSlots.length, validSlots.size()); i++) {
-            if (!keyHotbarSlots[i].matches(e.getKeyCode(), e.getScanCode())) continue;
+            if (!keyHotbarSlots[i].matches(e.getKeyEvent())) continue;
 
             int slot = validSlots.get(i);
             Models.CharacterSelection.playWithCharacter(slot);
@@ -58,7 +58,7 @@ public class CharacterSelectionUtilitiesFeature extends Feature {
         if (Models.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) return;
 
         KeyMapping perspectiveKey = McUtils.options().keyTogglePerspective;
-        if (perspectiveKey.matches(e.getKey(), e.getScanCode())) {
+        if (perspectiveKey.matches(e.getKeyEvent())) {
             e.setCanceled(true);
         }
     }
@@ -74,7 +74,7 @@ public class CharacterSelectionUtilitiesFeature extends Feature {
     @SubscribeEvent
     public void onRenderCrosshair(RenderEvent.Pre event) {
         if (!hideCrosshair.get()) return;
-        if (event.getType() != RenderEvent.ElementType.CROSSHAIR) return;
+        if (event.getType() != RenderElementType.CROSSHAIR) return;
         if (Models.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) return;
 
         event.setCanceled(true);

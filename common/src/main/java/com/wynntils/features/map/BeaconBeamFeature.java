@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.map;
 
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -13,7 +12,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.marker.type.MarkerInfo;
@@ -23,16 +21,12 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.core.Position;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.MAP)
 public class BeaconBeamFeature extends Feature {
-    private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
-            MultiBufferSource.immediate(new ByteBufferBuilder(256));
-
     @Persisted
     private final Config<CustomColor> waypointBeamColor = new Config<>(CommonColors.RED);
 
@@ -40,7 +34,7 @@ public class BeaconBeamFeature extends Feature {
     private CustomColor currentRainbowColor = CommonColors.RED;
 
     public BeaconBeamFeature() {
-        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+        super(ProfileDefault.ENABLED);
     }
 
     @SubscribeEvent
@@ -76,7 +70,7 @@ public class BeaconBeamFeature extends Feature {
         PoseStack poseStack = event.getPoseStack();
 
         for (MarkerInfo marker : markers) {
-            Position camera = event.getCamera().getPosition();
+            Position camera = event.getCameraRenderState().pos;
             Location location = marker.location();
 
             double dx = location.x - camera.x();
@@ -112,13 +106,16 @@ public class BeaconBeamFeature extends Feature {
                 colorInt = color.withAlpha(alpha).asInt();
             }
 
-            BeaconRenderer.renderBeaconBeam(
+            float partial = event.getDeltaTracker().getGameTimeDeltaPartialTick(false);
+            long gameTime = McUtils.mc().level.getGameTime();
+            float animationTime = (gameTime % 40) + partial;
+
+            BeaconRenderer.submitBeaconBeam(
                     poseStack,
-                    BUFFER_SOURCE,
+                    event.getSubmitNodeStorage(),
                     BeaconRenderer.BEAM_LOCATION,
-                    event.getDeltaTracker().getGameTimeDeltaPartialTick(false),
-                    1f,
-                    McUtils.player().level().getGameTime(),
+                    partial,
+                    animationTime,
                     0,
                     BeaconRenderer.MAX_RENDER_Y,
                     colorInt,
@@ -127,7 +124,5 @@ public class BeaconBeamFeature extends Feature {
 
             poseStack.popPose();
         }
-
-        BUFFER_SOURCE.endLastBatch();
     }
 }

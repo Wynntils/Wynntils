@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -33,7 +34,6 @@ import java.util.regex.Pattern;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UI)
 public class CustomTerritoryManagementScreenFeature extends Feature {
@@ -45,8 +45,7 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
     private static final int TERRITORY_MANAGEMENT_SLOT = 14;
 
     @RegisterKeyBind
-    private final KeyBind openTerritoryMenu =
-            new KeyBind("Open Territory Menu", GLFW.GLFW_KEY_U, true, this::updateTerritoryMenu);
+    private final KeyBind openTerritoryMenu = KeyBindDefinition.OPEN_TERRITORY_MENU.create(this::updateTerritoryMenu);
 
     @Persisted
     private final Config<ShiftBehavior> shiftBehaviorConfig = new Config<>(ShiftBehavior.DISABLED_IF_SHIFT_HELD);
@@ -64,7 +63,7 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
 
     public CustomTerritoryManagementScreenFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
                 .build());
     }
 

@@ -37,7 +37,7 @@ public class PreventTradesDuelsFeature extends Feature {
 
     public PreventTradesDuelsFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
                 .build());
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.territorymanagement.widgets;
@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -57,28 +58,24 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!territoryColor.backgroundColors().isEmpty()) {
             RenderUtils.drawMulticoloredRect(
-                    guiGraphics.pose(),
+                    guiGraphics,
                     territoryColor.backgroundColors(),
                     this.getX(),
                     this.getY(),
-                    0,
                     this.getWidth(),
                     this.getHeight());
         }
 
         if (territoryColor.borderColor() != CustomColor.NONE) {
             RenderUtils.drawRectBorders(
-                    guiGraphics.pose(),
+                    guiGraphics,
                     territoryColor.borderColor(),
                     this.getX() + 0.75f,
                     this.getY() + 0.75f,
                     this.getX() + this.getWidth() - 0.75f,
                     this.getY() + this.getHeight() - 0.75f,
-                    0,
                     1.5f);
         }
-
-        guiGraphics.pose().pushPose();
 
         // Pick the texture based on the item type
         Texture texture = Texture.TERRITORY_ITEM;
@@ -99,17 +96,14 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
 
         // Render at the center of the widget
         RenderUtils.drawScalingTexturedRect(
-                guiGraphics.pose(),
-                texture.resource(),
+                guiGraphics,
+                texture.identifier(),
                 itemRenderX,
                 itemRenderY,
-                0,
                 itemWidth,
                 itemHeight,
                 texture.width(),
                 texture.height());
-
-        guiGraphics.pose().popPose();
 
         // Render the territory production type icons
         Set<GuildResource> productionTypes = territoryItem.getProduction().keySet().stream()
@@ -128,7 +122,7 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
 
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
-                                guiGraphics.pose(),
+                                guiGraphics,
                                 StyledText.fromString(symbol),
                                 this.getX(),
                                 this.getX() + this.getWidth(),
@@ -146,7 +140,7 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
                     String symbol = productionType.getPrettySymbol().trim();
                     FontRenderer.getInstance()
                             .renderText(
-                                    guiGraphics.pose(),
+                                    guiGraphics,
                                     StyledText.fromString(symbol),
                                     this.getX() + i % 2 * 8,
                                     this.getY() + i / 2 * 8,
@@ -170,7 +164,7 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(shortTerritoryName),
                             this.getX(),
                             this.getX() + this.getWidth(),
@@ -186,7 +180,7 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
     }
 
     @Override
-    public void onClick(double mouseX, double mouseY) {
+    public void onClick(MouseButtonEvent event, boolean isDoubleClick) {
         holder.territoryItemClicked(territoryItem);
     }
 

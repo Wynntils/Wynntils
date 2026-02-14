@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -12,10 +12,10 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
-import net.minecraft.ResourceLocationException;
+import net.minecraft.IdentifierException;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 
@@ -71,10 +71,10 @@ public class MinecraftFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             String effectName = arguments.getArgument("effectName").getStringValue();
-            ResourceLocation effectLocation;
+            Identifier effectLocation;
             try {
-                effectLocation = ResourceLocation.withDefaultNamespace(effectName);
-            } catch (ResourceLocationException e) {
+                effectLocation = Identifier.withDefaultNamespace(effectName);
+            } catch (IdentifierException e) {
                 return -1; // Effect name contains invalid characters
             }
 

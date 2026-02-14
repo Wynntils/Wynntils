@@ -1,10 +1,10 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.sets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.google.common.collect.Lists;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.SetInfo;
@@ -31,9 +31,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public final class WynntilsSetsGuideScreen extends WynntilsListScreen<SetInfo, ItemSetGuideButton> {
     private WynntilsSetsGuideScreen() {
@@ -76,30 +77,28 @@ public final class WynntilsSetsGuideScreen extends WynntilsListScreen<SetInfo, I
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
+        renderBackgroundTexture(guiGraphics);
 
-        renderBackgroundTexture(poseStack);
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.sets.name"));
 
-        renderTitle(poseStack, I18n.get("screens.wynntils.wynntilsGuides.sets.name"));
+        renderDescription(guiGraphics);
 
-        renderDescription(poseStack);
-
-        renderVersion(poseStack);
+        renderVersion(guiGraphics);
 
         renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
+        renderPageInfo(guiGraphics, currentPage + 1, maxPage + 1);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderTitle(PoseStack poseStack, String titleString) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.CONTENT_BOOK_TITLE, offsetX, 30 + offsetY);
+    protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CONTENT_BOOK_TITLE, offsetX, 30 + offsetY);
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(titleString),
                         10 + offsetX,
                         36 + offsetY,
@@ -174,7 +173,8 @@ public final class WynntilsSetsGuideScreen extends WynntilsListScreen<SetInfo, I
             if (equippedCount < setInfo.bonuses().size()) {
                 tooltipLines.add(Component.empty()
                         .append(Component.literal("\uE000")
-                                .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("keybind"))))
+                                .withStyle(Style.EMPTY.withFont(
+                                        new FontDescription.Resource(Identifier.withDefaultNamespace("keybind")))))
                         .append(" ")
                         .append(Component.translatable(
                                 "screens.wynntils.wynntilsGuides.sets.setsButton.click"
@@ -184,7 +184,8 @@ public final class WynntilsSetsGuideScreen extends WynntilsListScreen<SetInfo, I
             if (equippedCount > 1) {
                 tooltipLines.add(Component.empty()
                         .append(Component.literal("\uE001")
-                                .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("keybind"))))
+                                .withStyle(Style.EMPTY.withFont(
+                                        new FontDescription.Resource(Identifier.withDefaultNamespace("keybind")))))
                         .append(" ")
                         .append(Component.translatable(
                                 "screens.wynntils.wynntilsGuides.sets.setsButton.click"
@@ -192,17 +193,18 @@ public final class WynntilsSetsGuideScreen extends WynntilsListScreen<SetInfo, I
                                 equippedCount - 1)));
             }
 
-            guiGraphics.renderComponentTooltip(FontRenderer.getInstance().getFont(), tooltipLines, mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(tooltipLines, Component::getVisualOrderText), mouseX, mouseY);
             return;
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderDescription(PoseStack poseStack) {
+    private void renderDescription(GuiGraphics guiGraphics) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(
                                 Component.translatable("screens.wynntils.wynntilsGuides.sets.description")),
                         20 + offsetX,

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.athena;
@@ -63,7 +63,7 @@ public final class WynntilsAccountService extends Service {
                     .withStyle(Style.EMPTY
                             .withColor(ChatFormatting.AQUA)
                             .withUnderlined(true)
-                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reauth"))));
+                            .withClickEvent(new ClickEvent.RunCommand("/wynntils reauth"))));
             failed.append(Component.translatable("service.wynntils.wynntilsAccount.clickToConnect3")
                     .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
 
@@ -145,7 +145,8 @@ public final class WynntilsAccountService extends Service {
             String s1 = (new BigInteger(Crypt.digestData("", publicKey, secretkey))).toString(16);
 
             McUtils.mc()
-                    .getMinecraftSessionService()
+                    .services()
+                    .sessionService()
                     .joinServer(
                             McUtils.mc().getUser().getProfileId(),
                             McUtils.mc().getUser().getAccessToken(),

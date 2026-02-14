@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -11,7 +11,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 
 @ConfigCategory(Category.COMBAT)
 public class CustomLootrunBeaconsFeature extends Feature {
@@ -22,7 +21,7 @@ public class CustomLootrunBeaconsFeature extends Feature {
     public final Config<Boolean> showAdditionalTextInWorld = new Config<>(true);
 
     public CustomLootrunBeaconsFeature() {
-        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+        super(ProfileDefault.ENABLED);
     }
 
     @Override

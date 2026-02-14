@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -40,90 +41,57 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UI)
 public class WynntilsContentBookFeature extends Feature {
     private static final StyledText CONTENT_BOOK_NAME = StyledText.fromString("§dContent Book");
 
     @RegisterKeyBind
-    private final KeyBind openQuestBook = new KeyBind(
-            "Open Quest Book",
-            GLFW.GLFW_KEY_K,
-            true,
+    private final KeyBind openContentBook = KeyBindDefinition.OPEN_CONTENT_BOOK.create(
             () -> ContainerUtils.openInventory(InventoryUtils.CONTENT_BOOK_SLOT_NUM));
 
     @RegisterKeyBind
-    private final KeyBind openWynntilsMenu = new KeyBind(
-            "Open Wynntils Menu",
-            GLFW.GLFW_KEY_I,
-            true,
+    private final KeyBind openWynntilsMenu = KeyBindDefinition.OPEN_WYNNTILS_MENU.create(
             () -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()));
 
     @RegisterKeyBind
     private final KeyBind openOverlayMenu =
-            new KeyBind("Open Overlay Menu", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.mc()
-                    .setScreen(OverlaySelectionScreen.create()));
+            KeyBindDefinition.OPEN_OVERLAY_MENU.create(() -> McUtils.mc().setScreen(OverlaySelectionScreen.create()));
 
     @RegisterKeyBind
-    private final KeyBind openOverlayFreeMove =
-            new KeyBind("Open Overlay Free Move", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.mc()
-                    .setScreen(OverlayManagementScreen.create(null)));
+    private final KeyBind openOverlayFreeMove = KeyBindDefinition.OPEN_OVERLAY_FREE_MOVE.create(
+            () -> McUtils.mc().setScreen(OverlayManagementScreen.create(null)));
 
     @RegisterKeyBind
-    private final KeyBind openPowderGuide = new KeyBind(
-            "Open Powder Guide",
-            GLFW.GLFW_KEY_UNKNOWN,
-            true,
+    private final KeyBind openPowderGuide = KeyBindDefinition.OPEN_POWDER_GUIDE.create(
             () -> WynntilsMenuScreenBase.openBook(WynntilsPowderGuideScreen.create()));
 
     @RegisterKeyBind
-    private final KeyBind openItemGuide = new KeyBind(
-            "Open Item Guide",
-            GLFW.GLFW_KEY_UNKNOWN,
-            true,
+    private final KeyBind openItemGuide = KeyBindDefinition.OPEN_ITEM_GUIDE.create(
             () -> WynntilsMenuScreenBase.openBook(WynntilsItemGuideScreen.create()));
 
     @RegisterKeyBind
-    private final KeyBind openIngredientGuide = new KeyBind(
-            "Open Ingredient Guide",
-            GLFW.GLFW_KEY_UNKNOWN,
-            true,
+    private final KeyBind openIngredientGuide = KeyBindDefinition.OPEN_INGREDIENT_GUIDE.create(
             () -> WynntilsMenuScreenBase.openBook(WynntilsIngredientGuideScreen.create()));
 
     @RegisterKeyBind
-    private final KeyBind openCharmGuide = new KeyBind(
-            "Open Charm Guide",
-            GLFW.GLFW_KEY_UNKNOWN,
-            true,
+    private final KeyBind openCharmGuide = KeyBindDefinition.OPEN_CHARM_GUIDE.create(
             () -> WynntilsMenuScreenBase.openBook(WynntilsCharmGuideScreen.create()));
 
     @RegisterKeyBind
-    private final KeyBind openTomeGuide = new KeyBind(
-            "Open Tome Guide",
-            GLFW.GLFW_KEY_UNKNOWN,
-            true,
+    private final KeyBind openTomeGuide = KeyBindDefinition.OPEN_TOME_GUIDE.create(
             () -> WynntilsMenuScreenBase.openBook(WynntilsTomeGuideScreen.create()));
 
     @RegisterKeyBind
-    private final KeyBind openAspectGuide = new KeyBind(
-            "Open Aspect Guide",
-            GLFW.GLFW_KEY_UNKNOWN,
-            true,
+    private final KeyBind openAspectGuide = KeyBindDefinition.OPEN_ASPECT_GUIDE.create(
             () -> WynntilsMenuScreenBase.openBook(WynntilsAspectGuideScreen.create()));
 
     @RegisterKeyBind
-    private final KeyBind openEmeraldPouchGuide = new KeyBind(
-            "Open Emerald Pouch Guide",
-            GLFW.GLFW_KEY_UNKNOWN,
-            true,
+    private final KeyBind openEmeraldPouchGuide = KeyBindDefinition.OPEN_EMERALD_POUCH_GUIDE.create(
             () -> WynntilsMenuScreenBase.openBook(WynntilsEmeraldPouchGuideScreen.create()));
 
     @RegisterKeyBind
-    private final KeyBind openGuidesList = new KeyBind(
-            "Open Guides List",
-            GLFW.GLFW_KEY_UNKNOWN,
-            true,
+    private final KeyBind openGuidesList = KeyBindDefinition.OPEN_GUIDES_LIST.create(
             () -> WynntilsMenuScreenBase.openBook(WynntilsGuidesListScreen.create()));
 
     @Persisted
@@ -139,7 +107,7 @@ public class WynntilsContentBookFeature extends Feature {
 
     public WynntilsContentBookFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
                 .build());
     }
 

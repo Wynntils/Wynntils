@@ -1,11 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.components.Models;
@@ -31,7 +29,7 @@ import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.buffered.CustomRenderType;
+import com.wynntils.utils.render.pipelines.CustomRenderTypes;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,8 +41,6 @@ import java.util.Optional;
 import java.util.Set;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -52,9 +48,6 @@ import org.joml.Matrix4f;
 
 @ConfigCategory(Category.COMBAT)
 public class RangeVisualizerFeature extends Feature {
-    private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
-            MultiBufferSource.immediate(new ByteBufferBuilder(256));
-
     // number of straight lines to draw when rendering circle, higher = smoother but more expensive
     private static final int SEGMENTS = 128;
     private static final float HEIGHT = 0.1f;
@@ -74,14 +67,14 @@ public class RangeVisualizerFeature extends Feature {
 
     public RangeVisualizerFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.NEW_PLAYER, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
                 .build());
     }
 
     // Handles rendering for other players and ourselves in third person
     @SubscribeEvent
     public void onPlayerRender(PlayerRenderEvent e) {
-        Entity entity = ((EntityRenderStateExtension) e.getPlayerRenderState()).getEntity();
+        Entity entity = ((EntityRenderStateExtension) e.getAvatarRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
         // We render the circle for ourselves in onRenderLevelLast if first person rendering is enabled
         if (player.equals(McUtils.player()) && renderInFirstPerson.get()) return;
@@ -95,7 +88,11 @@ public class RangeVisualizerFeature extends Feature {
             float radius = circleType.b();
             int color = circleType.a().asInt();
 
-            renderCircle(e.getPoseStack(), player.position(), radius, color);
+            e.getSubmitNodeCollector()
+                    .submitCustomGeometry(
+                            e.getPoseStack(), CustomRenderTypes.POSITION_COLOR_QUAD, (entry, vertices) -> {
+                                drawCircle(entry, vertices, player.isCrouching() ? 0.15f : 0.0f, radius, color);
+                            });
         });
     }
 
@@ -122,15 +119,19 @@ public class RangeVisualizerFeature extends Feature {
 
         poseStack.pushPose();
         poseStack.translate(
-                interpX - event.getCamera().getPosition().x,
-                interpY - event.getCamera().getPosition().y,
-                interpZ - event.getCamera().getPosition().z);
+                interpX - event.getCameraRenderState().pos.x,
+                interpY - event.getCameraRenderState().pos.y,
+                interpZ - event.getCameraRenderState().pos.z);
 
         for (Pair<CustomColor, Float> circle : circles) {
             float radius = circle.b();
             int color = circle.a().asInt();
 
-            renderCircle(poseStack, player.position(), radius, color);
+            event.getSubmitNodeStorage()
+                    .submitCustomGeometry(
+                            poseStack,
+                            CustomRenderTypes.POSITION_COLOR_QUAD,
+                            (entry, vertices) -> drawCircle(entry, vertices, 0f, radius, color));
         }
 
         poseStack.popPose();
@@ -264,44 +265,36 @@ public class RangeVisualizerFeature extends Feature {
      * - The circle is rendered at the player's feet, from the ground to HEIGHT blocks above the ground.<p>
      * - .color() takes floats from 0-1, but ints from 0-255<p>
      * - Increase SEGMENTS to make the circle smoother, but it will also increase the amount of vertices (and thus the amount of memory used and the amount of time it takes to render)<p>
-     * - The order of the consumer.vertex() calls matter. Here, we draw a quad, so we do bottom left corner, top left corner, top right corner, bottom right corner. This is filled in with the color we set.<p>
+     * - The order of the consumer.addVertex() calls matter. Here, we draw a quad, so we do bottom left corner, top left corner, top right corner, bottom right corner. This is filled in with the color we set.<p>
      *
-     * @param poseStack The pose stack to render with. This is supposed to be the pose stack from the event.
-     *                  We do the translation here, so no need to do it before passing it in.
-     * @param radius
-     * @param color
+     * @param pose The pose to render with. This is supposed to be the pose from the event.
+     * @param consumer The consumer to draw the circle with
+     * @param yOffset The y offset to apply for crouching players
+     * @param radius The radius of the circle
+     * @param color The color of the circle
      */
-    private void renderCircle(PoseStack poseStack, Position position, float radius, int color) {
-        // Circle must be rendered on both sides, otherwise it will be invisible when looking at
-        // it from the outside
-        RenderSystem.disableCull();
+    private static void drawCircle(
+            PoseStack.Pose pose, VertexConsumer consumer, float yOffset, float radius, int color) {
+        Matrix4f matrix4f = pose.pose();
 
-        poseStack.pushPose();
-        poseStack.translate(-position.x(), -position.y(), -position.z());
-        VertexConsumer consumer = BUFFER_SOURCE.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
-
-        Matrix4f matrix4f = poseStack.last().pose();
         double angleStep = 2 * Math.PI / SEGMENTS;
         double startingAngle = -(System.currentTimeMillis() % 40000) * 2 * Math.PI / 40000.0;
         double angle = startingAngle;
+
         for (int i = 0; i < SEGMENTS; i++) {
             if (i % 4 > 2) {
                 angle += angleStep;
                 continue;
             }
-            float x = (float) (position.x() + Math.sin(angle) * radius);
-            float z = (float) (position.z() + Math.cos(angle) * radius);
-            consumer.addVertex(matrix4f, x, (float) position.y(), z).setColor(color);
-            consumer.addVertex(matrix4f, x, (float) position.y() + HEIGHT, z).setColor(color);
+            float x = (float) (Math.sin(angle) * radius);
+            float z = (float) (Math.cos(angle) * radius);
+            consumer.addVertex(matrix4f, x, yOffset, z).setColor(color);
+            consumer.addVertex(matrix4f, x, yOffset + HEIGHT, z).setColor(color);
             angle += angleStep;
-            float x2 = (float) (position.x() + Math.sin(angle) * radius);
-            float z2 = (float) (position.z() + Math.cos(angle) * radius);
-            consumer.addVertex(matrix4f, x2, (float) position.y() + HEIGHT, z2).setColor(color);
-            consumer.addVertex(matrix4f, x2, (float) position.y(), z2).setColor(color);
+            float x2 = (float) (Math.sin(angle) * radius);
+            float z2 = (float) (Math.cos(angle) * radius);
+            consumer.addVertex(matrix4f, x2, yOffset + HEIGHT, z2).setColor(color);
+            consumer.addVertex(matrix4f, x2, yOffset, z2).setColor(color);
         }
-
-        BUFFER_SOURCE.endBatch();
-        poseStack.popPose();
-        RenderSystem.enableCull();
     }
 }

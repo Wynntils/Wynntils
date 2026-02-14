@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -9,6 +9,7 @@ import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.ColorPickerWidget;
 import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 
 public class CustomColorSettingsButton extends TextInputBoxSettingsWidget<CustomColor> {
     private final ColorPickerWidget colorPickerWidget;
@@ -28,12 +29,12 @@ public class CustomColorSettingsButton extends TextInputBoxSettingsWidget<Custom
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (colorPickerWidget.isMouseOver(mouseX, mouseY)) {
-            return colorPickerWidget.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (colorPickerWidget.isMouseOver(event.x(), event.y())) {
+            return colorPickerWidget.mouseClicked(event, isDoubleClick);
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override

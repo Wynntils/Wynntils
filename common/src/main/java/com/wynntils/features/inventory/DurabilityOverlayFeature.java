@@ -1,11 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -26,7 +24,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Optional;
-import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -44,32 +42,32 @@ public class DurabilityOverlayFeature extends Feature {
 
     public DurabilityOverlayFeature() {
         super(new ProfileDefault.Builder()
-                .disableFor(ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
                 .build());
     }
 
     @SubscribeEvent
-    public void onRenderHotbarSlot(HotbarSlotRenderEvent.CountPre e) {
+    public void onRenderHotbarSlot(HotbarSlotRenderEvent.Post e) {
         if (!renderDurabilityOverlayHotbar.get()) return;
         switch (durabilityRenderMode.get()) {
-            case ARC -> drawDurabilityArc(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
-            case BAR -> drawDurabilityBar(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
-            case PERCENTAGE -> drawDurabilityPercentage(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
+            case ARC -> drawDurabilityArc(e.getGuiGraphics(), e.getItemStack(), e.getX(), e.getY());
+            case BAR -> drawDurabilityBar(e.getGuiGraphics(), e.getItemStack(), e.getX(), e.getY());
+            case PERCENTAGE -> drawDurabilityPercentage(e.getGuiGraphics(), e.getItemStack(), e.getX(), e.getY());
         }
     }
 
     @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.CountPre e) {
+    public void onRenderSlot(SlotRenderEvent.Post e) {
         if (!renderDurabilityOverlayInventories.get()) return;
         switch (durabilityRenderMode.get()) {
-            case ARC -> drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
-            case BAR -> drawDurabilityBar(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+            case ARC -> drawDurabilityArc(e.getGuiGraphics(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+            case BAR -> drawDurabilityBar(e.getGuiGraphics(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
             case PERCENTAGE ->
-                drawDurabilityPercentage(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+                drawDurabilityPercentage(e.getGuiGraphics(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
         }
     }
 
-    private void drawDurabilityArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY) {
+    private void drawDurabilityArc(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
         Optional<DurableItemProperty> durableItemOpt =
                 Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemOpt.isEmpty()) return;
@@ -82,12 +80,10 @@ public class DurabilityOverlayFeature extends Feature {
         CustomColor color = CustomColor.fromInt(colorInt).withAlpha(160);
 
         // draw
-        RenderSystem.enableDepthTest();
-        RenderUtils.drawArc(poseStack, color, slotX, slotY, 100, durabilityFraction, 6, 8);
-        RenderSystem.disableDepthTest();
+        RenderUtils.drawArc(guiGraphics, color, slotX, slotY, durabilityFraction, 6, 8);
     }
 
-    private void drawDurabilityBar(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY) {
+    private void drawDurabilityBar(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
         Optional<DurableItemProperty> durableItemProperty =
                 Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemProperty.isEmpty()) return;
@@ -103,12 +99,12 @@ public class DurabilityOverlayFeature extends Feature {
         // draw
         int i = slotX + 2;
         int j = slotY + 13;
-        RenderUtils.drawRect(poseStack, CustomColor.fromInt(-16777216), i, j, 200, 13, 2);
-        RenderUtils.drawRect(poseStack, CustomColor.fromHSV(hue, 1.0f, 1.0f, 1.0f), i, j, 200, width, 1);
+        RenderUtils.drawRect(guiGraphics, CustomColor.fromInt(-16777216), i, j, 13, 2);
+        RenderUtils.drawRect(guiGraphics, CustomColor.fromHSV(hue, 1.0f, 1.0f, 1.0f), i, j, width, 1);
     }
 
     // Inspiration taken from https://github.com/GTNewHorizons/DuraDisplay
-    private void drawDurabilityPercentage(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY) {
+    private void drawDurabilityPercentage(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
         Optional<DurableItemProperty> durableItemOpt =
                 Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemOpt.isEmpty()) return;
@@ -119,11 +115,9 @@ public class DurabilityOverlayFeature extends Feature {
         CustomColor color = CustomColor.fromHSV(Math.max(0.0f, durabilityFraction) / 3.0f, 1.0f, 1.0f, 1.0f);
         StyledText text = StyledText.fromString(Math.round(durabilityFraction * 100) + "%");
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 300);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         text,
                         (float) slotX + 8,
                         (float) slotY + 16,
@@ -131,9 +125,7 @@ public class DurabilityOverlayFeature extends Feature {
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL,
-                        0.5f,
-                        Font.DisplayMode.NORMAL);
-        poseStack.popPose();
+                        0.5f);
     }
 
     private enum DurabilityRenderMode {

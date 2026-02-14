@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.rewards;
@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.Dependency;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
@@ -48,9 +49,13 @@ public class CharmInfoRegistry {
     public void registerDownloads(DownloadRegistry registry) {
         registry.registerDownload(
                         UrlId.DATA_STATIC_CHARMS,
-                        Dependency.multi(
-                                Models.WynnItem,
-                                Set.of(UrlId.DATA_STATIC_ITEM_OBTAIN_V2, UrlId.DATA_STATIC_MATERIAL_CONVERSION)))
+                        Dependency.complex(Set.of(
+                                Dependency.simple(Services.CustomModel, UrlId.DATA_STATIC_MODEL_DATA),
+                                Dependency.multi(
+                                        Models.WynnItem,
+                                        Set.of(
+                                                UrlId.DATA_STATIC_ITEM_OBTAIN_V2,
+                                                UrlId.DATA_STATIC_MATERIAL_CONVERSION)))))
                 .handleJsonObject(this::handleCharmInfoRegistry);
     }
 
@@ -151,11 +156,6 @@ public class CharmInfoRegistry {
             int max = levelRangeJson.get("max").getAsInt();
 
             return new CharmRequirements(level, RangedValue.of(min, max));
-        }
-
-        private TomeType parseTomeType(JsonObject json) {
-            String tomeType = JsonUtils.getNullableJsonString(json, "tomeType");
-            return TomeType.fromString(tomeType);
         }
     }
 }

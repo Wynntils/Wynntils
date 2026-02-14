@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -10,12 +10,12 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -24,7 +24,6 @@ import net.minecraft.client.OptionInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 /**
  * "Silencer" modifies the game's masterVolume setting when toggled.
@@ -40,8 +39,7 @@ public class SilencerFeature extends Feature {
     private final Config<Double> silencerVolume = new Config<>(0.01);
 
     @RegisterKeyBind
-    private final KeyBind silencerKeyBind =
-            new KeyBind("Toggle Silencer", GLFW.GLFW_KEY_UNKNOWN, true, this::toggleSilencer);
+    private final KeyBind silencerKeyBind = KeyBindDefinition.TOGGLE_SILENCER.create(this::toggleSilencer);
 
     @Persisted
     private final Storage<Double> originalVolume = new Storage<>(1.0);
@@ -51,10 +49,7 @@ public class SilencerFeature extends Feature {
     private boolean firstTitleScreenInit = true;
 
     public SilencerFeature() {
-        super(new ProfileDefault.Builder()
-                .disableFor(
-                        ConfigProfile.NEW_PLAYER, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
-                .build());
+        super(ProfileDefault.onlyDefault());
     }
 
     @SubscribeEvent

@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.loading;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
@@ -15,18 +14,21 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public final class LoadingScreen extends WynntilsScreen {
     private static final String LOGO_STRING = "\uE005\uDAFF\uDFFF\uE006";
     private static final String TEXT_LOGO_STRING = "Wynncraft";
-    private static final ResourceLocation LOGO_FONT_LOCATION = ResourceLocation.withDefaultNamespace("screen/static");
+    private static final FontDescription LOGO_FONT_LOCATION =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("screen/static"));
     private static final CustomColor MOSS_GREEN = CustomColor.fromInt(0x527529).withAlpha(255);
     private static final int SPINNER_SPEED = 1200;
     private final Runnable onClose;
@@ -80,8 +82,6 @@ public final class LoadingScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         int textureWidth = Texture.BACKGROUND_SPLASH.width();
         int textureHeight = Texture.BACKGROUND_SPLASH.height();
         float widthScaleFactor = (float) this.width / textureWidth;
@@ -93,18 +93,17 @@ public final class LoadingScreen extends WynntilsScreen {
 
         // Draw background
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.BACKGROUND_SPLASH.resource(),
+                guiGraphics,
+                Texture.BACKGROUND_SPLASH.identifier(),
                 (this.width - scaledWidth) / 2f,
                 (this.height - scaledHeight) / 2f,
-                0,
                 scaledWidth,
                 scaledHeight,
                 textureWidth,
                 textureHeight);
 
         // Draw notebook background
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
 
         // Draw logo
         int centerX = (int) (Texture.SCROLL_BACKGROUND.width() / 2f + 15 + offsetX);
@@ -113,7 +112,7 @@ public final class LoadingScreen extends WynntilsScreen {
                 : Component.literal(TEXT_LOGO_STRING);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(logoComponent),
                         centerX,
                         60 + offsetY,
@@ -125,7 +124,7 @@ public final class LoadingScreen extends WynntilsScreen {
         // Draw loading progress
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(message),
                         centerX,
                         100 + offsetY,
@@ -137,7 +136,7 @@ public final class LoadingScreen extends WynntilsScreen {
         // Draw additional messages (typically about queue position)
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(stageTitle),
                         centerX,
                         120 + offsetY,
@@ -147,7 +146,7 @@ public final class LoadingScreen extends WynntilsScreen {
                         TextShadow.NONE);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(subtitle),
                         centerX,
                         130 + offsetY,
@@ -158,30 +157,16 @@ public final class LoadingScreen extends WynntilsScreen {
 
         // Draw spinner
         boolean state = (System.currentTimeMillis() % SPINNER_SPEED) < SPINNER_SPEED / 2;
-        drawSpinner(poseStack, centerX, 150 + offsetY, state);
+        drawSpinner(guiGraphics, centerX, 150 + offsetY, state);
     }
 
-    private void drawSpinner(PoseStack poseStack, float x, float y, boolean state) {
-        ResourceLocation resource = Texture.RELOAD_ICON_OFFSET.resource();
-
-        int fullWidth = Texture.RELOAD_ICON_OFFSET.width();
-        int spinnerWidth = fullWidth / 2;
-        int spinnerHeight = Texture.RELOAD_ICON_OFFSET.height();
-        int uOffset = state ? spinnerWidth : 0;
-
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                resource,
-                x - spinnerWidth / 2f,
+    private void drawSpinner(GuiGraphics guiGraphics, float x, float y, boolean state) {
+        RenderUtils.drawHoverableTexturedRect(
+                guiGraphics,
+                Texture.RELOAD_ICON_OFFSET,
+                x - (Texture.RELOAD_ICON_OFFSET.width() / 2f) / 2f,
                 y,
-                0,
-                spinnerWidth,
-                spinnerHeight,
-                uOffset,
-                0,
-                spinnerWidth,
-                spinnerHeight,
-                fullWidth,
-                spinnerHeight);
+                state,
+                RenderDirection.HORIZONTAL);
     }
 }

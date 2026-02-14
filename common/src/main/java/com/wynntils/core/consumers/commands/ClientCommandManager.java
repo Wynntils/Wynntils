@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.commands;
@@ -130,7 +130,7 @@ public final class ClientCommandManager extends Manager {
                 MutableComponent text = Component.literal("")
                         .withStyle(Style.EMPTY
                                 .withColor(ChatFormatting.GRAY)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command)));
+                                .withClickEvent(new ClickEvent.SuggestCommand(command)));
                 if (cursor > 10) text.append("...");
 
                 text.append(e.getInput().substring(Math.max(0, cursor - 10), cursor));
@@ -147,7 +147,7 @@ public final class ClientCommandManager extends Manager {
             MutableComponent error =
                     Component.literal(e.getMessage() == null ? e.getClass().getName() : e.getMessage());
             sendError(Component.translatable("command.failed")
-                    .withStyle(Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, error))));
+                    .withStyle(Style.EMPTY.withHoverEvent(new HoverEvent.ShowText(error))));
             WynntilsMod.error("Failed to execute command.", e);
         }
 

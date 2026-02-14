@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.SharedConstants;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public final class NetManager extends Manager {
@@ -33,7 +33,7 @@ public final class NetManager extends Manager {
     private static final String USER_AGENT = String.format(
             "Wynntils Artemis\\%s+MC-%s (%s) %s",
             WynntilsMod.getVersion(),
-            SharedConstants.getCurrentVersion().getName(),
+            SharedConstants.getCurrentVersion().name(),
             WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client",
             WynntilsMod.getModLoader());
 

@@ -1,20 +1,19 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -23,7 +22,6 @@ import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 
 public abstract class BarOverlay extends DynamicOverlay {
@@ -54,41 +52,34 @@ public abstract class BarOverlay extends DynamicOverlay {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        PoseStack poseStack = guiGraphics.pose();
-
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         BarOverlayTemplatePair template = getTemplate();
 
         if (templateCache == null) {
             templateCache = calculateTemplate(template);
         }
-        render(poseStack, bufferSource, currentProgress, templateCache.key());
+        render(guiGraphics, currentProgress, templateCache.key());
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        PoseStack poseStack = guiGraphics.pose();
-
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         BarOverlayTemplatePair previewTemplate = getPreviewTemplate();
         Pair<StyledText, ErrorOr<CappedValue>> calculatedTemplate = calculateTemplate(previewTemplate);
 
         ErrorOr<CappedValue> valueOrError = calculatedTemplate.value();
         if (valueOrError.hasError()) {
-            renderText(poseStack, bufferSource, getModifiedRenderY(10), StyledText.fromString(valueOrError.getError()));
+            renderText(guiGraphics, getModifiedRenderY(10), StyledText.fromString(valueOrError.getError()));
             return;
         }
 
         // Do not render bars that has no value
         if (valueOrError.getValue().equals(CappedValue.EMPTY)) return;
 
-        render(poseStack, bufferSource, (float) valueOrError.getValue().getProgress(), calculatedTemplate.key());
+        render(guiGraphics, (float) valueOrError.getValue().getProgress(), calculatedTemplate.key());
     }
 
     @Override
-    protected void renderOrErrorMessage(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    protected void renderOrErrorMessage(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (templateCache == null) return;
         if (templateCache.b().hasError()) {
             StyledText[] errorMessage = {
@@ -96,10 +87,9 @@ public abstract class BarOverlay extends DynamicOverlay {
                         + getTranslatedName()),
                 StyledText.fromUnformattedString(templateCache.b().getError())
             };
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            guiGraphics.pose(),
-                            bufferSource,
+                            guiGraphics,
                             errorMessage,
                             getRenderX(),
                             getRenderX() + getWidth(),
@@ -113,19 +103,18 @@ public abstract class BarOverlay extends DynamicOverlay {
                             1);
 
         } else {
-            super.renderOrErrorMessage(guiGraphics, bufferSource, deltaTracker, window);
+            super.renderOrErrorMessage(guiGraphics, deltaTracker, window);
         }
     }
 
-    private void render(
-            PoseStack poseStack, MultiBufferSource bufferSource, float renderedProgress, StyledText textValue) {
+    private void render(GuiGraphics guiGraphics, float renderedProgress, StyledText textValue) {
         float barHeight = getTextureHeight() * heightModifier.get();
         float renderY = getModifiedRenderY(barHeight + 10);
 
-        renderText(poseStack, bufferSource, renderY, textValue);
+        renderText(guiGraphics, renderY, textValue);
 
         float progress = (flip.get() ? -1 : 1) * renderedProgress;
-        renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
+        renderBar(guiGraphics, renderY + 10, barHeight, progress);
     }
 
     @Override
@@ -158,14 +147,12 @@ public abstract class BarOverlay extends DynamicOverlay {
 
     protected abstract float getTextureHeight();
 
-    protected void renderBar(
-            PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float renderHeight, float progress) {
+    protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
         Texture texture = getTexture();
 
         if (getRenderColor() == CommonColors.WHITE) {
-            BufferedRenderUtils.drawProgressBar(
-                    poseStack,
-                    bufferSource,
+            RenderUtils.drawProgressBar(
+                    guiGraphics,
                     texture,
                     getRenderX(),
                     renderY,
@@ -177,9 +164,8 @@ public abstract class BarOverlay extends DynamicOverlay {
                     texture.height(),
                     progress);
         } else {
-            BufferedRenderUtils.drawColoredProgressBar(
-                    poseStack,
-                    bufferSource,
+            RenderUtils.drawColoredProgressBar(
+                    guiGraphics,
                     texture,
                     getRenderColor(),
                     getRenderX(),
@@ -194,11 +180,10 @@ public abstract class BarOverlay extends DynamicOverlay {
         }
     }
 
-    private void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, StyledText text) {
-        BufferedFontRenderer.getInstance()
+    private void renderText(GuiGraphics guiGraphics, float renderY, StyledText text) {
+        FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
-                        bufferSource,
+                        guiGraphics,
                         text,
                         getRenderX(),
                         getRenderX() + getWidth(),

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.rewards;
@@ -12,8 +12,10 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.TomeItem;
+import com.wynntils.models.rewards.type.AmplifierInfo;
 import com.wynntils.models.rewards.type.CharmInfo;
 import com.wynntils.models.rewards.type.CharmInstance;
+import com.wynntils.models.rewards.type.RuneType;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
@@ -26,6 +28,9 @@ public final class RewardsModel extends Model {
     private final TomeInfoRegistry tomeInfoRegistry = new TomeInfoRegistry();
     private final CharmInfoRegistry charmInfoRegistry = new CharmInfoRegistry();
 
+    private List<AmplifierInfo> allAmplifierInfo;
+    private List<RuneType> allRuneInfo;
+
     public RewardsModel() {
         super(List.of());
     }
@@ -34,6 +39,9 @@ public final class RewardsModel extends Model {
     public void registerDownloads(DownloadRegistry registry) {
         tomeInfoRegistry.registerDownloads(registry);
         charmInfoRegistry.registerDownloads(registry);
+
+        allAmplifierInfo = buildAmplifierInfo();
+        allRuneInfo = buildRuneInfo();
     }
 
     public CharmInfo getCharmInfoFromDisplayName(String name) {
@@ -50,6 +58,14 @@ public final class RewardsModel extends Model {
 
     public Stream<TomeInfo> getAllTomeInfos() {
         return tomeInfoRegistry.getAllTomeInfos();
+    }
+
+    public List<AmplifierInfo> getAllAmplifierInfo() {
+        return allAmplifierInfo;
+    }
+
+    public List<RuneType> getAllRuneInfo() {
+        return allRuneInfo;
     }
 
     public ItemAnnotation fromCharmItemStack(ItemStack itemStack, StyledText name, String displayName, String type) {
@@ -89,5 +105,13 @@ public final class RewardsModel extends Model {
         }
 
         return new TomeItem(tomeInfo, TomeInstance.create(result.rerolls(), tomeInfo, result.identifications()));
+    }
+
+    private List<AmplifierInfo> buildAmplifierInfo() {
+        return List.of(new AmplifierInfo(1, 5), new AmplifierInfo(2, 10), new AmplifierInfo(3, 15));
+    }
+
+    private List<RuneType> buildRuneInfo() {
+        return List.of(RuneType.values());
     }
 }

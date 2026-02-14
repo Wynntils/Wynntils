@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.embellishments;
@@ -12,7 +12,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
 import com.wynntils.utils.mc.McUtils;
@@ -26,14 +25,14 @@ public class WynntilsCosmeticsFeature extends Feature {
     public final Config<Boolean> renderOwnCape = new Config<>(true);
 
     public WynntilsCosmeticsFeature() {
-        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+        super(ProfileDefault.ENABLED);
     }
 
     @SubscribeEvent
     public void onCapeRender(PlayerRenderLayerEvent.Cape event) {
         if (!isEnabled() || !Managers.Connection.onServer()) return;
 
-        Entity entity = ((EntityRenderStateExtension) event.getPlayerRenderState()).getEntity();
+        Entity entity = ((EntityRenderStateExtension) event.getHumanoidRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
         if (McUtils.player().is(player) && !renderOwnCape.get()) return;
 
@@ -47,7 +46,7 @@ public class WynntilsCosmeticsFeature extends Feature {
     public void onElytraRender(PlayerRenderLayerEvent.Elytra event) {
         if (!isEnabled() || !Managers.Connection.onServer()) return;
 
-        Entity entity = ((EntityRenderStateExtension) event.getPlayerRenderState()).getEntity();
+        Entity entity = ((EntityRenderStateExtension) event.getHumanoidRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
         if (McUtils.player().is(player) && !renderOwnCape.get()) return;
 

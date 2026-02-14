@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.overlays;
@@ -9,25 +9,25 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
-import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
+import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.PacketEvent;
-import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.models.npcdialogue.type.NpcDialogue;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.overlays.NpcDialogueOverlay;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.RenderElementType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,9 +37,9 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundPlayerCommandPacket;
+import net.minecraft.network.protocol.game.ServerboundPlayerInputPacket;
+import net.minecraft.world.entity.player.Input;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 /**
  * Feature for handling NPC dialogues.
@@ -57,16 +57,16 @@ public class NpcDialogueFeature extends Feature {
     private static final StyledText PRESS_SHIFT_TO_CONTINUE =
             StyledText.fromComponent(Component.translatable("feature.wynntils.npcDialogue.pressShiftToContinue"));
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    @RegisterOverlay(renderType = RenderElementType.PLAYER_TAB_LIST)
     private final NpcDialogueOverlay npcDialogueOverlay = new NpcDialogueOverlay();
 
     @RegisterKeyBind
     public final KeyBind cancelAutoProgressKeybind =
-            new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, this::cancelAutoProgress);
+            KeyBindDefinition.CANCEL_NPC_AUTO_PROGRESS.create(this::cancelAutoProgress);
 
     @RegisterKeyBind
     public final KeyBind npcDialogKeyOverrideKeybind =
-            new KeyBind("Progress NPC Dialogue", GLFW.GLFW_KEY_UNKNOWN, true, this::progressNPCDialogue);
+            KeyBindDefinition.PROGRESS_NPC_DIALOGUE.create(this::progressNPCDialogue);
 
     @Persisted
     private final Config<NpcDialogueChatDisplayType> chatDisplayType = new Config<>(NpcDialogueChatDisplayType.NORMAL);
@@ -105,7 +105,7 @@ public class NpcDialogueFeature extends Feature {
     private StyledText displayedHelperMessage = null;
 
     public NpcDialogueFeature() {
-        super(new ProfileDefault.Builder().disableFor(ConfigProfile.BLANK_SLATE).build());
+        super(ProfileDefault.ENABLED);
 
         // Add this feature as a dependent of the NpcDialogueModel
         Models.NpcDialogue.addNpcDialogExtractionDependent(this);
@@ -182,16 +182,16 @@ public class NpcDialogueFeature extends Feature {
 
     @SubscribeEvent
     public void onPacketSent(PacketEvent.PacketSentEvent<?> e) {
-        if (!(e.getPacket() instanceof ServerboundPlayerCommandPacket packet)) return;
-        if (packet.getAction() != ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY) return;
+        if (!(e.getPacket() instanceof ServerboundPlayerInputPacket(Input input))) return;
+        if (!input.shift()) return;
 
         if (scheduledAutoProgressKeyPress != null) {
             scheduledAutoProgressKeyPress.cancel(true);
 
             // Must be scheduled, can't be sent immediately
             autoProgressExecutor.schedule(
-                    () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
-                            McUtils.player(), ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY)),
+                    () -> McUtils.sendPacket(new ServerboundPlayerInputPacket(
+                            new Input(false, false, false, false, false, false, false))),
                     100,
                     TimeUnit.MILLISECONDS);
 
@@ -200,8 +200,8 @@ public class NpcDialogueFeature extends Feature {
 
         if (isReleaseShiftScheduled) {
             npcDialogKeyOverrideExecutor.schedule(
-                    () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
-                            McUtils.player(), ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY)),
+                    () -> McUtils.sendPacket(new ServerboundPlayerInputPacket(
+                            new Input(false, false, false, false, false, false, false))),
                     100,
                     TimeUnit.MILLISECONDS);
 
@@ -239,8 +239,8 @@ public class NpcDialogueFeature extends Feature {
     private void progressNPCDialogue() {
         if (Models.NpcDialogue.getCurrentDialogue().dialogueType() == NpcDialogueType.NORMAL) {
             isReleaseShiftScheduled = true;
-            McUtils.sendPacket(new ServerboundPlayerCommandPacket(
-                    McUtils.player(), ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY));
+            McUtils.sendPacket(
+                    new ServerboundPlayerInputPacket(new Input(false, false, false, false, false, true, false)));
         }
     }
 
@@ -248,8 +248,8 @@ public class NpcDialogueFeature extends Feature {
         long delay = Models.NpcDialogue.calculateMessageReadTime(dialogue);
 
         return autoProgressExecutor.schedule(
-                () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
-                        McUtils.player(), ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY)),
+                () -> McUtils.sendPacket(
+                        new ServerboundPlayerInputPacket(new Input(false, false, false, false, false, true, false))),
                 delay,
                 TimeUnit.MILLISECONDS);
     }

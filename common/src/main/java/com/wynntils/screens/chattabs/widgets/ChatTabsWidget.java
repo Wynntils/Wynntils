@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.chattabs.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.chattabs.ChatTabEditingScreen;
@@ -23,6 +22,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class ChatTabsWidget extends AbstractWidget {
@@ -69,18 +69,16 @@ public class ChatTabsWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         if (this.isMouseOver(mouseX, mouseY)) {
             RenderUtils.drawRect(
-                    poseStack, CommonColors.GRAY.withAlpha(70), this.getX(), this.getY(), 0, this.width, this.height);
+                    guiGraphics, CommonColors.GRAY.withAlpha(70), this.getX(), this.getY(), this.width, this.height);
         }
 
         CustomColor nameColor = parent.isActiveChatTab(chatTab) ? CommonColors.GREEN : CommonColors.WHITE;
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(chatTab.name()),
                         this.getX() + 4,
                         this.getY() + (this.height >> 1),
@@ -88,6 +86,8 @@ public class ChatTabsWidget extends AbstractWidget {
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
+
+        handleCursor(guiGraphics);
 
         deleteButton.render(guiGraphics, mouseX, mouseY, partialTick);
         moveUpButton.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -106,10 +106,10 @@ public class ChatTabsWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (deleteButton.mouseClicked(mouseX, mouseY, button)
-                || moveUpButton.mouseClicked(mouseX, mouseY, button)
-                || moveDownButton.mouseClicked(mouseX, mouseY, button)) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (deleteButton.mouseClicked(event, isDoubleClick)
+                || moveUpButton.mouseClicked(event, isDoubleClick)
+                || moveDownButton.mouseClicked(event, isDoubleClick)) {
             parent.reloadChatTabsWidgets();
             return true;
         }

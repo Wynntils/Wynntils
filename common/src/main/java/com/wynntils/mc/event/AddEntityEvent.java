@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
@@ -33,9 +33,9 @@ public class AddEntityEvent extends Event {
         this.x = packet.getX();
         this.y = packet.getY();
         this.z = packet.getZ();
-        this.xa = packet.getXa();
-        this.ya = packet.getYa();
-        this.za = packet.getZa();
+        this.xa = packet.getMovement().x();
+        this.ya = packet.getMovement().y();
+        this.za = packet.getMovement().z();
         this.xRot = packet.getXRot();
         this.yRot = packet.getYRot();
         this.yHeadRot = packet.getYHeadRot();

@@ -19,9 +19,7 @@ import com.wynntils.models.character.actionbar.segments.CharacterSelectionSegmen
 import com.wynntils.models.worlds.actionbar.matchers.CharacterWardrobeSegmentMatcher;
 import com.wynntils.models.worlds.actionbar.segments.CharacterWardrobeSegment;
 import com.wynntils.models.worlds.bossbars.SkipCutsceneBar;
-import com.wynntils.models.worlds.bossbars.StreamerModeBar;
 import com.wynntils.models.worlds.event.CutsceneStartedEvent;
-import com.wynntils.models.worlds.event.StreamModeEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.CutsceneState;
 import com.wynntils.models.worlds.type.ServerRegion;
@@ -48,14 +46,11 @@ public final class WorldStateModel extends Model {
     private static final SkipCutsceneBar skipCutsceneBar = new SkipCutsceneBar();
     private CutsceneState cutsceneState = CutsceneState.NOT_IN_CUTSCENE;
 
-    private static final StreamerModeBar streamerModeBar = new StreamerModeBar();
-
     private String currentWorldName = "";
     private ServerRegion currentRegion = ServerRegion.WC;
     private long serverJoinTimestamp = 0;
     private boolean onBetaServer;
     private boolean hasJoinedAnyWorld = false;
-    private boolean inStream = false;
     private boolean inCharacterWardrobe = false;
 
     public WorldStateModel() {
@@ -63,7 +58,6 @@ public final class WorldStateModel extends Model {
 
         Handlers.ActionBar.registerSegment(new CharacterWardrobeSegmentMatcher());
         Handlers.BossBar.registerBar(skipCutsceneBar);
-        Handlers.BossBar.registerBar(streamerModeBar);
     }
 
     private WorldState currentState = WorldState.NOT_CONNECTED;
@@ -74,10 +68,6 @@ public final class WorldStateModel extends Model {
 
     public boolean inCharacterWardrobe() {
         return inCharacterWardrobe;
-    }
-
-    public boolean isInStream() {
-        return inStream;
     }
 
     public boolean isOnBetaServer() {
@@ -195,7 +185,7 @@ public final class WorldStateModel extends Model {
     @SubscribeEvent
     public void update(PlayerDisplayNameChangeEvent e) {
         if (!e.getId().equals(WORLD_NAME_UUID)) return;
-        if (inStream) return;
+        if (Models.StreamerMode.isInStream()) return;
 
         Component displayName = e.getDisplayName();
         StyledText name = StyledText.fromComponent(displayName);
@@ -220,11 +210,6 @@ public final class WorldStateModel extends Model {
             return true;
         }
         return false;
-    }
-
-    public void setStreamerMode(boolean inStream) {
-        this.inStream = inStream;
-        WynntilsMod.postEvent(new StreamModeEvent(inStream));
     }
 
     public void cutsceneStarted(boolean groupCutscene) {

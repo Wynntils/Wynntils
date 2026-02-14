@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.objectives;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -18,14 +17,12 @@ import com.wynntils.models.objectives.WynnObjective;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -64,27 +61,22 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         WynnObjective guildObjective = Models.Objectives.getGuildObjective();
         if (guildObjective == null) return;
-        renderObjective(guiGraphics, bufferSource, guildObjective);
+        renderObjective(guiGraphics, guildObjective);
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         WynnObjective guildObjective = Models.Objectives.getGuildObjective();
         if (guildObjective == null) {
             guildObjective = WynnObjective.DEMO_GUILD;
         }
-        renderObjective(guiGraphics, bufferSource, guildObjective);
+        renderObjective(guiGraphics, guildObjective);
     }
 
-    private void renderObjective(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, WynnObjective guildObjective) {
-        PoseStack poseStack = guiGraphics.pose();
-
+    private void renderObjective(GuiGraphics guiGraphics, WynnObjective guildObjective) {
         if (this.hideOnInactivity.get()) {
             final int maxInactivityMs = 3000;
             if (guildObjective.getUpdatedAt() + maxInactivityMs < System.currentTimeMillis()) {
@@ -107,10 +99,9 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
                 };
 
         final String text = guildObjective.asObjectiveString();
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
-                        bufferSource,
+                        guiGraphics,
                         StyledText.fromString(text),
                         this.getRenderX(),
                         this.getRenderX() + this.getWidth(),
@@ -127,9 +118,8 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
         }
 
         if (this.enableProgressBar.get()) {
-            BufferedRenderUtils.drawProgressBar(
-                    poseStack,
-                    bufferSource,
+            RenderUtils.drawProgressBar(
+                    guiGraphics,
                     Texture.BUBBLE_BAR,
                     this.getRenderX(),
                     renderY + SPACE_BETWEEN,
