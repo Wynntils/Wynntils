@@ -1,5 +1,8 @@
-Fixes
-- Fix ingredients "not touching" modifier not being parsed
-- Fix per character gear sharing settings not saving
-- Prevent health potion blocker, horse mounting, prevent trades & duels, quick casts and custom content book from working whilst in the wardrobe
-- Fix crashing when handling errors with chat tabs
+Downloads Screen
+- Added download source options, defaults are Wynntils CDN or GitHub but a custom source can be provided. Defaults to the Wynntils CDN
+- Added adjustable timeout for how long downloads should run for before timing out
+- Added reload and clear cache buttons
+
+Functions
+- Font Functions
+  - `to_background_text` added 3 new edge styles, "BOX", "FLAG" and "RIBBON"
