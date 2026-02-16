@@ -453,6 +453,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StyledTextFunctions.WithColorFunction());
         registerFunction(new StyledTextFunctions.WithItalicFunction());
         registerFunction(new StyledTextFunctions.WithObfuscatedFunction());
+        registerFunction(new StyledTextFunctions.WithPlayerSpriteFontFunction());
         registerFunction(new StyledTextFunctions.WithResourceFontFunction());
         registerFunction(new StyledTextFunctions.WithShadowColorFunction());
         registerFunction(new StyledTextFunctions.WithStrikethroughFunction());

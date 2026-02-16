@@ -11,8 +11,10 @@ import com.wynntils.core.consumers.functions.arguments.ListArgument;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.List;
+import java.util.UUID;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.component.ResolvableProfile;
 
 public class StyledTextFunctions {
     public static class StyledTextFunction extends GenericFunction<StyledText> {
@@ -131,6 +133,34 @@ public class StyledTextFunctions {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
                     new Argument<>("value", StyledText.class, null),
                     new Argument<>("isObfuscated", Boolean.class, null)));
+        }
+    }
+
+    public static class WithPlayerSpriteFontFunction extends GenericFunction<StyledText> {
+        @Override
+        public StyledText getValue(FunctionArguments arguments) {
+            StyledText styledText = arguments.getArgument("value").getStyledText();
+            String uuid = arguments.getArgument("uuid").getStringValue();
+            boolean hat = arguments.getArgument("hat").getBooleanValue();
+
+            FontDescription fontDescription =
+                    new FontDescription.PlayerSprite(ResolvableProfile.createUnresolved(UUID.fromString(uuid)), hat);
+
+            return styledText.map(part -> {
+                if (part.getPartStyle().getFont() != FontDescription.DEFAULT) {
+                    return part;
+                }
+
+                return part.withStyle(style -> style.withFont(fontDescription));
+            });
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("value", StyledText.class, null),
+                    new Argument<>("uuid", String.class, null),
+                    new Argument<>("hat", Boolean.class, null)));
         }
     }
 
