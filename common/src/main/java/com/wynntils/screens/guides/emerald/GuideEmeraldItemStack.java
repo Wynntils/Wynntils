@@ -52,8 +52,4 @@ public class GuideEmeraldItemStack extends GuideItemStack {
                 .append(Component.literal(unit.getMultiplier() + " " + EmeraldUnits.EMERALD.getSymbol())
                         .withStyle(ChatFormatting.BOLD));
     }
-
-    public EmeraldUnits getUnit() {
-        return unit;
-    }
 }
