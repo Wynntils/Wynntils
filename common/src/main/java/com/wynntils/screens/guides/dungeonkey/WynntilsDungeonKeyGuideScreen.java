@@ -2,10 +2,11 @@
  * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.guides.emerald;
+package com.wynntils.screens.guides.dungeonkey;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.activities.type.Dungeon;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -18,33 +19,38 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public final class WynntilsEmeraldGuideScreen
-        extends WynntilsListScreen<GuideEmeraldItemStack, GuideEmeraldItemStackButton> {
+import java.util.ArrayList;
+import java.util.List;
+
+public final class WynntilsDungeonKeyGuideScreen
+        extends WynntilsListScreen<GuideDungeonKeyItemStack, GuideDungeonKeyItemStackButton> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
-    private List<GuideEmeraldItemStack> parsedItemCache;
+    private List<GuideDungeonKeyItemStack> parsedItemCache;
 
-    private WynntilsEmeraldGuideScreen() {
-        super(Component.translatable("screens.wynntils.wynntilsGuides.emeralds.name"));
+    private WynntilsDungeonKeyGuideScreen() {
+        super(Component.translatable("screens.wynntils.wynntilsGuides.dungeonKey.name"));
     }
 
     public static Screen create() {
-        return new WynntilsEmeraldGuideScreen();
+        return new WynntilsDungeonKeyGuideScreen();
     }
 
     @Override
     protected void doInit() {
         if (parsedItemCache == null) {
             parsedItemCache = new ArrayList<>();
-            parsedItemCache.addAll(Models.Emerald.getAllEmeraldItems());
+
+            for(Dungeon dungeon : Dungeon.values()) {
+                parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, false));
+                parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, true));
+            }
         }
 
         super.doInit();
@@ -79,7 +85,7 @@ public final class WynntilsEmeraldGuideScreen
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(guiGraphics);
 
-        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.emeralds.name"));
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.dungeonKey.name"));
 
         renderDescription(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.guideDescription"), "");
 
@@ -113,7 +119,7 @@ public final class WynntilsEmeraldGuideScreen
 
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        if (hovered instanceof GuideEmeraldItemStackButton guideEmeraldItemStack) {
+        if (hovered instanceof GuideDungeonKeyItemStackButton guideEmeraldItemStack) {
             guiGraphics.setTooltipForNextFrame(
                     FontRenderer.getInstance().getFont(), guideEmeraldItemStack.getItemStack(), mouseX, mouseY);
         }
@@ -135,11 +141,11 @@ public final class WynntilsEmeraldGuideScreen
     }
 
     @Override
-    protected GuideEmeraldItemStackButton getButtonFromElement(int i) {
+    protected GuideDungeonKeyItemStackButton getButtonFromElement(int i) {
         int xOffset = (i % ELEMENTS_COLUMNS) * 20;
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
-        return new GuideEmeraldItemStackButton(
+        return new GuideDungeonKeyItemStackButton(
                 (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
                 yOffset + 43 + offsetY,
                 18,

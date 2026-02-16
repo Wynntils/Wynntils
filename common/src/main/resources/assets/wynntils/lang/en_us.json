@@ -3392,6 +3392,7 @@
   "screens.wynntils.wynntilsGuides.augments.simulator5": "Insulators",
   "screens.wynntils.wynntilsGuides.charmGuide.name": "Charm Guide",
   "screens.wynntils.wynntilsGuides.description": "See all the guides in Wynntils.",
+  "screens.wynntils.wynntilsGuides.dungeonKey.name": "Dungeon Key Guide",
   "screens.wynntils.wynntilsGuides.emeraldPouch.name": "Emerald Pouch Guide",
   "screens.wynntils.wynntilsGuides.emeralds.name": "Emerald Guide",
   "screens.wynntils.wynntilsGuides.export.description": "Export favorites to your clipboard",

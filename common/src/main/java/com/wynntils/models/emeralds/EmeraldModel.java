@@ -212,11 +212,9 @@ public final class EmeraldModel extends Model {
     }
 
     public List<GuideEmeraldItemStack> getAllEmeraldItems() {
-        List<GuideEmeraldItemStack> items = new ArrayList<>();
-        items.add(new GuideEmeraldItemStack(EmeraldUnits.EMERALD));
-        items.add(new GuideEmeraldItemStack(EmeraldUnits.EMERALD_BLOCK));
-        items.add(new GuideEmeraldItemStack(EmeraldUnits.LIQUID_EMERALD));
-
-        return items;
+        return List.of(
+                new GuideEmeraldItemStack(EmeraldUnits.EMERALD),
+                new GuideEmeraldItemStack(EmeraldUnits.EMERALD_BLOCK),
+                new GuideEmeraldItemStack(EmeraldUnits.LIQUID_EMERALD));
     }
 }
