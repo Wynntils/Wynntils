@@ -163,6 +163,13 @@ public final class PartStyle {
                     styleString.append(STYLE_PREFIX).append(color.toHexString());
                 }
             }
+            if (type.includeShadowColors() && shadowColor != CustomColor.NONE) {
+                styleString
+                        .append(STYLE_PREFIX)
+                        .append("{sc:")
+                        .append(shadowColor.toHexString())
+                        .append("}");
+            }
 
             // 2. Formatting
             if (obfuscated) {
@@ -482,6 +489,22 @@ public final class PartStyle {
             }
         } else if (oldColorInt != newColorInt) {
             return null;
+        }
+
+        if (type.includeShadowColors()) {
+            int oldShadowColorInt = oldStyle.shadowColor.asInt();
+            int newShadowColorInt = this.shadowColor.asInt();
+
+            if (oldShadowColorInt == -1) {
+                if (newColorInt != -1) {
+                    Arrays.stream(ChatFormatting.values())
+                            .filter(c -> c.isColor() && newShadowColorInt == (c.getColor()))
+                            .findFirst()
+                            .ifPresent(add::append);
+                }
+            } else if (oldShadowColorInt != newShadowColorInt) {
+                return null;
+            }
         }
 
         if (oldStyle.obfuscated && !this.obfuscated) return null;

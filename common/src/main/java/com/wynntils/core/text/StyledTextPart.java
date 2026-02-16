@@ -196,6 +196,27 @@ public final class StyledTextPart {
                         if (fontDescription != null) {
                             currentStyle = currentStyle.withFont(fontDescription);
                         }
+                    } else if (special.startsWith("sc:")) {
+                        // If we already had some text with the current style
+                        // Append it before modifying the style
+                        if (!currentString.isEmpty()) {
+                            if (style != Style.EMPTY) {
+                                // We might have lost an event, so we need to add it back
+                                currentStyle = currentStyle
+                                        .withClickEvent(style.getClickEvent())
+                                        .withHoverEvent(style.getHoverEvent());
+                            }
+                            // But if the style is empty, we might have parsed events from the string itself
+
+                            parts.add(new StyledTextPart(currentString.toString(), currentStyle, null, parentStyle));
+
+                            // reset string
+                            // style is not reset, because we want to keep the formatting
+                            currentString = new StringBuilder();
+                        }
+
+                        CustomColor shadowColor = CustomColor.fromHexString(special.substring(3));
+                        currentStyle = currentStyle.withShadowColor(shadowColor.asInt());
                     } else {
                         // Unknown special code, just ignore it for now
                     }
