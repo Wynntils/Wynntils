@@ -125,10 +125,12 @@ public final class PartStyle {
         //    The parent of this style's owner is responsible for keeping track of hover events.
         //    Example: §<1> -> (1st hover event)
         // 5. Additional formatting support is expressed with §{...}. The currently only supported such
-        //    formattings are for FontDecoration's, which are represented as §{fr:X} for Resource, where X is a
+        //    formattings are for FontDecoration's and shadow color.
+        //    FontDecoration's are represented as §{fr:X} for Resource, where X is a
         //    short code given to the font, if such is present, or the full identifier if not.
         //    §{fas:X:Y} for AltasSprite where X is the Atlas identifier and Y is the Sprite Identifier.
         //    §{fps:X:Y} for PlayerSprite where X is the profile UUID and Y is if the hat layer is included or not.
+        //    §{sc:X} for shadow color, where X is the hex formatting of the colour used for the text shadow
 
         if (!type.includeBasicFormatting()) return "";
 
