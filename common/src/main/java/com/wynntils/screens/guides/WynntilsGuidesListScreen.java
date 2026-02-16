@@ -12,6 +12,7 @@ import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.guides.aspect.WynntilsAspectGuideScreen;
 import com.wynntils.screens.guides.augment.WynntilsAugmentsGuideScreen;
 import com.wynntils.screens.guides.charm.WynntilsCharmGuideScreen;
+import com.wynntils.screens.guides.emerald.WynntilsEmeraldGuideScreen;
 import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
 import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
 import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
@@ -43,6 +44,7 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
             WynntilsCharmGuideScreen.create(),
             WynntilsAspectGuideScreen.create(),
             WynntilsEmeraldPouchGuideScreen.create(),
+            WynntilsEmeraldGuideScreen.create(),
             WynntilsPowderGuideScreen.create(),
             WynntilsSetsGuideScreen.create(),
             WynntilsAugmentsGuideScreen.create(),
