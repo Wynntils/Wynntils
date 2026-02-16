@@ -58,17 +58,6 @@ public final class FunctionExpression extends Expression {
     }
 
     @Override
-    public ErrorOr<String> calculateFormattedString() {
-        ErrorOr<FunctionArguments> arguments = getArguments();
-        if (arguments.hasError()) {
-            return ErrorOr.error(arguments.getError());
-        }
-
-        return ErrorOr.of(
-                Managers.Function.getStringFunctionValue(function, arguments.getValue(), formatted, decimals));
-    }
-
-    @Override
     public ErrorOr<StyledText> calculateFormattedStyledText() {
         ErrorOr<FunctionArguments> arguments = getArguments();
         if (arguments.hasError()) {

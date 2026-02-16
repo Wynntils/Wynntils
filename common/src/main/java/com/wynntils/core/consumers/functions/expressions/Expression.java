@@ -16,7 +16,5 @@ public abstract class Expression {
 
     public abstract ErrorOr<Object> calculate();
 
-    public abstract ErrorOr<String> calculateFormattedString();
-
     public abstract ErrorOr<StyledText> calculateFormattedStyledText();
 }

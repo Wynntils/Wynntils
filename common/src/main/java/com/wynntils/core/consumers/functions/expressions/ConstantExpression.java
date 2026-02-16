@@ -32,11 +32,6 @@ public final class ConstantExpression extends Expression {
     }
 
     @Override
-    public ErrorOr<String> calculateFormattedString() {
-        return ErrorOr.of(value.toString());
-    }
-
-    @Override
     public ErrorOr<StyledText> calculateFormattedStyledText() {
         return ErrorOr.of(StyledText.fromString(value.toString()));
     }
