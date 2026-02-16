@@ -184,7 +184,7 @@ public final class CombatModel extends Model {
     public int getDebuffCountInRadius(double radius, DebuffType debuffType) {
         if (debuffTextDisplays.isEmpty()) return 0;
 
-        Vec3 center = McUtils.mc().gameRenderer.getMainCamera().position();
+        Vec3 center = McUtils.mc().player.position();
 
         int total = 0;
 
