@@ -136,6 +136,37 @@ public class StyledTextFunctions {
         }
     }
 
+    public static class WithAtlasSpriteFontFunction extends GenericFunction<StyledText> {
+        @Override
+        public StyledText getValue(FunctionArguments arguments) {
+            StyledText styledText = arguments.getArgument("value").getStyledText();
+            String atlas = arguments.getArgument("atlas").getStringValue();
+            String sprite = arguments.getArgument("sprite").getStringValue();
+            Identifier atlasLocation = Identifier.tryParse(atlas);
+            Identifier spriteLocation = Identifier.tryParse(sprite);
+
+            if (atlasLocation == null || spriteLocation == null) return styledText;
+
+            FontDescription fontDescription = new FontDescription.AtlasSprite(atlasLocation, spriteLocation);
+
+            return styledText.map(part -> {
+                if (part.getPartStyle().getFont() != FontDescription.DEFAULT) {
+                    return part;
+                }
+
+                return part.withStyle(style -> style.withFont(fontDescription));
+            });
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("value", StyledText.class, null),
+                    new Argument<>("atlas", String.class, null),
+                    new Argument<>("sprite", String.class, null)));
+        }
+    }
+
     public static class WithPlayerSpriteFontFunction extends GenericFunction<StyledText> {
         @Override
         public StyledText getValue(FunctionArguments arguments) {
