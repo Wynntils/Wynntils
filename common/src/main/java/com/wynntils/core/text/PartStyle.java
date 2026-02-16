@@ -128,8 +128,7 @@ public final class PartStyle {
         //    formattings are for FontDecoration's, which are represented as §{fr:X} for Resource, where X is a
         //    short code given to the font, if such is present, or the full identifier if not.
         //    §{fas:X:Y} for AltasSprite where X is the Atlas identifier and Y is the Sprite Identifier.
-        //    §{fps:X:Y:Z} for PlayerSprite where X is the profile UUID, Y is the profile name and Z is if the
-        //    hat layer is included or not.
+        //    §{fps:X:Y} for PlayerSprite where X is the profile UUID and Y is if the hat layer is included or not.
 
         if (!type.includeBasicFormatting()) return "";
 
@@ -211,8 +210,6 @@ public final class PartStyle {
                                 .append(STYLE_PREFIX)
                                 .append("{fps:")
                                 .append(profile.partialProfile().id())
-                                .append(";")
-                                .append(profile.partialProfile().name())
                                 .append(";")
                                 .append(hat)
                                 .append("}");
@@ -532,14 +529,14 @@ public final class PartStyle {
                     add.append(STYLE_PREFIX)
                             .append("{fas:")
                             .append(atlasId)
-                            .append(":")
+                            .append(";")
                             .append(spriteId)
                             .append("}");
                 } else if (this.font instanceof FontDescription.PlayerSprite(ResolvableProfile profile, boolean hat)) {
                     add.append(STYLE_PREFIX)
                             .append("{fps:")
                             .append(profile.partialProfile().id())
-                            .append(":")
+                            .append(";")
                             .append(hat)
                             .append("}");
                 }

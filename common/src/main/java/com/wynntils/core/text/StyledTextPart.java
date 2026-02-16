@@ -10,10 +10,12 @@ import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import net.minecraft.ChatFormatting;
@@ -185,12 +187,18 @@ public final class StyledTextPart {
                             String profileDetails = special.substring(4);
                             String[] split = profileDetails.split(";");
 
-                            if (split.length != 3) continue;
+                            if (split.length != 2) continue;
 
-                            GameProfile profile = new GameProfile(UUID.fromString(split[0]), split[1]);
+                            UUID id = UUID.fromString(split[0]);
+                            Optional<GameProfile> optional =
+                                    McUtils.mc().services().profileResolver().fetchById(id);
 
-                            fontDescription = new FontDescription.PlayerSprite(
-                                    ResolvableProfile.createResolved(profile), Boolean.parseBoolean(split[2]));
+                            if (optional.isPresent()) {
+                                ResolvableProfile resolved = ResolvableProfile.createResolved(optional.get());
+
+                                fontDescription =
+                                        new FontDescription.PlayerSprite(resolved, Boolean.parseBoolean(split[1]));
+                            }
                         }
 
                         if (fontDescription != null) {
