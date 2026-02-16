@@ -67,10 +67,8 @@ public class GuideEmeraldItemStackButton extends WynntilsButton {
             return false;
         }
 
-        String unformattedName =
-                StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            Services.Favorites.toggleFavorite(unformattedName);
+            Services.Favorites.toggleFavorite(itemStack.getEmeraldUnit().getDisplayName());
         }
 
         return true;

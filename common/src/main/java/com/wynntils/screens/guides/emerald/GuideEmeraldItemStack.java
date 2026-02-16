@@ -28,7 +28,9 @@ public class GuideEmeraldItemStack extends GuideItemStack {
     public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag flag) {
         List<Component> tooltip = new ArrayList<>();
         tooltip.add(getHoverName());
+        tooltip.add(Component.empty());
         tooltip.add(generateLore());
+
         appendFavoriteInfo(tooltip);
 
         return tooltip;
@@ -39,6 +41,10 @@ public class GuideEmeraldItemStack extends GuideItemStack {
         return Component.empty()
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN))
                 .append(Component.literal(unit.getDisplayName() + " (" + unit.getSymbol() + ")"));
+    }
+
+    public EmeraldUnits getEmeraldUnit() {
+        return unit;
     }
 
     private Component generateLore() {

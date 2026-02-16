@@ -85,10 +85,8 @@ public class GuideDungeonKeyItemStackButton extends WynntilsButton {
             return false;
         }
 
-        String unformattedName =
-                StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            Services.Favorites.toggleFavorite(unformattedName);
+            Services.Favorites.toggleFavorite(StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting());
         }
 
         return true;
