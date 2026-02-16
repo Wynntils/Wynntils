@@ -633,9 +633,19 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         populateWaypoints();
     }
 
-    public void toggleIcon(Texture icon, boolean used) {
-        filteredIcons.put(icon, used);
+    public void toggleIcon(Texture icon, boolean used, boolean excludeOthers) {
+        if (excludeOthers) {
+            filteredIcons.forEach((key, value) -> {
+                if (key != icon) {
+                    filteredIcons.put(key, !used);
+                }
+            });
+            filteredIcons.put(icon, used);
+        } else {
+            filteredIcons.put(icon, used);
+        }
 
+        updateAllUsedIcons();
         populateWaypoints();
     }
 

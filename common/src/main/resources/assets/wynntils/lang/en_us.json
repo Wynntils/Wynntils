@@ -3325,6 +3325,8 @@
   "screens.wynntils.waypointManagementGui.help2": "Middle click waypoints to set a marker at that waypoint.",
   "screens.wynntils.waypointManagementGui.help3": "Right click to remove marker at that waypoint.",
   "screens.wynntils.waypointManagementGui.icon": "Icon",
+  "screens.wynntils.waypointManagementGui.iconFilterTooltip1": "Left Click to toggle filtering this icon",
+  "screens.wynntils.waypointManagementGui.iconFilterTooltip2": "Shift + Left click to toggle between including or excluding all icons besides this icon",
   "screens.wynntils.waypointManagementGui.import": "Import",
   "screens.wynntils.waypointManagementGui.import.error": "Failed to import waypoints",
   "screens.wynntils.waypointManagementGui.import.success": "Successfully imported %d waypoints",
