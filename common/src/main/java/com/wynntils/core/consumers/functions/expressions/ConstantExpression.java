@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions.expressions;
 
 import com.google.common.collect.ImmutableMap;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.Map;
 import java.util.Optional;
@@ -33,6 +34,11 @@ public final class ConstantExpression extends Expression {
     @Override
     public ErrorOr<String> calculateFormattedString() {
         return ErrorOr.of(value.toString());
+    }
+
+    @Override
+    public ErrorOr<StyledText> calculateFormattedStyledText() {
+        return ErrorOr.of(StyledText.fromString(value.toString()));
     }
 
     public static ErrorOr<Optional<Expression>> tryParse(String rawExpression) {

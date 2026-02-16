@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions.expressions;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.type.ErrorOr;
 
 public abstract class Expression {
@@ -16,4 +17,6 @@ public abstract class Expression {
     public abstract ErrorOr<Object> calculate();
 
     public abstract ErrorOr<String> calculateFormattedString();
+
+    public abstract ErrorOr<StyledText> calculateFormattedStyledText();
 }
