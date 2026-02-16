@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -83,6 +83,18 @@ public class SocialFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             return McUtils.playerName();
+        }
+    }
+
+    public static class PlayerUuidFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return McUtils.player().getStringUUID();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("uuid");
         }
     }
 }

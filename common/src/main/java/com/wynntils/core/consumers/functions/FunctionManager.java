@@ -589,6 +589,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new HadesPartyFunctions.HadesPartyMemberLocationFunction());
         registerFunction(new HadesPartyFunctions.HadesPartyMemberManaFunction());
         registerFunction(new HadesPartyFunctions.HadesPartyMemberNameFunction());
+        registerFunction(new HadesPartyFunctions.HadesPartyMemberUuidFunction());
 
         registerFunction(new HorseFunctions.CappedHorseLevelFunction());
         registerFunction(new HorseFunctions.CappedHorseTotalLevelTimeFunction());
@@ -712,6 +713,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new SocialFunctions.PartyLeaderFunction());
         registerFunction(new SocialFunctions.PartyMembersFunction());
         registerFunction(new SocialFunctions.PlayerNameFunction());
+        registerFunction(new SocialFunctions.PlayerUuidFunction());
         registerFunction(new SocialFunctions.WynntilsRoleFunction());
 
         registerFunction(new SpellFunctions.ArrowShieldCountFunction());
