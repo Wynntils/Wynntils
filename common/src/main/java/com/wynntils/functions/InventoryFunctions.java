@@ -19,6 +19,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.NamedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
+import com.wynntils.utils.wynn.ItemUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -86,11 +87,10 @@ public class InventoryFunctions {
             if (inventoryAccessory == null) return "NONE";
 
             ItemStack accessoryStack = McUtils.inventory().items.get(inventoryAccessory.getSlot());
-            if (accessoryStack.isEmpty()) return "NONE";
+            if (ItemUtils.isEmptyAccessorySlot(accessoryStack)) return "NONE";
 
             StyledText hoverName = StyledText.fromComponent(accessoryStack.getHoverName());
-            String itemName = hoverName.getString(StyleType.NONE);
-            return itemName.equals("Accessory Slot") ? "NONE" : itemName;
+            return hoverName.getString(StyleType.NONE);
         }
 
         @Override
