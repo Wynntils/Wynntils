@@ -67,20 +67,25 @@ public class GuideDungeonKeyItemStack extends GuideItemStack {
     private List<Component> generateLore() {
         List<Component> itemLore = new ArrayList<>();
 
-        itemLore.add(Component.literal("Grants access to ")
-                .append(Component.literal(dungeon.getName() + " Dungeon").withStyle(ChatFormatting.BOLD))
-                .append(" once"));
+        itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.usage1").withStyle(ChatFormatting.GRAY));
+        itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.usage2", dungeon.getName()).withStyle(ChatFormatting.WHITE)
+                .append(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.usage3").withStyle(ChatFormatting.GRAY)));
 
         itemLore.add(Component.empty());
-        itemLore.add(Component.literal("Dungeon Info:").withStyle(isCorrupted() ? ChatFormatting.DARK_RED : ChatFormatting.GOLD));
+        itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.usage4").withStyle(isCorrupted() ? ChatFormatting.DARK_RED : ChatFormatting.GOLD));
 
         Dungeon.DungeonData dungeonData = isCorrupted() ? dungeon.getCorruptedDungeonData() : dungeon.getDungeonData();
-        itemLore.add(Component.literal("Combat Level: ")
-                .append(Component.literal(dungeonData.getCombatLevel() + "").withStyle(ChatFormatting.BOLD)));
+        itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.usage5").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(dungeonData.getCombatLevel() + "").withStyle(ChatFormatting.WHITE)));
 
 
-        itemLore.add(Component.literal("Coordinates: ")
-                .append(Component.literal(dungeonData.getXPos() + " " + dungeonData.getYPos()).withStyle(ChatFormatting.BOLD)));
+        itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.usage6").withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(dungeonData.getXPos() + " " + dungeonData.getYPos()).withStyle(ChatFormatting.WHITE)));
+
+        itemLore.add(Component.empty());
+
+        itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.obtain1").withStyle(ChatFormatting.DARK_GRAY)
+                .append(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.obtain2").withStyle(ChatFormatting.AQUA)));
 
         return itemLore;
     }
