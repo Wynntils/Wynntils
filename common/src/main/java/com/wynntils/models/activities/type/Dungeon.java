@@ -18,7 +18,11 @@ public enum Dungeon {
             new DungeonData(23, 290, -1950),
             new DungeonData(82, 3313, 5346)),
     TIMELOST_SANCTUM("Time-Lost Sanctum",
-            new DungeonData(27, -263, -1069)),
+            new DungeonData(27, -263, -1069),
+            new DungeonData()), // Corrupted version is in Lost Sanctuary
+    LOST_SANCTUARY("Lost Sanctuary",
+            new DungeonData(), // Regular version is in Time-Lost Sanctum
+            new DungeonData(78, 3025, 6429)),
     SAND_SWEPT_TOMB("Sand-Swept Tomb",
             new DungeonData(36, 1432, -1830),
             new DungeonData(86, 3331, 4184)),
@@ -32,26 +36,15 @@ public enum Dungeon {
             new DungeonData(63, -582, -3511),
             new DungeonData(98, 4286, -18341)),
     FALLEN_FACTORY("Fallen Factory",
-            new DungeonData(90, -1646, -2608)),
+            new DungeonData(90, -1646, -2608),
+            new DungeonData()), // Corrupted version does not exist
     ELDRITCH_OUTLOOK("Eldritch Outlook",
-            new DungeonData(100, 1291, -749)),
-    LOST_SANCTUARY("Lost Sanctuary");
+            new DungeonData(100, 1291, -749),
+            new DungeonData()); // Corrupted version does not exist
 
     private final String name;
     private final DungeonData dungeonData;
     private final DungeonData corruptedDungeonData;
-
-    Dungeon(String name) {
-        this.name = name;
-        this.dungeonData = new DungeonData();
-        this.corruptedDungeonData = new DungeonData();
-    }
-
-    Dungeon(String name, DungeonData dungeonData) {
-        this.name = name;
-        this.dungeonData = dungeonData;
-        this.corruptedDungeonData = new DungeonData();
-    }
 
     Dungeon(String name, DungeonData dungeonData, DungeonData corruptedDungeonData) {
         this.name = name;
