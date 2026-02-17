@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.guides.emeraldpouch;
+package com.wynntils.screens.guides.emerald;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -30,7 +30,7 @@ public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
             int width,
             int height,
             GuideEmeraldPouchItemStack itemStack,
-            WynntilsEmeraldPouchGuideScreen screen) {
+            WynntilsEmeraldGuideScreen screen) {
         super(x, y, width, height, Component.literal("Guide EmeraldPouchItemStack Button"));
         this.itemStack = itemStack;
     }

@@ -25,7 +25,7 @@ import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.screens.guides.aspect.WynntilsAspectGuideScreen;
 import com.wynntils.screens.guides.charm.WynntilsCharmGuideScreen;
-import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
+import com.wynntils.screens.guides.emerald.WynntilsEmeraldGuideScreen;
 import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
 import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
 import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
@@ -87,8 +87,8 @@ public class WynntilsContentBookFeature extends Feature {
             () -> WynntilsMenuScreenBase.openBook(WynntilsAspectGuideScreen.create()));
 
     @RegisterKeyBind
-    private final KeyBind openEmeraldPouchGuide = KeyBindDefinition.OPEN_EMERALD_POUCH_GUIDE.create(
-            () -> WynntilsMenuScreenBase.openBook(WynntilsEmeraldPouchGuideScreen.create()));
+    private final KeyBind openEmeraldGuide = KeyBindDefinition.OPEN_EMERALD_GUIDE.create(
+            () -> WynntilsMenuScreenBase.openBook(WynntilsEmeraldGuideScreen.create()));
 
     @RegisterKeyBind
     private final KeyBind openGuidesList = KeyBindDefinition.OPEN_GUIDES_LIST.create(

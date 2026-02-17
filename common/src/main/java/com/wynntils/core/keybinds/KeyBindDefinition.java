@@ -452,9 +452,9 @@ public record KeyBindDefinition(
             GLFW.GLFW_KEY_UNKNOWN,
             true);
 
-    public static final KeyBindDefinition OPEN_EMERALD_POUCH_GUIDE = register(
-            "openEmeraldPouchGuide",
-            "Open Emerald Pouch Guide",
+    public static final KeyBindDefinition OPEN_EMERALD_GUIDE = register(
+            "openEmeraldGuide",
+            "Open Emerald Guide",
             Managers.KeyBind.UI_CATEGORY,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,

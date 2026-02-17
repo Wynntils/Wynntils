@@ -33,9 +33,12 @@ public class GuideEmeraldItemStack extends GuideItemStack {
     private static final Style BANNER_STYLE = Style.EMPTY.withFont(BANNER_TAG_FONT);
     private static final int SHADOW_COLOR = 16777215;
 
+    private final List<Component> generatedTooltip;
+
     public GuideEmeraldItemStack(EmeraldUnits unit) {
         super(unit.getItemStack(), new EmeraldItem(null, unit), unit.name());
         this.unit = unit;
+        this.generatedTooltip = generateLore();
     }
 
     @Override
@@ -43,7 +46,7 @@ public class GuideEmeraldItemStack extends GuideItemStack {
         List<Component> tooltip = new ArrayList<>();
         tooltip.add(getHoverName());
         tooltip.add(Component.empty());
-        tooltip.addAll(generateLore());
+        tooltip.addAll(generatedTooltip);
 
         appendFavoriteInfo(tooltip);
 

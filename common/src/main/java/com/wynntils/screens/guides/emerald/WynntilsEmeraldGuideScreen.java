@@ -9,6 +9,8 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
+import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -18,19 +20,20 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class WynntilsEmeraldGuideScreen
-        extends WynntilsListScreen<GuideEmeraldItemStack, GuideEmeraldItemStackButton> {
+        extends WynntilsListScreen<GuideItemStack, WynntilsButton> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
-    private List<GuideEmeraldItemStack> parsedItemCache;
+    private List<GuideItemStack> parsedItemCache;
 
     private WynntilsEmeraldGuideScreen() {
         super(Component.translatable("screens.wynntils.wynntilsGuides.emeralds.name"));
@@ -45,6 +48,10 @@ public final class WynntilsEmeraldGuideScreen
         if (parsedItemCache == null) {
             parsedItemCache = new ArrayList<>();
             parsedItemCache.addAll(Models.Emerald.getAllEmeraldItems());
+
+            for (int i = 1; i <= 10; i++) {
+                parsedItemCache.add(new GuideEmeraldPouchItemStack(i));
+            }
         }
 
         super.doInit();
@@ -116,6 +123,9 @@ public final class WynntilsEmeraldGuideScreen
         if (hovered instanceof GuideEmeraldItemStackButton guideEmeraldItemStack) {
             guiGraphics.setTooltipForNextFrame(
                     FontRenderer.getInstance().getFont(), guideEmeraldItemStack.getItemStack(), mouseX, mouseY);
+        } else if (hovered instanceof GuideEmeraldPouchItemStackButton guideEmeraldPouchItemStack) {
+            guiGraphics.setTooltipForNextFrame(
+                    FontRenderer.getInstance().getFont(), guideEmeraldPouchItemStack.getItemStack(), mouseX, mouseY);
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);
@@ -135,17 +145,30 @@ public final class WynntilsEmeraldGuideScreen
     }
 
     @Override
-    protected GuideEmeraldItemStackButton getButtonFromElement(int i) {
+    protected WynntilsButton getButtonFromElement(int i) {
         int xOffset = (i % ELEMENTS_COLUMNS) * 20;
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
-        return new GuideEmeraldItemStackButton(
-                (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
-                yOffset + 43 + offsetY,
-                18,
-                18,
-                elements.get(i),
-                this);
+        GuideItemStack element = elements.get(i);
+        if(element instanceof GuideEmeraldPouchItemStack guideEmeraldPouchItemStack) {
+            return new GuideEmeraldPouchItemStackButton(
+                    (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
+                    yOffset + 43 + offsetY,
+                    18,
+                    18,
+                    guideEmeraldPouchItemStack,
+                    this);
+        } else if (element instanceof GuideEmeraldItemStack guideEmeraldItemStack) {
+            return new GuideEmeraldItemStackButton(
+                    (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
+                    yOffset + 43 + offsetY,
+                    18,
+                    18,
+                    guideEmeraldItemStack,
+                    this);
+        }
+
+        return null;
     }
 
     @Override
