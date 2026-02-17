@@ -2809,7 +2809,6 @@
   "screens.wynntils.wynntilsGuides.aspectGuide.name": "아스펙트 가이드",
   "screens.wynntils.wynntilsGuides.charmGuide.name": "부적 가이드",
   "screens.wynntils.wynntilsGuides.description": "Wynntils 에서 제공하는 아이템 가이드입니다.",
-  "screens.wynntils.wynntilsGuides.emeralds.emeraldPouch.name": "에메랄드 파우치 가이드",
   "screens.wynntils.wynntilsGuides.export.description": "즐겨찾기한 아이템 목록을 클립보드로 내보냅니다.",
   "screens.wynntils.wynntilsGuides.export.name": "즐겨찾기 내보내기",
   "screens.wynntils.wynntilsGuides.exportedFavorites": "즐겨찾기 %s개를 내보냈습니다!",

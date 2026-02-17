@@ -2382,7 +2382,6 @@
   "screens.wynntils.wynntilsDiscoveries.showUnfoundWorld.name": "Descubrimientos de Mundo No Descubierto",
   "screens.wynntils.wynntilsGuides.charmGuide.name": "Guía de Encantos",
   "screens.wynntils.wynntilsGuides.description": "Ver todas las guías en Wynntils.",
-  "screens.wynntils.wynntilsGuides.emeralds.emeraldPouch.name": "Guía de Bolsas de Esmeraldas",
   "screens.wynntils.wynntilsGuides.export.description": "Exportar favoritos a tu portapapeles",
   "screens.wynntils.wynntilsGuides.export.name": "Exportar Favoritos",
   "screens.wynntils.wynntilsGuides.exportedFavorites": "¡Exportados %s favoritos!",

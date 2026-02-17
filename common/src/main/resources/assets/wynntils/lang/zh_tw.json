@@ -2382,7 +2382,6 @@
   "screens.wynntils.wynntilsDiscoveries.showUnfoundWorld.name": "未發現世界發現",
   "screens.wynntils.wynntilsGuides.charmGuide.name": "魅力指南",
   "screens.wynntils.wynntilsGuides.description": "查看Wynntils中的所有指南。",
-  "screens.wynntils.wynntilsGuides.emeralds.emeraldPouch.name": "翡翠袋指南",
   "screens.wynntils.wynntilsGuides.export.description": "導出收藏到剪貼板",
   "screens.wynntils.wynntilsGuides.export.name": "導出收藏",
   "screens.wynntils.wynntilsGuides.exportedFavorites": "已導出 %s 個收藏！",
