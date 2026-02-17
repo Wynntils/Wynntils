@@ -2382,7 +2382,7 @@
   "screens.wynntils.wynntilsDiscoveries.showUnfoundWorld.name": "Felfedezetlen Világ Felfedezések",
   "screens.wynntils.wynntilsGuides.charmGuide.name": "Bűbáj Útmutató",
   "screens.wynntils.wynntilsGuides.description": "Tekintse meg az összes útmutatót a Wynntils-ben.",
-  "screens.wynntils.wynntilsGuides.emeraldPouch.name": "Smaragdzsák Útmutató",
+  "screens.wynntils.wynntilsGuides.emeralds.emeraldPouch.name": "Smaragdzsák Útmutató",
   "screens.wynntils.wynntilsGuides.export.description": "Kedvencek exportálása a vágólapra",
   "screens.wynntils.wynntilsGuides.export.name": "Kedvencek Exportálása",
   "screens.wynntils.wynntilsGuides.exportedFavorites": "%s kedvenc exportálva!",

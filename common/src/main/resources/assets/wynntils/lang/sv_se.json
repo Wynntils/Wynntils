@@ -2412,7 +2412,7 @@
   "screens.wynntils.wynntilsDiscoveries.showUnfoundWorld.name": "Oupptäckta Världs Upptäckter",
   "screens.wynntils.wynntilsGuides.charmGuide.name": "Charm Guide",
   "screens.wynntils.wynntilsGuides.description": "Se alla guider i Wynntils.",
-  "screens.wynntils.wynntilsGuides.emeraldPouch.name": "Smaragdpåse Guide",
+  "screens.wynntils.wynntilsGuides.emeralds.emeraldPouch.name": "Smaragdpåse Guide",
   "screens.wynntils.wynntilsGuides.export.description": "Exportera favoriter till ditt urklipp",
   "screens.wynntils.wynntilsGuides.export.name": "Exportera Favoriter",
   "screens.wynntils.wynntilsGuides.exportedFavorites": "Exporterade %s favoriter!",

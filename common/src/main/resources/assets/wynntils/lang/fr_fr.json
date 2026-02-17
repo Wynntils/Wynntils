@@ -2382,7 +2382,7 @@
   "screens.wynntils.wynntilsDiscoveries.showUnfoundWorld.name": "Découvertes de Monde Non Découvert",
   "screens.wynntils.wynntilsGuides.charmGuide.name": "Guide des Charms",
   "screens.wynntils.wynntilsGuides.description": "Voir tous les guides dans Wynntils.",
-  "screens.wynntils.wynntilsGuides.emeraldPouch.name": "Guide des Pochettes d'Émeraudes",
+  "screens.wynntils.wynntilsGuides.emeralds.emeraldPouch.name": "Guide des Pochettes d'Émeraudes",
   "screens.wynntils.wynntilsGuides.export.description": "Exporter les favoris vers votre presse-papiers",
   "screens.wynntils.wynntilsGuides.export.name": "Exporter les Favoris",
   "screens.wynntils.wynntilsGuides.exportedFavorites": "%s favoris exportés !",

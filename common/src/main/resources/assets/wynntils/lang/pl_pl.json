@@ -2382,7 +2382,7 @@
   "screens.wynntils.wynntilsDiscoveries.showUnfoundWorld.name": "Nieodkryte Odkrycia Świata",
   "screens.wynntils.wynntilsGuides.charmGuide.name": "Przewodnik po Amuletach",
   "screens.wynntils.wynntilsGuides.description": "Zobacz wszystkie przewodniki w Wynntils.",
-  "screens.wynntils.wynntilsGuides.emeraldPouch.name": "Przewodnik po Sakiewce Szmaragdów",
+  "screens.wynntils.wynntilsGuides.emeralds.emeraldPouch.name": "Przewodnik po Sakiewce Szmaragdów",
   "screens.wynntils.wynntilsGuides.export.description": "Eksportuj ulubione do schowka",
   "screens.wynntils.wynntilsGuides.export.name": "Eksportuj Ulubione",
   "screens.wynntils.wynntilsGuides.exportedFavorites": "Wyeksportowano %s ulubionych!",

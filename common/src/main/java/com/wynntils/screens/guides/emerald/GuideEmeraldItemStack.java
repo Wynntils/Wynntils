@@ -68,7 +68,7 @@ public class GuideEmeraldItemStack extends GuideItemStack {
         List<Component> itemLore = new ArrayList<>();
         itemLore.add(getBanner());
         itemLore.add(Component.empty());
-        itemLore.add(Component.literal("Worth ")
+        itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.emeralds.emeralds.usage1")
                 .withStyle(ChatFormatting.DARK_GRAY)
                 .append(Component.literal(unit.getMultiplier() + EmeraldUnits.EMERALD.getSymbol())
                         .withStyle(ChatFormatting.GREEN)));

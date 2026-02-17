@@ -3172,7 +3172,7 @@
   "screens.wynntils.wynntilsGuides.aspectGuide.name": "Руководство по аспектам",
   "screens.wynntils.wynntilsGuides.charmGuide.name": "Руководство по Чарам",
   "screens.wynntils.wynntilsGuides.description": "Посмотреть все руководства в Wynntils.",
-  "screens.wynntils.wynntilsGuides.emeraldPouch.name": "Руководство по Изумрудным Сумкам",
+  "screens.wynntils.wynntilsGuides.emeralds.emeraldPouch.name": "Руководство по Изумрудным Сумкам",
   "screens.wynntils.wynntilsGuides.export.description": "Экспорт избранного в буфер обмена",
   "screens.wynntils.wynntilsGuides.export.name": "Экспорт Избранного",
   "screens.wynntils.wynntilsGuides.exportedFavorites": "Экспортировано %s избранных!",
