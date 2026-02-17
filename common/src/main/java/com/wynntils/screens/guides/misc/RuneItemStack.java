@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.guides.rune;
+package com.wynntils.screens.guides.misc;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.models.items.items.game.RuneItem;

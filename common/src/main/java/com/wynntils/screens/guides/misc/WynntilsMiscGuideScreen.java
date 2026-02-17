@@ -2,14 +2,17 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.guides.rune;
+package com.wynntils.screens.guides.misc;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.activities.type.Dungeon;
 import com.wynntils.models.rewards.type.RuneType;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
+import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -25,18 +28,18 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public final class WynntilsRunesGuideScreen extends WynntilsListScreen<RuneItemStack, GuideRuneItemStackButton> {
+public final class WynntilsMiscGuideScreen extends WynntilsListScreen<GuideItemStack, WynntilsButton> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
-    private final List<RuneItemStack> parsedItemCache = new ArrayList<>();
+    private final List<GuideItemStack> parsedItemCache = new ArrayList<>();
 
-    private WynntilsRunesGuideScreen() {
-        super(Component.translatable("screens.wynntils.wynntilsGuides.runes.name"));
+    private WynntilsMiscGuideScreen() {
+        super(Component.translatable("screens.wynntils.wynntilsGuides.misc.name"));
     }
 
     public static Screen create() {
-        return new WynntilsRunesGuideScreen();
+        return new WynntilsMiscGuideScreen();
     }
 
     @Override
@@ -44,6 +47,11 @@ public final class WynntilsRunesGuideScreen extends WynntilsListScreen<RuneItemS
         if (parsedItemCache.isEmpty()) {
             for (RuneType runeType : Models.Rewards.getAllRuneInfo()) {
                 parsedItemCache.add(new RuneItemStack(runeType));
+            }
+
+            for(Dungeon dungeon : Dungeon.values()) {
+                if(dungeon.isExists()) parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, false));
+                if(dungeon.isCorruptedExists()) parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, true));
             }
         }
 
@@ -79,7 +87,7 @@ public final class WynntilsRunesGuideScreen extends WynntilsListScreen<RuneItemS
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(guiGraphics);
 
-        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.runes.name"));
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.misc.name"));
 
         renderDescription(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.guideDescription"), "");
 
@@ -99,6 +107,9 @@ public final class WynntilsRunesGuideScreen extends WynntilsListScreen<RuneItemS
         if (hovered instanceof GuideRuneItemStackButton guideAugmentItemStack) {
             guiGraphics.setTooltipForNextFrame(
                     FontRenderer.getInstance().getFont(), guideAugmentItemStack.getItemStack(), mouseX, mouseY);
+        } else if (hovered instanceof GuideDungeonKeyItemStackButton guideDungeonKeyItemStack) {
+            guiGraphics.setTooltipForNextFrame(
+                    FontRenderer.getInstance().getFont(), guideDungeonKeyItemStack.getItemStack(), mouseX, mouseY);
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);
@@ -118,17 +129,31 @@ public final class WynntilsRunesGuideScreen extends WynntilsListScreen<RuneItemS
     }
 
     @Override
-    protected GuideRuneItemStackButton getButtonFromElement(int i) {
+    protected WynntilsButton getButtonFromElement(int i) {
         int xOffset = (i % ELEMENTS_COLUMNS) * 20;
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
-        return new GuideRuneItemStackButton(
-                (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
-                yOffset + 43 + offsetY,
-                18,
-                18,
-                elements.get(i),
-                this);
+        GuideItemStack element = elements.get(i);
+
+        if(element instanceof GuideDungeonKeyItemStack guideDungeonKeyItemStack) {
+            return new GuideDungeonKeyItemStackButton(
+                    (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
+                    yOffset + 43 + offsetY,
+                    18,
+                    18,
+                    guideDungeonKeyItemStack,
+                    this);
+        } else if (element instanceof RuneItemStack runeItemStack) {
+            return new GuideRuneItemStackButton(
+                    (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
+                    yOffset + 43 + offsetY,
+                    18,
+                    18,
+                    runeItemStack,
+                    this);
+        }
+
+        return null;
     }
 
     @Override

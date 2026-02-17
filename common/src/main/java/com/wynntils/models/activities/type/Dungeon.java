@@ -4,7 +4,6 @@
  */
 package com.wynntils.models.activities.type;
 
-import com.wynntils.utils.EnumUtils;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -19,8 +18,7 @@ public enum Dungeon {
             new DungeonData(23, 290, -1950),
             new DungeonData(82, 3313, 5346)),
     TIMELOST_SANCTUM("Time-Lost Sanctum",
-            new DungeonData(27, -263, -1069),
-            new DungeonData(0, 0, 0)), // TODO FIGURE OUT VALUES
+            new DungeonData(27, -263, -1069)),
     SAND_SWEPT_TOMB("Sand-Swept Tomb",
             new DungeonData(36, 1432, -1830),
             new DungeonData(86, 3331, 4184)),
@@ -34,25 +32,25 @@ public enum Dungeon {
             new DungeonData(63, -582, -3511),
             new DungeonData(98, 4286, -18341)),
     FALLEN_FACTORY("Fallen Factory",
-            new DungeonData(90, -1646, -2608),
-            new DungeonData(0, 0, 0)), // TODO FIGURE OUT VALUES
+            new DungeonData(90, -1646, -2608)),
     ELDRITCH_OUTLOOK("Eldritch Outlook",
-            new DungeonData(100, 1291, -749),
-            new DungeonData(0, 0, 0)), // TODO FIGURE OUT VALUES
-    LOST_SANCTUARY(true, false);
+            new DungeonData(100, 1291, -749)),
+    LOST_SANCTUARY("Lost Sanctuary");
 
     private final String name;
-    private DungeonData dungeonData;
-    private DungeonData corruptedDungeonData;
+    private final DungeonData dungeonData;
+    private final DungeonData corruptedDungeonData;
 
-    Dungeon() {
-        this(false, false);
+    Dungeon(String name) {
+        this.name = name;
+        this.dungeonData = new DungeonData();
+        this.corruptedDungeonData = new DungeonData();
     }
 
-    Dungeon(boolean removed, boolean corruptedRemoved) {
-        this.name = EnumUtils.toNiceString(name());
-        this.dungeonData = new DungeonData(0, 0, 0, removed);
-        this.corruptedDungeonData = new DungeonData(0, 0, 0, corruptedRemoved);
+    Dungeon(String name, DungeonData dungeonData) {
+        this.name = name;
+        this.dungeonData = dungeonData;
+        this.corruptedDungeonData = new DungeonData();
     }
 
     Dungeon(String name, DungeonData dungeonData, DungeonData corruptedDungeonData) {
@@ -83,12 +81,12 @@ public enum Dungeon {
         return corruptedDungeonData;
     }
 
-    public boolean isRemoved() {
-        return dungeonData.isRemoved();
+    public boolean isExists() {
+        return dungeonData.isExists();
     }
 
-    public boolean isCorruptedRemoved() {
-        return corruptedDungeonData.isRemoved();
+    public boolean isCorruptedExists() {
+        return corruptedDungeonData.isExists();
     }
 
     public String getInitials() {
@@ -99,23 +97,27 @@ public enum Dungeon {
         private final int combatLevel;
         private final int xPos;
         private final int yPos;
-        private final boolean removed;
+        private final boolean exists;
 
-        public DungeonData(int combatLevel, int xPos, int yPos) {
-            this(combatLevel, xPos, yPos, false);
+        public DungeonData() {
+            this(0, 0, 0, false);
         }
 
-        public DungeonData(int combatLevel, int xPos, int yPos, boolean removed) {
+        public DungeonData(int combatLevel, int xPos, int yPos) {
+            this(combatLevel, xPos, yPos, true);
+        }
+
+        public DungeonData(int combatLevel, int xPos, int yPos, boolean exists) {
             this.combatLevel = combatLevel;
             this.xPos = xPos;
             this.yPos = yPos;
-            this.removed = removed;
+            this.exists = exists;
         }
 
         public int getCombatLevel() { return combatLevel; }
         public int getXPos() { return xPos; }
         public int getYPos() { return yPos; }
-        public boolean isRemoved() { return removed; }
+        public boolean isExists() { return exists; }
 
         @Override
         public String toString() {
@@ -123,7 +125,7 @@ public enum Dungeon {
                     "combatLevel=" + combatLevel +
                     ", xPos=" + xPos +
                     ", yPos=" + yPos +
-                    ", removed=" + removed +
+                    ", exists=" + exists +
                     '}';
         }
     }

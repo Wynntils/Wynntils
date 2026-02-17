@@ -2,13 +2,11 @@
  * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.guides.dungeonkey;
+package com.wynntils.screens.guides.misc;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.activities.type.Dungeon;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -16,7 +14,6 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
-import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
@@ -28,7 +25,7 @@ public class GuideDungeonKeyItemStackButton extends WynntilsButton {
     private final GuideDungeonKeyItemStack itemStack;
 
     public GuideDungeonKeyItemStackButton(
-            int x, int y, int width, int height, GuideDungeonKeyItemStack itemStack, WynntilsDungeonKeyGuideScreen screen) {
+            int x, int y, int width, int height, GuideDungeonKeyItemStack itemStack, WynntilsMiscGuideScreen screen) {
         super(x, y, width, height, Component.literal("Guide EmeraldPouchItemStack Button"));
         this.itemStack = itemStack;
     }

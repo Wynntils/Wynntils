@@ -2,13 +2,12 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.guides.dungeonkey;
+package com.wynntils.screens.guides.misc;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.models.activities.type.Dungeon;
 import com.wynntils.models.items.items.game.DungeonKeyItem;
 import com.wynntils.screens.guides.GuideItemStack;
-import com.wynntils.utils.EnumUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -22,7 +21,6 @@ import net.minecraft.world.item.component.CustomModelData;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class GuideDungeonKeyItemStack extends GuideItemStack {
     private final Dungeon dungeon;
@@ -62,7 +60,7 @@ public class GuideDungeonKeyItemStack extends GuideItemStack {
     @Override
     public Component getHoverName() {
         return Component.empty()
-                .withStyle(Style.EMPTY.withColor(isCorrupted() ? ChatFormatting.RED : ChatFormatting.GOLD))
+                .withStyle(Style.EMPTY.withColor(isCorrupted() ? ChatFormatting.DARK_RED : ChatFormatting.GOLD))
                 .append(Component.literal(getName(dungeon, corrupted)));
     }
 
@@ -74,8 +72,7 @@ public class GuideDungeonKeyItemStack extends GuideItemStack {
                 .append(" once"));
 
         itemLore.add(Component.empty());
-
-        itemLore.add(Component.literal("Dungeon Info:").withStyle(isCorrupted() ? ChatFormatting.RED : ChatFormatting.GOLD));
+        itemLore.add(Component.literal("Dungeon Info:").withStyle(isCorrupted() ? ChatFormatting.DARK_RED : ChatFormatting.GOLD));
 
         Dungeon.DungeonData dungeonData = isCorrupted() ? dungeon.getCorruptedDungeonData() : dungeon.getDungeonData();
         itemLore.add(Component.literal("Combat Level: ")

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.guides.rune;
+package com.wynntils.screens.guides.misc;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -21,7 +21,7 @@ public class GuideRuneItemStackButton extends WynntilsButton {
     private final RuneItemStack itemStack;
 
     public GuideRuneItemStackButton(
-            int x, int y, int width, int height, RuneItemStack itemStack, WynntilsRunesGuideScreen screen) {
+            int x, int y, int width, int height, RuneItemStack itemStack, WynntilsMiscGuideScreen screen) {
         super(x, y, width, height, Component.literal("Guide RuneItemStack Button"));
         this.itemStack = itemStack;
     }
