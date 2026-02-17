@@ -36,7 +36,7 @@ public class GuideEmeraldItemStack extends GuideItemStack {
     private final List<Component> generatedTooltip;
 
     public GuideEmeraldItemStack(EmeraldUnits unit) {
-        super(unit.getItemStack(), new EmeraldItem(null, unit), unit.name());
+        super(unit.getItemStack(), new EmeraldItem(() -> 1, unit), unit.name());
         this.unit = unit;
         this.generatedTooltip = generateLore();
     }
