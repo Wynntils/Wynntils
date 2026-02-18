@@ -74,11 +74,11 @@ public enum Dungeon {
         return corruptedDungeonData;
     }
 
-    public boolean isExists() {
+    public boolean doesExist() {
         return dungeonData.isExists();
     }
 
-    public boolean isCorruptedExists() {
+    public boolean doesCorruptedExist() {
         return corruptedDungeonData.isExists();
     }
 
