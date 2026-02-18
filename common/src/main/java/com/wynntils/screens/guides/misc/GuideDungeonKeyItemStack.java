@@ -103,7 +103,7 @@ public class GuideDungeonKeyItemStack extends GuideItemStack {
 
         float model = corrupted
                 ? Services.CustomModel.getFloat("dungeon_key_broken").orElse(-1f)
-                : Services.CustomModel.getFloat("dungeon_key").orElse(0f);
+                : Services.CustomModel.getFloat("dungeon_key").orElse(-1f);
 
         CustomModelData customModelData = new CustomModelData(List.of(model), List.of(), List.of(), List.of());
         itemStack.set(DataComponents.CUSTOM_MODEL_DATA, customModelData);
