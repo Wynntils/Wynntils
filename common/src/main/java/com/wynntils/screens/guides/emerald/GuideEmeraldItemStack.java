@@ -56,7 +56,7 @@ public class GuideEmeraldItemStack extends GuideItemStack {
     @Override
     public Component getHoverName() {
         return Component.empty()
-                .withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN))
+                .withStyle(ChatFormatting.GREEN)
                 .append(Component.literal(unit.getDisplayName()));
     }
 
