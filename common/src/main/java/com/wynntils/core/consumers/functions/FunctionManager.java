@@ -435,6 +435,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.FormatDurationFunction());
         registerFunction(new StringFunctions.FormatFunction());
         registerFunction(new StringFunctions.FormatRangedFunction());
+        registerFunction(new StringFunctions.FromCodepointFunction());
         registerFunction(new StringFunctions.LeadingZerosFunction());
         registerFunction(new StringFunctions.ParseDoubleFunction());
         registerFunction(new StringFunctions.ParseIntegerFunction());
