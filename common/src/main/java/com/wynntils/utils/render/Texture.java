@@ -153,9 +153,8 @@ public enum Texture {
     WOODWORKING_FILTER_ICON("icons/guide_filters/woodworking_filter_icon.png", 16, 16),
 
     // Trade Market
-    PRESET("trade_market/preset.png", 16, 16),
-    SAVED_PRESET("trade_market/saved_preset.png", 16, 16),
-    SORT("trade_market/sort.png", 16, 16),
+    TRADE_MARKET_SIDEBAR("trade_market/trade_market_sidebar.png", 43, 163),
+    TRADE_MARKET_SCROLL("trade_market/trade_market_scroll.png", 43, 163),
 
     // Generic
     ADD_ICON("icons/generic/add_icon.png", 14, 14),
@@ -369,7 +368,6 @@ public enum Texture {
     BUTTON_TOP("ui_components/button_top.png", 128, 60),
     COLOR_PICKER_BACKGROUND("ui_components/color_picker_background.png", 442, 208),
     CONFIG_PROFILE_BACKGROUND("ui_components/config_profile_background.png", 160, 200),
-    CONTAINER_SIDEBAR("ui_components/container_sidebar.png", 25, 136),
     EMERALD_COUNT_BACKGROUND("ui_components/emerald_count_background.png", 24, 24),
     EXIT_FLAG("ui_components/exit_flag.png", 73, 62),
     GEAR_ICONS("ui_components/gear_icons.png", 64, 192),
@@ -386,7 +384,6 @@ public enum Texture {
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
     SCROLL_BUTTON("ui_components/scroll_button.png", 7, 17),
     SETTINGS_WARNING_BACKGROUND("ui_components/settings_warning_background.png", 153, 106),
-    SCROLLBAR_BACKGROUND("ui_components/generic_container_scrollbar.png", 25, 136),
     SCROLLBAR_BUTTON("ui_components/scroll_button_container.png", 12, 15),
     VIGNETTE("ui_components/vignette.png", 512, 512),
     WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 358, 206),

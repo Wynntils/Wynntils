@@ -16,21 +16,21 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.wrappedscreen.event.WrappedScreenOpenEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.screens.trademarket.TradeMarketSearchResultScreen;
 import com.wynntils.utils.mc.KeyboardUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ShiftBehavior;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class CustomTradeMarketResultScreenFeature extends Feature {
-    private static final String SEARCH_ITEM_TITLE = "§a§lSearch";
+    private static final String BACK_ITEM_TITLE = "§7Back";
+    private static final String SEARCH_FILTER_ITEM_TITLE = "§e§lSearch and Filter";
 
     @Persisted
     private final Config<ShiftBehavior> shiftBehaviorConfig = new Config<>(ShiftBehavior.DISABLED_IF_SHIFT_HELD);
@@ -45,6 +45,7 @@ public class CustomTradeMarketResultScreenFeature extends Feature {
 
     @SubscribeEvent
     public void onWrappedScreenOpen(WrappedScreenOpenEvent event) {
+        if (Models.TradeMarket.getTradeMarketState() != TradeMarketState.FILTERED_RESULTS) return;
         if (event.getWrappedScreenClass() != TradeMarketSearchResultScreen.class) return;
 
         boolean shouldOpen = false;
@@ -72,23 +73,29 @@ public class CustomTradeMarketResultScreenFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerClick(ContainerClickEvent event) {
-        if (!StyledText.fromComponent(event.getItemStack().getHoverName()).equalsString(SEARCH_ITEM_TITLE)) return;
+        StyledText itemName = StyledText.fromComponent(event.getItemStack().getHoverName());
 
-        shiftClickedSearchItem = KeyboardUtils.isShiftDown();
+        if (itemName.equalsString(BACK_ITEM_TITLE) || itemName.equalsString(SEARCH_FILTER_ITEM_TITLE)) {
+            shiftClickedSearchItem = KeyboardUtils.isShiftDown();
+        }
     }
 
     @SubscribeEvent
     public void onRenderTooltip(ItemTooltipRenderEvent.Pre event) {
         if (shiftBehaviorConfig.get() == ShiftBehavior.NONE) return;
-        if (McUtils.screen() == null) return;
 
-        if (!Models.TradeMarket.isFilterScreen(McUtils.screen().getTitle())) {
+        if (Models.TradeMarket.getTradeMarketState() == TradeMarketState.DEFAULT_RESULTS
+                || Models.TradeMarket.getTradeMarketState() == TradeMarketState.FILTERED_RESULTS) {
+            if (!StyledText.fromComponent(event.getItemStack().getHoverName()).equalsString(SEARCH_FILTER_ITEM_TITLE)) {
+                return;
+            }
+        } else if (Models.TradeMarket.getTradeMarketState() == TradeMarketState.FILTERS_PAGE) {
+            if (!StyledText.fromComponent(event.getItemStack().getHoverName()).equalsString(BACK_ITEM_TITLE)) {
+                return;
+            }
+        } else {
             return;
         }
-
-        if (!StyledText.fromComponent(event.getItemStack().getHoverName()).equalsString(SEARCH_ITEM_TITLE)) return;
-
-        ItemStack itemStack = event.getItemStack();
 
         List<Component> tooltips = new ArrayList<>(event.getTooltips());
 

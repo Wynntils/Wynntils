@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.trademarket;
@@ -33,19 +33,19 @@ import org.lwjgl.glfw.GLFW;
 
 public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMarketSearchResultScreen> {
     // Patterns
-    private static final Pattern TITLE_PATTERN = Pattern.compile("Search Results");
+    private static final Pattern TITLE_PATTERN = Pattern.compile("§f\uDAFF\uDFE8\uE011");
     private static final Pattern PAGE_PATTERN = Pattern.compile("§f§lPage (\\d+)§a (:?[<>]§2[<>]§a)+[<>]");
 
     // Constants
-    private static final int EXPECTED_ITEMS_PER_PAGE = 42;
-    private static final int LAST_ITEM_SLOT = 54;
+    private static final int EXPECTED_ITEMS_PER_PAGE = 45;
+    private static final int LAST_ITEM_SLOT = 44;
     private static final int PAGE_BATCH_SIZE = 10;
 
     // Slots
-    private static final int PREVIOUS_PAGE_SLOT = 26;
-    private static final int NEXT_PAGE_SLOT = 35;
-    private static final int BACK_TO_SEARCH_SLOT = 8;
-    private static final int SORT_MODE_SLOT = 53;
+    private static final int PREVIOUS_PAGE_SLOT = 51;
+    private static final int NEXT_PAGE_SLOT = 53;
+    private static final int BACK_TO_SEARCH_SLOT = 47;
+    private static final int SORT_MODE_SLOT = 52;
 
     // Screen
     private TradeMarketSearchResultScreen wrappedScreen;
@@ -275,7 +275,7 @@ public class TradeMarketSearchResultHolder extends WrappedScreenHolder<TradeMark
         }
 
         // We only care about the slots that are in the "search results" area
-        if (slot % 9 >= 7 || slot >= LAST_ITEM_SLOT) return;
+        if (slot > LAST_ITEM_SLOT) return;
 
         // If we have found an empty item, we count them and check if we have the expected amount
         Int2ObjectSortedMap<ItemStack> currentItems =

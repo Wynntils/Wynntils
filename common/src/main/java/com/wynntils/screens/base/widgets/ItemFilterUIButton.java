@@ -22,16 +22,28 @@ public class ItemFilterUIButton extends WynntilsButton {
     public ItemFilterUIButton(
             int x,
             int y,
+            int width,
+            int height,
             SearchWidget searchWidget,
             Screen previousScreen,
             boolean supportsSorting,
             List<ItemProviderType> supportedProviderTypes) {
-        super(x, y, 20, 20, Component.literal("✎"));
+        super(x, y, width, height, Component.literal("✎"));
         this.searchWidget = searchWidget;
         this.previousScreen = previousScreen;
         this.supportsSorting = supportsSorting;
         this.supportedProviderTypes = supportedProviderTypes;
         this.setTooltip(Tooltip.create(Component.translatable("screens.wynntils.itemSearchButton.tooltip")));
+    }
+
+    public ItemFilterUIButton(
+            int x,
+            int y,
+            SearchWidget searchWidget,
+            Screen previousScreen,
+            boolean supportsSorting,
+            List<ItemProviderType> supportedProviderTypes) {
+        this(x, y, 20, 20, searchWidget, previousScreen, supportsSorting, supportedProviderTypes);
     }
 
     @Override
