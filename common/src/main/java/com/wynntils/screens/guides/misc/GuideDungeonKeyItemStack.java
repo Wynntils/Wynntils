@@ -77,14 +77,15 @@ public class GuideDungeonKeyItemStack extends GuideItemStack {
         itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.usage4")
                 .withStyle(isCorrupted() ? ChatFormatting.DARK_RED : ChatFormatting.GOLD));
 
-        Dungeon.DungeonData dungeonData = isCorrupted() ? dungeon.getCorruptedDungeonData() : dungeon.getDungeonData();
+        Dungeon.DungeonData dungeonData =
+                (isCorrupted() ? dungeon.getCorruptedDungeonData() : dungeon.getDungeonData()).orElseThrow();
         itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.usage5")
                 .withStyle(ChatFormatting.GRAY)
                 .append(Component.literal(dungeonData.getCombatLevel() + "").withStyle(ChatFormatting.WHITE)));
 
         itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.usage6")
                 .withStyle(ChatFormatting.GRAY)
-                .append(Component.literal(dungeonData.getXPos() + " " + dungeonData.getYPos())
+                .append(Component.literal(dungeonData.getXPos() + " " + dungeonData.getZPos())
                         .withStyle(ChatFormatting.WHITE)));
 
         itemLore.add(Component.empty());
