@@ -114,7 +114,9 @@ public class GuideDungeonKeyItemStack extends GuideItemStack {
     private static String getName(Dungeon dungeon, boolean corrupted) {
         StringBuilder name = new StringBuilder();
 
-        if (corrupted) name.append("Corrupted ");
+        if (corrupted) {
+            name.append("Corrupted ");
+        }
 
         return name.append(dungeon.getName()).append(" Key").toString();
     }
