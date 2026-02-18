@@ -96,9 +96,7 @@ public class GuideAugmentItemStackButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress(InputWithModifiers input) {
-
-    }
+    public void onPress(InputWithModifiers input) {}
 
     public AugmentItemStack getItemStack() {
         return itemStack;

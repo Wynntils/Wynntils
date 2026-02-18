@@ -55,9 +55,7 @@ public class GuideEmeraldItemStack extends GuideItemStack {
 
     @Override
     public Component getHoverName() {
-        return Component.empty()
-                .withStyle(ChatFormatting.GREEN)
-                .append(Component.literal(unit.getDisplayName()));
+        return Component.empty().withStyle(ChatFormatting.GREEN).append(Component.literal(unit.getDisplayName()));
     }
 
     public EmeraldUnits getEmeraldUnit() {
@@ -91,7 +89,7 @@ public class GuideEmeraldItemStack extends GuideItemStack {
                         .withStyle(BANNER_STYLE)
                         .append(Component.literal(text + "\uDB00\uDC02")
                                 .withStyle(style ->
-                                        style.withColor(ChatFormatting.WHITE).withShadowColor(SHADOW_COLOR))))
+                                        style.withColor(ChatFormatting.WHITE).withoutShadow())))
                 .append(Component.empty()
                         .withStyle(ChatFormatting.DARK_GRAY)
                         .append(Component.literal(
@@ -100,6 +98,6 @@ public class GuideEmeraldItemStack extends GuideItemStack {
                                 .append(Component.literal(
                                                 "\uE002\uE014\uE011\uE011\uE004\uE00D\uE002\uE018\uDB00\uDC02")
                                         .withStyle(style -> style.withColor(ChatFormatting.WHITE)
-                                                .withShadowColor(SHADOW_COLOR)))));
+                                                .withoutShadow()))));
     }
 }
