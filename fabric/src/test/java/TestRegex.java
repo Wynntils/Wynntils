@@ -259,6 +259,8 @@ public class TestRegex {
         p.shouldMatch("§7[§f+0 Combat XP§7]\n§bx1.1 §7[§f+§b1058§f Guild XP§7]\n[ShadowCat117]");
         // Dxp guild xp with blessing
         p.shouldMatch("§dx2 §7[§f+§d0§f Combat XP§7]\n§dx2 §bx1.1 §7[§f+§b1661§f Guild XP§7]\n[ShadowCat117]");
+        // 1.5x xp
+        p.shouldMatch("§dx1.5 §7[§f+§d0§f Combat XP§7]\n§dx1.5 §7[§f+§d1438§f Guild XP§7]\n[ShadowCat117]");
     }
 
     @Test
