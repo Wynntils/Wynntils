@@ -26,13 +26,15 @@ public class GuideDungeonKeyItemStackButton extends WynntilsButton {
 
     public GuideDungeonKeyItemStackButton(
             int x, int y, int width, int height, GuideDungeonKeyItemStack itemStack, WynntilsMiscGuideScreen screen) {
-        super(x, y, width, height, Component.literal("Guide EmeraldPouchItemStack Button"));
+        super(x, y, width, height, Component.literal("Guide DungeonKeyItemStack Button"));
         this.itemStack = itemStack;
     }
 
     @Override
     public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        CustomColor color = itemStack.isCorrupted() ? CustomColor.fromChatFormatting(ChatFormatting.DARK_RED) : CustomColor.fromChatFormatting(ChatFormatting.GOLD);
+        CustomColor color = itemStack.isCorrupted()
+                ? CustomColor.fromChatFormatting(ChatFormatting.DARK_RED)
+                : CustomColor.fromChatFormatting(ChatFormatting.GOLD);
 
         RenderUtils.drawTexturedRect(
                 guiGraphics,
@@ -83,7 +85,8 @@ public class GuideDungeonKeyItemStackButton extends WynntilsButton {
         }
 
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            Services.Favorites.toggleFavorite(StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting());
+            Services.Favorites.toggleFavorite(
+                    StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting());
         }
 
         return true;

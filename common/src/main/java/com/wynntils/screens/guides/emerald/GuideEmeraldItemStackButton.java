@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2026.
+ * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.emerald;
@@ -23,7 +23,7 @@ public class GuideEmeraldItemStackButton extends WynntilsButton {
 
     public GuideEmeraldItemStackButton(
             int x, int y, int width, int height, GuideEmeraldItemStack itemStack, WynntilsEmeraldGuideScreen screen) {
-        super(x, y, width, height, Component.literal("Guide EmeraldPouchItemStack Button"));
+        super(x, y, width, height, Component.literal("Guide EmeraldItemStack Button"));
         this.itemStack = itemStack;
     }
 
@@ -68,7 +68,8 @@ public class GuideEmeraldItemStackButton extends WynntilsButton {
         }
 
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            Services.Favorites.toggleFavorite(StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting());
+            Services.Favorites.toggleFavorite(
+                    StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting());
         }
 
         return true;

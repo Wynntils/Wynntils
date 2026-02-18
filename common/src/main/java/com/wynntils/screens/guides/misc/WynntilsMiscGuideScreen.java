@@ -49,9 +49,14 @@ public final class WynntilsMiscGuideScreen extends WynntilsListScreen<GuideItemS
                 parsedItemCache.add(new RuneItemStack(runeType));
             }
 
-            for(Dungeon dungeon : Dungeon.values()) {
-                if(dungeon.doesExist()) parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, false));
-                if(dungeon.doesCorruptedExist()) parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, true));
+            for (Dungeon dungeon : Dungeon.values()) {
+                if (dungeon.doesExist()) {
+                    parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, false));
+                }
+
+                if (dungeon.doesCorruptedExist()) {
+                    parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, true));
+                }
             }
         }
 
@@ -135,7 +140,7 @@ public final class WynntilsMiscGuideScreen extends WynntilsListScreen<GuideItemS
 
         GuideItemStack element = elements.get(i);
 
-        if(element instanceof GuideDungeonKeyItemStack guideDungeonKeyItemStack) {
+        if (element instanceof GuideDungeonKeyItemStack guideDungeonKeyItemStack) {
             return new GuideDungeonKeyItemStackButton(
                     (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
                     yOffset + 43 + offsetY,
