@@ -22,7 +22,7 @@ public enum Dungeon {
             Optional.of(new DungeonData(23, 290, -1950)),
             Optional.of(new DungeonData(82, 3313, 5346))),
     TIMELOST_SANCTUM(
-            "Time-Lost Sanctum",
+            "Timelost Sanctum",
             Optional.of(new DungeonData(27, -263, -1069)),
             Optional.empty()), // Corrupted version is in Lost Sanctuary
     LOST_SANCTUARY(
