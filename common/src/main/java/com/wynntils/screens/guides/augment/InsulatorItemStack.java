@@ -41,7 +41,7 @@ public class InsulatorItemStack extends AugmentItemStack {
                         .withStyle(ChatFormatting.GRAY));
         MutableComponent obtainComponent = Component.translatable("screens.wynntils.wynntilsGuides.augments.obtain")
                 .withStyle(ChatFormatting.DARK_GRAY)
-                .append(Component.translatable("screens.wynntils.wynntilsGuides.augments.obtainRaids")
+                .append(Component.translatable("screens.wynntils.wynntilsGuides.augments.obtainLootruns")
                         .withStyle(ChatFormatting.AQUA));
 
         return List.of(effectComponent, Component.empty(), incompatibleComponent, Component.empty(), obtainComponent);

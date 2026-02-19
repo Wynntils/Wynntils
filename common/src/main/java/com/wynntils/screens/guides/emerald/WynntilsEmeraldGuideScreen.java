@@ -1,19 +1,21 @@
 /*
- * Copyright © Wynntils 2026.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.guides.rune;
+package com.wynntils.screens.guides.emerald;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.rewards.type.RuneType;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
+import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -25,25 +27,28 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public final class WynntilsRunesGuideScreen extends WynntilsListScreen<RuneItemStack, GuideRuneItemStackButton> {
+public final class WynntilsEmeraldGuideScreen extends WynntilsListScreen<GuideItemStack, WynntilsButton> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
-    private final List<RuneItemStack> parsedItemCache = new ArrayList<>();
+    private List<GuideItemStack> parsedItemCache;
 
-    private WynntilsRunesGuideScreen() {
-        super(Component.translatable("screens.wynntils.wynntilsGuides.runes.name"));
+    private WynntilsEmeraldGuideScreen() {
+        super(Component.translatable("screens.wynntils.wynntilsGuides.emeralds.name"));
     }
 
     public static Screen create() {
-        return new WynntilsRunesGuideScreen();
+        return new WynntilsEmeraldGuideScreen();
     }
 
     @Override
     protected void doInit() {
-        if (parsedItemCache.isEmpty()) {
-            for (RuneType runeType : Models.Rewards.getAllRuneInfo()) {
-                parsedItemCache.add(new RuneItemStack(runeType));
+        if (parsedItemCache == null) {
+            parsedItemCache = new ArrayList<>();
+            parsedItemCache.addAll(Models.Emerald.getAllEmeraldItems());
+
+            for (int i = 1; i <= 10; i++) {
+                parsedItemCache.add(new GuideEmeraldPouchItemStack(i));
             }
         }
 
@@ -79,7 +84,7 @@ public final class WynntilsRunesGuideScreen extends WynntilsListScreen<RuneItemS
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(guiGraphics);
 
-        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.runes.name"));
+        renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.emeralds.name"));
 
         renderDescription(guiGraphics, I18n.get("screens.wynntils.wynntilsGuides.guideDescription"), "");
 
@@ -95,10 +100,30 @@ public final class WynntilsRunesGuideScreen extends WynntilsListScreen<RuneItemS
     }
 
     @Override
+    protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CONTENT_BOOK_TITLE, offsetX, 30 + offsetY);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromString(titleString),
+                        10 + offsetX,
+                        36 + offsetY,
+                        CommonColors.YELLOW,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        TextShadow.NORMAL,
+                        1.5f);
+    }
+
+    @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        if (hovered instanceof GuideRuneItemStackButton guideAugmentItemStack) {
+        if (hovered instanceof GuideEmeraldItemStackButton guideEmeraldItemStack) {
             guiGraphics.setTooltipForNextFrame(
-                    FontRenderer.getInstance().getFont(), guideAugmentItemStack.getItemStack(), mouseX, mouseY);
+                    FontRenderer.getInstance().getFont(), guideEmeraldItemStack.getItemStack(), mouseX, mouseY);
+        } else if (hovered instanceof GuideEmeraldPouchItemStackButton guideEmeraldPouchItemStack) {
+            guiGraphics.setTooltipForNextFrame(
+                    FontRenderer.getInstance().getFont(), guideEmeraldPouchItemStack.getItemStack(), mouseX, mouseY);
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);
@@ -118,17 +143,30 @@ public final class WynntilsRunesGuideScreen extends WynntilsListScreen<RuneItemS
     }
 
     @Override
-    protected GuideRuneItemStackButton getButtonFromElement(int i) {
+    protected WynntilsButton getButtonFromElement(int i) {
         int xOffset = (i % ELEMENTS_COLUMNS) * 20;
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
-        return new GuideRuneItemStackButton(
-                (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
-                yOffset + 43 + offsetY,
-                18,
-                18,
-                elements.get(i),
-                this);
+        GuideItemStack element = elements.get(i);
+        if (element instanceof GuideEmeraldPouchItemStack guideEmeraldPouchItemStack) {
+            return new GuideEmeraldPouchItemStackButton(
+                    (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
+                    yOffset + 43 + offsetY,
+                    18,
+                    18,
+                    guideEmeraldPouchItemStack,
+                    this);
+        } else if (element instanceof GuideEmeraldItemStack guideEmeraldItemStack) {
+            return new GuideEmeraldItemStackButton(
+                    (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
+                    yOffset + 43 + offsetY,
+                    18,
+                    18,
+                    guideEmeraldItemStack,
+                    this);
+        }
+
+        return null;
     }
 
     @Override

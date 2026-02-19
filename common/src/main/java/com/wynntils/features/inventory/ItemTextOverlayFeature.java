@@ -338,9 +338,9 @@ public class ItemTextOverlayFeature extends Feature {
 
             CustomColor textColor;
             if (item.isCorrupted()) {
-                textColor = dungeon.isCorruptedRemoved() ? REMOVED_COLOR : CORRUPTED_COLOR;
+                textColor = dungeon.doesCorruptedExist() ? CORRUPTED_COLOR : REMOVED_COLOR;
             } else {
-                textColor = dungeon.isRemoved() ? REMOVED_COLOR : STANDARD_COLOR;
+                textColor = dungeon.doesExist() ? STANDARD_COLOR : REMOVED_COLOR;
             }
 
             TextRenderSetting style =
