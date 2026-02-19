@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.containers;
@@ -73,8 +73,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ContainerModel extends Model {
     // Test in ContainerModel_ABILITY_TREE_PATTERN
-    public static final Pattern ABILITY_TREE_PATTERN =
-            Pattern.compile("\uDAFF\uDFEA\uE000a");
+    public static final Pattern ABILITY_TREE_PATTERN = Pattern.compile("\uDAFF\uDFEA\uE000a");
 
     public static final String CHARACTER_INFO_NAME = "\uDAFF\uDFDC\uE003";
     public static final String STORE_MENU_NAME =
