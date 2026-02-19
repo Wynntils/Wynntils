@@ -16,7 +16,6 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.screens.guides.emerald.GuideEmeraldItemStack;
 import com.wynntils.utils.mc.McUtils;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
