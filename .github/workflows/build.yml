@@ -43,7 +43,7 @@ jobs:
 
       - name: Add upstream remote
         run: |
-          git remote add upstream https://github.com/${{ github.repository }}.git
+          git remote add upstream https://github.com/Wynntils/Wynntils.git
           git fetch upstream main
 
       - name: Format with spotless
