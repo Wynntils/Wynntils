@@ -2385,7 +2385,6 @@
   "screens.wynntils.wynntilsDiscoveries.showUnfoundWorld.name": "Unentdeckte Welt-Entdeckungen",
   "screens.wynntils.wynntilsGuides.charmGuide.name": "Charm-Leitfaden",
   "screens.wynntils.wynntilsGuides.description": "Alle Anleitungen in Wynntils ansehen.",
-  "screens.wynntils.wynntilsGuides.emeraldPouch.name": "Smaragdbeutel-Leitfaden",
   "screens.wynntils.wynntilsGuides.export.description": "Favoriten in die Zwischenablage exportieren",
   "screens.wynntils.wynntilsGuides.export.name": "Favoriten exportieren",
   "screens.wynntils.wynntilsGuides.exportedFavorites": "%s Favoriten exportiert!",

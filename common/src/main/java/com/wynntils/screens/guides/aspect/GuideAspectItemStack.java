@@ -9,7 +9,6 @@ import com.wynntils.models.aspects.type.AspectInfo;
 import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.colors.CommonColors;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -106,7 +105,7 @@ public class GuideAspectItemStack extends GuideItemStack {
         this.generatedTooltip.add(Component.empty());
         Style rarityStyle = Style.EMPTY
                 .withColor(aspectInfo.gearTier().getChatFormatting())
-                .withShadowColor(CommonColors.WHITE.withAlpha(0).asInt())
+                .withoutShadow()
                 .withFont(RARITY_TAG_FONT);
         Component rarityLine = getRarityTag().withStyle(rarityStyle);
 

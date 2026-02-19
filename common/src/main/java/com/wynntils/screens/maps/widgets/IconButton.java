@@ -4,13 +4,17 @@
  */
 package com.wynntils.screens.maps.widgets;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.screens.maps.PoiCreationScreen;
 import com.wynntils.screens.maps.WaypointManagementScreen;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -62,6 +66,21 @@ public class IconButton extends AbstractWidget {
         }
 
         if (this.isHovered) {
+            if (McUtils.screen() instanceof WaypointManagementScreen) {
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(
+                                ComponentUtils.wrapTooltips(
+                                        List.of(
+                                                Component.translatable(
+                                                        "screens.wynntils.waypointManagementGui.iconFilterTooltip1"),
+                                                Component.translatable(
+                                                        "screens.wynntils.waypointManagementGui.iconFilterTooltip2")),
+                                        250),
+                                Component::getVisualOrderText),
+                        mouseX,
+                        mouseY);
+            }
+
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }
@@ -73,7 +92,7 @@ public class IconButton extends AbstractWidget {
         } else if (McUtils.screen() instanceof WaypointManagementScreen waypointManagementScreen) {
             this.selected = !selected;
 
-            waypointManagementScreen.toggleIcon(mapIcon, selected);
+            waypointManagementScreen.toggleIcon(mapIcon, selected, KeyboardUtils.isShiftDown());
         }
 
         return true;

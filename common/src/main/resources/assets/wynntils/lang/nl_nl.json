@@ -2382,7 +2382,6 @@
   "screens.wynntils.wynntilsDiscoveries.showUnfoundWorld.name": "Onontdekte Wereld Ontdekkingen",
   "screens.wynntils.wynntilsGuides.charmGuide.name": "Amulet Gids",
   "screens.wynntils.wynntilsGuides.description": "Bekijk alle gidsen in Wynntils.",
-  "screens.wynntils.wynntilsGuides.emeraldPouch.name": "Smaragd Zak Gids",
   "screens.wynntils.wynntilsGuides.export.description": "Exporteer favorieten naar je klembord",
   "screens.wynntils.wynntilsGuides.export.name": "Favorieten Exporteren",
   "screens.wynntils.wynntilsGuides.exportedFavorites": "%s favorieten geëxporteerd!",

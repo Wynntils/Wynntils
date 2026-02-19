@@ -7,7 +7,6 @@ package com.wynntils.utils.wynn;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.client.Camera;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.player.Player;
@@ -48,10 +47,10 @@ public final class RaycastUtils {
             double maxRange,
             double horizontalFovDegrees,
             double verticalFovDegrees) {
-        Camera camera = McUtils.mc().gameRenderer.getMainCamera();
+        LocalPlayer player = McUtils.mc().player;
 
-        Vec3 camPos = camera.position();
-        Vec3 camForward = new Vec3(camera.forwardVector()).normalize();
+        Vec3 camPos = player.getEyePosition();
+        Vec3 camForward = player.getLookAngle();
 
         Display.TextDisplay best = null;
         double bestHorizontalAngle = Double.MAX_VALUE;

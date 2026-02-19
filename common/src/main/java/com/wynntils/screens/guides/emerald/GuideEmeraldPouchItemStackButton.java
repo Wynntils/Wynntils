@@ -1,34 +1,43 @@
 /*
- * Copyright © Wynntils 2026.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.guides.rune;
+package com.wynntils.screens.guides.emerald;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class GuideRuneItemStackButton extends WynntilsButton {
-    private final RuneItemStack itemStack;
+public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
+    private final GuideEmeraldPouchItemStack itemStack;
 
-    public GuideRuneItemStackButton(
-            int x, int y, int width, int height, RuneItemStack itemStack, WynntilsRunesGuideScreen screen) {
-        super(x, y, width, height, Component.literal("Guide RuneItemStack Button"));
+    public GuideEmeraldPouchItemStackButton(
+            int x,
+            int y,
+            int width,
+            int height,
+            GuideEmeraldPouchItemStack itemStack,
+            WynntilsEmeraldGuideScreen screen) {
+        super(x, y, width, height, Component.literal("Guide EmeraldPouchItemStack Button"));
         this.itemStack = itemStack;
     }
 
     @Override
     public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        CustomColor color = itemStack.getRuneType().getColor();
+        CustomColor color = CustomColor.fromChatFormatting(ChatFormatting.GREEN);
 
         RenderUtils.drawTexturedRect(
                 guiGraphics,
@@ -46,6 +55,18 @@ public class GuideRuneItemStackButton extends WynntilsButton {
                 Texture.HIGHLIGHT.height());
 
         RenderUtils.renderItem(guiGraphics, itemStack, getX(), getY());
+
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        guiGraphics,
+                        StyledText.fromString(String.valueOf(itemStack.getTier())),
+                        getX() + 2,
+                        getX() + 14,
+                        getY() + 8,
+                        0,
+                        color,
+                        HorizontalAlignment.CENTER,
+                        TextShadow.OUTLINE);
 
         if (Services.Favorites.isFavorite(itemStack)) {
             RenderUtils.drawScalingTexturedRect(
@@ -79,7 +100,7 @@ public class GuideRuneItemStackButton extends WynntilsButton {
     @Override
     public void onPress(InputWithModifiers input) {}
 
-    public RuneItemStack getItemStack() {
+    public GuideEmeraldPouchItemStack getItemStack() {
         return itemStack;
     }
 }

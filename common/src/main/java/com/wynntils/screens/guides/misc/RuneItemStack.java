@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.guides.rune;
+package com.wynntils.screens.guides.misc;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.models.items.items.game.RuneItem;
@@ -70,17 +70,17 @@ public class RuneItemStack extends GuideItemStack {
     }
 
     private List<Component> generateLore() {
-        MutableComponent usageComponent = Component.translatable("screens.wynntils.wynntilsGuides.runes.usage1")
+        MutableComponent usageComponent = Component.translatable("screens.wynntils.wynntilsGuides.misc.runes.usage1")
                 .withStyle(ChatFormatting.GRAY)
-                .append(Component.translatable("screens.wynntils.wynntilsGuides.runes.usage2")
+                .append(Component.translatable("screens.wynntils.wynntilsGuides.misc.runes.usage2")
                         .withStyle(ChatFormatting.WHITE))
-                .append(Component.translatable("screens.wynntils.wynntilsGuides.runes.usage3")
+                .append(Component.translatable("screens.wynntils.wynntilsGuides.misc.runes.usage3")
                         .withStyle(ChatFormatting.GRAY))
-                .append(Component.translatable("screens.wynntils.wynntilsGuides.runes.usage4")
+                .append(Component.translatable("screens.wynntils.wynntilsGuides.misc.runes.usage4")
                         .withStyle(ChatFormatting.WHITE));
-        MutableComponent obtainComponent = Component.translatable("screens.wynntils.wynntilsGuides.runes.obtain1")
+        MutableComponent obtainComponent = Component.translatable("screens.wynntils.wynntilsGuides.misc.runes.obtain1")
                 .withStyle(ChatFormatting.DARK_GRAY)
-                .append(Component.translatable("screens.wynntils.wynntilsGuides.runes.obtain2")
+                .append(Component.translatable("screens.wynntils.wynntilsGuides.misc.runes.obtain2")
                         .withStyle(ChatFormatting.AQUA));
 
         return List.of(usageComponent, Component.empty(), obtainComponent);

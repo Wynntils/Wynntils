@@ -90,6 +90,8 @@ public final class OverlayManager extends Manager {
         WynntilsMod.unregisterEventListener(disabledOverlay);
 
         disabledOverlay.getConfigOptionFromString("userEnabled").ifPresent(disabledOverlay::callOnConfigUpdate);
+
+        rebuildRenderOrder();
     }
 
     public void enableOverlays(Feature parent) {

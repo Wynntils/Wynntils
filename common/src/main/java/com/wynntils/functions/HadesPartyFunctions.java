@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -80,6 +80,18 @@ public class HadesPartyFunctions {
         @Override
         public String processMember(HadesUser member) {
             return member.getName();
+        }
+
+        @Override
+        public String whenAbsent() {
+            return "";
+        }
+    }
+
+    public static class HadesPartyMemberUuidFunction extends HadesPartyFunctionBase<String> {
+        @Override
+        public String processMember(HadesUser member) {
+            return member.getUuid().toString();
         }
 
         @Override

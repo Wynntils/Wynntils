@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions.expressions;
@@ -8,6 +8,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.consumers.functions.arguments.parser.ArgumentParser;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.List;
 import java.util.Optional;
@@ -57,14 +58,14 @@ public final class FunctionExpression extends Expression {
     }
 
     @Override
-    public ErrorOr<String> calculateFormattedString() {
+    public ErrorOr<StyledText> calculateFormattedStyledText() {
         ErrorOr<FunctionArguments> arguments = getArguments();
         if (arguments.hasError()) {
             return ErrorOr.error(arguments.getError());
         }
 
         return ErrorOr.of(
-                Managers.Function.getStringFunctionValue(function, arguments.getValue(), formatted, decimals));
+                Managers.Function.getStyledTextFunctionValue(function, arguments.getValue(), formatted, decimals));
     }
 
     private ErrorOr<FunctionArguments> getArguments() {
