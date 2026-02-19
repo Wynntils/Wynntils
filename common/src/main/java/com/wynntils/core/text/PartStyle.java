@@ -98,7 +98,7 @@ public final class PartStyle {
                         : CustomColor.fromInt(inheritedStyle.getColor().getValue() | 0xFF000000),
                 inheritedStyle.getShadowColor() == null
                         ? CustomColor.NONE
-                        : CustomColor.fromInt(inheritedStyle.getShadowColor() | 0xFF000000),
+                        : CustomColor.fromARGBInt(inheritedStyle.getShadowColor()),
                 inheritedStyle.isObfuscated(),
                 inheritedStyle.isBold(),
                 inheritedStyle.isStrikethrough(),
@@ -125,11 +125,12 @@ public final class PartStyle {
         //    The parent of this style's owner is responsible for keeping track of hover events.
         //    Example: §<1> -> (1st hover event)
         // 5. Additional formatting support is expressed with §{...}. The currently only supported such
-        //    formattings are for FontDecoration's, which are represented as §{fr:X} for Resource, where X is a
+        //    formattings are for FontDecoration's and shadow color.
+        //    FontDecoration's are represented as §{fr:X} for Resource, where X is a
         //    short code given to the font, if such is present, or the full identifier if not.
         //    §{fas:X:Y} for AltasSprite where X is the Atlas identifier and Y is the Sprite Identifier.
-        //    §{fps:X:Y:Z} for PlayerSprite where X is the profile UUID, Y is the profile name and Z is if the
-        //    hat layer is included or not.
+        //    §{fps:X:Y} for PlayerSprite where X is the profile UUID and Y is if the hat layer is included or not.
+        //    §{sc:X} for shadow color, where X is the hex formatting of the colour used for the text shadow
 
         if (!type.includeBasicFormatting()) return "";
 
@@ -162,6 +163,13 @@ public final class PartStyle {
                 } else {
                     styleString.append(STYLE_PREFIX).append(color.toHexString());
                 }
+            }
+            if (type.includeShadowColors() && shadowColor != CustomColor.NONE) {
+                styleString
+                        .append(STYLE_PREFIX)
+                        .append("{sc:")
+                        .append(shadowColor.toHexString())
+                        .append("}");
             }
 
             // 2. Formatting
@@ -205,8 +213,6 @@ public final class PartStyle {
                                 .append("{fps:")
                                 .append(profile.partialProfile().id())
                                 .append(";")
-                                .append(profile.partialProfile().name())
-                                .append(";")
                                 .append(hat)
                                 .append("}");
                     }
@@ -241,7 +247,7 @@ public final class PartStyle {
         // Optimization: Use raw Style constructor, instead of the builder.
         // Mask the color int to be 0xRRGGBB instead of 0xAARRGGBB (as TextColor doesn't expect alpha).
         TextColor textColor = color == CustomColor.NONE ? null : TextColor.fromRgb(color.asInt() & 0x00FFFFFF);
-        Integer shadowColorInt = shadowColor == CustomColor.NONE ? null : shadowColor.asInt() & 0x00FFFFFF;
+        Integer shadowColorInt = shadowColor == CustomColor.NONE ? null : shadowColor.asInt();
         return new Style(
                 textColor,
                 shadowColorInt,
@@ -484,6 +490,22 @@ public final class PartStyle {
             return null;
         }
 
+        if (type.includeShadowColors()) {
+            int oldShadowColorInt = oldStyle.shadowColor.asInt();
+            int newShadowColorInt = this.shadowColor.asInt();
+
+            if (oldShadowColorInt == -1) {
+                if (newColorInt != -1) {
+                    Arrays.stream(ChatFormatting.values())
+                            .filter(c -> c.isColor() && newShadowColorInt == (c.getColor()))
+                            .findFirst()
+                            .ifPresent(add::append);
+                }
+            } else if (oldShadowColorInt != newShadowColorInt) {
+                return null;
+            }
+        }
+
         if (oldStyle.obfuscated && !this.obfuscated) return null;
         if (!oldStyle.obfuscated && this.obfuscated) add.append(ChatFormatting.OBFUSCATED);
 
@@ -509,14 +531,14 @@ public final class PartStyle {
                     add.append(STYLE_PREFIX)
                             .append("{fas:")
                             .append(atlasId)
-                            .append(":")
+                            .append(";")
                             .append(spriteId)
                             .append("}");
                 } else if (this.font instanceof FontDescription.PlayerSprite(ResolvableProfile profile, boolean hat)) {
                     add.append(STYLE_PREFIX)
                             .append("{fps:")
                             .append(profile.partialProfile().id())
-                            .append(":")
+                            .append(";")
                             .append(hat)
                             .append("}");
                 }

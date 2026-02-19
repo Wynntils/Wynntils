@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
@@ -341,6 +341,24 @@ public class StringFunctions {
         protected FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new Argument<>("number", Integer.class, null)));
+        }
+    }
+
+    public static class FromCodepointFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int codepoint = arguments.getArgument("codepoint").getIntegerValue();
+            try {
+                return new String(Character.toChars(codepoint));
+            } catch (IllegalArgumentException ex) {
+                return "Invalid Codepoint";
+            }
+        }
+
+        @Override
+        protected FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("codepoint", Number.class, null)));
         }
     }
 }

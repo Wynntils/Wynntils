@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions.arguments;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
@@ -25,7 +26,8 @@ public class Argument<T> {
             RangedValue.class,
             NamedValue.class,
             Location.class,
-            Time.class);
+            Time.class,
+            StyledText.class);
 
     private final String name;
     private final Class<T> type;
@@ -139,6 +141,10 @@ public class Argument<T> {
         return getValueChecked(String.class);
     }
 
+    public StyledText getStyledText() {
+        return getValueChecked(StyledText.class);
+    }
+
     protected <U> List<U> getList(Class<U> assumedType) {
         // To store a list, ListArgument must be used
         throw new IllegalStateException("Argument is not a List.");
@@ -154,5 +160,9 @@ public class Argument<T> {
 
     public List<String> getStringList() {
         return getList(String.class);
+    }
+
+    public List<StyledText> getStyledTextList() {
+        return getList(StyledText.class);
     }
 }
