@@ -73,7 +73,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ContainerModel extends Model {
     // Test in ContainerModel_ABILITY_TREE_PATTERN
-    public static final Pattern ABILITY_TREE_PATTERN = Pattern.compile("\uDAFF\uDFEA\uE000");
+    public static final Pattern ABILITY_TREE_PATTERN =
+            Pattern.compile("\uDAFF\uDFEA\uE000a");
 
     public static final String CHARACTER_INFO_NAME = "\uDAFF\uDFDC\uE003";
     public static final String STORE_MENU_NAME =
