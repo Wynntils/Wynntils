@@ -85,7 +85,7 @@ public class TerritoryPoi implements Poi {
         TerritoryProfile territoryProfile = getTerritoryProfile();
 
         List<CustomColor> colors;
-        if (isTerritoryInfoUsable()
+        if (territoryInfo != null
                 && McUtils.screen() instanceof GuildMapScreen guildMapScreen
                 && guildMapScreen.isResourceMode()) {
             colors = territoryInfo.getResourceColors();
