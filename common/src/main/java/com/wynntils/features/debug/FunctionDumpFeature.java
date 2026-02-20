@@ -135,9 +135,18 @@ public class FunctionDumpFeature extends Feature {
     private void copyPreparationStatement() {
         String clearDatabase = "DROP SCHEMA public CASCADE; CREATE SCHEMA public;";
 
+        // add all return types to possible types
         Set<String> typeNames = Managers.Function.getFunctions().stream()
-                .map(function -> function.getReturnTypeName())
+                .map(Function::getReturnTypeName)
                 .collect(Collectors.toSet());
+
+        // and additionally all argument types, which catches things like List not being a return type
+        Managers.Function.getFunctions().stream()
+                .map(Function::getArgumentsBuilder)
+                .map(FunctionArguments.Builder::getArguments)
+                .forEach(arguments -> arguments
+                        .forEach(argument -> typeNames.add(argument.getType().getSimpleName())));
+
         String makeTypeEnum = "CREATE TYPE type AS ENUM ("
                 + typeNames.stream().map(name -> "'" + name + "'").collect(Collectors.joining(",")) + ");";
 
