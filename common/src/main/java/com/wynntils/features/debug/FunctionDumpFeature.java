@@ -69,7 +69,7 @@ public class FunctionDumpFeature extends Feature {
 
     private void dumpFunctionsToCSV() {
         List<String[]> dataLines = new ArrayList<>();
-        dataLines.add(new String[] {String.join(",", FUNCTION_MAP.keySet())});
+        dataLines.add(FUNCTION_MAP.keySet().toArray(new String[0]));
 
         for (Function<?> function : Managers.Function.getFunctions()) {
             String aliases = "{" + String.join(",", function.getAliasList()) + "}";
@@ -88,7 +88,7 @@ public class FunctionDumpFeature extends Feature {
 
     private void dumpArgumentsToCSV() {
         List<String[]> dataLines = new ArrayList<>();
-        dataLines.add(new String[] {String.join(",", ARGUMENT_MAP.keySet())});
+        dataLines.add(ARGUMENT_MAP.keySet().toArray(new String[0]));
 
         for (int i = 0; i < Managers.Function.getFunctions().size(); i++) {
             Function<?> function = Managers.Function.getFunctions().get(i);
