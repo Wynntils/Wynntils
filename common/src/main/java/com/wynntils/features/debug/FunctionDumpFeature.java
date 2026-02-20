@@ -144,8 +144,8 @@ public class FunctionDumpFeature extends Feature {
         Managers.Function.getFunctions().stream()
                 .map(Function::getArgumentsBuilder)
                 .map(FunctionArguments.Builder::getArguments)
-                .forEach(arguments -> arguments
-                        .forEach(argument -> typeNames.add(argument.getType().getSimpleName())));
+                .forEach(arguments -> arguments.forEach(
+                        argument -> typeNames.add(argument.getType().getSimpleName())));
 
         String makeTypeEnum = "CREATE TYPE type AS ENUM ("
                 + typeNames.stream().map(name -> "'" + name + "'").collect(Collectors.joining(",")) + ");";
