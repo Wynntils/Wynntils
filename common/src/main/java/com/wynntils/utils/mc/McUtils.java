@@ -6,7 +6,6 @@ package com.wynntils.utils.mc;
 
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ChatScreenCreateEvent;
@@ -136,9 +135,7 @@ public final class McUtils {
     }
 
     public static void sendMessageToClient(Component component) {
-        Handlers.Chat.setLocalMessage(true);
         mc().getChatListener().handleSystemMessage(component, false);
-        Handlers.Chat.setLocalMessage(false);
     }
 
     public static void sendWynntilsMessage(Component component) {
