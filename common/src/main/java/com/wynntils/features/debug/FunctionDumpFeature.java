@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
@@ -69,7 +69,7 @@ public class FunctionDumpFeature extends Feature {
 
     private void dumpFunctionsToCSV() {
         List<String[]> dataLines = new ArrayList<>();
-        dataLines.add(new String[] {String.join(",", FUNCTION_MAP.keySet())});
+        dataLines.add(FUNCTION_MAP.keySet().toArray(new String[0]));
 
         for (Function<?> function : Managers.Function.getFunctions()) {
             String aliases = "{" + String.join(",", function.getAliasList()) + "}";
@@ -88,7 +88,7 @@ public class FunctionDumpFeature extends Feature {
 
     private void dumpArgumentsToCSV() {
         List<String[]> dataLines = new ArrayList<>();
-        dataLines.add(new String[] {String.join(",", ARGUMENT_MAP.keySet())});
+        dataLines.add(ARGUMENT_MAP.keySet().toArray(new String[0]));
 
         for (int i = 0; i < Managers.Function.getFunctions().size(); i++) {
             Function<?> function = Managers.Function.getFunctions().get(i);
@@ -135,9 +135,18 @@ public class FunctionDumpFeature extends Feature {
     private void copyPreparationStatement() {
         String clearDatabase = "DROP SCHEMA public CASCADE; CREATE SCHEMA public;";
 
+        // add all return types to possible types
         Set<String> typeNames = Managers.Function.getFunctions().stream()
-                .map(function -> function.getReturnTypeName())
+                .map(Function::getReturnTypeName)
                 .collect(Collectors.toSet());
+
+        // and additionally all argument types, which catches things like List not being a return type
+        Managers.Function.getFunctions().stream()
+                .map(Function::getArgumentsBuilder)
+                .map(FunctionArguments.Builder::getArguments)
+                .forEach(arguments -> arguments.forEach(
+                        argument -> typeNames.add(argument.getType().getSimpleName())));
+
         String makeTypeEnum = "CREATE TYPE type AS ENUM ("
                 + typeNames.stream().map(name -> "'" + name + "'").collect(Collectors.joining(",")) + ");";
 
