@@ -1,12 +1,11 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
@@ -74,7 +73,7 @@ public final class ShamanMaskModel extends Model {
     public void onStatusChange(StatusEffectsChangedEvent event) {
         if (currentMaskType != ShamanMaskType.AWAKENED) return;
 
-        Optional<StatusEffect> awakenedEffects = Models.StatusEffect.getStatusEffects().stream()
+        Optional<StatusEffect> awakenedEffects = event.getOriginalStatusEffects().stream()
                 .filter(statusEffect -> AWAKENED_STATUS_EFFECT.equals(statusEffect.getName()))
                 .findFirst();
 
