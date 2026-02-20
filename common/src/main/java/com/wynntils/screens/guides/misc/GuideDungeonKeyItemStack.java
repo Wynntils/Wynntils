@@ -47,6 +47,10 @@ public class GuideDungeonKeyItemStack extends GuideItemStack {
         return corrupted;
     }
 
+    public boolean isBroken() {
+        return broken;
+    }
+
     @Override
     public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag flag) {
         if (generatedTooltip == null) {
