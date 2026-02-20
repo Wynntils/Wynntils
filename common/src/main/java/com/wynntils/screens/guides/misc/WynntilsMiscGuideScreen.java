@@ -51,11 +51,13 @@ public final class WynntilsMiscGuideScreen extends WynntilsListScreen<GuideItemS
 
             for (Dungeon dungeon : Dungeon.values()) {
                 if (dungeon.doesExist()) {
-                    parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, false));
+                    parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, false, false));
+                    parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, false, true));
                 }
 
                 if (dungeon.doesCorruptedExist()) {
-                    parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, true));
+                    parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, true, false));
+                    parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, true, true));
                 }
             }
         }
