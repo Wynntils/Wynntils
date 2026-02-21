@@ -6,6 +6,7 @@ package com.wynntils.models.combat.label;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.type.LabelParser;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -37,19 +38,8 @@ public class MobDebuffsLabelParser implements LabelParser<MobDebuffsLabelInfo> {
             // Some debuffs don't have a value and are just active
             String rawValue = matcher.group("value");
             if (rawValue != null) {
-                double parsed = Double.parseDouble(rawValue);
                 String unit = matcher.group("unit");
-
-                // Parse the debuffs with higher values
-                if (unit != null) {
-                    switch (unit) {
-                        case "k" -> parsed *= 1_000;
-                        case "m" -> parsed *= 1_000_000;
-                        case "b" -> parsed *= 1_000_000_000;
-                    }
-                }
-
-                value = (int) Math.round(parsed);
+                value = (int) MathUtils.parseAbbreviatedNumber(rawValue, unit);
             }
 
             DebuffType type = DebuffType.fromSymbol(symbol);

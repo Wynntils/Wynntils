@@ -221,12 +221,12 @@ public class TestRegex {
     @Test
     public void DamageLabelParser_DAMAGE_LABEL_PATTERN() {
         PatternTester p = new PatternTester(DamageLabelParser.class, "DAMAGE_LABEL_PATTERN");
-        p.shouldMatch("§e§l-509 §r§e\uE003 §f§l-398 §r§f\uE000 §c§l-5162 §r§c\uE002 §b§l-386 §r§b\uE004 ");
-        p.shouldMatch("§c§l-608 §r§c\uE002 §2§l-219 §r§2\uE001 ");
-        p.shouldMatch("§c-387 \uE002 §2-140 \uE001 ");
-        p.shouldMatch("§c§l-4089 §r§c\uE002 ");
-        p.shouldMatch("§c-2685 \uE002 ");
-        p.shouldMatch("§4-6 ❤ ");
+        p.shouldMatch("§e509");
+        p.shouldMatch("§52.8k");
+        p.shouldMatch("§5§{fr:minecraft:language/five}2.8k");
+        p.shouldMatch("§56.2k󐀊§519.7k󐀊§57.1k󐀊§57.9k󐀊§512.8k");
+        p.shouldMatch("§c1.2k󐀊§b300󐀊§e45.6k󐀊§f999");
+        p.shouldMatch("§42.8k");
     }
 
     @Test
