@@ -3042,6 +3042,8 @@
   "screens.wynntils.guildMap.mainMap.name": "Main Map",
   "screens.wynntils.guildMap.toggleResourceColor.description": "Click here to switch between resource generation colors and guild colors.",
   "screens.wynntils.guildMap.toggleResourceColor.name": "Use Resource Generation Colors",
+  "screens.wynntils.guildMap.toggleTerritoryNames.description": "Click here to switch between territory abbreviations and guild ownership.",
+  "screens.wynntils.guildMap.toggleTerritoryNames.name": "Use Territory Names",
   "screens.wynntils.iconFilter.done": "Done",
   "screens.wynntils.iconFilter.excludeAll": "Exclude all icons",
   "screens.wynntils.iconFilter.filterExclude.tooltip": "Exclude the icon, %s",
