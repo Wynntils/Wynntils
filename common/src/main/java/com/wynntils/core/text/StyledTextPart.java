@@ -133,7 +133,13 @@ public final class StyledTextPart {
 
                 // Color formatting resets the style besides the font
                 if (formatting.isColor()) {
-                    currentStyle = Style.EMPTY.withColor(formatting).withFont(currentStyle.getFont());
+                    currentStyle = Style.EMPTY.withColor(formatting);
+
+                    // Check if the current style had a font,
+                    // if so we need to keep it as color formatting resets the style
+                    if (currentStyle.font != null) {
+                        currentStyle = currentStyle.withFont(style.getFont());
+                    }
                 } else {
                     currentStyle = currentStyle.applyFormat(formatting);
                 }
