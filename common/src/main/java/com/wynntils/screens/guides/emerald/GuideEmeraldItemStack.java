@@ -31,7 +31,6 @@ public class GuideEmeraldItemStack extends GuideItemStack {
     private static final FontDescription BANNER_TAG_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("banner/box"));
     private static final Style BANNER_STYLE = Style.EMPTY.withFont(BANNER_TAG_FONT);
-    private static final int SHADOW_COLOR = 16777215;
 
     private final List<Component> generatedTooltip;
 
