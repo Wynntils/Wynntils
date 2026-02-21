@@ -511,10 +511,10 @@ public class TestRegex {
     @Test
     public void IngredientAnnotator_INGREDIENT_PATTERN() {
         PatternTester p = new PatternTester(IngredientAnnotator.class, "INGREDIENT_PATTERN");
-        p.shouldMatch("§7Perkish Potato [§8✫✫✫§7]");
-        p.shouldMatch("§7Sylphid Tears§6 [§e✫§8✫✫§6]");
-        p.shouldMatch("§7Bob's Tear§5 [§d✫✫§8✫§5]");
-        p.shouldMatch("§7Contorted Stone§3 [§b✫✫✫§3]");
+        p.shouldMatch("\uDAFC\uDC00§#20aa20ffBlueshift Beacon\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§#20aa20ffDernic Sludgebomb\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§#20aa20ffWorm Sign\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§#20aa20ffSludge Parasite\uDAFC\uDC00");
     }
 
     @Test
