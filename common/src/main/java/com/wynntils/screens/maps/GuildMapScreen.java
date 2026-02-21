@@ -46,6 +46,7 @@ import org.lwjgl.glfw.GLFW;
 
 public final class GuildMapScreen extends AbstractMapScreen {
     private boolean resourceMode = false;
+    private boolean territoryNameMode = false;
     private boolean territoryDefenseFilterEnabled = false;
     private boolean territoryTreasuryFilterEnabled = false;
     private boolean hybridMode = true;
@@ -85,6 +86,16 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.GOLD)
                                 .append(Component.translatable("screens.wynntils.guildMap.toggleResourceColor.name")),
                         Component.translatable("screens.wynntils.guildMap.toggleResourceColor.description")
+                                .withStyle(ChatFormatting.GRAY))));
+
+        addMapButton(new MapButton(
+                Texture.SIGN_ICON,
+                (b) -> territoryNameMode = !territoryNameMode,
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.GOLD)
+                                .append(Component.translatable("screens.wynntils.guildMap.toggleTerritoryNames.name")),
+                        Component.translatable("screens.wynntils.guildMap.toggleTerritoryNames.description")
                                 .withStyle(ChatFormatting.GRAY))));
 
         territoryDefenseFilterButton = new MapButton(
@@ -391,6 +402,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
     public boolean isResourceMode() {
         return resourceMode;
+    }
+
+    public boolean isTerritoryNameMode() {
+        return territoryNameMode;
     }
 
     private boolean filterDefense(TerritoryPoi territoryArea) {
