@@ -7,6 +7,7 @@ package com.wynntils.handlers.actionbar;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.mc.event.SystemMessageEvent;
@@ -44,7 +45,6 @@ public final class ActionBarHandler extends Handler {
         StyledText actionBarText = packetText.iterate((part, changes) -> {
             if (part.getPartStyle().getFont().equals(COORDINATES_FONT)) {
                 changes.remove(part);
-                return IterationDecision.BREAK;
             }
 
             return IterationDecision.CONTINUE;
@@ -76,7 +76,7 @@ public final class ActionBarHandler extends Handler {
                 return IterationDecision.CONTINUE;
             });
 
-            renderedText = renderedText.append(coordinatesText);
+            renderedText = coordinatesText.append(renderedText);
         }
 
         if (packetText.equals(renderedText)) return;
@@ -142,7 +142,7 @@ public final class ActionBarHandler extends Handler {
                 WynntilsMod.warn("Failed to match a portion of the action bar text, using a fallback: " + segment));
 
         if (!fallbackSegments.isEmpty()) {
-            WynntilsMod.warn("Action bar text: " + actionBarText.getString());
+            WynntilsMod.warn("Action bar text: " + actionBarText.getString(StyleType.COMPLETE));
         }
     }
 
