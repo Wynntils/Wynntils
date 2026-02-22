@@ -29,6 +29,8 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.type.ConsumableEffect;
 import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.models.wynnitem.type.NamedItemEffect;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -115,6 +117,19 @@ public final class WynnItemParser {
     // Test in WynnItemParser_CRAFTED_ITEM_NAME_PATTERN
     public static final Pattern CRAFTED_ITEM_NAME_PATTERN = Pattern.compile(
             "^§3(?:§o)?(?<name>.+) §b(?:§o)?\\[(((?<effectStrength>\\d+)%)|((?<currentUses>\\d+)\\/(?<maxUses>\\d+)))\\]À*$");
+
+    private static final Map<CustomColor, Integer> TIER_COLOR_CODES = Map.of(
+            CommonColors.BLACK,
+            0,
+            CustomColor.fromInt(0xebeb47),
+            1,
+            CustomColor.fromInt(0xeb47eb),
+            2,
+            CustomColor.fromInt(0x47ebeb),
+            3);
+
+    private static final Pattern PROFESSION_TIER_PATTERN =
+            Pattern.compile(".+?(?:§(0|#([a-f0-9]{8})))(?:\uE000){1,3}.+?");
 
     public static WynnItemParseResult parseItemStack(
             ItemStack itemStack, Map<StatType, StatPossibleValues> possibleValuesMap) {
@@ -567,5 +582,18 @@ public final class WynnItemParser {
 
         // In this case, we actually know the exact internal roll
         return new StatActualValue(statType, value, stars, RangedValue.of(internalRoll, internalRoll));
+    }
+
+    public static int parseProfessionTier(ItemStack itemStack) {
+        Matcher tierMatcher = LoreUtils.matchLoreLine(itemStack, 1, PROFESSION_TIER_PATTERN);
+        String tierColor = "";
+
+        if (tierMatcher.matches()) {
+            tierColor = tierMatcher.group(1);
+        }
+
+        if (tierColor.isEmpty()) return -1;
+
+        return TIER_COLOR_CODES.getOrDefault(CustomColor.fromHexString(tierColor), 0);
     }
 }
