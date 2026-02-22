@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import java.util.List;
@@ -35,12 +36,14 @@ public abstract class AbstractMeterSegmentMatcher implements ActionBarSegmentMat
         return false;
     }
 
-    protected abstract ActionBarSegment createSegment(String segmentText, String segmentValue);
+    protected abstract ActionBarSegment createSegment(
+            String segmentText, int startIndex, int endIndex, String segmentValue);
 
     @Override
-    public ActionBarSegment parse(String actionBar) {
-        Matcher matcher = this.segmentMatcher.matcher(actionBar);
+    public ActionBarSegment parse(StyledText actionBar) {
+        String actionBarString = actionBar.getStringWithoutFormatting();
+        Matcher matcher = this.segmentMatcher.matcher(actionBarString);
         if (!matcher.find()) return null;
-        return createSegment(matcher.group(), matcher.group("value"));
+        return createSegment(matcher.group(), matcher.start(), matcher.end(), matcher.group("value"));
     }
 }

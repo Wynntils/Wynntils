@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.segments;
@@ -10,8 +10,8 @@ import com.wynntils.models.characterstats.type.PowderSpecialInfo;
 public class PowderSpecialSegment extends ActionBarSegment {
     private final PowderSpecialInfo powderSpecialInfo;
 
-    public PowderSpecialSegment(String segmentText, PowderSpecialInfo powderSpecialInfo) {
-        super(segmentText);
+    public PowderSpecialSegment(String segmentText, int startIndex, int endIndex, PowderSpecialInfo powderSpecialInfo) {
+        super(segmentText, startIndex, endIndex);
         this.powderSpecialInfo = powderSpecialInfo;
     }
 

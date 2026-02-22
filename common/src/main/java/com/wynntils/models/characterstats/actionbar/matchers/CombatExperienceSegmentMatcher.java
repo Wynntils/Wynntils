@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
@@ -23,7 +23,8 @@ public class CombatExperienceSegmentMatcher extends ExperienceSegmentMatcher {
     }
 
     @Override
-    protected ActionBarSegment createExperienceSegment(String levelSegmentText, CappedValue progress) {
-        return new CombatExperienceSegment(levelSegmentText, progress);
+    protected ActionBarSegment createExperienceSegment(
+            String levelSegmentText, int startIndex, int endIndex, CappedValue progress) {
+        return new CombatExperienceSegment(levelSegmentText, startIndex, endIndex, progress);
     }
 }

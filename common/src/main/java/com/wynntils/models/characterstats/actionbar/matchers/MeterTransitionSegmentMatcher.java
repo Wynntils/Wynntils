@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
@@ -36,7 +36,7 @@ public class MeterTransitionSegmentMatcher extends AbstractMeterSegmentMatcher {
     }
 
     @Override
-    protected ActionBarSegment createSegment(String segmentText, String segmentValue) {
-        return new MeterTransitionSegment(segmentText);
+    protected ActionBarSegment createSegment(String segmentText, int startIndex, int endIndex, String segmentValue) {
+        return new MeterTransitionSegment(segmentText, startIndex, endIndex);
     }
 }
