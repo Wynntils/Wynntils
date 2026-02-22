@@ -11,6 +11,7 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.colors.CommonColors;
@@ -25,6 +26,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class HeldItemNameOverlay extends Overlay {
@@ -67,14 +69,18 @@ public class HeldItemNameOverlay extends Overlay {
 
     @SubscribeEvent
     public void onHeldItemChanged(ChangeCarriedItemEvent event) {
-        ItemStack heldItem = McUtils.player().getMainHandItem();
+        if (!shouldUpdateText()) return;
 
-        if (heldItem.isEmpty()) {
-            messageTimer = 0;
-            return;
-        }
+        itemText = StyledText.fromComponent(McUtils.player().getMainHandItem().getHoverName());
+        messageTimer = messageDisplayTicks.get();
+    }
 
-        itemText = StyledText.fromComponent(heldItem.getHoverName());
+    // Needs to run after SpellCastMessageOverlay
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onItemRename(ItemRenamedEvent event) {
+        if (!shouldUpdateText()) return;
+
+        itemText = event.getNewName();
         messageTimer = messageDisplayTicks.get();
     }
 
@@ -124,5 +130,16 @@ public class HeldItemNameOverlay extends Overlay {
                         this.getRenderVerticalAlignment(),
                         textShadow.get(),
                         fontScale.get());
+    }
+
+    private boolean shouldUpdateText() {
+        ItemStack heldItem = McUtils.player().getMainHandItem();
+
+        if (heldItem.isEmpty()) {
+            messageTimer = 0;
+            return false;
+        }
+
+        return true;
     }
 }
