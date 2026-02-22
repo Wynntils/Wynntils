@@ -1,5 +1,6 @@
 {
   "client": [
+    "AbstractContainerMenuMixin",
     "AbstractContainerScreenMixin",
     "AbstractRecipeBookScreenMixin",
     "AvatarRendererMixin",

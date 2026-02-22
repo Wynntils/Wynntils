@@ -722,6 +722,8 @@
   "feature.wynntils.hideLabels.hideKillLabels.description": "Hides the kill labels that popup when killing mobs displaying XP counts.",
   "feature.wynntils.hideLabels.hideKillLabels.name": "Hide Kill Labels",
   "feature.wynntils.hideLabels.name": "Hide Labels",
+  "feature.wynntils.hideSwapItemAnimation.description": "Hides the animation of swapping items when pressing the swap item key.",
+  "feature.wynntils.hideSwapItemAnimation.name": "Hide Swap Item Animation",
   "feature.wynntils.horseMount.alreadyRiding": "You are already riding a horse.",
   "feature.wynntils.horseMount.conflictingSlots": "You must free up a slot in your hotbar to mount your horse.",
   "feature.wynntils.horseMount.description": "Adds the ability to mount horses with a keybind.",
