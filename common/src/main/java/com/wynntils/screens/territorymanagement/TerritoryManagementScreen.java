@@ -38,6 +38,7 @@ import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.map.pois.ManageTerritoryPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.TerritoryPoi;
+import com.wynntils.services.map.type.TerritoryInfoType;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
@@ -81,7 +82,8 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
     // Map mode
     private boolean mapMode = false;
-    private boolean showDefenses = false;
+    private TerritoryInfoType infoType = TerritoryInfoType.RESOURCE;
+    private MapButton infoTypeButton;
 
     // Territory items
     private List<Pair<ItemStack, TerritoryItem>> territoryItems = new ArrayList<>();
@@ -220,17 +222,19 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                             button,
                             wrappedScreenInfo.containerMenu().getItems()),
                     List.of(Component.translatable("gui.back").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD))));
-            addMapButton(new MapButton(
-                    Texture.DEFENSE_FILTER_ICON,
-                    (b) -> showDefenses = !showDefenses,
-                    List.of(
-                            Component.literal("[>] ")
-                                    .withStyle(ChatFormatting.GOLD)
-                                    .append(Component.translatable(
-                                            "feature.wynntils.customTerritoryManagementScreen.toggleDefenses.name")),
-                            Component.translatable(
-                                            "feature.wynntils.customTerritoryManagementScreen.toggleDefenses.description")
-                                    .withStyle(ChatFormatting.GRAY))));
+            infoTypeButton = new MapButton(
+                    Texture.OVERLAY_EXTRA_ICON,
+                    (b) -> {
+                        if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                            infoType = infoType.getNext();
+                        } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                            infoType = infoType.getPrevious();
+                        }
+
+                        infoTypeButton.setTooltip(getCompleteInfoTypeTooltip());
+                    },
+                    getCompleteInfoTypeTooltip());
+            addMapButton(infoTypeButton);
         }
 
         this.addRenderableOnly(new GuildOverallProductionWidget(
@@ -954,6 +958,19 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         return Math.max(0, totalHeight - RENDER_AREA_SIZE.b());
     }
 
+    private List<Component> getCompleteInfoTypeTooltip() {
+        return List.of(
+                Component.literal("[>] ")
+                        .withStyle(ChatFormatting.BLUE)
+                        .append(Component.translatable(
+                                "feature.wynntils.customTerritoryManagementScreen.cycleInfoType.name")),
+                Component.translatable("feature.wynntils.customTerritoryManagementScreen.cycleInfoType.description")
+                        .withStyle(ChatFormatting.GRAY),
+                Component.translatable("feature.wynntils.customTerritoryManagementScreen.cycleInfoType.description2")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(infoType.asComponent()));
+    }
+
     private int getRenderX() {
         return (this.width - Texture.TERRITORY_MANAGEMENT_BACKGROUND.width()) / 2;
     }
@@ -974,7 +991,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         return this.zoomLevel;
     }
 
-    public boolean getShowDefenses() {
-        return this.showDefenses;
+    public TerritoryInfoType getInfoType() {
+        return this.infoType;
     }
 }
