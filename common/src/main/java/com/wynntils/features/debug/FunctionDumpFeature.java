@@ -5,6 +5,7 @@
 package com.wynntils.features.debug;
 
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -36,8 +37,10 @@ public class FunctionDumpFeature extends Feature {
     // names are used for tablenames, which cascades to function/argument cross referencing & any ORM types generated
     private static final String FUNCTION_NAME = "wynntilsFunction";
     private static final String ARGUMENT_NAME = "wynntilsArgument";
+    private static final String DATA_VERSION_NAME = "wynntilsDataVersion";
     private static final Map<String, String> FUNCTION_MAP = new LinkedHashMap<>();
     private static final Map<String, String> ARGUMENT_MAP = new LinkedHashMap<>();
+    private static final Map<String, String> DATA_VERSION_MAP = new LinkedHashMap<>();
 
     @RegisterCommand
     private final LiteralCommandNode<CommandSourceStack> dumpCommand = Commands.literal("dumpFunctions")
@@ -56,8 +59,13 @@ public class FunctionDumpFeature extends Feature {
                 ARGUMENT_MAP.put("type", "type NOT NULL");
                 ARGUMENT_MAP.put("defaultvalue", "VARCHAR(255)");
 
+                DATA_VERSION_MAP.put("id", "serial PRIMARY KEY");
+                DATA_VERSION_MAP.put("harvestedat", "BIGINT NOT NULL");
+                DATA_VERSION_MAP.put("modversion", "VARCHAR(255) NOT NULL");
+
                 dumpFunctionsToCSV();
                 dumpArgumentsToCSV();
+                dumpDataVersionToCSV();
                 copyPreparationStatement();
                 return 0;
             })
@@ -107,6 +115,25 @@ public class FunctionDumpFeature extends Feature {
         }
 
         writeToCSV(dataLines, ARGUMENT_NAME);
+    }
+
+    private void dumpDataVersionToCSV() {
+        List<String[]> dataLines = new ArrayList<>();
+        dataLines.add(DATA_VERSION_MAP.keySet().toArray(new String[0]));
+
+        String modVersion = WynntilsMod.getVersion();
+        if (modVersion.startsWith("v")) {
+            modVersion = modVersion.substring(1);
+        }
+
+        String[] dataLine = {
+            "1",
+            String.valueOf(System.currentTimeMillis()),
+            modVersion
+        };
+        dataLines.add(dataLine);
+
+        writeToCSV(dataLines, DATA_VERSION_NAME);
     }
 
     private void writeToCSV(List<String[]> dataLines, String name) {
@@ -163,13 +190,21 @@ public class FunctionDumpFeature extends Feature {
                         .collect(Collectors.joining(","))
                 + ");";
 
-        McUtils.mc().keyboardHandler.setClipboard(clearDatabase + makeTypeEnum + makeFunctionTable + makeArgumentTable);
+        String makeDataVersionTable = "CREATE TABLE " + DATA_VERSION_NAME + " ("
+                + DATA_VERSION_MAP.entrySet().stream()
+                        .map(entry -> entry.getKey() + " " + entry.getValue())
+                        .collect(Collectors.joining(","))
+                + ");";
+
+        McUtils.mc().keyboardHandler.setClipboard(
+                clearDatabase + makeTypeEnum + makeFunctionTable + makeArgumentTable + makeDataVersionTable);
         McUtils.sendMessageToClient(Component.literal("\n")
                 .append(Component.literal(
                         ChatFormatting.GREEN + "Copied database preparation statement to clipboard.\n"))
                 .append(Component.literal(ChatFormatting.GRAY + "Run this statement before importing new CSVs.\n"))
                 .append(Component.literal(ChatFormatting.GRAY
                         + "Import CSVs using pgAdmin 4 ensuring Header option is checked and encoding is UTF-8.\n"))
-                .append(Component.literal(ChatFormatting.GRAY + "Import functions before arguments.")));
+                .append(Component.literal(ChatFormatting.GRAY + "Import functions before arguments.\n"))
+                .append(Component.literal(ChatFormatting.GRAY + "Import data version CSV after function data.")));
     }
 }
