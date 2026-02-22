@@ -957,18 +957,13 @@ public class TestRegex {
         PatternTester p = new PatternTester(GearModel.class, "GEAR_PATTERN");
 
         // Unidentified
-        p.shouldMatch("§5Unidentified §f⬡ §5Shiny Crusade Sabatons");
-        p.shouldMatch("§5Unidentified §f⬡ §5Shiny Gaia");
-        p.shouldMatch("§5Unidentified Idol");
-        p.shouldMatch("§5Unidentified Nirvana");
-        p.shouldMatch("§bUnidentified Follow the Wind");
+        p.shouldMatch("\uDAFC\uDC00§f\uE008\uDB00\uDC02§cRenda Langit\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§f\uE008\uDB00\uDC02§5Shiny Lament\uDAFC\uDC00");
 
         // Identified
-        p.shouldMatch("§5Apocalypse");
-        p.shouldMatch("§cRhythm of the Seasons");
-        p.shouldMatch("§f⬡ §5Shiny Stratiformis");
-        p.shouldMatch("§f⬡ §5Shiny Aftershock");
-        p.shouldMatch("§f⬡ §5Shiny Crusade Sabatons");
+        p.shouldMatch("\uDAFC\uDC00§5Warp\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§5Shiny Divzer\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§dAnamnesis\uDAFC\uDC00");
     }
 
     @Test

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear;
@@ -51,7 +51,7 @@ import net.minecraft.world.item.ItemStack;
 public final class GearModel extends Model {
     // Test in GearModel_GEAR_PATTERN
     public static final Pattern GEAR_PATTERN = Pattern.compile(
-            "^(?:(?<unidrarity>§[5abcdef])(?<unidentified>Unidentified ))?(?:§f⬡ )?(?<idrarity>§[5abcdef])?(?:Shiny )?(?<name>.+)$");
+            "^\uDAFC\uDC00(?<unidentified>§f\uE008\uDB00\uDC02)?(?<rarity>§[5bcdef])(?:Shiny )?(?<name>.+)\uDAFC\uDC00$");
 
     private final GearInfoRegistry gearInfoRegistry = new GearInfoRegistry();
 
