@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear.type;
@@ -7,13 +7,13 @@ package com.wynntils.models.gear.type;
 import com.wynntils.core.WynntilsMod;
 
 public enum GearAttackSpeed {
-    SUPER_FAST("Super Fast Attack Speed", "superFast", 0),
-    VERY_FAST("Very Fast Attack Speed", "veryFast", 1),
-    FAST("Fast Attack Speed", "fast", 2),
-    NORMAL("Normal Attack Speed", "normal", 3),
-    SLOW("Slow Attack Speed", "slow", 4),
-    VERY_SLOW("Very Slow Attack Speed", "verySlow", 5),
-    SUPER_SLOW("Super Slow Attack Speed", "superSlow", 6);
+    SUPER_FAST("Super Fast", "superFast", 0),
+    VERY_FAST("Very Fast", "veryFast", 1),
+    FAST("Fast", "fast", 2),
+    NORMAL("Normal", "normal", 3),
+    SLOW("Slow", "slow", 4),
+    VERY_SLOW("Very Slow", "verySlow", 5),
+    SUPER_SLOW("Super Slow", "superSlow", 6);
 
     private final String name;
     private final String apiName;

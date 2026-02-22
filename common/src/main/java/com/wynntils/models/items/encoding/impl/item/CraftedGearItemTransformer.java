@@ -107,7 +107,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
                         // Negative stats do not decay, they always stay at the max
                         int value = (max <= 0) ? max : Math.round(max * effectStrength / 100f);
 
-                        return new StatActualValue(statPossibleValues.statType(), value, 0, RangedValue.NONE);
+                        return new StatActualValue(statPossibleValues.statType(), value, false);
                     })
                     .toList();
         }
@@ -120,7 +120,6 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
 
         return ErrorOr.of(new CraftedGearItem(
                 name,
-                effectStrength,
                 gearType,
                 attackSpeed,
                 health,
@@ -132,7 +131,8 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
                 powders,
                 powderSlots,
                 false,
-                durability));
+                durability,
+                0));
     }
 
     @Override
@@ -141,7 +141,6 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
 
         // Required blocks
         dataList.add(new CustomGearTypeData(item.getGearType()));
-        dataList.add(new DurabilityData(item.getEffectStrength(), item.getDurability()));
         dataList.add(new RequirementsData(item.getRequirements()));
 
         // Optional blocks

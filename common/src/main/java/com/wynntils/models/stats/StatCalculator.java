@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats;
@@ -64,84 +64,6 @@ public final class StatCalculator {
         }
     }
 
-    public static RangedValue calculateInternalRollRange(StatPossibleValues possibleValues, int value, int stars) {
-        // This code finds the lowest possible and highest possible rolls that result in the current
-        // value (inclusive).
-        int baseValue = possibleValues.baseValue();
-
-        // If the stat is calculated as inverted,
-        // invert the base value and the actual value
-        // (this weird edge case was revealed by Wynn's star calculations)
-        if (possibleValues.statType().calculateAsInverted()) {
-            baseValue = -baseValue;
-            value = -value;
-        }
-
-        // It's important to use the non-inverted base value here,
-        // since getStatCalculationInfo() will invert the rounding mode if necessary
-        StatCalculationInfo statCalculationInfo =
-                possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
-
-        double lowerRawRollBound = (value * 100 - 50) / ((double) baseValue);
-        double higherRawRollBound = (value * 100 + 49) / ((double) baseValue);
-
-        if (baseValue < 0) {
-            // Swap the bounds, since we are calculating using the negative range
-            double temp = lowerRawRollBound;
-            lowerRawRollBound = higherRawRollBound;
-            higherRawRollBound = temp;
-        }
-
-        // We can further bound the possible rolls using the star count
-        int starMin = statCalculationInfo.range().low();
-        int starMax = statCalculationInfo.range().high();
-
-        // If present, use the starInternalRollRanges to further bound the possible rolls
-        // (negative stats do not have starInternalRollRanges, we do not need to check for them)
-        // (stars is -1 if we don't want stars to be taken into account)
-        if (stars != -1 && statCalculationInfo.starInternalRollRanges().size() > stars) {
-            RangedValue rangedValue =
-                    statCalculationInfo.starInternalRollRanges().get(stars);
-            starMin = rangedValue.low();
-            starMax = rangedValue.high();
-        }
-
-        int lowerRollBound = (int) Math.max(Math.ceil(lowerRawRollBound), starMin);
-        int higherRollBound = (int) Math.max(lowerRollBound, Math.min(Math.floor(higherRawRollBound), starMax));
-
-        // This is a costly check and can fail sporadically if the API is not up-to-date,
-        // so we only do it if the developer enables it
-        if (VERIFY_CALCULATED_ROLLS) {
-            verifyCalculatedInternalRoll(
-                    baseValue, statCalculationInfo, lowerRollBound, higherRollBound, starMin, starMax);
-        }
-
-        return RangedValue.of(lowerRollBound, higherRollBound);
-    }
-
-    public static int calculateStarsFromInternalRoll(StatType statType, int baseValue, int internalRoll) {
-        // Star calculation reference, from salted:
-        // https://forums.wynncraft.com/threads/about-the-little-asterisks.147931/#post-1654183
-        StatCalculationInfo statCalculationInfo = statType.getStatCalculationInfo(baseValue);
-
-        // If the stat is treated as inverted, we need to invert the base value
-        // Note: This behavior could not be tested as of writing,
-        //       since no stat is treated as inverted with a negative base value
-        if (baseValue < 0 && statType.treatAsInverted()) {
-            statCalculationInfo = statType.getStatCalculationInfo(-baseValue);
-        }
-
-        for (int stars = 0; stars < statCalculationInfo.starInternalRollRanges().size(); stars++) {
-            RangedValue rangedValue =
-                    statCalculationInfo.starInternalRollRanges().get(stars);
-            if (rangedValue.inRange(internalRoll)) {
-                return stars;
-            }
-        }
-
-        return 0;
-    }
-
     public static int calculateStatValue(int internalRoll, StatPossibleValues possibleValues) {
         StatCalculationInfo statCalculationInfo =
                 possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
@@ -203,22 +125,13 @@ public final class StatCalculator {
     public static double getPerfectChance(StatPossibleValues possibleValues) {
         StatCalculationInfo statCalculationInfo =
                 possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
-        boolean treatAsNegative = possibleValues.statType().treatAsInverted() ^ possibleValues.baseValue() < 0;
 
-        int allCases =
-                statCalculationInfo.range().high() - statCalculationInfo.range().low() + 1;
+        int min = statCalculationInfo.range().low();
+        int max = statCalculationInfo.range().high();
 
-        // Internal roll range for maximum value
-        // Do not confuse this with a "3 star" roll, aka perfect internal roll
-        RangedValue perfectInternalRollRange = calculateInternalRollRange(
-                possibleValues,
-                treatAsNegative
-                        ? possibleValues.range().low()
-                        : possibleValues.range().high(),
-                -1);
-        int perfectCases = perfectInternalRollRange.high() - perfectInternalRollRange.low() + 1;
+        int totalCases = max - min + 1;
 
-        return ((double) perfectCases) / allCases * 100;
+        return 100.0 / totalCases;
     }
 
     public static double getDecreaseChance(StatActualValue actualValue, StatPossibleValues possibleValues) {
@@ -228,15 +141,11 @@ public final class StatCalculator {
                 possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
         boolean treatAsNegative = possibleValues.statType().treatAsInverted() ^ possibleValues.baseValue() < 0;
 
-        // This code finds the lowest possible and highest possible rolls that achieve the correct
-        // result (inclusive). Then, it calculates the chance where we can get a lower roll
-        RangedValue internalRollRange = actualValue.internalRoll();
-
         int allCases =
                 statCalculationInfo.range().high() - statCalculationInfo.range().low() + 1;
         int decreaseCases = treatAsNegative
-                ? statCalculationInfo.range().high() - internalRollRange.high()
-                : internalRollRange.low() - statCalculationInfo.range().low();
+                ? statCalculationInfo.range().high()
+                : statCalculationInfo.range().low();
 
         return ((double) decreaseCases) / allCases * 100;
     }
@@ -248,15 +157,11 @@ public final class StatCalculator {
                 possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
         boolean treatAsNegative = possibleValues.statType().treatAsInverted() ^ possibleValues.baseValue() < 0;
 
-        // This code finds the lowest possible and highest possible rolls that achieve the correct
-        // result (inclusive). Then, it calculates the chance where we can get a higher roll
-        RangedValue internalRollRange = actualValue.internalRoll();
-
         int allCases =
                 statCalculationInfo.range().high() - statCalculationInfo.range().low() + 1;
         int increaseCases = treatAsNegative
-                ? internalRollRange.low() - statCalculationInfo.range().low()
-                : statCalculationInfo.range().high() - internalRollRange.high();
+                ? statCalculationInfo.range().low()
+                : statCalculationInfo.range().high();
 
         return ((double) increaseCases) / allCases * 100;
     }
@@ -289,47 +194,5 @@ public final class StatCalculator {
         if (percents.getCount() == 0) return Optional.empty();
 
         return Optional.of((float) percents.getAverage());
-    }
-
-    private static void verifyCalculatedInternalRoll(
-            int baseValue,
-            StatCalculationInfo statCalculationInfo,
-            int lowerRollBound,
-            int higherRollBound,
-            int starMin,
-            int starMax) {
-        // Check if the bounds are in the correct order
-        assert lowerRollBound <= higherRollBound;
-
-        // Use BigDecimal to calculate using correct rounding
-
-        // Check if the bounds are valid
-        long lowerValue = new BigDecimal(baseValue)
-                .multiply(BigDecimal.valueOf(lowerRollBound))
-                .divide(BigDecimal.valueOf(100), statCalculationInfo.roundingMode())
-                .setScale(0, statCalculationInfo.roundingMode())
-                .longValue();
-        long higherValue = new BigDecimal(baseValue)
-                .multiply(BigDecimal.valueOf(higherRollBound))
-                .divide(BigDecimal.valueOf(100), statCalculationInfo.roundingMode())
-                .setScale(0, statCalculationInfo.roundingMode())
-                .longValue();
-        assert lowerValue == higherValue;
-
-        // Check if the lowest bound is the actually lowest possible roll
-        long oneBelowLowerValue = new BigDecimal(baseValue)
-                .multiply(BigDecimal.valueOf(lowerRollBound - 1))
-                .divide(BigDecimal.valueOf(100), statCalculationInfo.roundingMode())
-                .setScale(0, statCalculationInfo.roundingMode())
-                .longValue();
-        assert lowerRollBound == starMin || lowerValue != oneBelowLowerValue;
-
-        // Check if the highest bound is the actually highest possible roll
-        long oneAboveHigherValue = new BigDecimal(baseValue)
-                .multiply(BigDecimal.valueOf(higherRollBound + 1))
-                .divide(BigDecimal.valueOf(100), statCalculationInfo.roundingMode())
-                .setScale(0, statCalculationInfo.roundingMode())
-                .longValue();
-        assert higherRollBound == starMax || higherValue != oneAboveHigherValue;
     }
 }

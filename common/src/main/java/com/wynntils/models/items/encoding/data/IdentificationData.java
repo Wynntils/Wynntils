@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.data;
@@ -11,7 +11,6 @@ import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.ErrorOr;
-import com.wynntils.utils.type.RangedValue;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,12 +47,9 @@ public record IdentificationData(
                 return ErrorOr.error("No possible values for stat type: " + statType);
             }
 
-            int stars =
-                    StatCalculator.calculateStarsFromInternalRoll(statType, possibleValues.baseValue(), internalRoll);
             int value = StatCalculator.calculateStatValue(internalRoll, possibleValues);
 
-            identifications.add(
-                    new StatActualValue(statType, value, stars, RangedValue.of(internalRoll, internalRoll)));
+            identifications.add(new StatActualValue(statType, value, false));
         }
 
         pendingCalculations.clear();

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
@@ -11,6 +11,7 @@ import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
+import com.wynntils.models.items.properties.PagedItemProperty;
 import com.wynntils.models.items.properties.RerollableItemProperty;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
@@ -27,13 +28,20 @@ public class TomeItem extends GameItem
                 GearTypeItemProperty,
                 RerollableItemProperty,
                 LeveledItemProperty,
-                IdentifiableItemProperty<TomeInfo, TomeInstance> {
+                IdentifiableItemProperty<TomeInfo, TomeInstance>,
+                PagedItemProperty {
     private final TomeInfo tomeInfo;
     private final TomeInstance tomeInstance;
+    private final int currentPage;
 
-    public TomeItem(TomeInfo tomeInfo, TomeInstance tomeInstance) {
+    public TomeItem(TomeInfo tomeInfo, TomeInstance tomeInstance, int currentPage) {
         this.tomeInfo = tomeInfo;
         this.tomeInstance = tomeInstance;
+        this.currentPage = currentPage;
+    }
+
+    public TomeItem(TomeInfo tomeInfo, TomeInstance tomeInstance) {
+        this(tomeInfo, tomeInstance, 0);
     }
 
     @Override
@@ -118,6 +126,11 @@ public class TomeItem extends GameItem
     @Override
     public float getOverallPercentage() {
         return tomeInstance != null ? tomeInstance.getOverallPercentage() : 0.0f;
+    }
+
+    @Override
+    public int currentPage() {
+        return currentPage;
     }
 
     @Override

@@ -45,7 +45,9 @@ import java.util.Set;
 import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -56,8 +58,7 @@ public class ItemStatInfoFeature extends Feature {
     private final Map<IdentificationDecoratorType, TooltipIdentificationDecorator> identificationDecorators = Map.of(
             IdentificationDecoratorType.PERCENTAGE, new PercentageIdentificationDecorator(),
             IdentificationDecoratorType.REROLL, new RerollIdentificationDecorator(),
-            IdentificationDecoratorType.RANGE, new RangeIdentificationDecorator(),
-            IdentificationDecoratorType.INNER_ROLL, new InnerRollIdentificationDecorator());
+            IdentificationDecoratorType.RANGE, new RangeIdentificationDecorator());
 
     private final Map<WeightDecoratorType, TooltipWeightDecorator> weightDecorators = Map.of(
             WeightDecoratorType.OVERALL, new SimpleWeightDecorator(),
@@ -235,7 +236,7 @@ public class ItemStatInfoFeature extends Feature {
                 TooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
             float percentage = StatCalculator.getPercentage(actualValue, possibleValues);
             MutableComponent percentageTextComponent = ColorScaleUtils.getPercentageTextComponent(
-                    getColorMap(), percentage, colorLerp.get(), decimalPlaces.get());
+                    getColorMap(), percentage, colorLerp.get(), decimalPlaces.get(), actualValue.perfectInternalRoll());
 
             return percentageTextComponent;
         }
@@ -245,17 +246,30 @@ public class ItemStatInfoFeature extends Feature {
         @Override
         protected MutableComponent getRollSuffix(
                 TooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
-            MutableComponent rerollChancesComponent = Component.literal(String.format(
-                            Locale.ROOT, " \u2605%.2f%%", StatCalculator.getPerfectChance(possibleValues)))
-                    .withStyle(ChatFormatting.AQUA)
+            MutableComponent rerollChancesComponent = Component.empty()
+                    .append(Component.literal(" \u2605")
+                            .withStyle(Style.EMPTY
+                                    .withFont(FontDescription.DEFAULT)
+                                    .withColor(ChatFormatting.AQUA)))
+                    .append(Component.literal(String.format(
+                                    Locale.ROOT, "%.2f%%", StatCalculator.getPerfectChance(possibleValues)))
+                            .withStyle(ChatFormatting.AQUA))
+                    .append(Component.literal(" \u21E7")
+                            .withStyle(Style.EMPTY
+                                    .withFont(FontDescription.DEFAULT)
+                                    .withColor(ChatFormatting.GREEN)))
                     .append(Component.literal(String.format(
                                     Locale.ROOT,
-                                    " \u21E7%.1f%%",
+                                    "%.1f%%",
                                     StatCalculator.getIncreaseChance(actualValue, possibleValues)))
                             .withStyle(ChatFormatting.GREEN))
+                    .append(Component.literal(" \u21E9")
+                            .withStyle(Style.EMPTY
+                                    .withFont(FontDescription.DEFAULT)
+                                    .withColor(ChatFormatting.RED)))
                     .append(Component.literal(String.format(
                                     Locale.ROOT,
-                                    " \u21E9%.1f%%",
+                                    "%.1f%%",
                                     StatCalculator.getDecreaseChance(actualValue, possibleValues)))
                             .withStyle(ChatFormatting.RED));
 
@@ -274,21 +288,6 @@ public class ItemStatInfoFeature extends Feature {
                     .append(Component.literal(displayRange.a() + ", " + displayRange.b())
                             .withStyle(ChatFormatting.GREEN))
                     .append("]")
-                    .withStyle(ChatFormatting.DARK_GREEN);
-
-            return rangeTextComponent;
-        }
-    }
-
-    private static class InnerRollIdentificationDecorator extends IdentificationDecorator {
-        @Override
-        protected MutableComponent getRollSuffix(
-                TooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
-            MutableComponent rangeTextComponent = Component.literal(" <")
-                    .append(Component.literal(actualValue.internalRoll().low() + "% to "
-                                    + actualValue.internalRoll().high() + "%")
-                            .withStyle(ChatFormatting.GREEN))
-                    .append(">")
                     .withStyle(ChatFormatting.DARK_GREEN);
 
             return rangeTextComponent;
@@ -315,7 +314,7 @@ public class ItemStatInfoFeature extends Feature {
 
             float percentage = Services.ItemWeight.calculateWeighting(weighting, itemInfo);
             weightingComponent.append(ColorScaleUtils.getPercentageTextComponent(
-                    getColorMap(), percentage, colorLerp.get(), decimalPlaces.get()));
+                    getColorMap(), percentage, colorLerp.get(), decimalPlaces.get(), false));
 
             return List.of(weightingComponent);
         }
@@ -338,7 +337,7 @@ public class ItemStatInfoFeature extends Feature {
 
             float weightPercentage = Services.ItemWeight.calculateWeighting(weighting, itemInfo);
             weightingComponent.append(ColorScaleUtils.getPercentageTextComponent(
-                    getColorMap(), weightPercentage, colorLerp.get(), decimalPlaces.get()));
+                    getColorMap(), weightPercentage, colorLerp.get(), decimalPlaces.get(), false));
 
             lines.add(weightingComponent);
 
@@ -359,7 +358,7 @@ public class ItemStatInfoFeature extends Feature {
                         .append(Component.literal(displayName))
                         .append(Component.literal(weightStr).withStyle(ChatFormatting.WHITE))
                         .append(ColorScaleUtils.getPercentageTextComponent(
-                                getColorMap(), percentage, colorLerp.get(), decimalPlaces.get())));
+                                getColorMap(), percentage, colorLerp.get(), decimalPlaces.get(), false)));
             });
             lines.add(Component.empty());
 
@@ -368,7 +367,6 @@ public class ItemStatInfoFeature extends Feature {
     }
 
     private enum IdentificationDecoratorType {
-        INNER_ROLL(Set.of(GLFW.GLFW_KEY_LEFT_SHIFT, GLFW.GLFW_KEY_LEFT_CONTROL)),
         REROLL(Set.of(GLFW.GLFW_KEY_LEFT_CONTROL)),
         RANGE(Set.of(GLFW.GLFW_KEY_LEFT_SHIFT)),
         PERCENTAGE(Set.of());

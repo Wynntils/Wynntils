@@ -10,8 +10,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.models.gear.type.GearInstance;
-import com.wynntils.models.items.items.game.GearItem;
 import java.util.regex.Matcher;
 import net.minecraft.world.item.ItemStack;
 
@@ -28,7 +26,6 @@ public final class GearAnnotator implements GameItemAnnotator {
 
         // Verify that rarity matches
         String rarity = matcher.group("rarity");
-        if (rarity != null && !rarity.equals(gearInfo.tier().getChatFormatting().toString())) return null;
 
         // We have no rarity information, so we can't determine if the item is gear
         if (rarity == null) {
@@ -36,8 +33,6 @@ public final class GearAnnotator implements GameItemAnnotator {
             return null;
         }
 
-        GearInstance gearInstance =
-                matcher.group("unidentified") != null ? null : Models.Gear.parseInstance(gearInfo, itemStack);
-        return new GearItem(gearInfo, gearInstance);
+        return Models.Gear.parseInstance(gearInfo, itemStack, matcher.group("unidentified") != null);
     }
 }

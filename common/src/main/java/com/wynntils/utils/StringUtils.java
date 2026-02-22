@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils;
@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -177,6 +178,14 @@ public final class StringUtils {
             return "+" + value;
         } else {
             return Integer.toString(value);
+        }
+    }
+
+    public static String toSignedLocaleString(int value) {
+        if (value >= 0) {
+            return "+" + NumberFormat.getNumberInstance(Locale.ROOT).format(value);
+        } else {
+            return NumberFormat.getNumberInstance(Locale.ROOT).format(value);
         }
     }
 

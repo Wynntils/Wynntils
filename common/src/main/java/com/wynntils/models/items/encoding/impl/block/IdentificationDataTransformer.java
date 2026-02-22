@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -182,19 +182,6 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
                 // representing the base value of the id, as of sharing.
                 bytes.addAll(List.of(baseValueBytes));
             }
-
-            int internalRoll = identification.internalRoll().low();
-            UnsignedByte internalRollByte = UnsignedByte.of((byte) internalRoll);
-
-            // Check if the internal roll fits a byte.
-            if (internalRoll != internalRollByte.value()) {
-                WynntilsMod.warn("Internal roll " + internalRoll + " does not fit a byte!");
-                return ErrorOr.error("Unable to encode stat type, invalid internal roll: "
-                        + identification.statType().getDisplayName());
-            }
-
-            // The last byte is the calculated internal roll of the item.
-            bytes.add(internalRollByte);
         }
 
         return ErrorOr.of(bytes);

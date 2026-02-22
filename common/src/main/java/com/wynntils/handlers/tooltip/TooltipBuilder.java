@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip;
@@ -23,7 +23,7 @@ import net.minecraft.network.chat.Component;
 
 public abstract class TooltipBuilder {
     private static final TooltipStyle DEFAULT_TOOLTIP_STYLE =
-            new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true, true);
+            new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false);
     private final List<Component> header;
     private final List<Component> footer;
     private final String source;
@@ -139,7 +139,7 @@ public abstract class TooltipBuilder {
                         // so reset the flag here
                         skillPointsStarted = false;
 
-                        String statName = matcher.group(6);
+                        String statName = matcher.group("statName");
 
                         if (Skill.isSkill(statName)) {
                             skillPointsStarted = true;
