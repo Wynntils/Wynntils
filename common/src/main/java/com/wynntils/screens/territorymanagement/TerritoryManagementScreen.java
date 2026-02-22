@@ -21,6 +21,7 @@ import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.screens.base.widgets.ItemFilterUIButton;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.maps.AbstractMapScreen;
+import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.screens.territorymanagement.widgets.GuildOverallProductionWidget;
 import com.wynntils.screens.territorymanagement.widgets.TerritoryApplyLoadoutButton;
 import com.wynntils.screens.territorymanagement.widgets.TerritoryHighlightLegendWidget;
@@ -50,8 +51,9 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ContainerUtils;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -79,9 +81,11 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
     // Map mode
     private boolean mapMode = false;
+    private boolean showDefenses = false;
 
     // Territory items
     private List<Pair<ItemStack, TerritoryItem>> territoryItems = new ArrayList<>();
+    private final List<ManageTerritoryPoi> territoryPois = new ArrayList<>();
 
     // Widgets
     private final List<AbstractWidget> renderAreaWidgets = new ArrayList<>();
@@ -177,7 +181,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                     Texture.DEFENSE_FILTER_ICON,
                     (button) -> {
                         Storage<Boolean> screenTerritoryProductionTooltip = Managers.Feature.getFeatureInstance(
-                                CustomTerritoryManagementScreenFeature.class)
+                                        CustomTerritoryManagementScreenFeature.class)
                                 .screenTerritoryProductionTooltip;
                         screenTerritoryProductionTooltip.store(!screenTerritoryProductionTooltip.get());
                     },
@@ -199,7 +203,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                     Texture.HELP_ICON,
                     (button) -> {
                         Storage<Boolean> screenHighlightLegend = Managers.Feature.getFeatureInstance(
-                                CustomTerritoryManagementScreenFeature.class)
+                                        CustomTerritoryManagementScreenFeature.class)
                                 .screenHighlightLegend;
                         screenHighlightLegend.store(!screenHighlightLegend.get());
                     },
@@ -208,11 +212,33 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                             .withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD)),
                     false));
         } else {
-
+            addMapButton(new MapButton(
+                    Texture.ARROW_LEFT_ICON,
+                    (button) -> ContainerUtils.clickOnSlot(
+                            BACK_BUTTON_SLOT,
+                            wrappedScreenInfo.containerId(),
+                            button,
+                            wrappedScreenInfo.containerMenu().getItems()),
+                    List.of(Component.translatable("gui.back").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD))));
+            addMapButton(new MapButton(
+                    Texture.DEFENSE_FILTER_ICON,
+                    (b) -> showDefenses = !showDefenses,
+                    List.of(
+                            Component.literal("[>] ")
+                                    .withStyle(ChatFormatting.GOLD)
+                                    .append(Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.toggleDefenses.name")),
+                            Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.toggleDefenses.description")
+                                    .withStyle(ChatFormatting.GRAY))));
         }
 
-        this.addRenderableOnly(
-                new GuildOverallProductionWidget(mapMode ? (int) SCREEN_SIDE_OFFSET + 10 : getRenderX() - 190, mapMode ? (int) SCREEN_SIDE_OFFSET + 35 : getRenderY() + 10, 200, 150, holder));
+        this.addRenderableOnly(new GuildOverallProductionWidget(
+                mapMode ? (int) SCREEN_SIDE_OFFSET + 10 : getRenderX() - 190,
+                mapMode ? (int) SCREEN_SIDE_OFFSET + 35 : getRenderY() + 10,
+                200,
+                150,
+                holder));
 
         if (!holder.isSelectionMode()) {
             if (!this.mapMode) {
@@ -240,7 +266,24 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                                                 "feature.wynntils.customTerritoryManagementScreen.loadouts.clickToOpen")
                                         .withStyle(ChatFormatting.GREEN))));
             } else {
-
+                addMapButton(new MapButton(
+                        Texture.TERRITORY_LOADOUT,
+                        (button) -> ContainerUtils.clickOnSlot(
+                                LOADOUT_BUTTON_SLOT,
+                                wrappedScreenInfo.containerId(),
+                                button,
+                                wrappedScreenInfo.containerMenu().getItems()),
+                        List.of(
+                                Component.translatable("feature.wynntils.customTerritoryManagementScreen.loadouts")
+                                        .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD),
+                                Component.empty(),
+                                Component.translatable(
+                                                "feature.wynntils.customTerritoryManagementScreen.loadouts.description")
+                                        .withStyle(ChatFormatting.GRAY),
+                                Component.empty(),
+                                Component.translatable(
+                                                "feature.wynntils.customTerritoryManagementScreen.loadouts.clickToOpen")
+                                        .withStyle(ChatFormatting.GREEN))));
             }
         } else {
             if (!this.mapMode) {
@@ -257,7 +300,8 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                                 button,
                                 wrappedScreenInfo.containerMenu().getItems()),
                         List.of(
-                                Component.translatable("feature.wynntils.customTerritoryManagementScreen.applySelection")
+                                Component.translatable(
+                                                "feature.wynntils.customTerritoryManagementScreen.applySelection")
                                         .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD),
                                 Component.empty(),
                                 Component.translatable(
@@ -268,7 +312,28 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                                                 "feature.wynntils.customTerritoryManagementScreen.applySelection.clickToConfirm")
                                         .withStyle(ChatFormatting.GREEN))));
             } else {
-
+                addMapButton(new MapButton(
+                        Texture.CHECKMARK_YELLOW,
+                        (button) -> {
+                            holder.saveMapPos();
+                            ContainerUtils.clickOnSlot(
+                                    APPLY_BUTTON_SLOT,
+                                    wrappedScreenInfo.containerId(),
+                                    button,
+                                    wrappedScreenInfo.containerMenu().getItems());
+                        },
+                        List.of(
+                                Component.translatable(
+                                                "feature.wynntils.customTerritoryManagementScreen.applySelection")
+                                        .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD),
+                                Component.empty(),
+                                Component.translatable(
+                                                "feature.wynntils.customTerritoryManagementScreen.applySelection.description")
+                                        .withStyle(ChatFormatting.GRAY),
+                                Component.empty(),
+                                Component.translatable(
+                                                "feature.wynntils.customTerritoryManagementScreen.applySelection.clickToConfirm")
+                                        .withStyle(ChatFormatting.GREEN))));
             }
         }
 
@@ -329,7 +394,8 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!this.mapMode) {
             // Screen background
-            RenderUtils.drawTexturedRect(guiGraphics, Texture.TERRITORY_MANAGEMENT_BACKGROUND, getRenderX(), getRenderY());
+            RenderUtils.drawTexturedRect(
+                    guiGraphics, Texture.TERRITORY_MANAGEMENT_BACKGROUND, getRenderX(), getRenderY());
             RenderUtils.drawTexturedRect(guiGraphics, Texture.TERRITORY_SIDEBAR, getRenderX() - 22, getRenderY());
 
             // Render title
@@ -624,6 +690,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
             }
 
             if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT && hovered instanceof ManageTerritoryPoi) {
+                holder.saveMapPos();
                 ((ManageTerritoryPoi) hovered).onClick();
             }
         }
@@ -669,7 +736,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
     @Override
     public void onClose() {
-        holder.resetMap();
+        holder.resetMapPos();
         super.onClose();
     }
 
@@ -679,6 +746,18 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         if (!this.mapMode) {
             populateRenderAreaWidgets();
             scrollOffset = Math.min(getMaxScrollOffset(), scrollOffset);
+        } else {
+            territoryPois.clear();
+            for (Pair<ItemStack, TerritoryItem> entry : territoryItems) {
+                TerritoryItem item = entry.value();
+                TerritoryPoi advancementPoi = Models.Territory.getTerritoryPoiFromAdvancement(item.getName());
+                territoryPois.add(new ManageTerritoryPoi(
+                        holder,
+                        advancementPoi.getTerritoryInfo(),
+                        advancementPoi.getTerritoryProfile(),
+                        entry.key(),
+                        () -> item));
+            }
         }
     }
 
@@ -743,11 +822,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     private void renderPois(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         List<Poi> renderedPois = new ArrayList<>();
 
-        for (Pair<ItemStack, TerritoryItem> entry : territoryItems) {
-            TerritoryItem item = entry.value();
-            TerritoryPoi advancementPoi = Models.Territory.getTerritoryPoiFromAdvancement(item.getName());
-            renderedPois.add(new ManageTerritoryPoi(holder, advancementPoi.getTerritoryInfo(), advancementPoi.getTerritoryProfile(), entry.key(), () -> item));
-        }
+        renderedPois.addAll(territoryPois);
 
         Models.Marker.USER_WAYPOINTS_PROVIDER.getPois().forEach(renderedPois::add);
 
@@ -760,14 +835,15 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                 mouseY);
     }
 
-    private static void renderTerritoryTooltip(
+    private void renderTerritoryTooltip(
             GuiGraphics guiGraphics, int xOffset, int yOffset, ManageTerritoryPoi territoryPoi) {
         final ItemStack itemStack = territoryPoi.getItemStack();
-        final List<Component> tooltipLines = itemStack.getTooltipLines(Item.TooltipContext.of(McUtils.mc().level), McUtils.player(), TooltipFlag.NORMAL);
+        final List<Component> tooltipLines = itemStack.getTooltipLines(
+                Item.TooltipContext.of(McUtils.mc().level), McUtils.player(), TooltipFlag.NORMAL);
 
         final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
-        final float centerHeight = (tooltipLines.size() - 4) * 10 + 5;
+        final float centerHeight = (tooltipLines.size() - (holder.isSelectionMode() ? 3 : 4)) * 10 + 5;
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
         RenderUtils.drawScalingTexturedRect(
@@ -787,7 +863,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
         float renderYOffset = 10 + yOffset;
 
-        for (Component line : tooltipLines.subList(2, tooltipLines.size() - 2)) {
+        for (Component line : tooltipLines.subList(2, tooltipLines.size() - (holder.isSelectionMode() ? 1 : 2))) {
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
@@ -836,6 +912,12 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                 if (widget.isMouseOver(mouseX, mouseY)) {
                     return widget;
                 }
+            }
+        }
+
+        for (AbstractWidget button : mapButtons) {
+            if (button.isMouseOver(mouseX, mouseY)) {
+                return button;
             }
         }
 
@@ -890,5 +972,9 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
     public float getZoomLevel() {
         return this.zoomLevel;
+    }
+
+    public boolean getShowDefenses() {
+        return this.showDefenses;
     }
 }

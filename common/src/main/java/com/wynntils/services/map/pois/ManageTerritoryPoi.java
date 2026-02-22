@@ -1,13 +1,16 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.services.map.pois;
 
-import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.items.gui.TerritoryItem;
 import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
-import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
+import com.wynntils.screens.territorymanagement.TerritoryManagementScreen;
 import com.wynntils.services.map.type.DisplayPriority;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -19,12 +22,15 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.world.item.ItemStack;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.ItemStack;
 
 public class ManageTerritoryPoi implements Poi {
     private final Supplier<TerritoryItem> territoryItemSupplier;
@@ -38,7 +44,12 @@ public class ManageTerritoryPoi implements Poi {
 
     private TerritoryItem territoryItemCache;
 
-    public ManageTerritoryPoi(TerritoryManagementHolder holder, TerritoryInfo territoryInfo, TerritoryProfile territoryProfile, ItemStack itemStack, Supplier<TerritoryItem> territoryItemSupplier) {
+    public ManageTerritoryPoi(
+            TerritoryManagementHolder holder,
+            TerritoryInfo territoryInfo,
+            TerritoryProfile territoryProfile,
+            ItemStack itemStack,
+            Supplier<TerritoryItem> territoryItemSupplier) {
         this.holder = holder;
         this.territoryInfo = territoryInfo;
         this.territoryProfile = territoryProfile;
@@ -69,7 +80,15 @@ public class ManageTerritoryPoi implements Poi {
     }
 
     @Override
-    public void renderAt(GuiGraphics guiGraphics, float renderX, float renderY, boolean hovered, float scale, float zoomRenderScale, float zoomLevel, boolean showLabels) {
+    public void renderAt(
+            GuiGraphics guiGraphics,
+            float renderX,
+            float renderY,
+            boolean hovered,
+            float scale,
+            float zoomRenderScale,
+            float zoomLevel,
+            boolean showLabels) {
         final float renderWidth = width * zoomRenderScale;
         final float renderHeight = height * zoomRenderScale;
         final float actualRenderX = renderX - renderWidth / 2f;
@@ -78,12 +97,25 @@ public class ManageTerritoryPoi implements Poi {
         TerritoryItem territoryItem = getTerritoryItem();
 
         List<CustomColor> colors = new ArrayList<>();
-        for (Map.Entry<GuildResource, Integer> generator : territoryItem.getProduction().entrySet()) {
-            switch (generator.getKey()) { // We do not care about emeralds since they are produced everywhere
-                case ORE -> colors.add(CustomColor.fromHSV(0, 0.3f, 1f, 1));
-                case FISH -> colors.add(CustomColor.fromHSV(0.5f, 0.6f, 0.9f, 1));
-                case WOOD -> colors.add(CustomColor.fromHSV(1 / 3f, 0.6f, 0.9f, 1));
-                case CROPS -> colors.add(CustomColor.fromHSV(1 / 6f, 0.6f, 0.9f, 1));
+        if (McUtils.screen() instanceof TerritoryManagementScreen territoryManagementScreen
+                && territoryManagementScreen.getShowDefenses()) {
+            switch (territoryItem.getDefenseDifficulty()) {
+                case VERY_LOW -> colors.add(CustomColor.fromChatFormatting(ChatFormatting.DARK_GREEN));
+                case LOW -> colors.add(CustomColor.fromChatFormatting(ChatFormatting.GREEN));
+                case MEDIUM -> colors.add(CustomColor.fromChatFormatting(ChatFormatting.YELLOW));
+                case HIGH -> colors.add(CustomColor.fromChatFormatting(ChatFormatting.RED));
+                case VERY_HIGH -> colors.add(CustomColor.fromChatFormatting(ChatFormatting.DARK_RED));
+                default -> colors.add(CommonColors.WHITE);
+            }
+        } else {
+            for (Map.Entry<GuildResource, Integer> generator :
+                    territoryItem.getProduction().entrySet()) {
+                switch (generator.getKey()) { // We do not care about emeralds since they are produced everywhere
+                    case ORE -> colors.add(CustomColor.fromHSV(0, 0.3f, 1f, 1));
+                    case FISH -> colors.add(CustomColor.fromHSV(0.5f, 0.6f, 0.9f, 1));
+                    case WOOD -> colors.add(CustomColor.fromHSV(1 / 3f, 0.6f, 0.9f, 1));
+                    case CROPS -> colors.add(CustomColor.fromHSV(1 / 6f, 0.6f, 0.9f, 1));
+                }
             }
         }
 
@@ -97,7 +129,13 @@ public class ManageTerritoryPoi implements Poi {
         RenderUtils.drawMulticoloredRectBorders(
                 guiGraphics, colors, actualRenderX, actualRenderZ, renderWidth, renderHeight, 1.5f, 0.5f);
 
-        if (territoryItem.isHeadquarters()) {
+        if (territoryItem.isSelected()) {
+            RenderUtils.drawTexturedRect(
+                    guiGraphics,
+                    Texture.CHECKMARK_GREEN,
+                    actualRenderX + renderWidth / 2f - Texture.CHECKMARK_GREEN.width() / 2f,
+                    actualRenderZ + renderHeight / 2f - Texture.CHECKMARK_GREEN.height() / 2f);
+        } else if (territoryItem.isHeadquarters()) {
             RenderUtils.drawTexturedRect(
                     guiGraphics,
                     Texture.GUILD_HEADQUARTERS,
@@ -156,10 +194,6 @@ public class ManageTerritoryPoi implements Poi {
 
     public TerritoryInfo getTerritoryInfo() {
         return territoryInfo;
-    }
-
-    public TerritoryProfile getTerritoryProfile() {
-        return territoryProfile;
     }
 
     public ItemStack getItemStack() {

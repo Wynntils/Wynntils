@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.territorymanagement;
@@ -266,7 +266,14 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         lastClickTicks = Integer.MAX_VALUE;
     }
 
-    public void resetMap() {
+    public void saveMapPos() {
+        fromMap = true;
+        mapX = wrappedScreen.getMapCenterX();
+        mapZ = wrappedScreen.getMapCenterZ();
+        mapZoom = wrappedScreen.getZoomLevel();
+    }
+
+    public void resetMapPos() {
         fromMap = false;
     }
 
@@ -364,10 +371,6 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
                 selectedTerritories.add(territoryItem.getName());
             }
         } else {
-            fromMap = true;
-            mapX = wrappedScreen.getMapCenterX();
-            mapZ = wrappedScreen.getMapCenterZ();
-            mapZoom = wrappedScreen.getZoomLevel();
             if (!Models.War.isWarActive()) {
                 Handlers.Command.sendCommandImmediately("gu territory " + territoryItem.getName());
                 return;
