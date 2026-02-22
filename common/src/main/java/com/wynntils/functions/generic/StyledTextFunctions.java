@@ -174,8 +174,15 @@ public class StyledTextFunctions {
             String uuid = arguments.getArgument("uuid").getStringValue();
             boolean hat = arguments.getArgument("hat").getBooleanValue();
 
+            UUID uuidObject;
+            try {
+                uuidObject = UUID.fromString(uuid);
+            } catch (IllegalArgumentException e) {
+                return styledText;
+            }
+
             FontDescription fontDescription =
-                    new FontDescription.PlayerSprite(ResolvableProfile.createUnresolved(UUID.fromString(uuid)), hat);
+                    new FontDescription.PlayerSprite(ResolvableProfile.createUnresolved(uuidObject), hat);
 
             return styledText.map(part -> {
                 if (part.getPartStyle().getFont() != FontDescription.DEFAULT) {
