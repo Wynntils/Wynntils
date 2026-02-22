@@ -123,11 +123,7 @@ public class FunctionDumpFeature extends Feature {
 
         String modVersion = WynntilsMod.getVersion();
 
-        String[] dataLine = {
-            "1",
-            String.valueOf(System.currentTimeMillis()),
-            modVersion
-        };
+        String[] dataLine = {"1", String.valueOf(System.currentTimeMillis()), modVersion};
         dataLines.add(dataLine);
 
         writeToCSV(dataLines, DATA_VERSION_NAME);
@@ -193,8 +189,10 @@ public class FunctionDumpFeature extends Feature {
                         .collect(Collectors.joining(","))
                 + ");";
 
-        McUtils.mc().keyboardHandler.setClipboard(
-                clearDatabase + makeTypeEnum + makeFunctionTable + makeArgumentTable + makeDataVersionTable);
+        McUtils.mc()
+                .keyboardHandler
+                .setClipboard(
+                        clearDatabase + makeTypeEnum + makeFunctionTable + makeArgumentTable + makeDataVersionTable);
         McUtils.sendMessageToClient(Component.literal("\n")
                 .append(Component.literal(
                         ChatFormatting.GREEN + "Copied database preparation statement to clipboard.\n"))
