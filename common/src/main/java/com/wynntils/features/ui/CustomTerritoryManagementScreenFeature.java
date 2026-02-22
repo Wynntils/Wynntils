@@ -51,6 +51,9 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
     private final Config<ShiftBehavior> shiftBehaviorConfig = new Config<>(ShiftBehavior.DISABLED_IF_SHIFT_HELD);
 
     @Persisted
+    private final Config<Boolean> useTerritoryMap = new Config<>(true);
+
+    @Persisted
     public final Storage<Boolean> screenHighlightLegend = new Storage<>(true);
 
     @Persisted
@@ -108,6 +111,10 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
             // We might have opened a different screen,
             // but ScreenClosedEvent did not fire (as the screen was overridden).
             customScreenOpened = false;
+        }
+
+        if (event.getScreen() instanceof TerritoryManagementScreen) {
+            ((TerritoryManagementScreen) event.getScreen()).setMapMode(useTerritoryMap.get());
         }
     }
 
