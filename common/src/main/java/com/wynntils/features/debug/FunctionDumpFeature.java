@@ -122,9 +122,6 @@ public class FunctionDumpFeature extends Feature {
         dataLines.add(DATA_VERSION_MAP.keySet().toArray(new String[0]));
 
         String modVersion = WynntilsMod.getVersion();
-        if (modVersion.startsWith("v")) {
-            modVersion = modVersion.substring(1);
-        }
 
         String[] dataLine = {
             "1",
