@@ -6,11 +6,9 @@ package com.wynntils.screens.territorymanagement;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
-import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.GuildMapFeature;
@@ -18,9 +16,6 @@ import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.handlers.wrappedscreen.WrappedScreen;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
 import com.wynntils.models.items.items.gui.TerritoryItem;
-import com.wynntils.models.territories.TerritoryInfo;
-import com.wynntils.models.territories.profile.TerritoryProfile;
-import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.screens.base.widgets.ItemFilterUIButton;
@@ -53,7 +48,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
-import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ContainerUtils;
 
@@ -112,6 +106,11 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
     public void setMapMode(boolean mapMode) {
         this.mapMode = mapMode;
+    }
+
+    public void setMapPosition(float centerX, float centerZ, float zoomLevel) {
+        this.setZoomLevel(zoomLevel);
+        this.updateMapCenter(centerX, centerZ);
     }
 
     @Override
@@ -668,6 +667,12 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         return super.mouseDragged(event, dragX, dragY);
     }
 
+    @Override
+    public void onClose() {
+        holder.resetMap();
+        super.onClose();
+    }
+
     public void updateTerritoryItems() {
         territoryItems = holder.territoryItems().stream().toList();
 
@@ -873,5 +878,17 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
     private int getRenderY() {
         return (this.height - Texture.TERRITORY_MANAGEMENT_BACKGROUND.height()) / 2;
+    }
+
+    public float getMapCenterX() {
+        return this.mapCenterX;
+    }
+
+    public float getMapCenterZ() {
+        return this.mapCenterZ;
+    }
+
+    public float getZoomLevel() {
+        return this.zoomLevel;
     }
 }

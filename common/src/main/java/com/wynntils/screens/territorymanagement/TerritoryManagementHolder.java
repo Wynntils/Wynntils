@@ -74,6 +74,12 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
     // Screen
     private TerritoryManagementScreen wrappedScreen;
 
+    // Map position restoration
+    private boolean fromMap;
+    private float mapX;
+    private float mapZ;
+    private float mapZoom;
+
     // Page loading
     private int currentPage;
     private int requestedPage;
@@ -228,6 +234,11 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
     protected void setWrappedScreen(TerritoryManagementScreen wrappedScreen) {
         this.wrappedScreen = wrappedScreen;
 
+        WynntilsMod.getLogger().info("Set map center {}: {}, {}, {}", fromMap, mapX, mapZ, mapZoom);
+        if (fromMap) {
+            wrappedScreen.setMapPosition(mapX, mapZ, mapZoom);
+        }
+
         // This should have already been done in the constructor,
         // but just in case
         reset();
@@ -253,6 +264,10 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         selectedTerritories = new HashSet<>();
         currentClick = -1;
         lastClickTicks = Integer.MAX_VALUE;
+    }
+
+    public void resetMap() {
+        fromMap = false;
     }
 
     public TerritoryColor getTerritoryColor(TerritoryItem territoryItem) {
@@ -349,6 +364,10 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
                 selectedTerritories.add(territoryItem.getName());
             }
         } else {
+            fromMap = true;
+            mapX = wrappedScreen.getMapCenterX();
+            mapZ = wrappedScreen.getMapCenterZ();
+            mapZoom = wrappedScreen.getZoomLevel();
             if (!Models.War.isWarActive()) {
                 Handlers.Command.sendCommandImmediately("gu territory " + territoryItem.getName());
                 return;
