@@ -111,7 +111,7 @@ public class GuideDungeonKeyItemStack extends GuideItemStack {
                 .withStyle(ChatFormatting.WHITE)
                 .append(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.broken.usage3")
                         .withStyle(ChatFormatting.GRAY)));
-        itemLore.add(Component.literal(getName(dungeon, corrupted, false)).withStyle(highlightColor));
+        itemLore.add(Component.literal(getName(dungeon, true, false)).withStyle(highlightColor));
 
         return itemLore;
     }

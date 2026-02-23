@@ -57,7 +57,10 @@ public final class WynntilsMiscGuideScreen extends WynntilsListScreen<GuideItemS
 
                 if (dungeon.doesCorruptedExist()) {
                     parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, true, false));
-                    parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, true, true));
+
+                    if (dungeon == Dungeon.LOST_SANCTUARY) { // Wynncraft jank... Hopefully forgery gets redone soon
+                        parsedItemCache.add(new GuideDungeonKeyItemStack(dungeon, true, true));
+                    }
                 }
             }
         }
