@@ -36,6 +36,11 @@ public class MeterTransitionSegmentMatcher extends AbstractMeterSegmentMatcher {
     }
 
     @Override
+    protected boolean isUltimateMeter() {
+        return false;
+    }
+
+    @Override
     protected ActionBarSegment createSegment(String segmentText, int startIndex, int endIndex, String segmentValue) {
         return new MeterTransitionSegment(segmentText, startIndex, endIndex);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells;
@@ -14,6 +14,7 @@ import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.spells.actionbar.matchers.SpellSegmentMatcher;
+import com.wynntils.models.spells.actionbar.matchers.UltimateTypeSegmentMatcher;
 import com.wynntils.models.spells.actionbar.segments.SpellSegment;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellDirection;
@@ -53,6 +54,8 @@ public final class SpellModel extends Model {
         super(List.of());
 
         Handlers.ActionBar.registerSegment(new SpellSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new UltimateTypeSegmentMatcher());
+
         Handlers.Item.registerKnownMarkerNames(getKnownMarkerNames());
     }
 

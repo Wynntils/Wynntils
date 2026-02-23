@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2026.
+ * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
@@ -12,35 +12,30 @@ import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class MeterBarSegmentMatcher extends AbstractMeterSegmentMatcher {
+public class UltimateMeterBarSegmentMatcher extends AbstractMeterSegmentMatcher {
     // Number of steps in the meter bar
-    private static final int ACTION_STEPS = 25;
+    private static final int ACTION_STEPS = 32;
     private static final CappedValue FULL_METER = new CappedValue(ACTION_STEPS, ACTION_STEPS);
 
     // All possible meter character ranges, without the animation characters, extracted from the resource pack/font
-    private static final char FULL_METER_CHARACTER = '\uE090';
-    private static final char EMPTY_METER_CHARACTER = '\uE091';
-    private static final String DEFAULT_METER_CHARACTERS = FULL_METER_CHARACTER + "-" + EMPTY_METER_CHARACTER;
-
     // Sprint meter characters
-    private static final String SPRINT_METER_CHARACTERS = "\uE0A0-\uE0B8";
+    private static final String SPRINT_METER_CHARACTERS = "\uE4F0-\uE50F";
 
     // Breath meter characters
-    private static final String BREATH_METER_CHARACTERS = "\uE0C0-\uE0D8";
+    private static final String BREATH_METER_CHARACTERS = "\uE510-\uE52F";
 
-    private static final List<String> METER_CHARACTERS =
-            List.of(DEFAULT_METER_CHARACTERS, SPRINT_METER_CHARACTERS, BREATH_METER_CHARACTERS);
+    private static final List<String> METER_CHARACTERS = List.of(SPRINT_METER_CHARACTERS, BREATH_METER_CHARACTERS);
     private static final Pattern BREATH_METER_PATTERN = Pattern.compile("[" + BREATH_METER_CHARACTERS + "]");
     private static final Pattern SPRINT_METER_PATTERN = Pattern.compile("[" + SPRINT_METER_CHARACTERS + "]");
 
     @Override
-    protected List<String> getCharacterRange() {
-        return METER_CHARACTERS;
+    protected boolean isUltimateMeter() {
+        return true;
     }
 
     @Override
-    protected boolean isUltimateMeter() {
-        return false;
+    protected List<String> getCharacterRange() {
+        return METER_CHARACTERS;
     }
 
     @Override
@@ -55,14 +50,6 @@ public class MeterBarSegmentMatcher extends AbstractMeterSegmentMatcher {
         char firstActionCharacter;
 
         char meterChar = segmentValue.charAt(0);
-
-        // Check if the meter bar is empty or full
-        if (meterChar == EMPTY_METER_CHARACTER) {
-            return MeterBarInfo.EMPTY;
-        }
-        if (meterChar == FULL_METER_CHARACTER) {
-            return new MeterBarInfo(MeterBarInfo.MeterActionType.BOTH, FULL_METER);
-        }
 
         if (SPRINT_METER_PATTERN.matcher(segmentValue).matches()) {
             actionType = MeterBarInfo.MeterActionType.SPRINT;

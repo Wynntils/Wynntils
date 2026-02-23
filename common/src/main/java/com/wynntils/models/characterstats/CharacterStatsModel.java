@@ -22,6 +22,11 @@ import com.wynntils.models.characterstats.actionbar.matchers.MeterEdgeAnimationS
 import com.wynntils.models.characterstats.actionbar.matchers.MeterTransitionSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.matchers.PowderSpecialSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.matchers.ProfessionExperienceSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.UltimateMeterBarSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.UltimateMeterTransitionFromNormalSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.UltimateMeterTransitionToBarSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.UltimateReadyActivateSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.UltimateReadyTransitionSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.segments.CombatExperienceSegment;
 import com.wynntils.models.characterstats.actionbar.segments.HealthBarSegment;
 import com.wynntils.models.characterstats.actionbar.segments.HealthTextSegment;
@@ -69,6 +74,11 @@ public final class CharacterStatsModel extends Model {
         Handlers.ActionBar.registerSegment(new MeterBarSegmentMatcher());
         Handlers.ActionBar.registerSegment(new MeterEdgeAnimationSegmentMatcher());
         Handlers.ActionBar.registerSegment(new MeterTransitionSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new UltimateMeterBarSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new UltimateMeterTransitionFromNormalSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new UltimateReadyTransitionSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new UltimateMeterTransitionToBarSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new UltimateReadyActivateSegmentMatcher());
         Handlers.ActionBar.registerSegment(new LevelSegmentMatcher());
         Handlers.ActionBar.registerSegment(new ManaBarSegmentMatcher());
         Handlers.ActionBar.registerSegment(new HealthBarSegmentMatcher());

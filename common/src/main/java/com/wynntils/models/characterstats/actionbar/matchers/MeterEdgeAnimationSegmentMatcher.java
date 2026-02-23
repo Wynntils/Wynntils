@@ -19,6 +19,11 @@ public class MeterEdgeAnimationSegmentMatcher extends AbstractMeterSegmentMatche
     }
 
     @Override
+    protected boolean isUltimateMeter() {
+        return false;
+    }
+
+    @Override
     protected ActionBarSegment createSegment(String segmentText, int startIndex, int endIndex, String segmentValue) {
         return new MeterEdgeAnimationSegment(segmentText, startIndex, endIndex);
     }

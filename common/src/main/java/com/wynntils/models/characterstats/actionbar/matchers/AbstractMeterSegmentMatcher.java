@@ -20,11 +20,17 @@ public abstract class AbstractMeterSegmentMatcher implements ActionBarSegmentMat
     // The end of a meter segment, a spacer
     private static final String SEGMENT_END = "\uDAFF\uDFF3";
 
-    private final Pattern segmentMatcher = Pattern.compile(SEGMENT_START
+    // The start of an ultimate meter segment, a spacer
+    private static final String ULTIMATE_SEGMENT_START = "\uDAFF\uDFE8";
+
+    // The end of an ultimate meter segment, a spacer
+    private static final String ULTIMATE_SEGMENT_END = "\uDAFF\uDFE7";
+
+    private final Pattern segmentMatcher = Pattern.compile((isUltimateMeter() ? ULTIMATE_SEGMENT_START : SEGMENT_START)
             + (isMultipleSegments()
                     ? "(?<value>[" + String.join("", getCharacterRange()) + "])+"
                     : "(?<value>[" + String.join("", getCharacterRange()) + "])")
-            + SEGMENT_END);
+            + (isUltimateMeter() ? ULTIMATE_SEGMENT_END : SEGMENT_END));
 
     protected abstract List<String> getCharacterRange();
 
@@ -35,6 +41,8 @@ public abstract class AbstractMeterSegmentMatcher implements ActionBarSegmentMat
     protected boolean isMultipleSegments() {
         return false;
     }
+
+    protected abstract boolean isUltimateMeter();
 
     protected abstract ActionBarSegment createSegment(
             String segmentText, int startIndex, int endIndex, String segmentValue);
