@@ -82,7 +82,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
     // Map mode
     private boolean mapMode = false;
-    private TerritoryInfoType infoType = TerritoryInfoType.RESOURCE;
+    private TerritoryInfoType infoType = TerritoryInfoType.DEFENSE;
     private MapButton infoTypeButton;
 
     // Territory items
@@ -222,6 +222,21 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                             button,
                             wrappedScreenInfo.containerMenu().getItems()),
                     List.of(Component.translatable("gui.back").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD))));
+            addMapButton(new MapButton(
+                    Texture.DEFENSE_FILTER_ICON,
+                    (button) -> {
+                        Storage<Boolean> screenTerritoryProductionTooltip = Managers.Feature.getFeatureInstance(
+                                        CustomTerritoryManagementScreenFeature.class)
+                                .screenTerritoryProductionTooltip;
+                        screenTerritoryProductionTooltip.store(!screenTerritoryProductionTooltip.get());
+                    },
+                    List.of(
+                            Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.disableTerritoryProductionTooltip")
+                                    .withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD),
+                            Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper")
+                                    .withStyle(ChatFormatting.GRAY))));
             infoTypeButton = new MapButton(
                     Texture.OVERLAY_EXTRA_ICON,
                     (b) -> {

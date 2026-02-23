@@ -8,7 +8,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public enum TerritoryInfoType {
-    RESOURCE("Resource Types", ChatFormatting.GREEN),
     DEFENSE("Defense Level", ChatFormatting.RED),
     PRODUCTION("Production Upgrades", ChatFormatting.YELLOW),
     SEEKING("Seekings", ChatFormatting.AQUA),
@@ -31,6 +30,6 @@ public enum TerritoryInfoType {
     }
 
     public TerritoryInfoType getPrevious() {
-        return values()[(ordinal() - 1) % values().length];
+        return values()[ordinal() == 0 ? values().length - 1 : ordinal() - 1];
     }
 }

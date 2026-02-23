@@ -9,6 +9,7 @@ import com.wynntils.models.items.items.gui.TerritoryItem;
 import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
+import com.wynntils.models.territories.type.TerritoryConnectionType;
 import com.wynntils.models.territories.type.TerritoryUpgrade;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
 import com.wynntils.screens.territorymanagement.TerritoryManagementScreen;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
@@ -100,18 +102,6 @@ public class ManageTerritoryPoi implements Poi {
             TerritoryInfoType infoType = territoryManagementScreen.getInfoType();
             Map<TerritoryUpgrade, Integer> upgrades = territoryItem.getUpgrades();
             switch (infoType) {
-                case RESOURCE:
-                    for (Map.Entry<GuildResource, Integer> generator :
-                            territoryItem.getProduction().entrySet()) {
-                        switch (generator
-                                .getKey()) { // We do not care about emeralds since they are produced everywhere
-                            case ORE -> colors.add(CustomColor.fromHSV(0, 0.3f, 1f, 1));
-                            case FISH -> colors.add(CustomColor.fromHSV(0.5f, 0.6f, 0.9f, 1));
-                            case WOOD -> colors.add(CustomColor.fromHSV(1 / 3f, 0.6f, 0.9f, 1));
-                            case CROPS -> colors.add(CustomColor.fromHSV(1 / 6f, 0.6f, 0.9f, 1));
-                        }
-                    }
-                    break;
                 case DEFENSE:
                     switch (territoryItem.getDefenseDifficulty()) {
                         case VERY_LOW -> colors.add(CustomColor.fromChatFormatting(ChatFormatting.DARK_GREEN));
@@ -160,7 +150,8 @@ public class ManageTerritoryPoi implements Poi {
                     break;
                 case TREASURY:
                     float treasuryBonus = territoryItem.getTreasuryBonus();
-                    colors.add(CustomColor.fromHSV(5 / 6f, (treasuryBonus / 100) * (1f / 0.3f), 0.9f, 1));
+                    colors.add(CustomColor.fromHSV(
+                            5 / 6f, (treasuryBonus / 100) * (1f / 0.3f), (treasuryBonus / 100) + 0.6f, 1));
                     break;
                 default:
                     colors.add(CommonColors.WHITE);
@@ -176,8 +167,72 @@ public class ManageTerritoryPoi implements Poi {
                 actualRenderZ,
                 renderWidth,
                 renderHeight);
-        RenderUtils.drawMulticoloredRectBorders(
-                guiGraphics, colors, actualRenderX, actualRenderZ, renderWidth, renderHeight, 1.5f, 0.5f);
+        if (holder.territoryConnections().get(territoryItem) == TerritoryConnectionType.UNCONNECTED) {
+            RenderUtils.drawRectBorders(
+                    guiGraphics,
+                    CommonColors.RED,
+                    actualRenderX,
+                    actualRenderZ,
+                    actualRenderX + renderWidth,
+                    actualRenderZ + renderHeight,
+                    1.5f);
+        } else {
+            RenderUtils.drawMulticoloredRectBorders(
+                    guiGraphics, colors, actualRenderX, actualRenderZ, renderWidth, renderHeight, 1.5f, 0.5f);
+        }
+
+        // Render the territory production type icons
+        Set<GuildResource> productionTypes = territoryItem.getProduction().keySet().stream()
+                .filter(GuildResource::isMaterialResource)
+                .collect(Collectors.toUnmodifiableSet());
+
+        if (!productionTypes.isEmpty() && zoomRenderScale >= 0.25f) {
+            // Render the production types
+
+            int iconYOffset = 4;
+            if (territoryItem.isSelected() || territoryItem.isHeadquarters()) {
+                iconYOffset += 4;
+            }
+
+            if (productionTypes.size() <= 2) {
+                GuildResource productionType = productionTypes.iterator().next();
+                String symbol = productionType.getPrettySymbol().trim();
+                symbol += productionTypes.size() == 2
+                        ? productionTypes.iterator().next().getPrettySymbol().trim()
+                        : "";
+
+                FontRenderer.getInstance()
+                        .renderAlignedTextInBox(
+                                guiGraphics,
+                                StyledText.fromString(symbol),
+                                actualRenderX,
+                                actualRenderX + renderWidth,
+                                actualRenderZ + renderHeight / 2 + iconYOffset,
+                                actualRenderZ + renderHeight,
+                                0,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.CENTER,
+                                VerticalAlignment.TOP,
+                                TextShadow.NORMAL);
+            } else {
+                // Render the production types in two lines, 2 icons per line
+                int i = 0;
+                for (GuildResource productionType : productionTypes) {
+                    String symbol = productionType.getPrettySymbol().trim();
+                    FontRenderer.getInstance()
+                            .renderText(
+                                    guiGraphics,
+                                    StyledText.fromString(symbol),
+                                    actualRenderX + renderWidth / 2 + i * 8 - 12,
+                                    actualRenderZ + renderHeight / 2 + iconYOffset,
+                                    CommonColors.WHITE,
+                                    HorizontalAlignment.CENTER,
+                                    VerticalAlignment.TOP,
+                                    TextShadow.NORMAL);
+                    i++;
+                }
+            }
+        }
 
         if (territoryItem.isSelected()) {
             RenderUtils.drawTexturedRect(
