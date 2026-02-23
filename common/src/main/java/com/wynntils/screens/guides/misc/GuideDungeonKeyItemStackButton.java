@@ -14,7 +14,6 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -32,9 +31,7 @@ public class GuideDungeonKeyItemStackButton extends WynntilsButton {
 
     @Override
     public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        CustomColor color = itemStack.isCorrupted()
-                ? CustomColor.fromChatFormatting(ChatFormatting.DARK_RED)
-                : CustomColor.fromChatFormatting(ChatFormatting.GOLD);
+        CustomColor color = CustomColor.fromChatFormatting(itemStack.getHighlightColor());
 
         RenderUtils.drawTexturedRect(
                 guiGraphics,
