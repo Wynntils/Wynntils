@@ -8,19 +8,22 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public enum TerritoryInfoType {
-    RESOURCE("Resource Types"),
-    DEFENSE("Defense Level"),
-    PRODUCTION("Production Upgrades"),
-    SEEKING("Seekings");
+    RESOURCE("Resource Types", ChatFormatting.GREEN),
+    DEFENSE("Defense Level", ChatFormatting.RED),
+    PRODUCTION("Production Upgrades", ChatFormatting.YELLOW),
+    SEEKING("Seekings", ChatFormatting.AQUA),
+    TREASURY("Treasury Bonus", ChatFormatting.LIGHT_PURPLE);
 
     private final String asString;
+    private final ChatFormatting color;
 
-    TerritoryInfoType(String asString) {
+    TerritoryInfoType(String asString, ChatFormatting color) {
         this.asString = asString;
+        this.color = color;
     }
 
     public Component asComponent() {
-        return Component.literal(asString).withStyle(ChatFormatting.WHITE);
+        return Component.literal(asString).withStyle(color);
     }
 
     public TerritoryInfoType getNext() {

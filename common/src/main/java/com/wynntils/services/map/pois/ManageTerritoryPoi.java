@@ -158,6 +158,10 @@ public class ManageTerritoryPoi implements Poi {
                         colors.add(CustomColor.fromHSV(0, 0, 0.6f, 1));
                     }
                     break;
+                case TREASURY:
+                    float treasuryBonus = territoryItem.getTreasuryBonus();
+                    colors.add(CustomColor.fromHSV(5 / 6f, (treasuryBonus / 100) * (1f / 0.3f), 0.9f, 1));
+                    break;
                 default:
                     colors.add(CommonColors.WHITE);
             }
