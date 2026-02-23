@@ -11,6 +11,7 @@ import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
+import net.minecraft.network.chat.Component;
 
 public class SocialFunctions {
     public static class FriendsFunction extends Function<Integer> {
@@ -75,7 +76,11 @@ public class SocialFunctions {
         public String getValue(FunctionArguments arguments) {
             WynntilsUser player = Models.Player.getWynntilsUser(McUtils.player());
             if (player == null) return "";
-            return player.accountType().getComponent().getString();
+
+            Component component = player.accountType().getComponent();
+            if (component == null) return "";
+
+            return component.getString();
         }
     }
 
