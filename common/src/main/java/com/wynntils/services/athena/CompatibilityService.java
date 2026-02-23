@@ -149,9 +149,16 @@ public class CompatibilityService extends Service {
         //  Temporary to force old clients to have a warning on Fruma (v2.2)
         if (wynncraftVersion.versionGroup().equals("2")
                 && wynncraftVersion.majorVersion().equals("2")) {
-            compatibilityTier = CompatibilityTier.MAJOR_ERRORS;
+            if (wynncraftVersion.isBeta()) {
+                // Beta builds on beta server
+                compatibilityTier = CompatibilityTier.COMPATIBLE;
+            } else {
+                // If using these beta builds on full release
+                compatibilityTier = CompatibilityTier.MINOR_ERRORS;
+            }
         } else {
-            compatibilityTier = CompatibilityTier.COMPATIBLE;
+            // Main server with beta builds
+            compatibilityTier = CompatibilityTier.INCOMPATIBLE;
         }
 
         if (compatibilityTier.shouldScreenPrompt() && !isCompatible()) {
