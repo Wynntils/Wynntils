@@ -23,6 +23,8 @@ import net.minecraft.network.chat.Component;
 
 public class GuildOverallProductionWidget extends AbstractWidget {
     private final TerritoryManagementHolder holder;
+    private boolean showDeltas = false;
+    private boolean controlDown = false;
 
     public GuildOverallProductionWidget(int x, int y, int width, int height, TerritoryManagementHolder holder) {
         super(x, y, width, height, Component.literal("Guild Overall Production"));
@@ -89,7 +91,14 @@ public class GuildOverallProductionWidget extends AbstractWidget {
 
         lines.add(Component.literal(""));
 
-        if (KeyboardUtils.isShiftDown()) {
+        if (!controlDown && KeyboardUtils.isControlDown()) {
+            showDeltas = !showDeltas;
+            controlDown = true;
+        } else if (!KeyboardUtils.isControlDown()) {
+            controlDown = false;
+        }
+
+        if (showDeltas || KeyboardUtils.isShiftDown()) {
             // Show surplus/deficit
             lines.add(Component.literal("Surplus/Deficit (per hour):").withStyle(ChatFormatting.GRAY));
             lines.add(Component.literal("- %d Emeralds".formatted(emeraldProduction - emeraldUsage))
