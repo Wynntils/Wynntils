@@ -91,6 +91,7 @@ public class GuildOverallProductionWidget extends AbstractWidget {
 
         lines.add(Component.literal(""));
 
+        // Handle toggling surplus/deficit on and off since this widget does not get direct events
         if (!controlDown && KeyboardUtils.isControlDown()) {
             showDeltas = !showDeltas;
             controlDown = true;

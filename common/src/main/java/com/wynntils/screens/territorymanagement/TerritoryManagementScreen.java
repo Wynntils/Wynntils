@@ -192,7 +192,10 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                                             "feature.wynntils.customTerritoryManagementScreen.disableTerritoryProductionTooltip")
                                     .withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD),
                             Component.translatable(
-                                            "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper")
+                                            "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper1")
+                                    .withStyle(ChatFormatting.GRAY),
+                            Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper2")
                                     .withStyle(ChatFormatting.GRAY)),
                     false));
 
@@ -221,7 +224,9 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                             wrappedScreenInfo.containerId(),
                             button,
                             wrappedScreenInfo.containerMenu().getItems()),
-                    List.of(Component.translatable("gui.back").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD))));
+                    List.of(Component.literal("[>] ")
+                            .withStyle(ChatFormatting.GRAY)
+                            .append(Component.translatable("gui.back")))));
             addMapButton(new MapButton(
                     Texture.DEFENSE_FILTER_ICON,
                     (button) -> {
@@ -231,11 +236,16 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                         screenTerritoryProductionTooltip.store(!screenTerritoryProductionTooltip.get());
                     },
                     List.of(
+                            Component.literal("[>] ")
+                                    .withStyle(ChatFormatting.BLUE)
+                                    .append(
+                                            Component.translatable(
+                                                    "feature.wynntils.customTerritoryManagementScreen.disableTerritoryProductionTooltip")),
                             Component.translatable(
-                                            "feature.wynntils.customTerritoryManagementScreen.disableTerritoryProductionTooltip")
-                                    .withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD),
+                                            "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper1")
+                                    .withStyle(ChatFormatting.GRAY),
                             Component.translatable(
-                                            "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper")
+                                            "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper2")
                                     .withStyle(ChatFormatting.GRAY))));
             infoTypeButton = new MapButton(
                     Texture.OVERLAY_EXTRA_ICON,
@@ -293,13 +303,13 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                                 button,
                                 wrappedScreenInfo.containerMenu().getItems()),
                         List.of(
-                                Component.translatable("feature.wynntils.customTerritoryManagementScreen.loadouts")
-                                        .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD),
-                                Component.empty(),
+                                Component.literal("[>] ")
+                                        .withStyle(ChatFormatting.GOLD)
+                                        .append(Component.translatable(
+                                                "feature.wynntils.customTerritoryManagementScreen.loadouts")),
                                 Component.translatable(
                                                 "feature.wynntils.customTerritoryManagementScreen.loadouts.description")
                                         .withStyle(ChatFormatting.GRAY),
-                                Component.empty(),
                                 Component.translatable(
                                                 "feature.wynntils.customTerritoryManagementScreen.loadouts.clickToOpen")
                                         .withStyle(ChatFormatting.GREEN))));
@@ -342,14 +352,13 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                                     wrappedScreenInfo.containerMenu().getItems());
                         },
                         List.of(
-                                Component.translatable(
-                                                "feature.wynntils.customTerritoryManagementScreen.applySelection")
-                                        .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD),
-                                Component.empty(),
+                                Component.literal("[>] ")
+                                        .withStyle(ChatFormatting.GOLD)
+                                        .append(Component.translatable(
+                                                "feature.wynntils.customTerritoryManagementScreen.applySelection")),
                                 Component.translatable(
                                                 "feature.wynntils.customTerritoryManagementScreen.applySelection.description")
                                         .withStyle(ChatFormatting.GRAY),
-                                Component.empty(),
                                 Component.translatable(
                                                 "feature.wynntils.customTerritoryManagementScreen.applySelection.clickToConfirm")
                                         .withStyle(ChatFormatting.GREEN))));
@@ -404,6 +413,19 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                     QUICK_FILTER_WIDTH,
                     10,
                     this));
+        } else {
+            addMapButton(new MapButton(
+                    Texture.HELP_ICON,
+                    (b) -> {},
+                    List.of(
+                            Component.literal("[>] ")
+                                    .withStyle(ChatFormatting.YELLOW)
+                                    .append(Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.help.name")),
+                            Component.literal("- ")
+                                    .withStyle(ChatFormatting.GRAY)
+                                    .append(Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.help.description")))));
         }
 
         if (firstInit) {
@@ -985,7 +1007,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     private List<Component> getCompleteInfoTypeTooltip() {
         return List.of(
                 Component.literal("[>] ")
-                        .withStyle(ChatFormatting.BLUE)
+                        .withStyle(ChatFormatting.RED)
                         .append(Component.translatable(
                                 "feature.wynntils.customTerritoryManagementScreen.cycleInfoType.name")),
                 Component.translatable("feature.wynntils.customTerritoryManagementScreen.cycleInfoType.description")
