@@ -105,7 +105,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     private final TerritoryManagementHolder holder;
 
     public TerritoryManagementScreen(WrappedScreenInfo wrappedScreenInfo, TerritoryManagementHolder holder) {
-        super();
+        //super();
         this.wrappedScreenInfo = wrappedScreenInfo;
         this.holder = holder;
     }
@@ -404,6 +404,15 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                     QUICK_FILTER_WIDTH,
                     10,
                     this));
+        }
+
+        if (firstInit) {
+            // When outside of the main map, center to the middle of the map
+            if (!isPlayerInsideMainArea()) {
+                centerMapOnWorld();
+            }
+
+            firstInit = false;
         }
 
         updateTerritoryItems();
