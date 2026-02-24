@@ -470,7 +470,6 @@
   "feature.wynntils.customTerritoryManagementScreen.shiftBehaviorConfig.description": "영역 관리를 열 때 시프트를 누르고 있으면 어떻게 동작할까요?",
   "feature.wynntils.customTerritoryManagementScreen.shiftBehaviorConfig.name": "Shift 키 동작",
   "feature.wynntils.customTerritoryManagementScreen.sorts": "빠른 정렬",
-  "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper": "시프트를 눌러 생산 수지 표시",
   "feature.wynntils.customTradeMarketResultScreen.description": "Wynntils 필터를 사용할 수 있는 거래소 검색 결과창을 제공합니다.",
   "feature.wynntils.customTradeMarketResultScreen.name": "커스텀 거래소 검색 결과창",
   "feature.wynntils.customTradeMarketResultScreen.shiftBehaviorConfig.description": "검색 버튼을 누를 때 시프트를 누르고 있으면 어떻게 동작할까요?",
