@@ -6,6 +6,8 @@ package com.wynntils.screens.activities.widgets;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.WynnFont;
+import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.ActivityTrackingState;
@@ -34,6 +36,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
@@ -70,18 +73,33 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
         addons.add(Component.empty());
 
         if (canSetCompass()) {
-            addons.add(Component.translatable("screens.wynntils.contentBook.leftClickToSetCompass")
-                    .withStyle(ChatFormatting.BOLD)
-                    .withStyle(ChatFormatting.GREEN));
+            MutableComponent compassKeybind = Component.empty()
+                    .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(Component.translatable("screens.wynntils.contentBook.leftClickToSetCompass")
+                            .withStyle(ChatFormatting.BOLD)
+                            .withStyle(ChatFormatting.GREEN));
+            addons.add(compassKeybind);
         }
         if (canOpenMap()) {
-            addons.add(Component.translatable("screens.wynntils.contentBook.middleClickToOpenOnMap")
-                    .withStyle(ChatFormatting.BOLD)
-                    .withStyle(ChatFormatting.YELLOW));
+            MutableComponent mapKeybind = Component.empty()
+                    .append(WynnFont.asFont("middle_click", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(Component.translatable("screens.wynntils.contentBook.middleClickToOpenOnMap")
+                            .withStyle(ChatFormatting.BOLD)
+                            .withStyle(ChatFormatting.YELLOW));
+
+            addons.add(mapKeybind);
         }
-        addons.add(Component.translatable("screens.wynntils.contentBook.rightClickToOpenWiki")
-                .withStyle(ChatFormatting.BOLD)
-                .withStyle(ChatFormatting.GOLD));
+
+        MutableComponent wikiKeybind = Component.empty()
+                .append(WynnFont.asFont("right_click", WynncraftKeybindsFont.class))
+                .append(" ")
+                .append(Component.translatable("screens.wynntils.contentBook.rightClickToOpenWiki")
+                        .withStyle(ChatFormatting.BOLD)
+                        .withStyle(ChatFormatting.GOLD));
+
+        addons.add(wikiKeybind);
 
         this.tooltip = LoreUtils.appendTooltip(itemStack, LoreUtils.getTooltipLines(itemStack), addons);
 

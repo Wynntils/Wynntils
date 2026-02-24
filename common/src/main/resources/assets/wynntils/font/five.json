@@ -1,0 +1,15 @@
+{
+  "providers": [
+    {
+      "ascent": 6,
+      "chars": [
+        "\uE040\uE041\uE042\uE043\uE044\uE045\uE046\uE047\uE048\uE049\uE04A\uE04B\uE04C\uE04D\uE04E\uE04F",
+        "\uE050\uE051\uE052\uE053\uE054\uE055\uE056\uE057\uE058\uE059\uE05A\uE05B\uE05C\uE05D\uE05E\uE05F",
+        "\uE060\uE061\uE062\uE063\uE064\uE065\uE066\uE067\uE068\uE069\uE06A\uE06B\uE06C\uE06D\uE06E\uE06F"
+      ],
+      "file": "wynntils:font/chat/five.png",
+      "height": 7,
+      "type": "bitmap"
+    }
+  ]
+}

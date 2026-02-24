@@ -117,6 +117,7 @@ allprojects {
              */
             targetExclude(
                     "src/main/resources/assets/wynntils/font/*.json",
+                    "src/main/resources/assets/wynntils/fontmaps/*.json",
                     "src/main/resources/fabric.mod.json")
             gson()
                     .indentWithSpaces(2)
