@@ -234,7 +234,6 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
     protected void setWrappedScreen(TerritoryManagementScreen wrappedScreen) {
         this.wrappedScreen = wrappedScreen;
 
-        WynntilsMod.getLogger().info("Set map center {}: {}, {}, {}", fromMap, mapX, mapZ, mapZoom);
         if (fromMap) {
             wrappedScreen.setMapPosition(mapX, mapZ, mapZoom);
         }
