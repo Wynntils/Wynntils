@@ -58,6 +58,7 @@ public final class MapService extends Service {
         Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
         List<MapPartProfile> mapPartList = WynntilsMod.GSON.fromJson(reader, type);
+        maps.clear();
         for (MapPartProfile mapPart : mapPartList) {
             String fileName = mapPart.md5 + ".png";
 
