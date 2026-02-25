@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class MapService extends Service {
-    private final List<MapTexture> maps = new CopyOnWriteArrayList<>();
+    private List<MapTexture> maps = new CopyOnWriteArrayList<>();
 
     public MapService() {
         super(List.of());
@@ -58,15 +58,17 @@ public final class MapService extends Service {
         Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
         List<MapPartProfile> mapPartList = WynntilsMod.GSON.fromJson(reader, type);
-        maps.clear();
+        List<MapTexture> newMaps = new CopyOnWriteArrayList<>();
         for (MapPartProfile mapPart : mapPartList) {
             String fileName = mapPart.md5 + ".png";
 
-            loadMapPart(mapPart, fileName);
+            loadMapPart(mapPart, fileName, newMaps);
         }
+
+        maps = newMaps;
     }
 
-    private void loadMapPart(MapPartProfile mapPart, String fileName) {
+    private void loadMapPart(MapPartProfile mapPart, String fileName, List<MapTexture> newMaps) {
         Download dl = Managers.Net.download(
                 URI.create(Managers.Url.getDownloadSourceUrl() + mapPart.path), "maps/" + fileName, mapPart.md5);
         dl.handleInputStream(
@@ -75,7 +77,7 @@ public final class MapService extends Service {
                         NativeImage nativeImage = NativeImage.read(inputStream);
                         MapTexture mapPartImage =
                                 new MapTexture(fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
-                        maps.add(mapPartImage);
+                        newMaps.add(mapPartImage);
                     } catch (IOException e) {
                         WynntilsMod.warn("IOException occurred while loading map image of " + mapPart.name, e);
                     }
