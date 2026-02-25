@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.neoforge.mixins;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractContainerScreen.class)
-public abstract class ForgeAbstractContainerScreenMixin {
+public abstract class NeoForgeAbstractContainerScreenMixin {
     // This mixin replaces AbstractContainerScreenMixin#renderSlotPreCount.
     @Inject(
             method =

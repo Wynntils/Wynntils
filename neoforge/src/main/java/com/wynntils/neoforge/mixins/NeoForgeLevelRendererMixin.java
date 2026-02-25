@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(LevelRenderer.class)
-public abstract class ForgeLevelRendererMixin {
+public abstract class NeoForgeLevelRendererMixin {
     // This reverts the patch made by NeoForge here: https://github.com/neoforged/NeoForge/pull/858
     // Wynncraft uses this behaviour to hide the local player in certain cases such as the character selection screen.
     @Redirect(
