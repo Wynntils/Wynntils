@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import java.util.List;
@@ -19,11 +20,17 @@ public abstract class AbstractMeterSegmentMatcher implements ActionBarSegmentMat
     // The end of a meter segment, a spacer
     private static final String SEGMENT_END = "\uDAFF\uDFF3";
 
-    private final Pattern segmentMatcher = Pattern.compile(SEGMENT_START
+    // The start of an ultimate meter segment, a spacer
+    private static final String ULTIMATE_SEGMENT_START = "\uDAFF\uDFE8";
+
+    // The end of an ultimate meter segment, a spacer
+    private static final String ULTIMATE_SEGMENT_END = "\uDAFF\uDFE7";
+
+    private final Pattern segmentMatcher = Pattern.compile((isUltimateMeter() ? ULTIMATE_SEGMENT_START : SEGMENT_START)
             + (isMultipleSegments()
                     ? "(?<value>[" + String.join("", getCharacterRange()) + "])+"
                     : "(?<value>[" + String.join("", getCharacterRange()) + "])")
-            + SEGMENT_END);
+            + (isUltimateMeter() ? ULTIMATE_SEGMENT_END : SEGMENT_END));
 
     protected abstract List<String> getCharacterRange();
 
@@ -35,12 +42,16 @@ public abstract class AbstractMeterSegmentMatcher implements ActionBarSegmentMat
         return false;
     }
 
-    protected abstract ActionBarSegment createSegment(String segmentText, String segmentValue);
+    protected abstract boolean isUltimateMeter();
+
+    protected abstract ActionBarSegment createSegment(
+            String segmentText, int startIndex, int endIndex, String segmentValue);
 
     @Override
-    public ActionBarSegment parse(String actionBar) {
-        Matcher matcher = this.segmentMatcher.matcher(actionBar);
+    public ActionBarSegment parse(StyledText actionBar) {
+        String actionBarString = actionBar.getStringWithoutFormatting();
+        Matcher matcher = this.segmentMatcher.matcher(actionBarString);
         if (!matcher.find()) return null;
-        return createSegment(matcher.group(), matcher.group("value"));
+        return createSegment(matcher.group(), matcher.start(), matcher.end(), matcher.group("value"));
     }
 }

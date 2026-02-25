@@ -7,15 +7,16 @@ package com.wynntils.handlers.actionbar;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.Set;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -23,9 +24,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class ActionBarHandler extends Handler {
     private static final FontDescription COORDINATES_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("hud/gameplay/default/top_right"));
-
-    private static final FallBackSegmentMatcher FALLBACK_SEGMENT_MATCHER = new FallBackSegmentMatcher();
-    private static final Pattern PERCENT_PATTERN = Pattern.compile("%");
 
     private final List<ActionBarSegmentMatcher> segmentMatchers = new ArrayList<>();
 
@@ -44,7 +42,6 @@ public final class ActionBarHandler extends Handler {
         StyledText actionBarText = packetText.iterate((part, changes) -> {
             if (part.getPartStyle().getFont().equals(COORDINATES_FONT)) {
                 changes.remove(part);
-                return IterationDecision.BREAK;
             }
 
             return IterationDecision.CONTINUE;
@@ -59,12 +56,8 @@ public final class ActionBarHandler extends Handler {
         ActionBarRenderEvent actionBarRenderEvent = new ActionBarRenderEvent(matchedSegments);
         WynntilsMod.postEvent(actionBarRenderEvent);
 
-        // Remove disabled segments from the action bar text
-        for (ActionBarSegment disabledSegment : actionBarRenderEvent.getDisabledSegments()) {
-            actionBarText = actionBarText.replaceFirst(disabledSegment.getSegmentText(), "");
-        }
-
-        StyledText renderedText = actionBarText;
+        // Remove disabled segments from the action bar text using index-based substring removal
+        StyledText renderedText = removeDisabledSegments(actionBarText, actionBarRenderEvent.getDisabledSegments());
 
         // Append coordinates if needed
         if (actionBarRenderEvent.shouldRenderCoordinates()) {
@@ -76,7 +69,7 @@ public final class ActionBarHandler extends Handler {
                 return IterationDecision.CONTINUE;
             });
 
-            renderedText = renderedText.append(coordinatesText);
+            renderedText = coordinatesText.append(renderedText);
         }
 
         if (packetText.equals(renderedText)) return;
@@ -115,22 +108,81 @@ public final class ActionBarHandler extends Handler {
     private List<ActionBarSegment> parseActionBarSegments(StyledText actionBarText) {
         List<ActionBarSegment> matchedSegments = new ArrayList<>();
 
+        // Pass the full StyledText to each matcher, which will use getStringWithoutFormatting()
+        // to match patterns that may span multiple styled text parts
         for (ActionBarSegmentMatcher segmentMatcher : segmentMatchers) {
-            ActionBarSegment parsedSegment = segmentMatcher.parse(
-                    PERCENT_PATTERN.matcher(actionBarText.getString()).replaceAll(""));
+            ActionBarSegment parsedSegment = segmentMatcher.parse(actionBarText);
             if (parsedSegment == null) continue;
 
             matchedSegments.add(parsedSegment);
-            actionBarText = actionBarText.replaceFirst(parsedSegment.getSegmentText(), "%");
         }
 
-        // Check if there is any leftover text, add them as separate fallback segments
-        // (as we could be missing a segment matcher in separate, not continuous parts of the action bar text)
-        Arrays.stream(actionBarText.split("%"))
-                .filter(text -> !text.isEmpty())
-                .forEach(part -> matchedSegments.add(FALLBACK_SEGMENT_MATCHER.parse(part.getString())));
+        // Sort matched segments by their start index
+        matchedSegments.sort(Comparator.comparingInt(ActionBarSegment::getStartIndex));
+
+        // Find unmatched regions and create fallback segments for them
+        String unformattedText = actionBarText.getStringWithoutFormatting();
+        int currentIndex = 0;
+
+        List<ActionBarSegment> fallbackSegments = new ArrayList<>();
+        for (ActionBarSegment segment : matchedSegments) {
+            if (segment.getStartIndex() > currentIndex) {
+                String leftoverText = unformattedText.substring(currentIndex, segment.getStartIndex());
+                if (!leftoverText.isEmpty()) {
+                    fallbackSegments.add(new FallbackSegment(leftoverText, currentIndex, segment.getStartIndex()));
+                }
+            }
+            currentIndex = Math.max(currentIndex, segment.getEndIndex());
+        }
+
+        // Check for any trailing unmatched text
+        if (currentIndex < unformattedText.length()) {
+            String leftoverText = unformattedText.substring(currentIndex);
+            if (!leftoverText.isEmpty()) {
+                fallbackSegments.add(new FallbackSegment(leftoverText, currentIndex, unformattedText.length()));
+            }
+        }
+
+        matchedSegments.addAll(fallbackSegments);
 
         return matchedSegments;
+    }
+
+    /**
+     * Removes disabled segments from the action bar text using index-based substring operations.
+     * This avoids the multi-part matching issue that replaceFirst has.
+     */
+    private static StyledText removeDisabledSegments(StyledText actionBarText, Set<ActionBarSegment> disabledSegments) {
+        if (disabledSegments.isEmpty()) return actionBarText;
+
+        // Sort disabled segments by start index in reverse order so we can remove from back to front
+        // without invalidating earlier indices
+        List<ActionBarSegment> sortedDisabled = disabledSegments.stream()
+                .sorted(Comparator.comparingInt(ActionBarSegment::getStartIndex).reversed())
+                .toList();
+
+        for (ActionBarSegment segment : sortedDisabled) {
+            int textLength = actionBarText.length(StyleType.NONE);
+            int startIndex = segment.getStartIndex();
+            int endIndex = segment.getEndIndex();
+
+            // Clamp indices to valid range
+            startIndex = Math.min(startIndex, textLength);
+            endIndex = Math.min(endIndex, textLength);
+
+            if (startIndex >= endIndex) continue;
+
+            // Build new text by concatenating the parts before and after the disabled segment
+            StyledText before =
+                    startIndex > 0 ? actionBarText.substring(0, startIndex, StyleType.NONE) : StyledText.EMPTY;
+            StyledText after = endIndex < textLength
+                    ? actionBarText.substring(endIndex, textLength, StyleType.NONE)
+                    : StyledText.EMPTY;
+
+            actionBarText = StyledText.concat(before, after);
+        }
+
+        return actionBarText;
     }
 
     private static void debugChecks(List<ActionBarSegment> matchedSegments, StyledText actionBarText) {
@@ -142,24 +194,13 @@ public final class ActionBarHandler extends Handler {
                 WynntilsMod.warn("Failed to match a portion of the action bar text, using a fallback: " + segment));
 
         if (!fallbackSegments.isEmpty()) {
-            WynntilsMod.warn("Action bar text: " + actionBarText.getString());
-        }
-    }
-
-    /**
-     * A fallback matcher that matches any action bar text that doesn't match any other segment.
-     * This is used to prevent the action bar text from being lost if it doesn't match any other segment.
-     */
-    private static final class FallBackSegmentMatcher implements ActionBarSegmentMatcher {
-        @Override
-        public ActionBarSegment parse(String actionBar) {
-            return new FallbackSegment(actionBar);
+            WynntilsMod.warn("Action bar text: " + actionBarText.getString(StyleType.COMPLETE));
         }
     }
 
     private static final class FallbackSegment extends ActionBarSegment {
-        private FallbackSegment(String segmentText) {
-            super(segmentText);
+        private FallbackSegment(String segmentText, int startIndex, int endIndex) {
+            super(segmentText, startIndex, endIndex);
         }
 
         @Override

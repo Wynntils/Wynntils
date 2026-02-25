@@ -7,7 +7,6 @@ import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
-import com.wynntils.handlers.chat.ChatPageProcessor;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
@@ -183,22 +182,8 @@ public class TestRegex {
     }
 
     @Test
-    public void ChatPageProcessor_NPC_CONFIRM_PATTERN() {
-        PatternTester p = new PatternTester(ChatPageProcessor.class, "NPC_CONFIRM_PATTERN");
-        p.shouldMatch("§7Press §fSHIFT §7to continue");
-        p.shouldMatch("§4Press §cSNEAK §4to continue");
-    }
-
-    @Test
-    public void ChatPageProcessor_NPC_SELECT_PATTERN() {
-        PatternTester p = new PatternTester(ChatPageProcessor.class, "NPC_SELECT_PATTERN");
-        p.shouldMatch("§7Select §fan option §7to continue");
-        p.shouldMatch("§cCLICK §4an option to continue");
-    }
-
-    @Test
-    public void ChatRedirectFeature_LoginRedirector_FOREGROUND_PATTERN() {
-        PatternTester p = new PatternTester(ChatRedirectFeature.LoginRedirector.class, "FOREGROUND_PATTERN");
+    public void ChatRedirectFeature_LoginRedirector_PATTERN() {
+        PatternTester p = new PatternTester(ChatRedirectFeature.LoginRedirector.class, "PATTERN");
         // hero+ nickname
         p.shouldMatch("§f\uE08A §#d4448cff§oZepart Heal§f §dhas just logged in!");
         // hero
@@ -236,12 +221,12 @@ public class TestRegex {
     @Test
     public void DamageLabelParser_DAMAGE_LABEL_PATTERN() {
         PatternTester p = new PatternTester(DamageLabelParser.class, "DAMAGE_LABEL_PATTERN");
-        p.shouldMatch("§e§l-509 §r§e\uE003 §f§l-398 §r§f\uE000 §c§l-5162 §r§c\uE002 §b§l-386 §r§b\uE004 ");
-        p.shouldMatch("§c§l-608 §r§c\uE002 §2§l-219 §r§2\uE001 ");
-        p.shouldMatch("§c-387 \uE002 §2-140 \uE001 ");
-        p.shouldMatch("§c§l-4089 §r§c\uE002 ");
-        p.shouldMatch("§c-2685 \uE002 ");
-        p.shouldMatch("§4-6 ❤ ");
+        p.shouldMatch("§e509");
+        p.shouldMatch("§52.8k");
+        p.shouldMatch("§5§{fr:minecraft:language/five}2.8k");
+        p.shouldMatch("§56.2k󐀊§519.7k󐀊§57.1k󐀊§57.9k󐀊§512.8k");
+        p.shouldMatch("§c1.2k󐀊§b300󐀊§e45.6k󐀊§f999");
+        p.shouldMatch("§42.8k");
     }
 
     @Test
@@ -526,10 +511,10 @@ public class TestRegex {
     @Test
     public void IngredientAnnotator_INGREDIENT_PATTERN() {
         PatternTester p = new PatternTester(IngredientAnnotator.class, "INGREDIENT_PATTERN");
-        p.shouldMatch("§7Perkish Potato [§8✫✫✫§7]");
-        p.shouldMatch("§7Sylphid Tears§6 [§e✫§8✫✫§6]");
-        p.shouldMatch("§7Bob's Tear§5 [§d✫✫§8✫§5]");
-        p.shouldMatch("§7Contorted Stone§3 [§b✫✫✫§3]");
+        p.shouldMatch("\uDAFC\uDC00§#20aa20ffBlueshift Beacon\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§#20aa20ffDernic Sludgebomb\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§#20aa20ffWorm Sign\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§#20aa20ffSludge Parasite\uDAFC\uDC00");
     }
 
     @Test
@@ -584,8 +569,8 @@ public class TestRegex {
     }
 
     @Test
-    public void MessageFilterFeature_PARTY_FINDER_FG() {
-        PatternTester p = new PatternTester(MessageFilterFeature.class, "PARTY_FINDER_FG");
+    public void MessageFilterFeature_PARTY_FINDER() {
+        PatternTester p = new PatternTester(MessageFilterFeature.class, "PARTY_FINDER");
         p.shouldMatch(
                 "§5\uE00A\uE002 Party Finder:§d Hey §oShadowCat§r§d, over here! Join the §bNest of the Grootslangs§d queue and match up with §e3§d other players!");
         p.shouldMatch(
@@ -593,24 +578,10 @@ public class TestRegex {
     }
 
     @Test
-    public void MessageFilterFeature_PARTY_FINDER_BG() {
-        PatternTester p = new PatternTester(MessageFilterFeature.class, "PARTY_FINDER_BG");
-        p.shouldMatch(
-                "§8\uE00A\uE002 Party Finder: Hey §oShadowCat§r§8, over here! Join the TheNameless Anomaly queue and match up with 3 other players!");
-    }
-
-    @Test
-    public void MessageFilterFeature_SYSTEM_INFO_FG() {
-        PatternTester p = new PatternTester(MessageFilterFeature.class, "SYSTEM_INFO_FG");
+    public void MessageFilterFeature_SYSTEM_INFO() {
+        PatternTester p = new PatternTester(MessageFilterFeature.class, "SYSTEM_INFO");
         p.shouldMatch(
                 "§#a0aec0ff\uE01B\uE002 Follow us on Twitter to stay up to date with Wynncraft at §#77aefcffwynn.gg/twitter");
-    }
-
-    @Test
-    public void MessageFilterFeature_SYSTEM_INFO_BG() {
-        PatternTester p = new PatternTester(MessageFilterFeature.class, "SYSTEM_INFO_BG");
-        p.shouldMatch(
-                "§#c0c0c0ff\uE01B\uE002 Follow us on Twitter to stay up to date with Wynncraft at §#fcfcfcffwynn.gg/twitter");
     }
 
     @Test
@@ -640,19 +611,8 @@ public class TestRegex {
     }
 
     @Test
-    public void RecipientType_NPC_foregroundPattern() {
-        PatternTester p = new PatternTester(RecipientType.NPC, "foregroundPattern");
-        p.shouldMatch("§7[3/5]§2 Jesp:§a Keep fighting! We're almost halfway to the other side!");
-        p.shouldMatch("§7[1/11]§0 §2Scientist Ynnos:§a *Ahem* Welcome, everyone.");
-        p.shouldMatch(
-                "§7[3/11]§0 §2Scientist Ynnos:§0 §r§aAllow me to explain the situation we’re in. It’s a series of unfortunate events. I study the amazing properties of crystals and other geodes.");
-        p.shouldMatch(
-                "§7[6/6] §5Aster: §dSo remember, find a balance in elements! Whether you invest in one, or select many to excell in, I trust you may succeed. Thank you for you time.");
-    }
-
-    @Test
-    public void RecipientType_GLOBAL_foregroundPattern() {
-        PatternTester p = new PatternTester(RecipientType.GLOBAL, "foregroundPattern");
+    public void RecipientType_GLOBAL_pattern() {
+        PatternTester p = new PatternTester(RecipientType.GLOBAL, "pattern");
         // wc5 106(archer)VAI CHAMPION v8j: test
         p.shouldNotMatch(
                 "§f\uE056\uE042\uE065§r §8\uE010\u2064\uE070§f\uE071\uE061§8\uE00F§f\uE012\uE060§8\uE00F§f\uE012\uE066§8\uE00E§f\uE012\uE012\uE013\uE02C§8\uE00F§f\uE012\uE055§8\uE00F§f\uE012\uE040§8\uE00F§f\uE012\uE048§8\uE011\u2064§r\uE013\uE017\uE013\u2064\u2064§#ffe60000v8j: §ftest");
@@ -680,15 +640,8 @@ public class TestRegex {
     }
 
     @Test
-    public void RecipientType_GLOBAL_backgroundPattern() {
-        PatternTester p = new PatternTester(RecipientType.GLOBAL, "backgroundPattern");
-        p.shouldMatch(
-                "§7\uE056\uE042\uE061\uE061§r §8\uE010\u2064\uE00F\uE012\uE063\uE00E\uE012\uE02D\u2064\uE011\u2064§r\uE013\uE013\u2064\u2064\u2064§7kristof345: §8b");
-    }
-
-    @Test
-    public void RecipientType_LOCAL_foregroundPattern() {
-        PatternTester p = new PatternTester(RecipientType.LOCAL, "foregroundPattern");
+    public void RecipientType_LOCAL_pattern() {
+        PatternTester p = new PatternTester(RecipientType.LOCAL, "pattern");
         // wc5 106(archer)VAI CHAMPION v8j: test
         p.shouldMatch(
                 "§f\uE056\uE042\uE065§r §8\uE010\u2064\uE070§f\uE071\uE061§8\uE00F§f\uE012\uE060§8\uE00F§f\uE012\uE066§8\uE00E§f\uE012\uE012\uE013\uE02C§8\uE00F§f\uE012\uE055§8\uE00F§f\uE012\uE040§8\uE00F§f\uE012\uE048§8\uE011\u2064§r\uE013\uE017\uE013\u2064\u2064§#ffe60000v8j: §ftest");
@@ -720,59 +673,31 @@ public class TestRegex {
     }
 
     @Test
-    public void RecipientType_LOCAL_backgroundPattern() {
-        PatternTester p = new PatternTester(RecipientType.LOCAL, "backgroundPattern");
-        p.shouldMatch(
-                "§8\uE056\uE042\uE061\uE061§r §#a8a8a8ff\uE010\u2064\uE00F§8\uE012\uE063§#a8a8a8ff\uE00E§8\uE012\uE02D\u2064§#a8a8a8ff\uE011\u2064§r\uE013\uE013\u2064\u2064\u2064§7kristof345: §8a");
-    }
-
-    @Test
-    public void RecipientType_GUILD_foregroundPattern() {
-        PatternTester p = new PatternTester(RecipientType.GUILD, "foregroundPattern");
+    public void RecipientType_GUILD_pattern() {
+        PatternTester p = new PatternTester(RecipientType.GUILD, "pattern");
         // Message is <guild prefix> <rank background> <rank name> <player name>: <message>
         p.shouldMatch(
                 "§b\uDAFF\uDFFC\uE006\uDAFF\uDFFF\uE002\uDAFF\uDFFE \uE060\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE062\uDAFF\uDFD6§0\uE002\uE000\uE00F\uE013\uE000\uE008\uE00D\uDB00\uDC02§b §3§obol§r§3:§b test");
     }
 
     @Test
-    public void RecipientType_GUILD_backgroundPattern() {
-        PatternTester p = new PatternTester(RecipientType.GUILD, "backgroundPattern");
-        p.shouldMatch(
-                "§8\uDAFF\uDFFC\uE006\uDAFF\uDFFF\uE002\uDAFF\uDFFE \uE060\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE062\uDAFF\uDFD6\uE002\uE000\uE00F\uE013\uE000\uE008\uE00D\uDB00\uDC02 §obol§r§8: test");
-    }
-
-    @Test
-    public void RecipientType_PARTY_foregroundPattern() {
-        PatternTester p = new PatternTester(RecipientType.PARTY, "foregroundPattern");
+    public void RecipientType_PARTY_pattern() {
+        PatternTester p = new PatternTester(RecipientType.PARTY, "pattern");
         p.shouldMatch("§e\uDAFF\uDFFC\uE005\uDAFF\uDFFF\uE002\uDAFF\uDFFE You must leave your current party first.");
         p.shouldMatch("§e\uDAFF\uDFFC\uE001\uDB00\uDC06 You must leave your current party first.");
         p.shouldMatch("§e\uDAFF\uDFFC\uE005\uDAFF\uDFFF\uE002\uDAFF\uDFFE §obol§r§e: §fasd");
     }
 
     @Test
-    public void RecipientType_PARTY_backgroundPattern() {
-        PatternTester p = new PatternTester(RecipientType.PARTY, "backgroundPattern");
-        p.shouldMatch("§8\uDAFF\uDFFC\uE005\uDAFF\uDFFF\uE002\uDAFF\uDFFE This player is already in your party");
-        p.shouldMatch("§8\uDAFF\uDFFC\uE001\uDB00\uDC06 kristof345: asd");
-    }
-
-    @Test
-    public void RecipientType_PRIVATE_foregroundpattern() {
-        PatternTester p = new PatternTester(RecipientType.PRIVATE, "foregroundPattern");
+    public void RecipientType_PRIVATE_pattern() {
+        PatternTester p = new PatternTester(RecipientType.PRIVATE, "pattern");
         p.shouldMatch(
                 "§#ddcc99ff\uDAFF\uDFFC\uE007\uDAFF\uDFFF\uE002\uDAFF\uDFFE §#e8c00cff§oShadowCat§#ddcc99ff \uE003 §#e8c00cff§oShadowCat§r§#e8c00cff§[1]:§#ddcc99ff §fHi ");
     }
 
     @Test
-    public void RecipientType_PRIVATE_backgroundPattern() {
-        PatternTester p = new PatternTester(RecipientType.PRIVATE, "backgroundPattern");
-        p.shouldMatch(
-                "§#ddddddff\uDAFF\uDFFC\uE001\uDB00\uDC06 §#e8e8e8ff§oShadowCat§#ddddddff \uE003 §#e8e8e8ff§oShadowCat§r§#e8e8e8ff§[1]:§#ddddddff §8Hi ");
-    }
-
-    @Test
-    public void RecipientType_SHOUT_foregroundPattern() {
-        PatternTester p = new PatternTester(RecipientType.SHOUT, "foregroundPattern");
+    public void RecipientType_SHOUT_pattern() {
+        PatternTester p = new PatternTester(RecipientType.SHOUT, "pattern");
         p.shouldMatch(
                 "§#bd45ffff\uDAFF\uDFFC\uE015\uDAFF\uDFFF\uE002\uDAFF\uDFFE §oShadowCat§r§#bd45ffff \uE060\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE056\uDAFF\uDFFF\uE062\uDAFF\uDFEC§0\uE00D\uE000\uE026\uDB00\uDC02§#bd45ffff shouts: §#fad9f7ffo/");
         p.shouldMatch(
@@ -780,27 +705,12 @@ public class TestRegex {
     }
 
     @Test
-    public void RecipientType_SHOUT_backgroundPattern() {
-        PatternTester p = new PatternTester(RecipientType.SHOUT, "backgroundPattern");
-        p.shouldMatch(
-                "§f\uDAFF\uDFFC\uE015\uDAFF\uDFFF\uE002\uDAFF\uDFFE §oShadowCat§r§f \uE060\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE056\uDAFF\uDFFF\uE062\uDAFF\uDFEC§8\uE00D\uE000\uE026\uDB00\uDC02§f shouts: §#fafafafftest");
-    }
-
-    @Test
-    public void RecipientType_PETS_foregroundPattern() {
-        PatternTester p = new PatternTester(RecipientType.PETS, "foregroundPattern");
+    public void RecipientType_PETS_pattern() {
+        PatternTester p = new PatternTester(RecipientType.PETS, "pattern");
         p.shouldMatch("§6\uDAFF\uDFFC\uE016\uDAFF\uDFFF\uE002\uDAFF\uDFFE Duck: §#ffdd99ff§oquack");
         p.shouldMatch("§6\uDAFF\uDFFC\uE001\uDB00\uDC06 §oCosmo§r§6: §#ffdd99ff§obreezy squeak");
         p.shouldMatch(
                 "§6\uDAFF\uDFFC\uE016\uDAFF\uDFFF\uE002\uDAFF\uDFFE §oHanafubuki§r§6: §#ffdd99ffThose grooks look awfully... tempting.");
-    }
-
-    @Test
-    public void RecipientType_PETS_backgroundPattern() {
-        PatternTester p = new PatternTester(RecipientType.PETS, "backgroundPattern");
-        p.shouldMatch("§f\uDAFF\uDFFC\uE001\uDB00\uDC06 §oKlutzy§r§f: §ofalls over");
-        p.shouldMatch(
-                "§f\uDAFF\uDFFC\uE016\uDAFF\uDFFF\uE002\uDAFF\uDFFE §oHanafubuki§r§f: Watch the eye pal, watch the eye!");
     }
 
     @Test
@@ -1047,18 +957,13 @@ public class TestRegex {
         PatternTester p = new PatternTester(GearModel.class, "GEAR_PATTERN");
 
         // Unidentified
-        p.shouldMatch("§5Unidentified §f⬡ §5Shiny Crusade Sabatons");
-        p.shouldMatch("§5Unidentified §f⬡ §5Shiny Gaia");
-        p.shouldMatch("§5Unidentified Idol");
-        p.shouldMatch("§5Unidentified Nirvana");
-        p.shouldMatch("§bUnidentified Follow the Wind");
+        p.shouldMatch("\uDAFC\uDC00§f\uE008\uDB00\uDC02§cRenda Langit\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§f\uE008\uDB00\uDC02§5Shiny Lament\uDAFC\uDC00");
 
         // Identified
-        p.shouldMatch("§5Apocalypse");
-        p.shouldMatch("§cRhythm of the Seasons");
-        p.shouldMatch("§f⬡ §5Shiny Stratiformis");
-        p.shouldMatch("§f⬡ §5Shiny Aftershock");
-        p.shouldMatch("§f⬡ §5Shiny Crusade Sabatons");
+        p.shouldMatch("\uDAFC\uDC00§5Warp\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§5Shiny Divzer\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§dAnamnesis\uDAFC\uDC00");
     }
 
     @Test

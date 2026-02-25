@@ -20,6 +20,7 @@ import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.models.containers.type.FullscreenContainerProperty;
 import com.wynntils.models.items.items.game.MultiHealthPotionItem;
+import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -87,6 +88,12 @@ public class ItemLockFeature extends Feature {
                 || Models.Container.getCurrentContainer() instanceof FullscreenContainerProperty) return;
         if (!blockAllActionsOnLockedItems.get() && event.getClickType() != ClickType.THROW) return;
         if (Models.Housing.isInEditMode()) return;
+
+        if (event.getClickType() == ClickType.SWAP
+                && Models.Item.asWynnItemProperty(event.getItemStack(), GearTypeItemProperty.class)
+                        .isPresent()) {
+            return;
+        }
 
         // We have to match slot.index here, because the event slot number is an index as well
         Optional<Slot> slotOptional = abstractContainerScreen.getMenu().slots.stream()

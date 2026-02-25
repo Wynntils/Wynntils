@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.character.actionbar.matchers;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.models.character.actionbar.segments.CharacterSelectionClassSegment;
@@ -16,14 +17,16 @@ public class CharacterSelectionClassSegmentMatcher implements ActionBarSegmentMa
             Pattern.compile("\uDAFF\uDF8C\u0001([\uE000-\uE004])\uDB00\uDC0A");
 
     @Override
-    public ActionBarSegment parse(String actionBar) {
-        Matcher matcher = CLASS_CARD_PATTERN.matcher(actionBar);
+    public ActionBarSegment parse(StyledText actionBar) {
+        String actionBarString = actionBar.getStringWithoutFormatting();
+        Matcher matcher = CLASS_CARD_PATTERN.matcher(actionBarString);
         if (!matcher.find()) return null;
 
         String classCard = matcher.group(1);
         ClassType classType = ClassType.fromCharacterSelectionCard(classCard);
         boolean isReskinned = ClassType.isReskinnedCharacterSelection(classType, classCard);
 
-        return new CharacterSelectionClassSegment(actionBar, classType, isReskinned);
+        return new CharacterSelectionClassSegment(
+                matcher.group(), matcher.start(), matcher.end(), classType, isReskinned);
     }
 }

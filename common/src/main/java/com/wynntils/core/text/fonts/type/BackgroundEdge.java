@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.wynnfont;
+package com.wynntils.core.text.fonts.type;
 
 import com.wynntils.utils.type.Pair;
 

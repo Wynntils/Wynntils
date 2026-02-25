@@ -1,0 +1,22 @@
+{
+  "fontId": "keybind",
+  "glyphs": {
+    "left_click": "\uF000",
+    "right_click": "\uF001",
+    "middle_click": "\uF002",
+    "key_esc": "\uF003",
+    "key_shift": "\uF004",
+    "key_f": "\uF005",
+    "key_zero": "\uF006",
+    "key_one": "\uF007",
+    "key_two": "\uF008",
+    "key_three": "\uF009",
+    "key_four": "\uF00A",
+    "key_five": "\uF00B",
+    "key_six": "\uF00C",
+    "key_seven": "\uF00D",
+    "key_eight": "\uF00E",
+    "key_nine": "\uF00F",
+    "key_plus": "\uF014"
+  }
+}

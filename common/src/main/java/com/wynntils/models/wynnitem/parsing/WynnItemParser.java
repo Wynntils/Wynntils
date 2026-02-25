@@ -9,6 +9,8 @@ import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
@@ -29,6 +31,8 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.type.ConsumableEffect;
 import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.models.wynnitem.type.NamedItemEffect;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -44,6 +48,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public final class WynnItemParser {
@@ -115,6 +121,22 @@ public final class WynnItemParser {
     // Test in WynnItemParser_CRAFTED_ITEM_NAME_PATTERN
     public static final Pattern CRAFTED_ITEM_NAME_PATTERN = Pattern.compile(
             "^§3(?:§o)?(?<name>.+) §b(?:§o)?\\[(((?<effectStrength>\\d+)%)|((?<currentUses>\\d+)\\/(?<maxUses>\\d+)))\\]À*$");
+
+    private static final Map<CustomColor, Integer> TIER_COLOR_CODES = Map.of(
+            CommonColors.BLACK,
+            0,
+            CustomColor.fromInt(0xebeb47),
+            1,
+            CustomColor.fromInt(0xeb47eb),
+            2,
+            CustomColor.fromInt(0x47ebeb),
+            3);
+
+    private static final Pattern PROFESSION_TIER_PATTERN =
+            Pattern.compile(".+?(?:§(0|#([a-f0-9]{8})))(?:\uE000){1,3}.+?");
+
+    private static final FontDescription SPRITE_FRAME_FONT =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/emblem/sprite"));
 
     public static WynnItemParseResult parseItemStack(
             ItemStack itemStack, Map<StatType, StatPossibleValues> possibleValuesMap) {
@@ -567,5 +589,32 @@ public final class WynnItemParser {
 
         // In this case, we actually know the exact internal roll
         return new StatActualValue(statType, value, stars, RangedValue.of(internalRoll, internalRoll));
+    }
+
+    public static int parseProfessionTier(ItemStack itemStack) {
+        Matcher tierMatcher = LoreUtils.matchLoreLine(itemStack, 1, PROFESSION_TIER_PATTERN);
+        String tierColor = "";
+
+        if (tierMatcher.matches()) {
+            tierColor = tierMatcher.group(1);
+        }
+
+        if (tierColor.isEmpty()) return -1;
+
+        return TIER_COLOR_CODES.getOrDefault(CustomColor.fromHexString(tierColor), 0);
+    }
+
+    public static String extractFrameSpriteCode(ItemStack itemStack) {
+        List<StyledText> lines = LoreUtils.getLore(itemStack);
+
+        for (StyledText line : lines) {
+            for (StyledTextPart part : line) {
+                if (part.getPartStyle().getFont().equals(SPRITE_FRAME_FONT)) {
+                    return part.getString(null, StyleType.NONE);
+                }
+            }
+        }
+
+        return "";
     }
 }

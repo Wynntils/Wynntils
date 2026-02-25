@@ -9,7 +9,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.rewards.type.AmplifierInfo;
@@ -68,13 +67,16 @@ public final class RewardsModel extends Model {
         return allRuneInfo;
     }
 
-    public ItemAnnotation fromCharmItemStack(ItemStack itemStack, StyledText name, String displayName, String type) {
-        GearTier tier = GearTier.fromStyledText(name);
-
-        CharmInfo charmInfo = charmInfoRegistry.getFromDisplayName(name.getStringWithoutFormatting());
+    public ItemAnnotation fromCharmItemStack(
+            ItemStack itemStack, StyledText name, String displayName, String type, boolean isUnidentified) {
+        CharmInfo charmInfo = charmInfoRegistry.getFromDisplayName(displayName);
         if (charmInfo == null) {
-            WynntilsMod.warn("Could not find charm info for " + name.getStringWithoutFormatting());
+            WynntilsMod.warn("Could not find charm info for " + displayName);
             return null;
+        }
+
+        if (isUnidentified) {
+            return new CharmItem(charmInfo, null);
         }
 
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, charmInfo.getVariableStatsMap());
@@ -86,8 +88,6 @@ public final class RewardsModel extends Model {
     }
 
     public TomeItem fromTomeItemStack(ItemStack itemStack, StyledText name, String tomeName, boolean isUnidentified) {
-        GearTier gearTier = GearTier.fromStyledText(name);
-
         TomeInfo tomeInfo = tomeInfoRegistry.getFromDisplayName(tomeName);
         if (tomeInfo == null) {
             WynntilsMod.warn("Could not find tome info for " + tomeName + " (Originally "

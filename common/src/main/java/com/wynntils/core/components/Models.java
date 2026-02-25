@@ -44,7 +44,6 @@ import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootrun.LootrunModel;
 import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.npc.NpcModel;
-import com.wynntils.models.npcdialogue.NpcDialogueModel;
 import com.wynntils.models.objectives.ObjectivesModel;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.PartyModel;
@@ -68,7 +67,6 @@ import com.wynntils.models.worlds.ServerListModel;
 import com.wynntils.models.worlds.StreamerModeModel;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.wynnalphabet.WynnAlphabetModel;
-import com.wynntils.models.wynnfont.WynnFontModel;
 import com.wynntils.models.wynnitem.WynnItemModel;
 
 public final class Models {
@@ -105,7 +103,6 @@ public final class Models {
     public static final ItemModel Item = new ItemModel();
     public static final LootChestModel LootChest = new LootChestModel();
     public static final MarkerModel Marker = new MarkerModel();
-    public static final NpcDialogueModel NpcDialogue = new NpcDialogueModel();
     public static final NpcModel Npc = new NpcModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PartyModel Party = new PartyModel();
@@ -133,7 +130,6 @@ public final class Models {
     public static final WorldEventModel WorldEvent = new WorldEventModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
     public static final WynnAlphabetModel WynnAlphabet = new WynnAlphabetModel();
-    public static final WynnFontModel WynnFont = new WynnFontModel();
     public static final WynnItemModel WynnItem = new WynnItemModel();
 
     // Models with constructor dependencies, ordered alphabetically as far as possible

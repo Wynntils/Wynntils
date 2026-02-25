@@ -20,8 +20,10 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import net.minecraft.client.gui.GuiGraphics;
 
 public class TerritoryPoi implements Poi {
@@ -85,7 +87,7 @@ public class TerritoryPoi implements Poi {
         TerritoryProfile territoryProfile = getTerritoryProfile();
 
         List<CustomColor> colors;
-        if (isTerritoryInfoUsable()
+        if (territoryInfo != null
                 && McUtils.screen() instanceof GuildMapScreen guildMapScreen
                 && guildMapScreen.isResourceMode()) {
             colors = territoryInfo.getResourceColors();
@@ -118,12 +120,18 @@ public class TerritoryPoi implements Poi {
                     actualRenderX + renderWidth / 2f - Texture.GUILD_HEADQUARTERS.width() / 2f,
                     actualRenderZ + renderHeight / 2f - Texture.GUILD_HEADQUARTERS.height() / 2f);
         } else {
-            String guildPrefix =
-                    isTerritoryInfoUsable() ? territoryInfo.getGuildPrefix() : territoryProfile.getGuildPrefix();
+            String mapText;
+            if (McUtils.screen() instanceof GuildMapScreen guildMapScreen && guildMapScreen.isTerritoryNameMode()) {
+                mapText = Arrays.stream(territoryProfile.getName().split(" "))
+                        .map(s -> s.substring(0, 1))
+                        .collect(Collectors.joining());
+            } else {
+                mapText = isTerritoryInfoUsable() ? territoryInfo.getGuildPrefix() : territoryProfile.getGuildPrefix();
+            }
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             guiGraphics,
-                            StyledText.fromString(guildPrefix),
+                            StyledText.fromString(mapText),
                             actualRenderX,
                             actualRenderX + renderWidth,
                             actualRenderZ,

@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells.actionbar.matchers;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.models.spells.actionbar.segments.SpellSegment;
@@ -37,8 +38,9 @@ public class SpellSegmentMatcher implements ActionBarSegmentMatcher {
     private static final Pattern LEFT_CLICK_PATTERN = Pattern.compile(LEFT_CLICK);
 
     @Override
-    public ActionBarSegment parse(String actionBar) {
-        Matcher matcher = SPELL_REGEX.matcher(actionBar);
+    public ActionBarSegment parse(StyledText actionBar) {
+        String actionBarString = actionBar.getStringWithoutFormatting();
+        Matcher matcher = SPELL_REGEX.matcher(actionBarString);
         if (!matcher.find()) return null;
 
         SpellDirection first = fromCharacter(matcher.group("first"));
@@ -57,7 +59,7 @@ public class SpellSegmentMatcher implements ActionBarSegmentMatcher {
             directions = new SpellDirection[] {first, second, third};
         }
 
-        return new SpellSegment(matcher.group(), directions);
+        return new SpellSegment(matcher.group(), matcher.start(), matcher.end(), directions);
     }
 
     private SpellDirection fromCharacter(String spellCharacter) {
