@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear.type;
@@ -16,7 +16,6 @@ public enum GearTier {
     NORMAL(ChatFormatting.WHITE, 0, 0.0f, "common"),
     UNIQUE(ChatFormatting.YELLOW, 3, 0.5f),
     RARE(ChatFormatting.LIGHT_PURPLE, 8, 1.2f),
-    SET(ChatFormatting.GREEN, 8, 1.2f),
     LEGENDARY(ChatFormatting.AQUA, 12, 4.5f),
     FABLED(ChatFormatting.RED, 16, 8.0f),
     MYTHIC(ChatFormatting.DARK_PURPLE, 90, 18.0f),
@@ -46,6 +45,11 @@ public enum GearTier {
             if (type.apiName.equals(typeStr.toLowerCase(Locale.ROOT))) {
                 return type;
             }
+        }
+
+        // Temporary until the API is updated with set tier removed
+        if (typeStr.equals("set")) {
+            return UNIQUE;
         }
 
         return null;
