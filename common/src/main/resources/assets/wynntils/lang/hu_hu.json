@@ -1,5 +1,5 @@
 {
-  "command.wynntils.bomb.description": "Korábban bejelentett bombák listázása",
+  "command.wynntils.bombBell.description": "Korábban bejelentett bombák listázása",
   "command.wynntils.clearCaches.clickHere": "Kattintson ide a megerősítéshez.",
   "command.wynntils.clearCaches.deleting": "Gyorsítótárak törlése és a játék bezárása 5 másodperc múlva...",
   "command.wynntils.clearCaches.warn": "Ez törli az összes API és frissítési gyorsítótárat, és bezárja a Minecraftot. Biztosan folytatni szeretné?",

@@ -1,5 +1,5 @@
 {
-  "command.wynntils.bomb.description": "以前に発表された爆弾を一覧表示",
+  "command.wynntils.bombBell.description": "以前に発表された爆弾を一覧表示",
   "command.wynntils.clearCaches.clickHere": "確認するにはここをクリックしてください。",
   "command.wynntils.clearCaches.deleting": "キャッシュをクリアし、5秒後にゲームを終了します...",
   "command.wynntils.clearCaches.warn": "これにより、すべてのAPIおよび更新キャッシュがクリアされ、Minecraftが終了します。続行してもよろしいですか？",
