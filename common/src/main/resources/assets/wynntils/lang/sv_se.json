@@ -1,5 +1,5 @@
 {
-  "command.wynntils.bomb.description": "Lista tidigare annonserade bomber",
+  "command.wynntils.bombBell.description": "Lista tidigare annonserade bomber",
   "command.wynntils.clearCaches.clickHere": "Klicka här för att bekräfta.",
   "command.wynntils.clearCaches.deleting": "Rensar cache och stänger spelet om 5 sekunder...",
   "command.wynntils.clearCaches.warn": "Detta kommer att rensa alla API- och uppdateringscache och stänga Minecraft. Är du säker på att du vill fortsätta?",
