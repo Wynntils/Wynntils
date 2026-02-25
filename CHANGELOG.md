@@ -1,35 +1,34 @@
-Bomb Bell Command
-- No bombs available message now uses the chat ranks font to display the rank
+2.2.0 Beta Support
+- This update adds initial support for the Wynncraft 2.2.0 beta
 
-Guides
-- Tomes and Charms can now be opened on the web item guide
+Hide Swap Item Animation
+- New feature, prevents the item from moving slot when pressing F to go to the next page on items
+- Enabled by default in all profiles besides blank slate
 
-Overlays
-- New button on overlay management screen to customize render order.
-- Customize the layering of all overlays,
-- Customize layering around vanilla GUI elements
+Item Lock
+- Pressing F to change page on locked items is no longer blocked
 
-Personal Storage Utilities
-- Bank page names and jump buttons now use the Wynncraft language font
+Lootrun Overlays & Functions
+- Added support for pink beacons
 
-Functions
-- Combat Functions
-  - `debuffs_in_radius_value` returns the total value of the given debuff in the given radius around you
-    - `radius` required double argument, the radius around you to check for debuffs
-    - `debuffName` required string argument, the name of the debuff to get the value for
-  - `targeted_mob_debuff_value` returns the value of the given debuff for the targeted mob
-    - `range` required double argument, the range to check for targeted mob
-    - `horizontalDegrees` required douuble argument, horizontal field of view in degrees to check for targeted mob
-    - `verticalDegrees` required douuble argument, vertical field of view in degrees to check for targeted mob
-    - `debuffName` required string argument, the name of the debuff to get the value for
+NPC Dialogue & Overlay
+- Removed features and related keybinds
 
-Available debuff types for functions are: Bleeding, Blindness, Burning, Confused, Contaminated, Discombobulated, Enkindled, Freezing, Marked, Poison, Provoked, Resistance, Slowness, Trick, Weakness, Whipped and Winded
+Translations
+- Removed NPC Dialogue translation config
 
 Fixes
-- Fix ingredients "not touching" modifier not being parsed
-- Fix per character gear sharing settings not saving
-- Prevent health potion blocker, horse mounting, prevent trades & duels, quick casts and custom content book from working whilst in the wardrobe
-- Fix crashing when handling errors with chat tabs
-- Fix enhanced streamer mode hide tooltips option not working for crafted gear
-- Auto apply resource pack feature will no longer function if not using OpenGL (e.g. Vulkan)
-- Negative stats on shared crafted items are no longer decayed
+- Fixed HUD parsing
+- Fixed all chat related issues from NPC Dialogue
+- Fixed gear boxes not being recognised
+- Fixed ingredients not being recognised
+- Fixed ingredient pouch not counting ingredients
+- Fixed damage tracking
+- Fixed gathering tools not being recognised
+- Fixed not being able to scroll on final ability tree page
+- Fixed materials not being recognised
+  - New materials are still unrecognised
+- Fixed most weapons and armor items not being recognised
+- Fixed charms not being recognised
+- Fixed tomes not being recognised
+- Fixed fonts used in custom UIs
