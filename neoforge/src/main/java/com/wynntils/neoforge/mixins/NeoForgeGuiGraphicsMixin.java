@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GuiGraphics.class)
-public abstract class ForgeGuiGraphicsMixin {
+public abstract class NeoForgeGuiGraphicsMixin {
     // Note: Call site 3 of 3 of ItemTooltipRenderEvent. Check the event class for more info.
     //       See FabricAbstractContainerScreenMixin#renderTooltipPre for the Fabric mixin.
     @WrapOperation(

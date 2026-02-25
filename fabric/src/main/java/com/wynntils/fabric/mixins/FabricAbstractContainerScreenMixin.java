@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AbstractContainerScreen.class)
 public abstract class FabricAbstractContainerScreenMixin {
     // Note: Call site 2 of 3 of ItemTooltipRenderEvent. Check the event class for more info.
-    //       See ForgeGuiGraphicsMixin#renderTooltipPre for the Forge mixin.
+    //       See NeoForgeGuiGraphicsMixin#renderTooltipPre for the Forge mixin.
     @WrapOperation(
             method = "renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V",
             at =
@@ -62,7 +62,7 @@ public abstract class FabricAbstractContainerScreenMixin {
                 backgroundTexture);
     }
 
-    // See the ForgeAbstractContainerScreenMixin#renderSlotPreCount for the Forge mixin.
+    // See the NeoForgeAbstractContainerScreenMixin#renderSlotPreCount for the Forge mixin.
     @Inject(
             method = "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/world/inventory/Slot;II)V",
             at =
