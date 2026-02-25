@@ -14,8 +14,8 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 @Mod(WynntilsMod.MOD_ID)
-public class WynntilsModForge {
-    public WynntilsModForge() {
+public class WynntilsModNeoForge {
+    public WynntilsModNeoForge() {
         Path path = ModLoadingContext.get()
                 .getActiveContainer()
                 .getModInfo()
@@ -26,7 +26,7 @@ public class WynntilsModForge {
         File modFile = new File(path.toUri());
 
         WynntilsMod.init(
-                WynntilsMod.ModLoader.FORGE,
+                WynntilsMod.ModLoader.NEOFORGE,
                 ModLoadingContext.get()
                         .getActiveContainer()
                         .getModInfo()
