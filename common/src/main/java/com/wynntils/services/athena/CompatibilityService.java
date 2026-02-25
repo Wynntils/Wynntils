@@ -37,7 +37,7 @@ public class CompatibilityService extends Service {
     private static final FontDescription WYNNTILS_KEYBIND_FONT =
             new FontDescription.Resource(Identifier.fromNamespaceAndPath("wynntils", "keybind"));
 
-    private CompatibilityTier compatibilityTier = null;
+    private CompatibilityTier compatibilityTier = CompatibilityTier.UNKNOWN;
     private WynncraftVersion wynncraftVersion = null;
 
     private long toastExpire = 0L;
