@@ -79,6 +79,7 @@ public class CompatibilityService extends Service {
             }
         } else if (event.getNewState() == WorldState.NOT_CONNECTED) {
             wynncraftVersion = null;
+            isCompatible = OptionalBoolean.NULL;
         }
     }
 
