@@ -1,5 +1,5 @@
 {
-  "command.wynntils.bomb.description": "Elenca le bombe annunciate in precedenza",
+  "command.wynntils.bombBell.description": "Elenca le bombe annunciate in precedenza",
   "command.wynntils.clearCaches.clickHere": "Clicca qui per confermare.",
   "command.wynntils.clearCaches.deleting": "Cancellazione delle cache e chiusura del gioco in 5 secondi...",
   "command.wynntils.clearCaches.warn": "Questo cancellerà tutte le cache API e di aggiornamento e chiuderà Minecraft. Sei sicuro di voler continuare?",
