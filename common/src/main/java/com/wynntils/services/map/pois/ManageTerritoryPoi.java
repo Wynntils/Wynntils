@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 
@@ -103,14 +102,8 @@ public class ManageTerritoryPoi implements Poi {
             Map<TerritoryUpgrade, Integer> upgrades = territoryItem.getUpgrades();
             switch (infoType) {
                 case DEFENSE:
-                    switch (territoryItem.getDefenseDifficulty()) {
-                        case VERY_LOW -> colors.add(CustomColor.fromChatFormatting(ChatFormatting.DARK_GREEN));
-                        case LOW -> colors.add(CustomColor.fromChatFormatting(ChatFormatting.GREEN));
-                        case MEDIUM -> colors.add(CustomColor.fromChatFormatting(ChatFormatting.YELLOW));
-                        case HIGH -> colors.add(CustomColor.fromChatFormatting(ChatFormatting.RED));
-                        case VERY_HIGH -> colors.add(CustomColor.fromChatFormatting(ChatFormatting.DARK_RED));
-                        default -> colors.add(CommonColors.WHITE);
-                    }
+                    colors.add(CustomColor.fromChatFormatting(
+                            territoryItem.getDefenseDifficulty().getDefenceColor()));
                     break;
                 case PRODUCTION:
                     int emeraldUpgrades = upgrades.getOrDefault(TerritoryUpgrade.EMERALD_RATE, 0)
@@ -126,11 +119,11 @@ public class ManageTerritoryPoi implements Poi {
                         break;
                     }
                     // 4 3 or above -> 100% saturation
-                    // 3 3 or below -> 40% saturation
+                    // 3 3 or below -> 50% saturation
                     if (resourceUpgrades > 6) {
                         colors.add(CustomColor.fromHSV(1 / 6f, 1.0f, 1.0f, 1));
                     } else if (resourceUpgrades > 0) {
-                        colors.add(CustomColor.fromHSV(1 / 6f, 0.45f, 0.9f, 1));
+                        colors.add(CustomColor.fromHSV(1 / 6f, 0.50f, 0.9f, 1));
                     } else {
                         colors.add(CustomColor.fromHSV(0, 0, 0.6f, 1));
                     }

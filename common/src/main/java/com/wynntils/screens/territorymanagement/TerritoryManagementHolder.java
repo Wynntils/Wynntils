@@ -188,8 +188,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         // If we are in selection mode, and there are no changes needed, return
         // If the initial load has not finished, we need to proceed anyway
         if (initialLoadFinished && selectionMode && !shouldChangePageForSelection()) {
-            tryClickNextSelection();
-            return;
+            if (!tryClickNextSelection()) return;
         }
 
         // Try to cycle through the pages, if there are more than one
@@ -534,20 +533,24 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         return !selectedTerritoriesOnDifferentPages.equals(territoriesToBeSelectedOnDifferentPages);
     }
 
-    private void tryClickNextSelection() {
+    private boolean tryClickNextSelection() {
+        // Return true -> doing nothing, continue updating screen
+        // Return false -> doing something, don't update screen
+
         // A click is in progress, wait for it to finish
-        if (currentClick != -1) return;
+        if (currentClick != -1) return false;
 
         int nextSelection = getNextSelectionInQueue();
 
         if (nextSelection == -1) {
             // If there are no more selections, we are done
-            return;
+            return true;
         }
 
         currentClick = nextSelection;
         lastClickTicks = McUtils.player().tickCount;
         clickOnTerritory(getRelativeSlot(currentClick));
+        return false;
     }
 
     private void clickOnTerritory(int slot) {
