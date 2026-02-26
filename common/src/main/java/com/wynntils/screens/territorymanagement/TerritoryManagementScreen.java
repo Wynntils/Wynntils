@@ -126,139 +126,11 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     @Override
     protected void doInit() {
         super.doInit();
+
         if (!mapMode) {
-            ItemSearchWidget oldWidget = itemSearchWidget;
-
-            itemSearchWidget = new ItemSearchWidget(
-                    getRenderX(),
-                    getRenderY() - 20,
-                    Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() - 25,
-                    20,
-                    List.of(ItemProviderType.TERRITORY),
-                    true,
-                    (q) -> populateRenderAreaWidgets(),
-                    this);
-            this.addRenderableWidget(itemSearchWidget);
-            itemSearchWidget.setTextBoxInput(
-                    oldWidget == null ? "" : oldWidget.getSearchQuery().queryString());
-
-            this.addRenderableWidget(new ItemFilterUIButton(
-                    getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() - 20,
-                    getRenderY() - 20,
-                    itemSearchWidget,
-                    this,
-                    true,
-                    List.of(ItemProviderType.TERRITORY)));
-
-            // Territory Highlighter Legend
-            this.addRenderableWidget(new TerritoryHighlightLegendWidget(
-                    getRenderX(),
-                    getRenderY() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.height() + 5,
-                    Texture.TERRITORY_MANAGEMENT_BACKGROUND.width(),
-                    110,
-                    holder));
-
-            // Back button in the sidebar
-            this.addRenderableWidget(new BasicTexturedButton(
-                    getRenderX() - 20,
-                    getRenderY() + 5,
-                    Texture.ARROW_LEFT_ICON.width(),
-                    Texture.ARROW_LEFT_ICON.height(),
-                    Texture.ARROW_LEFT_ICON,
-                    (button) -> ContainerUtils.clickOnSlot(
-                            BACK_BUTTON_SLOT,
-                            wrappedScreenInfo.containerId(),
-                            button,
-                            wrappedScreenInfo.containerMenu().getItems()),
-                    List.of(Component.translatable("gui.back").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD)),
-                    false));
-
-            // Territory production tooltip disable button
-            this.addRenderableWidget(new BasicTexturedButton(
-                    getRenderX() - 20,
-                    getRenderY() + 75,
-                    Texture.DEFENSE_FILTER_ICON.width(),
-                    Texture.DEFENSE_FILTER_ICON.height(),
-                    Texture.DEFENSE_FILTER_ICON,
-                    (button) -> {
-                        Storage<Boolean> screenTerritoryProductionTooltip = Managers.Feature.getFeatureInstance(
-                                        CustomTerritoryManagementScreenFeature.class)
-                                .screenTerritoryProductionTooltip;
-                        screenTerritoryProductionTooltip.store(!screenTerritoryProductionTooltip.get());
-                    },
-                    List.of(
-                            Component.translatable(
-                                            "feature.wynntils.customTerritoryManagementScreen.disableTerritoryProductionTooltip")
-                                    .withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD),
-                            Component.translatable(
-                                            "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper1")
-                                    .withStyle(ChatFormatting.GRAY),
-                            Component.translatable(
-                                            "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper2")
-                                    .withStyle(ChatFormatting.GRAY)),
-                    false));
-
-            // Highlight legend disable button
-            this.addRenderableWidget(new BasicTexturedButton(
-                    getRenderX() - 17,
-                    getRenderY() + 95,
-                    Texture.HELP_ICON.width(),
-                    Texture.HELP_ICON.height(),
-                    Texture.HELP_ICON,
-                    (button) -> {
-                        Storage<Boolean> screenHighlightLegend = Managers.Feature.getFeatureInstance(
-                                        CustomTerritoryManagementScreenFeature.class)
-                                .screenHighlightLegend;
-                        screenHighlightLegend.store(!screenHighlightLegend.get());
-                    },
-                    List.of(Component.translatable(
-                                    "feature.wynntils.customTerritoryManagementScreen.disableHighlightLegend")
-                            .withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD)),
-                    false));
+            initListScreen();
         } else {
-            addMapButton(new MapButton(
-                    Texture.ARROW_LEFT_ICON,
-                    (button) -> ContainerUtils.clickOnSlot(
-                            BACK_BUTTON_SLOT,
-                            wrappedScreenInfo.containerId(),
-                            button,
-                            wrappedScreenInfo.containerMenu().getItems()),
-                    List.of(Component.literal("[>] ")
-                            .withStyle(ChatFormatting.GRAY)
-                            .append(Component.translatable("gui.back")))));
-            addMapButton(new MapButton(
-                    Texture.DEFENSE_FILTER_ICON,
-                    (button) -> {
-                        Storage<Boolean> screenTerritoryProductionTooltip = Managers.Feature.getFeatureInstance(
-                                        CustomTerritoryManagementScreenFeature.class)
-                                .screenTerritoryProductionTooltip;
-                        screenTerritoryProductionTooltip.store(!screenTerritoryProductionTooltip.get());
-                    },
-                    List.of(
-                            Component.literal("[>] ")
-                                    .withStyle(ChatFormatting.BLUE)
-                                    .append(
-                                            Component.translatable(
-                                                    "feature.wynntils.customTerritoryManagementScreen.disableTerritoryProductionTooltip")),
-                            Component.translatable(
-                                            "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper1")
-                                    .withStyle(ChatFormatting.GRAY),
-                            Component.translatable(
-                                            "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper2")
-                                    .withStyle(ChatFormatting.GRAY))));
-            infoTypeButton = new MapButton(
-                    Texture.OVERLAY_EXTRA_ICON,
-                    (b) -> {
-                        if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                            infoType = infoType.getNext();
-                        } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                            infoType = infoType.getPrevious();
-                        }
-
-                        infoTypeButton.setTooltip(getCompleteInfoTypeTooltip());
-                    },
-                    getCompleteInfoTypeTooltip());
-            addMapButton(infoTypeButton);
+            initMapScreen();
         }
 
         this.addRenderableOnly(new GuildOverallProductionWidget(
@@ -268,167 +140,8 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                 150,
                 holder));
 
-        if (!holder.isSelectionMode()) {
-            if (!this.mapMode) {
-                // Loadout button in the sidebar
-                this.addRenderableWidget(new BasicTexturedButton(
-                        getRenderX() - 20,
-                        getRenderY() + 115,
-                        Texture.TERRITORY_LOADOUT.width(),
-                        Texture.TERRITORY_LOADOUT.height(),
-                        Texture.TERRITORY_LOADOUT,
-                        (button) -> ContainerUtils.clickOnSlot(
-                                LOADOUT_BUTTON_SLOT,
-                                wrappedScreenInfo.containerId(),
-                                button,
-                                wrappedScreenInfo.containerMenu().getItems()),
-                        List.of(
-                                Component.translatable("feature.wynntils.customTerritoryManagementScreen.loadouts")
-                                        .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD),
-                                Component.empty(),
-                                Component.translatable(
-                                                "feature.wynntils.customTerritoryManagementScreen.loadouts.description")
-                                        .withStyle(ChatFormatting.GRAY),
-                                Component.empty(),
-                                Component.translatable(
-                                                "feature.wynntils.customTerritoryManagementScreen.loadouts.clickToOpen")
-                                        .withStyle(ChatFormatting.GREEN))));
-            } else {
-                addMapButton(new MapButton(
-                        Texture.TERRITORY_LOADOUT,
-                        (button) -> ContainerUtils.clickOnSlot(
-                                LOADOUT_BUTTON_SLOT,
-                                wrappedScreenInfo.containerId(),
-                                button,
-                                wrappedScreenInfo.containerMenu().getItems()),
-                        List.of(
-                                Component.literal("[>] ")
-                                        .withStyle(ChatFormatting.GOLD)
-                                        .append(Component.translatable(
-                                                "feature.wynntils.customTerritoryManagementScreen.loadouts")),
-                                Component.translatable(
-                                                "feature.wynntils.customTerritoryManagementScreen.loadouts.description")
-                                        .withStyle(ChatFormatting.GRAY),
-                                Component.translatable(
-                                                "feature.wynntils.customTerritoryManagementScreen.loadouts.clickToOpen")
-                                        .withStyle(ChatFormatting.GREEN))));
-            }
-        } else {
-            if (!this.mapMode) {
-                // Apply selection button in the sidebar
-                this.addRenderableWidget(new TerritoryApplyLoadoutButton(
-                        getRenderX() - 20,
-                        getRenderY() + 115,
-                        Texture.CHECKMARK_YELLOW.width(),
-                        Texture.CHECKMARK_YELLOW.height(),
-                        holder::getApplyButtonTexture,
-                        (button) -> ContainerUtils.clickOnSlot(
-                                APPLY_BUTTON_SLOT,
-                                wrappedScreenInfo.containerId(),
-                                button,
-                                wrappedScreenInfo.containerMenu().getItems()),
-                        List.of(
-                                Component.translatable(
-                                                "feature.wynntils.customTerritoryManagementScreen.applySelection")
-                                        .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD),
-                                Component.empty(),
-                                Component.translatable(
-                                                "feature.wynntils.customTerritoryManagementScreen.applySelection.description")
-                                        .withStyle(ChatFormatting.GRAY),
-                                Component.empty(),
-                                Component.translatable(
-                                                "feature.wynntils.customTerritoryManagementScreen.applySelection.clickToConfirm")
-                                        .withStyle(ChatFormatting.GREEN))));
-            } else {
-                addMapButton(new MapButton(
-                        Texture.CHECKMARK_YELLOW,
-                        (button) -> {
-                            holder.saveMapPos();
-                            ContainerUtils.clickOnSlot(
-                                    APPLY_BUTTON_SLOT,
-                                    wrappedScreenInfo.containerId(),
-                                    button,
-                                    wrappedScreenInfo.containerMenu().getItems());
-                        },
-                        List.of(
-                                Component.literal("[>] ")
-                                        .withStyle(ChatFormatting.GOLD)
-                                        .append(Component.translatable(
-                                                "feature.wynntils.customTerritoryManagementScreen.applySelection")),
-                                Component.translatable(
-                                                "feature.wynntils.customTerritoryManagementScreen.applySelection.description")
-                                        .withStyle(ChatFormatting.GRAY),
-                                Component.translatable(
-                                                "feature.wynntils.customTerritoryManagementScreen.applySelection.clickToConfirm")
-                                        .withStyle(ChatFormatting.GREEN))));
-            }
-        }
-
-        if (!this.mapMode) {
-            // Quick filters
-            quickFilters.clear();
-
-            quickFilters.add(new TerritoryBonusesQuickFilterWidget(
-                    getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5,
-                    getRenderY() + 20,
-                    QUICK_FILTER_WIDTH,
-                    10,
-                    this));
-
-            quickFilters.add(new TerritoryDefenseQuickFilterWidget(
-                    getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5,
-                    getRenderY() + 35,
-                    QUICK_FILTER_WIDTH,
-                    10,
-                    this));
-
-            quickFilters.add(new TerritoryProducesQuickFilterWidget(
-                    getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5,
-                    getRenderY() + 50,
-                    QUICK_FILTER_WIDTH,
-                    10,
-                    this));
-
-            // Quick sorts
-            quickSorts.clear();
-
-            quickSorts.add(new TerritoryTreasuryQuickSortWidget(
-                    getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5,
-                    getRenderY() + 85,
-                    QUICK_FILTER_WIDTH,
-                    10,
-                    this));
-
-            quickSorts.add(new TerritoryDefenseQuickSortWidget(
-                    getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5,
-                    getRenderY() + 100,
-                    QUICK_FILTER_WIDTH,
-                    10,
-                    this));
-
-            quickSorts.add(new TerritoryOverallProductionQuickSortWidget(
-                    getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5,
-                    getRenderY() + 115,
-                    QUICK_FILTER_WIDTH,
-                    10,
-                    this));
-        } else {
-            addMapButton(new MapButton(
-                    Texture.HELP_ICON,
-                    (b) -> {},
-                    List.of(
-                            Component.literal("[>] ")
-                                    .withStyle(ChatFormatting.YELLOW)
-                                    .append(Component.translatable(
-                                            "feature.wynntils.customTerritoryManagementScreen.help.name")),
-                            Component.literal("- ")
-                                    .withStyle(ChatFormatting.GRAY)
-                                    .append(Component.translatable(
-                                            "feature.wynntils.customTerritoryManagementScreen.help.description")))));
-        }
-
         if (firstInit) {
-            // When outside of the main map, center to the middle of the map
+            // When outside the main map, center to the middle of the map
             if (!isPlayerInsideMainArea()) {
                 centerMapOnWorld();
             }
@@ -439,80 +152,378 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         updateTerritoryItems();
     }
 
+    private void initListScreen() {
+        ItemSearchWidget oldWidget = itemSearchWidget;
+
+        itemSearchWidget = new ItemSearchWidget(
+                getRenderX(),
+                getRenderY() - 20,
+                Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() - 25,
+                20,
+                List.of(ItemProviderType.TERRITORY),
+                true,
+                (q) -> populateRenderAreaWidgets(),
+                this);
+        this.addRenderableWidget(itemSearchWidget);
+        itemSearchWidget.setTextBoxInput(
+                oldWidget == null ? "" : oldWidget.getSearchQuery().queryString());
+
+        this.addRenderableWidget(new ItemFilterUIButton(
+                getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() - 20,
+                getRenderY() - 20,
+                itemSearchWidget,
+                this,
+                true,
+                List.of(ItemProviderType.TERRITORY)));
+
+        // Territory Highlighter Legend
+        this.addRenderableWidget(new TerritoryHighlightLegendWidget(
+                getRenderX(),
+                getRenderY() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.height() + 5,
+                Texture.TERRITORY_MANAGEMENT_BACKGROUND.width(),
+                110,
+                holder));
+
+        // Back button in the sidebar
+        this.addRenderableWidget(new BasicTexturedButton(
+                getRenderX() - 20,
+                getRenderY() + 5,
+                Texture.ARROW_LEFT_ICON.width(),
+                Texture.ARROW_LEFT_ICON.height(),
+                Texture.ARROW_LEFT_ICON,
+                (button) -> ContainerUtils.clickOnSlot(
+                        BACK_BUTTON_SLOT,
+                        wrappedScreenInfo.containerId(),
+                        button,
+                        wrappedScreenInfo.containerMenu().getItems()),
+                List.of(Component.translatable("gui.back").withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD)),
+                false));
+
+        // Territory production tooltip disable button
+        this.addRenderableWidget(new BasicTexturedButton(
+                getRenderX() - 20,
+                getRenderY() + 75,
+                Texture.DEFENSE_FILTER_ICON.width(),
+                Texture.DEFENSE_FILTER_ICON.height(),
+                Texture.DEFENSE_FILTER_ICON,
+                (button) -> {
+                    Storage<Boolean> screenTerritoryProductionTooltip = Managers.Feature.getFeatureInstance(
+                                    CustomTerritoryManagementScreenFeature.class)
+                            .screenTerritoryProductionTooltip;
+                    screenTerritoryProductionTooltip.store(!screenTerritoryProductionTooltip.get());
+                },
+                List.of(
+                        Component.translatable(
+                                        "feature.wynntils.customTerritoryManagementScreen.disableTerritoryProductionTooltip")
+                                .withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD),
+                        Component.translatable(
+                                        "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper1")
+                                .withStyle(ChatFormatting.GRAY),
+                        Component.translatable(
+                                        "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper2")
+                                .withStyle(ChatFormatting.GRAY)),
+                false));
+
+        // Highlight legend disable button
+        this.addRenderableWidget(new BasicTexturedButton(
+                getRenderX() - 17,
+                getRenderY() + 95,
+                Texture.HELP_ICON.width(),
+                Texture.HELP_ICON.height(),
+                Texture.HELP_ICON,
+                (button) -> {
+                    Storage<Boolean> screenHighlightLegend = Managers.Feature.getFeatureInstance(
+                                    CustomTerritoryManagementScreenFeature.class)
+                            .screenHighlightLegend;
+                    screenHighlightLegend.store(!screenHighlightLegend.get());
+                },
+                List.of(Component.translatable(
+                                "feature.wynntils.customTerritoryManagementScreen.disableHighlightLegend")
+                        .withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD)),
+                false));
+
+        if (!holder.isSelectionMode()) {
+            // Loadout button in the sidebar
+            this.addRenderableWidget(new BasicTexturedButton(
+                    getRenderX() - 20,
+                    getRenderY() + 115,
+                    Texture.TERRITORY_LOADOUT.width(),
+                    Texture.TERRITORY_LOADOUT.height(),
+                    Texture.TERRITORY_LOADOUT,
+                    (button) -> ContainerUtils.clickOnSlot(
+                            LOADOUT_BUTTON_SLOT,
+                            wrappedScreenInfo.containerId(),
+                            button,
+                            wrappedScreenInfo.containerMenu().getItems()),
+                    List.of(
+                            Component.translatable("feature.wynntils.customTerritoryManagementScreen.loadouts")
+                                    .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD),
+                            Component.empty(),
+                            Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.loadouts.description")
+                                    .withStyle(ChatFormatting.GRAY),
+                            Component.empty(),
+                            Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.loadouts.clickToOpen")
+                                    .withStyle(ChatFormatting.GREEN))));
+        } else {
+            // Apply selection button in the sidebar
+            this.addRenderableWidget(new TerritoryApplyLoadoutButton(
+                    getRenderX() - 20,
+                    getRenderY() + 115,
+                    Texture.CHECKMARK_YELLOW.width(),
+                    Texture.CHECKMARK_YELLOW.height(),
+                    holder::getApplyButtonTexture,
+                    (button) -> ContainerUtils.clickOnSlot(
+                            APPLY_BUTTON_SLOT,
+                            wrappedScreenInfo.containerId(),
+                            button,
+                            wrappedScreenInfo.containerMenu().getItems()),
+                    List.of(
+                            Component.translatable("feature.wynntils.customTerritoryManagementScreen.applySelection")
+                                    .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD),
+                            Component.empty(),
+                            Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.applySelection.description")
+                                    .withStyle(ChatFormatting.GRAY),
+                            Component.empty(),
+                            Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.applySelection.clickToConfirm")
+                                    .withStyle(ChatFormatting.GREEN))));
+        }
+
+        // Quick filters
+        quickFilters.clear();
+
+        quickFilters.add(new TerritoryBonusesQuickFilterWidget(
+                getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5,
+                getRenderY() + 20,
+                QUICK_FILTER_WIDTH,
+                10,
+                this));
+
+        quickFilters.add(new TerritoryDefenseQuickFilterWidget(
+                getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5,
+                getRenderY() + 35,
+                QUICK_FILTER_WIDTH,
+                10,
+                this));
+
+        quickFilters.add(new TerritoryProducesQuickFilterWidget(
+                getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5,
+                getRenderY() + 50,
+                QUICK_FILTER_WIDTH,
+                10,
+                this));
+
+        // Quick sorts
+        quickSorts.clear();
+
+        quickSorts.add(new TerritoryTreasuryQuickSortWidget(
+                getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5,
+                getRenderY() + 85,
+                QUICK_FILTER_WIDTH,
+                10,
+                this));
+
+        quickSorts.add(new TerritoryDefenseQuickSortWidget(
+                getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5,
+                getRenderY() + 100,
+                QUICK_FILTER_WIDTH,
+                10,
+                this));
+
+        quickSorts.add(new TerritoryOverallProductionQuickSortWidget(
+                getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5,
+                getRenderY() + 115,
+                QUICK_FILTER_WIDTH,
+                10,
+                this));
+    }
+
+    private void initMapScreen() {
+        addMapButton(new MapButton(
+                Texture.ARROW_LEFT_ICON,
+                (button) -> ContainerUtils.clickOnSlot(
+                        BACK_BUTTON_SLOT,
+                        wrappedScreenInfo.containerId(),
+                        button,
+                        wrappedScreenInfo.containerMenu().getItems()),
+                List.of(Component.literal("[>] ")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(Component.translatable("gui.back")))));
+        addMapButton(new MapButton(
+                Texture.DEFENSE_FILTER_ICON,
+                (button) -> {
+                    Storage<Boolean> screenTerritoryProductionTooltip = Managers.Feature.getFeatureInstance(
+                                    CustomTerritoryManagementScreenFeature.class)
+                            .screenTerritoryProductionTooltip;
+                    screenTerritoryProductionTooltip.store(!screenTerritoryProductionTooltip.get());
+                },
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.BLUE)
+                                .append(
+                                        Component.translatable(
+                                                "feature.wynntils.customTerritoryManagementScreen.disableTerritoryProductionTooltip")),
+                        Component.translatable(
+                                        "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper1")
+                                .withStyle(ChatFormatting.GRAY),
+                        Component.translatable(
+                                        "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper2")
+                                .withStyle(ChatFormatting.GRAY))));
+        infoTypeButton = new MapButton(
+                Texture.OVERLAY_EXTRA_ICON,
+                (b) -> {
+                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                        infoType = infoType.getNext();
+                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                        infoType = infoType.getPrevious();
+                    }
+
+                    infoTypeButton.setTooltip(getCompleteInfoTypeTooltip());
+                },
+                getCompleteInfoTypeTooltip());
+        addMapButton(infoTypeButton);
+
+        if (!holder.isSelectionMode()) {
+            addMapButton(new MapButton(
+                    Texture.TERRITORY_LOADOUT,
+                    (button) -> ContainerUtils.clickOnSlot(
+                            LOADOUT_BUTTON_SLOT,
+                            wrappedScreenInfo.containerId(),
+                            button,
+                            wrappedScreenInfo.containerMenu().getItems()),
+                    List.of(
+                            Component.literal("[>] ")
+                                    .withStyle(ChatFormatting.GOLD)
+                                    .append(Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.loadouts")),
+                            Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.loadouts.description")
+                                    .withStyle(ChatFormatting.GRAY),
+                            Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.loadouts.clickToOpen")
+                                    .withStyle(ChatFormatting.GREEN))));
+        } else {
+            addMapButton(new MapButton(
+                    Texture.CHECKMARK_YELLOW,
+                    (button) -> {
+                        holder.saveMapPos();
+                        ContainerUtils.clickOnSlot(
+                                APPLY_BUTTON_SLOT,
+                                wrappedScreenInfo.containerId(),
+                                button,
+                                wrappedScreenInfo.containerMenu().getItems());
+                    },
+                    List.of(
+                            Component.literal("[>] ")
+                                    .withStyle(ChatFormatting.GOLD)
+                                    .append(Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.applySelection")),
+                            Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.applySelection.description")
+                                    .withStyle(ChatFormatting.GRAY),
+                            Component.translatable(
+                                            "feature.wynntils.customTerritoryManagementScreen.applySelection.clickToConfirm")
+                                    .withStyle(ChatFormatting.GREEN))));
+        }
+
+        addMapButton(new MapButton(
+                Texture.HELP_ICON,
+                (b) -> {},
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.YELLOW)
+                                .append(Component.translatable(
+                                        "feature.wynntils.customTerritoryManagementScreen.help.name")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable(
+                                        "feature.wynntils.customTerritoryManagementScreen.help.description")))));
+    }
+
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!this.mapMode) {
-            // Screen background
-            RenderUtils.drawTexturedRect(
-                    guiGraphics, Texture.TERRITORY_MANAGEMENT_BACKGROUND, getRenderX(), getRenderY());
-            RenderUtils.drawTexturedRect(guiGraphics, Texture.TERRITORY_SIDEBAR, getRenderX() - 22, getRenderY());
-
-            // Render title
-            FontRenderer.getInstance()
-                    .renderText(
-                            guiGraphics,
-                            StyledText.fromComponent(wrappedScreenInfo.screen().getTitle()),
-                            getRenderX() + 8,
-                            getRenderY() + 9,
-                            CommonColors.TITLE_GRAY,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NONE);
-
-            // Render the widgets
-            renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
-
-            // Render scroll button
-            renderScrollButton(guiGraphics);
-
-            // Render quick filters
-            renderQuickFiltersAndSorts(guiGraphics, mouseX, mouseY, partialTick);
+            renderListScreen(guiGraphics, mouseX, mouseY, partialTick);
         } else {
-            renderMap(guiGraphics);
-
-            RenderUtils.enableScissor(
-                    guiGraphics,
-                    (int) (renderX + renderedBorderXOffset),
-                    (int) (renderY + renderedBorderYOffset),
-                    (int) mapWidth,
-                    (int) mapHeight);
-
-            renderPois(guiGraphics, mouseX, mouseY);
-
-            renderCursor(
-                    guiGraphics,
-                    1.5f,
-                    Managers.Feature.getFeatureInstance(GuildMapFeature.class)
-                            .pointerColor
-                            .get(),
-                    Managers.Feature.getFeatureInstance(GuildMapFeature.class)
-                            .pointerType
-                            .get());
-
-            RenderUtils.disableScissor(guiGraphics);
-
-            renderMapBorder(guiGraphics);
-
-            renderCoordinates(guiGraphics, mouseX, mouseY);
-
-            renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
-
-            renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
-
-            renderHoveredTerritoryInfo(guiGraphics);
-
-            if (isPanning) {
-                guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
-            } else if (holdingZoomHandle) {
-                guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
-            } else if ((this.hovered != null && !(this.hovered instanceof TerritoryPoi))
-                    || isMouseOverZoomHandle(mouseX, mouseY)) {
-                guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
-            }
+            renderMapScreen(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         // Render widget tooltip
         renderTooltip(guiGraphics, mouseX, mouseY);
+    }
+
+    private void renderListScreen(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        // Screen background
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.TERRITORY_MANAGEMENT_BACKGROUND, getRenderX(), getRenderY());
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.TERRITORY_SIDEBAR, getRenderX() - 22, getRenderY());
+
+        // Render title
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromComponent(wrappedScreenInfo.screen().getTitle()),
+                        getRenderX() + 8,
+                        getRenderY() + 9,
+                        CommonColors.TITLE_GRAY,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NONE);
+
+        // Render the widgets
+        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
+
+        // Render scroll button
+        renderScrollButton(guiGraphics);
+
+        // Render quick filters
+        renderQuickFiltersAndSorts(guiGraphics, mouseX, mouseY, partialTick);
+    }
+
+    private void renderMapScreen(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        renderMap(guiGraphics);
+
+        RenderUtils.enableScissor(
+                guiGraphics,
+                (int) (renderX + renderedBorderXOffset),
+                (int) (renderY + renderedBorderYOffset),
+                (int) mapWidth,
+                (int) mapHeight);
+
+        renderPois(guiGraphics, mouseX, mouseY);
+
+        renderCursor(
+                guiGraphics,
+                1.5f,
+                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
+                        .pointerColor
+                        .get(),
+                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
+                        .pointerType
+                        .get());
+
+        RenderUtils.disableScissor(guiGraphics);
+
+        renderMapBorder(guiGraphics);
+
+        renderCoordinates(guiGraphics, mouseX, mouseY);
+
+        renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
+
+        renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
+
+        renderHoveredTerritoryInfo(guiGraphics);
+
+        if (isPanning) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
+        } else if (holdingZoomHandle) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if ((this.hovered != null && !(this.hovered instanceof TerritoryPoi))
+                || isMouseOverZoomHandle(mouseX, mouseY)) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
     }
 
     private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
