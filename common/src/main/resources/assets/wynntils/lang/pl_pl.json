@@ -1,5 +1,5 @@
 {
-  "command.wynntils.bomb.description": "Lista wcześniej ogłoszonych bomb",
+  "command.wynntils.bombBell.description": "Lista wcześniej ogłoszonych bomb",
   "command.wynntils.clearCaches.clickHere": "Kliknij tutaj, aby potwierdzić.",
   "command.wynntils.clearCaches.deleting": "Czyszczenie pamięci podręcznych i zamykanie gry za 5 sekund...",
   "command.wynntils.clearCaches.warn": "To wyczyści wszystkie pamięci podręczne API i aktualizacji oraz zamknie Minecrafta. Czy na pewno chcesz kontynuować?",

@@ -1,5 +1,5 @@
 {
-  "command.wynntils.bomb.description": "공지된 콘텐츠 폭탄의 기록을 확인합니다",
+  "command.wynntils.bombBell.description": "공지된 콘텐츠 폭탄의 기록을 확인합니다",
   "command.wynntils.clearCaches.clickHere": "이곳을 클릭해 확인.",
   "command.wynntils.clearCaches.deleting": "5초 내에 캐시를 지우고 게임을 종료합니다...",
   "command.wynntils.clearCaches.warn": "이 작업은 API와 업데이트의 캐시를 전부 지우고 마인크래프트를 종료합니다. 진행하시겠습니까?",
