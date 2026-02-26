@@ -81,11 +81,6 @@ public enum GearTier {
                 .orElse(null);
     }
 
-    public static GearTier fromBoxDamage(int damage) {
-        if (damage > 6) return NORMAL;
-        return GearTier.values()[damage];
-    }
-
     public ChatFormatting getChatFormatting() {
         return chatFormatting;
     }
