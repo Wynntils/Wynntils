@@ -87,6 +87,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
     private long nextRequestTicks;
     private long lastItemLoadedTicks;
     private boolean initialLoadFinished;
+    private boolean isBackwards;
 
     // Territory data
     private Int2ObjectSortedMap<Pair<ItemStack, TerritoryItem>> territories = new Int2ObjectAVLTreeMap<>();
@@ -193,25 +194,37 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         if (isSinglePage()) return;
 
         // If we already have a requested page, return
-        if (requestedPage != -1) return;
+        if (requestedPage == -1) {
+            boolean forwardPage = StyledText.fromComponent(wrappedScreen
+                            .getWrappedScreenInfo()
+                            .containerMenu()
+                            .getItems()
+                            .get(NEXT_PAGE_SLOT)
+                            .getHoverName())
+                    .matches(NEXT_PAGE_PATTERN);
+            boolean previousPage = StyledText.fromComponent(wrappedScreen
+                            .getWrappedScreenInfo()
+                            .containerMenu()
+                            .getItems()
+                            .get(PREVIOUS_PAGE_SLOT)
+                            .getHoverName())
+                    .matches(PREVIOUS_PAGE_PATTERN);
 
-        boolean forwardPage = StyledText.fromComponent(wrappedScreen
-                        .getWrappedScreenInfo()
-                        .containerMenu()
-                        .getItems()
-                        .get(NEXT_PAGE_SLOT)
-                        .getHoverName())
-                .matches(NEXT_PAGE_PATTERN);
+            if (forwardPage && !isBackwards) {
+                requestedPage = currentPage + 1;
+            } else if (previousPage) {
+                requestedPage = currentPage - 1;
 
-        if (forwardPage) {
-            requestedPage = currentPage + 1;
-        } else {
-            requestedPage = currentPage - 1;
-
-            // Initial load finished when we start going backwards
-            // (Note: this won't always work in non-selection mode,
-            // as the back button can open the menu on the second page)
-            initialLoadFinished = true;
+                // Initial load finished when we start going backwards
+                // (Note: this won't always work in non-selection mode,
+                // as the back button can open the menu on the second page)
+                initialLoadFinished = true;
+                isBackwards = true;
+            } else {
+                // At first page
+                requestedPage = currentPage + 1;
+                isBackwards = false;
+            }
         }
 
         // Proceed to do the requests for the next page
@@ -256,6 +269,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         nextRequestTicks = Integer.MAX_VALUE;
         lastItemLoadedTicks = Integer.MAX_VALUE;
         initialLoadFinished = false;
+        isBackwards = false;
         territories = new Int2ObjectAVLTreeMap<>();
         territoryConnections = new HashMap<>();
         selectionMode = false;
