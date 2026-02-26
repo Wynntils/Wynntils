@@ -738,7 +738,8 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                 }
             }
 
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT && hovered instanceof ManageTerritoryPoi manageTerritoryPoi) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT
+                    && hovered instanceof ManageTerritoryPoi manageTerritoryPoi) {
                 holder.saveMapPos();
                 manageTerritoryPoi.onClick();
             }
