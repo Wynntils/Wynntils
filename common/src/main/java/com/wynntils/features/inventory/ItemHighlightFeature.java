@@ -310,6 +310,7 @@ public class ItemHighlightFeature extends Feature {
                         case FABLED -> fabledHighlightEnabled.get();
                         case MYTHIC -> mythicHighlightEnabled.get();
                         case CRAFTED -> craftedHighlightEnabled.get();
+                        default -> false;
                     };
         }
 
@@ -325,6 +326,7 @@ public class ItemHighlightFeature extends Feature {
                         case FABLED -> fabledHighlightColor.get();
                         case MYTHIC -> mythicHighlightColor.get();
                         case CRAFTED -> craftedHighlightColor.get();
+                        default -> CustomColor.NONE;
                     };
         }
     }

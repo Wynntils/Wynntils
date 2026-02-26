@@ -16,6 +16,8 @@ public enum GearTier {
     NORMAL(ChatFormatting.WHITE, 0, 0.0f, "common"),
     UNIQUE(ChatFormatting.YELLOW, 3, 0.5f),
     RARE(ChatFormatting.LIGHT_PURPLE, 8, 1.2f),
+    @Deprecated
+    SET(ChatFormatting.GRAY, 8, 1.2f),
     LEGENDARY(ChatFormatting.AQUA, 12, 4.5f),
     FABLED(ChatFormatting.RED, 16, 8.0f),
     MYTHIC(ChatFormatting.DARK_PURPLE, 90, 18.0f),
@@ -45,11 +47,6 @@ public enum GearTier {
             if (type.apiName.equals(typeStr.toLowerCase(Locale.ROOT))) {
                 return type;
             }
-        }
-
-        // Temporary until the API is updated with set tier removed
-        if (typeStr.equals("set")) {
-            return UNIQUE;
         }
 
         return null;
@@ -99,6 +96,11 @@ public enum GearTier {
 
     public String getName() {
         return StringUtils.capitalizeFirst(name().toLowerCase(Locale.ROOT));
+    }
+
+    // This should be used instead of values() in almost all places as to not include the SET tier
+    public static GearTier[] normalValues() {
+        return new GearTier[] {NORMAL, UNIQUE, RARE, LEGENDARY, FABLED, MYTHIC, CRAFTED};
     }
 
     @Override
