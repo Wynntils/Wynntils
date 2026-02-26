@@ -134,6 +134,11 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
             } else {
                 TerritoryItem territoryItem = territoryItemOpt.get();
                 territories.put(absSlot, Pair.of(itemStack, territoryItem));
+                if (!territoryItem.isSelected() && selectedTerritories.contains(territoryItem.getName())) {
+                    territoryItem.markPending();
+                } else if (territoryItem.isSelected() && !selectedTerritories.contains(territoryItem.getName())) {
+                    territoryItem.markPending();
+                }
 
                 if (!isSinglePage()) {
                     // There is cases where we need to do clicking:
@@ -380,8 +385,10 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         if (selectionMode) {
             if (selectedTerritories.contains(territoryItem.getName())) {
                 selectedTerritories.remove(territoryItem.getName());
+                territoryItem.markPending();
             } else {
                 selectedTerritories.add(territoryItem.getName());
+                territoryItem.markPending();
             }
         } else {
             if (!Models.War.isWarActive()) {

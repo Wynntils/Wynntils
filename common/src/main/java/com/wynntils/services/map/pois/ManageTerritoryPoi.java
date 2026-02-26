@@ -193,7 +193,7 @@ public class ManageTerritoryPoi implements Poi {
             // Render the production types
 
             int iconYOffset = 4;
-            if (territoryItem.isSelected() || territoryItem.isHeadquarters()) {
+            if (territoryItem.isSelected() || territoryItem.isPending() || territoryItem.isHeadquarters()) {
                 iconYOffset += 4;
             }
 
@@ -237,12 +237,25 @@ public class ManageTerritoryPoi implements Poi {
             }
         }
 
-        if (territoryItem.isSelected()) {
+        if (territoryItem.isPending() && !territoryItem.isSelected()) {
+            RenderUtils.drawTexturedRect(
+                    guiGraphics,
+                    Texture.CHECKMARK_GRAY,
+                    actualRenderX + renderWidth / 2f - Texture.CHECKMARK_GRAY.width() / 2f,
+                    actualRenderZ + renderHeight / 2f - Texture.CHECKMARK_GRAY.height() / 2f);
+        } else if (!territoryItem.isPending() && territoryItem.isSelected()) {
             RenderUtils.drawTexturedRect(
                     guiGraphics,
                     Texture.CHECKMARK_GREEN,
                     actualRenderX + renderWidth / 2f - Texture.CHECKMARK_GREEN.width() / 2f,
                     actualRenderZ + renderHeight / 2f - Texture.CHECKMARK_GREEN.height() / 2f);
+        } else if (territoryItem.isPending() && territoryItem.isSelected()) {
+            RenderUtils.drawTexturedRect(
+                    guiGraphics,
+                    Texture.CHECKMARK_YELLOW,
+                    actualRenderX + renderWidth / 2f - Texture.CHECKMARK_YELLOW.width() / 2f,
+                    actualRenderZ + renderHeight / 2f - Texture.CHECKMARK_YELLOW.height() / 2f);
+
         } else if (territoryItem.isHeadquarters()) {
             RenderUtils.drawTexturedRect(
                     guiGraphics,

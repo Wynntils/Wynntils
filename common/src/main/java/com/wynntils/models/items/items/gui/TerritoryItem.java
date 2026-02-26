@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.gui;
@@ -20,6 +20,8 @@ public class TerritoryItem extends GuiItem {
     private final float treasuryBonus;
     private final List<String> alerts;
     private final Map<TerritoryUpgrade, Integer> upgrades;
+
+    private boolean isPending = false;
 
     public TerritoryItem(
             String name,
@@ -44,6 +46,10 @@ public class TerritoryItem extends GuiItem {
         return name;
     }
 
+    public void markPending() {
+        isPending = true;
+    }
+
     public boolean isHeadquarters() {
         return isHeadquarters;
     }
@@ -51,6 +57,10 @@ public class TerritoryItem extends GuiItem {
     // Note: Only works in loadout apply mode
     public boolean isSelected() {
         return isSelected;
+    }
+
+    public boolean isPending() {
+        return isPending;
     }
 
     public Map<GuildResource, Integer> getProduction() {
