@@ -560,8 +560,6 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
     }
 
     private int getNextSelectionInQueue() {
-        if (selectedTerritories.isEmpty()) return -1;
-
         List<TerritoryItem> itemsOnPage = getItemsOnPage(currentPage);
 
         for (TerritoryItem territoryItem : itemsOnPage) {
