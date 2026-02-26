@@ -10,7 +10,6 @@ import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.TerritoryConnectionType;
-import com.wynntils.models.territories.type.TerritoryUpgrade;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
 import com.wynntils.screens.territorymanagement.TerritoryManagementScreen;
 import com.wynntils.services.map.type.DisplayPriority;
@@ -28,7 +27,6 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -99,55 +97,19 @@ public class ManageTerritoryPoi implements Poi {
         List<CustomColor> colors = new ArrayList<>();
         if (McUtils.screen() instanceof TerritoryManagementScreen territoryManagementScreen) {
             TerritoryInfoType infoType = territoryManagementScreen.getInfoType();
-            Map<TerritoryUpgrade, Integer> upgrades = territoryItem.getUpgrades();
             switch (infoType) {
                 case DEFENSE:
                     colors.add(CustomColor.fromChatFormatting(
                             territoryItem.getDefenseDifficulty().getDefenceColor()));
                     break;
                 case PRODUCTION:
-                    int emeraldUpgrades = upgrades.getOrDefault(TerritoryUpgrade.EMERALD_RATE, 0)
-                            + upgrades.getOrDefault(TerritoryUpgrade.EFFICIENT_EMERALDS, 0);
-                    int resourceUpgrades = upgrades.getOrDefault(TerritoryUpgrade.RESOURCE_RATE, 0)
-                            + upgrades.getOrDefault(TerritoryUpgrade.EFFICIENT_RESOURCES, 0);
-                    if (emeraldUpgrades > 0) {
-                        if (resourceUpgrades > 0) {
-                            colors.add(CustomColor.fromHSV(0.5f, 0.8f, 0.9f, 1));
-                        } else {
-                            colors.add(CustomColor.fromHSV(1 / 3f, 0.8f, 0.9f, 1));
-                        }
-                        break;
-                    }
-                    // 4 3 or above -> 100% saturation
-                    // 3 3 or below -> 50% saturation
-                    if (resourceUpgrades > 6) {
-                        colors.add(CustomColor.fromHSV(1 / 6f, 1.0f, 1.0f, 1));
-                    } else if (resourceUpgrades > 0) {
-                        colors.add(CustomColor.fromHSV(1 / 6f, 0.50f, 0.9f, 1));
-                    } else {
-                        colors.add(CustomColor.fromHSV(0, 0, 0.6f, 1));
-                    }
+                    colors.add(territoryItem.getProductionColor());
                     break;
                 case SEEKING:
-                    int tomeSeek = upgrades.getOrDefault(TerritoryUpgrade.TOME_SEEKING, 0);
-                    int emeraldSeek = upgrades.getOrDefault(TerritoryUpgrade.EMERALD_SEEKING, 0);
-                    if (tomeSeek > 0 && emeraldSeek > 0) {
-                        colors.add(CustomColor.fromHSV(1 / 2f, 0.8f, 0.9f, 1));
-                    } else if (tomeSeek > 0) {
-                        colors.add(CustomColor.fromHSV(2 / 3f, 0.8f, 0.9f, 1));
-                    } else if (emeraldSeek > 0) {
-                        colors.add(CustomColor.fromHSV(1 / 3f, 0.8f, 0.9f, 1));
-                    } else {
-                        colors.add(CustomColor.fromHSV(0, 0, 0.6f, 1));
-                    }
+                    colors.add(territoryItem.getSeekingColor());
                     break;
                 case TREASURY:
-                    float treasuryBonus = territoryItem.getTreasuryBonus();
-                    colors.add(CustomColor.fromHSV(
-                            Math.max(treasuryBonus / 15 - 1, 0) * -1 / 3f + 5f / 6,
-                            Math.min(treasuryBonus / 15, 1),
-                            Math.min(treasuryBonus / 15, 1) * 0.3f + 0.6f,
-                            1));
+                    colors.add(territoryItem.getTreasuryColor());
                     break;
                 default:
                     colors.add(CommonColors.WHITE);
