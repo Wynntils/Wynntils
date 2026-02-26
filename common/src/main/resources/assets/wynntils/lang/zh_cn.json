@@ -1,5 +1,5 @@
 {
-  "command.wynntils.bomb.description": "列出先前宣布的炸弹",
+  "command.wynntils.bombBell.description": "列出先前宣布的炸弹",
   "command.wynntils.clearCaches.clickHere": "点击这里确认。",
   "command.wynntils.clearCaches.deleting": "清除缓存并在5秒内关闭游戏...",
   "command.wynntils.clearCaches.warn": "这将清除所有API和更新缓存，并关闭Minecraft。您确定要继续吗？",
