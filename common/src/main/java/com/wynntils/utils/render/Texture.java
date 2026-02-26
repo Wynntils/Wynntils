@@ -139,7 +139,6 @@ public enum Texture {
     RELIK_FILTER_ICON("icons/guide_filters/relik_filter_icon.png", 16, 16),
     RING_FILTER_ICON("icons/guide_filters/ring_filter_icon.png", 16, 16),
     SCRIBING_FILTER_ICON("icons/guide_filters/scribing_filter_icon.png", 16, 16),
-    SET_FILTER_ICON("icons/guide_filters/set_filter_icon.png", 16, 16),
     SPEAR_FILTER_ICON("icons/guide_filters/spear_filter_icon.png", 16, 16),
     TAILORING_FILTER_ICON("icons/guide_filters/tailoring_filter_icon.png", 16, 16),
     TIER_0_FILTER_ICON("icons/guide_filters/tier_0_filter_icon.png", 16, 16),
