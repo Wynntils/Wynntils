@@ -61,6 +61,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -376,12 +377,10 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                 Texture.OVERLAY_EXTRA_ICON,
                 (b) -> {
                     if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                        infoType = infoType.getNext();
+                        setInfoType(infoType.getNext());
                     } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                        infoType = infoType.getPrevious();
+                        setInfoType(infoType.getPrevious());
                     }
-
-                    infoTypeButton.setTooltip(getCompleteInfoTypeTooltip());
                 },
                 getCompleteInfoTypeTooltip());
         addMapButton(infoTypeButton);
@@ -796,6 +795,17 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     }
 
     @Override
+    public boolean keyPressed(KeyEvent event) {
+        switch (event.key()) {
+            case GLFW.GLFW_KEY_1 -> setInfoType(TerritoryInfoType.DEFENSE);
+            case GLFW.GLFW_KEY_2 -> setInfoType(TerritoryInfoType.PRODUCTION);
+            case GLFW.GLFW_KEY_3 -> setInfoType(TerritoryInfoType.TREASURY);
+            case GLFW.GLFW_KEY_4 -> setInfoType(TerritoryInfoType.SEEKING);
+        }
+        return super.keyPressed(event);
+    }
+
+    @Override
     public void onClose() {
         holder.resetMapPos();
         super.onClose();
@@ -829,6 +839,11 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                 .collect(Collectors.joining(" "))
                 .trim()
                 .replaceAll("\\s+", " "));
+    }
+
+    private void setInfoType(TerritoryInfoType type) {
+        infoType = type;
+        infoTypeButton.setTooltip(getCompleteInfoTypeTooltip());
     }
 
     private void populateRenderAreaWidgets() {

@@ -85,7 +85,7 @@ public class TerritoryItem extends GuiItem {
         // Treasury color
         treasuryColor = CustomColor.fromHSV(
                 Math.max(treasuryBonus / 15 - 1, 0) * -1 / 3f + 5f / 6,
-                Math.min(treasuryBonus / 15, 1),
+                Math.min(treasuryBonus / 12, 0.8f),
                 Math.min(treasuryBonus / 15, 1) * 0.3f + 0.6f,
                 1);
     }

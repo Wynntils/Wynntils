@@ -10,8 +10,8 @@ import net.minecraft.network.chat.Component;
 public enum TerritoryInfoType {
     DEFENSE("Defense Level", ChatFormatting.RED),
     PRODUCTION("Production Upgrades", ChatFormatting.YELLOW),
-    SEEKING("Seekings", ChatFormatting.AQUA),
-    TREASURY("Treasury Bonus", ChatFormatting.LIGHT_PURPLE);
+    TREASURY("Treasury Bonus", ChatFormatting.LIGHT_PURPLE),
+    SEEKING("Seekings", ChatFormatting.AQUA);
 
     private final String asString;
     private final ChatFormatting color;
