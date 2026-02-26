@@ -113,8 +113,8 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
             customScreenOpened = false;
         }
 
-        if (event.getScreen() instanceof TerritoryManagementScreen) {
-            ((TerritoryManagementScreen) event.getScreen()).setMapMode(useTerritoryMap.get());
+        if (event.getScreen() instanceof TerritoryManagementScreen territoryManagementScreen) {
+            territoryManagementScreen.setMapMode(useTerritoryMap.get());
         }
     }
 
