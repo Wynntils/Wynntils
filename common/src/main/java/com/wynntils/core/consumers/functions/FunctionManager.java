@@ -71,6 +71,7 @@ public final class FunctionManager extends Manager {
     private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("&(?<!\\\\)(#[0-9A-Fa-f]{8})");
     private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("&(?<!\\\\)([0-9a-fA-Fk-oK-OrR])");
     private static final Pattern NBSP_PATTERN = Pattern.compile("\u00A0");
+    private static final Pattern CRLF_PATTERN = Pattern.compile("\\r\\n?");
     private static final Pattern ESCAPED_OPEN_BRACE_PATTERN = Pattern.compile(Pattern.quote("\\[\\"));
     private static final Pattern ESCAPED_CLOSE_BRACE_PATTERN = Pattern.compile(Pattern.quote("\\]\\"));
     private static final Pattern ESCAPED_AMPERSAND_PATTERN = Pattern.compile(Pattern.quote("\\&\\"));
@@ -279,6 +280,10 @@ public final class FunctionManager extends Manager {
     }
 
     public StyledText[] doFormatLines(String templateString) {
+        // Copied templates often contain CRLF line endings. Normalize to LF so no raw
+        // carriage returns leak into rendered text as odd symbols.
+        templateString = CRLF_PATTERN.matcher(templateString).replaceAll("\n");
+
         StringBuilder resultBuilder = new StringBuilder();
 
         // Iterate though the string and escape characters
