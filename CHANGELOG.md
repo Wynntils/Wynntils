@@ -1,3 +1,2 @@
 Fixes
-- Fixed missing bomb bell command description
-- Joining the beta server will no longer disable Wynntils until next restart
+- Download source will now correctly switch when swapping between a beta and non beta instance
