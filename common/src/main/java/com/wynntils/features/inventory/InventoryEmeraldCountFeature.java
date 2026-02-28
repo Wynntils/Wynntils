@@ -79,8 +79,7 @@ public class InventoryEmeraldCountFeature extends Feature {
         // and all there is if we combine them, otherwise it is just the
         // container
         boolean isInventory = (event.getScreen().getMenu().containerId == 0);
-        boolean isEmeraldPouch =
-                StyledText.fromComponent(screen.getTitle()).find(EMERALD_POUCH_TITLE_PATTERN);
+        boolean isEmeraldPouch = StyledText.fromComponent(screen.getTitle()).find(EMERALD_POUCH_TITLE_PATTERN);
         boolean applySmartPouch = isEmeraldPouch && smartEmeraldPouchRendering.get();
         int topEmeralds;
         if (isInventory) {
@@ -89,7 +88,8 @@ public class InventoryEmeraldCountFeature extends Feature {
         } else {
             topEmeralds = 0;
             if (showContainerEmeraldCount.get()) topEmeralds += Models.Emerald.getAmountInContainer();
-            // When smart pouch rendering is active, we always show container and inventory separately, so don't combine them into the top count
+            // When smart pouch rendering is active, we always show container and inventory separately, so don't combine
+            // them into the top count
             if (!applySmartPouch && combineInventoryAndContainer.get() && showInventoryEmeraldCount.get()) {
                 topEmeralds += Models.Emerald.getAmountInInventory();
             }
