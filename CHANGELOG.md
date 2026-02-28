@@ -1,5 +1,5 @@
 Guides
-- Added tier 7 powders to power guide
+- Added tier 7 powders to powder guide
 - Updated guide powder tooltips
 
 Fixes
