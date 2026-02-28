@@ -15,6 +15,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.containers.containers.EmeraldPouchContainer;
 import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.screens.bulkbuy.widgets.BulkBuyWidget;
@@ -31,7 +32,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
-import java.util.regex.Pattern;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
@@ -42,7 +42,6 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.INVENTORY)
 public class InventoryEmeraldCountFeature extends Feature {
     private static final int TEXTURE_SIZE = 28;
-    private static final Pattern EMERALD_POUCH_TITLE_PATTERN = Pattern.compile("EmeraldÀÀÀÀPouchÀ");
 
     @Persisted
     private final Config<EmeraldCountType> emeraldCountType = new Config<>(EmeraldCountType.TEXTURE);
@@ -79,8 +78,8 @@ public class InventoryEmeraldCountFeature extends Feature {
         // and all there is if we combine them, otherwise it is just the
         // container
         boolean isInventory = (event.getScreen().getMenu().containerId == 0);
-        boolean isEmeraldPouch = StyledText.fromComponent(screen.getTitle()).find(EMERALD_POUCH_TITLE_PATTERN);
-        boolean applySmartPouch = isEmeraldPouch && smartEmeraldPouchRendering.get();
+        boolean applySmartPouch = Models.Container.getCurrentContainer() instanceof EmeraldPouchContainer
+                && smartEmeraldPouchRendering.get();
         int topEmeralds;
         if (isInventory) {
             if (!showInventoryEmeraldCount.get()) return;
