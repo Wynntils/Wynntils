@@ -118,7 +118,7 @@ public final class TerritoryModel extends Model {
         return new ArrayList<>(territoryPoiMap.values());
     }
 
-    private TerritoryPoi getTerritoryPoiFromAdvancement(String name) {
+    public TerritoryPoi getTerritoryPoiFromAdvancement(String name) {
         return territoryPoiMap.get(name);
     }
 
