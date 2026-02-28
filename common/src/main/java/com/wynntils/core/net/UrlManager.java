@@ -100,10 +100,6 @@ import java.util.function.Function;
  * </p>
  */
 public final class UrlManager extends Manager {
-    public static final String WYNNTILS_CDN_URL = "https://cdn.wynntils.com/static/";
-    public static final String STATIC_STORAGE_GITHUB_URL =
-            "https://raw.githubusercontent.com/Wynntils/Static-Storage/refs/heads/main/";
-
     private final Property<URI> urlListOverride = createProperty(URI.class, "override.link");
     private final Property<Boolean> ignoreCache = createProperty(Boolean.class, "ignore.cache", false);
     private final Property<Boolean> debugLogs = createProperty(Boolean.class, "log.debug", false);
@@ -111,11 +107,11 @@ public final class UrlManager extends Manager {
     private final Map<UrlMapperType, UrlMapper> urlMappersByType = new ConcurrentHashMap<>();
 
     @Persisted
-    private final Storage<String> downloadSourceUrl = new Storage<>(WYNNTILS_CDN_URL);
+    private final Storage<DownloadSource> downloadSourceUrl = new Storage<>(DownloadSource.CDN);
 
     // This is used for storing the custom url even when not in use
     @Persisted
-    private final Storage<String> customSourceurl = new Storage<>("");
+    private final Storage<String> customSourceUrl = new Storage<>("");
 
     private UrlMapper urlMapper = UrlMapper.EMPTY;
 
@@ -159,7 +155,7 @@ public final class UrlManager extends Manager {
 
         String url;
         if (urlInfo.path().isPresent()) {
-            url = downloadSourceUrl.get() + urlInfo.path().get();
+            url = getDownloadSourceUrl() + urlInfo.path().get();
         } else {
             url = urlInfo.url();
         }
@@ -232,39 +228,46 @@ public final class UrlManager extends Manager {
         }
     }
 
-    public String getDownloadSourceUrl() {
-        String url = downloadSourceUrl.get();
-
-        if (url.isEmpty()) {
-            return WYNNTILS_CDN_URL;
-        }
-
+    public DownloadSource getDownloadSource() {
         return downloadSourceUrl.get();
     }
 
-    public boolean usingCustomDownloadSource() {
-        return !downloadSourceUrl.get().equals(WYNNTILS_CDN_URL)
-                && !downloadSourceUrl.get().equals(STATIC_STORAGE_GITHUB_URL);
-    }
+    public String getDownloadSourceUrl() {
+        DownloadSource downloadSource = downloadSourceUrl.get();
 
-    public void setDownloadSource(String newSource) {
-        if (newSource.isEmpty()) {
-            downloadSourceUrl.store(WYNNTILS_CDN_URL);
-        } else {
-            downloadSourceUrl.store(newSource);
-
-            if (usingCustomDownloadSource()) {
-                customSourceurl.store(newSource);
+        if (downloadSource == DownloadSource.CUSTOM) {
+            if (customSourceUrl.get().isEmpty()) {
+                return DownloadSource.CDN.getUrl().get();
+            } else {
+                return customSourceUrl.get();
             }
+        }
+
+        if (downloadSourceUrl.get().getUrl().isPresent()) {
+            return downloadSourceUrl.get().getUrl().get();
+        } else {
+            return DownloadSource.CDN.getUrl().get();
         }
     }
 
+    public void setCustomDownloadSource(String newSource) {
+        customSourceUrl.store(newSource);
+
+        if (!customSourceUrl.get().isEmpty()) {
+            downloadSourceUrl.store(DownloadSource.CUSTOM);
+        }
+    }
+
+    public void setDownloadSource(DownloadSource newSource) {
+        downloadSourceUrl.store(newSource);
+    }
+
     public String getCustomSourceUrl() {
-        return customSourceurl.get();
+        return customSourceUrl.get();
     }
 
     public void setCustomSourceUrl(String newSource) {
-        customSourceurl.store(newSource);
+        customSourceUrl.store(newSource);
     }
 
     private void readEmbeddedUrls() {
@@ -362,7 +365,8 @@ public final class UrlManager extends Manager {
         }
 
         if (urlMapper.urls().isEmpty()) {
-            throw new IllegalStateException("""
+            throw new IllegalStateException(
+                    """
                                  URL list is empty after merging. This means all three of the URL sources failed to load.
                                  If you have set a custom url loading mode, this means that it failed to load.
                                  Otherwise, this is a critical error, try contacting the developers.
