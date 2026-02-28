@@ -105,3 +105,9 @@ sourcesJar {
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
 }
+
+remapSourcesJar {
+    inputFile.set sourcesJar.archiveFile
+    dependsOn sourcesJar
+    archiveClassifier = "fabric+MC-${minecraft_version}-sources"
+}
