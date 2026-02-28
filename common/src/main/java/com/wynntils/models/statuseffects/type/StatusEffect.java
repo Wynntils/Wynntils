@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.statuseffects.type;
@@ -116,5 +116,18 @@ public class StatusEffect implements Comparable<StatusEffect> {
                 .compare(this.getName().getString(), effect.getName().getString())
                 .compare(this.getModifier().getString(), effect.getModifier().getString())
                 .result();
+    }
+
+    @Override
+    public String toString() {
+        return "StatusEffect{" + "fullName="
+                + fullName + ", name="
+                + name + ", modifier="
+                + modifier + ", modifierSuffix="
+                + modifierSuffix + ", modifierValue="
+                + modifierValue + ", duration="
+                + duration + ", displayedTime="
+                + displayedTime + ", prefix="
+                + prefix + '}';
     }
 }

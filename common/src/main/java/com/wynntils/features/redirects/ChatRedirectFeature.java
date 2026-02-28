@@ -7,6 +7,7 @@ package com.wynntils.features.redirects;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
+import com.wynntils.core.notifications.type.RedirectAction;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -172,16 +173,10 @@ public class ChatRedirectFeature extends Feature {
         }
     }
 
-    public enum RedirectAction {
-        KEEP,
-        HIDE,
-        REDIRECT
-    }
-
     protected interface Redirector {
         Pattern getPattern(MessageType messageType);
 
-        ChatRedirectFeature.RedirectAction getAction();
+        RedirectAction getAction();
 
         List<StyledText> getNotifications(Matcher matcher);
     }
