@@ -17,13 +17,15 @@ import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.mc.event.SetSpawnEvent;
+import com.wynntils.models.activities.beacons.ActivityBeaconMarkerKind;
 import com.wynntils.models.activities.type.ActivityDifficulty;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityLength;
 import com.wynntils.models.activities.type.ActivityRequirements;
 import com.wynntils.models.activities.type.ActivityRewardType;
 import com.wynntils.models.activities.type.ActivityType;
+import com.wynntils.models.beacons.event.BeaconMarkerEvent;
+import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.FileUtils;
@@ -79,7 +81,9 @@ public class ContentBookDumpFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onSetSpawn(SetSpawnEvent event) {
+    public void onBeaconMarkerAdded(BeaconMarkerEvent.Added event) {
+        BeaconMarker beaconMarker = event.getBeaconMarker();
+        if (!(beaconMarker.beaconMarkerKind() instanceof ActivityBeaconMarkerKind)) return;
         if (currentlyTracking == null) return;
 
         Optional<Location> spawnLocationOpt = Models.Activity.ACTIVITY_MARKER_PROVIDER.getSpawnLocation();
