@@ -7,8 +7,8 @@ package com.wynntils.core.net;
 import java.util.Optional;
 
 public enum DownloadSource {
-    CDN(Optional.of("https://cdn.wynntils.com/static/")),
-    GITHUB(Optional.of("https://raw.githubusercontent.com/Wynntils/Static-Storage/refs/heads/main/")),
+    CDN(Optional.of("https://cdn.wynntils.com/static-beta/")),
+    GITHUB(Optional.of("https://raw.githubusercontent.com/Wynntils/Static-Storage/refs/heads/beta/")),
     CUSTOM(Optional.empty());
 
     private final Optional<String> url;
