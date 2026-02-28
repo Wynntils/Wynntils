@@ -64,6 +64,9 @@ public final class StyledTextPart {
         List<StyledTextPart> parts = new ArrayList<>();
 
         Style currentStyle = style;
+        // Preserve inherited font across color code resets
+        Style inheritedStyle = parentStyle == null ? style : style.applyTo(parentStyle);
+        FontDescription inheritedFont = inheritedStyle.getFont();
         StringBuilder currentString = new StringBuilder();
 
         boolean nextIsFormatting = false;
@@ -131,14 +134,13 @@ public final class StyledTextPart {
                     currentString = new StringBuilder();
                 }
 
-                // Color formatting resets the style besides the font
+                // Color formatting resets the style
                 if (formatting.isColor()) {
                     currentStyle = Style.EMPTY.withColor(formatting);
 
-                    // Check if the current style had a font,
-                    // if so we need to keep it as color formatting resets the style
-                    if (currentStyle.font != null) {
-                        currentStyle = currentStyle.withFont(style.getFont());
+                    // But we keep the inherited font
+                    if (inheritedFont != null) {
+                        currentStyle = currentStyle.withFont(inheritedFont);
                     }
                 } else {
                     currentStyle = currentStyle.applyFormat(formatting);
