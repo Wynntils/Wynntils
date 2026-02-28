@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.net.DownloadDependencyGraph;
+import com.wynntils.core.net.DownloadSource;
 import com.wynntils.core.net.QueuedDownload;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.WynncraftButtonFeature;
@@ -115,9 +116,9 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedHeight * 29),
                 20,
                 Component.literal("Wynntils CDN"),
-                Managers.Url.getDownloadSourceUrl().equals(Managers.Url.WYNNTILS_CDN_URL),
+                Managers.Url.getDownloadSource() == DownloadSource.CDN,
                 (int) (dividedWidth * 7),
-                (c, b) -> changeDownloadSource(Managers.Url.WYNNTILS_CDN_URL),
+                (c, b) -> changeDownloadSource(DownloadSource.CDN),
                 List.of(Component.translatable("screens.wynntils.downloads.cdnTooltip")));
         this.addRenderableWidget(cdnCheckbox);
 
@@ -126,9 +127,9 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedHeight * 34),
                 20,
                 Component.literal("GitHub"),
-                Managers.Url.getDownloadSourceUrl().equals(Managers.Url.STATIC_STORAGE_GITHUB_URL),
+                Managers.Url.getDownloadSource() == DownloadSource.GITHUB,
                 (int) (dividedWidth * 7),
-                (c, b) -> changeDownloadSource(Managers.Url.STATIC_STORAGE_GITHUB_URL),
+                (c, b) -> changeDownloadSource(DownloadSource.GITHUB),
                 List.of(Component.translatable("screens.wynntils.downloads.githubTooltip")));
         this.addRenderableWidget(githubCheckbox);
 
@@ -137,9 +138,9 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedHeight * 40 + 20),
                 20,
                 Component.translatable("screens.wynntils.downloads.customSource"),
-                Managers.Url.usingCustomDownloadSource(),
+                Managers.Url.getDownloadSource() == DownloadSource.CUSTOM,
                 (int) (dividedWidth * 7),
-                (c, b) -> changeDownloadSource(customInput.getTextBoxInput()),
+                (c, b) -> changeDownloadSource(DownloadSource.CUSTOM),
                 List.of(Component.translatable("screens.wynntils.downloads.customCheckboxTooltip")));
         this.addRenderableWidget(customCheckbox);
 
@@ -150,7 +151,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                 20,
                 (s) -> {
                     if (customCheckbox.selected) {
-                        changeDownloadSource(s);
+                        changeCustomSource(s);
                     } else {
                         Managers.Url.setCustomSourceUrl(s);
                     }
@@ -406,12 +407,17 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                 .store(show);
     }
 
-    private void changeDownloadSource(String url) {
-        Managers.Url.setDownloadSource(url);
+    private void changeDownloadSource(DownloadSource downloadSource) {
+        Managers.Url.setDownloadSource(downloadSource);
 
-        cdnCheckbox.selected = Managers.Url.getDownloadSourceUrl().equals(Managers.Url.WYNNTILS_CDN_URL);
-        githubCheckbox.selected = Managers.Url.getDownloadSourceUrl().equals(Managers.Url.STATIC_STORAGE_GITHUB_URL);
-        customCheckbox.selected = Managers.Url.usingCustomDownloadSource();
+        DownloadSource newSource = Managers.Url.getDownloadSource();
+        cdnCheckbox.selected = newSource == DownloadSource.CDN;
+        githubCheckbox.selected = newSource == DownloadSource.GITHUB;
+        customCheckbox.selected = newSource == DownloadSource.CUSTOM;
+    }
+
+    private void changeCustomSource(String customSource) {
+        Managers.Url.setCustomSourceUrl(customSource);
     }
 
     private void adjustTimeout(int adjustment) {
