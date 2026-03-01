@@ -206,28 +206,5 @@ public final class TooltipUtils {
             tooltips.set(i, updatedItemName.getComponent());
             return;
         }
-
-        //        MutableComponent name = Component.empty();
-        //        String itemName = itemInfo.getName();
-        //        ItemStatInfoFeature isif = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
-        //
-        //        if (isif.perfect.get() && itemInfo.isPerfect()) {
-        //            name.append(ComponentUtils.makeRainbowStyle("Perfect " + itemName, true));
-        //        } else if (isif.defective.get() && itemInfo.isDefective()) {
-        //            name.append(ComponentUtils.makeObfuscated(
-        //                    "Defective " + itemName, isif.obfuscationChanceStart.get(),
-        // isif.obfuscationChanceEnd.get()));
-        //        } else {
-        //            // This already contains the ⬡ if it is a shiny item so we don't append the line
-        //            name = tooltips.getFirst().copy();
-        //            name.append(ColorScaleUtils.getPercentageTextComponent(
-        //                    isif.getColorMap(),
-        //                    itemInfo.getOverallPercentage(),
-        //                    isif.colorLerp.get(),
-        //                    isif.decimalPlaces.get(),
-        //                    false));
-        //        }
-        //        tooltips.removeFirst();
-        //        tooltips.addFirst(name);
     }
 }
