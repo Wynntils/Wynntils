@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
@@ -17,6 +17,7 @@ import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
+import com.wynntils.models.items.properties.PagedItemProperty;
 import com.wynntils.models.items.properties.PowderedItemProperty;
 import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.items.properties.RerollableItemProperty;
@@ -41,13 +42,20 @@ public class GearItem extends GameItem
                 IdentifiableItemProperty<GearInfo, GearInstance>,
                 ClassableItemProperty,
                 SetItemProperty,
-                RequirementItemProperty {
+                RequirementItemProperty,
+                PagedItemProperty {
     private final GearInfo gearInfo;
     private final GearInstance gearInstance;
+    private final int currentPage;
 
-    public GearItem(GearInfo gearInfo, GearInstance gearInstance) {
+    public GearItem(GearInfo gearInfo, GearInstance gearInstance, int currentPage) {
         this.gearInfo = gearInfo;
         this.gearInstance = gearInstance;
+        this.currentPage = currentPage;
+    }
+
+    public GearItem(GearInfo gearInfo, GearInstance gearInstance) {
+        this(gearInfo, gearInstance, 0);
     }
 
     @Override
@@ -165,6 +173,11 @@ public class GearItem extends GameItem
     @Override
     public boolean meetsActualRequirements() {
         return gearInstance != null && gearInstance.meetsRequirements();
+    }
+
+    @Override
+    public int currentPage() {
+        return currentPage;
     }
 
     @Override

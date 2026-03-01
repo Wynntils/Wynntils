@@ -230,7 +230,8 @@ public class CustomNametagRendererFeature extends Feature {
                         isif.getColorMap(),
                         gearItem.getOverallPercentage(),
                         isif.colorLerp.get(),
-                        isif.decimalPlaces.get()));
+                        isif.decimalPlaces.get(),
+                        false));
             }
 
             return gearComponent;

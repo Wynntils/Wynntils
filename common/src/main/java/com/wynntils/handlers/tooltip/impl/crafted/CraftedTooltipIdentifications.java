@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.crafted;
@@ -8,19 +8,20 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListDelimiter;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
 
 public final class CraftedTooltipIdentifications {
     public static List<Component> buildTooltip(
@@ -86,26 +87,18 @@ public final class CraftedTooltipIdentifications {
         int valueToShow = statType.calculateAsInverted() ? -value : value;
         boolean hasPositiveEffect = valueToShow > 0 ^ statType.displayAsInverted();
 
-        MutableComponent line = Component.literal(StringUtils.toSignedString(valueToShow)
+        MutableComponent line = Component.literal(Models.Stat.getDisplayName(
+                        statType, craftedItem.getRequiredClass(), currentClass, RangedValue.NONE))
+                .withStyle(Style.EMPTY.withFont(
+                        new FontDescription.Resource(Identifier.withDefaultNamespace("language/wynncraft"))));
+
+        // FIXME: Add the appropriate amount of spacing so that the stat value is right aligned
+        line.append(Component.literal(" " + StringUtils.toSignedCommaString(valueToShow)
                         + statType.getUnit().getDisplayName())
-                .withStyle(Style.EMPTY.withColor(hasPositiveEffect ? ChatFormatting.GREEN : ChatFormatting.RED));
-
-        // Consumables don't have show max value
-        if (style.showMaxValue() && !(craftedItem instanceof CraftedConsumableItem)) {
-            craftedItem.getPossibleValues().stream()
-                    .filter(possibleValues -> possibleValues.statType() == statType)
-                    .findFirst()
-                    .ifPresent(possibleValues -> line.append(Component.literal("/"
-                                    + StringUtils.toSignedString(
-                                            possibleValues.range().high())
-                                    + statType.getUnit().getDisplayName())
-                            .withStyle(ChatFormatting.DARK_GRAY)));
-        }
-
-        line.append(Component.literal(" "
-                        + Models.Stat.getDisplayName(
-                                statType, craftedItem.getRequiredClass(), currentClass, RangedValue.NONE))
-                .withStyle(ChatFormatting.GRAY));
+                .withStyle(Style.EMPTY.withColor(
+                        hasPositiveEffect
+                                ? CustomColor.fromInt(0xacfac6).asInt()
+                                : CustomColor.fromInt(0xfaacac).asInt())));
 
         return line;
     }

@@ -1,10 +1,12 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.wynn;
 
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
@@ -27,17 +29,36 @@ public final class ColorScaleUtils {
      * @return the styled percentage text component
      */
     public static MutableComponent getPercentageTextComponent(
-            NavigableMap<Float, TextColor> colorMap, float percentage, boolean colorLerp, int decimalPlaces) {
+            NavigableMap<Float, TextColor> colorMap,
+            float percentage,
+            boolean colorLerp,
+            int decimalPlaces,
+            boolean perfectInternalRoll) {
         Style color = Style.EMPTY
                 .withColor(
-                        colorLerp
-                                ? getPercentageColor(colorMap, percentage)
-                                : getFlatPercentageColor(colorMap, percentage))
+                        perfectInternalRoll
+                                ? TextColor.fromRgb(CommonColors.RAINBOW.asInt())
+                                : colorLerp
+                                        ? getPercentageColor(colorMap, percentage)
+                                        : getFlatPercentageColor(colorMap, percentage))
                 .withItalic(false);
         String percentString = new BigDecimal(percentage)
                 .setScale(decimalPlaces, RoundingMode.DOWN)
                 .toPlainString();
         return Component.literal(" [" + percentString + "%]").withStyle(color);
+    }
+
+    public static CustomColor getPercentageColor(
+            NavigableMap<Float, TextColor> colorMap, float percentage, boolean colorLerp) {
+        int rgb;
+
+        if (colorLerp) {
+            rgb = getPercentageColor(colorMap, percentage).getValue();
+        } else {
+            rgb = getFlatPercentageColor(colorMap, percentage).getValue();
+        }
+
+        return CustomColor.fromInt(rgb);
     }
 
     private static TextColor getPercentageColor(NavigableMap<Float, TextColor> colorMap, float percentage) {

@@ -35,10 +35,7 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
         List<Component> header = new ArrayList<>();
 
         // name
-        header.add(Component.literal(craftedItem.getName())
-                .withStyle(ChatFormatting.DARK_AQUA)
-                .append(Component.literal(" [" + craftedItem.getEffectStrength() + "%]")
-                        .withStyle(ChatFormatting.AQUA)));
+        header.add(Component.literal(craftedItem.getName()).withStyle(ChatFormatting.DARK_AQUA));
 
         // attack speed
         if (craftedItem.getAttackSpeed().isPresent())

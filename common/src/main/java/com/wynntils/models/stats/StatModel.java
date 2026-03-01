@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats;
@@ -26,7 +26,6 @@ import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.SpellStatType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
-import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import com.wynntils.utils.type.RangedValue;
@@ -71,12 +70,8 @@ public final class StatModel extends Model {
         registry.registerDownload(UrlId.DATA_STATIC_IDENTIFICATION_KEYS).handleReader(this::handleIdentificationKeys);
     }
 
-    public StatActualValue buildActualValue(
-            StatType statType, int value, int stars, StatPossibleValues possibleValues) {
-        RangedValue internalRoll = possibleValues != null
-                ? StatCalculator.calculateInternalRollRange(possibleValues, value, stars)
-                : RangedValue.NONE;
-        return new StatActualValue(statType, value, stars, internalRoll);
+    public StatActualValue buildActualValue(StatType statType, int value, boolean perfectInternalRoll) {
+        return new StatActualValue(statType, value, perfectInternalRoll);
     }
 
     public StatType fromDisplayName(String displayName, String unit) {

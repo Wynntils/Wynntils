@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.type;
@@ -11,7 +11,6 @@ import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.ErrorOr;
-import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -71,8 +70,7 @@ public abstract class ItemTransformer<T extends WynnItem> {
             if (possibleValues.isPreIdentified() && !identifications.containsKey(possibleValues.statType())) {
                 identifications.put(
                         possibleValues.statType(),
-                        new StatActualValue(
-                                possibleValues.statType(), possibleValues.baseValue(), 0, RangedValue.NONE));
+                        new StatActualValue(possibleValues.statType(), possibleValues.baseValue(), false));
             }
         }
 

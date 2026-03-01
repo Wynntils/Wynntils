@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.identifiable;
@@ -16,14 +16,17 @@ import com.wynntils.models.stats.type.StatListDelimiter;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
 
 public final class TooltipIdentifications {
     public static List<Component> buildTooltip(
@@ -93,7 +96,7 @@ public final class TooltipIdentifications {
                 return null;
             }
 
-            MutableComponent line = buildIdentifiedLine(itemInfo, style, statActualValue, currentClass);
+            MutableComponent line = buildIdentifiedLine(itemInfo, statActualValue, currentClass);
 
             StatPossibleValues possibleValues = itemInfo.getPossibleValues().stream()
                     .filter(stat -> stat.statType() == statType)
@@ -130,33 +133,25 @@ public final class TooltipIdentifications {
     }
 
     private static MutableComponent buildIdentifiedLine(
-            IdentifiableItemProperty itemInfo,
-            TooltipStyle style,
-            StatActualValue actualValue,
-            ClassType currentClass) {
+            IdentifiableItemProperty itemInfo, StatActualValue actualValue, ClassType currentClass) {
         StatType statType = actualValue.statType();
         int value = actualValue.value();
 
         int valueToShow = statType.calculateAsInverted() ? -value : value;
         boolean hasPositiveEffect = valueToShow > 0 ^ statType.displayAsInverted();
-        String starString = style.showStars() ? "***".substring(3 - actualValue.stars()) : "";
 
-        MutableComponent line = Component.literal(StringUtils.toSignedString(valueToShow)
+        MutableComponent line = Component.literal(Models.Stat.getDisplayName(
+                        statType, itemInfo.getRequiredClass(), currentClass, itemInfo.getIdentificationLevelRange()))
+                .withStyle(Style.EMPTY.withFont(
+                        new FontDescription.Resource(Identifier.withDefaultNamespace("language/wynncraft"))));
+
+        // FIXME: Add the appropriate amount of spacing so that the stat value is right aligned
+        line.append(Component.literal(" " + StringUtils.toSignedCommaString(valueToShow)
                         + statType.getUnit().getDisplayName())
-                .withStyle(Style.EMPTY.withColor(hasPositiveEffect ? ChatFormatting.GREEN : ChatFormatting.RED));
-
-        if (!starString.isEmpty()) {
-            line.append(Component.literal(starString)
-                    .withStyle(hasPositiveEffect ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED));
-        }
-
-        line.append(Component.literal(" "
-                        + Models.Stat.getDisplayName(
-                                statType,
-                                itemInfo.getRequiredClass(),
-                                currentClass,
-                                itemInfo.getIdentificationLevelRange()))
-                .withStyle(ChatFormatting.GRAY));
+                .withStyle(Style.EMPTY.withColor(
+                        hasPositiveEffect
+                                ? CustomColor.fromInt(0xacfac6).asInt()
+                                : CustomColor.fromInt(0xfaacac).asInt())));
 
         return line;
     }

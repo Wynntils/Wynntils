@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils;
@@ -178,6 +178,10 @@ public final class StringUtils {
         } else {
             return Integer.toString(value);
         }
+    }
+
+    public static String toSignedCommaString(int value) {
+        return String.format("%+,d", value);
     }
 
     public static String convertMarkdownToColorCode(String input) {
