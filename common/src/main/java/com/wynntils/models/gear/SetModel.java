@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear;
@@ -11,7 +11,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.SetItemProperty;
@@ -75,9 +74,7 @@ public final class SetModel extends Model {
         Set<String> returnable = new HashSet<>();
         for (ItemStack itemStack : Models.Inventory.getEquippedItems()) {
             Optional<GearItem> gear = Models.Item.asWynnItem(itemStack, GearItem.class);
-            if (gear.isPresent()
-                    && gear.get().getGearTier() == GearTier.SET
-                    && gear.get().getSetInfo().isPresent()) {
+            if (gear.isPresent() && gear.get().getSetInfo().isPresent()) {
                 returnable.add(gear.get().getSetInfo().get().name());
             }
         }

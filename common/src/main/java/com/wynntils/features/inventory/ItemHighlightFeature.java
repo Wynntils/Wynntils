@@ -62,12 +62,6 @@ public class ItemHighlightFeature extends Feature {
     private final Config<CustomColor> rareHighlightColor = new Config<>(new CustomColor(255, 0, 255));
 
     @Persisted
-    private final Config<Boolean> setHighlightEnabled = new Config<>(true);
-
-    @Persisted
-    private final Config<CustomColor> setHighlightColor = new Config<>(new CustomColor(0, 255, 0));
-
-    @Persisted
     private final Config<Boolean> legendaryHighlightEnabled = new Config<>(true);
 
     @Persisted
@@ -312,11 +306,11 @@ public class ItemHighlightFeature extends Feature {
                         case NORMAL -> normalHighlightEnabled.get();
                         case UNIQUE -> uniqueHighlightEnabled.get();
                         case RARE -> rareHighlightEnabled.get();
-                        case SET -> setHighlightEnabled.get();
                         case LEGENDARY -> legendaryHighlightEnabled.get();
                         case FABLED -> fabledHighlightEnabled.get();
                         case MYTHIC -> mythicHighlightEnabled.get();
                         case CRAFTED -> craftedHighlightEnabled.get();
+                        default -> false;
                     };
         }
 
@@ -328,11 +322,11 @@ public class ItemHighlightFeature extends Feature {
                         case NORMAL -> normalHighlightColor.get();
                         case UNIQUE -> uniqueHighlightColor.get();
                         case RARE -> rareHighlightColor.get();
-                        case SET -> setHighlightColor.get();
                         case LEGENDARY -> legendaryHighlightColor.get();
                         case FABLED -> fabledHighlightColor.get();
                         case MYTHIC -> mythicHighlightColor.get();
                         case CRAFTED -> craftedHighlightColor.get();
+                        default -> CustomColor.NONE;
                     };
         }
     }
