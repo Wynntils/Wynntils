@@ -715,8 +715,6 @@
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.name": "常に最高値を最後に表示",
   "feature.wynntils.itemStatInfo.showMaxValues.description": "識別の最大値を表示しますか？",
   "feature.wynntils.itemStatInfo.showMaxValues.name": "最大値を表示（作成済み）",
-  "feature.wynntils.itemStatInfo.showStars.description": "識別に星（*、**、または***）を印刷しますか？",
-  "feature.wynntils.itemStatInfo.showStars.name": "星を表示",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "コーキアンアンプのレベルを表示するアイテムオーバーレイを描画しますか？",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.name": "コーキアンアンプレベルの仕様",
   "feature.wynntils.itemTextOverlay.amplifierTierRomanNumerals.description": "コーキアンアンプのレベルのオーバーレイにアラビア数字の代わりにローマ数字を使用しますか？",
