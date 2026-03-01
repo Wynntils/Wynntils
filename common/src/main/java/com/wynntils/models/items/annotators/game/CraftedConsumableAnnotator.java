@@ -31,7 +31,7 @@ public final class CraftedConsumableAnnotator implements GameItemAnnotator {
 
         return new CraftedConsumableItem(
                 matcher.group("name"),
-                ConsumableType.fromString(parseResult.itemType()),
+                ConsumableType.fromFrameSprite(parseResult.itemType()),
                 parseResult.level(),
                 parseResult.identifications(),
                 parseResult.namedEffects(),

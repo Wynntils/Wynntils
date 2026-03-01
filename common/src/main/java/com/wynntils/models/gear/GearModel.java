@@ -115,18 +115,15 @@ public final class GearModel extends Model {
         Map<StatType, StatPossibleValues> possibleValuesMap = new HashMap<>();
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, possibleValuesMap);
 
-        GearType gearType;
-        // If it is crafted, and has a skin, then we cannot determine weapon type from item stack
-        // Maybe it is possible to find in the string type, e.g. "Crafted Wand"
-        gearType = GearType.fromString(result.itemType());
+        GearType gearType = GearType.fromFrameSprite(result.itemType());
         if (gearType == null && result.requirements().classType().isPresent()) {
-            // If the item is signed, we can find the class type from the requirements
+            // If the item is a weapon, we can find the class type from the requirements
             gearType = GearType.fromClassType(result.requirements().classType().get());
         }
 
         // If we still failed to find the gear type, try to find it from the item stack
         if (gearType == null) {
-            gearType = GearType.fromItemStack(itemStack, true);
+            gearType = GearType.fromItemStack(itemStack);
 
             if (gearType == null) {
                 // If we failed to find the gear type, assume it is a weapon

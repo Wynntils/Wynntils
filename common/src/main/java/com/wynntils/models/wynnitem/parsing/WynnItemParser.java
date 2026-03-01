@@ -144,7 +144,7 @@ public final class WynnItemParser {
         int rerolls = 0;
         CappedValue durability = CappedValue.EMPTY;
         GearTier tier = null;
-        String itemType = "";
+        String itemType = extractFrameSpriteCode(itemStack);
         Optional<ShinyStat> shinyStat = Optional.empty();
         boolean allRequirementsMet = true;
         SetInfo setInfo = null;
