@@ -9,7 +9,6 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -181,12 +180,8 @@ public final class StringUtils {
         }
     }
 
-    public static String toSignedLocaleString(int value) {
-        if (value >= 0) {
-            return "+" + NumberFormat.getNumberInstance(Locale.ROOT).format(value);
-        } else {
-            return NumberFormat.getNumberInstance(Locale.ROOT).format(value);
-        }
+    public static String toSignedCommaString(int value) {
+        return String.format("%+,d", value);
     }
 
     public static String convertMarkdownToColorCode(String input) {

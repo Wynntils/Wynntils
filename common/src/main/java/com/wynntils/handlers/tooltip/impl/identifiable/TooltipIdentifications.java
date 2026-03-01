@@ -146,7 +146,7 @@ public final class TooltipIdentifications {
                         new FontDescription.Resource(Identifier.withDefaultNamespace("language/wynncraft"))));
 
         // FIXME: Add the appropriate amount of spacing so that the stat value is right aligned
-        line.append(Component.literal(" " + StringUtils.toSignedLocaleString(valueToShow)
+        line.append(Component.literal(" " + StringUtils.toSignedCommaString(valueToShow)
                         + statType.getUnit().getDisplayName())
                 .withStyle(Style.EMPTY.withColor(
                         hasPositiveEffect
