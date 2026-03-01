@@ -271,7 +271,9 @@ jobs:
           curseforge-id: 303451
           curseforge-token: ${{ secrets.CF_API_TOKEN }}
 
-          files: "**/build/libs/*-${{ matrix.modloader }}*.jar"
+          files: |
+            "**/build/libs/*-${{ matrix.modloader }}!(*-sources).jar"
+            "**/build/libs/*-${{ matrix.modloader }}*-sources.jar"
 
           name: Wynntils (${{ matrix.modloader }}) v${{ needs.set-version.outputs.tag }}
           version: v${{ needs.set-version.outputs.tag }}
