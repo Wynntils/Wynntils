@@ -89,7 +89,7 @@ public final class GearModel extends Model {
 
     // For "real" gear items eg. from the inventory
     public GearItem parseInstance(GearInfo gearInfo, ItemStack itemStack, boolean isUnidentified) {
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, gearInfo.getVariableStatsMap());
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack);
         if (result.tier() != gearInfo.tier()) {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
@@ -150,7 +150,7 @@ public final class GearModel extends Model {
 
     public UnknownGearItem parseUnknownGearItem(
             String name, GearType gearType, GearTier gearTier, boolean isUnidentified, ItemStack itemStack) {
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack);
 
         if (gearType == GearType.WEAPON) {
             // If the gear type is weapon, we can try to find the weapon type from the requirements

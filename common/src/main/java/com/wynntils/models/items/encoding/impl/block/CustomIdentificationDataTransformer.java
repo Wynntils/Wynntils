@@ -88,11 +88,7 @@ public class CustomIdentificationDataTransformer extends DataTransformer<CustomI
             // The next bytes are the identification's max value bytes, which are assembled into an integer.
             int maxValue = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
-            // For positive stats on crafted items, the max values can be used to calculate the minimum values (10%
-            // of the maximum, rounded). Negative stats do not decay so are always the maximum.
-            RangedValue range = maxValue <= 0
-                    ? RangedValue.of(maxValue, maxValue)
-                    : RangedValue.of(Math.round(maxValue * 0.1f), maxValue);
+            RangedValue range = RangedValue.of(maxValue, maxValue);
             possibleValues.add(new StatPossibleValues(statType, range, maxValue, false));
         }
 

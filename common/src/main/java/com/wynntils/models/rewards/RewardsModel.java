@@ -79,7 +79,7 @@ public final class RewardsModel extends Model {
             return new CharmItem(charmInfo, null);
         }
 
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, charmInfo.getVariableStatsMap());
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack);
         if (result.tier() != charmInfo.tier()) {
             WynntilsMod.warn("Tier for " + charmInfo.name() + " is reported as " + result.tier());
         }
@@ -99,7 +99,7 @@ public final class RewardsModel extends Model {
             return new TomeItem(tomeInfo, null);
         }
 
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, tomeInfo.getVariableStatsMap());
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack);
         if (result.tier() != tomeInfo.tier()) {
             WynntilsMod.warn("Tier for " + tomeInfo.name() + " is reported as " + result.tier());
         }

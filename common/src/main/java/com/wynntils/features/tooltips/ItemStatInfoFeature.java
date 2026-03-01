@@ -109,9 +109,6 @@ public class ItemStatInfoFeature extends Feature {
     @Persisted
     public final Config<Boolean> showBestValueLastAlways = new Config<>(true);
 
-    @Persisted
-    public final Config<Boolean> showMaxValues = new Config<>(true);
-
     private static final NavigableMap<Float, TextColor> LERP_MAP = new TreeMap<>(Map.of(
             0f,
             TextColor.fromLegacyFormat(ChatFormatting.RED),

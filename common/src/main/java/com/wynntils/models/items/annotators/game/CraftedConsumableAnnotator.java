@@ -25,7 +25,7 @@ public final class CraftedConsumableAnnotator implements GameItemAnnotator {
         Matcher matcher = name.getMatcher(CRAFTED_CONSUMABLE_NAME_PATTERN);
         if (!matcher.matches()) return null;
 
-        WynnItemParseResult parseResult = WynnItemParser.parseItemStack(itemStack, null);
+        WynnItemParseResult parseResult = WynnItemParser.parseItemStack(itemStack);
 
         if (parseResult == null) return null;
 

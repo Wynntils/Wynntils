@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
@@ -31,7 +31,9 @@ public final class PotionAnnotator implements GameItemAnnotator {
         if (!matcher.matches()) return null;
 
         String potionType = matcher.group(1);
-        WynnItemParseResult parseResult = WynnItemParser.parseItemStack(itemStack, null);
+        // FIXME: Can't use WynnItemParser for this anymore as it has been changed to parse items 2.0
+        //  simply parse them here instead
+        WynnItemParseResult parseResult = WynnItemParser.parseItemStack(itemStack);
 
         Matcher healingMatcher = HEALING_PATTERN.matcher(potionType);
         if (healingMatcher.matches()) {

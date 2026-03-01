@@ -97,8 +97,6 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         CustomIdentificationsData identificationsData = itemDataMap.get(CustomIdentificationsData.class);
         if (identificationsData != null) {
             possibleValues = identificationsData.possibleValues();
-            // For crafted items, the max values can be used to calculate the current values (from the overall
-            // effectiveness).
             identifications = identificationsData.possibleValues().stream()
                     .map(statPossibleValues -> new StatActualValue(
                             statPossibleValues.statType(),

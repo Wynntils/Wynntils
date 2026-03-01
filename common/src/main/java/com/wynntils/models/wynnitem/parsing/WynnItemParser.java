@@ -126,8 +126,12 @@ public final class WynnItemParser {
     private static final FontDescription SPRITE_FRAME_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/emblem/sprite"));
 
+    public static WynnItemParseResult parseItemStack(ItemStack itemStack) {
+        return parseItemStack(itemStack, null);
+    }
+
     public static WynnItemParseResult parseItemStack(
-            ItemStack itemStack, Map<StatType, StatPossibleValues> possibleValuesMap) {
+            ItemStack itemStack, Map<StatType, StatPossibleValues> statValuesMap) {
         List<StatActualValue> identifications = new ArrayList<>();
         List<NamedItemEffect> namedEffects = new ArrayList<>();
         List<ItemEffect> effects = new ArrayList<>();
@@ -364,6 +368,11 @@ public final class WynnItemParser {
 
                     StatActualValue actualValue = Models.Stat.buildActualValue(statType, value, perfectInternalRoll);
                     identifications.add(actualValue);
+
+                    if (statValuesMap != null) {
+                        statValuesMap.put(
+                                statType, new StatPossibleValues(statType, RangedValue.of(value, value), value, false));
+                    }
                 } else {
                     rerolls = parseRerolls(coded.getString(StyleType.DEFAULT));
                 }
