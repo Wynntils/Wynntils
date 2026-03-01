@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class CraftedConsumableAnnotator implements GameItemAnnotator {
     private static final Pattern CRAFTED_CONSUMABLE_NAME_PATTERN =
-            Pattern.compile("^\uDAFC\uDC00§3(?<name>.+?) §8\\[(?<currentUses>\\d+)\\/(?<maxuses>\\d+)\\]\uDAFC\uDC00$");
+            Pattern.compile("^\uDAFC\uDC00§3(?<name>.+?) §8\\[(?<currentUses>\\d+)\\/(?<maxUses>\\d+)\\]\uDAFC\uDC00$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
@@ -37,6 +37,6 @@ public final class CraftedConsumableAnnotator implements GameItemAnnotator {
                 parseResult.namedEffects(),
                 parseResult.effects(),
                 new CappedValue(
-                        Integer.parseInt(matcher.group("currentUses")), Integer.parseInt(matcher.group("maxuses"))));
+                        Integer.parseInt(matcher.group("currentUses")), Integer.parseInt(matcher.group("maxUses"))));
     }
 }
