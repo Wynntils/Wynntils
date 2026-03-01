@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GuiGraphics.class)
 public abstract class GuiGraphicsMixin {
     // Note: Call site 1 of 3 of ItemTooltipRenderEvent. Check the event class for more info.
-    //       This mixin works on Fabric, and on Forge as well.
+    //       This mixin works on Fabric, and on NeoForge as well.
     @WrapOperation(
             method = "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V",
             at =

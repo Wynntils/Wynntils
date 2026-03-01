@@ -113,7 +113,7 @@
   },
   {
     "id": "dataStaticCaveInfo",
-    "md5": "e3a64e7b576951b7260f9c4ed4a5db01",
+    "md5": "2e8325f671f9453582b584f9ae5f0377",
     "path": "Reference/caves.json",
     "url": "https://cdn.wynntils.com/static/Reference/caves.json"
   },
@@ -221,7 +221,7 @@
   },
   {
     "id": "dataStaticMaps",
-    "md5": "96913e54566a0f088ec799c5c5795bac",
+    "md5": "0c7e73c6d592e0d288fe58df3b67f7ff",
     "path": "Reference/maps.json",
     "url": "https://cdn.wynntils.com/static/Reference/maps.json"
   },
@@ -239,19 +239,19 @@
   },
   {
     "id": "dataStaticModelData",
-    "md5": "942ffb6d0ea8780b9aea8fc319b9aabd",
+    "md5": "229abd985f684e23cc3cd88a6a809162",
     "path": "Data-Storage/model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/model_data.json"
   },
   {
     "id": "dataStaticPlaceMapFeatures",
-    "md5": "152da6dd432af0306b7d84868b050cd0",
+    "md5": "73fb7bd1fca7b78ed6dc3019b0ad6ae8",
     "path": "Reference/place_mapfeatures.json",
     "url": "https://cdn.wynntils.com/static/Reference/place_mapfeatures.json"
   },
   {
     "id": "dataStaticPlaces",
-    "md5": "d25458ae7f877a250463428e62a78468",
+    "md5": "d7d84d18524c430211762da13d6908cf",
     "path": "Reference/places.json",
     "url": "https://cdn.wynntils.com/static/Reference/places.json"
   },
@@ -275,7 +275,7 @@
   },
   {
     "id": "dataStaticServicesCrowdsourced",
-    "md5": "48ccb62960b490d43be6055fde9b9574",
+    "md5": "986beef6346577ca369c4b96c601d4fd",
     "path": "Data-Storage/services_crowdsourced.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/services_crowdsourced.json"
   },
