@@ -715,8 +715,6 @@
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.name": "Mindig a Legjobb Érték Utoljára",
   "feature.wynntils.itemStatInfo.showMaxValues.description": "Az azonosítók maximális értékei megjelenjenek-e?",
   "feature.wynntils.itemStatInfo.showMaxValues.name": "Maximális Értékek Megjelenítése (Kézműves)",
-  "feature.wynntils.itemStatInfo.showStars.description": "Az azonosítók csillagokkal (*, ** vagy ***) legyenek jelölve?",
-  "feature.wynntils.itemStatInfo.showStars.name": "Csillagok Megjelenítése",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Rajzoljunk-e tárgyfedvényt, amely megmutatja a corki erősítő szintjét?",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.name": "Corki Erősítő Szint Meghatározása",
   "feature.wynntils.itemTextOverlay.amplifierTierRomanNumerals.description": "A corki erősítő szintek fedvénye római számokat használjon arab helyett?",

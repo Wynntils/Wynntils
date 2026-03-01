@@ -715,8 +715,6 @@
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.name": "始終顯示最佳值在最後",
   "feature.wynntils.itemStatInfo.showMaxValues.description": "是否應顯示識別的最大值？",
   "feature.wynntils.itemStatInfo.showMaxValues.name": "顯示最大值（已製作）",
-  "feature.wynntils.itemStatInfo.showStars.description": "識別上是否應印有星號（*，**或***）？",
-  "feature.wynntils.itemStatInfo.showStars.name": "顯示星號",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "我們是否應繪製一個顯示科基放大器等級的物品覆蓋？",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.name": "科基放大器等級規格",
   "feature.wynntils.itemTextOverlay.amplifierTierRomanNumerals.description": "放大器等級的覆蓋是否應使用羅馬數字而不是阿拉伯數字？",

@@ -901,8 +901,6 @@
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.name": "Всегда Показывать Лучшее Значение Последним",
   "feature.wynntils.itemStatInfo.showMaxValues.description": "Следует ли отображать максимальные значения идентификаций?",
   "feature.wynntils.itemStatInfo.showMaxValues.name": "Показать Максимальные Значения (Созданные)",
-  "feature.wynntils.itemStatInfo.showStars.description": "Следует ли печатать звёзды (*, ** или ***) на идентификациях?",
-  "feature.wynntils.itemStatInfo.showStars.name": "Показать Звёзды",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Следует ли нам нарисовать наложение предмета, показывающее уровень коркианского усилителя?",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.name": "Спецификация Уровня Коркианского Усилителя",
   "feature.wynntils.itemTextOverlay.amplifierTierRomanNumerals.description": "Следует ли использовать римские цифры вместо арабских для обозначения уровней коркианского усилителя?",

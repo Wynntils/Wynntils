@@ -718,8 +718,6 @@
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.name": "Immer den Besten Wert Zuletzt Anzeigen",
   "feature.wynntils.itemStatInfo.showMaxValues.description": "Sollten die Maximalwerte der Identifikationen angezeigt werden?",
   "feature.wynntils.itemStatInfo.showMaxValues.name": "Maximalwerte Anzeigen (Hergestellt)",
-  "feature.wynntils.itemStatInfo.showStars.description": "Sollten Sterne (*, ** oder ***) bei den Identifikationen gedruckt werden?",
-  "feature.wynntils.itemStatInfo.showStars.name": "Sterne Anzeigen",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Sollten wir eine Gegenstandsüberlagerung zeichnen, die die Stufe des corkianischen Verstärkers anzeigt?",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.name": "Corkianische Verstärkerstufen-Spezifikation",
   "feature.wynntils.itemTextOverlay.amplifierTierRomanNumerals.description": "Sollte die Überlagerung für die Stufen des corkianischen Verstärkers römische Zahlen anstelle von arabischen verwenden?",

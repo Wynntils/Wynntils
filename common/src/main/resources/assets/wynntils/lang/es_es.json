@@ -715,8 +715,6 @@
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.name": "Mostrar Siempre el Mejor Valor al Final",
   "feature.wynntils.itemStatInfo.showMaxValues.description": "¿Deberían mostrarse los valores máximos de las identificaciones?",
   "feature.wynntils.itemStatInfo.showMaxValues.name": "Mostrar Valores Máximos (Fabricados)",
-  "feature.wynntils.itemStatInfo.showStars.description": "¿Deberían imprimirse estrellas (*, ** o ***) en las identificaciones?",
-  "feature.wynntils.itemStatInfo.showStars.name": "Mostrar Estrellas",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "¿Deberíamos dibujar una superposición de objeto que muestre el nivel del amplificador corkiano?",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.name": "Especificación de Nivel de Amplificador Corkiano",
   "feature.wynntils.itemTextOverlay.amplifierTierRomanNumerals.description": "¿Debería la superposición para los niveles del amplificador corkiano usar números romanos, en lugar de arábigos?",

@@ -723,8 +723,6 @@
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.name": "Visa alltid bästa värdet sist",
   "feature.wynntils.itemStatInfo.showMaxValues.description": "Ska maxvärdena för identifieringar visas?",
   "feature.wynntils.itemStatInfo.showMaxValues.name": "Visa maxvärden (hantverkade)",
-  "feature.wynntils.itemStatInfo.showStars.description": "Ska ID:n ha stjärnor (*, ** eller ***) tryckta?",
-  "feature.wynntils.itemStatInfo.showStars.name": "Visa stjärnor",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Ska vi rita en föremålsöverläggning som visar corkians förstärkarnivå?",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.name": "Corkians förstärkarnivåspecifikation",
   "feature.wynntils.itemTextOverlay.amplifierTierRomanNumerals.description": "Ska överläggningen för corkians förstärkarnivåer använda romerska siffror istället för arabiska?",
