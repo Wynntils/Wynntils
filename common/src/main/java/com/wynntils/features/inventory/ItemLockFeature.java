@@ -31,16 +31,20 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemLockFeature extends Feature {
+    private static final String INTERACT_MODEL_DATA_KEY = "interact";
+
     @RegisterKeyBind
     private final KeyBind lockSlotKeyBind = KeyBindDefinition.LOCK_SLOT.create(this::tryChangeLockStateOnHoveredSlot);
 
@@ -93,6 +97,10 @@ public class ItemLockFeature extends Feature {
                 && Models.Item.asWynnItemProperty(event.getItemStack(), GearTypeItemProperty.class)
                         .isPresent()) {
             return;
+        } else if (event.getClickType() == ClickType.PICKUP) {
+            CustomModelData modelData = event.getItemStack().get(DataComponents.CUSTOM_MODEL_DATA);
+
+            if (modelData != null && modelData.strings().contains(INTERACT_MODEL_DATA_KEY)) return;
         }
 
         // We have to match slot.index here, because the event slot number is an index as well
