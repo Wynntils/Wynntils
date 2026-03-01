@@ -713,8 +713,6 @@
   "feature.wynntils.itemStatInfo.perfectColorThreshold.name": "Umbral de color perfecto",
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.description": "¿Deberíamos mantener consistentemente el orden [peor, mejor] en los rangos de identificación?",
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.name": "Mostrar Siempre el Mejor Valor al Final",
-  "feature.wynntils.itemStatInfo.showMaxValues.description": "¿Deberían mostrarse los valores máximos de las identificaciones?",
-  "feature.wynntils.itemStatInfo.showMaxValues.name": "Mostrar Valores Máximos (Fabricados)",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "¿Deberíamos dibujar una superposición de objeto que muestre el nivel del amplificador corkiano?",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.name": "Especificación de Nivel de Amplificador Corkiano",
   "feature.wynntils.itemTextOverlay.amplifierTierRomanNumerals.description": "¿Debería la superposición para los niveles del amplificador corkiano usar números romanos, en lugar de arábigos?",

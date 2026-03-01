@@ -852,8 +852,6 @@
   "feature.wynntils.itemStatInfo.perfectColorThreshold.name": "완벽함 색상 기준치",
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.description": "스탯 범위를 [최소, 최대] 순서로 일관되게 표시할까요?",
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.name": "좋은 값을 뒤에 배치",
-  "feature.wynntils.itemStatInfo.showMaxValues.description": "제작 아이템의 최대 스탯을 표시할까요?",
-  "feature.wynntils.itemStatInfo.showMaxValues.name": "제작 아이템 특성 최대치 표시",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "코르키안 증폭기의 등급을 표시할까요?",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.name": "코르키안 증폭기 등급 표시",
   "feature.wynntils.itemTextOverlay.amplifierTierRomanNumerals.description": "코르키안 증폭기 등급 표시를 로마 숫자로 합니다.",

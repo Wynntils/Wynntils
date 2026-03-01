@@ -713,8 +713,6 @@
   "feature.wynntils.itemStatInfo.perfectColorThreshold.name": "完美颜色阈值",
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.description": "我们是否应始终在识别范围内保持[最差，最好]的顺序？",
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.name": "始终显示最佳值在最后",
-  "feature.wynntils.itemStatInfo.showMaxValues.description": "是否应显示识别的最大值？",
-  "feature.wynntils.itemStatInfo.showMaxValues.name": "显示最大值（已制作）",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "我们是否应绘制一个显示科基放大器等级的物品覆盖？",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.name": "科基放大器等级规格",
   "feature.wynntils.itemTextOverlay.amplifierTierRomanNumerals.description": "放大器等级的覆盖是否应使用罗马数字而不是阿拉伯数字？",

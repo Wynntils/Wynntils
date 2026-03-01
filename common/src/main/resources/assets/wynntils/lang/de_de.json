@@ -716,8 +716,6 @@
   "feature.wynntils.itemStatInfo.perfectColorThreshold.name": "Perfekte Farbgrenzwert",
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.description": "Sollten wir konsequent die Reihenfolge [schlechteste, beste] in den Identifikationsbereichen beibehalten?",
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.name": "Immer den Besten Wert Zuletzt Anzeigen",
-  "feature.wynntils.itemStatInfo.showMaxValues.description": "Sollten die Maximalwerte der Identifikationen angezeigt werden?",
-  "feature.wynntils.itemStatInfo.showMaxValues.name": "Maximalwerte Anzeigen (Hergestellt)",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Sollten wir eine Gegenstandsüberlagerung zeichnen, die die Stufe des corkianischen Verstärkers anzeigt?",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.name": "Corkianische Verstärkerstufen-Spezifikation",
   "feature.wynntils.itemTextOverlay.amplifierTierRomanNumerals.description": "Sollte die Überlagerung für die Stufen des corkianischen Verstärkers römische Zahlen anstelle von arabischen verwenden?",

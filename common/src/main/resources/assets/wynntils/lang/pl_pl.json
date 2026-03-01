@@ -713,8 +713,6 @@
   "feature.wynntils.itemStatInfo.perfectColorThreshold.name": "Perfekcyjny próg kolorów",
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.description": "Czy powinniśmy konsekwentnie utrzymywać kolejność [najgorszy, najlepszy] w zakresach identyfikacji?",
   "feature.wynntils.itemStatInfo.showBestValueLastAlways.name": "Zawsze Pokaż Najlepszą Wartość na Końcu",
-  "feature.wynntils.itemStatInfo.showMaxValues.description": "Czy maksymalne wartości identyfikatorów powinny być wyświetlane?",
-  "feature.wynntils.itemStatInfo.showMaxValues.name": "Pokaż Maksymalne Wartości (Rzemieślnicze)",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.description": "Czy powinniśmy rysować nakładkę przedmiotu pokazującą poziom wzmacniacza korkiańskiego?",
   "feature.wynntils.itemTextOverlay.amplifierTierEnabled.name": "Specyfikacja Poziomu Wzmacniacza Korkiańskiego",
   "feature.wynntils.itemTextOverlay.amplifierTierRomanNumerals.description": "Czy nakładka dla poziomów wzmacniacza korkiańskiego powinna używać cyfr rzymskich zamiast arabskich?",
