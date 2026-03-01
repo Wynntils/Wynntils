@@ -25,7 +25,7 @@ public class CustomIdentificationDataTransformer extends DataTransformer<CustomI
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, CustomIdentificationsData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2 -> encodeCustomIdentificationData(data);
+            case VERSION_1, VERSION_2, VERSION_3 -> encodeCustomIdentificationData(data);
         };
     }
 
@@ -33,7 +33,7 @@ public class CustomIdentificationDataTransformer extends DataTransformer<CustomI
     public ErrorOr<CustomIdentificationsData> decodeData(
             ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1, VERSION_2 -> decodeCustomIdentificationData(byteReader);
+            case VERSION_1, VERSION_2, VERSION_3 -> decodeCustomIdentificationData(byteReader);
         };
     }
 

@@ -40,7 +40,6 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
     public ErrorOr<CraftedGearItem> decodeItem(ItemDataMap itemDataMap) {
         String name;
         GearType gearType;
-        int effectStrength;
         CappedValue durability;
         GearRequirements requirements;
         GearAttackSpeed attackSpeed = null;
@@ -63,7 +62,6 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         if (durabilityData == null) {
             return ErrorOr.error("Crafted gear item does not have durability data!");
         }
-        effectStrength = durabilityData.effectStrength();
         durability = durabilityData.durability();
 
         RequirementsData requirementsData = itemDataMap.get(RequirementsData.class);
@@ -102,13 +100,10 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
             // For crafted items, the max values can be used to calculate the current values (from the overall
             // effectiveness).
             identifications = identificationsData.possibleValues().stream()
-                    .map(statPossibleValues -> {
-                        int max = statPossibleValues.range().high();
-                        // Negative stats do not decay, they always stay at the max
-                        int value = (max <= 0) ? max : Math.round(max * effectStrength / 100f);
-
-                        return new StatActualValue(statPossibleValues.statType(), value, false);
-                    })
+                    .map(statPossibleValues -> new StatActualValue(
+                            statPossibleValues.statType(),
+                            statPossibleValues.range().high(),
+                            false))
                     .toList();
         }
 
@@ -141,6 +136,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
 
         // Required blocks
         dataList.add(new CustomGearTypeData(item.getGearType()));
+        dataList.add(new DurabilityData(item.getDurability()));
         dataList.add(new RequirementsData(item.getRequirements()));
 
         // Optional blocks

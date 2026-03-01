@@ -48,8 +48,9 @@ public record IdentificationData(
             }
 
             int value = StatCalculator.calculateStatValue(internalRoll, possibleValues);
+            boolean perfectInternalRoll = possibleValues.baseValue() > 0 ? internalRoll == 130 : internalRoll == 70;
 
-            identifications.add(new StatActualValue(statType, value, false));
+            identifications.add(new StatActualValue(statType, value, perfectInternalRoll));
         }
 
         pendingCalculations.clear();

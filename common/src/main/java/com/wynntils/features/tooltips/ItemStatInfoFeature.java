@@ -68,9 +68,6 @@ public class ItemStatInfoFeature extends Feature {
     private final Set<WynnItem> brokenItems = new HashSet<>();
 
     @Persisted
-    public final Config<Boolean> showStars = new Config<>(true);
-
-    @Persisted
     public final Config<Boolean> colorLerp = new Config<>(true);
 
     @Persisted

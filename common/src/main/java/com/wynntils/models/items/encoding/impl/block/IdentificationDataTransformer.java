@@ -30,13 +30,14 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, IdentificationData data) {
         return switch (version) {
             case VERSION_1, VERSION_2 -> encodeIdentifications(data, data.extendedEncoding());
+            case VERSION_3 -> encodeIdentificationsV3(data, data.extendedEncoding());
         };
     }
 
     @Override
     protected boolean shouldEncodeData(ItemTransformingVersion version, IdentificationData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2 -> {
+            case VERSION_1, VERSION_2, VERSION_3 -> {
                 if (data.extendedEncoding()) {
                     yield !data.identifications().isEmpty();
                 } else {
@@ -54,6 +55,7 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
             ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
             case VERSION_1, VERSION_2 -> decodeIdentifications(byteReader);
+            case VERSION_3 -> decodeIdentificationsV3(byteReader);
         };
     }
 
@@ -96,7 +98,9 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
         // Encoding an identification:
         // Each identification takes 2 bytes to encode.
         // The first byte is the numerical key of the ID.
-        // The second byte is the calculated internal roll of the item.
+        // The second byte is the internal roll marker:
+        // - 130/70 for perfect internal roll (positive/negative base values)
+        // - 100 when internal roll is unknown (non-perfect
         // Pre-identified stats are not encoded.
 
         // Encoding extended data:
@@ -182,6 +186,9 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
                 // representing the base value of the id, as of sharing.
                 bytes.addAll(List.of(baseValueBytes));
             }
+
+            int internalRoll = identification.perfectInternalRoll() ? (possibleValues.baseValue() > 0 ? 130 : 70) : 100;
+            bytes.add(UnsignedByte.of((byte) internalRoll));
         }
 
         return ErrorOr.of(bytes);
@@ -232,7 +239,7 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
                 if (preIdentified) continue;
             }
 
-            // The next byte is the calculated internal roll of the item.
+            // The next byte is the encoded internal roll marker of the item (70 or 130).
             int internalRoll = byteReader.read().value();
 
             // We might not know the possible values yet, so we store the internal roll for later
@@ -244,5 +251,136 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
 
         return ErrorOr.of(
                 new IdentificationData(identifications, possibleValuesMap, extendedData, pendingCalculations));
+    }
+
+    private ErrorOr<UnsignedByte[]> encodeIdentificationsV3(IdentificationData data, boolean extendedEncoding) {
+        List<UnsignedByte> bytes = new ArrayList<>();
+
+        if (data.identifications().size() > 255) {
+            WynntilsMod.warn("Item has more than 255 identifications!");
+            return ErrorOr.error("Cannot encode more than 255 identifications!");
+        }
+
+        byte encodedSize = (byte) data.identifications().stream()
+                .filter(stat -> {
+                    StatPossibleValues possibleValues = data.possibleValues().get(stat.statType());
+                    return possibleValues == null || !possibleValues.isPreIdentified();
+                })
+                .count();
+        bytes.add(UnsignedByte.of(encodedSize));
+        bytes.add(UnsignedByte.of((byte) (extendedEncoding ? 1 : 0)));
+
+        if (extendedEncoding) {
+            List<StatActualValue> preIdentifiedStats = data.identifications().stream()
+                    .filter(stat -> {
+                        StatPossibleValues possibleValues =
+                                data.possibleValues().get(stat.statType());
+                        return possibleValues != null && possibleValues.isPreIdentified();
+                    })
+                    .toList();
+
+            bytes.add(UnsignedByte.of((byte) preIdentifiedStats.size()));
+
+            for (StatActualValue identification : preIdentifiedStats) {
+                StatPossibleValues possibleValues = data.possibleValues().get(identification.statType());
+                Optional<Integer> idOpt = Models.Stat.getIdForStatType(identification.statType());
+                if (idOpt.isEmpty()) {
+                    WynntilsMod.warn("No ID found for stat type "
+                            + identification.statType().getApiName());
+                    return ErrorOr.error("Unable to encode stat type: "
+                            + identification.statType().getDisplayName());
+                }
+
+                bytes.add(UnsignedByte.of((byte) idOpt.get().intValue()));
+                bytes.addAll(List.of(UnsignedByteUtils.encodeVariableSizedInteger(possibleValues.baseValue())));
+            }
+        }
+
+        for (StatActualValue identification : data.identifications()) {
+            StatPossibleValues possibleValues = data.possibleValues().get(identification.statType());
+            if (possibleValues == null) {
+                WynntilsMod.warn("No possible values found for stat type "
+                        + identification.statType().getApiName());
+                return ErrorOr.error("Unable to encode stat type, no possible values for id: "
+                        + identification.statType().getDisplayName());
+            }
+            if (possibleValues.isPreIdentified()) {
+                continue;
+            }
+
+            Optional<Integer> idOpt = Models.Stat.getIdForStatType(identification.statType());
+            if (idOpt.isEmpty()) {
+                WynntilsMod.warn(
+                        "No ID found for stat type " + identification.statType().getApiName());
+                return ErrorOr.error("Unable to encode stat type: "
+                        + identification.statType().getDisplayName());
+            }
+
+            bytes.add(UnsignedByte.of((byte) idOpt.get().intValue()));
+
+            if (extendedEncoding) {
+                bytes.addAll(List.of(UnsignedByteUtils.encodeVariableSizedInteger(possibleValues.baseValue())));
+            }
+
+            bytes.addAll(List.of(UnsignedByteUtils.encodeVariableSizedInteger(identification.value())));
+
+            int perfectMarker =
+                    identification.perfectInternalRoll() ? (possibleValues.baseValue() > 0 ? 130 : 70) : 100;
+            bytes.add(UnsignedByte.of((byte) perfectMarker));
+        }
+
+        return ErrorOr.of(bytes.toArray(new UnsignedByte[0]));
+    }
+
+    private ErrorOr<IdentificationData> decodeIdentificationsV3(ArrayReader<UnsignedByte> byteReader) {
+        List<StatActualValue> identifications = new ArrayList<>();
+        List<StatPossibleValues> possibleValues = new ArrayList<>();
+
+        int identificationCount = byteReader.read().value();
+        boolean extendedData = byteReader.read().value() == 1;
+
+        int preIdentifiedCount = 0;
+        if (extendedData) {
+            preIdentifiedCount = byteReader.read().value();
+        }
+
+        for (int i = 0; i < preIdentifiedCount + identificationCount; i++) {
+            int id = byteReader.read().value();
+
+            Optional<StatType> statTypeOpt = Models.Stat.getStatTypeForId(id);
+            if (statTypeOpt.isEmpty()) {
+                WynntilsMod.warn("No stat type found for id " + id);
+                return ErrorOr.error("Unable to decode stat type for id: " + id);
+            }
+
+            StatType statType = statTypeOpt.get();
+            boolean preIdentified = i < preIdentifiedCount;
+
+            if (extendedData) {
+                int baseValue = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
+                RangedValue range = StatCalculator.calculatePossibleValuesRange(baseValue, preIdentified, statType);
+                StatPossibleValues possibleValue = new StatPossibleValues(statType, range, baseValue, preIdentified);
+                possibleValues.add(possibleValue);
+
+                if (preIdentified) {
+                    continue;
+                }
+            }
+
+            int value = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
+            int perfectMarker = byteReader.read().value();
+
+            boolean positiveBase = extendedData
+                    ? possibleValues.stream().anyMatch(p -> p.statType().equals(statType) && p.baseValue() > 0)
+                    : value > 0;
+            boolean perfectInternalRoll = positiveBase ? perfectMarker == 130 : perfectMarker == 70;
+
+            identifications.add(new StatActualValue(statType, value, perfectInternalRoll));
+        }
+
+        HashMap<StatType, StatPossibleValues> possibleValuesMap = possibleValues.stream()
+                .collect(HashMap::new, (map, value) -> map.put(value.statType(), value), HashMap::putAll);
+
+        return ErrorOr.of(new IdentificationData(identifications, possibleValuesMap, extendedData, new HashMap<>()));
     }
 }
