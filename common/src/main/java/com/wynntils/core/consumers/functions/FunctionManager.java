@@ -458,7 +458,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new MathFunctions.StddevFunction());
         registerFunction(new MathFunctions.SubtractFunction());
         registerFunction(new MathFunctions.TanFunction());
-        registerFunction(new MathFunctions.TruncFunction());
         registerFunction(new MathFunctions.VarianceFunction());
         registerFunction(new MathFunctions.WrapFunction());
 
@@ -477,6 +476,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.LeadingZerosFunction());
         registerFunction(new StringFunctions.ParseDoubleFunction());
         registerFunction(new StringFunctions.ParseIntegerFunction());
+        registerFunction(new StringFunctions.ParseLongFunction());
         registerFunction(new StringFunctions.RegexFindFunction());
         registerFunction(new StringFunctions.RegexMatchFunction());
         registerFunction(new StringFunctions.RegexReplaceFunction());

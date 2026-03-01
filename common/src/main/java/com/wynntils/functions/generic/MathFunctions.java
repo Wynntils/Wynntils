@@ -269,18 +269,6 @@ public final class MathFunctions {
         }
     }
 
-    public static class TruncFunction extends GenericFunction<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            return arguments.getArgument("value").getDoubleValue().longValue();
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class, null)));
-        }
-    }
-
     public static class SignFunction extends GenericFunction<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
