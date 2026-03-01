@@ -28,20 +28,13 @@ public class TomeItem extends GameItem
                 GearTypeItemProperty,
                 RerollableItemProperty,
                 LeveledItemProperty,
-                IdentifiableItemProperty<TomeInfo, TomeInstance>,
-                PagedItemProperty {
+                IdentifiableItemProperty<TomeInfo, TomeInstance> {
     private final TomeInfo tomeInfo;
     private final TomeInstance tomeInstance;
-    private final int currentPage;
-
-    public TomeItem(TomeInfo tomeInfo, TomeInstance tomeInstance, int currentPage) {
-        this.tomeInfo = tomeInfo;
-        this.tomeInstance = tomeInstance;
-        this.currentPage = currentPage;
-    }
 
     public TomeItem(TomeInfo tomeInfo, TomeInstance tomeInstance) {
-        this(tomeInfo, tomeInstance, 0);
+        this.tomeInfo = tomeInfo;
+        this.tomeInstance = tomeInstance;
     }
 
     @Override
@@ -126,11 +119,6 @@ public class TomeItem extends GameItem
     @Override
     public float getOverallPercentage() {
         return tomeInstance != null ? tomeInstance.getOverallPercentage() : 0.0f;
-    }
-
-    @Override
-    public int currentPage() {
-        return currentPage;
     }
 
     @Override
