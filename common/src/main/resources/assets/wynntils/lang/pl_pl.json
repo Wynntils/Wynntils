@@ -459,8 +459,6 @@
   "feature.wynntils.extendedSeasonLeaderboard.useShortSeasonRankingStrings.name": "Użyj Krótkich Ciągów dla Rankingów Sezonowych",
   "feature.wynntils.filterAdminCommands.description": "Filtruje polecenia administratora z automatycznego uzupełniania poleceń.",
   "feature.wynntils.filterAdminCommands.name": "Filtruj Polecenia Administratora",
-  "feature.wynntils.fixCastingSpellsFromInventory.description": "Naprawia błąd, w którym można przypadkowo rzucać zaklęcia z ekwipunku.",
-  "feature.wynntils.fixCastingSpellsFromInventory.name": "Blokuj Rzucanie Zaklęć z Ekwipunku",
   "feature.wynntils.fixPacketBugs.description": "Naprawia błędy pakietów, które spamują dzienniki.",
   "feature.wynntils.fixPacketBugs.name": "Naprawa Błędów Pakietów",
   "feature.wynntils.fixSpellOverwrite.name": "Naprawa Nadpisywania Zaklęć",

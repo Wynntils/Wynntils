@@ -459,8 +459,6 @@
   "feature.wynntils.extendedSeasonLeaderboard.useShortSeasonRankingStrings.name": "Utiliser des Chaînes Courtes pour le Classement de Saison",
   "feature.wynntils.filterAdminCommands.description": "Filtre les commandes administratives de l'auto-complétion des commandes.",
   "feature.wynntils.filterAdminCommands.name": "Filtrer les Commandes Admin",
-  "feature.wynntils.fixCastingSpellsFromInventory.description": "Corrige le bug où vous pouvez lancer des sorts accidentellement depuis votre inventaire.",
-  "feature.wynntils.fixCastingSpellsFromInventory.name": "Bloquer le Lancement depuis l'Inventaire",
   "feature.wynntils.fixPacketBugs.description": "Corrige les bugs de paquets qui spamment les journaux.",
   "feature.wynntils.fixPacketBugs.name": "Corriger les Bugs de Paquets",
   "feature.wynntils.fixSpellOverwrite.name": "Corriger le Remplacement de Sorts",

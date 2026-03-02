@@ -547,8 +547,6 @@
   "feature.wynntils.extendedSeasonLeaderboard.useShortSeasonRankingStrings.name": "시즌 리더보드 단축 표현",
   "feature.wynntils.filterAdminCommands.description": "명령어 자동 완성에서 관리자 권한 명령어를 필터링합니다.",
   "feature.wynntils.filterAdminCommands.name": "관리자 권한 명령어 필터",
-  "feature.wynntils.fixCastingSpellsFromInventory.description": "인벤토리를 열었을 때 주문이 발동하는 버그를 수정합니다.",
-  "feature.wynntils.fixCastingSpellsFromInventory.name": "인벤토리 주문 발동 방지",
   "feature.wynntils.fixCrosshairPosition.description": "특정 GUI 크기에서 십자선이 중앙을 벗어나는 버그 수정",
   "feature.wynntils.fixCrosshairPosition.name": "십자선 위치 수정",
   "feature.wynntils.fixPacketBugs.description": "패킷 관련 버그로 인한 반복적 게임 로그 기록을 방지합니다.",
