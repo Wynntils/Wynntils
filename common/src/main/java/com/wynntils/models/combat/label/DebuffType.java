@@ -25,7 +25,7 @@ public enum DebuffType {
     TRICK('\uE03A', CustomColor.fromInt(0x6AFA65)),
     WEAKNESS('⚔', ChatFormatting.RED),
     WHIPPED('⇶', ChatFormatting.GOLD),
-    WINDED('≈', ChatFormatting.DARK_AQUA);
+    CRYSTALLIZED('\uE045', CustomColor.fromInt(0xB6FBFC));
 
     private final char symbol;
     private final CustomColor color;
