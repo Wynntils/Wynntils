@@ -131,10 +131,7 @@ public final class ItemTransformerRegistry {
     // FIXME: This could be much more sophisticated in the future,
     //        e.g. by requesting the minimum versions required from each transformer instead.
     private static ItemTransformingVersion getEncodingVersionAccordingToItem(WynnItem wynnItem) {
-        ItemTransformingVersion versionToEncodeWith = ItemTransformingVersion.VERSION_1;
-        if (wynnItem instanceof IdentifiableItemProperty || wynnItem instanceof CraftedGearItem) {
-            versionToEncodeWith = ItemTransformingVersion.VERSION_3;
-        }
+        ItemTransformingVersion versionToEncodeWith = ItemTransformingVersion.VERSION_3;
         return versionToEncodeWith;
     }
 
