@@ -15,6 +15,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.containers.containers.EmeraldPouchContainer;
 import com.wynntils.models.containers.containers.personal.PersonalStorageContainer;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.screens.bulkbuy.widgets.BulkBuyWidget;
@@ -60,6 +61,9 @@ public class InventoryEmeraldCountFeature extends Feature {
     @Persisted
     private final Config<Boolean> combineInventoryAndContainer = new Config<>(false);
 
+    @Persisted
+    private final Config<Boolean> smartEmeraldPouchRendering = new Config<>(true);
+
     public InventoryEmeraldCountFeature() {
         super(ProfileDefault.onlyDefault());
     }
@@ -74,6 +78,8 @@ public class InventoryEmeraldCountFeature extends Feature {
         // and all there is if we combine them, otherwise it is just the
         // container
         boolean isInventory = (event.getScreen().getMenu().containerId == 0);
+        boolean applySmartPouch = Models.Container.getCurrentContainer() instanceof EmeraldPouchContainer
+                && smartEmeraldPouchRendering.get();
         int topEmeralds;
         if (isInventory) {
             if (!showInventoryEmeraldCount.get()) return;
@@ -81,7 +87,9 @@ public class InventoryEmeraldCountFeature extends Feature {
         } else {
             topEmeralds = 0;
             if (showContainerEmeraldCount.get()) topEmeralds += Models.Emerald.getAmountInContainer();
-            if (combineInventoryAndContainer.get() && showInventoryEmeraldCount.get()) {
+            // When smart pouch rendering is active, we always show container and inventory separately, so don't combine
+            // them into the top count
+            if (!applySmartPouch && combineInventoryAndContainer.get() && showInventoryEmeraldCount.get()) {
                 topEmeralds += Models.Emerald.getAmountInInventory();
             }
         }
@@ -109,8 +117,16 @@ public class InventoryEmeraldCountFeature extends Feature {
         // endregion
 
         int bottomEmeralds = Models.Emerald.getAmountInInventory();
+
+        // When in an Emerald Pouch with smart rendering, subtract the pouch's value
+        // from the inventory count to avoid duplication (the pouch's emeralds are already
+        // shown in the container count above)
+        if (applySmartPouch) {
+            bottomEmeralds = Math.max(0, bottomEmeralds - Models.Emerald.getAmountInContainer());
+        }
+
         boolean displayBottom = !isInventory
-                && !combineInventoryAndContainer.get()
+                && (applySmartPouch || !combineInventoryAndContainer.get())
                 && showInventoryEmeraldCount.get()
                 && bottomEmeralds != 0;
         if (topEmeralds != 0) {
