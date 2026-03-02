@@ -459,8 +459,6 @@
   "feature.wynntils.extendedSeasonLeaderboard.useShortSeasonRankingStrings.name": "Usa Stringhe Brevi per Classifiche Stagionali",
   "feature.wynntils.filterAdminCommands.description": "Filtra i comandi amministrativi dall'autocompletamento dei comandi.",
   "feature.wynntils.filterAdminCommands.name": "Filtra Comandi Amministrativi",
-  "feature.wynntils.fixCastingSpellsFromInventory.description": "Corregge il bug in cui puoi lanciare incantesimi accidentalmente dal tuo inventario.",
-  "feature.wynntils.fixCastingSpellsFromInventory.name": "Blocca Lancio da Inventario",
   "feature.wynntils.fixPacketBugs.description": "Corregge i bug dei pacchetti che riempiono i registri di spam.",
   "feature.wynntils.fixPacketBugs.name": "Correggi Bug dei Pacchetti",
   "feature.wynntils.fixSpellOverwrite.name": "Correggi Sovrascrittura Incantesimi",

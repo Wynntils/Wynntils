@@ -462,8 +462,6 @@
   "feature.wynntils.extendedSeasonLeaderboard.useShortSeasonRankingStrings.name": "Kurze Saison-Ranglisten verwenden",
   "feature.wynntils.filterAdminCommands.description": "Filtert Admin-Befehle aus der Befehls-Autovervollständigung.",
   "feature.wynntils.filterAdminCommands.name": "Admin-Befehle filtern",
-  "feature.wynntils.fixCastingSpellsFromInventory.description": "Behebt den Fehler, bei dem man versehentlich Zauber aus dem Inventar wirken kann.",
-  "feature.wynntils.fixCastingSpellsFromInventory.name": "Inventar-Zaubern blockieren",
   "feature.wynntils.fixPacketBugs.description": "Behebt Paketfehler, die Protokolle zuspammen.",
   "feature.wynntils.fixPacketBugs.name": "Paketfehler beheben",
   "feature.wynntils.fixSpellOverwrite.name": "Zauberüberschreibung beheben",

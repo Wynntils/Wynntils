@@ -459,8 +459,6 @@
   "feature.wynntils.extendedSeasonLeaderboard.useShortSeasonRankingStrings.name": "使用简短赛季排名字符串",
   "feature.wynntils.filterAdminCommands.description": "从命令自动完成中过滤管理员命令。",
   "feature.wynntils.filterAdminCommands.name": "过滤管理员命令",
-  "feature.wynntils.fixCastingSpellsFromInventory.description": "修复了可以从库存中意外施放法术的错误。",
-  "feature.wynntils.fixCastingSpellsFromInventory.name": "阻止从库存施法",
   "feature.wynntils.fixPacketBugs.description": "修复了垃圾邮件日志的包错误。",
   "feature.wynntils.fixPacketBugs.name": "修复包错误",
   "feature.wynntils.fixSpellOverwrite.name": "修复法术覆盖",

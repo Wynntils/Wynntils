@@ -576,8 +576,6 @@
   "feature.wynntils.extendedSeasonLeaderboard.useShortSeasonRankingStrings.name": "Использовать короткие строки для рейтингов сезона",
   "feature.wynntils.filterAdminCommands.description": "Фильтрует команды администратора из автозаполнения команд.",
   "feature.wynntils.filterAdminCommands.name": "Фильтр команд администратора",
-  "feature.wynntils.fixCastingSpellsFromInventory.description": "Исправляет ошибку, когда вы можете случайно использовать заклинания из инвентаря.",
-  "feature.wynntils.fixCastingSpellsFromInventory.name": "Блокировка заклинаний из инвентаря",
   "feature.wynntils.fixCrosshairPosition.description": "Исправляет ошибку, когда прицел может быть смещен по центру на определенных масштабах GUI.",
   "feature.wynntils.fixCrosshairPosition.name": "Исправить позицию прицела",
   "feature.wynntils.fixPacketBugs.description": "Исправляет ошибки пакетов, которые засоряют логи.",

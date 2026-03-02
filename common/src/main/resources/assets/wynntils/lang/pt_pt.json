@@ -459,8 +459,6 @@
   "feature.wynntils.extendedSeasonLeaderboard.useShortSeasonRankingStrings.name": "Usar Strings Curtas para Classificações de Temporada",
   "feature.wynntils.filterAdminCommands.description": "Filtra comandos de administrador da auto-completação de comandos.",
   "feature.wynntils.filterAdminCommands.name": "Filtrar Comandos de Administrador",
-  "feature.wynntils.fixCastingSpellsFromInventory.description": "Corrige o bug onde você pode lançar feitiços acidentalmente do seu inventário.",
-  "feature.wynntils.fixCastingSpellsFromInventory.name": "Bloquear Lançamento do Inventário",
   "feature.wynntils.fixPacketBugs.description": "Corrige bugs de pacotes que enchem os logs de spam.",
   "feature.wynntils.fixPacketBugs.name": "Corrigir Bugs de Pacotes",
   "feature.wynntils.fixSpellOverwrite.name": "Corrigir Sobrescrita de Feitiços",

@@ -459,8 +459,6 @@
   "feature.wynntils.extendedSeasonLeaderboard.useShortSeasonRankingStrings.name": "Usar Cadenas Cortas para Clasificación de Temporada",
   "feature.wynntils.filterAdminCommands.description": "Filtra los comandos de administrador del autocompletado de comandos.",
   "feature.wynntils.filterAdminCommands.name": "Filtrar Comandos de Administrador",
-  "feature.wynntils.fixCastingSpellsFromInventory.description": "Corrige el error donde puedes lanzar hechizos accidentalmente desde tu inventario.",
-  "feature.wynntils.fixCastingSpellsFromInventory.name": "Bloquear Lanzamiento desde Inventario",
   "feature.wynntils.fixPacketBugs.description": "Corrige errores de paquetes que llenan los registros de spam.",
   "feature.wynntils.fixPacketBugs.name": "Corregir Errores de Paquetes",
   "feature.wynntils.fixSpellOverwrite.name": "Corregir Sobrescritura de Hechizos",
