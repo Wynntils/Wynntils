@@ -606,8 +606,6 @@
   "feature.wynntils.extendedSeasonLeaderboard.useShortSeasonRankingStrings.name": "Use Short Season Ranking Strings",
   "feature.wynntils.filterAdminCommands.description": "Filters admin commands from the command auto completion.",
   "feature.wynntils.filterAdminCommands.name": "Filter Admin Commands",
-  "feature.wynntils.fixCastingSpellsFromInventory.description": "Fixes the bug where you can accidentally cast spells from your inventory.",
-  "feature.wynntils.fixCastingSpellsFromInventory.name": "Block Inventory Casting",
   "feature.wynntils.fixCrosshairPosition.description": "Fixes the bug where the crosshair may be off-center on certain GUI scales.",
   "feature.wynntils.fixCrosshairPosition.name": "Fix Crosshair Position",
   "feature.wynntils.fixPacketBugs.description": "Fixes packet bugs that spam logs.",

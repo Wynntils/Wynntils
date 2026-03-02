@@ -32,7 +32,6 @@ import com.wynntils.features.combat.AutoAttackFeature;
 import com.wynntils.features.combat.ChestBlockerFeature;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
-import com.wynntils.features.combat.FixCastingSpellsFromInventoryFeature;
 import com.wynntils.features.combat.HealthPotionBlockerFeature;
 import com.wynntils.features.combat.HideLabelsFeature;
 import com.wynntils.features.combat.HorseMountFeature;
@@ -237,7 +236,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new ChestBlockerFeature());
         registerFeature(new ContentTrackerFeature());
         registerFeature(new CustomLootrunBeaconsFeature());
-        registerFeature(new FixCastingSpellsFromInventoryFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HideLabelsFeature());
         registerFeature(new HorseMountFeature());
