@@ -27,7 +27,6 @@ public enum DebuffType {
     WEAKNESS('⚔', ChatFormatting.RED),
     WHIPPED('⇶', ChatFormatting.GOLD);
 
-
     private final char symbol;
     private final CustomColor color;
     private final String friendlyName;
