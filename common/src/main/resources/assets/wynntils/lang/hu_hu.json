@@ -459,8 +459,6 @@
   "feature.wynntils.extendedSeasonLeaderboard.useShortSeasonRankingStrings.name": "Rövid Évad Rangsor Szövegek Használata",
   "feature.wynntils.filterAdminCommands.description": "Szűri az admin parancsokat az automatikus parancskiegészítésből.",
   "feature.wynntils.filterAdminCommands.name": "Admin Parancsok Szűrése",
-  "feature.wynntils.fixCastingSpellsFromInventory.description": "Javítja azt a hibát, amikor véletlenül varázslatokat idézhet meg az eszköztárból.",
-  "feature.wynntils.fixCastingSpellsFromInventory.name": "Varázslatok Blokkolása az Eszköztárból",
   "feature.wynntils.fixPacketBugs.description": "Javítja a csomaghibákat, amelyek elárasztják a naplókat.",
   "feature.wynntils.fixPacketBugs.name": "Csomaghibák Javítása",
   "feature.wynntils.fixSpellOverwrite.name": "Varázslat Felülírás Javítása",

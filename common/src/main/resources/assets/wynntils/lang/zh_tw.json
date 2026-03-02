@@ -459,8 +459,6 @@
   "feature.wynntils.extendedSeasonLeaderboard.useShortSeasonRankingStrings.name": "使用簡短賽季排名字串",
   "feature.wynntils.filterAdminCommands.description": "從命令自動完成中過濾管理員命令。",
   "feature.wynntils.filterAdminCommands.name": "過濾管理員命令",
-  "feature.wynntils.fixCastingSpellsFromInventory.description": "修復了可以從庫存中意外施放法術的錯誤。",
-  "feature.wynntils.fixCastingSpellsFromInventory.name": "阻止從庫存施法",
   "feature.wynntils.fixPacketBugs.description": "修復了垃圾郵件日誌的包錯誤。",
   "feature.wynntils.fixPacketBugs.name": "修復包錯誤",
   "feature.wynntils.fixSpellOverwrite.name": "修復法術覆蓋",

@@ -467,8 +467,6 @@
   "feature.wynntils.extendedSeasonLeaderboard.useShortSeasonRankingStrings.name": "Använd korta säsongsrankningssträngar",
   "feature.wynntils.filterAdminCommands.description": "Filtrerar bort admin-kommandon från kommandots automatkomplettering.",
   "feature.wynntils.filterAdminCommands.name": "Filtrera admin-kommandon",
-  "feature.wynntils.fixCastingSpellsFromInventory.description": "Åtgärdar buggen där du av misstag kan kasta trollformler från ditt inventarium.",
-  "feature.wynntils.fixCastingSpellsFromInventory.name": "Blockera kastning från inventariet",
   "feature.wynntils.fixPacketBugs.description": "Åtgärdar paketbuggar som spammar loggar.",
   "feature.wynntils.fixPacketBugs.name": "Åtgärda paketbuggar",
   "feature.wynntils.fixSpellOverwrite.name": "Åtgärda överskrivning av trollformler",

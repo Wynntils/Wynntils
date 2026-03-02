@@ -459,8 +459,6 @@
   "feature.wynntils.extendedSeasonLeaderboard.useShortSeasonRankingStrings.name": "Gebruik Korte Seizoensranglijst Strings",
   "feature.wynntils.filterAdminCommands.description": "Filtert admin-opdrachten uit de automatische opdrachtvoltooiing.",
   "feature.wynntils.filterAdminCommands.name": "Filter Admin Opdrachten",
-  "feature.wynntils.fixCastingSpellsFromInventory.description": "Verhelpt de bug waarbij je per ongeluk spreuken vanuit je inventaris kunt uitspreken.",
-  "feature.wynntils.fixCastingSpellsFromInventory.name": "Blokkeer Spreuken vanuit Inventaris",
   "feature.wynntils.fixPacketBugs.description": "Verhelpt pakketfouten die logs overspoelen.",
   "feature.wynntils.fixPacketBugs.name": "Pakketfouten Oplossen",
   "feature.wynntils.fixSpellOverwrite.name": "Spreuk Overschrijven Herstellen",
