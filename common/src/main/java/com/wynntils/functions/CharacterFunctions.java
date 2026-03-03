@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.character.type.VehicleType;
+import com.wynntils.models.characterstats.type.PowderSpecialInfo;
 import com.wynntils.models.objectives.WynnObjective;
 import com.wynntils.services.leaderboard.type.LeaderboardType;
 import com.wynntils.utils.mc.McUtils;
@@ -429,6 +430,15 @@ public class CharacterFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new Argument<>("leaderboardKey", String.class, null)));
+        }
+    }
+
+    public static class PowderSpecialChargeFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            Optional<PowderSpecialInfo> powderSpecialInfoOpt = Models.CharacterStats.getPowderSpecialInfo();
+            if (powderSpecialInfoOpt.isEmpty()) return CappedValue.EMPTY;
+            return CappedValue.fromProgress(powderSpecialInfoOpt.get().charge(), 100);
         }
     }
 }
