@@ -501,6 +501,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.ClassFunction());
         registerFunction(new CharacterFunctions.CommanderActivatedFunction());
         registerFunction(new CharacterFunctions.CommanderDurationFunction());
+        registerFunction(new CharacterFunctions.CappedDistortionFunction());
         registerFunction(new CharacterFunctions.EquippedAspectFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveGoalFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveEventBonusFunction());
