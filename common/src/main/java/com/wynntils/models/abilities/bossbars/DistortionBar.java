@@ -17,6 +17,10 @@ public final class DistortionBar extends TrackedBar {
         super(DISTORTION_PATTERN);
     }
 
+    public int getCurrent() {
+        return current;
+    }
+
     @Override
     public void onUpdateName(Matcher match) {
         try {

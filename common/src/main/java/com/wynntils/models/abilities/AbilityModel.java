@@ -40,7 +40,7 @@ public final class AbilityModel extends Model {
 
     public static final TrackedBar corruptedBar = new CorruptedBar();
 
-    public static final TrackedBar distortionBar = new DistortionBar();
+    public static final DistortionBar distortionBar = new DistortionBar();
 
     public static final TrackedBar focusBar = new FocusBar();
 
