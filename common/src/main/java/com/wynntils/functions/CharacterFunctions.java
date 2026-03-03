@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -429,6 +429,15 @@ public class CharacterFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new Argument<>("leaderboardKey", String.class, null)));
+        }
+    }
+
+    public static class CappedDistortionFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Ability.distortionBar.isActive()
+                    ? Models.Ability.distortionBar.getBarProgress().value()
+                    : CappedValue.EMPTY;
         }
     }
 }
