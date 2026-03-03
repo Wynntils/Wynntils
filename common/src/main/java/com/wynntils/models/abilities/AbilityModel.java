@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities;
@@ -13,6 +13,7 @@ import com.wynntils.models.abilities.bossbars.AwakenedBar;
 import com.wynntils.models.abilities.bossbars.BloodPoolBar;
 import com.wynntils.models.abilities.bossbars.CommanderBar;
 import com.wynntils.models.abilities.bossbars.CorruptedBar;
+import com.wynntils.models.abilities.bossbars.DistortionBar;
 import com.wynntils.models.abilities.bossbars.FocusBar;
 import com.wynntils.models.abilities.bossbars.HolyPowerBar;
 import com.wynntils.models.abilities.bossbars.ManaBankBar;
@@ -27,25 +28,29 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class AbilityModel extends Model {
     private static final Pattern HUMMINGBIRD_SENT_PATTERN =
             Pattern.compile("§e((\uE008\uE002)|\uE001) You sent your hummingbirds to attack!$");
+
     private static final Pattern HUMMINGBIRD_RETURN_PATTERN =
             Pattern.compile("§e((\uE008\uE002)|\uE001) Your hummingbirds have returned to you!$");
-    public static final TrackedBar manaBankBar = new ManaBankBar();
-
-    public static final TrackedBar bloodPoolBar = new BloodPoolBar();
 
     public static final TrackedBar awakenedBar = new AwakenedBar();
 
-    public static final TrackedBar focusBar = new FocusBar();
-
-    public static final TrackedBar corruptedBar = new CorruptedBar();
-
-    public static final OphanimBar ophanimBar = new OphanimBar();
-
-    public static final TrackedBar holyPowerBar = new HolyPowerBar();
+    public static final TrackedBar bloodPoolBar = new BloodPoolBar();
 
     public static final CommanderBar commanderBar = new CommanderBar();
 
+    public static final TrackedBar corruptedBar = new CorruptedBar();
+
+    public static final TrackedBar distortionBar = new DistortionBar();
+
+    public static final TrackedBar focusBar = new FocusBar();
+
+    public static final TrackedBar holyPowerBar = new HolyPowerBar();
+
+    public static final TrackedBar manaBankBar = new ManaBankBar();
+
     public static final MomentumBar momentumBar = new MomentumBar();
+
+    public static final OphanimBar ophanimBar = new OphanimBar();
 
     public boolean hummingBirdsState = false;
 
@@ -54,6 +59,7 @@ public final class AbilityModel extends Model {
             bloodPoolBar,
             commanderBar,
             corruptedBar,
+            distortionBar,
             focusBar,
             holyPowerBar,
             manaBankBar,
