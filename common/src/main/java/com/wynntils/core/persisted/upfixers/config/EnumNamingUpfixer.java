@@ -51,10 +51,11 @@ public class EnumNamingUpfixer implements Upfixer {
 
     private static final class EnumConverterFactory<E extends Enum<E>> implements TypeAdapterFactory {
         @Override
+        @SuppressWarnings("unchecked")
         public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
             if (!type.getRawType().isEnum()) return null;
 
-            Class<E> enumClazz = (Class<E>) type.getRawType();
+            Class<E> enumClazz = (Class<E>) (Class<?>) type.getRawType();
             return (TypeAdapter<T>) new EnumConverter<>(enumClazz);
         }
     }
@@ -73,9 +74,15 @@ public class EnumNamingUpfixer implements Upfixer {
 
         @Override
         public T read(JsonReader in) throws IOException {
-            if (in.peek() != JsonToken.STRING) {
+            JsonToken token = in.peek();
+            if (token == JsonToken.NULL) {
                 in.nextNull();
                 return null;
+            }
+            if (token != JsonToken.STRING) {
+                WynntilsMod.warn("Invalid json type " + token + " for enum " + enumClazz.getName());
+                in.skipValue();
+                return replacement();
             }
 
             String jsonString = in.nextString();
