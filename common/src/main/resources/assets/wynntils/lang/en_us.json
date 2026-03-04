@@ -2585,6 +2585,8 @@
   "function.wynntils.playerName.name": "Player Name",
   "function.wynntils.playerUuid.description": "Your UUID",
   "function.wynntils.playerUuid.name": "Player UUID",
+  "function.wynntils.powderSpecialCharge.description": "The percent of charge of your powder special",
+  "function.wynntils.powderSpecialCharge.name": "Powder special charge",
   "function.wynntils.professionLevel.argument.profession": "The profession to check",
   "function.wynntils.professionLevel.description": "The level of the specified profession",
   "function.wynntils.professionLevel.name": "Profession Level",
