@@ -9,8 +9,6 @@ import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.consumers.functions.arguments.ListArgument;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -269,18 +267,6 @@ public final class MathFunctions {
         }
     }
 
-    public static class SignFunction extends GenericFunction<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return (int) Math.signum(arguments.getArgument("value").getDoubleValue());
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class, null)));
-        }
-    }
-
     public static class ClampFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
@@ -325,127 +311,6 @@ public final class MathFunctions {
         }
     }
 
-    public static class SinFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Math.sin(arguments.getArgument("radians").getDoubleValue());
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("radians", Number.class, null)));
-        }
-    }
-
-    public static class CosFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Math.cos(arguments.getArgument("radians").getDoubleValue());
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("radians", Number.class, null)));
-        }
-    }
-
-    public static class TanFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Math.tan(arguments.getArgument("radians").getDoubleValue());
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("radians", Number.class, null)));
-        }
-    }
-
-    public static class AsinFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Math.asin(arguments.getArgument("value").getDoubleValue());
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class, null)));
-        }
-    }
-
-    public static class AcosFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Math.acos(arguments.getArgument("value").getDoubleValue());
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class, null)));
-        }
-    }
-
-    public static class AtanFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Math.atan(arguments.getArgument("value").getDoubleValue());
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class, null)));
-        }
-    }
-
-    public static class AtanTwoFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Math.atan2(
-                    arguments.getArgument("y").getDoubleValue(),
-                    arguments.getArgument("x").getDoubleValue());
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("y", Number.class, null), new Argument<>("x", Number.class, null)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("atanxy");
-        }
-    }
-
-    public static class RadFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Math.toRadians(arguments.getArgument("degrees").getDoubleValue());
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("degrees", Number.class, null)));
-        }
-    }
-
-    public static class DegFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Math.toDegrees(arguments.getArgument("radians").getDoubleValue());
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("radians", Number.class, null)));
-        }
-    }
-
     public static class LnFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
@@ -474,81 +339,6 @@ public final class MathFunctions {
         }
     }
 
-    public static class ExpFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Math.exp(arguments.getArgument("value").getDoubleValue());
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class, null)));
-        }
-    }
-
-    public static class LerpFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            double start = arguments.getArgument("start").getDoubleValue();
-            double end = arguments.getArgument("end").getDoubleValue();
-            double t = arguments.getArgument("t").getDoubleValue();
-
-            return start + (end - start) * t;
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("start", Number.class, null),
-                    new Argument<>("end", Number.class, null),
-                    new Argument<>("t", Number.class, null)));
-        }
-    }
-
-    public static class InvLerpFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            double value = arguments.getArgument("value").getDoubleValue();
-            double start = arguments.getArgument("start").getDoubleValue();
-            double end = arguments.getArgument("end").getDoubleValue();
-            double width = end - start;
-            if (width == 0d) return 0d;
-
-            return (value - start) / width;
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", Number.class, null),
-                    new Argument<>("start", Number.class, null),
-                    new Argument<>("end", Number.class, null)));
-        }
-    }
-
-    public static class SmoothstepFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            double value = arguments.getArgument("value").getDoubleValue();
-            double start = arguments.getArgument("start").getDoubleValue();
-            double end = arguments.getArgument("end").getDoubleValue();
-            double width = end - start;
-            if (width == 0d) return 0d;
-
-            double t = (value - start) / width;
-            t = Math.max(0d, Math.min(1d, t));
-            return t * t * (3d - 2d * t);
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", Number.class, null),
-                    new Argument<>("start", Number.class, null),
-                    new Argument<>("end", Number.class, null)));
-        }
-    }
-
     public static class MapFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
@@ -561,34 +351,6 @@ public final class MathFunctions {
             if (inWidth == 0d) return outMin;
 
             return outMin + ((value - inMin) * (outMax - outMin) / inWidth);
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", Number.class, null),
-                    new Argument<>("inMin", Number.class, null),
-                    new Argument<>("inMax", Number.class, null),
-                    new Argument<>("outMin", Number.class, null),
-                    new Argument<>("outMax", Number.class, null)));
-        }
-    }
-
-    public static class MapClampedFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            double value = arguments.getArgument("value").getDoubleValue();
-            double inMin = arguments.getArgument("inMin").getDoubleValue();
-            double inMax = arguments.getArgument("inMax").getDoubleValue();
-            double outMin = arguments.getArgument("outMin").getDoubleValue();
-            double outMax = arguments.getArgument("outMax").getDoubleValue();
-            double inWidth = inMax - inMin;
-            if (inWidth == 0d) return outMin;
-
-            double remapped = outMin + ((value - inMin) * (outMax - outMin) / inWidth);
-            double lower = Math.min(outMin, outMax);
-            double upper = Math.max(outMin, outMax);
-            return Math.max(lower, Math.min(upper, remapped));
         }
 
         @Override
@@ -622,143 +384,6 @@ public final class MathFunctions {
                     new Argument<>("value", Number.class, null),
                     new Argument<>("min", Number.class, null),
                     new Argument<>("max", Number.class, null)));
-        }
-    }
-
-    public static class AvgFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            List<Number> values = arguments.getArgument("values").getNumberList();
-            if (values.isEmpty()) return 0d;
-
-            return values.stream().mapToDouble(Number::doubleValue).average().orElse(0d);
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new ListArgument<>("values", Number.class)));
-        }
-    }
-
-    public static class MedianFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            List<Number> rawValues = arguments.getArgument("values").getNumberList();
-            if (rawValues.isEmpty()) return 0d;
-
-            List<Double> values =
-                    new ArrayList<>(rawValues.stream().map(Number::doubleValue).toList());
-            values.sort(Comparator.naturalOrder());
-
-            int middleIndex = values.size() / 2;
-            if (values.size() % 2 == 1) {
-                return values.get(middleIndex);
-            }
-
-            return (values.get(middleIndex - 1) + values.get(middleIndex)) / 2d;
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new ListArgument<>("values", Number.class)));
-        }
-    }
-
-    public static class VarianceFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            List<Number> values = arguments.getArgument("values").getNumberList();
-            if (values.isEmpty()) return 0d;
-
-            double mean =
-                    values.stream().mapToDouble(Number::doubleValue).average().orElse(0d);
-            return values.stream()
-                            .mapToDouble(value -> {
-                                double delta = value.doubleValue() - mean;
-                                return delta * delta;
-                            })
-                            .sum()
-                    / values.size();
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new ListArgument<>("values", Number.class)));
-        }
-    }
-
-    public static class StddevFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            List<Number> values = arguments.getArgument("values").getNumberList();
-            if (values.isEmpty()) return 0d;
-
-            double mean =
-                    values.stream().mapToDouble(Number::doubleValue).average().orElse(0d);
-            double variance = values.stream()
-                            .mapToDouble(value -> {
-                                double delta = value.doubleValue() - mean;
-                                return delta * delta;
-                            })
-                            .sum()
-                    / values.size();
-            return Math.sqrt(variance);
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new ListArgument<>("values", Number.class)));
-        }
-    }
-
-    public static class RangeFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            List<Number> values = arguments.getArgument("values").getNumberList();
-            if (values.isEmpty()) return 0d;
-
-            double min = values.stream().mapToDouble(Number::doubleValue).min().orElse(0d);
-            double max = values.stream().mapToDouble(Number::doubleValue).max().orElse(0d);
-            return max - min;
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new ListArgument<>("values", Number.class)));
-        }
-    }
-
-    public static class PercentileFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            List<Number> rawValues = arguments.getArgument("values").getNumberList();
-            if (rawValues.isEmpty()) return 0d;
-
-            List<Double> values =
-                    new ArrayList<>(rawValues.stream().map(Number::doubleValue).toList());
-            values.sort(Comparator.naturalOrder());
-
-            double percent = arguments.getArgument("percent").getDoubleValue();
-            if (percent <= 0d) return values.getFirst();
-            if (percent >= 100d) return values.getLast();
-
-            double position = (percent / 100d) * (values.size() - 1);
-            int lowerIndex = (int) Math.floor(position);
-            int upperIndex = (int) Math.ceil(position);
-            if (lowerIndex == upperIndex) {
-                return values.get(lowerIndex);
-            }
-
-            double lowerValue = values.get(lowerIndex);
-            double upperValue = values.get(upperIndex);
-            double factor = position - lowerIndex;
-            return lowerValue + (upperValue - lowerValue) * factor;
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("percent", Number.class, null), new ListArgument<>("values", Number.class)));
         }
     }
 
