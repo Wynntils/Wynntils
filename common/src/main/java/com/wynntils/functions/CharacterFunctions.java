@@ -441,4 +441,13 @@ public class CharacterFunctions {
             return CappedValue.fromProgress(powderSpecialInfoOpt.get().charge(), 100);
         }
     }
+  
+    public static class CappedDistortionFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Ability.distortionBar.isActive()
+                    ? Models.Ability.distortionBar.getBarProgress().value()
+                    : CappedValue.EMPTY;
+        }
+    }
 }
