@@ -5,7 +5,7 @@
 package com.wynntils.mc.mixin;
 
 import com.wynntils.core.events.MixinHelper;
-import net.minecraft.world.level.block.Blocks;
+import com.wynntils.mc.event.BlockRenderShapeEvent;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,12 +22,11 @@ public class BlockBehaviourMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void hideTripwire(BlockState blockState, CallbackInfoReturnable<RenderShape> cir) {
-        if (!MixinHelper.onWynncraft()) return;
+        BlockRenderShapeEvent event = new BlockRenderShapeEvent(blockState);
+        MixinHelper.post(event);
 
-        // Set tripwires as invisible as the resource pack makes them invisible but when using Sodium they become black
-        // lines
-        if (blockState.is(Blocks.TRIPWIRE)) {
-            cir.setReturnValue(RenderShape.INVISIBLE);
+        if (event.getRenderShape() != null) {
+            cir.setReturnValue(event.getRenderShape());
         }
     }
 }
