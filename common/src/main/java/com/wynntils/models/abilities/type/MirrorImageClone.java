@@ -13,16 +13,16 @@ public class MirrorImageClone {
         this.activeState = activeState;
     }
 
+    public String getString() {
+        return activeState.getColor().toString() + "\uE040";
+    }
+
     public int getActiveState() {
         return switch (activeState) {
             case ALIVE -> 1;
             case DEAD -> 0;
         };
     }
-
-    public String getString() {
-        return activeState.getColor().toString() + "유";
-    } // placeholder icon, replace with real one if possible
 
     public enum ActiveState {
         ALIVE(ChatFormatting.GREEN),

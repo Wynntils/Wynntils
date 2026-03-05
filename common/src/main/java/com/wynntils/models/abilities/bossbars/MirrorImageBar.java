@@ -50,8 +50,8 @@ public class MirrorImageBar extends TrackedBar {
         clones.clear();
         Matcher cloneMatcher = CLONE_PATTERN.matcher(match.group("clones"));
 
-        // Due to color code truncation in Component to StyledText conversion, not every orb icon has a color code
-        // prefix. In case there is none we assume the orb has the same health state as the previous one.
+        // Due to color code truncation in Component to StyledText conversion, not every clone icon has a color code
+        // prefix. In case there is none we assume the clone has the same health state as the previous one.
         MirrorImageClone.ActiveState activeState = null;
         int start = 0;
         while (cloneMatcher.find(start)) {
