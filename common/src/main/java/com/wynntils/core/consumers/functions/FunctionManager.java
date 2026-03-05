@@ -472,6 +472,7 @@ public final class FunctionManager extends Manager {
 
         // Regular Functions
         registerFunction(new ActivityFunctions.ActivityColorFunction());
+        registerFunction(new ActivityFunctions.ActivityIconFunction());
         registerFunction(new ActivityFunctions.ActivityNameFunction());
         registerFunction(new ActivityFunctions.ActivityTaskFunction());
         registerFunction(new ActivityFunctions.ActivityTypeFunction());
