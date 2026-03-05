@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
+import com.wynntils.features.HideTripwiresFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
 import com.wynntils.features.ValuableFoundFeature;
@@ -409,6 +410,7 @@ public final class FeatureManager extends Manager {
         // region uncategorized
         registerFeature(new DiscordRichPresenceFeature());
         registerFeature(new ExtendedSeasonLeaderboardFeature());
+        registerFeature(new HideTripwiresFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new ValuableFoundFeature());
         // endregion
