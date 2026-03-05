@@ -53,7 +53,6 @@ public enum ActivityType {
                 Identifier.withDefaultNamespace("items"),
                 Identifier.withDefaultNamespace("wynn/gui/content_book/" + fontIcon + "_active"));
     }
-    ;
 
     public static ActivityType from(CustomColor color, String displayName) {
         for (ActivityType type : values()) {
