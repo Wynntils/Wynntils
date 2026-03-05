@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.ingredients;
@@ -38,11 +38,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
+import net.minecraft.resources.Identifier;
 
 public class IngredientInfoRegistry {
     private static final Gson GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(IngredientInfo.class, new IngredientInfoDeserializer())
             .create();
+    private static final Identifier TOOLTIP_STYLE = Identifier.withDefaultNamespace("profession_ingredient");
 
     private List<IngredientInfo> ingredientInfoRegistry = List.of();
     private Map<String, IngredientInfo> ingredientInfoLookup = Map.of();
@@ -171,11 +173,11 @@ public class IngredientInfoRegistry {
         }
 
         private ItemMaterial parseMaterial(JsonObject json, String name) {
-            ItemMaterial material = parseMaterial(json);
+            ItemMaterial material = parseMaterial(json, TOOLTIP_STYLE);
 
             if (material == null) {
                 WynntilsMod.warn("Ingredient DB is missing material for " + name);
-                return ItemMaterial.fromItemId("minecraft:air", 0);
+                return ItemMaterial.fromItemId("minecraft:air", 0, TOOLTIP_STYLE);
             }
 
             return material;
