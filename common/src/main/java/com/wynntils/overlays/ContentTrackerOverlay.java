@@ -56,10 +56,10 @@ public class ContentTrackerOverlay extends TextOverlay {
     @Override
     protected String getPreviewTemplate() {
         return """
-                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer \
-                    tempus purus in lacus pulvinar dictum. Quisque suscipit erat \
-                    pellentesque egestas volutpat. \
-                    """;
+               {with_atlas_sprite_font(styled_text("A");"items";"wynn/gui/content_book/quest_active")}§r§#29cc96ffQuest — Moving Wynntils Overlays§r
+               You can select any overlay from Overlay Manager and edit it freely, moving, resizing and changing its rendering order.
+               You can also hover over it while editing to show a tooltip with keyboard shortcuts!
+               """;
     }
 
     @Override
