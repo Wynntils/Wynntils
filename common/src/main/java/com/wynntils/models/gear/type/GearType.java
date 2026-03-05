@@ -8,10 +8,8 @@ import com.wynntils.core.components.Services;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
 import net.minecraft.core.component.DataComponents;
@@ -98,7 +96,6 @@ public enum GearType {
     private final int encodingId;
 
     private List<Float> modelList = new ArrayList<>();
-    private static final Map<Integer, GearType> craftedAccessoryMap = buildCraftedAccessoryMap();
 
     GearType(
             ClassType classReq,
@@ -143,7 +140,7 @@ public enum GearType {
         }
     }
 
-    public static GearType fromItemStack(ItemStack itemStack, boolean crafted) {
+    public static GearType fromItemStack(ItemStack itemStack) {
         Item item = itemStack.getItem();
         CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
 
@@ -159,24 +156,6 @@ public enum GearType {
                         return gearType;
                     }
                 }
-            }
-        } else if (crafted) {
-            // Crafted items still use the old textures, they have no custom model data but we can still
-            // match them based on the item itself
-
-            // For armor and weapons we can just match based on the item itself
-            for (GearType gearType : values()) {
-                if ((gearType.isArmor() && (gearType.defaultItem.equals(item) || gearType.otherItems.contains(item)))
-                        || (gearType.isWeapon() && gearType.otherItems.contains(item))) {
-                    return gearType;
-                }
-            }
-
-            // For accessories, we use the damage value
-            if (item == Items.FLINT_AND_STEEL) {
-                int damage = itemStack.getDamageValue();
-
-                return craftedAccessoryMap.getOrDefault(damage, null);
             }
         }
 
@@ -273,13 +252,5 @@ public enum GearType {
             int max = range.b().intValue();
             IntStream.rangeClosed(min, max).mapToObj(i -> (float) i).forEach(out::add);
         });
-    }
-
-    private static Map<Integer, GearType> buildCraftedAccessoryMap() {
-        Map<Integer, GearType> map = new HashMap<>();
-        IntStream.rangeClosed(1, 17).forEach(i -> map.put(i, RING));
-        IntStream.rangeClosed(18, 34).forEach(i -> map.put(i, NECKLACE));
-        IntStream.rangeClosed(35, 49).forEach(i -> map.put(i, BRACELET));
-        return Map.copyOf(map);
     }
 }

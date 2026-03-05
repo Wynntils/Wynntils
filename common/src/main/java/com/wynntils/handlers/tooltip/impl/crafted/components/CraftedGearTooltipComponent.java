@@ -37,8 +37,7 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
         // name
         header.add(Component.literal(craftedItem.getName())
                 .withStyle(ChatFormatting.DARK_AQUA)
-                .append(Component.literal(" [" + craftedItem.getEffectStrength() + "%]")
-                        .withStyle(ChatFormatting.AQUA)));
+                .append(Component.literal(" [100%]").withStyle(ChatFormatting.AQUA)));
 
         // attack speed
         if (craftedItem.getAttackSpeed().isPresent())
