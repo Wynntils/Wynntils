@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.data.EndData;
 import com.wynntils.models.items.encoding.data.NameData;
@@ -131,16 +130,7 @@ public final class ItemTransformerRegistry {
     // FIXME: This could be much more sophisticated in the future,
     //        e.g. by requesting the minimum versions required from each transformer instead.
     private static ItemTransformingVersion getEncodingVersionAccordingToItem(WynnItem wynnItem) {
-        ItemTransformingVersion versionToEncodeWith = ItemTransformingVersion.VERSION_1;
-        if (wynnItem instanceof GearItem gearItem) {
-            boolean shinyStatPresentWithRerolls = gearItem.getItemInstance()
-                    .map(GearInstance::shinyStat)
-                    .flatMap(shinyStat -> shinyStat.map(stat -> stat.shinyRerolls() != 0))
-                    .orElse(false);
-            if (shinyStatPresentWithRerolls) {
-                versionToEncodeWith = ItemTransformingVersion.VERSION_2;
-            }
-        }
+        ItemTransformingVersion versionToEncodeWith = ItemTransformingVersion.VERSION_3;
         return versionToEncodeWith;
     }
 

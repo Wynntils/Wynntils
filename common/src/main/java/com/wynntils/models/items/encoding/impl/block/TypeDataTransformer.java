@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -16,7 +16,7 @@ public class TypeDataTransformer extends DataTransformer<TypeData> {
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, TypeData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2 ->
+            case VERSION_1, VERSION_2, VERSION_3 ->
                 ErrorOr.of(new UnsignedByte[] {UnsignedByte.of(data.itemType().getEncodingId())});
         };
     }
@@ -24,7 +24,7 @@ public class TypeDataTransformer extends DataTransformer<TypeData> {
     @Override
     public ErrorOr<TypeData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1, VERSION_2 -> decodeType(byteReader);
+            case VERSION_1, VERSION_2, VERSION_3 -> decodeType(byteReader);
         };
     }
 

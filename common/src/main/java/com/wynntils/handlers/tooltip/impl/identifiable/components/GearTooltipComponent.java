@@ -89,6 +89,14 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
             header.add(Component.literal(""));
         }
 
+        // dps
+        int dps = gearInfo.fixedStats().averageDps();
+        if (dps != 0) {
+            MutableComponent dpsComp = Component.literal(" Average DPS: ").withStyle(ChatFormatting.DARK_GRAY);
+            dpsComp.append(Component.literal(String.valueOf(dps)).withStyle(ChatFormatting.GRAY));
+            header.add(dpsComp);
+        }
+
         // health
         int health = gearInfo.fixedStats().healthBuff();
         if (health != 0) {

@@ -44,6 +44,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         CappedValue durability;
         GearRequirements requirements;
         GearAttackSpeed attackSpeed = null;
+        int dps = 0;
         int health = 0;
         List<Pair<DamageType, RangedValue>> damages = new ArrayList<>();
         List<Pair<Element, Integer>> defences = new ArrayList<>();
@@ -63,7 +64,6 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         if (durabilityData == null) {
             return ErrorOr.error("Crafted gear item does not have durability data!");
         }
-        effectStrength = durabilityData.effectStrength();
         durability = durabilityData.durability();
 
         RequirementsData requirementsData = itemDataMap.get(RequirementsData.class);
@@ -86,6 +86,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
 
         DamageData damageData = itemDataMap.get(DamageData.class);
         if (damageData != null && damageData.attackSpeed().isPresent()) {
+            dps = damageData.dps();
             attackSpeed = damageData.attackSpeed().get();
             damages = damageData.damages();
         }
@@ -99,16 +100,12 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         CustomIdentificationsData identificationsData = itemDataMap.get(CustomIdentificationsData.class);
         if (identificationsData != null) {
             possibleValues = identificationsData.possibleValues();
-            // For crafted items, the max values can be used to calculate the current values (from the overall
-            // effectiveness).
             identifications = identificationsData.possibleValues().stream()
-                    .map(statPossibleValues -> {
-                        int max = statPossibleValues.range().high();
-                        // Negative stats do not decay, they always stay at the max
-                        int value = (max <= 0) ? max : Math.round(max * effectStrength / 100f);
-
-                        return new StatActualValue(statPossibleValues.statType(), value, 0, RangedValue.NONE);
-                    })
+                    .map(statPossibleValues -> new StatActualValue(
+                            statPossibleValues.statType(),
+                            statPossibleValues.range().high(),
+                            0,
+                            RangedValue.NONE))
                     .toList();
         }
 
@@ -122,6 +119,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
                 name,
                 gearType,
                 attackSpeed,
+                dps,
                 health,
                 damages,
                 defences,
@@ -141,7 +139,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
 
         // Required blocks
         dataList.add(new CustomGearTypeData(item.getGearType()));
-        dataList.add(new DurabilityData(100, item.getDurability()));
+        dataList.add(new DurabilityData(item.getDurability()));
         dataList.add(new RequirementsData(item.getRequirements()));
 
         // Optional blocks
@@ -149,7 +147,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
             dataList.add(NameData.sanitized(item.getName()));
         }
 
-        dataList.add(new DamageData(item.getAttackSpeed(), item.getDamages()));
+        dataList.add(new DamageData(item.getDps(), item.getAttackSpeed(), item.getDamages()));
         dataList.add(new DefenseData(item.getHealth(), item.getDefences()));
         dataList.add(new CustomIdentificationsData(item.getPossibleValues()));
         dataList.add(PowderData.from(item));

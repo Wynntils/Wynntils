@@ -135,6 +135,7 @@ public final class GearModel extends Model {
                 name,
                 gearType,
                 result.attackSpeed(),
+                result.dps(),
                 result.health(),
                 result.damages(),
                 result.defences(),
