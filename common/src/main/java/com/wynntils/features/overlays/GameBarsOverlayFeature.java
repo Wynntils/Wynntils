@@ -20,6 +20,7 @@ import com.wynntils.overlays.gamebars.HealthBarOverlay;
 import com.wynntils.overlays.gamebars.HolyPowerBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBankBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBarOverlay;
+import com.wynntils.overlays.gamebars.MirrorImageBarOverlay;
 import com.wynntils.overlays.gamebars.MomentumBarOverlay;
 import com.wynntils.overlays.gamebars.OphanimBarOverlay;
 import com.wynntils.utils.type.RenderElementType;
@@ -64,6 +65,9 @@ public class GameBarsOverlayFeature extends Feature {
 
     @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final DistortionBarOverlay distortionBarOverlay = new DistortionBarOverlay();
+
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
+    private final MirrorImageBarOverlay mirrorImageBarOverlay = new MirrorImageBarOverlay();
 
     public GameBarsOverlayFeature() {
         super(ProfileDefault.onlyDefault());

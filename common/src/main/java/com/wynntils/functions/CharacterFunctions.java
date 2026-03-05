@@ -450,4 +450,27 @@ public class CharacterFunctions {
                     : CappedValue.EMPTY;
         }
     }
+
+    public static class MirrorImageCloneFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            int cloneNumber = arguments.getArgument("cloneNumber").getIntegerValue();
+            return cloneNumber < Models.Ability.mirrorImageBar.getClones().size() && cloneNumber >= 0
+                    ? Models.Ability.mirrorImageBar.getClones().get(cloneNumber).getActiveState()
+                    : -1;
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("cloneNumber", Integer.class, null)));
+        }
+    }
+
+    public static class MirrorImageDurationFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Ability.mirrorImageBar.isActive() ? Models.Ability.mirrorImageBar.getDuration() : 0;
+        }
+    }
 }
