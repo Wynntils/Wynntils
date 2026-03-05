@@ -396,7 +396,6 @@
   "feature.wynntils.customTerritoryManagementScreen.shiftBehaviorConfig.description": "Que doit-il se passer lorsque vous appuyez sur le bouton de gestion des territoires tout en maintenant shift enfoncé ?",
   "feature.wynntils.customTerritoryManagementScreen.shiftBehaviorConfig.name": "Comportement de Shift sur le Bouton de Gestion des Territoires",
   "feature.wynntils.customTerritoryManagementScreen.sorts": "Tri Rapides",
-  "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper": "Maintenez shift pour voir l'excédent/déficit total",
   "feature.wynntils.customTradeMarketResultScreen.description": "Ajoute un écran de résultats de marché de commerce personnalisé où vous pouvez utiliser des filtres Wynntils pour filtrer les résultats.",
   "feature.wynntils.customTradeMarketResultScreen.name": "Écran de Résultats de Marché de Commerce Personnalisé",
   "feature.wynntils.customTradeMarketResultScreen.shiftBehaviorConfig.description": "Que doit-il se passer lorsque vous appuyez sur le bouton de recherche tout en maintenant shift enfoncé ?",

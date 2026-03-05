@@ -396,7 +396,6 @@
   "feature.wynntils.customTerritoryManagementScreen.shiftBehaviorConfig.description": "Co powinno się stać, gdy naciśniesz przycisk zarządzania terytorium trzymając shift?",
   "feature.wynntils.customTerritoryManagementScreen.shiftBehaviorConfig.name": "Zachowanie shift na przycisku zarządzania terytorium",
   "feature.wynntils.customTerritoryManagementScreen.sorts": "Szybkie sortowania",
-  "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper": "Przytrzymaj shift, aby zobaczyć całkowity nadmiar/niedobór",
   "feature.wynntils.customTradeMarketResultScreen.description": "Dodaje niestandardowy ekran wyników rynku handlowego, gdzie można używać filtrów Wynntils do filtrowania wyników.",
   "feature.wynntils.customTradeMarketResultScreen.name": "Niestandardowy ekran wyników rynku handlowego",
   "feature.wynntils.customTradeMarketResultScreen.shiftBehaviorConfig.description": "Co powinno się stać, gdy naciśniesz przycisk wyszukiwania trzymając shift?",
