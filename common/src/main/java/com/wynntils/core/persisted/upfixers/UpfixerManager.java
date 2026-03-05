@@ -72,7 +72,6 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new CustomBankQuickJumpsBankNameUpfixer());
         registerConfigUpfixer(new NpcDialoguesRenamedUpfixer());
         registerConfigUpfixer(new NpcDialoguesOverlayConfigsMovedUpfixer());
-        registerConfigUpfixer(new ContentTrackerTextOverlayUpfixer());
         registerConfigUpfixer(new TowerAuraVignetteNameUpfixer());
         registerConfigUpfixer(new TowerAuraVignetteAndOverlayMovedToCommonFeature());
         registerConfigUpfixer(new CombatXpGainToXpGainUpfixer());
@@ -89,6 +88,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new MythicBlockerToChestBlockerUpfixer());
         registerConfigUpfixer(new MaxItensityToMaxIntensityUpfixer());
         registerConfigUpfixer(new ShowAdditonalTextAboveToShowAdditionalTextAboveUpfixer());
+        registerConfigUpfixer(new ContentTrackerTextOverlayUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());
