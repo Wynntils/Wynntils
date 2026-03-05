@@ -24,6 +24,9 @@ public class ContentTrackerOverlay extends TextOverlay {
     @Persisted
     private final Config<Boolean> disableTrackerOnScoreboard = new Config<>(true);
 
+    @Persisted
+    private final Config<Style> displayStyle = new Config<>(Style.MODERN);
+
     public ContentTrackerOverlay() {
         super(
                 new OverlayPosition(
@@ -47,10 +50,7 @@ public class ContentTrackerOverlay extends TextOverlay {
 
     @Override
     protected String getTemplate() {
-        return """
-                {activity_icon}§r{with_color(styled_text(concat(activity_type; " — "; activity_name));activity_color)}§r
-                {activity_task(true)}
-                """;
+        return displayStyle.get().template;
     }
 
     @Override
@@ -75,5 +75,30 @@ public class ContentTrackerOverlay extends TextOverlay {
     @Override
     protected boolean isVisible() {
         return Models.Activity.isTracking();
+    }
+
+    private enum Style {
+        MODERN(
+                """
+                {activity_icon}§r{with_color(styled_text(concat(activity_type; " — "; activity_name));activity_color)}§r
+                {activity_task(true)}
+                """),
+        NO_ICON(
+                """
+                {with_color(styled_text(concat(activity_type; " — "; activity_name));activity_color)}§r
+                {activity_task(true)}
+                """),
+        LEGACY(
+                """
+                §aTracked {activity_type}:
+                §6{activity_name}§r
+                {activity_task(true)}
+                """);
+
+        public final String template;
+
+        Style(String template) {
+            this.template = template;
+        }
     }
 }
