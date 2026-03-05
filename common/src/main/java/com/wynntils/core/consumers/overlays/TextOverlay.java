@@ -80,7 +80,7 @@ public abstract class TextOverlay extends DynamicOverlay {
                         renderX + this.getWidth(),
                         renderY,
                         renderY + this.getHeight(),
-                        0,
+                        shouldTextFit() ? this.getWidth() : 0,
                         this.getRenderColor(),
                         this.getRenderHorizontalAlignment(),
                         this.getRenderVerticalAlignment(),
@@ -109,6 +109,10 @@ public abstract class TextOverlay extends DynamicOverlay {
 
     private float getTextScale() {
         return fontScale.get();
+    }
+
+    protected boolean shouldTextFit() {
+        return false;
     }
 
     protected abstract String getTemplate();
