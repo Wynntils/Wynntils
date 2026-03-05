@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip;
@@ -139,7 +139,7 @@ public abstract class TooltipBuilder {
                         // so reset the flag here
                         skillPointsStarted = false;
 
-                        String statName = matcher.group(6);
+                        String statName = matcher.group("statName");
 
                         if (Skill.isSkill(statName)) {
                             skillPointsStarted = true;

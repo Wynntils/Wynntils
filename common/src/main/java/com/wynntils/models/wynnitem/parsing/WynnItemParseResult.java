@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem.parsing;
@@ -15,6 +15,7 @@ import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.models.wynnitem.type.NamedItemEffect;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.Optional;
 public record WynnItemParseResult(
         GearTier tier,
         String itemType,
+        int dps,
         int health,
         int level,
         GearAttackSpeed attackSpeed,
@@ -37,16 +39,17 @@ public record WynnItemParseResult(
         List<Powder> powders,
         int powderSlots,
         int rerolls,
-        int durabilityCurrent,
-        int durabilityMax,
+        CappedValue durability,
         Optional<ShinyStat> shinyStat,
         boolean allRequirementsMet,
-        Optional<SetInstance> setInstance) {
+        Optional<SetInstance> setInstance,
+        int currentPage) {
     public static WynnItemParseResult fromInternalRoll(
             List<StatActualValue> identifications, List<Powder> powders, int rerolls) {
         return new WynnItemParseResult(
                 null,
                 null,
+                0,
                 0,
                 0,
                 null,
@@ -59,10 +62,10 @@ public record WynnItemParseResult(
                 powders,
                 0,
                 rerolls,
-                0,
-                0,
+                CappedValue.EMPTY,
                 Optional.empty(),
                 true,
-                Optional.empty());
+                Optional.empty(),
+                0);
     }
 }
