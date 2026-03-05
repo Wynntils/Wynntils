@@ -28,6 +28,9 @@ public abstract class TextOverlay extends DynamicOverlay {
     @Persisted(i18nKey = "overlay.wynntils.textOverlay.fontScale")
     protected final Config<Float> fontScale = new Config<>(1.0f);
 
+    @Persisted(i18nKey = "overlay.wynntils.textOverlay.fontScale.fitText")
+    protected final Config<Boolean> fitText = new Config<>(false);
+
     private StyledText[] cachedLines = new StyledText[0];
 
     protected TextOverlay(OverlayPosition position, float width, float height) {
@@ -80,7 +83,7 @@ public abstract class TextOverlay extends DynamicOverlay {
                         renderX + this.getWidth(),
                         renderY,
                         renderY + this.getHeight(),
-                        shouldTextFit() ? this.getWidth() : 0,
+                        fitText.get() ? this.getWidth() : 0,
                         this.getRenderColor(),
                         this.getRenderHorizontalAlignment(),
                         this.getRenderVerticalAlignment(),
@@ -109,10 +112,6 @@ public abstract class TextOverlay extends DynamicOverlay {
 
     private float getTextScale() {
         return fontScale.get();
-    }
-
-    protected boolean shouldTextFit() {
-        return false;
     }
 
     protected abstract String getTemplate();

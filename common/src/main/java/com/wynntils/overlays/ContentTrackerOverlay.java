@@ -38,6 +38,7 @@ public class ContentTrackerOverlay extends TextOverlay {
                 new OverlaySize(300, 50),
                 HorizontalAlignment.LEFT,
                 VerticalAlignment.MIDDLE);
+        fitText.store(true);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -60,11 +61,6 @@ public class ContentTrackerOverlay extends TextOverlay {
                You can select any overlay from Overlay Manager and edit it freely, moving, resizing and changing its rendering order.
                You can also hover over it while editing to show a tooltip with keyboard shortcuts!
                """;
-    }
-
-    @Override
-    protected boolean shouldTextFit() {
-        return true;
     }
 
     @Override
