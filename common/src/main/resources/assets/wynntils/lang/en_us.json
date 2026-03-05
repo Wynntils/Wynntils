@@ -146,6 +146,8 @@
   "feature.wynntils.betaWarning.usingReleaseOnBetaServer": "You are using a release version of Wynntils. This version is not supported on the Wynncraft Beta and various features may be broken. Please connect to the normal Wynncraft server or use a beta version of Wynntils which you can find in our Discord at %s.",
   "feature.wynntils.bombBellOverlay.description": "Adds an overlay to see active bombs.",
   "feature.wynntils.bombBellOverlay.name": "Bomb Bell",
+  "feature.wynntils.bombBellOverlay.overlay.bombBell.alwaysShowCurrentWorld.description": "Should bombs in the current world always be shown?",
+  "feature.wynntils.bombBellOverlay.overlay.bombBell.alwaysShowCurrentWorld.name": "Always Show Bombs in Current World",
   "feature.wynntils.bombBellOverlay.overlay.bombBell.fontScale.description": "How large should the bomb bell text be?",
   "feature.wynntils.bombBellOverlay.overlay.bombBell.fontScale.name": "Font Scale",
   "feature.wynntils.bombBellOverlay.overlay.bombBell.groupBombs.description": "Should bombs be grouped together by type?",
