@@ -394,6 +394,8 @@
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.description": "Display information about the currently tracked content",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.disableTrackerOnScoreboard.description": "Should tracked segment be removed from the scoreboard? This option only works if trackerOverlay is turned on.",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.disableTrackerOnScoreboard.name": "Disable Scoreboard Tracker",
+  "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.displayStyle.description": "Determines the style of how the Content Tracker displays its content.",
+  "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.displayStyle.name": "Display style",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.name": "Content Tracker",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.testQuestName": "Test quest",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.description": "What should the text shadow look like?",
