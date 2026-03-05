@@ -501,6 +501,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.ClassFunction());
         registerFunction(new CharacterFunctions.CommanderActivatedFunction());
         registerFunction(new CharacterFunctions.CommanderDurationFunction());
+        registerFunction(new CharacterFunctions.CappedDistortionFunction());
         registerFunction(new CharacterFunctions.EquippedAspectFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveGoalFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveEventBonusFunction());
@@ -525,6 +526,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.PersonalObjectiveGoalFunction());
         registerFunction(new CharacterFunctions.PersonalObjectiveEventBonusFunction());
         registerFunction(new CharacterFunctions.PersonalObjectiveScoreFunction());
+        registerFunction(new CharacterFunctions.PowderSpecialChargeFunction());
         registerFunction(new CharacterFunctions.SprintFunction());
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
