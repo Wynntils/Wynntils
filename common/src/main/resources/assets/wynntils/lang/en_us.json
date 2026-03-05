@@ -644,7 +644,7 @@
   "feature.wynntils.gameBarsOverlay.overlay.holyPowerBar.name": "Holy Power Bar",
   "feature.wynntils.gameBarsOverlay.overlay.manaBankBar.name": "Mana Bank Bar",
   "feature.wynntils.gameBarsOverlay.overlay.manaBar.name": "Mana Bar",
-  "feature.wynntils.gameBarsOverlay.overlay.mirrorImageBar.name": "Mirror Image",
+  "feature.wynntils.gameBarsOverlay.overlay.mirrorImageBar.name": "Mirror Image Bar",
   "feature.wynntils.gameBarsOverlay.overlay.momentumBar.maximumColor.description": "What should the color of the text be when momentum is maxed?",
   "feature.wynntils.gameBarsOverlay.overlay.momentumBar.maximumColor.name": "Maximum Color",
   "feature.wynntils.gameBarsOverlay.overlay.momentumBar.name": "Momentum Bar",
