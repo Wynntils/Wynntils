@@ -66,11 +66,10 @@ public class StatusEffectsOverlay extends Overlay {
 
     @SubscribeEvent
     public void onStatusChange(StatusEffectsChangedEvent event) {
-        recalculateRenderCache();
+        recalculateRenderCache(event.getStatusEffects());
     }
 
-    private void recalculateRenderCache() {
-        List<StatusEffect> effects = Models.StatusEffect.getStatusEffects();
+    private void recalculateRenderCache(List<StatusEffect> effects) {
         Stream<RenderedStatusEffect> effectWithProperties;
 
         if (stackingBehaviour.get() != StackingBehaviour.NONE) {
@@ -128,7 +127,7 @@ public class StatusEffectsOverlay extends Overlay {
     @Override
     protected void onConfigUpdate(Config<?> config) {
         updateTextRenderSetting();
-        recalculateRenderCache();
+        recalculateRenderCache(Models.StatusEffect.getStatusEffects());
     }
 
     private void updateTextRenderSetting() {
