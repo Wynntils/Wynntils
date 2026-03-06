@@ -14,9 +14,9 @@ import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.spells.actionbar.matchers.SpellCastSegmentMatcher;
-import com.wynntils.models.spells.actionbar.matchers.SpellSegmentMatcher;
+import com.wynntils.models.spells.actionbar.matchers.SpellInputsSegmentMatcher;
 import com.wynntils.models.spells.actionbar.matchers.UltimateTypeSegmentMatcher;
-import com.wynntils.models.spells.actionbar.segments.SpellSegment;
+import com.wynntils.models.spells.actionbar.segments.SpellInputsSegment;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.spells.type.SpellFailureReason;
@@ -54,7 +54,7 @@ public final class SpellModel extends Model {
     public SpellModel() {
         super(List.of());
 
-        Handlers.ActionBar.registerSegment(new SpellSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new SpellInputsSegmentMatcher());
         Handlers.ActionBar.registerSegment(new SpellCastSegmentMatcher());
         Handlers.ActionBar.registerSegment(new UltimateTypeSegmentMatcher());
 
@@ -91,13 +91,13 @@ public final class SpellModel extends Model {
 
     @SubscribeEvent
     public void onActionBarUpdate(ActionBarUpdatedEvent event) {
-        event.runIfPresentOrElse(SpellSegment.class, this::updateFromSpellSegment, this::handleExpiredSpell);
+        event.runIfPresentOrElse(SpellInputsSegment.class, this::updateFromSpellSegment, this::handleExpiredSpell);
     }
 
     @SubscribeEvent
     public void onActionBarRender(ActionBarRenderEvent event) {
         if (hideSpellInputs) {
-            event.setSegmentEnabled(SpellSegment.class, false);
+            event.setSegmentEnabled(SpellInputsSegment.class, false);
         }
     }
 
@@ -211,10 +211,10 @@ public final class SpellModel extends Model {
         return ticksSinceCast;
     }
 
-    private void updateFromSpellSegment(SpellSegment spellSegment) {
+    private void updateFromSpellSegment(SpellInputsSegment spellInputsSegment) {
         // noop if the spell state hasn't changed
-        if (Arrays.equals(spellSegment.getDirections(), lastSpell)) return;
-        lastSpell = spellSegment.getDirections();
+        if (Arrays.equals(spellInputsSegment.getDirections(), lastSpell)) return;
+        lastSpell = spellInputsSegment.getDirections();
 
         WynntilsMod.postEvent(new SpellEvent.Partial(lastSpell));
 
