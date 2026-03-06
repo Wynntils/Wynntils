@@ -13,6 +13,7 @@ import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.models.spells.actionbar.matchers.SpellCastSegmentMatcher;
 import com.wynntils.models.spells.actionbar.matchers.SpellSegmentMatcher;
 import com.wynntils.models.spells.actionbar.matchers.UltimateTypeSegmentMatcher;
 import com.wynntils.models.spells.actionbar.segments.SpellSegment;
@@ -54,6 +55,7 @@ public final class SpellModel extends Model {
         super(List.of());
 
         Handlers.ActionBar.registerSegment(new SpellSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new SpellCastSegmentMatcher());
         Handlers.ActionBar.registerSegment(new UltimateTypeSegmentMatcher());
 
         Handlers.Item.registerKnownMarkerNames(getKnownMarkerNames());
