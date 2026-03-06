@@ -45,6 +45,9 @@ public class SpellCastMessageOverlay extends Overlay {
     private final Config<MessageStyle> messageStyle = new Config<>(MessageStyle.MODERN);
 
     @Persisted
+    private final Config<Boolean> showFailedCasts = new Config<>(true);
+
+    @Persisted
     private final Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
 
     @Persisted
@@ -116,12 +119,31 @@ public class SpellCastMessageOverlay extends Overlay {
 
     @SubscribeEvent
     public void onSpellPartial(SpellEvent.Partial event) {
+        // Only reset on the 1st input so that failure message can be shown
+        if (event.getSpellDirectionArray().length != 1) return;
+
+        spellMessage = StyledText.EMPTY;
+    }
+
+    @SubscribeEvent
+    public void onSpellCastExpire(SpellEvent.Expired event) {
         spellMessage = StyledText.EMPTY;
     }
 
     @SubscribeEvent
     public void onSpellCastExpire(SpellEvent.CastExpired event) {
         spellMessage = StyledText.EMPTY;
+    }
+
+    @SubscribeEvent
+    public void onSpellFailed(SpellEvent.Failed event) {
+        if (!showFailedCasts.get()) return;
+
+        spellMessage = StyledText.fromComponent(Component.literal(
+                        event.getFailureReason().getDisplayMessage())
+                .withStyle(Style.EMPTY
+                        .withFont(messageStyle.get() == MessageStyle.MODERN ? WYNNCRAFT_FONT : FontDescription.DEFAULT)
+                        .withColor(ChatFormatting.RED)));
     }
 
     @Override

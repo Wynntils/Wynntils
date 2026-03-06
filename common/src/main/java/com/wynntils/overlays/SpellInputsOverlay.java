@@ -88,6 +88,13 @@ public class SpellInputsOverlay extends Overlay {
     }
 
     @SubscribeEvent
+    public void onSpellFailed(SpellEvent.Failed event) {
+        // The vanilla overlay does not remove the text on failure but we do this to prevent overlap with
+        // SpellCastMessageOverlay
+        spellText = StyledText.EMPTY;
+    }
+
+    @SubscribeEvent
     public void onWorldStateChanged(WorldStateEvent event) {
         spellText = StyledText.EMPTY;
     }
