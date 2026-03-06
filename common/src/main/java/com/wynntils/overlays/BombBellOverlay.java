@@ -64,6 +64,9 @@ public class BombBellOverlay extends Overlay {
     @Persisted
     private final Config<Boolean> showProfessionSpeedBombs = new Config<>(true);
 
+    @Persisted
+    private final Config<Boolean> alwaysShowCurrentWorld = new Config<>(false);
+
     private final Map<BombType, Supplier<Boolean>> bombTypeMap = Map.ofEntries(
             Map.entry(BombType.COMBAT_XP, showCombatBombs::get),
             Map.entry(BombType.DUNGEON, showDungeonBombs::get),
@@ -144,7 +147,7 @@ public class BombBellOverlay extends Overlay {
     @Override
     public void tick() {
         Stream<BombInfo> bombsToRender = Models.Bomb.getBombBellStream(
-                        groupBombs.get(), sortOrder.get(), maxBombs.get())
+                        groupBombs.get(), sortOrder.get(), maxBombs.get(), alwaysShowCurrentWorld.get())
                 .filter(bombInfo -> {
                     BombType bombType = bombInfo.bomb();
                     Supplier<Boolean> bombTypeSupplier = bombTypeMap.get(bombType);
