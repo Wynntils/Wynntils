@@ -49,7 +49,7 @@ public class FakeItemStack extends ItemStack {
 
     @Override
     public ItemStack copy() {
-        return new FakeItemStack(wynnItem, itemStack, source);
+        return new FakeItemStack(wynnItem, this, source);
     }
 
     @Override

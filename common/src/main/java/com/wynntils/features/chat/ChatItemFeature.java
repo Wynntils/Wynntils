@@ -289,7 +289,6 @@ public class ChatItemFeature extends Feature {
 
         ItemStack itemStack = new FakeItemStack(wynnItem, "From chat");
 
-        // FIXME: Doesn't work?
         itemStack.set(DataComponents.TOOLTIP_STYLE, tooltipStyle);
 
         style = style.withHoverEvent(new HoverEvent.ShowItem(itemStack));
