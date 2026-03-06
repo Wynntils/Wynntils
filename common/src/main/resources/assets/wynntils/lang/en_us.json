@@ -1798,6 +1798,8 @@
   "function.wynntils.accessoryDurability.name": "Accessory Durability",
   "function.wynntils.activityColor.description": "The CustomColor of the current tracked activity type",
   "function.wynntils.activityColor.name": "Activity Color",
+  "function.wynntils.activityIcon.description": "Returns the icon of tracked activity",
+  "function.wynntils.activityIcon.name": "Activity Icon",
   "function.wynntils.activityName.description": "The name of the current tracked activity",
   "function.wynntils.activityName.name": "Activity Name",
   "function.wynntils.activityTask.argument.formatted": "Whether to retain color codes",
