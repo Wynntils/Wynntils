@@ -27,6 +27,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -40,6 +41,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -133,6 +135,13 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
 
         if (wynnItem instanceof GearItem gearItem) {
             itemStack = gearItem.getItemInfo().metaInfo().material().itemStack();
+
+            if (gearItem.getShinyStat().isPresent()) {
+                itemStack.set(
+                        DataComponents.TOOLTIP_STYLE,
+                        Identifier.withDefaultNamespace(
+                                gearItem.getGearTier().name().toLowerCase(Locale.ROOT) + "_shiny"));
+            }
         } else if (wynnItem instanceof CraftedGearItem craftedGearItem) {
             // Armor and weapons are sent by Wynn so we can use those itemstacks, accessories we will have to use
             // a default texture
@@ -152,6 +161,8 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
                         DataComponentMap.builder().set(DataComponents.CUSTOM_MODEL_DATA, customModelData);
                 itemStack.applyComponents(componentsBuilder.build());
             }
+
+            itemStack.set(DataComponents.TOOLTIP_STYLE, Identifier.withDefaultNamespace("crafted"));
         }
 
         return new FakeItemStack(wynnItem, itemStack, "From " + player.getScoreboardName());

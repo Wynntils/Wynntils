@@ -114,7 +114,7 @@ public class AspectInfoRegistry {
             String name = json.get("name").getAsString();
             GearTier gearTier = GearTier.fromString(json.get("rarity").getAsString());
             ClassType classType = ClassType.fromName(json.get("requiredClass").getAsString());
-            ItemMaterial itemMaterial = parseMaterial(json);
+            ItemMaterial itemMaterial = parseMaterial(json, null);
 
             List<Pair<Integer, List<StyledText>>> tiers = new ArrayList<>();
 

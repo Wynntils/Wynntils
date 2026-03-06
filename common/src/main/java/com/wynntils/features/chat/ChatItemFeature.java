@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -50,10 +51,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
@@ -269,11 +272,25 @@ public class ChatItemFeature extends Feature {
 
         Style style = Style.EMPTY.applyFormat(ChatFormatting.UNDERLINE).withColor(ChatFormatting.GOLD);
 
+        Identifier tooltipStyle = null;
+
         if (wynnItem instanceof GearTierItemProperty tierItemProperty) {
             style = style.withColor(tierItemProperty.getGearTier().getChatFormatting());
+
+            String tooltipStyleName = tierItemProperty.getGearTier().name().toLowerCase(Locale.ROOT);
+
+            if (wynnItem instanceof ShinyItemProperty shiny
+                    && shiny.getShinyStat().isPresent()) {
+                tooltipStyleName += "_shiny";
+            }
+
+            tooltipStyle = Identifier.withDefaultNamespace(tooltipStyleName);
         }
 
         ItemStack itemStack = new FakeItemStack(wynnItem, "From chat");
+
+        itemStack.set(DataComponents.TOOLTIP_STYLE, tooltipStyle);
+
         style = style.withHoverEvent(new HoverEvent.ShowItem(itemStack));
 
         // Add the item name

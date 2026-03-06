@@ -5,7 +5,6 @@
 package com.wynntils.models.wynnitem.type;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.gear.type.GearType;
 import com.wynntils.utils.mc.SkinUtils;
 import java.util.List;
 import java.util.Optional;
@@ -21,37 +20,30 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomModelData;
 
 public record ItemMaterial(ItemStack itemStack) {
-    public static ItemMaterial getDefaultTomeItemMaterial() {
-        ItemStack itemStack = createItemStack(Items.ENCHANTED_BOOK, 0);
+    public static ItemMaterial getDefaultTomeItemMaterial(Identifier tooltipStyle) {
+        ItemStack itemStack = createItemStack(Items.ENCHANTED_BOOK, 0, tooltipStyle);
         return new ItemMaterial(itemStack);
     }
 
-    public static ItemMaterial getDefaultCharmItemMaterial() {
+    public static ItemMaterial getDefaultCharmItemMaterial(Identifier tooltipStyle) {
         // All charms are different items, this is as good as any other item
-        ItemStack itemStack = createItemStack(Items.CLAY, 0);
+        ItemStack itemStack = createItemStack(Items.CLAY, 0, tooltipStyle);
         return new ItemMaterial(itemStack);
     }
 
-    public static ItemMaterial fromPlayerHeadUUID(String uuid) {
-        ItemStack itemStack = createItemStack(Items.PLAYER_HEAD, 0);
+    public static ItemMaterial fromPlayerHeadUUID(String uuid, Identifier tooltipStyle) {
+        ItemStack itemStack = createItemStack(Items.PLAYER_HEAD, 0, tooltipStyle);
         SkinUtils.setPlayerHeadFromUUID(itemStack, uuid);
 
         return new ItemMaterial(itemStack);
     }
 
-    public static ItemMaterial fromGearType(GearType gearType) {
-        // Material is missing, so just give generic icon for this type of gear (weapon or accessory)
-        ItemStack itemStack = createItemStack(gearType.getDefaultItem(), gearType.getDefaultModel());
-
+    public static ItemMaterial fromItemId(String itemId, int customModelData, Identifier tooltip) {
+        ItemStack itemStack = createItemStack(getItem(itemId), customModelData, tooltip);
         return new ItemMaterial(itemStack);
     }
 
-    public static ItemMaterial fromItemId(String itemId, int customModelData) {
-        ItemStack itemStack = createItemStack(getItem(itemId), customModelData);
-        return new ItemMaterial(itemStack);
-    }
-
-    public static ItemMaterial fromItemTypeCode(int itemTypeCode, int damageCode) {
+    public static ItemMaterial fromItemTypeCode(int itemTypeCode, int damageCode, Identifier tooltipStyle) {
         String itemId;
 
         Optional<String> materialNameOverrideOpt = Models.WynnItem.getMaterialName(itemTypeCode, damageCode);
@@ -65,24 +57,26 @@ public record ItemMaterial(ItemStack itemStack) {
             itemId = alternativeName != null ? alternativeName : toIdString;
         }
 
-        ItemStack itemStack = createItemStackFromDamage(getItem(itemId), damageCode);
+        ItemStack itemStack = createItemStackFromDamage(getItem(itemId), damageCode, tooltipStyle);
         return new ItemMaterial(itemStack);
     }
 
-    private static ItemStack createItemStack(Item item, float modelValue) {
+    private static ItemStack createItemStack(Item item, float modelValue, Identifier tooltipStyle) {
         ItemStack itemStack = new ItemStack(item);
 
         CustomModelData customModelData = new CustomModelData(List.of(modelValue), List.of(), List.of(), List.of());
         itemStack.set(DataComponents.CUSTOM_MODEL_DATA, customModelData);
         itemStack.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
+        itemStack.set(DataComponents.TOOLTIP_STYLE, tooltipStyle);
         return itemStack;
     }
 
-    private static ItemStack createItemStackFromDamage(Item item, int damageValue) {
+    private static ItemStack createItemStackFromDamage(Item item, int damageValue, Identifier tooltipStyle) {
         ItemStack itemStack = new ItemStack(item);
 
         itemStack.set(DataComponents.DAMAGE, damageValue);
         itemStack.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
+        itemStack.set(DataComponents.TOOLTIP_STYLE, tooltipStyle);
         return itemStack;
     }
 

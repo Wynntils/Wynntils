@@ -21,6 +21,7 @@ import com.wynntils.models.gear.type.GearMajorId;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearRestrictions;
+import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.DamageType;
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import net.minecraft.resources.Identifier;
 
 public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserializer<T> {
     protected Pair<String, String> parseNames(JsonObject json) {
@@ -78,13 +80,14 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return GearType.fromString(typeString);
     }
 
-    protected GearMetaInfo parseMetaInfo(JsonObject json, String apiName, GearType type) {
+    protected GearMetaInfo parseMetaInfo(JsonObject json, String apiName, GearType type, GearTier tier) {
         GearRestrictions restrictions = parseRestrictions(json);
-        ItemMaterial material = parseMaterial(json, type);
+        Identifier tooltipStyle = Identifier.withDefaultNamespace(tier.name().toLowerCase(Locale.ROOT));
+        ItemMaterial material = parseMaterial(json, type, tooltipStyle);
 
         if (material == null || material.itemStack().isEmpty()) {
             WynntilsMod.warn("Failed to parse material for " + json.get("name").getAsString());
-            material = ItemMaterial.fromItemId("minecraft:air", 0);
+            material = ItemMaterial.fromItemId("minecraft:air", 0, tooltipStyle);
         }
 
         List<ItemObtainInfo> obtainInfo = parseObtainInfo(json);
@@ -209,47 +212,47 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return List.copyOf(types);
     }
 
-    private ItemMaterial parseMaterial(JsonObject json, GearType type) {
+    private ItemMaterial parseMaterial(JsonObject json, GearType type, Identifier tooltip) {
         if (type == GearType.HELMET && json.has("armourMaterial")) {
             // Helmets that use vanilla blocks/items use the armourMaterial field instead of icon
             switch (json.get("armourMaterial").getAsString()) {
                 case "creeper" -> {
-                    return ItemMaterial.fromItemId("minecraft:creeper_head", 0);
+                    return ItemMaterial.fromItemId("minecraft:creeper_head", 0, tooltip);
                 }
                 case "zombie" -> {
-                    return ItemMaterial.fromItemId("minecraft:zombie_head", 0);
+                    return ItemMaterial.fromItemId("minecraft:zombie_head", 0, tooltip);
                 }
                 case "pumpkin" -> {
-                    return ItemMaterial.fromItemId("minecraft:carved_pumpkin", 0);
+                    return ItemMaterial.fromItemId("minecraft:carved_pumpkin", 0, tooltip);
                 }
                 case "jackolantern" -> {
-                    return ItemMaterial.fromItemId("minecraft:jack_o_lantern", 0);
+                    return ItemMaterial.fromItemId("minecraft:jack_o_lantern", 0, tooltip);
                 }
                 // These are not currently used so they are just guesses at the moment
                 case "skeleton" -> {
-                    return ItemMaterial.fromItemId("minecraft:skeleton_skull", 0);
+                    return ItemMaterial.fromItemId("minecraft:skeleton_skull", 0, tooltip);
                 }
                 case "witherskeleton" -> {
-                    return ItemMaterial.fromItemId("minecraft:wither_skeleton_skull", 0);
+                    return ItemMaterial.fromItemId("minecraft:wither_skeleton_skull", 0, tooltip);
                 }
                 case "piglin" -> {
-                    return ItemMaterial.fromItemId("minecraft:piglin_head", 0);
+                    return ItemMaterial.fromItemId("minecraft:piglin_head", 0, tooltip);
                 }
                 default -> {
                     // Unknown material, try parsing normally
-                    return parseMaterial(json);
+                    return parseMaterial(json, tooltip);
                 }
             }
         } else {
-            return parseMaterial(json);
+            return parseMaterial(json, tooltip);
         }
     }
 
-    protected ItemMaterial parseMaterial(JsonObject json) {
+    protected ItemMaterial parseMaterial(JsonObject json, Identifier tooltipStyle) {
         if (!json.has("icon")) {
             WynntilsMod.warn(
                     "Item DB does not contain an icon for " + json.get("name").getAsString());
-            return ItemMaterial.fromItemId("minecraft:air", 0);
+            return ItemMaterial.fromItemId("minecraft:air", 0, tooltipStyle);
         }
 
         JsonObject icon = json.getAsJsonObject("icon");
@@ -267,7 +270,8 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
                     if (modelDataOpt.isPresent()) {
                         return ItemMaterial.fromItemId(
                                 value.get("id").getAsString(),
-                                modelDataOpt.get().intValue());
+                                modelDataOpt.get().intValue(),
+                                tooltipStyle);
                     }
                 }
 
@@ -283,7 +287,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
                     } else {
                         WynntilsMod.warn("Item DB does not contain custom model data for "
                                 + json.get("name").getAsString());
-                        return ItemMaterial.fromItemId("minecraft:air", 0);
+                        return ItemMaterial.fromItemId("minecraft:air", 0, tooltipStyle);
                     }
                 } else if (customModelData.isJsonPrimitive()) {
                     // Original format, only the single model data was sent as either a string or an int
@@ -295,20 +299,20 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
                 } else {
                     WynntilsMod.warn("Unexpected custom model data format for "
                             + json.get("name").getAsString());
-                    return ItemMaterial.fromItemId("minecraft:air", 0);
+                    return ItemMaterial.fromItemId("minecraft:air", 0, tooltipStyle);
                 }
 
-                return ItemMaterial.fromItemId(value.get("id").getAsString(), customModelDataInt);
+                return ItemMaterial.fromItemId(value.get("id").getAsString(), customModelDataInt, tooltipStyle);
             }
             case "skin" -> {
-                return ItemMaterial.fromPlayerHeadUUID(icon.get("value").getAsString());
+                return ItemMaterial.fromPlayerHeadUUID(icon.get("value").getAsString(), tooltipStyle);
             }
             case "legacy" -> {
                 String material = icon.get("value").getAsString();
                 String[] materialArray = material.split(":");
                 int itemTypeCode = Integer.parseInt(materialArray[0]);
                 int damageCode = materialArray.length > 1 ? Integer.parseInt(materialArray[1]) : 0;
-                return ItemMaterial.fromItemTypeCode(itemTypeCode, damageCode);
+                return ItemMaterial.fromItemTypeCode(itemTypeCode, damageCode, tooltipStyle);
             }
         }
 
