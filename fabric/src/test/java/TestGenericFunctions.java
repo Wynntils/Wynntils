@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 import com.wynntils.core.WynntilsMod;
@@ -28,6 +28,38 @@ public class TestGenericFunctions {
     @Test
     public void testMathFunctions() {
         assertTemplateResult("{int(add(5;6))}", "11");
+
+        assertTemplateResult("{equals(abs(-12.5);12.5)}", "true");
+        assertTemplateResult("{equals(floor(3.9);3)}", "true");
+        assertTemplateResult("{equals(ceil(3.1);4)}", "true");
+        assertTemplateResult("{equals(clamp(50;0;10);10)}", "true");
+        assertTemplateResult("{equals(safe_div(10;0;99);99)}", "true");
+        assertTemplateResult("{equals(map(15;10;20;0;100);50)}", "true");
+        assertTemplateResult("{equals(wrap(-1;0;10);9)}", "true");
+
+        assertTemplateResult("{equals(round(ln(e());6);1)}", "true");
+        assertTemplateResult("{equals(round(log(1000;10);6);3)}", "true");
+        assertTemplateResult("{equals(round(pi();6);3.141593)}", "true");
+        assertTemplateResult("{equals(round(e();6);2.718282)}", "true");
+
+        assertTemplateResult("{dec_to_hex(48879)}", "BEEF");
+        assertTemplateResult("{equals(hex_to_dec(\"BEEF\");48879)}", "true");
+        assertTemplateResult("{equals(hex_to_dec(\"0x10\");16)}", "true");
+        assertTemplateResult("{equals(hex_to_dec(\"#10\");16)}", "true");
+        assertTemplateResult("{equals(hex_to_dec(\"invalid\");0)}", "true");
+
+        assertTemplateResult("{is_finite(123)}", "true");
+        assertTemplateResult("{is_finite(div(1;0))}", "false");
+        assertTemplateResult("{is_nan(div(0;0))}", "true");
+        assertTemplateResult("{is_infinite(div(1;0))}", "true");
+    }
+
+    @Test
+    public void testLongFunctionsFormatting() {
+        assertTemplateResult("{long(42)}", "42");
+        assertTemplateResult("{parse_long(\"12345678900\")}", "12345678900");
+        assertTemplateResult("{parse_long(\"invalid\")}", "0");
+        assertTemplateResult("{timestamp(time(0))}", "0");
     }
 
     @DisabledIfEnvironmentVariable(named = "CI", matches = ".+")
@@ -41,17 +73,16 @@ public class TestGenericFunctions {
         assertTemplateResult("{absolute_time(time(0))}", "1970-01-01 00:00");
         assertTemplateResult("{absolute_time(offset(time(0);60))}", "1970-01-01 00:01");
 
-        // FIXME: why are longs returned as decimal numbers?
-        assertTemplateResult("{timestamp(time(0))}", "0.00");
+        assertTemplateResult("{timestamp(time(0))}", "0");
 
         assertTemplateResult("{offset(now;-1)}", "1 second ago");
         assertTemplateResult("{offset(now;-125)}", "2 minutes ago");
         assertTemplateResult("{time_offset(now;190)}", "in 3 minutes");
 
-        assertTemplateResult("{seconds_between(now;offset(now;5))}", "5.00");
-        assertTemplateResult("{seconds_between(offset(now;60);now)}", "-60.00");
+        assertTemplateResult("{seconds_between(now;offset(now;5))}", "5");
+        assertTemplateResult("{seconds_between(offset(now;60);now)}", "-60");
 
-        assertTemplateResult("{seconds_since(offset(now;-17))}", "17.00");
+        assertTemplateResult("{seconds_since(offset(now;-17))}", "17");
 
         long then = System.currentTimeMillis() - 10000;
         assertTemplateResult("{time(" + then + ")}", "10 seconds ago");
