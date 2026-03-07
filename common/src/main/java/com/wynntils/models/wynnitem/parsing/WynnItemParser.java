@@ -76,7 +76,7 @@ public final class WynnItemParser {
             "§f(?<statName>[\\w\\.\\- ]+).+?§#(acfac6ff|faacacff)(?<value>[-+][\\d,]+)(?<unit>%| tier|\\/[35]s)?(?:§f §8.+?(?:§(?<indicatorColor>#[a-zA-Z0-9]{8})(.)?)?)?");
 
     // Test in WynnItemParser_TIER_PATTERN
-    private static final Pattern TIER_PATTERN = Pattern.compile("§f\uDB00\uDC23§([5bcdef]).+");
+    private static final Pattern TIER_PATTERN = Pattern.compile("§f\uDB00\uDC23§([35bcdef]).+");
 
     private static final Pattern REROLL_EXTRACT_PATTERN = Pattern.compile("\uE060(.*?)\uE062");
 
@@ -375,6 +375,13 @@ public final class WynnItemParser {
                     // Load the possible values for this stat
                     StatPossibleValues possibleValues =
                             possibleValuesMap != null ? possibleValuesMap.get(statType) : null;
+
+                    if (tier == GearTier.CRAFTED && possibleValuesMap != null) {
+                        // Add possible values for this stat
+                        StatPossibleValues calculatedPossibleValues =
+                                new StatPossibleValues(statType, RangedValue.of(value, value), value, false);
+                        possibleValuesMap.put(statType, calculatedPossibleValues);
+                    }
 
                     StatActualValue actualValue = Models.Stat.buildActualValue(statType, value, stars, possibleValues);
                     identifications.add(actualValue);
