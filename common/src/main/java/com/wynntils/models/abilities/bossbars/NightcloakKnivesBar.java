@@ -25,7 +25,6 @@ public final class NightcloakKnivesBar extends TrackedBar {
     public void onUpdateName(Matcher match) {
         try {
             current = Integer.parseInt(match.group(1));
-
         } catch (NumberFormatException e) {
             WynntilsMod.error(String.format("Failed to parse current nightcloak knife armount (%s)", match.group(1)));
         }
