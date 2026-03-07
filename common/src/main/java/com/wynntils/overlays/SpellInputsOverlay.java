@@ -49,6 +49,9 @@ public class SpellInputsOverlay extends Overlay {
     private final Config<SpellInputStyle> inputStyle = new Config<>(SpellInputStyle.ORIGINAL);
 
     @Persisted
+    private final Config<Boolean> clearOnFail = new Config<>(true);
+
+    @Persisted
     private final Config<TextShadow> textShadow = new Config<>(TextShadow.NONE);
 
     @Persisted
@@ -89,8 +92,8 @@ public class SpellInputsOverlay extends Overlay {
 
     @SubscribeEvent
     public void onSpellFailed(SpellEvent.Failed event) {
-        // The vanilla overlay does not remove the text on failure but we do this to prevent overlap with
-        // SpellCastMessageOverlay
+        if (!clearOnFail.get()) return;
+
         spellText = StyledText.EMPTY;
     }
 

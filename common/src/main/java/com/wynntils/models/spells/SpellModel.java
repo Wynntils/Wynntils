@@ -52,6 +52,8 @@ public final class SpellModel extends Model {
     // This keeps track of if the spell cast text is currently displayed so that we don't send multiple events
     private boolean spellTextActive = false;
 
+    private SpellFailureReason failureReason = null;
+
     public SpellModel() {
         super(List.of());
 
@@ -75,10 +77,7 @@ public final class SpellModel extends Model {
     public void onChatMessage(ChatMessageEvent.Match e) {
         StyledText message = StyledTextUtils.unwrap(e.getMessage()).stripAlignment();
 
-        SpellFailureReason failureReason = SpellFailureReason.fromMsg(message);
-        if (failureReason != null) {
-            WynntilsMod.postEvent(new SpellEvent.Failed(failureReason));
-        }
+        failureReason = SpellFailureReason.fromMsg(message);
     }
 
     @SubscribeEvent
@@ -211,7 +210,13 @@ public final class SpellModel extends Model {
         WynntilsMod.postEvent(new SpellEvent.Partial(lastSpell));
 
         if (lastSpell.length == 3) {
-            WynntilsMod.postEvent(new SpellEvent.Completed(lastSpell, SpellType.fromSpellDirectionArray(lastSpell)));
+            if (failureReason != null) {
+                WynntilsMod.postEvent(new SpellEvent.Failed(failureReason));
+                failureReason = null;
+            } else {
+                WynntilsMod.postEvent(
+                        new SpellEvent.Completed(lastSpell, SpellType.fromSpellDirectionArray(lastSpell)));
+            }
         }
     }
 
