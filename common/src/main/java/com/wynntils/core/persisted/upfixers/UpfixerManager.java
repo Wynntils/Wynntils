@@ -11,6 +11,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.upfixers.config.CombatXpGainToXpGainUpfixer;
+import com.wynntils.core.persisted.upfixers.config.ContentTrackerTextOverlayUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomBankQuickJumpsBankNameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomBankQuickJumpsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomCommandKeybindSlashStartUpfixer;
@@ -87,6 +88,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new MythicBlockerToChestBlockerUpfixer());
         registerConfigUpfixer(new MaxItensityToMaxIntensityUpfixer());
         registerConfigUpfixer(new ShowAdditonalTextAboveToShowAdditionalTextAboveUpfixer());
+        registerConfigUpfixer(new ContentTrackerTextOverlayUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());
