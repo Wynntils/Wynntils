@@ -16,8 +16,10 @@ import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
+import com.wynntils.models.items.properties.ShinyItemProperty;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.colors.CommonColors;
@@ -33,13 +35,16 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public final class ItemSharingScreen extends WynntilsScreen {
@@ -162,6 +167,17 @@ public final class ItemSharingScreen extends WynntilsScreen {
         WynnItem renderedItem = errorOrDecodedByteBuffer.getValue();
 
         previewItemStack = new FakeItemStack(renderedItem, "From chat");
+
+        if (renderedItem instanceof GearTierItemProperty gearTier) {
+            String tooltipStyle = gearTier.getGearTier().name().toLowerCase(Locale.ROOT);
+
+            if (renderedItem instanceof ShinyItemProperty shiny
+                    && shiny.getShinyStat().isPresent()) {
+                tooltipStyle += "_shiny";
+            }
+
+            previewItemStack.set(DataComponents.TOOLTIP_STYLE, Identifier.withDefaultNamespace(tooltipStyle));
+        }
 
         // Find the width of the tooltip
         int tooltipWidth = LoreUtils.getTooltipLines(previewItemStack).stream()

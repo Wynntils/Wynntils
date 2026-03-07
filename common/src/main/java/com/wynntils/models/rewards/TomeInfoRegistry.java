@@ -33,10 +33,12 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
+import net.minecraft.resources.Identifier;
 
 public class TomeInfoRegistry {
     private static final Gson GSON = new GsonBuilder()
@@ -112,7 +114,7 @@ public class TomeInfoRegistry {
                 throw new RuntimeException("Invalid Wynncraft data: tome has no tier");
             }
 
-            GearMetaInfo metaInfo = parseMetaInfo(json, internalName);
+            GearMetaInfo metaInfo = parseMetaInfo(json, internalName, tier);
             TomeRequirements requirements = parseTomeRequirements(json);
 
             JsonObject identifications = JsonUtils.getNullableJsonObject(json, "identifications");
@@ -122,9 +124,10 @@ public class TomeInfoRegistry {
             return new TomeInfo(displayName, type, tier, metaInfo, requirements, variableStats);
         }
 
-        private GearMetaInfo parseMetaInfo(JsonObject json, String apiName) {
+        private GearMetaInfo parseMetaInfo(JsonObject json, String apiName, GearTier tier) {
             GearRestrictions restrictions = parseRestrictions(json);
-            ItemMaterial material = parseMaterial(json, apiName);
+            ItemMaterial material = parseMaterial(
+                    json, apiName, Identifier.withDefaultNamespace(tier.name().toLowerCase(Locale.ROOT)));
 
             List<ItemObtainInfo> obtainInfo = parseObtainInfo(json);
 
@@ -132,12 +135,12 @@ public class TomeInfoRegistry {
                     restrictions, material, obtainInfo, Optional.empty(), Optional.empty(), true, false);
         }
 
-        private ItemMaterial parseMaterial(JsonObject json, String name) {
-            ItemMaterial material = parseMaterial(json);
+        private ItemMaterial parseMaterial(JsonObject json, String name, Identifier tooltipStyle) {
+            ItemMaterial material = parseMaterial(json, tooltipStyle);
 
             if (material == null) {
                 WynntilsMod.warn("Tome DB is missing material for " + name);
-                return ItemMaterial.getDefaultTomeItemMaterial();
+                return ItemMaterial.getDefaultTomeItemMaterial(tooltipStyle);
             }
 
             return material;
