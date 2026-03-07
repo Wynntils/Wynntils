@@ -17,6 +17,7 @@ import com.wynntils.models.abilities.bossbars.DistortionBar;
 import com.wynntils.models.abilities.bossbars.FocusBar;
 import com.wynntils.models.abilities.bossbars.HolyPowerBar;
 import com.wynntils.models.abilities.bossbars.ManaBankBar;
+import com.wynntils.models.abilities.bossbars.MirrorImageBar;
 import com.wynntils.models.abilities.bossbars.MomentumBar;
 import com.wynntils.models.abilities.bossbars.NightcloakKnivesBar;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
@@ -49,6 +50,8 @@ public final class AbilityModel extends Model {
 
     public static final TrackedBar manaBankBar = new ManaBankBar();
 
+    public static final MirrorImageBar mirrorImageBar = new MirrorImageBar();
+
     public static final MomentumBar momentumBar = new MomentumBar();
 
     public static final NightcloakKnivesBar nightcloakKnivesBar = new NightcloakKnivesBar();
@@ -66,6 +69,7 @@ public final class AbilityModel extends Model {
             focusBar,
             holyPowerBar,
             manaBankBar,
+            mirrorImageBar,
             momentumBar,
             nightcloakKnivesBar,
             ophanimBar);

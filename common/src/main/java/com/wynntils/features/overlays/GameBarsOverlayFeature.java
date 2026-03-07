@@ -20,6 +20,7 @@ import com.wynntils.overlays.gamebars.HealthBarOverlay;
 import com.wynntils.overlays.gamebars.HolyPowerBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBankBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBarOverlay;
+import com.wynntils.overlays.gamebars.MirrorImageBarOverlay;
 import com.wynntils.overlays.gamebars.MomentumBarOverlay;
 import com.wynntils.overlays.gamebars.NightcloakKnivesBarOverlay;
 import com.wynntils.overlays.gamebars.OphanimBarOverlay;
@@ -27,11 +28,32 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class GameBarsOverlayFeature extends Feature {
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
+    private final AwakenedProgressBarOverlay awakenedProgressBarOverlay = new AwakenedProgressBarOverlay();
+
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
+    private final BloodPoolBarOverlay bloodPoolBarOverlay = new BloodPoolBarOverlay();
+
     @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)
     private final HealthBarOverlay healthBarOverlay = new HealthBarOverlay();
 
     @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
-    private final BloodPoolBarOverlay bloodPoolBarOverlay = new BloodPoolBarOverlay();
+    private final CommanderBarOverlay commanderBarOverlay = new CommanderBarOverlay();
+
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
+    private final CorruptedBarOverlay corruptedBarOverlay = new CorruptedBarOverlay();
+
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
+    private final DistortionBarOverlay distortionBarOverlay = new DistortionBarOverlay();
+
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
+    private final FocusBarOverlay focusBarOverlay = new FocusBarOverlay();
+
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
+    private final FocusedMobHealthBarOverlay focusedMobHealthBarOverlay = new FocusedMobHealthBarOverlay();
+
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
+    private final HolyPowerBarOverlay holyPowerBarOverlay = new HolyPowerBarOverlay();
 
     @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)
     private final ManaBarOverlay manaBarOverlay = new ManaBarOverlay();
@@ -40,31 +62,13 @@ public class GameBarsOverlayFeature extends Feature {
     private final ManaBankBarOverlay manaBankBarOverlay = new ManaBankBarOverlay();
 
     @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
-    private final FocusBarOverlay focusBarOverlay = new FocusBarOverlay();
-
-    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
-    private final AwakenedProgressBarOverlay awakenedProgressBarOverlay = new AwakenedProgressBarOverlay();
-
-    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
-    private final CorruptedBarOverlay corruptedBarOverlay = new CorruptedBarOverlay();
-
-    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
-    private final OphanimBarOverlay ophanimBarOverlay = new OphanimBarOverlay();
-
-    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
-    private final HolyPowerBarOverlay holyPowerBarOverlay = new HolyPowerBarOverlay();
-
-    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
-    private final FocusedMobHealthBarOverlay focusedMobHealthBarOverlay = new FocusedMobHealthBarOverlay();
-
-    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
-    private final CommanderBarOverlay commanderBarOverlay = new CommanderBarOverlay();
+    private final MirrorImageBarOverlay mirrorImageBarOverlay = new MirrorImageBarOverlay();
 
     @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final MomentumBarOverlay momentumBarOverlay = new MomentumBarOverlay();
 
     @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
-    private final DistortionBarOverlay distortionBarOverlay = new DistortionBarOverlay();
+    private final OphanimBarOverlay ophanimBarOverlay = new OphanimBarOverlay();
 
     @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final NightcloakKnivesBarOverlay nightcloakKnivesBarOverlay = new NightcloakKnivesBarOverlay();
