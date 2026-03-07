@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -21,6 +21,7 @@ public class DurabilityDataTransformer extends DataTransformer<DurabilityData> {
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, DurabilityData data) {
         return switch (version) {
             case VERSION_1, VERSION_2 -> encodeDurabilityData(data);
+            case VERSION_3 -> encodeDurabilityDataV3(data);
         };
     }
 
@@ -28,6 +29,7 @@ public class DurabilityDataTransformer extends DataTransformer<DurabilityData> {
     public ErrorOr<DurabilityData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
             case VERSION_1, VERSION_2 -> decodeDurabilityData(byteReader);
+            case VERSION_3 -> decodeDurabilityDataV3(byteReader);
         };
     }
 
@@ -39,12 +41,8 @@ public class DurabilityDataTransformer extends DataTransformer<DurabilityData> {
     private ErrorOr<UnsignedByte[]> encodeDurabilityData(DurabilityData data) {
         List<UnsignedByte> bytes = new ArrayList<>();
 
-        // The first byte is the overall effectiveness of the identifications (the percentage next to the name for
-        // crafted items).
-        if (data.effectStrength() > 100 || data.effectStrength() < 0) {
-            return ErrorOr.error("Effect strength was not a percentage.");
-        }
-        bytes.add(UnsignedByte.of((byte) data.effectStrength()));
+        // Effect strength no longer exists for crafted items.
+        bytes.add(UnsignedByte.of((byte) 100));
 
         // The next bytes are the maximum durability bytes, which are assembled into an integer.
         int max = data.durability().max();
@@ -60,9 +58,8 @@ public class DurabilityDataTransformer extends DataTransformer<DurabilityData> {
     }
 
     private ErrorOr<DurabilityData> decodeDurabilityData(ArrayReader<UnsignedByte> byteReader) {
-        // The first byte is the overall effectiveness of the identifications (the percentage next to the name for
-        // crafted items).
-        int effectStrength = byteReader.read().value();
+        // Effect strength no longer exists for crafted items.
+        byteReader.read();
 
         // The next bytes are the maximum durability bytes, which are assembled into an integer.
         int max = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
@@ -70,6 +67,32 @@ public class DurabilityDataTransformer extends DataTransformer<DurabilityData> {
         // The next bytes are the current durability bytes, which are assembled into an integer.
         int current = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
-        return ErrorOr.of(new DurabilityData(effectStrength, new CappedValue(current, max)));
+        return ErrorOr.of(new DurabilityData(new CappedValue(current, max)));
+    }
+
+    private ErrorOr<UnsignedByte[]> encodeDurabilityDataV3(DurabilityData data) {
+        List<UnsignedByte> bytes = new ArrayList<>();
+
+        // The first bytes are the maximum durability bytes, which are assembled into an integer.
+        int max = data.durability().max();
+        UnsignedByte[] unsignedBytes = UnsignedByteUtils.encodeVariableSizedInteger(max);
+        bytes.addAll(List.of(unsignedBytes));
+
+        // The next bytes are the current durability bytes, which are assembled into an integer.
+        int current = data.durability().current();
+        unsignedBytes = UnsignedByteUtils.encodeVariableSizedInteger(current);
+        bytes.addAll(List.of(unsignedBytes));
+
+        return ErrorOr.of(bytes.toArray(new UnsignedByte[0]));
+    }
+
+    private ErrorOr<DurabilityData> decodeDurabilityDataV3(ArrayReader<UnsignedByte> byteReader) {
+        // The first bytes are the maximum durability bytes, which are assembled into an integer.
+        int max = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
+
+        // The next bytes are the current durability bytes, which are assembled into an integer.
+        int current = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
+
+        return ErrorOr.of(new DurabilityData(new CappedValue(current, max)));
     }
 }

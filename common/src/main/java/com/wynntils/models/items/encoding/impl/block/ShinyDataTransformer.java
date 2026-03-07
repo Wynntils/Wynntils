@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -20,7 +20,7 @@ public class ShinyDataTransformer extends DataTransformer<ShinyData> {
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, ShinyData data) {
         return switch (version) {
             case VERSION_1 -> ErrorOr.of(encodeShinyData(data));
-            case VERSION_2 -> ErrorOr.of(encodeShinyDataV2(data));
+            case VERSION_2, VERSION_3 -> ErrorOr.of(encodeShinyDataV2(data));
         };
     }
 
@@ -33,7 +33,7 @@ public class ShinyDataTransformer extends DataTransformer<ShinyData> {
     public ErrorOr<ShinyData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
             case VERSION_1 -> decodeShinyData(byteReader);
-            case VERSION_2 -> decodeShinyDataV2(byteReader);
+            case VERSION_2, VERSION_3 -> decodeShinyDataV2(byteReader);
         };
     }
 

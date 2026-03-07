@@ -43,6 +43,7 @@ public class CraftedGearItem extends GameItem
     private final String name;
     private final GearType gearType;
     private final GearAttackSpeed attackSpeed;
+    private final int dps;
     private final int health;
     private final List<Pair<DamageType, RangedValue>> damages;
     private final List<Pair<Element, Integer>> defences;
@@ -59,6 +60,7 @@ public class CraftedGearItem extends GameItem
             String name,
             GearType gearType,
             GearAttackSpeed attackSpeed,
+            int dps,
             int health,
             List<Pair<DamageType, RangedValue>> damages,
             List<Pair<Element, Integer>> defences,
@@ -73,6 +75,7 @@ public class CraftedGearItem extends GameItem
         this.name = name;
         this.gearType = gearType;
         this.attackSpeed = attackSpeed;
+        this.dps = dps;
         this.health = health;
         this.damages = damages;
         this.defences = defences;
@@ -98,6 +101,10 @@ public class CraftedGearItem extends GameItem
 
     public Optional<GearAttackSpeed> getAttackSpeed() {
         return Optional.ofNullable(attackSpeed);
+    }
+
+    public int getDps() {
+        return dps;
     }
 
     public int getHealth() {

@@ -70,6 +70,14 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
             header.add(Component.literal(""));
         }
 
+        // dps
+        int dps = craftedItem.getDps();
+        if (dps != 0) {
+            MutableComponent dpsComp = Component.literal(" Average DPS: ").withStyle(ChatFormatting.DARK_GRAY);
+            dpsComp.append(Component.literal(String.valueOf(dps)).withStyle(ChatFormatting.GRAY));
+            header.add(dpsComp);
+        }
+
         // health
         int health = craftedItem.getHealth();
         if (health != 0) {
