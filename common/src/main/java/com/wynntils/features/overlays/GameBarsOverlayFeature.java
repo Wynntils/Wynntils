@@ -9,7 +9,6 @@ import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.overlays.gamebars.NightcloakKnivesBarOverlay;
 import com.wynntils.overlays.gamebars.AwakenedProgressBarOverlay;
 import com.wynntils.overlays.gamebars.BloodPoolBarOverlay;
 import com.wynntils.overlays.gamebars.CommanderBarOverlay;
@@ -22,6 +21,7 @@ import com.wynntils.overlays.gamebars.HolyPowerBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBankBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBarOverlay;
 import com.wynntils.overlays.gamebars.MomentumBarOverlay;
+import com.wynntils.overlays.gamebars.NightcloakKnivesBarOverlay;
 import com.wynntils.overlays.gamebars.OphanimBarOverlay;
 import com.wynntils.utils.type.RenderElementType;
 

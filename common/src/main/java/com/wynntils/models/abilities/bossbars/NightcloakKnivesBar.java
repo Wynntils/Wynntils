@@ -17,7 +17,9 @@ public final class NightcloakKnivesBar extends TrackedBar {
         super(NIGHTCLOAK_KNIVES_PATTERN);
     }
 
-    public int getCurrent(){return current;}
+    public int getCurrent() {
+        return current;
+    }
 
     @Override
     public void onUpdateName(Matcher match) {
@@ -25,8 +27,7 @@ public final class NightcloakKnivesBar extends TrackedBar {
             current = Integer.parseInt(match.group(1));
 
         } catch (NumberFormatException e) {
-            WynntilsMod.error(String.format(
-                    "Failed to parse current nightcloak knife armount (%s)", match.group(1)));
+            WynntilsMod.error(String.format("Failed to parse current nightcloak knife armount (%s)", match.group(1)));
         }
     }
 }
