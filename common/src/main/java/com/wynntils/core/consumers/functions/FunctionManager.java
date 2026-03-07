@@ -418,14 +418,14 @@ public final class FunctionManager extends Manager {
         registerFunction(new MathFunctions.ClampFunction());
         registerFunction(new MathFunctions.DecToHexFunction());
         registerFunction(new MathFunctions.DivideFunction());
-        registerFunction(new MathFunctions.EFunction());
+        registerFunction(new MathFunctions.EulerFunction());
         registerFunction(new MathFunctions.FloorFunction());
         registerFunction(new MathFunctions.HexToDecFunction());
         registerFunction(new MathFunctions.IntegerFunction());
         registerFunction(new MathFunctions.IsFiniteFunction());
         registerFunction(new MathFunctions.IsInfiniteFunction());
         registerFunction(new MathFunctions.IsNanFunction());
-        registerFunction(new MathFunctions.LnFunction());
+        registerFunction(new MathFunctions.NaturalLogFunction());
         registerFunction(new MathFunctions.LogFunction());
         registerFunction(new MathFunctions.LongFunction());
         registerFunction(new MathFunctions.MapFunction());
@@ -437,7 +437,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new MathFunctions.PowerFunction());
         registerFunction(new MathFunctions.RandomFunction());
         registerFunction(new MathFunctions.RoundFunction());
-        registerFunction(new MathFunctions.SafeDivFunction());
+        registerFunction(new MathFunctions.SafeDivideFunction());
         registerFunction(new MathFunctions.SquareRootFunction());
         registerFunction(new MathFunctions.SubtractFunction());
         registerFunction(new MathFunctions.WrapFunction());
