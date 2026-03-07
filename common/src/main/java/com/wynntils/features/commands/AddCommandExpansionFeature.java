@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.CommandSuggestionEvent;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -38,7 +39,9 @@ public class AddCommandExpansionFeature extends Feature {
 
     @SubscribeEvent
     public void onCommandSuggestions(CommandSuggestionEvent.Add event) {
-        suggestions.stream().filter(s -> s.startsWith(event.getInput())).forEach(event::addSuggestion);
+        suggestions.stream()
+                .filter(s -> s.startsWith(event.getInput().toLowerCase(Locale.ROOT)))
+                .forEach(event::addSuggestion);
     }
 
     @Override
@@ -191,6 +194,7 @@ public class AddCommandExpansionFeature extends Feature {
         suggestions.add("thankyou");
 
         suggestions.add("renameitem");
+        addAlias("ri", AliasCommandLevel.SHORT_FORMS);
         addAlias("renameitems", AliasCommandLevel.ALL);
 
         suggestions.add("renamepet");
