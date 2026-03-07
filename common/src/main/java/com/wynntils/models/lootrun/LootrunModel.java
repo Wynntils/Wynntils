@@ -916,12 +916,12 @@ public final class LootrunModel extends Model {
         possibleTaskLocations.clear();
         vibrantBeacons.clear();
 
-        getCurrentLootrunDetails().setOrangeAmount(-1);
-        getCurrentLootrunDetails().setRainbowAmount(-1);
-        lootrunDetailsStorage.touched();
-
-        expectOrangeBeacon = false;
-        expectRainbowBeacon = false;
+        // Note: We intentionally do NOT reset orangeAmount, rainbowAmount, expectOrangeBeacon,
+        // or expectRainbowBeacon here. The beacon description and amount chat messages can arrive
+        // before or after "Choose a Beacon!", and resetting here would nuke values that were
+        // already captured. These are properly managed by:
+        // - challengeCompleted() / challengeFailed(): always reset orangeAmount and rainbowAmount
+        // - The amount capture handlers in onChatMessage: clear expect flags when matched
     }
 
     private void addToRedBeaconTaskCount(int changeAmount) {
@@ -1020,20 +1020,29 @@ public final class LootrunModel extends Model {
             return;
         }
 
-        Beacon closestBeacon = getClosestBeacon();
-        if (oldState == LootrunningState.CHOOSING_BEACON
-                && newState == LootrunningState.IN_TASK
-                && closestBeacon != null
-                && closestBeacon.beaconKind() instanceof LootrunBeaconKind color) {
-            WynntilsMod.info("Selected a " + color + " beacon at " + closestBeacon.position());
-            getCurrentLootrunDetails().incrementBeaconCount(color);
-            lootrunDetailsStorage.touched();
+        if (oldState == LootrunningState.CHOOSING_BEACON && newState == LootrunningState.IN_TASK) {
+            // Always reduce beacon counts when starting a new task, regardless of whether
+            // we know which beacon was selected. This avoids a race condition where the
+            // scoreboard updates to IN_TASK before the beacon removal event sets closestBeacon.
+            reduceBeaconCounts();
 
-            setLastTaskBeaconColor(color);
-            WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(
-                    closestBeacon,
-                    beacons.get(closestBeacon.beaconKind()).taskLocation(),
-                    activeTaskTypes.getOrDefault(closestBeacon.beaconKind(), LootrunTaskType.UNKNOWN)));
+            Beacon closestBeacon = getClosestBeacon();
+            if (closestBeacon != null && closestBeacon.beaconKind() instanceof LootrunBeaconKind color) {
+                WynntilsMod.info("Selected a " + color + " beacon at " + closestBeacon.position());
+                getCurrentLootrunDetails().incrementBeaconCount(color);
+                lootrunDetailsStorage.touched();
+
+                setLastTaskBeaconColor(color);
+                WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(
+                        closestBeacon,
+                        beacons.get(closestBeacon.beaconKind()).taskLocation(),
+                        activeTaskTypes.getOrDefault(closestBeacon.beaconKind(), LootrunTaskType.UNKNOWN)));
+            } else {
+                WynntilsMod.warn("Started a task but closestBeacon was not set; beacon-specific tracking skipped");
+                // Clear stale color to prevent challengeCompleted() from incorrectly
+                // adding rainbow/orange counts based on the previous challenge's color.
+                setLastTaskBeaconColor(null);
+            }
 
             possibleTaskLocations = new HashSet<>();
 
@@ -1043,9 +1052,6 @@ public final class LootrunModel extends Model {
             activeBeacons.clear();
             activeTaskTypes.clear();
             setClosestBeacon(null);
-            expectOrangeBeacon = false;
-            expectRainbowBeacon = false;
-            reduceBeaconCounts();
             LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
             return;
         }
