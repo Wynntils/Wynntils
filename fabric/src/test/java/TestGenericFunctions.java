@@ -28,10 +28,7 @@ public class TestGenericFunctions {
     @Test
     public void testMathFunctions() {
         assertTemplateResult("{int(add(5;6))}", "11");
-    }
 
-    @Test
-    public void testApprovedMathFunctions() {
         assertTemplateResult("{equals(abs(-12.5);12.5)}", "true");
         assertTemplateResult("{equals(floor(3.9);3)}", "true");
         assertTemplateResult("{equals(ceil(3.1);4)}", "true");
