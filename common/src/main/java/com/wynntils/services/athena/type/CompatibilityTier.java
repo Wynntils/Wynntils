@@ -33,7 +33,7 @@ public enum CompatibilityTier {
         return shouldScreenPrompt;
     }
 
-    public boolean shouldChatPrompt() {
+    public boolean shouldToastPrompt() {
         return shouldToastPrompt;
     }
 
