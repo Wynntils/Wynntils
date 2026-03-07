@@ -32,12 +32,12 @@ public class DamageLabelParser implements LabelParser<DamageLabelInfo> {
 
     private static final Map<Character, DamageType> TYPE_BY_COLOR = Map.of(
             '2', DamageType.EARTH,
-            '5', DamageType.WATER,
-            'b', DamageType.AIR,
+            'b', DamageType.WATER,
+            'f', DamageType.AIR,
             'c', DamageType.FIRE,
             'e', DamageType.THUNDER,
-            'f', DamageType.NEUTRAL,
-            '4', DamageType.NEUTRAL);
+            '4', DamageType.NEUTRAL,
+            '5', DamageType.POISON);
 
     @Override
     public DamageLabelInfo getInfo(StyledText label, Location location, Entity entity) {
