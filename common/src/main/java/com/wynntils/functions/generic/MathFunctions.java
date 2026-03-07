@@ -291,7 +291,7 @@ public final class MathFunctions {
         }
     }
 
-    public static class SafeDivFunction extends GenericFunction<Double> {
+    public static class SafeDivideFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
             double dividend = arguments.getArgument("dividend").getDoubleValue();
@@ -311,7 +311,7 @@ public final class MathFunctions {
         }
     }
 
-    public static class LnFunction extends GenericFunction<Double> {
+    public static class NaturalLogFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
             return Math.log(arguments.getArgument("value").getDoubleValue());
@@ -399,7 +399,7 @@ public final class MathFunctions {
         }
     }
 
-    public static class EFunction extends GenericFunction<Double> {
+    public static class EulerFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
             return Math.E;
