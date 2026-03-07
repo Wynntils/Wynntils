@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.overlays.gamebars.NightcloakKnivesBarOverlay;
 import com.wynntils.overlays.gamebars.AwakenedProgressBarOverlay;
 import com.wynntils.overlays.gamebars.BloodPoolBarOverlay;
 import com.wynntils.overlays.gamebars.CommanderBarOverlay;
@@ -64,6 +65,9 @@ public class GameBarsOverlayFeature extends Feature {
 
     @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final DistortionBarOverlay distortionBarOverlay = new DistortionBarOverlay();
+
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
+    private final NightcloakKnivesBarOverlay nightcloakKnivesBarOverlay = new NightcloakKnivesBarOverlay();
 
     public GameBarsOverlayFeature() {
         super(ProfileDefault.onlyDefault());

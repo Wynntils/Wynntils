@@ -18,6 +18,7 @@ import com.wynntils.models.abilities.bossbars.FocusBar;
 import com.wynntils.models.abilities.bossbars.HolyPowerBar;
 import com.wynntils.models.abilities.bossbars.ManaBankBar;
 import com.wynntils.models.abilities.bossbars.MomentumBar;
+import com.wynntils.models.abilities.bossbars.NightcloakKnivesBar;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.Arrays;
@@ -50,6 +51,8 @@ public final class AbilityModel extends Model {
 
     public static final MomentumBar momentumBar = new MomentumBar();
 
+    public static final NightcloakKnivesBar nightcloakKnivesBar = new NightcloakKnivesBar();
+
     public static final OphanimBar ophanimBar = new OphanimBar();
 
     public boolean hummingBirdsState = false;
@@ -64,6 +67,7 @@ public final class AbilityModel extends Model {
             holyPowerBar,
             manaBankBar,
             momentumBar,
+            nightcloakKnivesBar,
             ophanimBar);
 
     public AbilityModel() {
