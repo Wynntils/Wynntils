@@ -309,6 +309,11 @@ public final class MathFunctions {
                     new Argument<>("divisor", Number.class, null),
                     new Argument<>("fallback", Number.class, null)));
         }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("safe_div");
+        }
     }
 
     public static class NaturalLogFunction extends GenericFunction<Double> {
@@ -320,6 +325,11 @@ public final class MathFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("ln");
         }
     }
 
@@ -408,6 +418,11 @@ public final class MathFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of());
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("e");
         }
     }
 
