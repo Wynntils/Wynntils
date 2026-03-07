@@ -14,20 +14,33 @@ import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandSuggestionEvent;
 import java.util.List;
+import java.util.Locale;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMMANDS)
 public class CommandAliasesFeature extends Feature {
     @Persisted
-    private final HiddenConfig<List<RootAlias>> rootAliases =
-            new HiddenConfig<>(List.of(new RootAlias("partyfinder", List.of("pf"))));
+    private final HiddenConfig<List<RootAlias>> rootAliases = new HiddenConfig<>(List.of(
+            new RootAlias("partyfinder", List.of("pf")),
+            new RootAlias("renameitem", List.of("ri")),
+            new RootAlias("onlinemembers", List.of("om"))));
 
     @Persisted
     private final HiddenConfig<List<ArgumentAlias>> argumentAliases = new HiddenConfig<>(List.of(
-            new ArgumentAlias(List.of("guild", "gu", "guilds"), "attack", List.of("a")),
+            new ArgumentAlias(List.of("guild", "gu", "guilds"), "attack", List.of("a", "atk")),
             new ArgumentAlias(List.of("guild", "gu", "guilds"), "manage", List.of("m", "man")),
-            new ArgumentAlias(List.of("guild", "gu", "guilds"), "territory", List.of("t", "terr"))));
+            new ArgumentAlias(List.of("guild", "gu", "guilds"), "territory", List.of("t", "terr")),
+            new ArgumentAlias(List.of("party", "pa"), "create", List.of("c")),
+            new ArgumentAlias(List.of("party", "pa"), "finder", List.of("f")),
+            new ArgumentAlias(List.of("party", "pa"), "invite", List.of("i", "inv")),
+            new ArgumentAlias(List.of("party", "pa"), "join", List.of("j")),
+            new ArgumentAlias(List.of("party", "pa"), "kick", List.of("k")),
+            new ArgumentAlias(List.of("player", "pl"), "guild", List.of("g")),
+            new ArgumentAlias(List.of("player", "pl"), "lastseen", List.of("ls"))));
+
+    // Running `/party kick` or any of its aliases caused heavy log-spam, hopefully this fixes it
+    private boolean rewritingCommand = false;
 
     public CommandAliasesFeature() {
         super(ProfileDefault.ENABLED);
@@ -35,6 +48,8 @@ public class CommandAliasesFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onCommandSent(CommandSentEvent e) {
+        if (rewritingCommand) return;
+
         String message = e.getCommand();
         if (message.isEmpty()) return;
 
@@ -43,7 +58,7 @@ public class CommandAliasesFeature extends Feature {
         boolean changed = false;
 
         for (RootAlias rootAlias : rootAliases.get()) {
-            if (rootAlias.aliases().contains(parts[0])) {
+            if (rootAlias.aliases().contains(parts[0].toLowerCase(Locale.ROOT))) {
                 parts[0] = rootAlias.original();
                 changed = true;
                 break;
@@ -52,10 +67,10 @@ public class CommandAliasesFeature extends Feature {
 
         if (parts.length > 1) {
             for (ArgumentAlias argumentAlias : argumentAliases.get()) {
-                if (!argumentAlias.roots().contains(parts[0])) continue;
+                if (!argumentAlias.roots().contains(parts[0].toLowerCase(Locale.ROOT))) continue;
 
                 for (int i = 1; i < parts.length; i++) {
-                    if (argumentAlias.aliases().contains(parts[i])) {
+                    if (argumentAlias.aliases().contains(parts[i].toLowerCase(Locale.ROOT))) {
                         parts[i] = argumentAlias.original();
                         changed = true;
                     }
@@ -65,7 +80,9 @@ public class CommandAliasesFeature extends Feature {
 
         if (changed) {
             e.setCanceled(true);
+            rewritingCommand = true;
             Handlers.Command.sendCommandImmediately(String.join(" ", parts));
+            rewritingCommand = false;
         }
     }
 
@@ -73,7 +90,7 @@ public class CommandAliasesFeature extends Feature {
     public void onCommandSuggestions(CommandSuggestionEvent.Modify event) {
         String input = event.getInput();
 
-        if (!event.getInput().contains(" ")) {
+        if (!event.getInput().toLowerCase(Locale.ROOT).contains(" ")) {
             for (RootAlias rootAlias : rootAliases.get()) {
                 for (String alias : rootAlias.aliases()) {
                     if (alias.startsWith(event.getInput())) {
@@ -93,7 +110,7 @@ public class CommandAliasesFeature extends Feature {
             if (!argumentAlias.roots().contains(root)) continue;
 
             for (String alias : argumentAlias.aliases()) {
-                if (currentArg.isEmpty() || alias.startsWith(currentArg)) {
+                if (currentArg.isEmpty() || alias.startsWith(currentArg.toLowerCase(Locale.ROOT))) {
                     event.addSuggestion(alias);
                 }
             }
