@@ -224,8 +224,8 @@ public class TestRegex {
         p.shouldMatch("§e509");
         p.shouldMatch("§42.8k");
         p.shouldMatch("§5200k");
-        p.shouldMatch("§42.8k\uDB80\uDC0A§e19.7k\uDB80\uDC0A§c7.1k\uDB80\uDC0A§b7.9k\uDB80\uDC0A§f12.8k");
-        p.shouldMatch("§c1.2k\uDB80\uDC0A§b300\uDB80\uDC0A§e45.6k\uDB80\uDC0A§f999");
+        p.shouldMatch("§42.8k\uDB00\uDC0A§e19.7k\uDB00\uDC0A§c7.1k\uDB00\uDC0A§b7.9k\uDB00\uDC0A§f12.8k");
+        p.shouldMatch("§c1.2k\uDB00\uDC0A§b300\uDB00\uDC0A§e45.6k\uDB00\uDC0A§f999");
     }
 
     @Test

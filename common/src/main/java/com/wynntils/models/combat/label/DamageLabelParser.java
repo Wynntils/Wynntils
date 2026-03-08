@@ -21,7 +21,7 @@ public class DamageLabelParser implements LabelParser<DamageLabelInfo> {
     private static final String TYPE_COLOR = "§([245bcef])";
     private static final String NUMBER = "(\\d+(?:\\.\\d+)?)";
     private static final String SUFFIX = "([kKmMbB]?)";
-    private static final String SEP_OR_END = "(?:\uDB80\uDC0A|$)";
+    private static final String SEP_OR_END = "(?:\uDB00\uDC0A|$)";
 
     private static final String DAMAGE_LABEL_PART =
             FMT_NOISE + TYPE_COLOR + FMT_NOISE + NUMBER + SUFFIX + FMT_NOISE + SEP_OR_END;
