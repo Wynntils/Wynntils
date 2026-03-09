@@ -29,13 +29,13 @@ public class TestGenericFunctions {
     public void testMathFunctions() {
         assertTemplateResult("{int(add(5;6))}", "11");
 
-        assertTemplateResult("{abs(-12.5)}", "12.5");
+        assertTemplateResult("{abs(-12.5):1}", "12.5");
         assertTemplateResult("{floor(3.9)}", "3");
         assertTemplateResult("{ceil(3.1)}", "4");
-        assertTemplateResult("{clamp(50;0;10)}", "10");
-        assertTemplateResult("{safe_div(10;0;99)}", "99");
-        assertTemplateResult("{map(15;10;20;0;100)}", "50");
-        assertTemplateResult("{wrap(-1;0;10)}", "9");
+        assertTemplateResult("{clamp(50;0;10):0}", "10");
+        assertTemplateResult("{safe_div(10;0;99):0}", "99");
+        assertTemplateResult("{map(15;10;20;0;100):0}", "50");
+        assertTemplateResult("{wrap(-1;0;10):0}", "9");
 
         assertTemplateResult("{equals(round(ln(e());6);1)}", "true");
         assertTemplateResult("{equals(round(log(1000;10);6);3)}", "true");
