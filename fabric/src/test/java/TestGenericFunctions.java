@@ -29,13 +29,13 @@ public class TestGenericFunctions {
     public void testMathFunctions() {
         assertTemplateResult("{int(add(5;6))}", "11");
 
-        assertTemplateResult("{equals(abs(-12.5);12.5)}", "true");
-        assertTemplateResult("{equals(floor(3.9);3)}", "true");
-        assertTemplateResult("{equals(ceil(3.1);4)}", "true");
-        assertTemplateResult("{equals(clamp(50;0;10);10)}", "true");
-        assertTemplateResult("{equals(safe_div(10;0;99);99)}", "true");
-        assertTemplateResult("{equals(map(15;10;20;0;100);50)}", "true");
-        assertTemplateResult("{equals(wrap(-1;0;10);9)}", "true");
+        assertTemplateResult("{abs(-12.5)}", "12.5");
+        assertTemplateResult("{floor(3.9)}", "3");
+        assertTemplateResult("{ceil(3.1)}", "4");
+        assertTemplateResult("{clamp(50;0;10)}", "10");
+        assertTemplateResult("{safe_div(10;0;99)}", "99");
+        assertTemplateResult("{map(15;10;20;0;100)}", "50");
+        assertTemplateResult("{wrap(-1;0;10)}", "9");
 
         assertTemplateResult("{equals(round(ln(e());6);1)}", "true");
         assertTemplateResult("{equals(round(log(1000;10);6);3)}", "true");
@@ -43,10 +43,10 @@ public class TestGenericFunctions {
         assertTemplateResult("{equals(round(e();6);2.718282)}", "true");
 
         assertTemplateResult("{dec_to_hex(48879)}", "BEEF");
-        assertTemplateResult("{equals(hex_to_dec(\"BEEF\");48879)}", "true");
-        assertTemplateResult("{equals(hex_to_dec(\"0x10\");16)}", "true");
-        assertTemplateResult("{equals(hex_to_dec(\"#10\");16)}", "true");
-        assertTemplateResult("{equals(hex_to_dec(\"invalid\");0)}", "true");
+        assertTemplateResult("{hex_to_dec(\"BEEF\")}", "48879");
+        assertTemplateResult("{hex_to_dec(\"0x10\")}", "16");
+        assertTemplateResult("{hex_to_dec(\"#10\")}", "16");
+        assertTemplateResult("{hex_to_dec(\"invalid\")}", "0");
 
         assertTemplateResult("{is_finite(123)}", "true");
         assertTemplateResult("{is_finite(div(1;0))}", "false");
