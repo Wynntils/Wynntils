@@ -55,7 +55,7 @@ public class EnumNamingUpfixer implements Upfixer {
         public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
             if (!type.getRawType().isEnum()) return null;
 
-            Class<E> enumClazz = (Class<E>) (Class<?>) type.getRawType();
+            Class<E> enumClazz = (Class<E>) type.getRawType();
             return (TypeAdapter<T>) new EnumConverter<>(enumClazz);
         }
     }
