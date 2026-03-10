@@ -21,7 +21,7 @@ public class DamageLabelParser implements LabelParser<DamageLabelInfo> {
     private static final String TYPE_COLOR = "§([245bcef])";
     private static final String NUMBER = "(\\d+(?:\\.\\d+)?)";
     private static final String SUFFIX = "([kKmMbB]?)";
-    private static final String SEP_OR_END = "(?:󐀊|$)";
+    private static final String SEP_OR_END = "(?:\uDB00\uDC0A|$)";
 
     private static final String DAMAGE_LABEL_PART =
             FMT_NOISE + TYPE_COLOR + FMT_NOISE + NUMBER + SUFFIX + FMT_NOISE + SEP_OR_END;
@@ -32,12 +32,12 @@ public class DamageLabelParser implements LabelParser<DamageLabelInfo> {
 
     private static final Map<Character, DamageType> TYPE_BY_COLOR = Map.of(
             '2', DamageType.EARTH,
-            '5', DamageType.WATER,
-            'b', DamageType.AIR,
+            'b', DamageType.WATER,
+            'f', DamageType.AIR,
             'c', DamageType.FIRE,
             'e', DamageType.THUNDER,
-            'f', DamageType.NEUTRAL,
-            '4', DamageType.NEUTRAL);
+            '4', DamageType.NEUTRAL,
+            '5', DamageType.POISON);
 
     @Override
     public DamageLabelInfo getInfo(StyledText label, Location location, Entity entity) {

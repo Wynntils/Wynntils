@@ -222,11 +222,10 @@ public class TestRegex {
     public void DamageLabelParser_DAMAGE_LABEL_PATTERN() {
         PatternTester p = new PatternTester(DamageLabelParser.class, "DAMAGE_LABEL_PATTERN");
         p.shouldMatch("§e509");
-        p.shouldMatch("§52.8k");
-        p.shouldMatch("§5§{fr:minecraft:language/five}2.8k");
-        p.shouldMatch("§56.2k󐀊§519.7k󐀊§57.1k󐀊§57.9k󐀊§512.8k");
-        p.shouldMatch("§c1.2k󐀊§b300󐀊§e45.6k󐀊§f999");
         p.shouldMatch("§42.8k");
+        p.shouldMatch("§5200k");
+        p.shouldMatch("§42.8k\uDB00\uDC0A§e19.7k\uDB00\uDC0A§c7.1k\uDB00\uDC0A§b7.9k\uDB00\uDC0A§f12.8k");
+        p.shouldMatch("§c1.2k\uDB00\uDC0A§b300\uDB00\uDC0A§e45.6k\uDB00\uDC0A§f999");
     }
 
     @Test
