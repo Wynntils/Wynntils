@@ -1,2 +1,2 @@
-CI
-- Disable source downloads - no more tries for now
+CI:
+- fix glob patterns for modrinth and curseforge
