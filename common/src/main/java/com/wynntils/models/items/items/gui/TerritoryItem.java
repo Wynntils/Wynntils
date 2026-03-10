@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.gui;
@@ -7,6 +7,7 @@ package com.wynntils.models.items.items.gui;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.models.territories.type.TerritoryUpgrade;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,12 @@ public class TerritoryItem extends GuiItem {
     private final float treasuryBonus;
     private final List<String> alerts;
     private final Map<TerritoryUpgrade, Integer> upgrades;
+
+    private final CustomColor productionColor;
+    private final CustomColor seekingColor;
+    private final CustomColor treasuryColor;
+
+    private boolean isPending = false;
 
     public TerritoryItem(
             String name,
@@ -38,10 +45,57 @@ public class TerritoryItem extends GuiItem {
         this.treasuryBonus = treasuryBonus;
         this.alerts = alerts;
         this.upgrades = upgrades;
+
+        // Production color
+        int emeraldUpgrades = upgrades.getOrDefault(TerritoryUpgrade.EMERALD_RATE, 0)
+                + upgrades.getOrDefault(TerritoryUpgrade.EFFICIENT_EMERALDS, 0);
+        int resourceUpgrades = upgrades.getOrDefault(TerritoryUpgrade.RESOURCE_RATE, 0)
+                + upgrades.getOrDefault(TerritoryUpgrade.EFFICIENT_RESOURCES, 0);
+        if (emeraldUpgrades > 0) {
+            if (resourceUpgrades > 0) {
+                productionColor = CustomColor.fromHSV(0.5f, 0.8f, 0.9f, 1);
+            } else {
+                productionColor = CustomColor.fromHSV(1 / 3f, 0.8f, 0.9f, 1);
+            }
+        } else {
+            // 4 3 or above -> 100% saturation
+            // 3 3 or below -> 50% saturation
+            if (resourceUpgrades > 6) {
+                productionColor = CustomColor.fromHSV(1 / 6f, 1.0f, 1.0f, 1);
+            } else if (resourceUpgrades > 0) {
+                productionColor = CustomColor.fromHSV(1 / 6f, 0.50f, 0.9f, 1);
+            } else {
+                productionColor = CustomColor.fromHSV(0, 0, 0.6f, 1);
+            }
+        }
+
+        // Seeking color
+        int tomeSeek = upgrades.getOrDefault(TerritoryUpgrade.TOME_SEEKING, 0);
+        int emeraldSeek = upgrades.getOrDefault(TerritoryUpgrade.EMERALD_SEEKING, 0);
+        if (tomeSeek > 0 && emeraldSeek > 0) {
+            seekingColor = CustomColor.fromHSV(1 / 2f, 0.8f, 0.9f, 1);
+        } else if (tomeSeek > 0) {
+            seekingColor = CustomColor.fromHSV(2 / 3f, 0.8f, 0.9f, 1);
+        } else if (emeraldSeek > 0) {
+            seekingColor = CustomColor.fromHSV(1 / 3f, 0.8f, 0.9f, 1);
+        } else {
+            seekingColor = CustomColor.fromHSV(0, 0, 0.6f, 1);
+        }
+
+        // Treasury color
+        treasuryColor = CustomColor.fromHSV(
+                Math.max(treasuryBonus / 15 - 1, 0) * -1 / 3f + 5f / 6,
+                Math.min(treasuryBonus / 18.75f, 0.8f),
+                Math.min(treasuryBonus / 15, 1) * 0.3f + 0.6f,
+                1);
     }
 
     public String getName() {
         return name;
+    }
+
+    public void markPending() {
+        isPending = true;
     }
 
     public boolean isHeadquarters() {
@@ -53,16 +107,32 @@ public class TerritoryItem extends GuiItem {
         return isSelected;
     }
 
+    public boolean isPending() {
+        return isPending;
+    }
+
+    public float getTreasuryBonus() {
+        return treasuryBonus;
+    }
+
+    public CustomColor getProductionColor() {
+        return productionColor;
+    }
+
+    public CustomColor getSeekingColor() {
+        return seekingColor;
+    }
+
+    public CustomColor getTreasuryColor() {
+        return treasuryColor;
+    }
+
     public Map<GuildResource, Integer> getProduction() {
         return production;
     }
 
     public Map<GuildResource, CappedValue> getStorage() {
         return storage;
-    }
-
-    public float getTreasuryBonus() {
-        return treasuryBonus;
     }
 
     public List<String> getAlerts() {

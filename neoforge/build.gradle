@@ -74,6 +74,18 @@ remapJar {
     atAccessWideners.add loom.accessWidenerPath.get().asFile.name
 }
 
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+}
+
+remapSourcesJar {
+    inputFile.set sourcesJar.archiveFile
+    dependsOn sourcesJar
+    archiveClassifier = "neoforge+MC-${minecraft_version}-sources"
+}
+
 jar {
     archiveClassifier = "dev"
 }
