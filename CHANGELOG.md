@@ -1,2 +1,2 @@
 CI
-- reenabling sources upload
+- Disable source downloads - no more tries for now
