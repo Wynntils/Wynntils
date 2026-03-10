@@ -273,7 +273,6 @@ jobs:
 
           files: |
             **/build/libs/*-${{ matrix.modloader }}.jar
-            **/build/libs/*-${{ matrix.modloader }}*-sources.jar
 
           name: Wynntils (${{ matrix.modloader }}) v${{ needs.set-version.outputs.tag }}
           version: v${{ needs.set-version.outputs.tag }}
