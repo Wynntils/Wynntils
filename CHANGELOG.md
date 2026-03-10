@@ -1,2 +1,2 @@
 CI
-- Disable Modrinth/Curseforge sources uploading
+- reenabling sources upload
