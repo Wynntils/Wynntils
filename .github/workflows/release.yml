@@ -260,7 +260,8 @@ jobs:
           curseforge-token: ${{ secrets.CF_API_TOKEN }}
 
           files: |
-            **/build/libs/*-${{ matrix.modloader }}*.jar
+            **/build/libs/*-${{ matrix.modloader }}+MC-*[0-9].jar
+            **/build/libs/*-${{ matrix.modloader }}+MC-*-sources.jar
 
           name: Wynntils (${{ matrix.modloader }}) ${{ needs.set-version.outputs.tag }}
           version: ${{ needs.set-version.outputs.tag }}
