@@ -82,8 +82,8 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     private static final int QUICK_FILTER_WIDTH = 150;
 
     // Map mode
+    private static TerritoryInfoType infoType = TerritoryInfoType.DEFENSE;
     private boolean mapMode = false;
-    private TerritoryInfoType infoType = TerritoryInfoType.DEFENSE;
     private MapButton infoTypeButton;
 
     // Territory items
