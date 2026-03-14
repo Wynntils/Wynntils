@@ -377,7 +377,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
     }
 
     private Optional<GearMajorId> parseMajorIds(JsonObject json) {
-        JsonObject majorIdsJson = JsonUtils.getNullableJsonObject(json, "majorIds");
+        JsonObject majorIdsJson = JsonUtils.getNullableJsonObject(json, "jsonMajorIds");
         if (majorIdsJson == null || majorIdsJson.isJsonNull() || majorIdsJson.isEmpty()) return Optional.empty();
 
         Map<String, JsonElement> majorIdMap = majorIdsJson.asMap();
@@ -392,9 +392,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         Map.Entry<String, JsonElement> majorIdElement =
                 majorIdMap.entrySet().iterator().next();
 
-        // Wynncraft API now ships HTML tags in the description (as they have a custom markup language internally)
-        StyledText description =
-                StyledText.fromString(majorIdElement.getValue().getAsString().replaceAll("<[^>]*>", ""));
+        StyledText description = StyledText.fromJson(majorIdElement.getValue().getAsJsonArray());
 
         return Optional.of(new GearMajorId(majorIdElement.getKey(), description));
     }
