@@ -9,7 +9,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
-import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
@@ -23,8 +22,6 @@ import net.minecraft.network.chat.Component;
 
 public class GuildOverallProductionWidget extends AbstractWidget {
     private final TerritoryManagementHolder holder;
-    private boolean showDeltas = false;
-    private boolean controlDown = false;
 
     public GuildOverallProductionWidget(int x, int y, int width, int height, TerritoryManagementHolder holder) {
         super(x, y, width, height, Component.literal("Guild Overall Production"));
@@ -91,46 +88,38 @@ public class GuildOverallProductionWidget extends AbstractWidget {
 
         lines.add(Component.literal(""));
 
-        // Handle toggling surplus/deficit on and off since this widget does not get direct events
-        if (!controlDown && KeyboardUtils.isControlDown()) {
-            showDeltas = !showDeltas;
-            controlDown = true;
-        } else if (!KeyboardUtils.isControlDown()) {
-            controlDown = false;
-        }
-
-        if (showDeltas || KeyboardUtils.isShiftDown()) {
-            // Show surplus/deficit
-            lines.add(Component.literal("Surplus/Deficit (per hour):").withStyle(ChatFormatting.GRAY));
-            lines.add(Component.literal("%d Emeralds".formatted(emeraldProduction - emeraldUsage))
-                    .withStyle(ChatFormatting.GREEN));
-            lines.add(Component.literal("Ⓑ %d Ore".formatted(oreProduction - oreUsage))
-                    .withStyle(ChatFormatting.WHITE));
-            lines.add(Component.literal("Ⓒ %d Wood".formatted(woodProduction - woodUsage))
-                    .withStyle(ChatFormatting.GOLD));
-            lines.add(Component.literal("Ⓚ %d Fish".formatted(fishProduction - fishUsage))
-                    .withStyle(ChatFormatting.AQUA));
-            lines.add(Component.literal("Ⓙ %d Crops".formatted(cropsProduction - cropsUsage))
-                    .withStyle(ChatFormatting.YELLOW));
-        } else {
-            // Show overall cost
-            lines.add(Component.literal("Overall Cost (per hour):").withStyle(ChatFormatting.GRAY));
-            lines.add(Component.literal("%d Emeralds (%.1f%%)"
-                            .formatted(emeraldUsage, (double) emeraldUsage / emeraldProduction * 100d))
-                    .withStyle(ChatFormatting.GREEN));
-            lines.add(
-                    Component.literal("Ⓑ %d Ore (%.1f%%)".formatted(oreUsage, (double) oreUsage / oreProduction * 100d))
-                            .withStyle(ChatFormatting.WHITE));
-            lines.add(Component.literal(
-                            "Ⓒ %d Wood (%.1f%%)".formatted(woodUsage, (double) woodUsage / woodProduction * 100d))
-                    .withStyle(ChatFormatting.GOLD));
-            lines.add(Component.literal(
-                            "Ⓚ %d Fish (%.1f%%)".formatted(fishUsage, (double) fishUsage / fishProduction * 100d))
-                    .withStyle(ChatFormatting.AQUA));
-            lines.add(Component.literal(
-                            "Ⓙ %d Crops (%.1f%%)".formatted(cropsUsage, (double) cropsUsage / cropsProduction * 100d))
-                    .withStyle(ChatFormatting.YELLOW));
-        }
+        long emeraldDelta = emeraldProduction - emeraldUsage;
+        long oreDelta = oreProduction - oreUsage;
+        long woodDelta = woodProduction - woodUsage;
+        long fishDelta = fishProduction - fishUsage;
+        long cropDelta = cropsProduction - cropsUsage;
+        // Show overall cost
+        lines.add(Component.literal("Overall Cost (per hour):").withStyle(ChatFormatting.GRAY));
+        lines.add(Component.literal("%.1fk Emeralds (%.1f%%)"
+                        .formatted(emeraldUsage / 1000d, (double) emeraldUsage / emeraldProduction * 100d))
+                .withStyle(ChatFormatting.GREEN)
+                .append(Component.literal(" [%s%.1fk]".formatted(emeraldDelta >= 0 ? "+" : "", emeraldDelta / 1000d))
+                        .withStyle(emeraldDelta >= 0 ? ChatFormatting.BLUE : ChatFormatting.RED)));
+        lines.add(Component.literal(
+                        "Ⓑ %.1fk Ore (%.1f%%)".formatted(oreUsage / 1000d, (double) oreUsage / oreProduction * 100d))
+                .withStyle(ChatFormatting.WHITE)
+                .append(Component.literal(" [%s%.1fk]".formatted(oreDelta >= 0 ? "+" : "", oreDelta / 1000d))
+                        .withStyle(oreDelta >= 0 ? ChatFormatting.BLUE : ChatFormatting.RED)));
+        lines.add(Component.literal("Ⓒ %.1fk Wood (%.1f%%)"
+                        .formatted(woodUsage / 1000d, (double) woodUsage / woodProduction * 100d))
+                .withStyle(ChatFormatting.GOLD)
+                .append(Component.literal(" [%s%.1fk]".formatted(woodDelta >= 0 ? "+" : "", woodDelta / 1000d))
+                        .withStyle(woodDelta >= 0 ? ChatFormatting.BLUE : ChatFormatting.RED)));
+        lines.add(Component.literal("Ⓚ %.1fk Fish (%.1f%%)"
+                        .formatted(fishUsage / 1000d, (double) fishUsage / fishProduction * 100d))
+                .withStyle(ChatFormatting.AQUA)
+                .append(Component.literal(" [%s%.1fk]".formatted(fishDelta >= 0 ? "+" : "", fishDelta / 1000d))
+                        .withStyle(fishDelta >= 0 ? ChatFormatting.BLUE : ChatFormatting.RED)));
+        lines.add(Component.literal("Ⓙ %.1fk Crops (%.1f%%)"
+                        .formatted(cropsUsage / 1000d, (double) cropsUsage / cropsProduction * 100d))
+                .withStyle(ChatFormatting.YELLOW)
+                .append(Component.literal(" [%s%.1fk]".formatted(cropDelta >= 0 ? "+" : "", cropDelta / 1000d))
+                        .withStyle(cropDelta >= 0 ? ChatFormatting.BLUE : ChatFormatting.RED)));
 
         RenderUtils.renderTooltip(guiGraphics, lines, this.getX(), this.getY());
     }
