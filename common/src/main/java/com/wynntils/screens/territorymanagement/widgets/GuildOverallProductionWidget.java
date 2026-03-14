@@ -102,33 +102,33 @@ public class GuildOverallProductionWidget extends AbstractWidget {
         if (showDeltas || KeyboardUtils.isShiftDown()) {
             // Show surplus/deficit
             lines.add(Component.literal("Surplus/Deficit (per hour):").withStyle(ChatFormatting.GRAY));
-            lines.add(Component.literal("- %d Emeralds".formatted(emeraldProduction - emeraldUsage))
+            lines.add(Component.literal("%d Emeralds".formatted(emeraldProduction - emeraldUsage))
                     .withStyle(ChatFormatting.GREEN));
-            lines.add(Component.literal("- Ⓑ %d Ore".formatted(oreProduction - oreUsage))
+            lines.add(Component.literal("Ⓑ %d Ore".formatted(oreProduction - oreUsage))
                     .withStyle(ChatFormatting.WHITE));
-            lines.add(Component.literal("- Ⓒ %d Wood".formatted(woodProduction - woodUsage))
+            lines.add(Component.literal("Ⓒ %d Wood".formatted(woodProduction - woodUsage))
                     .withStyle(ChatFormatting.GOLD));
-            lines.add(Component.literal("- Ⓚ %d Fish".formatted(fishProduction - fishUsage))
+            lines.add(Component.literal("Ⓚ %d Fish".formatted(fishProduction - fishUsage))
                     .withStyle(ChatFormatting.AQUA));
-            lines.add(Component.literal("- Ⓙ %d Crops".formatted(cropsProduction - cropsUsage))
+            lines.add(Component.literal("Ⓙ %d Crops".formatted(cropsProduction - cropsUsage))
                     .withStyle(ChatFormatting.YELLOW));
         } else {
             // Show overall cost
             lines.add(Component.literal("Overall Cost (per hour):").withStyle(ChatFormatting.GRAY));
-            lines.add(Component.literal("- %d Emeralds (%.1f%%)"
+            lines.add(Component.literal("%d Emeralds (%.1f%%)"
                             .formatted(emeraldUsage, (double) emeraldUsage / emeraldProduction * 100d))
                     .withStyle(ChatFormatting.GREEN));
+            lines.add(
+                    Component.literal("Ⓑ %d Ore (%.1f%%)".formatted(oreUsage, (double) oreUsage / oreProduction * 100d))
+                            .withStyle(ChatFormatting.WHITE));
             lines.add(Component.literal(
-                            "- Ⓑ %d Ore (%.1f%%)".formatted(oreUsage, (double) oreUsage / oreProduction * 100d))
-                    .withStyle(ChatFormatting.WHITE));
-            lines.add(Component.literal(
-                            "- Ⓒ %d Wood (%.1f%%)".formatted(woodUsage, (double) woodUsage / woodProduction * 100d))
+                            "Ⓒ %d Wood (%.1f%%)".formatted(woodUsage, (double) woodUsage / woodProduction * 100d))
                     .withStyle(ChatFormatting.GOLD));
             lines.add(Component.literal(
-                            "- Ⓚ %d Fish (%.1f%%)".formatted(fishUsage, (double) fishUsage / fishProduction * 100d))
+                            "Ⓚ %d Fish (%.1f%%)".formatted(fishUsage, (double) fishUsage / fishProduction * 100d))
                     .withStyle(ChatFormatting.AQUA));
             lines.add(Component.literal(
-                            "- Ⓙ %d Crops (%.1f%%)".formatted(cropsUsage, (double) cropsUsage / cropsProduction * 100d))
+                            "Ⓙ %d Crops (%.1f%%)".formatted(cropsUsage, (double) cropsUsage / cropsProduction * 100d))
                     .withStyle(ChatFormatting.YELLOW));
         }
 
