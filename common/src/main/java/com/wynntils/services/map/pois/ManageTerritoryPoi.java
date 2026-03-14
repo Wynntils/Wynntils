@@ -10,6 +10,7 @@ import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.TerritoryConnectionType;
+import com.wynntils.models.territories.type.TerritoryUpgrade;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
 import com.wynntils.screens.territorymanagement.TerritoryManagementScreen;
 import com.wynntils.services.map.type.DisplayPriority;
@@ -101,6 +102,9 @@ public class ManageTerritoryPoi implements Poi {
                 case DEFENSE:
                     colors.add(CustomColor.fromChatFormatting(
                             territoryItem.getDefenseDifficulty().getDefenceColor()));
+                    if (territoryItem.getUpgrades().getOrDefault(TerritoryUpgrade.TOWER_MULTI_ATTACKS, 0) > 0) {
+                        colors.add(CustomColor.fromHSV(1 / 2f, 0.8f, 0.9f, 1));
+                    }
                     break;
                 case PRODUCTION:
                     colors = territoryItem.getProductionColors();
