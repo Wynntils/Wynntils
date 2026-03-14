@@ -103,10 +103,10 @@ public class ManageTerritoryPoi implements Poi {
                             territoryItem.getDefenseDifficulty().getDefenceColor()));
                     break;
                 case PRODUCTION:
-                    colors.add(territoryItem.getProductionColor());
+                    colors = territoryItem.getProductionColors();
                     break;
                 case SEEKING:
-                    colors.add(territoryItem.getSeekingColor());
+                    colors = territoryItem.getSeekingColors();
                     break;
                 case TREASURY:
                     colors.add(territoryItem.getTreasuryColor());
