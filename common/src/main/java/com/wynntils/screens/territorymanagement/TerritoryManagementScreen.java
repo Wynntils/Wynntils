@@ -45,6 +45,7 @@ import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.type.TerritoryInfoType;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -452,7 +453,11 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                         Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
                                 .append(Component.translatable(
-                                        "feature.wynntils.customTerritoryManagementScreen.help.description")))));
+                                        "feature.wynntils.customTerritoryManagementScreen.help.description1")),
+                        Component.literal("- ")
+                                .withStyle(ChatFormatting.GRAY)
+                                .append(Component.translatable(
+                                        "feature.wynntils.customTerritoryManagementScreen.help.description2")))));
     }
 
     @Override
@@ -814,6 +819,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
             case GLFW.GLFW_KEY_2 -> setInfoType(TerritoryInfoType.PRODUCTION);
             case GLFW.GLFW_KEY_3 -> setInfoType(TerritoryInfoType.TREASURY);
             case GLFW.GLFW_KEY_4 -> setInfoType(TerritoryInfoType.SEEKING);
+            case GLFW.GLFW_KEY_H -> centerOnHeadquarters();
         }
         return super.keyPressed(event);
     }
@@ -1065,6 +1071,19 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
+    }
+
+    private boolean centerOnHeadquarters() {
+        Optional<Pair<ItemStack, TerritoryItem>> hqItem = territoryItems.stream()
+                .filter((item) -> item.b().isHeadquarters())
+                .findFirst();
+        if (hqItem.isPresent()) {
+            PoiLocation location = Models.Territory.getTerritoryProfile(
+                            hqItem.get().b().getName())
+                    .getCenterLocation();
+            updateMapCenter(location.getX(), location.getZ());
+        }
+        return hqItem.isPresent();
     }
 
     private AbstractWidget getHoveredWidget(int mouseX, int mouseY) {
