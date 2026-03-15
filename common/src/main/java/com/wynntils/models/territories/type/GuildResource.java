@@ -7,7 +7,7 @@ package com.wynntils.models.territories.type;
 import net.minecraft.ChatFormatting;
 
 public enum GuildResource {
-    EMERALDS(ChatFormatting.GREEN, "Emeralds", "²"),
+    EMERALDS(ChatFormatting.GREEN, "Emeralds", ""),
     ORE(ChatFormatting.WHITE, "Ore", "Ⓑ"),
     WOOD(ChatFormatting.GOLD, "Wood", "Ⓒ"),
     FISH(ChatFormatting.AQUA, "Fish", "Ⓚ"),

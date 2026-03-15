@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 
@@ -171,7 +173,7 @@ public class ManageTerritoryPoi implements Poi {
                                 guiGraphics,
                                 StyledText.fromString(symbol),
                                 actualRenderX,
-                                actualRenderX + renderWidth + (territoryItem.getDoubleEmeralds() ? 4 : 0),
+                                actualRenderX + renderWidth + (territoryItem.getDoubleEmeralds() ? 6 : 0),
                                 actualRenderZ + renderHeight / 2 + iconYOffset,
                                 actualRenderZ + renderHeight,
                                 0,
@@ -185,13 +187,13 @@ public class ManageTerritoryPoi implements Poi {
                     FontRenderer.getInstance()
                             .renderAlignedTextInBox(
                                     guiGraphics,
-                                    StyledText.fromString(GuildResource.EMERALDS.getPrettySymbol()),
+                                    StyledText.fromUnformattedString("²"),
                                     actualRenderX,
-                                    actualRenderX + renderWidth - 4,
+                                    actualRenderX + renderWidth - 8,
                                     actualRenderZ + renderHeight / 2 + iconYOffset + 1,
                                     actualRenderZ + renderHeight,
                                     0,
-                                    CommonColors.WHITE,
+                                    CustomColor.fromChatFormatting(ChatFormatting.GREEN),
                                     HorizontalAlignment.CENTER,
                                     VerticalAlignment.TOP,
                                     TextShadow.NORMAL);
