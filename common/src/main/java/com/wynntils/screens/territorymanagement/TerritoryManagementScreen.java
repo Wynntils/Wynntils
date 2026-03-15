@@ -16,6 +16,10 @@ import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.handlers.wrappedscreen.WrappedScreen;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
 import com.wynntils.models.items.items.gui.TerritoryItem;
+import com.wynntils.models.territories.TerritoryInfo;
+import com.wynntils.models.territories.profile.TerritoryProfile;
+import com.wynntils.models.territories.type.GuildResource;
+import com.wynntils.models.territories.type.TerritoryUpgrade;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.screens.base.widgets.ItemFilterUIButton;
@@ -41,7 +45,6 @@ import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.type.TerritoryInfoType;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -50,11 +53,14 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -64,9 +70,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import org.lwjgl.glfw.GLFW;
 
 public class TerritoryManagementScreen extends AbstractMapScreen implements WrappedScreen {
@@ -80,6 +84,15 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     private static final int APPLY_BUTTON_SLOT = 0;
     private static final int LOADOUT_BUTTON_SLOT = 36;
     private static final int QUICK_FILTER_WIDTH = 150;
+    private static final Set<TerritoryUpgrade> DEFENSE_UPGRADES = Set.of(
+            TerritoryUpgrade.DAMAGE,
+            TerritoryUpgrade.ATTACK,
+            TerritoryUpgrade.HEALTH,
+            TerritoryUpgrade.DEFENCE,
+            TerritoryUpgrade.STRONGER_MINIONS,
+            TerritoryUpgrade.TOWER_MULTI_ATTACKS,
+            TerritoryUpgrade.TOWER_AURA,
+            TerritoryUpgrade.TOWER_VOLLEY);
 
     // Map mode
     private static TerritoryInfoType infoType = TerritoryInfoType.DEFENSE;
@@ -913,10 +926,90 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
     private void renderTerritoryTooltip(
             GuiGraphics guiGraphics, int xOffset, int yOffset, ManageTerritoryPoi territoryPoi) {
-        final ItemStack itemStack = territoryPoi.getItemStack();
+        final TerritoryItem item = territoryPoi.getTerritoryItem();
 
-        final List<Component> tooltipLines = itemStack.getTooltipLines(
-                Item.TooltipContext.of(McUtils.mc().level), McUtils.player(), TooltipFlag.NORMAL);
+        final List<Component> tooltipLines = new ArrayList<>();
+        // itemStack.getTooltipLines(
+        //         Item.TooltipContext.of(McUtils.mc().level), McUtils.player(), TooltipFlag.NORMAL);
+        for (GuildResource value : GuildResource.values()) {
+            int generation = item.getProduction().getOrDefault(value, 0);
+            CappedValue storage = item.getStorage().get(value);
+
+            if (generation != 0) {
+                StyledText formattedGenerated = StyledText.fromString(
+                        "%s+%d %s per Hour".formatted(value.getPrettySymbol(), generation, value.getName()));
+
+                tooltipLines.add(formattedGenerated.getComponent());
+            }
+
+            if (storage != null) {
+                StyledText formattedStored = StyledText.fromString("%s%d/%d %s stored"
+                        .formatted(value.getPrettySymbol(), storage.current(), storage.max(), value.getName()));
+
+                tooltipLines.add(formattedStored.getComponent());
+            }
+        }
+
+        tooltipLines.add(Component.literal(""));
+
+        StyledText defences = StyledText.fromString(ChatFormatting.GRAY
+                + "Territory Defences: %s"
+                        .formatted(item.getDefenseDifficulty().getDefenceColor()
+                                + item.getDefenseDifficulty().getAsString()));
+        tooltipLines.add(defences.getComponent());
+
+        TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(item.getName());
+        TerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
+
+        String timeHeldString = territoryProfile.getGuild().equals(territoryInfo.getGuildName())
+                ? territoryProfile.getTimeAcquiredColor() + territoryProfile.getReadableRelativeTimeAcquired()
+                : "-";
+        tooltipLines.add(StyledText.fromString(ChatFormatting.GRAY + "Time Held: " + timeHeldString)
+                .getComponent());
+
+        if (item.getTreasuryBonus() > 0) {
+            tooltipLines.add(Component.literal(""));
+
+            StyledText treasury = StyledText.fromString(ChatFormatting.LIGHT_PURPLE
+                    + "✦ Treasury Bonus: " + ChatFormatting.WHITE + "%.1f%%".formatted(item.getTreasuryBonus())
+                    + ChatFormatting.GRAY
+                    + " (%s)"
+                            .formatted(territoryInfo.getTreasury().getTreasuryColor()
+                                    + territoryInfo.getTreasury().getAsString()
+                                    + ChatFormatting.GRAY));
+            tooltipLines.add(treasury.getComponent());
+        }
+
+        List<Component> defenseLines = new ArrayList<>();
+        List<Component> bonusLines = new ArrayList<>();
+
+        Map<TerritoryUpgrade, Integer> territoryUpgrades = item.getUpgrades();
+
+        for (TerritoryUpgrade upgrade : TerritoryUpgrade.values()) {
+            if (territoryUpgrades.getOrDefault(upgrade, 0) == 0) continue;
+            Component upgradeLine = Component.literal("- ")
+                    .withStyle(ChatFormatting.LIGHT_PURPLE)
+                    .append(Component.literal(upgrade.getName()).withStyle(ChatFormatting.GRAY))
+                    .append(Component.literal(" [Lv. %s]".formatted(territoryUpgrades.get(upgrade)))
+                            .withStyle(ChatFormatting.DARK_GRAY));
+            if (DEFENSE_UPGRADES.contains(upgrade)) {
+                defenseLines.add(upgradeLine);
+            } else {
+                bonusLines.add(upgradeLine);
+            }
+        }
+
+        if (!defenseLines.isEmpty()) {
+            tooltipLines.add(Component.literal(""));
+            tooltipLines.add(Component.literal("Defenses:").withStyle(ChatFormatting.LIGHT_PURPLE));
+            tooltipLines.addAll(defenseLines);
+        }
+
+        if (!bonusLines.isEmpty()) {
+            tooltipLines.add(Component.literal(""));
+            tooltipLines.add(Component.literal("Bonuses:").withStyle(ChatFormatting.LIGHT_PURPLE));
+            tooltipLines.addAll(bonusLines);
+        }
 
         final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
