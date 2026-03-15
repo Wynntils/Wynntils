@@ -148,7 +148,7 @@ public class ManageTerritoryPoi implements Poi {
                 .filter(GuildResource::isMaterialResource)
                 .collect(Collectors.toUnmodifiableSet());
 
-        if (!productionTypes.isEmpty() && zoomRenderScale >= 0.25f) {
+        if (!productionTypes.isEmpty() && zoomRenderScale >= 0.2f) {
             // Render the production types
 
             int iconYOffset = 4;
@@ -162,13 +162,16 @@ public class ManageTerritoryPoi implements Poi {
                 symbol += productionTypes.size() == 2
                         ? productionTypes.iterator().next().getPrettySymbol().trim()
                         : "";
+                if (territoryItem.getDoubleResource()) {
+                    symbol += symbol;
+                }
 
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 guiGraphics,
                                 StyledText.fromString(symbol),
                                 actualRenderX,
-                                actualRenderX + renderWidth,
+                                actualRenderX + renderWidth + (territoryItem.getDoubleEmeralds() ? 4 : 0),
                                 actualRenderZ + renderHeight / 2 + iconYOffset,
                                 actualRenderZ + renderHeight,
                                 0,
@@ -176,8 +179,24 @@ public class ManageTerritoryPoi implements Poi {
                                 HorizontalAlignment.CENTER,
                                 VerticalAlignment.TOP,
                                 TextShadow.NORMAL);
+
+                // Render E icon separately so we can shift it down to be aligned
+                if (territoryItem.getDoubleEmeralds()) {
+                    FontRenderer.getInstance()
+                            .renderAlignedTextInBox(
+                                    guiGraphics,
+                                    StyledText.fromString(GuildResource.EMERALDS.getPrettySymbol()),
+                                    actualRenderX,
+                                    actualRenderX + renderWidth - 4,
+                                    actualRenderZ + renderHeight / 2 + iconYOffset + 1,
+                                    actualRenderZ + renderHeight,
+                                    0,
+                                    CommonColors.WHITE,
+                                    HorizontalAlignment.CENTER,
+                                    VerticalAlignment.TOP,
+                                    TextShadow.NORMAL);
+                }
             } else {
-                // Render the production types in two lines, 2 icons per line
                 int i = 0;
                 for (GuildResource productionType : productionTypes) {
                     String symbol = productionType.getPrettySymbol().trim();

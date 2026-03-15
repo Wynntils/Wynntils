@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories.type;
@@ -7,7 +7,7 @@ package com.wynntils.models.territories.type;
 import net.minecraft.ChatFormatting;
 
 public enum GuildResource {
-    EMERALDS(ChatFormatting.GREEN, "Emeralds", ""),
+    EMERALDS(ChatFormatting.GREEN, "Emeralds", "²"),
     ORE(ChatFormatting.WHITE, "Ore", "Ⓑ"),
     WOOD(ChatFormatting.GOLD, "Wood", "Ⓒ"),
     FISH(ChatFormatting.AQUA, "Fish", "Ⓚ"),

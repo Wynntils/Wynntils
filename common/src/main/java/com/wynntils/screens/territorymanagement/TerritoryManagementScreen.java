@@ -914,12 +914,13 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     private void renderTerritoryTooltip(
             GuiGraphics guiGraphics, int xOffset, int yOffset, ManageTerritoryPoi territoryPoi) {
         final ItemStack itemStack = territoryPoi.getItemStack();
+
         final List<Component> tooltipLines = itemStack.getTooltipLines(
                 Item.TooltipContext.of(McUtils.mc().level), McUtils.player(), TooltipFlag.NORMAL);
 
         final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
-        final float centerHeight = (tooltipLines.size() - (holder.isSelectionMode() ? 3 : 4)) * 10 + 5;
+        final float centerHeight = (tooltipLines.size()) * 10 + 5;
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
         RenderUtils.drawScalingTexturedRect(
@@ -939,7 +940,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
         float renderYOffset = 10 + yOffset;
 
-        for (Component line : tooltipLines.subList(2, tooltipLines.size() - (holder.isSelectionMode() ? 1 : 2))) {
+        for (Component line : tooltipLines) {
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
