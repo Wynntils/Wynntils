@@ -74,8 +74,11 @@ public class TranslationFeature extends Feature {
     @Override
     protected void onConfigUpdate(Config<?> config) {
         switch (config.getFieldName()) {
-            case "translationService", "libreTranslateBaseUrl", "libreTranslateApiKey", "ollamaBaseUrl", "ollamaModel" ->
-                Services.Translation.resetTranslator();
+            case "translationService",
+                    "libreTranslateBaseUrl",
+                    "libreTranslateApiKey",
+                    "ollamaBaseUrl",
+                    "ollamaModel" -> Services.Translation.resetTranslator();
             default -> {}
         }
     }
