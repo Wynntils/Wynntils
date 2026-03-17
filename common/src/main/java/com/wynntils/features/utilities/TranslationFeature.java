@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -17,6 +17,9 @@ import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
+import com.wynntils.services.translation.DeepLTranslationProvider;
+import com.wynntils.services.translation.LibreTranslateProvider;
+import com.wynntils.services.translation.OllamaTranslationProvider;
 import com.wynntils.services.translation.TranslationService;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
@@ -49,8 +52,32 @@ public class TranslationFeature extends Feature {
     private final Config<TranslationService.TranslationServices> translationService =
             new Config<>(TranslationService.TranslationServices.GOOGLEAPI);
 
+    @Persisted
+    private final Config<String> deeplApiKey = new Config<>("");
+
+    @Persisted
+    private final Config<String> libreTranslateBaseUrl = new Config<>("http://127.0.0.1:5000");
+
+    @Persisted
+    private final Config<String> libreTranslateApiKey = new Config<>("");
+
+    @Persisted
+    private final Config<String> ollamaBaseUrl = new Config<>("http://127.0.0.1:11434");
+
+    @Persisted
+    private final Config<String> ollamaModel = new Config<>("qwen3:4b");
+
     public TranslationFeature() {
         super(ProfileDefault.DISABLED);
+    }
+
+    @Override
+    protected void onConfigUpdate(Config<?> config) {
+        switch (config.getFieldName()) {
+            case "translationService", "libreTranslateBaseUrl", "libreTranslateApiKey", "ollamaBaseUrl", "ollamaModel" ->
+                Services.Translation.resetTranslator();
+            default -> {}
+        }
     }
 
     @SubscribeEvent
@@ -59,6 +86,8 @@ public class TranslationFeature extends Feature {
 
         if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat.get()) return;
         if (e.getRecipientType() == RecipientType.INFO && !translateInfo.get()) return;
+
+        applyProviderConfig();
 
         StyledText originalMessage = e.getMessage();
         String codedString = wrapCoding(originalMessage);
@@ -89,6 +118,8 @@ public class TranslationFeature extends Feature {
     public void onNpcDialogue(NpcDialogueProcessingEvent.Pre event) {
         if (!translateNpc.get()) return;
         if (languageName.get().isEmpty()) return;
+
+        applyProviderConfig();
 
         event.addProcessingStep(future -> future.thenCompose(styledTexts -> {
             if (styledTexts.isEmpty()) return CompletableFuture.completedFuture(styledTexts);
@@ -128,6 +159,20 @@ public class TranslationFeature extends Feature {
 
             return translationFuture;
         }));
+    }
+
+    private void applyProviderConfig() {
+        if (translationService.get() == TranslationService.TranslationServices.DEEPL) {
+            DeepLTranslationProvider.setApiKey(deeplApiKey.get());
+        }
+        if (translationService.get() == TranslationService.TranslationServices.LIBRETRANSLATE) {
+            LibreTranslateProvider.setBaseUrl(libreTranslateBaseUrl.get());
+            LibreTranslateProvider.setApiKey(libreTranslateApiKey.get());
+        }
+        if (translationService.get() == TranslationService.TranslationServices.OLLAMA) {
+            OllamaTranslationProvider.setBaseUrl(ollamaBaseUrl.get());
+            OllamaTranslationProvider.setModel(ollamaModel.get());
+        }
     }
 
     private StyledText unwrapCoding(String codedTranslatedString, StyledText originalText) {
