@@ -72,13 +72,17 @@ public class TranslationFeature extends Feature {
     }
 
     @Override
+    public void onEnable() {
+        applyProviderConfig();
+    }
+
+    @Override
     protected void onConfigUpdate(Config<?> config) {
         switch (config.getFieldName()) {
-            case "translationService",
-                    "libreTranslateBaseUrl",
-                    "libreTranslateApiKey",
-                    "ollamaBaseUrl",
-                    "ollamaModel" -> Services.Translation.resetTranslator();
+            case "translationService", "deeplApiKey", "libreTranslateBaseUrl", "libreTranslateApiKey", "ollamaBaseUrl", "ollamaModel" -> {
+                applyProviderConfig();
+                Services.Translation.resetTranslator();
+            }
             default -> {}
         }
     }
@@ -89,8 +93,6 @@ public class TranslationFeature extends Feature {
 
         if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat.get()) return;
         if (e.getRecipientType() == RecipientType.INFO && !translateInfo.get()) return;
-
-        applyProviderConfig();
 
         StyledText originalMessage = e.getMessage();
         String codedString = wrapCoding(originalMessage);
@@ -121,8 +123,6 @@ public class TranslationFeature extends Feature {
     public void onNpcDialogue(NpcDialogueProcessingEvent.Pre event) {
         if (!translateNpc.get()) return;
         if (languageName.get().isEmpty()) return;
-
-        applyProviderConfig();
 
         event.addProcessingStep(future -> future.thenCompose(styledTexts -> {
             if (styledTexts.isEmpty()) return CompletableFuture.completedFuture(styledTexts);
@@ -165,17 +165,11 @@ public class TranslationFeature extends Feature {
     }
 
     private void applyProviderConfig() {
-        if (translationService.get() == TranslationService.TranslationServices.DEEPL) {
-            DeepLTranslationProvider.setApiKey(deeplApiKey.get());
-        }
-        if (translationService.get() == TranslationService.TranslationServices.LIBRETRANSLATE) {
-            LibreTranslateProvider.setBaseUrl(libreTranslateBaseUrl.get());
-            LibreTranslateProvider.setApiKey(libreTranslateApiKey.get());
-        }
-        if (translationService.get() == TranslationService.TranslationServices.OLLAMA) {
-            OllamaTranslationProvider.setBaseUrl(ollamaBaseUrl.get());
-            OllamaTranslationProvider.setModel(ollamaModel.get());
-        }
+        DeepLTranslationProvider.setApiKey(deeplApiKey.get());
+        LibreTranslateProvider.setBaseUrl(libreTranslateBaseUrl.get());
+        LibreTranslateProvider.setApiKey(libreTranslateApiKey.get());
+        OllamaTranslationProvider.setBaseUrl(ollamaBaseUrl.get());
+        OllamaTranslationProvider.setModel(ollamaModel.get());
     }
 
     private StyledText unwrapCoding(String codedTranslatedString, StyledText originalText) {
