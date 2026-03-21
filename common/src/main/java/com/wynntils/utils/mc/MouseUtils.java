@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
@@ -30,6 +30,22 @@ public final class MouseUtils {
         McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(
                 InteractionHand.MAIN_HAND,
                 id,
+                McUtils.player().getYRot(),
+                McUtils.player().getXRot()));
+    }
+
+    public static void sendDirectAttackInput(boolean reversed) {
+        if (reversed) {
+            sendDirectRightClickInput();
+        } else {
+            sendLeftClickInput();
+        }
+    }
+
+    public static void sendDirectRightClickInput() {
+        McUtils.sendPacket(new ServerboundUseItemPacket(
+                InteractionHand.MAIN_HAND,
+                0,
                 McUtils.player().getYRot(),
                 McUtils.player().getXRot()));
     }

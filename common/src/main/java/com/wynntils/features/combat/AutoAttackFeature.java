@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -85,7 +85,7 @@ public class AutoAttackFeature extends Feature {
     @SubscribeEvent
     public void onTick(TickEvent event) {
         if (!Models.WorldState.onWorld()) return;
-        if (!Models.Spell.isSpellQueueEmpty()) return;
+        if (Models.SpellCaster.isSendingInputs()) return;
 
         int tickCount = McUtils.player().tickCount;
 
