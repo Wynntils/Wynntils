@@ -111,7 +111,7 @@ public class TestSpellCasterModel {
         });
 
         try {
-            Assertions.assertTrue(model.queueClicks(List.of(CombatClickType.PRIMARY), false, 25, 0, 50));
+            Assertions.assertTrue(model.queueClicks(List.of(CombatClickType.PRIMARY), false, 0, 25, 50));
 
             waitFor(() -> clickDelayStarted.getCount() == 0, "Timed out waiting for spell input sending to start");
             Assertions.assertTrue(model.isBusy());
