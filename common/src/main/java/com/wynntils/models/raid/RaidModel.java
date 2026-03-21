@@ -30,11 +30,7 @@ import com.wynntils.models.raid.event.RaidChallengeEvent;
 import com.wynntils.models.raid.event.RaidEndedEvent;
 import com.wynntils.models.raid.event.RaidNewBestTimeEvent;
 import com.wynntils.models.raid.event.RaidStartedEvent;
-import com.wynntils.models.raid.raids.NestOfTheGrootslangsRaid;
-import com.wynntils.models.raid.raids.OrphionsNexusOfLightRaid;
-import com.wynntils.models.raid.raids.RaidKind;
-import com.wynntils.models.raid.raids.TheCanyonColossusRaid;
-import com.wynntils.models.raid.raids.TheNamelessAnomalyRaid;
+import com.wynntils.models.raid.raids.*;
 import com.wynntils.models.raid.scoreboard.RaidScoreboardPart;
 import com.wynntils.models.raid.type.HistoricRaidInfo;
 import com.wynntils.models.raid.type.RaidInfo;
@@ -775,6 +771,7 @@ public final class RaidModel extends Model {
         registerRaid(new OrphionsNexusOfLightRaid());
         registerRaid(new TheCanyonColossusRaid());
         registerRaid(new TheNamelessAnomalyRaid());
+        registerRaid(new TheWartornPalaceRaid());
     }
 
     private void registerRaid(RaidKind raidKind) {
