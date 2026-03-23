@@ -10,7 +10,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
-import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.models.characterstats.actionbar.matchers.HealthBarSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.matchers.HealthTextSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.matchers.HotbarSegmentMatcher;
@@ -105,12 +104,6 @@ public final class CharacterStatsModel extends Model {
         // This segment must be updated last, as it updates the level based on the
         // the current experience segment, which are updated above.
         event.runIfPresent(LevelSegment.class, this::updateLevel);
-    }
-
-    @SubscribeEvent
-    public void onHeldItemChanged(ChangeCarriedItemEvent event) {
-        // powders are always reset when held item is changed on Wynn, this ensures consistent behavior
-        powderSpecialInfo = PowderSpecialInfo.EMPTY;
     }
 
     public double getBlocksAboveGround() {

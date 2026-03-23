@@ -11,7 +11,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.TextDisplayChangedEvent;
 import com.wynntils.mc.event.AddEntityEvent;
-import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.models.abilities.type.ShamanTotem;
@@ -217,11 +216,6 @@ public final class ShamanTotemModel extends Model {
 
     @SubscribeEvent
     public void onClassChange(CharacterUpdateEvent e) {
-        removeAllTotems();
-    }
-
-    @SubscribeEvent
-    public void onHeldItemChange(ChangeCarriedItemEvent e) {
         removeAllTotems();
     }
 
