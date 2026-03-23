@@ -549,6 +549,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatFunctions.TimeSinceLastDamageDealtFunction());
         registerFunction(new CombatFunctions.TimeSinceLastKillFunction());
         registerFunction(new CombatFunctions.TotalAreaDamageFunction());
+        registerFunction(new CombatFunctions.TicksSinceSpecificSpellFunction());
 
         registerFunction(new CombatXpFunctions.CappedLevelFunction());
         registerFunction(new CombatXpFunctions.CappedXpFunction());
