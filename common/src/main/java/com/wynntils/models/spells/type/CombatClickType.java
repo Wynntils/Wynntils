@@ -12,7 +12,8 @@ public enum CombatClickType {
     public boolean usesRightClick(boolean isArcher) {
         return switch (this) {
             case PRIMARY -> !isArcher;
-            case SECONDARY, MELEE -> isArcher;
+            case SECONDARY -> isArcher;
+            case MELEE -> isArcher;
         };
     }
 }

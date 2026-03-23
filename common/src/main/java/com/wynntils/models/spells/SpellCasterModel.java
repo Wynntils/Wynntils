@@ -25,15 +25,16 @@ public final class SpellCasterModel extends Model {
     private final Thread workerThread;
 
     private long generation = 0L;
-    private boolean processing = false;
-    private boolean sendingInputs = false;
-    private boolean shuttingDown = false;
+    private volatile boolean processing = false;
+    private volatile boolean sendingInputs = false;
+    private volatile boolean shuttingDown = false;
     private Runnable idleListener = () -> {};
 
     public SpellCasterModel() {
         this(SpellCasterModel::dispatchClick, Thread::sleep);
     }
 
+    // Package-private for unit tests that need to stub packet sending and timing.
     SpellCasterModel(ClickSender clickSender, DelayStrategy delayStrategy) {
         super(List.of());
 
@@ -58,30 +59,30 @@ public final class SpellCasterModel extends Model {
             List<CombatClickType> clicks, boolean isArcher, int leftDelayMs, int rightDelayMs, int cooldownMs) {
         if (clicks.isEmpty()) return false;
 
+        List<CombatClickType> copiedClicks = List.copyOf(clicks);
+        int normalizedLeftDelayMs = Math.max(leftDelayMs, 0);
+        int normalizedRightDelayMs = Math.max(rightDelayMs, 0);
+        int normalizedCooldownMs = Math.max(cooldownMs, 0);
+
         synchronized (stateLock) {
             if (shuttingDown || processing || !queuedSequences.isEmpty()) return false;
 
-            QueuedSequence sequence = new QueuedSequence(
-                    List.copyOf(clicks),
+            return queuedSequences.offer(new QueuedSequence(
+                    copiedClicks,
                     isArcher,
-                    Math.max(leftDelayMs, 0),
-                    Math.max(rightDelayMs, 0),
-                    Math.max(cooldownMs, 0),
-                    generation);
-            return queuedSequences.offer(sequence);
+                    normalizedLeftDelayMs,
+                    normalizedRightDelayMs,
+                    normalizedCooldownMs,
+                    generation));
         }
     }
 
     public boolean isBusy() {
-        synchronized (stateLock) {
-            return processing || !queuedSequences.isEmpty();
-        }
+        return processing || !queuedSequences.isEmpty();
     }
 
     public boolean isSendingInputs() {
-        synchronized (stateLock) {
-            return sendingInputs;
-        }
+        return sendingInputs;
     }
 
     public void clear() {
@@ -205,9 +206,7 @@ public final class SpellCasterModel extends Model {
     }
 
     private boolean isShuttingDown() {
-        synchronized (stateLock) {
-            return shuttingDown;
-        }
+        return shuttingDown;
     }
 
     private void finishSendingInputs(QueuedSequence sequence) {
