@@ -8,12 +8,12 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
-import com.wynntils.models.spells.actionbar.segments.SpellSegment;
+import com.wynntils.models.spells.actionbar.segments.SpellInputsSegment;
 import com.wynntils.models.spells.type.SpellDirection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SpellSegmentMatcher implements ActionBarSegmentMatcher {
+public class SpellInputsSegmentMatcher implements ActionBarSegmentMatcher {
     // The start and end of a spell segment, a spacer
     private static final String SEGMENT_SEPARATOR = "\uDAFF\uDFE0";
 
@@ -59,7 +59,7 @@ public class SpellSegmentMatcher implements ActionBarSegmentMatcher {
             directions = new SpellDirection[] {first, second, third};
         }
 
-        return new SpellSegment(matcher.group(), matcher.start(), matcher.end(), directions);
+        return new SpellInputsSegment(matcher.group(), matcher.start(), matcher.end(), directions);
     }
 
     private SpellDirection fromCharacter(String spellCharacter) {
