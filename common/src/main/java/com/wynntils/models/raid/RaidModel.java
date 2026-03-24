@@ -334,7 +334,7 @@ public final class RaidModel extends Model {
         }
 
         if (expectedNumRewardPulls.get()
-                <= (RAID_REWARD_CHEST_REWARD_SLOTS_END - RAID_REWARD_CHEST_REWARD_SLOTS_START + 1)
+                        <= (RAID_REWARD_CHEST_REWARD_SLOTS_END - RAID_REWARD_CHEST_REWARD_SLOTS_START + 1)
                 && foundNumRewardPulls != expectedNumRewardPulls.get()) {
             WynntilsMod.warn("[RaidModel] Expected user to receive " + expectedNumRewardPulls.get()
                     + " pulls based on raid summary in chat. However, detected "
@@ -380,7 +380,7 @@ public final class RaidModel extends Model {
         }
 
         if (expectedNumRewardPulls.get()
-                <= (RAID_REWARD_CHEST_REWARD_SLOTS_END - RAID_REWARD_CHEST_REWARD_SLOTS_START + 1)
+                        <= (RAID_REWARD_CHEST_REWARD_SLOTS_END - RAID_REWARD_CHEST_REWARD_SLOTS_START + 1)
                 && foundNumRewardPulls != expectedNumRewardPulls.get()) {
             WynntilsMod.warn("[RaidModel] Expected user to receive " + expectedNumRewardPulls.get()
                     + " pulls based on raid summary in chat. However, detected "
