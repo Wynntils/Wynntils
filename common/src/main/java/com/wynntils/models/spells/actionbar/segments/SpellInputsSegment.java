@@ -8,10 +8,10 @@ import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.models.spells.type.SpellDirection;
 import java.util.Arrays;
 
-public class SpellSegment extends ActionBarSegment {
+public class SpellInputsSegment extends ActionBarSegment {
     private final SpellDirection[] directions;
 
-    public SpellSegment(String segmentText, int startIndex, int endIndex, SpellDirection[] directions) {
+    public SpellInputsSegment(String segmentText, int startIndex, int endIndex, SpellDirection[] directions) {
         super(segmentText, startIndex, endIndex);
         this.directions = directions;
 
@@ -24,7 +24,7 @@ public class SpellSegment extends ActionBarSegment {
 
     @Override
     public String toString() {
-        return "SpellSegment{" + "directions="
+        return "SpellInputsSegment{" + "directions="
                 + Arrays.toString(directions) + ", segmentText='"
                 + segmentText + '\'' + '}';
     }

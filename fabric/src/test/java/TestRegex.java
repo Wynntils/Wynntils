@@ -36,6 +36,7 @@ import com.wynntils.models.players.PartyModel;
 import com.wynntils.models.profession.label.GatheringNodeHarvestLabelParser;
 import com.wynntils.models.raid.RaidModel;
 import com.wynntils.models.raid.bossbar.ParasiteOvertakenBar;
+import com.wynntils.models.spells.actionbar.matchers.SpellCastSegmentMatcher;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
@@ -222,11 +223,10 @@ public class TestRegex {
     public void DamageLabelParser_DAMAGE_LABEL_PATTERN() {
         PatternTester p = new PatternTester(DamageLabelParser.class, "DAMAGE_LABEL_PATTERN");
         p.shouldMatch("§e509");
-        p.shouldMatch("§52.8k");
-        p.shouldMatch("§5§{fr:minecraft:language/five}2.8k");
-        p.shouldMatch("§56.2k󐀊§519.7k󐀊§57.1k󐀊§57.9k󐀊§512.8k");
-        p.shouldMatch("§c1.2k󐀊§b300󐀊§e45.6k󐀊§f999");
         p.shouldMatch("§42.8k");
+        p.shouldMatch("§5200k");
+        p.shouldMatch("§42.8k\uDB00\uDC0A§e19.7k\uDB00\uDC0A§c7.1k\uDB00\uDC0A§b7.9k\uDB00\uDC0A§f12.8k");
+        p.shouldMatch("§c1.2k\uDB00\uDC0A§b300\uDB00\uDC0A§e45.6k\uDB00\uDC0A§f999");
     }
 
     @Test
@@ -754,6 +754,16 @@ public class TestRegex {
         p.shouldMatch("\uDB00\uDC03§7162 points§r\uDB00\uDC10       \uDB00\uDC10§6163 points");
         p.shouldMatch("\uDB00\uDC06§790 points§r\uDB00\uDC13       \uDB00\uDC13§691 points");
         p.shouldMatch("\uDB00\uDC03§7-29 points§r\uDB00\uDC10       \uDB00\uDC10§6-28 points");
+    }
+
+    @Test
+    public void SpellCastSegmentMatcher_SPELL_REGEX() {
+        PatternTester p = new PatternTester(SpellCastSegmentMatcher.class, "SPELL_REGEX");
+        p.shouldMatch("\uDAFF\uDFCEIce Snake Cast! -30 \uE531\uDAFF\uDFCE");
+        p.shouldMatch("\uDAFF\uDFD5Meteor Cast! -69 \uE531\uDAFF\uDFD4");
+        p.shouldMatch("\uDAFF\uDFD1Teleport Cast! -15 \uE531\uDAFF\uDFD1");
+        p.shouldMatch("\uDAFF\uDFDAHeal Cast! -34 \uE531\uDAFF\uDFDA");
+        p.shouldMatch("\uDAFF\uDFC1Charge Cast! -12 \uE531 -1138 \uE530\uDAFF\uDFC1");
     }
 
     @Test

@@ -6,7 +6,6 @@ package com.wynntils.utils.wynn;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
@@ -14,12 +13,8 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.HashedStack;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public final class ItemUtils {
     private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
@@ -76,23 +71,6 @@ public final class ItemUtils {
             return !b.isEmpty()
                     && a.getHoverName().getString().equals(b.getHoverName().getString());
         }
-    }
-
-    public static MutableComponent getNonGearDescription(ItemStack itemStack, String gearName) {
-        if (gearName.contains("Crafted")) {
-            return Component.literal(gearName).withStyle(ChatFormatting.DARK_AQUA);
-        }
-
-        // this solves an unidentified item showcase exploit
-        // boxes items are STONE_SHOVEL, 1 represents UNIQUE boxes and 6 MYTHIC boxes
-        if (itemStack.getItem() == Items.STONE_SHOVEL
-                && itemStack.getDamageValue() >= 1
-                && itemStack.getDamageValue() <= 6) {
-            return Component.literal("Unidentified Item")
-                    .withStyle(
-                            GearTier.fromBoxDamage(itemStack.getDamageValue()).getChatFormatting());
-        }
-        return null;
     }
 
     public static HashedStack createHashedItem(ItemStack itemStack) {

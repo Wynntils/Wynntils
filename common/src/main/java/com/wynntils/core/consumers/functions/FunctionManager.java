@@ -492,6 +492,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.CappedAwakenedProgressFunction());
         registerFunction(new CharacterFunctions.CappedBloodPoolFunction());
         registerFunction(new CharacterFunctions.CappedCorruptedFunction());
+        registerFunction(new CharacterFunctions.CappedDistortionFunction());
         registerFunction(new CharacterFunctions.CappedFocusFunction());
         registerFunction(new CharacterFunctions.CappedHealthFunction());
         registerFunction(new CharacterFunctions.CappedHolyPowerFunction());
@@ -517,6 +518,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
         registerFunction(new CharacterFunctions.ManaPctFunction());
+        registerFunction(new CharacterFunctions.MirrorImageDurationFunction());
+        registerFunction(new CharacterFunctions.MirrorImageCloneFunction());
         registerFunction(new CharacterFunctions.MomentumFunction());
         registerFunction(new CharacterFunctions.MomentumPercentFunction());
         registerFunction(new CharacterFunctions.OphanimActive());
@@ -525,6 +528,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.PersonalObjectiveGoalFunction());
         registerFunction(new CharacterFunctions.PersonalObjectiveEventBonusFunction());
         registerFunction(new CharacterFunctions.PersonalObjectiveScoreFunction());
+        registerFunction(new CharacterFunctions.PowderSpecialChargeFunction());
         registerFunction(new CharacterFunctions.SprintFunction());
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());

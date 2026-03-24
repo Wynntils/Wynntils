@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
+import com.wynntils.features.HideTripwiresFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
 import com.wynntils.features.ValuableFoundFeature;
@@ -32,7 +33,6 @@ import com.wynntils.features.combat.AutoAttackFeature;
 import com.wynntils.features.combat.ChestBlockerFeature;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
-import com.wynntils.features.combat.FixCastingSpellsFromInventoryFeature;
 import com.wynntils.features.combat.HealthPotionBlockerFeature;
 import com.wynntils.features.combat.HideLabelsFeature;
 import com.wynntils.features.combat.HorseMountFeature;
@@ -237,7 +237,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new ChestBlockerFeature());
         registerFeature(new ContentTrackerFeature());
         registerFeature(new CustomLootrunBeaconsFeature());
-        registerFeature(new FixCastingSpellsFromInventoryFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HideLabelsFeature());
         registerFeature(new HorseMountFeature());
@@ -411,6 +410,7 @@ public final class FeatureManager extends Manager {
         // region uncategorized
         registerFeature(new DiscordRichPresenceFeature());
         registerFeature(new ExtendedSeasonLeaderboardFeature());
+        registerFeature(new HideTripwiresFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new ValuableFoundFeature());
         // endregion

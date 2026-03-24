@@ -4,6 +4,7 @@
     "AbstractContainerScreenMixin",
     "AbstractRecipeBookScreenMixin",
     "AvatarRendererMixin",
+    "BlockBehaviourMixin",
     "BossHealthOverlayMixin",
     "CapeLayerMixin",
     "ChatComponentMixin",
