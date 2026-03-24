@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.raid;
@@ -35,6 +35,7 @@ import com.wynntils.models.raid.raids.OrphionsNexusOfLightRaid;
 import com.wynntils.models.raid.raids.RaidKind;
 import com.wynntils.models.raid.raids.TheCanyonColossusRaid;
 import com.wynntils.models.raid.raids.TheNamelessAnomalyRaid;
+import com.wynntils.models.raid.raids.TheWartornPalaceRaid;
 import com.wynntils.models.raid.scoreboard.RaidScoreboardPart;
 import com.wynntils.models.raid.type.HistoricRaidInfo;
 import com.wynntils.models.raid.type.RaidInfo;
@@ -775,6 +776,7 @@ public final class RaidModel extends Model {
         registerRaid(new OrphionsNexusOfLightRaid());
         registerRaid(new TheCanyonColossusRaid());
         registerRaid(new TheNamelessAnomalyRaid());
+        registerRaid(new TheWartornPalaceRaid());
     }
 
     private void registerRaid(RaidKind raidKind) {
