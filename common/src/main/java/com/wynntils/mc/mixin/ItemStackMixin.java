@@ -7,7 +7,6 @@ package com.wynntils.mc.mixin;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.mc.event.ItemTooltipFlagsEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -23,20 +22,6 @@ public abstract class ItemStackMixin implements ItemStackExtension {
 
     @Unique
     private StyledText wynntilsOriginalName;
-
-    @ModifyVariable(
-            method =
-                    "getTooltipLines(Lnet/minecraft/world/item/Item$TooltipContext;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/TooltipFlag;)Ljava/util/List;",
-            at = @At("HEAD"),
-            ordinal = 0,
-            argsOnly = true)
-    private TooltipFlag onGetTooltipLines(TooltipFlag flags) {
-        ItemStack itemStack = (ItemStack) (Object) this;
-        ItemTooltipFlagsEvent event = new ItemTooltipFlagsEvent(itemStack, flags);
-        MixinHelper.post(event);
-
-        return event.getFlags();
-    }
 
     @Override
     @Unique
