@@ -7,7 +7,10 @@ package com.wynntils.models.spells;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
+import com.wynntils.mc.event.CooldownUpdateEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.spells.type.CombatClickType;
+import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -15,6 +18,8 @@ import com.wynntils.utils.mc.MouseUtils;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.function.LongSupplier;
+import net.minecraft.world.InteractionHand;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class SpellCasterModel extends Model {
@@ -22,6 +27,8 @@ public final class SpellCasterModel extends Model {
     private final Object stateLock = new Object();
     private final ClickSender clickSender;
     private final DelayStrategy delayStrategy;
+    private final SpellCasterLagCorrectionTracker lagCorrectionTracker;
+    private final LongSupplier currentTimeMsSupplier;
     private final Thread workerThread;
 
     private long generation = 0L;
@@ -31,16 +38,27 @@ public final class SpellCasterModel extends Model {
     private Runnable idleListener = () -> {};
 
     public SpellCasterModel() {
-        this(SpellCasterModel::dispatchClick, Thread::sleep);
+        this(SpellCasterModel::dispatchClick, Thread::sleep, new SpellCasterLagCorrectionTracker(), System::currentTimeMillis);
     }
 
     // Package-private for unit tests that need to stub packet sending and timing.
     SpellCasterModel(ClickSender clickSender, DelayStrategy delayStrategy) {
+        this(clickSender, delayStrategy, new SpellCasterLagCorrectionTracker(), System::currentTimeMillis);
+    }
+
+    // Package-private for unit tests that need to control lag-correction state and timing.
+    SpellCasterModel(
+            ClickSender clickSender,
+            DelayStrategy delayStrategy,
+            SpellCasterLagCorrectionTracker lagCorrectionTracker,
+            LongSupplier currentTimeMsSupplier) {
         super(List.of());
 
         this.queuedSequences = new ArrayBlockingQueue<>(1);
         this.clickSender = clickSender;
         this.delayStrategy = delayStrategy;
+        this.lagCorrectionTracker = lagCorrectionTracker;
+        this.currentTimeMsSupplier = currentTimeMsSupplier;
         workerThread = new Thread(this::runWorker, "Wynntils-SpellCaster");
         workerThread.setDaemon(true);
         workerThread.start();
@@ -48,15 +66,35 @@ public final class SpellCasterModel extends Model {
 
     public boolean queueDirections(
             List<SpellDirection> directions, boolean isArcher, int leftDelayMs, int rightDelayMs, int cooldownMs) {
+        return queueDirections(directions, isArcher, leftDelayMs, rightDelayMs, cooldownMs, false);
+    }
+
+    public boolean queueDirections(
+            List<SpellDirection> directions,
+            boolean isArcher,
+            int leftDelayMs,
+            int rightDelayMs,
+            int cooldownMs,
+            boolean adaptiveLagCorrectionEnabled) {
         List<CombatClickType> clicks = directions.stream()
                 .map(direction ->
                         direction == SpellDirection.RIGHT ? CombatClickType.PRIMARY : CombatClickType.SECONDARY)
                 .toList();
-        return queueClicks(clicks, isArcher, leftDelayMs, rightDelayMs, cooldownMs);
+        return queueClicks(clicks, isArcher, leftDelayMs, rightDelayMs, cooldownMs, adaptiveLagCorrectionEnabled);
     }
 
     public boolean queueClicks(
             List<CombatClickType> clicks, boolean isArcher, int leftDelayMs, int rightDelayMs, int cooldownMs) {
+        return queueClicks(clicks, isArcher, leftDelayMs, rightDelayMs, cooldownMs, false);
+    }
+
+    public boolean queueClicks(
+            List<CombatClickType> clicks,
+            boolean isArcher,
+            int leftDelayMs,
+            int rightDelayMs,
+            int cooldownMs,
+            boolean adaptiveLagCorrectionEnabled) {
         if (clicks.isEmpty()) return false;
 
         List<CombatClickType> copiedClicks = List.copyOf(clicks);
@@ -73,6 +111,7 @@ public final class SpellCasterModel extends Model {
                     normalizedLeftDelayMs,
                     normalizedRightDelayMs,
                     normalizedCooldownMs,
+                    adaptiveLagCorrectionEnabled,
                     generation));
         }
     }
@@ -93,6 +132,7 @@ public final class SpellCasterModel extends Model {
             queuedSequences.clear();
         }
 
+        lagCorrectionTracker.reset();
         workerThread.interrupt();
     }
 
@@ -124,6 +164,34 @@ public final class SpellCasterModel extends Model {
         clear();
     }
 
+    @SubscribeEvent
+    public void onSpellPartial(SpellEvent.Partial event) {
+        lagCorrectionTracker.onSpellProgressObserved(currentTimeMs());
+    }
+
+    @SubscribeEvent
+    public void onCooldownUpdate(CooldownUpdateEvent event) {
+        if (!shouldObserveItemCooldown(
+                McUtils.player() != null,
+                McUtils.player() != null
+                        && event.getCooldownGroup().equals(
+                                McUtils.player().getCooldowns().getCooldownGroup(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND))),
+                event.getDuration())) {
+            return;
+        }
+
+        lagCorrectionTracker.onItemCooldownObserved(currentTimeMs());
+    }
+
+    static boolean shouldObserveItemCooldown(boolean playerPresent, boolean sameCooldownGroup, int duration) {
+        return playerPresent && sameCooldownGroup && duration > 0;
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        lagCorrectionTracker.onTick(currentTimeMs(), isSendingInputs());
+    }
+
     private void runWorker() {
         while (!isShuttingDown()) {
             try {
@@ -152,6 +220,9 @@ public final class SpellCasterModel extends Model {
 
             processing = true;
             sendingInputs = true;
+            if (sequence.adaptiveLagCorrectionEnabled) {
+                lagCorrectionTracker.beginAdaptiveWindow(currentTimeMs());
+            }
             return true;
         }
     }
@@ -177,13 +248,21 @@ public final class SpellCasterModel extends Model {
     }
 
     private void execute(QueuedSequence sequence) throws InterruptedException {
-        for (CombatClickType click : sequence.clicks) {
+        for (int i = 0; i < sequence.clicks.size(); i++) {
+            CombatClickType click = sequence.clicks.get(i);
             if (!isCurrent(sequence)) return;
 
             boolean usesRightClick = click.usesRightClick(sequence.isArcher);
             sendClick(click, usesRightClick, sequence.isArcher);
-
+            if (sequence.adaptiveLagCorrectionEnabled) {
+                lagCorrectionTracker.onInputSent(click, currentTimeMs());
+            }
+            // Quick Cast delays are configured as "wait after sending this click type",
+            // including the final click before the sequence is considered settled.
             int delayMs = usesRightClick ? sequence.rightDelayMs : sequence.leftDelayMs;
+            if (sequence.adaptiveLagCorrectionEnabled) {
+                delayMs += lagCorrectionTracker.computeExtraDelayMs(click, delayMs);
+            }
             if (delayMs > 0) {
                 delayStrategy.sleep(delayMs);
             }
@@ -250,12 +329,17 @@ public final class SpellCasterModel extends Model {
         }
     }
 
+    private long currentTimeMs() {
+        return currentTimeMsSupplier.getAsLong();
+    }
+
     private record QueuedSequence(
             List<CombatClickType> clicks,
             boolean isArcher,
             int leftDelayMs,
             int rightDelayMs,
             int cooldownMs,
+            boolean adaptiveLagCorrectionEnabled,
             long generation) {}
 
     @FunctionalInterface
