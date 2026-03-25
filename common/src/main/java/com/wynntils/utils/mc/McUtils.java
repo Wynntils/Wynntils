@@ -180,9 +180,8 @@ public final class McUtils {
     }
 
     public static void openChatScreen(String keybindCommand) {
-        ChatComponent.ChatMethod chatMethod = keybindCommand.startsWith("/")
-                ? ChatComponent.ChatMethod.COMMAND
-                : ChatComponent.ChatMethod.MESSAGE;
+        ChatComponent.ChatMethod chatMethod =
+                keybindCommand.startsWith("/") ? ChatComponent.ChatMethod.COMMAND : ChatComponent.ChatMethod.MESSAGE;
 
         // Route through ChatComponent so the existing createScreen mixin can post ChatScreenCreateEvent.
         mc().gui.getChat().saveAsDraft(keybindCommand);
