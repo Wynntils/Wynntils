@@ -1133,8 +1133,6 @@
   "feature.wynntils.tooltipFitting.name": "提示适应",
   "feature.wynntils.tooltipFitting.universalScale.description": "应应用于每个提示的缩放因子",
   "feature.wynntils.tooltipFitting.universalScale.name": "通用比例",
-  "feature.wynntils.tooltipFitting.wrapText.description": "提示是否应在到达屏幕边缘时换行",
-  "feature.wynntils.tooltipFitting.wrapText.name": "换行文本",
   "feature.wynntils.tooltipVanillaHide.description": "隐藏原版提示。",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "这将在 Wynncraft 上禁用高级提示 (F3+H)",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "始终隐藏高级提示",
