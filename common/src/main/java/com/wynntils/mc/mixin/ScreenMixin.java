@@ -51,12 +51,28 @@ public abstract class ScreenMixin implements ScreenExtension {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;init()V"))
     private void onScreenInitPre(CallbackInfo ci) {
         // This is called whenever a screen is re-inited (e.g. when the window is resized)
-        MixinHelper.postAlways(new ScreenInitEvent.Pre((Screen) (Object) this, false));
+        Screen screen = (Screen) (Object) this;
+
+        if (screen instanceof TitleScreen) {
+            // Title screen rebuilds must still run off-server so the Wynncraft button survives resize.
+            MixinHelper.postAlways(new ScreenInitEvent.Pre(screen, false));
+            return;
+        }
+
+        MixinHelper.post(new ScreenInitEvent.Pre(screen, false));
     }
 
     @Inject(method = "rebuildWidgets()V", at = @At("RETURN"))
     private void onScreenInitPost(CallbackInfo ci) {
-        MixinHelper.postAlways(new ScreenInitEvent.Post((Screen) (Object) this, false));
+        Screen screen = (Screen) (Object) this;
+
+        if (screen instanceof TitleScreen) {
+            // Keep title-screen rebuild behavior aligned with the pre event.
+            MixinHelper.postAlways(new ScreenInitEvent.Post(screen, false));
+            return;
+        }
+
+        MixinHelper.post(new ScreenInitEvent.Post(screen, false));
     }
 
     @Inject(
