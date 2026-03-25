@@ -18,9 +18,9 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.mc.event.TitleScreenRebuildEvent;
 import com.wynntils.models.worlds.type.ServerRegion;
 import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.screens.update.UpdateScreen;
@@ -85,10 +85,25 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onTitleScreenInit(TitleScreenInitEvent.Post event) {
-        TitleScreen titleScreen = event.getTitleScreen();
+    public void onTitleScreenInitPre(TitleScreenInitEvent.Pre event) {
+        if (!firstTitleScreenInit || !autoConnect.get()) return;
 
-        addWynncraftButton(titleScreen);
+        firstTitleScreenInit = false;
+        if (Managers.Download.graphState().error() && cancelAutoJoin.get() && !ignoreFailedDownloads.get()) {
+            WynntilsMod.warn("Downloads have failed, auto join is cancelled.");
+            return;
+        } else if (Services.Update.shouldPromptUpdate() && cancelAutoJoin.get()) {
+            WynntilsMod.info("Cancelling auto join, update available");
+            return;
+        }
+
+        ServerData wynncraftServer = getWynncraftServer();
+        connectToServer(wynncraftServer);
+    }
+
+    @SubscribeEvent
+    public void onTitleScreenInitPost(TitleScreenInitEvent.Post event) {
+        addWynncraftButton(event.getTitleScreen());
     }
 
     @SubscribeEvent
@@ -109,24 +124,8 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onScreenInit(ScreenInitEvent.Pre event) {
-        if (!(event.getScreen() instanceof TitleScreen titleScreen)) return;
-
-        if (firstTitleScreenInit && autoConnect.get()) {
-            firstTitleScreenInit = false;
-            if (Managers.Download.graphState().error() && cancelAutoJoin.get() && !ignoreFailedDownloads.get()) {
-                WynntilsMod.warn("Downloads have failed, auto join is cancelled.");
-                return;
-            } else if (Services.Update.shouldPromptUpdate() && cancelAutoJoin.get()) {
-                WynntilsMod.info("Cancelling auto join, update available");
-                return;
-            }
-            ServerData wynncraftServer = getWynncraftServer();
-            connectToServer(wynncraftServer);
-            return;
-        }
-
-        addWynncraftButton(titleScreen);
+    public void onTitleScreenRebuild(TitleScreenRebuildEvent.Post event) {
+        addWynncraftButton(event.getTitleScreen());
     }
 
     private void addWynncraftButton(TitleScreen titleScreen) {

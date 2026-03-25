@@ -9,6 +9,7 @@ import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.PauseMenuInitEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.mc.event.TitleScreenRebuildEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import net.minecraft.CrashReport;
@@ -50,29 +51,23 @@ public abstract class ScreenMixin implements ScreenExtension {
             method = "rebuildWidgets()V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;init()V"))
     private void onScreenInitPre(CallbackInfo ci) {
-        // This is called whenever a screen is re-inited (e.g. when the window is resized)
-        Screen screen = (Screen) (Object) this;
-
-        if (screen instanceof TitleScreen) {
-            // Title screen rebuilds must still run off-server so the Wynncraft button survives resize.
-            MixinHelper.postAlways(new ScreenInitEvent.Pre(screen, false));
+        if ((Object) this instanceof TitleScreen titleScreen) {
+            MixinHelper.postAlways(new TitleScreenRebuildEvent.Pre(titleScreen));
             return;
         }
 
-        MixinHelper.post(new ScreenInitEvent.Pre(screen, false));
+        // This is called whenever a screen is re-inited (e.g. when the window is resized)
+        MixinHelper.post(new ScreenInitEvent.Pre((Screen) (Object) this, false));
     }
 
     @Inject(method = "rebuildWidgets()V", at = @At("RETURN"))
     private void onScreenInitPost(CallbackInfo ci) {
-        Screen screen = (Screen) (Object) this;
-
-        if (screen instanceof TitleScreen) {
-            // Keep title-screen rebuild behavior aligned with the pre event.
-            MixinHelper.postAlways(new ScreenInitEvent.Post(screen, false));
+        if ((Object) this instanceof TitleScreen titleScreen) {
+            MixinHelper.postAlways(new TitleScreenRebuildEvent.Post(titleScreen));
             return;
         }
 
-        MixinHelper.post(new ScreenInitEvent.Post(screen, false));
+        MixinHelper.post(new ScreenInitEvent.Post((Screen) (Object) this, false));
     }
 
     @Inject(
