@@ -4,8 +4,8 @@
  */
 package com.wynntils.features.combat;
 
-import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
@@ -95,7 +95,8 @@ public class AutoAttackFeature extends Feature {
                 true,
                 true,
                 Models.SpellCaster.isSendingInputs(),
-                Managers.Feature.getFeatureInstance(QuickCastFeature.class).isNormalAutoAttackTriggerActingAsSpellModifier(),
+                Managers.Feature.getFeatureInstance(QuickCastFeature.class)
+                        .isNormalAutoAttackTriggerActingAsSpellModifier(),
                 Models.Raid.isParasiteOvertaken(),
                 lastSpellInput + Models.Spell.SPELL_COST_RESET_TICKS > tickCount,
                 triggerHeld)) {

@@ -239,5 +239,6 @@ final class SpellCasterLagCorrectionTracker {
         SPELL_PROGRESS,
         ITEM_COOLDOWN
     }
+
     private record PendingInput(FeedbackChannel feedbackChannel, long sentAtMs) {}
 }

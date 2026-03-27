@@ -46,6 +46,7 @@ public class QuickCastFeature extends Feature {
             List.of(CombatClickType.PRIMARY, CombatClickType.SECONDARY, CombatClickType.SECONDARY);
     private static final List<CombatClickType> FOURTH_SPELL_SEQUENCE =
             List.of(CombatClickType.PRIMARY, CombatClickType.PRIMARY, CombatClickType.SECONDARY);
+
     @RegisterKeyBind
     private final KeyBind castFirstSpell = KeyBindDefinition.CAST_FIRST_SPELL.create(() -> {});
 
@@ -372,11 +373,11 @@ public class QuickCastFeature extends Feature {
 
     private boolean shouldAutoInsertMelee() {
         return isAutoInsertMeleeTriggerHeld(
-                        Models.Character.getClassType(),
-                        Managers.Feature.getFeatureInstance(AutoAttackFeature.class).isEnabled(),
-                        castMeleeAttack.getKeyMapping().isDown(),
-                        McUtils.options().keyAttack.isDown(),
-                        McUtils.options().keyUse.isDown());
+                Models.Character.getClassType(),
+                Managers.Feature.getFeatureInstance(AutoAttackFeature.class).isEnabled(),
+                castMeleeAttack.getKeyMapping().isDown(),
+                McUtils.options().keyAttack.isDown(),
+                McUtils.options().keyUse.isDown());
     }
 
     static boolean isAutoInsertMeleeTriggerHeld(
@@ -458,13 +459,11 @@ public class QuickCastFeature extends Feature {
     }
 
     private boolean shouldSuppressNormalAttackTriggerInput() {
-        return isNormalAutoAttackTriggerActingAsSpellModifier()
-                && Models.Character.getClassType() != ClassType.ARCHER;
+        return isNormalAutoAttackTriggerActingAsSpellModifier() && Models.Character.getClassType() != ClassType.ARCHER;
     }
 
     private boolean shouldSuppressNormalUseTriggerInput() {
-        return isNormalAutoAttackTriggerActingAsSpellModifier()
-                && Models.Character.getClassType() == ClassType.ARCHER;
+        return isNormalAutoAttackTriggerActingAsSpellModifier() && Models.Character.getClassType() == ClassType.ARCHER;
     }
 
     private boolean hasRawSpellKeyDown() {

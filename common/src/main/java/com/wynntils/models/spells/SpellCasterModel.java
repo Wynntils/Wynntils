@@ -9,8 +9,8 @@ import com.wynntils.core.components.Model;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.CooldownUpdateEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.spells.type.CombatClickType;
 import com.wynntils.models.spells.event.SpellEvent;
+import com.wynntils.models.spells.type.CombatClickType;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -49,12 +49,7 @@ public final class SpellCasterModel extends Model {
 
     // Package-private for unit tests that need to stub packet sending and timing.
     SpellCasterModel(ClickSender clickSender, DelayStrategy delayStrategy) {
-        this(
-                clickSender,
-                delayStrategy,
-                click -> {},
-                new SpellCasterLagCorrectionTracker(),
-                System::currentTimeMillis);
+        this(clickSender, delayStrategy, click -> {}, new SpellCasterLagCorrectionTracker(), System::currentTimeMillis);
     }
 
     // Package-private for unit tests that need to control lag-correction state and timing.
@@ -196,8 +191,10 @@ public final class SpellCasterModel extends Model {
         if (!shouldObserveItemCooldown(
                 McUtils.player() != null,
                 McUtils.player() != null
-                        && event.getCooldownGroup().equals(
-                                McUtils.player().getCooldowns().getCooldownGroup(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND))),
+                        && event.getCooldownGroup()
+                                .equals(McUtils.player()
+                                        .getCooldowns()
+                                        .getCooldownGroup(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND))),
                 event.getDuration())) {
             return;
         }
@@ -299,7 +296,8 @@ public final class SpellCasterModel extends Model {
         delayStrategy.sleep(sequence.cooldownMs);
     }
 
-    private boolean sendClick(QueuedSequence sequence, CombatClickType click, boolean usesRightClick, boolean isArcher) {
+    private boolean sendClick(
+            QueuedSequence sequence, CombatClickType click, boolean usesRightClick, boolean isArcher) {
         synchronized (stateLock) {
             if (sequence.generation != generation || shuttingDown) {
                 return false;
