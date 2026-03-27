@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BooleanSupplier;
 import org.junit.jupiter.api.Assertions;
@@ -70,6 +71,57 @@ public class TestSpellCasterModel {
             Assertions.assertEquals(List.of("PRIMARY"), snapshot(events));
             Assertions.assertFalse(model.isSendingInputs());
         } finally {
+            model.shutdown();
+        }
+    }
+
+    @Test
+    public void clearBeforeNextDispatchPreventsLeakingInputsAcrossWeaponSwap() throws Exception {
+        List<String> events = Collections.synchronizedList(new ArrayList<>());
+        CountDownLatch firstDelayStarted = new CountDownLatch(1);
+        CountDownLatch releaseFirstDelay = new CountDownLatch(1);
+        CountDownLatch secondDispatchBlocked = new CountDownLatch(1);
+        AtomicBoolean holdSecondDispatch = new AtomicBoolean(true);
+        SpellCasterModel model = new SpellCasterModel(
+                (click, usesRightClick, isArcher) -> events.add(click.name()),
+                delayMs -> {
+                    if (firstDelayStarted.getCount() != 0L) {
+                        firstDelayStarted.countDown();
+                        releaseFirstDelay.await();
+                    }
+                },
+                click -> {
+                    if (click != CombatClickType.SECONDARY) return;
+
+                    secondDispatchBlocked.countDown();
+                    while (holdSecondDispatch.get()) {
+                        Thread.onSpinWait();
+                    }
+                },
+                new SpellCasterLagCorrectionTracker(),
+                System::currentTimeMillis);
+
+        try {
+            Assertions.assertTrue(
+                    model.queueClicks(List.of(CombatClickType.PRIMARY, CombatClickType.SECONDARY), false, 25, 25, 0));
+            waitFor(() -> firstDelayStarted.getCount() == 0, "Timed out waiting for the first spell delay to start");
+
+            releaseFirstDelay.countDown();
+            waitFor(
+                    () -> secondDispatchBlocked.getCount() == 0,
+                    "Timed out waiting for the second spell input to reach the dispatch boundary");
+
+            model.clear();
+            holdSecondDispatch.set(false);
+
+            waitFor(() -> !model.isBusy(), "Timed out waiting for clear() to flush the pending dispatch");
+            Thread.sleep(50);
+
+            Assertions.assertEquals(List.of("PRIMARY"), snapshot(events));
+            Assertions.assertFalse(model.isSendingInputs());
+        } finally {
+            releaseFirstDelay.countDown();
+            holdSecondDispatch.set(false);
             model.shutdown();
         }
     }

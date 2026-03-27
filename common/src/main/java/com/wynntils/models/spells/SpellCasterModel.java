@@ -27,6 +27,7 @@ public final class SpellCasterModel extends Model {
     private final Object stateLock = new Object();
     private final ClickSender clickSender;
     private final DelayStrategy delayStrategy;
+    private final BeforeDispatchHook beforeDispatchHook;
     private final SpellCasterLagCorrectionTracker lagCorrectionTracker;
     private final LongSupplier currentTimeMsSupplier;
     private final Thread workerThread;
@@ -38,12 +39,22 @@ public final class SpellCasterModel extends Model {
     private Runnable idleListener = () -> {};
 
     public SpellCasterModel() {
-        this(SpellCasterModel::dispatchClick, Thread::sleep, new SpellCasterLagCorrectionTracker(), System::currentTimeMillis);
+        this(
+                SpellCasterModel::dispatchClick,
+                Thread::sleep,
+                click -> {},
+                new SpellCasterLagCorrectionTracker(),
+                System::currentTimeMillis);
     }
 
     // Package-private for unit tests that need to stub packet sending and timing.
     SpellCasterModel(ClickSender clickSender, DelayStrategy delayStrategy) {
-        this(clickSender, delayStrategy, new SpellCasterLagCorrectionTracker(), System::currentTimeMillis);
+        this(
+                clickSender,
+                delayStrategy,
+                click -> {},
+                new SpellCasterLagCorrectionTracker(),
+                System::currentTimeMillis);
     }
 
     // Package-private for unit tests that need to control lag-correction state and timing.
@@ -52,11 +63,22 @@ public final class SpellCasterModel extends Model {
             DelayStrategy delayStrategy,
             SpellCasterLagCorrectionTracker lagCorrectionTracker,
             LongSupplier currentTimeMsSupplier) {
+        this(clickSender, delayStrategy, click -> {}, lagCorrectionTracker, currentTimeMsSupplier);
+    }
+
+    // Package-private for unit tests that need to pause precisely before a click is dispatched.
+    SpellCasterModel(
+            ClickSender clickSender,
+            DelayStrategy delayStrategy,
+            BeforeDispatchHook beforeDispatchHook,
+            SpellCasterLagCorrectionTracker lagCorrectionTracker,
+            LongSupplier currentTimeMsSupplier) {
         super(List.of());
 
         this.queuedSequences = new ArrayBlockingQueue<>(1);
         this.clickSender = clickSender;
         this.delayStrategy = delayStrategy;
+        this.beforeDispatchHook = beforeDispatchHook;
         this.lagCorrectionTracker = lagCorrectionTracker;
         this.currentTimeMsSupplier = currentTimeMsSupplier;
         workerThread = new Thread(this::runWorker, "Wynntils-SpellCaster");
@@ -253,7 +275,10 @@ public final class SpellCasterModel extends Model {
             if (!isCurrent(sequence)) return;
 
             boolean usesRightClick = click.usesRightClick(sequence.isArcher);
-            sendClick(click, usesRightClick, sequence.isArcher);
+            beforeDispatchHook.beforeDispatch(click);
+            if (!sendClick(sequence, click, usesRightClick, sequence.isArcher)) {
+                return;
+            }
             if (sequence.adaptiveLagCorrectionEnabled) {
                 lagCorrectionTracker.onInputSent(click, currentTimeMs());
             }
@@ -274,8 +299,15 @@ public final class SpellCasterModel extends Model {
         delayStrategy.sleep(sequence.cooldownMs);
     }
 
-    private void sendClick(CombatClickType click, boolean usesRightClick, boolean isArcher) {
-        clickSender.send(click, usesRightClick, isArcher);
+    private boolean sendClick(QueuedSequence sequence, CombatClickType click, boolean usesRightClick, boolean isArcher) {
+        synchronized (stateLock) {
+            if (sequence.generation != generation || shuttingDown) {
+                return false;
+            }
+
+            clickSender.send(click, usesRightClick, isArcher);
+            return true;
+        }
     }
 
     private boolean isCurrent(QueuedSequence sequence) {
@@ -350,5 +382,10 @@ public final class SpellCasterModel extends Model {
     @FunctionalInterface
     interface DelayStrategy {
         void sleep(int delayMs) throws InterruptedException;
+    }
+
+    @FunctionalInterface
+    interface BeforeDispatchHook {
+        void beforeDispatch(CombatClickType click) throws InterruptedException;
     }
 }
