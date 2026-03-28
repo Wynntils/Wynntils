@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items;
@@ -23,11 +23,11 @@ import com.wynntils.models.items.annotators.game.EmeraldPouchAnnotator;
 import com.wynntils.models.items.annotators.game.GatheringToolAnnotator;
 import com.wynntils.models.items.annotators.game.GearAnnotator;
 import com.wynntils.models.items.annotators.game.GearBoxAnnotator;
-import com.wynntils.models.items.annotators.game.HorseAnnotator;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
 import com.wynntils.models.items.annotators.game.InsulatorAnnotator;
 import com.wynntils.models.items.annotators.game.MaterialAnnotator;
 import com.wynntils.models.items.annotators.game.MiscAnnotator;
+import com.wynntils.models.items.annotators.game.MountAnnotator;
 import com.wynntils.models.items.annotators.game.MultiHealthPotionAnnotator;
 import com.wynntils.models.items.annotators.game.OuterVoidItemAnnotator;
 import com.wynntils.models.items.annotators.game.PotionAnnotator;
@@ -85,7 +85,7 @@ public final class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new EmeraldAnnotator());
         Handlers.Item.registerAnnotator(new EmeraldPouchAnnotator());
         Handlers.Item.registerAnnotator(new GatheringToolAnnotator());
-        Handlers.Item.registerAnnotator(new HorseAnnotator());
+        Handlers.Item.registerAnnotator(new MountAnnotator());
         Handlers.Item.registerAnnotator(new InsulatorAnnotator());
         Handlers.Item.registerAnnotator(new MultiHealthPotionAnnotator());
         Handlers.Item.registerAnnotator(new PotionAnnotator());

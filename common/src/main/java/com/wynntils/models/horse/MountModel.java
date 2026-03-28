@@ -7,7 +7,7 @@ package com.wynntils.models.horse;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.items.items.game.HorseItem;
+import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
@@ -20,8 +20,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 
-public final class HorseModel extends Model {
-    public HorseModel() {
+public final class MountModel extends Model {
+    public MountModel() {
         super(List.of());
     }
 
@@ -35,27 +35,27 @@ public final class HorseModel extends Model {
             35, 18530,
             40, 24180);
 
-    public Optional<HorseItem> getHorse() {
-        int horseSlot = findHorseSlotNum();
-        if (horseSlot == -1) return Optional.empty();
+    public Optional<MountItem> getMount() {
+        int mountSlot = findMountSlotNum();
+        if (mountSlot == -1) return Optional.empty();
 
-        return Models.Item.asWynnItem(McUtils.inventory().getItem(horseSlot), HorseItem.class);
+        return Models.Item.asWynnItem(McUtils.inventory().getItem(mountSlot), MountItem.class);
     }
 
     public Optional<Integer> calculateNextLevelSeconds() {
-        Optional<HorseItem> optionalHorse = getHorse();
-        if (optionalHorse.isEmpty()) return Optional.empty();
+        Optional<MountItem> optionalMount = getMount();
+        if (optionalMount.isEmpty()) return Optional.empty();
 
-        HorseItem horseItem = optionalHorse.get();
+        MountItem horseItem = optionalMount.get();
 
-        if (horseItem.getLevel() == CappedValue.EMPTY || horseItem.getXp() == CappedValue.EMPTY) {
+        if (horseItem.getSpeed() == CappedValue.EMPTY || horseItem.getEnergy() == CappedValue.EMPTY) {
             return Optional.empty();
         }
-        if (horseItem.getLevel().current() == horseItem.getLevel().max()) return Optional.empty();
+        if (horseItem.getSpeed().current() == horseItem.getSpeed().max()) return Optional.empty();
 
         // This is based off of a formula from https://wynncraft.wiki.gg/wiki/Horses#Levels
-        double levelProgress = (horseItem.getLevel().current() + (2.0 / 3.0)) / 2.0;
-        double xpProgress = 100.0 - horseItem.getXp().current();
+        double levelProgress = (horseItem.getSpeed().current() + (2.0 / 3.0)) / 2.0;
+        double xpProgress = 100.0 - horseItem.getEnergy().current();
 
         double result = levelProgress * (xpProgress / 100.0) * 60.0;
 
@@ -63,44 +63,44 @@ public final class HorseModel extends Model {
     }
 
     public Optional<CappedValue> calculateNextLevelCumulativeSeconds() {
-        Optional<HorseItem> optionalHorse = getHorse();
+        Optional<MountItem> optionalHorse = getMount();
         if (optionalHorse.isEmpty()) return Optional.empty();
 
-        HorseItem horseItem = optionalHorse.get();
+        MountItem horseItem = optionalHorse.get();
 
-        if (horseItem.getLevel() == CappedValue.EMPTY || horseItem.getXp() == CappedValue.EMPTY) {
+        if (horseItem.getSpeed() == CappedValue.EMPTY || horseItem.getEnergy() == CappedValue.EMPTY) {
             return Optional.empty();
         }
-        if (MAX_LEVEL_TIMES.get(horseItem.getLevel().max()) == null) return Optional.empty();
+        if (MAX_LEVEL_TIMES.get(horseItem.getSpeed().max()) == null) return Optional.empty();
 
         double result = 0;
 
-        double resultMax = MAX_LEVEL_TIMES.get(horseItem.getLevel().max());
+        double resultMax = MAX_LEVEL_TIMES.get(horseItem.getSpeed().max());
 
-        for (int levelNumber = 1; levelNumber != horseItem.getLevel().current() + 1; levelNumber++) {
+        for (int levelNumber = 1; levelNumber != horseItem.getSpeed().current() + 1; levelNumber++) {
             // This is based off of a formula from https://wynncraft.wiki.gg/wiki/Horses#Levels
             double levelProgress = (levelNumber + (2.0 / 3.0)) / 2.0;
-            double xpProgress = 100.0 - horseItem.getXp().current();
+            double xpProgress = 100.0 - horseItem.getEnergy().current();
 
             result += levelProgress * 60.0;
 
-            if (levelNumber == horseItem.getLevel().current()) {
+            if (levelNumber == horseItem.getSpeed().current()) {
                 result -= (levelProgress * (xpProgress / 100.0) * 60.0);
             }
         }
 
-        if (horseItem.getLevel().current() == horseItem.getLevel().max()) {
+        if (horseItem.getSpeed().current() == horseItem.getSpeed().max()) {
             result = resultMax;
         }
 
         return Optional.of(new CappedValue((int) Math.ceil(result), (int) Math.ceil(resultMax)));
     }
 
-    public int findHorseSlotNum() {
+    public int findMountSlotNum() {
         Inventory inventory = McUtils.inventory();
         for (int slotNum = 0; slotNum < Inventory.INVENTORY_SIZE; slotNum++) {
             ItemStack itemStack = inventory.getItem(slotNum);
-            if (Models.Item.asWynnItem(itemStack, HorseItem.class).isPresent()) {
+            if (Models.Item.asWynnItem(itemStack, MountItem.class).isPresent()) {
                 return slotNum;
             }
         }
