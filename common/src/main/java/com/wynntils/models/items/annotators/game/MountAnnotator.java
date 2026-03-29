@@ -5,10 +5,10 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.items.items.game.MountItem;
+import com.wynntils.models.items.items.game.MountStat;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.EnumMap;
@@ -21,25 +21,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class MountAnnotator implements GameItemAnnotator {
-    private enum MountStat {
-        ACCELERATION,
-        ALTITUDE,
-        ENERGY_STAT,
-        HANDLING,
-        POWERUP,
-        SPEED,
-        TOUGHNESS,
-        TRAINING
-    }
-
-    private static final Pattern MOUNT_PATTERN = Pattern.compile(
-            "^\\u00A7\\{fr:minecraft:space\\}.*\\u00A7\\{fr:d\\}.*\\bWhistle\\b.*\\u00A7\\{fr:minecraft:space\\}.*$");
-    private static final Pattern NAME_PATTERN =
+    private static final Pattern MOUNT_PATTERN =
             Pattern.compile("([\\p{L}\\p{N}'\\- ]+)\\s+Whistle", Pattern.CASE_INSENSITIVE);
     private static final Map<MountStat, Pattern> STAT_PATTERNS = Map.of(
             MountStat.ACCELERATION, Pattern.compile("\\bAcceleration\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.ALTITUDE, Pattern.compile("\\bAltitude\\b.*?(\\d+)/(\\d+)\\b"),
-            MountStat.ENERGY_STAT, Pattern.compile("\\bEnergy\\b.*?(\\d+)/(\\d+)\\b"),
+            MountStat.ENERGY, Pattern.compile("\\bEnergy\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.HANDLING, Pattern.compile("\\bHandling\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.POWERUP, Pattern.compile("\\bPowerup\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.SPEED, Pattern.compile("\\bSpeed\\b.*?(\\d+)/(\\d+)\\b"),
@@ -50,8 +37,8 @@ public final class MountAnnotator implements GameItemAnnotator {
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         if (itemStack.getItem() != Items.POTION) return null;
 
-        Matcher matcher = name.getMatcher(MOUNT_PATTERN, StyleType.COMPLETE);
-        if (!matcher.matches()) return null;
+        Matcher matcher = name.getMatcher(MOUNT_PATTERN);
+        if (!matcher.find()) return null;
 
         List<StyledText> lore = LoreUtils.getLore(itemStack);
         List<String> plainLore =
@@ -60,13 +47,12 @@ public final class MountAnnotator implements GameItemAnnotator {
         ParsedMountStats stats = parseMountStats(plainLore);
         String mountName = parseMountName(name.getStringWithoutFormatting()).orElse(null);
 
-        // Backwards compatibility for existing horse functions: level->speed, xp->energy.
         return new MountItem(
                 mountName,
-                stats.value(MountStat.ENERGY_STAT),
+                stats.value(MountStat.ENERGY),
                 stats.value(MountStat.ACCELERATION),
                 stats.value(MountStat.ALTITUDE),
-                stats.value(MountStat.ENERGY_STAT),
+                stats.value(MountStat.ENERGY),
                 stats.value(MountStat.HANDLING),
                 stats.value(MountStat.POWERUP),
                 stats.value(MountStat.SPEED),
@@ -80,7 +66,7 @@ public final class MountAnnotator implements GameItemAnnotator {
         for (String line : lines) {
             for (Map.Entry<MountStat, Pattern> entry : STAT_PATTERNS.entrySet()) {
                 MountStat stat = entry.getKey();
-                if (stat != MountStat.ENERGY_STAT && statValues.containsKey(stat)) continue;
+                if (stat != MountStat.ENERGY && statValues.containsKey(stat)) continue;
 
                 Matcher statMatcher = entry.getValue().matcher(line);
                 if (statMatcher.find()) {
@@ -106,7 +92,7 @@ public final class MountAnnotator implements GameItemAnnotator {
     }
 
     private Optional<String> parseMountName(String plainName) {
-        Matcher matcher = NAME_PATTERN.matcher(plainName);
+        Matcher matcher = MOUNT_PATTERN.matcher(plainName);
         if (!matcher.find()) return Optional.empty();
 
         String value = matcher.group(1).trim();

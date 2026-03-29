@@ -85,8 +85,8 @@ public final class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new EmeraldAnnotator());
         Handlers.Item.registerAnnotator(new EmeraldPouchAnnotator());
         Handlers.Item.registerAnnotator(new GatheringToolAnnotator());
-        Handlers.Item.registerAnnotator(new MountAnnotator());
         Handlers.Item.registerAnnotator(new InsulatorAnnotator());
+        Handlers.Item.registerAnnotator(new MountAnnotator());
         Handlers.Item.registerAnnotator(new MultiHealthPotionAnnotator());
         Handlers.Item.registerAnnotator(new PotionAnnotator());
         Handlers.Item.registerAnnotator(new PowderAnnotator());

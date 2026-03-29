@@ -201,7 +201,7 @@
   "feature.wynntils.bulkBuy.widget.closeCancel": "Close shop to cancel",
   "feature.wynntils.bulkBuy.widget.currentlyBuying": "Currently Buying: ",
   "feature.wynntils.bulkBuy.widget.idle": "Currently Idle",
-  "feature.wynntils.bulkBuy.widget.totalPrice": "Total Price: %dÂ²",
+  "feature.wynntils.bulkBuy.widget.totalPrice": "Total Price: %d",
   "feature.wynntils.changelog.autoClassMenu.description": "Should the player be put into class selection menu before displaying the changelog?",
   "feature.wynntils.changelog.autoClassMenu.name": "Auto Class Menu to Display Changelog",
   "feature.wynntils.changelog.description": "Displays the changelog on startup.",

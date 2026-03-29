@@ -65,7 +65,7 @@ public class MountKeybindFeature extends Feature {
     public void onUseItem(UseItemEvent event) {
         if (!Models.WorldState.onWorld()) return;
 
-        int mountInventorySlot = Models.Horse.findMountSlotNum();
+        int mountInventorySlot = Models.Mount.findMountSlotNum();
         if (mountInventorySlot == -1) return;
         if (McUtils.inventory().selected != mountInventorySlot) return;
 
@@ -88,7 +88,7 @@ public class MountKeybindFeature extends Feature {
             return;
         }
 
-        int mountInventorySlot = Models.Horse.findMountSlotNum();
+        int mountInventorySlot = Models.Mount.findMountSlotNum();
         if (mountInventorySlot == -1) {
             postHorseErrorMessage(MountHorseStatus.NO_HORSE);
             return;
@@ -135,7 +135,7 @@ public class MountKeybindFeature extends Feature {
 
     private void postHorseErrorMessage(MountHorseStatus status) {
         Managers.Notification.queueMessage(
-                Component.translatable(status.getTcString()).withStyle(ChatFormatting.DARK_RED));
+                Component.translatable(status.getTranslationKey()).withStyle(ChatFormatting.DARK_RED));
     }
 
     private enum MountHorseStatus {
@@ -143,14 +143,14 @@ public class MountKeybindFeature extends Feature {
         ALREADY_RIDING("feature.wynntils.mountKeybind.alreadyRiding"),
         CONFLICTING_SLOTS("feature.wynntils.mountKeybind.conflictingSlots");
 
-        private final String tcString;
+        private final String translationKey;
 
         MountHorseStatus(String tcString) {
-            this.tcString = tcString;
+            this.translationKey = tcString;
         }
 
-        private String getTcString() {
-            return this.tcString;
+        private String getTranslationKey() {
+            return this.translationKey;
         }
     }
 }

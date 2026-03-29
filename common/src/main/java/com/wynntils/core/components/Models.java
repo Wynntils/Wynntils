@@ -94,7 +94,6 @@ public final class Models {
     public static final GearModel Gear = new GearModel();
     public static final GuildModel Guild = new GuildModel();
     public static final GuildWarTowerModel GuildWarTower = new GuildWarTowerModel();
-    public static final MountModel Horse = new MountModel();
     public static final HousingModel Housing = new HousingModel();
     public static final IngredientModel Ingredient = new IngredientModel();
     public static final IngredientPouchModel IngredientPouch = new IngredientPouchModel();
@@ -103,6 +102,7 @@ public final class Models {
     public static final ItemModel Item = new ItemModel();
     public static final LootChestModel LootChest = new LootChestModel();
     public static final MarkerModel Marker = new MarkerModel();
+    public static final MountModel Mount = new MountModel();
     public static final NpcModel Npc = new NpcModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PartyModel Party = new PartyModel();
