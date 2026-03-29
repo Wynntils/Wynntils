@@ -9,7 +9,7 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.items.items.game.MountItem;
-import com.wynntils.models.items.items.game.MountStat;
+import com.wynntils.models.mount.type.MountStat;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Optional;

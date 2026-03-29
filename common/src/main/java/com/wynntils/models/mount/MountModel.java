@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.horse;
+package com.wynntils.models.mount;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;

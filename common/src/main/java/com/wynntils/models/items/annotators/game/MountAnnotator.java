@@ -8,7 +8,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.items.items.game.MountItem;
-import com.wynntils.models.items.items.game.MountStat;
+import com.wynntils.models.mount.type.MountStat;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.EnumMap;
