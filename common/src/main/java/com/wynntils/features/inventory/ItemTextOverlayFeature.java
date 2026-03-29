@@ -25,7 +25,6 @@ import com.wynntils.models.items.items.game.CrafterBagItem;
 import com.wynntils.models.items.items.game.DungeonKeyItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
-import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.models.items.items.game.PotionItem;
 import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
@@ -201,9 +200,6 @@ public class ItemTextOverlayFeature extends Feature {
         }
         if (wynnItem instanceof GatheringToolItem gatheringToolItem) {
             return new GatheringToolOverlay(gatheringToolItem);
-        }
-        if (wynnItem instanceof HorseItem horseItem) {
-            return new HorseOverlay(horseItem);
         }
         if (wynnItem instanceof PowderItem powderItem) {
             return new PowderOverlay(powderItem);
@@ -398,29 +394,6 @@ public class ItemTextOverlayFeature extends Feature {
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
                     .withTextShadow(gatheringToolTierShadow.get());
-
-            return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
-        }
-    }
-
-    private final class HorseOverlay implements TextOverlayInfo {
-        private final HorseItem item;
-
-        private HorseOverlay(HorseItem item) {
-            this.item = item;
-        }
-
-        @Override
-        public boolean isTextOverlayEnabled() {
-            return horseTierEnabled.get();
-        }
-
-        @Override
-        public TextOverlay getTextOverlay() {
-            String text = valueToString(item.getTier().getNumeral(), horseTierRomanNumerals.get());
-            TextRenderSetting style = TextRenderSetting.DEFAULT
-                    .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
-                    .withTextShadow(horseTierShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
         }
