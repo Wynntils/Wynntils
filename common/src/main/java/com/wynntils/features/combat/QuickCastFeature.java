@@ -23,6 +23,7 @@ import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.spells.QueuedMeleeScheduler;
 import com.wynntils.models.spells.type.CombatClickType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -512,4 +513,62 @@ public class QuickCastFeature extends Feature {
     private record SpellBinding(KeyBind keyBind, List<CombatClickType> clicks) {}
 
     private record SpellSelection(int index, SpellBinding spellBinding, boolean notifyInvalidWeapon) {}
+
+    static final class QuickCastMeleeInsertionState {
+        private boolean standaloneMeleeQueued;
+        private boolean bufferedStandaloneMelee;
+        private boolean pendingStandaloneMeleePress;
+
+        boolean shouldPrependMelee(boolean autoInsertionEnabled, boolean meleeReady) {
+            return autoInsertionEnabled && meleeReady && !standaloneMeleeQueued;
+        }
+
+        boolean hasBufferedStandaloneMelee() {
+            return bufferedStandaloneMelee;
+        }
+
+        boolean hasPendingStandaloneMeleePress() {
+            return pendingStandaloneMeleePress;
+        }
+
+        boolean shouldQueueStandaloneMelee(boolean meleeReady) {
+            return meleeReady;
+        }
+
+        void onStandaloneMeleePressed() {
+            pendingStandaloneMeleePress = true;
+        }
+
+        void onStandaloneMeleeCooldownBlocked() {
+            bufferedStandaloneMelee = true;
+            pendingStandaloneMeleePress = false;
+        }
+
+        void onStandaloneMeleeQueued() {
+            standaloneMeleeQueued = true;
+            bufferedStandaloneMelee = false;
+            pendingStandaloneMeleePress = false;
+        }
+
+        void onStandaloneMeleeRejected() {
+            pendingStandaloneMeleePress = false;
+        }
+
+        void onSpellSelected() {
+            bufferedStandaloneMelee = false;
+            pendingStandaloneMeleePress = false;
+        }
+
+        void onSpellQueued() {
+            standaloneMeleeQueued = false;
+            bufferedStandaloneMelee = false;
+            pendingStandaloneMeleePress = false;
+        }
+
+        void clear() {
+            standaloneMeleeQueued = false;
+            bufferedStandaloneMelee = false;
+            pendingStandaloneMeleePress = false;
+        }
+    }
 }

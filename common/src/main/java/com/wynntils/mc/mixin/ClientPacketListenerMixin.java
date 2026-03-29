@@ -615,7 +615,6 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
             at = @At("RETURN"))
     private void handleItemCooldownPost(ClientboundCooldownPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (!MixinHelper.onWynncraft()) return;
 
         MixinHelper.post(new CooldownUpdateEvent(packet.cooldownGroup(), packet.duration()));
     }

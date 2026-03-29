@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.combat;
+package com.wynntils.models.spells;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.character.type.ClassType;
@@ -17,24 +17,24 @@ import java.util.Optional;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
-final class QueuedMeleeScheduler {
+public final class QueuedMeleeScheduler {
     private static final List<CombatClickType> MELEE_SEQUENCE = List.of(CombatClickType.MELEE);
 
-    static boolean canHandleCombatInput() {
+    public static boolean canHandleCombatInput() {
         return McUtils.player() != null && Models.WorldState.onWorld() && !Models.WorldState.inCharacterWardrobe();
     }
 
-    static boolean canQueueCombatInput(boolean checkValidWeapon) {
+    public static boolean canQueueCombatInput(boolean checkValidWeapon) {
         return canHandleCombatInput() && resolveWeaponContext(checkValidWeapon).valid();
     }
 
-    static boolean isMeleeReady() {
+    public static boolean isMeleeReady() {
         CappedValue cooldown =
                 Models.CharacterStats.getItemCooldownTicks(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
         return cooldown.current() <= 0;
     }
 
-    static MeleeQueueResult queueCurrentMelee(
+    public static MeleeQueueResult queueCurrentMelee(
             int leftDelayMs, int rightDelayMs, boolean adaptiveLagCorrectionEnabled, boolean checkValidWeapon) {
         if (!canHandleCombatInput()) return MeleeQueueResult.NOT_QUEUED;
         if (!isMeleeReady()) return MeleeQueueResult.BLOCKED_BY_COOLDOWN;
@@ -45,7 +45,7 @@ final class QueuedMeleeScheduler {
         return queueCurrentMelee(weaponContext, leftDelayMs, rightDelayMs, adaptiveLagCorrectionEnabled);
     }
 
-    static MeleeQueueResult queueCurrentMelee(
+    public static MeleeQueueResult queueCurrentMelee(
             WeaponContext weaponContext, int leftDelayMs, int rightDelayMs, boolean adaptiveLagCorrectionEnabled) {
         if (!weaponContext.valid()) return MeleeQueueResult.NOT_QUEUED;
 
@@ -60,7 +60,7 @@ final class QueuedMeleeScheduler {
                 : MeleeQueueResult.NOT_QUEUED;
     }
 
-    static WeaponContext resolveWeaponContext(boolean checkValidWeapon) {
+    public static WeaponContext resolveWeaponContext(boolean checkValidWeapon) {
         boolean isArcher = Models.Character.getClassType() == ClassType.ARCHER;
         if (!checkValidWeapon) {
             return WeaponContext.valid(isArcher);
@@ -88,18 +88,18 @@ final class QueuedMeleeScheduler {
         return WeaponContext.valid(isArcher);
     }
 
-    enum MeleeQueueResult {
+    public enum MeleeQueueResult {
         QUEUED,
         BLOCKED_BY_COOLDOWN,
         NOT_QUEUED
     }
 
-    enum InvalidWeaponReason {
+    public enum InvalidWeaponReason {
         NOT_A_WEAPON,
         REQUIREMENTS_UNMET
     }
 
-    record WeaponContext(boolean valid, boolean isArcher, InvalidWeaponReason invalidWeaponReason) {
+    public record WeaponContext(boolean valid, boolean isArcher, InvalidWeaponReason invalidWeaponReason) {
         private static WeaponContext valid(boolean isArcher) {
             return new WeaponContext(true, isArcher, null);
         }

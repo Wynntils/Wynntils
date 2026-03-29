@@ -19,6 +19,7 @@ import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.spells.QueuedMeleeScheduler;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -114,13 +115,14 @@ public class AutoAttackFeature extends Feature {
             boolean parasiteOvertaken,
             boolean inSpellInputWindow,
             boolean triggerHeld) {
-        return playerPresent
-                && onWorld
-                && !spellCasterSending
-                && !actingAsSpellModifier
-                && !parasiteOvertaken
-                && !inSpellInputWindow
-                && triggerHeld;
+        if (!playerPresent) return false;
+        if (!onWorld) return false;
+        if (spellCasterSending) return false;
+        if (actingAsSpellModifier) return false;
+        if (parasiteOvertaken) return false;
+        if (inSpellInputWindow) return false;
+
+        return triggerHeld;
     }
 
     private void handleInput(boolean interaction) {

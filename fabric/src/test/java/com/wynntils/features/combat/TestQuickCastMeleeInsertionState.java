@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 public class TestQuickCastMeleeInsertionState {
     @Test
     public void prependsMeleeWhenAutoInsertionIsEnabledAndNoStandaloneMeleeWasQueued() {
-        QuickCastMeleeInsertionState state = new QuickCastMeleeInsertionState();
+        QuickCastFeature.QuickCastMeleeInsertionState state = new QuickCastFeature.QuickCastMeleeInsertionState();
 
         Assertions.assertTrue(state.shouldPrependMelee(true, true));
         Assertions.assertFalse(state.shouldPrependMelee(false, true));
@@ -20,14 +20,14 @@ public class TestQuickCastMeleeInsertionState {
 
     @Test
     public void doesNotPrependMeleeWhileCooldownBlocked() {
-        QuickCastMeleeInsertionState state = new QuickCastMeleeInsertionState();
+        QuickCastFeature.QuickCastMeleeInsertionState state = new QuickCastFeature.QuickCastMeleeInsertionState();
 
         Assertions.assertFalse(state.shouldPrependMelee(true, false));
     }
 
     @Test
     public void standaloneMeleeSatisfiesOnlyTheNextSpell() {
-        QuickCastMeleeInsertionState state = new QuickCastMeleeInsertionState();
+        QuickCastFeature.QuickCastMeleeInsertionState state = new QuickCastFeature.QuickCastMeleeInsertionState();
 
         state.onStandaloneMeleeQueued();
 
@@ -40,7 +40,7 @@ public class TestQuickCastMeleeInsertionState {
 
     @Test
     public void standaloneMeleeCreditPersistsWhileIdleUntilNextSpellConsumesIt() {
-        QuickCastMeleeInsertionState state = new QuickCastMeleeInsertionState();
+        QuickCastFeature.QuickCastMeleeInsertionState state = new QuickCastFeature.QuickCastMeleeInsertionState();
 
         state.onStandaloneMeleeQueued();
 
@@ -53,7 +53,7 @@ public class TestQuickCastMeleeInsertionState {
 
     @Test
     public void bufferedStandaloneMeleePersistsUntilSpellSelectionClearsIt() {
-        QuickCastMeleeInsertionState state = new QuickCastMeleeInsertionState();
+        QuickCastFeature.QuickCastMeleeInsertionState state = new QuickCastFeature.QuickCastMeleeInsertionState();
 
         state.onStandaloneMeleeCooldownBlocked();
 
@@ -66,7 +66,7 @@ public class TestQuickCastMeleeInsertionState {
 
     @Test
     public void pendingStandaloneMeleePressPersistsUntilSpellSelectionClearsIt() {
-        QuickCastMeleeInsertionState state = new QuickCastMeleeInsertionState();
+        QuickCastFeature.QuickCastMeleeInsertionState state = new QuickCastFeature.QuickCastMeleeInsertionState();
 
         state.onStandaloneMeleePressed();
 
@@ -79,7 +79,7 @@ public class TestQuickCastMeleeInsertionState {
 
     @Test
     public void queuedStandaloneMeleeClearsBufferedRetryAndGrantsSpellCredit() {
-        QuickCastMeleeInsertionState state = new QuickCastMeleeInsertionState();
+        QuickCastFeature.QuickCastMeleeInsertionState state = new QuickCastFeature.QuickCastMeleeInsertionState();
 
         state.onStandaloneMeleePressed();
         state.onStandaloneMeleeCooldownBlocked();
@@ -92,7 +92,7 @@ public class TestQuickCastMeleeInsertionState {
 
     @Test
     public void clearRemovesStandaloneMeleeCredit() {
-        QuickCastMeleeInsertionState state = new QuickCastMeleeInsertionState();
+        QuickCastFeature.QuickCastMeleeInsertionState state = new QuickCastFeature.QuickCastMeleeInsertionState();
 
         state.onStandaloneMeleePressed();
         state.onStandaloneMeleeQueued();
