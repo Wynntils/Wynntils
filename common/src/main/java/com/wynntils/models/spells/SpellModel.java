@@ -39,7 +39,7 @@ public final class SpellModel extends Model {
 
     private static final Queue<SpellDirection> SPELL_PACKET_QUEUE = new LinkedList<>();
 
-    private final Map<Integer, Integer> ticksSinceSpecificSpellMap;
+    private final Map<Integer, Integer> ticksSinceSpecificSpellMap = new HashMap<>();
 
     private boolean hideSpellInputs = false;
 
@@ -58,8 +58,6 @@ public final class SpellModel extends Model {
 
         Handlers.ActionBar.registerSegment(new SpellSegmentMatcher());
         Handlers.Item.registerKnownMarkerNames(getKnownMarkerNames());
-
-        ticksSinceSpecificSpellMap = new HashMap<>();
     }
 
     private List<Pattern> getKnownMarkerNames() {
