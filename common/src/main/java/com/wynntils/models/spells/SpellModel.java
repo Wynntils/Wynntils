@@ -41,7 +41,7 @@ public final class SpellModel extends Model {
 
     private static final Queue<SpellDirection> SPELL_PACKET_QUEUE = new LinkedList<>();
 
-    private final Map<Integer, Integer> ticksSinceSpecificSpellMap;
+    private final Map<Integer, Integer> ticksSinceSpecificSpellMap = new HashMap<>();
 
     private final Set<Class<? extends ActionBarSegment>> hiddenSegments = new HashSet<>();
 
