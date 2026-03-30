@@ -14,6 +14,7 @@ public class MountItem extends GameItem {
     private final CappedValue altitude;
     private final CappedValue energyStat;
     private final CappedValue handling;
+    private final int potential;
     private final CappedValue powerup;
     private final CappedValue speed;
     private final CappedValue toughness;
@@ -26,6 +27,7 @@ public class MountItem extends GameItem {
             CappedValue altitude,
             CappedValue energyStat,
             CappedValue handling,
+            int potential,
             CappedValue powerup,
             CappedValue speed,
             CappedValue toughness,
@@ -36,6 +38,7 @@ public class MountItem extends GameItem {
         this.altitude = altitude;
         this.energyStat = energyStat;
         this.handling = handling;
+        this.potential = potential;
         this.powerup = powerup;
         this.speed = speed;
         this.toughness = toughness;
@@ -59,12 +62,12 @@ public class MountItem extends GameItem {
         return altitude;
     }
 
-    public CappedValue getEnergyStat() {
-        return energyStat;
-    }
-
     public CappedValue getHandling() {
         return handling;
+    }
+
+    public int getPotential() {
+        return potential;
     }
 
     public CappedValue getPowerup() {
@@ -85,7 +88,8 @@ public class MountItem extends GameItem {
 
     @Override
     public String toString() {
-        return "MountItem{" + "name='" + name + '\'' + ", energy=" + energy + ", acceleration=" + acceleration
+        return "MountItem{" + "name='" + name + '\'' + ", potential=" + potential + ", energy=" + energy
+                + ", acceleration=" + acceleration
                 + ", altitude=" + altitude + ", energyStat=" + energyStat + ", handling=" + handling
                 + ", powerup=" + powerup + ", speed=" + speed + ", toughness=" + toughness + ", training="
                 + training + '}';

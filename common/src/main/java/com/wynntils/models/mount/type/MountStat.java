@@ -7,19 +7,22 @@ package com.wynntils.models.mount.type;
 import java.util.Optional;
 
 public enum MountStat {
-    ACCELERATION("acceleration"),
-    ALTITUDE("altitude"),
-    ENERGY("energy"),
-    HANDLING("handling"),
-    POWERUP("powerup"),
-    SPEED("speed"),
-    TOUGHNESS("toughness"),
-    TRAINING("training");
+    ACCELERATION("acceleration", true),
+    ALTITUDE("altitude", true),
+    ENERGY("energy", true),
+    HANDLING("handling", true),
+    POTENTIAL("potential", false),
+    POWERUP("powerup", true),
+    SPEED("speed", true),
+    TOUGHNESS("toughness", true),
+    TRAINING("training", true);
 
     private final String key;
+    private final boolean capped;
 
-    MountStat(String key) {
+    MountStat(String key, boolean capped) {
         this.key = key;
+        this.capped = capped;
     }
 
     public static Optional<MountStat> fromKey(String key) {
@@ -29,5 +32,9 @@ public enum MountStat {
             }
         }
         return Optional.empty();
+    }
+
+    public boolean isCapped() {
+        return capped;
     }
 }

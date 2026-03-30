@@ -23,7 +23,7 @@ import net.minecraft.world.item.Items;
 public final class MountAnnotator implements GameItemAnnotator {
     private static final Pattern MOUNT_PATTERN =
             Pattern.compile("([\\p{L}\\p{N}'\\- ]+)\\s+Whistle", Pattern.CASE_INSENSITIVE);
-    private static final Map<MountStat, Pattern> STAT_PATTERNS = Map.of(
+    private static final Map<MountStat, Pattern> CAPPED_STAT_PATTERNS = Map.of(
             MountStat.ACCELERATION, Pattern.compile("\\bAcceleration\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.ALTITUDE, Pattern.compile("\\bAltitude\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.ENERGY, Pattern.compile("\\bEnergy\\b.*?(\\d+)/(\\d+)\\b"),
@@ -32,6 +32,7 @@ public final class MountAnnotator implements GameItemAnnotator {
             MountStat.SPEED, Pattern.compile("\\bSpeed\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.TOUGHNESS, Pattern.compile("\\bToughness\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.TRAINING, Pattern.compile("\\bTraining\\b.*?(\\d+)/(\\d+)\\b"));
+    private static final Pattern POTENTIAL_PATTERN = Pattern.compile("\\b(\\d+)\\s+Potential\\b");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
@@ -54,6 +55,7 @@ public final class MountAnnotator implements GameItemAnnotator {
                 stats.value(MountStat.ALTITUDE),
                 stats.value(MountStat.ENERGY),
                 stats.value(MountStat.HANDLING),
+                stats.potentialValue(),
                 stats.value(MountStat.POWERUP),
                 stats.value(MountStat.SPEED),
                 stats.value(MountStat.TOUGHNESS),
@@ -62,9 +64,10 @@ public final class MountAnnotator implements GameItemAnnotator {
 
     private ParsedMountStats parseMountStats(List<String> lines) {
         Map<MountStat, CappedValue> statValues = new EnumMap<>(MountStat.class);
+        int potential = -1;
 
         for (String line : lines) {
-            for (Map.Entry<MountStat, Pattern> entry : STAT_PATTERNS.entrySet()) {
+            for (Map.Entry<MountStat, Pattern> entry : CAPPED_STAT_PATTERNS.entrySet()) {
                 MountStat stat = entry.getKey();
                 if (stat != MountStat.ENERGY && statValues.containsKey(stat)) continue;
 
@@ -74,9 +77,14 @@ public final class MountAnnotator implements GameItemAnnotator {
                     statValues.put(stat, parseCapped(statMatcher));
                 }
             }
+
+            Matcher potentialMatcher = POTENTIAL_PATTERN.matcher(line);
+            if (potentialMatcher.find()) {
+                potential = Integer.parseInt(potentialMatcher.group(1));
+            }
         }
 
-        return new ParsedMountStats(statValues);
+        return new ParsedMountStats(statValues, potential);
     }
 
     private CappedValue parseCapped(Matcher matcher) {
@@ -85,7 +93,7 @@ public final class MountAnnotator implements GameItemAnnotator {
         return new CappedValue(current, max);
     }
 
-    private record ParsedMountStats(Map<MountStat, CappedValue> statValues) {
+    private record ParsedMountStats(Map<MountStat, CappedValue> statValues, int potentialValue) {
         private CappedValue value(MountStat stat) {
             return statValues.getOrDefault(stat, CappedValue.EMPTY);
         }

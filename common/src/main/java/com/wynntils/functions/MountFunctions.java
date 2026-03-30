@@ -18,7 +18,7 @@ public class MountFunctions {
     public static class CappedMountStatFunction extends MountStatFunctionBase<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return getRequestedStat(arguments).orElse(CappedValue.EMPTY);
+            return getRequestedCappedStat(arguments).orElse(CappedValue.EMPTY);
         }
 
         @Override
@@ -30,7 +30,7 @@ public class MountFunctions {
     public static class MountStatFunction extends MountStatFunctionBase<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return getRequestedStat(arguments).map(CappedValue::current).orElse(-1);
+            return getRequestedStatCurrent(arguments).orElse(-1);
         }
 
         @Override
@@ -42,7 +42,7 @@ public class MountFunctions {
     public static class MountStatMaxFunction extends MountStatFunctionBase<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return getRequestedStat(arguments).map(CappedValue::max).orElse(-1);
+            return getRequestedStatMax(arguments).orElse(-1);
         }
 
         @Override
@@ -69,15 +69,36 @@ public class MountFunctions {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("stat", String.class, null)));
         }
 
-        protected Optional<CappedValue> getRequestedStat(FunctionArguments arguments) {
+        protected Optional<CappedValue> getRequestedCappedStat(FunctionArguments arguments) {
             Optional<MountItem> mount = getMount();
             if (mount.isEmpty()) return Optional.empty();
 
-            String statArg = arguments.getArgument("stat").getStringValue();
-            Optional<MountStat> stat = MountStat.fromKey(statArg);
-            if (stat.isEmpty()) return Optional.empty();
+            Optional<MountStat> stat = getRequestedStat(arguments);
+            if (stat.isEmpty() || !stat.get().isCapped()) return Optional.empty();
 
-            return Optional.of(getStatValue(mount.get(), stat.get()));
+            return Optional.of(getCappedStatValue(mount.get(), stat.get()));
+        }
+
+        protected Optional<Integer> getRequestedStatCurrent(FunctionArguments arguments) {
+            Optional<MountItem> mount = getMount();
+            if (mount.isEmpty()) return Optional.empty();
+
+            return getRequestedStat(arguments).map(stat -> getStatCurrentValue(mount.get(), stat));
+        }
+
+        protected Optional<Integer> getRequestedStatMax(FunctionArguments arguments) {
+            Optional<MountItem> mount = getMount();
+            if (mount.isEmpty()) return Optional.empty();
+
+            Optional<MountStat> stat = getRequestedStat(arguments);
+            if (stat.isEmpty() || !stat.get().isCapped()) return Optional.empty();
+
+            return Optional.of(getCappedStatValue(mount.get(), stat.get()).max());
+        }
+
+        private Optional<MountStat> getRequestedStat(FunctionArguments arguments) {
+            String statArg = arguments.getArgument("stat").getStringValue();
+            return MountStat.fromKey(statArg);
         }
     }
 
@@ -85,7 +106,21 @@ public class MountFunctions {
         return Models.Mount.getMount();
     }
 
-    private static CappedValue getStatValue(MountItem mount, MountStat stat) {
+    private static int getStatCurrentValue(MountItem mount, MountStat stat) {
+        return switch (stat) {
+            case ACCELERATION -> mount.getAcceleration().current();
+            case ALTITUDE -> mount.getAltitude().current();
+            case ENERGY -> mount.getEnergy().current();
+            case HANDLING -> mount.getHandling().current();
+            case POTENTIAL -> mount.getPotential();
+            case POWERUP -> mount.getPowerup().current();
+            case SPEED -> mount.getSpeed().current();
+            case TOUGHNESS -> mount.getToughness().current();
+            case TRAINING -> mount.getTraining().current();
+        };
+    }
+
+    private static CappedValue getCappedStatValue(MountItem mount, MountStat stat) {
         return switch (stat) {
             case ACCELERATION -> mount.getAcceleration();
             case ALTITUDE -> mount.getAltitude();
@@ -95,6 +130,7 @@ public class MountFunctions {
             case SPEED -> mount.getSpeed();
             case TOUGHNESS -> mount.getToughness();
             case TRAINING -> mount.getTraining();
+            case POTENTIAL -> CappedValue.EMPTY;
         };
     }
 }
