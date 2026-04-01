@@ -288,4 +288,18 @@ public class CombatFunctions {
                     new Argument<>("radius", Double.class, null), new Argument<>("debuffName", String.class, null)));
         }
     }
+
+    public static class TicksSinceSpecificSpellFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            int spellNumber = arguments.getArgument("spellNumber").getIntegerValue();
+            return Models.Spell.getTicksSinceCast(spellNumber);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("spellNumber", Integer.class, null)));
+        }
+    }
 }
