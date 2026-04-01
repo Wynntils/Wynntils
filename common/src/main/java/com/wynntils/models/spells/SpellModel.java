@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells;
@@ -22,10 +22,8 @@ import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -34,8 +32,6 @@ public final class SpellModel extends Model {
     private static final Pattern SPELL_CAST =
             Pattern.compile("^§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\](?: §4\\[§c-([0-9]+) ❤§4\\])?$");
     public static final int SPELL_COST_RESET_TICKS = 60;
-
-    private static final Queue<SpellDirection> SPELL_PACKET_QUEUE = new LinkedList<>();
 
     private boolean hideSpellInputs = false;
 
@@ -134,7 +130,6 @@ public final class SpellModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
-        SPELL_PACKET_QUEUE.clear();
         lastSpell = SpellDirection.NO_SPELL;
         lastBurstSpellName = "";
         lastSpellName = "";
@@ -146,36 +141,14 @@ public final class SpellModel extends Model {
 
     @SubscribeEvent
     public void onHeldItemChange(ChangeCarriedItemEvent event) {
-        SPELL_PACKET_QUEUE.clear();
         // We need to reset lastSpell here as the actual inputs are now cleared, but they are still visible
         // so we don't post the expired event until the action bar has actually updated with the cleared inputs
         lastSpell = SpellDirection.NO_SPELL;
         expireNextClear = true;
     }
 
-    public void addSpellToQueue(List<SpellDirection> spell) {
-        if (!SPELL_PACKET_QUEUE.isEmpty()) return;
-
-        SPELL_PACKET_QUEUE.addAll(spell);
-    }
-
-    public SpellDirection checkNextSpellDirection() {
-        return SPELL_PACKET_QUEUE.peek();
-    }
-
-    public void sendNextSpell() {
-        if (SPELL_PACKET_QUEUE.isEmpty()) return;
-
-        SpellDirection spellDirection = SPELL_PACKET_QUEUE.poll();
-        spellDirection.getSendPacketRunnable().run();
-    }
-
     public void setHideSpellInputs(boolean hideSpellInputs) {
         this.hideSpellInputs = hideSpellInputs;
-    }
-
-    public boolean isSpellQueueEmpty() {
-        return SPELL_PACKET_QUEUE.isEmpty();
     }
 
     public String getLastBurstSpellName() {
