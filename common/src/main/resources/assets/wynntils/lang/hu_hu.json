@@ -1133,8 +1133,6 @@
   "feature.wynntils.tooltipFitting.name": "Tooltip Igazítás",
   "feature.wynntils.tooltipFitting.universalScale.description": "A méretarány, amelyet minden tooltipre alkalmazni kell",
   "feature.wynntils.tooltipFitting.universalScale.name": "Univerzális Méretarány",
-  "feature.wynntils.tooltipFitting.wrapText.description": "A tooltip-ek tördelődjenek, amikor elérik a képernyő szélét?",
-  "feature.wynntils.tooltipFitting.wrapText.name": "Szöveg Tördelése",
   "feature.wynntils.tooltipVanillaHide.description": "Elrejti a vanília tooltipjeit.",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Ez kikapcsolja a fejlett tooltip-eket (F3+H) a Wynncrafton",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Mindig Rejtsd el a Fejlett Tooltipet",

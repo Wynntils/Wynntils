@@ -1133,8 +1133,6 @@
   "feature.wynntils.tooltipFitting.name": "Tooltip Aanpassing",
   "feature.wynntils.tooltipFitting.universalScale.description": "De schaalfactor die op elke tooltip moet worden toegepast",
   "feature.wynntils.tooltipFitting.universalScale.name": "Universele Schaal",
-  "feature.wynntils.tooltipFitting.wrapText.description": "Moeten tooltips worden afgebroken wanneer ze de rand van het scherm bereiken?",
-  "feature.wynntils.tooltipFitting.wrapText.name": "Tekst Omslaan",
   "feature.wynntils.tooltipVanillaHide.description": "Verbergt vanilla tooltips.",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Dit schakelt geavanceerde tooltips (F3+H) uit op Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Verberg Altijd Geavanceerde Tooltip",
