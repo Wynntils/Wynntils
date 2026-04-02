@@ -9,6 +9,7 @@ import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.mount.type.MountStat;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.EnumMap;
@@ -80,7 +81,7 @@ public final class MountAnnotator implements GameItemAnnotator {
 
             Matcher potentialMatcher = POTENTIAL_PATTERN.matcher(line);
             if (potentialMatcher.find()) {
-                potential = parsePotential(potentialMatcher.group(1));
+                potential = (int) StringUtils.parseSuffixedInteger(potentialMatcher.group(1));
             }
         }
 
@@ -91,16 +92,6 @@ public final class MountAnnotator implements GameItemAnnotator {
         int current = Integer.parseInt(matcher.group(1));
         int max = Integer.parseInt(matcher.group(2));
         return new CappedValue(current, max);
-    }
-
-    private int parsePotential(String value) {
-        String normalizedValue = value.trim();
-        if (normalizedValue.endsWith("k") || normalizedValue.endsWith("K")) {
-            String numberPart = normalizedValue.substring(0, normalizedValue.length() - 1);
-            return (int) Math.round(Double.parseDouble(numberPart) * 1000);
-        }
-
-        return Integer.parseInt(normalizedValue);
     }
 
     private record ParsedMountStats(Map<MountStat, CappedValue> statValues, int potentialValue) {
