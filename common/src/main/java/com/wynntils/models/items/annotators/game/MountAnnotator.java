@@ -22,7 +22,7 @@ import net.minecraft.world.item.Items;
 
 public final class MountAnnotator implements GameItemAnnotator {
     private static final Pattern MOUNT_PATTERN =
-            Pattern.compile("([\\p{L}\\p{N}'\\- ]+)\\s+Whistle", Pattern.CASE_INSENSITIVE);
+            Pattern.compile("([\\p{L}\\p{N}'\\- ]+)\\s+(?:Whistle|Flute|Ocarina)", Pattern.CASE_INSENSITIVE);
     private static final Map<MountStat, Pattern> CAPPED_STAT_PATTERNS = Map.of(
             MountStat.ACCELERATION, Pattern.compile("\\bAcceleration\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.ALTITUDE, Pattern.compile("\\bAltitude\\b.*?(\\d+)/(\\d+)\\b"),
@@ -32,7 +32,7 @@ public final class MountAnnotator implements GameItemAnnotator {
             MountStat.SPEED, Pattern.compile("\\bSpeed\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.TOUGHNESS, Pattern.compile("\\bToughness\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.TRAINING, Pattern.compile("\\bTraining\\b.*?(\\d+)/(\\d+)\\b"));
-    private static final Pattern POTENTIAL_PATTERN = Pattern.compile("\\b(\\d+)\\s+Potential\\b");
+    private static final Pattern POTENTIAL_PATTERN = Pattern.compile("\\b(\\d+(?:\\.\\d+)?[kK]?)\\s+Potential\\b");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
@@ -80,7 +80,7 @@ public final class MountAnnotator implements GameItemAnnotator {
 
             Matcher potentialMatcher = POTENTIAL_PATTERN.matcher(line);
             if (potentialMatcher.find()) {
-                potential = Integer.parseInt(potentialMatcher.group(1));
+                potential = parsePotential(potentialMatcher.group(1));
             }
         }
 
@@ -91,6 +91,16 @@ public final class MountAnnotator implements GameItemAnnotator {
         int current = Integer.parseInt(matcher.group(1));
         int max = Integer.parseInt(matcher.group(2));
         return new CappedValue(current, max);
+    }
+
+    private int parsePotential(String value) {
+        String normalizedValue = value.trim();
+        if (normalizedValue.endsWith("k") || normalizedValue.endsWith("K")) {
+            String numberPart = normalizedValue.substring(0, normalizedValue.length() - 1);
+            return (int) Math.round(Double.parseDouble(numberPart) * 1000);
+        }
+
+        return Integer.parseInt(normalizedValue);
     }
 
     private record ParsedMountStats(Map<MountStat, CappedValue> statValues, int potentialValue) {
