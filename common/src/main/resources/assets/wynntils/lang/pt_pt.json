@@ -1125,8 +1125,6 @@
   "feature.wynntils.tooltipFitting.name": "Ajuste de Dicas de Ferramentas",
   "feature.wynntils.tooltipFitting.universalScale.description": "O fator de escala que deve ser aplicado a cada dica de ferramenta",
   "feature.wynntils.tooltipFitting.universalScale.name": "Escala Universal",
-  "feature.wynntils.tooltipFitting.wrapText.description": "Se as dicas de ferramentas devem se ajustar quando atingem o lado da tela",
-  "feature.wynntils.tooltipFitting.wrapText.name": "Envolver Texto",
   "feature.wynntils.tooltipVanillaHide.description": "Oculta as dicas de ferramentas de baunilha.",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "Isso desativará as dicas de ferramentas avançadas (F3+H) no Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Sempre Ocultar Dica de Ferramenta Avançada",
