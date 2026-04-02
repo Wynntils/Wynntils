@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -18,24 +19,18 @@ import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.items.properties.RequirementItemProperty;
+import com.wynntils.models.spells.QueuedMeleeScheduler;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.MouseUtils;
-import com.wynntils.utils.wynn.ItemUtils;
-import java.util.Optional;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class AutoAttackFeature extends Feature {
     @Persisted
-    private final Config<Integer> attackTickDelay = new Config<>(2);
+    private final Config<Boolean> adaptiveLagCorrection = new Config<>(true);
 
     private long lastSpellInput = -1L;
     private int spellInputs = 0;
-    private WeaponStatus weaponStatus = WeaponStatus.UNKNOWN;
 
     public AutoAttackFeature() {
         super(ProfileDefault.DISABLED);
@@ -45,15 +40,14 @@ public class AutoAttackFeature extends Feature {
     public void onChangeCarriedItemEvent(ChangeCarriedItemEvent event) {
         lastSpellInput = -1L;
         spellInputs = 0;
-
-        updateWeaponStatus();
     }
 
     @SubscribeEvent
     public void onSetSlotEvent(SetSlotEvent.Post event) {
-        if (event.getSlot() == McUtils.inventory().selected) {
-            updateWeaponStatus();
-        }
+        if (event.getSlot() != McUtils.inventory().selected) return;
+
+        lastSpellInput = -1L;
+        spellInputs = 0;
     }
 
     @SubscribeEvent
@@ -84,8 +78,8 @@ public class AutoAttackFeature extends Feature {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
+        if (McUtils.player() == null) return;
         if (!Models.WorldState.onWorld()) return;
-        if (!Models.Spell.isSpellQueueEmpty()) return;
 
         int tickCount = McUtils.player().tickCount;
 
@@ -94,21 +88,41 @@ public class AutoAttackFeature extends Feature {
             spellInputs = 0;
         }
 
-        if (Models.Raid.isParasiteOvertaken()) return;
-        if (tickCount % Math.max(attackTickDelay.get(), 1) != 0) return;
-        if (lastSpellInput + Models.Spell.SPELL_COST_RESET_TICKS > McUtils.player().tickCount) return;
+        boolean triggerHeld = Models.Character.getClassType() == ClassType.ARCHER
+                ? McUtils.options().keyUse.isDown()
+                : McUtils.options().keyAttack.isDown();
 
-        if (weaponStatus == WeaponStatus.UNKNOWN) {
-            updateWeaponStatus();
+        if (!shouldQueueHeldAutoAttack(
+                true,
+                true,
+                Models.SpellCaster.isSendingInputs(),
+                Managers.Feature.getFeatureInstance(QuickCastFeature.class)
+                        .isNormalAutoAttackTriggerActingAsSpellModifier(),
+                Models.Raid.isParasiteOvertaken(),
+                lastSpellInput + Models.Spell.SPELL_COST_RESET_TICKS > tickCount,
+                triggerHeld)) {
+            return;
         }
 
-        if (weaponStatus != WeaponStatus.USABLE) return;
+        QueuedMeleeScheduler.queueCurrentMelee(0, 0, adaptiveLagCorrection.get(), true);
+    }
 
-        if (Models.Character.getClassType() == ClassType.ARCHER
-                ? !McUtils.options().keyUse.isDown()
-                : !McUtils.options().keyAttack.isDown()) return;
+    static boolean shouldQueueHeldAutoAttack(
+            boolean playerPresent,
+            boolean onWorld,
+            boolean spellCasterSending,
+            boolean actingAsSpellModifier,
+            boolean parasiteOvertaken,
+            boolean inSpellInputWindow,
+            boolean triggerHeld) {
+        if (!playerPresent) return false;
+        if (!onWorld) return false;
+        if (spellCasterSending) return false;
+        if (actingAsSpellModifier) return false;
+        if (parasiteOvertaken) return false;
+        if (inSpellInputWindow) return false;
 
-        MouseUtils.sendAttackInput(Models.Character.getClassType() == ClassType.ARCHER);
+        return triggerHeld;
     }
 
     private void handleInput(boolean interaction) {
@@ -127,27 +141,5 @@ public class AutoAttackFeature extends Feature {
                 lastSpellInput = -1;
             }
         }
-    }
-
-    private void updateWeaponStatus() {
-        ItemStack heldItem = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
-        if (!ItemUtils.isWeapon(heldItem)) {
-            weaponStatus = WeaponStatus.NOT_USABLE;
-            return;
-        }
-
-        Optional<RequirementItemProperty> wynnItem =
-                Models.Item.asWynnItemProperty(heldItem, RequirementItemProperty.class);
-        if (wynnItem.isPresent() && wynnItem.get().meetsActualRequirements()) {
-            weaponStatus = WeaponStatus.USABLE;
-        } else {
-            weaponStatus = WeaponStatus.NOT_USABLE;
-        }
-    }
-
-    private enum WeaponStatus {
-        UNKNOWN,
-        NOT_USABLE,
-        USABLE
     }
 }

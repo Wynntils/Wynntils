@@ -33,6 +33,7 @@ import com.wynntils.core.persisted.upfixers.config.OverlayConfigsIntegrationUpfi
 import com.wynntils.core.persisted.upfixers.config.OverlayRestructuringUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ProfessionBadgesToLeaderboardBadgesUpfixer;
 import com.wynntils.core.persisted.upfixers.config.QuestBookToContentRenamedConfigsUpfixer;
+import com.wynntils.core.persisted.upfixers.config.QuickCastTimingsToMillisecondsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.SacredSurgeToHolyPowerUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ShowAdditonalTextAboveToShowAdditionalTextAboveUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMovedToCommonFeature;
@@ -87,6 +88,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new MythicFoundToValuableFoundUpfixer());
         registerConfigUpfixer(new MythicBlockerToChestBlockerUpfixer());
         registerConfigUpfixer(new MaxItensityToMaxIntensityUpfixer());
+        registerConfigUpfixer(new QuickCastTimingsToMillisecondsUpfixer());
         registerConfigUpfixer(new ShowAdditonalTextAboveToShowAdditionalTextAboveUpfixer());
         registerConfigUpfixer(new ContentTrackerTextOverlayUpfixer());
 
