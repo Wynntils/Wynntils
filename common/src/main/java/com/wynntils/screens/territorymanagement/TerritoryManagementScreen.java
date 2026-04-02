@@ -935,8 +935,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         final TerritoryItem item = territoryPoi.getTerritoryItem();
 
         final List<Component> tooltipLines = new ArrayList<>();
-        // itemStack.getTooltipLines(
-        //         Item.TooltipContext.of(McUtils.mc().level), McUtils.player(), TooltipFlag.NORMAL);
+
         for (GuildResource value : GuildResource.values()) {
             int generation = item.getProduction().getOrDefault(value, 0);
             CappedValue storage = item.getStorage().get(value);

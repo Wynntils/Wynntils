@@ -105,8 +105,11 @@ public class TerritoryItem extends GuiItem {
         Map.Entry<GuildResource, Integer> primaryResource = null;
         for (Map.Entry<GuildResource, Integer> entry : production.entrySet()) {
             if (entry.getKey() == GuildResource.EMERALDS) continue;
-            if (primaryResource == null) primaryResource = entry;
-            else if (primaryResource.getValue() < entry.getValue()) primaryResource = entry;
+            if (primaryResource == null) {
+                primaryResource = entry;
+            } else if (primaryResource.getValue() < entry.getValue()) {
+                primaryResource = entry;
+            }
         }
         double expectedResources = 3600d
                 * RESOURCE_MODIFIERS.get(upgrades.getOrDefault(TerritoryUpgrade.EFFICIENT_RESOURCES, 0))
