@@ -15,7 +15,7 @@ import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.CharacterSelectionContainer;
 import com.wynntils.models.containers.containers.ContentBookContainer;
 import com.wynntils.models.containers.containers.CosmeticContainer;
-import com.wynntils.models.containers.containers.crafting.*;
+import com.wynntils.models.containers.containers.CraftingStationContainer;
 import com.wynntils.models.containers.containers.GuildBadgesContainer;
 import com.wynntils.models.containers.containers.GuildBankContainer;
 import com.wynntils.models.containers.containers.GuildLogContainer;
@@ -120,8 +120,6 @@ public final class ContainerModel extends Model {
         registerContainer(new AbilityTreeContainer());
         registerContainer(new AbilityTreeResetContainer());
         registerContainer(new AccountBankContainer());
-        registerContainer(new AlchemismContainer());
-        registerContainer(new ArmouringContainer());
         registerContainer(new AspectsContainer());
         registerContainer(new BlacksmithContainer());
         registerContainer(new BookshelfContainer());
@@ -130,7 +128,6 @@ public final class ContainerModel extends Model {
         registerContainer(new CharacterInfoContainer());
         registerContainer(new CharacterSelectionContainer());
         registerContainer(new ContentBookContainer());
-        registerContainer(new CookingContainer());
         registerContainer(new CosmeticContainer());
         registerContainer(new DailyRewardContainer());
         registerContainer(new EventContainer());
@@ -149,7 +146,6 @@ public final class ContainerModel extends Model {
         registerContainer(new ItemBombRewardContainer());
         registerContainer(new ItemIdentifierAugmentsContainer());
         registerContainer(new ItemIdentifierContainer());
-        registerContainer(new JewelingContainer());
         registerContainer(new JukeboxContainer());
         registerContainer(new LeaderboardRewardsContainer());
         registerContainer(new LobbyContainer());
@@ -164,17 +160,13 @@ public final class ContainerModel extends Model {
         registerContainer(new RaidStartContainer());
         registerContainer(new RatingRewardsContainer());
         registerContainer(new ScrapMenuContainer());
-        registerContainer(new ScribingContainer());
         registerContainer(new SeaskipperContainer());
-        registerContainer(new TailoringContainer());
         registerContainer(new TradeMarketBuyContainer());
         registerContainer(new TradeMarketContainer());
         registerContainer(new TradeMarketFiltersContainer());
         registerContainer(new TradeMarketOrderContainer());
         registerContainer(new TradeMarketSellContainer());
         registerContainer(new TradeMarketTradesContainer());
-        registerContainer(new WeaponsmithingContainer());
-        registerContainer(new WoodworkingContainer());
 
         for (CosmeticItemType type : CosmeticItemType.values()) {
             registerContainer(new CosmeticContainer(type));
@@ -182,6 +174,10 @@ public final class ContainerModel extends Model {
 
         for (GuildLogType type : GuildLogType.values()) {
             registerContainer(new GuildLogContainer(type));
+        }
+
+        for (ProfessionType type : ProfessionType.craftingProfessionTypes()) {
+            registerContainer(new CraftingStationContainer(Pattern.compile(type.getDisplayName()), type));
         }
 
         for (StoreItemType type : StoreItemType.values()) {
