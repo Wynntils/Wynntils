@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2026.
+ * Copyright © Wynntils 2022-2025.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.containers;
@@ -15,6 +15,14 @@ import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.CharacterSelectionContainer;
 import com.wynntils.models.containers.containers.ContentBookContainer;
 import com.wynntils.models.containers.containers.CosmeticContainer;
+import com.wynntils.models.containers.containers.crafting.AlchemismContainer;
+import com.wynntils.models.containers.containers.crafting.ArmouringContainer;
+import com.wynntils.models.containers.containers.crafting.CookingContainer;
+import com.wynntils.models.containers.containers.crafting.JewelingContainer;
+import com.wynntils.models.containers.containers.crafting.ScribingContainer;
+import com.wynntils.models.containers.containers.crafting.TailoringContainer;
+import com.wynntils.models.containers.containers.crafting.WeaponsmithingContainer;
+import com.wynntils.models.containers.containers.crafting.WoodworkingContainer;
 import com.wynntils.models.containers.containers.GuildBadgesContainer;
 import com.wynntils.models.containers.containers.GuildBankContainer;
 import com.wynntils.models.containers.containers.GuildLogContainer;
@@ -39,14 +47,6 @@ import com.wynntils.models.containers.containers.RatingRewardsContainer;
 import com.wynntils.models.containers.containers.ScrapMenuContainer;
 import com.wynntils.models.containers.containers.SeaskipperContainer;
 import com.wynntils.models.containers.containers.StoreContainer;
-import com.wynntils.models.containers.containers.crafting.AlchemismContainer;
-import com.wynntils.models.containers.containers.crafting.ArmouringContainer;
-import com.wynntils.models.containers.containers.crafting.CookingContainer;
-import com.wynntils.models.containers.containers.crafting.JewelingContainer;
-import com.wynntils.models.containers.containers.crafting.ScribingContainer;
-import com.wynntils.models.containers.containers.crafting.TailoringContainer;
-import com.wynntils.models.containers.containers.crafting.WeaponsmithingContainer;
-import com.wynntils.models.containers.containers.crafting.WoodworkingContainer;
 import com.wynntils.models.containers.containers.personal.AccountBankContainer;
 import com.wynntils.models.containers.containers.personal.BookshelfContainer;
 import com.wynntils.models.containers.containers.personal.CharacterBankContainer;
@@ -68,6 +68,7 @@ import com.wynntils.models.containers.containers.trademarket.TradeMarketOrderCon
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesContainer;
 import com.wynntils.models.guild.type.GuildLogType;
+import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.store.type.CosmeticItemType;
 import com.wynntils.models.store.type.StoreItemType;
 import java.util.ArrayList;
