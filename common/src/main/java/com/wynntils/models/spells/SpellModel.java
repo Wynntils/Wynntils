@@ -26,11 +26,10 @@ import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -42,7 +41,7 @@ public final class SpellModel extends Model {
 
     private final Set<Class<? extends ActionBarSegment>> hiddenSegments = new HashSet<>();
 
-    private Map<SpellType, Integer> ticksSinceSpecificSpellMap = new HashMap<>();
+    private final EnumMap<SpellType, Integer> ticksSinceSpecificSpellMap = new EnumMap<>(SpellType.class);
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
     private String lastBurstSpellName = "";
