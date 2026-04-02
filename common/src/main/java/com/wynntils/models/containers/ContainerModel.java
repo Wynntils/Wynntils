@@ -177,7 +177,7 @@ public final class ContainerModel extends Model {
         }
 
         for (ProfessionType type : ProfessionType.craftingProfessionTypes()) {
-            registerContainer(new CraftingStationContainer(Pattern.compile(type.getDisplayName()), type));
+            registerContainer(new CraftingStationContainer(type));
         }
 
         for (StoreItemType type : StoreItemType.values()) {
