@@ -15,7 +15,6 @@ public class CraftingStationContainer extends Container implements Highlightable
 
     private static final String CRAFTING_STATION_TITLE_PREFIX = "\uDAFF\uDFF8\uE053\uDAFF\uDF80";
 
-
     public CraftingStationContainer(ProfessionType professionType) {
         super(Pattern.compile(CRAFTING_STATION_TITLE_PREFIX + getContainerTitleChar(professionType)));
 
