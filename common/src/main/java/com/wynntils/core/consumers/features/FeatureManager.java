@@ -239,9 +239,9 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomLootrunBeaconsFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HideLabelsFeature());
-        registerFeature(new MountKeybindFeature());
         registerFeature(new InvertAttackKeybindsFeature());
         registerFeature(new LowHealthVignetteFeature());
+        registerFeature(new MountKeybindFeature());
         registerFeature(new MythicBoxScalerFeature());
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuickCastFeature());

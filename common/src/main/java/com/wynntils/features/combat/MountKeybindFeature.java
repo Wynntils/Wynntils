@@ -32,12 +32,14 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class MountKeybindFeature extends Feature {
-    private static final Identifier MOUNT_WHISTLE_ID = Identifier.fromNamespaceAndPath("wynntils", "horse.whistle");
+    private static final Identifier MOUNT_WHISTLE_ID = Identifier.fromNamespaceAndPath("wynntils", "mount.whistle");
     private static final SoundEvent MOUNT_WHISTLE_SOUND = SoundEvent.createVariableRangeEvent(MOUNT_WHISTLE_ID);
+    private static final int DEFAULT_SUMMON_DELAY_TICKS = 10;
     private static final int RESTORE_TIMEOUT_TICKS = 40;
 
     // TODO: Check if there are new error messages, as of writing this Wyverns and Adasaurs haven't been released yet
     private static final List<String> MOUNT_ERROR_MESSAGES = List.of(
+            "Your mount does not have enough room to be used!",
             "There is no room for a horse.",
             "You cannot interact with your horse at the moment.",
             "You cannot use your horse here!",
@@ -46,7 +48,7 @@ public class MountKeybindFeature extends Feature {
             "You cannot use your vehicle here!");
 
     @RegisterKeyBind
-    private final KeyBind mountHorseKeyBind = KeyBindDefinition.MOUNT_HORSE.create(this::mountHorse);
+    private final KeyBind rideMountKeybind = KeyBindDefinition.RIDE_MOUNT.create(this::mountHorse);
 
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;
@@ -54,6 +56,9 @@ public class MountKeybindFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> playWhistle = new Config<>(true);
+
+    @Persisted
+    private final Config<Integer> summonDelayTicks = new Config<>(DEFAULT_SUMMON_DELAY_TICKS);
 
     public MountKeybindFeature() {
         super(new ProfileDefault.Builder()
@@ -108,12 +113,14 @@ public class MountKeybindFeature extends Feature {
             McUtils.playSoundAmbient(MOUNT_WHISTLE_SOUND);
         }
         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(mountInventorySlot));
-        Managers.TickScheduler.scheduleNextTick(() -> {
-            // Re-assert selected slot packet before use to reduce desync.
-            McUtils.sendPacket(new ServerboundSetCarriedItemPacket(mountInventorySlot));
-            MouseUtils.sendRightClickInput();
-            waitForMountAndRestore(prevItem, previousSlotStack, RESTORE_TIMEOUT_TICKS);
-        });
+        Managers.TickScheduler.scheduleLater(
+                () -> {
+                    // Re-assert selected slot packet before use to reduce desync.
+                    McUtils.sendPacket(new ServerboundSetCarriedItemPacket(mountInventorySlot));
+                    MouseUtils.sendRightClickInput();
+                    waitForMountAndRestore(prevItem, previousSlotStack, RESTORE_TIMEOUT_TICKS);
+                },
+                summonDelayTicks.get());
     }
 
     private void waitForMountAndRestore(int previousSlot, ItemStack previousSlotStack, int ticksLeft) {
