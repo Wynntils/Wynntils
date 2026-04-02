@@ -6,7 +6,6 @@ package com.wynntils.models.containers.containers.crafting;
 
 import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.type.ContainerBounds;
-import com.wynntils.models.containers.type.HighlightableProfessionProperty;
 import com.wynntils.models.profession.type.ProfessionType;
 import java.util.regex.Pattern;
 
