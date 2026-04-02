@@ -8,7 +8,9 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.combat.label.DebuffType;
+import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Time;
 import java.util.List;
@@ -292,14 +294,54 @@ public class CombatFunctions {
     public static class TicksSinceSpecificSpellFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            int spellNumber = arguments.getArgument("spellNumber").getIntegerValue();
-            return Models.Spell.getTicksSinceCast(spellNumber);
+            String spellName = arguments.getArgument("spellName").getStringValue();
+            return Models.Spell.getTicksSinceCast(spellName);
         }
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("spellNumber", Integer.class, null)));
+                    List.of(new Argument<>("spellName", String.class, null)));
+        }
+    }
+
+    public static class SpellNameFromDirectionFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            String spellDirection = arguments.getArgument("spellDirection").getStringValue();
+            SpellType spellType;
+            if (spellDirection.equalsIgnoreCase("rlr") || spellDirection.equalsIgnoreCase("lrl")) {
+                spellType = SpellType.fromSpellDirectionArray(SpellType.RLR);
+            } else if (spellDirection.equalsIgnoreCase("rrr") || spellDirection.equalsIgnoreCase("lll")) {
+                spellType = SpellType.fromSpellDirectionArray(SpellType.RRR);
+            } else if (spellDirection.equalsIgnoreCase("rll") || spellDirection.equalsIgnoreCase("lrr")) {
+                spellType = SpellType.fromSpellDirectionArray(SpellType.RLL);
+            } else if (spellDirection.equalsIgnoreCase("rrl") || spellDirection.equalsIgnoreCase("llr")) {
+                spellType = SpellType.fromSpellDirectionArray(SpellType.RRL);
+            } else {
+                return "";
+            }
+            return spellType.getName();
+        }
+
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("spellDirection", String.class, null)));
+        }
+    }
+
+    public static class SpellNameFromNumberFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int spellNumber = arguments.getArgument("spellNumber").getIntegerValue();
+            String className = arguments.getArgument("class").getStringValue();
+            SpellType spellType = SpellType.forClass(ClassType.fromName(className), spellNumber);
+            return spellType == null ? "" : spellType.getName();
+        }
+
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("spellNumber", Integer.class, null), new Argument<>("class", String.class, null)));
         }
     }
 }

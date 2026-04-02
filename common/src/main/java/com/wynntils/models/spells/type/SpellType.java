@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells.type;
@@ -42,15 +42,15 @@ public enum SpellType {
 
     public static final int MAX_SPELL = 4;
 
-    private static final SpellDirection[] RLR = {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.RIGHT};
-    private static final SpellDirection[] RRR = {SpellDirection.RIGHT, SpellDirection.RIGHT, SpellDirection.RIGHT};
-    private static final SpellDirection[] RLL = {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.LEFT};
-    private static final SpellDirection[] RRL = {SpellDirection.RIGHT, SpellDirection.RIGHT, SpellDirection.LEFT};
+    public static final SpellDirection[] RLR = {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.RIGHT};
+    public static final SpellDirection[] RRR = {SpellDirection.RIGHT, SpellDirection.RIGHT, SpellDirection.RIGHT};
+    public static final SpellDirection[] RLL = {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.LEFT};
+    public static final SpellDirection[] RRL = {SpellDirection.RIGHT, SpellDirection.RIGHT, SpellDirection.LEFT};
     // Archer only
-    private static final SpellDirection[] LRL = SpellDirection.invertArray(RLR);
-    private static final SpellDirection[] LLL = SpellDirection.invertArray(RRR);
-    private static final SpellDirection[] LRR = SpellDirection.invertArray(RLL);
-    private static final SpellDirection[] LLR = SpellDirection.invertArray(RRL);
+    public static final SpellDirection[] LRL = SpellDirection.invertArray(RLR);
+    public static final SpellDirection[] LLL = SpellDirection.invertArray(RRR);
+    public static final SpellDirection[] LRR = SpellDirection.invertArray(RLL);
+    public static final SpellDirection[] LLR = SpellDirection.invertArray(RRL);
 
     private final ClassType classType;
     private final int spellNumber;

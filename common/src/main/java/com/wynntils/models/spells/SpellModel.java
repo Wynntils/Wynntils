@@ -42,7 +42,7 @@ public final class SpellModel extends Model {
 
     private final Set<Class<? extends ActionBarSegment>> hiddenSegments = new HashSet<>();
 
-    private Map<Integer, Integer> ticksSinceSpecificSpellMap = new HashMap<>();
+    private Map<SpellType, Integer> ticksSinceSpecificSpellMap = new HashMap<>();
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
     private String lastBurstSpellName = "";
@@ -102,7 +102,7 @@ public final class SpellModel extends Model {
 
         lastBurstSpellName = e.getSpellType().getName();
         lastSpellName = e.getSpellType().getName();
-        ticksSinceSpecificSpellMap.put(e.getSpellType().getSpellNumber(), 0);
+        ticksSinceSpecificSpellMap.put(e.getSpellType(), 0);
     }
 
     @SubscribeEvent
@@ -209,8 +209,8 @@ public final class SpellModel extends Model {
         return ticksSinceCast;
     }
 
-    public int getTicksSinceCast(int number) {
-        return ticksSinceSpecificSpellMap.getOrDefault(number, -1);
+    public int getTicksSinceCast(String name) {
+        return ticksSinceSpecificSpellMap.getOrDefault(SpellType.fromName(name), -1);
     }
 
     private void updateFromSpellSegment(SpellInputsSegment spellInputsSegment) {
