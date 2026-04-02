@@ -2681,6 +2681,7 @@
   "function.wynntils.specificRaidRunsSince.argument.sinceDays": "The number of days to include",
   "function.wynntils.specificRaidRunsSince.description": "The total amount of specified raid you ran in last specified days",
   "function.wynntils.specificRaidRunsSince.name": "The",
+  "function.wynntils.spellNameFromDirection.argument.class": "The class to get spell name from",
   "function.wynntils.spellNameFromDirection.argument.spellDirection": "3 letter direcion represented by Rs and Ls. Avaliable values: RLR, RRR, RLL, RRL, LRL, LLL, LRR and LLR",
   "function.wynntils.spellNameFromDirection.description": "The name of a spell from your class given direction.",
   "function.wynntils.spellNameFromDirection.name": "Spell Name From Direction",

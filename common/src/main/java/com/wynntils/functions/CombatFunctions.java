@@ -309,24 +309,16 @@ public class CombatFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             String spellDirection = arguments.getArgument("spellDirection").getStringValue();
-            SpellType spellType;
-            if (spellDirection.equalsIgnoreCase("rlr") || spellDirection.equalsIgnoreCase("lrl")) {
-                spellType = SpellType.fromSpellDirectionArray(SpellType.RLR);
-            } else if (spellDirection.equalsIgnoreCase("rrr") || spellDirection.equalsIgnoreCase("lll")) {
-                spellType = SpellType.fromSpellDirectionArray(SpellType.RRR);
-            } else if (spellDirection.equalsIgnoreCase("rll") || spellDirection.equalsIgnoreCase("lrr")) {
-                spellType = SpellType.fromSpellDirectionArray(SpellType.RLL);
-            } else if (spellDirection.equalsIgnoreCase("rrl") || spellDirection.equalsIgnoreCase("llr")) {
-                spellType = SpellType.fromSpellDirectionArray(SpellType.RRL);
-            } else {
-                return "";
-            }
-            return spellType.getName();
+            ClassType classType =
+                    ClassType.fromName(arguments.getArgument("class").getStringValue());
+            SpellType spellType = SpellType.fromSpellDirectionString(spellDirection, classType);
+
+            return spellType == null ? "" : spellType.getName();
         }
 
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("spellDirection", String.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("spellDirection", String.class, null), new Argument<>("class", String.class, null)));
         }
     }
 

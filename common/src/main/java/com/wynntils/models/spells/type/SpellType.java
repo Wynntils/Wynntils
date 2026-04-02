@@ -16,7 +16,7 @@ public enum SpellType {
 
     SPIN_ATTACK(ClassType.ASSASSIN, 1, "Spin Attack", 6, 0),
     DASH(ClassType.ASSASSIN, 2, "Dash", 2, 0),
-    MULTI_HIT(ClassType.ASSASSIN, 3, "Multi Hit", 8, 0),
+    MULTIHIT(ClassType.ASSASSIN, 3, "Multihit", 8, 0),
     SMOKE_BOMB(ClassType.ASSASSIN, 4, "Smoke Bomb", 8, 0),
 
     BASH(ClassType.WARRIOR, 1, "Bash", 6, 0),
@@ -42,15 +42,15 @@ public enum SpellType {
 
     public static final int MAX_SPELL = 4;
 
-    public static final SpellDirection[] RLR = {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.RIGHT};
-    public static final SpellDirection[] RRR = {SpellDirection.RIGHT, SpellDirection.RIGHT, SpellDirection.RIGHT};
-    public static final SpellDirection[] RLL = {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.LEFT};
-    public static final SpellDirection[] RRL = {SpellDirection.RIGHT, SpellDirection.RIGHT, SpellDirection.LEFT};
+    private static final SpellDirection[] RLR = {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.RIGHT};
+    private static final SpellDirection[] RRR = {SpellDirection.RIGHT, SpellDirection.RIGHT, SpellDirection.RIGHT};
+    private static final SpellDirection[] RLL = {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.LEFT};
+    private static final SpellDirection[] RRL = {SpellDirection.RIGHT, SpellDirection.RIGHT, SpellDirection.LEFT};
     // Archer only
-    public static final SpellDirection[] LRL = SpellDirection.invertArray(RLR);
-    public static final SpellDirection[] LLL = SpellDirection.invertArray(RRR);
-    public static final SpellDirection[] LRR = SpellDirection.invertArray(RLL);
-    public static final SpellDirection[] LLR = SpellDirection.invertArray(RRL);
+    private static final SpellDirection[] LRL = SpellDirection.invertArray(RLR);
+    private static final SpellDirection[] LLL = SpellDirection.invertArray(RRR);
+    private static final SpellDirection[] LRR = SpellDirection.invertArray(RLL);
+    private static final SpellDirection[] LLR = SpellDirection.invertArray(RRL);
 
     private final ClassType classType;
     private final int spellNumber;
@@ -113,7 +113,7 @@ public enum SpellType {
         return getGenericName() + " (" + getName() + ")";
     }
 
-    public static SpellType fromSpellDirectionArray(SpellDirection[] casted) {
+    private static SpellType fromSpellDirectionArray(ClassType classType, SpellDirection[] casted) {
         int spellNumber = 4;
         if (Arrays.equals(casted, RLR) || Arrays.equals(casted, LRL)) {
             spellNumber = 1;
@@ -122,6 +122,26 @@ public enum SpellType {
         } else if (Arrays.equals(casted, RLL) || Arrays.equals(casted, LRR)) {
             spellNumber = 3;
         }
-        return forClass(Models.Character.getClassType(), spellNumber);
+        return forClass(classType, spellNumber);
+    }
+
+    public static SpellType fromSpellDirectionArray(SpellDirection[] casted) {
+        return fromSpellDirectionArray(Models.Character.getClassType(), casted);
+    }
+
+    public static SpellType fromSpellDirectionString(String direction, ClassType classType) {
+        SpellDirection[] spellDirection;
+        if (direction.equalsIgnoreCase("rlr") || direction.equalsIgnoreCase("lrl")) {
+            spellDirection = RLR;
+        } else if (direction.equalsIgnoreCase("rrr") || direction.equalsIgnoreCase("lll")) {
+            spellDirection = RRR;
+        } else if (direction.equalsIgnoreCase("rll") || direction.equalsIgnoreCase("lrr")) {
+            spellDirection = RLL;
+        } else if (direction.equalsIgnoreCase("rrl") || direction.equalsIgnoreCase("llr")) {
+            spellDirection = RRL;
+        } else {
+            return null;
+        }
+        return fromSpellDirectionArray(classType, spellDirection);
     }
 }
