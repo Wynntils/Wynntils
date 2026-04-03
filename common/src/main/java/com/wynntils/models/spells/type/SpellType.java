@@ -123,11 +123,15 @@ public enum SpellType {
         return -1;
     }
 
-    public static SpellType fromSpellDirectionArray(SpellDirection[] casted) {
+    public static SpellType fromSpellDirectionArray(ClassType classType, SpellDirection[] casted) {
         int spellNumber = getSpellNumberFromDirectionArray(casted);
         if (spellNumber == -1) return null;
 
-        return forClass(Models.Character.getClassType(), spellNumber);
+        return forClass(classType, spellNumber);
+    }
+
+    public static SpellType fromSpellDirectionArray(SpellDirection[] casted) {
+        return fromSpellDirectionArray(Models.Character.getClassType(), casted);
     }
 
     public static SpellDirection[] getSpellDirectionArrayFromString(String casted) {
@@ -146,7 +150,7 @@ public enum SpellType {
         return spellDirections;
     }
 
-    public static SpellType fromSpellString(String casted) {
-        return fromSpellDirectionArray(getSpellDirectionArrayFromString(casted));
+    public static SpellType fromSpellString(ClassType classType, String casted) {
+        return fromSpellDirectionArray(classType, getSpellDirectionArrayFromString(casted));
     }
 }

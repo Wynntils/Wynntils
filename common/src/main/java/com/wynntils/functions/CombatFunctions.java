@@ -311,7 +311,7 @@ public class CombatFunctions {
             String spellDirection = arguments.getArgument("spellDirection").getStringValue();
             ClassType classType =
                     ClassType.fromName(arguments.getArgument("class").getStringValue());
-            SpellType spellType = SpellType.fromSpellDirectionString(spellDirection, classType);
+            SpellType spellType = SpellType.fromSpellString(classType, spellDirection);
 
             return spellType == null ? "" : spellType.getName();
         }
