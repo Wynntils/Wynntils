@@ -187,7 +187,7 @@
   "feature.wynntils.bonusTotemTimerOverlay.overlay.mobTotemTimer.name": "Mob Totem Timer",
   "feature.wynntils.bonusTotemTimerOverlay.overlay.mobTotemTimer.textShadow.description": "What should the text shadow look like?",
   "feature.wynntils.bonusTotemTimerOverlay.overlay.mobTotemTimer.textShadow.name": "Text Shadow",
-  "feature.wynntils.y.animationDuration.description": "How long should the info widget animation take, in milliseconds?",
+  "feature.wynntils.bulkBuy.animationDuration.description": "How long should the info widget animation take, in milliseconds?",
   "feature.wynntils.bulkBuy.animationDuration.name": "Animation Duration",
   "feature.wynntils.bulkBuy.bulkBuyActive": "Click to buy %d times",
   "feature.wynntils.bulkBuy.bulkBuyAmount.description": "How many items should be bought at once?",
