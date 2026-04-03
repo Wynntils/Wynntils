@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.colors;
@@ -32,12 +32,20 @@ public final class CommonColors {
     public static final CustomColor RAINBOW = CustomColor.fromInt(0x00f000);
     // Animated gradient from #f56217 to #0b486b
     public static final CustomColor GRADIENT = CustomColor.fromInt(0x00f004);
-    // Smooth animated fade from #5af082 to black
+    // Animated fade from #5af082 to transparent
     public static final CustomColor FADE = CustomColor.fromInt(0x00f008);
-    // Animated blinking between #e63232 and black
+    // Animated blinking which toggles between #e63232 and transparent
     public static final CustomColor BLINK = CustomColor.fromInt(0x00f00c);
     // Animated gradient from #560505ff to #8a0303ff
     public static final CustomColor GRADIENT_2 = CustomColor.fromInt(0x00f010);
     // Animated shine effect between #a3cc52ff to #ffffd2ff
     public static final CustomColor SHINE = CustomColor.fromInt(0x00f014);
+    // Animated fade effect from a vertical gradient to transparent
+    public static final CustomColor FADE_2 = CustomColor.fromInt(0x00f018);
+    // "Italic" effect which displaces characters and colors them to #55ffff
+    public static final CustomColor ITALIC = CustomColor.fromInt(0x00f01c);
+    // "Italic" effect which displaces characters and colors them to #55ffff
+    public static final CustomColor ITALIC_2 = CustomColor.fromInt(0x00f020);
+    // Animated Warp effect which makes the text look like wave and color it to #c6c6c6
+    public static final CustomColor WARP = CustomColor.fromInt(0x00f024);
 }

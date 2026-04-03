@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
@@ -131,7 +131,15 @@ public final class ColorFunctions {
     public static class FadeShaderFunction extends Function<CustomColor> {
         @Override
         public CustomColor getValue(FunctionArguments arguments) {
-            return CommonColors.FADE;
+            return switch (arguments.getArgument("style").getIntegerValue()) {
+                case 2 -> CommonColors.FADE_2;
+                default -> CommonColors.FADE;
+            };
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("style", Integer.class, 1)));
         }
     }
 
@@ -159,6 +167,28 @@ public final class ColorFunctions {
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new Argument<>("color", CustomColor.class, null)));
+        }
+    }
+
+    public static class ItalicShaderFunction extends Function<CustomColor> {
+        @Override
+        public CustomColor getValue(FunctionArguments arguments) {
+            return switch (arguments.getArgument("style").getIntegerValue()) {
+                case 2 -> CommonColors.ITALIC_2;
+                default -> CommonColors.ITALIC;
+            };
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("style", Integer.class, 1)));
+        }
+    }
+
+    public static class WarpShaderFunction extends Function<CustomColor> {
+        @Override
+        public CustomColor getValue(FunctionArguments arguments) {
+            return CommonColors.WARP;
         }
     }
 }
