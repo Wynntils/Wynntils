@@ -255,7 +255,6 @@
   "feature.wynntils.chatRedirect.merchant.notification": "%s에서 아이템 구매함.",
   "feature.wynntils.chatRedirect.mount.description": "말과 관련된 메시지를 어떻게 처리할까요?",
   "feature.wynntils.chatRedirect.mount.name": "말 메시지 필터",
-  "feature.wynntils.chatRedirect.mount.notificationDespawned": "말이 소환 해제 되었습니다.",
   "feature.wynntils.chatRedirect.mount.notificationNoRoom": "소환할 공간이 부족합니다!",
   "feature.wynntils.chatRedirect.mount.notificationScared": "근처의 몹이 말을 겁주고 있습니다!",
   "feature.wynntils.chatRedirect.name": "시스템 메시지 필터",

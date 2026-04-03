@@ -265,7 +265,6 @@
   "feature.wynntils.chatRedirect.merchant.notification": "Куплен предмет у %s.",
   "feature.wynntils.chatRedirect.mount.description": "Как должны отображаться сообщения, связанные с вашей лошадью?",
   "feature.wynntils.chatRedirect.mount.name": "Фильтрация Сообщений о Лошади",
-  "feature.wynntils.chatRedirect.mount.notificationDespawned": "Ваша лошадь исчезла.",
   "feature.wynntils.chatRedirect.mount.notificationNoRoom": "Нет места для лошади!",
   "feature.wynntils.chatRedirect.mount.notificationScared": "Близлежащие мобы мешают появлению лошади!",
   "feature.wynntils.chatRedirect.name": "Фильтр Информационных Сообщений",

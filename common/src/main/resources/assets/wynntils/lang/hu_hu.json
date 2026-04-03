@@ -203,7 +203,6 @@
   "feature.wynntils.chatRedirect.merchant.notification": "Tárgy vásárolva %s-tól.",
   "feature.wynntils.chatRedirect.mount.description": "Hogyan jelenjenek meg a lóval kapcsolatos üzenetek?",
   "feature.wynntils.chatRedirect.mount.name": "Ló Üzenet Szűrés",
-  "feature.wynntils.chatRedirect.mount.notificationDespawned": "A lovad eltűnt.",
   "feature.wynntils.chatRedirect.mount.notificationNoRoom": "Nincs hely a lónak!",
   "feature.wynntils.chatRedirect.mount.notificationScared": "Közeli mobok akadályozzák a ló megidézését!",
   "feature.wynntils.chatRedirect.name": "Információs Üzenet Szűrő",

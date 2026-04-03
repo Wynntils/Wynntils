@@ -203,7 +203,6 @@
   "feature.wynntils.chatRedirect.merchant.notification": "從 %s 購買了物品。",
   "feature.wynntils.chatRedirect.mount.description": "與您的馬有關的訊息應如何顯示？",
   "feature.wynntils.chatRedirect.mount.name": "馬訊息過濾",
-  "feature.wynntils.chatRedirect.mount.notificationDespawned": "你的馬已消失。",
   "feature.wynntils.chatRedirect.mount.notificationNoRoom": "沒有空間容納馬！",
   "feature.wynntils.chatRedirect.mount.notificationScared": "附近的怪物阻止了馬的出現！",
   "feature.wynntils.chatRedirect.name": "資訊訊息過濾器",

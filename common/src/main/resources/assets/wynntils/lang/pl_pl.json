@@ -203,7 +203,6 @@
   "feature.wynntils.chatRedirect.merchant.notification": "Kupiono przedmiot od %s.",
   "feature.wynntils.chatRedirect.mount.description": "Jak powinny wyglądać wiadomości dotyczące konia?",
   "feature.wynntils.chatRedirect.mount.name": "Filtrowanie Wiadomości o Koniu",
-  "feature.wynntils.chatRedirect.mount.notificationDespawned": "Twój koń zniknął.",
   "feature.wynntils.chatRedirect.mount.notificationNoRoom": "Brak miejsca na konia!",
   "feature.wynntils.chatRedirect.mount.notificationScared": "Bliskie moby uniemożliwiają przywołanie konia!",
   "feature.wynntils.chatRedirect.name": "Filtr Wiadomości Informacyjnych",

@@ -203,7 +203,6 @@
   "feature.wynntils.chatRedirect.merchant.notification": "Articolo acquistato da %s.",
   "feature.wynntils.chatRedirect.mount.description": "Come dovrebbero apparire i messaggi relativi al tuo cavallo?",
   "feature.wynntils.chatRedirect.mount.name": "Filtraggio dei Messaggi del Cavallo",
-  "feature.wynntils.chatRedirect.mount.notificationDespawned": "Il tuo cavallo è scomparso.",
   "feature.wynntils.chatRedirect.mount.notificationNoRoom": "Non c'è spazio per un cavallo!",
   "feature.wynntils.chatRedirect.mount.notificationScared": "I mob vicini impediscono la comparsa del cavallo!",
   "feature.wynntils.chatRedirect.name": "Filtro dei Messaggi Informativi",

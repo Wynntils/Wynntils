@@ -203,7 +203,6 @@
   "feature.wynntils.chatRedirect.merchant.notification": "%s からアイテムを購入しました。",
   "feature.wynntils.chatRedirect.mount.description": "馬に関するメッセージはどのように表示されるべきですか？",
   "feature.wynntils.chatRedirect.mount.name": "馬のメッセージのフィルタリング",
-  "feature.wynntils.chatRedirect.mount.notificationDespawned": "あなたの馬は消えました。",
   "feature.wynntils.chatRedirect.mount.notificationNoRoom": "馬のためのスペースがありません！",
   "feature.wynntils.chatRedirect.mount.notificationScared": "近くのモブが馬の出現を妨げています！",
   "feature.wynntils.chatRedirect.name": "情報メッセージフィルター",

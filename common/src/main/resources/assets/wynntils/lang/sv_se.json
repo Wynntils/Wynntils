@@ -203,7 +203,6 @@
   "feature.wynntils.chatRedirect.merchant.notification": "Köpte föremål från %s.",
   "feature.wynntils.chatRedirect.mount.description": "Hur ska meddelanden om din häst visas?",
   "feature.wynntils.chatRedirect.mount.name": "Filtrering av hästmeddelanden",
-  "feature.wynntils.chatRedirect.mount.notificationDespawned": "Din häst har försvunnit.",
   "feature.wynntils.chatRedirect.mount.notificationNoRoom": "Ingen plats för en häst!",
   "feature.wynntils.chatRedirect.mount.notificationScared": "Närliggande fiender hindrar hästspawning!",
   "feature.wynntils.chatRedirect.name": "Informationsmeddelandefilter",
