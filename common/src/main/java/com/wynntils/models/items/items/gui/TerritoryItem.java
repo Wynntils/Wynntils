@@ -9,10 +9,15 @@ import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.models.territories.type.TerritoryUpgrade;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.CappedValue;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class TerritoryItem extends GuiItem {
+    private static final List<Float> RATE_MODIFIERS = List.of(1f, 4f / 3f, 2f, 4f);
+    private static final List<Float> RESOURCE_MODIFIERS = List.of(1.0f, 1.5f, 2.0f, 2.5f, 3.0f, 3.5f, 4.0f);
+    private static final List<Float> EMERALD_MODIFIERS = List.of(1.0f, 1.35f, 2.0f, 4.0f);
+
     private final String name;
     private final boolean isHeadquarters;
     private final boolean isSelected;
@@ -22,9 +27,12 @@ public class TerritoryItem extends GuiItem {
     private final List<String> alerts;
     private final Map<TerritoryUpgrade, Integer> upgrades;
 
-    private final CustomColor productionColor;
-    private final CustomColor seekingColor;
+    private final List<CustomColor> productionColors;
+    private final List<CustomColor> seekingColors;
     private final CustomColor treasuryColor;
+
+    private final boolean isDoubleEmeralds;
+    private final boolean isDoubleResource;
 
     private boolean isPending = false;
 
@@ -47,39 +55,37 @@ public class TerritoryItem extends GuiItem {
         this.upgrades = upgrades;
 
         // Production color
+        productionColors = new ArrayList<>();
         int emeraldUpgrades = upgrades.getOrDefault(TerritoryUpgrade.EMERALD_RATE, 0)
                 + upgrades.getOrDefault(TerritoryUpgrade.EFFICIENT_EMERALDS, 0);
         int resourceUpgrades = upgrades.getOrDefault(TerritoryUpgrade.RESOURCE_RATE, 0)
                 + upgrades.getOrDefault(TerritoryUpgrade.EFFICIENT_RESOURCES, 0);
         if (emeraldUpgrades > 0) {
-            if (resourceUpgrades > 0) {
-                productionColor = CustomColor.fromHSV(0.5f, 0.8f, 0.9f, 1);
-            } else {
-                productionColor = CustomColor.fromHSV(1 / 3f, 0.8f, 0.9f, 1);
-            }
-        } else {
-            // 4 3 or above -> 100% saturation
-            // 3 3 or below -> 50% saturation
-            if (resourceUpgrades > 6) {
-                productionColor = CustomColor.fromHSV(1 / 6f, 1.0f, 1.0f, 1);
-            } else if (resourceUpgrades > 0) {
-                productionColor = CustomColor.fromHSV(1 / 6f, 0.50f, 0.9f, 1);
-            } else {
-                productionColor = CustomColor.fromHSV(0, 0, 0.6f, 1);
-            }
+            productionColors.add(CustomColor.fromHSV(1 / 3f, 0.8f, 0.9f, 1));
+        }
+        if (resourceUpgrades > 6) {
+            productionColors.add(CustomColor.fromHSV(1 / 10f, 0.9f, 0.9f, 1));
+        } else if (resourceUpgrades == 6) {
+            productionColors.add(CustomColor.fromHSV(1 / 6f, 0.8f, 0.9f, 1));
+        } else if (resourceUpgrades > 0) {
+            productionColors.add(CustomColor.fromHSV(1 / 6f, 0.5f, 0.8f, 1));
+        }
+        if (emeraldUpgrades == 0 && resourceUpgrades == 0) {
+            productionColors.add(CustomColor.fromHSV(0, 0, 0.6f, 1));
         }
 
         // Seeking color
+        seekingColors = new ArrayList<>();
         int tomeSeek = upgrades.getOrDefault(TerritoryUpgrade.TOME_SEEKING, 0);
         int emeraldSeek = upgrades.getOrDefault(TerritoryUpgrade.EMERALD_SEEKING, 0);
-        if (tomeSeek > 0 && emeraldSeek > 0) {
-            seekingColor = CustomColor.fromHSV(1 / 2f, 0.8f, 0.9f, 1);
-        } else if (tomeSeek > 0) {
-            seekingColor = CustomColor.fromHSV(2 / 3f, 0.8f, 0.9f, 1);
-        } else if (emeraldSeek > 0) {
-            seekingColor = CustomColor.fromHSV(1 / 3f, 0.8f, 0.9f, 1);
-        } else {
-            seekingColor = CustomColor.fromHSV(0, 0, 0.6f, 1);
+        if (tomeSeek > 0) {
+            seekingColors.add(CustomColor.fromHSV(1 / 2f, 0.8f, 0.9f, 1));
+        }
+        if (emeraldSeek > 0) {
+            seekingColors.add(CustomColor.fromHSV(1 / 3f, 0.8f, 0.9f, 1));
+        }
+        if (tomeSeek == 0 && emeraldSeek == 0) {
+            seekingColors.add(CustomColor.fromHSV(0, 0, 0.6f, 1));
         }
 
         // Treasury color
@@ -88,6 +94,29 @@ public class TerritoryItem extends GuiItem {
                 Math.min(treasuryBonus / 18.75f, 0.8f),
                 Math.min(treasuryBonus / 15, 1) * 0.3f + 0.6f,
                 1);
+
+        // Double Resource/Emeralds
+        double expectedEmeralds = 9000d
+                * EMERALD_MODIFIERS.get(upgrades.getOrDefault(TerritoryUpgrade.EFFICIENT_EMERALDS, 0))
+                * RATE_MODIFIERS.get(upgrades.getOrDefault(TerritoryUpgrade.EMERALD_RATE, 0));
+        // If actual production > 1.5x (Max treasury is 1.3x) what we expect based on upgrades, it likely is a city
+        isDoubleEmeralds = production.getOrDefault(GuildResource.EMERALDS, 0) > expectedEmeralds * 1.5f;
+
+        Map.Entry<GuildResource, Integer> primaryResource = null;
+        for (Map.Entry<GuildResource, Integer> entry : production.entrySet()) {
+            if (entry.getKey() == GuildResource.EMERALDS) continue;
+            if (primaryResource == null) {
+                primaryResource = entry;
+            } else if (primaryResource.getValue() < entry.getValue()) {
+                primaryResource = entry;
+            }
+        }
+        double expectedResources = 3600d
+                * RESOURCE_MODIFIERS.get(upgrades.getOrDefault(TerritoryUpgrade.EFFICIENT_RESOURCES, 0))
+                * RATE_MODIFIERS.get(upgrades.getOrDefault(TerritoryUpgrade.RESOURCE_RATE, 0));
+        // If actual production > 1.5x (Max treasury is 1.3x) what we expect based on upgrades, it likely is a double
+        // production
+        isDoubleResource = primaryResource.getValue() > expectedResources * 1.5f;
     }
 
     public String getName() {
@@ -115,12 +144,12 @@ public class TerritoryItem extends GuiItem {
         return treasuryBonus;
     }
 
-    public CustomColor getProductionColor() {
-        return productionColor;
+    public List<CustomColor> getProductionColors() {
+        return productionColors;
     }
 
-    public CustomColor getSeekingColor() {
-        return seekingColor;
+    public List<CustomColor> getSeekingColors() {
+        return seekingColors;
     }
 
     public CustomColor getTreasuryColor() {
@@ -133,6 +162,14 @@ public class TerritoryItem extends GuiItem {
 
     public Map<GuildResource, CappedValue> getStorage() {
         return storage;
+    }
+
+    public boolean getDoubleEmeralds() {
+        return isDoubleEmeralds;
+    }
+
+    public boolean getDoubleResource() {
+        return isDoubleResource;
     }
 
     public List<String> getAlerts() {
