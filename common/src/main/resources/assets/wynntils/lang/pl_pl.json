@@ -891,7 +891,7 @@
   "feature.wynntils.mountKeybind.conflictingSlots": "Musisz zwolnić miejsce na pasku szybkiego dostępu, aby dosiąść konia.",
   "feature.wynntils.mountKeybind.description": "Dodaje możliwość dosiadania koni za pomocą skrótu klawiszowego.",
   "feature.wynntils.mountKeybind.name": "Dosiadanie Konia",
-  "feature.wynntils.mountKeybind.noHorse": "Nie można znaleźć twojego konia.",
+  "feature.wynntils.mountKeybind.noMount": "Nie można znaleźć twojego konia.",
   "feature.wynntils.mountKeybind.playWhistle.description": "Czy powinien być odtwarzany dźwięk gwizdka, gdy dosiadasz konia?",
   "feature.wynntils.mountKeybind.playWhistle.name": "Odtwarzaj Gwizdek",
   "feature.wynntils.mythicBoxScaler.description": "Skaluje mityczne pudełko, aby było bardziej widoczne na ziemi.",

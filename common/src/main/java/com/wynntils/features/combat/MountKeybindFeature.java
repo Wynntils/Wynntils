@@ -146,7 +146,7 @@ public class MountKeybindFeature extends Feature {
     }
 
     private enum RideMountStatus {
-        NO_MOUNT("feature.wynntils.mountKeybind.noHorse"),
+        NO_MOUNT("feature.wynntils.mountKeybind.noMount"),
         ALREADY_RIDING("feature.wynntils.mountKeybind.alreadyRiding"),
         CONFLICTING_SLOTS("feature.wynntils.mountKeybind.conflictingSlots");
 

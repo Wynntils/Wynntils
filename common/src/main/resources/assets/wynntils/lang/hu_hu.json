@@ -891,7 +891,7 @@
   "feature.wynntils.mountKeybind.conflictingSlots": "Fel kell szabadítanod egy helyet a gyorselérési sávban, hogy felülhess a lóra.",
   "feature.wynntils.mountKeybind.description": "Lehetőséget ad lovak felülésére egy gyorsbillentyűvel.",
   "feature.wynntils.mountKeybind.name": "Ló Felülés",
-  "feature.wynntils.mountKeybind.noHorse": "A lovad nem található.",
+  "feature.wynntils.mountKeybind.noMount": "A lovad nem található.",
   "feature.wynntils.mountKeybind.playWhistle.description": "Játsszon le egy sípszót, amikor felülsz a lovadra?",
   "feature.wynntils.mountKeybind.playWhistle.name": "Sípszó Lejátszása",
   "feature.wynntils.mythicBoxScaler.description": "Növeli a mitikus doboz méretét, hogy jobban észrevehető legyen a földön.",

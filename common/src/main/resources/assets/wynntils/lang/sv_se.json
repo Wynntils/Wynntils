@@ -899,7 +899,7 @@
   "feature.wynntils.mountKeybind.conflictingSlots": "Du måste frigöra en plats i din snabbmeny för att kunna rida på din häst.",
   "feature.wynntils.mountKeybind.description": "Lägger till möjligheten att rida på hästar med ett kortkommando.",
   "feature.wynntils.mountKeybind.name": "Hästuppstigning",
-  "feature.wynntils.mountKeybind.noHorse": "Din häst kunde inte hittas.",
+  "feature.wynntils.mountKeybind.noMount": "Din häst kunde inte hittas.",
   "feature.wynntils.mountKeybind.playWhistle.description": "Ska ett visselljud spelas när du sitter upp på din häst?",
   "feature.wynntils.mountKeybind.playWhistle.name": "Spela Vissla",
   "feature.wynntils.mythicBoxScaler.description": "Skalar den mytiska lådan för att göra den mer synlig på marken.",

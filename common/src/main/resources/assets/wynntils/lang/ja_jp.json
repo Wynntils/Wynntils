@@ -891,7 +891,7 @@
   "feature.wynntils.mountKeybind.conflictingSlots": "馬に乗るには、ホットバーのスロットを空ける必要があります。",
   "feature.wynntils.mountKeybind.description": "ホットキーで馬に乗る機能を追加します。",
   "feature.wynntils.mountKeybind.name": "馬の乗馬",
-  "feature.wynntils.mountKeybind.noHorse": "馬が見つかりませんでした。",
+  "feature.wynntils.mountKeybind.noMount": "馬が見つかりませんでした。",
   "feature.wynntils.mountKeybind.playWhistle.description": "馬に乗るときに口笛の音が鳴るべきですか？",
   "feature.wynntils.mountKeybind.playWhistle.name": "口笛を鳴らす",
   "feature.wynntils.mythicBoxScaler.description": "地面でより目立つようにミシックボックスをスケーリングします。",

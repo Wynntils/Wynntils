@@ -891,7 +891,7 @@
   "feature.wynntils.mountKeybind.conflictingSlots": "Você deve liberar um espaço na sua barra de acesso rápido para montar seu cavalo.",
   "feature.wynntils.mountKeybind.description": "Adiciona a capacidade de montar cavalos com uma tecla de atalho.",
   "feature.wynntils.mountKeybind.name": "Montaria de Cavalo",
-  "feature.wynntils.mountKeybind.noHorse": "Seu cavalo não pôde ser encontrado.",
+  "feature.wynntils.mountKeybind.noMount": "Seu cavalo não pôde ser encontrado.",
   "feature.wynntils.mountKeybind.playWhistle.description": "Deve soar um assobio quando você monta seu cavalo?",
   "feature.wynntils.mountKeybind.playWhistle.name": "Tocar Assobio",
   "feature.wynntils.mythicBoxScaler.description": "Escala a caixa mítica para torná-la mais visível no chão.",

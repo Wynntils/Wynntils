@@ -1165,7 +1165,7 @@
   "feature.wynntils.mountKeybind.conflictingSlots": "You must free up a slot in your hotbar to get on your mount.",
   "feature.wynntils.mountKeybind.description": "Adds the ability to get on a mount with a keybind.",
   "feature.wynntils.mountKeybind.name": "Mounts",
-  "feature.wynntils.mountKeybind.noHorse": "Your mount was unable to be found.",
+  "feature.wynntils.mountKeybind.noMount": "Your mount was unable to be found.",
   "feature.wynntils.mountKeybind.playWhistle.description": "Should a whistle sound play when you get on your mount?",
   "feature.wynntils.mountKeybind.playWhistle.name": "Play Whistle",
   "feature.wynntils.mountKeybind.summonDelayTicks.description": "How many ticks to wait before using the selected mount item.",

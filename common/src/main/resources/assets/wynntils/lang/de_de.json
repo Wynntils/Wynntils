@@ -894,7 +894,7 @@
   "feature.wynntils.mountKeybind.conflictingSlots": "Sie müssen einen Platz in Ihrer Schnellzugriffsleiste freimachen, um Ihr Pferd zu besteigen.",
   "feature.wynntils.mountKeybind.description": "Fügt die Möglichkeit hinzu, Pferde mit einer Tastenkombination zu besteigen.",
   "feature.wynntils.mountKeybind.name": "Pferdebesteigung",
-  "feature.wynntils.mountKeybind.noHorse": "Ihr Pferd konnte nicht gefunden werden.",
+  "feature.wynntils.mountKeybind.noMount": "Ihr Pferd konnte nicht gefunden werden.",
   "feature.wynntils.mountKeybind.playWhistle.description": "Sollte ein Pfeifton ertönen, wenn Sie Ihr Pferd besteigen?",
   "feature.wynntils.mountKeybind.playWhistle.name": "Pfeifton Abspielen",
   "feature.wynntils.mythicBoxScaler.description": "Skaliert die mythische Box, um sie auf dem Boden besser sichtbar zu machen.",

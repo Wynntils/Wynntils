@@ -891,7 +891,7 @@
   "feature.wynntils.mountKeybind.conflictingSlots": "Je moet een slot in je hotbar vrijmaken om op je paard te kunnen stappen.",
   "feature.wynntils.mountKeybind.description": "Voegt de mogelijkheid toe om paarden te bestijgen met een sneltoets.",
   "feature.wynntils.mountKeybind.name": "Paard Bestijgen",
-  "feature.wynntils.mountKeybind.noHorse": "Je paard kon niet worden gevonden.",
+  "feature.wynntils.mountKeybind.noMount": "Je paard kon niet worden gevonden.",
   "feature.wynntils.mountKeybind.playWhistle.description": "Moet er een fluitsignaal klinken wanneer je op je paard stapt?",
   "feature.wynntils.mountKeybind.playWhistle.name": "Speel Fluitsignaal",
   "feature.wynntils.mythicBoxScaler.description": "Schaalt de mythische doos om deze beter zichtbaar te maken op de grond.",

@@ -891,7 +891,7 @@
   "feature.wynntils.mountKeybind.conflictingSlots": "Vous devez libérer un emplacement dans votre barre d'accès rapide pour monter votre cheval.",
   "feature.wynntils.mountKeybind.description": "Ajoute la possibilité de monter des chevaux avec un raccourci.",
   "feature.wynntils.mountKeybind.name": "Monture de Cheval",
-  "feature.wynntils.mountKeybind.noHorse": "Votre cheval n'a pas pu être trouvé.",
+  "feature.wynntils.mountKeybind.noMount": "Votre cheval n'a pas pu être trouvé.",
   "feature.wynntils.mountKeybind.playWhistle.description": "Un sifflement doit-il retentir lorsque vous montez votre cheval ?",
   "feature.wynntils.mountKeybind.playWhistle.name": "Jouer un Sifflement",
   "feature.wynntils.mythicBoxScaler.description": "Échelle la boîte mythique pour la rendre plus visible au sol.",
