@@ -539,8 +539,6 @@
   "feature.wynntils.deathCoordinates.diedAt": "You have died at ",
   "feature.wynntils.deathCoordinates.name": "Death Coordinates",
   "feature.wynntils.deathCoordinates.showDeathCoordinates.description": "Should the coordinates of your last death be shown in chat?",
-  "feature.wynntils.dialogueOptionOverride.description": "Adds the ability to select dialogue options with slot buttons.",
-  "feature.wynntils.dialogueOptionOverride.name": "Dialogue Button Override",
   "feature.wynntils.disableRecipeBook.description": "Disables the recipe book, as it is not used in Wynncraft.",
   "feature.wynntils.disableRecipeBook.name": "Disable Recipe Book",
   "feature.wynntils.discordRichPresence.description": "Adds Discord Rich Presence support.",

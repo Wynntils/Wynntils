@@ -419,8 +419,6 @@
   "feature.wynntils.deathCoordinates.diedAt": "你死在了 ",
   "feature.wynntils.deathCoordinates.name": "死亡座標",
   "feature.wynntils.deathCoordinates.showDeathCoordinates.description": "是否應在聊天中顯示你最後一次死亡的座標？",
-  "feature.wynntils.dialogueOptionOverride.description": "增加使用槽按鈕選擇對話選項的能力。",
-  "feature.wynntils.dialogueOptionOverride.name": "對話按鈕覆蓋",
   "feature.wynntils.discordRichPresence.description": "增加對Discord Rich Presence的支持。",
   "feature.wynntils.discordRichPresence.disableInStream.description": "在主播模式下是否應禁用豐富狀態？",
   "feature.wynntils.discordRichPresence.disableInStream.name": "在主播模式下禁用",
