@@ -11,7 +11,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -41,9 +40,9 @@ public class DurabilityOverlayFeature extends Feature {
     private final Config<DurabilityRenderMode> durabilityRenderMode = new Config<>(DurabilityRenderMode.ARC);
 
     public DurabilityOverlayFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
-                .build());
+        // TODO: Revert to enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
+        //  when feature fixed
+        super(ProfileDefault.DISABLED);
     }
 
     @SubscribeEvent

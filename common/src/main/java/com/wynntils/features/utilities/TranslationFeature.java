@@ -41,8 +41,38 @@ public class TranslationFeature extends Feature {
     private final Config<TranslationService.TranslationServices> translationService =
             new Config<>(TranslationService.TranslationServices.GOOGLEAPI);
 
+    @Persisted
+    private final Config<String> deeplApiKey = new Config<>("");
+
+    @Persisted
+    private final Config<String> libreTranslateBaseUrl = new Config<>("http://127.0.0.1:5000");
+
+    @Persisted
+    private final Config<String> libreTranslateApiKey = new Config<>("");
+
+    @Persisted
+    private final Config<String> ollamaBaseUrl = new Config<>("http://127.0.0.1:11434");
+
+    @Persisted
+    private final Config<String> ollamaModel = new Config<>("qwen3:4b");
+
     public TranslationFeature() {
         super(ProfileDefault.DISABLED);
+    }
+
+    @Override
+    protected void onConfigUpdate(Config<?> config) {
+        switch (config.getFieldName()) {
+            case "translationService",
+                    "deeplApiKey",
+                    "libreTranslateBaseUrl",
+                    "libreTranslateApiKey",
+                    "ollamaBaseUrl",
+                    "ollamaModel" -> {
+                Services.Translation.resetTranslator();
+            }
+            default -> {}
+        }
     }
 
     @SubscribeEvent

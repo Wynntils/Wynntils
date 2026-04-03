@@ -63,9 +63,10 @@ public class CompatibilityService extends Service {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (WynntilsMod.isDevelopmentEnvironment() || WynntilsMod.isDevelopmentBuild()) return;
+        if (wynncraftVersion == null) return;
 
         if (event.getNewState() == WorldState.WORLD && event.isFirstJoinWorld()) {
-            if (compatibilityTier.shouldChatPrompt()) {
+            if (compatibilityTier.shouldToastPrompt()) {
                 MutableComponent toastMessage = Component.empty()
                         .append(Component.translatable("service.wynntils.compatibility.toastMessage1"))
                         .append(Component.literal("Y").withStyle(Style.EMPTY.withFont(WYNNTILS_KEYBIND_FONT)))
