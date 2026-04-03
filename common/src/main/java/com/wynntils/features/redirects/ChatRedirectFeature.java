@@ -48,7 +48,7 @@ public class ChatRedirectFeature extends Feature {
     private final Config<RedirectAction> heal = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    private final Config<RedirectAction> horse = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> mount = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
     private final Config<RedirectAction> housingMaster = new Config<>(RedirectAction.REDIRECT);
@@ -115,9 +115,6 @@ public class ChatRedirectFeature extends Feature {
         register(new GuildRewardRedirector());
         register(new HealRedirector());
         register(new HealedByOtherRedirector());
-        register(new HorseDespawnedRedirector());
-        register(new HorseScaredRedirector());
-        register(new HorseSpawnFailRedirector());
         register(new HousingMasterRedirector());
         register(new HousingTeleportArrivalCooldownRedirector());
         register(new HousingTeleportArrivalRedirector());
@@ -129,6 +126,8 @@ public class ChatRedirectFeature extends Feature {
         register(new MageTeleportationFailRedirector());
         register(new ManaDeficitRedirector());
         register(new MerchantRedirector());
+        register(new MountScaredRedirector());
+        register(new MountSpawnFailRedirector());
         register(new NoTotemRedirector());
         register(new PotionAlreadyActiveRedirector());
         register(new PotionsMaxRedirector());
@@ -369,72 +368,6 @@ public class ChatRedirectFeature extends Feature {
         }
     }
 
-    private class HorseDespawnedRedirector extends SimpleRedirector {
-        private static final Pattern PATTERN =
-                Pattern.compile("^§dSince you interacted with your inventory, your horse has despawned\\.$");
-
-        @Override
-        public Pattern getPattern() {
-            return PATTERN;
-        }
-
-        @Override
-        public RedirectAction getAction() {
-            return horse.get();
-        }
-
-        @Override
-        protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromComponent(
-                    Component.translatable("feature.wynntils.chatRedirect.horse.notificationDespawned")
-                            .withStyle(ChatFormatting.DARK_PURPLE));
-        }
-    }
-
-    private class HorseScaredRedirector extends SimpleRedirector {
-        private static final Pattern PATTERN =
-                Pattern.compile("^§dYour horse is scared to come out right now, too many mobs are nearby\\.$");
-
-        @Override
-        public Pattern getPattern() {
-            return PATTERN;
-        }
-
-        @Override
-        public RedirectAction getAction() {
-            return horse.get();
-        }
-
-        @Override
-        protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromComponent(
-                    Component.translatable("feature.wynntils.chatRedirect.horse.notificationScared")
-                            .withStyle(ChatFormatting.DARK_RED));
-        }
-    }
-
-    private class HorseSpawnFailRedirector extends SimpleRedirector {
-        private static final Pattern PATTERN =
-                Pattern.compile("^§4(?:\uE008\uE002|\uE001) There is no room for a horse\\.$");
-
-        @Override
-        public Pattern getPattern() {
-            return PATTERN;
-        }
-
-        @Override
-        public RedirectAction getAction() {
-            return horse.get();
-        }
-
-        @Override
-        protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromComponent(
-                    Component.translatable("feature.wynntils.chatRedirect.horse.notificationNoRoom")
-                            .withStyle(ChatFormatting.DARK_RED));
-        }
-    }
-
     private class HousingTeleportArrivalRedirector extends SimpleRedirector {
         private static final Pattern PATTERN = Pattern.compile("^§aYou have flown to your housing island\\.$");
 
@@ -645,6 +578,72 @@ public class ChatRedirectFeature extends Feature {
         protected StyledText getNotification(Matcher matcher) {
             return StyledText.fromComponent(
                     Component.translatable("feature.wynntils.chatRedirect.notEnoughMana.notification")
+                            .withStyle(ChatFormatting.DARK_RED));
+        }
+    }
+
+    private final class MerchantRedirector extends SimpleRedirector {
+        private static final Pattern PATTERN = Pattern.compile(
+                "^§5(?:\uE00A\uE002|\uE001) (?<merchant>.*):§d Thank you for your business\\. Come again!$");
+
+        @Override
+        public Pattern getPattern() {
+            return PATTERN;
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromComponent(Component.translatable(
+                            "feature.wynntils.chatRedirect.merchant.notification", matcher.group("merchant"))
+                    .withStyle(ChatFormatting.LIGHT_PURPLE));
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return merchant.get();
+        }
+    }
+
+    private class MountScaredRedirector extends SimpleRedirector {
+        private static final Pattern PATTERN =
+                Pattern.compile("^§dYour mount is scared to come out right now, too many mobs are nearby\\.$");
+
+        @Override
+        public Pattern getPattern() {
+            return PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return mount.get();
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.mount.notificationScared")
+                            .withStyle(ChatFormatting.DARK_RED));
+        }
+    }
+
+    private class MountSpawnFailRedirector extends SimpleRedirector {
+        private static final Pattern PATTERN =
+                Pattern.compile("^§4(?:\uE008\uE002|\uE001) Your mount does not have enough room to be used!$");
+
+        @Override
+        public Pattern getPattern() {
+            return PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return mount.get();
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.mount.notificationNoRoom")
                             .withStyle(ChatFormatting.DARK_RED));
         }
     }
@@ -965,28 +964,6 @@ public class ChatRedirectFeature extends Feature {
 
             return StyledText.fromString(ChatFormatting.AQUA + sender + ChatFormatting.DARK_AQUA + " " + REWARD_SYMBOL
                     + " " + ChatFormatting.AQUA + recipient + ChatFormatting.DARK_AQUA + ": " + reward);
-        }
-    }
-
-    private final class MerchantRedirector extends SimpleRedirector {
-        private static final Pattern PATTERN = Pattern.compile(
-                "^§5(?:\uE00A\uE002|\uE001) (?<merchant>.*):§d Thank you for your business\\. Come again!$");
-
-        @Override
-        public Pattern getPattern() {
-            return PATTERN;
-        }
-
-        @Override
-        protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromComponent(Component.translatable(
-                            "feature.wynntils.chatRedirect.merchant.notification", matcher.group("merchant"))
-                    .withStyle(ChatFormatting.LIGHT_PURPLE));
-        }
-
-        @Override
-        public RedirectAction getAction() {
-            return merchant.get();
         }
     }
 

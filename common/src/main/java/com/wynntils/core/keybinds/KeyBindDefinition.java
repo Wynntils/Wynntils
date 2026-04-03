@@ -82,7 +82,7 @@ public record KeyBindDefinition(
     // endregion
 
     // region Combat
-    public static final KeyBindDefinition MOUNT_HORSE = register(
+    public static final KeyBindDefinition RIDE_MOUNT = register(
             "mountHorse",
             "Mount Horse",
             Managers.KeyBind.COMBAT_CATEGORY,

@@ -23,10 +23,10 @@ import com.wynntils.functions.CombatXpFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.GuildFunctions;
 import com.wynntils.functions.HadesPartyFunctions;
-import com.wynntils.functions.HorseFunctions;
 import com.wynntils.functions.InventoryFunctions;
 import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
+import com.wynntils.functions.MountFunctions;
 import com.wynntils.functions.ProfessionFunctions;
 import com.wynntils.functions.RaidFunctions;
 import com.wynntils.functions.SocialFunctions;
@@ -600,16 +600,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new HadesPartyFunctions.HadesPartyMemberNameFunction());
         registerFunction(new HadesPartyFunctions.HadesPartyMemberUuidFunction());
 
-        registerFunction(new HorseFunctions.CappedHorseLevelFunction());
-        registerFunction(new HorseFunctions.CappedHorseTotalLevelTimeFunction());
-        registerFunction(new HorseFunctions.CappedHorseXpFunction());
-        registerFunction(new HorseFunctions.HorseLevelFunction());
-        registerFunction(new HorseFunctions.HorseLevelMaxFunction());
-        registerFunction(new HorseFunctions.HorseLevelTimeFunction());
-        registerFunction(new HorseFunctions.HorseNameFunction());
-        registerFunction(new HorseFunctions.HorseTierFunction());
-        registerFunction(new HorseFunctions.HorseXpFunction());
-
         registerFunction(new InventoryFunctions.AccessoryDurabilityFunction());
         registerFunction(new InventoryFunctions.AllShinyStatsFunction());
         registerFunction(new InventoryFunctions.ArmorDurabilityFunction());
@@ -671,6 +661,11 @@ public final class FunctionManager extends Manager {
         registerFunction(new MinecraftFunctions.MinecraftEffectDurationFunction());
         registerFunction(new MinecraftFunctions.MyLocationFunction());
         registerFunction(new MinecraftFunctions.TicksFunction());
+
+        registerFunction(new MountFunctions.CappedMountStatFunction());
+        registerFunction(new MountFunctions.MountStatFunction());
+        registerFunction(new MountFunctions.MountStatMaxFunction());
+        registerFunction(new MountFunctions.MountNameFunction());
 
         registerFunction(new ProfessionFunctions.LastHarvestMaterialLevelFunction());
         registerFunction(new ProfessionFunctions.LastHarvestMaterialNameFunction());

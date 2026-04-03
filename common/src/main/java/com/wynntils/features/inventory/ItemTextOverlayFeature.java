@@ -25,13 +25,14 @@ import com.wynntils.models.items.items.game.CrafterBagItem;
 import com.wynntils.models.items.items.game.DungeonKeyItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
-import com.wynntils.models.items.items.game.HorseItem;
+import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.items.game.PotionItem;
 import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.models.items.items.gui.TradeMarketIdentificationFilterItem;
+import com.wynntils.models.mount.type.MountStat;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
@@ -99,13 +100,13 @@ public class ItemTextOverlayFeature extends Feature {
     private final Config<TextShadow> gatheringToolTierShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
-    private final Config<Boolean> horseTierEnabled = new Config<>(true);
+    private final Config<Boolean> mountItemEnabled = new Config<>(true);
 
     @Persisted
-    private final Config<Boolean> horseTierRomanNumerals = new Config<>(false);
+    private final Config<MountStat> mountItemStat = new Config<>(MountStat.POTENTIAL);
 
     @Persisted
-    private final Config<TextShadow> horseTierShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<TextShadow> mountItemShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
     private final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
@@ -202,8 +203,8 @@ public class ItemTextOverlayFeature extends Feature {
         if (wynnItem instanceof GatheringToolItem gatheringToolItem) {
             return new GatheringToolOverlay(gatheringToolItem);
         }
-        if (wynnItem instanceof HorseItem horseItem) {
-            return new HorseOverlay(horseItem);
+        if (wynnItem instanceof MountItem mountItem) {
+            return new MountItemOverlay(mountItem);
         }
         if (wynnItem instanceof PowderItem powderItem) {
             return new PowderOverlay(powderItem);
@@ -403,26 +404,42 @@ public class ItemTextOverlayFeature extends Feature {
         }
     }
 
-    private final class HorseOverlay implements TextOverlayInfo {
-        private final HorseItem item;
+    private final class MountItemOverlay implements TextOverlayInfo {
+        private final MountItem item;
 
-        private HorseOverlay(HorseItem item) {
+        private MountItemOverlay(MountItem item) {
             this.item = item;
         }
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return horseTierEnabled.get();
+            return mountItemEnabled.get();
         }
 
         @Override
         public TextOverlay getTextOverlay() {
-            String text = valueToString(item.getTier().getNumeral(), horseTierRomanNumerals.get());
+            int value = getSelectedMountStatValue();
+            String text = String.valueOf(value);
+            float scale = text.length() >= 4 ? 0.75f : 0.9f;
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
-                    .withTextShadow(horseTierShadow.get());
+                    .withTextShadow(mountItemShadow.get());
 
-            return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
+            return new TextOverlay(new TextRenderTask(text, style), -1, 1, scale);
+        }
+
+        private int getSelectedMountStatValue() {
+            return switch (mountItemStat.get()) {
+                case ACCELERATION -> item.getAcceleration().current();
+                case ALTITUDE -> item.getAltitude().current();
+                case ENERGY -> item.getEnergy().current();
+                case HANDLING -> item.getHandling().current();
+                case POTENTIAL -> item.getPotential();
+                case POWERUP -> item.getPowerup().current();
+                case SPEED -> item.getSpeed().current();
+                case TOUGHNESS -> item.getToughness().current();
+                case TRAINING -> item.getTraining().current();
+            };
         }
     }
 
