@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells.type;
@@ -7,6 +7,7 @@ package com.wynntils.models.spells.type;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.character.type.ClassType;
 import java.util.Arrays;
+import java.util.List;
 
 public enum SpellType {
     ARROW_STORM(ClassType.ARCHER, 1, "Arrow Storm", 6, 0),
@@ -16,7 +17,7 @@ public enum SpellType {
 
     SPIN_ATTACK(ClassType.ASSASSIN, 1, "Spin Attack", 6, 0),
     DASH(ClassType.ASSASSIN, 2, "Dash", 2, 0),
-    MULTI_HIT(ClassType.ASSASSIN, 3, "Multi Hit", 8, 0),
+    MULTIHIT(ClassType.ASSASSIN, 3, "Multihit", 8, 0),
     SMOKE_BOMB(ClassType.ASSASSIN, 4, "Smoke Bomb", 8, 0),
 
     BASH(ClassType.WARRIOR, 1, "Bash", 6, 0),
@@ -42,21 +43,25 @@ public enum SpellType {
 
     public static final int MAX_SPELL = 4;
 
-    private static final SpellDirection[] RLR = {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.RIGHT};
-    private static final SpellDirection[] RRR = {SpellDirection.RIGHT, SpellDirection.RIGHT, SpellDirection.RIGHT};
-    private static final SpellDirection[] RLL = {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.LEFT};
-    private static final SpellDirection[] RRL = {SpellDirection.RIGHT, SpellDirection.RIGHT, SpellDirection.LEFT};
-    // Archer only
-    private static final SpellDirection[] LRL = SpellDirection.invertArray(RLR);
-    private static final SpellDirection[] LLL = SpellDirection.invertArray(RRR);
-    private static final SpellDirection[] LRR = SpellDirection.invertArray(RLL);
-    private static final SpellDirection[] LLR = SpellDirection.invertArray(RRL);
+    private static final List<SpellDirection[]> SPELL_COMBOS = List.of(
+            new SpellDirection[] {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.RIGHT},
+            new SpellDirection[] {SpellDirection.RIGHT, SpellDirection.RIGHT, SpellDirection.RIGHT},
+            new SpellDirection[] {SpellDirection.RIGHT, SpellDirection.LEFT, SpellDirection.LEFT},
+            new SpellDirection[] {SpellDirection.RIGHT, SpellDirection.RIGHT, SpellDirection.LEFT});
 
     private final ClassType classType;
     private final int spellNumber;
     private final String name;
     private final int startManaCost;
     private final int gradeManaChange;
+
+    SpellType(ClassType classType, int spellNumber, String name, int startManaCost, int gradeManaChange) {
+        this.classType = classType;
+        this.spellNumber = spellNumber;
+        this.name = name;
+        this.startManaCost = startManaCost;
+        this.gradeManaChange = gradeManaChange;
+    }
 
     public ClassType getClassType() {
         return classType;
@@ -70,12 +75,16 @@ public enum SpellType {
         return name;
     }
 
-    SpellType(ClassType classType, int spellNumber, String name, int startManaCost, int gradeManaChange) {
-        this.classType = classType;
-        this.spellNumber = spellNumber;
-        this.name = name;
-        this.startManaCost = startManaCost;
-        this.gradeManaChange = gradeManaChange;
+    public String getGenericName() {
+        return forClass(ClassType.NONE, getSpellNumber()).getName();
+    }
+
+    public String getGenericAndSpecificName() {
+        return getGenericName() + " (" + getName() + ")";
+    }
+
+    public SpellType forOtherClass(ClassType otherClass) {
+        return forClass(otherClass, getSpellNumber());
     }
 
     public static SpellType fromName(String name) {
@@ -92,10 +101,6 @@ public enum SpellType {
         return null;
     }
 
-    public SpellType forOtherClass(ClassType otherClass) {
-        return forClass(otherClass, getSpellNumber());
-    }
-
     public static SpellType forClass(ClassType classRequired, int spellNumber) {
         for (SpellType spellType : values()) {
             if (spellType.classType == classRequired && spellType.spellNumber == spellNumber) {
@@ -105,23 +110,43 @@ public enum SpellType {
         return null;
     }
 
-    public String getGenericName() {
-        return forClass(ClassType.NONE, getSpellNumber()).getName();
-    }
+    public static int getSpellNumberFromDirectionArray(SpellDirection[] spellDirections) {
+        SpellDirection[] normalizedDirections = spellDirections[0] == SpellDirection.LEFT
+                ? SpellDirection.invertArray(spellDirections)
+                : spellDirections;
 
-    public String getGenericAndSpecificName() {
-        return getGenericName() + " (" + getName() + ")";
+        for (int spellNumber = 1; spellNumber <= SpellType.MAX_SPELL; spellNumber++) {
+            if (Arrays.equals(normalizedDirections, SPELL_COMBOS.get(spellNumber - 1))) {
+                return spellNumber;
+            }
+        }
+        return -1;
     }
 
     public static SpellType fromSpellDirectionArray(SpellDirection[] casted) {
-        int spellNumber = 4;
-        if (Arrays.equals(casted, RLR) || Arrays.equals(casted, LRL)) {
-            spellNumber = 1;
-        } else if (Arrays.equals(casted, RRR) || Arrays.equals(casted, LLL)) {
-            spellNumber = 2;
-        } else if (Arrays.equals(casted, RLL) || Arrays.equals(casted, LRR)) {
-            spellNumber = 3;
-        }
+        int spellNumber = getSpellNumberFromDirectionArray(casted);
+        if (spellNumber == -1) return null;
+
         return forClass(Models.Character.getClassType(), spellNumber);
+    }
+
+    public static SpellDirection[] getSpellDirectionArrayFromString(String casted) {
+        // Convert e.g. "rlr" into a spell direction array
+        SpellDirection[] spellDirections = new SpellDirection[casted.length()];
+        for (int i = 0; i < spellDirections.length; i++) {
+            char directionChar = casted.charAt(i);
+            if (directionChar == 'r' || directionChar == 'R') {
+                spellDirections[i] = SpellDirection.RIGHT;
+            } else if (directionChar == 'l' || directionChar == 'L') {
+                spellDirections[i] = SpellDirection.LEFT;
+            } else {
+                throw new IllegalArgumentException("Invalid spell direction character: " + directionChar);
+            }
+        }
+        return spellDirections;
+    }
+
+    public static SpellType fromSpellString(String casted) {
+        return fromSpellDirectionArray(getSpellDirectionArrayFromString(casted));
     }
 }
