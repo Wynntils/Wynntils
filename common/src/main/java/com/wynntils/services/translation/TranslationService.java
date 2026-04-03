@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2018-2024.
+ * Copyright © Wynntils 2018-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.translation;
@@ -70,7 +70,7 @@ public final class TranslationService extends Service {
      */
     public TranslationProvider getTranslator(TranslationService.TranslationServices translationService) {
         // These might not have been created yet, or reset by config changing
-        if (translator == null) {
+        if (translator == null || !translationService.serviceClass.isInstance(translator)) {
             translator = getService(translationService);
         }
         return translator;
@@ -91,7 +91,10 @@ public final class TranslationService extends Service {
     }
 
     public enum TranslationServices {
-        GOOGLEAPI(GoogleApiTranslationProvider.class);
+        GOOGLEAPI(GoogleApiTranslationProvider.class),
+        DEEPL(DeepLTranslationProvider.class),
+        LIBRETRANSLATE(LibreTranslateProvider.class),
+        OLLAMA(OllamaTranslationProvider.class);
 
         // This is a demo service, not used in production.
         // Users accidentally enabling this service could cause confusion and frustration.
