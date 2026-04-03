@@ -419,8 +419,6 @@
   "feature.wynntils.deathCoordinates.diedAt": "Je bent gestorven op ",
   "feature.wynntils.deathCoordinates.name": "Dood coördinaten",
   "feature.wynntils.deathCoordinates.showDeathCoordinates.description": "Moeten de coördinaten van je laatste dood in de chat worden weergegeven?",
-  "feature.wynntils.dialogueOptionOverride.description": "Voegt de mogelijkheid toe om dialoogopties te selecteren met slot knoppen.",
-  "feature.wynntils.dialogueOptionOverride.name": "Dialoogknop overschrijven",
   "feature.wynntils.discordRichPresence.description": "Voegt Discord Rich Presence ondersteuning toe.",
   "feature.wynntils.discordRichPresence.disableInStream.description": "Moet de rich presence worden uitgeschakeld in streamer modus?",
   "feature.wynntils.discordRichPresence.disableInStream.name": "Uitschakelen in streamer modus",

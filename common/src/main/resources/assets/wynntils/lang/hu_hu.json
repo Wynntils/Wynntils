@@ -419,8 +419,6 @@
   "feature.wynntils.deathCoordinates.diedAt": "Meghaltál itt: ",
   "feature.wynntils.deathCoordinates.name": "Halál koordináták",
   "feature.wynntils.deathCoordinates.showDeathCoordinates.description": "Megjelenjenek az utolsó halál koordinátái a csevegésben?",
-  "feature.wynntils.dialogueOptionOverride.description": "Lehetővé teszi a párbeszéd opciók kiválasztását slot gombokkal.",
-  "feature.wynntils.dialogueOptionOverride.name": "Párbeszéd gomb felülírás",
   "feature.wynntils.discordRichPresence.description": "Discord Rich Presence támogatást ad hozzá.",
   "feature.wynntils.discordRichPresence.disableInStream.description": "Legyen letiltva a rich presence, amikor streamer módban van?",
   "feature.wynntils.discordRichPresence.disableInStream.name": "Letiltás streamer módban",

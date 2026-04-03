@@ -422,8 +422,6 @@
   "feature.wynntils.deathCoordinates.diedAt": "Du bist gestorben bei ",
   "feature.wynntils.deathCoordinates.name": "Todeskoordinaten",
   "feature.wynntils.deathCoordinates.showDeathCoordinates.description": "Sollen die Koordinaten deines letzten Todes im Chat angezeigt werden?",
-  "feature.wynntils.dialogueOptionOverride.description": "Fügt die Möglichkeit hinzu, Dialogoptionen mit Slot-Tasten auszuwählen.",
-  "feature.wynntils.dialogueOptionOverride.name": "Dialogtasten-Überschreibung",
   "feature.wynntils.discordRichPresence.description": "Fügt Unterstützung für Discord Rich Presence hinzu.",
   "feature.wynntils.discordRichPresence.disableInStream.description": "Soll die Rich Presence im Streamer-Modus deaktiviert werden?",
   "feature.wynntils.discordRichPresence.disableInStream.name": "Im Streamer-Modus deaktivieren",

@@ -419,8 +419,6 @@
   "feature.wynntils.deathCoordinates.diedAt": "あなたはここで死にました ",
   "feature.wynntils.deathCoordinates.name": "死亡座標",
   "feature.wynntils.deathCoordinates.showDeathCoordinates.description": "最後の死亡座標をチャットに表示しますか？",
-  "feature.wynntils.dialogueOptionOverride.description": "スロットボタンでダイアログオプションを選択する機能を追加します。",
-  "feature.wynntils.dialogueOptionOverride.name": "ダイアログボタンオーバーライド",
   "feature.wynntils.discordRichPresence.description": "Discord Rich Presenceのサポートを追加します。",
   "feature.wynntils.discordRichPresence.disableInStream.description": "ストリーマーモードのときにリッチプレゼンスを無効にしますか？",
   "feature.wynntils.discordRichPresence.disableInStream.name": "ストリーマーモードで無効化",

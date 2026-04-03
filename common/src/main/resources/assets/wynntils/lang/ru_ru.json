@@ -520,8 +520,6 @@
   "feature.wynntils.deathCoordinates.diedAt": "Вы умерли в ",
   "feature.wynntils.deathCoordinates.name": "Координаты смерти",
   "feature.wynntils.deathCoordinates.showDeathCoordinates.description": "Должны ли координаты вашей последней смерти отображаться в чате?",
-  "feature.wynntils.dialogueOptionOverride.description": "Добавляет возможность выбирать варианты диалога с помощью кнопок слотов.",
-  "feature.wynntils.dialogueOptionOverride.name": "Переопределение кнопки диалога",
   "feature.wynntils.disableRecipeBook.description": "Отключает книгу рецептов, поскольку она не используется в Wynncraft.",
   "feature.wynntils.disableRecipeBook.name": "Отключить книгу рецептов",
   "feature.wynntils.discordRichPresence.description": "Добавляет поддержку Discord Rich Presence.",

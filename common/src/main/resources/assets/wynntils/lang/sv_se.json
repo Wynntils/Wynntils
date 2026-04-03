@@ -425,8 +425,6 @@
   "feature.wynntils.deathCoordinates.diedAt": "Du dog vid ",
   "feature.wynntils.deathCoordinates.name": "Dödskoordinater",
   "feature.wynntils.deathCoordinates.showDeathCoordinates.description": "Ska koordinaterna för din senaste död visas i chatten?",
-  "feature.wynntils.dialogueOptionOverride.description": "Lägger till möjligheten att välja dialogalternativ med slotknappar.",
-  "feature.wynntils.dialogueOptionOverride.name": "Dialogknapp Override",
   "feature.wynntils.disableRecipeBook.description": "Inaktiverar receptboken, eftersom den inte används i Wynncraft.",
   "feature.wynntils.disableRecipeBook.name": "Inaktivera Receptbok",
   "feature.wynntils.discordRichPresence.description": "Lägger till stöd för Discord Rich Presence.",
