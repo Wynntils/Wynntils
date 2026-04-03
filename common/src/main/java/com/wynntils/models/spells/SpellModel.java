@@ -145,13 +145,6 @@ public final class SpellModel extends Model {
         return SPELL_PACKET_QUEUE.peek();
     }
 
-    public void sendNextSpell() {
-        if (SPELL_PACKET_QUEUE.isEmpty()) return;
-
-        SpellDirection spellDirection = SPELL_PACKET_QUEUE.poll();
-        spellDirection.getSendPacketRunnable().run();
-    }
-
     public void setHideSpellInputs(boolean shouldHide) {
         if (shouldHide) {
             hiddenSegments.add(SpellInputsSegment.class);

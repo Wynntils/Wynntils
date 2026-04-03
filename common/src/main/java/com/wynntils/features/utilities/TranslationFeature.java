@@ -61,11 +61,6 @@ public class TranslationFeature extends Feature {
     }
 
     @Override
-    public void onEnable() {
-        applyProviderConfig();
-    }
-
-    @Override
     protected void onConfigUpdate(Config<?> config) {
         switch (config.getFieldName()) {
             case "translationService",
@@ -74,7 +69,6 @@ public class TranslationFeature extends Feature {
                     "libreTranslateApiKey",
                     "ollamaBaseUrl",
                     "ollamaModel" -> {
-                applyProviderConfig();
                 Services.Translation.resetTranslator();
             }
             default -> {}
