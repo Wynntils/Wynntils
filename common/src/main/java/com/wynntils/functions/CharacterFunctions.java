@@ -264,6 +264,7 @@ public class CharacterFunctions {
         }
     }
 
+    // TODO: Change this to IsRidingMountFunction after parsing energy action bar segment.
     public static class IsRidingHorseFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {

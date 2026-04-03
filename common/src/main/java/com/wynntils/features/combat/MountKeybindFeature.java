@@ -37,10 +37,10 @@ public class MountKeybindFeature extends Feature {
     private static final int DEFAULT_SUMMON_DELAY_TICKS = 10;
     private static final int RESTORE_TIMEOUT_TICKS = 40;
 
-    // TODO: Check if there are new error messages, as of writing this Wyverns and Adasaurs haven't been released yet
+    // TODO: Check if there are new error messages
     private static final List<String> MOUNT_ERROR_MESSAGES = List.of(
+            "Your mount is scared to come out right now, too many mobs are nearby.",
             "Your mount does not have enough room to be used!",
-            "There is no room for a horse.",
             "You cannot interact with your horse at the moment.",
             "You cannot use your horse here!",
             "Your horse spawn was disabled (in vanish)!",
@@ -48,7 +48,7 @@ public class MountKeybindFeature extends Feature {
             "You cannot use your vehicle here!");
 
     @RegisterKeyBind
-    private final KeyBind rideMountKeybind = KeyBindDefinition.RIDE_MOUNT.create(this::mountHorse);
+    private final KeyBind rideMountKeybind = KeyBindDefinition.RIDE_MOUNT.create(this::rideMount);
 
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;
@@ -74,7 +74,7 @@ public class MountKeybindFeature extends Feature {
         if (mountInventorySlot == -1) return;
         if (McUtils.inventory().selected != mountInventorySlot) return;
 
-        mountHorse();
+        rideMount();
         event.setCanceled(true);
     }
 
@@ -84,22 +84,22 @@ public class MountKeybindFeature extends Feature {
                 .anyMatch(msg -> e.getMessage().getString().contains(msg));
     }
 
-    private void mountHorse() {
+    private void rideMount() {
         if (!Models.WorldState.onWorld()) return;
 
         LocalPlayer player = McUtils.player();
         if (player.getVehicle() != null) {
-            postHorseErrorMessage(MountHorseStatus.ALREADY_RIDING);
+            postMountErrorMessage(RideMountStatus.ALREADY_RIDING);
             return;
         }
 
         int mountInventorySlot = Models.Mount.findMountSlotNum();
         if (mountInventorySlot == -1) {
-            postHorseErrorMessage(MountHorseStatus.NO_HORSE);
+            postMountErrorMessage(RideMountStatus.NO_MOUNT);
             return;
         }
         if (mountInventorySlot > 8) {
-            postHorseErrorMessage(MountHorseStatus.CONFLICTING_SLOTS);
+            postMountErrorMessage(RideMountStatus.CONFLICTING_SLOTS);
             return;
         }
 
@@ -140,19 +140,19 @@ public class MountKeybindFeature extends Feature {
                 () -> waitForMountAndRestore(previousSlot, previousSlotStack, ticksLeft - 1));
     }
 
-    private void postHorseErrorMessage(MountHorseStatus status) {
+    private void postMountErrorMessage(RideMountStatus status) {
         Managers.Notification.queueMessage(
                 Component.translatable(status.getTranslationKey()).withStyle(ChatFormatting.DARK_RED));
     }
 
-    private enum MountHorseStatus {
-        NO_HORSE("feature.wynntils.mountKeybind.noHorse"),
+    private enum RideMountStatus {
+        NO_MOUNT("feature.wynntils.mountKeybind.noHorse"),
         ALREADY_RIDING("feature.wynntils.mountKeybind.alreadyRiding"),
         CONFLICTING_SLOTS("feature.wynntils.mountKeybind.conflictingSlots");
 
         private final String translationKey;
 
-        MountHorseStatus(String tcString) {
+        RideMountStatus(String tcString) {
             this.translationKey = tcString;
         }
 

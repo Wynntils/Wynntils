@@ -84,7 +84,7 @@ public record KeyBindDefinition(
     // region Combat
     public static final KeyBindDefinition RIDE_MOUNT = register(
             "mountHorse",
-            "Ride mount",
+            "Mount Horse",
             Managers.KeyBind.COMBAT_CATEGORY,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_R,
