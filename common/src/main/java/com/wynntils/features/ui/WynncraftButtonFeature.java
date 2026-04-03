@@ -5,8 +5,6 @@
 package com.wynntils.features.ui;
 
 import com.google.common.collect.Lists;
-import com.google.common.hash.Hashing;
-import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
@@ -18,9 +16,9 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.mc.event.TitleScreenRebuildEvent;
 import com.wynntils.models.worlds.type.ServerRegion;
 import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.screens.update.UpdateScreen;
@@ -32,11 +30,8 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Consumer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConnectScreen;
@@ -44,14 +39,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.client.multiplayer.ServerStatusPinger;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
-import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.network.EventLoopGroupHolder;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.apache.commons.lang3.Validate;
 
 @ConfigCategory(Category.UI)
 public class WynncraftButtonFeature extends Feature {
@@ -85,10 +76,25 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onTitleScreenInit(TitleScreenInitEvent.Post event) {
-        TitleScreen titleScreen = event.getTitleScreen();
+    public void onTitleScreenInitPre(TitleScreenInitEvent.Pre event) {
+        if (!firstTitleScreenInit || !autoConnect.get()) return;
 
-        addWynncraftButton(titleScreen);
+        firstTitleScreenInit = false;
+        if (Managers.Download.graphState().error() && cancelAutoJoin.get() && !ignoreFailedDownloads.get()) {
+            WynntilsMod.warn("Downloads have failed, auto join is cancelled.");
+            return;
+        } else if (Services.Update.shouldPromptUpdate() && cancelAutoJoin.get()) {
+            WynntilsMod.info("Cancelling auto join, update available");
+            return;
+        }
+
+        ServerData wynncraftServer = getWynncraftServer();
+        connectToServer(wynncraftServer);
+    }
+
+    @SubscribeEvent
+    public void onTitleScreenInitPost(TitleScreenInitEvent.Post event) {
+        addWynncraftButton(event.getTitleScreen());
     }
 
     @SubscribeEvent
@@ -109,24 +115,8 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onScreenInit(ScreenInitEvent.Pre event) {
-        if (!(event.getScreen() instanceof TitleScreen titleScreen)) return;
-
-        if (firstTitleScreenInit && autoConnect.get()) {
-            firstTitleScreenInit = false;
-            if (Managers.Download.graphState().error() && cancelAutoJoin.get() && !ignoreFailedDownloads.get()) {
-                WynntilsMod.warn("Downloads have failed, auto join is cancelled.");
-                return;
-            } else if (Services.Update.shouldPromptUpdate() && cancelAutoJoin.get()) {
-                WynntilsMod.info("Cancelling auto join, update available");
-                return;
-            }
-            ServerData wynncraftServer = getWynncraftServer();
-            connectToServer(wynncraftServer);
-            return;
-        }
-
-        addWynncraftButton(titleScreen);
+    public void onTitleScreenRebuild(TitleScreenRebuildEvent.Post event) {
+        addWynncraftButton(event.getTitleScreen());
     }
 
     private void addWynncraftButton(TitleScreen titleScreen) {
@@ -184,6 +174,8 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     private static class WynncraftButton extends Button.Plain {
+        // Keep using the bundled Wynncraft icon until dynamic server-icon loading is restored.
+        private static final Identifier BUTTON_ICON = Texture.WYNNCRAFT_ICON.identifier();
         private static final List<Component> CONNECT_TOOLTIP =
                 List.of(Component.translatable("feature.wynntils.wynncraftButton.connect"));
         private static final List<Component> DOWNLOAD_TOOLTIP = List.of(
@@ -193,7 +185,6 @@ public class WynncraftButtonFeature extends Feature {
                 List.of(Component.translatable("feature.wynntils.wynncraftButton.update"));
         private final Screen titleScreen;
         private final ServerData serverData;
-        private final ServerIcon serverIcon;
         private final WarningType warningType;
         private final boolean ignoreFailedDownloads;
         private final List<Component> tooltip;
@@ -209,9 +200,6 @@ public class WynncraftButtonFeature extends Feature {
             super(x, y, 20, 20, Component.literal(""), onPress, Button.DEFAULT_NARRATION);
             this.serverData = serverData;
             this.titleScreen = titleScreen;
-
-            this.serverIcon = new ServerIcon(serverData);
-            this.serverIcon.loadIdentifier(false);
             this.warningType = warningType;
             this.ignoreFailedDownloads = ignoreFailedDownloads;
 
@@ -227,14 +215,9 @@ public class WynncraftButtonFeature extends Feature {
         @Override
         public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
             super.renderContents(guiGraphics, mouseX, mouseY, partialTicks);
-            if (serverIcon == null || serverIcon.getServerIconLocation() == null) {
-                return;
-            }
-
-            // Insets the icon by 3
             RenderUtils.drawScalingTexturedRect(
                     guiGraphics,
-                    serverIcon.getServerIconLocation(),
+                    BUTTON_ICON,
                     CommonColors.WHITE.withAlpha(this.alpha),
                     this.getX() + 3,
                     this.getY() + 3,
@@ -271,120 +254,6 @@ public class WynncraftButtonFeature extends Feature {
             if (isHovered) {
                 guiGraphics.setTooltipForNextFrame(
                         Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
-            }
-        }
-    }
-
-    /**
-     * Provides the icon for a server in the form of a {@link Identifier} with utility methods
-     */
-    private static final class ServerIcon {
-        private static final Identifier FALLBACK;
-
-        private final ServerData server;
-        private Identifier serverIconLocation;
-        private final Consumer<ServerIcon> onDone;
-
-        static {
-            FALLBACK = Texture.WYNNCRAFT_ICON.identifier();
-        }
-
-        /**
-         * @param server {@link ServerData} of server
-         * @param onDone consumer when done, can be null if none
-         */
-        private ServerIcon(ServerData server, Consumer<ServerIcon> onDone) {
-            this.server = server;
-            this.onDone = onDone;
-            this.serverIconLocation = FALLBACK;
-        }
-
-        private void loadIdentifier(boolean allowStale) {
-            // Try default
-            @SuppressWarnings("deprecation")
-            Identifier destination = Identifier.withDefaultNamespace(
-                    "servers/" + Hashing.sha1().hashUnencodedChars(server.ip) + "/icon");
-
-            // If someone converts this to get the actual ServerData used by the gui, check
-            // ServerData#pinged here and
-            // set it later
-            if (allowStale && McUtils.mc().getTextureManager().getTexture(destination) != null) {
-                serverIconLocation = destination;
-                onDone();
-                return;
-            }
-
-            try {
-                ServerStatusPinger pinger = new ServerStatusPinger();
-                // FIXME: DynamicTexture issues in loadServerIcon
-                //        loadServerIcon(destination);
-                pinger.pingServer(
-                        server,
-                        () -> {},
-                        this::onDone,
-                        EventLoopGroupHolder.remote(McUtils.mc().options.useNativeTransport()));
-            } catch (Exception e) {
-                WynntilsMod.warn("Failed to ping server", e);
-                onDone();
-            }
-        }
-
-        private ServerIcon(ServerData server) {
-            this(server, null);
-        }
-
-        /**
-         * Returns whether getting the icon has succeeded.
-         */
-        public boolean isSuccess() {
-            return !FALLBACK.equals(serverIconLocation);
-        }
-
-        /**
-         * Returns the {@link ServerData} used to get the icon
-         */
-        public ServerData getServer() {
-            return server;
-        }
-
-        /**
-         * Returns the icon as a {@link Identifier} if found, else unknown server texture
-         */
-        private synchronized Identifier getServerIconLocation() {
-            return serverIconLocation;
-        }
-
-        private void onDone() {
-            if (onDone != null) onDone.accept(this);
-        }
-
-        // Modified from
-        // net.minecraft.client.gui.screens.multiplayer.ServerSelectionList#uploadServerIcon
-        private synchronized void loadServerIcon(Identifier destination) {
-            byte[] iconBytes = server.getIconBytes();
-            if (iconBytes == null) {
-                // failed to ping server or icon wasn't sent
-                WynntilsMod.warn("Unable to load icon");
-                serverIconLocation = FALLBACK;
-                return;
-            }
-            ByteBuffer iconBytesBuffer = ByteBuffer.wrap(iconBytes);
-
-            try (NativeImage nativeImage = NativeImage.read(iconBytesBuffer)) {
-                Validate.validState(nativeImage.getWidth() == 64, "Must be 64 pixels wide");
-                Validate.validState(nativeImage.getHeight() == 64, "Must be 64 pixels high");
-
-                synchronized (this) {
-                    McUtils.mc().execute(() -> {
-                        McUtils.mc()
-                                .getTextureManager()
-                                .register(destination, new DynamicTexture(() -> "Wynncraft Server Icon", nativeImage));
-                        serverIconLocation = destination;
-                    });
-                }
-            } catch (IOException e) {
-                WynntilsMod.error("Unable to read server image: " + server.name, e);
-                serverIconLocation = FALLBACK;
             }
         }
     }
