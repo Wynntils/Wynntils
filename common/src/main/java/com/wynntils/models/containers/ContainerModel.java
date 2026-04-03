@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.containers;
@@ -177,7 +177,7 @@ public final class ContainerModel extends Model {
         }
 
         for (ProfessionType type : ProfessionType.craftingProfessionTypes()) {
-            registerContainer(new CraftingStationContainer(Pattern.compile(type.getDisplayName()), type));
+            registerContainer(new CraftingStationContainer(type));
         }
 
         for (StoreItemType type : StoreItemType.values()) {
