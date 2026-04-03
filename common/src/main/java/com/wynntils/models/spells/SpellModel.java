@@ -26,6 +26,7 @@ import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,6 +40,8 @@ public final class SpellModel extends Model {
     private static final Queue<SpellDirection> SPELL_PACKET_QUEUE = new LinkedList<>();
 
     private final Set<Class<? extends ActionBarSegment>> hiddenSegments = new HashSet<>();
+
+    private final EnumMap<SpellType, Integer> ticksSinceSpecificSpellMap = new EnumMap<>(SpellType.class);
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
     private String lastBurstSpellName = "";
@@ -98,6 +101,7 @@ public final class SpellModel extends Model {
 
         lastBurstSpellName = e.getSpellType().getName();
         lastSpellName = e.getSpellType().getName();
+        ticksSinceSpecificSpellMap.put(e.getSpellType(), 0);
     }
 
     @SubscribeEvent
@@ -114,6 +118,7 @@ public final class SpellModel extends Model {
             repeatedBurstSpellCount = 0;
             ticksSinceCastBurst = 0;
         }
+        ticksSinceSpecificSpellMap.replaceAll((number, tick) -> tick + 1);
     }
 
     @SubscribeEvent
@@ -125,6 +130,7 @@ public final class SpellModel extends Model {
         repeatedSpellCount = 0;
         ticksSinceCastBurst = 0;
         ticksSinceCast = 0;
+        ticksSinceSpecificSpellMap.clear();
     }
 
     @SubscribeEvent
@@ -187,6 +193,10 @@ public final class SpellModel extends Model {
 
     public int getTicksSinceCast() {
         return ticksSinceCast;
+    }
+
+    public int getTicksSinceCast(String name) {
+        return ticksSinceSpecificSpellMap.getOrDefault(SpellType.fromName(name), -1);
     }
 
     private void updateFromSpellSegment(SpellInputsSegment spellInputsSegment) {
