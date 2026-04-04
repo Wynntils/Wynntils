@@ -41,7 +41,6 @@ public enum GearType {
             "\uE000",
             "helmet",
             "helmet_skin",
-            "helmet",
             List.of(
                     Items.LEATHER_HELMET,
                     Items.CHAINMAIL_HELMET,
@@ -68,8 +67,6 @@ public enum GearType {
             Items.LEATHER_LEGGINGS,
             "\uE002",
             "leggings",
-            null,
-            "legging",
             List.of(
                     Items.CHAINMAIL_LEGGINGS,
                     Items.IRON_LEGGINGS,
@@ -82,8 +79,6 @@ public enum GearType {
             Items.LEATHER_BOOTS,
             "\uE003",
             "boots",
-            null,
-            "boot",
             List.of(
                     Items.CHAINMAIL_BOOTS,
                     Items.IRON_BOOTS,
@@ -99,7 +94,6 @@ public enum GearType {
     private final String frameSpriteCode;
     private final String modelKey;
     private final String skinModelKey;
-    private final String apiKey;
     private final List<Item> otherItems;
     private final int encodingId;
 
@@ -112,7 +106,6 @@ public enum GearType {
             String frameSpriteCode,
             String modelKey,
             String skinModelKey,
-            String apiKey,
             List<Item> otherItems,
             int encodingId) {
         this.classReq = classReq;
@@ -120,7 +113,6 @@ public enum GearType {
         this.frameSpriteCode = frameSpriteCode;
         this.modelKey = modelKey;
         this.skinModelKey = skinModelKey;
-        this.apiKey = apiKey;
         this.otherItems = otherItems;
         this.encodingId = encodingId;
     }
@@ -132,7 +124,7 @@ public enum GearType {
             String modelKey,
             List<Item> otherItems,
             int encodingId) {
-        this(classReq, defaultItem, frameSpriteCode, modelKey, null, modelKey, otherItems, encodingId);
+        this(classReq, defaultItem, frameSpriteCode, modelKey, null, otherItems, encodingId);
     }
 
     GearType(ClassType classReq, String frameSpriteCode, String modelKey, Item craftedItem, int encodingId) {
@@ -149,17 +141,6 @@ public enum GearType {
         } catch (IllegalArgumentException e) {
             return null;
         }
-    }
-
-    public static GearType fromApiKey(String typeStr) {
-        for (GearType gearType : values()) {
-            if (gearType.apiKey == null) continue;
-
-            if (gearType.apiKey.equals(typeStr)) {
-                return gearType;
-            }
-        }
-        return null;
     }
 
     public static GearType fromItemStack(ItemStack itemStack, boolean crafted) {

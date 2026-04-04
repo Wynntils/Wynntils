@@ -113,7 +113,7 @@ public class GearInfoRegistry {
             String displayName = names.key();
             String internalName = names.value();
 
-            GearType type = GearType.fromApiKey(json.get("subType").getAsString());
+            GearType type = GearType.fromString(json.get("subType").getAsString());
             if (type == null) {
                 throw new RuntimeException("Invalid Wynncraft data: item has no gear type");
             }

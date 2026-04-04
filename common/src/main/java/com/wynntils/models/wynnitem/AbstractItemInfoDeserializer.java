@@ -236,7 +236,9 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
                             return ItemMaterial.fromItemId("minecraft:piglin_head", 0);
                         }
                         default -> {
-                            // Unknown material, fall through and try parsing normally
+                            WynntilsMod.warn("Unknown item material: "
+                                    + icon.get("value").getAsString());
+                            return ItemMaterial.fromItemId("minecraft:air", 0);
                         }
                     }
                 }
