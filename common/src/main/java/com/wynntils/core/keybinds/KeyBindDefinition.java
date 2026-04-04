@@ -43,12 +43,12 @@ public record KeyBindDefinition(
         return "wynntils.keybind." + id;
     }
 
-    public String legacyOptionsKeyPrefix() {
-        return "key_" + name + ":";
+    public String legacyOptionsKey() {
+        return "key_" + name;
     }
 
-    public String optionsKeyPrefix() {
-        return "key_" + translationKey() + ":";
+    public String optionsKey() {
+        return "key_" + translationKey();
     }
 
     // region Chat

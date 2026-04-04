@@ -62,7 +62,8 @@
     "accessors.ClientboundSetPlayerTeamPacketAccessor",
     "accessors.LerpingBossEventAccessor",
     "accessors.MinecraftAccessor",
-    "accessors.OptionsAccessor"
+    "accessors.OptionsAccessor",
+    "accessors.OptionsLoadVisitorAccessor"
   ],
   "compatibilityLevel": "JAVA_17",
   "injectors": {
