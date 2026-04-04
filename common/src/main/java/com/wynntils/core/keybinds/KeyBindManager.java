@@ -16,9 +16,14 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +73,10 @@ public final class KeyBindManager extends Manager {
         super(List.of());
     }
 
+    public void migrateLegacyKeybinds() {
+        migrateLegacyKeybinds(McUtils.getGameDirectory().toPath().resolve("options.txt"));
+    }
+
     public void registerKeybinds(Options options) {
         if (registeredKeybinds) return;
         registeredKeybinds = true;
@@ -75,7 +84,7 @@ public final class KeyBindManager extends Manager {
         List<KeyMapping> list = new ArrayList<>(Arrays.asList(options.keyMappings));
 
         for (KeyBindDefinition def : KeyBindDefinition.definitions()) {
-            KeyMapping mapping = new KeyMapping(def.name(), def.type(), def.defaultKey(), def.category());
+            KeyMapping mapping = new KeyMapping(def.translationKey(), def.type(), def.defaultKey(), def.category());
 
             list.add(mapping);
             mappingsById.put(def.id(), mapping);
@@ -92,6 +101,55 @@ public final class KeyBindManager extends Manager {
         }
 
         return new KeyBind(definition, mapping, onPress, onInventoryPress);
+    }
+
+    static void migrateLegacyKeybinds(Path optionsPath) {
+        if (!Files.isRegularFile(optionsPath)) {
+            return;
+        }
+
+        try {
+            List<String> originalLines = Files.readAllLines(optionsPath, StandardCharsets.UTF_8);
+            List<String> migratedLines = migrateLegacyKeybindLines(originalLines);
+            if (!migratedLines.equals(originalLines)) {
+                Files.write(optionsPath, migratedLines, StandardCharsets.UTF_8);
+            }
+        } catch (IOException e) {
+            WynntilsMod.warn("Failed to migrate legacy Wynntils keybind entries in options.txt", e);
+        }
+    }
+
+    static List<String> migrateLegacyKeybindLines(List<String> lines) {
+        Map<String, String> legacyPrefixes = new LinkedHashMap<>();
+        for (KeyBindDefinition definition : KeyBindDefinition.definitions()) {
+            legacyPrefixes.put(definition.legacyOptionsKeyPrefix(), definition.optionsKeyPrefix());
+        }
+
+        boolean changed = false;
+        List<String> migratedLines = new ArrayList<>(lines.size());
+
+        for (String line : lines) {
+            String migratedLine = line;
+
+            for (Map.Entry<String, String> legacyPrefix : legacyPrefixes.entrySet()) {
+                if (!line.startsWith(legacyPrefix.getKey())) {
+                    continue;
+                }
+
+                migratedLine = legacyPrefix.getValue()
+                        + line.substring(legacyPrefix.getKey().length());
+                changed = true;
+                break;
+            }
+
+            migratedLines.add(migratedLine);
+        }
+
+        if (!changed) {
+            return lines;
+        }
+
+        return migratedLines;
     }
 
     public void discoverKeyBinds(Feature feature) {
