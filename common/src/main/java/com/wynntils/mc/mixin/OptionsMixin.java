@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class OptionsMixin {
     @Inject(method = "load()V", at = @At("HEAD"))
     private void onLoad(CallbackInfo ci) {
+        Managers.KeyBind.migrateLegacyKeybinds();
         Managers.KeyBind.registerKeybinds((Options) (Object) this);
     }
 }
