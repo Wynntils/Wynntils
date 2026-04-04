@@ -3746,11 +3746,11 @@
   "wynntils.keybind.logItemInfo": "Log Item Info",
   "wynntils.keybind.minimapZoomIn": "Increase Minimap Zoom",
   "wynntils.keybind.minimapZoomOut": "Decrease Minimap Zoom",
-  "wynntils.keybind.mountHorse": "Mount Horse",
+  "wynntils.keybind.mountHorse": "Ride Mount",
   "wynntils.keybind.newWaypoint": "New Waypoint",
   "wynntils.keybind.openAspectGuide": "Open Aspect Guide",
   "wynntils.keybind.openCharmGuide": "Open Charm Guide",
-  "wynntils.keybind.openContentBook": "Open Quest Book",
+  "wynntils.keybind.openContentBook": "Open Content Book",
   "wynntils.keybind.openEmeraldGuide": "Open Emerald Pouch Guide",
   "wynntils.keybind.openEmeraldPouch": "Open Emerald Pouch",
   "wynntils.keybind.openGuidesList": "Open Guides List",
@@ -3781,5 +3781,5 @@
   "wynntils.keybind.toggleFavorite": "Favorite/Unfavorite Item",
   "wynntils.keybind.toggleSilencer": "Toggle Silencer",
   "wynntils.keybind.toggleStopwatch": "Toggle Stopwatch",
-  "wynntils.keybind.viewPlayer": "View player's gear"
+  "wynntils.keybind.viewPlayer": "View Player's Gear"
 }
