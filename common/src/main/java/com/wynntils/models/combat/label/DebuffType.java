@@ -14,6 +14,7 @@ public enum DebuffType {
     BURNING('✹', ChatFormatting.RED),
     CONFUSED('\uE03C', CustomColor.fromInt(0xE1DCA4)),
     CONTAMINATED('\uE043', CustomColor.fromInt(0x94A771)),
+    CRYSTALLIZED('\uE045', CustomColor.fromInt(0xB6FBFC)),
     DISCOMBOBULATED('⚙', ChatFormatting.YELLOW),
     ENKINDLED('\uE03D', CustomColor.fromInt(0xFF8E8E)),
     FREEZING('❄', ChatFormatting.AQUA),
@@ -24,8 +25,7 @@ public enum DebuffType {
     SLOWNESS('⬤', ChatFormatting.RED),
     TRICK('\uE03A', CustomColor.fromInt(0x6AFA65)),
     WEAKNESS('⚔', ChatFormatting.RED),
-    WHIPPED('⇶', ChatFormatting.GOLD),
-    WINDED('≈', ChatFormatting.DARK_AQUA);
+    WHIPPED('⇶', ChatFormatting.GOLD);
 
     private final char symbol;
     private final CustomColor color;

@@ -1,0 +1,7 @@
+{
+  "fontId": "wynntils:keybind",
+  "glyphs": {
+    "key_y": "Y",
+    "key_control": "\uF010"
+  }
+}

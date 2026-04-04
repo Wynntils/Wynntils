@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear.type;
@@ -13,10 +13,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public enum GearTier {
-    NORMAL(ChatFormatting.WHITE, 0, 0.0f, "common"),
+    NORMAL(ChatFormatting.WHITE, 0, 0.0f),
     UNIQUE(ChatFormatting.YELLOW, 3, 0.5f),
     RARE(ChatFormatting.LIGHT_PURPLE, 8, 1.2f),
-    SET(ChatFormatting.GREEN, 8, 1.2f),
+    @Deprecated
+    SET(ChatFormatting.GRAY, 8, 1.2f),
     LEGENDARY(ChatFormatting.AQUA, 12, 4.5f),
     FABLED(ChatFormatting.RED, 16, 8.0f),
     MYTHIC(ChatFormatting.DARK_PURPLE, 90, 18.0f),
@@ -32,13 +33,6 @@ public enum GearTier {
         this.baseCost = baseCost;
         this.costMultiplier = costMultiplier;
         this.apiName = name().toLowerCase(Locale.ROOT);
-    }
-
-    GearTier(ChatFormatting chatFormatting, int baseCost, float costMultiplier, String apiName) {
-        this.chatFormatting = chatFormatting;
-        this.baseCost = baseCost;
-        this.costMultiplier = costMultiplier;
-        this.apiName = apiName;
     }
 
     public static GearTier fromString(String typeStr) {
@@ -80,11 +74,6 @@ public enum GearTier {
                 .orElse(null);
     }
 
-    public static GearTier fromBoxDamage(int damage) {
-        if (damage > 6) return NORMAL;
-        return GearTier.values()[damage];
-    }
-
     public ChatFormatting getChatFormatting() {
         return chatFormatting;
     }
@@ -95,6 +84,11 @@ public enum GearTier {
 
     public String getName() {
         return StringUtils.capitalizeFirst(name().toLowerCase(Locale.ROOT));
+    }
+
+    // This should be used instead of values() in almost all places as to not include the SET tier
+    public static GearTier[] validValues() {
+        return new GearTier[] {NORMAL, UNIQUE, RARE, LEGENDARY, FABLED, MYTHIC, CRAFTED};
     }
 
     @Override

@@ -82,7 +82,7 @@ public record KeyBindDefinition(
     // endregion
 
     // region Combat
-    public static final KeyBindDefinition MOUNT_HORSE = register(
+    public static final KeyBindDefinition RIDE_MOUNT = register(
             "mountHorse",
             "Mount Horse",
             Managers.KeyBind.COMBAT_CATEGORY,
@@ -292,22 +292,6 @@ public record KeyBindDefinition(
     // endregion
 
     // region Overlays
-    public static final KeyBindDefinition CANCEL_NPC_AUTO_PROGRESS = register(
-            "cancelNpcAutoProgress",
-            "Cancel Dialog Auto Progress",
-            Managers.KeyBind.OVERLAYS_CATEGORY,
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_Y,
-            true);
-
-    public static final KeyBindDefinition PROGRESS_NPC_DIALOGUE = register(
-            "progressNpcDialogue",
-            "Progress NPC Dialogue",
-            Managers.KeyBind.OVERLAYS_CATEGORY,
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
-            true);
-
     public static final KeyBindDefinition TOGGLE_STOPWATCH = register(
             "toggleStopwatch",
             "Toggle Stopwatch",

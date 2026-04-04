@@ -1,13 +1,13 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
 
-import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.core.text.fonts.WynnFont;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class WynnFontFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             String text = arguments.getArgument("text").getStringValue();
-            return Models.WynnFont.toFancyFont(text);
+            return WynnFont.asFancyFont(text);
         }
 
         @Override
@@ -35,7 +35,7 @@ public class WynnFontFunctions {
             String leftEdge = arguments.getArgument("leftEdge").getStringValue();
             String rightEdge = arguments.getArgument("rightEdge").getStringValue();
 
-            return Models.WynnFont.toBackgroundFont(text, textColor, backgroundColor, leftEdge, rightEdge);
+            return WynnFont.asBackgroundFont(text, textColor, backgroundColor, leftEdge, rightEdge);
         }
 
         @Override

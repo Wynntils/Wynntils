@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
@@ -23,6 +23,7 @@ import com.wynntils.core.persisted.config.ConfigManager;
 import com.wynntils.core.persisted.storage.StorageManager;
 import com.wynntils.core.persisted.upfixers.UpfixerManager;
 import com.wynntils.core.properties.SystemPropertiesManager;
+import com.wynntils.core.text.fonts.FontManager;
 
 public final class Managers {
     // Start with SystemPropertiesManager so it can bootstrap before other Managers access properties
@@ -39,6 +40,7 @@ public final class Managers {
     public static final CrashReportManager CrashReport = new CrashReportManager();
     public static final CrowdSourcedDataManager CrowdSourcedData = new CrowdSourcedDataManager();
     public static final FeatureManager Feature = new FeatureManager();
+    public static final FontManager Font = new FontManager();
     public static final FunctionManager Function = new FunctionManager();
     public static final JsonManager Json = new JsonManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();

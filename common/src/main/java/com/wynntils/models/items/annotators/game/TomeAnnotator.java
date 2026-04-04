@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
@@ -15,7 +15,7 @@ import net.minecraft.world.item.Items;
 
 public final class TomeAnnotator implements GameItemAnnotator {
     private static final Pattern TOME_PATTERN = Pattern.compile(
-            "^§[5abcdef](?<unid>Unidentified )?(?<tomename>((?<variant>[\\w']+)? ?Tome of (?<type>\\w+))( (?<subtype>.+)( (?<tier>[IVX]{1,4}))?)?)$");
+            "^\uDAFC\uDC00(?<unid>§f\uE008\uDB00\uDC02)?§[5abcdef](?<tomename>(?<variant>[\\w']+) Tome of (?<type>\\w+)(?<subtype>.+) ?(?<tier>[IVX]{1,4})?)\uDAFC\uDC00$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {

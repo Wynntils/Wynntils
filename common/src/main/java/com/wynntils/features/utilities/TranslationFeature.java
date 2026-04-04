@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.utilities;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -16,16 +15,9 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
-import com.wynntils.services.translation.DeepLTranslationProvider;
-import com.wynntils.services.translation.LibreTranslateProvider;
-import com.wynntils.services.translation.OllamaTranslationProvider;
 import com.wynntils.services.translation.TranslationService;
 import com.wynntils.utils.mc.McUtils;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
@@ -35,9 +27,6 @@ public class TranslationFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> translateTrackedQuest = new Config<>(true);
-
-    @Persisted
-    private final Config<Boolean> translateNpc = new Config<>(true);
 
     @Persisted
     private final Config<Boolean> translateInfo = new Config<>(true);
@@ -72,11 +61,6 @@ public class TranslationFeature extends Feature {
     }
 
     @Override
-    public void onEnable() {
-        applyProviderConfig();
-    }
-
-    @Override
     protected void onConfigUpdate(Config<?> config) {
         switch (config.getFieldName()) {
             case "translationService",
@@ -85,7 +69,6 @@ public class TranslationFeature extends Feature {
                     "libreTranslateApiKey",
                     "ollamaBaseUrl",
                     "ollamaModel" -> {
-                applyProviderConfig();
                 Services.Translation.resetTranslator();
             }
             default -> {}
@@ -121,60 +104,6 @@ public class TranslationFeature extends Feature {
         if (!keepOriginal.get()) {
             e.cancelChat();
         }
-    }
-
-    // Translation should be the last post-processing step
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onNpcDialogue(NpcDialogueProcessingEvent.Pre event) {
-        if (!translateNpc.get()) return;
-        if (languageName.get().isEmpty()) return;
-
-        event.addProcessingStep(future -> future.thenCompose(styledTexts -> {
-            if (styledTexts.isEmpty()) return CompletableFuture.completedFuture(styledTexts);
-
-            CompletableFuture<List<StyledText>> translationFuture = new CompletableFuture<>();
-
-            CompletableFuture.runAsync(() -> {
-                try {
-                    Services.Translation.getTranslator(translationService.get())
-                            .translate(
-                                    styledTexts.stream().map(this::wrapCoding).toList(),
-                                    languageName.get(),
-                                    translatedMsgList -> {
-                                        List<StyledText> translatedComponents = new ArrayList<>();
-
-                                        // Add the original message if requested
-                                        if (keepOriginal.get()) {
-                                            translatedComponents.addAll(styledTexts);
-                                        }
-
-                                        // Add the translated message
-                                        for (int i = 0; i < translatedMsgList.size(); i++) {
-                                            String result = translatedMsgList.get(i);
-                                            StyledText originalText = styledTexts.get(i);
-
-                                            StyledText messageToSend = unwrapCoding(result, originalText);
-                                            translatedComponents.add(messageToSend);
-                                        }
-
-                                        translationFuture.complete(translatedComponents);
-                                    });
-                } catch (Exception e) {
-                    WynntilsMod.error("Failed to translate NPC dialogue.", e);
-                    translationFuture.complete(styledTexts);
-                }
-            });
-
-            return translationFuture;
-        }));
-    }
-
-    private void applyProviderConfig() {
-        DeepLTranslationProvider.setApiKey(deeplApiKey.get());
-        LibreTranslateProvider.setBaseUrl(libreTranslateBaseUrl.get());
-        LibreTranslateProvider.setApiKey(libreTranslateApiKey.get());
-        OllamaTranslationProvider.setBaseUrl(ollamaBaseUrl.get());
-        OllamaTranslationProvider.setModel(ollamaModel.get());
     }
 
     private StyledText unwrapCoding(String codedTranslatedString, StyledText originalText) {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
@@ -14,12 +14,15 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.RangedValue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class GearBoxAnnotator implements GameItemAnnotator {
-    private static final Pattern GEAR_BOX_PATTERN = Pattern.compile("^§[5abcdef]Unidentified (.*)$");
-    private static final Pattern LEVEL_RANGE_PATTERN = Pattern.compile("^§a- §7Lv\\. Range: §f(\\d+)-(\\d+)$");
+    private static final Pattern GEAR_BOX_PATTERN =
+            Pattern.compile("^\uDAFC\uDC00§f\uE008\uDB00\uDC02§([5bcdef])Unidentified (.*)\uDAFC\uDC00$");
+    private static final Pattern LEVEL_RANGE_PATTERN =
+            Pattern.compile("^§#(?:[a-f0-9]{8})(\\d+)-(\\d+) §fLevel Range$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
@@ -27,10 +30,13 @@ public final class GearBoxAnnotator implements GameItemAnnotator {
         Matcher matcher = name.getMatcher(GEAR_BOX_PATTERN);
         if (!matcher.matches()) return null;
 
-        GearType gearType = GearType.fromString(matcher.group(1));
+        GearType gearType = GearType.fromString(matcher.group(2));
         if (gearType == null) return null;
 
-        GearTier gearTier = GearTier.fromStyledText(name);
+        ChatFormatting chatFormatting =
+                ChatFormatting.getByCode(matcher.group(1).charAt(0));
+
+        GearTier gearTier = GearTier.fromChatFormatting(chatFormatting);
         RangedValue levelRange = getLevelRange(itemStack);
 
         if (gearTier == null || levelRange == null) return null;
@@ -39,12 +45,10 @@ public final class GearBoxAnnotator implements GameItemAnnotator {
     }
 
     private static RangedValue getLevelRange(ItemStack itemStack) {
-        Matcher matcher = LoreUtils.matchLoreLine(itemStack, 6, LEVEL_RANGE_PATTERN);
+        Matcher matcher = LoreUtils.matchLoreLine(itemStack, 2, LEVEL_RANGE_PATTERN);
         if (!matcher.matches()) return null;
         int low = Integer.parseInt(matcher.group(1));
         int high = Integer.parseInt(matcher.group(2));
-        // Wynncraft "lies" to us, it says like "range 8-12" but in reality this means "9-12".
-        // The lowest level is presented as "0-4" so this should be fine
-        return RangedValue.of(low + 1, high);
+        return RangedValue.of(low, high);
     }
 }

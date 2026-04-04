@@ -26,6 +26,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.RenderElementType;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Camera;
@@ -132,7 +133,9 @@ public class WorldWaypointDistanceFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onRenderGuiPost(RenderEvent.Post event) {
+    public void onRenderGuiPost(RenderEvent.Pre event) {
+        if (event.getType() != RenderElementType.ACTION_BAR) return;
+
         for (RenderedMarkerInfo renderedMarker : renderedMarkers) {
             if (maxWaypointTextDistance.get() != 0 && maxWaypointTextDistance.get() < renderedMarker.distance) continue;
 

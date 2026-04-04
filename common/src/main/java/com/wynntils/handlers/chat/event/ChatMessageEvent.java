@@ -1,31 +1,24 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.chat.event;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
 import net.neoforged.bus.api.Event;
 
 public abstract class ChatMessageEvent extends Event {
     protected final StyledText message;
-    private final MessageType messageType;
     private final RecipientType recipientType;
 
-    protected ChatMessageEvent(StyledText message, MessageType messageType, RecipientType recipientType) {
+    protected ChatMessageEvent(StyledText message, RecipientType recipientType) {
         this.message = message;
-        this.messageType = messageType;
         this.recipientType = recipientType;
     }
 
     public StyledText getMessage() {
         return message;
-    }
-
-    public MessageType getMessageType() {
-        return messageType;
     }
 
     public RecipientType getRecipientType() {
@@ -40,8 +33,8 @@ public abstract class ChatMessageEvent extends Event {
     public static class Match extends ChatMessageEvent {
         private boolean chatCanceled = false;
 
-        public Match(StyledText message, MessageType messageType, RecipientType recipientType) {
-            super(message, messageType, recipientType);
+        public Match(StyledText message, RecipientType recipientType) {
+            super(message, recipientType);
         }
 
         public boolean isChatCanceled() {
@@ -59,8 +52,8 @@ public abstract class ChatMessageEvent extends Event {
     public static class Edit extends ChatMessageEvent {
         private StyledText editedMessage = null;
 
-        public Edit(StyledText message, MessageType messageType, RecipientType recipientType) {
-            super(message, messageType, recipientType);
+        public Edit(StyledText message, RecipientType recipientType) {
+            super(message, recipientType);
         }
 
         public StyledText getMessage() {

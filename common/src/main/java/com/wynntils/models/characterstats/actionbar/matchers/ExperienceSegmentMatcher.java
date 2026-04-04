@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.utils.type.CappedValue;
@@ -21,8 +22,9 @@ public abstract class ExperienceSegmentMatcher implements ActionBarSegmentMatche
             SEGMENT_START + "([" + getExperienceCharStart() + "-" + getExperienceCharEnd() + "])" + SEGMENT_END);
 
     @Override
-    public ActionBarSegment parse(String actionBar) {
-        Matcher matcher = experienceBarPattern.matcher(actionBar);
+    public ActionBarSegment parse(StyledText actionBar) {
+        String actionBarString = actionBar.getStringWithoutFormatting();
+        Matcher matcher = experienceBarPattern.matcher(actionBarString);
         if (!matcher.find()) {
             return null;
         }
@@ -35,12 +37,13 @@ public abstract class ExperienceSegmentMatcher implements ActionBarSegmentMatche
         int progress = levelSegmentText.codePointAt(0) - startChar;
 
         CappedValue cappedProgress = new CappedValue(progress, endChar - startChar + 1);
-        return createExperienceSegment(matcher.group(), cappedProgress);
+        return createExperienceSegment(matcher.group(), matcher.start(), matcher.end(), cappedProgress);
     }
 
     protected abstract String getExperienceCharStart();
 
     protected abstract String getExperienceCharEnd();
 
-    protected abstract ActionBarSegment createExperienceSegment(String levelSegmentText, CappedValue progress);
+    protected abstract ActionBarSegment createExperienceSegment(
+            String levelSegmentText, int startIndex, int endIndex, CappedValue progress);
 }

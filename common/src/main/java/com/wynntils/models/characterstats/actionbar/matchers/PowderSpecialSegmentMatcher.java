@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.segments.PowderSpecialSegment;
@@ -49,12 +50,13 @@ public class PowderSpecialSegmentMatcher implements ActionBarSegmentMatcher {
             + EMPTY_POWDER_SPECIAL + "])" + SEGMENT_END);
 
     @Override
-    public ActionBarSegment parse(String actionBar) {
-        Matcher matcher = POWDER_SPECIAL_REGEX.matcher(actionBar);
+    public ActionBarSegment parse(StyledText actionBar) {
+        String actionBarString = actionBar.getStringWithoutFormatting();
+        Matcher matcher = POWDER_SPECIAL_REGEX.matcher(actionBarString);
         if (!matcher.find()) return null;
 
         PowderSpecialInfo powderSpecialInfo = getPowderSpecialInfo(matcher.group("powder"));
-        return new PowderSpecialSegment(matcher.group(), powderSpecialInfo);
+        return new PowderSpecialSegment(matcher.group(), matcher.start(), matcher.end(), powderSpecialInfo);
     }
 
     private PowderSpecialInfo getPowderSpecialInfo(String powderSpecialText) {

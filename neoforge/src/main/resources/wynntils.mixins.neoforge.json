@@ -1,9 +1,9 @@
 {
   "client": [
-    "ForgeAbstractContainerScreenMixin",
-    "ForgeGuiGraphicsMixin",
-    "ForgeLevelRendererMixin",
-    "ForgeGuiMixin"
+    "NeoForgeAbstractContainerScreenMixin",
+    "NeoForgeGuiGraphicsMixin",
+    "NeoForgeLevelRendererMixin",
+    "NeoForgeGuiMixin"
   ],
   "compatibilityLevel": "JAVA_17",
   "injectors": {

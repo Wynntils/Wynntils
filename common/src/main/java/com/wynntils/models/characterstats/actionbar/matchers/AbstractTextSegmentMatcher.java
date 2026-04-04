@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.utils.type.CappedValue;
@@ -53,15 +54,17 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
      */
     protected abstract SegmentSeparators segmentSeparators();
 
-    protected abstract ActionBarSegment createSegment(String segmentText, CappedValue value);
+    protected abstract ActionBarSegment createSegment(
+            String segmentText, int startIndex, int endIndex, CappedValue value);
 
     // There is a spacing character before and after actual display characters
     private final Pattern segmentPattern = Pattern.compile(".(?<value>[" + DISPLAY_CHARACTER_START + "-"
             + DISPLAY_CHARACTER_END + CHAR_SEPARATOR + SLASH_SEPARATOR + "]+).");
 
     @Override
-    public ActionBarSegment parse(String actionBar) {
-        Matcher matcher = segmentPattern.matcher(actionBar);
+    public ActionBarSegment parse(StyledText actionBar) {
+        String actionBarString = actionBar.getStringWithoutFormatting();
+        Matcher matcher = segmentPattern.matcher(actionBarString);
 
         if (!matcher.find()) return null;
 
@@ -88,7 +91,7 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
             // Parse the value from the display characters
             CappedValue value = valueFromDisplayCharacters(matcher.group("value"));
 
-            return createSegment(segmentText, value);
+            return createSegment(segmentText, matcher.start(), matcher.end(), value);
         } while (matcher.find());
 
         return null;
