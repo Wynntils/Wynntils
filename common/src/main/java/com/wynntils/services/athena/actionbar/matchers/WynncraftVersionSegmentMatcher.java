@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.athena.actionbar.matchers;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.services.athena.actionbar.segments.WynncraftVersionSegment;
@@ -12,20 +13,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WynncraftVersionSegmentMatcher implements ActionBarSegmentMatcher {
+    // The §8 formatting code is not present in the unformatted string, so we match without it
     private static final Pattern VERSION_PATTERN = Pattern.compile(
-            "§8(?:(?<dev>DEV)|v(?<versiongroup>\\d+)\\.(?<majorversion>\\d+)\\.(?<minorversion>\\d+)_(?<revision>\\d+)(?<beta> BETA)?)");
+            "(?:(?<dev>DEV)|v(?<versiongroup>\\d+)\\.(?<majorversion>\\d+)\\.(?<minorversion>\\d+)_(?<revision>\\d+)(?<beta> BETA)?)");
 
     @Override
-    public ActionBarSegment parse(String actionBar) {
-        Matcher matcher = VERSION_PATTERN.matcher(actionBar);
+    public ActionBarSegment parse(StyledText actionBar) {
+        String actionBarString = actionBar.getStringWithoutFormatting();
+        Matcher matcher = VERSION_PATTERN.matcher(actionBarString);
         if (!matcher.find()) return null;
 
         if (matcher.group("dev") != null) {
-            return new WynncraftVersionSegment(actionBar, WynncraftVersion.DEV);
+            return new WynncraftVersionSegment(matcher.group(), matcher.start(), matcher.end(), WynncraftVersion.DEV);
         }
 
         return new WynncraftVersionSegment(
-                actionBar,
+                matcher.group(),
+                matcher.start(),
+                matcher.end(),
                 new WynncraftVersion(
                         matcher.group("versiongroup"),
                         matcher.group("majorversion"),

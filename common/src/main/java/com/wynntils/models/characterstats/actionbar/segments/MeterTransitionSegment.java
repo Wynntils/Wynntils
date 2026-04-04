@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.segments;
 
 public class MeterTransitionSegment extends AbstractMeterSegment {
-    public MeterTransitionSegment(String segmentText) {
-        super(segmentText);
+    public MeterTransitionSegment(String segmentText, int startIndex, int endIndex) {
+        super(segmentText, startIndex, endIndex);
     }
 
     @Override

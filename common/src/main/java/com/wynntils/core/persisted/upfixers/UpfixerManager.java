@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.persisted.PersistedValue;
+import com.wynntils.core.persisted.upfixers.config.ChatRedirectHorseToMountUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CombatXpGainToXpGainUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ContentTrackerTextOverlayUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomBankQuickJumpsBankNameUpfixer;
@@ -21,6 +22,7 @@ import com.wynntils.core.persisted.upfixers.config.DurabilityArcToDurabilityOver
 import com.wynntils.core.persisted.upfixers.config.EnumNamingUpfixer;
 import com.wynntils.core.persisted.upfixers.config.GameBarOverlayMoveUpfixer;
 import com.wynntils.core.persisted.upfixers.config.HideDamageLabelsToHideLabelsUpfixer;
+import com.wynntils.core.persisted.upfixers.config.HorseMountFeatureToMountKeybindFeatureUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ItemHighlightFeatureCosmeticToStoreUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MapToMainMapRenamedConfigsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MaxItensityToMaxIntensityUpfixer;
@@ -33,6 +35,7 @@ import com.wynntils.core.persisted.upfixers.config.OverlayConfigsIntegrationUpfi
 import com.wynntils.core.persisted.upfixers.config.OverlayRestructuringUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ProfessionBadgesToLeaderboardBadgesUpfixer;
 import com.wynntils.core.persisted.upfixers.config.QuestBookToContentRenamedConfigsUpfixer;
+import com.wynntils.core.persisted.upfixers.config.QuickCastTimingsToMillisecondsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.SacredSurgeToHolyPowerUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ShowAdditonalTextAboveToShowAdditionalTextAboveUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMovedToCommonFeature;
@@ -43,6 +46,7 @@ import com.wynntils.core.persisted.upfixers.config.WynntilsContentBookReplaceToS
 import com.wynntils.core.persisted.upfixers.storage.BankPageNameToBankPagePropertyUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankToAccountBankUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.DownloadSourceStringToEnumUpfixer;
+import com.wynntils.core.persisted.upfixers.storage.RemoveSetGearTierUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.UpdateChangelogToModelUpfixer;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,14 +91,18 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new MythicFoundToValuableFoundUpfixer());
         registerConfigUpfixer(new MythicBlockerToChestBlockerUpfixer());
         registerConfigUpfixer(new MaxItensityToMaxIntensityUpfixer());
+        registerConfigUpfixer(new QuickCastTimingsToMillisecondsUpfixer());
         registerConfigUpfixer(new ShowAdditonalTextAboveToShowAdditionalTextAboveUpfixer());
         registerConfigUpfixer(new ContentTrackerTextOverlayUpfixer());
+        registerConfigUpfixer(new HorseMountFeatureToMountKeybindFeatureUpfixer());
+        registerConfigUpfixer(new ChatRedirectHorseToMountUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());
         registerStorageUpfixer(new UpdateChangelogToModelUpfixer());
         registerStorageUpfixer(new BankPageNameToBankPagePropertyUpfixer());
         registerStorageUpfixer(new DownloadSourceStringToEnumUpfixer());
+        registerStorageUpfixer(new RemoveSetGearTierUpfixer());
     }
 
     private void registerConfigUpfixer(Upfixer upfixer) {

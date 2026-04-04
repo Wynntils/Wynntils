@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2018-2023.
+ * Copyright © Wynntils 2018-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.translation;
@@ -21,6 +21,11 @@ import java.util.function.Consumer;
  * sufficient for NPCs translation, but not for general chat messages, at least not in chatty areas like Detlas.
  */
 public class GoogleApiTranslationProvider extends CachingTranslationProvider {
+    @Override
+    protected String getCacheNamespace() {
+        return "googleapi";
+    }
+
     @Override
     protected void translateNew(List<String> messageList, String toLanguage, Consumer<List<String>> handleTranslation) {
         if (toLanguage == null || toLanguage.isEmpty()) {
@@ -49,8 +54,9 @@ public class GoogleApiTranslationProvider extends CachingTranslationProvider {
                     handleTranslation.accept(result);
                 },
                 onError -> {
-                    // If Google translate return no data ( 500 error ), display default lang
-                    handleTranslation.accept(List.copyOf(messageList));
+                    // If Google translate returns no data (500 error / rate limit), return empty list
+                    // so TranslationFeature can handle it correctly based on keepOriginal setting
+                    handleTranslation.accept(List.of());
                 });
     }
 }

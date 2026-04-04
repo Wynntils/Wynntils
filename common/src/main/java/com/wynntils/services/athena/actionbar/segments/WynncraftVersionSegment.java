@@ -10,8 +10,9 @@ import com.wynntils.services.athena.type.WynncraftVersion;
 public class WynncraftVersionSegment extends ActionBarSegment {
     private final WynncraftVersion wynncraftVersion;
 
-    public WynncraftVersionSegment(String segmentText, WynncraftVersion wynncraftVersion) {
-        super(segmentText);
+    public WynncraftVersionSegment(
+            String segmentText, int startIndex, int endIndex, WynncraftVersion wynncraftVersion) {
+        super(segmentText, startIndex, endIndex);
         this.wynncraftVersion = wynncraftVersion;
     }
 

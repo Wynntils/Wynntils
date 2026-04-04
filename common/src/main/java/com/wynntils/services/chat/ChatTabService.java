@@ -12,7 +12,6 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.chat.ChatTabsFeature;
-import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -156,7 +155,7 @@ public final class ChatTabService extends Service {
         McUtils.mc().gui.chat.allMessages.reversed().forEach(msg -> {
             Component component = msg.content();
             StyledText styledText = StyledText.fromComponent(component);
-            RecipientType recipientType = Handlers.Chat.getRecipientType(styledText, MessageType.FOREGROUND);
+            RecipientType recipientType = Handlers.Chat.getRecipientType(styledText);
             List<ChatTab> recipientTabs = Services.ChatTab.getRecipientTabs(recipientType, styledText);
 
             recipientTabs.forEach(tab -> {
@@ -206,7 +205,7 @@ public final class ChatTabService extends Service {
             vanillaChatComponent.addMessage(component, headerSignature, tag);
 
             StyledText styledText = StyledText.fromComponent(component);
-            RecipientType recipientType = Handlers.Chat.getRecipientType(styledText, MessageType.FOREGROUND);
+            RecipientType recipientType = Handlers.Chat.getRecipientType(styledText);
 
             List<ChatTab> recipientTabs = getRecipientTabs(recipientType, styledText);
             recipientTabs.forEach(tab -> {

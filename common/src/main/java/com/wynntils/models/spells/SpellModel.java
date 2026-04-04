@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells;
@@ -8,36 +8,40 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
-import com.wynntils.handlers.item.event.ItemRenamedEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.spells.actionbar.matchers.SpellSegmentMatcher;
-import com.wynntils.models.spells.actionbar.segments.SpellSegment;
+import com.wynntils.models.spells.actionbar.matchers.SpellCastSegmentMatcher;
+import com.wynntils.models.spells.actionbar.matchers.SpellInputsSegmentMatcher;
+import com.wynntils.models.spells.actionbar.matchers.UltimateTypeSegmentMatcher;
+import com.wynntils.models.spells.actionbar.segments.SpellCastSegment;
+import com.wynntils.models.spells.actionbar.segments.SpellInputsSegment;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.spells.type.SpellFailureReason;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import java.util.ArrayList;
+import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Queue;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Set;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class SpellModel extends Model {
-    private static final Pattern SPELL_CAST =
-            Pattern.compile("^§7(.*) spell cast! §3\\[§b-([0-9]+) ✺§3\\](?: §4\\[§c-([0-9]+) ❤§4\\])?$");
     public static final int SPELL_COST_RESET_TICKS = 60;
 
     private static final Queue<SpellDirection> SPELL_PACKET_QUEUE = new LinkedList<>();
 
-    private boolean hideSpellInputs = false;
+    private final Set<Class<? extends ActionBarSegment>> hiddenSegments = new HashSet<>();
+
+    private final EnumMap<SpellType, Integer> ticksSinceSpecificSpellMap = new EnumMap<>(SpellType.class);
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
     private String lastBurstSpellName = "";
@@ -48,52 +52,35 @@ public final class SpellModel extends Model {
     private int ticksSinceCast = 0;
 
     private boolean expireNextClear = false;
+    // This keeps track of if the spell cast text is currently displayed so that we don't send multiple events
+    private boolean spellTextActive = false;
+
+    private SpellFailureReason failureReason = null;
 
     public SpellModel() {
         super(List.of());
 
-        Handlers.ActionBar.registerSegment(new SpellSegmentMatcher());
-        Handlers.Item.registerKnownMarkerNames(getKnownMarkerNames());
-    }
-
-    private List<Pattern> getKnownMarkerNames() {
-        List<Pattern> knownMarkerNames = new ArrayList<>();
-        knownMarkerNames.add(SPELL_CAST);
-        knownMarkerNames.addAll(Arrays.stream(SpellFailureReason.values())
-                .map(s -> Pattern.compile(s.getMessage().getString()))
-                .toList());
-        return knownMarkerNames;
-    }
-
-    @SubscribeEvent(receiveCanceled = true)
-    public void onItemRenamed(ItemRenamedEvent event) {
-        StyledText msg = event.getNewName();
-        SpellFailureReason failureReason = SpellFailureReason.fromMsg(msg);
-        if (failureReason != null) {
-            WynntilsMod.postEvent(new SpellEvent.Failed(failureReason));
-            return;
-        }
-
-        Matcher spellMatcher = msg.getMatcher(SPELL_CAST);
-        if (spellMatcher.matches()) {
-            SpellType spellType = SpellType.fromName(spellMatcher.group(1));
-            int manaCost = Integer.parseInt(spellMatcher.group(2));
-            int healthCost =
-                    Integer.parseInt(Optional.ofNullable(spellMatcher.group(3)).orElse("0"));
-            WynntilsMod.postEvent(new SpellEvent.Cast(spellType, manaCost, healthCost));
-        }
+        Handlers.ActionBar.registerSegment(new SpellInputsSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new SpellCastSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new UltimateTypeSegmentMatcher());
     }
 
     @SubscribeEvent
     public void onActionBarUpdate(ActionBarUpdatedEvent event) {
-        event.runIfPresentOrElse(SpellSegment.class, this::updateFromSpellSegment, this::handleExpiredSpell);
+        event.runIfPresentOrElse(SpellInputsSegment.class, this::updateFromSpellSegment, this::handleExpiredSpell);
+        event.runIfPresentOrElse(SpellCastSegment.class, this::handleSpellCast, this::spellCastExpire);
     }
 
     @SubscribeEvent
     public void onActionBarRender(ActionBarRenderEvent event) {
-        if (hideSpellInputs) {
-            event.setSegmentEnabled(SpellSegment.class, false);
-        }
+        hiddenSegments.forEach(segment -> event.setSegmentEnabled(segment, false));
+    }
+
+    @SubscribeEvent
+    public void onChatMessage(ChatMessageEvent.Match e) {
+        StyledText message = StyledTextUtils.unwrap(e.getMessage()).stripAlignment();
+
+        failureReason = SpellFailureReason.fromMsg(message);
     }
 
     @SubscribeEvent
@@ -114,6 +101,7 @@ public final class SpellModel extends Model {
 
         lastBurstSpellName = e.getSpellType().getName();
         lastSpellName = e.getSpellType().getName();
+        ticksSinceSpecificSpellMap.put(e.getSpellType(), 0);
     }
 
     @SubscribeEvent
@@ -130,11 +118,11 @@ public final class SpellModel extends Model {
             repeatedBurstSpellCount = 0;
             ticksSinceCastBurst = 0;
         }
+        ticksSinceSpecificSpellMap.replaceAll((number, tick) -> tick + 1);
     }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent e) {
-        SPELL_PACKET_QUEUE.clear();
         lastSpell = SpellDirection.NO_SPELL;
         lastBurstSpellName = "";
         lastSpellName = "";
@@ -142,11 +130,11 @@ public final class SpellModel extends Model {
         repeatedSpellCount = 0;
         ticksSinceCastBurst = 0;
         ticksSinceCast = 0;
+        ticksSinceSpecificSpellMap.clear();
     }
 
     @SubscribeEvent
     public void onHeldItemChange(ChangeCarriedItemEvent event) {
-        SPELL_PACKET_QUEUE.clear();
         // We need to reset lastSpell here as the actual inputs are now cleared, but they are still visible
         // so we don't post the expired event until the action bar has actually updated with the cleared inputs
         lastSpell = SpellDirection.NO_SPELL;
@@ -163,19 +151,20 @@ public final class SpellModel extends Model {
         return SPELL_PACKET_QUEUE.peek();
     }
 
-    public void sendNextSpell() {
-        if (SPELL_PACKET_QUEUE.isEmpty()) return;
-
-        SpellDirection spellDirection = SPELL_PACKET_QUEUE.poll();
-        spellDirection.getSendPacketRunnable().run();
+    public void setHideSpellInputs(boolean shouldHide) {
+        if (shouldHide) {
+            hiddenSegments.add(SpellInputsSegment.class);
+        } else {
+            hiddenSegments.remove(SpellInputsSegment.class);
+        }
     }
 
-    public void setHideSpellInputs(boolean hideSpellInputs) {
-        this.hideSpellInputs = hideSpellInputs;
-    }
-
-    public boolean isSpellQueueEmpty() {
-        return SPELL_PACKET_QUEUE.isEmpty();
+    public void setHideSpellCasts(boolean shouldHide) {
+        if (shouldHide) {
+            hiddenSegments.add(SpellCastSegment.class);
+        } else {
+            hiddenSegments.remove(SpellCastSegment.class);
+        }
     }
 
     public String getLastBurstSpellName() {
@@ -206,15 +195,25 @@ public final class SpellModel extends Model {
         return ticksSinceCast;
     }
 
-    private void updateFromSpellSegment(SpellSegment spellSegment) {
+    public int getTicksSinceCast(String name) {
+        return ticksSinceSpecificSpellMap.getOrDefault(SpellType.fromName(name), -1);
+    }
+
+    private void updateFromSpellSegment(SpellInputsSegment spellInputsSegment) {
         // noop if the spell state hasn't changed
-        if (Arrays.equals(spellSegment.getDirections(), lastSpell)) return;
-        lastSpell = spellSegment.getDirections();
+        if (Arrays.equals(spellInputsSegment.getDirections(), lastSpell)) return;
+        lastSpell = spellInputsSegment.getDirections();
 
         WynntilsMod.postEvent(new SpellEvent.Partial(lastSpell));
 
         if (lastSpell.length == 3) {
-            WynntilsMod.postEvent(new SpellEvent.Completed(lastSpell, SpellType.fromSpellDirectionArray(lastSpell)));
+            if (failureReason != null) {
+                WynntilsMod.postEvent(new SpellEvent.Failed(failureReason));
+                failureReason = null;
+            } else {
+                WynntilsMod.postEvent(
+                        new SpellEvent.Completed(lastSpell, SpellType.fromSpellDirectionArray(lastSpell)));
+            }
         }
     }
 
@@ -228,5 +227,20 @@ public final class SpellModel extends Model {
             expireNextClear = false;
             WynntilsMod.postEvent(new SpellEvent.Expired());
         }
+    }
+
+    private void handleSpellCast(SpellCastSegment spellCastSegment) {
+        if (spellTextActive) return;
+
+        spellTextActive = true;
+        WynntilsMod.postEvent(new SpellEvent.Cast(
+                spellCastSegment.getSpellType(), spellCastSegment.getManaCost(), spellCastSegment.getHealthCost()));
+    }
+
+    private void spellCastExpire() {
+        if (!spellTextActive) return;
+
+        spellTextActive = false;
+        WynntilsMod.postEvent(new SpellEvent.CastExpired());
     }
 }

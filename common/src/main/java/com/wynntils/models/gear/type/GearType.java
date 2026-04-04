@@ -21,23 +21,24 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomModelData;
 
 public enum GearType {
-    SPEAR(ClassType.WARRIOR, "spear", Items.IRON_SHOVEL, 0),
-    WAND(ClassType.MAGE, "wand", Items.WOODEN_SHOVEL, 1),
-    DAGGER(ClassType.ASSASSIN, "dagger", Items.SHEARS, 2),
-    BOW(ClassType.ARCHER, "bow", Items.BOW, 3),
-    RELIK(ClassType.SHAMAN, "relik", Items.STONE_SHOVEL, 4),
+    SPEAR(ClassType.WARRIOR, "\uE008", "spear", Items.POTION, 0),
+    WAND(ClassType.MAGE, "\uE006", "wand", Items.POTION, 1),
+    DAGGER(ClassType.ASSASSIN, "\uE005", "dagger", Items.POTION, 2),
+    BOW(ClassType.ARCHER, "\uE004", "bow", Items.POTION, 3),
+    RELIK(ClassType.SHAMAN, "\uE007", "relik", Items.POTION, 4),
 
     // This is a fallback for signed, crafted gear with a skin
-    WEAPON(null, null, 12),
+    WEAPON(null, null, null, 12),
     // Note: This fallback should basically be never be matched, but we use it in item encoding
     //       (as it's the same as WEAPON, and we have no other info)
-    ACCESSORY(null, null, 13),
-    RING(null, "ring", 5),
-    BRACELET(null, "bracelet", 6),
-    NECKLACE(null, "necklace", 7),
+    ACCESSORY(null, null, null, 13),
+    RING(null, "\uE014", "ring", 5),
+    BRACELET(null, "\uE015", "bracelet", 6),
+    NECKLACE(null, "\uE016", "necklace", 7),
     HELMET(
             null,
             Items.LEATHER_HELMET,
+            "\uE000",
             "helmet",
             "helmet_skin",
             List.of(
@@ -52,6 +53,7 @@ public enum GearType {
     CHESTPLATE(
             null,
             Items.LEATHER_CHESTPLATE,
+            "\uE001",
             "chestplate",
             List.of(
                     Items.CHAINMAIL_CHESTPLATE,
@@ -63,6 +65,7 @@ public enum GearType {
     LEGGINGS(
             null,
             Items.LEATHER_LEGGINGS,
+            "\uE002",
             "leggings",
             List.of(
                     Items.CHAINMAIL_LEGGINGS,
@@ -74,6 +77,7 @@ public enum GearType {
     BOOTS(
             null,
             Items.LEATHER_BOOTS,
+            "\uE003",
             "boots",
             List.of(
                     Items.CHAINMAIL_BOOTS,
@@ -82,11 +86,12 @@ public enum GearType {
                     Items.DIAMOND_BOOTS,
                     Items.NETHERITE_BOOTS),
             11),
-    MASTERY_TOME(null, "tome", -1),
-    CHARM(null, "charm", -1);
+    MASTERY_TOME(null, "\uE028", "tome", -1),
+    CHARM(null, "\uE029", "charm", -1);
 
     private final ClassType classReq;
     private final Item defaultItem;
+    private final String frameSpriteCode;
     private final String modelKey;
     private final String skinModelKey;
     private final List<Item> otherItems;
@@ -98,28 +103,36 @@ public enum GearType {
     GearType(
             ClassType classReq,
             Item defaultItem,
+            String frameSpriteCode,
             String modelKey,
             String skinModelKey,
             List<Item> otherItems,
             int encodingId) {
         this.classReq = classReq;
         this.defaultItem = defaultItem;
+        this.frameSpriteCode = frameSpriteCode;
         this.modelKey = modelKey;
         this.skinModelKey = skinModelKey;
         this.otherItems = otherItems;
         this.encodingId = encodingId;
     }
 
-    GearType(ClassType classReq, Item defaultItem, String modelKey, List<Item> otherItems, int encodingId) {
-        this(classReq, defaultItem, modelKey, null, otherItems, encodingId);
+    GearType(
+            ClassType classReq,
+            Item defaultItem,
+            String frameSpriteCode,
+            String modelKey,
+            List<Item> otherItems,
+            int encodingId) {
+        this(classReq, defaultItem, frameSpriteCode, modelKey, null, otherItems, encodingId);
     }
 
-    GearType(ClassType classReq, String modelKey, Item craftedItem, int encodingId) {
-        this(classReq, Items.POTION, modelKey, List.of(craftedItem), encodingId);
+    GearType(ClassType classReq, String frameSpriteCode, String modelKey, Item craftedItem, int encodingId) {
+        this(classReq, Items.POTION, frameSpriteCode, modelKey, List.of(craftedItem), encodingId);
     }
 
-    GearType(ClassType classReq, String modelKey, int encodingId) {
-        this(classReq, Items.POTION, modelKey, List.of(), encodingId);
+    GearType(ClassType classReq, String frameSpriteCode, String modelKey, int encodingId) {
+        this(classReq, Items.POTION, frameSpriteCode, modelKey, List.of(), encodingId);
     }
 
     public static GearType fromString(String typeStr) {
@@ -167,6 +180,13 @@ public enum GearType {
             }
         }
 
+        return null;
+    }
+
+    public static GearType fromFrameSprite(String frameSpriteCode) {
+        for (GearType gearType : values()) {
+            if (frameSpriteCode.equals(gearType.frameSpriteCode)) return gearType;
+        }
         return null;
     }
 

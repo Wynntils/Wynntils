@@ -1,30 +1,40 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells.type;
 
 import com.wynntils.core.text.StyledText;
+import java.util.regex.Pattern;
 
 public enum SpellFailureReason {
-    NOT_ENOUGH_MANA(StyledText.fromString("§4You don't have enough mana to cast that spell!")),
-    NOT_ENOUGH_HEALTH(StyledText.fromString("§4You don't have enough health to cast that spell!")),
-    NOT_UNLOCKED(StyledText.fromString("§4You have not unlocked this spell!"));
+    NOT_ENOUGH_MANA(
+            Pattern.compile("§4(?:\uE008\uE002|\uE001) You don't have enough mana to cast that spell!"),
+            "You don't have enough mana to cast that spell!"),
+    NOT_ENOUGH_HEALTH(
+            Pattern.compile("§4(?:\uE008\uE002|\uE001) You don't have enough health to cast that spell!"),
+            "You don't have enough health to cast that spell!"),
+    NOT_UNLOCKED(
+            Pattern.compile(
+                    "§4(?:\uE008\uE002|\uE001) You have not unlocked this spell! Unlock it using your compass."),
+            "You have not unlocked this spell!");
 
-    private final StyledText message;
+    private final Pattern pattern;
+    private final String displayMessage;
 
-    SpellFailureReason(StyledText message) {
-        this.message = message;
+    SpellFailureReason(Pattern pattern, String displayMessage) {
+        this.pattern = pattern;
+        this.displayMessage = displayMessage;
     }
 
     public static SpellFailureReason fromMsg(StyledText msg) {
         for (SpellFailureReason failureReason : values()) {
-            if (failureReason.message.equals(msg)) return failureReason;
+            if (msg.matches(failureReason.pattern)) return failureReason;
         }
         return null;
     }
 
-    public StyledText getMessage() {
-        return message;
+    public String getDisplayMessage() {
+        return displayMessage;
     }
 }

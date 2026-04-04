@@ -7,6 +7,8 @@ package com.wynntils.screens.guides.sets;
 import com.google.common.collect.Lists;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.WynnFont;
+import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatType;
@@ -31,10 +33,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 
 public final class WynntilsSetsGuideScreen extends WynntilsListScreen<SetInfo, ItemSetGuideButton> {
     private WynntilsSetsGuideScreen() {
@@ -172,9 +171,7 @@ public final class WynntilsSetsGuideScreen extends WynntilsListScreen<SetInfo, I
             tooltipLines.add(Component.empty());
             if (equippedCount < setInfo.bonuses().size()) {
                 tooltipLines.add(Component.empty()
-                        .append(Component.literal("\uE000")
-                                .withStyle(Style.EMPTY.withFont(
-                                        new FontDescription.Resource(Identifier.withDefaultNamespace("keybind")))))
+                        .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class))
                         .append(" ")
                         .append(Component.translatable(
                                 "screens.wynntils.wynntilsGuides.sets.setsButton.click"
@@ -183,9 +180,7 @@ public final class WynntilsSetsGuideScreen extends WynntilsListScreen<SetInfo, I
             }
             if (equippedCount > 1) {
                 tooltipLines.add(Component.empty()
-                        .append(Component.literal("\uE001")
-                                .withStyle(Style.EMPTY.withFont(
-                                        new FontDescription.Resource(Identifier.withDefaultNamespace("keybind")))))
+                        .append(WynnFont.asFont("right_click", WynncraftKeybindsFont.class))
                         .append(" ")
                         .append(Component.translatable(
                                 "screens.wynntils.wynntilsGuides.sets.setsButton.click"

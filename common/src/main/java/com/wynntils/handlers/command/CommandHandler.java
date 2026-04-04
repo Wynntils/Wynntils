@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.command;
@@ -15,7 +15,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public final class CommandHandler extends Handler {
     private static final int TICKS_PER_EXECUTE = 7;
-    private static final int NPC_DIALOGUE_WAIT_TICKS = 40;
 
     private final Queue<String> commandQueue = new LinkedList<>();
     private int commandQueueTicks = 0;
@@ -23,15 +22,6 @@ public final class CommandHandler extends Handler {
     @SubscribeEvent
     public void onTick(TickEvent e) {
         if (!Models.WorldState.onWorld()) return;
-
-        if (Models.NpcDialogue.isInDialogue()) {
-            // Reset the command queue ticks when we are in dialogue,
-            // so that we don't execute commands mid-dialogue,
-            // and we also have a wait time after dialogue ends
-            // (because dialogues tend to clear for a tick or two).
-            commandQueueTicks = NPC_DIALOGUE_WAIT_TICKS;
-            return;
-        }
 
         commandQueueTicks--;
 
@@ -52,7 +42,7 @@ public final class CommandHandler extends Handler {
      * @param command The command to queue. The leading '/' should not be included.
      */
     public void queueCommand(String command) {
-        if (commandQueueTicks <= 0 && !Models.NpcDialogue.isInDialogue()) {
+        if (commandQueueTicks <= 0) {
             WynntilsMod.info("Executing queued command immediately: " + command);
             McUtils.mc().getConnection().sendCommand(command);
             commandQueueTicks = TICKS_PER_EXECUTE;

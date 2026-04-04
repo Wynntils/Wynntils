@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.character.actionbar.segments;
@@ -11,8 +11,9 @@ public class CharacterSelectionClassSegment extends ActionBarSegment {
     private final ClassType classType;
     private final boolean isReskinned;
 
-    public CharacterSelectionClassSegment(String segmentText, ClassType classType, boolean isReskinned) {
-        super(segmentText);
+    public CharacterSelectionClassSegment(
+            String segmentText, int startIndex, int endIndex, ClassType classType, boolean isReskinned) {
+        super(segmentText, startIndex, endIndex);
 
         this.classType = classType;
         this.isReskinned = isReskinned;

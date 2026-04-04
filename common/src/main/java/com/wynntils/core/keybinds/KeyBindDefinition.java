@@ -82,7 +82,7 @@ public record KeyBindDefinition(
     // endregion
 
     // region Combat
-    public static final KeyBindDefinition MOUNT_HORSE = register(
+    public static final KeyBindDefinition RIDE_MOUNT = register(
             "mountHorse",
             "Mount Horse",
             Managers.KeyBind.COMBAT_CATEGORY,
@@ -96,7 +96,7 @@ public record KeyBindDefinition(
             Managers.KeyBind.COMBAT_CATEGORY,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_Z,
-            false);
+            true);
 
     public static final KeyBindDefinition CAST_SECOND_SPELL = register(
             "castSecondSpell",
@@ -104,7 +104,7 @@ public record KeyBindDefinition(
             Managers.KeyBind.COMBAT_CATEGORY,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_X,
-            false);
+            true);
 
     public static final KeyBindDefinition CAST_THIRD_SPELL = register(
             "castThirdSpell",
@@ -112,7 +112,7 @@ public record KeyBindDefinition(
             Managers.KeyBind.COMBAT_CATEGORY,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_C,
-            false);
+            true);
 
     public static final KeyBindDefinition CAST_FOURTH_SPELL = register(
             "castFourthSpell",
@@ -120,7 +120,15 @@ public record KeyBindDefinition(
             Managers.KeyBind.COMBAT_CATEGORY,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_V,
-            false);
+            true);
+
+    public static final KeyBindDefinition CAST_MELEE_ATTACK = register(
+            "castMeleeAttack",
+            "Cast Melee Attack",
+            Managers.KeyBind.COMBAT_CATEGORY,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_UNKNOWN,
+            true);
     // endregion
 
     // region Commands
@@ -284,22 +292,6 @@ public record KeyBindDefinition(
     // endregion
 
     // region Overlays
-    public static final KeyBindDefinition CANCEL_NPC_AUTO_PROGRESS = register(
-            "cancelNpcAutoProgress",
-            "Cancel Dialog Auto Progress",
-            Managers.KeyBind.OVERLAYS_CATEGORY,
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_Y,
-            true);
-
-    public static final KeyBindDefinition PROGRESS_NPC_DIALOGUE = register(
-            "progressNpcDialogue",
-            "Progress NPC Dialogue",
-            Managers.KeyBind.OVERLAYS_CATEGORY,
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
-            true);
-
     public static final KeyBindDefinition TOGGLE_STOPWATCH = register(
             "toggleStopwatch",
             "Toggle Stopwatch",
