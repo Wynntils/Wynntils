@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.keybinds;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
@@ -17,11 +16,7 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -33,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -72,42 +68,6 @@ public final class KeyBindManager extends Manager {
 
     public KeyBindManager() {
         super(List.of());
-    }
-
-    public void migrateLegacyKeybinds(Options options) {
-        migrateLegacyKeybinds(options.getFile().toPath());
-    }
-
-    public void applyLegacyKeybinds(Options options) {
-        Path optionsPath = options.getFile().toPath();
-        if (!Files.isRegularFile(optionsPath)) {
-            return;
-        }
-
-        try {
-            Map<String, InputConstants.Key> legacyOverrides =
-                    getLegacyKeybindOverrides(Files.readAllLines(optionsPath, StandardCharsets.UTF_8));
-            if (legacyOverrides.isEmpty()) {
-                return;
-            }
-
-            boolean appliedAny = false;
-            for (Map.Entry<String, InputConstants.Key> legacyOverride : legacyOverrides.entrySet()) {
-                KeyMapping mapping = mappingsById.get(legacyOverride.getKey());
-                if (mapping == null) {
-                    continue;
-                }
-
-                mapping.setKey(legacyOverride.getValue());
-                appliedAny = true;
-            }
-
-            if (appliedAny) {
-                KeyMapping.resetMapping();
-            }
-        } catch (IOException e) {
-            WynntilsMod.warn("Failed to apply legacy Wynntils keybind entries from options.txt", e);
-        }
     }
 
     public void registerKeybinds(Options options) {
@@ -178,75 +138,19 @@ public final class KeyBindManager extends Manager {
         return null;
     }
 
-    static Map<String, InputConstants.Key> getLegacyKeybindOverrides(List<String> lines) {
-        Map<String, InputConstants.Key> legacyOverrides = new LinkedHashMap<>();
+    public static Map<String, String> getLegacyKeybindAliases(CompoundTag options) {
+        Map<String, String> legacyAliases = new LinkedHashMap<>();
 
-        for (String line : lines) {
-            for (KeyBindDefinition definition : KeyBindDefinition.definitions()) {
-                if (line.startsWith(definition.legacyOptionsKeyPrefix())) {
-                    String keyName =
-                            line.substring(definition.legacyOptionsKeyPrefix().length());
-                    legacyOverrides.put(definition.id(), InputConstants.getKey(keyName));
-                    break;
-                }
-
-                if (line.startsWith(definition.optionsKeyPrefix())) {
-                    legacyOverrides.remove(definition.id());
-                    break;
-                }
-            }
-        }
-
-        return legacyOverrides;
-    }
-
-    static void migrateLegacyKeybinds(Path optionsPath) {
-        if (!Files.isRegularFile(optionsPath)) {
-            return;
-        }
-
-        try {
-            List<String> originalLines = Files.readAllLines(optionsPath, StandardCharsets.UTF_8);
-            List<String> migratedLines = migrateLegacyKeybindLines(originalLines);
-            if (!migratedLines.equals(originalLines)) {
-                Files.write(optionsPath, migratedLines, StandardCharsets.UTF_8);
-            }
-        } catch (IOException e) {
-            WynntilsMod.warn("Failed to migrate legacy Wynntils keybind entries in options.txt", e);
-        }
-    }
-
-    static List<String> migrateLegacyKeybindLines(List<String> lines) {
-        Map<String, String> legacyPrefixes = new LinkedHashMap<>();
         for (KeyBindDefinition definition : KeyBindDefinition.definitions()) {
-            legacyPrefixes.put(definition.legacyOptionsKeyPrefix(), definition.optionsKeyPrefix());
-        }
-
-        boolean changed = false;
-        List<String> migratedLines = new ArrayList<>(lines.size());
-
-        for (String line : lines) {
-            String migratedLine = line;
-
-            for (Map.Entry<String, String> legacyPrefix : legacyPrefixes.entrySet()) {
-                if (!line.startsWith(legacyPrefix.getKey())) {
-                    continue;
-                }
-
-                migratedLine = legacyPrefix.getValue()
-                        + line.substring(legacyPrefix.getKey().length());
-                changed = true;
-                break;
+            if (options.contains(definition.optionsKey())) {
+                continue;
             }
 
-            migratedLines.add(migratedLine);
+            options.getString(definition.legacyOptionsKey())
+                    .ifPresent(keyName -> legacyAliases.put(definition.optionsKey(), keyName));
         }
 
-        if (!changed) {
-            return lines;
-        }
-
-        return migratedLines;
+        return legacyAliases;
     }
 
     public void discoverKeyBinds(Feature feature) {
