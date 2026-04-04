@@ -20,7 +20,7 @@ public enum GearRestrictions {
 
     public static GearRestrictions fromString(String typeStr) {
         for (GearRestrictions type : GearRestrictions.values()) {
-            if (type.name().replaceAll("_", " ").toLowerCase(Locale.ROOT).equals(typeStr.toLowerCase(Locale.ROOT))) {
+            if (type.name().toLowerCase(Locale.ROOT).equals(typeStr.toLowerCase(Locale.ROOT))) {
                 return type;
             }
         }
