@@ -107,7 +107,7 @@ public class TomeInfoRegistry {
                 throw new RuntimeException("Invalid Wynncraft data: tome has no tome type");
             }
 
-            GearTier tier = GearTier.fromString(json.get("rarity").getAsString());
+            GearTier tier = GearTier.fromString(json.get("tier").getAsString());
             if (tier == null) {
                 throw new RuntimeException("Invalid Wynncraft data: tome has no tier");
             }
@@ -156,7 +156,7 @@ public class TomeInfoRegistry {
         }
 
         private TomeType parseTomeType(JsonObject json) {
-            String tomeType = JsonUtils.getNullableJsonString(json, "tomeType");
+            String tomeType = JsonUtils.getNullableJsonString(json, "subType");
             return TomeType.fromString(tomeType);
         }
     }

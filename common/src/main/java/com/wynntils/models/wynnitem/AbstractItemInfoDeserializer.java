@@ -64,20 +64,6 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return Pair.of(displayName, internalName);
     }
 
-    protected GearType parseType(JsonObject json) {
-        String typeString;
-        if (json.has("accessoryType")) {
-            typeString = json.get("accessoryType").getAsString();
-        } else if (json.has("weaponType")) {
-            typeString = json.get("weaponType").getAsString();
-        } else if (json.has("armourType")) {
-            typeString = json.get("armourType").getAsString();
-        } else {
-            typeString = json.get("type").getAsString();
-        }
-        return GearType.fromString(typeString);
-    }
-
     protected GearMetaInfo parseMetaInfo(JsonObject json, String apiName, GearType type) {
         GearRestrictions restrictions = parseRestrictions(json);
         ItemMaterial material = parseMaterial(json, type);
@@ -175,7 +161,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
     }
 
     protected GearRestrictions parseRestrictions(JsonObject json) {
-        String restrictions = JsonUtils.getNullableJsonString(json, "restrictions");
+        String restrictions = JsonUtils.getNullableJsonString(json, "restriction");
         if (restrictions == null) return GearRestrictions.NONE;
 
         return GearRestrictions.fromString(restrictions);
