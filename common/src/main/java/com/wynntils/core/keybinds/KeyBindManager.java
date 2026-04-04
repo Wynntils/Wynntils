@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.keybinds;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
@@ -73,8 +74,40 @@ public final class KeyBindManager extends Manager {
         super(List.of());
     }
 
-    public void migrateLegacyKeybinds() {
-        migrateLegacyKeybinds(McUtils.getGameDirectory().toPath().resolve("options.txt"));
+    public void migrateLegacyKeybinds(Options options) {
+        migrateLegacyKeybinds(options.getFile().toPath());
+    }
+
+    public void applyLegacyKeybinds(Options options) {
+        Path optionsPath = options.getFile().toPath();
+        if (!Files.isRegularFile(optionsPath)) {
+            return;
+        }
+
+        try {
+            Map<String, InputConstants.Key> legacyOverrides =
+                    getLegacyKeybindOverrides(Files.readAllLines(optionsPath, StandardCharsets.UTF_8));
+            if (legacyOverrides.isEmpty()) {
+                return;
+            }
+
+            boolean appliedAny = false;
+            for (Map.Entry<String, InputConstants.Key> legacyOverride : legacyOverrides.entrySet()) {
+                KeyMapping mapping = mappingsById.get(legacyOverride.getKey());
+                if (mapping == null) {
+                    continue;
+                }
+
+                mapping.setKey(legacyOverride.getValue());
+                appliedAny = true;
+            }
+
+            if (appliedAny) {
+                KeyMapping.resetMapping();
+            }
+        } catch (IOException e) {
+            WynntilsMod.warn("Failed to apply legacy Wynntils keybind entries from options.txt", e);
+        }
     }
 
     public void registerKeybinds(Options options) {
@@ -101,6 +134,70 @@ public final class KeyBindManager extends Manager {
         }
 
         return new KeyBind(definition, mapping, onPress, onInventoryPress);
+    }
+
+    public KeyMapping getKeyMapping(String keybindName) {
+        return findActiveKeyMapping(keybindName, McUtils.options().keyMappings, mappingsById);
+    }
+
+    static KeyMapping findActiveKeyMapping(
+            String keybindName, KeyMapping[] activeMappings, Map<String, KeyMapping> mappingsById) {
+        KeyBindDefinition definition = getKeyBindDefinition(keybindName);
+        if (definition != null) {
+            KeyMapping registeredMapping = mappingsById.get(definition.id());
+            if (registeredMapping == null) {
+                return null;
+            }
+
+            for (KeyMapping keyMapping : activeMappings) {
+                if (keyMapping == registeredMapping) {
+                    return keyMapping;
+                }
+            }
+
+            return null;
+        }
+
+        for (KeyMapping keyMapping : activeMappings) {
+            if (keyMapping.getName().equals(keybindName)) {
+                return keyMapping;
+            }
+        }
+
+        return null;
+    }
+
+    static KeyBindDefinition getKeyBindDefinition(String keybindName) {
+        for (KeyBindDefinition definition : KeyBindDefinition.definitions()) {
+            if (definition.name().equals(keybindName)
+                    || definition.translationKey().equals(keybindName)) {
+                return definition;
+            }
+        }
+
+        return null;
+    }
+
+    static Map<String, InputConstants.Key> getLegacyKeybindOverrides(List<String> lines) {
+        Map<String, InputConstants.Key> legacyOverrides = new LinkedHashMap<>();
+
+        for (String line : lines) {
+            for (KeyBindDefinition definition : KeyBindDefinition.definitions()) {
+                if (line.startsWith(definition.legacyOptionsKeyPrefix())) {
+                    String keyName =
+                            line.substring(definition.legacyOptionsKeyPrefix().length());
+                    legacyOverrides.put(definition.id(), InputConstants.getKey(keyName));
+                    break;
+                }
+
+                if (line.startsWith(definition.optionsKeyPrefix())) {
+                    legacyOverrides.remove(definition.id());
+                    break;
+                }
+            }
+        }
+
+        return legacyOverrides;
     }
 
     static void migrateLegacyKeybinds(Path optionsPath) {
