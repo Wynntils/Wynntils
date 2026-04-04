@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats.builders;
@@ -38,7 +38,7 @@ public enum MiscStatKind {
 
     // Bonuses for emeralds, XP, loot and gathering
     STEALING("Stealing", StatUnit.PERCENT, "stealing", "EMERALDSTEALING"),
-    XP_BONUS("XP Bonus", StatUnit.PERCENT, "xpBonus"),
+    XP_BONUS("XP Bonus", StatUnit.PERCENT, "combatExperience"),
     LOOT_BONUS("Loot Bonus", StatUnit.PERCENT, "lootBonus"),
     LOOT_QUALITY("Loot Quality", StatUnit.PERCENT, "lootQuality", "LOOT_QUALITY"),
     GATHER_XP_BONUS("Gather XP Bonus", StatUnit.PERCENT, "gatherXpBonus", "GATHER_XP_BONUS"),
@@ -48,7 +48,11 @@ public enum MiscStatKind {
     // Special tome only stats, which are only found as base stats on tomes
     SLAYING_XP("Slaying XP", StatUnit.PERCENT, "slayingXP", "SLAYING_XP", StatType.SpecialStatType.TOME_BASE_STAT),
     GATHERING_XP(
-            "Gathering XP", StatUnit.PERCENT, "gatheringXP", "GATHERING_XP", StatType.SpecialStatType.TOME_BASE_STAT),
+            "Gathering XP",
+            StatUnit.PERCENT,
+            "gatheringExperience",
+            "GATHERING_XP",
+            StatType.SpecialStatType.TOME_BASE_STAT),
     DUNGEON_XP("Dungeon XP", StatUnit.PERCENT, "dungeonXP", "DUNGEON_XP", StatType.SpecialStatType.TOME_BASE_STAT),
 
     // Charm stats

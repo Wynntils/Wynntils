@@ -66,7 +66,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
 
     protected GearMetaInfo parseMetaInfo(JsonObject json, String apiName, GearType type) {
         GearRestrictions restrictions = parseRestrictions(json);
-        ItemMaterial material = parseMaterial(json, type);
+        ItemMaterial material = parseMaterial(json);
 
         if (material == null || material.itemStack().isEmpty()) {
             WynntilsMod.warn("Failed to parse material for " + json.get("name").getAsString());
@@ -135,9 +135,11 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
                                 dropMeta.get("event").getAsString().toUpperCase(Locale.ROOT));
                         obtainInfo.add(
                                 new ItemObtainInfo(ItemObtainType.EVENT, Optional.of(festivalType.getFullName())));
-                    } else {
+                    } else if (dropMeta.has("name")) {
                         obtainInfo.add(new ItemObtainInfo(
                                 itemObtainType, Optional.of(dropMeta.get("name").getAsString())));
+                    } else {
+                        obtainInfo.add(new ItemObtainInfo(itemObtainType, Optional.empty()));
                     }
                 }
             } else if (dropRestriction == DropRestriction.DUNGEON) {
@@ -195,42 +197,6 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         return List.copyOf(types);
     }
 
-    private ItemMaterial parseMaterial(JsonObject json, GearType type) {
-        if (type == GearType.HELMET && json.has("armourMaterial")) {
-            // Helmets that use vanilla blocks/items use the armourMaterial field instead of icon
-            switch (json.get("armourMaterial").getAsString()) {
-                case "creeper" -> {
-                    return ItemMaterial.fromItemId("minecraft:creeper_head", 0);
-                }
-                case "zombie" -> {
-                    return ItemMaterial.fromItemId("minecraft:zombie_head", 0);
-                }
-                case "pumpkin" -> {
-                    return ItemMaterial.fromItemId("minecraft:carved_pumpkin", 0);
-                }
-                case "jackolantern" -> {
-                    return ItemMaterial.fromItemId("minecraft:jack_o_lantern", 0);
-                }
-                // These are not currently used so they are just guesses at the moment
-                case "skeleton" -> {
-                    return ItemMaterial.fromItemId("minecraft:skeleton_skull", 0);
-                }
-                case "witherskeleton" -> {
-                    return ItemMaterial.fromItemId("minecraft:wither_skeleton_skull", 0);
-                }
-                case "piglin" -> {
-                    return ItemMaterial.fromItemId("minecraft:piglin_head", 0);
-                }
-                default -> {
-                    // Unknown material, try parsing normally
-                    return parseMaterial(json);
-                }
-            }
-        } else {
-            return parseMaterial(json);
-        }
-    }
-
     protected ItemMaterial parseMaterial(JsonObject json) {
         if (!json.has("icon")) {
             WynntilsMod.warn(
@@ -244,6 +210,37 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
 
         switch (iconFormat) {
             case "attribute" -> {
+                if (icon.get("value").isJsonPrimitive()) {
+                    // Helmets that use vanilla blocks/items use the armourMaterial field instead of icon
+                    switch (icon.get("value").getAsString()) {
+                        case "helmet.creeper" -> {
+                            return ItemMaterial.fromItemId("minecraft:creeper_head", 0);
+                        }
+                        case "helmet.zombie" -> {
+                            return ItemMaterial.fromItemId("minecraft:zombie_head", 0);
+                        }
+                        case "helmet.pumpkin" -> {
+                            return ItemMaterial.fromItemId("minecraft:carved_pumpkin", 0);
+                        }
+                        case "helmet.jackOLantern" -> {
+                            return ItemMaterial.fromItemId("minecraft:jack_o_lantern", 0);
+                        }
+                        // These are not currently used so they are just guesses at the moment
+                        case "helmet.skeleton" -> {
+                            return ItemMaterial.fromItemId("minecraft:skeleton_skull", 0);
+                        }
+                        case "helmet.witherSkeleton" -> {
+                            return ItemMaterial.fromItemId("minecraft:wither_skeleton_skull", 0);
+                        }
+                        case "helmet.piglin" -> {
+                            return ItemMaterial.fromItemId("minecraft:piglin_head", 0);
+                        }
+                        default -> {
+                            // Unknown material, fall through and try parsing normally
+                        }
+                    }
+                }
+
                 JsonObject value = icon.get("value").getAsJsonObject();
 
                 if (value.has("name")) {
