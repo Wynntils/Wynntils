@@ -143,7 +143,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "441b1dfc10747d80e4827bd097cda6b4",
+    "md5": "e98b947885a40500ce754f3fd70b06cb",
     "path": "Reference/gear.json",
     "url": "https://cdn.wynntils.com/static/Reference/gear.json"
   },
@@ -239,7 +239,7 @@
   },
   {
     "id": "dataStaticModelData",
-    "md5": "229abd985f684e23cc3cd88a6a809162",
+    "md5": "53a5b9d6b75f08371e4b15b9482461e8",
     "path": "Data-Storage/model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/model_data.json"
   },
