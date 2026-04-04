@@ -102,7 +102,7 @@ public class CharmInfoRegistry {
             String displayName = names.key();
             String internalName = names.value();
 
-            GearTier tier = GearTier.fromString(json.get("rarity").getAsString());
+            GearTier tier = GearTier.fromString(json.get("tier").getAsString());
             if (tier == null) {
                 throw new RuntimeException("Invalid Wynncraft data: charm has no tier");
             }
