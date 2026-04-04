@@ -9,16 +9,12 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.mc.mixin.accessors.OptionsLoadVisitorAccessor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.Map;
 import net.minecraft.client.Options;
 import net.minecraft.nbt.CompoundTag;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Coerce;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -40,7 +36,7 @@ public class OptionsMixin {
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/client/Options;processOptions(Lnet/minecraft/client/Options$FieldAccess;)V"))
-    private void wrapProcessOptions(Options instance, @Coerce Object fieldAccess, Operation<Void> original) {
+    private void wrapProcessOptions(Options instance, Options.FieldAccess fieldAccess, Operation<Void> original) {
         original.call(instance, wrapLegacyKeybindFieldAccess(fieldAccess));
     }
 
@@ -55,7 +51,7 @@ public class OptionsMixin {
     }
 
     @Unique
-    private Object wrapLegacyKeybindFieldAccess(Object fieldAccess) {
+    private Options.FieldAccess wrapLegacyKeybindFieldAccess(Options.FieldAccess fieldAccess) {
         if (!(fieldAccess instanceof OptionsLoadVisitorAccessor loadVisitorAccessor)) {
             return fieldAccess;
         }
@@ -66,31 +62,6 @@ public class OptionsMixin {
             return fieldAccess;
         }
 
-        return Proxy.newProxyInstance(
-                fieldAccess.getClass().getClassLoader(),
-                fieldAccess.getClass().getInterfaces(),
-                (proxy, method, args) -> processFieldAccessInvocation(fieldAccess, legacyAliases, method, args));
-    }
-
-    @Unique
-    private Object processFieldAccessInvocation(
-            Object fieldAccess, Map<String, String> legacyAliases, Method method, Object[] args) throws Throwable {
-        if ("process".equals(method.getName())
-                && args != null
-                && args.length == 2
-                && args[0] instanceof String optionKey
-                && args[1] instanceof String) {
-            String legacyValue = legacyAliases.get(optionKey);
-            if (legacyValue != null) {
-                wynntils$legacyKeybindsMigrated = true;
-                return legacyValue;
-            }
-        }
-
-        try {
-            return method.invoke(fieldAccess, args);
-        } catch (InvocationTargetException e) {
-            throw e.getCause();
-        }
+        return new LegacyKeybindFieldAccess(fieldAccess, legacyAliases, () -> wynntils$legacyKeybindsMigrated = true);
     }
 }
