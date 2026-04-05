@@ -98,7 +98,7 @@ public class MountItem extends GameItem {
         return "MountItem{" + "name='" + name + '\'' + ", potential=" + potential + ", energy=" + energy
                 + ", acceleration=" + acceleration + ", jumpHeight=" + jumpHeight
                 + ", altitude=" + altitude + ", energyStat=" + energyStat + ", handling=" + handling
-                + ", powerup=" + boost + ", speed=" + speed + ", toughness=" + toughness + ", training="
+                + ", boost=" + boost + ", speed=" + speed + ", toughness=" + toughness + ", training="
                 + training + '}';
     }
 }
