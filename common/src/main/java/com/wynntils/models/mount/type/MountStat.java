@@ -9,10 +9,11 @@ import java.util.Optional;
 public enum MountStat {
     ACCELERATION("acceleration", true),
     ALTITUDE("altitude", true),
+    JUMP_HEIGHT("jumpHeight", true),
     ENERGY("energy", true),
     HANDLING("handling", true),
     POTENTIAL("potential", false),
-    POWERUP("powerup", true),
+    BOOST("powerup", true),
     SPEED("speed", true),
     TOUGHNESS("toughness", true),
     TRAINING("training", true);
