@@ -39,6 +39,18 @@ public record KeyBindDefinition(
         return Managers.KeyBind.createKeyBind(this, onPress, inventoryPress);
     }
 
+    public String translationKey() {
+        return "wynntils.keybind." + id;
+    }
+
+    public String legacyOptionsKey() {
+        return "key_" + name;
+    }
+
+    public String optionsKey() {
+        return "key_" + translationKey();
+    }
+
     // region Chat
     public static final KeyBindDefinition BOMB_RELAY_PARTY = register(
             "relayBombToParty",
