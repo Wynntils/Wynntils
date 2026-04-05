@@ -24,6 +24,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
           labels: auto-generated
           committer: 'WynntilsBot <admin@wynntils.com>'
           commit-message: "chore: [auto-generated] Update urls.json [ci skip]"
