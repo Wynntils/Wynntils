@@ -11,26 +11,38 @@ public class TestAutoAttackFeature {
     @Test
     public void queuesHeldAutoAttackWhenTriggerIsHeldOutsideSpellWindows() {
         Assertions.assertTrue(
-                AutoAttackFeature.shouldQueueHeldAutoAttack(true, true, false, false, false, false, true));
+                AutoAttackFeature.shouldQueueHeldAutoAttack(true, true, false, false, false, false, false, true));
     }
 
     @Test
     public void doesNotQueueHeldAutoAttackWhileQuickCastUsesTheTriggerAsModifier() {
         Assertions.assertFalse(
-                AutoAttackFeature.shouldQueueHeldAutoAttack(true, true, false, true, false, false, true));
+                AutoAttackFeature.shouldQueueHeldAutoAttack(true, true, false, false, true, false, false, true));
+    }
+
+    @Test
+    public void doesNotQueueHeldAutoAttackWhileSpellInputsAreActive() {
+        Assertions.assertFalse(
+                AutoAttackFeature.shouldQueueHeldAutoAttack(true, true, false, true, false, false, false, true));
+    }
+
+    @Test
+    public void queuesHeldAutoAttackWhenOnlySpellCastTextRemainsActive() {
+        Assertions.assertTrue(
+                AutoAttackFeature.shouldQueueHeldAutoAttack(true, true, false, false, false, false, false, true));
     }
 
     @Test
     public void doesNotQueueHeldAutoAttackInsideSpellWindow() {
         Assertions.assertFalse(
-                AutoAttackFeature.shouldQueueHeldAutoAttack(true, true, false, false, false, true, true));
+                AutoAttackFeature.shouldQueueHeldAutoAttack(true, true, false, false, false, false, true, true));
     }
 
     @Test
     public void doesNotQueueHeldAutoAttackWithoutPlayerOrWorld() {
         Assertions.assertFalse(
-                AutoAttackFeature.shouldQueueHeldAutoAttack(false, true, false, false, false, false, true));
+                AutoAttackFeature.shouldQueueHeldAutoAttack(false, true, false, false, false, false, false, true));
         Assertions.assertFalse(
-                AutoAttackFeature.shouldQueueHeldAutoAttack(true, false, false, false, false, false, true));
+                AutoAttackFeature.shouldQueueHeldAutoAttack(true, false, false, false, false, false, false, true));
     }
 }

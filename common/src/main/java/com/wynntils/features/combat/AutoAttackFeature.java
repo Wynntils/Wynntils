@@ -96,6 +96,7 @@ public class AutoAttackFeature extends Feature {
                 true,
                 true,
                 Models.SpellCaster.isSendingInputs(),
+                Models.Spell.hasActiveSpellInputs(),
                 Managers.Feature.getFeatureInstance(QuickCastFeature.class)
                         .isNormalAutoAttackTriggerActingAsSpellModifier(),
                 Models.Raid.isParasiteOvertaken(),
@@ -111,6 +112,7 @@ public class AutoAttackFeature extends Feature {
             boolean playerPresent,
             boolean onWorld,
             boolean spellCasterSending,
+            boolean spellInputsActive,
             boolean actingAsSpellModifier,
             boolean parasiteOvertaken,
             boolean inSpellInputWindow,
@@ -118,6 +120,7 @@ public class AutoAttackFeature extends Feature {
         if (!playerPresent) return false;
         if (!onWorld) return false;
         if (spellCasterSending) return false;
+        if (spellInputsActive) return false;
         if (actingAsSpellModifier) return false;
         if (parasiteOvertaken) return false;
         if (inSpellInputWindow) return false;
