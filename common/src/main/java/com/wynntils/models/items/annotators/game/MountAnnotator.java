@@ -30,7 +30,7 @@ public final class MountAnnotator implements GameItemAnnotator {
             MountStat.JUMP_HEIGHT, Pattern.compile("\\bJump Height\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.ENERGY, Pattern.compile("\\bEnergy\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.HANDLING, Pattern.compile("\\bHandling\\b.*?(\\d+)/(\\d+)\\b"),
-            MountStat.BOOST, Pattern.compile("\\Boost\\b.*?(\\d+)/(\\d+)\\b"),
+            MountStat.BOOST, Pattern.compile("\\bBoost\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.SPEED, Pattern.compile("\\bSpeed\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.TOUGHNESS, Pattern.compile("\\bToughness\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.TRAINING, Pattern.compile("\\bTraining\\b.*?(\\d+)/(\\d+)\\b"));
