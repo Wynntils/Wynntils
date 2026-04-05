@@ -3,6 +3,7 @@ accessWidener v2 named
 accessible class net/minecraft/client/gui/GuiGraphics$ScissorStack
 accessible class net/minecraft/client/gui/components/ChatComponent$DrawingBackgroundGraphicsAccess
 accessible class net/minecraft/client/gui/components/ChatComponent$DrawingFocusedGraphicsAccess
+accessible class net/minecraft/client/Options$FieldAccess
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$AddOperation
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$Operation
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$OperationType

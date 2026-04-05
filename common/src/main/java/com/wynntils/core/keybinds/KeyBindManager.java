@@ -75,7 +75,7 @@ public final class KeyBindManager extends Manager {
         List<KeyMapping> list = new ArrayList<>(Arrays.asList(options.keyMappings));
 
         for (KeyBindDefinition def : KeyBindDefinition.definitions()) {
-            KeyMapping mapping = new KeyMapping(def.name(), def.type(), def.defaultKey(), def.category());
+            KeyMapping mapping = new KeyMapping(def.translationKey(), def.type(), def.defaultKey(), def.category());
 
             list.add(mapping);
             mappingsById.put(def.id(), mapping);
@@ -92,6 +92,49 @@ public final class KeyBindManager extends Manager {
         }
 
         return new KeyBind(definition, mapping, onPress, onInventoryPress);
+    }
+
+    public KeyMapping getKeyMapping(String keybindName) {
+        return findActiveKeyMapping(keybindName, McUtils.options().keyMappings, mappingsById);
+    }
+
+    KeyMapping findActiveKeyMapping(
+            String keybindName, KeyMapping[] activeMappings, Map<String, KeyMapping> mappingsById) {
+        KeyBindDefinition definition = getKeyBindDefinition(keybindName);
+        if (definition != null) {
+            KeyMapping registeredMapping = mappingsById.get(definition.id());
+            if (registeredMapping == null) {
+                return null;
+            }
+
+            for (KeyMapping keyMapping : activeMappings) {
+                if (keyMapping == registeredMapping) {
+                    return keyMapping;
+                }
+            }
+
+            return null;
+        }
+
+        for (KeyMapping keyMapping : activeMappings) {
+            if (keyMapping.getName().equals(keybindName)) {
+                return keyMapping;
+            }
+        }
+
+        return null;
+    }
+
+    public KeyBindDefinition getKeyBindDefinition(String keybindName) {
+        for (KeyBindDefinition definition : KeyBindDefinition.definitions()) {
+            if (definition.name().equals(keybindName)
+                    || definition.translationKey().equals(keybindName)
+                    || definition.optionsKey().equals(keybindName)) {
+                return definition;
+            }
+        }
+
+        return null;
     }
 
     public void discoverKeyBinds(Feature feature) {
