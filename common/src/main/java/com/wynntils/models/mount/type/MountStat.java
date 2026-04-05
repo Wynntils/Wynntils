@@ -13,7 +13,7 @@ public enum MountStat {
     ENERGY("energy", true),
     HANDLING("handling", true),
     POTENTIAL("potential", false),
-    BOOST("powerup", true),
+    BOOST("boost", true),
     SPEED("speed", true),
     TOUGHNESS("toughness", true),
     TRAINING("training", true);
