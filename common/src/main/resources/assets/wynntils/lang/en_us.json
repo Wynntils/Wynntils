@@ -3727,7 +3727,6 @@
   "utils.wynntils.time.past": "%s ago",
   "utils.wynntils.time.second": "%d second",
   "utils.wynntils.time.seconds": "%d seconds",
-  "wynntils.keybind.cancelNpcAutoProgress": "Cancel Dialog Auto Progress",
   "wynntils.keybind.castFirstSpell": "Cast 1st Spell",
   "wynntils.keybind.castFourthSpell": "Cast 4th Spell",
   "wynntils.keybind.castMeleeAttack": "Cast Melee Attack",
@@ -3769,7 +3768,6 @@
   "wynntils.keybind.openTerritoryMenu": "Open Territory Menu",
   "wynntils.keybind.openTomeGuide": "Open Tome Guide",
   "wynntils.keybind.openWynntilsMenu": "Open Wynntils Menu",
-  "wynntils.keybind.progressNpcDialogue": "Progress NPC Dialogue",
   "wynntils.keybind.quickSearchTradeMarket": "Quick Search TM",
   "wynntils.keybind.relayBombToGuild": "Relay Bomb to Guild",
   "wynntils.keybind.relayBombToParty": "Relay Bomb to Party",
@@ -3781,5 +3779,5 @@
   "wynntils.keybind.toggleFavorite": "Favorite/Unfavorite Item",
   "wynntils.keybind.toggleSilencer": "Toggle Silencer",
   "wynntils.keybind.toggleStopwatch": "Toggle Stopwatch",
-  "wynntils.keybind.viewPlayer": "View Player's Gear"
+  "wynntils.keybind.viewPlayer": "View Player"
 }
