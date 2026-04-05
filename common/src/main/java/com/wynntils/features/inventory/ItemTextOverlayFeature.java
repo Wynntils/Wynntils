@@ -432,10 +432,11 @@ public class ItemTextOverlayFeature extends Feature {
             return switch (mountItemStat.get()) {
                 case ACCELERATION -> item.getAcceleration().current();
                 case ALTITUDE -> item.getAltitude().current();
+                case JUMP_HEIGHT -> item.getJumpHeight().current();
                 case ENERGY -> item.getEnergy().current();
                 case HANDLING -> item.getHandling().current();
                 case POTENTIAL -> item.getPotential();
-                case POWERUP -> item.getPowerup().current();
+                case BOOST -> item.getBoost().current();
                 case SPEED -> item.getSpeed().current();
                 case TOUGHNESS -> item.getToughness().current();
                 case TRAINING -> item.getTraining().current();
