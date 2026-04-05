@@ -7,7 +7,6 @@ package com.wynntils.mc.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.mc.mixin.accessors.OptionsLoadVisitorAccessor;
 import java.util.Map;
 import net.minecraft.client.Options;
@@ -57,7 +56,7 @@ public class OptionsMixin {
         }
 
         CompoundTag options = loadVisitorAccessor.wynntils$getOptions();
-        Map<String, String> legacyAliases = KeyBindManager.getLegacyKeybindAliases(options);
+        Map<String, String> legacyAliases = Managers.KeyBind.getLegacyKeybindAliases(options);
         if (legacyAliases.isEmpty()) {
             return fieldAccess;
         }

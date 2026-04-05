@@ -5,6 +5,7 @@
 package com.wynntils.core.keybinds;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import java.util.Map;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.nbt.CompoundTag;
@@ -26,7 +27,7 @@ public class TestKeyBindManager {
         options.putString(KeyBindDefinition.VIEW_PLAYER.legacyOptionsKey(), "key.mouse.middle");
         options.putString(KeyBindDefinition.OPEN_CONTENT_BOOK.legacyOptionsKey(), "key.keyboard.k");
 
-        Map<String, String> legacyAliases = KeyBindManager.getLegacyKeybindAliases(options);
+        Map<String, String> legacyAliases = Managers.KeyBind.getLegacyKeybindAliases(options);
 
         Assertions.assertEquals("key.keyboard.r", legacyAliases.get(KeyBindDefinition.RIDE_MOUNT.optionsKey()));
         Assertions.assertEquals("key.keyboard.p", legacyAliases.get(KeyBindDefinition.OPEN_GUILD_BANK.optionsKey()));
@@ -40,15 +41,15 @@ public class TestKeyBindManager {
         options.putString(KeyBindDefinition.SHARE_ITEM.legacyOptionsKey(), "key.keyboard.f5");
         options.putString(KeyBindDefinition.SHARE_ITEM.optionsKey(), "key.keyboard.f6");
 
-        Map<String, String> legacyAliases = KeyBindManager.getLegacyKeybindAliases(options);
+        Map<String, String> legacyAliases = Managers.KeyBind.getLegacyKeybindAliases(options);
 
         Assertions.assertFalse(legacyAliases.containsKey(KeyBindDefinition.SHARE_ITEM.optionsKey()));
     }
 
     @Test
     public void resolvesLegacyAndStableKeybindNamesToTheSameDefinition() {
-        KeyBindDefinition legacyNameDefinition = KeyBindManager.getKeyBindDefinition("Share Item");
-        KeyBindDefinition stableNameDefinition = KeyBindManager.getKeyBindDefinition("wynntils.keybind.shareItem");
+        KeyBindDefinition legacyNameDefinition = Managers.KeyBind.getKeyBindDefinition("Share Item");
+        KeyBindDefinition stableNameDefinition = Managers.KeyBind.getKeyBindDefinition("wynntils.keybind.shareItem");
 
         Assertions.assertNotNull(legacyNameDefinition);
         Assertions.assertSame(legacyNameDefinition, stableNameDefinition);
@@ -60,7 +61,7 @@ public class TestKeyBindManager {
         options.putString("key_key.attack", "key.mouse.left");
         options.putString("gamma", "0.5");
 
-        Map<String, String> legacyAliases = KeyBindManager.getLegacyKeybindAliases(options);
+        Map<String, String> legacyAliases = Managers.KeyBind.getLegacyKeybindAliases(options);
 
         Assertions.assertEquals(Map.of(), legacyAliases);
     }
@@ -86,15 +87,15 @@ public class TestKeyBindManager {
 
         Assertions.assertSame(
                 activeShareItemMapping,
-                KeyBindManager.findActiveKeyMapping(
+                Managers.KeyBind.findActiveKeyMapping(
                         "Share Item", new KeyMapping[] {activeShareItemMapping}, mappingsById));
         Assertions.assertSame(
                 activeShareItemMapping,
-                KeyBindManager.findActiveKeyMapping(
+                Managers.KeyBind.findActiveKeyMapping(
                         KeyBindDefinition.SHARE_ITEM.translationKey(),
                         new KeyMapping[] {activeShareItemMapping},
                         mappingsById));
-        Assertions.assertNull(KeyBindManager.findActiveKeyMapping(
+        Assertions.assertNull(Managers.KeyBind.findActiveKeyMapping(
                 "View player's gear", new KeyMapping[] {activeShareItemMapping}, mappingsById));
     }
 }

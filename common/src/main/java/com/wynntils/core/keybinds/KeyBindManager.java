@@ -100,7 +100,7 @@ public final class KeyBindManager extends Manager {
         return findActiveKeyMapping(keybindName, McUtils.options().keyMappings, mappingsById);
     }
 
-    static KeyMapping findActiveKeyMapping(
+    KeyMapping findActiveKeyMapping(
             String keybindName, KeyMapping[] activeMappings, Map<String, KeyMapping> mappingsById) {
         KeyBindDefinition definition = getKeyBindDefinition(keybindName);
         if (definition != null) {
@@ -127,7 +127,7 @@ public final class KeyBindManager extends Manager {
         return null;
     }
 
-    static KeyBindDefinition getKeyBindDefinition(String keybindName) {
+    KeyBindDefinition getKeyBindDefinition(String keybindName) {
         for (KeyBindDefinition definition : KeyBindDefinition.definitions()) {
             if (definition.name().equals(keybindName)
                     || definition.translationKey().equals(keybindName)) {
@@ -138,7 +138,7 @@ public final class KeyBindManager extends Manager {
         return null;
     }
 
-    public static Map<String, String> getLegacyKeybindAliases(CompoundTag options) {
+    public Map<String, String> getLegacyKeybindAliases(CompoundTag options) {
         Map<String, String> legacyAliases = new LinkedHashMap<>();
 
         for (KeyBindDefinition definition : KeyBindDefinition.definitions()) {
