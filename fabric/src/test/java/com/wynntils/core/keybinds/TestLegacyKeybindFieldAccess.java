@@ -5,7 +5,6 @@
 package com.wynntils.core.keybinds;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
@@ -26,7 +25,6 @@ public class TestLegacyKeybindFieldAccess {
         AtomicBoolean migrated = new AtomicBoolean(false);
         LegacyKeybindFieldAccess fieldAccess = new LegacyKeybindFieldAccess(
                 new TestFieldAccess(Map.of(KeyBindDefinition.SHARE_ITEM.legacyOptionsKey(), "key.keyboard.g")),
-                Managers.KeyBind,
                 () -> migrated.set(true));
 
         String value = fieldAccess.process(KeyBindDefinition.SHARE_ITEM.optionsKey(), "key.keyboard.f5");
@@ -44,7 +42,6 @@ public class TestLegacyKeybindFieldAccess {
                         "key.keyboard.f8",
                         KeyBindDefinition.SHARE_ITEM.legacyOptionsKey(),
                         "key.keyboard.g")),
-                Managers.KeyBind,
                 () -> migrated.set(true));
 
         String value = fieldAccess.process(KeyBindDefinition.SHARE_ITEM.optionsKey(), "key.keyboard.f5");
@@ -56,8 +53,8 @@ public class TestLegacyKeybindFieldAccess {
     @Test
     public void leavesNonKeybindStringOptionsUntouched() {
         AtomicBoolean migrated = new AtomicBoolean(false);
-        LegacyKeybindFieldAccess fieldAccess = new LegacyKeybindFieldAccess(
-                new TestFieldAccess(Map.of("lang", "en_gb")), Managers.KeyBind, () -> migrated.set(true));
+        LegacyKeybindFieldAccess fieldAccess =
+                new LegacyKeybindFieldAccess(new TestFieldAccess(Map.of("lang", "en_gb")), () -> migrated.set(true));
 
         String value = fieldAccess.process("lang", "en_us");
 

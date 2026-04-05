@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.keybinds;
 
+import com.wynntils.core.components.Managers;
 import java.util.function.Function;
 import net.minecraft.client.Options;
 
@@ -11,13 +12,10 @@ public final class LegacyKeybindFieldAccess implements Options.FieldAccess {
     private static final String MISSING_KEYBIND_SENTINEL = "__wynntils_missing_keybind__";
 
     private final Options.FieldAccess delegate;
-    private final KeyBindManager keyBindManager;
     private final Runnable markMigrated;
 
-    public LegacyKeybindFieldAccess(
-            Options.FieldAccess delegate, KeyBindManager keyBindManager, Runnable markMigrated) {
+    public LegacyKeybindFieldAccess(Options.FieldAccess delegate, Runnable markMigrated) {
         this.delegate = delegate;
-        this.keyBindManager = keyBindManager;
         this.markMigrated = markMigrated;
     }
 
@@ -38,7 +36,7 @@ public final class LegacyKeybindFieldAccess implements Options.FieldAccess {
 
     @Override
     public String process(String key, String currentValue) {
-        KeyBindDefinition definition = keyBindManager.getKeyBindDefinition(key);
+        KeyBindDefinition definition = Managers.KeyBind.getKeyBindDefinition(key);
         if (definition == null || !definition.optionsKey().equals(key)) {
             return delegate.process(key, currentValue);
         }

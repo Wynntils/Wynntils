@@ -49,7 +49,6 @@ public class OptionsMixin {
 
     @Unique
     private Options.FieldAccess wrapLegacyKeybindFieldAccess(Options.FieldAccess fieldAccess) {
-        return new LegacyKeybindFieldAccess(
-                fieldAccess, Managers.KeyBind, () -> wynntils$legacyKeybindsMigrated = true);
+        return new LegacyKeybindFieldAccess(fieldAccess, () -> wynntils$legacyKeybindsMigrated = true);
     }
 }
