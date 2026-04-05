@@ -37,6 +37,7 @@ import com.wynntils.models.players.PartyModel;
 import com.wynntils.models.profession.label.GatheringNodeHarvestLabelParser;
 import com.wynntils.models.raid.RaidModel;
 import com.wynntils.models.raid.bossbar.ParasiteOvertakenBar;
+import com.wynntils.models.spells.actionbar.matchers.SpellCastSegmentMatcher;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
@@ -239,11 +240,10 @@ public class TestRegex {
     public void DamageLabelParser_DAMAGE_LABEL_PATTERN() {
         PatternTester p = new PatternTester(DamageLabelParser.class, "DAMAGE_LABEL_PATTERN");
         p.shouldMatch("§e509");
-        p.shouldMatch("§52.8k");
-        p.shouldMatch("§5§{fr:minecraft:language/five}2.8k");
-        p.shouldMatch("§56.2k󐀊§519.7k󐀊§57.1k󐀊§57.9k󐀊§512.8k");
-        p.shouldMatch("§c1.2k󐀊§b300󐀊§e45.6k󐀊§f999");
         p.shouldMatch("§42.8k");
+        p.shouldMatch("§5200k");
+        p.shouldMatch("§42.8k\uDB00\uDC0A§e19.7k\uDB00\uDC0A§c7.1k\uDB00\uDC0A§b7.9k\uDB00\uDC0A§f12.8k");
+        p.shouldMatch("§c1.2k\uDB00\uDC0A§b300\uDB00\uDC0A§e45.6k\uDB00\uDC0A§f999");
     }
 
     @Test
@@ -774,6 +774,16 @@ public class TestRegex {
     }
 
     @Test
+    public void SpellCastSegmentMatcher_SPELL_REGEX() {
+        PatternTester p = new PatternTester(SpellCastSegmentMatcher.class, "SPELL_REGEX");
+        p.shouldMatch("\uDAFF\uDFCEIce Snake Cast! -30 \uE531\uDAFF\uDFCE");
+        p.shouldMatch("\uDAFF\uDFD5Meteor Cast! -69 \uE531\uDAFF\uDFD4");
+        p.shouldMatch("\uDAFF\uDFD1Teleport Cast! -15 \uE531\uDAFF\uDFD1");
+        p.shouldMatch("\uDAFF\uDFDAHeal Cast! -34 \uE531\uDAFF\uDFDA");
+        p.shouldMatch("\uDAFF\uDFC1Charge Cast! -12 \uE531 -1138 \uE530\uDAFF\uDFC1");
+    }
+
+    @Test
     public void StatusEffectModel_STATUS_EFFECT_PATTERN() {
         PatternTester p = new PatternTester(StatusEffectModel.class, "STATUS_EFFECT_PATTERN");
         p.shouldMatch("§fⒺ§7 +198 Main Attack Damage §8(00:41)");
@@ -996,6 +1006,14 @@ public class TestRegex {
         PatternTester p = new PatternTester(RaidModel.class, "RAID_CHOOSE_BUFF_PATTERN");
         p.shouldMatch(
                 "§#d6401eff\uE009\uE002 §#fa7f63ffDanzxms§#d6401eff has chosen the §#fa7f63ffStonewalker III§#d6401eff buff!");
+    }
+
+    @Test
+    public void WynnItemParser_CRAFTED_ITEM_NAME_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "CRAFTED_ITEM_NAME_PATTERN");
+        p.shouldMatch("§3how do i rename horses now lol §b[100%]À");
+        p.shouldMatch("§3Dune Hero Fallen Chestplate §b[100%]");
+        p.shouldMatch("§3I need money pls §b[1/1]À");
     }
 
     @Test

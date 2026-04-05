@@ -8,12 +8,12 @@ import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.mc.event.ChatScreenCreateEvent;
 import java.io.File;
 import java.util.UUID;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
+import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.prediction.PredictiveAction;
@@ -177,11 +177,11 @@ public final class McUtils {
     }
 
     public static void openChatScreen(String keybindCommand) {
-        // TODO: Improve mixin to not require event posting here
-        Screen chatScreen = new ChatScreen(keybindCommand, false);
-        ChatScreenCreateEvent event = new ChatScreenCreateEvent(chatScreen, keybindCommand, false);
-        WynntilsMod.postEvent(event);
+        ChatComponent.ChatMethod chatMethod =
+                keybindCommand.startsWith("/") ? ChatComponent.ChatMethod.COMMAND : ChatComponent.ChatMethod.MESSAGE;
 
-        setScreen(event.getScreen());
+        // Route through ChatComponent so the existing createScreen mixin can post ChatScreenCreateEvent.
+        mc().gui.getChat().saveAsDraft(keybindCommand);
+        mc().gui.getChat().openScreen(chatMethod, ChatScreen::new);
     }
 }

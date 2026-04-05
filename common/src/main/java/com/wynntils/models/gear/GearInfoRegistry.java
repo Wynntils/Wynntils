@@ -113,12 +113,12 @@ public class GearInfoRegistry {
             String displayName = names.key();
             String internalName = names.value();
 
-            GearType type = parseType(json);
+            GearType type = GearType.fromString(json.get("subType").getAsString());
             if (type == null) {
                 throw new RuntimeException("Invalid Wynncraft data: item has no gear type");
             }
 
-            GearTier tier = GearTier.fromString(json.get("rarity").getAsString());
+            GearTier tier = GearTier.fromString(json.get("tier").getAsString());
             if (tier == null) {
                 throw new RuntimeException("Invalid Wynncraft data: item has no gear tier");
             }

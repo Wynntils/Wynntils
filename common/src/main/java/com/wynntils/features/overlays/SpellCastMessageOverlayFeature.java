@@ -16,7 +16,7 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class SpellCastMessageOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.HOTBAR)
+    @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)
     private final Overlay spellCastOverlay = new SpellCastMessageOverlay();
 
     @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)

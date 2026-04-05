@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
+import com.wynntils.features.HideTripwiresFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
 import com.wynntils.features.ValuableFoundFeature;
@@ -22,7 +23,6 @@ import com.wynntils.features.chat.ChatMentionFeature;
 import com.wynntils.features.chat.ChatTabsFeature;
 import com.wynntils.features.chat.ChatTimestampFeature;
 import com.wynntils.features.chat.DeathCoordinatesFeature;
-import com.wynntils.features.chat.DialogueOptionOverrideFeature;
 import com.wynntils.features.chat.InputTranscriptionFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.chat.RemoveWynncraftChatWrapFeature;
@@ -34,9 +34,9 @@ import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.features.combat.HealthPotionBlockerFeature;
 import com.wynntils.features.combat.HideLabelsFeature;
-import com.wynntils.features.combat.HorseMountFeature;
 import com.wynntils.features.combat.InvertAttackKeybindsFeature;
 import com.wynntils.features.combat.LowHealthVignetteFeature;
+import com.wynntils.features.combat.MountKeybindFeature;
 import com.wynntils.features.combat.MythicBoxScalerFeature;
 import com.wynntils.features.combat.PreventTradesDuelsFeature;
 import com.wynntils.features.combat.QuickCastFeature;
@@ -223,7 +223,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new ChatTabsFeature());
         registerFeature(new ChatTimestampFeature());
         registerFeature(new DeathCoordinatesFeature());
-        registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new InputTranscriptionFeature());
         registerFeature(new MessageFilterFeature());
         registerFeature(new RemoveWynncraftChatWrapFeature());
@@ -238,9 +237,9 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomLootrunBeaconsFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HideLabelsFeature());
-        registerFeature(new HorseMountFeature());
         registerFeature(new InvertAttackKeybindsFeature());
         registerFeature(new LowHealthVignetteFeature());
+        registerFeature(new MountKeybindFeature());
         registerFeature(new MythicBoxScalerFeature());
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuickCastFeature());
@@ -409,6 +408,7 @@ public final class FeatureManager extends Manager {
         // region uncategorized
         registerFeature(new DiscordRichPresenceFeature());
         registerFeature(new ExtendedSeasonLeaderboardFeature());
+        registerFeature(new HideTripwiresFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new ValuableFoundFeature());
         // endregion
