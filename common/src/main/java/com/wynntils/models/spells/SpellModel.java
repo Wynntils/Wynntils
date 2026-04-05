@@ -50,8 +50,11 @@ public final class SpellModel extends Model {
     private int repeatedSpellCount = 0;
     private int ticksSinceCastBurst = 0;
     private int ticksSinceCast = 0;
+    private int ticksSinceSpellInputActivity = SPELL_COST_RESET_TICKS;
 
     private boolean expireNextClear = false;
+    private boolean ignoreSpellInputsUntilClear = false;
+    private boolean spellInputsActive = false;
     // This keeps track of if the spell cast text is currently displayed so that we don't send multiple events
     private boolean spellTextActive = false;
 
@@ -112,6 +115,12 @@ public final class SpellModel extends Model {
         if (!lastSpellName.isEmpty()) {
             ticksSinceCast++;
         }
+        if (spellInputsActive && ticksSinceSpellInputActivity < SPELL_COST_RESET_TICKS) {
+            ticksSinceSpellInputActivity++;
+            if (ticksSinceSpellInputActivity >= SPELL_COST_RESET_TICKS) {
+                spellInputsActive = false;
+            }
+        }
 
         if (ticksSinceCastBurst >= SPELL_COST_RESET_TICKS) {
             lastBurstSpellName = "";
@@ -131,14 +140,13 @@ public final class SpellModel extends Model {
         ticksSinceCastBurst = 0;
         ticksSinceCast = 0;
         ticksSinceSpecificSpellMap.clear();
+        clearSpellInputActivity();
+        ignoreSpellInputsUntilClear = true;
     }
 
     @SubscribeEvent
     public void onHeldItemChange(ChangeCarriedItemEvent event) {
-        // We need to reset lastSpell here as the actual inputs are now cleared, but they are still visible
-        // so we don't post the expired event until the action bar has actually updated with the cleared inputs
-        lastSpell = SpellDirection.NO_SPELL;
-        expireNextClear = true;
+        clearSpellInputsForHeldItemChange();
     }
 
     public void addSpellToQueue(List<SpellDirection> spell) {
@@ -179,6 +187,14 @@ public final class SpellModel extends Model {
         return lastSpell.clone();
     }
 
+    public boolean hasActiveSpellInputs() {
+        return spellInputsActive;
+    }
+
+    public boolean isSpellCastActive() {
+        return spellTextActive;
+    }
+
     public int getRepeatedBurstSpellCount() {
         return repeatedBurstSpellCount;
     }
@@ -200,6 +216,21 @@ public final class SpellModel extends Model {
     }
 
     private void updateFromSpellSegment(SpellInputsSegment spellInputsSegment) {
+        if (ignoreSpellInputsUntilClear) {
+            if (spellInputsSegment.getDirections().length == 0) {
+                ignoreSpellInputsUntilClear = false;
+                if (expireNextClear) {
+                    expireNextClear = false;
+                    WynntilsMod.postEvent(new SpellEvent.Expired());
+                }
+            }
+            clearSpellInputActivity();
+            return;
+        }
+
+        spellInputsActive = spellInputsSegment.getDirections().length > 0;
+        ticksSinceSpellInputActivity = spellInputsActive ? 0 : SPELL_COST_RESET_TICKS;
+
         // noop if the spell state hasn't changed
         if (Arrays.equals(spellInputsSegment.getDirections(), lastSpell)) return;
         lastSpell = spellInputsSegment.getDirections();
@@ -218,6 +249,9 @@ public final class SpellModel extends Model {
     }
 
     private void handleExpiredSpell() {
+        ignoreSpellInputsUntilClear = false;
+        clearSpellInputActivity();
+
         if (lastSpell.length != 0) {
             if (lastSpell.length != 3) {
                 lastSpell = SpellDirection.NO_SPELL;
@@ -242,5 +276,19 @@ public final class SpellModel extends Model {
 
         spellTextActive = false;
         WynntilsMod.postEvent(new SpellEvent.CastExpired());
+    }
+
+    private void clearSpellInputsForHeldItemChange() {
+        // The actual input state is cleared immediately, but the action bar may still show stale inputs
+        // until the next packet, so keep the deferred Expired event behavior.
+        lastSpell = SpellDirection.NO_SPELL;
+        clearSpellInputActivity();
+        expireNextClear = true;
+        ignoreSpellInputsUntilClear = true;
+    }
+
+    private void clearSpellInputActivity() {
+        spellInputsActive = false;
+        ticksSinceSpellInputActivity = SPELL_COST_RESET_TICKS;
     }
 }
