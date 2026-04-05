@@ -11,7 +11,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.wrappedscreen.WrappedScreenHolder;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
-import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.items.items.gui.TerritoryItem;
