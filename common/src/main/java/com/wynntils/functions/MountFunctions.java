@@ -110,10 +110,11 @@ public class MountFunctions {
         return switch (stat) {
             case ACCELERATION -> mount.getAcceleration().current();
             case ALTITUDE -> mount.getAltitude().current();
+            case JUMP_HEIGHT -> mount.getJumpHeight().current();
             case ENERGY -> mount.getEnergy().current();
             case HANDLING -> mount.getHandling().current();
             case POTENTIAL -> mount.getPotential();
-            case POWERUP -> mount.getPowerup().current();
+            case BOOST -> mount.getBoost().current();
             case SPEED -> mount.getSpeed().current();
             case TOUGHNESS -> mount.getToughness().current();
             case TRAINING -> mount.getTraining().current();
@@ -124,9 +125,10 @@ public class MountFunctions {
         return switch (stat) {
             case ACCELERATION -> mount.getAcceleration();
             case ALTITUDE -> mount.getAltitude();
+            case JUMP_HEIGHT -> mount.getJumpHeight();
             case ENERGY -> mount.getEnergy();
             case HANDLING -> mount.getHandling();
-            case POWERUP -> mount.getPowerup();
+            case BOOST -> mount.getBoost();
             case SPEED -> mount.getSpeed();
             case TOUGHNESS -> mount.getToughness();
             case TRAINING -> mount.getTraining();
