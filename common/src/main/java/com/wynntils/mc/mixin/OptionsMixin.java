@@ -7,10 +7,8 @@ package com.wynntils.mc.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.wynntils.core.components.Managers;
-import com.wynntils.mc.mixin.accessors.OptionsLoadVisitorAccessor;
-import java.util.Map;
+import com.wynntils.core.keybinds.LegacyKeybindFieldAccess;
 import net.minecraft.client.Options;
-import net.minecraft.nbt.CompoundTag;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -51,16 +49,7 @@ public class OptionsMixin {
 
     @Unique
     private Options.FieldAccess wrapLegacyKeybindFieldAccess(Options.FieldAccess fieldAccess) {
-        if (!(fieldAccess instanceof OptionsLoadVisitorAccessor loadVisitorAccessor)) {
-            return fieldAccess;
-        }
-
-        CompoundTag options = loadVisitorAccessor.wynntils$getOptions();
-        Map<String, String> legacyAliases = Managers.KeyBind.getLegacyKeybindAliases(options);
-        if (legacyAliases.isEmpty()) {
-            return fieldAccess;
-        }
-
-        return new LegacyKeybindFieldAccess(fieldAccess, legacyAliases, () -> wynntils$legacyKeybindsMigrated = true);
+        return new LegacyKeybindFieldAccess(
+                fieldAccess, Managers.KeyBind, () -> wynntils$legacyKeybindsMigrated = true);
     }
 }

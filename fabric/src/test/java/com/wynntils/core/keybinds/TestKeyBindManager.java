@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import java.util.Map;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.nbt.CompoundTag;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,50 +19,15 @@ public class TestKeyBindManager {
     }
 
     @Test
-    public void createsLegacyAliasesForStableKeybindOptions() {
-        CompoundTag options = new CompoundTag();
-        options.putString(KeyBindDefinition.RIDE_MOUNT.legacyOptionsKey(), "key.keyboard.r");
-        options.putString(KeyBindDefinition.OPEN_GUILD_BANK.legacyOptionsKey(), "key.keyboard.p");
-        options.putString(KeyBindDefinition.VIEW_PLAYER.legacyOptionsKey(), "key.mouse.middle");
-        options.putString(KeyBindDefinition.OPEN_CONTENT_BOOK.legacyOptionsKey(), "key.keyboard.k");
-
-        Map<String, String> legacyAliases = Managers.KeyBind.getLegacyKeybindAliases(options);
-
-        Assertions.assertEquals("key.keyboard.r", legacyAliases.get(KeyBindDefinition.RIDE_MOUNT.optionsKey()));
-        Assertions.assertEquals("key.keyboard.p", legacyAliases.get(KeyBindDefinition.OPEN_GUILD_BANK.optionsKey()));
-        Assertions.assertEquals("key.mouse.middle", legacyAliases.get(KeyBindDefinition.VIEW_PLAYER.optionsKey()));
-        Assertions.assertEquals("key.keyboard.k", legacyAliases.get(KeyBindDefinition.OPEN_CONTENT_BOOK.optionsKey()));
-    }
-
-    @Test
-    public void skipsLegacyAliasWhenStableKeyAlreadyExists() {
-        CompoundTag options = new CompoundTag();
-        options.putString(KeyBindDefinition.SHARE_ITEM.legacyOptionsKey(), "key.keyboard.f5");
-        options.putString(KeyBindDefinition.SHARE_ITEM.optionsKey(), "key.keyboard.f6");
-
-        Map<String, String> legacyAliases = Managers.KeyBind.getLegacyKeybindAliases(options);
-
-        Assertions.assertFalse(legacyAliases.containsKey(KeyBindDefinition.SHARE_ITEM.optionsKey()));
-    }
-
-    @Test
-    public void resolvesLegacyAndStableKeybindNamesToTheSameDefinition() {
+    public void resolvesLegacyStableAndOptionsKeybindNamesToTheSameDefinition() {
         KeyBindDefinition legacyNameDefinition = Managers.KeyBind.getKeyBindDefinition("Share Item");
         KeyBindDefinition stableNameDefinition = Managers.KeyBind.getKeyBindDefinition("wynntils.keybind.shareItem");
+        KeyBindDefinition optionsKeyDefinition =
+                Managers.KeyBind.getKeyBindDefinition("key_wynntils.keybind.shareItem");
 
         Assertions.assertNotNull(legacyNameDefinition);
         Assertions.assertSame(legacyNameDefinition, stableNameDefinition);
-    }
-
-    @Test
-    public void ignoresUnrelatedOptionsWhenCreatingLegacyAliases() {
-        CompoundTag options = new CompoundTag();
-        options.putString("key_key.attack", "key.mouse.left");
-        options.putString("gamma", "0.5");
-
-        Map<String, String> legacyAliases = Managers.KeyBind.getLegacyKeybindAliases(options);
-
-        Assertions.assertEquals(Map.of(), legacyAliases);
+        Assertions.assertSame(legacyNameDefinition, optionsKeyDefinition);
     }
 
     @Test

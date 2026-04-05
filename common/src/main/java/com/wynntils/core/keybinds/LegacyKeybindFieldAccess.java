@@ -2,20 +2,22 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.mc.mixin;
+package com.wynntils.core.keybinds;
 
-import java.util.Map;
 import java.util.function.Function;
 import net.minecraft.client.Options;
 
-final class LegacyKeybindFieldAccess implements Options.FieldAccess {
+public final class LegacyKeybindFieldAccess implements Options.FieldAccess {
+    private static final String MISSING_KEYBIND_SENTINEL = "__wynntils_missing_keybind__";
+
     private final Options.FieldAccess delegate;
-    private final Map<String, String> legacyAliases;
+    private final KeyBindManager keyBindManager;
     private final Runnable markMigrated;
 
-    LegacyKeybindFieldAccess(Options.FieldAccess delegate, Map<String, String> legacyAliases, Runnable markMigrated) {
+    public LegacyKeybindFieldAccess(
+            Options.FieldAccess delegate, KeyBindManager keyBindManager, Runnable markMigrated) {
         this.delegate = delegate;
-        this.legacyAliases = legacyAliases;
+        this.keyBindManager = keyBindManager;
         this.markMigrated = markMigrated;
     }
 
@@ -36,13 +38,23 @@ final class LegacyKeybindFieldAccess implements Options.FieldAccess {
 
     @Override
     public String process(String key, String currentValue) {
-        String legacyValue = legacyAliases.get(key);
-        if (legacyValue != null) {
-            markMigrated.run();
-            return legacyValue;
+        KeyBindDefinition definition = keyBindManager.getKeyBindDefinition(key);
+        if (definition == null || !definition.optionsKey().equals(key)) {
+            return delegate.process(key, currentValue);
         }
 
-        return delegate.process(key, currentValue);
+        String stableValue = delegate.process(key, MISSING_KEYBIND_SENTINEL);
+        if (!MISSING_KEYBIND_SENTINEL.equals(stableValue)) {
+            return stableValue;
+        }
+
+        String legacyValue = delegate.process(definition.legacyOptionsKey(), MISSING_KEYBIND_SENTINEL);
+        if (MISSING_KEYBIND_SENTINEL.equals(legacyValue)) {
+            return currentValue;
+        }
+
+        markMigrated.run();
+        return legacyValue;
     }
 
     @Override

@@ -19,7 +19,6 @@ import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -127,30 +125,16 @@ public final class KeyBindManager extends Manager {
         return null;
     }
 
-    KeyBindDefinition getKeyBindDefinition(String keybindName) {
+    public KeyBindDefinition getKeyBindDefinition(String keybindName) {
         for (KeyBindDefinition definition : KeyBindDefinition.definitions()) {
             if (definition.name().equals(keybindName)
-                    || definition.translationKey().equals(keybindName)) {
+                    || definition.translationKey().equals(keybindName)
+                    || definition.optionsKey().equals(keybindName)) {
                 return definition;
             }
         }
 
         return null;
-    }
-
-    public Map<String, String> getLegacyKeybindAliases(CompoundTag options) {
-        Map<String, String> legacyAliases = new LinkedHashMap<>();
-
-        for (KeyBindDefinition definition : KeyBindDefinition.definitions()) {
-            if (options.contains(definition.optionsKey())) {
-                continue;
-            }
-
-            options.getString(definition.legacyOptionsKey())
-                    .ifPresent(keyName -> legacyAliases.put(definition.optionsKey(), keyName));
-        }
-
-        return legacyAliases;
     }
 
     public void discoverKeyBinds(Feature feature) {
