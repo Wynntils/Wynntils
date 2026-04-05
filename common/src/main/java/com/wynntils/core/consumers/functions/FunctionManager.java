@@ -204,6 +204,8 @@ public final class FunctionManager extends Manager {
     private String format(Object value, boolean formatted, int decimals) {
         if (value instanceof Integer integer && !formatted) {
             return String.valueOf(integer);
+        } else if (value instanceof Long longValue && !formatted) {
+            return String.valueOf(longValue);
         } else if (value instanceof Number number) {
             if (formatted) {
                 // French locale has NBSP
@@ -410,19 +412,35 @@ public final class FunctionManager extends Manager {
         registerFunction(new LogicFunctions.NotFunction());
         registerFunction(new LogicFunctions.OrFunction());
 
+        registerFunction(new MathFunctions.AbsFunction());
         registerFunction(new MathFunctions.AddFunction());
+        registerFunction(new MathFunctions.CeilFunction());
+        registerFunction(new MathFunctions.ClampFunction());
+        registerFunction(new MathFunctions.DecToHexFunction());
         registerFunction(new MathFunctions.DivideFunction());
+        registerFunction(new MathFunctions.EulerFunction());
+        registerFunction(new MathFunctions.FloorFunction());
+        registerFunction(new MathFunctions.HexToDecFunction());
         registerFunction(new MathFunctions.IntegerFunction());
+        registerFunction(new MathFunctions.IsFiniteFunction());
+        registerFunction(new MathFunctions.IsInfiniteFunction());
+        registerFunction(new MathFunctions.IsNanFunction());
+        registerFunction(new MathFunctions.NaturalLogFunction());
+        registerFunction(new MathFunctions.LogFunction());
         registerFunction(new MathFunctions.LongFunction());
+        registerFunction(new MathFunctions.MapFunction());
         registerFunction(new MathFunctions.MaxFunction());
         registerFunction(new MathFunctions.MinFunction());
         registerFunction(new MathFunctions.ModuloFunction());
         registerFunction(new MathFunctions.MultiplyFunction());
+        registerFunction(new MathFunctions.PiFunction());
         registerFunction(new MathFunctions.PowerFunction());
         registerFunction(new MathFunctions.RandomFunction());
         registerFunction(new MathFunctions.RoundFunction());
+        registerFunction(new MathFunctions.SafeDivideFunction());
         registerFunction(new MathFunctions.SquareRootFunction());
         registerFunction(new MathFunctions.SubtractFunction());
+        registerFunction(new MathFunctions.WrapFunction());
 
         registerFunction(new NamedFunctions.NameFunction());
         registerFunction(new NamedFunctions.NamedValueFunction());
@@ -439,6 +457,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.LeadingZerosFunction());
         registerFunction(new StringFunctions.ParseDoubleFunction());
         registerFunction(new StringFunctions.ParseIntegerFunction());
+        registerFunction(new StringFunctions.ParseLongFunction());
         registerFunction(new StringFunctions.RegexFindFunction());
         registerFunction(new StringFunctions.RegexMatchFunction());
         registerFunction(new StringFunctions.RegexReplaceFunction());
