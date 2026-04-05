@@ -152,15 +152,15 @@ jobs:
           TAG=${{ needs.set-version.outputs.tag }}
           BASE_URL="https://github.com/Wynntils/Wynntils/releases/download/$TAG"
 
-          FILES=$(find . -path "*/build/libs/*-fabric+MC-*.jar" -or -path "*/build/libs/*-neoforge+MC-*.jar")
-
           {
             echo "links<<EOF"
-            for f in $FILES; do
-              NAME=$(basename "$f")
-              URL="$BASE_URL/${NAME//+/%2B}"
-              echo "- [$NAME]($URL)"
-            done
+            find . \( -path "*/build/libs/*-fabric+MC-*[0-9].jar" -o -path "*/build/libs/*-neoforge+MC-*[0-9].jar" \) \
+              | sort \
+              | while IFS= read -r f; do
+                  NAME=$(basename "$f")
+                  URL="$BASE_URL/${NAME//+/%2B}"
+                  echo "- [$NAME]($URL)"
+                done
             echo "EOF"
           } >> $GITHUB_OUTPUT
 
