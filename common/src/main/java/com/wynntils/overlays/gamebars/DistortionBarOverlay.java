@@ -24,7 +24,7 @@ import net.minecraft.client.gui.GuiGraphics;
 
 public class DistortionBarOverlay extends BaseBarOverlay {
     @Persisted
-    private final Config<CustomColor> activatedColor = new Config<>(CommonColors.GREEN);
+    private final Config<CustomColor> activatedColor = new Config<>(CustomColor.fromHexString("d599ffff"));
 
     public DistortionBarOverlay() {
         super(

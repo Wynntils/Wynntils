@@ -443,12 +443,10 @@ public class CharacterFunctions {
         }
     }
 
-    public static class CappedDistortionFunction extends Function<CappedValue> {
+    public static class CurrentDistortionFunction extends Function<Integer> {
         @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Ability.distortionBar.isActive()
-                    ? Models.Ability.distortionBar.getBarProgress().value()
-                    : CappedValue.EMPTY;
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Ability.distortionBar.getCurrent();
         }
     }
 
