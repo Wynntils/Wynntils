@@ -65,6 +65,7 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 
 /** Manage all built-in {@link Function}s */
 public final class FunctionManager extends Manager {
@@ -231,8 +232,9 @@ public final class FunctionManager extends Manager {
     private StyledText formatStyledText(Object value, boolean formatted, int decimals) {
         if (value instanceof StyledText styledText) {
             return styledText;
+        } else if (value instanceof CustomColor color) {
+            return new StyledText(Style.EMPTY.withColor(color.asInt()));
         }
-
         return StyledText.fromString(format(value, formatted, decimals));
     }
 
