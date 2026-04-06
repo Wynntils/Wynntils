@@ -11,11 +11,21 @@ import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
 import com.wynntils.services.map.MapTexture;
+import com.wynntils.services.mapdata.MapFeatureRenderer;
+import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
+import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
+import com.wynntils.services.mapdata.features.type.MapFeature;
+import com.wynntils.services.mapdata.features.type.MapLocation;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -24,20 +34,28 @@ import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.PointerType;
+import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
+import com.wynntils.utils.type.Pair;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import org.joml.Vector2f;
 
 public class MinimapOverlay extends Overlay {
     private static final int DEFAULT_SIZE = 130;
+    private static final float MINIMUM_RENDER_ALPHA = 0.1f;
 
     @Persisted
     private final Config<Float> zoomLevel = new Config<>(MapRenderer.DEFAULT_ZOOM_LEVEL);
 
     @Persisted
-    private final Config<Float> poiScale = new Config<>(0.6f);
+    private final Config<Float> mapFeatureScale = new Config<>(0.6f);
 
     @Persisted
     private final Config<Float> pointerScale = new Config<>(0.8f);
@@ -64,16 +82,10 @@ public class MinimapOverlay extends Overlay {
     private final Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.ALL);
 
     @Persisted
-    private final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
-
-    @Persisted
-    private final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
-
-    @Persisted
-    private final Config<Boolean> renderRemoteGuildPlayers = new Config<>(true);
-
-    @Persisted
     public final Config<Float> remotePlayersHeadScale = new Config<>(0.4f);
+
+    @Persisted
+    private final Config<Boolean> renderTerritories = new Config<>(false);
 
     public MinimapOverlay() {
         super(
@@ -175,7 +187,7 @@ public class MinimapOverlay extends Overlay {
             guiGraphics.pose().popMatrix();
         }
 
-        renderPois(
+        renderMapFeatures(
                 guiGraphics,
                 centerX,
                 centerZ,
@@ -183,8 +195,8 @@ public class MinimapOverlay extends Overlay {
                 height,
                 playerX,
                 playerZ,
-                zoomRenderScale,
                 zoomLevel.get(),
+                zoomRenderScale,
                 visibleWorldBox);
 
         // cursor
@@ -210,7 +222,7 @@ public class MinimapOverlay extends Overlay {
         renderCardinalDirections(guiGraphics, width, height, centerX, centerZ);
     }
 
-    private void renderPois(
+    private void renderMapFeatures(
             GuiGraphics guiGraphics,
             float centerX,
             float centerZ,
@@ -218,14 +230,164 @@ public class MinimapOverlay extends Overlay {
             float height,
             double playerX,
             double playerZ,
-            float zoomRenderScale,
             float zoomLevel,
+            float zoomRenderScale,
             BoundingBox visibleWorldBox) {
-        // FIXME: Re-implement POI rendering for mapdata system
-        // The POI system was replaced by MapFeatureRenderer in the mapdata branch
-    }
+        float sinRotationRadians;
+        float cosRotationRadians;
 
-    // FIXME: Re-implement player minimap POIs for mapdata system
+        if (followPlayerRotation.get()) {
+            double rotationRadians =
+                    Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().yRot());
+            sinRotationRadians = (float) StrictMath.sin(rotationRadians);
+            cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
+        } else {
+            sinRotationRadians = 0f;
+            cosRotationRadians = 1f;
+        }
+
+        float currentZoom = 1f / zoomRenderScale;
+
+        // Get all MapData features
+        Stream<Pair<MapFeature, ResolvedMapAttributes>> mapFeatures = Services.MapData.getFeatures()
+                .filter(feature -> feature.isVisible(visibleWorldBox))
+                .filter(feature -> !(feature instanceof TerritoryArea) || renderTerritories.get())
+                .filter(feature -> !(feature instanceof SeaskipperDestinationArea))
+                .map(feature -> Pair.of(feature, Services.MapData.resolveMapAttributes(feature)))
+                .sorted(Comparator.comparing(pair -> pair.b().priority()));
+
+        Vector2f mapCenter = new Vector2f((float) playerX, (float) playerZ);
+        Vector2f screenCenter = new Vector2f(centerX, centerZ);
+        Vector2f rotationVector = new Vector2f(cosRotationRadians, sinRotationRadians);
+
+        List<Pair<MapFeature, ResolvedMapAttributes>> renderedMapFeatures = mapFeatures.toList();
+        for (Pair<MapFeature, ResolvedMapAttributes> featurePair : renderedMapFeatures) {
+            MapFeature feature = featurePair.a();
+            ResolvedMapAttributes attributes = featurePair.b();
+
+            MapFeatureRenderer.renderMapFeature(
+                    guiGraphics,
+                    feature,
+                    attributes,
+                    mapCenter,
+                    screenCenter,
+                    rotationVector,
+                    zoomLevel,
+                    zoomRenderScale,
+                    mapFeatureScale.get(),
+                    false,
+                    false);
+        }
+
+        // Render all marked features (user waypoints/compass markers)
+        List<MapLocation> userMarkers = Services.UserMarker.getMarkedFeatures()
+                .filter(feature -> feature instanceof MapLocation)
+                .toList();
+        for (MapLocation userMarker : userMarkers) {
+            Location compassLocation = userMarker.getLocation();
+            if (compassLocation == null) continue;
+
+            ResolvedMapAttributes attributes = Services.MapData.resolveMapAttributes(userMarker);
+            float iconAlpha = Services.MapData.calculateVisibility(attributes.iconVisibility(), zoomLevel);
+            Optional<MapIcon> icon = Services.MapData.getIcon(attributes.iconId());
+            boolean drawIcon = iconAlpha > MINIMUM_RENDER_ALPHA;
+
+            if (!drawIcon || icon.isEmpty()) continue;
+
+            float compassOffsetX = (compassLocation.x() - (float) playerX) * zoomRenderScale;
+            float compassOffsetZ = (compassLocation.z() - (float) playerZ) * zoomRenderScale;
+
+            if (followPlayerRotation.get()) {
+                float tempCompassOffsetX = compassOffsetX * cosRotationRadians - compassOffsetZ * sinRotationRadians;
+
+                compassOffsetZ = compassOffsetX * sinRotationRadians + compassOffsetZ * cosRotationRadians;
+                compassOffsetX = tempCompassOffsetX;
+            }
+
+            final float compassSize = Math.max(
+                            icon.get().getWidth() * mapFeatureScale.get(),
+                            icon.get().getHeight() * mapFeatureScale.get())
+                    * 0.8f;
+
+            float compassRenderX = compassOffsetX + centerX;
+            float compassRenderZ = compassOffsetZ + centerZ;
+
+            // Normalize offset for later
+            float distance = MathUtils.magnitude(compassOffsetX, compassOffsetZ);
+            compassOffsetX /= distance;
+            compassOffsetZ /= distance;
+
+            // Subtract compassSize so scaled remains within boundary
+            float scaledWidth = width - 2 * compassSize;
+            float scaledHeight = height - 2 * compassSize;
+
+            float toBorderScale = 1f;
+
+            if (maskType.get() == MapMaskType.RECTANGULAR) {
+                // Scale as necessary
+                toBorderScale =
+                        Math.min(scaledWidth / Math.abs(compassOffsetX), scaledHeight / Math.abs(compassOffsetZ)) / 2;
+            }
+            // FIXME: Reimplement circle mask
+            //            } else if (maskType.get() == MapMaskType.CIRCLE) {
+            //                toBorderScale = scaledWidth
+            //                        / (MathUtils.magnitude(compassOffsetX, compassOffsetZ * scaledWidth /
+            // scaledHeight))
+            //                        / 2;
+            //            }
+
+            if (toBorderScale < distance) {
+                // Scale to border
+                compassRenderX = centerX + compassOffsetX * toBorderScale;
+                compassRenderZ = centerZ + compassOffsetZ * toBorderScale;
+
+                // Replace with pointer
+                float angle = (float) Math.toDegrees(StrictMath.atan2(compassOffsetZ, compassOffsetX)) + 90f;
+
+                guiGraphics.pose().pushMatrix();
+                RenderUtils.rotatePose(guiGraphics.pose(), compassRenderX, compassRenderZ, angle);
+                RenderUtils.drawScalingTexturedRect(
+                        guiGraphics,
+                        Texture.POINTER,
+                        attributes.iconColor().withAlpha(iconAlpha),
+                        compassRenderX - compassSize / 2f,
+                        compassRenderZ - compassSize / 2f,
+                        compassSize,
+                        compassSize);
+                guiGraphics.pose().popMatrix();
+            }
+
+            guiGraphics.pose().pushMatrix();
+            guiGraphics.pose().translate(centerX, centerZ);
+            guiGraphics.pose().scale(0.8f, 0.8f);
+            guiGraphics.pose().translate(-centerX, -centerZ);
+
+            FontRenderer fontRenderer = FontRenderer.getInstance();
+            Font font = fontRenderer.getFont();
+
+            String text = StringUtils.integerToShortString(Math.round(distance * currentZoom)) + "m";
+            float w = font.width(text) / 2f, h = font.lineHeight / 2f;
+
+            RenderUtils.drawRect(
+                    guiGraphics,
+                    new CustomColor(0f, 0f, 0f, 0.7f),
+                    compassRenderX - w - 3f,
+                    compassRenderZ - h - 1f,
+                    2 * w + 6,
+                    2 * h + 1);
+            fontRenderer.renderText(
+                    guiGraphics,
+                    StyledText.fromString(text),
+                    compassRenderX,
+                    compassRenderZ - 3f,
+                    CommonColors.WHITE,
+                    HorizontalAlignment.CENTER,
+                    VerticalAlignment.TOP,
+                    TextShadow.NORMAL);
+
+            guiGraphics.pose().popMatrix();
+        }
+    }
 
     private void renderCardinalDirections(
             GuiGraphics guiGraphics, float width, float height, float centerX, float centerZ) {
