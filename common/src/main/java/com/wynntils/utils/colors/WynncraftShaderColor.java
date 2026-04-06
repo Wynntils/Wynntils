@@ -6,7 +6,7 @@ package com.wynntils.utils.colors;
 
 import java.util.Locale;
 
-public enum WynncraftShaderTriggerColors {
+public enum WynncraftShaderColor {
     BLINK(0x00f00c), // Animated blinking which toggles between #e63232 and transparent
     FADE(0x00f008), // Animated fade from #5af082 to transparent
     FADE_2(0x00f018), // Animated fade effect from a vertical gradient to transparent
@@ -20,11 +20,11 @@ public enum WynncraftShaderTriggerColors {
 
     public final CustomColor color;
 
-    WynncraftShaderTriggerColors(int intColor) {
+    WynncraftShaderColor(int intColor) {
         this.color = CustomColor.fromInt(intColor);
     }
 
-    public static WynncraftShaderTriggerColors fromString(String name) {
+    public static WynncraftShaderColor fromString(String name) {
         try {
             return valueOf(name.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {

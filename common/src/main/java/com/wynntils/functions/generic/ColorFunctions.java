@@ -9,7 +9,7 @@ import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.colors.WynncraftShaderTriggerColors;
+import com.wynntils.utils.colors.WynncraftShaderColor;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -112,7 +112,7 @@ public final class ColorFunctions {
     public static class RainbowShaderFunction extends Function<CustomColor> {
         @Override
         public CustomColor getValue(FunctionArguments arguments) {
-            return WynncraftShaderTriggerColors.RAINBOW.color;
+            return WynncraftShaderColor.RAINBOW.color;
         }
     }
 
@@ -120,8 +120,8 @@ public final class ColorFunctions {
         @Override
         public CustomColor getValue(FunctionArguments arguments) {
             return switch (arguments.getArgument("style").getIntegerValue()) {
-                case 2 -> WynncraftShaderTriggerColors.GRADIENT_2.color;
-                default -> WynncraftShaderTriggerColors.GRADIENT.color;
+                case 2 -> WynncraftShaderColor.GRADIENT_2.color;
+                default -> WynncraftShaderColor.GRADIENT.color;
             };
         }
 
@@ -134,21 +134,21 @@ public final class ColorFunctions {
     public static class FadeShaderFunction extends Function<CustomColor> {
         @Override
         public CustomColor getValue(FunctionArguments arguments) {
-            return WynncraftShaderTriggerColors.FADE.color;
+            return WynncraftShaderColor.FADE.color;
         }
     }
 
     public static class BlinkShaderFunction extends Function<CustomColor> {
         @Override
         public CustomColor getValue(FunctionArguments arguments) {
-            return WynncraftShaderTriggerColors.BLINK.color;
+            return WynncraftShaderColor.BLINK.color;
         }
     }
 
     public static class ShineShaderFunction extends Function<CustomColor> {
         @Override
         public CustomColor getValue(FunctionArguments arguments) {
-            return WynncraftShaderTriggerColors.SHINE.color;
+            return WynncraftShaderColor.SHINE.color;
         }
     }
 
@@ -168,7 +168,7 @@ public final class ColorFunctions {
     public static class WynncraftShaderFunction extends Function<CustomColor> {
         @Override
         public CustomColor getValue(FunctionArguments arguments) {
-            WynncraftShaderTriggerColors shaderName = WynncraftShaderTriggerColors.fromString(
+            WynncraftShaderColor shaderName = WynncraftShaderColor.fromString(
                     arguments.getArgument("shaderName").getStringValue());
             return shaderName == null ? CustomColor.NONE : shaderName.color;
         }
@@ -185,7 +185,7 @@ public final class ColorFunctions {
                     getTypeName().toLowerCase(Locale.ROOT) + ".wynntils." + getTranslationKeyName() + "." + keySuffix,
                     String.join(
                             ", ",
-                            Arrays.stream(WynncraftShaderTriggerColors.values())
+                            Arrays.stream(WynncraftShaderColor.values())
                                     .map(Enum::name)
                                     .sorted()
                                     .toList()));

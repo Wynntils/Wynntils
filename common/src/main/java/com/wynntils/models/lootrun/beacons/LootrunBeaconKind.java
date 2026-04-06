@@ -10,7 +10,7 @@ import com.wynntils.core.persisted.config.NullableConfig;
 import com.wynntils.models.beacons.type.BeaconKind;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.colors.WynncraftShaderTriggerColors;
+import com.wynntils.utils.colors.WynncraftShaderColor;
 
 public enum LootrunBeaconKind implements BeaconKind, NullableConfig {
     GREEN(CustomColor.fromInt(0x00FF80), CommonColors.GREEN),
@@ -24,8 +24,8 @@ public enum LootrunBeaconKind implements BeaconKind, NullableConfig {
     WHITE(CommonColors.WHITE, CommonColors.WHITE),
     AQUA(CustomColor.fromInt(0x55FFFF), CommonColors.AQUA),
     PINK(CustomColor.fromInt(0xFD72B1), CustomColor.fromInt(0xFD72B1)),
-    CRIMSON(CustomColor.fromInt(0xF010), WynncraftShaderTriggerColors.GRADIENT_2.color),
-    RAINBOW(CustomColor.fromInt(0x00F000), WynncraftShaderTriggerColors.RAINBOW.color);
+    CRIMSON(CustomColor.fromInt(0xF010), WynncraftShaderColor.GRADIENT_2.color),
+    RAINBOW(CustomColor.fromInt(0x00F000), WynncraftShaderColor.RAINBOW.color);
 
     // These values are used to identify the beacon kind
     private final CustomColor customColor;
