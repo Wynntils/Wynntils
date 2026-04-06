@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -52,6 +53,8 @@ public class ChatMentionFeature extends Feature {
     private List<Pattern> mentionPatterns;
 
     public ChatMentionFeature() {
+        super(ProfileDefault.onlyDefault());
+
         mentionPatterns = buildPattern();
     }
 

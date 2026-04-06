@@ -1,13 +1,15 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
@@ -20,7 +22,7 @@ import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -30,11 +32,17 @@ public class TerritoryDefenseMessageFeature extends Feature {
     private static final Pattern ATTACK_SCREEN_TITLE = Pattern.compile("Attacking: (.+)");
     private static final Pattern TERRITORY_DEFENSE_PATTERN = Pattern.compile("Territory Defences: (.+)");
     private static final String DEFENSE_MESSAGE = "g %s defense is %s";
-    private static final ResourceLocation ATTACK_SOUND =
-            ResourceLocation.fromNamespaceAndPath("minecraft", "entity.ender_dragon.growl");
+    private static final Identifier ATTACK_SOUND =
+            Identifier.fromNamespaceAndPath("minecraft", "entity.ender_dragon.growl");
     // 2 seconds for the server to respond to an attack command
     private static final long MESSAGE_TIMEOUT = 2000;
     private final Queue<QueuedTerritory> queuedTerritories = new LinkedList<>();
+
+    public TerritoryDefenseMessageFeature() {
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
+                .build());
+    }
 
     @SubscribeEvent
     public void onInventoryClick(InventoryMouseClickedEvent event) {
@@ -62,7 +70,7 @@ public class TerritoryDefenseMessageFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onAttackSound(SoundPlayedEvent event) {
         if (queuedTerritories.isEmpty()
-                || !event.getSoundInstance().getLocation().equals(ATTACK_SOUND)) {
+                || !event.getSoundInstance().getIdentifier().equals(ATTACK_SOUND)) {
             return;
         }
 

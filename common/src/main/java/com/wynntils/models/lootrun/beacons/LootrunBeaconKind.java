@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun.beacons;
@@ -22,6 +22,7 @@ public enum LootrunBeaconKind implements BeaconKind, NullableConfig {
     DARK_GRAY(CustomColor.fromInt(0x808080), CommonColors.GRAY),
     WHITE(CommonColors.WHITE, CommonColors.WHITE),
     AQUA(CustomColor.fromInt(0x55FFFF), CommonColors.AQUA),
+    PINK(CustomColor.fromInt(0xFD72B1), CustomColor.fromInt(0xFD72B1)),
     CRIMSON(CustomColor.fromInt(0xF010), CommonColors.GRADIENT_2),
     RAINBOW(CustomColor.fromInt(0x00F000), CommonColors.RAINBOW);
 

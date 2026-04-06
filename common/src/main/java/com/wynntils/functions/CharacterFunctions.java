@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -9,7 +9,9 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.character.type.VehicleType;
+import com.wynntils.models.characterstats.type.PowderSpecialInfo;
 import com.wynntils.models.objectives.WynnObjective;
+import com.wynntils.services.leaderboard.type.LeaderboardType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.NamedValue;
@@ -262,6 +264,7 @@ public class CharacterFunctions {
         }
     }
 
+    // TODO: Change this to IsRidingMountFunction after parsing energy action bar segment.
     public static class IsRidingHorseFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
@@ -308,6 +311,15 @@ public class CharacterFunctions {
         }
     }
 
+    public static class GuildObjectiveEventBonusFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            WynnObjective weekly = Models.Objectives.getGuildObjective();
+            if (weekly == null) return false;
+            return weekly.hasEventBonus();
+        }
+    }
+
     public static class PersonalObjectiveScoreFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
@@ -332,6 +344,23 @@ public class CharacterFunctions {
             return !daily.isEmpty() && index >= 0 && daily.size() > index
                     ? daily.get(index).getGoal()
                     : "";
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("index", Integer.class, 0)));
+        }
+    }
+
+    public static class PersonalObjectiveEventBonusFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("index").getIntegerValue();
+            List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
+            return !daily.isEmpty()
+                    && index >= 0
+                    && daily.size() > index
+                    && daily.get(index).hasEventBonus();
         }
 
         @Override
@@ -384,6 +413,65 @@ public class CharacterFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new Argument<>("aspectName", String.class, null)));
+        }
+    }
+
+    public static class LeaderboardPositionFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            String leaderboardKey = arguments.getArgument("leaderboardKey").getStringValue();
+            LeaderboardType leaderboardType = LeaderboardType.fromKey(leaderboardKey);
+
+            if (leaderboardType == null) return 0;
+
+            return Models.Account.getPlayerInfo().leaderboardPlacements().getOrDefault(leaderboardType, 0);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("leaderboardKey", String.class, null)));
+        }
+    }
+
+    public static class PowderSpecialChargeFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            Optional<PowderSpecialInfo> powderSpecialInfoOpt = Models.CharacterStats.getPowderSpecialInfo();
+            if (powderSpecialInfoOpt.isEmpty()) return CappedValue.EMPTY;
+            return CappedValue.fromProgress(powderSpecialInfoOpt.get().charge(), 100);
+        }
+    }
+
+    public static class CappedDistortionFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Ability.distortionBar.isActive()
+                    ? Models.Ability.distortionBar.getBarProgress().value()
+                    : CappedValue.EMPTY;
+        }
+    }
+
+    public static class MirrorImageCloneFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            int cloneNumber = arguments.getArgument("cloneNumber").getIntegerValue();
+            return cloneNumber < Models.Ability.mirrorImageBar.getClones().size() && cloneNumber >= 0
+                    ? Models.Ability.mirrorImageBar.getClones().get(cloneNumber).getActiveState()
+                    : -1;
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("cloneNumber", Integer.class, null)));
+        }
+    }
+
+    public static class MirrorImageDurationFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Ability.mirrorImageBar.isActive() ? Models.Ability.mirrorImageBar.getDuration() : 0;
         }
     }
 }

@@ -58,7 +58,7 @@ When filing an issue, make sure to answer these seven questions. We should be ab
 
 # How to suggest a feature or enhancement
 
-[Our discord](https://discord.gg/wynntils) should be used for suggesting features or enchancments.
+[Our discord](https://discord.gg/wynntils) should be used for suggesting features or enhancements.
 
 # Code review process
 

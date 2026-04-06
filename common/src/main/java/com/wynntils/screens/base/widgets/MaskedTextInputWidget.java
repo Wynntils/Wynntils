@@ -1,0 +1,141 @@
+/*
+ * Copyright © Wynntils 2025-2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.screens.base.widgets;
+
+import com.wynntils.screens.base.TextboxScreen;
+import java.util.function.Consumer;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
+
+public class MaskedTextInputWidget extends AbstractWidget {
+    private boolean masked = true;
+    private final MaskedTextInputBoxWidget maskedTextInputBoxWidget;
+    private final Button toggleMaskButton;
+
+    public MaskedTextInputWidget(
+            int x,
+            int y,
+            int width,
+            int height,
+            Consumer<String> onUpdateConsumer,
+            TextboxScreen textboxScreen,
+            String initialText) {
+        super(x, y, width, height, Component.literal("Masked Text Input"));
+
+        this.maskedTextInputBoxWidget =
+                new MaskedTextInputBoxWidget(x, y, width - 42, height, onUpdateConsumer, textboxScreen);
+        this.maskedTextInputBoxWidget.setTextBoxInput(initialText);
+
+        this.toggleMaskButton = new Button.Builder(
+                        masked
+                                ? Component.translatable("screens.wynntils.widget.show")
+                                : Component.translatable("screens.wynntils.widget.hide"),
+                        (button -> toggleMask()))
+                .pos(x + width - 40, y)
+                .size(40, 20)
+                .build();
+    }
+
+    public MaskedTextInputWidget(
+            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
+        this(x, y, width, height, onUpdateConsumer, textboxScreen, "");
+    }
+
+    @Override
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        maskedTextInputBoxWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+
+        toggleMaskButton.render(guiGraphics, mouseX, mouseY, partialTick);
+    }
+
+    @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (toggleMaskButton.isMouseOver(event.x(), event.y())) {
+            return toggleMaskButton.mouseClicked(event, isDoubleClick);
+        } else if (maskedTextInputBoxWidget.isMouseOver(event.x(), event.y())) {
+            return maskedTextInputBoxWidget.mouseClicked(event, isDoubleClick);
+        }
+
+        return super.mouseClicked(event, isDoubleClick);
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if (maskedTextInputBoxWidget.isMouseOver(event.x(), event.y())) {
+            return maskedTextInputBoxWidget.mouseReleased(event);
+        }
+
+        return super.mouseReleased(event);
+    }
+
+    @Override
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        if (maskedTextInputBoxWidget.isMouseOver(event.x(), event.y())) {
+            return maskedTextInputBoxWidget.mouseDragged(event, dragX, dragY);
+        }
+
+        return super.mouseDragged(event, dragX, dragY);
+    }
+
+    @Override
+    public void setY(int y) {
+        super.setY(y);
+
+        maskedTextInputBoxWidget.setY(y);
+        toggleMaskButton.setY(y);
+    }
+
+    @Override
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
+
+    private void toggleMask() {
+        masked = !masked;
+        toggleMaskButton.setMessage(
+                masked
+                        ? Component.translatable("screens.wynntils.widget.show")
+                        : Component.translatable("screens.wynntils.widget.hide"));
+    }
+
+    private final class MaskedTextInputBoxWidget extends TextInputBoxWidget {
+        private MaskedTextInputBoxWidget(
+                int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
+            super(x, y, width, height, onUpdateConsumer, textboxScreen, null);
+        }
+
+        @Override
+        protected void doRenderWidget(
+                GuiGraphics guiGraphics,
+                String renderedText,
+                int renderedTextStart,
+                String firstPortion,
+                String highlightedPortion,
+                String lastPortion,
+                Font font,
+                int firstWidth,
+                int highlightedWidth,
+                int lastWidth,
+                int mouseX,
+                int mouseY) {
+            super.doRenderWidget(
+                    guiGraphics,
+                    masked ? "*".repeat(renderedText.length()) : renderedText,
+                    renderedTextStart,
+                    masked ? "*".repeat(firstPortion.length()) : firstPortion,
+                    masked ? "*".repeat(highlightedPortion.length()) : highlightedPortion,
+                    masked ? "*".repeat(lastPortion.length()) : lastPortion,
+                    font,
+                    firstWidth,
+                    highlightedWidth,
+                    lastWidth,
+                    mouseX,
+                    mouseY);
+        }
+    }
+}

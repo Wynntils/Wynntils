@@ -32,7 +32,9 @@ repositories {
 
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    include(modImplementation(fabricApi.module("fabric-resource-loader-v0", fabric_version)))
+    // Resource loader needs base
+    include(modImplementation(fabricApi.module("fabric-api-base", fabric_version)))
+    include(modImplementation(fabricApi.module("fabric-resource-loader-v1", fabric_version)))
 
     modCompileOnly("com.terraformersmc:modmenu:${modmenu_version}")
 
@@ -102,4 +104,10 @@ sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
+}
+
+remapSourcesJar {
+    inputFile.set sourcesJar.archiveFile
+    dependsOn sourcesJar
+    archiveClassifier = "fabric+MC-${minecraft_version}-sources"
 }

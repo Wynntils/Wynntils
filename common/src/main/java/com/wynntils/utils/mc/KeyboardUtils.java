@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
@@ -8,7 +8,7 @@ import org.lwjgl.glfw.GLFW;
 
 public final class KeyboardUtils {
     public static boolean isKeyDown(int keyCode) {
-        return GLFW.glfwGetKey(McUtils.window().getWindow(), keyCode) == 1;
+        return GLFW.glfwGetKey(McUtils.window().handle(), keyCode) == 1;
     }
 
     public static boolean isShiftDown() {

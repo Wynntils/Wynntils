@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnalphabet;
@@ -75,7 +75,7 @@ public final class WynnAlphabetModel extends Model {
         String originalString = originalPart.getString(null, StyleType.NONE);
         StringBuilder transcriptedStringBuilder = new StringBuilder(originalString.length());
 
-        // If the message is a wynnic number, we transribe it to an english number
+        // If the message is a wynnic number, we transcribe it to an english number
         if (WYNNIC_NUMBER_PATTERN.matcher(originalString).matches()) {
             transcriptedStringBuilder.append(wynnicNumToInt(originalString));
         } else {
@@ -104,7 +104,7 @@ public final class WynnAlphabetModel extends Model {
                         "feature.wynntils.transcribeMessages.transcribedFrom",
                         StringUtils.capitalizeFirst(alphabet.toString().toLowerCase(Locale.ROOT)),
                         originalString);
-        partStyle = partStyle.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverComponent));
+        partStyle = partStyle.withHoverEvent(new HoverEvent.ShowText(hoverComponent));
 
         return new StyledTextPart(
                 originalTextAsTooltip ? originalString : transcriptedString, partStyle.getStyle(), null, Style.EMPTY);
@@ -325,13 +325,13 @@ public final class WynnAlphabetModel extends Model {
         return englishToWynnicMap.getOrDefault(characterToTranscribe, characterToTranscribe);
     }
 
-    private boolean hasTranscriber(WynnAlphabet transciberToFind) {
+    private boolean hasTranscriber(WynnAlphabet transcriberToFind) {
         Inventory inventory = McUtils.inventory();
 
         for (int slotNum = 0; slotNum < Inventory.INVENTORY_SIZE; slotNum++) {
             ItemStack itemStack = inventory.getItem(slotNum);
 
-            if (transciberToFind == WynnAlphabet.WYNNIC) {
+            if (transcriberToFind == WynnAlphabet.WYNNIC) {
                 if (StyledText.fromComponent(itemStack.getHoverName()).equals(WYNNIC_TRANSCRIBER)) {
                     return true;
                 }

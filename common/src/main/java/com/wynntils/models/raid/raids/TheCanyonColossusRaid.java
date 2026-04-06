@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.raid.raids;
@@ -42,8 +42,8 @@ public class TheCanyonColossusRaid extends RaidKind {
         return Map.of(
                 "Intrepid",
                 Map.of(
-                        1, "Altruism",
-                        2, "Greed",
+                        1, "Greed",
+                        2, "Altruism",
                         3, "Guardian"),
                 "Stonewalker",
                 Map.of(3, "Explosive Impact"));

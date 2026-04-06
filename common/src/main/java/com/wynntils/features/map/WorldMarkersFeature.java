@@ -1,21 +1,21 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.map;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
@@ -30,7 +30,6 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -38,8 +37,9 @@ import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Camera;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.Position;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -54,9 +54,6 @@ import org.joml.Vector4f;
 public class WorldMarkersFeature extends Feature {
     private static final float MINIMUM_RENDER_VISIBILITY = 0.1f;
     private static final int RAINBOW_CHANGE_RATE = 10;
-
-    private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
-            MultiBufferSource.immediate(new ByteBufferBuilder(256));
 
     @Persisted
     public final Config<Float> textBackgroundOpacity = new Config<>(0.2f);
@@ -85,6 +82,10 @@ public class WorldMarkersFeature extends Feature {
     private final List<RenderedMapLocation> renderedMapLocations = new ArrayList<>();
     private CustomColor currentRainbowColor = CommonColors.RED;
 
+    public WorldMarkersFeature() {
+        super(ProfileDefault.ENABLED);
+    }
+
     @SubscribeEvent
     public void onTick(TickEvent event) {
         int r = currentRainbowColor.r();
@@ -110,38 +111,39 @@ public class WorldMarkersFeature extends Feature {
         currentRainbowColor = new CustomColor(r, g, b, 255);
     }
 
-    // Rendered map location calculation happens here
-    // Beacon beam rendering happens here
+    // Rendered map location calculation happens on the RenderLevelEvent which has projectionMatrix + Camera
+    @SubscribeEvent
+    public void onRenderLevel(RenderLevelEvent.Post event) {
+        updateRenderedMapLocations(event.getProjectionMatrix(), event.getCamera());
+    }
+
+    // Beacon beam rendering happens here (world-space rendering)
     @SubscribeEvent
     public void onRenderLevelLast(RenderTileLevelLastEvent event) {
-        // We update the rendered map locations here so that we can render the beacon beams in the same event
-        // and also use it below to render the icons and labels
-        updateRenderedMapLocations(event.getProjectionMatrix(), event.getCamera());
         if (renderedMapLocations.isEmpty()) return;
 
         PoseStack poseStack = event.getPoseStack();
+        CameraRenderState cameraRenderState = event.getCameraRenderState();
+        Position cameraPos = cameraRenderState.pos;
 
-        // render beacon beams
-        for (RenderedMapLocation mapLocationPair : renderedMapLocations) {
-            double alpha = mapLocationPair.visibility();
-            MapLocation mapLocation = mapLocationPair.mapLocation();
+        for (RenderedMapLocation renderedMapLocation : renderedMapLocations) {
+            MapLocation mapLocation = renderedMapLocation.mapLocation();
+            double visibility = renderedMapLocation.visibility();
 
             ResolvedMapAttributes resolvedMapAttributes = Services.MapData.resolveMapAttributes(mapLocation);
             ResolvedMarkerOptions resolvedMarkerOptions = resolvedMapAttributes.markerOptions();
 
-            Position camera = event.getCamera().getPosition();
             Location location = mapLocation.getLocation();
 
-            double dx = location.x - camera.x();
-            double dy = location.y - camera.y();
-            double dz = location.z - camera.z();
+            double dx = location.x - cameraPos.x();
+            double dy = location.y - cameraPos.y();
+            double dz = location.z - cameraPos.z();
 
             double distance = MathUtils.magnitude(dx, dz);
             int maxDistance = McUtils.options().renderDistance().get() * 16;
 
             if (distance > maxDistance) {
                 double scale = maxDistance / distance;
-
                 dx *= scale;
                 dz *= scale;
             }
@@ -152,25 +154,27 @@ public class WorldMarkersFeature extends Feature {
             CustomColor color = resolvedMarkerOptions.beaconColor();
 
             if (color == CustomColor.NONE) {
-                // If the color is set to NONE, we skip rendering the beacon beam
-                // This is not logged as render time logging is heavy
+                poseStack.popPose();
                 continue;
             }
 
             int colorInt;
             if (color == CommonColors.RAINBOW) {
-                colorInt = currentRainbowColor.withAlpha((float) alpha).asInt();
+                colorInt = currentRainbowColor.withAlpha((float) visibility).asInt();
             } else {
-                colorInt = color.withAlpha((float) alpha).asInt();
+                colorInt = color.withAlpha((float) visibility).asInt();
             }
 
-            BeaconRenderer.renderBeaconBeam(
+            float partial = event.getDeltaTracker().getGameTimeDeltaPartialTick(false);
+            long gameTime = McUtils.mc().level.getGameTime();
+            float animationTime = (gameTime % 40) + partial;
+
+            BeaconRenderer.submitBeaconBeam(
                     poseStack,
-                    BUFFER_SOURCE,
+                    event.getSubmitNodeStorage(),
                     BeaconRenderer.BEAM_LOCATION,
-                    event.getDeltaTracker().getGameTimeDeltaPartialTick(false),
-                    1f,
-                    McUtils.player().level().getGameTime(),
+                    partial,
+                    animationTime,
                     0,
                     BeaconRenderer.MAX_RENDER_Y,
                     colorInt,
@@ -179,8 +183,6 @@ public class WorldMarkersFeature extends Feature {
 
             poseStack.popPose();
         }
-
-        BUFFER_SOURCE.endBatch();
     }
 
     private void updateRenderedMapLocations(Matrix4f projectionMatrix, Camera camera) {
@@ -216,15 +218,12 @@ public class WorldMarkersFeature extends Feature {
             Location location = mapLocation.getLocation();
 
             Matrix4f projection = new Matrix4f(projectionMatrix);
-            Position cameraPos = camera.getPosition();
+            Position cameraPos = camera.position();
 
             // apply camera rotation
-            Vector3f xp = new Vector3f(1, 0, 0);
-            Vector3f yp = new Vector3f(0, 1, 0);
-            Quaternionf xRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.getXRot()), xp);
-            Quaternionf yRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.getYRot() + 180f), yp);
-            projection.mul(new Matrix4f().rotation(xRotation));
-            projection.mul(new Matrix4f().rotation(yRotation));
+            Quaternionf cameraRotation = camera.rotation();
+            Quaternionf invertedRotation = new Quaternionf(cameraRotation).conjugate();
+            projection.mul(new Matrix4f().rotation(invertedRotation));
 
             // offset to put text to the center of the block
             float dx = (float) (location.x + 0.5 - cameraPos.x());
@@ -252,9 +251,11 @@ public class WorldMarkersFeature extends Feature {
         }
     }
 
-    // Rendering the icons and labels/distance happens here
+    // Rendering the icons and labels/distance happens here (screen-space rendering)
     @SubscribeEvent
     public void onRenderGuiPost(RenderEvent.Post event) {
+        GuiGraphics guiGraphics = event.getGuiGraphics();
+
         for (RenderedMapLocation renderedMapLocation : renderedMapLocations) {
             if (maxMarkerDistance.get() != 0 && maxMarkerDistance.get() < renderedMapLocation.distance) {
                 continue;
@@ -282,11 +283,7 @@ public class WorldMarkersFeature extends Feature {
             Vec2 intersectPoint = getBoundingIntersectPoint(renderedMapLocation.screenCoordinates, event.getWindow());
 
             MapIcon icon = Services.MapData.getIconOrFallback(resolvedMapAttributes.iconId());
-            float[] iconColor = resolvedMapAttributes.iconColor().asFloatArray();
-
-            RenderSystem.enableBlend();
-            RenderSystem.setShaderColor(
-                    iconColor[0], iconColor[1], iconColor[2], (float) renderedMapLocation.visibility);
+            CustomColor iconColor = resolvedMapAttributes.iconColor();
 
             // The set waypoint is visible on the screen, so we render the icon + distance
             if (intersectPoint == null) {
@@ -295,29 +292,25 @@ public class WorldMarkersFeature extends Feature {
 
                 if (resolvedMarkerOptions.hasIcon()) {
                     RenderUtils.drawScalingTexturedRect(
-                            event.getPoseStack(),
-                            icon.getResourceLocation(),
+                            guiGraphics,
+                            icon.getIdentifier(),
+                            iconColor.withAlpha((float) renderedMapLocation.visibility),
                             displayPositionX - iconRenderScale.get() * icon.getWidth() / 2f,
                             displayPositionY
                                     - iconRenderScale.get() * icon.getHeight()
                                     - textRenderScale.get() * (backgroundHeight / 2f + 2f),
-                            0,
                             iconRenderScale.get() * icon.getWidth(),
                             iconRenderScale.get() * icon.getHeight(),
                             icon.getWidth(),
                             icon.getHeight());
                 }
 
-                RenderSystem.setShaderColor(1, 1, 1, 1);
-                RenderSystem.disableBlend();
-
                 if (resolvedMarkerOptions.hasDistance() || resolvedMarkerOptions.hasLabel()) {
                     RenderUtils.drawRect(
-                            event.getPoseStack(),
+                            guiGraphics,
                             CommonColors.BLACK.withAlpha(textBackgroundOpacity.get()),
                             displayPositionX - textRenderScale.get() * (backgroundWidth / 2f + 2f),
                             displayPositionY - textRenderScale.get() * (backgroundHeight / 2f + 2f),
-                            0,
                             textRenderScale.get() * (backgroundWidth + 3f),
                             textRenderScale.get() * (backgroundHeight + 2f));
                 }
@@ -325,7 +318,7 @@ public class WorldMarkersFeature extends Feature {
                 if (resolvedMarkerOptions.hasDistance()) {
                     FontRenderer.getInstance()
                             .renderAlignedTextInBox(
-                                    event.getPoseStack(),
+                                    guiGraphics,
                                     StyledText.fromString(renderedDistanceText),
                                     displayPositionX - textRenderScale.get() * (backgroundWidth / 2f),
                                     displayPositionX + textRenderScale.get() * (backgroundWidth / 2f),
@@ -343,7 +336,7 @@ public class WorldMarkersFeature extends Feature {
                 if (resolvedMarkerOptions.hasLabel()) {
                     FontRenderer.getInstance()
                             .renderAlignedTextInBox(
-                                    event.getPoseStack(),
+                                    guiGraphics,
                                     StyledText.fromString(resolvedMapAttributes.label()),
                                     displayPositionX - textRenderScale.get() * (backgroundWidth / 2f),
                                     displayPositionX + textRenderScale.get() * (backgroundWidth / 2f),
@@ -375,44 +368,37 @@ public class WorldMarkersFeature extends Feature {
                 float pointerDisplayPositionY = displayPositionY + pointerOffsetY;
 
                 RenderUtils.drawScalingTexturedRect(
-                        event.getPoseStack(),
-                        icon.getResourceLocation(),
+                        guiGraphics,
+                        icon.getIdentifier(),
+                        iconColor.withAlpha((float) renderedMapLocation.visibility),
                         displayPositionX
                                 - iconRenderScale.get() * icon.getWidth() / 2
                                 + pointerOffsetX * (1 - iconRenderScale.get()),
                         displayPositionY
                                 - iconRenderScale.get() * icon.getHeight() / 2
                                 + pointerOffsetY * (1 - iconRenderScale.get()),
-                        0,
                         iconRenderScale.get() * icon.getWidth(),
                         iconRenderScale.get() * icon.getHeight(),
                         icon.getWidth(),
                         icon.getHeight());
-                RenderSystem.setShaderColor(1, 1, 1, 1);
-                RenderSystem.disableBlend();
 
-                // apply rotation
-                PoseStack poseStack = event.getPoseStack();
-                poseStack.pushPose();
-                poseStack.translate(pointerDisplayPositionX, pointerDisplayPositionY, 0);
-                poseStack.mulPose(new Quaternionf().rotationXYZ(0, 0, (float) Math.toRadians(angle)));
-                poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
-
+                // Render rotated pointer arrow
                 Texture pointerTexture = Texture.POINTER;
-                BufferedRenderUtils.drawScalingTexturedRect(
-                        poseStack,
-                        BUFFER_SOURCE,
-                        pointerTexture.resource(),
+
+                guiGraphics.pose().pushMatrix();
+                guiGraphics.pose().translate(pointerDisplayPositionX, pointerDisplayPositionY);
+                guiGraphics.pose().rotate((float) Math.toRadians(angle));
+                guiGraphics.pose().translate(-pointerDisplayPositionX, -pointerDisplayPositionY);
+
+                RenderUtils.drawScalingTexturedRect(
+                        guiGraphics,
+                        pointerTexture,
                         pointerDisplayPositionX - pointerTexture.width() / 2f,
                         pointerDisplayPositionY - pointerTexture.height() / 2f,
-                        0,
                         iconRenderScale.get() * pointerTexture.width(),
-                        iconRenderScale.get() * pointerTexture.height(),
-                        pointerTexture.width(),
-                        pointerTexture.height());
+                        iconRenderScale.get() * pointerTexture.height());
 
-                BUFFER_SOURCE.endBatch();
-                poseStack.popPose();
+                guiGraphics.pose().popMatrix();
             }
         }
     }

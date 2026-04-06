@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
@@ -10,19 +10,22 @@ import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.mc.event.SetSpawnEvent;
+import com.wynntils.models.activities.beacons.ActivityBeaconMarkerKind;
 import com.wynntils.models.activities.type.ActivityDifficulty;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityLength;
 import com.wynntils.models.activities.type.ActivityRequirements;
 import com.wynntils.models.activities.type.ActivityRewardType;
 import com.wynntils.models.activities.type.ActivityType;
+import com.wynntils.models.beacons.event.BeaconMarkerEvent;
+import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.services.mapdata.features.type.MapLocation;
 import com.wynntils.utils.EnumUtils;
@@ -50,10 +53,8 @@ import java.util.stream.Collectors;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
-// Note: To run this sucessfully, you have to have a class with all content trackable in the content book
-@StartDisabled
+// Note: To run this successfully, you have to have a class with all content trackable in the content book
 @ConfigCategory(Category.DEBUG)
 public class ContentBookDumpFeature extends Feature {
     // Temporary hack...
@@ -68,8 +69,7 @@ public class ContentBookDumpFeature extends Feature {
     private static final File SAVE_FOLDER = WynntilsMod.getModStorageDir("debug");
 
     @RegisterKeyBind
-    private final KeyBind dumpContentBook =
-            new KeyBind("Dump Content Book", GLFW.GLFW_KEY_UNKNOWN, true, this::dumpContentBook);
+    private final KeyBind dumpContentBook = KeyBindDefinition.DUMP_CONTENT_BOOK.create(this::dumpContentBook);
 
     private List<DumpableActivityInfo> currentDump = List.of();
 
@@ -77,15 +77,23 @@ public class ContentBookDumpFeature extends Feature {
     private DumpableActivityInfo currentlyTracking = null;
     private Queue<DumpableActivityInfo> manualTrackingRequired = new LinkedList<>();
 
+    public ContentBookDumpFeature() {
+        super(ProfileDefault.DISABLED);
+    }
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onSetSpawn(SetSpawnEvent event) {
+    public void onBeaconMarkerAdded(BeaconMarkerEvent.Added event) {
+        BeaconMarker beaconMarker = event.getBeaconMarker();
+        if (!(beaconMarker.beaconMarkerKind() instanceof ActivityBeaconMarkerKind)) return;
         if (currentlyTracking == null) return;
 
         Optional<Location> spawnLocationOpt = Models.Activity.ACTIVITY_PROVIDER
                 .getFeatures()
                 .filter(mapFeature -> mapFeature instanceof MapLocation)
                 .map(mapFeature -> (MapLocation) mapFeature)
-                .filter(mapLocation -> mapLocation.getLocation().equals(new Location(event.getSpawnPos())))
+                .filter(mapLocation -> mapLocation
+                        .getLocation()
+                        .equals(new Location(McUtils.mc().level.getRespawnData().pos())))
                 .findFirst()
                 .map(MapLocation::getLocation);
 
@@ -175,7 +183,7 @@ public class ContentBookDumpFeature extends Feature {
                 .map(mapFeature -> (MapLocation) mapFeature)
                 .filter(mapLocation -> mapLocation
                         .getLocation()
-                        .equals(new Location(McUtils.mc().level.getSharedSpawnPos())))
+                        .equals(new Location(McUtils.mc().level.getRespawnData().pos())))
                 .findFirst()
                 .map(MapLocation::getLocation)
                 .orElse(null);

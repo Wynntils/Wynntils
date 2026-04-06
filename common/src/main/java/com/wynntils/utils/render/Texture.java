@@ -1,10 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 // If a texture is currently in a specific category but you want to use
 // it elsewhere, please move it to a more appropriate location
@@ -19,6 +19,7 @@ public enum Texture {
     CUSTOM_CONTENT_BOOK_BACKGROUND("content_book/custom_content_book.png", 432, 263),
     CONTENT_BOOK_SEARCH("content_book/content_book_search.png", 250, 20),
     TAG_BLUE("content_book/tag_blue.png", 44, 22),
+    TAG_GREEN("content_book/tag_green.png", 44, 22),
     TAG_RED("content_book/tag_red.png", 22, 44),
     TAG_RED_SELECTED("content_book/tag_red_selected.png", 22, 44),
     TAG_SEARCH("content_book/tag_search.png", 140, 30),
@@ -48,7 +49,7 @@ public enum Texture {
     ACTIVITY_CANNOT_START("icons/activities/activity_cannot_start_icon.png", 7, 7),
     ACTIVITY_FINISHED("icons/activities/activity_finished_icon.png", 11, 7),
     ACTIVITY_STARTED("icons/activities/activity_started_icon.png", 7, 7),
-    CAVE_AVALIABLE_ICON("icons/activities/cave_avaliable_icon.png", 7, 7),
+    CAVE_AVAILABLE_ICON("icons/activities/cave_available_icon.png", 7, 7),
     DISCOVERY_ICON("icons/activities/discovery_icon.png", 22, 22),
     MINI_QUEST_ICON("icons/activities/mini_quest_icon.png", 22, 22),
     QUEST_ICON("icons/activities/quest_icon.png", 20, 19),
@@ -77,6 +78,10 @@ public enum Texture {
     DISCARD_SETTINGS_ICON("icons/config_categories/discard_settings_icon.png", 16, 16),
     EXPORT_SETTINGS_ICON("icons/config_categories/export_settings_icon.png", 16, 16),
     IMPORT_SETTINGS_ICON("icons/config_categories/import_settings_icon.png", 16, 16),
+    SETTINGS_PROFILES_ICON("icons/config_categories/settings_profiles_icon.png", 16, 16),
+    ENABLED_SETTINGS_ICON("icons/config_categories/enabled_icon.png", 16, 16),
+    DISABLED_SETTINGS_ICON("icons/config_categories/disabled_icon.png", 16, 16),
+    NEUTRAL_SETTINGS_ICON("icons/config_categories/neutral_icon.png", 16, 16),
 
     // Content Book
     ACCESS_REWARD("icons/content_book/access_reward.png", 10, 10),
@@ -134,7 +139,6 @@ public enum Texture {
     RELIK_FILTER_ICON("icons/guide_filters/relik_filter_icon.png", 16, 16),
     RING_FILTER_ICON("icons/guide_filters/ring_filter_icon.png", 16, 16),
     SCRIBING_FILTER_ICON("icons/guide_filters/scribing_filter_icon.png", 16, 16),
-    SET_FILTER_ICON("icons/guide_filters/set_filter_icon.png", 16, 16),
     SPEAR_FILTER_ICON("icons/guide_filters/spear_filter_icon.png", 16, 16),
     TAILORING_FILTER_ICON("icons/guide_filters/tailoring_filter_icon.png", 16, 16),
     TIER_0_FILTER_ICON("icons/guide_filters/tier_0_filter_icon.png", 16, 16),
@@ -169,7 +173,7 @@ public enum Texture {
     HELP_ICON("icons/generic/help_icon.png", 10, 16),
     INFO("icons/generic/info.png", 25, 25),
     ITEM_LOCK("icons/generic/item_lock_icon.png", 16, 16),
-    MAP("icons/generic/map_icon.png", 15, 14),
+    MAP("icons/generic/map_icon.png", 14, 14),
     NEXT("icons/generic/next.png", 16, 16),
     OVERLAY_EXTRA_ICON("icons/generic/overlay_extra_icon.png", 16, 16),
     PREVIOUS("icons/generic/previous.png", 16, 16),
@@ -318,6 +322,7 @@ public enum Texture {
     MAP_INFO_TOOLTIP_CENTER("map/map_components/map_info_tooltip_center.png", 200, 5),
     MAP_INFO_TOOLTIP_TOP("map/map_components/map_info_tooltip_top.png", 200, 10),
     MAP_POINTERS("map/map_components/map_pointers.png", 256, 256),
+    ZOOM_BAR("map/map_components/zoom_bar.png", 4, 10),
     ZOOM_HANDLE("map/map_components/zoom_handle.png", 12, 5),
     // endregion
 
@@ -344,7 +349,7 @@ public enum Texture {
     TRAVEL_BUTTON("seaskipper/travel_button.png", 151, 60),
     // endregion
 
-    // region Territory Magagement Background
+    // region Territory Management Background
     TERRITORY_MANAGEMENT_BACKGROUND("territory_management/territory_management_background.png", 256, 136),
     TERRITORY_ITEM("territory_management/territory.png", 16, 16),
     TERRITORY_ITEM_HQ("territory_management/territory_hq.png", 16, 16),
@@ -361,6 +366,7 @@ public enum Texture {
     BUTTON_RIGHT("ui_components/button_right.png", 48, 56),
     BUTTON_TOP("ui_components/button_top.png", 128, 60),
     COLOR_PICKER_BACKGROUND("ui_components/color_picker_background.png", 442, 208),
+    CONFIG_PROFILE_BACKGROUND("ui_components/config_profile_background.png", 160, 200),
     CONTAINER_SIDEBAR("ui_components/container_sidebar.png", 25, 136),
     EMERALD_COUNT_BACKGROUND("ui_components/emerald_count_background.png", 24, 24),
     EXIT_FLAG("ui_components/exit_flag.png", 73, 62),
@@ -370,30 +376,34 @@ public enum Texture {
     ITEM_FILTER_BACKGROUND("ui_components/item_filter_background.png", 358, 206),
     ITEM_SHARING_BACKGROUND("ui_components/item_sharing_background.png", 250, 100),
     LIST_SEARCH("ui_components/list_search.png", 133, 23),
+    OVERLAY_ORDERING_BACKGROUND("ui_components/overlay_ordering_background.png", 234, 206),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 358, 206),
     PLAYER_VIEWER_BACKGROUND("ui_components/player_viewer_background.png", 126, 88),
     QUICK_JUMP_BUTTON("ui_components/quick_jump_button.png", 16, 32),
+    SECRETS_BACKGROUND("ui_components/secrets_background.png", 350, 150),
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
     SCROLL_BUTTON("ui_components/scroll_button.png", 7, 17),
     SETTINGS_WARNING_BACKGROUND("ui_components/settings_warning_background.png", 153, 106),
     SCROLLBAR_BACKGROUND("ui_components/generic_container_scrollbar.png", 25, 136),
     SCROLLBAR_BUTTON("ui_components/scroll_button_container.png", 12, 15),
     VIGNETTE("ui_components/vignette.png", 512, 512),
-    WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 358, 206);
+    WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 358, 206),
+    WIDGET_BACKGROUND_LONG("ui_components/widget_background_long.png", 198, 20),
+    WOOD_STRIP("ui_components/wood_strip.png", 198, 20);
     // endregion
 
-    private final ResourceLocation resource;
+    private final Identifier identifier;
     private final int width;
     private final int height;
 
     Texture(String name, int width, int height) {
-        this.resource = ResourceLocation.fromNamespaceAndPath("wynntils", "textures/" + name);
+        this.identifier = Identifier.fromNamespaceAndPath("wynntils", "textures/" + name);
         this.width = width;
         this.height = height;
     }
 
-    public ResourceLocation resource() {
-        return resource;
+    public Identifier identifier() {
+        return identifier;
     }
 
     public int width() {

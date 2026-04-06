@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.CustomWaypointIconScreen;
 import com.wynntils.services.mapdata.impl.MapIconImpl;
@@ -18,6 +17,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class CustomIconWidget extends AbstractWidget {
@@ -57,20 +57,17 @@ public class CustomIconWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.BROWN.withAlpha(isHovered ? 150 : 100),
                 this.getX(),
                 this.getY(),
-                0,
                 width,
                 height);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(customIcon.getIconId().substring(ICON_ID_PREFIX.length())),
                         getX() + 15 + iconWidth,
                         getY() + getHeight() / 2f,
@@ -82,11 +79,10 @@ public class CustomIconWidget extends AbstractWidget {
                         1);
 
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                customIcon.getResourceLocation(),
+                guiGraphics,
+                customIcon.getIdentifier(),
                 iconRenderX,
                 iconRenderY,
-                1,
                 iconWidth,
                 iconHeight,
                 customIcon.getWidth(),
@@ -96,14 +92,14 @@ public class CustomIconWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (removeButton.isMouseOver(mouseX, mouseY)) {
-            return removeButton.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (removeButton.isMouseOver(event.x(), event.y())) {
+            return removeButton.mouseClicked(event, isDoubleClick);
         }
 
         waypointIconScreen.selectIcon(customIcon);
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override

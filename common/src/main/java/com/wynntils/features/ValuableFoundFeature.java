@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
@@ -24,18 +25,17 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class ValuableFoundFeature extends Feature {
-    private static final ResourceLocation MYTHIC_FOUND_CLASSIC_ID =
-            ResourceLocation.fromNamespaceAndPath("wynntils", "misc.mythic-found-classic");
-    private static final ResourceLocation MYTHIC_FOUND_MODERN_ID =
-            ResourceLocation.fromNamespaceAndPath("wynntils", "misc.mythic-found-modern");
-    private static final ResourceLocation CACHE_FOUND_ID =
-            ResourceLocation.fromNamespaceAndPath("wynntils", "misc.cache-found");
+    private static final Identifier MYTHIC_FOUND_CLASSIC_ID =
+            Identifier.fromNamespaceAndPath("wynntils", "misc.mythic-found-classic");
+    private static final Identifier MYTHIC_FOUND_MODERN_ID =
+            Identifier.fromNamespaceAndPath("wynntils", "misc.mythic-found-modern");
+    private static final Identifier CACHE_FOUND_ID = Identifier.fromNamespaceAndPath("wynntils", "misc.cache-found");
 
     @Persisted
     private final Config<ValuableFoundSound> chestSound = new Config<>(ValuableFoundSound.MODERN);
@@ -78,6 +78,10 @@ public class ValuableFoundFeature extends Feature {
 
     @Persisted
     private final Config<Float> soundPitch = new Config<>(1.0f);
+
+    public ValuableFoundFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onValuableFound(ValuableFoundEvent event) {

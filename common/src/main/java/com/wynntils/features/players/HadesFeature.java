@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.players;
@@ -7,10 +7,12 @@ package com.wynntils.features.players;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.hades.protocol.enums.SocialType;
 
 @ConfigCategory(Category.PLAYERS)
@@ -26,6 +28,12 @@ public class HadesFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> shareWithGuild = new Config<>(true);
+
+    public HadesFeature() {
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
+                .build());
+    }
 
     @Override
     protected void onConfigUpdate(Config<?> config) {

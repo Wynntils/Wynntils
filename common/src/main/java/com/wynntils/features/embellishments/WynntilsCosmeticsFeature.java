@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.embellishments;
@@ -7,6 +7,7 @@ package com.wynntils.features.embellishments;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -23,11 +24,15 @@ public class WynntilsCosmeticsFeature extends Feature {
     @Persisted
     public final Config<Boolean> renderOwnCape = new Config<>(true);
 
+    public WynntilsCosmeticsFeature() {
+        super(ProfileDefault.ENABLED);
+    }
+
     @SubscribeEvent
     public void onCapeRender(PlayerRenderLayerEvent.Cape event) {
         if (!isEnabled() || !Managers.Connection.onServer()) return;
 
-        Entity entity = ((EntityRenderStateExtension) event.getPlayerRenderState()).getEntity();
+        Entity entity = ((EntityRenderStateExtension) event.getHumanoidRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
         if (McUtils.player().is(player) && !renderOwnCape.get()) return;
 
@@ -41,7 +46,7 @@ public class WynntilsCosmeticsFeature extends Feature {
     public void onElytraRender(PlayerRenderLayerEvent.Elytra event) {
         if (!isEnabled() || !Managers.Connection.onServer()) return;
 
-        Entity entity = ((EntityRenderStateExtension) event.getPlayerRenderState()).getEntity();
+        Entity entity = ((EntityRenderStateExtension) event.getHumanoidRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
         if (McUtils.player().is(player) && !renderOwnCape.get()) return;
 

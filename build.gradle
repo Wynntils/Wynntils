@@ -15,7 +15,7 @@ def usingHotswapAgent = project.hasProperty("wynntils.hotswap") ? project.getPro
 
 // On the release branches, this string will be automatically updated by the bots
 // Do not change this in the main branch!
-version = "3.0.0-SNAPSHOT"
+version = "4.0.0-SNAPSHOT"
 
 subprojects {
     apply plugin: "dev.architectury.loom"
@@ -88,6 +88,7 @@ allprojects {
             palantirJavaFormat(spotless_palantir_version)
             trimTrailingWhitespace()
             endWithNewline()
+            toggleOffOn()
             ratchetFrom('origin/main')
             // Custom rule from https://github.com/apache/geode
             custom "Refuse wildcard imports", {
@@ -117,6 +118,7 @@ allprojects {
              */
             targetExclude(
                     "src/main/resources/assets/wynntils/font/*.json",
+                    "src/main/resources/assets/wynntils/fontmaps/*.json",
                     "src/main/resources/fabric.mod.json")
             gson()
                     .indentWithSpaces(2)

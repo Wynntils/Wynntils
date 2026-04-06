@@ -1,13 +1,13 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -25,13 +25,14 @@ import com.wynntils.models.items.items.game.CrafterBagItem;
 import com.wynntils.models.items.items.game.DungeonKeyItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
-import com.wynntils.models.items.items.game.HorseItem;
+import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.items.game.PotionItem;
 import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.models.items.items.gui.TradeMarketIdentificationFilterItem;
+import com.wynntils.models.mount.type.MountStat;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
@@ -40,10 +41,11 @@ import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -98,13 +100,13 @@ public class ItemTextOverlayFeature extends Feature {
     private final Config<TextShadow> gatheringToolTierShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
-    private final Config<Boolean> horseTierEnabled = new Config<>(true);
+    private final Config<Boolean> mountItemEnabled = new Config<>(true);
 
     @Persisted
-    private final Config<Boolean> horseTierRomanNumerals = new Config<>(false);
+    private final Config<MountStat> mountItemStat = new Config<>(MountStat.POTENTIAL);
 
     @Persisted
-    private final Config<TextShadow> horseTierShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<TextShadow> mountItemShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
     private final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
@@ -139,21 +141,25 @@ public class ItemTextOverlayFeature extends Feature {
     @Persisted
     private final Config<TextShadow> tradeMarketFilterShadow = new Config<>(TextShadow.OUTLINE);
 
+    public ItemTextOverlayFeature() {
+        super(ProfileDefault.ENABLED);
+    }
+
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Post e) {
         if (!inventoryTextOverlayEnabled.get()) return;
 
-        drawTextOverlay(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
+        drawTextOverlay(e.getGuiGraphics(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
     }
 
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Post e) {
         if (!hotbarTextOverlayEnabled.get()) return;
 
-        drawTextOverlay(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY(), true);
+        drawTextOverlay(e.getGuiGraphics(), e.getItemStack(), e.getX(), e.getY(), true);
     }
 
-    private void drawTextOverlay(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
+    private void drawTextOverlay(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
 
@@ -170,13 +176,12 @@ public class ItemTextOverlayFeature extends Feature {
             return;
         }
 
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 300); // items are drawn at z300, so text has to be as well
-        poseStack.scale(textOverlay.scale(), textOverlay.scale(), 1f);
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().scale(textOverlay.scale(), textOverlay.scale());
         float x = (slotX + textOverlay.xOffset()) / textOverlay.scale();
         float y = (slotY + textOverlay.yOffset()) / textOverlay.scale();
-        FontRenderer.getInstance().renderText(poseStack, x, y, textOverlay.task(), Font.DisplayMode.NORMAL);
-        poseStack.popPose();
+        FontRenderer.getInstance().renderText(guiGraphics, x, y, textOverlay.task());
+        guiGraphics.pose().popMatrix();
     }
 
     private TextOverlayInfo calculateOverlay(WynnItem wynnItem) {
@@ -198,8 +203,8 @@ public class ItemTextOverlayFeature extends Feature {
         if (wynnItem instanceof GatheringToolItem gatheringToolItem) {
             return new GatheringToolOverlay(gatheringToolItem);
         }
-        if (wynnItem instanceof HorseItem horseItem) {
-            return new HorseOverlay(horseItem);
+        if (wynnItem instanceof MountItem mountItem) {
+            return new MountItemOverlay(mountItem);
         }
         if (wynnItem instanceof PowderItem powderItem) {
             return new PowderOverlay(powderItem);
@@ -334,9 +339,9 @@ public class ItemTextOverlayFeature extends Feature {
 
             CustomColor textColor;
             if (item.isCorrupted()) {
-                textColor = dungeon.isCorruptedRemoved() ? REMOVED_COLOR : CORRUPTED_COLOR;
+                textColor = dungeon.doesCorruptedExist() ? CORRUPTED_COLOR : REMOVED_COLOR;
             } else {
-                textColor = dungeon.isRemoved() ? REMOVED_COLOR : STANDARD_COLOR;
+                textColor = dungeon.doesExist() ? STANDARD_COLOR : REMOVED_COLOR;
             }
 
             TextRenderSetting style =
@@ -399,26 +404,43 @@ public class ItemTextOverlayFeature extends Feature {
         }
     }
 
-    private final class HorseOverlay implements TextOverlayInfo {
-        private final HorseItem item;
+    private final class MountItemOverlay implements TextOverlayInfo {
+        private final MountItem item;
 
-        private HorseOverlay(HorseItem item) {
+        private MountItemOverlay(MountItem item) {
             this.item = item;
         }
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return horseTierEnabled.get();
+            return mountItemEnabled.get();
         }
 
         @Override
         public TextOverlay getTextOverlay() {
-            String text = valueToString(item.getTier().getNumeral(), horseTierRomanNumerals.get());
+            int value = getSelectedMountStatValue();
+            String text = String.valueOf(value);
+            float scale = text.length() >= 4 ? 0.75f : 0.9f;
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
-                    .withTextShadow(horseTierShadow.get());
+                    .withTextShadow(mountItemShadow.get());
 
-            return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
+            return new TextOverlay(new TextRenderTask(text, style), -1, 1, scale);
+        }
+
+        private int getSelectedMountStatValue() {
+            return switch (mountItemStat.get()) {
+                case ACCELERATION -> item.getAcceleration().current();
+                case ALTITUDE -> item.getAltitude().current();
+                case JUMP_HEIGHT -> item.getJumpHeight().current();
+                case ENERGY -> item.getEnergy().current();
+                case HANDLING -> item.getHandling().current();
+                case POTENTIAL -> item.getPotential();
+                case BOOST -> item.getBoost().current();
+                case SPEED -> item.getSpeed().current();
+                case TOUGHNESS -> item.getToughness().current();
+                case TRAINING -> item.getTraining().current();
+            };
         }
     }
 
@@ -482,7 +504,8 @@ public class ItemTextOverlayFeature extends Feature {
             Skill skill = item.getSkill();
 
             StyledText text = StyledText.fromComponent(Component.literal(skill.getSymbol())
-                    .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))));
+                    .withStyle(Style.EMPTY.withFont(
+                            new FontDescription.Resource(Identifier.withDefaultNamespace("common")))));
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
                     .withTextShadow(skillIconShadow.get());
@@ -508,7 +531,8 @@ public class ItemTextOverlayFeature extends Feature {
             Skill skill = item.getType().getSkill();
 
             StyledText text = StyledText.fromComponent(Component.literal(skill.getSymbol())
-                    .withStyle(Style.EMPTY.withFont(ResourceLocation.withDefaultNamespace("common"))));
+                    .withStyle(Style.EMPTY.withFont(
+                            new FontDescription.Resource(Identifier.withDefaultNamespace("common")))));
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
                     .withTextShadow(skillIconShadow.get());

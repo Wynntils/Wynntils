@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.combat.label;
@@ -15,7 +15,7 @@ import net.minecraft.world.entity.Entity;
 public class KillLabelParser implements LabelParser<KillLabelInfo> {
     // Test in KillLabelParser_KILL_LABEL_PATTERN
     private static final Pattern KILL_LABEL_PATTERN = Pattern.compile(
-            "(?:§dx\\d )?§7\\[§f\\+(?:§d)?(?<combatXp>\\d+)(?:§f)? Combat XP§7\\](\n(?:§dx\\d )?(?:§bx\\d\\.\\d )?(?:§7)?\\[§f\\+(?:§(?:b|d))?(?<guildXp>\\d+)(?:§f)? Guild XP§7\\])?\n\\[(?<killCredit>.*)\\]");
+            "(?:§dx\\d )?(?:§dx\\d\\.\\d )?§7\\[§f\\+(?:§d)?(?<combatXp>\\d+)(?:§f)? Combat XP§7\\](\n(?:§dx\\d )?(?:§(b|d)x\\d\\.\\d )?(?:§7)?\\[§f\\+(?:§(?:b|d))?(?<guildXp>\\d+)(?:§f)? Guild XP§7\\])?\n\\[(?<killCredit>.*)\\]");
 
     @Override
     public KillLabelInfo getInfo(StyledText label, Location location, Entity entity) {

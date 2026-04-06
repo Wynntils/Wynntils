@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -15,9 +15,9 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombSortOrder;
 import com.wynntils.models.worlds.type.BombType;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -29,7 +29,6 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 
 public class BombBellOverlay extends Overlay {
     @Persisted
@@ -64,6 +63,9 @@ public class BombBellOverlay extends Overlay {
 
     @Persisted
     private final Config<Boolean> showProfessionSpeedBombs = new Config<>(true);
+
+    @Persisted
+    private final Config<Boolean> alwaysShowCurrentWorld = new Config<>(false);
 
     private final Map<BombType, Supplier<Boolean>> bombTypeMap = Map.ofEntries(
             Map.entry(BombType.COMBAT_XP, showCombatBombs::get),
@@ -102,12 +104,10 @@ public class BombBellOverlay extends Overlay {
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        BufferedFontRenderer.getInstance()
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        FontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        guiGraphics.pose(),
-                        bufferSource,
+                        guiGraphics,
                         this.getRenderX(),
                         this.getRenderY(),
                         renderTasks,
@@ -119,12 +119,10 @@ public class BombBellOverlay extends Overlay {
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        BufferedFontRenderer.getInstance()
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        FontRenderer.getInstance()
                 .renderTextsWithAlignment(
-                        guiGraphics.pose(),
-                        bufferSource,
+                        guiGraphics,
                         this.getRenderX(),
                         this.getRenderY(),
                         List.of(
@@ -149,7 +147,7 @@ public class BombBellOverlay extends Overlay {
     @Override
     public void tick() {
         Stream<BombInfo> bombsToRender = Models.Bomb.getBombBellStream(
-                        groupBombs.get(), sortOrder.get(), maxBombs.get())
+                        groupBombs.get(), sortOrder.get(), maxBombs.get(), alwaysShowCurrentWorld.get())
                 .filter(bombInfo -> {
                     BombType bombType = bombInfo.bomb();
                     Supplier<Boolean> bombTypeSupplier = bombTypeMap.get(bombType);

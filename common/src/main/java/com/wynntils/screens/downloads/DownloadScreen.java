@@ -1,18 +1,22 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.downloads;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.DownloadDependencyGraph;
+import com.wynntils.core.net.DownloadSource;
 import com.wynntils.core.net.QueuedDownload;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.screens.base.WynntilsGridLayoutScreen;
+import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.downloads.widgets.DownloadWidget;
+import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
@@ -28,9 +32,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.network.chat.Component;
@@ -45,10 +51,19 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
 
     private final Component infoText;
     private List<DownloadWidget> downloadWidgets = new ArrayList<>();
+    private int clearCount = 3;
     private int scrollY;
     private int scrollOffset = 0;
     private int widgetHeight;
     private boolean draggingScroll = false;
+
+    private Button clearCachesButton;
+    private Button incrementTimeoutButton;
+    private Button decrementTimeoutButton;
+    private TextInputBoxWidget customInput;
+    private WynntilsCheckbox cdnCheckbox;
+    private WynntilsCheckbox githubCheckbox;
+    private WynntilsCheckbox customCheckbox;
 
     private DownloadScreen(Screen previousScreen, ServerData serverData) {
         super(Component.translatable("screens.wynntils.downloads.name"));
@@ -73,28 +88,117 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
     protected void doInit() {
         super.doInit();
 
-        this.addRenderableWidget(
-                new Button.Builder(Component.translatable("screens.wynntils.downloads.back"), (button -> onClose()))
-                        .pos((int) (dividedWidth * 5), (int) (dividedHeight * 37))
-                        .size((int) (dividedWidth * 6), 20)
-                        .build());
-
         if (serverData != null) {
-            this.addRenderableWidget(new Button.Builder(
-                            Component.translatable("screens.wynntils.downloads.connect"), (button -> connectToServer()))
-                    .pos((int) dividedWidth, (int) (dividedHeight * 31))
-                    .size((int) (dividedWidth * 14), 20)
-                    .build());
-
             this.addRenderableWidget(new WynntilsCheckbox(
                     (int) (dividedWidth * 2),
-                    (int) (dividedHeight * 25),
+                    (int) (dividedHeight * 12),
                     20,
                     Component.translatable("screens.wynntils.downloads.dontShowAgain"),
                     false,
                     (int) (dividedWidth * 10),
                     (c, b) -> toggleShowAgain(b)));
+
+            this.addRenderableWidget(new Button.Builder(
+                            Component.translatable("screens.wynntils.downloads.connect"), (button -> connectToServer()))
+                    .pos((int) dividedWidth, (int) (dividedHeight * 18))
+                    .size((int) (dividedWidth * 14), 20)
+                    .build());
         }
+
+        this.addRenderableWidget(
+                new Button.Builder(Component.translatable("screens.wynntils.downloads.back"), (button -> onClose()))
+                        .pos((int) (dividedWidth * 5), (int) (dividedHeight * 24))
+                        .size((int) (dividedWidth * 6), 20)
+                        .build());
+
+        cdnCheckbox = new WynntilsCheckbox(
+                (int) (dividedWidth * 4),
+                (int) (dividedHeight * 29),
+                20,
+                Component.literal("Wynntils CDN"),
+                Managers.Url.getDownloadSource() == DownloadSource.CDN,
+                (int) (dividedWidth * 7),
+                (c, b) -> changeDownloadSource(DownloadSource.CDN),
+                List.of(Component.translatable("screens.wynntils.downloads.cdnTooltip")));
+        this.addRenderableWidget(cdnCheckbox);
+
+        githubCheckbox = new WynntilsCheckbox(
+                (int) (dividedWidth * 4),
+                (int) (dividedHeight * 34),
+                20,
+                Component.literal("GitHub"),
+                Managers.Url.getDownloadSource() == DownloadSource.GITHUB,
+                (int) (dividedWidth * 7),
+                (c, b) -> changeDownloadSource(DownloadSource.GITHUB),
+                List.of(Component.translatable("screens.wynntils.downloads.githubTooltip")));
+        this.addRenderableWidget(githubCheckbox);
+
+        customCheckbox = new WynntilsCheckbox(
+                (int) (dividedWidth * 4),
+                (int) (dividedHeight * 40 + 20),
+                20,
+                Component.translatable("screens.wynntils.downloads.customSource"),
+                Managers.Url.getDownloadSource() == DownloadSource.CUSTOM,
+                (int) (dividedWidth * 7),
+                (c, b) -> changeDownloadSource(DownloadSource.CUSTOM),
+                List.of(Component.translatable("screens.wynntils.downloads.customCheckboxTooltip")));
+        this.addRenderableWidget(customCheckbox);
+
+        customInput = new TextInputBoxWidget(
+                (int) (dividedWidth * 2),
+                (int) (dividedHeight * 39),
+                (int) (dividedWidth * 12),
+                20,
+                (s) -> {
+                    if (customCheckbox.selected) {
+                        changeCustomSource(s);
+                    } else {
+                        Managers.Url.setCustomSourceUrl(s);
+                    }
+                },
+                this,
+                customInput);
+        customInput.setTextBoxInput(Managers.Url.getCustomSourceUrl());
+        customInput.setTooltip(Tooltip.create(Component.translatable("screens.wynntils.downloads.customInputTooltip")));
+        this.addRenderableWidget(customInput);
+
+        decrementTimeoutButton = new Button.Builder(Component.literal("-"), (b -> adjustTimeout(-1000)))
+                .pos((int) (dividedWidth * 5), (int) (dividedHeight * 52))
+                .size(20, 20)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.downloads.timeoutDecrease")))
+                .build();
+        this.addRenderableWidget(decrementTimeoutButton);
+
+        incrementTimeoutButton = new Button.Builder(Component.literal("+"), (b -> adjustTimeout(1000)))
+                .pos((int) (dividedWidth * 9), (int) (dividedHeight * 52))
+                .size(20, 20)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.downloads.timeoutIncrease")))
+                .build();
+        this.addRenderableWidget(incrementTimeoutButton);
+
+        decrementTimeoutButton.active = Managers.Net.getTimeoutMillis() > 1000;
+        incrementTimeoutButton.active = Managers.Net.getTimeoutMillis() < 30000;
+
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.downloads.reloadCaches")
+                                .withStyle(ChatFormatting.BLUE),
+                        (b -> Managers.Url.loadUrls()))
+                .pos((int) dividedWidth, (int) (dividedHeight * 56))
+                .size((int) (dividedWidth * 14), 20)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.downloads.reloadCachesTooltip")))
+                .build());
+
+        clearCachesButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.downloads.clearCaches", clearCount)
+                                .withStyle(ChatFormatting.RED),
+                        (b -> {
+                            tryClearCaches();
+                        }))
+                .pos((int) dividedWidth, (int) (dividedHeight * 56 + 20))
+                .size((int) (dividedWidth * 14), 20)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.downloads.clearCachesTooltip")))
+                .build();
+        this.addRenderableWidget(clearCachesButton);
 
         widgetHeight = (int) (dividedHeight * 3.5f);
 
@@ -109,11 +213,10 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.downloads.name")
                                 .withStyle(ChatFormatting.UNDERLINE)),
                         dividedWidth * 32,
@@ -138,11 +241,10 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         RenderUtils.disableScissor(guiGraphics);
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.LIGHT_GRAY,
                 (dividedWidth * 48),
                 (int) (dividedHeight * WIDGET_TOP_Y),
-                0,
                 6,
                 WIDGETS_PER_PAGE * widgetHeight);
 
@@ -150,17 +252,16 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                 + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, (WIDGETS_PER_PAGE * widgetHeight) - 20));
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 draggingScroll ? CommonColors.BLACK : CommonColors.GRAY,
                 (dividedWidth * 48),
                 scrollY,
-                0,
                 6,
                 20);
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.downloads.info")
                                 .withStyle(ChatFormatting.UNDERLINE)),
                         (dividedWidth * 56),
@@ -173,7 +274,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(infoText),
                         (dividedWidth * 50),
                         (dividedWidth * 63),
@@ -185,14 +286,43 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL,
                         0.8f);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.downloads.timeout")),
+                        dividedWidth * 8,
+                        dividedHeight * 50,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromString(String.valueOf(Managers.Net.getTimeoutMillis() / 1000)),
+                        dividedWidth * 8,
+                        dividedHeight * 52 + 10,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
+
+        if (draggingScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (MathUtils.isInside(
+                mouseX, mouseY, (int) (dividedWidth * 48), (int) ((dividedWidth * 48) + 6), scrollY, scrollY + 20)) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!draggingScroll) {
             if (MathUtils.isInside(
-                    (int) mouseX,
-                    (int) mouseY,
+                    (int) event.x(),
+                    (int) event.y(),
                     (int) (dividedWidth * 48),
                     (int) ((dividedWidth * 48) + 6),
                     scrollY,
@@ -204,14 +334,14 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         }
 
         for (GuiEventListener listener : this.children) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseClicked(mouseX, mouseY, button);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseClicked(event, isDoubleClick);
             }
         }
 
         for (DownloadWidget downloadWidget : this.downloadWidgets) {
-            if (downloadWidget.isMouseOver(mouseX, mouseY)) {
-                return downloadWidget.mouseClicked(mouseX, mouseY, button);
+            if (downloadWidget.isMouseOver(event.x(), event.y())) {
+                return downloadWidget.mouseClicked(event, isDoubleClick);
             }
         }
 
@@ -219,13 +349,13 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (draggingScroll) {
             int scrollAreaStartY = (int) ((dividedHeight * WIDGET_TOP_Y) + 10);
             int scrollAreaHeight = (WIDGETS_PER_PAGE - 1) * widgetHeight;
 
             int newOffset = Math.round(MathUtils.map(
-                    (float) mouseY, scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
+                    (float) event.y(), scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
 
             newOffset = Math.max(0, Math.min(newOffset, getMaxScrollOffset()));
 
@@ -235,8 +365,8 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         }
 
         for (GuiEventListener listener : this.children) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseDragged(event, dragX, dragY);
             }
         }
 
@@ -244,12 +374,12 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
 
         for (GuiEventListener listener : this.children) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseReleased(mouseX, mouseY, button);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseReleased(event);
             }
         }
 
@@ -275,6 +405,42 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         Managers.Feature.getFeatureInstance(WynncraftButtonFeature.class)
                 .ignoreFailedDownloads
                 .store(show);
+    }
+
+    private void changeDownloadSource(DownloadSource downloadSource) {
+        Managers.Url.setDownloadSource(downloadSource);
+
+        DownloadSource newSource = Managers.Url.getDownloadSource();
+        cdnCheckbox.selected = newSource == DownloadSource.CDN;
+        githubCheckbox.selected = newSource == DownloadSource.GITHUB;
+        customCheckbox.selected = newSource == DownloadSource.CUSTOM;
+    }
+
+    private void changeCustomSource(String customSource) {
+        Managers.Url.setCustomSourceUrl(customSource);
+    }
+
+    private void adjustTimeout(int adjustment) {
+        int timeout = Managers.Net.getTimeoutMillis();
+        timeout += adjustment;
+        Managers.Net.setTimeoutMillis(timeout);
+
+        decrementTimeoutButton.active = timeout > 1000;
+        incrementTimeoutButton.active = timeout < 30000;
+    }
+
+    private void tryClearCaches() {
+        clearCount -= 1;
+
+        if (clearCount <= 0) {
+            FileUtils.deleteFolder(Managers.Net.getCacheDir());
+            FileUtils.deleteFolder(Services.Update.getUpdatesFolder());
+
+            System.exit(0);
+        } else {
+            clearCachesButton.setMessage(Component.translatable("screens.wynntils.downloads.clearCaches", clearCount)
+                    .withStyle(ChatFormatting.RED));
+        }
     }
 
     private void scroll(int newOffset) {

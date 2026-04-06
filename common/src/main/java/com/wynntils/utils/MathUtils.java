@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2023.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils;
@@ -96,6 +96,22 @@ public final class MathUtils {
             return INT_TO_ROMAN_MAP.get(number);
         }
         return INT_TO_ROMAN_MAP.get(l) + toRoman(number - l);
+    }
+
+    public static long parseAbbreviatedNumber(String numberStr, String suffixStr) {
+        double value = Double.parseDouble(numberStr);
+
+        if (suffixStr == null || suffixStr.isEmpty()) {
+            return Math.round(value);
+        }
+
+        return switch (Character.toLowerCase(suffixStr.charAt(0))) {
+            case 'k' -> Math.round(value * 1_000d);
+            case 'm' -> Math.round(value * 1_000_000d);
+            case 'b' -> Math.round(value * 1_000_000_000d);
+            case 't' -> Math.round(value * 1_000_000_000_000d);
+            default -> Math.round(value);
+        };
     }
 
     public static float map(float sourceNumber, float fromA, float fromB, float toA, float toB) {

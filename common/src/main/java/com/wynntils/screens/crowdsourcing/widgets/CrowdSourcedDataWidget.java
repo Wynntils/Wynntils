@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.crowdsourcing.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import com.wynntils.core.text.StyledText;
@@ -22,7 +21,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.ConfirmedBoolean;
+import com.wynntils.utils.type.OptionalBoolean;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +29,8 @@ import java.util.Map;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -54,15 +55,13 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         CustomColor backgroundColor = this.isHovered ? BUTTON_COLOR.b() : BUTTON_COLOR.a();
-        RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
+        RenderUtils.drawRect(guiGraphics, backgroundColor, this.getX(), this.getY(), this.width, this.height);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(crowdSourcedDataType.getTranslatedName()),
                         this.getX() + 14,
                         this.getY() + 1,
@@ -77,28 +76,20 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
                 switch (Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType)) {
                     case FALSE -> Texture.ACTIVITY_CANNOT_START;
                     case TRUE -> Texture.ACTIVITY_FINISHED;
-                    case UNCONFIRMED -> Texture.QUESTION_MARK;
+                    case NULL -> Texture.QUESTION_MARK;
                 };
 
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                stateTexture.resource(),
-                this.getX() + 1,
-                this.getY() + 1,
-                stateTexture.width(),
-                stateTexture.height(),
-                stateTexture.width(),
-                stateTexture.height());
+        RenderUtils.drawTexturedRect(guiGraphics, stateTexture, this.getX() + 1, this.getY() + 1);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            if (Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType) == ConfirmedBoolean.TRUE) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType) == OptionalBoolean.TRUE) {
                 Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class)
                         .crowdSourcedDataTypeEnabledMap
                         .get()
-                        .put(crowdSourcedDataType, ConfirmedBoolean.FALSE);
+                        .put(crowdSourcedDataType, OptionalBoolean.FALSE);
 
                 Managers.Config.saveConfig();
                 return true;
@@ -113,20 +104,20 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
             Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class)
                     .crowdSourcedDataTypeEnabledMap
                     .get()
-                    .put(crowdSourcedDataType, ConfirmedBoolean.TRUE);
+                    .put(crowdSourcedDataType, OptionalBoolean.TRUE);
             Managers.Config.saveConfig();
 
             return true;
         }
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            ConfirmedBoolean dataCollectionState =
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            OptionalBoolean dataCollectionState =
                     Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType);
-            if (dataCollectionState == ConfirmedBoolean.UNCONFIRMED) {
+            if (dataCollectionState == OptionalBoolean.NULL) {
                 Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class)
                         .crowdSourcedDataTypeEnabledMap
                         .get()
-                        .put(crowdSourcedDataType, ConfirmedBoolean.FALSE);
+                        .put(crowdSourcedDataType, OptionalBoolean.FALSE);
 
                 Managers.Config.saveConfig();
                 return true;
@@ -145,7 +136,7 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
     }
 
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 
     @Override
     public List<Component> getTooltipLines() {
@@ -162,12 +153,12 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
 
         lines.add(Component.empty());
 
-        ConfirmedBoolean dataCollectionState = Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType);
+        OptionalBoolean dataCollectionState = Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType);
         if (!Managers.CrowdSourcedData.isDataCollectionEnabled()) {
             lines.add(Component.translatable("feature.wynntils.dataCrowdSourcing.button.enableWithFeature")
                     .withStyle(ChatFormatting.BOLD)
                     .withStyle(ChatFormatting.DARK_GREEN));
-        } else if (dataCollectionState != ConfirmedBoolean.TRUE) {
+        } else if (dataCollectionState != OptionalBoolean.TRUE) {
             lines.add(Component.translatable("feature.wynntils.dataCrowdSourcing.button.enable")
                     .withStyle(ChatFormatting.BOLD)
                     .withStyle(ChatFormatting.GREEN));
@@ -177,7 +168,7 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
                     .withStyle(ChatFormatting.RED));
         }
 
-        if (dataCollectionState == ConfirmedBoolean.UNCONFIRMED) {
+        if (dataCollectionState == OptionalBoolean.NULL) {
             lines.add(Component.translatable("feature.wynntils.dataCrowdSourcing.button.disableUnconfirmed")
                     .withStyle(ChatFormatting.BOLD)
                     .withStyle(ChatFormatting.RED));

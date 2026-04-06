@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.changelog;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsPagedScreen;
@@ -27,6 +26,7 @@ import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public final class ChangelogScreen extends WynntilsScreen implements WynntilsPagedScreen {
@@ -105,30 +105,28 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        PoseStack poseStack = guiGraphics.pose();
-
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
 
         RenderUtils.enableScissor(guiGraphics, offsetX + 40, offsetY + 11, 220, SCISSOR_HEIGHT);
         FontRenderer.getInstance()
-                .renderTexts(poseStack, 45 + offsetX, 15 + offsetY - scrollOffset, changelogTasks.get(currentPage));
+                .renderTexts(guiGraphics, 45 + offsetX, 15 + offsetY - scrollOffset, changelogTasks.get(currentPage));
         RenderUtils.disableScissor(guiGraphics);
 
         if (getMaxScrollOffset() != 0) {
-            renderScrollBar(poseStack);
+            renderScrollBar(guiGraphics);
         }
 
-        renderPageInfo(poseStack, getCurrentPage() + 1, getMaxPage() + 1);
+        renderPageInfo(guiGraphics, getCurrentPage() + 1, getMaxPage() + 1);
 
         for (Renderable renderable : this.renderables) {
             renderable.render(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 
-    private void renderPageInfo(PoseStack poseStack, int currentPage, int maxPage) {
+    private void renderPageInfo(GuiGraphics guiGraphics, int currentPage, int maxPage) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString((currentPage) + " / " + (maxPage)),
                         80 + offsetX,
                         Texture.SCROLL_BACKGROUND.width() - 80 + offsetX,
@@ -139,13 +137,12 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
                         TextShadow.OUTLINE);
     }
 
-    private void renderScrollBar(PoseStack poseStack) {
+    private void renderScrollBar(GuiGraphics guiGraphics) {
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.LIGHT_GRAY,
                 offsetX + SCROLLBAR_RENDER_X,
                 offsetY + 14,
-                0,
                 SCROLLBAR_WIDTH,
                 SCROLL_AREA_HEIGHT);
 
@@ -154,21 +151,20 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
                 + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT - SCROLLBAR_HEIGHT));
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 draggingScroll ? CommonColors.BLACK : CommonColors.GRAY,
                 offsetX + SCROLLBAR_RENDER_X,
                 scrollRenderY,
-                0,
                 SCROLLBAR_WIDTH,
                 SCROLLBAR_HEIGHT);
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!draggingScroll) {
             if (MathUtils.isInside(
-                    (int) mouseX,
-                    (int) mouseY,
+                    (int) event.x(),
+                    (int) event.y(),
                     offsetX + SCROLLBAR_RENDER_X,
                     offsetX + SCROLLBAR_RENDER_X + SCROLLBAR_WIDTH,
                     scrollRenderY,
@@ -179,16 +175,16 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
             }
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (draggingScroll) {
             int scrollAreaStartY = offsetY + 14 + 10;
 
             int newOffset = Math.round(MathUtils.map(
-                    (float) mouseY,
+                    (float) event.y(),
                     scrollAreaStartY,
                     scrollAreaStartY + SCROLL_AREA_HEIGHT - SCROLLBAR_HEIGHT,
                     0,
@@ -205,10 +201,10 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override

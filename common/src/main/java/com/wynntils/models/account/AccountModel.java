@@ -1,11 +1,13 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.account;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
+import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
@@ -15,12 +17,17 @@ import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.type.ConfirmedBoolean;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.OptionalBoolean;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,7 +53,12 @@ public final class AccountModel extends Model {
     private final Storage<Long> silverbullExpiresAt = new Storage<>(0L);
 
     @Persisted
-    private final Storage<ConfirmedBoolean> silverbullSubscriber = new Storage<>(ConfirmedBoolean.UNCONFIRMED);
+    private final Storage<OptionalBoolean> silverbullSubscriber = new Storage<>(OptionalBoolean.NULL);
+
+    private static final int PLAYER_INFO_UPDATE_MS = 60000;
+    private ScheduledFuture<?> scheduledFuture;
+    private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
+    private WynnPlayerInfo playerInfo;
 
     public AccountModel() {
         super(List.of());
@@ -57,7 +69,7 @@ public final class AccountModel extends Model {
         StyledText message = e.getMessage().trim();
 
         if (message.matches(SILVERBULL_JOIN_PATTERN) || message.matches(SILVERBULL_UPDATE_PATTERN)) {
-            silverbullSubscriber.store(ConfirmedBoolean.TRUE);
+            silverbullSubscriber.store(OptionalBoolean.TRUE);
         }
     }
 
@@ -67,8 +79,25 @@ public final class AccountModel extends Model {
         scanRankInfo(e.isFirstJoinWorld());
     }
 
+    @SubscribeEvent
+    public void onConnect(WynncraftConnectionEvent.Connected e) {
+        scheduledFuture = timerExecutor.scheduleWithFixedDelay(
+                this::updatePlayerInfo, 0, PLAYER_INFO_UPDATE_MS, TimeUnit.MILLISECONDS);
+    }
+
+    @SubscribeEvent
+    public void onDisconnect(WynncraftConnectionEvent.Disconnected e) {
+        if (scheduledFuture != null && !scheduledFuture.isCancelled()) {
+            scheduledFuture.cancel(false);
+        }
+    }
+
     public boolean isSilverbullSubscriber() {
-        return silverbullSubscriber.get() == ConfirmedBoolean.TRUE;
+        return silverbullSubscriber.get() == OptionalBoolean.TRUE;
+    }
+
+    public WynnPlayerInfo getPlayerInfo() {
+        return playerInfo;
     }
 
     public void scanRankInfo(boolean forceParseUnexpired) {
@@ -81,8 +110,8 @@ public final class AccountModel extends Model {
                 .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME));
 
         if (forceParseUnexpired
-                || silverbullSubscriber.get() == ConfirmedBoolean.UNCONFIRMED
-                || (silverbullSubscriber.get() != ConfirmedBoolean.FALSE
+                || silverbullSubscriber.get() == OptionalBoolean.NULL
+                || (silverbullSubscriber.get() != OptionalBoolean.FALSE
                         && System.currentTimeMillis() > silverbullExpiresAt.get())) {
             // Open Cosmetics Menu
             queryBuilder.then(QueryStep.clickOnSlot(COSMETICS_SLOT)
@@ -101,9 +130,9 @@ public final class AccountModel extends Model {
         ItemStack silverbullItem = container.items().get(SILVERBULL_SLOT);
 
         Matcher status = LoreUtils.matchLoreLine(silverbullItem, 6, SILVERBULL_PATTERN);
-        silverbullSubscriber.store(status.matches() ? ConfirmedBoolean.FALSE : ConfirmedBoolean.TRUE);
+        silverbullSubscriber.store(status.matches() ? OptionalBoolean.FALSE : OptionalBoolean.TRUE);
         WynntilsMod.info("Parsed Silverbull subscription status: " + silverbullSubscriber.get());
-        if (silverbullSubscriber.get() != ConfirmedBoolean.TRUE) return;
+        if (silverbullSubscriber.get() != OptionalBoolean.TRUE) return;
 
         Matcher expiry = LoreUtils.matchLoreLine(silverbullItem, 7, SILVERBULL_DURATION_PATTERN);
         if (!expiry.matches()) {
@@ -126,5 +155,15 @@ public final class AccountModel extends Model {
         silverbullExpiresAt.store(expiryTime);
 
         WynntilsMod.info("Parsed Silverbull expiry: " + expiryTime);
+    }
+
+    private void updatePlayerInfo() {
+        Models.Player.getPlayerFullInfo(McUtils.player().getStringUUID()).whenComplete((wynnPlayerInfo, throwable) -> {
+            if (throwable != null) {
+                WynntilsMod.warn("Failed to update player info", throwable);
+            } else {
+                this.playerInfo = wynnPlayerInfo;
+            }
+        });
     }
 }

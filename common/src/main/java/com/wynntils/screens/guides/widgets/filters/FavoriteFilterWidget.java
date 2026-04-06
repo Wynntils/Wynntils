@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.widgets.filters;
@@ -15,22 +15,22 @@ import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.ConfirmedBoolean;
+import com.wynntils.utils.type.OptionalBoolean;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class FavoriteFilterWidget extends GuideFilterWidget {
-    private ConfirmedBoolean state;
+    private OptionalBoolean state;
     private FavoriteStatProvider provider;
 
     public FavoriteFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
@@ -42,18 +42,17 @@ public class FavoriteFilterWidget extends GuideFilterWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(
-                guiGraphics.pose(),
+                guiGraphics,
                 CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f),
                 getX(),
                 getY(),
-                0,
                 getWidth(),
                 getHeight());
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
-                        StyledText.fromString(state == ConfirmedBoolean.UNCONFIRMED ? "☆" : "★"),
+                        guiGraphics,
+                        StyledText.fromString(state == OptionalBoolean.NULL ? "☆" : "★"),
                         getX() + getWidth() / 2f,
                         getY() + getHeight() / 2f + 1,
                         getStarColor(),
@@ -61,40 +60,43 @@ public class FavoriteFilterWidget extends GuideFilterWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NONE);
 
+        handleCursor(guiGraphics);
+
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(
                             ComponentUtils.wrapTooltips(
                                     List.of(Component.translatable(
                                             "screens.wynntils.wynntilsGuides.filterWidget.tooltip",
                                             I18n.get("service.wynntils.itemFilter.stat.favorite.name"))),
                                     200),
-                            Component::getVisualOrderText));
+                            Component::getVisualOrderText),
+                    mouseX,
+                    mouseY);
         }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT || button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            if (state != ConfirmedBoolean.TRUE) {
-                state = ConfirmedBoolean.TRUE;
-            } else if (state != ConfirmedBoolean.FALSE) {
-                state = ConfirmedBoolean.FALSE;
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT || event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (state != OptionalBoolean.TRUE) {
+                state = OptionalBoolean.TRUE;
+            } else if (state != OptionalBoolean.FALSE) {
+                state = OptionalBoolean.FALSE;
             }
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            state = ConfirmedBoolean.UNCONFIRMED;
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            state = OptionalBoolean.NULL;
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
     protected List<StatProviderAndFilterPair> getFilters() {
-        if (state == ConfirmedBoolean.UNCONFIRMED) return List.of();
+        if (state == OptionalBoolean.NULL) return List.of();
 
         return List.of(new StatProviderAndFilterPair(
-                provider,
-                new BooleanStatFilter.BooleanStatFilterFactory().fromBoolean(state == ConfirmedBoolean.TRUE)));
+                provider, new BooleanStatFilter.BooleanStatFilterFactory().fromBoolean(state == OptionalBoolean.TRUE)));
     }
 
     @Override
@@ -113,18 +115,18 @@ public class FavoriteFilterWidget extends GuideFilterWidget {
 
         if (filterPairOpt.isPresent()) {
             if (filterPairOpt.get().statFilter().matches(true)) {
-                state = ConfirmedBoolean.TRUE;
+                state = OptionalBoolean.TRUE;
             } else if (filterPairOpt.get().statFilter().matches(false)) {
-                state = ConfirmedBoolean.FALSE;
+                state = OptionalBoolean.FALSE;
             }
         } else {
-            state = ConfirmedBoolean.UNCONFIRMED;
+            state = OptionalBoolean.NULL;
         }
     }
 
     private CustomColor getStarColor() {
         return switch (state) {
-            case UNCONFIRMED -> CommonColors.WHITE;
+            case NULL -> CommonColors.WHITE;
             case TRUE -> CommonColors.YELLOW;
             case FALSE -> CommonColors.RED;
         };

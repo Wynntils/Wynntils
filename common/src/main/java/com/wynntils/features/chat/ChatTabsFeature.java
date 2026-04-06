@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -7,10 +7,12 @@ package com.wynntils.features.chat;
 import com.google.common.collect.Sets;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatScreenCreateEvent;
@@ -44,9 +46,15 @@ public class ChatTabsFeature extends Feature {
     @Persisted
     private final Config<Boolean> oldTabHotkey = new Config<>(false);
 
+    public ChatTabsFeature() {
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
+                .build());
+    }
+
     @SubscribeEvent
     public void onChatScreenCreate(ChatScreenCreateEvent event) {
-        event.setScreen(new ChatTabsScreen(event.getDefaultText(), oldTabHotkey.get()));
+        event.setScreen(new ChatTabsScreen(event.getDefaultText(), event.isDraft(), oldTabHotkey.get()));
     }
 
     @SubscribeEvent
@@ -76,7 +84,7 @@ public class ChatTabsFeature extends Feature {
         if (screen instanceof ChatScreen chatScreen) {
             if (screen instanceof ChatTabsScreen) return;
 
-            McUtils.setScreen(new ChatTabsScreen("", oldTabHotkey.get()));
+            McUtils.setScreen(new ChatTabsScreen("", false, oldTabHotkey.get()));
         }
     }
 

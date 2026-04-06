@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -11,6 +11,7 @@ import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
+import net.minecraft.network.chat.Component;
 
 public class SocialFunctions {
     public static class FriendsFunction extends Function<Integer> {
@@ -75,7 +76,11 @@ public class SocialFunctions {
         public String getValue(FunctionArguments arguments) {
             WynntilsUser player = Models.Player.getWynntilsUser(McUtils.player());
             if (player == null) return "";
-            return player.accountType().getComponent().getString();
+
+            Component component = player.accountType().getComponent();
+            if (component == null) return "";
+
+            return component.getString();
         }
     }
 
@@ -83,6 +88,18 @@ public class SocialFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             return McUtils.playerName();
+        }
+    }
+
+    public static class PlayerUuidFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return McUtils.player().getStringUUID();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("uuid");
         }
     }
 }

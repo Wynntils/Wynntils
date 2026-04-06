@@ -1,13 +1,13 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class HotbarSlotRenderEvent extends Event {
     private final GuiGraphics guiGraphics;
@@ -26,10 +26,6 @@ public abstract class HotbarSlotRenderEvent extends Event {
         return guiGraphics;
     }
 
-    public PoseStack getPoseStack() {
-        return guiGraphics.pose();
-    }
-
     public ItemStack getItemStack() {
         return itemStack;
     }
@@ -42,7 +38,7 @@ public abstract class HotbarSlotRenderEvent extends Event {
         return y;
     }
 
-    public static class Pre extends HotbarSlotRenderEvent {
+    public static class Pre extends HotbarSlotRenderEvent implements ICancellableEvent {
         public Pre(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y) {
             super(guiGraphics, itemStack, x, y);
         }

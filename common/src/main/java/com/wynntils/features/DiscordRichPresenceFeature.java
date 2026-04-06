@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features;
@@ -8,8 +8,10 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.mc.event.ConnectionEvent;
@@ -42,6 +44,12 @@ public class DiscordRichPresenceFeature extends Feature {
 
     private boolean territoryChecking = false;
     private TerritoryProfile lastTerritoryProfile = null;
+
+    public DiscordRichPresenceFeature() {
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onCharacterUpdate(CharacterUpdateEvent event) {
@@ -104,13 +112,18 @@ public class DiscordRichPresenceFeature extends Feature {
     }
 
     @SubscribeEvent
+    public void onConnect(ConnectionEvent.ConnectedEvent e) {
+        enableRichPresence();
+    }
+
+    @SubscribeEvent
     public void onDisconnect(ConnectionEvent.DisconnectedEvent e) {
         disableRichPresence();
     }
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        if (config == disableInStream && Models.WorldState.isInStream()) {
+        if (config == disableInStream && Models.StreamerMode.isInStream()) {
             if (disableInStream.get()) {
                 disableRichPresence();
             } else {

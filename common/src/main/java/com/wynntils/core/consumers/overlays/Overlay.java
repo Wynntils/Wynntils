@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
@@ -14,17 +14,18 @@ import com.wynntils.core.consumers.features.AbstractConfigurable;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
+import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
@@ -40,6 +41,13 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
 
     @Persisted(i18nKey = "overlay.wynntils.overlay.userEnabled")
     protected final Config<Boolean> userEnabled = new Config<>(true);
+
+    @Persisted(i18nKey = "overlay.wynntils.overlay.renderElement")
+    protected final HiddenConfig<RenderElementType> renderElement = new HiddenConfig<>(RenderElementType.CHAT);
+
+    // We set the default as -1 here but it will be set to a proper default in OverlayManager#rebuildRenderOrder
+    @Persisted(i18nKey = "overlay.wynntils.overlay.renderOrder")
+    protected final HiddenConfig<Integer> renderOrder = new HiddenConfig<>(-1);
 
     // This is used in rendering.
     // Initially we use the overlay position horizontal alignment
@@ -109,33 +117,29 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         return "Overlay";
     }
 
-    public abstract void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window);
+    public abstract void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window);
 
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        this.render(guiGraphics, bufferSource, deltaTracker, window);
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        this.render(guiGraphics, deltaTracker, window);
     }
 
-    protected void renderOrErrorMessage(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    protected void renderOrErrorMessage(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (this.enabledTemplateCache != null && this.enabledTemplateCache.hasError()) {
-            renderEnabledTemplateErrorMessage(guiGraphics, bufferSource);
+            renderEnabledTemplateErrorMessage(guiGraphics);
         } else {
-            render(guiGraphics, bufferSource, deltaTracker, window);
+            render(guiGraphics, deltaTracker, window);
         }
     }
 
-    private void renderEnabledTemplateErrorMessage(GuiGraphics guiGraphics, MultiBufferSource bufferSource) {
+    private void renderEnabledTemplateErrorMessage(GuiGraphics guiGraphics) {
         StyledText[] errorMessage = {
             StyledText.fromString(
                     "§c§l" + I18n.get("overlay.wynntils.overlay.enabledTemplate.error") + " " + getTranslatedName()),
             StyledText.fromUnformattedString(enabledTemplateCache.getError())
         };
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        guiGraphics.pose(),
-                        bufferSource,
+                        guiGraphics,
                         errorMessage,
                         getRenderX(),
                         getRenderX() + getWidth(),
@@ -174,6 +178,8 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
                 // (worst case overlay.shouldBeEnabled() will return false)
                 Managers.Overlay.enableOverlay(this);
             }
+        } else if (config.getFieldName().equals("renderElement")) {
+            Managers.Overlay.rebuildRenderOrder();
         }
 
         callOnConfigUpdate(config);
@@ -310,6 +316,24 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
             case BOTTOM_LEFT -> new Vec2(getRenderX(), getRenderY() + getHeight());
             case BOTTOM_RIGHT -> new Vec2(getRenderX() + getWidth(), getRenderY() + getHeight());
         };
+    }
+
+    public RenderElementType getRenderElementType() {
+        return renderElement.get();
+    }
+
+    public void setRenderElementType(RenderElementType renderElementType) {
+        renderElement.store(renderElementType);
+        renderElement.touched();
+    }
+
+    public int getRenderOrder() {
+        return renderOrder.get();
+    }
+
+    public void setRenderOrder(int renderOrder) {
+        this.renderOrder.store(renderOrder);
+        this.renderOrder.touched();
     }
 
     @Override

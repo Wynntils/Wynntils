@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.caves;
@@ -40,7 +40,7 @@ public final class CaveModel extends Model {
 
         for (ActivityInfo activity : newActivities) {
             if (activity.type() != ActivityType.CAVE) {
-                WynntilsMod.warn("Incorrect cave activity type recieved: " + activity);
+                WynntilsMod.warn("Incorrect cave activity type received: " + activity);
                 continue;
             }
             CaveInfo caveInfo = getCaveInfoFromActivity(activity);

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class MapService extends Service {
-    private final List<MapTexture> maps = new CopyOnWriteArrayList<>();
+    private List<MapTexture> maps = new CopyOnWriteArrayList<>();
 
     public MapService() {
         super(List.of());
@@ -58,22 +58,26 @@ public final class MapService extends Service {
         Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
         List<MapPartProfile> mapPartList = WynntilsMod.GSON.fromJson(reader, type);
+        List<MapTexture> newMaps = new CopyOnWriteArrayList<>();
         for (MapPartProfile mapPart : mapPartList) {
             String fileName = mapPart.md5 + ".png";
 
-            loadMapPart(mapPart, fileName);
+            loadMapPart(mapPart, fileName, newMaps);
         }
+
+        maps = newMaps;
     }
 
-    private void loadMapPart(MapPartProfile mapPart, String fileName) {
-        Download dl = Managers.Net.download(URI.create(mapPart.url), "maps/" + fileName, mapPart.md5);
+    private void loadMapPart(MapPartProfile mapPart, String fileName, List<MapTexture> newMaps) {
+        Download dl = Managers.Net.download(
+                URI.create(Managers.Url.getDownloadSourceUrl() + mapPart.path), "maps/" + fileName, mapPart.md5);
         dl.handleInputStream(
                 inputStream -> {
                     try {
                         NativeImage nativeImage = NativeImage.read(inputStream);
                         MapTexture mapPartImage =
                                 new MapTexture(fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
-                        maps.add(mapPartImage);
+                        newMaps.add(mapPartImage);
                     } catch (IOException e) {
                         WynntilsMod.warn("IOException occurred while loading map image of " + mapPart.name, e);
                     }
@@ -81,5 +85,5 @@ public final class MapService extends Service {
                 onError -> WynntilsMod.warn("Error occurred while downloading map image of " + mapPart.name, onError));
     }
 
-    private record MapPartProfile(String name, String url, int x1, int z1, int x2, int z2, String md5) {}
+    private record MapPartProfile(String name, String url, String path, int x1, int z1, int x2, int z2, String md5) {}
 }

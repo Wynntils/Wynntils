@@ -1,25 +1,27 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
 
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class ContentTrackerFeature extends Feature {
-    private static final ResourceLocation TRACKER_UPDATE_ID =
-            ResourceLocation.fromNamespaceAndPath("wynntils", "ui.tracker.update");
+    private static final Identifier TRACKER_UPDATE_ID =
+            Identifier.fromNamespaceAndPath("wynntils", "ui.tracker.update");
     private static final SoundEvent TRACKER_UPDATE_SOUND = SoundEvent.createVariableRangeEvent(TRACKER_UPDATE_ID);
 
     @Persisted
@@ -30,6 +32,12 @@ public class ContentTrackerFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> hideOriginalMarker = new Config<>(true);
+
+    public ContentTrackerFeature() {
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onTrackerUpdate(ActivityTrackerUpdatedEvent event) {

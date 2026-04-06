@@ -1,66 +1,43 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.minimap;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
-import com.wynntils.core.text.StyledText;
-import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
 import com.wynntils.services.map.MapTexture;
-import com.wynntils.services.mapdata.MapFeatureRenderer;
-import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
-import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
-import com.wynntils.services.mapdata.features.type.MapFeature;
-import com.wynntils.services.mapdata.features.type.MapLocation;
-import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.PointerType;
-import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
-import com.wynntils.utils.type.BoundingCircle;
-import com.wynntils.utils.type.Pair;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
-import org.joml.Vector2f;
 
 public class MinimapOverlay extends Overlay {
     private static final int DEFAULT_SIZE = 130;
-    private static final float MINIMUM_RENDER_ALPHA = 0.1f;
 
     @Persisted
     private final Config<Float> zoomLevel = new Config<>(MapRenderer.DEFAULT_ZOOM_LEVEL);
 
     @Persisted
-    private final Config<Float> mapFeatureScale = new Config<>(0.6f);
+    private final Config<Float> poiScale = new Config<>(0.6f);
 
     @Persisted
     private final Config<Float> pointerScale = new Config<>(0.8f);
@@ -69,7 +46,7 @@ public class MinimapOverlay extends Overlay {
     private final Config<Boolean> followPlayerRotation = new Config<>(true);
 
     @Persisted
-    public final Config<UnmappedOption> hideWhenUnmapped = new Config<>(UnmappedOption.MINIMAP_AND_COORDS);
+    public final Config<UnmappedOption> hideWhenUnmapped = new Config<>(UnmappedOption.MINIMAP);
 
     @Persisted
     private final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
@@ -87,15 +64,21 @@ public class MinimapOverlay extends Overlay {
     private final Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.ALL);
 
     @Persisted
-    public final Config<Float> remotePlayersHeadScale = new Config<>(0.7f);
+    private final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
 
     @Persisted
-    private final Config<Boolean> renderTerritories = new Config<>(false);
+    private final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
+
+    @Persisted
+    private final Config<Boolean> renderRemoteGuildPlayers = new Config<>(true);
+
+    @Persisted
+    public final Config<Float> remotePlayersHeadScale = new Config<>(0.4f);
 
     public MinimapOverlay() {
         super(
                 new OverlayPosition(
-                        20.25f,
+                        5.25f,
                         5,
                         VerticalAlignment.TOP,
                         HorizontalAlignment.LEFT,
@@ -117,15 +100,8 @@ public class MinimapOverlay extends Overlay {
         setZoomLevel(zoomLevel.get() + delta);
     }
 
-    // FIXME: This is the only overlay not to use buffer sources for rendering. This is due to `createMask`
-    // currently not working with buffer sources.
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         float width = getWidth();
         float height = getHeight();
         float renderX = getRenderX();
@@ -137,40 +113,10 @@ public class MinimapOverlay extends Overlay {
         double playerX = McUtils.player().getX();
         double playerZ = McUtils.player().getZ();
 
-        final float zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(zoomLevel.get());
-
-        BoundingCircle textureBoundingCircle = BoundingCircle.enclosingCircle(BoundingBox.centered(
-                (float) playerX, (float) playerZ, width * zoomRenderScale, height * zoomRenderScale));
-
-        List<MapTexture> maps = Services.Map.getMapsForBoundingCircle(textureBoundingCircle);
-
-        if (hideWhenUnmapped.get() != UnmappedOption.NEITHER && maps.isEmpty()) return;
-
-        // enable mask
-        switch (maskType.get()) {
-            case RECTANGULAR ->
-                RenderUtils.enableScissor(guiGraphics, (int) renderX, (int) renderY, (int) width, (int) height);
-            case CIRCLE ->
-                RenderUtils.createMask(
-                        poseStack, Texture.CIRCLE_MASK, (int) renderX, (int) renderY, (int) (renderX + width), (int)
-                                (renderY + height));
-        }
-
-        // Always draw a black background to cover transparent map areas
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, renderX, renderY, 0, width, height);
-
-        // enable rotation if necessary
-        if (followPlayerRotation.get()) {
-            poseStack.pushPose();
-            RenderUtils.rotatePose(
-                    poseStack,
-                    centerX,
-                    centerZ,
-                    180 - McUtils.mc().gameRenderer.getMainCamera().getYRot());
-        }
+        final float zoomRenderScale = 1.0f / MapRenderer.getZoomRenderScaleFromLevel(zoomLevel.get());
 
         // avoid rotational overpass - This is a rather loose oversizing, if possible later
-        // use trignometry, etc. to find a better one
+        // use trigonometry, etc. to find a better one
         float extraFactor = 1f;
         if (followPlayerRotation.get()) {
             // 1.5 > sqrt(2);
@@ -183,41 +129,67 @@ public class MinimapOverlay extends Overlay {
             }
         }
 
-        for (MapTexture map : maps) {
-            float textureX = map.getTextureXPosition(playerX);
-            float textureZ = map.getTextureZPosition(playerZ);
-            MapRenderer.renderMapQuad(
-                    map,
-                    poseStack,
+        float worldWidth = width * (1f / zoomRenderScale) * extraFactor;
+        float worldHeight = height * (1f / zoomRenderScale) * extraFactor;
+
+        BoundingBox visibleWorldBox = BoundingBox.centered((float) playerX, (float) playerZ, worldWidth, worldHeight);
+
+        List<MapTexture> maps = Services.Map.getMapsForBoundingBox(visibleWorldBox);
+
+        if (hideWhenUnmapped.get() != UnmappedOption.NEITHER && maps.isEmpty()) return;
+
+        // FIXME: Reimplement circle mask
+        // enable mask
+        switch (maskType.get()) {
+            case RECTANGULAR ->
+                RenderUtils.enableScissor(guiGraphics, (int) renderX, (int) renderY, (int) width, (int) height);
+        }
+
+        // Always draw a black background to cover transparent map areas
+        RenderUtils.drawRect(guiGraphics, CommonColors.BLACK, (int) renderX, (int) renderY, (int) width, (int) height);
+
+        // enable rotation if necessary
+        if (followPlayerRotation.get()) {
+            guiGraphics.pose().pushMatrix();
+            RenderUtils.rotatePose(
+                    guiGraphics.pose(),
                     centerX,
                     centerZ,
-                    textureX,
-                    textureZ,
-                    width * extraFactor,
-                    height * extraFactor,
-                    1f / zoomRenderScale);
+                    180 - McUtils.mc().gameRenderer.getMainCamera().yRot());
+        }
+
+        for (MapTexture map : maps) {
+            MapRenderer.renderMapTile(
+                    guiGraphics,
+                    map,
+                    (float) playerX,
+                    (float) playerZ,
+                    centerX,
+                    centerZ,
+                    zoomRenderScale,
+                    visibleWorldBox);
         }
 
         // disable rotation if necessary
         if (followPlayerRotation.get()) {
-            poseStack.popPose();
+            guiGraphics.pose().popMatrix();
         }
 
-        renderMapFeatures(
-                poseStack,
+        renderPois(
+                guiGraphics,
                 centerX,
                 centerZ,
                 width,
                 height,
                 playerX,
                 playerZ,
-                zoomLevel.get(),
                 zoomRenderScale,
-                textureBoundingCircle);
+                zoomLevel.get(),
+                visibleWorldBox);
 
         // cursor
         MapRenderer.renderCursor(
-                poseStack,
+                guiGraphics,
                 centerX,
                 centerZ,
                 this.pointerScale.get(),
@@ -225,201 +197,38 @@ public class MinimapOverlay extends Overlay {
                 this.pointerType.get(),
                 followPlayerRotation.get());
 
+        // FIXME: Reimplement circle mask
         // disable mask & render border
         switch (maskType.get()) {
             case RECTANGULAR -> RenderUtils.disableScissor(guiGraphics);
-            case CIRCLE -> RenderUtils.clearMask();
         }
 
         // render border
-        renderMapBorder(poseStack, renderX, renderY, width, height);
+        renderMapBorder(guiGraphics, renderX, renderY, width, height);
 
         // Directional Text
-        renderCardinalDirections(poseStack, width, height, centerX, centerZ);
+        renderCardinalDirections(guiGraphics, width, height, centerX, centerZ);
     }
 
-    private void renderMapFeatures(
-            PoseStack poseStack,
+    private void renderPois(
+            GuiGraphics guiGraphics,
             float centerX,
             float centerZ,
             float width,
             float height,
             double playerX,
             double playerZ,
-            float zoomLevel,
             float zoomRenderScale,
-            BoundingCircle textureBoundingCircle) {
-        float sinRotationRadians;
-        float cosRotationRadians;
-
-        if (followPlayerRotation.get()) {
-            double rotationRadians =
-                    Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().getYRot());
-            sinRotationRadians = (float) StrictMath.sin(rotationRadians);
-            cosRotationRadians = (float) -StrictMath.cos(rotationRadians);
-        } else {
-            sinRotationRadians = 0f;
-            cosRotationRadians = 1f;
-        }
-
-        float currentZoom = 1f / zoomRenderScale;
-
-        // Get all MapData features as Pois
-        Stream<Pair<MapFeature, ResolvedMapAttributes>> mapFeatures = Services.MapData.getFeatures()
-                .filter(feature -> feature.isVisible(textureBoundingCircle))
-                .filter(feature -> feature instanceof TerritoryArea ? renderTerritories.get() : true)
-                .filter(feature -> !(feature instanceof SeaskipperDestinationArea))
-                .map(feature -> Pair.of(feature, Services.MapData.resolveMapAttributes(feature)))
-                .sorted(Comparator.comparing(pair -> pair.b().priority()));
-
-        // FIXME: Add back the pois that are still not converted to MapData
-        //        - Provided custom pois
-        //        - Remote players
-
-        Vector2f mapCenter = new Vector2f((float) playerX, (float) playerZ);
-        Vector2f screenCenter = new Vector2f(centerX, centerZ);
-        Vector2f rotationVector = new Vector2f(cosRotationRadians, sinRotationRadians);
-
-        MultiBufferSource.BufferSource bufferSource =
-                McUtils.mc().renderBuffers().bufferSource();
-
-        List<Pair<MapFeature, ResolvedMapAttributes>> renderedMapFeatures = mapFeatures.toList();
-        for (Pair<MapFeature, ResolvedMapAttributes> featurePair : renderedMapFeatures) {
-            MapFeature feature = featurePair.a();
-            ResolvedMapAttributes attributes = featurePair.b();
-
-            MapFeatureRenderer.renderMapFeature(
-                    poseStack,
-                    bufferSource,
-                    feature,
-                    attributes,
-                    mapCenter,
-                    screenCenter,
-                    rotationVector,
-                    zoomLevel,
-                    zoomRenderScale,
-                    mapFeatureScale.get(),
-                    false,
-                    false);
-        }
-
-        bufferSource.endBatch();
-
-        // Render all marked features
-        List<MapLocation> userMarkers = Services.UserMarker.getMarkedFeatures()
-                .filter(feature -> feature instanceof MapLocation)
-                .toList();
-        for (MapLocation userMarker : userMarkers) {
-            Location compassLocation = userMarker.getLocation();
-            if (compassLocation == null) continue;
-
-            ResolvedMapAttributes attributes = Services.MapData.resolveMapAttributes(userMarker);
-            float iconAlpha = Services.MapData.calculateVisibility(attributes.iconVisibility(), zoomLevel);
-            Optional<MapIcon> icon = Services.MapData.getIcon(attributes.iconId());
-            boolean drawIcon = iconAlpha > MINIMUM_RENDER_ALPHA;
-
-            if (!drawIcon || icon.isEmpty()) continue;
-
-            float compassOffsetX = (compassLocation.x() - (float) playerX) / zoomRenderScale;
-            float compassOffsetZ = (compassLocation.z() - (float) playerZ) / zoomRenderScale;
-
-            if (followPlayerRotation.get()) {
-                float tempCompassOffsetX = compassOffsetX * cosRotationRadians - compassOffsetZ * sinRotationRadians;
-
-                compassOffsetZ = compassOffsetX * sinRotationRadians + compassOffsetZ * cosRotationRadians;
-                compassOffsetX = tempCompassOffsetX;
-            }
-
-            final float compassSize = Math.max(
-                            icon.get().getWidth() * mapFeatureScale.get(),
-                            icon.get().getHeight() * mapFeatureScale.get())
-                    * 0.8f;
-
-            float compassRenderX = compassOffsetX + centerX;
-            float compassRenderZ = compassOffsetZ + centerZ;
-
-            // Normalize offset for later
-            float distance = MathUtils.magnitude(compassOffsetX, compassOffsetZ);
-            compassOffsetX /= distance;
-            compassOffsetZ /= distance;
-
-            // Subtract compassSize so scaled remains within boundary
-            float scaledWidth = width - 2 * compassSize;
-            float scaledHeight = height - 2 * compassSize;
-
-            float toBorderScale = 1f;
-
-            if (maskType.get() == MapMaskType.RECTANGULAR) {
-                // Scale as necessary
-                toBorderScale =
-                        Math.min(scaledWidth / Math.abs(compassOffsetX), scaledHeight / Math.abs(compassOffsetZ)) / 2;
-            } else if (maskType.get() == MapMaskType.CIRCLE) {
-                toBorderScale = scaledWidth
-                        / (MathUtils.magnitude(compassOffsetX, compassOffsetZ * scaledWidth / scaledHeight))
-                        / 2;
-            }
-
-            if (toBorderScale < distance) {
-                // Scale to border
-                compassRenderX = centerX + compassOffsetX * toBorderScale;
-                compassRenderZ = centerZ + compassOffsetZ * toBorderScale;
-
-                // Replace with pointer
-                float angle = (float) Math.toDegrees(StrictMath.atan2(compassOffsetZ, compassOffsetX)) + 90f;
-
-                poseStack.pushPose();
-                RenderUtils.rotatePose(poseStack, compassRenderX, compassRenderZ, angle);
-                BufferedRenderUtils.drawColoredTexturedRect(
-                        poseStack,
-                        bufferSource,
-                        Texture.POINTER.resource(),
-                        attributes.iconColor(),
-                        iconAlpha,
-                        compassRenderX,
-                        compassRenderZ,
-                        0,
-                        compassSize,
-                        compassSize);
-                poseStack.popPose();
-            }
-
-            bufferSource.endBatch();
-
-            poseStack.pushPose();
-            poseStack.translate(centerX, centerZ, 0);
-            poseStack.scale(0.8f, 0.8f, 1);
-            poseStack.translate(-centerX, -centerZ, 0);
-
-            FontRenderer fontRenderer = FontRenderer.getInstance();
-            Font font = fontRenderer.getFont();
-
-            String text = StringUtils.integerToShortString(Math.round(distance * zoomRenderScale)) + "m";
-            float w = font.width(text) / 2f, h = font.lineHeight / 2f;
-
-            RenderUtils.drawRect(
-                    poseStack,
-                    new CustomColor(0f, 0f, 0f, 0.7f),
-                    compassRenderX - w - 3f,
-                    compassRenderZ - h - 1f,
-                    0,
-                    2 * w + 6,
-                    2 * h + 1);
-            fontRenderer.renderText(
-                    poseStack,
-                    StyledText.fromString(text),
-                    compassRenderX,
-                    compassRenderZ - 3f,
-                    CommonColors.WHITE,
-                    HorizontalAlignment.CENTER,
-                    VerticalAlignment.TOP,
-                    TextShadow.NORMAL);
-
-            poseStack.popPose();
-        }
+            float zoomLevel,
+            BoundingBox visibleWorldBox) {
+        // FIXME: Re-implement POI rendering for mapdata system
+        // The POI system was replaced by MapFeatureRenderer in the mapdata branch
     }
 
+    // FIXME: Re-implement player minimap POIs for mapdata system
+
     private void renderCardinalDirections(
-            PoseStack poseStack, float width, float height, float centerX, float centerZ) {
+            GuiGraphics guiGraphics, float width, float height, float centerX, float centerZ) {
         if (showCompass.get() == CompassRenderType.NONE) return;
 
         float northDX;
@@ -427,7 +236,7 @@ public class MinimapOverlay extends Overlay {
 
         if (followPlayerRotation.get()) {
             float yawRadians = (float)
-                    Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().getYRot());
+                    Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().yRot());
             northDX = (float) StrictMath.sin(yawRadians);
             northDY = (float) StrictMath.cos(yawRadians);
 
@@ -435,9 +244,11 @@ public class MinimapOverlay extends Overlay {
 
             if (maskType.get() == MapMaskType.RECTANGULAR) {
                 toBorderScaleNorth = Math.min(width / Math.abs(northDX), height / Math.abs(northDY)) / 2;
-            } else if (maskType.get() == MapMaskType.CIRCLE) {
-                toBorderScaleNorth = width / (MathUtils.magnitude(northDX, northDY * width / height)) / 2;
             }
+            // FIXME: Reimplement circle mask
+            //            } else if (maskType.get() == MapMaskType.CIRCLE) {
+            //                toBorderScaleNorth = width / (MathUtils.magnitude(northDX, northDY * width / height)) / 2;
+            //            }
 
             northDX *= toBorderScaleNorth;
             northDY *= toBorderScaleNorth;
@@ -449,7 +260,7 @@ public class MinimapOverlay extends Overlay {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         centerX + northDX,
                         centerZ + northDY,
                         new TextRenderTask("N", TextRenderSetting.CENTERED));
@@ -468,9 +279,11 @@ public class MinimapOverlay extends Overlay {
 
             if (maskType.get() == MapMaskType.RECTANGULAR) {
                 toBorderScaleEast = Math.min(width / Math.abs(northDY), height / Math.abs(northDX)) / 2;
-            } else if (maskType.get() == MapMaskType.CIRCLE) {
-                toBorderScaleEast = width / (MathUtils.magnitude(eastDX, eastDY * width / height)) / 2;
             }
+            // FIXME: Reimplement circle mask
+            //            } else if (maskType.get() == MapMaskType.CIRCLE) {
+            //                toBorderScaleEast = width / (MathUtils.magnitude(eastDX, eastDY * width / height)) / 2;
+            //            }
 
             eastDX *= toBorderScaleEast;
             eastDY *= toBorderScaleEast;
@@ -481,30 +294,32 @@ public class MinimapOverlay extends Overlay {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         centerX + eastDX,
                         centerZ + eastDY,
                         new TextRenderTask("E", TextRenderSetting.CENTERED));
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         centerX - northDX,
                         centerZ - northDY,
                         new TextRenderTask("S", TextRenderSetting.CENTERED));
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         centerX - eastDX,
                         centerZ - eastDY,
                         new TextRenderTask("W", TextRenderSetting.CENTERED));
     }
 
-    private void renderMapBorder(PoseStack poseStack, float renderX, float renderY, float width, float height) {
+    private void renderMapBorder(GuiGraphics guiGraphics, float renderX, float renderY, float width, float height) {
         Texture texture = borderType.get().texture();
         int grooves = borderType.get().groovesSize();
-        BorderInfo borderInfo = maskType.get() == MapMaskType.CIRCLE
-                ? borderType.get().circle()
-                : borderType.get().square();
+        BorderInfo borderInfo = borderType.get().square();
+        // FIXME: Reimplement circle mask
+        //        BorderInfo borderInfo = maskType.get() == MapMaskType.CIRCLE
+        //                ? borderType.get().circle()
+        //                : borderType.get().square();
         int tx1 = borderInfo.tx1();
         int ty1 = borderInfo.ty1();
         int tx2 = borderInfo.tx2();
@@ -515,11 +330,10 @@ public class MinimapOverlay extends Overlay {
         float groovesHeight = grooves * height / DEFAULT_SIZE;
 
         RenderUtils.drawTexturedRect(
-                poseStack,
-                texture.resource(),
+                guiGraphics,
+                texture,
                 renderX - groovesWidth,
                 renderY - groovesHeight,
-                0,
                 width + 2 * groovesWidth,
                 height + 2 * groovesHeight,
                 tx1,
@@ -552,7 +366,8 @@ public class MinimapOverlay extends Overlay {
 
     private enum MapMaskType {
         RECTANGULAR,
-        CIRCLE
+        // FIXME: Reimplement circle mask
+        //        CIRCLE
     }
 
     private enum MapBorderType {

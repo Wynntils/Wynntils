@@ -1,11 +1,13 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.activities.widgets;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.WynnFont;
+import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.ActivityTrackingState;
@@ -21,6 +23,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
@@ -31,7 +34,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
@@ -68,18 +73,33 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
         addons.add(Component.empty());
 
         if (canSetCompass()) {
-            addons.add(Component.translatable("screens.wynntils.contentBook.leftClickToSetCompass")
-                    .withStyle(ChatFormatting.BOLD)
-                    .withStyle(ChatFormatting.GREEN));
+            MutableComponent compassKeybind = Component.empty()
+                    .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(Component.translatable("screens.wynntils.contentBook.leftClickToSetCompass")
+                            .withStyle(ChatFormatting.BOLD)
+                            .withStyle(ChatFormatting.GREEN));
+            addons.add(compassKeybind);
         }
         if (canOpenMap()) {
-            addons.add(Component.translatable("screens.wynntils.contentBook.middleClickToOpenOnMap")
-                    .withStyle(ChatFormatting.BOLD)
-                    .withStyle(ChatFormatting.YELLOW));
+            MutableComponent mapKeybind = Component.empty()
+                    .append(WynnFont.asFont("middle_click", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(Component.translatable("screens.wynntils.contentBook.middleClickToOpenOnMap")
+                            .withStyle(ChatFormatting.BOLD)
+                            .withStyle(ChatFormatting.YELLOW));
+
+            addons.add(mapKeybind);
         }
-        addons.add(Component.translatable("screens.wynntils.contentBook.rightClickToOpenWiki")
-                .withStyle(ChatFormatting.BOLD)
-                .withStyle(ChatFormatting.GOLD));
+
+        MutableComponent wikiKeybind = Component.empty()
+                .append(WynnFont.asFont("right_click", WynncraftKeybindsFont.class))
+                .append(" ")
+                .append(Component.translatable("screens.wynntils.contentBook.rightClickToOpenWiki")
+                        .withStyle(ChatFormatting.BOLD)
+                        .withStyle(ChatFormatting.GOLD));
+
+        addons.add(wikiKeybind);
 
         this.tooltip = LoreUtils.appendTooltip(itemStack, LoreUtils.getTooltipLines(itemStack), addons);
 
@@ -93,22 +113,22 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
         final CustomColor gradientColor = activityInfo.status() == ActivityStatus.UNAVAILABLE
                 ? UNAVAILABLE_COLOR
                 : activityInfo.type().getColor();
-        RenderUtils.fillSidewaysGradient(
-                guiGraphics.pose(),
+        RenderUtils.fillGradient(
+                guiGraphics,
                 getX(),
                 getY(),
                 getX() + width,
                 getY() + height,
-                0,
                 gradientColor,
-                gradientColor.withAlpha(0));
+                gradientColor.withAlpha(0),
+                RenderDirection.HORIZONTAL);
         guiGraphics.renderItem(itemStack, getX(), getY());
 
         nameStyle = nameStyle.withBold(this.isHovered || activityInfo.trackingState() == ActivityTrackingState.TRACKED);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromComponent(
                                 Component.literal(activityInfo.name()).withStyle(nameStyle)),
                         getX() + 18,
@@ -121,16 +141,19 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
 
         if (holder.inTutorial) {
             RenderUtils.drawRotatingBorderSegment(
-                    guiGraphics.pose(), CommonColors.RED, getX(), getY(), getX() + width, getY() + height, 1, 2, 0.25f);
+                    guiGraphics, CommonColors.RED, getX(), getY(), getX() + width, getY() + height, 2, 0.25f);
         }
+
+        handleCursor(guiGraphics);
 
         if (searchMatch) return;
 
-        RenderUtils.drawRect(guiGraphics.pose(), CommonColors.BLACK.withAlpha(100), getX(), getY(), 1, width, height);
+        RenderUtils.drawRect(guiGraphics, CommonColors.BLACK.withAlpha(100), getX(), getY(), width, height);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        int button = event.button();
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (canSetCompass()) {
                 Models.Activity.placeCompassOnActivity(activityInfo);

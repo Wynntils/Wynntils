@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.wynntils;
@@ -7,6 +7,7 @@ package com.wynntils.features.wynntils;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
@@ -18,7 +19,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.ConfirmedBoolean;
+import com.wynntils.utils.type.OptionalBoolean;
 import java.util.Locale;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
@@ -31,11 +32,15 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 @ConfigCategory(Category.WYNNTILS)
 public class TelemetryFeature extends Feature {
     @Persisted
-    private final Config<ConfirmedBoolean> crashReports = new Config<>(ConfirmedBoolean.UNCONFIRMED);
+    private final Config<OptionalBoolean> crashReports = new Config<>(OptionalBoolean.NULL);
+
+    public TelemetryFeature() {
+        super(ProfileDefault.onlyDefault());
+    }
 
     @SubscribeEvent
     public void onCrash(WynntilsCrashEvent event) {
-        if (crashReports.get() != ConfirmedBoolean.TRUE) return;
+        if (crashReports.get() != OptionalBoolean.TRUE) return;
         // Only send telemetry for released versions
         if (WynntilsMod.isDevelopmentEnvironment()) return;
         if (WynntilsMod.getVersion().contains("SNAPSHOT")) return;
@@ -60,7 +65,7 @@ public class TelemetryFeature extends Feature {
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
         if (event.getNewState() != WorldState.WORLD) return;
-        if (crashReports.get() != ConfirmedBoolean.UNCONFIRMED) return;
+        if (crashReports.get() != OptionalBoolean.NULL) return;
 
         MutableComponent component = Component.literal("Wynntils Telemetry\n").withStyle(ChatFormatting.AQUA);
         component.append(Component.literal(
@@ -74,16 +79,16 @@ public class TelemetryFeature extends Feature {
         component.append(Component.literal("Click here")
                 .withStyle(ChatFormatting.GREEN)
                 .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(style -> style.withClickEvent(new ClickEvent(
-                        ClickEvent.Action.RUN_COMMAND, "/wynntils config set Telemetry crashReports true"))));
+                .withStyle(style -> style.withClickEvent(
+                        new ClickEvent.RunCommand("/wynntils config set Telemetry crashReports true"))));
         component.append(
                 Component.literal(" to accept crash report telemetry\n").withStyle(ChatFormatting.GREEN));
 
         component.append(Component.literal("Click here")
                 .withStyle(ChatFormatting.RED)
                 .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(style -> style.withClickEvent(new ClickEvent(
-                        ClickEvent.Action.RUN_COMMAND, "/wynntils config set Telemetry crashReports false"))));
+                .withStyle(style -> style.withClickEvent(
+                        new ClickEvent.RunCommand("/wynntils config set Telemetry crashReports false"))));
         component.append(
                 Component.literal(" to opt out of crash report telemetry\n").withStyle(ChatFormatting.RED));
 

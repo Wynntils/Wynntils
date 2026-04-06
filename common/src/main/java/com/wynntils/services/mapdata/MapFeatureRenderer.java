@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -19,15 +18,14 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingPolygon;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphics;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
@@ -40,8 +38,7 @@ public final class MapFeatureRenderer {
     private static final float MINIMUM_RENDER_ALPHA = 0.1f;
 
     public static void renderMapFeature(
-            PoseStack poseStack,
-            MultiBufferSource bufferSource,
+            GuiGraphics guiGraphics,
             MapFeature feature,
             ResolvedMapAttributes attributes,
             Vector2f mapCenter,
@@ -54,8 +51,7 @@ public final class MapFeatureRenderer {
             boolean fullscreenMap) {
         if (feature instanceof MapLocation location) {
             renderMapLocation(
-                    poseStack,
-                    bufferSource,
+                    guiGraphics,
                     location,
                     attributes,
                     mapCenter,
@@ -68,8 +64,7 @@ public final class MapFeatureRenderer {
                     fullscreenMap);
         } else if (feature instanceof MapArea area) {
             renderMapArea(
-                    poseStack,
-                    bufferSource,
+                    guiGraphics,
                     area,
                     attributes,
                     mapCenter,
@@ -88,8 +83,7 @@ public final class MapFeatureRenderer {
     }
 
     public static void renderMapLocation(
-            PoseStack poseStack,
-            MultiBufferSource bufferSource,
+            GuiGraphics guiGraphics,
             MapLocation location,
             ResolvedMapAttributes attributes,
             Vector2f mapCenter,
@@ -114,10 +108,10 @@ public final class MapFeatureRenderer {
                 zoomRenderScale,
                 new Vector2f(featureLocation.x(), featureLocation.z()));
 
-        poseStack.pushPose();
+        guiGraphics.pose().pushMatrix();
         // z-index for rendering
-        poseStack.translate(renderVector.x(), renderVector.y(), attributes.priority());
-        poseStack.scale(renderScale, renderScale, 1);
+        guiGraphics.pose().translate(renderVector.x(), renderVector.y());
+        guiGraphics.pose().scale(renderScale, renderScale);
 
         // Draw icon, if applicable
         float iconAlpha = Services.MapData.calculateVisibility(attributes.iconVisibility(), zoomLevel);
@@ -132,15 +126,14 @@ public final class MapFeatureRenderer {
                 iconAlpha = 1f;
             }
 
-            BufferedRenderUtils.drawColoredTexturedRect(
-                    poseStack,
-                    bufferSource,
-                    icon.get().getResourceLocation(),
-                    attributes.iconColor(),
-                    iconAlpha,
+            RenderUtils.drawScalingTexturedRect(
+                    guiGraphics,
+                    icon.get().getIdentifier(),
+                    attributes.iconColor().withAlpha(iconAlpha),
                     0 - iconWidth / 2f,
                     yOffset - iconHeight / 2f,
-                    0,
+                    iconWidth,
+                    iconHeight,
                     iconWidth,
                     iconHeight);
             yOffset += (iconHeight + labelHeight) / 2 + SPACING;
@@ -158,10 +151,9 @@ public final class MapFeatureRenderer {
 
             CustomColor color = attributes.labelColor().withAlpha(labelAlpha);
 
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
-                            bufferSource,
+                            guiGraphics,
                             StyledText.fromString(attributes.label()),
                             0,
                             yOffset,
@@ -178,10 +170,9 @@ public final class MapFeatureRenderer {
         // Show level only for features that are displayed and hovered
         boolean drawLevel = hovered && (drawIcon || drawLabel);
         if (level >= 1 && drawLevel) {
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
-                            bufferSource,
+                            guiGraphics,
                             StyledText.fromString("[Lv. " + level + "]"),
                             0,
                             yOffset,
@@ -195,15 +186,14 @@ public final class MapFeatureRenderer {
         // Draw decoration, if applicable
         MapDecoration decoration = attributes.iconDecoration();
         if (decoration.isVisible()) {
-            decoration.render(poseStack, bufferSource, hovered, fullscreenMap, zoomLevel);
+            decoration.render(guiGraphics, hovered, fullscreenMap, zoomLevel);
         }
 
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     private static void renderMapArea(
-            PoseStack poseStack,
-            MultiBufferSource bufferSource,
+            GuiGraphics guiGraphics,
             MapArea area,
             ResolvedMapAttributes attributes,
             Vector2f mapCenter,
@@ -221,14 +211,12 @@ public final class MapFeatureRenderer {
                 .map(vertex -> getRenderLocation(mapCenter, screenCenter, rotationVector, zoomRenderScale, vertex))
                 .toList();
 
-        BufferedRenderUtils.drawPolygon(
-                poseStack,
-                bufferSource,
+        RenderUtils.drawPolygon(
+                guiGraphics,
                 attributes.fillColor(),
                 attributes.borderColor(),
                 attributes.borderWidth() + (hovered ? 1 : 0),
-                screenVertices,
-                0);
+                screenVertices);
 
         BoundingPolygon boundingPolygon = BoundingPolygon.fromVertices(screenVertices);
         Vector2f centroid = boundingPolygon.centroid();
@@ -239,10 +227,9 @@ public final class MapFeatureRenderer {
         float labelScaleModifier = Math.max(1f, labelWidth / maxLabelWidth);
         float textScale = TEXT_SCALE * featureRenderScale / labelScaleModifier;
 
-        BufferedFontRenderer.getInstance()
+        FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
-                        bufferSource,
+                        guiGraphics,
                         StyledText.fromString(attributes.label()),
                         centroid.x(),
                         centroid.y(),
@@ -256,10 +243,9 @@ public final class MapFeatureRenderer {
         // If hovered, draw secondary label
         if (hovered && !attributes.description().isEmpty()) {
             // The secondary label is rendered below the primary label, with the full scale
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
-                            bufferSource,
+                            guiGraphics,
                             StyledText.fromString(attributes.description()),
                             centroid.x(),
                             centroid.y() + FontRenderer.getInstance().getFont().lineHeight * textScale,

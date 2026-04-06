@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.update;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
@@ -15,8 +14,8 @@ import com.wynntils.services.athena.type.UpdateResult;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.UniversalTexture;
@@ -34,7 +33,7 @@ import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.network.chat.Component;
 
 public final class UpdateScreen extends WynntilsScreen {
-    private final Screen titleScreen;
+    private final Screen previousScreen;
     private final ServerData serverData;
 
     private Button updateButton;
@@ -42,21 +41,25 @@ public final class UpdateScreen extends WynntilsScreen {
     private Button ignoreNowButton;
     private Button ignoreUpdateButton;
     private Button changelogButton;
-    private Button titleScreenButton;
+    private Button previousScreenButton;
     private UpdateResult updateResult;
 
     private CompletionTrigger completionTrigger = null;
     private long completionFinish = 0L;
 
-    private UpdateScreen(ServerData serverData, Screen titleScreen) {
+    private UpdateScreen(ServerData serverData, Screen previousScreen) {
         super(Component.literal("Update Screen"));
 
         this.serverData = serverData;
-        this.titleScreen = titleScreen;
+        this.previousScreen = previousScreen;
     }
 
-    public static Screen create(ServerData serverData, Screen titleScreen) {
-        return new UpdateScreen(serverData, titleScreen);
+    public static Screen create(ServerData serverData, Screen previousScreen) {
+        return new UpdateScreen(serverData, previousScreen);
+    }
+
+    public static Screen create(Screen previousScreen) {
+        return new UpdateScreen(null, previousScreen);
     }
 
     @Override
@@ -109,23 +112,31 @@ public final class UpdateScreen extends WynntilsScreen {
                 .build();
         this.addRenderableWidget(changelogButton);
 
-        titleScreenButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.update.titleScreen"), (button) -> onClose())
+        previousScreenButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.update.previousScreen"), (button) -> onClose())
                 .pos(this.width / 2 + 10, this.height / 2 + 100)
                 .size(140, 20)
                 .build();
-        this.addRenderableWidget(titleScreenButton);
+        this.addRenderableWidget(previousScreenButton);
+
+        toggleButtons(true);
+    }
+
+    @Override
+    public void onClose() {
+        // Update in progress
+        if (completionTrigger != null && updateResult == null) return;
+
+        McUtils.mc().setScreen(previousScreen);
     }
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        PoseStack poseStack = guiGraphics.pose();
-
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable(
                                         "screens.wynntils.update.title",
                                         Services.Update.getModUpdateInfo().version())
@@ -141,7 +152,7 @@ public final class UpdateScreen extends WynntilsScreen {
         if (Services.Update.getUpdateProgress() != -1f) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(Component.translatable("screens.wynntils.update.downloading")),
                             this.width / 2f,
                             60,
@@ -153,7 +164,7 @@ public final class UpdateScreen extends WynntilsScreen {
 
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString((int) (Services.Update.getUpdateProgress() * 100) + "%"),
                             this.width / 2f,
                             this.height / 2f - Texture.UNIVERSAL_BAR.height(),
@@ -162,9 +173,8 @@ public final class UpdateScreen extends WynntilsScreen {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
 
-            BufferedRenderUtils.drawColoredProgressBar(
-                    poseStack,
-                    guiGraphics.bufferSource,
+            RenderUtils.drawColoredProgressBar(
+                    guiGraphics,
                     Texture.UNIVERSAL_BAR,
                     CommonColors.LIGHT_GREEN,
                     this.width / 2f - Texture.UNIVERSAL_BAR.width(),
@@ -183,7 +193,7 @@ public final class UpdateScreen extends WynntilsScreen {
             if (updateResult == UpdateResult.SUCCESSFUL) {
                 FontRenderer.getInstance()
                         .renderText(
-                                poseStack,
+                                guiGraphics,
                                 StyledText.fromComponent(Component.translatable("screens.wynntils.update.downloaded")),
                                 this.width / 2f,
                                 60,
@@ -196,7 +206,7 @@ public final class UpdateScreen extends WynntilsScreen {
                 if (completionTrigger == CompletionTrigger.CONNECT) {
                     FontRenderer.getInstance()
                             .renderText(
-                                    poseStack,
+                                    guiGraphics,
                                     StyledText.fromComponent(Component.translatable(
                                             "screens.wynntils.update.connecting",
                                             (int) Math.ceil((completionFinish - System.currentTimeMillis()) / 1000f))),
@@ -210,7 +220,7 @@ public final class UpdateScreen extends WynntilsScreen {
                 } else {
                     FontRenderer.getInstance()
                             .renderText(
-                                    poseStack,
+                                    guiGraphics,
                                     StyledText.fromComponent(
                                             Component.translatable("screens.wynntils.update.exiting", (int) Math.ceil(
                                                     (completionFinish - System.currentTimeMillis()) / 1000f))),
@@ -225,7 +235,7 @@ public final class UpdateScreen extends WynntilsScreen {
             } else {
                 FontRenderer.getInstance()
                         .renderText(
-                                poseStack,
+                                guiGraphics,
                                 StyledText.fromComponent(updateResult.getMessage()),
                                 this.width / 2f,
                                 60,
@@ -243,7 +253,7 @@ public final class UpdateScreen extends WynntilsScreen {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.update.description")),
                         this.width / 2f - 200,
                         this.width / 2f + 200,
@@ -323,16 +333,18 @@ public final class UpdateScreen extends WynntilsScreen {
     private void connectToServer() {
         // We pass in the titleScreen here so that if failing to connect the title screen is returned to instead of this
         ConnectScreen.startConnecting(
-                titleScreen, McUtils.mc(), ServerAddress.parseString(serverData.ip), serverData, false, null);
+                previousScreen, McUtils.mc(), ServerAddress.parseString(serverData.ip), serverData, false, null);
     }
 
     private void toggleButtons(boolean active) {
-        updateButton.active = active;
+        boolean compatibleVersion = Services.Compatibility.isCompatible();
+
+        updateButton.active = active && compatibleVersion;
         updateNowButton.active = active;
-        ignoreNowButton.active = active;
-        ignoreUpdateButton.active = active;
+        ignoreNowButton.active = active && compatibleVersion;
+        ignoreUpdateButton.active = active && compatibleVersion;
         changelogButton.active = active;
-        titleScreenButton.active = active;
+        previousScreenButton.active = active;
     }
 
     private enum CompletionTrigger {

@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
@@ -23,6 +24,7 @@ import com.wynntils.screens.settings.widgets.CategoryButton;
 import com.wynntils.screens.settings.widgets.ConfigTile;
 import com.wynntils.screens.settings.widgets.ConfigurableButton;
 import com.wynntils.screens.settings.widgets.SettingsCategoryTabButton;
+import com.wynntils.screens.settings.widgets.SettingsEnabledStateTabButton;
 import com.wynntils.screens.settings.widgets.SettingsPageTabButton;
 import com.wynntils.screens.settings.widgets.SettingsSearchWidget;
 import com.wynntils.screens.settings.widgets.SettingsSideTabButton;
@@ -36,6 +38,7 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
@@ -55,6 +58,9 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -69,7 +75,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private static final int CONFIGS_PER_PAGE = 4;
     private static final int CONFIGURABLE_SCROLL_X = (int) (Texture.CONFIG_BOOK_BACKGROUND.width() / 2f - 12);
     private static final int CONFIG_SCROLL_X = Texture.CONFIG_BOOK_BACKGROUND.width() - 23;
-    private static final int MAX_DISPLAYED_CATEGORIES = 10;
+    private static final int MAX_DISPLAYED_CATEGORIES = 9;
     private static final int SCROLL_AREA_HEIGHT = 186;
     private static final int SCROLL_START_Y = 21;
 
@@ -85,10 +91,11 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private final SearchWidget searchWidget;
     private SettingsCategoryTabButton allCategoriesButton;
     private SettingsCategoryTabButton selectedCategoryButton;
+    private SettingsEnabledStateTabButton enabledStateTabButton;
     private TextInputBoxWidget focusedTextInput;
     private UnsavedChangesWidget unsavedChangesWidget;
 
-    // UI size, postions, etc
+    // UI size, positions, etc
     private boolean draggingConfigurableScroll = false;
     private boolean draggingConfigScroll = false;
     private int categoriesScrollOffset = 0;
@@ -105,6 +112,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private Category selectedCategory;
     private Configurable selectedConfigurable = null;
     private Configurable hoveredConfigurable = null;
+    private EnabledFilterType enabledFilterType = EnabledFilterType.ENABLED;
 
     private final Screen previousScreen;
 
@@ -262,6 +270,19 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             selectedCategoryButton = allCategoriesButton;
         }
 
+        xPos += Texture.TAG_RED.width() + 1;
+
+        enabledStateTabButton = this.addRenderableWidget(new SettingsEnabledStateTabButton(
+                xPos,
+                (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
+                Texture.TAG_RED.width(),
+                Texture.TAG_RED.height(),
+                this::cycleEnabledState,
+                List.of(Component.translatable("screens.wynntils.settingsScreen.cycleEnabled")),
+                enabledFilterType.getIcon(),
+                offsetX,
+                offsetY));
+
         xPos += Texture.TAG_RED.width() * 2 + 1;
 
         this.addRenderableWidget(new SettingsPageTabButton(
@@ -269,7 +290,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                 (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
                 Texture.TAG_RED.width(),
                 Texture.TAG_RED.height(),
-                (b) -> scrollCategorories(-1),
+                (b) -> scrollCategories(-1),
                 List.of(Component.translatable("screens.wynntils.settingsScreen.previous")),
                 false,
                 offsetX,
@@ -283,9 +304,27 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                 (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
                 Texture.TAG_RED.width(),
                 Texture.TAG_RED.height(),
-                (b) -> scrollCategorories(1),
+                (b) -> scrollCategories(1),
                 List.of(Component.translatable("screens.wynntils.settingsScreen.next")),
                 true,
+                offsetX,
+                offsetY));
+
+        this.addRenderableWidget(new SettingsSideTabButton(
+                (int) -(Texture.TAG_BLUE.width() * 0.75f) + offsetX,
+                offsetY + Texture.CONFIG_BOOK_BACKGROUND.height() - Texture.TAG_GREEN.height() - 20,
+                Texture.TAG_GREEN.width(),
+                Texture.TAG_GREEN.height(),
+                (b) -> McUtils.setScreen(ConfigProfileScreen.create(this, Managers.Config.getSelectedProfile())),
+                ComponentUtils.wrapTooltips(
+                        List.of(
+                                Component.translatable("screens.wynntils.settingsScreen.profiles")
+                                        .withStyle(ChatFormatting.WHITE),
+                                Component.translatable("screens.wynntils.settingsScreen.profiles.description")
+                                        .withStyle(ChatFormatting.GRAY)),
+                        150),
+                Texture.TAG_GREEN,
+                Texture.SETTINGS_PROFILES_ICON,
                 offsetX,
                 offsetY));
 
@@ -302,9 +341,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
-
         if (displayWarning) {
             unsavedChangesWidget.render(guiGraphics, mouseX, mouseY, partialTick);
             return;
@@ -312,7 +348,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         renderTags(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderBg(poseStack);
+        renderBg(guiGraphics);
 
         String categoryName = selectedCategory == null
                 ? I18n.get("screens.wynntils.settingsScreen.all")
@@ -320,7 +356,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(categoryName),
                         Texture.CONFIG_BOOK_BACKGROUND.width() * 0.25f + offsetX,
                         McUtils.mc().font.lineHeight + 5 + offsetY,
@@ -330,13 +366,12 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                         TextShadow.NORMAL);
 
         RenderUtils.drawLine(
-                poseStack,
+                guiGraphics,
                 CommonColors.GRAY,
                 offsetX + 11,
                 offsetY + 19,
                 Texture.CONFIG_BOOK_BACKGROUND.width() / 2f - 6 + offsetX,
                 19 + offsetY,
-                0,
                 1);
 
         if (selectedConfigurable != null || hoveredConfigurable != null) {
@@ -352,7 +387,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(textToRender),
                             Texture.CONFIG_BOOK_BACKGROUND.width() * 0.75f + offsetX,
                             McUtils.mc().font.lineHeight + 5 + offsetY,
@@ -362,18 +397,17 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                             TextShadow.NORMAL);
 
             RenderUtils.drawLine(
-                    poseStack,
+                    guiGraphics,
                     CommonColors.GRAY,
                     Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 6 + offsetX,
                     19 + offsetY,
                     Texture.CONFIG_BOOK_BACKGROUND.width() - 11 + offsetX,
                     19 + offsetY,
-                    0,
                     1);
         } else {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.settingsScreen.unselectedConfig")),
                             Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + offsetX,
@@ -389,22 +423,61 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         }
 
         if (configurables.size() > CONFIGURABLES_PER_PAGE) {
-            renderConfigurableScroll(poseStack);
+            renderConfigurableScroll(guiGraphics);
         }
 
         if (hoveredConfigurable == null && configs.size() > CONFIGS_PER_PAGE) {
-            renderSelectedConfigScroll(poseStack);
+            renderSelectedConfigScroll(guiGraphics);
         } else if (hoveredConfigurable != null
                 && configurableMap.get(hoveredConfigurable).size() > CONFIGS_PER_PAGE) {
-            renderHoveredConfigScroll(poseStack);
+            renderHoveredConfigScroll(guiGraphics);
         }
 
-        renderConfigurables(guiGraphics, mouseX, mouseY, partialTick);
+        if (configurables.isEmpty()) {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            guiGraphics,
+                            StyledText.fromComponent(
+                                    Component.translatable("screens.wynntils.settingsScreen.noFeaturesFound")),
+                            offsetX,
+                            Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + offsetX,
+                            Texture.CONFIG_BOOK_BACKGROUND.height() * 0.25f + offsetY,
+                            Texture.CONFIG_BOOK_BACKGROUND.height() * 0.75f + offsetY,
+                            Texture.CONFIG_BOOK_BACKGROUND.width() / 3f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.TOP,
+                            TextShadow.NORMAL,
+                            1.25f);
+        } else {
+            renderConfigurables(guiGraphics, mouseX, mouseY, partialTick);
+        }
 
         if (hoveredConfigurable == null) {
             renderSelectedConfigs(guiGraphics, mouseX, mouseY, partialTick);
         } else {
             renderHoveredConfigs(guiGraphics, mouseX, mouseY, partialTick);
+        }
+
+        if (draggingConfigScroll || draggingConfigurableScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (MathUtils.isInside(
+                mouseX,
+                mouseY,
+                CONFIGURABLE_SCROLL_X + offsetX,
+                CONFIGURABLE_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
+                (int) configurableScrollRenderY,
+                (int) (configurableScrollRenderY + Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f))) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        } else if ((configs.size() > CONFIGS_PER_PAGE)
+                && MathUtils.isInside(
+                        mouseX,
+                        mouseY,
+                        CONFIG_SCROLL_X + offsetX,
+                        CONFIG_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
+                        (int) configScrollRenderY,
+                        (int) (configScrollRenderY + Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f))) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
 
         renderTooltips(guiGraphics, mouseX, mouseY);
@@ -443,25 +516,25 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (displayWarning) {
-            if (unsavedChangesWidget.isMouseOver(mouseX, mouseY)) {
-                return unsavedChangesWidget.mouseClicked(mouseX, mouseY, button);
+            if (unsavedChangesWidget.isMouseOver(event.x(), event.y())) {
+                return unsavedChangesWidget.mouseClicked(event, isDoubleClick);
             } else {
                 return false;
             }
         }
 
         for (GuiEventListener listener : getWidgetsForIteration().toList()) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseClicked(mouseX, mouseY, button);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseClicked(event, isDoubleClick);
             }
         }
 
         if (!draggingConfigurableScroll
                 && MathUtils.isInside(
-                        (int) mouseX,
-                        (int) mouseY,
+                        (int) event.x(),
+                        (int) event.y(),
                         CONFIGURABLE_SCROLL_X + offsetX,
                         CONFIGURABLE_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
                         (int) configurableScrollRenderY,
@@ -473,8 +546,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         if (!draggingConfigScroll
                 && (configs.size() > CONFIGS_PER_PAGE)
                 && MathUtils.isInside(
-                        (int) mouseX,
-                        (int) mouseY,
+                        (int) event.x(),
+                        (int) event.y(),
                         CONFIG_SCROLL_X + offsetX,
                         CONFIG_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
                         (int) configScrollRenderY,
@@ -487,10 +560,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (displayWarning) {
-            if (unsavedChangesWidget.isMouseOver(mouseX, mouseY)) {
-                return unsavedChangesWidget.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            if (unsavedChangesWidget.isMouseOver(event.x(), event.y())) {
+                return unsavedChangesWidget.mouseDragged(event, dragX, dragY);
             } else {
                 return false;
             }
@@ -500,7 +573,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             int scrollAreaStartY = SCROLL_START_Y + 7 + offsetY;
 
             int newOffset = Math.round(MathUtils.map(
-                    (float) mouseY,
+                    (float) event.y(),
                     scrollAreaStartY,
                     scrollAreaStartY + SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f,
                     0,
@@ -517,7 +590,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             int scrollAreaStartY = SCROLL_START_Y + 7 + offsetY;
 
             int newOffset = Math.round(MathUtils.map(
-                    (float) mouseY,
+                    (float) event.y(),
                     scrollAreaStartY,
                     scrollAreaStartY + SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f,
                     0,
@@ -531,8 +604,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         }
 
         for (GuiEventListener listener : getWidgetsForIteration().toList()) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
-                return listener.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseDragged(event, dragX, dragY);
             }
         }
 
@@ -540,17 +613,17 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         if (displayWarning) {
-            if (unsavedChangesWidget.isMouseOver(mouseX, mouseY)) {
-                return unsavedChangesWidget.mouseReleased(mouseX, mouseY, button);
+            if (unsavedChangesWidget.isMouseOver(event.x(), event.y())) {
+                return unsavedChangesWidget.mouseReleased(event);
             } else {
                 return false;
             }
         }
 
         for (GuiEventListener listener : getWidgetsForIteration().toList()) {
-            listener.mouseReleased(mouseX, mouseY, button);
+            listener.mouseReleased(event);
         }
 
         draggingConfigurableScroll = false;
@@ -575,7 +648,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         // When below top of book and left side scroll configurables
         // Otherwise scroll configs
         if (mouseY <= offsetY) {
-            scrollCategorories((int) -Math.signum(deltaY));
+            scrollCategories((int) -Math.signum(deltaY));
         } else if (mouseX <= Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + offsetX) {
             int newOffset =
                     Math.max(0, Math.min(configurablesScrollOffset + scrollAmount, getMaxConfigurableScrollOffset()));
@@ -589,18 +662,18 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        return focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers);
+    public boolean charTyped(CharacterEvent event) {
+        return focusedTextInput != null && focusedTextInput.charTyped(event);
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
             this.onClose();
             return true;
         }
 
-        return focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers);
+        return focusedTextInput != null && focusedTextInput.keyPressed(event);
     }
 
     @Override
@@ -656,6 +729,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
             if (configurable instanceof Feature feature) {
                 for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature).stream()
+                        .filter(this::isOverlayFiltered)
                         .sorted()
                         .toList()) {
                     matchingConfigs = 0;
@@ -774,7 +848,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             this.removeWidget(widget);
         }
 
-        int xPos = (int) (Texture.TAG_RED.width() * 2.85 + 1) + offsetX;
+        int xPos = (int) (Texture.TAG_RED.width() * 3.85 + 1) + offsetX;
 
         categoryButtons = new ArrayList<>();
 
@@ -810,61 +884,30 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private void getFilteredConfigurables() {
         configurableList = new ArrayList<>();
 
-        List<Configurable> filteredConfigurables;
+        boolean hasSearch = !searchWidget.getTextBoxInput().isEmpty();
 
         // Add all configurables for selected category
         if (selectedCategory != null) {
-            filteredConfigurables = Managers.Feature.getFeatures().stream()
-                    .filter(feature -> searchMatches(feature)
-                            || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains))
-                    .map(feature -> (Configurable) feature)
+            configurableList.addAll(Managers.Feature.getFeatures().stream()
+                    .filter(this::isFeatureFiltered)
+                    .filter(feature -> isCategoryMatching(feature, selectedCategory))
                     .sorted()
-                    .filter(configurable -> isCategoryMatching(configurable, selectedCategory))
-                    .collect(Collectors.toList());
-
-            filteredConfigurables.addAll(Managers.Overlay.getOverlays().stream()
-                    .filter(overlay -> !filteredConfigurables.contains(Managers.Overlay.getOverlayParent(overlay)))
-                    .filter(overlay -> searchMatches(overlay)
-                            || overlay.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains))
-                    .sorted()
-                    .filter(configurable -> isCategoryMatching(configurable, selectedCategory))
                     .toList());
 
             // If there is a search query, add all matches from every other category
-            if (!searchWidget.getTextBoxInput().isEmpty()) {
-                filteredConfigurables.addAll(Managers.Feature.getFeatures().stream()
-                        .filter(feature -> searchMatches(feature)
-                                || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains))
-                        .map(feature -> (Configurable) feature)
+            if (hasSearch) {
+                configurableList.addAll(Managers.Feature.getFeatures().stream()
+                        .filter(this::isFeatureFiltered)
+                        .filter(feature -> !isCategoryMatching(feature, selectedCategory))
                         .sorted()
-                        .filter(configurable -> !isCategoryMatching(configurable, selectedCategory))
-                        .toList());
-
-                filteredConfigurables.addAll(Managers.Overlay.getOverlays().stream()
-                        .filter(overlay -> !filteredConfigurables.contains(Managers.Overlay.getOverlayParent(overlay)))
-                        .filter(overlay -> searchMatches(overlay)
-                                || overlay.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains))
-                        .sorted()
-                        .filter(configurable -> !isCategoryMatching(configurable, selectedCategory))
                         .toList());
             }
         } else { // All tab, add all configurables
-            filteredConfigurables = Managers.Feature.getFeatures().stream()
-                    .filter(feature -> searchMatches(feature)
-                            || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains))
-                    .map(feature -> (Configurable) feature)
-                    .sorted()
-                    .collect(Collectors.toList());
-
-            filteredConfigurables.addAll(Managers.Overlay.getOverlays().stream()
-                    .filter(overlay -> !filteredConfigurables.contains(Managers.Overlay.getOverlayParent(overlay)))
-                    .filter(overlay -> searchMatches(overlay)
-                            || overlay.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains))
+            configurableList.addAll(Managers.Feature.getFeatures().stream()
+                    .filter(this::isFeatureFiltered)
                     .sorted()
                     .toList());
         }
-
-        configurableList.addAll(filteredConfigurables);
     }
 
     private List<ConfigTile> buildConfigTiles(Configurable configurable) {
@@ -925,7 +968,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         return (configs.size() - CONFIGS_PER_PAGE) * 46;
     }
 
-    private void scrollCategorories(int direction) {
+    private void scrollCategories(int direction) {
         if (Math.abs(categoriesScrollOffset + direction) == sortedCategories.size()) {
             categoriesScrollOffset = 0;
         } else {
@@ -936,8 +979,55 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         populateCategories();
     }
 
+    private void cycleEnabledState(int button) {
+        int direction = button == GLFW.GLFW_MOUSE_BUTTON_LEFT ? 1 : -1;
+        EnabledFilterType[] values = EnabledFilterType.values();
+        int currentIndex = enabledFilterType.ordinal();
+        int newIndex = (currentIndex + direction + values.length) % values.length;
+
+        enabledFilterType = values[newIndex];
+        enabledStateTabButton.updateIcon(enabledFilterType.getIcon());
+
+        configurablesScrollOffset = 0;
+        getFilteredConfigurables();
+        populateConfigurables();
+    }
+
     private boolean isCategoryMatching(Configurable configurable, Category selectedCategory) {
         return getCategory(configurable) == selectedCategory;
+    }
+
+    private boolean isFeatureFiltered(Feature feature) {
+        if (searchWidget.getTextBoxInput().isEmpty()) {
+            return switch (enabledFilterType) {
+                case NEUTRAL -> true;
+                case ENABLED -> feature.isEnabled();
+                case DISABLED -> !feature.isEnabled();
+            };
+        }
+
+        boolean featureSearchMatch = searchMatches(feature)
+                || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains);
+
+        boolean anyOverlayMatches =
+                Managers.Overlay.getFeatureOverlays(feature).stream().anyMatch(this::overlaySearchMatches);
+
+        return (featureSearchMatch || anyOverlayMatches);
+    }
+
+    private boolean isOverlayFiltered(Overlay overlay) {
+        if (searchWidget.getTextBoxInput().isEmpty()) {
+            Feature parent = Managers.Overlay.getOverlayParent(overlay);
+            boolean parentEnabled = parent.isEnabled();
+
+            return switch (enabledFilterType) {
+                case ENABLED -> parentEnabled;
+                case DISABLED -> !parentEnabled;
+                case NEUTRAL -> true;
+            };
+        }
+
+        return overlaySearchMatches(overlay);
     }
 
     private void scrollToMatchingConfig() {
@@ -999,6 +1089,11 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         }
     }
 
+    private boolean overlaySearchMatches(Overlay overlay) {
+        return searchMatches(overlay)
+                || overlay.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains);
+    }
+
     private boolean searchMatches(Translatable translatable) {
         // For info boxes and custom bars, we want to search for their custom name if given
         // if there is no match, then check the translated name
@@ -1011,8 +1106,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         return StringUtils.partialMatch(translatable.getTranslatedName(), searchWidget.getTextBoxInput());
     }
 
-    private void renderBg(PoseStack poseStack) {
-        RenderUtils.drawTexturedRect(poseStack, Texture.CONFIG_BOOK_BACKGROUND, offsetX, offsetY);
+    private void renderBg(GuiGraphics guiGraphics) {
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CONFIG_BOOK_BACKGROUND, offsetX, offsetY);
     }
 
     private void renderTags(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
@@ -1030,8 +1125,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             configurable.render(guiGraphics, mouseX, mouseY, partialTick);
 
             if (configurable.isHovered() && configurable instanceof ConfigurableButton configurableButton) {
-                Configurable hovered = configurableButton.getConfigurable();
-
                 if (selectedConfigurable != null) continue;
 
                 hoveredConfigurable = configurableButton.getConfigurable();
@@ -1041,13 +1134,12 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    private void renderConfigurableScroll(PoseStack poseStack) {
+    private void renderConfigurableScroll(GuiGraphics guiGraphics) {
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.GRAY,
                 CONFIGURABLE_SCROLL_X + offsetX,
                 21 + offsetY,
-                0,
                 Texture.CONFIG_BOOK_SCROLL_BUTTON.width(),
                 SCROLL_AREA_HEIGHT);
 
@@ -1061,11 +1153,12 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                         SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f);
 
         RenderUtils.drawHoverableTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.CONFIG_BOOK_SCROLL_BUTTON,
                 CONFIGURABLE_SCROLL_X + offsetX,
                 configurableScrollRenderY,
-                draggingConfigurableScroll);
+                draggingConfigurableScroll,
+                RenderDirection.VERTICAL);
     }
 
     private void renderSelectedConfigs(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
@@ -1098,15 +1191,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    private void renderSelectedConfigScroll(PoseStack poseStack) {
+    private void renderSelectedConfigScroll(GuiGraphics guiGraphics) {
         if (configs.size() <= CONFIGS_PER_PAGE) return;
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.GRAY,
                 CONFIG_SCROLL_X + offsetX,
                 SCROLL_START_Y + offsetY,
-                0,
                 Texture.CONFIG_BOOK_SCROLL_BUTTON.width(),
                 SCROLL_AREA_HEIGHT);
 
@@ -1120,31 +1212,32 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                         SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f);
 
         RenderUtils.drawHoverableTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.CONFIG_BOOK_SCROLL_BUTTON,
                 CONFIG_SCROLL_X + offsetX,
                 configScrollRenderY,
-                draggingConfigScroll);
+                draggingConfigScroll,
+                RenderDirection.VERTICAL);
     }
 
-    private void renderHoveredConfigScroll(PoseStack poseStack) {
+    private void renderHoveredConfigScroll(GuiGraphics guiGraphics) {
         if (configurableMap.get(hoveredConfigurable).size() <= CONFIGS_PER_PAGE) return;
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.GRAY,
                 CONFIG_SCROLL_X + offsetX,
                 SCROLL_START_Y + offsetY,
-                0,
                 Texture.CONFIG_BOOK_SCROLL_BUTTON.width(),
                 SCROLL_AREA_HEIGHT);
 
         RenderUtils.drawHoverableTexturedRect(
-                poseStack,
+                guiGraphics,
                 Texture.CONFIG_BOOK_SCROLL_BUTTON,
                 CONFIG_SCROLL_X + offsetX,
                 SCROLL_START_Y + offsetY,
-                draggingConfigScroll);
+                draggingConfigScroll,
+                RenderDirection.VERTICAL);
     }
 
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
@@ -1154,8 +1247,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         for (GuiEventListener child : children()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
+                        mouseX,
+                        mouseY);
                 break;
             }
         }
@@ -1237,5 +1332,21 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         // Save to clipboard
         McUtils.mc().keyboardHandler.setClipboard(exportedSettings);
+    }
+
+    public enum EnabledFilterType {
+        ENABLED(Texture.ENABLED_SETTINGS_ICON),
+        DISABLED(Texture.DISABLED_SETTINGS_ICON),
+        NEUTRAL(Texture.NEUTRAL_SETTINGS_ICON);
+
+        private final Texture icon;
+
+        EnabledFilterType(Texture icon) {
+            this.icon = icon;
+        }
+
+        public Texture getIcon() {
+            return icon;
+        }
     }
 }

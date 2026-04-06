@@ -1,13 +1,13 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -31,6 +31,8 @@ import java.util.Optional;
 import java.util.TreeMap;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.bus.api.EventPriority;
@@ -50,6 +52,10 @@ public class ProfessionHighlightFeature extends Feature {
 
     @Persisted
     private final Storage<Map<String, ProfessionType>> selectionPerContainer = new Storage<>(new TreeMap<>());
+
+    public ProfessionHighlightFeature() {
+        super(ProfileDefault.onlyDefault());
+    }
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent.Pre event) {
@@ -77,7 +83,7 @@ public class ProfessionHighlightFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onRenderSlot(SlotRenderEvent.Pre event) {
+    public void onRenderSlot(SlotRenderEvent.Post event) {
         Screen screen = event.getScreen();
 
         if (!(screen instanceof AbstractContainerScreen<?>)) return;
@@ -103,21 +109,20 @@ public class ProfessionHighlightFeature extends Feature {
         if (selectedProfession == null) return;
         if (!professionItemPropertyOpt.get().getProfessionTypes().contains(selectedProfession)) return;
 
-        RenderSystem.enableDepthTest();
-
-        RenderUtils.drawTexturedRectWithColor(
-                event.getPoseStack(),
-                Texture.HIGHLIGHT.resource(),
+        RenderUtils.drawTexturedRect(
+                event.getGuiGraphics(),
+                Texture.HIGHLIGHT.identifier(),
                 highlightColor.get(),
                 slot.x - 1,
                 slot.y - 1,
-                201,
+                18,
+                18,
+                0,
+                0,
                 18,
                 18,
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
-
-        RenderSystem.disableDepthTest();
     }
 
     private void setSelectedProfession(ProfessionType professionType) {
@@ -185,8 +190,8 @@ public class ProfessionHighlightFeature extends Feature {
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (!isMouseOver(mouseX, mouseY)) return false;
+        public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+            if (!isMouseOver(event.x(), event.y())) return false;
 
             ProfessionHighlightFeature feature = Managers.Feature.getFeatureInstance(ProfessionHighlightFeature.class);
 
@@ -212,7 +217,7 @@ public class ProfessionHighlightFeature extends Feature {
             }
 
             // Left click increases the profession type
-            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 if (profession == null) {
                     profession = ProfessionType.craftingProfessionTypes().getFirst();
                 } else {
@@ -231,7 +236,7 @@ public class ProfessionHighlightFeature extends Feature {
             }
 
             // Right click decreases the profession type
-            if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                 if (profession == null) {
                     profession = ProfessionType.craftingProfessionTypes().getLast();
                 } else {
@@ -253,7 +258,7 @@ public class ProfessionHighlightFeature extends Feature {
         }
 
         @Override
-        public void onPress() {}
+        public void onPress(InputWithModifiers input) {}
     }
 
     private enum HighlightSelectionMode {

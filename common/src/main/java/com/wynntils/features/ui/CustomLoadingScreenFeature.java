@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -7,7 +7,7 @@ package com.wynntils.features.ui;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.mod.TickSchedulerManager;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -25,15 +25,14 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.DisconnectedScreen;
+import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import net.minecraft.client.gui.screens.ProgressScreen;
-import net.minecraft.client.gui.screens.ReceivingLevelScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
-@StartDisabled
 @ConfigCategory(Category.UI)
 public class CustomLoadingScreenFeature extends Feature {
     private static final String IGNORED_TITLE = "\uE000\uE001\uE000";
@@ -44,6 +43,10 @@ public class CustomLoadingScreenFeature extends Feature {
     private Screen replacedScreen;
     private TickSchedulerManager.ScheduledTask delayedRemoval;
     private boolean allowClosing;
+
+    public CustomLoadingScreenFeature() {
+        super(ProfileDefault.DISABLED);
+    }
 
     @SubscribeEvent
     public void onTickAlways(TickAlwaysEvent e) {
@@ -108,7 +111,7 @@ public class CustomLoadingScreenFeature extends Feature {
                 messageUpdate = "feature.wynntils.customLoadingScreen.transferRequest";
             }
         }
-        if (screen instanceof ReceivingLevelScreen) {
+        if (screen instanceof LevelLoadingScreen) {
             messageUpdate = "feature.wynntils.customLoadingScreen.receivingTerrain";
         }
 
@@ -127,7 +130,7 @@ public class CustomLoadingScreenFeature extends Feature {
 
         // Make the screen think it is showing, but really don't let it show
         replacedScreen = screen;
-        screen.init(McUtils.mc(), 1, 1);
+        screen.init(1, 1);
         event.setCanceled(true);
     }
 

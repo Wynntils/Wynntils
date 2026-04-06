@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps.widgets;
@@ -16,6 +16,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class CategoryWidget extends AbstractWidget {
@@ -32,18 +33,17 @@ public class CategoryWidget extends AbstractWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(
-                guiGraphics.pose(),
+                guiGraphics,
                 CommonColors.BROWN.withAlpha(isHovered ? 150 : 100),
                 this.getX(),
                 this.getY(),
-                0,
                 width,
                 height);
 
         if (rootCategory) {
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString("⏎"),
                             getX() + 10,
                             getY() + getHeight() / 2f,
@@ -54,7 +54,7 @@ public class CategoryWidget extends AbstractWidget {
 
             FontRenderer.getInstance()
                     .renderScrollingText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(category),
                             getX() + 20,
                             getY() + getHeight() / 2f,
@@ -66,7 +66,7 @@ public class CategoryWidget extends AbstractWidget {
         } else {
             FontRenderer.getInstance()
                     .renderScrollingText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(category),
                             getX() + 10,
                             getY() + getHeight() / 2f,
@@ -80,7 +80,7 @@ public class CategoryWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (McUtils.mc().screen instanceof WaypointCategoryScreen categoryScreen) {
             if (rootCategory) {
                 categoryScreen.selectPreviousCategory();
@@ -89,7 +89,7 @@ public class CategoryWidget extends AbstractWidget {
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override

@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.gui.Font;
@@ -20,7 +19,7 @@ import net.neoforged.bus.api.ICancellableEvent;
  * However, starting Minecraft 1.20, there is no longer a concrete way of rendering item tooltips.
  * We still have {@link GuiGraphics#renderTooltip(Font, ItemStack, int, int)}, but some screens tend to convert an item into tooltip themselves.
  * This leads to us having to call this event from 3 locations, which the secondary location being {@link net.minecraft.client.gui.screens.inventory.AbstractContainerScreen#renderTooltip(GuiGraphics, int, int)}.`
- * The third location is patched in by Forge, handled in {@link ForgeGuiGraphicsMixin}.
+ * The third location is patched in by NeoForge, handled in {@link NeoForgeGuiGraphicsMixin}.
  */
 public abstract class ItemTooltipRenderEvent extends Event {
     private final GuiGraphics guiGraphics;
@@ -37,10 +36,6 @@ public abstract class ItemTooltipRenderEvent extends Event {
 
     public GuiGraphics getGuiGraphics() {
         return guiGraphics;
-    }
-
-    public PoseStack getPoseStack() {
-        return guiGraphics.pose();
     }
 
     public ItemStack getItemStack() {

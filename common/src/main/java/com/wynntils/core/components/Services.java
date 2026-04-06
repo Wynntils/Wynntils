@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
 
+import com.wynntils.services.athena.CompatibilityService;
 import com.wynntils.services.athena.UpdateService;
 import com.wynntils.services.athena.WynntilsAccountService;
 import com.wynntils.services.chat.ChatTabService;
@@ -24,6 +25,7 @@ import com.wynntils.services.mapdata.MapDataService;
 import com.wynntils.services.mapdata.WaypointsService;
 import com.wynntils.services.ping.PingService;
 import com.wynntils.services.resourcepack.ResourcePackService;
+import com.wynntils.services.secrets.SecretsService;
 import com.wynntils.services.splashes.SplashService;
 import com.wynntils.services.statistics.StatisticsService;
 import com.wynntils.services.stopwatch.StopwatchService;
@@ -32,6 +34,7 @@ import com.wynntils.services.usermarker.UserMarkerService;
 
 public final class Services {
     public static final ChatTabService ChatTab = new ChatTabService();
+    public static final CompatibilityService Compatibility = new CompatibilityService();
     public static final CosmeticsService Cosmetics = new CosmeticsService();
     public static final CustomModelService CustomModel = new CustomModelService();
     public static final DestinationService Destination = new DestinationService();
@@ -48,6 +51,7 @@ public final class Services {
     public static final MapService Map = new MapService();
     public static final PingService Ping = new PingService();
     public static final ResourcePackService ResourcePack = new ResourcePackService();
+    public static final SecretsService Secrets = new SecretsService();
     public static final SplashService Splash = new SplashService();
     public static final StatisticsService Statistics = new StatisticsService();
     public static final StopwatchService Stopwatch = new StopwatchService();

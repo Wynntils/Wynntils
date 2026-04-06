@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2025.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -7,14 +7,12 @@ package com.wynntils.mc.mixin;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ArmSwingEvent;
-import com.wynntils.mc.event.ChatScreenCreateEvent;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -125,25 +123,6 @@ public abstract class MinecraftMixin implements MinecraftExtension {
         }
 
         return operation.call();
-    }
-
-    @WrapOperation(
-            method = "openChatScreen(Ljava/lang/String;)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/Minecraft;setScreen(Lnet/minecraft/client/gui/screens/Screen;)V"))
-    private void wrapOpenChatScreenSetScreen(
-            Minecraft instance, Screen screen, Operation<Void> original, String defaultText) {
-        if (screen == null) {
-            original.call(instance, screen);
-            return;
-        }
-
-        ChatScreenCreateEvent event = new ChatScreenCreateEvent(screen, defaultText);
-        MixinHelper.post(event);
-        original.call(instance, event.getScreen());
     }
 
     @Override

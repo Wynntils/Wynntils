@@ -1,18 +1,19 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
+import com.wynntils.mc.event.DataComponentGetEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
-import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
@@ -26,11 +27,9 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.EventPriority;
@@ -41,9 +40,8 @@ public class ItemHighlightFeature extends Feature {
     private static final List<String> DEFAULT_HIGHLIGHT_KEYS =
             List.of("item_tier", "ingredient_tier", "material_tier", "store_tier");
 
-    // TODO: Set default to WYNN when porting to 1.21.6+
     @Persisted
-    private final Config<HighlightTexture> highlightTexture = new Config<>(HighlightTexture.TAG);
+    private final Config<HighlightTexture> highlightTexture = new Config<>(HighlightTexture.WYNN);
 
     @Persisted
     private final Config<Boolean> normalHighlightEnabled = new Config<>(true);
@@ -62,12 +60,6 @@ public class ItemHighlightFeature extends Feature {
 
     @Persisted
     private final Config<CustomColor> rareHighlightColor = new Config<>(new CustomColor(255, 0, 255));
-
-    @Persisted
-    private final Config<Boolean> setHighlightEnabled = new Config<>(true);
-
-    @Persisted
-    private final Config<CustomColor> setHighlightColor = new Config<>(new CustomColor(0, 255, 0));
 
     @Persisted
     private final Config<Boolean> legendaryHighlightEnabled = new Config<>(true);
@@ -159,49 +151,40 @@ public class ItemHighlightFeature extends Feature {
     @Persisted
     private final Config<Boolean> selectedItemHighlight = new Config<>(true);
 
+    public ItemHighlightFeature() {
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
+                .build());
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onRenderSlot(SlotRenderEvent.CountPre e) {
+    public void onRenderSlot(SlotRenderEvent.Pre e) {
         if (!inventoryHighlightEnabled.get()) return;
 
         CustomColor color = getHighlightColor(e.getSlot().getItem(), false);
         if (color == CustomColor.NONE) return;
 
         if (selectedItemHighlight.get()
-                && McUtils.inventory().getSelected().equals(e.getSlot().getItem())) {
-            RenderSystem.enableDepthTest();
-            RenderUtils.drawTexturedRectWithColor(
-                    e.getPoseStack(),
-                    Texture.HOTBAR_SELECTED_HIGHLIGHT.resource(),
-                    color,
-                    e.getSlot().x,
-                    e.getSlot().y,
-                    100,
-                    16,
-                    16,
-                    16,
-                    16);
-            RenderSystem.disableDepthTest();
+                && McUtils.inventory().getSelectedItem().equals(e.getSlot().getItem())) {
+            RenderUtils.drawTexturedRect(
+                    e.getGuiGraphics(), Texture.HOTBAR_SELECTED_HIGHLIGHT, color, e.getSlot().x, e.getSlot().y);
             return;
         }
 
-        RenderSystem.enableDepthTest();
-        RenderUtils.drawTexturedRectWithColor(
-                e.getPoseStack(),
-                Texture.HIGHLIGHT.resource(),
+        RenderUtils.drawTexturedRect(
+                e.getGuiGraphics(),
+                Texture.HIGHLIGHT.identifier(),
                 color,
                 e.getSlot().x - 1,
                 e.getSlot().y - 1,
-                100,
                 18,
                 18,
-                // TODO: Remove +18 when porting to 1.21.6+
-                (highlightTexture.get().ordinal() * 18) + 18,
+                highlightTexture.get().ordinal() * 18,
                 0,
                 18,
                 18,
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
-        RenderSystem.disableDepthTest();
     }
 
     @SubscribeEvent
@@ -211,29 +194,21 @@ public class ItemHighlightFeature extends Feature {
         CustomColor color = getHighlightColor(e.getItemStack(), true);
         if (color == CustomColor.NONE) return;
 
-        if (selectedItemHighlight.get() && McUtils.inventory().getSelected().equals(e.getItemStack())) {
-            BufferedRenderUtils.drawTexturedRectWithColor(
-                    e.getPoseStack(),
-                    e.getGuiGraphics().bufferSource,
-                    Texture.HOTBAR_SELECTED_HIGHLIGHT,
-                    color,
-                    e.getX(),
-                    e.getY());
+        if (selectedItemHighlight.get() && McUtils.inventory().getSelectedItem().equals(e.getItemStack())) {
+            RenderUtils.drawTexturedRect(
+                    e.getGuiGraphics(), Texture.HOTBAR_SELECTED_HIGHLIGHT, color, e.getX(), e.getY());
             return;
         }
 
-        BufferedRenderUtils.drawTexturedRectWithColor(
-                e.getPoseStack(),
-                e.getGuiGraphics().bufferSource,
-                Texture.HIGHLIGHT.resource(),
+        RenderUtils.drawTexturedRect(
+                e.getGuiGraphics(),
+                Texture.HIGHLIGHT.identifier(),
                 color,
                 e.getX() - 1,
                 e.getY() - 1,
-                0,
                 18,
                 18,
-                // TODO: Remove +18 when porting to 1.21.6+
-                (highlightTexture.get().ordinal() * 18) + 18,
+                highlightTexture.get().ordinal() * 18,
                 0,
                 18,
                 18,
@@ -242,27 +217,18 @@ public class ItemHighlightFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onSetSlot(SetSlotEvent.Pre event) {
-        removeVanillaHighlight(event.getItemStack());
-    }
+    public void onGetModelData(DataComponentGetEvent.CustomModelData event) {
+        CustomModelData itemStackModelData = event.getOriginalValue();
 
-    @Override
-    public void onEnable() {
-        if (McUtils.player() == null) return;
-
-        McUtils.inventory().items.forEach(this::removeVanillaHighlight);
-    }
-
-    private void removeVanillaHighlight(ItemStack itemStack) {
-        CustomModelData itemStackModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
-        if (itemStackModelData == null) return;
-
+        // The index of model data matters, so instead of removing the tier string, just replace it with an empty string
         List<String> newStrings = itemStackModelData.strings().stream()
-                .filter(s -> DEFAULT_HIGHLIGHT_KEYS.stream().noneMatch(s::startsWith))
+                .map(s -> DEFAULT_HIGHLIGHT_KEYS.stream().anyMatch(s::startsWith) ? "" : s)
                 .toList();
-        CustomModelData newModelData = new CustomModelData(
-                itemStackModelData.floats(), itemStackModelData.flags(), newStrings, itemStackModelData.colors());
-        itemStack.set(DataComponents.CUSTOM_MODEL_DATA, newModelData);
+
+        if (!newStrings.equals(itemStackModelData.strings())) {
+            event.setValue(new CustomModelData(
+                    itemStackModelData.floats(), itemStackModelData.flags(), newStrings, itemStackModelData.colors()));
+        }
     }
 
     private CustomColor getHighlightColor(ItemStack itemStack, boolean hotbarHighlight) {
@@ -340,11 +306,11 @@ public class ItemHighlightFeature extends Feature {
                         case NORMAL -> normalHighlightEnabled.get();
                         case UNIQUE -> uniqueHighlightEnabled.get();
                         case RARE -> rareHighlightEnabled.get();
-                        case SET -> setHighlightEnabled.get();
                         case LEGENDARY -> legendaryHighlightEnabled.get();
                         case FABLED -> fabledHighlightEnabled.get();
                         case MYTHIC -> mythicHighlightEnabled.get();
                         case CRAFTED -> craftedHighlightEnabled.get();
+                        default -> false;
                     };
         }
 
@@ -356,11 +322,11 @@ public class ItemHighlightFeature extends Feature {
                         case NORMAL -> normalHighlightColor.get();
                         case UNIQUE -> uniqueHighlightColor.get();
                         case RARE -> rareHighlightColor.get();
-                        case SET -> setHighlightColor.get();
                         case LEGENDARY -> legendaryHighlightColor.get();
                         case FABLED -> fabledHighlightColor.get();
                         case MYTHIC -> mythicHighlightColor.get();
                         case CRAFTED -> craftedHighlightColor.get();
+                        default -> CustomColor.NONE;
                     };
         }
     }
@@ -456,8 +422,7 @@ public class ItemHighlightFeature extends Feature {
     }
 
     public enum HighlightTexture {
-        // TODO: Add WYNN back when porting to 1.21.6+
-        // WYNN,
+        WYNN,
         TAG,
         CIRCLE_TRANSPARENT,
         CIRCLE_OPAQUE,

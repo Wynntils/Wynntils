@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -7,10 +7,12 @@ package com.wynntils.features.utilities;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
@@ -38,6 +40,12 @@ public class PerCharacterGuildContributionFeature extends Feature {
     private final Config<Boolean> hideContributionMessage = new Config<>(true);
 
     private boolean waitingForCommandResponse = false;
+
+    public PerCharacterGuildContributionFeature() {
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onCharacterChange(CharacterUpdateEvent e) {
@@ -97,8 +105,8 @@ public class PerCharacterGuildContributionFeature extends Feature {
         contributionMessage.append(Component.literal("Click here")
                 .withStyle(ChatFormatting.AQUA)
                 .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(style -> style.withClickEvent(new ClickEvent(
-                        ClickEvent.Action.RUN_COMMAND, "/wynntils feature disable " + this.getShortName()))));
+                .withStyle(style -> style.withClickEvent(
+                        new ClickEvent.RunCommand("/wynntils feature disable " + this.getShortName()))));
 
         contributionMessage.append(
                 Component.literal(" to disable this functionality.").withStyle(ChatFormatting.DARK_AQUA));

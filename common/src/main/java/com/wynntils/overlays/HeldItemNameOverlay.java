@@ -1,0 +1,145 @@
+/*
+ * Copyright © Wynntils 2025-2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.overlays;
+
+import com.mojang.blaze3d.platform.Window;
+import com.wynntils.core.consumers.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.OverlayPosition;
+import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.event.ItemRenamedEvent;
+import com.wynntils.mc.event.ChangeCarriedItemEvent;
+import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.RenderElementType;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+
+public class HeldItemNameOverlay extends Overlay {
+    @Persisted
+    private final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
+
+    @Persisted
+    private final Config<Integer> messageDisplayTicks = new Config<>(40);
+
+    @Persisted
+    private final Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
+
+    @Persisted
+    private final Config<Float> fontScale = new Config<>(1.0f);
+
+    private StyledText itemText = StyledText.EMPTY;
+    private int messageTimer;
+
+    public HeldItemNameOverlay() {
+        super(
+                new OverlayPosition(
+                        -49,
+                        0,
+                        VerticalAlignment.BOTTOM,
+                        HorizontalAlignment.CENTER,
+                        OverlayPosition.AnchorSection.BOTTOM_MIDDLE),
+                new OverlaySize(300, 20),
+                HorizontalAlignment.CENTER,
+                VerticalAlignment.BOTTOM);
+    }
+
+    @SubscribeEvent
+    public void onRenderSelectedItemName(RenderEvent.Pre event) {
+        if (shouldDisplayOriginal.get()) return;
+
+        if (event.getType() == RenderElementType.SELECTED_ITEM) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onHeldItemChanged(ChangeCarriedItemEvent event) {
+        if (!shouldUpdateText()) return;
+
+        itemText = StyledText.fromComponent(McUtils.player().getMainHandItem().getHoverName());
+        messageTimer = messageDisplayTicks.get();
+    }
+
+    // Needs to run after SpellCastMessageOverlay
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onItemRename(ItemRenamedEvent event) {
+        if (!shouldUpdateText()) return;
+
+        itemText = event.getNewName();
+        messageTimer = messageDisplayTicks.get();
+    }
+
+    @Override
+    protected void tick() {
+        if (messageTimer <= 0) return;
+
+        messageTimer--;
+    }
+
+    @Override
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        if (messageTimer <= 0 || itemText.isEmpty()) return;
+
+        int alpha = (int) Math.min((float) messageTimer * 256.0F / 10.0F, 255.0F);
+        if (alpha <= 0) return;
+
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        guiGraphics,
+                        itemText,
+                        this.getRenderX(),
+                        this.getRenderX() + this.getWidth(),
+                        this.getRenderY(),
+                        this.getRenderY() + this.getHeight(),
+                        this.getWidth(),
+                        CommonColors.WHITE.withAlpha(alpha),
+                        this.getRenderHorizontalAlignment(),
+                        this.getRenderVerticalAlignment(),
+                        textShadow.get(),
+                        fontScale.get());
+    }
+
+    @Override
+    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        guiGraphics,
+                        StyledText.fromString("Content Book"),
+                        this.getRenderX(),
+                        this.getRenderX() + this.getWidth(),
+                        this.getRenderY(),
+                        this.getRenderY() + this.getHeight(),
+                        this.getWidth(),
+                        CustomColor.fromChatFormatting(ChatFormatting.LIGHT_PURPLE),
+                        this.getRenderHorizontalAlignment(),
+                        this.getRenderVerticalAlignment(),
+                        textShadow.get(),
+                        fontScale.get());
+    }
+
+    private boolean shouldUpdateText() {
+        ItemStack heldItem = McUtils.player().getMainHandItem();
+
+        if (heldItem.isEmpty()) {
+            messageTimer = 0;
+            return false;
+        }
+
+        return true;
+    }
+}

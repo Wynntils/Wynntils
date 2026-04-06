@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -14,10 +14,12 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.playerviewer.GearSharingSettingsScreen;
+import com.wynntils.screens.secrets.SecretsScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.services.athena.type.UpdateResult;
 import com.wynntils.utils.FileUtils;
@@ -25,6 +27,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +78,7 @@ public class WynntilsCommand extends Command {
         return base.then(Commands.literal("clearcaches")
                         .then(Commands.literal("run").executes(this::doClearCaches))
                         .executes(this::clearCaches))
+                .then(Commands.literal("crowdsourcing").executes(this::openCrowdsourceMenu))
                 .then(Commands.literal("debug")
                         .then(Commands.literal("profile")
                                 .then(Commands.literal("reset").executes(this::profileReset))
@@ -89,8 +93,10 @@ public class WynntilsCommand extends Command {
                 .then(Commands.literal("map").executes(this::openMap))
                 .then(Commands.literal("menu").executes(this::openMenu))
                 .then(Commands.literal("reauth").executes(this::reauth))
+                .then(Commands.literal("refetch").executes(this::refetch))
                 .then(Commands.literal("reloadcaches").executes(this::reloadCaches))
                 .then(Commands.literal("rescan").executes(this::rescan))
+                .then(Commands.literal("secrets").executes(this::secrets))
                 .then(Commands.literal("status").executes(this::status))
                 .then(Commands.literal("token").executes(this::token))
                 .then(Commands.literal("update").executes(this::update))
@@ -178,6 +184,17 @@ public class WynntilsCommand extends Command {
         return 1;
     }
 
+    private int refetch(CommandContext<CommandSourceStack> context) {
+        context.getSource()
+                .sendSuccess(
+                        () -> Component.translatable("command.wynntils.refetching")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
+
+        Models.Player.loadSelf();
+        return 1;
+    }
+
     private int openGearSharingSettings(CommandContext<CommandSourceStack> commandSourceStackCommandContext) {
         Managers.TickScheduler.scheduleNextTick(() -> McUtils.setScreen(GearSharingSettingsScreen.create(null)));
         return 1;
@@ -194,8 +211,8 @@ public class WynntilsCommand extends Command {
                         () -> Component.translatable("command.wynntils.clearCaches.clickHere")
                                 .withStyle(ChatFormatting.BLUE)
                                 .withStyle(ChatFormatting.UNDERLINE)
-                                .withStyle(style -> style.withClickEvent(
-                                        new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils clearcaches run"))),
+                                .withStyle(style ->
+                                        style.withClickEvent(new ClickEvent.RunCommand("/wynntils clearcaches run"))),
                         false);
 
         return 1;
@@ -263,11 +280,10 @@ public class WynntilsCommand extends Command {
                 .withStyle(Style.EMPTY
                         .withColor(ChatFormatting.LIGHT_PURPLE)
                         .withUnderlined(true)
-                        .withClickEvent(new ClickEvent(
-                                ClickEvent.Action.OPEN_URL, Managers.Url.getUrl(UrlId.LINK_WYNNTILS_STATUS)))
-                        .withHoverEvent(new HoverEvent(
-                                HoverEvent.Action.SHOW_TEXT,
-                                Component.literal("Click here to open in your browser."))));
+                        .withClickEvent(new ClickEvent.OpenUrl(
+                                URI.create(Managers.Url.buildUrl(UrlId.LINK_WYNNTILS_STATUS, Map.of()))))
+                        .withHoverEvent(
+                                new HoverEvent.ShowText(Component.literal("Click here to open in your browser."))));
 
         context.getSource().sendSuccess(() -> component.append(url), false);
 
@@ -306,11 +322,10 @@ public class WynntilsCommand extends Command {
                 .withStyle(Style.EMPTY
                         .withColor(ChatFormatting.LIGHT_PURPLE)
                         .withUnderlined(true)
-                        .withClickEvent(new ClickEvent(
-                                ClickEvent.Action.OPEN_URL, Managers.Url.getUrl(UrlId.LINK_WYNNTILS_PATREON)))
-                        .withHoverEvent(new HoverEvent(
-                                HoverEvent.Action.SHOW_TEXT,
-                                Component.literal("Click here to open in your browser."))));
+                        .withClickEvent(new ClickEvent.OpenUrl(
+                                URI.create(Managers.Url.buildUrl(UrlId.LINK_WYNNTILS_PATREON, Map.of()))))
+                        .withHoverEvent(
+                                new HoverEvent.ShowText(Component.literal("Click here to open in your browser."))));
 
         context.getSource().sendSuccess(() -> c.append(url), false);
         return 1;
@@ -323,10 +338,10 @@ public class WynntilsCommand extends Command {
         MutableComponent link =
                 Component.literal(discordInvite).withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_AQUA));
         link.setStyle(link.getStyle()
-                .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, discordInvite))
-                .withHoverEvent(new HoverEvent(
-                        HoverEvent.Action.SHOW_TEXT,
-                        Component.literal("Click here to join our Discord" + " server."))));
+                .withClickEvent(new ClickEvent.OpenUrl(
+                        URI.create(Managers.Url.buildUrl(UrlId.LINK_WYNNTILS_DISCORD_INVITE, Map.of()))))
+                .withHoverEvent(
+                        new HoverEvent.ShowText(Component.literal("Click here to join our Discord" + " server."))));
         context.getSource().sendSuccess(() -> msg.append(link), false);
         return 1;
     }
@@ -339,7 +354,7 @@ public class WynntilsCommand extends Command {
             failed.append(Component.literal("/wynntils reauth")
                     .withStyle(Style.EMPTY
                             .withColor(ChatFormatting.AQUA)
-                            .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reauth"))));
+                            .withClickEvent(new ClickEvent.RunCommand("/wynntils reauth"))));
             context.getSource().sendFailure(failed);
             return 1;
         }
@@ -349,11 +364,9 @@ public class WynntilsCommand extends Command {
         MutableComponent text = Component.literal("Wynntils Token ").withStyle(ChatFormatting.AQUA);
         MutableComponent response = Component.literal(token)
                 .withStyle(Style.EMPTY
-                        .withHoverEvent(new HoverEvent(
-                                HoverEvent.Action.SHOW_TEXT, Component.literal("Click me to register an account.")))
-                        .withClickEvent((new ClickEvent(
-                                ClickEvent.Action.OPEN_URL,
-                                Managers.Url.buildUrl(UrlId.LINK_WYNNTILS_REGISTER_ACCOUNT, Map.of("token", token)))))
+                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("Click me to register an account.")))
+                        .withClickEvent((new ClickEvent.OpenUrl(URI.create(
+                                Managers.Url.buildUrl(UrlId.LINK_WYNNTILS_REGISTER_ACCOUNT, Map.of("token", token))))))
                         .withColor(ChatFormatting.DARK_AQUA)
                         .withUnderlined(true));
         text.append(response);
@@ -386,6 +399,14 @@ public class WynntilsCommand extends Command {
                         false);
 
         return 1;
+    }
+
+    private int secrets(CommandContext<CommandSourceStack> context) {
+        return openScreen(SecretsScreen.create());
+    }
+
+    private int openCrowdsourceMenu(CommandContext<CommandSourceStack> context) {
+        return openScreen(WynntilsCrowdSourcingSettingsScreen.create());
     }
 
     private int openGuildMap(CommandContext<CommandSourceStack> context) {
@@ -448,9 +469,8 @@ public class WynntilsCommand extends Command {
         MutableComponent clickComponent = Component.empty();
         clickComponent.setStyle(clickComponent
                 .getStyle()
-                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/" + command))
-                .withHoverEvent(new HoverEvent(
-                        HoverEvent.Action.SHOW_TEXT, Component.literal("Click here to run this command"))));
+                .withClickEvent(new ClickEvent.SuggestCommand("/" + command))
+                .withHoverEvent(new HoverEvent.ShowText(Component.literal("Click here to run this command"))));
 
         clickComponent.append(Component.literal("/" + command).withStyle(ChatFormatting.GREEN));
         clickComponent.append(Component.literal(" - ").withStyle(ChatFormatting.DARK_GRAY));

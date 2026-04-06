@@ -1,17 +1,18 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
@@ -43,14 +44,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -77,8 +77,7 @@ public class ValuablesProtectionFeature extends Feature {
     @Persisted
     private final Config<Boolean> requireCtrlToSell = new Config<>(false);
 
-    private static final ResourceLocation CIRCLE_TEXTURE =
-            ResourceLocation.withDefaultNamespace("textures/wynn/gui/tutorial.png");
+    private static final Identifier CIRCLE_TEXTURE = Identifier.withDefaultNamespace("textures/wynn/gui/tutorial.png");
 
     private static final int BLACKSMITH_IDENTIFIER_CONFIRM_BUTTON_SLOT = 17;
     private static final int TM_ITEM_SLOT = 22;
@@ -96,20 +95,24 @@ public class ValuablesProtectionFeature extends Feature {
     private int emphasizeAnimationDelay = 0;
     private int emphasizeDirection = 1; // 1 for forward, -1 for reverse
 
+    public ValuablesProtectionFeature() {
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
+                .build());
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         Container currentContainer = Models.Container.getCurrentContainer();
         if (currentContainerType != null && !currentContainerType.isInstance(currentContainer)) return;
         if (!slotsToWarn.contains(e.getSlot().index)) return;
 
-        RenderSystem.enableDepthTest();
-        RenderUtils.drawTexturedRectWithColor(
-                e.getPoseStack(),
+        RenderUtils.drawTexturedRect(
+                e.getGuiGraphics(),
                 CIRCLE_TEXTURE,
                 CommonColors.RED,
                 e.getSlot().x - 16,
                 e.getSlot().y - 16,
-                200,
                 48,
                 48,
                 0,
@@ -118,7 +121,6 @@ public class ValuablesProtectionFeature extends Feature {
                 48,
                 48,
                 192);
-        RenderSystem.disableDepthTest();
     }
 
     @SubscribeEvent
@@ -360,7 +362,7 @@ public class ValuablesProtectionFeature extends Feature {
         protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             FontRenderer.getInstance()
                     .renderText(
-                            guiGraphics.pose(),
+                            guiGraphics,
                             StyledText.fromString(text),
                             getX(),
                             getY(),
@@ -368,8 +370,7 @@ public class ValuablesProtectionFeature extends Feature {
                             textColor,
                             horizontalAlignment,
                             VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL,
-                            Font.DisplayMode.NORMAL);
+                            TextShadow.NORMAL);
         }
 
         @Override

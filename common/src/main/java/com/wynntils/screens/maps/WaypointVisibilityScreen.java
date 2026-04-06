@@ -1,11 +1,9 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
@@ -201,13 +199,6 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        renderBlurredBackground();
-
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-
-        RenderSystem.enableDepthTest();
         renderMap(guiGraphics);
         RenderUtils.enableScissor(
                 guiGraphics,
@@ -216,7 +207,7 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
                 (int) mapWidth,
                 (int) mapHeight);
 
-        renderMapFeatures(poseStack, mouseX, mouseY);
+        renderMapFeatures(guiGraphics, mouseX, mouseY);
 
         RenderUtils.disableScissor(guiGraphics);
 
@@ -225,7 +216,7 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable(
                                 editinglabel
                                         ? "screens.wynntils.waypointVisibility.labelVisibility"
@@ -240,7 +231,7 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.waypointVisibility.minVisibility") + ":"),
                         dividedWidth,
                         dividedHeight * 15.5f,
@@ -251,7 +242,7 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.waypointVisibility.maxVisibility") + ":"),
                         dividedWidth * 11.0f,
                         dividedHeight * 15.5f,
@@ -262,7 +253,7 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.waypointVisibility.fade") + ":"),
                         dividedWidth * 21.0f,
                         dividedHeight * 15.5f,
@@ -273,7 +264,7 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(
                                 Component.translatable("screens.wynntils.waypointVisibility.description1")),
                         dividedWidth * 2.0f,
@@ -288,7 +279,7 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(
                                 Component.translatable("screens.wynntils.waypointVisibility.description2")),
                         dividedWidth * 2.0f,
@@ -303,7 +294,7 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(
                                 Component.translatable("screens.wynntils.waypointVisibility.description3")),
                         dividedWidth * 2.0f,
@@ -316,7 +307,7 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        renderZoomText(poseStack);
+        renderZoomText(guiGraphics);
     }
 
     @Override

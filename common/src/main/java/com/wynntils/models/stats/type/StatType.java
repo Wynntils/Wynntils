@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats.type;
@@ -75,8 +75,8 @@ public abstract class StatType {
     }
 
     public StatCalculationInfo getStatCalculationInfo(int baseValue) {
-        boolean usePostiveRange = baseValue > 0;
-        return usePostiveRange
+        boolean usePositiveRange = baseValue > 0;
+        return usePositiveRange
                 ? new StatCalculationInfo(
                         RangedValue.of(30, 130),
                         calculateAsInverted() ? RoundingMode.HALF_DOWN : RoundingMode.HALF_UP,

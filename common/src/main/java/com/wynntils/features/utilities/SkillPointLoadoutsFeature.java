@@ -1,24 +1,33 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
 public class SkillPointLoadoutsFeature extends Feature {
+    public SkillPointLoadoutsFeature() {
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
+                .build());
+    }
+
     @SubscribeEvent
     public void onCharacterInfoScreenOpened(ScreenOpenedEvent.Post e) {
         if (!(e.getScreen() instanceof ContainerScreen screen)) return;
@@ -42,7 +51,7 @@ public class SkillPointLoadoutsFeature extends Feature {
         }
 
         @Override
-        public void onPress() {
+        public void onPress(InputWithModifiers input) {
             McUtils.setScreen(SkillPointLoadoutsScreen.create());
         }
     }

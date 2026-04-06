@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -30,7 +31,14 @@ public class ExtendedItemCountFeature extends Feature {
     @Persisted
     private final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
 
+    @Persisted
+    private final Config<Boolean> showLevel = new Config<>(true);
+
     private boolean isInventory;
+
+    public ExtendedItemCountFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onRenderSlotPre(SlotRenderEvent.Pre e) {
@@ -52,7 +60,8 @@ public class ExtendedItemCountFeature extends Feature {
 
         WynnItem wynnItem = wynnItemOpt.get();
 
-        if (wynnItem instanceof LeveledItemProperty leveledItem
+        if (showLevel.get()
+                && wynnItem instanceof LeveledItemProperty leveledItem
                 && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)
                 && isInventory) {
             event.setCountString(String.valueOf(leveledItem.getLevel()));

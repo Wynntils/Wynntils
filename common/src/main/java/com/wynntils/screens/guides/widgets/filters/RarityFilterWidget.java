@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.widgets.filters;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 
 public class RarityFilterWidget extends GuideFilterWidget {
@@ -28,10 +29,9 @@ public class RarityFilterWidget extends GuideFilterWidget {
         rarityButtons.add(new RarityButton(x, y, GearTier.MYTHIC, Texture.MYTHIC_FILTER_ICON, searchQuery));
         rarityButtons.add(new RarityButton(x + 20, y, GearTier.FABLED, Texture.FABLED_FILTER_ICON, searchQuery));
         rarityButtons.add(new RarityButton(x + 40, y, GearTier.LEGENDARY, Texture.LEGENDARY_FILTER_ICON, searchQuery));
-        rarityButtons.add(new RarityButton(x + 60, y, GearTier.SET, Texture.SET_FILTER_ICON, searchQuery));
-        rarityButtons.add(new RarityButton(x + 80, y, GearTier.RARE, Texture.RARE_FILTER_ICON, searchQuery));
-        rarityButtons.add(new RarityButton(x + 100, y, GearTier.UNIQUE, Texture.UNIQUE_FILTER_ICON, searchQuery));
-        rarityButtons.add(new RarityButton(x + 120, y, GearTier.NORMAL, Texture.NORMAL_FILTER_ICON, searchQuery));
+        rarityButtons.add(new RarityButton(x + 60, y, GearTier.RARE, Texture.RARE_FILTER_ICON, searchQuery));
+        rarityButtons.add(new RarityButton(x + 80, y, GearTier.UNIQUE, Texture.UNIQUE_FILTER_ICON, searchQuery));
+        rarityButtons.add(new RarityButton(x + 100, y, GearTier.NORMAL, Texture.NORMAL_FILTER_ICON, searchQuery));
     }
 
     @Override
@@ -40,12 +40,12 @@ public class RarityFilterWidget extends GuideFilterWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         boolean clicked = false;
 
         for (RarityButton rarityButton : rarityButtons) {
-            if (rarityButton.isMouseOver(mouseX, mouseY)) {
-                clicked = rarityButton.mouseClicked(mouseX, mouseY, button);
+            if (rarityButton.isMouseOver(event.x(), event.y())) {
+                clicked = rarityButton.mouseClicked(event, isDoubleClick);
                 break;
             }
         }

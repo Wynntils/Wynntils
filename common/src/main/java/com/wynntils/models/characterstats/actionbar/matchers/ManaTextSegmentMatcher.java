@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
@@ -18,7 +18,7 @@ public class ManaTextSegmentMatcher extends AbstractTextSegmentMatcher {
     }
 
     @Override
-    protected ActionBarSegment createSegment(String segmentText, CappedValue value) {
-        return new ManaTextSegment(segmentText, value);
+    protected ActionBarSegment createSegment(String segmentText, int startIndex, int endIndex, CappedValue value) {
+        return new ManaTextSegment(segmentText, startIndex, endIndex, value);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.text;
@@ -7,20 +7,26 @@ package com.wynntils.core.text;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.authlib.GameProfile;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.component.ResolvableProfile;
 
 public final class StyledTextPart {
     private final String text;
@@ -58,6 +64,9 @@ public final class StyledTextPart {
         List<StyledTextPart> parts = new ArrayList<>();
 
         Style currentStyle = style;
+        // Preserve inherited font across color code resets
+        Style inheritedStyle = parentStyle == null ? style : style.applyTo(parentStyle);
+        FontDescription inheritedFont = inheritedStyle.getFont();
         StringBuilder currentString = new StringBuilder();
 
         boolean nextIsFormatting = false;
@@ -125,9 +134,14 @@ public final class StyledTextPart {
                     currentString = new StringBuilder();
                 }
 
-                // Color formatting resets the style besides the font
+                // Color formatting resets the style
                 if (formatting.isColor()) {
-                    currentStyle = Style.EMPTY.withColor(formatting).withFont(currentStyle.getFont());
+                    currentStyle = Style.EMPTY.withColor(formatting);
+
+                    // But we keep the inherited font
+                    if (inheritedFont != null) {
+                        currentStyle = currentStyle.withFont(inheritedFont);
+                    }
                 } else {
                     currentStyle = currentStyle.applyFormat(formatting);
                 }
@@ -145,7 +159,7 @@ public final class StyledTextPart {
                     specialPrefix = false;
                     String special = specialString.toString();
                     specialString = new StringBuilder();
-                    if (special.startsWith("f:")) {
+                    if (special.startsWith("fr:") || special.startsWith("fas:") || special.startsWith("fps:")) {
                         // If we already had some text with the current style
                         // Append it before modifying the style
                         if (!currentString.isEmpty()) {
@@ -164,11 +178,61 @@ public final class StyledTextPart {
                             currentString = new StringBuilder();
                         }
 
-                        String fontCode = special.substring(2);
-                        ResourceLocation font = FontLookup.getFontFromFromFontCode(fontCode);
-                        if (font != null) {
-                            currentStyle = currentStyle.withFont(font);
+                        FontDescription fontDescription = null;
+
+                        if (special.startsWith("fr:")) {
+                            String fontCode = special.substring(3);
+                            fontDescription = FontLookup.getFontFromFromFontCode(fontCode);
+                        } else if (special.startsWith("fas:")) {
+                            String identifiers = special.substring(4);
+                            String[] split = identifiers.split(";");
+
+                            if (split.length != 2) continue;
+
+                            fontDescription = new FontDescription.AtlasSprite(
+                                    Identifier.parse(split[0]), Identifier.parse(split[1]));
+                        } else if (special.startsWith("fps:")) {
+                            String profileDetails = special.substring(4);
+                            String[] split = profileDetails.split(";");
+
+                            if (split.length != 2) continue;
+
+                            UUID id = UUID.fromString(split[0]);
+                            Optional<GameProfile> optional =
+                                    McUtils.mc().services().profileResolver().fetchById(id);
+
+                            if (optional.isPresent()) {
+                                ResolvableProfile resolved = ResolvableProfile.createResolved(optional.get());
+
+                                fontDescription =
+                                        new FontDescription.PlayerSprite(resolved, Boolean.parseBoolean(split[1]));
+                            }
                         }
+
+                        if (fontDescription != null) {
+                            currentStyle = currentStyle.withFont(fontDescription);
+                        }
+                    } else if (special.startsWith("sc:")) {
+                        // If we already had some text with the current style
+                        // Append it before modifying the style
+                        if (!currentString.isEmpty()) {
+                            if (style != Style.EMPTY) {
+                                // We might have lost an event, so we need to add it back
+                                currentStyle = currentStyle
+                                        .withClickEvent(style.getClickEvent())
+                                        .withHoverEvent(style.getHoverEvent());
+                            }
+                            // But if the style is empty, we might have parsed events from the string itself
+
+                            parts.add(new StyledTextPart(currentString.toString(), currentStyle, null, parentStyle));
+
+                            // reset string
+                            // style is not reset, because we want to keep the formatting
+                            currentString = new StringBuilder();
+                        }
+
+                        CustomColor shadowColor = CustomColor.fromHexString(special.substring(3));
+                        currentStyle = currentStyle.withShadowColor(shadowColor.asInt());
                     } else {
                         // Unknown special code, just ignore it for now
                     }
@@ -331,8 +395,8 @@ public final class StyledTextPart {
                     style = style.withStrikethrough(true);
                 }
                 if (jsonObject.has("font")) {
-                    style = style.withFont(ResourceLocation.withDefaultNamespace(
-                            jsonObject.get("font").getAsString()));
+                    style = style.withFont(new FontDescription.Resource(Identifier.withDefaultNamespace(
+                            jsonObject.get("font").getAsString())));
                 }
                 if (jsonObject.has("color")) {
                     style = style.withColor(

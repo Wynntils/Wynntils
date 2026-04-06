@@ -1,55 +1,31 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.consumers.overlays.TextOverlay;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.models.activities.ActivityTrackerScoreboardPart;
-import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.render.TextRenderSetting;
-import com.wynntils.utils.render.TextRenderTask;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
-import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.resources.language.I18n;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
-public class ContentTrackerOverlay extends Overlay {
-    private static final String PREVIEW_TASK =
-            """
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer \
-                    tempus purus in lacus pulvinar dictum. Quisque suscipit erat \
-                    pellentesque egestas volutpat. \
-                    """;
-
+public class ContentTrackerOverlay extends TextOverlay {
     @Persisted
     private final Config<Boolean> disableTrackerOnScoreboard = new Config<>(true);
 
     @Persisted
-    private final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
-
-    private static final List<CustomColor> TEXT_COLORS =
-            List.of(CommonColors.GREEN, CommonColors.ORANGE, CommonColors.WHITE);
-
-    private final List<TextRenderTask> toRender = createRenderTaskList();
-    private final List<TextRenderTask> toRenderPreview = createRenderTaskList();
+    private final Config<Style> displayStyle = new Config<>(Style.MODERN);
 
     public ContentTrackerOverlay() {
         super(
@@ -62,14 +38,7 @@ public class ContentTrackerOverlay extends Overlay {
                 new OverlaySize(300, 50),
                 HorizontalAlignment.LEFT,
                 VerticalAlignment.MIDDLE);
-
-        toRenderPreview
-                .get(0)
-                .setText(I18n.get("feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title") + " Quest:");
-        toRenderPreview
-                .get(1)
-                .setText(I18n.get("feature.wynntils.contentTrackerOverlay.overlay.contentTracker.testQuestName") + ":");
-        toRenderPreview.get(2).setText(PREVIEW_TASK);
+        fitText.store(true);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -81,77 +50,51 @@ public class ContentTrackerOverlay extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(Config<?> config) {
-        updateTextRenderSettings(toRender);
+    protected String getTemplate() {
+        return displayStyle.get().template;
     }
 
     @Override
-    public void render(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        if (!Models.Activity.isTracking()) {
-            return;
-        }
-
-        toRender.get(0)
-                .setText(I18n.get("feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title") + " "
-                        + Models.Activity.getTrackedType().getDisplayName() + ":");
-        toRender.get(1).setText(Models.Activity.getTrackedName());
-        toRender.get(2).setText(Models.Activity.getTrackedTask());
-
-        BufferedFontRenderer.getInstance()
-                .renderTextsWithAlignment(
-                        guiGraphics.pose(),
-                        bufferSource,
-                        this.getRenderX(),
-                        this.getRenderY(),
-                        toRender,
-                        this.getWidth(),
-                        this.getHeight(),
-                        this.getRenderHorizontalAlignment(),
-                        this.getRenderVerticalAlignment());
+    protected String getPreviewTemplate() {
+        return """
+               {with_atlas_sprite_font(styled_text("A");"items";"wynn/gui/content_book/quest_active")}§r§#29cc96ffQuest — Moving Wynntils Overlays§r
+               You can select any overlay from Overlay Manager and edit it freely, moving, resizing and changing its rendering order.
+               You can also hover over it while editing to show a tooltip with keyboard shortcuts!
+               """;
     }
 
     @Override
-    public void renderPreview(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
-        updateTextRenderSettings(toRenderPreview); // we have to force update every time
-
-        BufferedFontRenderer.getInstance()
-                .renderTextsWithAlignment(
-                        guiGraphics.pose(),
-                        bufferSource,
-                        this.getRenderX(),
-                        this.getRenderY(),
-                        toRenderPreview,
-                        this.getWidth(),
-                        this.getHeight(),
-                        this.getRenderHorizontalAlignment(),
-                        this.getRenderVerticalAlignment());
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        super.render(guiGraphics, deltaTracker, window);
     }
 
-    private List<TextRenderTask> createRenderTaskList() {
-        List<TextRenderTask> renderTaskList = new ArrayList<>(3);
-        for (int i = 0; i < 3; i++) {
-            renderTaskList.add(new TextRenderTask(
-                    StyledText.EMPTY,
-                    TextRenderSetting.DEFAULT
-                            .withMaxWidth(this.getWidth())
-                            .withCustomColor(TEXT_COLORS.get(i))
-                            .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                            .withTextShadow(this.textShadow.get())));
-        }
-        return renderTaskList;
+    @Override
+    protected boolean isVisible() {
+        return Models.Activity.isTracking();
     }
 
-    private void updateTextRenderSettings(List<TextRenderTask> renderTasks) {
-        for (int i = 0; i < 3; i++) {
-            renderTasks
-                    .get(i)
-                    .setSetting(TextRenderSetting.DEFAULT
-                            .withMaxWidth(this.getWidth())
-                            .withCustomColor(TEXT_COLORS.get(i))
-                            .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                            .withTextShadow(this.textShadow.get()));
+    private enum Style {
+        MODERN(
+                """
+                {activity_icon}§rÀ{with_font(with_color(styled_text(concat(activity_type; " - "; activity_name));activity_color);"language/wynncraft")}§r
+                {activity_task(true)}
+                """),
+        NO_ICON(
+                """
+                {with_font(with_color(styled_text(concat(activity_type; " - "; activity_name));activity_color);"language/wynncraft")}§r
+                {activity_task(true)}
+                """),
+        LEGACY(
+                """
+                §aTracked {activity_type}:
+                §6{activity_name}§r
+                {activity_task(true)}
+                """);
+
+        public final String template;
+
+        Style(String template) {
+            this.template = template;
         }
     }
 }

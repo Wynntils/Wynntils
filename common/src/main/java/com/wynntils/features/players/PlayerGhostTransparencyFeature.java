@@ -1,18 +1,21 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.players;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.mc.event.RenderTranslucentCheckEvent;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
+import com.wynntils.services.cosmetics.event.PlayerArmorVisibilityEvent;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -24,6 +27,12 @@ public class PlayerGhostTransparencyFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> transparentPlayerGhostArmor = new Config<>(true);
+
+    public PlayerGhostTransparencyFeature() {
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onTranslucentCheck(RenderTranslucentCheckEvent.Body e) {
@@ -48,11 +57,22 @@ public class PlayerGhostTransparencyFeature extends Feature {
     @SubscribeEvent
     public void onPlayerArmorRender(PlayerRenderLayerEvent.Armor event) {
         if (!transparentPlayerGhostArmor.get()) return;
-        Entity entity = ((EntityRenderStateExtension) event.getPlayerRenderState()).getEntity();
+        Entity entity = ((EntityRenderStateExtension) event.getHumanoidRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
 
         if (Models.Player.isPlayerGhost(player)) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerArmorVisibilityCheck(PlayerArmorVisibilityEvent event) {
+        if (!transparentPlayerGhostArmor.get()) return;
+        Entity entity = ((EntityRenderStateExtension) event.getRenderState()).getEntity();
+        if (!(entity instanceof AbstractClientPlayer player)) return;
+
+        if (Models.Player.isPlayerGhost(player)) {
+            event.setVisible(false);
         }
     }
 }

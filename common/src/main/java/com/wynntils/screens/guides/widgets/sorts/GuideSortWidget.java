@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.widgets.sorts;
@@ -13,6 +13,7 @@ import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class GuideSortWidget extends AbstractWidget {
@@ -30,16 +31,16 @@ public class GuideSortWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (guideSortButtonPrimary.isMouseOver(mouseX, mouseY)) {
-            return guideSortButtonPrimary.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (guideSortButtonPrimary.isMouseOver(event.x(), event.y())) {
+            return guideSortButtonPrimary.mouseClicked(event, isDoubleClick);
         }
 
-        if (guideSortButtonSecondary.isMouseOver(mouseX, mouseY)) {
-            return guideSortButtonSecondary.mouseClicked(mouseX, mouseY, button);
+        if (guideSortButtonSecondary.isMouseOver(event.x(), event.y())) {
+            return guideSortButtonSecondary.mouseClicked(event, isDoubleClick);
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     public void updateFromQuery(ItemSearchQuery searchQuery) {

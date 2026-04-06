@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.ingredients;
@@ -95,7 +95,7 @@ public class IngredientInfoRegistry {
             }
         }
 
-        // Make the result visisble to the world
+        // Make the result visible to the world
         ingredientInfoRegistry = registry;
         ingredientInfoLookup = lookupMap;
         ingredientInfoLookupApiName = altLookupMap;
@@ -113,7 +113,15 @@ public class IngredientInfoRegistry {
 
             Optional<String> internalNameOpt = Optional.ofNullable(internalName);
 
-            int tier = JsonUtils.getNullableJsonInt(json, "tier");
+            String tierStr = JsonUtils.getNullableJsonString(json, "tier");
+
+            int tier =
+                    switch (tierStr) {
+                        case "TIER_1" -> 1;
+                        case "TIER_2" -> 2;
+                        case "TIER_3" -> 3;
+                        default -> 0;
+                    };
 
             JsonObject requirements = JsonUtils.getNullableJsonObject(json, "requirements");
             int level = requirements.get("level").getAsInt();

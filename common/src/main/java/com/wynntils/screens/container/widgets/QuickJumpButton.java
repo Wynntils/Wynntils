@@ -1,30 +1,35 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.container.widgets;
 
-import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.containers.type.QuickJumpButtonIcon;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public class QuickJumpButton extends WynntilsButton {
+    private static final Style NUMBER_STYLE =
+            Style.EMPTY.withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("language/wynncraft")));
+
     private final int destination;
     private final CustomColor lockedColor;
     private final CustomColor selectedColor;
@@ -50,10 +55,9 @@ public class QuickJumpButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        RenderUtils.drawHoverableTexturedRect(poseStack, Texture.QUICK_JUMP_BUTTON, getX(), getY(), isHovered);
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.drawHoverableTexturedRect(
+                guiGraphics, Texture.QUICK_JUMP_BUTTON, getX(), getY(), isHovered, RenderDirection.VERTICAL);
 
         CustomColor color = CommonColors.WHITE;
         Component tooltip = Component.translatable(
@@ -70,8 +74,9 @@ public class QuickJumpButton extends WynntilsButton {
         if (icon == QuickJumpButtonIcon.NONE) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
-                            StyledText.fromString(String.valueOf(destination)),
+                            guiGraphics,
+                            StyledText.fromComponent(Component.literal(String.valueOf(destination))
+                                    .withStyle(NUMBER_STYLE)),
                             getX() + 8,
                             getY() + 8,
                             color,
@@ -80,32 +85,29 @@ public class QuickJumpButton extends WynntilsButton {
                             TextShadow.NORMAL);
 
         } else {
-            Texture texture = this.icon.getTexture();
-            RenderUtils.drawTexturedRectWithColor(
-                    poseStack, texture.resource(), color, getX(), getY(), 0, 16, 16, texture.width(), texture.height());
+            RenderUtils.drawTexturedRect(guiGraphics, this.icon.getTexture(), color, getX(), getY());
         }
 
         if (isHovered) {
-            McUtils.screen()
-                    .setTooltipForNextRenderPass(Lists.transform(List.of(tooltip), Component::getVisualOrderText));
+            guiGraphics.setTooltipForNextFrame(tooltip, mouseX, mouseY);
         }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (Models.Bank.isEditingMode()) {
-            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 icon = icon.next();
-            } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
                 icon = icon.prev();
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         if (!Models.Bank.isEditingMode()) {
             parent.jumpToPage(destination);
         }

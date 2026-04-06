@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -21,6 +22,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class TokenTrackerBellFeature extends Feature {
     @Persisted
     private final Config<Boolean> playSound = new Config<>(true);
+
+    public TokenTrackerBellFeature() {
+        super(ProfileDefault.onlyDefault());
+    }
 
     @SubscribeEvent
     public void onInventoryUpdated(TokenGatekeeperEvent.InventoryUpdated event) {

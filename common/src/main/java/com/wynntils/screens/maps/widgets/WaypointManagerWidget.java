@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.WaypointCreationScreen;
@@ -25,6 +24,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
@@ -158,13 +158,11 @@ public class WaypointManagerWidget extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        renderIcon(poseStack);
+        renderIcon(guiGraphics);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(waypointLabel),
                         getX() + 25,
                         getY() + 10,
@@ -176,7 +174,7 @@ public class WaypointManagerWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(
                                 String.valueOf(waypoint.getLocation().x())),
                         getX() + 140,
@@ -188,7 +186,7 @@ public class WaypointManagerWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(
                                 String.valueOf(waypoint.getLocation().y())),
                         getX() + 170,
@@ -200,7 +198,7 @@ public class WaypointManagerWidget extends AbstractWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(
                                 String.valueOf(waypoint.getLocation().z())),
                         getX() + 200,
@@ -216,13 +214,12 @@ public class WaypointManagerWidget extends AbstractWidget {
 
             // Border to show selected waypoints, orange when selected, white if not
             RenderUtils.drawRectBorders(
-                    poseStack,
+                    guiGraphics,
                     selected ? CommonColors.ORANGE : CommonColors.WHITE,
                     getX(),
                     getY(),
                     getX() + width,
                     getY() + height,
-                    0,
                     1f);
         } else {
             editButton.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -233,7 +230,11 @@ public class WaypointManagerWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
+
         if (!isMouseOver(mouseX, mouseY)) return false;
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
@@ -249,12 +250,12 @@ public class WaypointManagerWidget extends AbstractWidget {
 
         // Determine if a button was clicked or should we select the widget
         if (selectionMode) {
-            clickedButton = selectButton.mouseClicked(mouseX, mouseY, button);
+            clickedButton = selectButton.mouseClicked(event, isDoubleClick);
         } else {
-            clickedButton = editButton.mouseClicked(mouseX, mouseY, button)
-                    || deleteButton.mouseClicked(mouseX, mouseY, button)
-                    || upButton.mouseClicked(mouseX, mouseY, button)
-                    || downButton.mouseClicked(mouseX, mouseY, button);
+            clickedButton = editButton.mouseClicked(event, isDoubleClick)
+                    || deleteButton.mouseClicked(event, isDoubleClick)
+                    || upButton.mouseClicked(event, isDoubleClick)
+                    || downButton.mouseClicked(event, isDoubleClick);
         }
 
         if (clickedButton) {
@@ -280,16 +281,15 @@ public class WaypointManagerWidget extends AbstractWidget {
         }
     }
 
-    private void renderIcon(PoseStack poseStack) {
+    private void renderIcon(GuiGraphics guiGraphics) {
         if (mapIcon == null) return;
 
-        RenderUtils.drawScalingTexturedRectWithColor(
-                poseStack,
-                mapIcon.getResourceLocation(),
+        RenderUtils.drawScalingTexturedRect(
+                guiGraphics,
+                mapIcon.getIdentifier(),
                 iconColor,
                 iconRenderX,
                 iconRenderY,
-                1,
                 iconWidth,
                 iconHeight,
                 mapIcon.getWidth(),

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -19,6 +19,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.NamedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
+import com.wynntils.utils.wynn.ItemUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -65,11 +66,52 @@ public class InventoryFunctions {
             if (inventoryArmor == null) return CappedValue.EMPTY;
 
             Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(
-                    McUtils.inventory().armor.get(inventoryArmor.getArmorSlot()), DurableItemProperty.class);
+                    McUtils.inventory().getItem(inventoryArmor.getInventorySlot()), DurableItemProperty.class);
 
             if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
 
             return durableItemOpt.get().getDurability();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("armor", String.class, null)));
+        }
+    }
+
+    public static class EquippedAccessoryNameFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            InventoryAccessory inventoryAccessory = InventoryAccessory.fromString(
+                    arguments.getArgument("accessory").getStringValue());
+            if (inventoryAccessory == null) return "NONE";
+
+            ItemStack accessoryStack = McUtils.inventory().items.get(inventoryAccessory.getSlot());
+            if (ItemUtils.isEmptyAccessorySlot(accessoryStack)) return "NONE";
+
+            StyledText hoverName = StyledText.fromComponent(accessoryStack.getHoverName());
+            return hoverName.getString(StyleType.NONE);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("accessory", String.class, null)));
+        }
+    }
+
+    public static class EquippedArmorNameFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            InventoryArmor inventoryArmor =
+                    InventoryArmor.fromString(arguments.getArgument("armor").getStringValue());
+            if (inventoryArmor == null) return "NONE";
+
+            ItemStack armorStack = McUtils.inventory().getItem(inventoryArmor.getInventorySlot());
+            if (armorStack.isEmpty()) return "NONE";
+
+            StyledText hoverName = StyledText.fromComponent(armorStack.getHoverName());
+            return hoverName.getString(StyleType.NONE);
         }
 
         @Override

@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -31,6 +30,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
@@ -112,16 +112,13 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 CommonColors.BLACK.withAlpha(100),
                 dividedWidth * 33,
                 dividedHeight * 16,
-                0,
                 dividedWidth * 31,
                 dividedHeight * 20);
 
@@ -134,11 +131,11 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
         }
 
         if (iconWidgets.size() > ICONS_PER_PAGE) {
-            renderScrollBar(poseStack);
+            renderScrollBar(guiGraphics);
         } else if (iconWidgets.isEmpty()) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.customWaypointIcon.noIcons")),
                             dividedWidth * 2,
@@ -152,7 +149,7 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.customWaypointIcon.help")),
                         dividedWidth * 34,
                         dividedWidth * 62,
@@ -166,7 +163,7 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.customWaypointIcon.iconName") + ":"),
                         dividedWidth * 34,
                         dividedHeight * 20,
@@ -177,7 +174,7 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString("base64:"),
                         dividedWidth * 34,
                         dividedHeight * 28,
@@ -186,7 +183,7 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        renderPreview(poseStack);
+        renderPreview(guiGraphics);
     }
 
     @Override
@@ -195,18 +192,18 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         for (CustomIconWidget widget : iconWidgets) {
-            if (widget.isMouseOver(mouseX, mouseY)) {
-                return widget.mouseClicked(mouseX, mouseY, button);
+            if (widget.isMouseOver((double) event.x(), (double) event.y())) {
+                return widget.mouseClicked(event, isDoubleClick);
             }
         }
 
         if (!draggingScroll
                 && (iconWidgets.size() > ICONS_PER_PAGE)
                 && MathUtils.isInside(
-                        (int) mouseX,
-                        (int) mouseY,
+                        (int) event.x(),
+                        (int) event.y(),
                         (int) (dividedWidth * 32),
                         (int) (dividedWidth * 32) + (int) (dividedWidth / 2),
                         (int) scrollRenderY,
@@ -215,14 +212,14 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
             return true;
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (draggingScroll) {
             int newOffset = Math.round(
-                    MathUtils.map((float) mouseY, 20, 20 + this.height - SCROLLBAR_HEIGHT, 0, getMaxScrollOffset()));
+                    MathUtils.map((float) event.y(), 20, 20 + this.height - SCROLLBAR_HEIGHT, 0, getMaxScrollOffset()));
 
             newOffset = Math.max(0, Math.min(newOffset, getMaxScrollOffset()));
 
@@ -231,14 +228,14 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
             return true;
         }
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override
@@ -305,12 +302,12 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
         populateIcons();
     }
 
-    private void renderPreview(PoseStack poseStack) {
+    private void renderPreview(GuiGraphics guiGraphics) {
         if (newIcon == null) return;
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable("screens.wynntils.customWaypointIcon.preview")),
                         dividedWidth * 34,
                         dividedHeight * 38,
@@ -320,11 +317,10 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
                         TextShadow.NORMAL);
 
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                newIcon.getResourceLocation(),
+                guiGraphics,
+                newIcon.getIdentifier(),
                 dividedWidth * 34,
                 dividedHeight * 40,
-                1,
                 newIcon.getWidth(),
                 newIcon.getHeight(),
                 newIcon.getWidth(),
@@ -347,18 +343,17 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
         scroll(scrollOffset);
     }
 
-    private void renderScrollBar(PoseStack poseStack) {
+    private void renderScrollBar(GuiGraphics guiGraphics) {
         RenderUtils.drawRect(
-                poseStack, CommonColors.LIGHT_GRAY, (dividedWidth * 32), 0, 0, (dividedWidth / 2), this.height);
+                guiGraphics, CommonColors.LIGHT_GRAY, (dividedWidth * 32), 0, (dividedWidth / 2), this.height);
 
         scrollRenderY = (int) (MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, this.height - SCROLLBAR_HEIGHT));
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 draggingScroll ? CommonColors.BLACK : CommonColors.GRAY,
                 (dividedWidth * 32),
                 scrollRenderY,
-                0,
                 (dividedWidth / 2),
                 SCROLLBAR_HEIGHT);
     }

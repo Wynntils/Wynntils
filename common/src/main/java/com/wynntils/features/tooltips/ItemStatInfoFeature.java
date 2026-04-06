@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.tooltips;
@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -125,6 +126,12 @@ public class ItemStatInfoFeature extends Feature {
             TextColor.fromLegacyFormat(ChatFormatting.AQUA)));
 
     private NavigableMap<Float, TextColor> flatMap = createFlatMap();
+
+    public ItemStatInfoFeature() {
+        // TODO: Revert to enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
+        //  when feature fixed
+        super(ProfileDefault.DISABLED);
+    }
 
     @Override
     protected void onConfigUpdate(Config<?> config) {

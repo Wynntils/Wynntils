@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.worlds;
@@ -36,7 +36,7 @@ public final class BombModel extends Model {
 
     // Test in BombModel_BOMB_BELL_PATTERN
     private static final Pattern BOMB_BELL_PATTERN = Pattern.compile(
-            "^§#fddd5cff(?:\uE01E\uE002|\uE001) (?<user>.+) has thrown an? §#f3e6b2ff(?<bomb>.+) Bomb§#fddd5cff on §#f3e6b2ff§n(?<server>.+)$");
+            "^§#fddd5cff(?:\uE01E\uE002|\uE001) (?<user>.+) has thrown an? §#f3e6b2ff(?<bomb>.+) Bomb§#fddd5cff ( ?)on §#f3e6b2ff§n(?<server>.+)$");
 
     // Test in BombModel_BOMB_EXPIRED_PATTERN
     private static final Pattern BOMB_EXPIRED_PATTERN = Pattern.compile(
@@ -147,14 +147,49 @@ public final class BombModel extends Model {
     }
 
     public Stream<BombInfo> getBombBellStream(boolean group, BombSortOrder sortOrder, int maxPerGroup) {
+        return getBombBellStream(group, sortOrder, maxPerGroup, false);
+    }
+
+    public Stream<BombInfo> getBombBellStream(
+            boolean group, BombSortOrder sortOrder, int maxPerGroup, boolean alwaysShowCurrentWorld) {
         Stream<BombInfo> stream = getBombBells().stream();
         Comparator<BombInfo> comparator = sortOrder == BombSortOrder.NEWEST
                 ? Comparator.comparing(BombInfo::getRemainingLong).reversed()
                 : Comparator.comparing(BombInfo::getRemainingLong);
 
         if (group) {
+            String currentWorld = Models.WorldState.getCurrentWorldName();
+
             return stream.collect(Collectors.groupingBy(BombInfo::bomb)).values().stream()
-                    .flatMap(list -> list.stream().sorted(comparator).limit(maxPerGroup));
+                    .flatMap(list -> {
+                        List<BombInfo> sorted = list.stream().sorted(comparator).toList();
+                        if (!alwaysShowCurrentWorld
+                                || maxPerGroup <= 0
+                                || currentWorld == null
+                                || currentWorld.isBlank()) {
+                            return sorted.stream().limit(maxPerGroup);
+                        }
+
+                        BombInfo currentWorldBomb = sorted.stream()
+                                .filter(bomb -> currentWorld.equals(bomb.server()))
+                                .findFirst()
+                                .orElse(null);
+
+                        List<BombInfo> selected =
+                                sorted.stream().limit(maxPerGroup).collect(Collectors.toList());
+                        if (currentWorldBomb == null || selected.contains(currentWorldBomb)) {
+                            return selected.stream();
+                        }
+
+                        if (selected.isEmpty()) {
+                            return Stream.of(currentWorldBomb);
+                        }
+
+                        // Keep per-group size fixed: replace the lowest-priority selected bomb with current-world bomb.
+                        selected.remove(selected.size() - 1);
+                        selected.add(currentWorldBomb);
+                        return selected.stream().sorted(comparator);
+                    });
         } else {
             return stream.sorted(comparator).limit(maxPerGroup);
         }

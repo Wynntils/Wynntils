@@ -1,36 +1,35 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render;
 
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.Util;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Util;
 
 public final class FontRenderer {
-    private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
-            MultiBufferSource.immediate(new ByteBufferBuilder(256));
     private static final FontRenderer INSTANCE = new FontRenderer();
     private final Font font;
 
+    private static final CustomColor SHADOW_COLOR = CommonColors.BLACK;
     private static final double HALF_PI = 1.5707963267948966;
     private static final double TWO_PI = 6.283185307179586;
     private static final int NEWLINE_OFFSET = 10;
@@ -48,35 +47,7 @@ public final class FontRenderer {
     }
 
     public void renderText(
-            PoseStack poseStack,
-            StyledText text,
-            float x,
-            float y,
-            CustomColor customColor,
-            HorizontalAlignment horizontalAlignment,
-            VerticalAlignment verticalAlignment,
-            TextShadow shadow,
-            float textScale,
-            Font.DisplayMode displayMode) {
-        BufferedFontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        BUFFER_SOURCE,
-                        text,
-                        x,
-                        y,
-                        customColor,
-                        horizontalAlignment,
-                        verticalAlignment,
-                        shadow,
-                        textScale,
-                        displayMode);
-
-        BUFFER_SOURCE.endBatch();
-    }
-
-    public void renderText(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             StyledText text,
             float x,
             float y,
@@ -85,21 +56,52 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow shadow,
             float textScale) {
-        renderText(
-                poseStack,
-                text,
-                x,
-                y,
-                customColor,
-                horizontalAlignment,
-                verticalAlignment,
-                shadow,
-                textScale,
-                Font.DisplayMode.SEE_THROUGH);
+        float renderX;
+        float renderY;
+
+        if (text == null) return;
+
+        renderX = switch (horizontalAlignment) {
+            case LEFT -> x;
+            case CENTER -> x - (font.width(text.getComponent()) / 2f * textScale);
+            case RIGHT -> x - font.width(text.getComponent()) * textScale;
+        };
+
+        renderY = switch (verticalAlignment) {
+            case TOP -> y;
+            case MIDDLE -> y - (font.lineHeight / 2f * textScale);
+            case BOTTOM -> y - font.lineHeight * textScale;
+        };
+
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(renderX, renderY);
+        guiGraphics.pose().scale(textScale, textScale);
+
+        switch (shadow) {
+            case NONE -> guiGraphics.drawString(font, text.getComponent(), 0, 0, customColor.asInt(), false);
+            case NORMAL -> guiGraphics.drawString(font, text.getComponent(), 0, 0, customColor.asInt(), true);
+            case OUTLINE -> {
+                int shadowColor = SHADOW_COLOR.withAlpha(customColor.a()).asInt();
+                Component strippedComponent = text.iterate((part, changes) -> {
+                            changes.remove(part);
+                            changes.add(part.withStyle(partStyle -> partStyle.withColor(ChatFormatting.BLACK)));
+                            return IterationDecision.CONTINUE;
+                        })
+                        .getComponent();
+
+                guiGraphics.drawString(font, strippedComponent, -1, 0, shadowColor, false);
+                guiGraphics.drawString(font, strippedComponent, 1, 0, shadowColor, false);
+                guiGraphics.drawString(font, strippedComponent, 0, -1, shadowColor, false);
+                guiGraphics.drawString(font, strippedComponent, 0, 1, shadowColor, false);
+                guiGraphics.drawString(font, text.getComponent(), 0, 0, customColor.asInt(), false);
+            }
+        }
+
+        guiGraphics.pose().popMatrix();
     }
 
     public void renderText(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             StyledText text,
             float x,
             float y,
@@ -107,11 +109,11 @@ public final class FontRenderer {
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
             TextShadow shadow) {
-        renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
+        renderText(guiGraphics, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
     }
 
     public void renderAlignedTextInBox(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             StyledText[] lines,
             float x1,
             float x2,
@@ -161,7 +163,7 @@ public final class FontRenderer {
         float lineOffset = 0;
         for (StyledText text : adjustedLines) {
             renderText(
-                    poseStack,
+                    guiGraphics,
                     text,
                     renderX,
                     renderY + lineOffset,
@@ -175,7 +177,7 @@ public final class FontRenderer {
     }
 
     public void renderAlignedTextInBox(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             StyledText text,
             float x1,
             float x2,
@@ -188,7 +190,7 @@ public final class FontRenderer {
             TextShadow textShadow,
             float textScale) {
         renderAlignedTextInBox(
-                poseStack,
+                guiGraphics,
                 new StyledText[] {text},
                 x1,
                 x2,
@@ -203,7 +205,7 @@ public final class FontRenderer {
     }
 
     public void renderAlignedTextInBox(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             StyledText text,
             float x1,
             float x2,
@@ -215,7 +217,7 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow textShadow) {
         renderAlignedTextInBox(
-                poseStack,
+                guiGraphics,
                 new StyledText[] {text},
                 x1,
                 x2,
@@ -230,7 +232,7 @@ public final class FontRenderer {
     }
 
     public void renderAlignedHighlightedTextInBox(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             StyledText text,
             float x1,
             float x2,
@@ -263,16 +265,15 @@ public final class FontRenderer {
                 };
 
         RenderUtils.drawRect(
-                poseStack,
+                guiGraphics,
                 backgroundColor,
                 renderX,
                 cursorRenderY,
-                0,
                 font.width(text.getComponent()),
                 font.lineHeight + 2);
 
         renderAlignedTextInBox(
-                poseStack,
+                guiGraphics,
                 new StyledText[] {text},
                 x1,
                 x2,
@@ -287,7 +288,7 @@ public final class FontRenderer {
     }
 
     public void renderAlignedTextInBox(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             StyledText text,
             float x1,
             float x2,
@@ -297,7 +298,7 @@ public final class FontRenderer {
             HorizontalAlignment horizontalAlignment,
             TextShadow textShadow) {
         renderAlignedTextInBox(
-                poseStack,
+                guiGraphics,
                 new StyledText[] {text},
                 x1,
                 x2,
@@ -312,7 +313,7 @@ public final class FontRenderer {
     }
 
     public void renderAlignedTextInBox(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             StyledText text,
             float x,
             float y1,
@@ -322,7 +323,7 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow textShadow) {
         renderAlignedTextInBox(
-                poseStack,
+                guiGraphics,
                 new StyledText[] {text},
                 x,
                 x,
@@ -336,8 +337,8 @@ public final class FontRenderer {
                 1f);
     }
 
-    private void renderText(
-            PoseStack poseStack,
+    public void renderText(
+            GuiGraphics guiGraphics,
             StyledText text,
             float x,
             float y,
@@ -346,22 +347,11 @@ public final class FontRenderer {
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
             TextShadow shadow,
-            float textScale,
-            Font.DisplayMode displayMode) {
+            float textScale) {
         if (text == null) return;
 
         if (maxWidth == 0 || font.width(text.getComponent()) / textScale < maxWidth) {
-            renderText(
-                    poseStack,
-                    text,
-                    x,
-                    y,
-                    customColor,
-                    horizontalAlignment,
-                    verticalAlignment,
-                    shadow,
-                    textScale,
-                    displayMode);
+            renderText(guiGraphics, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, textScale);
             return;
         }
 
@@ -378,7 +368,7 @@ public final class FontRenderer {
             lastPart = part;
 
             renderText(
-                    poseStack,
+                    guiGraphics,
                     part,
                     x,
                     y + (i * font.lineHeight * textScale),
@@ -386,63 +376,12 @@ public final class FontRenderer {
                     horizontalAlignment,
                     verticalAlignment,
                     shadow,
-                    textScale,
-                    displayMode);
+                    textScale);
         }
     }
 
     public void renderText(
-            PoseStack poseStack,
-            StyledText text,
-            float x,
-            float y,
-            float maxWidth,
-            CustomColor customColor,
-            HorizontalAlignment horizontalAlignment,
-            VerticalAlignment verticalAlignment,
-            TextShadow shadow,
-            float textScale) {
-        renderText(
-                poseStack,
-                text,
-                x,
-                y,
-                maxWidth,
-                customColor,
-                horizontalAlignment,
-                verticalAlignment,
-                shadow,
-                textScale,
-                Font.DisplayMode.SEE_THROUGH);
-    }
-
-    public void renderText(
-            PoseStack poseStack,
-            StyledText text,
-            float x,
-            float y,
-            float maxWidth,
-            CustomColor customColor,
-            HorizontalAlignment horizontalAlignment,
-            VerticalAlignment verticalAlignment,
-            TextShadow shadow,
-            Font.DisplayMode displayMode) {
-        renderText(
-                poseStack,
-                text,
-                x,
-                y,
-                maxWidth,
-                customColor,
-                horizontalAlignment,
-                verticalAlignment,
-                shadow,
-                1f,
-                displayMode);
-    }
-
-    public void renderText(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             StyledText text,
             float x,
             float y,
@@ -451,21 +390,11 @@ public final class FontRenderer {
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
             TextShadow shadow) {
-        renderText(
-                poseStack,
-                text,
-                x,
-                y,
-                maxWidth,
-                customColor,
-                horizontalAlignment,
-                verticalAlignment,
-                shadow,
-                Font.DisplayMode.SEE_THROUGH);
+        renderText(guiGraphics, text, x, y, maxWidth, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
     }
 
     public void renderScrollingText(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             StyledText styledText,
             float x,
             float y,
@@ -513,10 +442,10 @@ public final class FontRenderer {
                         case BOTTOM -> y - font.lineHeight - 1;
                     };
 
-            RenderUtils.createRectMask(poseStack, (int) scissorX, (int) scissorY, (int) renderWidth, (int)
+            RenderUtils.enableScissor(guiGraphics, (int) scissorX, (int) scissorY, (int) renderWidth, (int)
                     ((font.lineHeight + 1) * textScale)); // + 1 to account for letters that sit lower, eg y
             renderText(
-                    poseStack,
+                    guiGraphics,
                     styledText,
                     x - (int) scrollOffset,
                     y,
@@ -525,10 +454,10 @@ public final class FontRenderer {
                     verticalAlignment,
                     shadow,
                     textScale);
-            RenderUtils.clearMask();
+            RenderUtils.disableScissor(guiGraphics);
         } else {
             renderText(
-                    poseStack,
+                    guiGraphics,
                     styledText,
                     x,
                     y,
@@ -541,7 +470,7 @@ public final class FontRenderer {
     }
 
     public void renderScrollingText(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             StyledText styledText,
             float x,
             float y,
@@ -551,7 +480,7 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow shadow) {
         renderScrollingText(
-                poseStack,
+                guiGraphics,
                 styledText,
                 x,
                 y,
@@ -564,7 +493,7 @@ public final class FontRenderer {
     }
 
     public void renderScrollingAlignedTextInBox(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             StyledText text,
             float x1,
             float x2,
@@ -591,7 +520,7 @@ public final class FontRenderer {
                 };
 
         renderScrollingText(
-                poseStack,
+                guiGraphics,
                 text,
                 renderX,
                 renderY,
@@ -604,7 +533,7 @@ public final class FontRenderer {
     }
 
     public void renderScrollingAlignedTextInBox(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             StyledText text,
             float x1,
             float x2,
@@ -616,7 +545,7 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow textShadow) {
         renderScrollingAlignedTextInBox(
-                poseStack,
+                guiGraphics,
                 text,
                 x1,
                 x2,
@@ -630,9 +559,33 @@ public final class FontRenderer {
                 1f);
     }
 
-    public void renderText(PoseStack poseStack, float x, float y, TextRenderTask line, Font.DisplayMode displayMode) {
+    public void renderText(GuiGraphics guiGraphics, float x, float y, TextRenderTask line) {
         renderText(
-                poseStack,
+                guiGraphics,
+                line.getText(),
+                x,
+                y,
+                line.getSetting().maxWidth(),
+                line.getSetting().customColor(),
+                line.getSetting().horizontalAlignment(),
+                line.getSetting().verticalAlignment(),
+                line.getSetting().shadow());
+    }
+
+    private void renderTexts(GuiGraphics guiGraphics, float x, float y, List<TextRenderTask> lines, float textScale) {
+        float currentY = y;
+        for (TextRenderTask line : lines) {
+            renderText(guiGraphics, x, currentY, line, textScale);
+            currentY += FontRenderer.getInstance()
+                            .calculateRenderHeight(
+                                    line.getText(), line.getSetting().maxWidth() / textScale)
+                    * textScale;
+        }
+    }
+
+    private void renderText(GuiGraphics guiGraphics, float x, float y, TextRenderTask line, float textScale) {
+        renderText(
+                guiGraphics,
                 line.getText(),
                 x,
                 y,
@@ -641,25 +594,15 @@ public final class FontRenderer {
                 line.getSetting().horizontalAlignment(),
                 line.getSetting().verticalAlignment(),
                 line.getSetting().shadow(),
-                displayMode);
+                textScale);
     }
 
-    public void renderText(PoseStack poseStack, float x, float y, TextRenderTask line) {
-        renderText(poseStack, x, y, line, Font.DisplayMode.SEE_THROUGH);
+    public void renderTexts(GuiGraphics guiGraphics, float x, float y, List<TextRenderTask> lines) {
+        renderTexts(guiGraphics, x, y, lines, 1f);
     }
 
-    public void renderTexts(PoseStack poseStack, float x, float y, List<TextRenderTask> lines) {
-        float currentY = y;
-        for (TextRenderTask line : lines) {
-            renderText(poseStack, x, currentY, line);
-            currentY += calculateRenderHeight(line.getText(), line.getSetting().maxWidth());
-        }
-    }
-
-    // TODO this is basically renderAlignedTextInBox but with tasks instead, make signatures the same and remove code
-    // dup
     public void renderTextsWithAlignment(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             float x,
             float y,
             List<TextRenderTask> toRender,
@@ -681,11 +624,38 @@ public final class FontRenderer {
                     case BOTTOM -> y + (height - calculateRenderHeight(toRender));
                 };
 
-        renderTexts(poseStack, renderX, renderY, toRender);
+        renderTexts(guiGraphics, renderX, renderY, toRender);
+    }
+
+    public void renderTextsWithAlignment(
+            GuiGraphics guiGraphics,
+            float x,
+            float y,
+            List<TextRenderTask> toRender,
+            float width,
+            float height,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            float textScale) {
+        float renderX =
+                switch (horizontalAlignment) {
+                    case LEFT -> x;
+                    case CENTER -> x + width / 2;
+                    case RIGHT -> x + width;
+                };
+
+        float renderY =
+                switch (verticalAlignment) {
+                    case TOP -> y;
+                    case MIDDLE -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender)) / 2;
+                    case BOTTOM -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender));
+                };
+
+        renderTexts(guiGraphics, renderX, renderY, toRender, textScale);
     }
 
     public void renderTextWithAlignment(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             float renderX,
             float renderY,
             TextRenderTask toRender,
@@ -694,7 +664,14 @@ public final class FontRenderer {
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment) {
         renderTextsWithAlignment(
-                poseStack, renderX, renderY, List.of(toRender), width, height, horizontalAlignment, verticalAlignment);
+                guiGraphics,
+                renderX,
+                renderY,
+                List.of(toRender),
+                width,
+                height,
+                horizontalAlignment,
+                verticalAlignment);
     }
 
     public float calculateRenderHeight(List<TextRenderTask> toRender) {

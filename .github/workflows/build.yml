@@ -32,6 +32,12 @@ jobs:
           path: .gradle
           key: ${{ runner.os }}-gradle--${{ hashFiles('**/settings.gradle', '**/gradle.properties') }}
 
+      - name: Cache Gradle shared data
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.home }}/.gradle/caches
+          key: ${{ runner.os }}-gradle-shared--${{ hashFiles('**/settings.gradle', '**/gradle.properties') }}
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 

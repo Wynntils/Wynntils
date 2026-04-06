@@ -1,15 +1,16 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 
 public class ListSearchWidget extends SearchWidget {
     public ListSearchWidget(
@@ -18,13 +19,12 @@ public class ListSearchWidget extends SearchWidget {
     }
 
     @Override
-    protected void renderBackground(PoseStack poseStack) {
+    protected void renderBackground(GuiGraphics guiGraphics) {
         RenderUtils.drawScalingTexturedRect(
-                poseStack,
-                Texture.LIST_SEARCH.resource(),
+                guiGraphics,
+                Texture.LIST_SEARCH.identifier(),
                 this.getX(),
                 this.getY(),
-                0,
                 this.width,
                 this.height,
                 Texture.LIST_SEARCH.width(),
@@ -33,7 +33,7 @@ public class ListSearchWidget extends SearchWidget {
 
     @Override
     protected void renderText(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -44,12 +44,12 @@ public class ListSearchWidget extends SearchWidget {
             int highlightedWidth,
             int lastWidth,
             boolean defaultText) {
-        poseStack.pushPose();
+        guiGraphics.pose().pushMatrix();
 
-        poseStack.translate(getXOffset(), getYOffset(), 0);
+        guiGraphics.pose().translate(getXOffset(), getYOffset());
 
         super.renderText(
-                poseStack,
+                guiGraphics,
                 renderedText,
                 renderedTextStart,
                 firstPortion,
@@ -61,22 +61,28 @@ public class ListSearchWidget extends SearchWidget {
                 lastWidth,
                 defaultText);
 
-        poseStack.popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return super.mouseClicked(mouseX - getXOffset(), mouseY - getYOffset(), button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        return super.mouseClicked(
+                new MouseButtonEvent(event.x() - getXOffset(), event.y() - getYOffset(), event.buttonInfo()),
+                isDoubleClick);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        return super.mouseReleased(mouseX - getXOffset(), mouseY - getYOffset(), button);
+    public boolean mouseReleased(MouseButtonEvent event) {
+        return super.mouseReleased(
+                new MouseButtonEvent(event.x() - getXOffset(), event.y() - getYOffset(), event.buttonInfo()));
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        return super.mouseDragged(mouseX - getXOffset(), mouseY - getYOffset(), button, dragX, dragY);
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        return super.mouseDragged(
+                new MouseButtonEvent(event.x() - getXOffset(), event.y() - getYOffset(), event.buttonInfo()),
+                dragX,
+                dragY);
     }
 
     private static int getYOffset() {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip;
@@ -28,7 +28,7 @@ public abstract class TooltipBuilder {
     private final List<Component> footer;
     private final String source;
 
-    // The identificationsCache is only valid if the cached dependencies matchs
+    // The identificationsCache is only valid if the cached dependencies match
     private ClassType cachedCurrentClass;
     private ItemWeightSource cachedWeightSource;
     private TooltipStyle cachedStyle;

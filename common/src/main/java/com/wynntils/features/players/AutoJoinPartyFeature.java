@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.players;
@@ -7,6 +7,7 @@ package com.wynntils.features.players;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -24,6 +25,10 @@ public class AutoJoinPartyFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> onlySameWorld = new Config<>(true);
+
+    public AutoJoinPartyFeature() {
+        super(ProfileDefault.onlyDefault());
+    }
 
     @SubscribeEvent
     public void onPartyInvite(PartyEvent.Invited event) {

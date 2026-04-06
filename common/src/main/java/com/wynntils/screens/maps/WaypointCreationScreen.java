@@ -1,11 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -45,6 +43,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -550,13 +552,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
-        renderBlurredBackground();
-
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-
-        RenderSystem.enableDepthTest();
         renderMap(guiGraphics);
         RenderUtils.enableScissor(
                 guiGraphics,
@@ -566,11 +561,11 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 (int) mapHeight);
 
         if (waypoint != null) {
-            renderMapFeatures(poseStack, mouseX, mouseY);
+            renderMapFeatures(guiGraphics, mouseX, mouseY);
         }
 
         renderCursor(
-                poseStack,
+                guiGraphics,
                 1.5f,
                 Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .pointerColor
@@ -586,7 +581,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(
                                 oldWaypoint == null
                                         ? Component.translatable("screens.wynntils.waypointCreation.createTitle")
@@ -602,7 +597,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         // region Label
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.waypointCreation.label") + ":"),
                         dividedWidth,
                         dividedHeight * 12.5f,
@@ -613,7 +608,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.waypointCreation.labelShadow") + ":"),
                         dividedWidth * 12,
                         dividedHeight * 12.5f,
@@ -624,7 +619,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.waypointCreation.labelColor") + ":"),
                         dividedWidth * 23,
                         dividedHeight * 12.5f,
@@ -638,7 +633,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         if (useIcon) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.waypointCreation.iconColor") + ":"),
                             dividedWidth * 23.0f,
                             dividedHeight * 20.5f,
@@ -654,7 +649,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         // region Location
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString("X:"),
                         dividedWidth,
                         dividedHeight * 31.5f,
@@ -664,7 +659,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString("Y:"),
                         dividedWidth * 9.0f,
                         dividedHeight * 31.5f,
@@ -674,7 +669,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString("Z:"),
                         dividedWidth * 17.0f,
                         dividedHeight * 31.5f,
@@ -687,7 +682,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         // region Visibility
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable(
                                 "screens.wynntils.waypointCreation.visibilityLevels",
                                 labelVisibility.getMin().get(),
@@ -703,7 +698,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(Component.translatable(
                                 "screens.wynntils.waypointCreation.visibilityLevels",
                                 iconVisibility.getMin().get(),
@@ -721,7 +716,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         // region Category
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.waypointCreation.currentCategory") + ": "),
                         dividedWidth * 2.0f,
                         dividedHeight * 48.0f + 10,
@@ -732,7 +727,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         FontRenderer.getInstance()
                 .renderScrollingText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromString(fullCategory),
                         dividedWidth * 2.0f,
                         dividedHeight * 51.0f + 10,
@@ -753,41 +748,40 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        if (labelShadowButton != null && labelShadowButton.isMouseOver(mouseX, mouseY)) {
-            handleLabelShadowClick(button);
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (labelShadowButton != null && labelShadowButton.isMouseOver(event.x(), event.y())) {
+            handleLabelShadowClick(event.button());
             updateWaypoint();
 
             return true;
         }
 
         for (IconButton iconButton : iconButtons) {
-            if (iconButton.isMouseOver(mouseX, mouseY)) {
-                return iconButton.mouseClicked(mouseX, mouseY, button);
+            if (iconButton.isMouseOver(event.x(), event.y())) {
+                return iconButton.mouseClicked(event, isDoubleClick);
             }
         }
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
-            int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            int gameX = (int) ((event.x() - centerX) / zoomRenderScale + mapCenterX);
+            int gameZ = (int) ((event.y() - centerZ) / zoomRenderScale + mapCenterZ);
             xInput.setTextBoxInput(String.valueOf(gameX));
             yInput.setTextBoxInput("0");
             zInput.setTextBoxInput(String.valueOf(gameZ));
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
-                || super.charTyped(codePoint, modifiers);
+    public boolean charTyped(CharacterEvent event) {
+        return (focusedTextInput != null && focusedTextInput.charTyped(event)) || super.charTyped(event);
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
         // When tab is pressed, focus the next text box
-        if (keyCode == GLFW.GLFW_KEY_TAB) {
+        if (event.key() == GLFW.GLFW_KEY_TAB) {
             int index = focusedTextInput == null ? 0 : children().indexOf(focusedTextInput);
             int actualIndex = Math.max(index, 0) + 1;
 
@@ -809,8 +803,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
             }
         }
 
-        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers))
-                || super.keyPressed(keyCode, scanCode, modifiers);
+        return (focusedTextInput != null && focusedTextInput.keyPressed(event)) || super.keyPressed(event);
     }
 
     @Override
@@ -1000,7 +993,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         }
 
         @Override
-        public void onPress() {
+        public void onPress(InputWithModifiers input) {
             // Handle in mouseClicked to use left/right click
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
@@ -11,6 +11,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.event.UrlProcessingFinishedEvent;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.properties.Property;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.StringUtils;
@@ -54,7 +56,7 @@ import java.util.function.Function;
  * <h3>Handling data hash conflicts between different data sources</h3>
  * <p>
  *     It's possible for the URL sources to point to different hashes, even when their version matches.
- *     As we can't gurantee that all 3 of the url lists load, and that they are up to date,
+ *     As we can't guarantee that all 3 of the url lists load, and that they are up to date,
  *     some rules have to be applied to make sure outdated hashes are not being used.
  * </p>
  * <p>
@@ -62,7 +64,7 @@ import java.util.function.Function;
  * </p>
  * <ol>
  *     <li>
- *         If the online sources are available, use all hashes avaiable in it. If an url was removed from the online list,
+ *         If the online sources are available, use all hashes available in it. If an url was removed from the online list,
  *         fall back to using the local cache, or the bundled list.
  *     </li>
  *     <li>
@@ -104,6 +106,13 @@ public final class UrlManager extends Manager {
     private final Property<UrlMapperType> urlMapperForceType = createProperty(UrlMapperType.class, "force.type");
     private final Map<UrlMapperType, UrlMapper> urlMappersByType = new ConcurrentHashMap<>();
 
+    @Persisted
+    private final Storage<DownloadSource> downloadSourceUrl = new Storage<>(DownloadSource.CDN);
+
+    // This is used for storing the custom url even when not in use
+    @Persisted
+    private final Storage<String> customSourceUrl = new Storage<>("");
+
     private UrlMapper urlMapper = UrlMapper.EMPTY;
 
     public UrlManager(NetManager netManager) {
@@ -144,10 +153,17 @@ public final class UrlManager extends Manager {
                 : "Arguments mismatch for " + urlInfo.url + ", expected: " + urlInfo.arguments() + " got: "
                         + arguments.keySet();
 
+        String url;
+        if (urlInfo.path().isPresent()) {
+            url = getDownloadSourceUrl() + urlInfo.path().get();
+        } else {
+            url = urlInfo.url();
+        }
+
         // Replace %{argKey} with arg value in URL string
         return arguments.keySet().stream()
                 .reduce(
-                        urlInfo.url(),
+                        url,
                         (str, argKey) -> str.replaceAll(
                                 "%\\{" + argKey + "\\}",
                                 // First encode with specified encoder (if any), then finish by
@@ -191,7 +207,12 @@ public final class UrlManager extends Manager {
                 throw new RuntimeException("Missing DATA_STATIC_URLS from cached and bundled urls.json");
             }
 
-            URI uri = URI.create(urlInfo.url());
+            URI uri;
+            if (urlInfo.path().isPresent()) {
+                uri = URI.create(getDownloadSourceUrl() + urlInfo.path().get());
+            } else {
+                uri = URI.create(urlInfo.url());
+            }
             downloadAndReadRemoteUrls(uri);
         } else {
             // Start by reading the URLs from the resource embedded in the mod, so we have something to rely on
@@ -205,6 +226,48 @@ public final class UrlManager extends Manager {
             // Then trigger a (re-)download from the net to the cache
             downloadAndReadRemoteUrls(urlListOverride.get());
         }
+    }
+
+    public DownloadSource getDownloadSource() {
+        return downloadSourceUrl.get();
+    }
+
+    public String getDownloadSourceUrl() {
+        DownloadSource downloadSource = downloadSourceUrl.get();
+
+        if (downloadSource == DownloadSource.CUSTOM) {
+            if (customSourceUrl.get().isEmpty()) {
+                return DownloadSource.CDN.getUrl().get();
+            } else {
+                return customSourceUrl.get();
+            }
+        }
+
+        if (downloadSourceUrl.get().getUrl().isPresent()) {
+            return downloadSourceUrl.get().getUrl().get();
+        } else {
+            return DownloadSource.CDN.getUrl().get();
+        }
+    }
+
+    public void setCustomDownloadSource(String newSource) {
+        customSourceUrl.store(newSource);
+
+        if (!customSourceUrl.get().isEmpty()) {
+            downloadSourceUrl.store(DownloadSource.CUSTOM);
+        }
+    }
+
+    public void setDownloadSource(DownloadSource newSource) {
+        downloadSourceUrl.store(newSource);
+    }
+
+    public String getCustomSourceUrl() {
+        return customSourceUrl.get();
+    }
+
+    public void setCustomSourceUrl(String newSource) {
+        customSourceUrl.store(newSource);
     }
 
     private void readEmbeddedUrls() {
@@ -444,6 +507,7 @@ public final class UrlManager extends Manager {
                     urlId.get(),
                     new UrlInfo(
                             urlProfile.url,
+                            Optional.ofNullable(urlProfile.path),
                             arguments,
                             Method.from(urlProfile.method),
                             Encoding.from(urlProfile.encoding),
@@ -492,9 +556,15 @@ public final class UrlManager extends Manager {
         }
     }
 
-    public record UrlInfo(String url, List<String> arguments, Method method, Encoding encoding, Optional<String> md5) {
+    public record UrlInfo(
+            String url,
+            Optional<String> path,
+            List<String> arguments,
+            Method method,
+            Encoding encoding,
+            Optional<String> md5) {
         public UrlInfo withoutMd5() {
-            return new UrlInfo(url, arguments, method, encoding, Optional.empty());
+            return new UrlInfo(url, path, arguments, method, encoding, Optional.empty());
         }
     }
 
@@ -502,6 +572,7 @@ public final class UrlManager extends Manager {
         int version;
         String id;
         String url;
+        String path;
         String method;
         List<String> arguments;
         String md5;

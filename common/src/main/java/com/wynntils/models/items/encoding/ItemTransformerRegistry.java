@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding;
@@ -129,7 +129,7 @@ public final class ItemTransformerRegistry {
     }
 
     // FIXME: This could be much more sophisticated in the future,
-    //        e.g. by requesting the minimum versions requred from each transformer instead.
+    //        e.g. by requesting the minimum versions required from each transformer instead.
     private static ItemTransformingVersion getEncodingVersionAccordingToItem(WynnItem wynnItem) {
         ItemTransformingVersion versionToEncodeWith = ItemTransformingVersion.VERSION_1;
         if (wynnItem instanceof GearItem gearItem) {

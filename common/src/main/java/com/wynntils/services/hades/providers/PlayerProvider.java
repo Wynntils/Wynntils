@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hades.providers;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.features.map.MainMapFeature;
@@ -20,16 +19,16 @@ import com.wynntils.services.mapdata.features.type.MapLocation;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HealthTexture;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class PlayerProvider extends BuiltInProvider {
@@ -133,12 +132,7 @@ public class PlayerProvider extends BuiltInProvider {
             }
 
             @Override
-            public void render(
-                    PoseStack poseStack,
-                    MultiBufferSource bufferSource,
-                    boolean hovered,
-                    boolean fullscreenMap,
-                    float zoomLevel) {
+            public void render(GuiGraphics guiGraphics, boolean hovered, boolean fullscreenMap, float zoomLevel) {
                 float playerHeadRenderSize = INITIAL_PLAYER_HEAD_RENDER_SIZE
                         * (fullscreenMap
                                 ? 1
@@ -147,68 +141,39 @@ public class PlayerProvider extends BuiltInProvider {
                                         .remotePlayersHeadScale
                                         .get());
 
-                poseStack.pushPose();
+                guiGraphics.pose().pushMatrix();
                 // center the player icon
-                poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0);
+                guiGraphics.pose().translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f);
 
-                ResourceLocation skin = SkinUtils.getSkin(hadesUser.getUuid());
+                Identifier skin = SkinUtils.getSkin(hadesUser.getUuid());
 
                 if (!fullscreenMap) {
                     // outline
-                    BufferedRenderUtils.drawRectBorders(
-                            poseStack,
-                            bufferSource,
+                    RenderUtils.drawRectBorders(
+                            guiGraphics,
                             hadesUser.getRelationColor(),
                             0,
                             0,
                             playerHeadRenderSize,
                             playerHeadRenderSize,
-                            0,
                             2);
                 }
 
                 // head
-                BufferedRenderUtils.drawTexturedRect(
-                        poseStack,
-                        bufferSource,
-                        skin,
-                        0,
-                        0,
-                        0,
-                        playerHeadRenderSize,
-                        playerHeadRenderSize,
-                        8,
-                        8,
-                        8,
-                        8,
-                        64,
-                        64);
+                RenderUtils.drawTexturedRect(
+                        guiGraphics, skin, 0, 0, playerHeadRenderSize, playerHeadRenderSize, 8, 8, 8, 8, 64, 64);
 
                 // hat
-                BufferedRenderUtils.drawTexturedRect(
-                        poseStack,
-                        bufferSource,
-                        skin,
-                        0,
-                        0,
-                        1,
-                        playerHeadRenderSize,
-                        playerHeadRenderSize,
-                        40,
-                        8,
-                        8,
-                        8,
-                        64,
-                        64);
+                RenderUtils.drawTexturedRect(
+                        guiGraphics, skin, 0, 0, playerHeadRenderSize, playerHeadRenderSize, 40, 8, 8, 8, 64, 64);
 
                 // health
                 if (fullscreenMap) {
                     HealthTexture healthTexture = Managers.Feature.getFeatureInstance(MainMapFeature.class)
                             .remotePlayerHealthTexture
                             .get();
-                    BufferedRenderUtils.drawProgressBar(
-                            poseStack,
-                            bufferSource,
+                    RenderUtils.drawProgressBar(
+                            guiGraphics,
                             Texture.HEALTH_BAR,
                             -10,
                             playerHeadRenderSize - INITIAL_PLAYER_HEAD_RENDER_SIZE - 7,
@@ -221,7 +186,7 @@ public class PlayerProvider extends BuiltInProvider {
                             (float) hadesUser.getHealth().getProgress());
                 }
 
-                poseStack.popPose();
+                guiGraphics.pose().popMatrix();
             }
         }
     }

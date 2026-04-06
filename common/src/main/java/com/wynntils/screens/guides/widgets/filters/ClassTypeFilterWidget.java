@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.widgets.filters;
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 
 public class ClassTypeFilterWidget extends GuideFilterWidget {
@@ -40,12 +41,12 @@ public class ClassTypeFilterWidget extends GuideFilterWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         boolean clicked = false;
 
         for (ClassTypeButton classTypeButton : classTypeButtons) {
-            if (classTypeButton.isMouseOver(mouseX, mouseY)) {
-                clicked = classTypeButton.mouseClicked(mouseX, mouseY, button);
+            if (classTypeButton.isMouseOver(event.x(), event.y())) {
+                clicked = classTypeButton.mouseClicked(event, isDoubleClick);
                 break;
             }
         }

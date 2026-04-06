@@ -1,11 +1,11 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
 
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -14,6 +14,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
@@ -25,14 +26,20 @@ import net.minecraft.network.chat.Style;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
-@StartDisabled
 @ConfigCategory(Category.CHAT)
 public class RevealNicknamesFeature extends Feature {
     private static final String NICKNAME_HOVER_TEXT = "§f%s§7's nickname is §f%s";
 
+    public RevealNicknamesFeature() {
+        super(ProfileDefault.DISABLED);
+    }
+
     @Persisted
     private final Config<NicknameReplaceOption> nicknameReplaceOption =
             new Config<>(NicknameReplaceOption.PREPEND_USERNAME);
+
+    @Persisted
+    private final Config<Boolean> keepOwnNickname = new Config<>(false);
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerChat(ChatMessageEvent.Edit event) {
@@ -40,12 +47,13 @@ public class RevealNicknamesFeature extends Feature {
             HoverEvent hoverEvent = currentPart.getPartStyle().getStyle().getHoverEvent();
 
             // If the hover event doesn't exist or it is not SHOW_TEXT event, it's not a nickname text part
-            if (hoverEvent == null || hoverEvent.getAction() != HoverEvent.Action.SHOW_TEXT) {
+            if (hoverEvent == null || hoverEvent.action() != HoverEvent.Action.SHOW_TEXT) {
                 return IterationDecision.CONTINUE;
             }
 
-            StyledText[] partTexts = StyledText.fromComponent(hoverEvent.getValue(HoverEvent.Action.SHOW_TEXT))
-                    .split("\n");
+            HoverEvent.ShowText showTextHoverEvent = (HoverEvent.ShowText) hoverEvent;
+            StyledText[] partTexts =
+                    StyledText.fromComponent(showTextHoverEvent.value()).split("\n");
 
             List<StyledText> newHoverTexts = new ArrayList<>();
             String nickname = null;
@@ -63,6 +71,10 @@ public class RevealNicknamesFeature extends Feature {
 
             // If the nickname or username is null, it's not a nickname text part
             if (nickname == null || username == null) {
+                return IterationDecision.CONTINUE;
+            }
+
+            if (username.equals(McUtils.playerName()) && keepOwnNickname.get()) {
                 return IterationDecision.CONTINUE;
             }
 
@@ -88,8 +100,7 @@ public class RevealNicknamesFeature extends Feature {
                     Style newStyle = currentPart
                             .getPartStyle()
                             .withItalic(false)
-                            .withHoverEvent(new HoverEvent(
-                                    HoverEvent.Action.SHOW_TEXT,
+                            .withHoverEvent(new HoverEvent.ShowText(
                                     StyledText.join("\n", newHoverTexts).getComponent()))
                             .getStyle();
 
@@ -101,8 +112,7 @@ public class RevealNicknamesFeature extends Feature {
                     Style newStyle = currentPart
                             .getPartStyle()
                             .withItalic(false)
-                            .withHoverEvent(new HoverEvent(
-                                    HoverEvent.Action.SHOW_TEXT,
+                            .withHoverEvent(new HoverEvent.ShowText(
                                     StyledText.join("\n", newHoverTexts).getComponent()))
                             .getStyle();
 

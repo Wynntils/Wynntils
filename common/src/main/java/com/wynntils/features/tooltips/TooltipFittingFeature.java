@@ -1,22 +1,22 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.tooltips;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.TooltipRenderEvent;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.network.chat.Component;
@@ -33,27 +33,17 @@ public class TooltipFittingFeature extends Feature {
     @Persisted
     private final Config<Boolean> fitToScreen = new Config<>(true);
 
-    @Persisted
-    private final Config<Boolean> wrapText = new Config<>(true);
-
     private boolean scaledLast = false;
     private float lastScaleFactor = 1f;
+
+    public TooltipFittingFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     // scaling should only happen after every other feature has updated tooltip
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onTooltipPre(ItemTooltipRenderEvent.Pre e) {
         Window window = McUtils.mc().getWindow();
-
-        if (wrapText.get()) {
-            // calculate optimal wrapping for scaled up tooltips
-            int tooltipWidth = ComponentUtils.getOptimalTooltipWidth(
-                    e.getTooltips(), (int) (window.getGuiScaledWidth() / universalScale.get()), (int)
-                            (e.getMouseX() / universalScale.get()));
-
-            List<Component> wrappedTooltips = ComponentUtils.wrapTooltips(e.getTooltips(), tooltipWidth);
-
-            e.setTooltips(wrappedTooltips);
-        }
 
         // calculate scale factor
         float scaleFactor = universalScale.get();
@@ -76,29 +66,35 @@ public class TooltipFittingFeature extends Feature {
         }
 
         lastScaleFactor = scaleFactor;
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onTooltipRenderPre(TooltipRenderEvent.Pre e) {
+        if (lastScaleFactor == 1f) return;
 
         // push pose before scaling, so we can pop it afterwards
-        PoseStack poseStack = e.getPoseStack();
-        poseStack.pushPose();
-        poseStack.scale(scaleFactor, scaleFactor, 1);
+        GuiGraphics guiGraphics = e.getGuiGraphics();
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().scale(lastScaleFactor, lastScaleFactor);
 
         scaledLast = true;
     }
 
-    // highest priority to reset pose before other features start rendering
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onTooltipPost(ItemTooltipRenderEvent.Post e) {
-        if (!scaledLast) return;
-
-        e.getPoseStack().popPose();
-        scaledLast = false;
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onTooltipRendering(TooltipRenderEvent event) {
+    public void onTooltipRenderPosition(TooltipRenderEvent.Position event) {
         if (!scaledLast) return;
 
         event.setPositioner(new ScaledTooltipPositioner(lastScaleFactor));
+    }
+
+    // highest priority to reset pose before other features start rendering
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onTooltipRenderPost(TooltipRenderEvent.Post e) {
+        if (!scaledLast) return;
+
+        e.getGuiGraphics().pose().popMatrix();
+        scaledLast = false;
+        lastScaleFactor = 1f;
     }
 
     /**

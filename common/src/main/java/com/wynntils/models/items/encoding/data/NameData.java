@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.data;
@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 public record NameData(Optional<String> name) implements ItemData {
     private static final NameData EMPTY = new NameData(Optional.empty());
 
-    private static final int MAX_NAME_LENGTH = 48;
+    private static final int MAX_NAME_LENGTH = 50;
     private static final Pattern SANITIZE_PATTERN = Pattern.compile("[^a-zA-Z0-9'\\-.,!?\\s]");
 
     /**

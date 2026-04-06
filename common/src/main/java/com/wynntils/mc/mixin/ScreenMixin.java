@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2025.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -9,6 +9,7 @@ import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.PauseMenuInitEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.mc.event.TitleScreenRebuildEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import net.minecraft.CrashReport;
@@ -27,16 +28,16 @@ public abstract class ScreenMixin implements ScreenExtension {
     @Unique
     private TextInputBoxWidget wynntilsFocusedTextInput;
 
-    @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("HEAD"))
-    private void initPre(Minecraft client, int width, int height, CallbackInfo info) {
+    @Inject(method = "init(II)V", at = @At("HEAD"))
+    private void initPre(int width, int height, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
         if (!(screen instanceof TitleScreen titleScreen)) return;
 
         MixinHelper.postAlways(new TitleScreenInitEvent.Pre(titleScreen));
     }
 
-    @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("RETURN"))
-    private void initPost(Minecraft client, int width, int height, CallbackInfo info) {
+    @Inject(method = "init(II)V", at = @At("RETURN"))
+    private void initPost(int width, int height, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
 
         if (screen instanceof TitleScreen titleScreen) {
@@ -50,17 +51,27 @@ public abstract class ScreenMixin implements ScreenExtension {
             method = "rebuildWidgets()V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;init()V"))
     private void onScreenInitPre(CallbackInfo ci) {
+        if ((Object) this instanceof TitleScreen titleScreen) {
+            MixinHelper.postAlways(new TitleScreenRebuildEvent.Pre(titleScreen));
+            return;
+        }
+
         // This is called whenever a screen is re-inited (e.g. when the window is resized)
-        MixinHelper.postAlways(new ScreenInitEvent.Pre((Screen) (Object) this, false));
+        MixinHelper.post(new ScreenInitEvent.Pre((Screen) (Object) this, false));
     }
 
     @Inject(method = "rebuildWidgets()V", at = @At("RETURN"))
     private void onScreenInitPost(CallbackInfo ci) {
-        MixinHelper.postAlways(new ScreenInitEvent.Post((Screen) (Object) this, false));
+        if ((Object) this instanceof TitleScreen titleScreen) {
+            MixinHelper.postAlways(new TitleScreenRebuildEvent.Post(titleScreen));
+            return;
+        }
+
+        MixinHelper.post(new ScreenInitEvent.Post((Screen) (Object) this, false));
     }
 
     @Inject(
-            method = "init(Lnet/minecraft/client/Minecraft;II)V",
+            method = "init(II)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;init()V"))
     private void onFirstScreenInitPre(CallbackInfo ci) {
         // This is called only once, when the screen is first initialized
@@ -68,7 +79,7 @@ public abstract class ScreenMixin implements ScreenExtension {
     }
 
     @Inject(
-            method = "init(Lnet/minecraft/client/Minecraft;II)V",
+            method = "init(II)V",
             at =
                     @At(
                             value = "INVOKE",

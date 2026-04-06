@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -7,12 +7,15 @@ package com.wynntils.features.ui;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.wrappedscreen.event.WrappedScreenOpenEvent;
@@ -31,7 +34,6 @@ import java.util.regex.Pattern;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UI)
 public class CustomTerritoryManagementScreenFeature extends Feature {
@@ -43,11 +45,13 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
     private static final int TERRITORY_MANAGEMENT_SLOT = 14;
 
     @RegisterKeyBind
-    private final KeyBind openTerritoryMenu =
-            new KeyBind("Open Territory Menu", GLFW.GLFW_KEY_U, true, this::updateTerritoryMenu);
+    private final KeyBind openTerritoryMenu = KeyBindDefinition.OPEN_TERRITORY_MENU.create(this::updateTerritoryMenu);
 
     @Persisted
     private final Config<ShiftBehavior> shiftBehaviorConfig = new Config<>(ShiftBehavior.DISABLED_IF_SHIFT_HELD);
+
+    @Persisted
+    private final Config<Boolean> useTerritoryMap = new Config<>(true);
 
     @Persisted
     public final Storage<Boolean> screenHighlightLegend = new Storage<>(true);
@@ -59,6 +63,12 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
 
     private boolean customScreenOpened = false;
     private boolean openTerritoryManagement = false;
+
+    public CustomTerritoryManagementScreenFeature() {
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onWrappedScreenOpen(WrappedScreenOpenEvent event) {
@@ -102,6 +112,8 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
             // but ScreenClosedEvent did not fire (as the screen was overridden).
             customScreenOpened = false;
         }
+
+        // FIXME: Re-implement setMapMode when TerritoryManagementScreen supports it
     }
 
     @SubscribeEvent

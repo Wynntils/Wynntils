@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.rewards;
@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.Dependency;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
@@ -39,7 +40,7 @@ import java.util.stream.Stream;
 
 public class CharmInfoRegistry {
     private static final Gson GSON = new GsonBuilder()
-            .registerTypeHierarchyAdapter(CharmInfo.class, new CharmInfoDeserizalier())
+            .registerTypeHierarchyAdapter(CharmInfo.class, new CharmInfoDeserializer())
             .create();
 
     private List<CharmInfo> charmInfoRegistry = List.of();
@@ -48,9 +49,13 @@ public class CharmInfoRegistry {
     public void registerDownloads(DownloadRegistry registry) {
         registry.registerDownload(
                         UrlId.DATA_STATIC_CHARMS,
-                        Dependency.multi(
-                                Models.WynnItem,
-                                Set.of(UrlId.DATA_STATIC_ITEM_OBTAIN_V2, UrlId.DATA_STATIC_MATERIAL_CONVERSION)))
+                        Dependency.complex(Set.of(
+                                Dependency.simple(Services.CustomModel, UrlId.DATA_STATIC_MODEL_DATA),
+                                Dependency.multi(
+                                        Models.WynnItem,
+                                        Set.of(
+                                                UrlId.DATA_STATIC_ITEM_OBTAIN_V2,
+                                                UrlId.DATA_STATIC_MATERIAL_CONVERSION)))))
                 .handleJsonObject(this::handleCharmInfoRegistry);
     }
 
@@ -82,12 +87,12 @@ public class CharmInfoRegistry {
         Map<String, CharmInfo> lookupMap = registry.stream()
                 .collect(HashMap::new, (map, charmInfo) -> map.put(charmInfo.name(), charmInfo), HashMap::putAll);
 
-        // Make the result visisble to the world
+        // Make the result visible to the world
         charmInfoRegistry = registry;
         charmInfoLookup = lookupMap;
     }
 
-    private static final class CharmInfoDeserizalier extends AbstractItemInfoDeserializer<CharmInfo> {
+    private static final class CharmInfoDeserializer extends AbstractItemInfoDeserializer<CharmInfo> {
         @Override
         public CharmInfo deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
                 throws JsonParseException {
@@ -97,7 +102,7 @@ public class CharmInfoRegistry {
             String displayName = names.key();
             String internalName = names.value();
 
-            GearTier tier = GearTier.fromString(json.get("rarity").getAsString());
+            GearTier tier = GearTier.fromString(json.get("tier").getAsString());
             if (tier == null) {
                 throw new RuntimeException("Invalid Wynncraft data: charm has no tier");
             }
@@ -146,16 +151,14 @@ public class CharmInfoRegistry {
             }
 
             int level = JsonUtils.getNullableJsonInt(requirementsJson, "level");
-            JsonObject levelRangeJson = JsonUtils.getNullableJsonObject(requirementsJson, "levelRange");
-            int min = levelRangeJson.get("min").getAsInt();
-            int max = levelRangeJson.get("max").getAsInt();
+            // FIXME: Currently missing from API
+            //            JsonObject levelRangeJson = JsonUtils.getNullableJsonObject(requirementsJson, "levelRange");
+            //            int min = levelRangeJson.get("min").getAsInt();
+            //            int max = levelRangeJson.get("max").getAsInt();
+            int min = level;
+            int max = level;
 
             return new CharmRequirements(level, RangedValue.of(min, max));
-        }
-
-        private TomeType parseTomeType(JsonObject json) {
-            String tomeType = JsonUtils.getNullableJsonString(json, "tomeType");
-            return TomeType.fromString(tomeType);
         }
     }
 }

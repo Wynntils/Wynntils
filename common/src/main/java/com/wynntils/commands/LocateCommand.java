@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -89,7 +89,7 @@ public class LocateCommand extends Command {
             }
 
             MutableComponent response = Component.literal("Found multiple services matching '" + searchedName
-                            + "'. Pleace specify with more detail. Matching: ")
+                            + "'. Please specify with more detail. Matching: ")
                     .withStyle(ChatFormatting.RED);
             response.append(Component.literal(String.join(
                     ", ",
@@ -128,13 +128,11 @@ public class LocateCommand extends Command {
                     .append(Component.literal(Services.MapData.resolveMapAttributes(service)
                                             .label() + " ")
                             .withStyle(ChatFormatting.YELLOW)
-                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.RUN_COMMAND,
+                            .withStyle((style) -> style.withClickEvent(new ClickEvent.RunCommand(
                                     "/compass at " + service.getLocation().asChatCoordinates()))))
                     .append(Component.literal(service.getLocation().toString())
                             .withStyle(ChatFormatting.WHITE)
-                            .withStyle((style) -> style.withClickEvent(new ClickEvent(
-                                    ClickEvent.Action.RUN_COMMAND,
+                            .withStyle((style) -> style.withClickEvent(new ClickEvent.RunCommand(
                                     "/compass at " + service.getLocation().asChatCoordinates()))));
         }
 
@@ -170,12 +168,12 @@ public class LocateCommand extends Command {
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
                     .append(Component.literal(placeName + " ")
                             .withStyle(ChatFormatting.YELLOW)
-                            .withStyle((style) -> style.withClickEvent(
-                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/compass place " + placeName))))
+                            .withStyle((style) ->
+                                    style.withClickEvent(new ClickEvent.RunCommand("/compass place " + placeName))))
                     .append(Component.literal(place.getLocation().toString())
                             .withStyle(ChatFormatting.WHITE)
-                            .withStyle((style) -> style.withClickEvent(
-                                    new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/compass place " + placeName))));
+                            .withStyle((style) ->
+                                    style.withClickEvent(new ClickEvent.RunCommand("/compass place " + placeName))));
         }
 
         context.getSource().sendSuccess(() -> response, false);

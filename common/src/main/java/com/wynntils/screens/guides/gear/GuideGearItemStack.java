@@ -1,12 +1,11 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.gear;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.components.Services;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.items.WynnItemData;
@@ -15,7 +14,6 @@ import com.wynntils.screens.guides.GuideItemStack;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
@@ -46,16 +44,8 @@ public final class GuideGearItemStack extends GuideItemStack {
 
         appendObtainInfo(tooltipLines, Models.Gear.getObtainInfo(gearInfo));
 
-        tooltipLines.add(Component.empty());
-        if (Services.Favorites.isFavorite(this)) {
-            tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
-                    .withStyle(ChatFormatting.YELLOW));
-        } else {
-            tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
-                    .withStyle(ChatFormatting.GREEN));
-        }
-        tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.open")
-                .withStyle(ChatFormatting.RED));
+        appendFavoriteInfo(tooltipLines);
+        appendWebGuideInfo(tooltipLines);
 
         return tooltipLines;
     }

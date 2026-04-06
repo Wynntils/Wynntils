@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hint;
 
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
@@ -76,7 +77,7 @@ public class HintService extends Service {
 
         if (component.equals(Component.empty())) return;
 
-        McUtils.sendMessageToClientWithPillHeader(component);
+        McUtils.sendWynntilsMessage(component);
     }
 
     private MutableComponent formatHint(String hint) {
@@ -123,28 +124,26 @@ public class HintService extends Service {
     }
 
     private MutableComponent createKeybindPart(String keybindName) {
-        for (KeyMapping keyMapping : McUtils.options().keyMappings) {
-            if (keyMapping.getName().equals(keybindName)) {
-                String translated = keyMapping.getTranslatedKeyMessage().getString();
-                if (translated.equals(I18n.get(UNBOUND_KEY))) {
-                    WynntilsMod.info("Skipping hint due to unbound key");
-                    return Component.empty();
-                }
-
-                return Component.literal(translated).withStyle(ChatFormatting.YELLOW);
-            }
+        KeyMapping keyMapping = Managers.KeyBind.getKeyMapping(keybindName);
+        if (keyMapping == null) {
+            WynntilsMod.info("Skipping hint due to unknown keybind " + keybindName);
+            return Component.empty();
         }
 
-        WynntilsMod.info("Skipping hint due to unknown keybind " + keybindName);
-        return Component.empty();
+        String translated = keyMapping.getTranslatedKeyMessage().getString();
+        if (translated.equals(I18n.get(UNBOUND_KEY))) {
+            WynntilsMod.info("Skipping hint due to unbound key");
+            return Component.empty();
+        }
+
+        return Component.literal(translated).withStyle(ChatFormatting.YELLOW);
     }
 
     private MutableComponent createCommandPart(String command, String argument) {
         String fullCommand = "/" + command + " " + argument;
         return Component.literal(fullCommand).withStyle(style -> style.withColor(ChatFormatting.GOLD)
                 .withUnderlined(true)
-                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, fullCommand))
-                .withHoverEvent(
-                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Click to run " + fullCommand))));
+                .withClickEvent(new ClickEvent.RunCommand(fullCommand))
+                .withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to run " + fullCommand))));
     }
 }

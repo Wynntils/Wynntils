@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -16,7 +16,10 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.DynamicOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.config.OverlayGroupHolder;
+import com.wynntils.screens.settings.ConfigProfileScreen;
+import com.wynntils.utils.mc.McUtils;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
@@ -162,6 +165,15 @@ public class ConfigCommand extends Command {
                     },
                     builder);
 
+    private static final SuggestionProvider<CommandSourceStack> CONFIG_PROFILES_SUGGESTION_PROVIDER =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    () -> {
+                        return Arrays.stream(ConfigProfile.values())
+                                .map(Enum::name)
+                                .iterator();
+                    },
+                    builder);
+
     @Override
     public String getCommandName() {
         return "config";
@@ -175,6 +187,7 @@ public class ConfigCommand extends Command {
                 .then(this.buildResetConfigNode())
                 .then(this.buildReloadConfigNode())
                 .then(this.buildOverlayGroupNode())
+                .then(this.buildProfileNode())
                 .executes(this::syntaxError);
     }
 
@@ -278,6 +291,15 @@ public class ConfigCommand extends Command {
                                         .executes(this::removeOverlayGroup)))));
 
         return overlayGroupArgBuilder.build();
+    }
+
+    private LiteralCommandNode<CommandSourceStack> buildProfileNode() {
+        return Commands.literal("profile")
+                .then(Commands.argument("profileName", StringArgumentType.word())
+                        .suggests(CONFIG_PROFILES_SUGGESTION_PROVIDER)
+                        .executes(this::setConfigProfile))
+                .executes(this::openProfilesScreen)
+                .build();
     }
 
     private int addOverlayGroup(CommandContext<CommandSourceStack> context) {
@@ -417,10 +439,8 @@ public class ConfigCommand extends Command {
         for (Config<?> config : overlay.getVisibleConfigOptions()) {
             MutableComponent current = getComponentForConfig(config);
 
-            current.withStyle(style -> style.withClickEvent(new ClickEvent(
-                    ClickEvent.Action.SUGGEST_COMMAND,
-                    "/wynntils config set " + featureName + " overlay " + overlayName + " " + config.getFieldName()
-                            + " ")));
+            current.withStyle(style -> style.withClickEvent(new ClickEvent.SuggestCommand("/wynntils config set "
+                    + featureName + " overlay " + overlayName + " " + config.getFieldName() + " ")));
 
             response.append(current);
         }
@@ -504,8 +524,7 @@ public class ConfigCommand extends Command {
         for (Config<?> config : feature.getVisibleConfigOptions()) {
             MutableComponent current = getComponentForConfig(config);
 
-            current.withStyle(style -> style.withClickEvent(new ClickEvent(
-                    ClickEvent.Action.SUGGEST_COMMAND,
+            current.withStyle(style -> style.withClickEvent(new ClickEvent.SuggestCommand(
                     "/wynntils config set " + featureName + " " + config.getFieldName() + " ")));
 
             response.append(current);
@@ -520,8 +539,7 @@ public class ConfigCommand extends Command {
         for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature)) {
             MutableComponent current = getComponentForOverlay(overlay);
 
-            current.withStyle(style -> style.withClickEvent(new ClickEvent(
-                    ClickEvent.Action.SUGGEST_COMMAND,
+            current.withStyle(style -> style.withClickEvent(new ClickEvent.SuggestCommand(
                     "/wynntils config set " + featureName + " overlay " + overlay.getShortName() + " ")));
 
             response.append(current);
@@ -637,6 +655,38 @@ public class ConfigCommand extends Command {
         return 1;
     }
 
+    private int openProfilesScreen(CommandContext<CommandSourceStack> context) {
+        // Delay is needed to prevent chat screen overwriting the new screen
+        Managers.TickScheduler.scheduleLater(
+                () -> McUtils.setScreen(ConfigProfileScreen.create(null, Managers.Config.getSelectedProfile())), 2);
+        return 1;
+    }
+
+    private int setConfigProfile(CommandContext<CommandSourceStack> context) {
+        String profileName = context.getArgument("profileName", String.class);
+        ConfigProfile configProfile;
+        try {
+            configProfile = ConfigProfile.valueOf(profileName);
+        } catch (IllegalArgumentException e) {
+            context.getSource()
+                    .sendFailure(Component.literal(profileName)
+                            .append(Component.literal(" is not a valid profile."))
+                            .withStyle(ChatFormatting.DARK_RED));
+            return 0;
+        }
+
+        Managers.Config.setSelectedProfile(configProfile);
+
+        context.getSource()
+                .sendSuccess(
+                        () -> Component.literal("Successfully set config profile to ")
+                                .withStyle(ChatFormatting.GREEN)
+                                .append(Component.literal(configProfile.name()).withStyle(ChatFormatting.YELLOW))
+                                .append(Component.literal(".").withStyle(ChatFormatting.GREEN)),
+                        false);
+        return 1;
+    }
+
     private static Feature getFeatureFromArguments(CommandContext<CommandSourceStack> context, String featureName) {
         Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureName);
 
@@ -732,17 +782,15 @@ public class ConfigCommand extends Command {
         return Component.literal("\n - ")
                 .withStyle(ChatFormatting.GRAY)
                 .append(Component.literal(configNameString)
-                        .withStyle(style -> style.withHoverEvent(new HoverEvent(
-                                HoverEvent.Action.SHOW_TEXT,
-                                Component.literal("Description: " + config.getDescription())
+                        .withStyle(style -> style.withHoverEvent(
+                                new HoverEvent.ShowText(Component.literal("Description: " + config.getDescription())
                                         .withStyle(ChatFormatting.LIGHT_PURPLE))))
                         .withStyle(ChatFormatting.YELLOW)
                         .append(Component.literal(configTypeString).withStyle(ChatFormatting.WHITE))
                         .append(Component.literal(": "))
                         .append(Component.literal(valueString)
                                 .withStyle(ChatFormatting.GREEN)
-                                .withStyle(style -> style.withHoverEvent(new HoverEvent(
-                                        HoverEvent.Action.SHOW_TEXT,
+                                .withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(
                                         Component.literal("Click here to change this setting."))))));
     }
 

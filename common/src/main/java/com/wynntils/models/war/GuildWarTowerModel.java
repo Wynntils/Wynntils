@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.war;
@@ -55,7 +55,7 @@ public final class GuildWarTowerModel extends Model {
     }
 
     @SubscribeEvent
-    public void onWorldStateChange(WorldStateEvent evente) {
+    public void onWorldStateChange(WorldStateEvent event) {
         resetTowerState();
     }
 

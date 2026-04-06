@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
@@ -23,6 +22,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class ItemSearchWidget extends SearchWidget {
@@ -66,17 +66,17 @@ public class ItemSearchWidget extends SearchWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (helperWidget.mouseClicked(mouseX, mouseY, button)) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (helperWidget.mouseClicked(event, isDoubleClick)) {
             return true;
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
     protected void renderText(
-            PoseStack poseStack,
+            GuiGraphics guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -89,7 +89,7 @@ public class ItemSearchWidget extends SearchWidget {
             boolean defaultText) {
         if (defaultText || !getTextBoxInput().equals(searchQuery.queryString())) {
             super.renderText(
-                    poseStack,
+                    guiGraphics,
                     renderedText,
                     renderedTextStart,
                     firstPortion,
@@ -122,7 +122,7 @@ public class ItemSearchWidget extends SearchWidget {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         firstPortionStyled,
                         this.getX() + textPadding,
                         this.getX() + this.width - textPadding - lastWidth - highlightedWidth,
@@ -134,7 +134,7 @@ public class ItemSearchWidget extends SearchWidget {
 
         FontRenderer.getInstance()
                 .renderAlignedHighlightedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         highlightedPortionStyled,
                         this.getX() + textPadding + firstWidth,
                         this.getX() + this.width - textPadding - lastWidth,
@@ -148,7 +148,7 @@ public class ItemSearchWidget extends SearchWidget {
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
-                        poseStack,
+                        guiGraphics,
                         lastPortionStyled,
                         this.getX() + textPadding + firstWidth + highlightedWidth,
                         this.getX() + this.width - textPadding,
@@ -159,7 +159,7 @@ public class ItemSearchWidget extends SearchWidget {
                         TextShadow.NORMAL);
 
         drawCursor(
-                poseStack,
+                guiGraphics,
                 this.getX()
                         + font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length())))
                         + textPadding

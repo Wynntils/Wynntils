@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions.templates;
 
 import com.wynntils.core.consumers.functions.expressions.Expression;
 import com.wynntils.core.consumers.functions.expressions.parser.ExpressionParser;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.type.ErrorOr;
 
 public class ExpressionTemplatePart extends TemplatePart {
@@ -22,15 +23,15 @@ public class ExpressionTemplatePart extends TemplatePart {
     }
 
     @Override
-    public String getValue() {
+    public StyledText getValue() {
         if (expression.hasError()) {
-            return expression.getError();
+            return StyledText.fromString(expression.getError());
         }
 
-        ErrorOr<String> calculatedValue = expression.getValue().calculateFormattedString();
+        ErrorOr<StyledText> calculatedValue = expression.getValue().calculateFormattedStyledText();
 
         if (calculatedValue.hasError()) {
-            return calculatedValue.getError();
+            return StyledText.fromString(calculatedValue.getError());
         }
 
         return calculatedValue.getValue();

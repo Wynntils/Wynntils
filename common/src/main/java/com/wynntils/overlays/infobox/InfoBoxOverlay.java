@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.infobox;
@@ -14,14 +14,13 @@ import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 
 public class InfoBoxOverlay extends TextOverlay implements CustomNameProperty {
@@ -55,8 +54,7 @@ public class InfoBoxOverlay extends TextOverlay implements CustomNameProperty {
     }
 
     @Override
-    protected void renderOrErrorMessage(
-            GuiGraphics guiGraphics, MultiBufferSource bufferSource, DeltaTracker deltaTracker, Window window) {
+    protected void renderOrErrorMessage(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (colorCache.hasError()) {
             StyledText[] errorMessage = {
                 StyledText.fromString("§c§l"
@@ -65,10 +63,9 @@ public class InfoBoxOverlay extends TextOverlay implements CustomNameProperty {
                         + " " + getTranslatedName()),
                 StyledText.fromUnformattedString(colorCache.getError())
             };
-            BufferedFontRenderer.getInstance()
+            FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            guiGraphics.pose(),
-                            bufferSource,
+                            guiGraphics,
                             errorMessage,
                             getRenderX(),
                             getRenderX() + getWidth(),
@@ -82,7 +79,7 @@ public class InfoBoxOverlay extends TextOverlay implements CustomNameProperty {
                             1);
 
         } else {
-            super.renderOrErrorMessage(guiGraphics, bufferSource, deltaTracker, window);
+            super.renderOrErrorMessage(guiGraphics, deltaTracker, window);
         }
     }
 

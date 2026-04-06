@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps.widgets;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.WaypointCreationScreen;
 import com.wynntils.screens.maps.WaypointManagementScreen;
@@ -19,6 +18,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class IconButton extends AbstractWidget {
@@ -60,18 +60,15 @@ public class IconButton extends AbstractWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         RenderUtils.drawRect(
-                poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
+                guiGraphics, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), width, height);
 
         if (mapIcon != null) {
             RenderUtils.drawScalingTexturedRect(
-                    poseStack,
-                    mapIcon.getResourceLocation(),
+                    guiGraphics,
+                    mapIcon.getIdentifier(),
                     iconRenderX,
                     iconRenderY,
-                    1,
                     iconWidth,
                     iconHeight,
                     mapIcon.getWidth(),
@@ -79,7 +76,7 @@ public class IconButton extends AbstractWidget {
         } else {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromString("No Icon"),
                             getX(),
                             getX() + width,
@@ -94,12 +91,12 @@ public class IconButton extends AbstractWidget {
         }
 
         if (selected) {
-            RenderUtils.drawRect(poseStack, CommonColors.LIGHT_BLUE.withAlpha(35), getX(), getY(), 1, width, height);
+            RenderUtils.drawRect(guiGraphics, CommonColors.LIGHT_BLUE.withAlpha(35), getX(), getY(), width, height);
         }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (McUtils.screen() instanceof WaypointCreationScreen waypointCreationScreen) {
             waypointCreationScreen.setSelectedIcon(mapIcon);
         } else if (McUtils.screen() instanceof WaypointManagementScreen waypointManagementScreen) {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
@@ -25,7 +25,7 @@ public class RarityStatProvider extends ItemStatProvider<String> {
 
     @Override
     public List<String> getValidInputs() {
-        return Arrays.stream(GearTier.values()).map(GearTier::getName).collect(Collectors.toList());
+        return Arrays.stream(GearTier.validValues()).map(GearTier::getName).collect(Collectors.toList());
     }
 
     @Override

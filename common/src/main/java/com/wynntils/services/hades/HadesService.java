@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hades;
@@ -82,6 +82,12 @@ public final class HadesService extends Service {
 
     @Persisted
     private final Storage<GearShareOptions> gearShareOptions = new Storage<>(new GearShareOptions());
+
+    @Persisted
+    private final Storage<Map<String, Boolean>> characterGearShareEnabled = new Storage<>(new TreeMap<>());
+
+    @Persisted
+    private final Storage<Map<String, GearShareOptions>> characterGearShareOptions = new Storage<>(new TreeMap<>());
 
     // Original WynnItem cache to avoid unnecessary encoding
     private NavigableMap<InventoryArmor, WynnItem> armorCache = new TreeMap<>();
@@ -227,7 +233,7 @@ public final class HadesService extends Service {
                         .withStyle(Style.EMPTY
                                 .withColor(ChatFormatting.AQUA)
                                 .withUnderlined(true)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/wynntils reauth"))));
+                                .withClickEvent(new ClickEvent.RunCommand("/wynntils reauth"))));
                 failed.append(Component.translatable("service.wynntils.hades.clickToConnect3")
                         .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
 
@@ -253,13 +259,18 @@ public final class HadesService extends Service {
 
     @SubscribeEvent
     public void onClassChange(CharacterUpdateEvent event) {
+        String id = Models.Character.getId();
+
+        characterGearShareOptions.get().putIfAbsent(id, new GearShareOptions());
+        characterGearShareOptions.touched();
+
         tryResendWorldData();
     }
 
     @SubscribeEvent
     public void onSetSlot(SetSlotEvent.Post event) {
         if (!event.getContainer().equals(McUtils.inventory())) return;
-        if (gearShareOptions.get().shouldShare()) {
+        if (getGearShareOptions().shouldShare()) {
             for (InventoryAccessory accessory : InventoryAccessory.values()) {
                 if (event.getSlot() == accessory.getSlot()) {
                     updateAccessoryCache(accessory);
@@ -282,7 +293,7 @@ public final class HadesService extends Service {
 
     @SubscribeEvent
     public void onSwappedItem(ChangeCarriedItemEvent event) {
-        if (gearShareOptions.get().shouldShare()) {
+        if (getGearShareOptions().shouldShare()) {
             updateHeldItemCache();
         }
     }
@@ -312,7 +323,7 @@ public final class HadesService extends Service {
 
             PlayerStatus newStatus;
 
-            if (gearShareOptions.get().shouldShare()) {
+            if (getGearShareOptions().shouldShare()) {
                 newStatus = new PlayerStatus(
                         pX,
                         pY,
@@ -385,18 +396,32 @@ public final class HadesService extends Service {
     }
 
     public GearShareOptions getGearShareOptions() {
+        if (isCharacterGearShareEnabled()) {
+            return characterGearShareOptions.get().getOrDefault(Models.Character.getId(), new GearShareOptions());
+        }
+
         return gearShareOptions.get();
+    }
+
+    public void toggleCharacterGearShareEnabled() {
+        characterGearShareEnabled.get().put(Models.Character.getId(), !isCharacterGearShareEnabled());
+        characterGearShareEnabled.touched();
+    }
+
+    public boolean isCharacterGearShareEnabled() {
+        return characterGearShareEnabled.get().getOrDefault(Models.Character.getId(), false);
     }
 
     public void saveGearShareOptions() {
         gearShareOptions.touched();
+        characterGearShareOptions.touched();
         refreshGear();
     }
 
     private void refreshGear() {
         if (McUtils.player() == null) return;
 
-        if (gearShareOptions.get().shouldShare()) {
+        if (getGearShareOptions().shouldShare()) {
             for (InventoryArmor inventoryArmor : InventoryArmor.values()) {
                 updateArmorCache(inventoryArmor);
             }
@@ -422,12 +447,12 @@ public final class HadesService extends Service {
 
     private void updateArmorCache(InventoryArmor inventoryArmor) {
         Optional<WynnItem> armorItemOpt =
-                Models.Item.getWynnItem(McUtils.inventory().armor.get(inventoryArmor.getArmorSlot()));
+                Models.Item.getWynnItem(McUtils.inventory().getItem(inventoryArmor.getInventorySlot()));
 
         if (armorItemOpt.isEmpty()
                 || (armorItemOpt.get() instanceof CraftedGearItem
-                        && !gearShareOptions.get().shareCraftedItems())
-                || !gearShareOptions.get().shouldShareArmor(inventoryArmor)) {
+                        && !getGearShareOptions().shareCraftedItems())
+                || !getGearShareOptions().shouldShareArmor(inventoryArmor)) {
             armor.remove(inventoryArmor);
             armorCache.remove(inventoryArmor);
         } else if (!armorCache.containsKey(inventoryArmor)
@@ -443,8 +468,8 @@ public final class HadesService extends Service {
 
         if (accessoryItemOpt.isEmpty()
                 || (accessoryItemOpt.get() instanceof CraftedGearItem
-                        && !gearShareOptions.get().shareCraftedItems())
-                || !gearShareOptions.get().shouldShareAccessory(inventoryAccessory)) {
+                        && !getGearShareOptions().shareCraftedItems())
+                || !getGearShareOptions().shouldShareAccessory(inventoryAccessory)) {
             accessories.remove(inventoryAccessory);
             accessoriesCache.remove(inventoryAccessory);
         } else if (!accessoriesCache.containsKey(inventoryAccessory)
@@ -460,8 +485,8 @@ public final class HadesService extends Service {
 
         if (heldItemOpt.isEmpty()
                 || (heldItemOpt.get() instanceof CraftedGearItem
-                        && !gearShareOptions.get().shareCraftedItems())
-                || !gearShareOptions.get().shouldShareHeldItem()) {
+                        && !getGearShareOptions().shareCraftedItems())
+                || !getGearShareOptions().shouldShareHeldItem()) {
             heldItem = "";
             heldItemCache = null;
         } else if (heldItemCache == null || !heldItemCache.equals(heldItemOpt.get())) {
@@ -478,7 +503,7 @@ public final class HadesService extends Service {
             if (!errorOrEncodedByteBuffer.hasError()) {
                 String itemName = "";
 
-                if (gearShareOptions.get().shareCraftedNames()
+                if (getGearShareOptions().shareCraftedNames()
                         && item.get() instanceof CraftedGearItem craftedGearItem) {
                     itemName = " \"" + craftedGearItem.getName() + "\"";
                 }

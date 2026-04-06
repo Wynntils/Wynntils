@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.lootrun;
@@ -25,6 +25,7 @@ public class LootrunBeaconCountOverlay extends TextOverlay {
             §aGreen: ";string(lootrun_beacon_count("GREEN"));"
             §cRed: ";string(lootrun_beacon_count("RED"));" (";string(lootrun_red_beacon_challenge_count);")";"
             §fWhite: ";string(lootrun_beacon_count("WHITE"));"/1";"
+            §#fd72b1ffPink: ";string(lootrun_beacon_count("PINK"));"
             §#00f010ffCrimson: ";string(lootrun_beacon_count("CRIMSON"));"/2";"
             §#00f000ffRainbow: ";string(lootrun_beacon_count("RAINBOW"));" (";string(lootrun_rainbow_beacon_count);")")}
             """;
@@ -41,6 +42,7 @@ public class LootrunBeaconCountOverlay extends TextOverlay {
             §aGreen: 0
             §cRed: 0 (0)
             §fWhite: 0/1
+            §#fd72b1ffPink: 0
             §#00f010ffCrimson: 0/2
             §#00f000ffRainbow: 0 (10)
             """;

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2025.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.features;
@@ -7,12 +7,12 @@ package com.wynntils.core.consumers.features;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
+import com.wynntils.features.HideTripwiresFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
 import com.wynntils.features.ValuableFoundFeature;
@@ -23,7 +23,6 @@ import com.wynntils.features.chat.ChatMentionFeature;
 import com.wynntils.features.chat.ChatTabsFeature;
 import com.wynntils.features.chat.ChatTimestampFeature;
 import com.wynntils.features.chat.DeathCoordinatesFeature;
-import com.wynntils.features.chat.DialogueOptionOverrideFeature;
 import com.wynntils.features.chat.InputTranscriptionFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.chat.RemoveWynncraftChatWrapFeature;
@@ -33,12 +32,11 @@ import com.wynntils.features.combat.AutoAttackFeature;
 import com.wynntils.features.combat.ChestBlockerFeature;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
-import com.wynntils.features.combat.FixCastingSpellsFromInventoryFeature;
 import com.wynntils.features.combat.HealthPotionBlockerFeature;
 import com.wynntils.features.combat.HideLabelsFeature;
-import com.wynntils.features.combat.HorseMountFeature;
 import com.wynntils.features.combat.InvertAttackKeybindsFeature;
 import com.wynntils.features.combat.LowHealthVignetteFeature;
+import com.wynntils.features.combat.MountKeybindFeature;
 import com.wynntils.features.combat.MythicBoxScalerFeature;
 import com.wynntils.features.combat.PreventTradesDuelsFeature;
 import com.wynntils.features.combat.QuickCastFeature;
@@ -69,6 +67,7 @@ import com.wynntils.features.inventory.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.inventory.ExtendedItemCountFeature;
 import com.wynntils.features.inventory.GuildBankHotkeyFeature;
 import com.wynntils.features.inventory.HideAttackCooldownFeature;
+import com.wynntils.features.inventory.HideSwapItemAnimationFeature;
 import com.wynntils.features.inventory.IngredientPouchHotkeyFeature;
 import com.wynntils.features.inventory.InventoryEmeraldCountFeature;
 import com.wynntils.features.inventory.ItemFavoriteFeature;
@@ -95,14 +94,15 @@ import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.overlays.GuardianAngelsTrackerOverlayFeature;
 import com.wynntils.features.overlays.HeldItemCooldownOverlayFeature;
+import com.wynntils.features.overlays.HeldItemNameOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
 import com.wynntils.features.overlays.LootrunOverlaysFeature;
 import com.wynntils.features.overlays.MantleShieldTrackerOverlayFeature;
-import com.wynntils.features.overlays.NpcDialogueFeature;
 import com.wynntils.features.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.overlays.PartyMembersOverlayFeature;
 import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
 import com.wynntils.features.overlays.RaidProgressFeature;
+import com.wynntils.features.overlays.ScoreboardOverlayFeature;
 import com.wynntils.features.overlays.ServerUptimeInfoOverlayFeature;
 import com.wynntils.features.overlays.ShamanMaskOverlayFeature;
 import com.wynntils.features.overlays.ShamanTotemTimerOverlayFeature;
@@ -150,6 +150,7 @@ import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
 import com.wynntils.features.utilities.AutoSkipCutscenesFeature;
 import com.wynntils.features.utilities.CharacterSelectionUtilitiesFeature;
+import com.wynntils.features.utilities.EnhancedStreamerModeFeature;
 import com.wynntils.features.utilities.FixCrosshairPositionFeature;
 import com.wynntils.features.utilities.GammabrightFeature;
 import com.wynntils.features.utilities.PerCharacterGuildContributionFeature;
@@ -177,8 +178,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.OptionInstance;
-import net.minecraft.client.Options;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -223,7 +222,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new ChatTabsFeature());
         registerFeature(new ChatTimestampFeature());
         registerFeature(new DeathCoordinatesFeature());
-        registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new InputTranscriptionFeature());
         registerFeature(new MessageFilterFeature());
         registerFeature(new RemoveWynncraftChatWrapFeature());
@@ -236,12 +234,11 @@ public final class FeatureManager extends Manager {
         registerFeature(new ChestBlockerFeature());
         registerFeature(new ContentTrackerFeature());
         registerFeature(new CustomLootrunBeaconsFeature());
-        registerFeature(new FixCastingSpellsFromInventoryFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HideLabelsFeature());
-        registerFeature(new HorseMountFeature());
         registerFeature(new InvertAttackKeybindsFeature());
         registerFeature(new LowHealthVignetteFeature());
+        registerFeature(new MountKeybindFeature());
         registerFeature(new MythicBoxScalerFeature());
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuickCastFeature());
@@ -274,6 +271,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ExtendedItemCountFeature());
         registerFeature(new GuildBankHotkeyFeature());
         registerFeature(new HideAttackCooldownFeature());
+        registerFeature(new HideSwapItemAnimationFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new InventoryEmeraldCountFeature());
         registerFeature(new ItemFavoriteFeature());
@@ -306,14 +304,15 @@ public final class FeatureManager extends Manager {
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GuardianAngelsTrackerOverlayFeature());
         registerFeature(new HeldItemCooldownOverlayFeature());
+        registerFeature(new HeldItemNameOverlayFeature());
         registerFeature(new InfoBoxFeature());
         registerFeature(new LootrunOverlaysFeature());
         registerFeature(new MantleShieldTrackerOverlayFeature());
-        registerFeature(new NpcDialogueFeature());
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PartyMembersOverlayFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());
         registerFeature(new RaidProgressFeature());
+        registerFeature(new ScoreboardOverlayFeature());
         registerFeature(new ServerUptimeInfoOverlayFeature());
         registerFeature(new ShamanMaskOverlayFeature());
         registerFeature(new ShamanTotemTimerOverlayFeature());
@@ -379,6 +378,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new AutoApplyResourcePackFeature());
         registerFeature(new AutoSkipCutscenesFeature());
         registerFeature(new CharacterSelectionUtilitiesFeature());
+        registerFeature(new EnhancedStreamerModeFeature());
         registerFeature(new FixCrosshairPositionFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new ValuablesProtectionFeature());
@@ -406,26 +406,10 @@ public final class FeatureManager extends Manager {
         // region uncategorized
         registerFeature(new DiscordRichPresenceFeature());
         registerFeature(new ExtendedSeasonLeaderboardFeature());
+        registerFeature(new HideTripwiresFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new ValuableFoundFeature());
         // endregion
-
-        // Reload Minecraft's config files so our own keybinds get loaded
-        // This is needed because we are late to register the keybinds,
-        // but we cannot move it earlier to the init process because of I18n
-        synchronized (McUtils.options()) {
-            Options options = McUtils.options();
-            OptionInstance<Integer> guiScale = options.guiScale();
-
-            // Re-loading the options while the game is running might cause the GUI scale to change,
-            // as it is now clamped by the window size. We need to capture the initial value, then
-            // restore it after the reload.
-            int initialGuiScale = guiScale.get();
-
-            options.load();
-
-            guiScale.value = initialGuiScale;
-        }
 
         commands.init();
 
@@ -458,8 +442,6 @@ public final class FeatureManager extends Manager {
     }
 
     private void initializeFeature(Feature feature) {
-        Class<? extends Feature> featureClass = feature.getClass();
-
         // Set feature category
         ConfigCategory configCategory = feature.getClass().getAnnotation(ConfigCategory.class);
         Category category = configCategory != null ? configCategory.value() : Category.UNCATEGORIZED;
@@ -468,10 +450,6 @@ public final class FeatureManager extends Manager {
         // Register commands and key binds
         commands.discoverCommands(feature);
         Managers.KeyBind.discoverKeyBinds(feature);
-
-        // Determine if feature should be enabled & set default enabled value for user features
-        boolean startDisabled = featureClass.isAnnotationPresent(StartDisabled.class);
-        feature.userEnabled.store(!startDisabled);
 
         Managers.Overlay.discoverOverlays(feature);
         Managers.Overlay.discoverOverlayGroups(feature);
@@ -617,8 +595,8 @@ public final class FeatureManager extends Manager {
             MutableComponent enableMessage = Component.literal("Click here to enable it again.")
                     .withStyle(ChatFormatting.UNDERLINE)
                     .withStyle(ChatFormatting.RED)
-                    .withStyle(style -> style.withClickEvent(new ClickEvent(
-                            ClickEvent.Action.RUN_COMMAND, "/feature enable " + feature.getShortName())));
+                    .withStyle(style -> style.withClickEvent(
+                            new ClickEvent.RunCommand("/feature enable " + feature.getShortName())));
 
             McUtils.sendMessageToClient(enableMessage);
         }

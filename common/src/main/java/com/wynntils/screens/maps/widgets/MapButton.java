@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps.widgets;
@@ -19,17 +19,8 @@ public class MapButton extends BasicTexturedButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRectWithColor(
-                guiGraphics.pose(),
-                texture.resource(),
-                isHovered ? CommonColors.GRAY : CommonColors.WHITE,
-                getX(),
-                getY(),
-                0,
-                texture.width(),
-                texture.height(),
-                texture.width(),
-                texture.height());
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.drawTexturedRect(
+                guiGraphics, texture, isHovered ? CommonColors.GRAY : CommonColors.WHITE, getX(), getY());
     }
 }

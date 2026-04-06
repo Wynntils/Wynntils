@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2025.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.worlds;
@@ -7,6 +7,7 @@ package com.wynntils.models.worlds;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
@@ -15,19 +16,14 @@ import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
 import com.wynntils.models.character.actionbar.segments.CharacterCreationSegment;
 import com.wynntils.models.character.actionbar.segments.CharacterSelectionSegment;
-import com.wynntils.models.worlds.actionbar.matchers.CharacterWardrobeSegmentMacher;
-import com.wynntils.models.worlds.actionbar.matchers.WynncraftVersionSegmentMatcher;
+import com.wynntils.models.worlds.actionbar.matchers.CharacterWardrobeSegmentMatcher;
 import com.wynntils.models.worlds.actionbar.segments.CharacterWardrobeSegment;
-import com.wynntils.models.worlds.actionbar.segments.WynncraftVersionSegment;
 import com.wynntils.models.worlds.bossbars.SkipCutsceneBar;
-import com.wynntils.models.worlds.bossbars.StreamerModeBar;
 import com.wynntils.models.worlds.event.CutsceneStartedEvent;
-import com.wynntils.models.worlds.event.StreamModeEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.CutsceneState;
 import com.wynntils.models.worlds.type.ServerRegion;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.models.worlds.type.WynncraftVersion;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.UUID;
@@ -50,26 +46,18 @@ public final class WorldStateModel extends Model {
     private static final SkipCutsceneBar skipCutsceneBar = new SkipCutsceneBar();
     private CutsceneState cutsceneState = CutsceneState.NOT_IN_CUTSCENE;
 
-    private static final StreamerModeBar streamerModeBar = new StreamerModeBar();
-
     private String currentWorldName = "";
-    private String currentHousingName = "";
     private ServerRegion currentRegion = ServerRegion.WC;
     private long serverJoinTimestamp = 0;
     private boolean onBetaServer;
     private boolean hasJoinedAnyWorld = false;
-    private boolean inStream = false;
-    private boolean onHousing = false;
     private boolean inCharacterWardrobe = false;
-    private WynncraftVersion worldVersion = null;
 
     public WorldStateModel() {
         super(List.of());
 
-        Handlers.ActionBar.registerSegment(new WynncraftVersionSegmentMatcher());
-        Handlers.ActionBar.registerSegment(new CharacterWardrobeSegmentMacher());
+        Handlers.ActionBar.registerSegment(new CharacterWardrobeSegmentMatcher());
         Handlers.BossBar.registerBar(skipCutsceneBar);
-        Handlers.BossBar.registerBar(streamerModeBar);
     }
 
     private WorldState currentState = WorldState.NOT_CONNECTED;
@@ -82,20 +70,8 @@ public final class WorldStateModel extends Model {
         return inCharacterWardrobe;
     }
 
-    public boolean onHousing() {
-        return onHousing;
-    }
-
-    public boolean isInStream() {
-        return inStream;
-    }
-
     public boolean isOnBetaServer() {
         return onBetaServer;
-    }
-
-    public WynncraftVersion getWorldVersion() {
-        return worldVersion;
     }
 
     public WorldState getCurrentState() {
@@ -172,7 +148,6 @@ public final class WorldStateModel extends Model {
     public void onActionBarUpdate(ActionBarUpdatedEvent event) {
         event.runIfPresent(CharacterCreationSegment.class, this::onCharacterCreation);
         event.runIfPresent(CharacterSelectionSegment.class, this::onCharacterSelection);
-        event.runIfPresent(WynncraftVersionSegment.class, this::setWorldVersion);
         inCharacterWardrobe = false;
         event.runIfPresent(CharacterWardrobeSegment.class, this::onCharacterWardrobe);
     }
@@ -203,10 +178,6 @@ public final class WorldStateModel extends Model {
         setState(WorldState.CHARACTER_SELECTION);
     }
 
-    private void setWorldVersion(WynncraftVersionSegment segment) {
-        worldVersion = segment.getWynncraftVersion();
-    }
-
     private void onCharacterWardrobe(CharacterWardrobeSegment segment) {
         inCharacterWardrobe = true;
     }
@@ -214,7 +185,7 @@ public final class WorldStateModel extends Model {
     @SubscribeEvent
     public void update(PlayerDisplayNameChangeEvent e) {
         if (!e.getId().equals(WORLD_NAME_UUID)) return;
-        if (inStream) return;
+        if (Models.StreamerMode.isInStream()) return;
 
         Component displayName = e.getDisplayName();
         StyledText name = StyledText.fromComponent(displayName);
@@ -235,16 +206,10 @@ public final class WorldStateModel extends Model {
             }
             setState(WorldState.WORLD, worldName, !hasJoinedAnyWorld);
             hasJoinedAnyWorld = true;
-            onHousing = housing;
-            currentHousingName = onHousing ? m.group(1) : "";
+            Models.Housing.updateHousingState(housing, housing ? m.group(1) : "");
             return true;
         }
         return false;
-    }
-
-    public void setStreamerMode(boolean inStream) {
-        this.inStream = inStream;
-        WynntilsMod.postEvent(new StreamModeEvent(inStream));
     }
 
     public void cutsceneStarted(boolean groupCutscene) {
@@ -273,10 +238,6 @@ public final class WorldStateModel extends Model {
 
     public ServerRegion getCurrentServerRegion() {
         return currentRegion;
-    }
-
-    public String getCurrentHousingName() {
-        return currentHousingName;
     }
 
     public long getServerJoinTimestamp() {

@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -14,7 +15,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
-import com.wynntils.models.npcdialogue.event.NpcDialogueProcessingEvent;
 import com.wynntils.models.wynnalphabet.WynnAlphabet;
 import com.wynntils.models.wynnalphabet.type.TranscribeCondition;
 import com.wynntils.utils.colors.ColorChatFormatting;
@@ -34,9 +34,6 @@ public class TranscribeMessagesFeature extends Feature {
     private final Config<Boolean> transcribeChat = new Config<>(true);
 
     @Persisted
-    private final Config<Boolean> transcribeNpcs = new Config<>(true);
-
-    @Persisted
     private final Config<TranscribeCondition> transcribeCondition = new Config<>(TranscribeCondition.ALWAYS);
 
     @Persisted
@@ -52,6 +49,10 @@ public class TranscribeMessagesFeature extends Feature {
     private final Config<ColorChatFormatting> wynnicColor = new Config<>(ColorChatFormatting.DARK_GREEN);
 
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
+
+    public TranscribeMessagesFeature() {
+        super(ProfileDefault.onlyDefault());
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageEvent.Edit event) {
@@ -71,35 +72,6 @@ public class TranscribeMessagesFeature extends Feature {
         if (message.equals(modified)) return;
 
         event.setMessage(modified);
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onNpcDialogue(NpcDialogueProcessingEvent.Pre event) {
-        if (!transcribeNpcs.get()) return;
-
-        boolean transcribeWynnic = Models.WynnAlphabet.shouldTranscribe(transcribeCondition.get(), WynnAlphabet.WYNNIC);
-        boolean transcribeGavellian =
-                Models.WynnAlphabet.shouldTranscribe(transcribeCondition.get(), WynnAlphabet.GAVELLIAN);
-
-        if (!transcribeWynnic && !transcribeGavellian) return;
-
-        event.addProcessingStep(future ->
-                future.thenApply(styledTexts -> transcribeText(styledTexts, transcribeWynnic, transcribeGavellian)));
-    }
-
-    private List<StyledText> transcribeText(
-            List<StyledText> styledTexts, boolean transcribeWynnic, boolean transcribeGavellian) {
-        // If there are no Wynnic or Gavellian characters, return the original text
-        if (styledTexts.stream()
-                .noneMatch(text -> Models.WynnAlphabet.hasWynnicOrGavellian(text.getStringWithoutFormatting()))) {
-            return styledTexts;
-        }
-
-        // Transcribe each styled text
-        return styledTexts.stream()
-                .map(styledText ->
-                        getStyledTextWithTranscription(styledText, transcribeWynnic, transcribeGavellian, true))
-                .toList();
     }
 
     private StyledText getStyledTextWithTranscription(

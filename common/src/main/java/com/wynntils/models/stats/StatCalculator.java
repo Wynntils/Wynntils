@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats;
@@ -208,7 +208,7 @@ public final class StatCalculator {
         int allCases =
                 statCalculationInfo.range().high() - statCalculationInfo.range().low() + 1;
 
-        // Internal roll range for maxiumum value
+        // Internal roll range for maximum value
         // Do not confuse this with a "3 star" roll, aka perfect internal roll
         RangedValue perfectInternalRollRange = calculateInternalRollRange(
                 possibleValues,

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -88,10 +88,12 @@ public class CustomIdentificationDataTransformer extends DataTransformer<CustomI
             // The next bytes are the identification's max value bytes, which are assembled into an integer.
             int maxValue = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
-            //  For crafted items, the max values can be used to calculate the minimum values (10% of the maximum,
-            // rounded).
-            possibleValues.add(new StatPossibleValues(
-                    statType, RangedValue.of(Math.round(maxValue * 0.1f), maxValue), maxValue, false));
+            // For positive stats on crafted items, the max values can be used to calculate the minimum values (10%
+            // of the maximum, rounded). Negative stats do not decay so are always the maximum.
+            RangedValue range = maxValue <= 0
+                    ? RangedValue.of(maxValue, maxValue)
+                    : RangedValue.of(Math.round(maxValue * 0.1f), maxValue);
+            possibleValues.add(new StatPossibleValues(statType, range, maxValue, false));
         }
 
         return ErrorOr.of(new CustomIdentificationsData(possibleValues));

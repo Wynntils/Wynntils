@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.map;
@@ -7,13 +7,16 @@ package com.wynntils.features.map;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
+import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.WaypointCreationScreen;
 import com.wynntils.services.map.pois.CustomPoi;
@@ -24,7 +27,6 @@ import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.PointerType;
 import java.util.ArrayList;
 import java.util.List;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.MAP)
 public class MainMapFeature extends Feature {
@@ -59,11 +61,14 @@ public class MainMapFeature extends Feature {
     public final Config<Boolean> holdGuildMapOpen = new Config<>(true);
 
     @RegisterKeyBind
-    public final KeyBind openMapKeybind = new KeyBind("Open Main Map", GLFW.GLFW_KEY_M, false, this::openMainMap);
+    public final KeyBind openMapKeybind = KeyBindDefinition.OPEN_MAIN_MAP.create(this::openMainMap);
 
     @RegisterKeyBind
-    public final KeyBind newWaypointKeybind =
-            new KeyBind("New Waypoint", GLFW.GLFW_KEY_B, true, this::openWaypointSetup);
+    public final KeyBind newWaypointKeybind = KeyBindDefinition.NEW_WAYPOINT.create(this::openWaypointSetup);
+
+    public MainMapFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     // Keep track of whether migration has already occurred this instance
     private boolean customPoisMigrated = false;
@@ -83,6 +88,9 @@ public class MainMapFeature extends Feature {
         // and should signal that we should close when the key is not held anymore.
         if (McUtils.screen() instanceof MainMapScreen mainMapScreen) {
             mainMapScreen.setHoldingMapKey(true);
+            return;
+        } else if (McUtils.screen() instanceof GuildMapScreen guildMapScreen) {
+            guildMapScreen.changeToMainMap();
             return;
         }
 

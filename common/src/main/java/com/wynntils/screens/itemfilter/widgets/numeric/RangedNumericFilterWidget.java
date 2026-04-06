@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemfilter.widgets.numeric;
@@ -19,6 +19,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public abstract class RangedNumericFilterWidget<T> extends GeneralFilterWidget {
@@ -70,7 +71,7 @@ public abstract class RangedNumericFilterWidget<T> extends GeneralFilterWidget {
 
         FontRenderer.getInstance()
                 .renderText(
-                        guiGraphics.pose(),
+                        guiGraphics,
                         StyledText.fromString("-"),
                         getX() + 59,
                         getY() + 11,
@@ -81,26 +82,26 @@ public abstract class RangedNumericFilterWidget<T> extends GeneralFilterWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (minInput.isMouseOver(mouseX, mouseY)) {
-            return minInput.mouseClicked(mouseX, mouseY, button);
-        } else if (maxInput.isMouseOver(mouseX, mouseY)) {
-            return maxInput.mouseClicked(mouseX, mouseY, button);
-        } else if (removeButton.isMouseOver(mouseX, mouseY)) {
-            return removeButton.mouseClicked(mouseX, mouseY, button);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (minInput.isMouseOver(event.x(), event.y())) {
+            return minInput.mouseClicked(event, isDoubleClick);
+        } else if (maxInput.isMouseOver(event.x(), event.y())) {
+            return maxInput.mouseClicked(event, isDoubleClick);
+        } else if (removeButton.isMouseOver(event.x(), event.y())) {
+            return removeButton.mouseClicked(event, isDoubleClick);
         }
 
         return false;
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (minInput.isMouseOver(mouseX, mouseY)) {
-            return minInput.mouseReleased(mouseX, mouseY, button);
-        } else if (maxInput.isMouseOver(mouseX, mouseY)) {
-            return maxInput.mouseReleased(mouseX, mouseY, button);
-        } else if (removeButton.isMouseOver(mouseX, mouseY)) {
-            return removeButton.mouseReleased(mouseX, mouseY, button);
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if (minInput.isMouseOver(event.x(), event.y())) {
+            return minInput.mouseReleased(event);
+        } else if (maxInput.isMouseOver(event.x(), event.y())) {
+            return maxInput.mouseReleased(event);
+        } else if (removeButton.isMouseOver(event.x(), event.y())) {
+            return removeButton.mouseReleased(event);
         }
 
         return false;

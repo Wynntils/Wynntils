@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.ingredients.type;
@@ -12,7 +12,7 @@ public enum IngredientPosition {
     ABOVE("above"),
     UNDER("under"),
     TOUCHING("touching"),
-    NOT_TOUCHING("not touching", "notTouching");
+    NOT_TOUCHING("not touching");
 
     private final String displayName;
     private final String apiName;
@@ -20,11 +20,6 @@ public enum IngredientPosition {
     IngredientPosition(String displayName) {
         this.displayName = displayName;
         this.apiName = this.name().toLowerCase(Locale.ROOT);
-    }
-
-    IngredientPosition(String displayName, String apiName) {
-        this.displayName = displayName;
-        this.apiName = apiName;
     }
 
     public String getDisplayName() {

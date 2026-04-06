@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2025.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -7,7 +7,7 @@ package com.wynntils.features.combat;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -23,7 +23,6 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
 import net.neoforged.bus.api.SubscribeEvent;
 
-@StartDisabled
 @ConfigCategory(Category.COMBAT)
 public class InvertAttackKeybindsFeature extends Feature {
     @Persisted
@@ -42,6 +41,10 @@ public class InvertAttackKeybindsFeature extends Feature {
     private final Config<Boolean> invertShaman = new Config<>(false);
 
     private final Map<InputConstants.Key, InputConstants.Key> activeRemappings = new HashMap<>();
+
+    public InvertAttackKeybindsFeature() {
+        super(ProfileDefault.DISABLED);
+    }
 
     @SubscribeEvent
     public void onKeyMappingOperation(KeyMappingEvent event) {

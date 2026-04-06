@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -24,6 +25,10 @@ import org.lwjgl.glfw.GLFW;
 public class ContainerScrollFeature extends Feature {
     @Persisted
     private final Config<Boolean> invertScroll = new Config<>(false);
+
+    public ContainerScrollFeature() {
+        super(ProfileDefault.ENABLED);
+    }
 
     @SubscribeEvent
     public void onInteract(MouseScrollEvent event) {

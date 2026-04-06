@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.npc.label;
@@ -13,8 +13,8 @@ import net.minecraft.world.entity.Entity;
 
 public class NpcLabelParser implements LabelParser<NpcLabelInfo> {
     // Test in NpcLabelParser_NPC_LABEL_PATTERN
-    private static final Pattern NPC_LABEL_PATTERN =
-            Pattern.compile("^§f(?<icon>.)\n§(?:c|d)(?<name>[a-zA-Z ]*)(?:§f)?\n§7(?<description>.*)$", Pattern.DOTALL);
+    private static final Pattern NPC_LABEL_PATTERN = Pattern.compile(
+            "^§f(?<icon>.)\n§(?:c|d)(?<name>[a-zA-Z ]*)(?:§f)?\n§(7|8)(?<description>.*)$", Pattern.DOTALL);
 
     // Special cases
     private static final Pattern HOUSING_LABEL_PATTERN = Pattern.compile("^§fClick §7to go to your housing plot$");

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.skillpointloadouts.widgets;
@@ -9,6 +9,7 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
 import com.wynntils.utils.type.Pair;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class ConvertButton extends WynntilsButton {
@@ -21,7 +22,7 @@ public class ConvertButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         if (parent.selectedLoadout.value().isBuild()) {
             Models.SkillPoint.saveSkillPoints(
                     parent.selectedLoadout.key(), parent.selectedLoadout.value().getSkillPointsAsArray());

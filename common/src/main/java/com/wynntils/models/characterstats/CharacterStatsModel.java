@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats;
@@ -10,7 +10,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
-import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.models.characterstats.actionbar.matchers.HealthBarSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.matchers.HealthTextSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.matchers.HotbarSegmentMatcher;
@@ -22,6 +21,11 @@ import com.wynntils.models.characterstats.actionbar.matchers.MeterEdgeAnimationS
 import com.wynntils.models.characterstats.actionbar.matchers.MeterTransitionSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.matchers.PowderSpecialSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.matchers.ProfessionExperienceSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.UltimateMeterBarSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.UltimateMeterTransitionFromNormalSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.UltimateMeterTransitionToBarSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.UltimateReadyActivateSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.matchers.UltimateReadyTransitionSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.segments.CombatExperienceSegment;
 import com.wynntils.models.characterstats.actionbar.segments.HealthBarSegment;
 import com.wynntils.models.characterstats.actionbar.segments.HealthTextSegment;
@@ -44,7 +48,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
@@ -69,6 +73,11 @@ public final class CharacterStatsModel extends Model {
         Handlers.ActionBar.registerSegment(new MeterBarSegmentMatcher());
         Handlers.ActionBar.registerSegment(new MeterEdgeAnimationSegmentMatcher());
         Handlers.ActionBar.registerSegment(new MeterTransitionSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new UltimateMeterBarSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new UltimateMeterTransitionFromNormalSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new UltimateReadyTransitionSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new UltimateMeterTransitionToBarSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new UltimateReadyActivateSegmentMatcher());
         Handlers.ActionBar.registerSegment(new LevelSegmentMatcher());
         Handlers.ActionBar.registerSegment(new ManaBarSegmentMatcher());
         Handlers.ActionBar.registerSegment(new HealthBarSegmentMatcher());
@@ -95,12 +104,6 @@ public final class CharacterStatsModel extends Model {
         // This segment must be updated last, as it updates the level based on the
         // the current experience segment, which are updated above.
         event.runIfPresent(LevelSegment.class, this::updateLevel);
-    }
-
-    @SubscribeEvent
-    public void onHeldItemChanged(ChangeCarriedItemEvent event) {
-        // powders are always reset when held item is changed on Wynn, this ensures consistent behavior
-        powderSpecialInfo = PowderSpecialInfo.EMPTY;
     }
 
     public double getBlocksAboveGround() {
@@ -131,8 +134,8 @@ public final class CharacterStatsModel extends Model {
 
     public CappedValue getItemCooldownTicks(ItemStack itemStack) {
         ItemCooldowns cooldowns = McUtils.player().getCooldowns();
-        ResourceLocation resourceLocation = cooldowns.getCooldownGroup(itemStack);
-        ItemCooldowns.CooldownInstance cooldown = cooldowns.cooldowns.get(resourceLocation);
+        Identifier identifier = cooldowns.getCooldownGroup(itemStack);
+        ItemCooldowns.CooldownInstance cooldown = cooldowns.cooldowns.get(identifier);
         if (cooldown == null || cooldown.startTime >= cooldown.endTime) return CappedValue.EMPTY; // Sanity check
 
         int remaining = cooldown.endTime - cooldowns.tickCount;
@@ -160,7 +163,7 @@ public final class CharacterStatsModel extends Model {
         // We trust that Wynncraft do not let us wear invalid gear, so no further validation checks are needed
 
         // Check armor slots
-        player.getArmorSlots().forEach(itemStack -> {
+        player.equipment.items.values().forEach(itemStack -> {
             Optional<GearItem> armorGearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
             if (armorGearItem.isPresent()) {
                 GearInfo gearInfo = armorGearItem.get().getItemInfo();

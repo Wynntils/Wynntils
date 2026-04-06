@@ -1,18 +1,22 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.charm;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -29,18 +33,19 @@ public class GuideCharmItemStackButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         CustomColor color =
                 CustomColor.fromChatFormatting(itemStack.getCharmInfo().tier().getChatFormatting());
 
-        RenderUtils.drawTexturedRectWithColor(
-                poseStack,
-                Texture.HIGHLIGHT.resource(),
-                color.withAlpha(1f),
+        RenderUtils.drawTexturedRect(
+                guiGraphics,
+                Texture.HIGHLIGHT.identifier(),
+                color,
                 getX() - 1,
                 getY() - 1,
+                18,
+                18,
+                0,
                 0,
                 18,
                 18,
@@ -51,11 +56,10 @@ public class GuideCharmItemStackButton extends WynntilsButton {
 
         if (Services.Favorites.isFavorite(itemStack)) {
             RenderUtils.drawScalingTexturedRect(
-                    poseStack,
-                    Texture.FAVORITE_ICON.resource(),
+                    guiGraphics,
+                    Texture.FAVORITE_ICON.identifier(),
                     getX() + 12,
                     getY() - 4,
-                    200,
                     9,
                     9,
                     Texture.FAVORITE_ICON.width(),
@@ -64,14 +68,17 @@ public class GuideCharmItemStackButton extends WynntilsButton {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT) && !KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) {
             return false;
         }
 
         String unformattedName =
                 StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            Managers.Net.openLink(UrlId.LINK_WYNNCRAFT_ITEM_LOOKUP, Map.of("itemname", unformattedName));
+            return true;
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             Services.Favorites.toggleFavorite(unformattedName);
         }
 
@@ -80,7 +87,7 @@ public class GuideCharmItemStackButton extends WynntilsButton {
 
     /* no-op */
     @Override
-    public void onPress() {}
+    public void onPress(InputWithModifiers input) {}
 
     public GuideCharmItemStack getItemStack() {
         return itemStack;

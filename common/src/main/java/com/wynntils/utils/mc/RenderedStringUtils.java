@@ -1,47 +1,59 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.render.FontRenderer;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 
 public final class RenderedStringUtils {
-    private static final Pattern OPENING_PARANTHESIS_PATTERN = Pattern.compile(" \\(");
+    private static final Pattern OPENING_PARENTHESIS_PATTERN = Pattern.compile(" \\(");
     private static final Pattern OPENING_BRACKET_PATTERN = Pattern.compile(" \\[");
 
     public static StyledText[] wrapTextBySize(StyledText s, int maxPixels) {
         Font font = McUtils.mc().font;
         int spaceSize = font.width(" ");
 
-        StyledText[] stringArray = s.split(" ");
-        StringBuilder result = new StringBuilder();
+        StyledText[] words = s.split(" ");
+
+        List<StyledText> lines = new ArrayList<>();
+        StyledText currentLine = StyledText.EMPTY;
+
         int length = 0;
 
-        for (StyledText string : stringArray) {
-            StyledText[] lines = string.split("\\\\n");
-            for (int i = 0; i < lines.length; i++) {
-                StyledText line = lines[i];
-                if (i > 0 || length + font.width(line.getString()) >= maxPixels) {
-                    result.append('\n');
+        for (StyledText word : words) {
+            StyledText[] parts = word.split("\\n");
+
+            for (int i = 0; i < parts.length; i++) {
+                StyledText part = parts[i];
+
+                int width = font.width(part.getString());
+
+                if (i > 0 || length + width >= maxPixels) {
+                    lines.add(currentLine);
+                    currentLine = StyledText.EMPTY;
                     length = 0;
                 }
-                if (!line.isEmpty()) {
-                    result.append(line.getString()).append(' ');
-                    length += font.width(line.getString()) + spaceSize;
+
+                if (!part.isEmpty()) {
+                    currentLine = currentLine.append(part).append(" ");
+                    length += width + spaceSize;
                 }
             }
         }
 
-        return Arrays.stream(result.toString().split("\n"))
-                .map(StyledText::fromString)
-                .toArray(StyledText[]::new);
+        if (!currentLine.isEmpty()) {
+            lines.add(currentLine);
+        }
+
+        return lines.toArray(new StyledText[0]);
     }
 
     public static String getMaxFittingText(String text, float maxTextWidth, Font font) {
@@ -91,23 +103,25 @@ public final class RenderedStringUtils {
             }
 
             return StyledText.fromString(
-                    OPENING_PARANTHESIS_PATTERN.matcher(line.getString()).replaceFirst("\n" + color + "("));
+                    OPENING_PARENTHESIS_PATTERN.matcher(line.getString()).replaceFirst("\n" + color + "("));
         } else { // Fits fine, give normal lines
             return line;
         }
     }
 
-    public static String substringMaxWidth(String input, int maxWidth) {
+    public static StyledText substringMaxWidth(StyledText input, int maxWidth) {
         Font font = McUtils.mc().font;
-        if (font.width(input) <= maxWidth) return input;
+        Component component = input.getComponent();
+        if (font.width(component) <= maxWidth) return input;
 
         StringBuilder builder = new StringBuilder();
-        for (char c : input.toCharArray()) {
+        for (char c : component.getString().toCharArray()) {
             if (font.width(builder.toString() + c) > maxWidth) break;
             builder.append(c);
         }
 
-        return builder.toString();
+        int length = builder.toString().length();
+        return input.substring(0, length);
     }
 
     public static Component getPercentageComponent(int count, int totalCount, int tickCount) {

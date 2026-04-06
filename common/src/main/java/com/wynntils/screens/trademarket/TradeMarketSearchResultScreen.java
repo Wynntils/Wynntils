@@ -1,10 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.trademarket;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.google.common.collect.Lists;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.wrappedscreen.WrappedScreen;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
@@ -30,16 +30,17 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 
 public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<ChestMenu> implements WrappedScreen {
     // Constants
     private static final int FAKE_CONTAINER_ID = 454545;
-    private static final ResourceLocation CONTAINER_BACKGROUND =
-            ResourceLocation.withDefaultNamespace("textures/gui/container/generic_54.png");
+    private static final Identifier CONTAINER_BACKGROUND =
+            Identifier.withDefaultNamespace("textures/gui/container/generic_54.png");
     private static final int SCROLL_AREA_HEIGHT = 110;
     private static final int ITEMS_PER_PAGE = 54;
 
@@ -158,12 +159,10 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        PoseStack poseStack = guiGraphics.pose();
-
         updateItems();
 
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        renderScrollButton(poseStack);
+        renderScrollButton(guiGraphics);
 
         renderables.forEach(c -> c.render(guiGraphics, mouseX, mouseY, partialTick));
 
@@ -173,8 +172,10 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         // Render tooltip for hovered widget
         for (GuiEventListener child : children()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.renderComponentTooltip(
-                        FontRenderer.getInstance().getFont(), tooltipProvider.getTooltipLines(), mouseX, mouseY);
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
+                        mouseX,
+                        mouseY);
                 break;
             }
         }
@@ -193,22 +194,20 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        PoseStack poseStack = guiGraphics.pose();
-
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
 
         // Container
-        RenderUtils.drawTexturedRect(
-                poseStack, CONTAINER_BACKGROUND, x, y, this.imageWidth, this.menu.getRowCount() * 18 + 17, 256, 256);
+        //        RenderUtils.drawTexturedRect(
+        //                guiGraphics, CONTAINER_BACKGROUND, x, y, this.imageWidth, this.menu.getRowCount() * 18 + 17,
+        // 256, 256);
 
         // Inventory
         RenderUtils.drawTexturedRect(
-                poseStack,
+                guiGraphics,
                 CONTAINER_BACKGROUND,
                 x,
                 y + this.menu.getRowCount() * 18 + 17,
-                0,
                 this.imageWidth,
                 96,
                 0,
@@ -219,35 +218,35 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                 256);
 
         // Scrollbar
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLLBAR_BACKGROUND, x + this.imageWidth - 7, y);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLLBAR_BACKGROUND, x + this.imageWidth - 7, y);
 
         // Sidebar
         RenderUtils.drawTexturedRect(
-                poseStack, Texture.CONTAINER_SIDEBAR, x - Texture.CONTAINER_SIDEBAR.width() + 7, y);
+                guiGraphics, Texture.CONTAINER_SIDEBAR, x - Texture.CONTAINER_SIDEBAR.width() + 7, y);
     }
 
-    private void renderScrollButton(PoseStack poseStack) {
+    private void renderScrollButton(GuiGraphics guiGraphics) {
         float renderX =
                 (this.width - this.imageWidth) / 2 + this.imageWidth + Texture.SCROLLBAR_BACKGROUND.width() / 2 - 14;
         float renderY = (this.height - this.imageHeight) / 2
                 + Texture.SCROLLBAR_BUTTON.height() / 2
                 + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT);
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLLBAR_BUTTON, renderX, renderY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLLBAR_BUTTON, renderX, renderY);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         float scrollBarRenderX =
                 (this.width - this.imageWidth) / 2 + this.imageWidth + Texture.SCROLLBAR_BACKGROUND.width() / 2 - 14;
         float scrollBarRenderY = (this.height - this.imageHeight) / 2
                 + Texture.SCROLLBAR_BUTTON.height() / 2
                 + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT);
 
-        if (mouseX >= scrollBarRenderX
-                && mouseX <= scrollBarRenderX + Texture.SCROLLBAR_BUTTON.width()
-                && mouseY >= scrollBarRenderY
-                && mouseY <= scrollBarRenderY + Texture.SCROLLBAR_BUTTON.height()) {
+        if (event.x() >= scrollBarRenderX
+                && event.x() <= scrollBarRenderX + Texture.SCROLLBAR_BUTTON.width()
+                && event.y() >= scrollBarRenderY
+                && event.y() <= scrollBarRenderY + Texture.SCROLLBAR_BUTTON.height()) {
             holdingScrollbar = true;
             return true;
         }
@@ -260,35 +259,35 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         // Item helper widget needs special handling because it is overlaid on the search box
         for (GuiEventListener child : children()) {
             if (child instanceof ItemSearchHelperWidget) {
-                if (child.mouseClicked(mouseX, mouseY, button)) {
+                if (child.mouseClicked(event, isDoubleClick)) {
                     return true;
                 }
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (!holdingScrollbar) return false;
 
         int renderY = (this.height - this.imageHeight) / 2;
         int scrollAreaStartY = renderY + 14;
 
         int newValue = Math.round(MathUtils.map(
-                (float) mouseY, scrollAreaStartY, scrollAreaStartY + SCROLL_AREA_HEIGHT, 0, getMaxScrollOffset()));
+                (float) event.y(), scrollAreaStartY, scrollAreaStartY + SCROLL_AREA_HEIGHT, 0, getMaxScrollOffset()));
 
         scroll(newValue - scrollOffset);
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         holdingScrollbar = false;
 
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override

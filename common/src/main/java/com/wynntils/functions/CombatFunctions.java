@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -8,6 +8,9 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.combat.label.DebuffType;
+import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Time;
 import java.util.List;
@@ -243,6 +246,94 @@ public class CombatFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("last_kill_ms");
+        }
+    }
+
+    public static class TargetedMobDebuffValueFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            DebuffType debuffType =
+                    DebuffType.fromName(arguments.getArgument("debuffName").getStringValue());
+            if (debuffType == null) return 0;
+            double range = arguments.getArgument("range").getDoubleValue();
+            double horizontalFovDegrees =
+                    arguments.getArgument("horizontalDegrees").getDoubleValue();
+            double verticalFovDegrees = arguments.getArgument("verticalDegrees").getDoubleValue();
+
+            return Models.Combat.getTargetedDebuffCount(range, horizontalFovDegrees, verticalFovDegrees, debuffType);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("range", Double.class, null),
+                    new Argument<>("horizontalDegrees", Double.class, null),
+                    new Argument<>("verticalDegrees", Double.class, null),
+                    new Argument<>("debuffName", String.class, null)));
+        }
+    }
+
+    public static class DebuffsInRadiusValueFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            DebuffType debuffType =
+                    DebuffType.fromName(arguments.getArgument("debuffName").getStringValue());
+            if (debuffType == null) return 0;
+            double radius = arguments.getArgument("radius").getDoubleValue();
+
+            return Models.Combat.getDebuffCountInRadius(radius, debuffType);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("radius", Double.class, null), new Argument<>("debuffName", String.class, null)));
+        }
+    }
+
+    public static class TicksSinceSpecificSpellFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            String spellName = arguments.getArgument("spellName").getStringValue();
+            return Models.Spell.getTicksSinceCast(spellName);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("spellName", String.class, null)));
+        }
+    }
+
+    public static class SpellNameFromDirectionFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            String spellDirection = arguments.getArgument("spellDirection").getStringValue();
+            ClassType classType =
+                    ClassType.fromName(arguments.getArgument("class").getStringValue());
+            SpellType spellType = SpellType.fromSpellString(classType, spellDirection);
+
+            return spellType == null ? "" : spellType.getName();
+        }
+
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("spellDirection", String.class, null), new Argument<>("class", String.class, null)));
+        }
+    }
+
+    public static class SpellNameFromNumberFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int spellNumber = arguments.getArgument("spellNumber").getIntegerValue();
+            String className = arguments.getArgument("class").getStringValue();
+            SpellType spellType = SpellType.forClass(ClassType.fromName(className), spellNumber);
+            return spellType == null ? "" : spellType.getName();
+        }
+
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("spellNumber", Integer.class, null), new Argument<>("class", String.class, null)));
         }
     }
 }

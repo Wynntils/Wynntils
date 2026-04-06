@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -7,6 +7,7 @@ package com.wynntils.features.combat;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -34,13 +35,17 @@ public class SpellCastVignetteFeature extends Feature {
     private final Config<Float> vignetteIntensity = new Config<>(0.75f);
 
     @Persisted
-    private final Config<Float> maxItensityPercent = new Config<>(100f);
+    private final Config<Float> maxIntensityPercent = new Config<>(100f);
 
     @Persisted
     private final Config<CustomColor> vignetteColor = new Config<>(new CustomColor(0, 71, 201));
 
     private int vignetteTimer;
     private float intensity;
+
+    public SpellCastVignetteFeature() {
+        super(ProfileDefault.onlyDefault());
+    }
 
     @SubscribeEvent
     public void onSpellCast(SpellEvent.Cast event) {
@@ -57,7 +62,7 @@ public class SpellCastVignetteFeature extends Feature {
         int currentMana = Math.max(1, manaOpt.get().current());
 
         // An relativeCost of 1.0 means we just used all mana we have left
-        float relativeCost = Math.min((float) event.getManaCost() / currentMana, maxItensityPercent.get() / 100);
+        float relativeCost = Math.min((float) event.getManaCost() / currentMana, maxIntensityPercent.get() / 100);
         intensity = vignetteIntensity.get() * relativeCost;
         vignetteTimer = SHOW_VIGNETTE_TICKS;
     }
@@ -83,7 +88,7 @@ public class SpellCastVignetteFeature extends Feature {
         int fade = vignetteFadeTime.get() - shownTicks;
         if (fade > 0) {
             float alpha = intensity * ((float) fade / vignetteFadeTime.get());
-            RenderUtils.renderVignetteOverlay(event.getPoseStack(), vignetteColor.get(), alpha);
+            RenderUtils.renderVignetteOverlay(event.getGuiGraphics(), vignetteColor.get(), alpha);
         }
     }
 }

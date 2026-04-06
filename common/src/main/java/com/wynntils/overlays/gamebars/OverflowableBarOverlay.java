@@ -1,16 +1,15 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays.gamebars;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedRenderUtils;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.gui.GuiGraphics;
 
 public abstract class OverflowableBarOverlay extends BaseBarOverlay {
     protected OverflowableBarOverlay(OverlayPosition position, OverlaySize size, CustomColor textColor) {
@@ -18,8 +17,7 @@ public abstract class OverflowableBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    protected void renderBar(
-            PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float renderHeight, float progress) {
+    protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
         int textureY1 = getTextureY1();
         int textureY2 = getTextureY2();
 
@@ -33,11 +31,10 @@ public abstract class OverflowableBarOverlay extends BaseBarOverlay {
             float x2 = this.getRenderX() + this.getWidth();
 
             int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
-            BufferedRenderUtils.drawProgressBarBackground(
-                    poseStack, bufferSource, texture, x1, renderY, x2, renderY + renderHeight, 0, textureY1, 81, half);
-            BufferedRenderUtils.drawProgressBarForeground(
-                    poseStack,
-                    bufferSource,
+            RenderUtils.drawProgressBarBackground(
+                    guiGraphics, texture, x1, renderY, x2, renderY + renderHeight, 0, textureY1, 81, half);
+            RenderUtils.drawProgressBarForeground(
+                    guiGraphics,
                     texture,
                     x1,
                     renderY,
@@ -50,9 +47,8 @@ public abstract class OverflowableBarOverlay extends BaseBarOverlay {
                     1f);
 
             float overflowProgress = progress < 0 ? progress + 1 : progress - 1;
-            BufferedRenderUtils.drawProgressBarForeground(
-                    poseStack,
-                    bufferSource,
+            RenderUtils.drawProgressBarForeground(
+                    guiGraphics,
                     overflowTexture,
                     x1,
                     renderY,
@@ -67,9 +63,8 @@ public abstract class OverflowableBarOverlay extends BaseBarOverlay {
             return;
         }
 
-        BufferedRenderUtils.drawProgressBar(
-                poseStack,
-                bufferSource,
+        RenderUtils.drawProgressBar(
+                guiGraphics,
                 texture,
                 this.getRenderX(),
                 renderY,

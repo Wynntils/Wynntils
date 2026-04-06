@@ -1,17 +1,17 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
@@ -19,6 +19,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Optional;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -31,19 +32,25 @@ public class EmeraldPouchFillArcFeature extends Feature {
     @Persisted
     private final Config<Boolean> renderFillArcInventory = new Config<>(true);
 
+    public EmeraldPouchFillArcFeature() {
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER)
+                .build());
+    }
+
     @SubscribeEvent
-    public void onRenderHotbarSlot(HotbarSlotRenderEvent.CountPre e) {
+    public void onRenderHotbarSlot(HotbarSlotRenderEvent.Post e) {
         if (!renderFillArcHotbar.get()) return;
-        drawFilledArc(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
+        drawFilledArc(e.getGuiGraphics(), e.getItemStack(), e.getX(), e.getY());
     }
 
     @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.CountPre e) {
+    public void onRenderSlot(SlotRenderEvent.Post e) {
         if (!renderFillArcInventory.get()) return;
-        drawFilledArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+        drawFilledArc(e.getGuiGraphics(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
     }
 
-    private void drawFilledArc(PoseStack poseStack, ItemStack itemStack, int slotX, int slotY) {
+    private void drawFilledArc(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
         Optional<EmeraldPouchItem> optionalItem = Models.Item.asWynnItem(itemStack, EmeraldPouchItem.class);
 
         if (optionalItem.isEmpty()) return;
@@ -60,8 +67,6 @@ public class EmeraldPouchFillArcFeature extends Feature {
         float ringFraction = Math.min(1f, capacityFraction);
 
         // draw
-        RenderSystem.enableDepthTest();
-        RenderUtils.drawArc(poseStack, color, slotX - 2, slotY - 2, 100, ringFraction, 8, 10);
-        RenderSystem.disableDepthTest();
+        RenderUtils.drawArc(guiGraphics, color, slotX - 2, slotY - 2, ringFraction, 8, 10);
     }
 }

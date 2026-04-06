@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.raid.raids;
@@ -44,6 +44,9 @@ public class OrphionsNexusOfLightRaid extends RaidKind {
                 "Seraphim", Map.of(3, "Sorcery"),
                 "Ophanim", Map.of(3, "Guardian"),
                 "Throne", Map.of(3, "Transcendence"),
-                "Anti", Map.of(3, "Explosive Impact"));
+                "Anti",
+                        Map.of(
+                                1, "Explosive Impact",
+                                3, "Fission"));
     }
 }

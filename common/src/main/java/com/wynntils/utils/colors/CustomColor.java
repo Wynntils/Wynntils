@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.colors;
@@ -88,6 +88,16 @@ public record CustomColor(int r, int g, int b, int a) {
     public static CustomColor fromInt(int num) {
         // if alpha is not set, set it to 255
         if ((num & 0xFF000000) == 0) num |= 0xFF000000;
+        return new CustomColor(num >> 16 & 255, num >> 8 & 255, num & 255, num >> 24 & 255);
+    }
+
+    /**
+     * This method takes a color in the format 0xAARRGGBB.
+     * Unlike {@link #fromInt(int)}, this preserves an explicit alpha value of 0.
+     * @param num the ARGB color
+     * @return the color
+     */
+    public static CustomColor fromARGBInt(int num) {
         return new CustomColor(num >> 16 & 255, num >> 8 & 255, num & 255, num >> 24 & 255);
     }
 

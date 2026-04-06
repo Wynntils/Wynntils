@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.crowdsource;
@@ -15,7 +15,7 @@ public class ProfessionStationLocationDataCollector
         extends CrowdSourcedDataCollector<ProfessionCraftingStationLabelInfo> {
     @SubscribeEvent
     public void onLabelIdentified(LabelIdentifiedEvent event) {
-        if (Models.WorldState.onHousing()) return;
+        if (Models.Housing.isOnHousing()) return;
 
         if (event.getLabelInfo() instanceof ProfessionCraftingStationLabelInfo labelInfo) {
             collect(labelInfo);

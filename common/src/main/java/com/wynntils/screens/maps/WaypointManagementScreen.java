@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
@@ -43,6 +42,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -379,13 +379,12 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
-        PoseStack poseStack = guiGraphics.pose();
-        renderScroll(poseStack);
+        renderScroll(guiGraphics);
 
         if (Services.Waypoints.getWaypoints().isEmpty()) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.waypointManagementGui.noWaypoints")),
                             getTranslationX() + Texture.WAYPOINT_MANAGER_BACKGROUND.width() / 2f,
@@ -400,7 +399,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
 
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        guiGraphics,
                         StyledText.fromComponent(
                                 Component.translatable("screens.wynntils.waypointManagementGui.search")),
                         getTranslationX() + 5,
@@ -413,7 +412,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         if (filteredIcons.size() > 1) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(
                                     Component.translatable("screens.wynntils.waypointManagementGui.filter")),
                             getTranslationX() + 15 + Texture.WAYPOINT_MANAGER_BACKGROUND.width() / 2f,
@@ -427,7 +426,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         if (waypoints.isEmpty()) {
             FontRenderer.getInstance()
                     .renderText(
-                            poseStack,
+                            guiGraphics,
                             StyledText.fromComponent(Component.translatable(
                                     "screens.wynntils.waypointManagementGui.noFilteredWaypoints")),
                             getTranslationX() + Texture.WAYPOINT_MANAGER_BACKGROUND.width() / 2f,
@@ -451,15 +450,15 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawTexturedRect(
-                guiGraphics.pose(), Texture.WAYPOINT_MANAGER_BACKGROUND, getTranslationX(), getTranslationY());
+                guiGraphics, Texture.WAYPOINT_MANAGER_BACKGROUND, getTranslationX(), getTranslationY());
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!draggingScroll) {
             if (MathUtils.isInside(
-                    (int) mouseX,
-                    (int) mouseY,
+                    (int) event.x(),
+                    (int) event.y(),
                     (int) (getTranslationX() + SCROLL_RENDER_X),
                     (int) (getTranslationX() + SCROLL_RENDER_X + Texture.SCROLL_BUTTON.width()),
                     (int) scrollY,
@@ -472,35 +471,35 @@ public final class WaypointManagementScreen extends WynntilsScreen {
 
         for (AbstractWidget widget : Stream.concat(waypointManagerWidgets.stream(), iconButtons.stream())
                 .toList()) {
-            if (widget.isMouseOver(mouseX, mouseY)) {
-                return widget.mouseClicked(mouseX, mouseY, button);
+            if (widget.isMouseOver((double) event.x(), (double) event.y())) {
+                return widget.mouseClicked(event, isDoubleClick);
             }
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (!draggingScroll) return false;
 
         int scrollAreaStartY = (int) (getTranslationY() + 15 + 16);
         int scrollAreaHeight = SCROLL_AREA_HEIGHT - Texture.SCROLL_BUTTON.height();
 
         int newOffset = Math.round(MathUtils.map(
-                (float) mouseY, scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
+                (float) event.y(), scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
 
         newOffset = Math.max(0, Math.min(newOffset, getMaxScrollOffset()));
 
         scroll(newOffset);
 
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
     @Override
@@ -614,7 +613,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         return Collections.unmodifiableList(waypoints);
     }
 
-    private void renderScroll(PoseStack poseStack) {
+    private void renderScroll(GuiGraphics guiGraphics) {
         if (waypoints.size() <= MAX_WIDGETS_PER_PAGE) return;
 
         scrollY = getTranslationY()
@@ -622,7 +621,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                 + MathUtils.map(
                         waypointsScrollOffset, 0, getMaxScrollOffset(), 0, 186 - Texture.SCROLL_BUTTON.height());
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.SCROLL_BUTTON, getTranslationX() + SCROLL_RENDER_X, scrollY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, getTranslationX() + SCROLL_RENDER_X, scrollY);
     }
 
     private void scroll(int newOffset) {

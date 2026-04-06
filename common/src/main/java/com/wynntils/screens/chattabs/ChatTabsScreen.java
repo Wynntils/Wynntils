@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.chattabs;
@@ -12,13 +12,14 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.input.KeyEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class ChatTabsScreen extends ChatScreen {
     private final boolean oldTabHotkey;
 
-    public ChatTabsScreen(String initial, boolean oldTabHotkey) {
-        super(initial);
+    public ChatTabsScreen(String initial, boolean isDraft, boolean oldTabHotkey) {
+        super(initial, isDraft);
         this.oldTabHotkey = oldTabHotkey;
     }
 
@@ -38,8 +39,8 @@ public class ChatTabsScreen extends ChatScreen {
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_TAB) {
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_TAB) {
             int newTab = -1;
             if (oldTabHotkey) {
                 if (KeyboardUtils.isShiftDown()) {
@@ -59,15 +60,15 @@ public class ChatTabsScreen extends ChatScreen {
             }
         }
 
-        if (KeyboardUtils.isControlDown() && keyCode >= GLFW.GLFW_KEY_1 && keyCode <= GLFW.GLFW_KEY_9) {
-            ChatTab newTab = Services.ChatTab.getTab(keyCode - GLFW.GLFW_KEY_1);
+        if (KeyboardUtils.isControlDown() && event.key() >= GLFW.GLFW_KEY_1 && event.key() <= GLFW.GLFW_KEY_9) {
+            ChatTab newTab = Services.ChatTab.getTab(event.key() - GLFW.GLFW_KEY_1);
             if (newTab != null) {
                 Services.ChatTab.setFocusedTab(newTab);
             }
             return true;
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     @Override

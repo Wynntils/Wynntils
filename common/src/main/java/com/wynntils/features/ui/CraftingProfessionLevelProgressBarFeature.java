@@ -1,16 +1,17 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.containers.containers.CraftingStationContainer;
@@ -31,24 +32,28 @@ public class CraftingProfessionLevelProgressBarFeature extends Feature {
     @Persisted
     private final Config<ObjectivesTextures> texture = new Config<>(ObjectivesTextures.WYNN);
 
+    public CraftingProfessionLevelProgressBarFeature() {
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
+                .build());
+    }
+
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
         if (!(event.getScreen() instanceof ContainerScreen screen)) return;
         if (!(Models.Container.getCurrentContainer() instanceof CraftingStationContainer container)) return;
-
-        PoseStack poseStack = event.getPoseStack();
 
         ProfessionType profession = container.getProfessionType();
         int level = Models.Profession.getLevel(profession);
         double progress = Models.Profession.getProgress(profession);
 
         RenderUtils.drawProgressBar(
-                poseStack,
+                event.getGuiGraphics(),
                 Texture.EXPERIENCE_BAR,
                 screen.leftPos,
-                screen.topPos - 6,
+                screen.topPos - 20,
                 screen.leftPos + screen.imageWidth,
-                screen.topPos - 1,
+                screen.topPos - 15,
                 0,
                 texture.get().getTextureY1(),
                 Texture.EXPERIENCE_BAR.width(),
@@ -58,10 +63,10 @@ public class CraftingProfessionLevelProgressBarFeature extends Feature {
         final String text = "Level %d (%.2f%%)".formatted(level, progress);
         FontRenderer.getInstance()
                 .renderText(
-                        poseStack,
+                        event.getGuiGraphics(),
                         StyledText.fromString(text),
                         (float) screen.width / 2,
-                        screen.topPos - 8,
+                        screen.topPos - 22,
                         0,
                         CommonColors.GREEN,
                         HorizontalAlignment.CENTER,

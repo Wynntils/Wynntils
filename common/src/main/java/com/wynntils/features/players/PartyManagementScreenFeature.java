@@ -1,33 +1,40 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.players;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.models.players.event.FriendsEvent;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.screens.partymanagement.PartyManagementScreen;
 import com.wynntils.utils.mc.McUtils;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.PLAYERS)
 public class PartyManagementScreenFeature extends Feature {
     private PartyManagementScreen partyManagementScreen;
 
     @RegisterKeyBind
-    private final KeyBind openPartyManagementScreen =
-            new KeyBind("Open Party Management Screen", GLFW.GLFW_KEY_O, true, () -> {
-                partyManagementScreen = (PartyManagementScreen) PartyManagementScreen.create();
-                McUtils.setScreen(partyManagementScreen);
-            });
+    private final KeyBind openPartyManagementScreen = KeyBindDefinition.OPEN_PARTY_MANAGEMENT.create(() -> {
+        partyManagementScreen = (PartyManagementScreen) PartyManagementScreen.create();
+        McUtils.setScreen(partyManagementScreen);
+    });
+
+    public PartyManagementScreenFeature() {
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
+                .build());
+    }
 
     @SubscribeEvent
     public void onScreenClose(ScreenClosedEvent.Post e) {

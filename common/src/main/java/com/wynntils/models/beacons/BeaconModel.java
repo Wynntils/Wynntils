@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.beacons;
@@ -30,8 +30,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -45,7 +46,8 @@ public final class BeaconModel extends Model {
     private static final Pattern MARKER_DISTANCE_PATTERN = Pattern.compile("\n(\\d+)m (§[a-z0-9])?(\uE000|\uE001)?");
     private static final Pattern MARKER_COLOR_PATTERN = Pattern.compile("§((?:#)?([a-z0-9]{1,8}))");
 
-    private static final ResourceLocation MARKER_FONT = ResourceLocation.withDefaultNamespace("marker");
+    private static final FontDescription MARKER_FONT =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("marker"));
     private static final List<BeaconKind> beaconRegistry = new ArrayList<>();
     private static final List<BeaconMarkerKind> beaconMarkerRegistry = new ArrayList<>();
     // Maps base entity id to corresponding beacon

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2025.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.emeralds;
@@ -14,6 +14,7 @@ import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.properties.EmeraldValuedItemProperty;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.screens.guides.emerald.GuideEmeraldItemStack;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Locale;
@@ -207,5 +208,12 @@ public final class EmeraldModel extends Model {
 
     public double getTaxAmount() {
         return Models.Account.isSilverbullSubscriber() ? SILVERBULL_TAX_AMOUNT : NORMAL_TAX_AMOUNT;
+    }
+
+    public List<GuideEmeraldItemStack> getAllEmeraldItems() {
+        return List.of(
+                new GuideEmeraldItemStack(EmeraldUnits.EMERALD),
+                new GuideEmeraldItemStack(EmeraldUnits.EMERALD_BLOCK),
+                new GuideEmeraldItemStack(EmeraldUnits.LIQUID_EMERALD));
     }
 }

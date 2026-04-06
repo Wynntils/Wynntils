@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -172,7 +172,7 @@ public class FunctionCommand extends Command {
                                             ? ChatFormatting.GOLD
                                             : ChatFormatting.YELLOW))
                     .withStyle(style -> style.withClickEvent(
-                            new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/function help " + function.getName())));
+                            new ClickEvent.SuggestCommand("/function help " + function.getName())));
             if (!function.getAliasList().isEmpty()) {
                 String aliasList = String.join(", ", function.getAliasList());
 
@@ -182,8 +182,8 @@ public class FunctionCommand extends Command {
                         .append(Component.literal("]").withStyle(ChatFormatting.GRAY));
             }
 
-            functionComponent.withStyle(style -> style.withHoverEvent(
-                    new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(function.getDescription()))));
+            functionComponent.withStyle(style ->
+                    style.withHoverEvent(new HoverEvent.ShowText(Component.literal(function.getDescription()))));
 
             response.append(functionComponent);
         }
@@ -196,17 +196,15 @@ public class FunctionCommand extends Command {
         MutableComponent pageComponent = Component.literal("\n")
                 .append(Component.literal("< Previous")
                         .withStyle(ChatFormatting.DARK_AQUA)
-                        .withStyle(style -> style.withClickEvent(
-                                new ClickEvent(ClickEvent.Action.RUN_COMMAND, previousPageCommand)))
+                        .withStyle(style -> style.withClickEvent(new ClickEvent.RunCommand(previousPageCommand)))
                         .withStyle(style -> style.withHoverEvent(
-                                new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Go to previous page")))))
+                                new HoverEvent.ShowText(Component.literal("Go to previous page")))))
                 .append(Component.literal(" (" + page + "/" + totalPages + ") ").withStyle(ChatFormatting.AQUA))
                 .append(Component.literal("Next >")
                         .withStyle(ChatFormatting.DARK_AQUA)
+                        .withStyle(style -> style.withClickEvent(new ClickEvent.RunCommand(nextPageCommand)))
                         .withStyle(style ->
-                                style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, nextPageCommand)))
-                        .withStyle(style -> style.withHoverEvent(
-                                new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Go to next page")))));
+                                style.withHoverEvent(new HoverEvent.ShowText(Component.literal("Go to next page")))));
 
         response.append(pageComponent);
 
