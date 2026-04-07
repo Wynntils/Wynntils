@@ -172,7 +172,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
         } else if (DUNGEON_KEY_PATTERN.matcher(searchTerm).matches()) {
             searchTerm = TRAILING_KEY_PADDING_PATTERN.matcher(searchTerm).replaceAll("");
         } else {
-            searchTerm = WynnUtils.normalizeBadString(searchTerm);
+            searchTerm = WynnUtils.stripItemNameMarkers(searchTerm);
         }
 
         searchTerm = searchTerm.trim();
