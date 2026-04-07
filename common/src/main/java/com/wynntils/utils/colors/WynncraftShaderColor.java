@@ -13,7 +13,7 @@ public enum WynncraftShaderColor {
     GRADIENT(0x00f004), // Animated gradient from #f56217 to #0b486b
     GRADIENT_2(0x00f010), // Animated gradient from #560505ff to #8a0303ff
     ITALIC(0x00f01c), // "Italic" effect which displaces characters and colors them to #55ffff
-    ITALIC_2(0x00f020), // "Italic" effect which displaces characters and colors them to #55ffff
+    ITALIC_2(0x00f020), // "Italic" effect which displaces characters and colors them to #c6c6c6
     RAINBOW(0x00f000), // Animated rainbow
     SHINE(0x00f014), // Animated shine effect between #a3cc52ff to #ffffd2ff
     WARP(0x00f024); // Animated Warp effect which makes the text look like wave and color it to #c6c6c6
