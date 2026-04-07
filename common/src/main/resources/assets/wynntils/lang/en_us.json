@@ -3025,7 +3025,7 @@
   "screens.wynntils.downloads.description2": "This data includes but is not limited to, the images for the map/minimap, cave locations and the item % stats.",
   "screens.wynntils.downloads.description3": "Options highlighted in red have failed to download, this means that any feature that relies on that data will not function as expected.",
   "screens.wynntils.downloads.description4": "Click a red option to try and redownload that data, if it fails again there may be issues with the hosting provider or it is being blocked.",
-  "screens.wynntils.downloads.description5": "If you encounter issues, first make sure you are using the lastes version of Wynntils, your installed version is: %s. If your installed version is latest, try changing the provider on the left.",
+  "screens.wynntils.downloads.description5": "If you encounter issues, first make sure that you are using the lastest version of Wynntils, your current version is: %s. If your current version is the latest, try changing the provider on the left and reloading/clearing caches.",
   "screens.wynntils.downloads.dontShowAgain": "Don't show again",
   "screens.wynntils.downloads.githubTooltip": "Download from GitHub",
   "screens.wynntils.downloads.info": "What is this?",
