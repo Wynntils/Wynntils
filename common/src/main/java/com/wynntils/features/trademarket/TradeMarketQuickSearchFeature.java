@@ -170,8 +170,8 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
     private String getSearchQuery(String rawName) {
         String searchTerm = CUT_PATTERN.matcher(rawName).replaceFirst("");
-        searchTerm = EOL_PATTERN.matcher(searchTerm).replaceFirst("").trim();
         searchTerm = PADDING_PATTERN.matcher(searchTerm).replaceAll("");
+        searchTerm = EOL_PATTERN.matcher(searchTerm).replaceFirst("").trim();
         Matcher potionMatcher = POTION_PATTERN.matcher(searchTerm);
         if (potionMatcher.matches()) {
             searchTerm = potionMatcher.group(1);
