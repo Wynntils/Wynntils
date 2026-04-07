@@ -5,6 +5,7 @@
 package com.wynntils.screens.downloads;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.net.DownloadDependencyGraph;
@@ -77,7 +78,9 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                 .append("\n\n")
                 .append(Component.translatable("screens.wynntils.downloads.description3"))
                 .append("\n\n")
-                .append(Component.translatable("screens.wynntils.downloads.description4"));
+                .append(Component.translatable("screens.wynntils.downloads.description4"))
+                .append("\n\n")
+                .append(Component.translatable("screens.wynntils.downloads.description5", WynntilsMod.getVersion()));
     }
 
     public static Screen create(Screen previousScreen, ServerData serverData) {
