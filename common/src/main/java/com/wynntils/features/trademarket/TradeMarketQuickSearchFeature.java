@@ -24,6 +24,7 @@ import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -68,14 +69,9 @@ public class TradeMarketQuickSearchFeature extends Feature {
     // e.g. "Potion of ✤ Strength [2/2]" -> "Potion of ✤ Strength" -> "✤ Strength"
     private static final Pattern POTION_PATTERN = Pattern.compile("^Potion of (. \\w+)");
 
-    // 'À' this char is behind all the items names and needs to be trimmed before we search.
-    // We cannot use WynnUtils.normalizeBadString() as this messes up dungeon keys.
-    // e.g. "CorruptedÀÀÀGalleon'sÀÀÀGraveyard KeyÀ" -> "CorruptedÀÀÀGalleon'sÀÀÀGraveyard Key"
-    private static final Pattern EOL_PATTERN = Pattern.compile("À+$");
-
-    // 󏀀 this invisible char is surrounding new fruma-style item lores on both sides.
-    // All occurrences need to be deleted before search.
-    private static final Pattern PADDING_PATTERN = Pattern.compile("\uDAFC\uDC00");
+    // Dungeon keys need to preserve internal ÀÀÀ separators for TM matching
+    private static final Pattern DUNGEON_KEY_PATTERN = Pattern.compile(".* KeyÀ*$");
+    private static final Pattern TRAILING_KEY_PADDING_PATTERN = Pattern.compile("À+$");
 
     private static final int SEARCH_SLOT = 47;
     private String searchQuery;
@@ -170,12 +166,17 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
     private String getSearchQuery(String rawName) {
         String searchTerm = CUT_PATTERN.matcher(rawName).replaceFirst("");
-        searchTerm = PADDING_PATTERN.matcher(searchTerm).replaceAll("");
-        searchTerm = EOL_PATTERN.matcher(searchTerm).replaceFirst("").trim();
         Matcher potionMatcher = POTION_PATTERN.matcher(searchTerm);
         if (potionMatcher.matches()) {
             searchTerm = potionMatcher.group(1);
+        } else if (DUNGEON_KEY_PATTERN.matcher(searchTerm).matches()) {
+            searchTerm = TRAILING_KEY_PADDING_PATTERN.matcher(searchTerm).replaceAll("");
+        } else {
+            searchTerm = WynnUtils.normalizeBadString(searchTerm);
         }
+
+        searchTerm = searchTerm.trim();
+
         WynntilsMod.info("Quick Searching: " + rawName + " -> " + searchTerm);
         return searchTerm;
     }
