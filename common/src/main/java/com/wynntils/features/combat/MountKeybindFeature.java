@@ -17,11 +17,14 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
+import com.wynntils.mc.event.RemoveEntitiesEvent;
+import com.wynntils.mc.event.SetLocalPlayerVehicleEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.MouseUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
@@ -60,6 +63,13 @@ public class MountKeybindFeature extends Feature {
     @Persisted
     private final Config<Integer> summonDelayTicks = new Config<>(DEFAULT_SUMMON_DELAY_TICKS);
 
+    @Persisted
+    private final Config<Boolean> switchToThirdPersonOnMount = new Config<>(false);
+
+    private boolean intentionalMount = false;
+    private CameraType prevCameraType = null;
+    private int mountedVehicleId = -1;
+
     public MountKeybindFeature() {
         super(new ProfileDefault.Builder()
                 .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
@@ -82,6 +92,32 @@ public class MountKeybindFeature extends Feature {
     public void onChatReceived(ChatMessageEvent.Match e) {
         cancelMounting = MOUNT_ERROR_MESSAGES.stream()
                 .anyMatch(msg -> e.getMessage().getString().contains(msg));
+    }
+
+    @SubscribeEvent
+    public void onVehicleChange(SetLocalPlayerVehicleEvent event) {
+        if (!switchToThirdPersonOnMount.get()) return;
+        if (!Models.WorldState.onWorld()) return;
+
+        if (event.getVehicle() != null) {
+            if (intentionalMount && McUtils.options().getCameraType() == CameraType.FIRST_PERSON) {
+                prevCameraType = McUtils.options().getCameraType();
+                mountedVehicleId = event.getVehicle().getId();
+                McUtils.options().setCameraType(CameraType.THIRD_PERSON_BACK);
+            }
+            intentionalMount = false;
+        } else {
+            restoreCamera();
+        }
+    }
+
+    @SubscribeEvent
+    public void onRemoveEntities(RemoveEntitiesEvent event) {
+        if (prevCameraType == null) return;
+        if (!Models.WorldState.onWorld()) return;
+        if (!event.getEntityIds().contains(mountedVehicleId)) return;
+
+        restoreCamera();
     }
 
     private void rideMount() {
@@ -109,6 +145,8 @@ public class MountKeybindFeature extends Feature {
         }
         ItemStack previousSlotStack = McUtils.inventory().getItem(prevItem).copy();
 
+        intentionalMount = switchToThirdPersonOnMount.get();
+
         if (playWhistle.get()) {
             McUtils.playSoundAmbient(MOUNT_WHISTLE_SOUND);
         }
@@ -133,11 +171,20 @@ public class MountKeybindFeature extends Feature {
             McUtils.sendPacket(new ServerboundSetCarriedItemPacket(previousSlot));
             alreadySetPrevItem = false;
             cancelMounting = false;
+            intentionalMount = false;
             return;
         }
 
         Managers.TickScheduler.scheduleNextTick(
                 () -> waitForMountAndRestore(previousSlot, previousSlotStack, ticksLeft - 1));
+    }
+
+    private void restoreCamera() {
+        if (prevCameraType == null) return;
+
+        McUtils.options().setCameraType(prevCameraType);
+        prevCameraType = null;
+        mountedVehicleId = -1;
     }
 
     private void postMountErrorMessage(RideMountStatus status) {
