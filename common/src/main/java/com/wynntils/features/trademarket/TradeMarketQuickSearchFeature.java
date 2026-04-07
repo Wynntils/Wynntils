@@ -73,6 +73,10 @@ public class TradeMarketQuickSearchFeature extends Feature {
     // e.g. "CorruptedÀÀÀGalleon'sÀÀÀGraveyard KeyÀ" -> "CorruptedÀÀÀGalleon'sÀÀÀGraveyard Key"
     private static final Pattern EOL_PATTERN = Pattern.compile("À+$");
 
+    // 󏀀 this invisible char is surrounding new fruma-style item lores on both sides.
+    // All occurrences need to be deleted before search.
+    private static final Pattern PADDING_PATTERN = Pattern.compile("\uDAFC\uDC00");
+
     private static final int SEARCH_SLOT = 47;
     private String searchQuery;
     private boolean openChatWhenContainerClosed = false;
@@ -167,6 +171,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
     private String getSearchQuery(String rawName) {
         String searchTerm = CUT_PATTERN.matcher(rawName).replaceFirst("");
         searchTerm = EOL_PATTERN.matcher(searchTerm).replaceFirst("").trim();
+        searchTerm = PADDING_PATTERN.matcher(searchTerm).replaceAll("");
         Matcher potionMatcher = POTION_PATTERN.matcher(searchTerm);
         if (potionMatcher.matches()) {
             searchTerm = potionMatcher.group(1);
