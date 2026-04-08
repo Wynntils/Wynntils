@@ -12,7 +12,6 @@ import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.HashedStack;
 import net.minecraft.world.item.ItemStack;
@@ -20,8 +19,7 @@ import net.minecraft.world.item.ItemStack;
 public final class ItemUtils {
     private static final Pattern EMPTY_ARMOR_SLOT_PATTERN =
             Pattern.compile("§7(?:Helmet|Chestplate|Leggings|Boots) Slot");
-    private static final Pattern EMPTY_ACCESSORY_SLOT_PATTERN =
-            Pattern.compile("§7(?:Ring|Bracelet|Necklace) Slot");
+    private static final Pattern EMPTY_ACCESSORY_SLOT_PATTERN = Pattern.compile("§7(?:Ring|Bracelet|Necklace) Slot");
     public static final Pattern ITEM_RARITY_PATTERN =
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
 
