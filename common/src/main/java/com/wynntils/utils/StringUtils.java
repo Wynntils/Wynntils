@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils;
@@ -178,6 +178,38 @@ public final class StringUtils {
         } else {
             return Integer.toString(value);
         }
+    }
+
+    public static String toSignedCommaString(int value) {
+        return String.format("%+,d", value);
+    }
+
+    /**
+     * Shorten text in the middle while preferring word boundaries when possible.
+     */
+    public static String shorten(String input, int keep) {
+        if (input == null || input.isBlank()) return input;
+        if (keep <= 0) return "...";
+        if (input.length() <= keep * 2 + 3) return input;
+        if (keep >= input.length() - 1) return input;
+
+        int leftCut = keep;
+        while (leftCut > 0 && !Character.isWhitespace(input.charAt(leftCut))) {
+            leftCut--;
+        }
+
+        int rightCut = input.length() - keep;
+        while (rightCut < input.length() && !Character.isWhitespace(input.charAt(rightCut))) {
+            rightCut++;
+        }
+
+        if (leftCut == 0 || rightCut == input.length()) {
+            return input.substring(0, keep).trim() + "..."
+                    + input.substring(input.length() - keep).trim();
+        }
+
+        return input.substring(0, leftCut).trim() + "..."
+                + input.substring(rightCut).trim();
     }
 
     public static String convertMarkdownToColorCode(String input) {

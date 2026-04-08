@@ -73,7 +73,7 @@ public final class WynnItemParser {
 
     // Test in WynnItemParser_IDENTIFICATION_STAT_PATTERN
     public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
-            "§f(?<statName>[\\w\\.\\- ]+).+?§#(acfac6ff|faacacff)(?<value>[-+][\\d,]+)(?<unit>%| tier|\\/[35]s)?(?:§f §8.+?(?:§(?<indicatorColor>#[a-zA-Z0-9]{8})(.)?)?)?");
+            "§f(?<iconPrefix>(?:\uDAFF\uDFFF\uE010\uDB00\uDC02|\uE011\uDB00\uDC02|\uDAFF\uDFFF\uE012\uDB00\uDC02|\uDAFF\uDFFF\uE013\uDB00\uDC01\uDB00\uDC02|\uE014\uDB00\uDC02))?(?<statName>[\\w\\.\\- ]+).+?§#(acfac6ff|faacacff)(?<value>[-+][\\d,]+)(?<unit>%| tier|\\/[35]s)?(?:§f §8.+?(?:§(?<indicatorColor>#[a-zA-Z0-9]{8})(.)?)?)?");
 
     // Test in WynnItemParser_TIER_PATTERN
     private static final Pattern TIER_PATTERN = Pattern.compile("§f\uDB00\uDC23§([5bcdef]).+");
@@ -184,6 +184,10 @@ public final class WynnItemParser {
         for (Component loreLine : lore) {
             StyledText coded = StyledText.fromComponent(loreLine);
             StyledText normalizedCoded = coded.getNormalized();
+            int parsedRerolls = parseRerolls(normalizedCoded.getString(StyleType.DEFAULT));
+            if (parsedRerolls > rerolls) {
+                rerolls = parsedRerolls;
+            }
 
             if (segment == 1) {
                 Matcher tierMatcher = normalizedCoded.getMatcher(TIER_PATTERN);
@@ -318,7 +322,7 @@ public final class WynnItemParser {
                     questReq = questMatcher.group(2);
 
                     String mark = questMatcher.group(1);
-                    if (mark.contains("\uE006")) {
+                    if (mark.contains("\uE007")) {
                         allRequirementsMet = false;
                     }
 
@@ -379,8 +383,6 @@ public final class WynnItemParser {
                     StatActualValue actualValue = Models.Stat.buildActualValue(statType, value, stars, possibleValues);
                     identifications.add(actualValue);
                 }
-            } else {
-                rerolls = parseRerolls(normalizedCoded.getString(StyleType.DEFAULT));
             }
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
@@ -9,26 +9,27 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
+import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearTooltipAlignmentComponent;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
+import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.ItemWeightSource;
+import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
-import com.wynntils.models.items.properties.ShinyItemProperty;
+import com.wynntils.models.items.properties.PagedItemProperty;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 
 public final class TooltipUtils {
@@ -72,13 +73,21 @@ public final class TooltipUtils {
         return tooltip;
     }
 
+    public static void realignMarkedTooltipLines(List<Component> tooltips) {
+        GearTooltipAlignmentComponent.realignMarkedTooltipLines(tooltips);
+    }
+
     private static List<Component> getIdentifiableItemTooltip(
             ItemStack itemStack, WynnItem wynnItem, IdentifiableItemProperty itemInfo) {
-        TooltipBuilder builder = wynnItem.getData()
-                .getOrCalculate(
-                        WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.fromParsedItemStack(itemStack, itemInfo));
-        if (builder == null) return null;
         ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
+        IdentifiableItemProperty effectiveItemInfo = resolveTooltipItemProperty(itemStack, itemInfo);
+
+        if (shouldKeepOriginalGearTooltip(itemStack, effectiveItemInfo)) {
+            return List.of();
+        }
+
+        TooltipBuilder builder = getIdentifiableTooltipBuilder(itemStack, wynnItem, effectiveItemInfo);
+        if (builder == null) return null;
 
         TooltipIdentificationDecorator identificationDecorator =
                 feature.identificationDecorations.get() ? feature.getIdentificationDecorator() : null;
@@ -89,23 +98,37 @@ public final class TooltipUtils {
                 feature.groupIdentifications.get(),
                 feature.showBestValueLastAlways.get(),
                 feature.showStars.get(),
-                false // this only applies to crafted items
-                );
+                false);
         LinkedList<Component> tooltips = new LinkedList<>(builder.getTooltipLines(
                 Models.Character.getClassType(),
                 currentIdentificationStyle,
                 identificationDecorator,
                 feature.itemWeights.get(),
                 weightDecorator));
-
-        // Update name depending on overall percentage; this needs to be done every rendering
-        // for rainbow/defective effects
-        boolean isShiny = (wynnItem instanceof ShinyItemProperty shinyItemProperty
-                && shinyItemProperty.getShinyStat().isPresent());
-        if (feature.overallPercentageInName.get() && itemInfo.hasOverallValue()) {
-            updateItemName(itemInfo, isShiny, tooltips);
-        }
         return tooltips;
+    }
+
+    private static TooltipBuilder getIdentifiableTooltipBuilder(
+            ItemStack itemStack, WynnItem wynnItem, IdentifiableItemProperty itemInfo) {
+        if (itemInfo.getItemInfo() instanceof GearInfo) {
+            String source = itemStack instanceof FakeItemStack fakeItemStack ? fakeItemStack.getSource() : "";
+            if (itemStack instanceof FakeItemStack) {
+                return Handlers.Tooltip.buildNew(itemInfo, false, true, source);
+            }
+
+            return Handlers.Tooltip.buildFromItemStack(itemStack, itemInfo, false, true, source);
+        }
+
+        if (itemStack instanceof FakeItemStack fakeItemStack) {
+            return wynnItem.getData()
+                    .getOrCalculate(
+                            WynnItemData.TOOLTIP_KEY,
+                            () -> Handlers.Tooltip.buildNew(itemInfo, false, true, fakeItemStack.getSource()));
+        }
+
+        return wynnItem.getData()
+                .getOrCalculate(
+                        WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.fromParsedItemStack(itemStack, itemInfo));
     }
 
     private static List<Component> getCraftedItemTooltip(
@@ -120,39 +143,36 @@ public final class TooltipUtils {
         TooltipStyle currentIdentificationStyle = new TooltipStyle(
                 isif.identificationsOrdering.get(),
                 isif.groupIdentifications.get(),
-                false, // irrelevant for crafted items
-                false, // irrelevant for crafted items
+                false,
+                false,
                 isif.showMaxValues.get());
 
         return new LinkedList<>(builder.getTooltipLines(
                 Models.Character.getClassType(), currentIdentificationStyle, null, isif.itemWeights.get(), null));
     }
 
-    private static void updateItemName(IdentifiableItemProperty itemInfo, boolean isShiny, Deque<Component> tooltips) {
-        MutableComponent name = Component.empty();
-        String itemName = itemInfo.getName();
-        ItemStatInfoFeature isif = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
-
-        if (isShiny) {
-            name = Component.literal("⬡ ");
-            itemName = "Shiny " + itemName;
+    public static IdentifiableItemProperty resolveTooltipItemProperty(
+            ItemStack itemStack, IdentifiableItemProperty itemInfo) {
+        if (itemStack instanceof FakeItemStack) {
+            return itemInfo;
         }
 
-        if (isif.perfect.get() && itemInfo.isPerfect()) {
-            name.append(ComponentUtils.makeRainbowStyle("Perfect " + itemName, true));
-        } else if (isif.defective.get() && itemInfo.isDefective()) {
-            name.append(ComponentUtils.makeObfuscated(
-                    "Defective " + itemName, isif.obfuscationChanceStart.get(), isif.obfuscationChanceEnd.get()));
-        } else {
-            // This already contains the ⬡ if it is a shiny item so we don't append the line
-            name = tooltips.getFirst().copy();
-            name.append(ColorScaleUtils.getPercentageTextComponent(
-                    isif.getColorMap(),
-                    itemInfo.getOverallPercentage(),
-                    isif.colorLerp.get(),
-                    isif.decimalPlaces.get()));
+        if (!(itemInfo instanceof GearItem gearItem)) {
+            return itemInfo;
         }
-        tooltips.removeFirst();
-        tooltips.addFirst(name);
+
+        return Models.Gear.parseInstance(gearItem.getItemInfo(), itemStack, gearItem.isUnidentified());
+    }
+
+    private static boolean shouldKeepOriginalGearTooltip(ItemStack itemStack, IdentifiableItemProperty itemInfo) {
+        if (itemStack instanceof FakeItemStack || !(itemInfo.getItemInfo() instanceof GearInfo)) {
+            return false;
+        }
+
+        if (!(itemInfo instanceof PagedItemProperty pagedItemProperty)) {
+            return false;
+        }
+
+        return !pagedItemProperty.isStatPage();
     }
 }

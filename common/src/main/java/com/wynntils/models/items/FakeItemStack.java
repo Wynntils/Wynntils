@@ -47,6 +47,10 @@ public class FakeItemStack extends ItemStack {
         this(wynnItem, new ItemStack(Items.STONE), source);
     }
 
+    public String getSource() {
+        return source;
+    }
+
     @Override
     public ItemStack copy() {
         return new FakeItemStack(wynnItem, itemStack, source);

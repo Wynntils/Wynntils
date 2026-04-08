@@ -1,0 +1,16 @@
+{
+  "providers": [
+    {
+      "type": "reference",
+      "id": "minecraft:language/wynncraft"
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:common"
+    },
+    {
+      "type": "reference",
+      "id": "minecraft:default"
+    }
+  ]
+}

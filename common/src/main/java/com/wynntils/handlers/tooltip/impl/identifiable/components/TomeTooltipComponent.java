@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.identifiable.components;
@@ -25,8 +25,13 @@ public class TomeTooltipComponent extends IdentifiableTooltipComponent<TomeInfo,
 
         // name
         String prefix = tomeInstance == null && !hideUnidentified ? "Unidentified " : "";
-        header.add(Component.literal(prefix + tomeInfo.name())
-                .withStyle(tomeInfo.tier().getChatFormatting()));
+        MutableComponent nameLine = Component.literal(prefix + tomeInfo.name())
+                .withStyle(tomeInfo.tier().getChatFormatting());
+        if (tomeInstance != null) {
+            appendOverallPercentageInName(
+                    nameLine, tomeInstance.hasOverallValue(), tomeInstance.getOverallPercentage());
+        }
+        header.add(nameLine);
         header.add(Component.empty());
 
         // requirements

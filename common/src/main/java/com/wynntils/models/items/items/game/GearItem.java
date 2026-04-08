@@ -47,11 +47,18 @@ public class GearItem extends GameItem
     private final GearInfo gearInfo;
     private final GearInstance gearInstance;
     private final int currentPage;
+    private final Optional<ShinyStat> parsedShinyStat;
 
-    public GearItem(GearInfo gearInfo, GearInstance gearInstance, int currentPage) {
+    public GearItem(
+            GearInfo gearInfo, GearInstance gearInstance, int currentPage, Optional<ShinyStat> parsedShinyStat) {
         this.gearInfo = gearInfo;
         this.gearInstance = gearInstance;
         this.currentPage = currentPage;
+        this.parsedShinyStat = parsedShinyStat != null ? parsedShinyStat : Optional.empty();
+    }
+
+    public GearItem(GearInfo gearInfo, GearInstance gearInstance, int currentPage) {
+        this(gearInfo, gearInstance, currentPage, gearInstance != null ? gearInstance.shinyStat() : Optional.empty());
     }
 
     public GearItem(GearInfo gearInfo, GearInstance gearInstance) {
@@ -167,7 +174,11 @@ public class GearItem extends GameItem
 
     @Override
     public Optional<ShinyStat> getShinyStat() {
-        return gearInstance != null ? gearInstance.shinyStat() : Optional.empty();
+        if (gearInstance != null && gearInstance.shinyStat().isPresent()) {
+            return gearInstance.shinyStat();
+        }
+
+        return parsedShinyStat;
     }
 
     @Override
@@ -182,6 +193,13 @@ public class GearItem extends GameItem
 
     @Override
     public String toString() {
-        return "GearItem{" + "gearInfo=" + gearInfo + ", gearInstance=" + gearInstance + '}';
+        return "GearItem{"
+                + "gearInfo="
+                + gearInfo
+                + ", gearInstance="
+                + gearInstance
+                + ", parsedShinyStat="
+                + parsedShinyStat
+                + '}';
     }
 }

@@ -13,6 +13,7 @@ import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,7 @@ public abstract class TooltipBuilder {
         List<Component> tooltip;
         List<Component> identifications;
         List<Component> weightings;
+        List<Component> headerToUse;
 
         // Identification lines are rendered differently depending on current class, requested
         // style and provided decorator. If all match, use cache.
@@ -64,13 +66,6 @@ public abstract class TooltipBuilder {
                 || !Objects.equals(cachedStyle, style)
                 || !Objects.equals(this.cachedIdentificationDecorator, identificationDecorator)
                 || !Objects.equals(this.cachedWeightDecorator, weightDecorator)) {
-            identifications = getIdentificationLines(currentClass, style, identificationDecorator);
-            identificationsCache = identifications;
-            cachedCurrentClass = currentClass;
-            cachedWeightSource = weightSource;
-            cachedStyle = style;
-            this.cachedIdentificationDecorator = identificationDecorator;
-            this.cachedWeightDecorator = weightDecorator;
             weightings = null;
 
             if (weightSource != ItemWeightSource.NONE) {
@@ -78,6 +73,16 @@ public abstract class TooltipBuilder {
             }
 
             weightedHeaderCache = weightings;
+            headerToUse = weightedHeaderCache != null ? weightedHeaderCache : header;
+            int targetWidth = calculateTargetWidth(headerToUse, footer);
+            identifications = getIdentificationLines(currentClass, style, identificationDecorator, targetWidth);
+
+            identificationsCache = identifications;
+            cachedCurrentClass = currentClass;
+            cachedWeightSource = weightSource;
+            cachedStyle = style;
+            this.cachedIdentificationDecorator = identificationDecorator;
+            this.cachedWeightDecorator = weightDecorator;
         }
 
         // Determine header to use
@@ -103,7 +108,32 @@ public abstract class TooltipBuilder {
                             .withStyle(ChatFormatting.ITALIC));
         }
 
-        return tooltip;
+        int finalTargetWidth = tooltip.stream()
+                .mapToInt(line -> McUtils.mc().font.width(line))
+                .max()
+                .orElse(0);
+        return postProcessTooltipLines(tooltip, finalTargetWidth);
+    }
+
+    private int calculateTargetWidth(List<Component> headerLines, List<Component> footerLines) {
+        int targetWidth = 0;
+
+        for (Component line : headerLines) {
+            targetWidth = Math.max(targetWidth, McUtils.mc().font.width(line));
+        }
+
+        for (Component line : footerLines) {
+            targetWidth = Math.max(targetWidth, McUtils.mc().font.width(line));
+        }
+
+        if (!source.isEmpty()) {
+            Component sourceLine = Component.literal(source)
+                    .withStyle(ChatFormatting.DARK_GRAY)
+                    .withStyle(ChatFormatting.ITALIC);
+            targetWidth = Math.max(targetWidth, McUtils.mc().font.width(sourceLine));
+        }
+
+        return targetWidth;
     }
 
     protected abstract List<Component> getWeightedHeaderLines(
@@ -113,7 +143,11 @@ public abstract class TooltipBuilder {
             TooltipStyle style);
 
     protected abstract List<Component> getIdentificationLines(
-            ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator);
+            ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator, int targetWidth);
+
+    protected List<Component> postProcessTooltipLines(List<Component> tooltip, int targetWidth) {
+        return tooltip;
+    }
 
     protected static Pair<List<Component>, List<Component>> extractHeaderAndFooter(List<Component> lore) {
         List<Component> header = new ArrayList<>();

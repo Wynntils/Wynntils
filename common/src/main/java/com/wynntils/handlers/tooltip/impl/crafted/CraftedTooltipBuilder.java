@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.crafted;
@@ -59,7 +59,7 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
 
     @Override
     protected List<Component> getIdentificationLines(
-            ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator) {
+            ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator, int targetWidth) {
         return CraftedTooltipIdentifications.buildTooltip(craftedItem, currentClass, style);
     }
 }

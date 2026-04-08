@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.identifiable.components;
@@ -26,8 +26,13 @@ public class CharmTooltipComponent extends IdentifiableTooltipComponent<CharmInf
 
         // name
         String prefix = charmInstance == null && !hideUnidentified ? "Unidentified " : "";
-        header.add(Component.literal(prefix + charmInfo.name())
-                .withStyle(charmInfo.tier().getChatFormatting()));
+        MutableComponent nameLine = Component.literal(prefix + charmInfo.name())
+                .withStyle(charmInfo.tier().getChatFormatting());
+        if (charmInstance != null) {
+            appendOverallPercentageInName(
+                    nameLine, charmInstance.hasOverallValue(), charmInstance.getOverallPercentage());
+        }
+        header.add(nameLine);
 
         // Keep in inventory to gain bonus
         header.add(Component.literal("Keep in inventory to gain bonus").withStyle(ChatFormatting.GRAY));

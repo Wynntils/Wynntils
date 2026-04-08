@@ -13,6 +13,8 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
@@ -21,6 +23,7 @@ import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
+import com.wynntils.models.items.properties.PagedItemProperty;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
@@ -44,14 +47,21 @@ import java.util.Set;
 import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemStatInfoFeature extends Feature {
+    private static final FontDescription SPACE_FONT =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("space"));
+
     private final Map<IdentificationDecoratorType, TooltipIdentificationDecorator> identificationDecorators = Map.of(
             IdentificationDecoratorType.PERCENTAGE, new PercentageIdentificationDecorator(),
             IdentificationDecoratorType.REROLL, new RerollIdentificationDecorator(),
@@ -124,6 +134,8 @@ public class ItemStatInfoFeature extends Feature {
             TextColor.fromLegacyFormat(ChatFormatting.GREEN),
             100f,
             TextColor.fromLegacyFormat(ChatFormatting.AQUA)));
+    public static final FontDescription WYNNCRAFT_LANGUAGE_FONT =
+            new FontDescription.Resource(Identifier.fromNamespaceAndPath("wynntils", "language"));
 
     private NavigableMap<Float, TextColor> flatMap = createFlatMap();
 
@@ -175,6 +187,98 @@ public class ItemStatInfoFeature extends Feature {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onTooltipPreFinalize(ItemTooltipRenderEvent.Pre event) {
+        Optional<IdentifiableItemProperty> itemInfoOpt =
+                Models.Item.asWynnItemProperty(event.getItemStack(), IdentifiableItemProperty.class);
+        if (itemInfoOpt.isEmpty()) return;
+
+        IdentifiableItemProperty itemInfo =
+                TooltipUtils.resolveTooltipItemProperty(event.getItemStack(), itemInfoOpt.get());
+        if (shouldKeepOriginalGearTooltip(itemInfo)) {
+            return;
+        }
+
+        List<Component> tooltips = new ArrayList<>(event.getTooltips());
+        if (tooltips.isEmpty()) return;
+
+        if (overallPercentageInName.get()) {
+            Optional<Float> overallPercentageOpt = resolveOverallPercentage(itemInfo);
+            if (overallPercentageOpt.isPresent()) {
+                int nameLineIndex = findNameLineIndex(tooltips, itemInfo.getName());
+                if (nameLineIndex >= 0) {
+                    Component nameLine = stripSpaceFontSegments(tooltips.get(nameLineIndex));
+                    if (!nameLine.getString().contains("%]")) {
+                        MutableComponent updatedNameLine = nameLine.copy();
+                        updatedNameLine.append(ColorScaleUtils.getPercentageTextComponent(
+                                        getColorMap(), overallPercentageOpt.get(), colorLerp.get(), decimalPlaces.get())
+                                .withStyle(style ->
+                                        style.withFont(WYNNCRAFT_LANGUAGE_FONT).withItalic(false)));
+                        tooltips.set(nameLineIndex, updatedNameLine);
+                    }
+                }
+            }
+        }
+
+        TooltipUtils.realignMarkedTooltipLines(tooltips);
+        event.setTooltips(tooltips);
+    }
+
+    private boolean shouldKeepOriginalGearTooltip(IdentifiableItemProperty<?, ?> itemInfo) {
+        if (!(itemInfo.getItemInfo() instanceof com.wynntils.models.gear.type.GearInfo)) {
+            return false;
+        }
+
+        if (!(itemInfo instanceof PagedItemProperty pagedItemProperty)) {
+            return false;
+        }
+
+        return !pagedItemProperty.isStatPage();
+    }
+
+    private Optional<Float> resolveOverallPercentage(IdentifiableItemProperty<?, ?> itemInfo) {
+        if (itemInfo.hasOverallValue()) {
+            return Optional.of(itemInfo.getOverallPercentage());
+        }
+
+        return StatCalculator.calculateOverallQuality(
+                itemInfo.getName(), itemInfo.getPossibleValues(), itemInfo.getIdentifications());
+    }
+
+    private int findNameLineIndex(List<Component> tooltip, String itemName) {
+        for (int i = tooltip.size() - 1; i >= 0; i--) {
+            if (tooltip.get(i).getString().contains(itemName)) {
+                return i;
+            }
+        }
+
+        for (int i = 0; i < tooltip.size(); i++) {
+            Component line = tooltip.get(i);
+            if (!line.getString().isBlank()) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private static Component stripSpaceFontSegments(Component line) {
+        StyledText styledText = StyledText.fromComponent(line);
+        List<StyledTextPart> visibleParts = new ArrayList<>();
+
+        for (StyledTextPart part : styledText) {
+            if (!SPACE_FONT.equals(part.getPartStyle().getFont())) {
+                visibleParts.add(part);
+            }
+        }
+
+        if (visibleParts.isEmpty()) {
+            return line.copy();
+        }
+
+        return StyledText.fromParts(visibleParts).getComponent();
     }
 
     public NavigableMap<Float, TextColor> getColorMap() {
@@ -316,7 +420,7 @@ public class ItemStatInfoFeature extends Feature {
             weightingComponent.append(ColorScaleUtils.getPercentageTextComponent(
                     getColorMap(), percentage, colorLerp.get(), decimalPlaces.get()));
 
-            return List.of(weightingComponent);
+            return List.of(withWynncraftFont(weightingComponent));
         }
     }
 
@@ -339,7 +443,7 @@ public class ItemStatInfoFeature extends Feature {
             weightingComponent.append(ColorScaleUtils.getPercentageTextComponent(
                     getColorMap(), weightPercentage, colorLerp.get(), decimalPlaces.get()));
 
-            lines.add(weightingComponent);
+            lines.add(withWynncraftFont(weightingComponent));
 
             Map<StatType, Pair<Float, Float>> statWeights = Services.ItemWeight.getStatWeights(weighting, itemInfo);
 
@@ -353,17 +457,23 @@ public class ItemStatInfoFeature extends Feature {
                 String weightStr = String.format(Locale.ROOT, "(%.1f%%)", weight.a());
                 float percentage = distribution ? weight.b() : ((weight.a() / 100f) * weight.b());
 
-                lines.add(Component.literal("   - ")
+                lines.add(withWynncraftFont(Component.literal("   - ")
                         .withStyle(ChatFormatting.GRAY)
                         .append(Component.literal(displayName))
                         .append(Component.literal(weightStr).withStyle(ChatFormatting.WHITE))
                         .append(ColorScaleUtils.getPercentageTextComponent(
-                                getColorMap(), percentage, colorLerp.get(), decimalPlaces.get())));
+                                getColorMap(), percentage, colorLerp.get(), decimalPlaces.get()))));
             });
-            lines.add(Component.empty());
+            lines.add(withWynncraftFont(Component.empty()));
 
             return lines;
         }
+    }
+
+    private static MutableComponent withWynncraftFont(MutableComponent component) {
+        return Component.empty()
+                .withStyle(Style.EMPTY.withFont(WYNNCRAFT_LANGUAGE_FONT))
+                .append(component);
     }
 
     private enum IdentificationDecoratorType {
