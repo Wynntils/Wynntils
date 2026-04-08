@@ -17,7 +17,6 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
-import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.SetLocalPlayerVehicleEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -68,7 +67,6 @@ public class MountKeybindFeature extends Feature {
 
     private boolean intentionalMount = false;
     private CameraType prevCameraType = null;
-    private int mountedVehicleId = -1;
 
     public MountKeybindFeature() {
         super(new ProfileDefault.Builder()
@@ -102,22 +100,12 @@ public class MountKeybindFeature extends Feature {
         if (event.getVehicle() != null) {
             if (intentionalMount && McUtils.options().getCameraType() == CameraType.FIRST_PERSON) {
                 prevCameraType = McUtils.options().getCameraType();
-                mountedVehicleId = event.getVehicle().getId();
                 McUtils.options().setCameraType(CameraType.THIRD_PERSON_BACK);
             }
             intentionalMount = false;
         } else {
             restoreCamera();
         }
-    }
-
-    @SubscribeEvent
-    public void onRemoveEntities(RemoveEntitiesEvent event) {
-        if (prevCameraType == null) return;
-        if (!Models.WorldState.onWorld()) return;
-        if (!event.getEntityIds().contains(mountedVehicleId)) return;
-
-        restoreCamera();
     }
 
     private void rideMount() {
@@ -184,7 +172,6 @@ public class MountKeybindFeature extends Feature {
 
         McUtils.options().setCameraType(prevCameraType);
         prevCameraType = null;
-        mountedVehicleId = -1;
     }
 
     private void postMountErrorMessage(RideMountStatus status) {
