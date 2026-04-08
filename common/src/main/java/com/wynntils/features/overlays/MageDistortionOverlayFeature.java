@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.overlays.MageDistortionOverlay;
 
+@ConfigCategory(Category.OVERLAYS)
 public class MageDistortionOverlayFeature extends Feature {
     @RegisterOverlay
     private final Overlay distortionOverlay = new MageDistortionOverlay();
