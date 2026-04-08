@@ -20,6 +20,7 @@ import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.NamedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
 import com.wynntils.utils.wynn.ItemUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -335,10 +336,10 @@ public class InventoryFunctions {
         public String getValue(FunctionArguments arguments) {
             ItemStack itemStack = InventoryUtils.getItemInHand();
             StyledText hoverName = StyledText.fromComponent(itemStack.getHoverName());
-            if (!arguments.getArgument("formatted").getBooleanValue()) {
-                return hoverName.getString(StyleType.NONE);
-            }
-            return hoverName.getString();
+            String itemName = arguments.getArgument("formatted").getBooleanValue()
+                    ? hoverName.getString()
+                    : hoverName.getString(StyleType.NONE);
+            return WynnUtils.stripItemNameMarkers(itemName);
         }
 
         @Override
