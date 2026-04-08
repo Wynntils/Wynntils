@@ -16,7 +16,6 @@ import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.models.abilities.bossbars.DistortionBar;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
