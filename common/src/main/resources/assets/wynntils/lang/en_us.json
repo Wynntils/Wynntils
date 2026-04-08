@@ -1063,8 +1063,6 @@
   "feature.wynntils.mageDistortionOverlay.overlay.mageDistortion.fontScale.description": "Font size",
   "feature.wynntils.mageDistortionOverlay.overlay.mageDistortion.fontScale.name": "Font size",
   "feature.wynntils.mageDistortionOverlay.overlay.mageDistortion.name": "Distortion overlay",
-  "feature.wynntils.mageDistortionOverlay.overlay.mageDistortion.textColor.description": "Distortion overlay color",
-  "feature.wynntils.mageDistortionOverlay.overlay.mageDistortion.textColor.name": "Distortion color",
   "feature.wynntils.mageDistortionOverlay.overlay.mageDistortion.textShadow.description": "Distortion overlay shadow",
   "feature.wynntils.mageDistortionOverlay.overlay.mageDistortion.textShadow.name": "Text shadow",
   "feature.wynntils.mainMap.autoWaypointChests.description": "When finding a new loot chest, should there be a waypoint created?",
