@@ -4,6 +4,8 @@
  */
 package com.wynntils.handlers.tooltip.impl.identifiable;
 
+import net.minecraft.network.chat.MutableComponent;
+
 public enum TooltipMarkers {
     ALIGN_CENTER("wynntils:gear-align-center"),
     ALIGN_RIGHT("wynntils:gear-align-right"),
@@ -37,5 +39,10 @@ public enum TooltipMarkers {
         }
 
         return null;
+    }
+
+    public static MutableComponent markLine(MutableComponent line, TooltipMarkers marker) {
+        line.setStyle(line.getStyle().withInsertion(marker.token()));
+        return line;
     }
 }

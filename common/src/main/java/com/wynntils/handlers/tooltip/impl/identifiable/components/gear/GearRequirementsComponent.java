@@ -28,7 +28,7 @@ import net.minecraft.network.chat.Style;
 public final class GearRequirementsComponent {
     public List<Component> buildHeaderLines(GearInfo gearInfo, GearInstance gearInstance) {
         List<Component> header = new ArrayList<>();
-        header.add(DividerComponent.markLine(Component.empty(), TooltipMarkers.SECTION_DIVIDER));
+        header.add(TooltipMarkers.markLine(Component.empty(), TooltipMarkers.SECTION_DIVIDER));
 
         GearRequirements gearRequirements = gearInfo.requirements();
         appendSkillRequirements(header, gearRequirements, gearInfo, gearInstance);
@@ -37,15 +37,15 @@ public final class GearRequirementsComponent {
         appendLevelRequirement(header, gearRequirements);
 
         if (gearInstance != null && gearInstance.shinyStat().isPresent()) {
-            header.add(DividerComponent.markLine(Component.empty(), TooltipMarkers.SECTION_DIVIDER));
-            header.add(DividerComponent.markLine(
+            header.add(TooltipMarkers.markLine(Component.empty(), TooltipMarkers.SECTION_DIVIDER));
+            header.add(TooltipMarkers.markLine(
                     GearTooltipSupport.buildShinyStatLine(
                             gearInstance.shinyStat().get(), gearInfo.tier()),
                     TooltipMarkers.ALIGN_RIGHT));
         }
 
-        header.add(DividerComponent.markLine(Component.empty(), TooltipMarkers.IDENTIFICATION_DIVIDER));
-        header.add(DividerComponent.markLine(Component.empty(), TooltipMarkers.REROLL_BANNER));
+        header.add(TooltipMarkers.markLine(Component.empty(), TooltipMarkers.IDENTIFICATION_DIVIDER));
+        header.add(TooltipMarkers.markLine(Component.empty(), TooltipMarkers.REROLL_BANNER));
         return header;
     }
 
@@ -72,10 +72,10 @@ public final class GearRequirementsComponent {
             skillSlotWidth = Math.max(skillSlotWidth, McUtils.mc().font.width(countCell));
         }
 
-        header.add(DividerComponent.markLine(
+        header.add(TooltipMarkers.markLine(
                 joinSkillRequirementCells(skillIconCells, skillSlotWidth), TooltipMarkers.ALIGN_CENTER));
         header.add(Component.empty());
-        header.add(DividerComponent.markLine(
+        header.add(TooltipMarkers.markLine(
                 joinSkillRequirementCells(skillCountCells, skillSlotWidth), TooltipMarkers.ALIGN_CENTER));
         header.add(Component.empty());
     }
@@ -114,7 +114,7 @@ public final class GearRequirementsComponent {
                                         .WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(ChatFormatting.DARK_GRAY)));
 
-        header.add(DividerComponent.markLine(
+        header.add(TooltipMarkers.markLine(
                 GearTooltipSupport.buildRequirementValueLine(questReqLine, questReqValue, fulfilled),
                 TooltipMarkers.ALIGN_RIGHT));
     }
@@ -140,7 +140,7 @@ public final class GearRequirementsComponent {
                                         .WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(ChatFormatting.GRAY));
 
-        header.add(DividerComponent.markLine(
+        header.add(TooltipMarkers.markLine(
                 GearTooltipSupport.buildRequirementValueLine(classReqLine, classReqValue, fulfilled),
                 TooltipMarkers.ALIGN_RIGHT));
     }
@@ -152,7 +152,7 @@ public final class GearRequirementsComponent {
         }
 
         boolean fulfilled = Models.CharacterStats.getLevel() >= level;
-        header.add(DividerComponent.markLine(
+        header.add(TooltipMarkers.markLine(
                 GearTooltipSupport.buildRequirementValueLine(
                         Component.literal(" Combat Level")
                                 .withStyle(Style.EMPTY

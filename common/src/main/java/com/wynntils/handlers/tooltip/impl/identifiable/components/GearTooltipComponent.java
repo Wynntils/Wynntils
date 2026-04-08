@@ -11,6 +11,7 @@ import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearFoote
 import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearItemWeightsComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearParsedTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearTooltipAlignmentComponent;
+import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.RerollBannerComponent;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.models.gear.type.GearInfo;
@@ -29,6 +30,7 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
     private final GearHeaderComponent headerComponent = new GearHeaderComponent();
     private final GearFooterComponent footerComponent = new GearFooterComponent();
     private final DividerComponent dividerComponent = new DividerComponent();
+    private final RerollBannerComponent rerollBannerComponent = new RerollBannerComponent();
     private final GearItemWeightsComponent itemWeightsComponent = new GearItemWeightsComponent();
     private final GearParsedTooltipComponent parsedTooltipComponent = new GearParsedTooltipComponent();
 
@@ -82,7 +84,7 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
             } else if (marker == TooltipMarkers.IDENTIFICATION_DIVIDER) {
                 finalized.add(mark(dividerComponent.buildIdentificationDivider(gearInfo.tier()), marker));
             } else if (marker == TooltipMarkers.REROLL_BANNER) {
-                finalized.add(mark(dividerComponent.buildRerollBanner(gearInfo.tier(), gearInstance), marker));
+                finalized.add(mark(rerollBannerComponent.buildRerollBanner(gearInfo.tier(), gearInstance), marker));
             } else {
                 finalized.add(line);
             }
