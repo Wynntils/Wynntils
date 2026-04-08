@@ -13,7 +13,6 @@ import com.wynntils.overlays.gamebars.AwakenedProgressBarOverlay;
 import com.wynntils.overlays.gamebars.BloodPoolBarOverlay;
 import com.wynntils.overlays.gamebars.CommanderBarOverlay;
 import com.wynntils.overlays.gamebars.CorruptedBarOverlay;
-import com.wynntils.overlays.gamebars.DistortionBarOverlay;
 import com.wynntils.overlays.gamebars.FocusBarOverlay;
 import com.wynntils.overlays.gamebars.FocusedMobHealthBarOverlay;
 import com.wynntils.overlays.gamebars.HealthBarOverlay;
@@ -42,9 +41,6 @@ public class GameBarsOverlayFeature extends Feature {
 
     @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final CorruptedBarOverlay corruptedBarOverlay = new CorruptedBarOverlay();
-
-    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
-    private final DistortionBarOverlay distortionBarOverlay = new DistortionBarOverlay();
 
     @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final FocusBarOverlay focusBarOverlay = new FocusBarOverlay();
