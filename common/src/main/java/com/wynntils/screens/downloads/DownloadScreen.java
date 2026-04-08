@@ -288,7 +288,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL,
-                        0.8f);
+                        0.7f);
 
         FontRenderer.getInstance()
                 .renderText(
