@@ -204,23 +204,7 @@ public class ItemStatInfoFeature extends Feature {
         List<Component> tooltips = new ArrayList<>(event.getTooltips());
         if (tooltips.isEmpty()) return;
 
-        if (overallPercentageInName.get()) {
-            Optional<Float> overallPercentageOpt = resolveOverallPercentage(itemInfo);
-            if (overallPercentageOpt.isPresent()) {
-                int nameLineIndex = findNameLineIndex(tooltips, itemInfo.getName());
-                if (nameLineIndex >= 0) {
-                    Component nameLine = stripSpaceFontSegments(tooltips.get(nameLineIndex));
-                    if (!nameLine.getString().contains("%]")) {
-                        MutableComponent updatedNameLine = nameLine.copy();
-                        updatedNameLine.append(ColorScaleUtils.getPercentageTextComponent(
-                                        getColorMap(), overallPercentageOpt.get(), colorLerp.get(), decimalPlaces.get())
-                                .withStyle(style ->
-                                        style.withFont(WYNNCRAFT_LANGUAGE_FONT).withItalic(false)));
-                        tooltips.set(nameLineIndex, updatedNameLine);
-                    }
-                }
-            }
-        }
+        appendOverallPercentageToName(tooltips, itemInfo);
 
         TooltipUtils.realignMarkedTooltipLines(tooltips);
         event.setTooltips(tooltips);
@@ -245,6 +229,37 @@ public class ItemStatInfoFeature extends Feature {
 
         return StatCalculator.calculateOverallQuality(
                 itemInfo.getName(), itemInfo.getPossibleValues(), itemInfo.getIdentifications());
+    }
+
+    private void appendOverallPercentageToName(List<Component> tooltips, IdentifiableItemProperty<?, ?> itemInfo) {
+        if (!overallPercentageInName.get()) {
+            return;
+        }
+
+        Optional<Float> overallPercentageOpt = resolveOverallPercentage(itemInfo);
+        if (overallPercentageOpt.isEmpty()) {
+            return;
+        }
+
+        int nameLineIndex = findNameLineIndex(tooltips, itemInfo.getName());
+        if (nameLineIndex < 0) {
+            return;
+        }
+
+        Component nameLine = stripSpaceFontSegments(tooltips.get(nameLineIndex));
+        if (nameLine.getString().contains("%]")) {
+            return;
+        }
+
+        tooltips.set(nameLineIndex, buildNameLineWithOverallPercentage(nameLine, overallPercentageOpt.get()));
+    }
+
+    private MutableComponent buildNameLineWithOverallPercentage(Component nameLine, float overallPercentage) {
+        MutableComponent updatedNameLine = nameLine.copy();
+        updatedNameLine.append(ColorScaleUtils.getPercentageTextComponent(
+                        getColorMap(), overallPercentage, colorLerp.get(), decimalPlaces.get())
+                .withStyle(style -> style.withFont(WYNNCRAFT_LANGUAGE_FONT).withItalic(false)));
+        return updatedNameLine;
     }
 
     private int findNameLineIndex(List<Component> tooltip, String itemName) {

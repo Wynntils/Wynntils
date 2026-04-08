@@ -80,9 +80,9 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
         for (Component line : tooltip) {
             TooltipMarkers marker = TooltipMarkers.fromToken(line.getStyle().getInsertion());
             if (marker == TooltipMarkers.SECTION_DIVIDER) {
-                finalized.add(mark(dividerComponent.buildSectionDivider(gearInfo.tier()), marker));
+                finalized.add(mark(dividerComponent.buildDivider(gearInfo.tier()), marker));
             } else if (marker == TooltipMarkers.IDENTIFICATION_DIVIDER) {
-                finalized.add(mark(dividerComponent.buildIdentificationDivider(gearInfo.tier()), marker));
+                finalized.add(mark(dividerComponent.buildDivider(gearInfo.tier()), marker));
             } else if (marker == TooltipMarkers.REROLL_BANNER) {
                 finalized.add(mark(rerollBannerComponent.buildRerollBanner(gearInfo.tier(), gearInstance), marker));
             } else {
