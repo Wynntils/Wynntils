@@ -91,7 +91,7 @@ public class InventoryFunctions {
             if (ItemUtils.isEmptyAccessorySlot(accessoryStack)) return "NONE";
 
             StyledText hoverName = StyledText.fromComponent(accessoryStack.getHoverName());
-            return hoverName.getString(StyleType.NONE);
+            return WynnUtils.stripItemNameMarkers(hoverName.getString(StyleType.NONE));
         }
 
         @Override
@@ -109,10 +109,10 @@ public class InventoryFunctions {
             if (inventoryArmor == null) return "NONE";
 
             ItemStack armorStack = McUtils.inventory().getItem(inventoryArmor.getInventorySlot());
-            if (armorStack.isEmpty()) return "NONE";
+            if (ItemUtils.isEmptyArmorSlot(armorStack)) return "NONE";
 
             StyledText hoverName = StyledText.fromComponent(armorStack.getHoverName());
-            return hoverName.getString(StyleType.NONE);
+            return WynnUtils.stripItemNameMarkers(hoverName.getString(StyleType.NONE));
         }
 
         @Override
