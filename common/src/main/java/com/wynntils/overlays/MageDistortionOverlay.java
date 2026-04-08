@@ -113,6 +113,8 @@ public class MageDistortionOverlay extends Overlay {
 
     @SubscribeEvent
     public void onBossBarAdd(BossBarAddedEvent event) {
-        if (event.getTrackedBar().getClass().equals(DistortionBar.class)) event.setCanceled(true);
+        if (event.getTrackedBar().getClass().equals(DistortionBar.class)) {
+            event.setCanceled(true);
+        }
     }
 }
