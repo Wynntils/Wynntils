@@ -38,8 +38,6 @@ public class MageDistortionOverlay extends Overlay {
 
     private MutableComponent component = Component.empty();
 
-    private TextRenderSetting textRenderSetting;
-
     public MageDistortionOverlay() {
         super(
                 new OverlayPosition(
@@ -51,8 +49,6 @@ public class MageDistortionOverlay extends Overlay {
                 new OverlaySize(80, 12),
                 HorizontalAlignment.CENTER,
                 VerticalAlignment.MIDDLE);
-
-        updateTextRenderSetting();
     }
 
     @Override
@@ -103,13 +99,6 @@ public class MageDistortionOverlay extends Overlay {
                         this.getRenderVerticalAlignment(),
                         TextShadow.OUTLINE,
                         fontScale.get());
-    }
-
-    private void updateTextRenderSetting() {
-        textRenderSetting = TextRenderSetting.DEFAULT
-                .withMaxWidth(this.getWidth())
-                .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                .withTextShadow(textShadow.get());
     }
 
     @Override
