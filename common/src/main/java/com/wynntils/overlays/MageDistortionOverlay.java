@@ -71,7 +71,7 @@ public class MageDistortionOverlay extends Overlay {
                         CommonColors.WHITE,
                         this.getRenderHorizontalAlignment(),
                         this.getRenderVerticalAlignment(),
-                        TextShadow.OUTLINE,
+                        textShadow.get(),
                         fontScale.get());
     }
 
@@ -96,7 +96,7 @@ public class MageDistortionOverlay extends Overlay {
                         CommonColors.WHITE,
                         this.getRenderHorizontalAlignment(),
                         this.getRenderVerticalAlignment(),
-                        TextShadow.OUTLINE,
+                        textShadow.get(),
                         fontScale.get());
     }
 
