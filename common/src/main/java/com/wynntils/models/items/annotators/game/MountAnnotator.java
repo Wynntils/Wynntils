@@ -22,8 +22,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class MountAnnotator implements GameItemAnnotator {
-    private static final Pattern MOUNT_PATTERN =
-            Pattern.compile("([\\p{L}\\p{N}'\\- ]+)\\s+(?:Whistle|Flute|Ocarina)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern MOUNT_PATTERN = Pattern.compile(
+            "\uDAFC\uDC00([\\p{L}\\p{N}'\\- ]+)\\s+(?:Whistle|Flute|Ocarina)\uDAFC\uDC00", Pattern.CASE_INSENSITIVE);
     private static final Map<MountStat, Pattern> CAPPED_STAT_PATTERNS = Map.of(
             MountStat.ACCELERATION, Pattern.compile("\\bAcceleration\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.ALTITUDE, Pattern.compile("\\bAltitude\\b.*?(\\d+)/(\\d+)\\b"),
