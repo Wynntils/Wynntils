@@ -493,7 +493,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.CappedAwakenedProgressFunction());
         registerFunction(new CharacterFunctions.CappedBloodPoolFunction());
         registerFunction(new CharacterFunctions.CappedCorruptedFunction());
-        registerFunction(new CharacterFunctions.CappedDistortionFunction());
         registerFunction(new CharacterFunctions.CappedFocusFunction());
         registerFunction(new CharacterFunctions.CappedHealthFunction());
         registerFunction(new CharacterFunctions.CappedHolyPowerFunction());
@@ -503,6 +502,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.ClassFunction());
         registerFunction(new CharacterFunctions.CommanderActivatedFunction());
         registerFunction(new CharacterFunctions.CommanderDurationFunction());
+        registerFunction(new CharacterFunctions.CurrentDistortionFunction());
         registerFunction(new CharacterFunctions.EquippedAspectFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveGoalFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveEventBonusFunction());
