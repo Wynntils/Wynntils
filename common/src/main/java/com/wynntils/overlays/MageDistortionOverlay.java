@@ -43,12 +43,14 @@ public class MageDistortionOverlay extends Overlay {
     public MageDistortionOverlay() {
         super(
                 new OverlayPosition(
+                        -60,
                         150,
-                        -5,
-                        VerticalAlignment.TOP,
-                        HorizontalAlignment.RIGHT,
-                        OverlayPosition.AnchorSection.TOP_RIGHT),
-                new OverlaySize(80, 12));
+                        VerticalAlignment.BOTTOM,
+                        HorizontalAlignment.CENTER,
+                        OverlayPosition.AnchorSection.BOTTOM_MIDDLE),
+                new OverlaySize(80, 12),
+                HorizontalAlignment.CENTER,
+                VerticalAlignment.MIDDLE);
 
         updateTextRenderSetting();
     }
@@ -74,7 +76,7 @@ public class MageDistortionOverlay extends Overlay {
                         CommonColors.WHITE,
                         this.getRenderHorizontalAlignment(),
                         this.getRenderVerticalAlignment(),
-                        TextShadow.NONE,
+                        TextShadow.OUTLINE,
                         fontScale.get());
     }
 
@@ -99,7 +101,7 @@ public class MageDistortionOverlay extends Overlay {
                         CommonColors.WHITE,
                         this.getRenderHorizontalAlignment(),
                         this.getRenderVerticalAlignment(),
-                        TextShadow.NONE,
+                        TextShadow.OUTLINE,
                         fontScale.get());
     }
 
