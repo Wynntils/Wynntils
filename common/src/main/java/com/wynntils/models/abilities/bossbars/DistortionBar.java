@@ -29,20 +29,4 @@ public final class DistortionBar extends TrackedBar {
             WynntilsMod.error(String.format("Failed to parse current for distortion bar (%s)", match.group(1)));
         }
     }
-
-    @Override
-    public void onUpdateProgress(float progress) {
-        // Bar remaining full 100% of the time now so it could be removed, waiting for confirmation before we remove it
-        if (progress != 0f) {
-            // Round to nearest 5
-            int unroundedMax = (int) (current / progress);
-            int remainder = unroundedMax % 5;
-
-            int max = unroundedMax - remainder;
-            if (remainder > 3) {
-                max += 5;
-            }
-            updateValue(current, max);
-        }
-    }
 }
