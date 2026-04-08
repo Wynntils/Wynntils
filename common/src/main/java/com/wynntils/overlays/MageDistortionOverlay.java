@@ -119,7 +119,6 @@ public class MageDistortionOverlay extends Overlay {
                                 new FontDescription.Resource(Identifier.withDefaultNamespace("common")))))
                 .append(Component.literal(" Distortion: ")
                         .append(String.valueOf(Models.Ability.distortionBar.getCurrent())));
-
     }
 
     @SubscribeEvent
