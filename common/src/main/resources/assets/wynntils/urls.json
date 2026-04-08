@@ -107,7 +107,7 @@
   },
   {
     "id": "dataStaticAspects",
-    "md5": "e26f88d65e3e5132a8effd38dc21f760",
+    "md5": "3de54328d3281c6a459f54ff6838fec5",
     "path": "Reference/aspects.json",
     "url": "https://cdn.wynntils.com/static/Reference/aspects.json"
   },
@@ -143,7 +143,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "e14b643ead703003d3204715912c52f8",
+    "md5": "c54958ec2897cb107a535515407178ab",
     "path": "Reference/gear.json",
     "url": "https://cdn.wynntils.com/static/Reference/gear.json"
   },
