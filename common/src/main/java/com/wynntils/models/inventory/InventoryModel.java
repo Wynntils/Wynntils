@@ -18,6 +18,7 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.ItemUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -112,7 +113,7 @@ public final class InventoryModel extends Model {
             StyledText itemName = StyledText.fromComponent(itemStack.getHoverName())
                     .getNormalized()
                     .trim();
-            if (itemName.getString().endsWith(name)) {
+            if (WynnUtils.stripItemNameMarkers(itemName.getString()).endsWith(name)) {
                 amount += itemStack.getCount();
             }
         }
@@ -125,7 +126,8 @@ public final class InventoryModel extends Model {
                 .filter(itemStack -> {
                     Optional<IngredientItem> ingredientItem = Models.Item.asWynnItem(itemStack, IngredientItem.class);
                     if (ingredientItem.isEmpty()) return false;
-                    return ingredientItem.get().getName().startsWith(name);
+                    return WynnUtils.stripItemNameMarkers(ingredientItem.get().getName())
+                            .startsWith(name);
                 })
                 .mapToInt(itemStack -> itemStack.count)
                 .sum();
@@ -137,7 +139,8 @@ public final class InventoryModel extends Model {
                     Optional<MaterialItem> materialItemOpt = Models.Item.asWynnItem(itemStack, MaterialItem.class);
                     if (materialItemOpt.isEmpty()) return false;
                     MaterialItem materialItem = materialItemOpt.get();
-                    if (!itemStack.getHoverName().getString().startsWith(name)) return false;
+                    if (!WynnUtils.stripItemNameMarkers(itemStack.getHoverName().getString())
+                            .startsWith(name)) return false;
                     return exact ? materialItem.getQualityTier() == tier : materialItem.getQualityTier() >= tier;
                 })
                 .mapToInt(itemStack -> itemStack.count)
