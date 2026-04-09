@@ -4,20 +4,18 @@
  */
 package com.wynntils.screens.maps;
 
-import com.google.gson.JsonSyntaxException;
-import com.mojang.blaze3d.platform.cursor.CursorTypes;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
-import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.base.widgets.InfoButton;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.widgets.IconButton;
 import com.wynntils.screens.maps.widgets.WaypointManagerWidget;
 import com.wynntils.screens.maps.widgets.WaypointSortButton;
-import com.wynntils.services.map.pois.CustomPoi;
+import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -31,9 +29,10 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -46,6 +45,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 public final class WaypointManagementScreen extends WynntilsScreen {
     // Constants
@@ -57,12 +57,12 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     private static final int SCROLL_AREA_HEIGHT = 168;
 
     // Collections
-    private final List<CustomPoi> deletedWaypoints = new ArrayList<>();
+    private final List<WaypointLocation> deletedWaypoints = new ArrayList<>();
     private final List<Integer> deletedIndexes = new ArrayList<>();
     private List<AbstractWidget> waypointManagerWidgets = new ArrayList<>();
     private List<AbstractWidget> iconButtons = new ArrayList<>();
-    private List<CustomPoi> selectedWaypoints = new ArrayList<>();
-    private List<CustomPoi> waypoints = new ArrayList<>();
+    private List<WaypointLocation> selectedWaypoints = new ArrayList<>();
+    private List<WaypointLocation> waypoints = new ArrayList<>();
 
     // Previous screen
     private final MainMapScreen oldMapScreen;
@@ -95,7 +95,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     private int waypointsScrollOffset = 0;
 
     // Waypoint display
-    private Map<Texture, Boolean> filteredIcons = new EnumMap<>(Texture.class);
+    private Map<String, Boolean> filteredIcons = new HashMap<>();
     private boolean selectionMode = false;
     private WaypointSortOrder sortOrder;
 
@@ -193,7 +193,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         // region add waypoint button
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.add"),
-                        (button) -> McUtils.mc().setScreen(PoiCreationScreen.create(this)))
+                        (button) -> McUtils.mc().setScreen(WaypointCreationScreen.create(this)))
                 .pos(
                         (int) (getTranslationX() + Texture.WAYPOINT_MANAGER_BACKGROUND.width() + 10),
                         (int) (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10) - 60)
@@ -355,9 +355,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
             undoDeleteButton.active = false;
         }
 
-        waypoints = Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                .customPois
-                .get();
+        waypoints = Services.Waypoints.getWaypoints();
 
         if (waypoints.isEmpty()) {
             searchInput.visible = false;
@@ -383,10 +381,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
         renderScroll(guiGraphics);
 
-        if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                .customPois
-                .get()
-                .isEmpty()) {
+        if (Services.Waypoints.getWaypoints().isEmpty()) {
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
@@ -442,24 +437,12 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                             TextShadow.NORMAL);
         } else {
             RenderUtils.enableScissor(
-                    guiGraphics, (int) (getTranslationX() + 10), (int) (getTranslationY() + 16), 322, 181);
+                    guiGraphics, (int) (getTranslationX() + 12), (int) (getTranslationY() + 15), 320, 181);
             waypointManagerWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
             RenderUtils.disableScissor(guiGraphics);
         }
 
         iconButtons.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
-
-        if (draggingScroll) {
-            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
-        } else if (MathUtils.isInside(
-                mouseX,
-                mouseY,
-                (int) (getTranslationX() + SCROLL_RENDER_X),
-                (int) (getTranslationX() + SCROLL_RENDER_X + Texture.SCROLL_BUTTON.width()),
-                (int) scrollY,
-                (int) (scrollY + Texture.SCROLL_BUTTON.height()))) {
-            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
-        }
     }
 
     @Override
@@ -488,7 +471,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
 
         for (AbstractWidget widget : Stream.concat(waypointManagerWidgets.stream(), iconButtons.stream())
                 .toList()) {
-            if (widget.isMouseOver(event.x(), event.y())) {
+            if (widget.isMouseOver((double) event.x(), (double) event.y())) {
                 return widget.mouseClicked(event, isDoubleClick);
             }
         }
@@ -528,7 +511,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         return true;
     }
 
-    public void selectWaypoint(CustomPoi selectedWaypoint) {
+    public void selectWaypoint(WaypointLocation selectedWaypoint) {
         boolean addedWaypoint = true;
 
         // Deselect a waypoint
@@ -579,22 +562,17 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         populateWaypoints();
     }
 
-    public void deleteWaypoint(CustomPoi waypointToDelete, boolean save) {
-        HiddenConfig<List<CustomPoi>> customPois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
-        int deletedWaypointIndex = customPois.get().indexOf(waypointToDelete);
+    public void deleteWaypoint(WaypointLocation waypointToDelete) {
+        int deletedWaypointIndex = Services.Waypoints.getWaypoints().indexOf(waypointToDelete);
 
-        customPois.get().remove(waypointToDelete);
-        if (save) {
-            customPois.touched();
-        }
-        Managers.Feature.getFeatureInstance(MainMapFeature.class).updateWaypoints();
+        Services.Waypoints.removeWaypoint(waypointToDelete);
 
         deletedWaypoints.add(waypointToDelete);
         deletedIndexes.add(deletedWaypointIndex);
 
         undoDeleteButton.active = true;
 
-        if (customPois.get().isEmpty()) {
+        if (Services.Waypoints.getWaypoints().isEmpty()) {
             searchInput.visible = false;
             iconSortButton.visible = false;
             nameSortButton.visible = false;
@@ -609,7 +587,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         populateWaypoints();
     }
 
-    public void updateWaypointPosition(CustomPoi waypointToMove, int direction) {
+    public void updateWaypointPosition(WaypointLocation waypointToMove, int direction) {
         int waypointToMoveIndex = waypoints.indexOf(waypointToMove);
 
         // If waypoint is at the top/bottom of list or if it was selected but then filtered out, don't move it
@@ -619,37 +597,19 @@ public final class WaypointManagementScreen extends WynntilsScreen {
             return;
         }
 
-        CustomPoi waypointToSwap = waypoints.get(waypoints.indexOf(waypointToMove) + direction);
+        WaypointLocation waypointToSwap = waypoints.get(waypoints.indexOf(waypointToMove) + direction);
 
-        HiddenConfig<List<CustomPoi>> customPois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
-
-        Collections.swap(
-                customPois.get(),
-                customPois.get().indexOf(waypointToMove),
-                customPois.get().indexOf(waypointToSwap));
-
-        customPois.touched();
-        Managers.Feature.getFeatureInstance(MainMapFeature.class).updateWaypoints();
+        Services.Waypoints.reorderWaypoints(waypointToMove, waypointToSwap);
         populateWaypoints();
     }
 
-    public void toggleIcon(Texture icon, boolean used, boolean excludeOthers) {
-        if (excludeOthers) {
-            filteredIcons.forEach((key, value) -> {
-                if (key != icon) {
-                    filteredIcons.put(key, !used);
-                }
-            });
-            filteredIcons.put(icon, used);
-        } else {
-            filteredIcons.put(icon, used);
-        }
+    public void toggleIcon(String iconId, boolean used) {
+        filteredIcons.put(iconId, used);
 
-        updateAllUsedIcons();
         populateWaypoints();
     }
 
-    public List<CustomPoi> getWaypoints() {
+    public List<WaypointLocation> getWaypoints() {
         return Collections.unmodifiableList(waypoints);
     }
 
@@ -684,18 +644,18 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         waypointManagerWidgets = new ArrayList<>();
 
         // Get full list of waypoints
-        waypoints = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream()
-                .filter(poi -> searchMatches(poi.getName()))
+        waypoints = Services.Waypoints.getWaypoints().stream()
+                .filter(waypoint ->
+                        searchMatches(waypoint.getAttributes().get().getLabel().get()))
                 .collect(Collectors.toList());
 
         // No waypoints
-        if (waypoints.isEmpty()) {
-            return;
-        }
+        if (waypoints.isEmpty()) return;
 
         // Filter waypoints based on filtered icons
         waypoints = waypoints.stream()
-                .filter(poi -> filteredIcons.getOrDefault(poi.getIcon(), true))
+                .filter(waypoint -> filteredIcons.get(
+                        waypoint.getAttributes().get().getIconId().orElse(MapIcon.NO_ICON_ID)))
                 .collect(Collectors.toList());
 
         // Hide buttons if no filtered waypoints
@@ -712,12 +672,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
 
         // Only hide search bar & filter button if no waypoints at all
         // Can't check if filtered waypoints is empty as they may be empty due to the filters
-        if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                .customPois
-                .get()
-                .isEmpty()) {
-            searchInput.visible = false;
-        }
+        searchInput.visible = !Services.Waypoints.getWaypoints().isEmpty();
 
         // No filtered waypoints
         if (waypoints.isEmpty()) return;
@@ -730,7 +685,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         int renderX = (int) (getTranslationX() + 12);
         int renderY = (int) (getTranslationY() + 16);
 
-        for (CustomPoi waypoint : waypoints) {
+        for (WaypointLocation waypoint : waypoints) {
             WaypointManagerWidget waypointManagerWidget = new WaypointManagerWidget(
                     renderX, renderY, 320, 20, waypoint, this, selectionMode, selectedWaypoints.contains(waypoint));
 
@@ -744,40 +699,48 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     }
 
     private void sortWaypoints() {
-        // Sort waypoints, ignore case and for null Y's, treat them as 0
+        // Sort waypoints, ignore case
         switch (sortOrder) {
-            case ICON_ASC -> waypoints.sort(Comparator.comparing(CustomPoi::getIcon));
+            case ICON_ASC ->
+                waypoints.sort(Comparator.comparing(
+                        waypoint -> waypoint.getAttributes().get().getIconId().orElse(MapIcon.NO_ICON_ID)));
             case ICON_DESC ->
-                waypoints.sort(Comparator.comparing(CustomPoi::getIcon).reversed());
-            case NAME_ASC -> waypoints.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER));
+                waypoints.sort(Comparator.comparing(
+                        waypoint -> waypoint.getAttributes().get().getIconId().orElse(MapIcon.NO_ICON_ID),
+                        Comparator.reverseOrder()));
+            case NAME_ASC ->
+                waypoints.sort(Comparator.comparing(
+                        waypoint -> waypoint.getAttributes().get().getLabel().get(), String.CASE_INSENSITIVE_ORDER));
             case NAME_DESC ->
-                waypoints.sort(Comparator.comparing(CustomPoi::getName, String.CASE_INSENSITIVE_ORDER)
-                        .reversed());
+                waypoints.sort(Comparator.comparing(
+                        waypoint -> waypoint.getAttributes().get().getLabel().get(),
+                        String.CASE_INSENSITIVE_ORDER.reversed()));
             case X_ASC ->
-                waypoints.sort(Comparator.comparing(poi -> poi.getLocation().getX()));
+                waypoints.sort(
+                        Comparator.comparing(waypoint -> waypoint.getLocation().x()));
             case X_DESC ->
-                waypoints.sort(Comparator.comparing(poi -> poi.getLocation().getX(), Comparator.reverseOrder()));
+                waypoints.sort(
+                        Comparator.comparing(waypoint -> waypoint.getLocation().x(), Comparator.reverseOrder()));
             case Y_ASC ->
-                waypoints.sort(Comparator.comparing(
-                        poi -> poi.getLocation().getY().orElse(null),
-                        Comparator.nullsFirst(Comparator.naturalOrder())));
+                waypoints.sort(
+                        Comparator.comparing(waypoint -> waypoint.getLocation().y()));
             case Y_DESC ->
-                waypoints.sort(Comparator.comparing(
-                        poi -> poi.getLocation().getY().orElse(null), Comparator.nullsLast(Comparator.reverseOrder())));
+                waypoints.sort(
+                        Comparator.comparing(waypoint -> waypoint.getLocation().y(), Comparator.reverseOrder()));
             case Z_ASC ->
-                waypoints.sort(Comparator.comparing(poi -> poi.getLocation().getZ()));
+                waypoints.sort(
+                        Comparator.comparing(waypoint -> waypoint.getLocation().z()));
             case Z_DESC ->
-                waypoints.sort(Comparator.comparing(poi -> poi.getLocation().getZ(), Comparator.reverseOrder()));
+                waypoints.sort(
+                        Comparator.comparing(waypoint -> waypoint.getLocation().z(), Comparator.reverseOrder()));
         }
     }
 
     private void toggleMarkers(boolean addMarkers) {
         if (addMarkers) {
-            selectedWaypoints.forEach(poi -> Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                    poi.getLocation().asLocation(), poi.getIcon(), poi.getColor(), poi.getColor(), poi.getName()));
+            selectedWaypoints.forEach(Services.UserMarker::addUserMarkedFeature);
         } else {
-            selectedWaypoints.forEach(poi -> Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
-                    poi.getLocation().asLocation()));
+            selectedWaypoints.forEach(Services.UserMarker::removeUserMarkedFeature);
         }
     }
 
@@ -859,15 +822,17 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     }
 
     private void updateAllUsedIcons() {
-        // Get all icons from all pois, default their "active" boolean to true.
-        filteredIcons = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream()
-                .map(CustomPoi::getIcon)
+        filteredIcons = Services.Waypoints.getWaypoints().stream()
+                .filter(waypointLocation ->
+                        waypointLocation.getAttributes().get().getIconId().isPresent())
+                .map(waypointLocation ->
+                        waypointLocation.getAttributes().get().getIconId().get())
                 .distinct()
                 .collect(Collectors.toMap(
                         Function.identity(),
-                        texture -> filteredIcons.getOrDefault(texture, true),
+                        id -> filteredIcons.getOrDefault(id, true),
                         (existing, replacement) -> existing,
-                        () -> new EnumMap<>(Texture.class)));
+                        HashMap::new));
 
         populateIcons();
     }
@@ -909,14 +874,30 @@ public final class WaypointManagementScreen extends WynntilsScreen {
 
             for (int i = 0; i < iconsToDisplay; i++) {
                 iconIndex = (iconsScrollOffset + i) % filteredIcons.size();
-                Texture icon = filteredIcons.keySet().stream().toList().get(iconIndex);
+                String iconId = filteredIcons.keySet().stream().toList().get(iconIndex);
 
-                IconButton iconButton =
-                        new IconButton(renderX, (int) (getTranslationY() - 25), 20, icon, filteredIcons.get(icon));
+                if (iconId.equals(MapIcon.NO_ICON_ID)) {
+                    IconButton iconButton =
+                            new IconButton(renderX, (int) (getTranslationY() - 25), 20, filteredIcons.get(iconId));
 
-                iconButtons.add(iconButton);
+                    iconButtons.add(iconButton);
 
-                renderX += 20;
+                    renderX += 20;
+                    continue;
+                }
+
+                Optional<MapIcon> mapIconOpt = Services.MapData.getIcon(iconId);
+
+                if (mapIconOpt.isPresent()) {
+                    IconButton iconButton = new IconButton(
+                            renderX, (int) (getTranslationY() - 25), 20, mapIconOpt.get(), filteredIcons.get(iconId));
+
+                    iconButtons.add(iconButton);
+
+                    renderX += 20;
+                } else {
+                    WynntilsMod.warn("Waypoint has icon ID " + iconId + " but failed to retrieve");
+                }
             }
 
             if (filteredIcons.size() > MAX_ICONS_NO_PAGE) {
@@ -937,13 +918,13 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         }
     }
 
-    private boolean searchMatches(String poiName) {
-        return StringUtils.partialMatch(poiName, searchInput.getTextBoxInput());
+    private boolean searchMatches(String waypointName) {
+        return StringUtils.partialMatch(waypointName, searchInput.getTextBoxInput());
     }
 
     private void updateSelectedWaypointPositions(int direction) {
         // Get selected waypoints in the same order they are in waypoints
-        List<CustomPoi> orderedWaypoints = waypoints.stream()
+        List<WaypointLocation> orderedWaypoints = waypoints.stream()
                 .filter(waypoint -> selectedWaypoints.contains(waypoint))
                 .collect(Collectors.toList());
 
@@ -952,25 +933,21 @@ public final class WaypointManagementScreen extends WynntilsScreen {
             Collections.reverse(orderedWaypoints);
         }
 
-        for (CustomPoi selectedWaypoint : orderedWaypoints) {
+        for (WaypointLocation selectedWaypoint : orderedWaypoints) {
             updateWaypointPosition(selectedWaypoint, direction);
         }
     }
 
     private void deleteSelectedWaypoints() {
-        HiddenConfig<List<CustomPoi>> customPois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
-
-        for (CustomPoi poi : selectedWaypoints) {
-            deleteWaypoint(poi, false);
+        for (WaypointLocation waypoint : selectedWaypoints) {
+            deleteWaypoint(waypoint);
         }
-
-        customPois.touched();
 
         McUtils.sendMessageToClient(Component.translatable(
                         "screens.wynntils.waypointManagementGui.deletedWaypoints", selectedWaypoints.size())
                 .withStyle(ChatFormatting.GREEN));
 
-        if (customPois.get().isEmpty()) {
+        if (Services.Waypoints.getWaypoints().isEmpty()) {
             selectAllButton.active = false;
             iconSortButton.visible = false;
             nameSortButton.visible = false;
@@ -984,76 +961,67 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     }
 
     private void importFromClipboard() {
-        String clipboard = McUtils.mc().keyboardHandler.getClipboard();
+        int importedWaypoints = Services.Waypoints.importWaypoints();
 
-        CustomPoi[] customPois;
-        try {
-            customPois = Managers.Json.GSON.fromJson(clipboard, CustomPoi[].class);
-        } catch (JsonSyntaxException e) {
-            McUtils.sendErrorToClient(I18n.get("screens.wynntils.waypointManagementGui.import.error"));
-            return;
+        MutableComponent importTooltip = Component.translatable("screens.wynntils.waypointManagementGui.import.tooltip")
+                .withStyle(ChatFormatting.WHITE)
+                .append(Component.literal("\n"));
+
+        // Still accept 0 as that was not a failure
+        if (importedWaypoints >= 0) {
+            // Enable search after importing new waypoints
+            if (!Services.Waypoints.getWaypoints().isEmpty()) {
+                searchInput.visible = true;
+            }
+
+            updateAllUsedIcons();
+            populateWaypoints();
+
+            importTooltip.append(Component.translatable("service.wynntils.waypoint.importSuccess", importedWaypoints)
+                    .withStyle(ChatFormatting.GREEN));
+        } else {
+            importTooltip.append(Component.translatable("service.wynntils.waypoint.importError")
+                    .withStyle(ChatFormatting.RED));
         }
 
-        if (customPois == null) {
-            McUtils.sendErrorToClient(I18n.get("screens.wynntils.waypointManagementGui.import.error"));
-            return;
-        }
-
-        HiddenConfig<List<CustomPoi>> customPoiConfig =
-                Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
-        List<CustomPoi> existingPois = new ArrayList<>(customPoiConfig.get());
-
-        // Only add pois that don't already exist
-        List<CustomPoi> poisToAdd = Stream.of(customPois)
-                .filter(newPoi -> !existingPois.contains(newPoi))
-                .toList();
-
-        existingPois.addAll(poisToAdd);
-        customPoiConfig.setValue(existingPois);
-        customPoiConfig.touched();
-        Managers.Feature.getFeatureInstance(MainMapFeature.class).updateWaypoints();
-
-        // Enable search and filter after importing new pois
-        if (!customPoiConfig.get().isEmpty()) {
-            searchInput.visible = true;
-        }
-
-        updateAllUsedIcons();
-        populateWaypoints();
-
-        McUtils.sendMessageToClient(
-                Component.translatable("screens.wynntils.waypointManagementGui.import.success", poisToAdd.size())
-                        .withStyle(ChatFormatting.GREEN));
+        importButton.setTooltip(Tooltip.create(importTooltip));
     }
 
     private void exportToClipboard() {
-        List<CustomPoi> poisToExport = selectedWaypoints.isEmpty()
-                ? Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                        .customPois
-                        .get()
-                : selectedWaypoints;
+        List<WaypointLocation> waypointsToExport =
+                selectedWaypoints.isEmpty() ? Services.Waypoints.getWaypoints() : selectedWaypoints;
 
         McUtils.mc()
                 .keyboardHandler
-                .setClipboard(poisToExport.stream()
+                .setClipboard(waypointsToExport.stream()
                         .map(Managers.Json.GSON::toJson)
                         .toList()
                         .toString());
 
-        McUtils.sendMessageToClient(
-                Component.translatable("screens.wynntils.waypointManagementGui.exportedPois", poisToExport.size())
+        MutableComponent exportTooltip;
+
+        if (selectedWaypoints.isEmpty()) {
+            exportTooltip = Component.translatable("screens.wynntils.waypointManagementGui.exportAll.tooltip");
+        } else {
+            exportTooltip = Component.translatable(
+                    "screens.wynntils.waypointManagementGui.exportSelected.tooltip", selectedWaypoints.size());
+        }
+
+        exportTooltip
+                .append(Component.literal("\n"))
+                .append(Component.translatable(
+                                "screens.wynntils.waypointManagementGui.exportedWaypoints", waypointsToExport.size())
                         .withStyle(ChatFormatting.GREEN));
+
+        exportButton.setTooltip(Tooltip.create(exportTooltip));
     }
 
     private void undoDelete() {
-        HiddenConfig<List<CustomPoi>> allPois = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
+        List<WaypointLocation> allWaypoints = Services.Waypoints.getWaypoints();
 
-        // Potentially a poi that was deleted had been imported so don't want a duplicate
-        if (!allPois.get().contains(deletedWaypoints.getLast())) {
-            allPois.get().add(deletedIndexes.getLast(), deletedWaypoints.getLast());
-
-            allPois.touched();
-            Managers.Feature.getFeatureInstance(MainMapFeature.class).updateWaypoints();
+        // Potentially a waypoint that was deleted had been imported so don't want a duplicate
+        if (!allWaypoints.contains(deletedWaypoints.getLast())) {
+            Services.Waypoints.addWaypointAtIndex(deletedWaypoints.getLast(), deletedIndexes.getLast());
 
             // Scroll up 1 waypoint widget if not already at the top of the list
             waypointsScrollOffset = Math.max(waypointsScrollOffset - 1, 0);

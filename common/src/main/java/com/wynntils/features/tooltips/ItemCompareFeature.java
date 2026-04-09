@@ -204,7 +204,7 @@ public class ItemCompareFeature extends Feature {
                         });
                     }
                 }
-                // TODO: allow comparing with equipped/selected tomes and selected charms
+                    // TODO: allow comparing with equipped/selected tomes and selected charms
             }
         }
 

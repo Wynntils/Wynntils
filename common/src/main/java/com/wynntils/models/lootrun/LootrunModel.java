@@ -10,6 +10,8 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
@@ -41,8 +43,8 @@ import com.wynntils.models.lootrun.beacons.LootrunBeaconKind;
 import com.wynntils.models.lootrun.beacons.LootrunBeaconMarkerKind;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEventBuilder;
-import com.wynntils.models.lootrun.markers.LootrunBeaconMarkerProvider;
 import com.wynntils.models.lootrun.particle.LootrunTaskParticleVerifier;
+import com.wynntils.models.lootrun.providers.LootrunLocationProvider;
 import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
 import com.wynntils.models.lootrun.type.LootrunDetails;
 import com.wynntils.models.lootrun.type.LootrunLocation;
@@ -52,7 +54,6 @@ import com.wynntils.models.lootrun.type.MissionType;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.lootrun.type.TaskPrediction;
 import com.wynntils.models.lootrun.type.TrialType;
-import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.npc.label.NpcLabelInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -132,7 +133,7 @@ public final class LootrunModel extends Model {
     private static final Pattern BEACONS_PATTERN = Pattern.compile(
             "[\uDAFF\uDFFF-\uDB00\uDC78]§(?<beaconOneColor>[a-z0-9#]+)§l(?<beaconOneVibrant>Vibrant )?.+? Beacon(§r[\uDAFF\uDFFF-\uDB00\uDC78]§(?<beaconTwoColor>[a-z0-9#]+)§l(?<beaconTwoVibrant>Vibrant )?.+ Beacon)?");
     private static final Pattern ORANGE_AMOUNT_PATTERN =
-            Pattern.compile("(?:.+)?§7(?:.+?)?for (?:§b)?(\\d+)(§(r|7))? Challenges");
+            Pattern.compile("(?:.+)?§7(?:.+?)?for (?:§b)?(\\d+)(?:§r)? Challenges");
     private static final Pattern RAINBOW_AMOUNT_PATTERN =
             Pattern.compile("(?:.+)?§7(?:.+?)?next (?:§b)?(\\d+)(§(r|7))? Challenges");
     private static final Pattern MISSION_COMPLETED_PATTERN =
@@ -171,8 +172,7 @@ public final class LootrunModel extends Model {
 
     private static final LootrunScoreboardPart LOOTRUN_SCOREBOARD_PART = new LootrunScoreboardPart();
 
-    private static final LootrunBeaconMarkerProvider LOOTRUN_BEACON_COMPASS_PROVIDER =
-            new LootrunBeaconMarkerProvider();
+    public static final LootrunLocationProvider LOOTRUN_LOCATION_PROVIDER = new LootrunLocationProvider();
 
     @Persisted
     public final Storage<Integer> dryPulls = new Storage<>(0);
@@ -218,12 +218,11 @@ public final class LootrunModel extends Model {
     private List<Pair<Beacon<LootrunBeaconKind>, EntityExtension>> activeBeacons = new ArrayList<>();
     private Map<LootrunBeaconKind, LootrunTaskType> activeTaskTypes = new HashMap<>();
 
-    public LootrunModel(MarkerModel markerModel) {
-        super(List.of(markerModel));
+    public LootrunModel() {
+        super(List.of());
 
         Handlers.Scoreboard.addPart(LOOTRUN_SCOREBOARD_PART);
         Handlers.Particle.registerParticleVerifier(ParticleType.LOOTRUN_TASK, new LootrunTaskParticleVerifier());
-        Models.Marker.registerMarkerProvider(LOOTRUN_BEACON_COMPASS_PROVIDER);
 
         for (LootrunBeaconKind beaconKind : LootrunBeaconKind.values()) {
             Models.Beacon.registerBeacon(beaconKind);
@@ -238,6 +237,11 @@ public final class LootrunModel extends Model {
     public void registerDownloads(DownloadRegistry registry) {
         registry.registerDownload(UrlId.DATA_STATIC_LOOTRUN_TASKS_NAMED_V2)
                 .handleReader(this::handleLootrunTaskLocations);
+    }
+
+    @SubscribeEvent
+    public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerBuiltInProvider(LOOTRUN_LOCATION_PROVIDER);
     }
 
     private void handleLootrunTaskLocations(Reader reader) {
@@ -632,7 +636,6 @@ public final class LootrunModel extends Model {
         beacons = new HashMap<>();
         activeBeacons = new ArrayList<>();
         activeTaskTypes = new HashMap<>();
-        LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
 
         challenges = CappedValue.EMPTY;
         timeLeft = 0;
@@ -660,7 +663,6 @@ public final class LootrunModel extends Model {
         } else {
             // Note: If we get more accurate predictions, we don't need to remove if we are close.
             beacons.remove(lootrunBeaconKind);
-            LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
         }
 
         activeBeacons.removeIf(beaconPair -> beaconPair.a().beaconKind() == lootrunBeaconKind);
@@ -916,12 +918,12 @@ public final class LootrunModel extends Model {
         possibleTaskLocations.clear();
         vibrantBeacons.clear();
 
-        // Note: We intentionally do NOT reset orangeAmount, rainbowAmount, expectOrangeBeacon,
-        // or expectRainbowBeacon here. The beacon description and amount chat messages can arrive
-        // before or after "Choose a Beacon!", and resetting here would nuke values that were
-        // already captured. These are properly managed by:
-        // - challengeCompleted() / challengeFailed(): always reset orangeAmount and rainbowAmount
-        // - The amount capture handlers in onChatMessage: clear expect flags when matched
+        getCurrentLootrunDetails().setOrangeAmount(-1);
+        getCurrentLootrunDetails().setRainbowAmount(-1);
+        lootrunDetailsStorage.touched();
+
+        expectOrangeBeacon = false;
+        expectRainbowBeacon = false;
     }
 
     private void addToRedBeaconTaskCount(int changeAmount) {
@@ -1020,29 +1022,20 @@ public final class LootrunModel extends Model {
             return;
         }
 
-        if (oldState == LootrunningState.CHOOSING_BEACON && newState == LootrunningState.IN_TASK) {
-            // Always reduce beacon counts when starting a new task, regardless of whether
-            // we know which beacon was selected. This avoids a race condition where the
-            // scoreboard updates to IN_TASK before the beacon removal event sets closestBeacon.
-            reduceBeaconCounts();
+        Beacon closestBeacon = getClosestBeacon();
+        if (oldState == LootrunningState.CHOOSING_BEACON
+                && newState == LootrunningState.IN_TASK
+                && closestBeacon != null
+                && closestBeacon.beaconKind() instanceof LootrunBeaconKind color) {
+            WynntilsMod.info("Selected a " + color + " beacon at " + closestBeacon.position());
+            getCurrentLootrunDetails().incrementBeaconCount(color);
+            lootrunDetailsStorage.touched();
 
-            Beacon closestBeacon = getClosestBeacon();
-            if (closestBeacon != null && closestBeacon.beaconKind() instanceof LootrunBeaconKind color) {
-                WynntilsMod.info("Selected a " + color + " beacon at " + closestBeacon.position());
-                getCurrentLootrunDetails().incrementBeaconCount(color);
-                lootrunDetailsStorage.touched();
-
-                setLastTaskBeaconColor(color);
-                WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(
-                        closestBeacon,
-                        beacons.get(closestBeacon.beaconKind()).taskLocation(),
-                        activeTaskTypes.getOrDefault(closestBeacon.beaconKind(), LootrunTaskType.UNKNOWN)));
-            } else {
-                WynntilsMod.warn("Started a task but closestBeacon was not set; beacon-specific tracking skipped");
-                // Clear stale color to prevent challengeCompleted() from incorrectly
-                // adding rainbow/orange counts based on the previous challenge's color.
-                setLastTaskBeaconColor(null);
-            }
+            setLastTaskBeaconColor(color);
+            WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(
+                    closestBeacon,
+                    beacons.get(closestBeacon.beaconKind()).taskLocation(),
+                    activeTaskTypes.getOrDefault(closestBeacon.beaconKind(), LootrunTaskType.UNKNOWN)));
 
             possibleTaskLocations = new HashSet<>();
 
@@ -1052,7 +1045,9 @@ public final class LootrunModel extends Model {
             activeBeacons.clear();
             activeTaskTypes.clear();
             setClosestBeacon(null);
-            LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
+            expectOrangeBeacon = false;
+            expectRainbowBeacon = false;
+            reduceBeaconCounts();
             return;
         }
     }
@@ -1227,7 +1222,6 @@ public final class LootrunModel extends Model {
         }
 
         // Finally, update the markers.
-        LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
         return foundTask;
     }
 

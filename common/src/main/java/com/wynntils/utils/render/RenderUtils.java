@@ -7,6 +7,7 @@ package com.wynntils.utils.render;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -47,6 +48,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3x2f;
 import org.joml.Matrix3x2fStack;
+import org.joml.Vector2f;
 
 public final class RenderUtils {
     // used to render player nametags as semi-transparent
@@ -399,7 +401,7 @@ public final class RenderUtils {
                 texture.height());
     }
 
-    public static void drawTexturedRect(
+    public static void drawTexturedRectWithColor(
             GuiGraphics guiGraphics,
             Identifier identifier,
             CustomColor color,
@@ -1172,5 +1174,84 @@ public final class RenderUtils {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         }
+    }
+
+    public static void drawPolygon(
+            GuiGraphics guiGraphics,
+            CustomColor fillColor,
+            CustomColor borderColor,
+            float borderWidth,
+            List<Vector2f> vertices) {
+        if (vertices.size() < 3) {
+            WynntilsMod.warn("Tried to draw a polygon with less than 3 vertices");
+            return;
+        }
+
+        // Fill the polygon using a triangle fan decomposition
+        if (fillColor != CustomColor.NONE) {
+            Vector2f firstVertex = vertices.getFirst();
+            for (int i = 1; i < vertices.size() - 1; i++) {
+                Vector2f v1 = vertices.get(i);
+                Vector2f v2 = vertices.get(i + 1);
+
+                // Draw each triangle as a filled shape
+                // Approximate triangle fill using drawLine with enough width
+                // For a proper fill, we draw lines from v1 to v2 across the triangle
+                drawTriangleFill(guiGraphics, fillColor, firstVertex, v1, v2);
+            }
+        }
+
+        // Draw border lines
+        if (borderColor != CustomColor.NONE && borderWidth > 0f) {
+            for (int i = 0; i < vertices.size() - 1; i++) {
+                Vector2f v1 = vertices.get(i);
+                Vector2f v2 = vertices.get(i + 1);
+                drawLine(guiGraphics, borderColor, v1.x(), v1.y(), v2.x(), v2.y(), borderWidth);
+            }
+            // Close the polygon
+            Vector2f last = vertices.getLast();
+            Vector2f first = vertices.getFirst();
+            drawLine(guiGraphics, borderColor, last.x(), last.y(), first.x(), first.y(), borderWidth);
+        }
+    }
+
+    private static void drawTriangleFill(
+            GuiGraphics guiGraphics, CustomColor color, Vector2f v0, Vector2f v1, Vector2f v2) {
+        // Approximate triangle fill by drawing horizontal lines (scanline fill)
+        float minY = Math.min(v0.y(), Math.min(v1.y(), v2.y()));
+        float maxY = Math.max(v0.y(), Math.max(v1.y(), v2.y()));
+
+        for (float y = minY; y <= maxY; y += 1.0f) {
+            // Find the x intersections of the scanline with the triangle edges
+            float minX = Float.MAX_VALUE;
+            float maxX = Float.MIN_VALUE;
+
+            float[] xs = new float[3];
+            boolean[] valid = new boolean[3];
+
+            valid[0] = intersectEdge(v0, v1, y, xs, 0);
+            valid[1] = intersectEdge(v1, v2, y, xs, 1);
+            valid[2] = intersectEdge(v2, v0, y, xs, 2);
+
+            for (int i = 0; i < 3; i++) {
+                if (valid[i]) {
+                    minX = Math.min(minX, xs[i]);
+                    maxX = Math.max(maxX, xs[i]);
+                }
+            }
+
+            if (minX <= maxX) {
+                fill(guiGraphics, color, minX, y, maxX, y + 1);
+            }
+        }
+    }
+
+    private static boolean intersectEdge(Vector2f a, Vector2f b, float y, float[] xs, int index) {
+        if ((a.y() <= y && b.y() > y) || (b.y() <= y && a.y() > y)) {
+            float t = (y - a.y()) / (b.y() - a.y());
+            xs[index] = a.x() + t * (b.x() - a.x());
+            return true;
+        }
+        return false;
     }
 }

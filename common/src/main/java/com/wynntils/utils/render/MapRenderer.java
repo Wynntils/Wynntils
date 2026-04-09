@@ -6,7 +6,6 @@ package com.wynntils.utils.render;
 
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.MapTexture;
-import com.wynntils.services.map.pois.Poi;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -435,31 +434,9 @@ public final class MapRenderer {
         vertices.add(new Vector2f(pos));
     }
 
-    /**
-     * {@param poi} POI that we get the render coordinate for
-     * {@param mapCenterX} center coordinates of map (in-game coordinates)
-     * {@param centerX} center coordinates of map (screen render coordinates)
-     * {@param currentZoom} the bigger, the more detailed the map is
-     */
-    public static float getRenderX(Poi poi, float mapCenterX, float centerX, float currentZoom) {
-        double distanceX = poi.getLocation().getX() - mapCenterX;
-        return (float) (centerX + distanceX * currentZoom);
-    }
-
     public static float getRenderX(int worldX, float mapCenterX, float centerX, float currentZoom) {
         double distanceX = worldX - mapCenterX;
         return (float) (centerX + distanceX * currentZoom);
-    }
-
-    /**
-     * {@param poi} POI that we get the render coordinate for
-     * {@param mapCenterZ} center coordinates of map (in-game coordinates)
-     * {@param centerZ} center coordinates of map (screen render coordinates)
-     * {@param currentZoom} the bigger, the more detailed the map is
-     */
-    public static float getRenderZ(Poi poi, float mapCenterZ, float centerZ, float currentZoom) {
-        double distanceZ = poi.getLocation().getZ() - mapCenterZ;
-        return (float) (centerZ + distanceZ * currentZoom);
     }
 
     public static float getRenderZ(int worldZ, float mapCenterZ, float centerZ, float currentZoom) {
