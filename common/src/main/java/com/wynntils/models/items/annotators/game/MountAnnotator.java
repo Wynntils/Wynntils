@@ -41,7 +41,7 @@ public final class MountAnnotator implements GameItemAnnotator {
         if (itemStack.getItem() != Items.POTION) return null;
 
         Matcher matcher = name.getMatcher(MOUNT_PATTERN);
-        if (!matcher.find()) return null;
+        if (!matcher.matches()) return null;
 
         List<StyledText> lore = LoreUtils.getLore(itemStack);
         List<String> plainLore =
