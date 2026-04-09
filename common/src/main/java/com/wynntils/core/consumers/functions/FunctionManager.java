@@ -387,6 +387,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new ColorFunctions.SaturationShiftFunction());
         registerFunction(new ColorFunctions.ShineShaderFunction());
         registerFunction(new ColorFunctions.ToHexStringFunction());
+        registerFunction(new ColorFunctions.WynncraftShaderFunction());
 
         registerFunction(new ConditionalFunctions.IfCappedValueFunction());
         registerFunction(new ConditionalFunctions.IfCustomColorFunction());
