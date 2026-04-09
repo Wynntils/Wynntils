@@ -5,6 +5,7 @@
 package com.wynntils.services.map.pois;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.items.items.gui.TerritoryItem;
 import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
@@ -31,7 +32,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public class ManageTerritoryPoi implements Poi {
@@ -171,7 +174,7 @@ public class ManageTerritoryPoi implements Poi {
                                 guiGraphics,
                                 StyledText.fromString(symbol),
                                 actualRenderX,
-                                actualRenderX + renderWidth + (territoryItem.getDoubleEmeralds() ? 4 : 0),
+                                actualRenderX + renderWidth + (territoryItem.getDoubleEmeralds() ? 8 : 0),
                                 actualRenderZ + renderHeight / 2 + iconYOffset,
                                 actualRenderZ + renderHeight,
                                 0,
@@ -185,9 +188,10 @@ public class ManageTerritoryPoi implements Poi {
                     FontRenderer.getInstance()
                             .renderAlignedTextInBox(
                                     guiGraphics,
-                                    StyledText.fromString(GuildResource.EMERALDS.getPrettySymbol()),
+                                    StyledText.fromComponent(Component.literal(EmeraldUnits.EMERALD.getSymbol())
+                                            .withStyle(ChatFormatting.GREEN)),
                                     actualRenderX,
-                                    actualRenderX + renderWidth - 4,
+                                    actualRenderX + renderWidth - 8,
                                     actualRenderZ + renderHeight / 2 + iconYOffset + 1,
                                     actualRenderZ + renderHeight,
                                     0,

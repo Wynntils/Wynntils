@@ -7,7 +7,7 @@ package com.wynntils.utils.mc;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.WynncraftShaderColor;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -133,7 +133,7 @@ public final class ComponentUtils {
     public static MutableComponent makeRainbowStyle(String name, boolean useShader) {
         if (useShader) {
             return Component.literal(name)
-                    .withColor(CommonColors.RAINBOW.asInt())
+                    .withColor(WynncraftShaderColor.RAINBOW.color.asInt())
                     .withStyle(ChatFormatting.BOLD);
         }
 
