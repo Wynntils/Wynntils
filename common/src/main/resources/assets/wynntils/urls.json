@@ -107,7 +107,7 @@
   },
   {
     "id": "dataStaticAspects",
-    "md5": "e26f88d65e3e5132a8effd38dc21f760",
+    "md5": "3de54328d3281c6a459f54ff6838fec5",
     "path": "Reference/aspects.json",
     "url": "https://cdn.wynntils.com/static/Reference/aspects.json"
   },
@@ -119,7 +119,7 @@
   },
   {
     "id": "dataStaticCharms",
-    "md5": "0f4847de40bdc82f745de32d4725c5f2",
+    "md5": "f4d7e28034aa7fd08a9cc3d27328c288",
     "path": "Reference/charms.json",
     "url": "https://cdn.wynntils.com/static/Reference/charms.json"
   },
@@ -143,7 +143,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "fe5a77e98bfd101206f21ff79e9070e8",
+    "md5": "c54958ec2897cb107a535515407178ab",
     "path": "Reference/gear.json",
     "url": "https://cdn.wynntils.com/static/Reference/gear.json"
   },
@@ -173,7 +173,7 @@
   },
   {
     "id": "dataStaticIngredients",
-    "md5": "31a2b9848bb4474245c4735ec0c2066d",
+    "md5": "4c9292c184fb05ed096aa7f1bdf54b84",
     "path": "Reference/ingredients.json",
     "url": "https://cdn.wynntils.com/static/Reference/ingredients.json"
   },
@@ -245,13 +245,13 @@
   },
   {
     "id": "dataStaticPlaceMapFeatures",
-    "md5": "832ec3d2959c5b804ed20fba85d007f9",
+    "md5": "8b3c5bd8b33b70e3b63c2b8045fc045b",
     "path": "Reference/place_mapfeatures.json",
     "url": "https://cdn.wynntils.com/static/Reference/place_mapfeatures.json"
   },
   {
     "id": "dataStaticPlaces",
-    "md5": "4a5df6a4ec70d60e9a5741f39f4e1354",
+    "md5": "ea5886d525137c8fce196b2a8283b669",
     "path": "Reference/places.json",
     "url": "https://cdn.wynntils.com/static/Reference/places.json"
   },
@@ -293,13 +293,13 @@
   },
   {
     "id": "dataStaticTomes",
-    "md5": "d1a34bc55f7565aab2535d69040df236",
+    "md5": "899e475b21b047f5212b3961eb29ab05",
     "path": "Reference/tomes.json",
     "url": "https://cdn.wynntils.com/static/Reference/tomes.json"
   },
   {
     "id": "dataStaticTools",
-    "md5": "83ecd674143bfe18f826c86f3d4d747b",
+    "md5": "1490abd584c359ee39ca5fa73dc07d6a",
     "path": "Reference/tools.json",
     "url": "https://cdn.wynntils.com/static/Reference/tools.json"
   },
