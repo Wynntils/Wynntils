@@ -1187,6 +1187,8 @@
   "feature.wynntils.mountKeybind.playWhistle.name": "Play Whistle",
   "feature.wynntils.mountKeybind.summonDelayTicks.description": "How many ticks to wait before using the selected mount item.",
   "feature.wynntils.mountKeybind.summonDelayTicks.name": "Summon Delay (Ticks)",
+  "feature.wynntils.mountKeybind.switchToThirdPersonOnMount.description": "Automatically switch to third-person view when mounting, and restore the previous view when dismounting.",
+  "feature.wynntils.mountKeybind.switchToThirdPersonOnMount.name": "Switch to Third Person on Mount",
   "feature.wynntils.mythicBoxScaler.description": "Scales the mythic box to make it more noticeable on the ground.",
   "feature.wynntils.mythicBoxScaler.name": "Mythic Box Item Scaling",
   "feature.wynntils.mythicBoxScaler.scale.description": "How much more should mythic boxes should be scaled by?",
