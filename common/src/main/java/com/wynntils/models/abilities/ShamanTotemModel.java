@@ -5,13 +5,13 @@
 package com.wynntils.models.abilities;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.TextDisplayChangedEvent;
 import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
+import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.models.abilities.type.ShamanTotem;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
@@ -19,8 +19,9 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.utils.mc.McUtils;
-import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +30,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Position;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ShamanTotemModel extends Model {
@@ -42,19 +44,22 @@ public final class ShamanTotemModel extends Model {
     private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile(
             "§b(?<username>.+)'(?:s)? §7Totem\n(§c\\+(?<regen>\\d+)❤§7/s )?(§e\uE013 §7(\\d+)s )?§d\uE01F §7(?<time>\\d+)s");
     private static final int MAX_TOTEM_COUNT = 4;
-    private static final double TOTEM_SEARCH_RADIUS = 1;
-    private static final int TOTEM_DATA_DELAY_TICKS = 2;
-    private static final int CAST_MAX_DELAY_MS = 240;
+    private static final double TOTEM_SEARCH_RADIUS = 5;
+    private static final double TOTEM_VERTICAL_SEARCH_RADIUS = 10;
+    private static final int CAST_MAX_DELAY_MS = 1000;
+    private static final int DISPLAY_CONFIRM_MAX_DELAY_MS = 2000;
+    private static final float SHAMAN_TOTEM_CUSTOM_MODEL_DATA = 30601.0f;
     // TODO: CAST_MAX_DELAY could be a config when model configs eventually exist
     // it kind of depends on ping and server lag
 
     private final ShamanTotem[] totems = new ShamanTotem[MAX_TOTEM_COUNT]; // 0-indexed list of totems 1-4
-    private final Integer[] timerlessTotemVisibleIds = new Integer[MAX_TOTEM_COUNT]; // ID of totems that need a timer
+    private final Map<Integer, Integer> pendingVisibleEntityIds = new HashMap<>(); // entity id -> totem number
+    private final Map<Integer, PositionSnapshot> recentItemDisplaySpawns = new HashMap<>();
+    private final Deque<PositionSnapshot> recentCastSnapshots = new ArrayDeque<>();
     private final Map<Integer, Integer> orphanedTimers =
             new HashMap<>(); // IDs of timers that can't really find a totem
     // These orphaned timers will be checked at a lower rate, they are probably timers that aren't actually totems
     private int nextTotemSlot = 1;
-    private long totemCastTimestamp = 0;
 
     public ShamanTotemModel() {
         super(List.of());
@@ -63,54 +68,36 @@ public final class ShamanTotemModel extends Model {
     @SubscribeEvent
     public void onTotemSpellCast(SpellEvent.Cast e) {
         if (e.getSpellType() != SpellType.TOTEM) return;
-        totemCastTimestamp = System.currentTimeMillis();
+        pruneOldCastSnapshots();
+        pruneOldItemDisplaySpawns();
+        recentCastSnapshots.addLast(new PositionSnapshot(McUtils.player().getX(), McUtils.player().getZ(), System.currentTimeMillis()));
+        pruneMissingPendingDisplays();
     }
 
     @SubscribeEvent
-    public void onTotemSpawn(AddEntityEvent e) {
+    public void onItemDisplaySpawn(AddEntityEvent e) {
+        if (!Models.WorldState.onWorld()) return;
+        if (Models.Character.getClassType() != ClassType.SHAMAN) return;
+        if (!(e.getEntity() instanceof Display.ItemDisplay)) return;
+
+        pruneOldItemDisplaySpawns();
+        recentItemDisplaySpawns.put(e.getId(), new PositionSnapshot(e.getX(), e.getZ(), System.currentTimeMillis()));
+    }
+
+    @SubscribeEvent
+    public void onTotemItemDisplayData(SetEntityDataEvent e) {
         if (!Models.WorldState.onWorld()) return;
         if (Models.Character.getClassType() != ClassType.SHAMAN) return;
 
-        Entity entity = getBufferedEntity(e.getId());
-        if (!(entity instanceof ArmorStand totemAS)) return;
+        Entity entity = McUtils.mc().level.getEntity(e.getId());
+        if (!(entity instanceof Display.ItemDisplay totemDisplay)) return;
+        if (!wasLikelyCreatedByRecentCast(recentItemDisplaySpawns.get(e.getId()), totemDisplay.position())) return;
+        if (isTrackedVisibleEntityId(totemDisplay.getId())) return;
 
-        if (!isClose(totemAS.position(), McUtils.mc().player.position())) return;
-
-        Managers.TickScheduler.scheduleLater(
-                () -> {
-                    // didn't come from a cast within the delay, probably not casted by the player
-                    // this check needs to be ran with a delay, the cast/spawn order is not guaranteed
-                    if (System.currentTimeMillis() - totemCastTimestamp > CAST_MAX_DELAY_MS
-                            && !Models.Inventory.hasAutoCasterItem()) {
-                        return;
-                    }
-
-                    // Checks to verify this is a totem
-                    // These must be ran with a delay,
-                    // inventory contents are set a couple ticks after the totem actually spawns
-                    List<ItemStack> inv = new ArrayList<>(totemAS.equipment.items.values());
-
-                    if (inv.isEmpty()) return;
-
-                    ItemStack data = inv.getFirst();
-                    if (data.getItem() != Items.STONE_SHOVEL) return;
-
-                    // This relies on the fact that damage values 28 (Shaman) and 29 (Skyseer) on the stone shovel set
-                    // the totem's texture
-                    if (data.getDamageValue() != 28 && data.getDamageValue() != 29) return;
-
-                    // Checks complete, this is a valid totem
-                    int totemNumber = getNextTotemSlot();
-
-                    WynntilsMod.postEvent(new TotemEvent.Summoned(totemNumber, totemAS));
-
-                    ShamanTotem newTotem = new ShamanTotem(
-                            totemNumber, -1, totemAS.getId(), -1, ShamanTotem.TotemState.SUMMONED, totemAS.position());
-
-                    totems[totemNumber - 1] = newTotem;
-                    timerlessTotemVisibleIds[totemNumber - 1] = totemAS.getId();
-                },
-                TOTEM_DATA_DELAY_TICKS);
+        ItemStack data = getUpdatedItemStack(e);
+        if (!isShamanTotemItem(data)) return;
+        registerPendingTotem(totemDisplay);
+        recentItemDisplaySpawns.remove(totemDisplay.getId());
     }
 
     @SubscribeEvent
@@ -129,74 +116,22 @@ public final class ShamanTotemModel extends Model {
         int parsedTime = Integer.parseInt(m.group("time"));
         int timerId = textDisplay.getId();
 
-        if (getBoundTotem(timerId) == null) {
-            // this is a new timer that needs to find a totem to link with
-            findAndLinkTotem(timerId, parsedTime, textDisplay);
-        } else {
-            updateTotem(timerId, parsedTime, textDisplay);
-        }
-    }
-
-    private void findAndLinkTotem(int timerId, int parsedTime, Display.TextDisplay textDisplay) {
-        List<ArmorStand> possibleTotems = McUtils.mc()
-                .level
-                .getEntitiesOfClass(
-                        ArmorStand.class,
-                        new AABB(
-                                textDisplay.position().x - TOTEM_SEARCH_RADIUS,
-                                textDisplay.position().y - TOTEM_SEARCH_RADIUS,
-                                textDisplay.position().z - TOTEM_SEARCH_RADIUS,
-                                textDisplay.position().x + TOTEM_SEARCH_RADIUS,
-                                // (a LOT) more vertical radius required for totems casted off high places
-                                // This increased radius requirement increases as you cast from higher places and as the
-                                // server gets laggier
-                                textDisplay.position().y + TOTEM_SEARCH_RADIUS * 5,
-                                textDisplay.position().z + TOTEM_SEARCH_RADIUS));
-
-        for (ArmorStand possibleTotem : possibleTotems) {
-            for (int i = 0; i < timerlessTotemVisibleIds.length; i++) {
-                if (timerlessTotemVisibleIds[i] != null && possibleTotem.getId() == timerlessTotemVisibleIds[i]) {
-                    // we found the totem that this timer belongs to, bind it
-                    ShamanTotem totem = totems[i];
-
-                    totem.setTimerEntityId(timerId);
-                    totem.setTime(parsedTime);
-                    totem.setPosition(possibleTotem.position());
-                    totem.setState(ShamanTotem.TotemState.ACTIVE);
-
-                    WynntilsMod.postEvent(new TotemEvent.Activated(totem.getTotemNumber(), possibleTotem.position()));
-
-                    timerlessTotemVisibleIds[i] = null;
-                    if (orphanedTimers.containsKey(timerId) && orphanedTimers.get(timerId) > 1) {
-                        WynntilsMod.info("Matched an orphaned totem timer " + timerId + " to a totem "
-                                + totem.getTotemNumber() + " after " + orphanedTimers.get(timerId) + " attempts.");
-                        orphanedTimers.remove(timerId);
-                    }
-
-                    return;
-                }
-            }
-        }
-        orphanedTimers.merge(timerId, 1, Integer::sum);
-        if (orphanedTimers.get(timerId) == 2) {
-            WynntilsMod.warn("Matched an unbound totem timer " + timerId + " but couldn't find a totem to bind it to.");
-        }
-    }
-
-    private void updateTotem(int timerId, int parsedTime, Display.TextDisplay textDisplay) {
         ShamanTotem boundTotem = getBoundTotem(timerId);
-        if (boundTotem == null) return;
-
-        for (ShamanTotem totem : totems) {
-            if (boundTotem == totem) {
-                totem.setTime(parsedTime);
-                totem.setPosition(textDisplay.position());
-
-                WynntilsMod.postEvent(
-                        new TotemEvent.Updated(totem.getTotemNumber(), parsedTime, textDisplay.position()));
-                break;
-            }
+        if (boundTotem != null) {
+            updateTotem(boundTotem, parsedTime, textDisplay);
+            return;
         }
+
+        Integer matchedTotemNumber = findMatchingPendingTotem(textDisplay);
+        if (matchedTotemNumber == null) {
+            orphanedTimers.merge(timerId, 1, Integer::sum);
+            if (orphanedTimers.get(timerId) == 2) {
+                WynntilsMod.warn("Matched an unbound totem timer " + timerId + " but couldn't find a totem to bind it to.");
+            }
+            return;
+        }
+
+        bindPendingTotem(matchedTotemNumber, timerId, parsedTime, textDisplay);
     }
 
     @SubscribeEvent
@@ -204,6 +139,8 @@ public final class ShamanTotemModel extends Model {
         if (!Models.WorldState.onWorld()) return;
 
         List<Integer> destroyedEntities = e.getEntityIds();
+        destroyedEntities.forEach(pendingVisibleEntityIds::remove);
+        destroyedEntities.forEach(recentItemDisplaySpawns::remove);
 
         for (ShamanTotem totem : totems) {
             if (totem != null
@@ -219,15 +156,165 @@ public final class ShamanTotemModel extends Model {
         removeAllTotems();
     }
 
-    private Entity getBufferedEntity(int entityId) {
-        Entity entity = McUtils.mc().level.getEntity(entityId);
-        if (entity != null) return entity;
+    private void registerPendingTotem(Display.ItemDisplay totemDisplay) {
+        int totemNumber = getNextTotemSlot();
+        if (totems[totemNumber - 1] != null) {
+            removeTotem(totemNumber);
+        }
 
-        if (entityId == -1) {
-            return new ArmorStand(McUtils.mc().level, 0, 0, 0);
+        ShamanTotem newTotem = new ShamanTotem(
+                totemNumber,
+                -1,
+                totemDisplay.getId(),
+                -1,
+                ShamanTotem.TotemState.SUMMONED,
+                totemDisplay.position());
+
+        totems[totemNumber - 1] = newTotem;
+        pendingVisibleEntityIds.put(totemDisplay.getId(), totemNumber);
+        WynntilsMod.postEvent(new TotemEvent.Summoned(totemNumber, totemDisplay));
+    }
+
+    private Integer findMatchingPendingTotem(Display.TextDisplay textDisplay) {
+        pruneMissingPendingDisplays();
+
+        Entity vehicle = textDisplay.getVehicle();
+        if (vehicle instanceof Display.ItemDisplay mountedDisplay) {
+            Integer mountedTotemNumber = pendingVisibleEntityIds.get(mountedDisplay.getId());
+            if (mountedTotemNumber != null) {
+                return mountedTotemNumber;
+            }
+        }
+
+        Integer passengerMatch = findPassengerLinkedTotem(textDisplay);
+        if (passengerMatch != null) {
+            return passengerMatch;
+        }
+
+        return findNearestPendingTotem(textDisplay.position());
+    }
+
+    private Integer findPassengerLinkedTotem(Display.TextDisplay textDisplay) {
+        for (Map.Entry<Integer, Integer> entry : pendingVisibleEntityIds.entrySet()) {
+            Entity entity = McUtils.mc().level.getEntity(entry.getKey());
+            if (!(entity instanceof Display.ItemDisplay itemDisplay)) continue;
+
+            if (itemDisplay.getPassengers().contains(textDisplay)) {
+                return entry.getValue();
+            }
         }
 
         return null;
+    }
+
+    private Integer findNearestPendingTotem(Position textPosition) {
+        Integer bestTotemNumber = null;
+        double bestScore = Double.MAX_VALUE;
+
+        for (Map.Entry<Integer, Integer> entry : pendingVisibleEntityIds.entrySet()) {
+            Entity entity = McUtils.mc().level.getEntity(entry.getKey());
+            if (!(entity instanceof Display.ItemDisplay itemDisplay)) continue;
+            if (!isWithinSearchBounds(textPosition, itemDisplay.position())) continue;
+
+            double score = matchScore(textPosition, itemDisplay.position());
+            if (score >= bestScore) continue;
+
+            bestScore = score;
+            bestTotemNumber = entry.getValue();
+        }
+
+        return bestTotemNumber;
+    }
+
+    private void bindPendingTotem(int totemNumber, int timerId, int parsedTime, Display.TextDisplay textDisplay) {
+        ShamanTotem totem = getTotem(totemNumber);
+        if (totem == null) return;
+
+        Display.ItemDisplay visibleDisplay = getVisibleDisplay(totem.getVisibleEntityId());
+        Position boundPosition = visibleDisplay != null ? visibleDisplay.position() : textDisplay.position();
+
+        totem.setTimerEntityId(timerId);
+        totem.setTime(parsedTime);
+        totem.setPosition(boundPosition);
+        totem.setState(ShamanTotem.TotemState.ACTIVE);
+
+        pendingVisibleEntityIds.remove(totem.getVisibleEntityId());
+        if (orphanedTimers.containsKey(timerId) && orphanedTimers.get(timerId) > 1) {
+            WynntilsMod.info("Matched an orphaned totem timer " + timerId + " to a totem "
+                    + totem.getTotemNumber() + " after " + orphanedTimers.get(timerId) + " attempts.");
+        }
+        orphanedTimers.remove(timerId);
+
+        WynntilsMod.postEvent(new TotemEvent.Activated(totem.getTotemNumber(), boundPosition));
+    }
+
+    private void updateTotem(ShamanTotem totem, int parsedTime, Display.TextDisplay textDisplay) {
+        Display.ItemDisplay visibleDisplay = getVisibleDisplay(totem.getVisibleEntityId());
+        Position updatedPosition = visibleDisplay != null ? visibleDisplay.position() : textDisplay.position();
+
+        totem.setTime(parsedTime);
+        totem.setPosition(updatedPosition);
+
+        WynntilsMod.postEvent(new TotemEvent.Updated(totem.getTotemNumber(), parsedTime, updatedPosition));
+    }
+
+    private boolean wasLikelyCreatedByRecentCast(PositionSnapshot spawnSnapshot, Position displayPosition) {
+        if (Models.Inventory.hasAutoCasterItem()) return true;
+
+        pruneOldCastSnapshots();
+        double displayX = spawnSnapshot != null ? spawnSnapshot.x() : displayPosition.x();
+        double displayZ = spawnSnapshot != null ? spawnSnapshot.z() : displayPosition.z();
+        for (PositionSnapshot castSnapshot : recentCastSnapshots) {
+            if (Math.abs(displayX - castSnapshot.x()) <= TOTEM_SEARCH_RADIUS
+                    && Math.abs(displayZ - castSnapshot.z()) <= TOTEM_SEARCH_RADIUS) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isShamanTotemItem(ItemStack itemStack) {
+        if (!itemStack.is(Items.OAK_BOAT)) return false;
+        CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
+        if (customModelData == null) return false;
+
+        return customModelData.floats().stream().anyMatch(model -> model == SHAMAN_TOTEM_CUSTOM_MODEL_DATA);
+    }
+
+    private ItemStack getUpdatedItemStack(SetEntityDataEvent event) {
+        for (SynchedEntityData.DataValue<?> dataValue : event.getPackedItems()) {
+            if (dataValue.id() != Display.ItemDisplay.DATA_ITEM_STACK_ID.id()) continue;
+            if (dataValue.value() instanceof ItemStack itemStack) {
+                return itemStack;
+            }
+        }
+
+        return ItemStack.EMPTY;
+    }
+
+    private void pruneMissingPendingDisplays() {
+        pendingVisibleEntityIds.entrySet().removeIf(entry -> {
+            Entity entity = McUtils.mc().level.getEntity(entry.getKey());
+            return !(entity instanceof Display.ItemDisplay);
+        });
+    }
+
+    private void pruneOldItemDisplaySpawns() {
+        long now = System.currentTimeMillis();
+        recentItemDisplaySpawns.entrySet().removeIf(entry ->
+                now - entry.getValue().timestamp() > DISPLAY_CONFIRM_MAX_DELAY_MS);
+    }
+
+    private void pruneOldCastSnapshots() {
+        long now = System.currentTimeMillis();
+        while (!recentCastSnapshots.isEmpty() && now - recentCastSnapshots.peekFirst().timestamp() > CAST_MAX_DELAY_MS) {
+            recentCastSnapshots.removeFirst();
+        }
+    }
+
+    private boolean isTrackedVisibleEntityId(int entityId) {
+        return pendingVisibleEntityIds.containsKey(entityId) || getTotemByVisibleEntityId(entityId) != null;
     }
 
     /**
@@ -235,9 +322,12 @@ public final class ShamanTotemModel extends Model {
      * @param totem The totem to remove. Must be 1, 2, 3 or 4
      */
     private void removeTotem(int totem) {
-        WynntilsMod.postEvent(new TotemEvent.Removed(totem, totems[totem - 1]));
+        ShamanTotem existingTotem = totems[totem - 1];
+        if (existingTotem == null) return;
+
+        WynntilsMod.postEvent(new TotemEvent.Removed(totem, existingTotem));
+        pendingVisibleEntityIds.remove(existingTotem.getVisibleEntityId());
         totems[totem - 1] = null;
-        timerlessTotemVisibleIds[totem - 1] = null;
         nextTotemSlot = totem;
     }
 
@@ -249,10 +339,21 @@ public final class ShamanTotemModel extends Model {
             removeTotem(i);
         }
 
+        recentCastSnapshots.clear();
+        recentItemDisplaySpawns.clear();
+        pendingVisibleEntityIds.clear();
+        orphanedTimers.clear();
         nextTotemSlot = 1;
     }
 
     private int getNextTotemSlot() {
+        for (int i = 0; i < MAX_TOTEM_COUNT; i++) {
+            if (totems[i] == null) {
+                nextTotemSlot = i + 1;
+                return nextTotemSlot;
+            }
+        }
+
         int toReturn = nextTotemSlot;
 
         if (nextTotemSlot == MAX_TOTEM_COUNT) {
@@ -277,6 +378,41 @@ public final class ShamanTotemModel extends Model {
         }
 
         return null;
+    }
+
+    private ShamanTotem getTotemByVisibleEntityId(int visibleEntityId) {
+        for (ShamanTotem totem : totems) {
+            if (totem != null && totem.getVisibleEntityId() == visibleEntityId) {
+                return totem;
+            }
+        }
+
+        return null;
+    }
+
+    private Display.ItemDisplay getVisibleDisplay(int visibleEntityId) {
+        Entity entity = McUtils.mc().level.getEntity(visibleEntityId);
+        return entity instanceof Display.ItemDisplay itemDisplay ? itemDisplay : null;
+    }
+
+    private boolean isWithinSearchBounds(Position textPosition, Position displayPosition) {
+        double deltaX = Math.abs(textPosition.x() - displayPosition.x());
+        double deltaY = textPosition.y() - displayPosition.y();
+        double deltaZ = Math.abs(textPosition.z() - displayPosition.z());
+
+        return deltaX <= TOTEM_SEARCH_RADIUS
+                && deltaZ <= TOTEM_SEARCH_RADIUS
+                && deltaY >= -1
+                && deltaY <= TOTEM_VERTICAL_SEARCH_RADIUS;
+    }
+
+    private double matchScore(Position textPosition, Position displayPosition) {
+        double deltaX = textPosition.x() - displayPosition.x();
+        double deltaZ = textPosition.z() - displayPosition.z();
+        double verticalOffset = Math.max(0, textPosition.y() - displayPosition.y());
+
+        double horizontalDistanceSquared = deltaX * deltaX + deltaZ * deltaZ;
+        return horizontalDistanceSquared * 4 + verticalOffset * verticalOffset;
     }
 
     private boolean isClose(Position pos1, Position pos2) {
@@ -304,4 +440,6 @@ public final class ShamanTotemModel extends Model {
 
         return totems[totemNumber - 1];
     }
+
+    private record PositionSnapshot(double x, double z, long timestamp) {}
 }

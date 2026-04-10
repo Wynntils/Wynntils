@@ -6,7 +6,7 @@ package com.wynntils.models.abilities.event;
 
 import com.wynntils.models.abilities.type.ShamanTotem;
 import net.minecraft.core.Position;
-import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.Display;
 import net.neoforged.bus.api.Event;
 
 public abstract class TotemEvent extends Event {
@@ -21,7 +21,7 @@ public abstract class TotemEvent extends Event {
     }
 
     /**
-     * Fired when the totem's timer ArmorStand is bound to the visible totem
+     * Fired when the totem's timer text display is bound to the visible totem
      */
     public static class Activated extends TotemEvent {
         private final Position position;
@@ -78,14 +78,14 @@ public abstract class TotemEvent extends Event {
      * Fired when totem is initially summoned by spell cast
      */
     public static class Summoned extends TotemEvent {
-        private final ArmorStand totemEntity;
+        private final Display.ItemDisplay totemEntity;
 
-        public Summoned(int totemNumber, ArmorStand totemEntity) {
+        public Summoned(int totemNumber, Display.ItemDisplay totemEntity) {
             super(totemNumber);
             this.totemEntity = totemEntity;
         }
 
-        public ArmorStand getTotemEntity() {
+        public Display.ItemDisplay getTotemEntity() {
             return totemEntity;
         }
     }
