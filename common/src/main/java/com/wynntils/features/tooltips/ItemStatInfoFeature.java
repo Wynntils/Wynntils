@@ -167,6 +167,11 @@ public class ItemStatInfoFeature extends Feature {
             List<Component> tooltips = TooltipUtils.getWynnItemTooltip(itemStack, wynnItem);
 
             if (tooltips.isEmpty()) return;
+
+            Models.Item.asWynnItemProperty(itemStack, IdentifiableItemProperty.class)
+                    .map(itemInfo -> TooltipUtils.resolveTooltipItemProperty(itemStack, itemInfo))
+                    .ifPresent(itemInfo -> appendOverallPercentageToName(tooltips, itemInfo));
+
             event.setTooltips(tooltips);
         } catch (Exception e) {
             brokenItems.add(wynnItem);
@@ -203,8 +208,6 @@ public class ItemStatInfoFeature extends Feature {
 
         List<Component> tooltips = new ArrayList<>(event.getTooltips());
         if (tooltips.isEmpty()) return;
-
-        appendOverallPercentageToName(tooltips, itemInfo);
 
         TooltipUtils.realignMarkedTooltipLines(tooltips);
         event.setTooltips(tooltips);
@@ -247,10 +250,6 @@ public class ItemStatInfoFeature extends Feature {
         }
 
         Component nameLine = stripSpaceFontSegments(tooltips.get(nameLineIndex));
-        if (nameLine.getString().contains("%]")) {
-            return;
-        }
-
         tooltips.set(nameLineIndex, buildNameLineWithOverallPercentage(nameLine, overallPercentageOpt.get()));
     }
 
