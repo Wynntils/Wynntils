@@ -29,4 +29,11 @@ public final class DistortionBar extends TrackedBar {
             WynntilsMod.error(String.format("Failed to parse current for distortion bar (%s)", match.group(1)));
         }
     }
+
+    @Override
+    public void reset(){
+        super.reset();
+
+        current = 0;
+    }
 }
