@@ -31,7 +31,7 @@ public final class DistortionBar extends TrackedBar {
     }
 
     @Override
-    public void reset(){
+    public void reset() {
         super.reset();
 
         current = 0;
