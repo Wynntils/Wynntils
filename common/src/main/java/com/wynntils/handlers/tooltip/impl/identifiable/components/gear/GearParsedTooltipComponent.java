@@ -10,14 +10,21 @@ import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.TooltipMarkers;
+import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.models.items.properties.ShinyItemProperty;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
@@ -26,6 +33,9 @@ import net.minecraft.world.item.ItemStack;
 
 public final class GearParsedTooltipComponent {
     private static final String SHINY_STAT_ICON = "\uE04F";
+    private static final String SKILL_REQ_PART = ".+?(\\uE005|\\uE006|\\uE007).+?(?:§8|§#acfac6ff|§#faacacff)(\\d+).+?";
+    private static final Pattern SKILL_REQ_PATTERN = Pattern.compile("(?:" + SKILL_REQ_PART + "){5}");
+    private static final Pattern SKILL_REQ_PART_PATTERN = Pattern.compile(SKILL_REQ_PART);
 
     private final GearRequirementsComponent requirementsComponent = new GearRequirementsComponent();
 
@@ -120,12 +130,14 @@ public final class GearParsedTooltipComponent {
             return null;
         }
 
-        List<Component> header =
-                buildHeaderWithSyntheticRequirements(tooltipLines, itemProperty.getItemInfo(), null, lastDividerLine);
-        List<Component> footer = pageLineIndex >= 0
+        GearInstance headerInstance = createSyntheticHeaderInstance(itemProperty);
+        List<Component> header = buildHeaderWithSyntheticRequirements(
+                tooltipLines, itemProperty.getItemInfo(), headerInstance, lastDividerLine);
+        int footerStartIndex = findUnidentifiedFooterStart(tooltipLines, lastDividerLine, pageLineIndex);
+        List<Component> footer = footerStartIndex >= 0
                 ? copyMarkedRange(
                         tooltipLines,
-                        pageLineIndex,
+                        footerStartIndex,
                         tooltipLines.size(),
                         lineIndex -> classifyFooterMarker(tooltipLines.get(lineIndex)))
                 : List.of();
@@ -142,10 +154,12 @@ public final class GearParsedTooltipComponent {
         }
 
         int requirementsStartLine = findRequirementsSectionStart(tooltipLines, identificationDividerLine);
+        Map<Skill, Boolean> parsedSkillRequirementStates =
+                parseSkillRequirementStates(tooltipLines, requirementsStartLine, identificationDividerLine);
         List<Component> header = copyMarkedRange(tooltipLines, 0, requirementsStartLine, lineIndex -> null);
         removeVanillaHoverNameLine(header, gearInfo);
         appendOverallPercentageToTitleLine(header, gearInfo, gearInstance);
-        header.addAll(requirementsComponent.buildHeaderLines(gearInfo, gearInstance));
+        header.addAll(requirementsComponent.buildHeaderLines(gearInfo, gearInstance, parsedSkillRequirementStates));
         return header;
     }
 
@@ -243,6 +257,57 @@ public final class GearParsedTooltipComponent {
         }
 
         return Math.max(0, scanIndex + 1);
+    }
+
+    private static Map<Skill, Boolean> parseSkillRequirementStates(
+            List<Component> tooltipLines, int requirementsStartLine, int identificationDividerLine) {
+        Map<Skill, Boolean> parsedStates = new EnumMap<>(Skill.class);
+
+        for (int i = requirementsStartLine; i < identificationDividerLine; i++) {
+            StyledText normalized = StyledText.fromComponent(tooltipLines.get(i)).getNormalized();
+            Matcher skillMatcher = normalized.getMatcher(SKILL_REQ_PATTERN);
+            if (!skillMatcher.matches()) {
+                continue;
+            }
+
+            Matcher partMatcher = normalized.getMatcher(SKILL_REQ_PART_PATTERN);
+            int index = 0;
+            while (partMatcher.find() && index < Skill.values().length) {
+                parsedStates.put(Skill.values()[index], "\uE006".equals(partMatcher.group(1)));
+                index++;
+            }
+            break;
+        }
+
+        return parsedStates;
+    }
+
+    private static GearInstance createSyntheticHeaderInstance(IdentifiableItemProperty<GearInfo, GearInstance> itemProperty) {
+        if (!(itemProperty instanceof ShinyItemProperty shinyItemProperty)
+                || shinyItemProperty.getShinyStat().isEmpty()) {
+            return null;
+        }
+
+        return new GearInstance(
+                List.of(), List.of(), 0, Optional.empty(), shinyItemProperty.getShinyStat(), false, Optional.empty());
+    }
+
+    private static int findUnidentifiedFooterStart(List<Component> tooltipLines, int lastDividerLine, int pageLineIndex) {
+        if (pageLineIndex < 0) {
+            return -1;
+        }
+
+        if (lastDividerLine < 0 || lastDividerLine >= pageLineIndex) {
+            return pageLineIndex;
+        }
+
+        for (int i = lastDividerLine + 1; i < pageLineIndex; i++) {
+            if (!tooltipLines.get(i).getString().isBlank()) {
+                return lastDividerLine;
+            }
+        }
+
+        return pageLineIndex;
     }
 
     private static boolean isRequirementRelatedLine(Component line) {

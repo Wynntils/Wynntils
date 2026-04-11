@@ -13,13 +13,17 @@ import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearRequirements;
+import com.wynntils.models.players.type.wynnplayer.CharacterData;
+import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -27,11 +31,16 @@ import net.minecraft.network.chat.Style;
 
 public final class GearRequirementsComponent {
     public List<Component> buildHeaderLines(GearInfo gearInfo, GearInstance gearInstance) {
+        return buildHeaderLines(gearInfo, gearInstance, Map.of());
+    }
+
+    public List<Component> buildHeaderLines(
+            GearInfo gearInfo, GearInstance gearInstance, Map<Skill, Boolean> parsedSkillRequirementStates) {
         List<Component> header = new ArrayList<>();
         header.add(TooltipMarkers.markLine(Component.empty(), TooltipMarkers.SECTION_DIVIDER));
 
         GearRequirements gearRequirements = gearInfo.requirements();
-        appendSkillRequirements(header, gearRequirements, gearInfo, gearInstance);
+        appendSkillRequirements(header, gearRequirements, gearInfo, gearInstance, parsedSkillRequirementStates);
         appendQuestRequirement(header, gearRequirements, gearInstance);
         appendClassRequirement(header, gearRequirements);
         appendLevelRequirement(header, gearRequirements);
@@ -50,7 +59,11 @@ public final class GearRequirementsComponent {
     }
 
     private static void appendSkillRequirements(
-            List<Component> header, GearRequirements gearRequirements, GearInfo gearInfo, GearInstance gearInstance) {
+            List<Component> header,
+            GearRequirements gearRequirements,
+            GearInfo gearInfo,
+            GearInstance gearInstance,
+            Map<Skill, Boolean> parsedSkillRequirementStates) {
         if (gearRequirements.skills().isEmpty()) {
             return;
         }
@@ -64,7 +77,8 @@ public final class GearRequirementsComponent {
         for (Skill skill : Skill.values()) {
             int count = getSkillRequirementCount(gearRequirements, skill);
             MutableComponent iconCell = buildSkillRequirementIconCell(skill, count, gearInfo);
-            MutableComponent countCell = buildSkillRequirementCountCell(skill, count, gearInstance);
+            MutableComponent countCell =
+                    buildSkillRequirementCountCell(skill, count, gearInstance, parsedSkillRequirementStates);
 
             skillIconCells.add(iconCell);
             skillCountCells.add(countCell);
@@ -198,10 +212,12 @@ public final class GearRequirementsComponent {
         return cell;
     }
 
-    private static MutableComponent buildSkillRequirementCountCell(Skill skill, int count, GearInstance gearInstance) {
+    private static MutableComponent buildSkillRequirementCountCell(
+            Skill skill, int count, GearInstance gearInstance, Map<Skill, Boolean> parsedSkillRequirementStates) {
         MutableComponent cell = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
         String reqCharacter = "\uE005";
-        boolean fulfilled = count == 0 || isSkillRequirementFulfilled(skill, count, gearInstance);
+        boolean fulfilled = count == 0
+                || parsedSkillRequirementStates.getOrDefault(skill, isSkillRequirementFulfilled(skill, count, gearInstance));
 
         if (count != 0) {
             reqCharacter = fulfilled ? "\uE006" : "\uE007";
@@ -261,11 +277,33 @@ public final class GearRequirementsComponent {
 
         int totalSkillPoints = Models.SkillPoint.getTotalSkillPoints(skill);
         int assignedSkillPoints = Models.SkillPoint.getAssignedSkillPoints(skill);
-        boolean hasSkillPointData = Models.SkillPoint.getTotalSum() > 0 || Models.SkillPoint.getAssignedSum() > 0;
-        if (!hasSkillPointData) {
-            return false;
+        int apiSkillPoints = getApiSkillPoints(skill);
+        boolean hasSkillPointData = Models.SkillPoint.getTotalSum() > 0
+                || Models.SkillPoint.getAssignedSum() > 0
+                || apiSkillPoints > 0;
+        if (!hasSkillPointData) return false;
+
+        return Math.max(Math.max(totalSkillPoints, assignedSkillPoints), apiSkillPoints) >= count;
+    }
+
+    private static int getApiSkillPoints(Skill skill) {
+        WynnPlayerInfo playerInfo = Models.Account.getPlayerInfo();
+        if (playerInfo == null || playerInfo.characters().isEmpty()) {
+            return 0;
         }
 
-        return Math.max(totalSkillPoints, assignedSkillPoints) >= count;
+        Optional<UUID> activeCharacterUuid = playerInfo.characters().keySet().stream()
+                .filter(uuid -> uuid.toString().startsWith(Models.Character.getId()))
+                .findFirst();
+        if (activeCharacterUuid.isEmpty()) {
+            return 0;
+        }
+
+        CharacterData characterData = playerInfo.characters().get(activeCharacterUuid.get());
+        if (characterData == null) {
+            return 0;
+        }
+
+        return characterData.skillPoints().getOrDefault(skill, 0);
     }
 }
