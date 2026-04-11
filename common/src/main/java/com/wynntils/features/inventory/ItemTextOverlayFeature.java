@@ -551,7 +551,6 @@ public class ItemTextOverlayFeature extends Feature {
     }
 
     private final class TeleportScrollOverlay implements TextOverlayInfo {
-        private static final int MAX_SCROLL_CHARGES = 3;
         private static final CustomColor MAX_CHARGES_COLOR = CustomColor.fromChatFormatting(ChatFormatting.AQUA);
         private static final CustomColor TWO_CHARGES_COLOR = new CustomColor(123, 178, 255);
         private static final CustomColor ONE_CHARGE_COLOR = new CustomColor(181, 90, 189);
@@ -570,9 +569,8 @@ public class ItemTextOverlayFeature extends Feature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            int remainingCharges = MathUtils.clamp(item.getRemainingCharges(), 0, MAX_SCROLL_CHARGES);
             CustomColor textColor = teleportScrollColorByCharges.get()
-                    ? switch (remainingCharges) {
+                    ? switch (item.getRemainingCharges()) {
                         case 3 -> MAX_CHARGES_COLOR;
                         case 2 -> TWO_CHARGES_COLOR;
                         case 1 -> ONE_CHARGE_COLOR;
