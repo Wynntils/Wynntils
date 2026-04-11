@@ -688,6 +688,8 @@
   "feature.wynntils.itemStatInfo.obfuscationChanceStart.name": "Összezavarás Kezdő Esélye",
   "feature.wynntils.itemStatInfo.overallPercentageInName.description": "A felszerelés összesített százalékos aránya megjelenjen-e a névben?",
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Összesített Százalék a Névben",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.description": "A tökéletes (100%) és hibás (0%) tárgyak neve továbbra is mutassa az összesített százalékot?",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.name": "Összesített Százalék Tökéletes/Hibás Esetén",
   "feature.wynntils.itemStatInfo.perfect.description": "A tökéletes (100%) tárgyak nevei legyenek szivárványszínűek?",
   "feature.wynntils.itemStatInfo.perfect.name": "Szivárvány Tökéletes Tárgyak",
   "feature.wynntils.itemStatInfo.perfectColorThreshold.description": "A tökéletes szín 95-ös vagy 96-os értéktől jelenjen meg?",

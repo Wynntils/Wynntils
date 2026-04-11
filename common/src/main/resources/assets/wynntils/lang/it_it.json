@@ -688,6 +688,8 @@
   "feature.wynntils.itemStatInfo.obfuscationChanceStart.name": "Probabilità Iniziale di Offuscamento",
   "feature.wynntils.itemStatInfo.overallPercentageInName.description": "La percentuale complessiva di un equipaggiamento dovrebbe essere visualizzata nel nome?",
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Percentuale Complessiva nel Nome",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.description": "I nomi degli oggetti perfetti (100%) e difettosi (0%) dovrebbero continuare a mostrare la loro percentuale complessiva?",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.name": "Percentuale Complessiva su Perfetto/Difettoso",
   "feature.wynntils.itemStatInfo.perfect.description": "I nomi degli oggetti perfetti (100%) dovrebbero essere colorati come un arcobaleno?",
   "feature.wynntils.itemStatInfo.perfect.name": "Oggetti Perfetti Arcobaleno",
   "feature.wynntils.itemStatInfo.perfectColorThreshold.description": "Il colore perfetto dovrebbe iniziare a comparire dal 95 o 96?",

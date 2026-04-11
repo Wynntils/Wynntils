@@ -38,6 +38,7 @@ public final class GearParsedTooltipComponent {
     private static final Pattern SKILL_REQ_PART_PATTERN = Pattern.compile(SKILL_REQ_PART);
 
     private final GearRequirementsComponent requirementsComponent = new GearRequirementsComponent();
+    private final GearTitleComponent titleComponent = new GearTitleComponent();
 
     private static final FontDescription DIVIDER_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/divider"));
@@ -177,14 +178,16 @@ public final class GearParsedTooltipComponent {
         }
     }
 
-    private static void appendOverallPercentageToTitleLine(
+    private void appendOverallPercentageToTitleLine(
             List<Component> header, GearInfo gearInfo, GearInstance gearInstance) {
         if (gearInstance == null || !gearInstance.hasOverallValue()) {
             return;
         }
 
         ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
-        if (!feature.overallPercentageInName.get()) {
+        boolean perfectTitle = feature.perfect.get() && gearInstance.isPerfect();
+        boolean defectiveTitle = feature.defective.get() && gearInstance.isDefective();
+        if (!GearTitleComponent.shouldAppendOverallPercentage(gearInstance, feature) && !perfectTitle && !defectiveTitle) {
             return;
         }
 
@@ -199,6 +202,15 @@ public final class GearParsedTooltipComponent {
             }
             if (!isEmblemTitleLine && !visibleText.endsWith(gearInfo.name())) {
                 continue;
+            }
+
+            if (perfectTitle) {
+                header.set(i, titleComponent.buildNameLine(gearInfo, gearInstance, true));
+                return;
+            }
+            if (defectiveTitle) {
+                header.set(i, titleComponent.buildNameLine(gearInfo, gearInstance, true));
+                return;
             }
 
             MutableComponent updatedLine = line.copy();

@@ -688,6 +688,8 @@
   "feature.wynntils.itemStatInfo.obfuscationChanceStart.name": "難読化開始の可能性",
   "feature.wynntils.itemStatInfo.overallPercentageInName.description": "装備の全体的な割合を名前に表示しますか？",
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "名前の全体的な割合",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.description": "完璧な（100%）および欠陥のある（0%）アイテム名にも全体割合を表示しますか？",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.name": "完璧・欠陥アイテム名の全体割合",
   "feature.wynntils.itemStatInfo.perfect.description": "完璧な（100％）アイテムの名前を虹色にしますか？",
   "feature.wynntils.itemStatInfo.perfect.name": "虹色の完璧なアイテム",
   "feature.wynntils.itemStatInfo.perfectColorThreshold.description": "完璧な色は95または96から表示されるべきですか？",

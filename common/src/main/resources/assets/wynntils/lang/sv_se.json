@@ -696,6 +696,8 @@
   "feature.wynntils.itemStatInfo.obfuscationChanceStart.name": "Startchans för förvrängning",
   "feature.wynntils.itemStatInfo.overallPercentageInName.description": "Ska den totala procenten av en utrustning visas i namnet?",
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Total procent i namn",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.description": "Ska namn på perfekta (100%) och defekta (0%) föremål fortfarande visa sin totala procent?",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.name": "Total Procent på Perfekt/Defekt",
   "feature.wynntils.itemStatInfo.perfect.description": "Ska namnen på perfekta (100%) föremål vara regnbågsfärgade?",
   "feature.wynntils.itemStatInfo.perfect.name": "Regnbågsfärgade perfekta föremål",
   "feature.wynntils.itemStatInfo.perfectColorThreshold.description": "Ska den perfekta färgen börja visas från 95 eller 96?",

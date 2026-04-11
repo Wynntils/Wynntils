@@ -872,6 +872,8 @@
   "feature.wynntils.itemStatInfo.obfuscationChanceStart.name": "Начальная Вероятность Зашифровки",
   "feature.wynntils.itemStatInfo.overallPercentageInName.description": "Следует ли отображать общий процент снаряжения в названии?",
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Общий Процент в Названии",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.description": "Должны ли названия идеальных (100%) и дефектных (0%) предметов по-прежнему показывать их общий процент?",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.name": "Общий Процент для Идеальных/Дефектных",
   "feature.wynntils.itemStatInfo.perfect.description": "Должны ли имена идеальных (100%) предметов быть окрашены в цвета радуги?",
   "feature.wynntils.itemStatInfo.perfect.name": "Радужные Идеальные Предметы",
   "feature.wynntils.itemStatInfo.perfectColorThreshold.description": "Должен ли идеальный цвет начинать появляться с 95 или 96?",

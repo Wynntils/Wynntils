@@ -691,6 +691,8 @@
   "feature.wynntils.itemStatInfo.obfuscationChanceStart.name": "Startchance der Verschleierung",
   "feature.wynntils.itemStatInfo.overallPercentageInName.description": "Sollte der Gesamtprozentsatz einer Ausrüstung im Namen angezeigt werden?",
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Gesamtprozentsatz im Namen",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.description": "Sollen perfekte (100%) und defekte (0%) Gegenstandsnamen weiterhin ihren Gesamtprozentsatz anzeigen?",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.name": "Gesamtprozentsatz bei Perfekt/Defekt",
   "feature.wynntils.itemStatInfo.perfect.description": "Sollten die Namen von perfekten (100%) Gegenständen regenbogenfarben sein?",
   "feature.wynntils.itemStatInfo.perfect.name": "Regenbogen Perfekte Gegenstände",
   "feature.wynntils.itemStatInfo.perfectColorThreshold.description": "Soll die perfekte Farbe ab 95 oder 96 erscheinen?",

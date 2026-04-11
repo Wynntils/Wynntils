@@ -133,7 +133,7 @@ public final class GearItemWeightsComponent {
         MutableComponent line =
                 Component.empty().withStyle(Style.EMPTY.withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT));
         line.append(left.copy());
-        line.append(right.copy());
+        line.append(trimLeadingSpace(right));
         line.setStyle(line.getStyle().withInsertion(TooltipMarkers.ALIGN_RIGHT.token()));
         return line;
     }
@@ -172,5 +172,18 @@ public final class GearItemWeightsComponent {
         }
 
         return false;
+    }
+
+    private static Component trimLeadingSpace(Component component) {
+        if (!component.getSiblings().isEmpty()) {
+            return component.copy();
+        }
+
+        String text = component.getString();
+        if (!text.startsWith(" ")) {
+            return component.copy();
+        }
+
+        return Component.literal(text.substring(1)).withStyle(component.getStyle());
     }
 }

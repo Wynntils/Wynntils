@@ -688,6 +688,8 @@
   "feature.wynntils.itemStatInfo.obfuscationChanceStart.name": "Szansa na Zniekształcenie Początkowe",
   "feature.wynntils.itemStatInfo.overallPercentageInName.description": "Czy ogólny procent wyposażenia powinien być wyświetlany w nazwie?",
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Ogólny Procent w Nazwie",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.description": "Czy nazwy idealnych (100%) i wadliwych (0%) przedmiotów powinny nadal pokazywać ich ogólny procent?",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.name": "Ogólny Procent dla Idealnych/Wadliwych",
   "feature.wynntils.itemStatInfo.perfect.description": "Czy nazwy idealnych (100%) przedmiotów powinny być tęczowe?",
   "feature.wynntils.itemStatInfo.perfect.name": "Tęczowe Idealne Przedmioty",
   "feature.wynntils.itemStatInfo.perfectColorThreshold.description": "Czy idealny kolor powinien zaczynać się pojawiać od 95 lub 96?",

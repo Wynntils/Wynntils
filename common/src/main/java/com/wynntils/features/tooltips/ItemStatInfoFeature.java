@@ -113,6 +113,9 @@ public class ItemStatInfoFeature extends Feature {
     public final Config<Boolean> overallPercentageInName = new Config<>(true);
 
     @Persisted
+    public final Config<Boolean> overallPercentageInPerfectDefectiveName = new Config<>(true);
+
+    @Persisted
     public final Config<Boolean> showBestValueLastAlways = new Config<>(true);
 
     @Persisted

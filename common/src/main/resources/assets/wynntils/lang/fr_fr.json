@@ -688,6 +688,8 @@
   "feature.wynntils.itemStatInfo.obfuscationChanceStart.name": "Probabilité de Début d'Obfuscation",
   "feature.wynntils.itemStatInfo.overallPercentageInName.description": "Le pourcentage global d'un équipement doit-il être affiché dans le nom ?",
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Pourcentage Global dans le Nom",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.description": "Les noms d'objets parfaits (100%) et défectueux (0%) doivent-ils toujours afficher leur pourcentage global ?",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.name": "Pourcentage Global sur Parfait/Défectueux",
   "feature.wynntils.itemStatInfo.perfect.description": "Les noms des objets parfaits (100%) doivent-ils être colorés en arc-en-ciel ?",
   "feature.wynntils.itemStatInfo.perfect.name": "Objets Parfaits Arc-en-ciel",
   "feature.wynntils.itemStatInfo.perfectColorThreshold.description": "Le coloris parfait doit-il commencer à apparaître à 95 ou 96 ?",

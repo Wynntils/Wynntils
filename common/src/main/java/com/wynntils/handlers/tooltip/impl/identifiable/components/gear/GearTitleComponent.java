@@ -3,7 +3,6 @@
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
-
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
@@ -33,49 +32,10 @@ public final class GearTitleComponent {
     public List<Component> buildHeaderLines(GearInfo gearInfo, GearInstance gearInstance, boolean hideUnidentified) {
         List<Component> header = new ArrayList<>();
         ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
-
-        header.add(Component.empty());
-
-        MutableComponent nameLine = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
-
-        String frameCode = gearInfo.type().getFrameCode();
-        String spriteCode = gearInfo.type().getFrameSpriteCode();
         String setName = gearInfo.setInfo().map(SetInfo::name).orElse("");
 
-        if (!setName.isEmpty()) {
-            frameCode = String.valueOf((char) (frameCode.charAt(0) + 0x1000));
-            spriteCode = String.valueOf((char) (spriteCode.charAt(0) + 0x1000));
-        }
-
-        MutableComponent emblemComponent = Component.literal("\uDAFF\uDFF0").withStyle(style -> style.withFont(
-                        com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent
-                                .WYNNCRAFT_LANGUAGE_FONT)
-                .withShadowColor(0xFFFFFF));
-        emblemComponent.append(
-                Component.literal(frameCode).withStyle(Style.EMPTY.withFont(GearTooltipSupport.EMBLEM_FRAME_FONT)));
-        emblemComponent.append(Component.literal("\uDAFF\uDFCF"));
-        emblemComponent.append(Component.empty()
-                .withStyle(Style.EMPTY.withColor(0x00eb1c))
-                .append(Component.literal(spriteCode)
-                        .withStyle(Style.EMPTY.withFont(GearTooltipSupport.EMBLEM_SPRITE_FONT))));
-        nameLine.append(emblemComponent);
-
-        nameLine.append(Component.literal("\uDB00\uDC05")
-                .withStyle(com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent.SPACING_STYLE));
-
-        if (gearInstance == null && !hideUnidentified) {
-            nameLine.append(GearTooltipSupport.withWhiteShadow(Component.literal("\uE008")
-                    .withStyle(Style.EMPTY.withFont(GearTooltipSupport.ATTRIBUTE_SPRITE_FONT))));
-            nameLine.append(Component.literal("\uDB00\uDC02")
-                    .withStyle(
-                            com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent
-                                    .SPACING_STYLE));
-        }
-
-        MutableComponent itemNameComponent = buildItemNameComponent(gearInfo, gearInstance, feature);
-        appendOverallPercentage(itemNameComponent, gearInstance, feature);
-        nameLine.append(itemNameComponent);
-        header.add(nameLine);
+        header.add(Component.empty());
+        header.add(buildNameLine(gearInfo, gearInstance, hideUnidentified, feature));
 
         MutableComponent rarityTypeLine = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
         rarityTypeLine.append(Component.literal("\uDB00\uDC26")
@@ -137,6 +97,56 @@ public final class GearTitleComponent {
         return header;
     }
 
+    public Component buildNameLine(GearInfo gearInfo, GearInstance gearInstance, boolean hideUnidentified) {
+        return buildNameLine(
+                gearInfo, gearInstance, hideUnidentified, Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class));
+    }
+
+    private Component buildNameLine(
+            GearInfo gearInfo, GearInstance gearInstance, boolean hideUnidentified, ItemStatInfoFeature feature) {
+
+        MutableComponent nameLine = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
+
+        String frameCode = gearInfo.type().getFrameCode();
+        String spriteCode = gearInfo.type().getFrameSpriteCode();
+        String setName = gearInfo.setInfo().map(SetInfo::name).orElse("");
+
+        if (!setName.isEmpty()) {
+            frameCode = String.valueOf((char) (frameCode.charAt(0) + 0x1000));
+            spriteCode = String.valueOf((char) (spriteCode.charAt(0) + 0x1000));
+        }
+
+        MutableComponent emblemComponent = Component.literal("\uDAFF\uDFF0").withStyle(style -> style.withFont(
+                        com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent
+                                .WYNNCRAFT_LANGUAGE_FONT)
+                .withShadowColor(0xFFFFFF));
+        emblemComponent.append(
+                Component.literal(frameCode).withStyle(Style.EMPTY.withFont(GearTooltipSupport.EMBLEM_FRAME_FONT)));
+        emblemComponent.append(Component.literal("\uDAFF\uDFCF"));
+        emblemComponent.append(Component.empty()
+                .withStyle(Style.EMPTY.withColor(0x00eb1c))
+                .append(Component.literal(spriteCode)
+                        .withStyle(Style.EMPTY.withFont(GearTooltipSupport.EMBLEM_SPRITE_FONT))));
+        nameLine.append(emblemComponent);
+
+        nameLine.append(Component.literal("\uDB00\uDC05")
+                .withStyle(com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent.SPACING_STYLE));
+
+        if (gearInstance == null && !hideUnidentified) {
+            nameLine.append(GearTooltipSupport.withWhiteShadow(Component.literal("\uE008")
+                    .withStyle(Style.EMPTY.withFont(GearTooltipSupport.ATTRIBUTE_SPRITE_FONT))));
+            nameLine.append(Component.literal("\uDB00\uDC02")
+                    .withStyle(
+                            com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent
+                                    .SPACING_STYLE));
+        }
+
+        MutableComponent itemNameComponent = buildItemNameComponent(gearInfo, gearInstance, feature);
+        appendOverallPercentage(itemNameComponent, gearInstance, feature);
+        nameLine.append(itemNameComponent);
+        return nameLine;
+    }
+
     private MutableComponent buildItemNameComponent(
             GearInfo gearInfo, GearInstance gearInstance, ItemStatInfoFeature feature) {
         boolean isShiny = gearInstance != null && gearInstance.shinyStat().isPresent();
@@ -146,8 +156,7 @@ public final class GearTitleComponent {
         if (feature.perfect.get() && gearInstance != null && gearInstance.isPerfect()) {
             nameComponent = ComponentUtils.makeRainbowStyle("Perfect " + itemName, true);
         } else if (feature.defective.get() && gearInstance != null && gearInstance.isDefective()) {
-            nameComponent = ComponentUtils.makeObfuscated(
-                    "Defective " + itemName, feature.obfuscationChanceStart.get(), feature.obfuscationChanceEnd.get());
+            nameComponent = ComponentUtils.makeCrimsonStyle("Defective " + itemName, true);
         } else {
             nameComponent = Component.literal(itemName)
                     .withStyle(Style.EMPTY
@@ -162,7 +171,7 @@ public final class GearTitleComponent {
 
     private static void appendOverallPercentage(
             MutableComponent itemNameComponent, GearInstance gearInstance, ItemStatInfoFeature feature) {
-        if (gearInstance == null || !gearInstance.hasOverallValue() || !feature.overallPercentageInName.get()) {
+        if (!shouldAppendOverallPercentage(gearInstance, feature)) {
             return;
         }
 
@@ -172,6 +181,20 @@ public final class GearTitleComponent {
                         feature.colorLerp.get(),
                         feature.decimalPlaces.get())
                 .withStyle(style -> style.withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)));
+    }
+
+    static boolean shouldAppendOverallPercentage(GearInstance gearInstance, ItemStatInfoFeature feature) {
+        if (gearInstance == null || !gearInstance.hasOverallValue()) {
+            return false;
+        }
+
+        boolean specialTitle = feature.perfect.get() && gearInstance.isPerfect()
+                || feature.defective.get() && gearInstance.isDefective();
+        if (specialTitle) {
+            return feature.overallPercentageInPerfectDefectiveName.get();
+        }
+
+        return feature.overallPercentageInName.get();
     }
 
     private static List<Element> collectItemElements(GearInfo gearInfo) {

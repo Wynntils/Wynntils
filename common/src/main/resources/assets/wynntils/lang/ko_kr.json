@@ -827,6 +827,8 @@
   "feature.wynntils.itemStatInfo.obfuscationChanceStart.name": "난독화 최대 강도",
   "feature.wynntils.itemStatInfo.overallPercentageInName.description": "아이템 이름에 스탯 만점도 백분율을 표시할까요?",
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "아이템 이름에 만점도 추가 표시",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.description": "완벽한 (100%%) 및 고물 (0%%) 아이템 이름에도 전체 백분율을 계속 표시할까요?",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.name": "완벽/고물 아이템 전체 백분율 표시",
   "feature.wynntils.itemStatInfo.perfect.description": "완벽 (100%%) 아이템의 이름에 특수 효과를 추가할까요?",
   "feature.wynntils.itemStatInfo.perfect.name": "완벽 아이템 무지개 효과",
   "feature.wynntils.itemStatInfo.perfectColorThreshold.description": "완벽함 색상을 몇 퍼센트부터 표시할까요?",

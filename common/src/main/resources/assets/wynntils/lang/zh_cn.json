@@ -688,6 +688,8 @@
   "feature.wynntils.itemStatInfo.obfuscationChanceStart.name": "模糊开始概率",
   "feature.wynntils.itemStatInfo.overallPercentageInName.description": "是否应在名称中显示装备的总体百分比？",
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "名称中的总体百分比",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.description": "完美（100%）和缺陷（0%）物品的名称是否仍应显示其总体百分比？",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.name": "完美/缺陷物品的总体百分比",
   "feature.wynntils.itemStatInfo.perfect.description": "完美（100%）物品的名称是否应为彩虹色？",
   "feature.wynntils.itemStatInfo.perfect.name": "彩虹完美物品",
   "feature.wynntils.itemStatInfo.perfectColorThreshold.description": "完美的颜色是否应该从95或96开始出现？",

@@ -77,17 +77,19 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
         List<Component> finalized = new ArrayList<>(tooltip.size());
         for (Component line : tooltip) {
             TooltipMarkers marker = TooltipMarkers.fromToken(line.getStyle().getInsertion());
-            if (marker == TooltipMarkers.SECTION_DIVIDER) {
+            if (isDividerMarker(marker)) {
                 finalized.add(mark(dividerComponent.buildDivider(gearInfo.tier()), marker));
-            } else if (marker == TooltipMarkers.IDENTIFICATION_DIVIDER) {
-                finalized.add(mark(dividerComponent.buildDivider(gearInfo.tier()), marker));
-            } else if (marker == TooltipMarkers.REROLL_BANNER) {
-                if (gearInstance != null && gearInstance.rerolls() > 0) {
+                continue;
+            }
+
+            if (marker == TooltipMarkers.REROLL_BANNER) {
+                if (shouldRenderRerollBanner(gearInstance)) {
                     finalized.add(mark(rerollBannerComponent.buildRerollBanner(gearInfo.tier(), gearInstance), marker));
                 }
-            } else {
-                finalized.add(line);
+                continue;
             }
+
+            finalized.add(line);
         }
 
         GearTooltipAlignmentComponent.realignMarkedTooltipLines(finalized);
@@ -98,6 +100,14 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
         MutableComponent marked = line.copy();
         marked.setStyle(marked.getStyle().withInsertion(marker.token()));
         return marked;
+    }
+
+    private static boolean isDividerMarker(TooltipMarkers marker) {
+        return marker == TooltipMarkers.SECTION_DIVIDER || marker == TooltipMarkers.IDENTIFICATION_DIVIDER;
+    }
+
+    private static boolean shouldRenderRerollBanner(GearInstance gearInstance) {
+        return gearInstance != null && gearInstance.rerolls() > 0;
     }
 
     private static GearInstance createSyntheticHeaderInstance(

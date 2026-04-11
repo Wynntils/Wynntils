@@ -688,6 +688,8 @@
   "feature.wynntils.itemStatInfo.obfuscationChanceStart.name": "Verwarring Startkans",
   "feature.wynntils.itemStatInfo.overallPercentageInName.description": "Moet het totale percentage van een uitrusting in de naam worden weergegeven?",
   "feature.wynntils.itemStatInfo.overallPercentageInName.name": "Totaal Percentage in Naam",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.description": "Moeten perfecte (100%) en defecte (0%) itemnamen hun totale percentage blijven tonen?",
+  "feature.wynntils.itemStatInfo.overallPercentageInPerfectDefectiveName.name": "Totaal Percentage op Perfect/Defect",
   "feature.wynntils.itemStatInfo.perfect.description": "Moeten de namen van perfecte (100%) items regenboogkleurig zijn?",
   "feature.wynntils.itemStatInfo.perfect.name": "Regenboog Perfecte Items",
   "feature.wynntils.itemStatInfo.perfectColorThreshold.description": "Moet de perfecte kleur beginnen bij 95 of 96?",
