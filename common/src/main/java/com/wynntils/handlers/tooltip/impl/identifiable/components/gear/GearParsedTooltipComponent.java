@@ -302,9 +302,12 @@ public final class GearParsedTooltipComponent {
         }
 
         for (int i = lastDividerLine + 1; i < pageLineIndex; i++) {
-            if (!tooltipLines.get(i).getString().isBlank()) {
-                return lastDividerLine;
+            if (!containsFont(StyledText.fromComponent(tooltipLines.get(i)), IDENTIFICATION_MAJOR_FONT)) {
+                continue;
             }
+
+            int footerDividerLine = findLastDividerBefore(tooltipLines, i + 1);
+            return footerDividerLine >= 0 ? footerDividerLine : i;
         }
 
         return pageLineIndex;
