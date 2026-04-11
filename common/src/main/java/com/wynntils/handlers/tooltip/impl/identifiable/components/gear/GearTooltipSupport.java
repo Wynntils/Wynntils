@@ -127,7 +127,10 @@ final class GearTooltipSupport {
                                         com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent
                                                 .REQUIREMENT_STYLE)));
         requirement.append(label.copy());
-        requirement.append(value.copy());
+
+        MutableComponent paddedValue = Component.literal("  ").withStyle(value.getStyle());
+        paddedValue.append(value.copy());
+        requirement.append(paddedValue);
         return requirement;
     }
 
