@@ -10,7 +10,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.PagedItemProperty;
 import com.wynntils.models.stats.StatCalculator;
@@ -291,10 +290,6 @@ public final class TooltipIdentifications {
     }
 
     private static boolean shouldMarkIdentificationAlignment(IdentifiableItemProperty<?, ?> itemInfo) {
-        if (!(itemInfo.getItemInfo() instanceof GearInfo)) {
-            return false;
-        }
-
         if (itemInfo instanceof PagedItemProperty pagedItemProperty) {
             return pagedItemProperty.isStatPage();
         }

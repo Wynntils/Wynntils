@@ -216,15 +216,6 @@ public class ItemStatInfoFeature extends Feature {
         return !pagedItemProperty.isStatPage();
     }
 
-    private Optional<Float> resolveOverallPercentage(IdentifiableItemProperty<?, ?> itemInfo) {
-        if (itemInfo.hasOverallValue()) {
-            return Optional.of(itemInfo.getOverallPercentage());
-        }
-
-        return StatCalculator.calculateOverallQuality(
-                itemInfo.getName(), itemInfo.getPossibleValues(), itemInfo.getIdentifications());
-    }
-
     public NavigableMap<Float, TextColor> getColorMap() {
         return colorLerp.get() ? LERP_MAP : flatMap;
     }

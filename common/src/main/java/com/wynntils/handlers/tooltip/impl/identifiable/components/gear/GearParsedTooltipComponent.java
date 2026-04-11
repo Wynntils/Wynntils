@@ -187,7 +187,9 @@ public final class GearParsedTooltipComponent {
         ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
         boolean perfectTitle = feature.perfect.get() && gearInstance.isPerfect();
         boolean defectiveTitle = feature.defective.get() && gearInstance.isDefective();
-        if (!GearTitleComponent.shouldAppendOverallPercentage(gearInstance, feature) && !perfectTitle && !defectiveTitle) {
+        if (!GearTitleComponent.shouldAppendOverallPercentage(gearInstance, feature)
+                && !perfectTitle
+                && !defectiveTitle) {
             return;
         }
 

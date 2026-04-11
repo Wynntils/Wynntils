@@ -30,6 +30,8 @@ import java.util.Optional;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 
 public final class TooltipUtils {
@@ -75,6 +77,56 @@ public final class TooltipUtils {
 
     public static void realignMarkedTooltipLines(List<Component> tooltips) {
         GearTooltipAlignmentComponent.realignMarkedTooltipLines(tooltips);
+    }
+
+    public static boolean containsFont(Component component, FontDescription font) {
+        if (font.equals(component.getStyle().getFont())) {
+            return true;
+        }
+
+        for (Component sibling : component.getSiblings()) {
+            if (containsFont(sibling, font)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static int findFirstLineWithFont(List<Component> tooltips, FontDescription font) {
+        for (int i = 0; i < tooltips.size(); i++) {
+            if (containsFont(tooltips.get(i), font)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public static int findFirstNonBlankLine(List<Component> tooltips) {
+        for (int i = 0; i < tooltips.size(); i++) {
+            if (!tooltips.get(i).getString().isBlank()) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public static boolean replaceTrailingTitleComponent(
+            MutableComponent line, String itemName, MutableComponent replacement) {
+        List<Component> siblings = line.getSiblings();
+        for (int i = siblings.size() - 1; i >= 0; i--) {
+            String siblingText = siblings.get(i).getString().trim();
+            if (!siblingText.equals(itemName) && !siblingText.endsWith(itemName)) {
+                continue;
+            }
+
+            siblings.set(i, replacement);
+            return true;
+        }
+
+        return false;
     }
 
     private static List<Component> getIdentifiableItemTooltip(
@@ -126,9 +178,14 @@ public final class TooltipUtils {
                             () -> Handlers.Tooltip.buildNew(itemInfo, false, true, fakeItemStack.getSource()));
         }
 
+        if (itemInfo instanceof PagedItemProperty) {
+            return Handlers.Tooltip.buildFromItemStack(itemStack, itemInfo, false, true, "");
+        }
+
         return wynnItem.getData()
                 .getOrCalculate(
-                        WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.fromParsedItemStack(itemStack, itemInfo));
+                        WynnItemData.TOOLTIP_KEY,
+                        () -> Handlers.Tooltip.buildFromItemStack(itemStack, itemInfo, false, true, ""));
     }
 
     private static List<Component> getCraftedItemTooltip(
@@ -165,7 +222,7 @@ public final class TooltipUtils {
     }
 
     private static boolean shouldKeepOriginalGearTooltip(ItemStack itemStack, IdentifiableItemProperty itemInfo) {
-        if (itemStack instanceof FakeItemStack || !(itemInfo.getItemInfo() instanceof GearInfo)) {
+        if (itemStack instanceof FakeItemStack) {
             return false;
         }
 

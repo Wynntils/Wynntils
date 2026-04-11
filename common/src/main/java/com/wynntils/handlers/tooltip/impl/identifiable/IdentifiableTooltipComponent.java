@@ -12,6 +12,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -48,6 +49,12 @@ public abstract class IdentifiableTooltipComponent<T, U> {
 
     public static final FontDescription WYNNCRAFT_LANGUAGE_FONT =
             new FontDescription.Resource(Identifier.fromNamespaceAndPath("wynntils", "language"));
+    protected static final FontDescription TOOLTIP_DIVIDER_FONT =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/divider"));
+    protected static final FontDescription TOOLTIP_PAGE_FONT =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/page"));
+    protected static final Style WYNNCRAFT_WHITE_STYLE =
+            Style.EMPTY.withFont(WYNNCRAFT_LANGUAGE_FONT).withColor(ChatFormatting.WHITE);
 
     public static final Component DIVIDER = Component.literal("\uE000")
             .withStyle(Style.EMPTY.withFont(
@@ -143,17 +150,81 @@ public abstract class IdentifiableTooltipComponent<T, U> {
 
     protected MutableComponent appendOverallPercentageInName(
             MutableComponent line, boolean hasOverallValue, float overallPercentage) {
+        return appendOverallPercentageInName(line, hasOverallValue, overallPercentage, false, false);
+    }
+
+    protected MutableComponent appendOverallPercentageInName(
+            MutableComponent line,
+            boolean hasOverallValue,
+            float overallPercentage,
+            boolean perfect,
+            boolean defective) {
         if (!hasOverallValue || line.getString().contains("%]")) {
             return line;
         }
 
         ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
-        if (!feature.overallPercentageInName.get()) {
+        if (!shouldAppendOverallPercentageInName(feature, perfect, defective)) {
             return line;
         }
 
         line.append(ColorScaleUtils.getPercentageTextComponent(
-                feature.getColorMap(), overallPercentage, feature.colorLerp.get(), feature.decimalPlaces.get()));
+                        feature.getColorMap(), overallPercentage, feature.colorLerp.get(), feature.decimalPlaces.get())
+                .withStyle(style -> style.withFont(WYNNCRAFT_LANGUAGE_FONT)));
         return line;
+    }
+
+    protected MutableComponent buildRewardItemNameComponent(
+            String itemName,
+            ChatFormatting tierFormatting,
+            boolean perfectItem,
+            boolean defectiveItem,
+            boolean hasOverallValue,
+            float overallPercentage) {
+        ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
+        boolean perfectTitle = feature.perfect.get() && perfectItem;
+        boolean defectiveTitle = feature.defective.get() && defectiveItem;
+
+        MutableComponent nameComponent;
+        if (perfectTitle) {
+            nameComponent = ComponentUtils.makeRainbowStyle("Perfect " + itemName, true);
+        } else if (defectiveTitle) {
+            nameComponent = ComponentUtils.makeCrimsonStyle("Defective " + itemName, true);
+        } else {
+            nameComponent = Component.literal(itemName)
+                    .withStyle(Style.EMPTY.withFont(WYNNCRAFT_LANGUAGE_FONT).withColor(tierFormatting));
+        }
+
+        if (!hasOverallValue || !shouldAppendOverallPercentageInName(feature, perfectTitle, defectiveTitle)) {
+            return nameComponent;
+        }
+
+        nameComponent.append(ColorScaleUtils.getPercentageTextComponent(
+                        feature.getColorMap(), overallPercentage, feature.colorLerp.get(), feature.decimalPlaces.get())
+                .withStyle(style -> style.withFont(WYNNCRAFT_LANGUAGE_FONT)));
+        return nameComponent;
+    }
+
+    protected MutableComponent buildRequirementValueLine(Component label, Component value, boolean fulfilled) {
+        MutableComponent requirement = Component.empty();
+        requirement.append(withWhiteShadow(
+                fulfilled
+                        ? Component.literal("\uE006\uDAFF\uDFFF").withStyle(REQUIREMENT_STYLE)
+                        : Component.literal("\uE007\uDAFF\uDFFF").withStyle(REQUIREMENT_STYLE)));
+        requirement.append(label.copy());
+
+        MutableComponent paddedValue = Component.literal("  ").withStyle(value.getStyle());
+        paddedValue.append(value.copy());
+        requirement.append(paddedValue);
+        return requirement;
+    }
+
+    protected static boolean shouldAppendOverallPercentageInName(
+            ItemStatInfoFeature feature, boolean perfect, boolean defective) {
+        if ((feature.perfect.get() && perfect) || (feature.defective.get() && defective)) {
+            return feature.overallPercentageInPerfectDefectiveName.get();
+        }
+
+        return feature.overallPercentageInName.get();
     }
 }

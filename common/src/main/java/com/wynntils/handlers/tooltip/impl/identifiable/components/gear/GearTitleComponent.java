@@ -3,6 +3,7 @@
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
+
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
@@ -99,12 +100,14 @@ public final class GearTitleComponent {
 
     public Component buildNameLine(GearInfo gearInfo, GearInstance gearInstance, boolean hideUnidentified) {
         return buildNameLine(
-                gearInfo, gearInstance, hideUnidentified, Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class));
+                gearInfo,
+                gearInstance,
+                hideUnidentified,
+                Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class));
     }
 
     private Component buildNameLine(
             GearInfo gearInfo, GearInstance gearInstance, boolean hideUnidentified, ItemStatInfoFeature feature) {
-
         MutableComponent nameLine = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
 
         String frameCode = gearInfo.type().getFrameCode();
