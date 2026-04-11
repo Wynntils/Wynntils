@@ -108,7 +108,8 @@ public final class RewardsModel extends Model {
     }
 
     private List<AmplifierInfo> buildAmplifierInfo() {
-        return List.of(new AmplifierInfo(1, 5), new AmplifierInfo(2, 10), new AmplifierInfo(3, 15), new AmplifierInfo(4, 20));
+        return List.of(
+                new AmplifierInfo(1, 5), new AmplifierInfo(2, 10), new AmplifierInfo(3, 15), new AmplifierInfo(4, 20));
     }
 
     private List<RuneType> buildRuneInfo() {
