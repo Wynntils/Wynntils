@@ -25,6 +25,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public final class GearParsedTooltipComponent {
+    private static final String SHINY_STAT_ICON = "\uE04F";
+
     private final GearRequirementsComponent requirementsComponent = new GearRequirementsComponent();
 
     private static final FontDescription DIVIDER_FONT =
@@ -230,21 +232,30 @@ public final class GearParsedTooltipComponent {
         int scanIndex = identificationDividerLine - 1;
         while (scanIndex >= 0) {
             Component line = tooltipLines.get(scanIndex);
+            if (isDividerLine(line) || line.getString().isBlank() || isRequirementRelatedLine(line)) {
+                scanIndex--;
+                continue;
+            }
+
             if (!line.getString().isBlank() && !isRequirementRelatedLine(line)) {
                 break;
             }
-            scanIndex--;
         }
 
-        int sectionDividerLine = findLastDividerBefore(tooltipLines, scanIndex + 1);
-        return sectionDividerLine >= 0 ? sectionDividerLine : identificationDividerLine;
+        return Math.max(0, scanIndex + 1);
     }
 
     private static boolean isRequirementRelatedLine(Component line) {
         StyledText styledText = StyledText.fromComponent(line);
+        StyledText normalized = styledText.getNormalized();
         return containsFont(styledText, REQUIREMENT_FRAME_FONT)
                 || containsFont(styledText, REQUIREMENT_SPRITE_FONT)
-                || containsFont(styledText, GearTooltipSupport.COMMON_FONT);
+                || containsFont(styledText, GearTooltipSupport.COMMON_FONT)
+                || normalized.getString().contains(SHINY_STAT_ICON);
+    }
+
+    private static boolean isDividerLine(Component line) {
+        return containsFont(StyledText.fromComponent(line), DIVIDER_FONT);
     }
 
     private static int countFontParts(StyledText styledText, FontDescription font) {
