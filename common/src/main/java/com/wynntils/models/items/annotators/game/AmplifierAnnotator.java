@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class AmplifierAnnotator implements GameItemAnnotator {
-    private static final Pattern AMPLIFIER_PATTERN = Pattern.compile("^§bCorkian Amplifier (I{1,3}|IV)$");
+    private static final Pattern AMPLIFIER_PATTERN = Pattern.compile("^§bCorkian Amplifier ([IV]{1,3})$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
