@@ -7,6 +7,7 @@ package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
+import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
@@ -18,6 +19,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
+import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -70,7 +72,9 @@ public final class GearTitleComponent {
                                     .SPACING_STYLE));
         }
 
-        nameLine.append(buildItemNameComponent(gearInfo, gearInstance, feature));
+        MutableComponent itemNameComponent = buildItemNameComponent(gearInfo, gearInstance, feature);
+        appendOverallPercentage(itemNameComponent, gearInstance, feature);
+        nameLine.append(itemNameComponent);
         header.add(nameLine);
 
         MutableComponent rarityTypeLine = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
@@ -154,6 +158,20 @@ public final class GearTitleComponent {
         }
 
         return nameComponent;
+    }
+
+    private static void appendOverallPercentage(
+            MutableComponent itemNameComponent, GearInstance gearInstance, ItemStatInfoFeature feature) {
+        if (gearInstance == null || !gearInstance.hasOverallValue() || !feature.overallPercentageInName.get()) {
+            return;
+        }
+
+        itemNameComponent.append(ColorScaleUtils.getPercentageTextComponent(
+                        feature.getColorMap(),
+                        gearInstance.getOverallPercentage(),
+                        feature.colorLerp.get(),
+                        feature.decimalPlaces.get())
+                .withStyle(style -> style.withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)));
     }
 
     private static List<Element> collectItemElements(GearInfo gearInfo) {

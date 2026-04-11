@@ -4,8 +4,10 @@
  */
 package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.TooltipMarkers;
 import com.wynntils.models.gear.type.GearInfo;
@@ -13,6 +15,7 @@ import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.network.chat.Component;
@@ -130,13 +133,68 @@ public final class GearParsedTooltipComponent {
     private List<Component> buildHeaderWithSyntheticRequirements(
             List<Component> tooltipLines, GearInfo gearInfo, GearInstance gearInstance, int identificationDividerLine) {
         if (identificationDividerLine < 0) {
-            return copyMarkedRange(tooltipLines, 0, tooltipLines.size(), lineIndex -> null);
+            List<Component> header = copyMarkedRange(tooltipLines, 0, tooltipLines.size(), lineIndex -> null);
+            removeVanillaHoverNameLine(header, gearInfo);
+            appendOverallPercentageToTitleLine(header, gearInfo, gearInstance);
+            return header;
         }
 
         int requirementsStartLine = findRequirementsSectionStart(tooltipLines, identificationDividerLine);
         List<Component> header = copyMarkedRange(tooltipLines, 0, requirementsStartLine, lineIndex -> null);
+        removeVanillaHoverNameLine(header, gearInfo);
+        appendOverallPercentageToTitleLine(header, gearInfo, gearInstance);
         header.addAll(requirementsComponent.buildHeaderLines(gearInfo, gearInstance));
         return header;
+    }
+
+    private static void removeVanillaHoverNameLine(List<Component> header, GearInfo gearInfo) {
+        if (header.size() < 2) {
+            return;
+        }
+
+        Component firstLine = header.get(0);
+        Component secondLine = header.get(1);
+        if (!containsFont(StyledText.fromComponent(firstLine), GearTooltipSupport.EMBLEM_FRAME_FONT)
+                && firstLine.getString().trim().equals(gearInfo.name())
+                && containsFont(StyledText.fromComponent(secondLine), GearTooltipSupport.EMBLEM_FRAME_FONT)) {
+            header.remove(0);
+        }
+    }
+
+    private static void appendOverallPercentageToTitleLine(
+            List<Component> header, GearInfo gearInfo, GearInstance gearInstance) {
+        if (gearInstance == null || !gearInstance.hasOverallValue()) {
+            return;
+        }
+
+        ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
+        if (!feature.overallPercentageInName.get()) {
+            return;
+        }
+
+        for (int i = 0; i < header.size(); i++) {
+            Component line = header.get(i);
+            StyledText styledText = StyledText.fromComponent(line);
+            String visibleText = styledText.getNormalized().getString().trim();
+            boolean isEmblemTitleLine = containsFont(styledText, GearTooltipSupport.EMBLEM_FRAME_FONT);
+
+            if (visibleText.isBlank() || visibleText.contains("%]")) {
+                continue;
+            }
+            if (!isEmblemTitleLine && !visibleText.endsWith(gearInfo.name())) {
+                continue;
+            }
+
+            MutableComponent updatedLine = line.copy();
+            updatedLine.append(ColorScaleUtils.getPercentageTextComponent(
+                            feature.getColorMap(),
+                            gearInstance.getOverallPercentage(),
+                            feature.colorLerp.get(),
+                            feature.decimalPlaces.get())
+                    .withStyle(style -> style.withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)));
+            header.set(i, updatedLine);
+            return;
+        }
     }
 
     private static TooltipMarkers classifyFooterMarker(Component line) {

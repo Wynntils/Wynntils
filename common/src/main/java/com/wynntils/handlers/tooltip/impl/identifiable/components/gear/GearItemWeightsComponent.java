@@ -6,6 +6,7 @@ package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
+import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.TooltipMarkers;
 import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.models.gear.type.GearInfo;
@@ -21,11 +22,12 @@ import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 
 public final class GearItemWeightsComponent {
-    private static final CustomColor NORI_SOURCE_COLOR = CustomColor.fromInt(0x1cb5fc);
-    private static final CustomColor WYNNPOOL_SOURCE_COLOR = CustomColor.fromInt(0xfc9700);
+    private static final CustomColor NORI_SOURCE_COLOR = CustomColor.fromInt(0x67CCF5);
+    private static final CustomColor WYNNPOOL_SOURCE_COLOR = CustomColor.fromInt(0xFFC457);
     private static final FontDescription DIVIDER_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/divider"));
 
@@ -125,6 +127,21 @@ public final class GearItemWeightsComponent {
             case WYNNPOOL -> BannerBoxFont.buildMessage("wynnpool", WYNNPOOL_SOURCE_COLOR, CommonColors.BLACK, "");
             default -> Component.empty();
         };
+    }
+
+    public static MutableComponent buildRightAlignedWeightLine(Component left, Component right) {
+        MutableComponent line =
+                Component.empty().withStyle(Style.EMPTY.withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT));
+        line.append(left.copy());
+        line.append(right.copy());
+        line.setStyle(line.getStyle().withInsertion(TooltipMarkers.ALIGN_RIGHT.token()));
+        return line;
+    }
+
+    public static MutableComponent withLanguageFont(MutableComponent component) {
+        return Component.empty()
+                .withStyle(Style.EMPTY.withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT))
+                .append(component);
     }
 
     private static int addWeightingLines(

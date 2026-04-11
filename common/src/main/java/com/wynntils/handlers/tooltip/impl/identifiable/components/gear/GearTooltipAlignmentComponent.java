@@ -8,10 +8,12 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.TooltipMarkers;
 import com.wynntils.utils.mc.McUtils;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 
 public final class GearTooltipAlignmentComponent {
@@ -19,9 +21,6 @@ public final class GearTooltipAlignmentComponent {
             new FontDescription.Resource(Identifier.withDefaultNamespace("space"));
     private static final FontDescription PAGE_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/page"));
-    private static final FontDescription CHAT_TILE_FONT =
-            new FontDescription.Resource(Identifier.withDefaultNamespace("chat/tile"));
-
     private GearTooltipAlignmentComponent() {}
 
     public static void realignMarkedTooltipLines(List<Component> tooltips) {
@@ -45,7 +44,7 @@ public final class GearTooltipAlignmentComponent {
                 case ALIGN_CENTER, SECTION_DIVIDER, IDENTIFICATION_DIVIDER -> {
                     Component unaligned = stripLeadingOffset(clearMarker(line));
                     MutableComponent aligned = containsFont(unaligned, PAGE_FONT)
-                            ? rebuildCenteredPaginationLine(unaligned, targetWidth)
+                            ? alignPaginationLine(unaligned, targetWidth)
                             : alignCenterLine(unaligned, targetWidth);
                     tooltips.set(i, markLine(aligned, marker));
                 }
@@ -88,7 +87,7 @@ public final class GearTooltipAlignmentComponent {
             firstContentIndex++;
         }
 
-        MutableComponent stripped = Component.empty();
+        MutableComponent stripped = Component.empty().withStyle(line.getStyle());
         for (int i = firstContentIndex; i < siblings.size(); i++) {
             stripped.append(siblings.get(i).copy());
         }
@@ -108,7 +107,7 @@ public final class GearTooltipAlignmentComponent {
             return noLeadingOffset;
         }
 
-        MutableComponent stripped = Component.empty();
+        MutableComponent stripped = Component.empty().withStyle(noLeadingOffset.getStyle());
         for (int i = 0; i < siblings.size(); i++) {
             if (i == offsetIndex) {
                 continue;
@@ -159,52 +158,32 @@ public final class GearTooltipAlignmentComponent {
         return aligned;
     }
 
-    private static MutableComponent rebuildCenteredPaginationLine(Component line, int targetWidth) {
+    private static MutableComponent alignPaginationLine(Component line, int targetWidth) {
         List<Component> leaves = flattenLeafComponents(line);
-        int firstPageIndex = -1;
-        for (int i = 0; i < leaves.size(); i++) {
-            if (PAGE_FONT.equals(leaves.get(i).getStyle().getFont())) {
-                firstPageIndex = i;
-                break;
+        int prefixWidth = 0;
+        int paginationWidth = 0;
+        boolean foundPagination = false;
+
+        for (Component leaf : leaves) {
+            if (!foundPagination && PAGE_FONT.equals(leaf.getStyle().getFont())) {
+                foundPagination = true;
+            }
+
+            if (foundPagination) {
+                paginationWidth += McUtils.mc().font.width(leaf);
+            } else {
+                prefixWidth += McUtils.mc().font.width(leaf);
             }
         }
 
-        if (firstPageIndex < 0) {
+        if (!foundPagination) {
             return alignCenterLine(line, targetWidth);
         }
 
-        MutableComponent pageDots = Component.empty();
-        for (int i = firstPageIndex; i < leaves.size(); i++) {
-            Component leaf = leaves.get(i);
-            if (PAGE_FONT.equals(leaf.getStyle().getFont())) {
-                pageDots.append(leaf.copy());
-                continue;
-            }
-
-            if (!leaf.getString().isEmpty()) {
-                pageDots.append(
-                        Component.literal(leaf.getString()).withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
-            }
-        }
-
-        Component keybind = null;
-        for (int i = firstPageIndex - 1; i >= 0; i--) {
-            if (CHAT_TILE_FONT.equals(leaves.get(i).getStyle().getFont())) {
-                keybind = leaves.get(i).copy();
-                break;
-            }
-        }
-
+        int leftPadding = Math.max(0, ((targetWidth - paginationWidth) / 2) - prefixWidth);
         MutableComponent aligned = Component.empty();
-        int pageWidth = McUtils.mc().font.width(pageDots);
-        appendOffset(aligned, Math.max(0, (targetWidth - pageWidth) / 2));
-        aligned.append(pageDots);
-
-        if (keybind != null) {
-            appendOffset(aligned, McUtils.mc().font.width(" "));
-            aligned.append(keybind.copy());
-        }
-
+        appendOffset(aligned, leftPadding);
+        aligned.append(line.copy());
         return aligned;
     }
 
@@ -214,13 +193,13 @@ public final class GearTooltipAlignmentComponent {
             return alignRightWhole(line, targetWidth);
         }
 
-        MutableComponent left = Component.empty();
+        MutableComponent left = Component.empty().withStyle(line.getStyle());
         for (int i = 0; i < siblings.size() - 1; i++) {
             left.append(siblings.get(i).copy());
         }
 
         Component right = siblings.get(siblings.size() - 1);
-        MutableComponent aligned = Component.empty().append(left);
+        MutableComponent aligned = Component.empty().withStyle(line.getStyle()).append(left);
         int currentWidth = McUtils.mc().font.width(left) + McUtils.mc().font.width(right);
         appendOffset(aligned, Math.max(0, targetWidth - currentWidth));
         aligned.append(right.copy());
@@ -231,7 +210,7 @@ public final class GearTooltipAlignmentComponent {
         int lineWidth = McUtils.mc().font.width(line);
         int leftPadding = Math.max(0, targetWidth - lineWidth);
 
-        MutableComponent aligned = Component.empty();
+        MutableComponent aligned = Component.empty().withStyle(line.getStyle());
         appendOffset(aligned, leftPadding);
         aligned.append(line.copy());
         return aligned;
@@ -249,20 +228,23 @@ public final class GearTooltipAlignmentComponent {
     }
 
     private static List<Component> flattenLeafComponents(Component component) {
-        java.util.ArrayList<Component> leaves = new java.util.ArrayList<>();
-        collectLeafComponents(component, leaves);
+        ArrayList<Component> leaves = new ArrayList<>();
+        collectLeafComponents(component, Style.EMPTY, leaves);
         return leaves;
     }
 
-    private static void collectLeafComponents(Component component, List<Component> leaves) {
+    private static void collectLeafComponents(Component component, Style inheritedStyle, List<Component> leaves) {
+        Style effectiveStyle = component.getStyle().applyTo(inheritedStyle);
         MutableComponent leaf = component.copy();
         leaf.getSiblings().clear();
+        leaf.setStyle(effectiveStyle);
         if (!leaf.getString().isEmpty()) {
             leaves.add(leaf);
         }
 
         for (Component sibling : component.getSiblings()) {
-            collectLeafComponents(sibling, leaves);
+            collectLeafComponents(sibling, effectiveStyle, leaves);
         }
     }
+
 }

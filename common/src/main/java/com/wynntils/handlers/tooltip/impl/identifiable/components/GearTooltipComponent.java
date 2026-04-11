@@ -7,7 +7,6 @@ package com.wynntils.handlers.tooltip.impl.identifiable.components;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.TooltipMarkers;
 import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.DividerComponent;
-import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearFooterComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearItemWeightsComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearParsedTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearTooltipAlignmentComponent;
@@ -28,7 +27,6 @@ import net.minecraft.world.item.ItemStack;
 
 public final class GearTooltipComponent extends IdentifiableTooltipComponent<GearInfo, GearInstance> {
     private final GearHeaderComponent headerComponent = new GearHeaderComponent();
-    private final GearFooterComponent footerComponent = new GearFooterComponent();
     private final DividerComponent dividerComponent = new DividerComponent();
     private final RerollBannerComponent rerollBannerComponent = new RerollBannerComponent();
     private final GearItemWeightsComponent itemWeightsComponent = new GearItemWeightsComponent();
@@ -60,7 +58,7 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
 
     @Override
     public List<Component> buildFooterTooltip(GearInfo gearInfo, GearInstance gearInstance, boolean showItemType) {
-        return footerComponent.buildFooterTooltip(gearInfo, gearInstance, showItemType);
+        return List.of();
     }
 
     @Override
