@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.destination;
@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 public class DestinationService extends Service {
+    private static final int DESTINATION_ABBREVIATION_LENGTH = 3;
+
     // Map<location, abbreviation>
     private Map<String, String> destinations = new HashMap<>();
 
@@ -29,7 +31,8 @@ public class DestinationService extends Service {
     /**
      * Get the abbreviation of a location
      * @param location Full location name of the destination (eg. "Ragni")
-     * @return Abbreviation of the location (eg. "Ra"). Reads from destination json first, if not found returns first + next non-conflicting letter of the location name.
+     * @return Abbreviation of the location (eg. "Rag"). Reads from destination json first, if not found computes
+     * a non-conflicting abbreviation from the location name.
      */
     public String getAbbreviation(String location) {
         destinations.computeIfAbsent(location, this::findNextAbbreviation);
@@ -37,27 +40,31 @@ public class DestinationService extends Service {
     }
 
     /**
-     * Finds the next non-conflicting abbreviation for a location, excluding spaces
+     * Finds the next non-conflicting abbreviation for a location, excluding spaces.
      * @param location Full location name of the destination (eg. "Ragni")
      */
     private String findNextAbbreviation(String location) {
-        String abbreviation = location.substring(0, 2);
-        int i = 2;
-        while (destinations.containsValue(abbreviation)) {
-            while (location.charAt(i) == ' ') {
-                if (i == location.length() - 1) {
-                    WynntilsMod.warn("DestinationService: No unique destination found for " + location
+        String compactLocation = location.replace(" ", "");
+
+        String fallbackAbbreviation = compactLocation.substring(0, DESTINATION_ABBREVIATION_LENGTH);
+
+        for (int secondIndex = 1; secondIndex < compactLocation.length() - 1; secondIndex++) {
+            for (int thirdIndex = secondIndex + 1; thirdIndex < compactLocation.length(); thirdIndex++) {
+                String abbreviation = "" + compactLocation.charAt(0)
+                        + compactLocation.charAt(secondIndex)
+                        + compactLocation.charAt(thirdIndex);
+                if (!destinations.containsValue(abbreviation)) {
+                    WynntilsMod.warn("DestinationService: No destination found for " + location
                             + ", computed fallback abbreviation " + abbreviation);
                     return abbreviation;
                 }
-                i++;
+                fallbackAbbreviation = abbreviation;
             }
-            abbreviation = location.charAt(0) + "" + location.charAt(i);
-            i++;
         }
-        WynntilsMod.warn("DestinationService: No destination found for " + location
-                + ", computed fallback abbreviation " + abbreviation);
-        return abbreviation;
+
+        WynntilsMod.warn("DestinationService: No unique destination found for " + location
+                + ", computed fallback abbreviation " + fallbackAbbreviation);
+        return fallbackAbbreviation;
     }
 
     private void handleDestinations(Reader reader) {
