@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class DistortionBar extends TrackedBar {
-    private static final Pattern DISTORTION_PATTERN = Pattern.compile("§3Distortion: §b(\\d+)");
+    private static final Pattern DISTORTION_PATTERN = Pattern.compile("§#d599ffff\uE035 Distortion: §b(\\d+)");
     private int current;
 
     public DistortionBar() {
@@ -31,17 +31,9 @@ public final class DistortionBar extends TrackedBar {
     }
 
     @Override
-    public void onUpdateProgress(float progress) {
-        if (progress != 0f) {
-            // Round to nearest 5
-            int unroundedMax = (int) (current / progress);
-            int remainder = unroundedMax % 5;
+    public void reset() {
+        super.reset();
 
-            int max = unroundedMax - remainder;
-            if (remainder > 3) {
-                max += 5;
-            }
-            updateValue(current, max);
-        }
+        current = 0;
     }
 }
