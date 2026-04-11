@@ -21,6 +21,7 @@ public final class GearTooltipAlignmentComponent {
             new FontDescription.Resource(Identifier.withDefaultNamespace("space"));
     private static final FontDescription PAGE_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/page"));
+
     private GearTooltipAlignmentComponent() {}
 
     public static void realignMarkedTooltipLines(List<Component> tooltips) {
@@ -246,5 +247,4 @@ public final class GearTooltipAlignmentComponent {
             collectLeafComponents(sibling, effectiveStyle, leaves);
         }
     }
-
 }
