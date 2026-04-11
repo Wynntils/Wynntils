@@ -217,7 +217,8 @@ public final class GearRequirementsComponent {
         MutableComponent cell = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
         String reqCharacter = "\uE005";
         boolean fulfilled = count == 0
-                || parsedSkillRequirementStates.getOrDefault(skill, isSkillRequirementFulfilled(skill, count, gearInstance));
+                || parsedSkillRequirementStates.getOrDefault(
+                        skill, isSkillRequirementFulfilled(skill, count, gearInstance));
 
         if (count != 0) {
             reqCharacter = fulfilled ? "\uE006" : "\uE007";
@@ -278,9 +279,8 @@ public final class GearRequirementsComponent {
         int totalSkillPoints = Models.SkillPoint.getTotalSkillPoints(skill);
         int assignedSkillPoints = Models.SkillPoint.getAssignedSkillPoints(skill);
         int apiSkillPoints = getApiSkillPoints(skill);
-        boolean hasSkillPointData = Models.SkillPoint.getTotalSum() > 0
-                || Models.SkillPoint.getAssignedSum() > 0
-                || apiSkillPoints > 0;
+        boolean hasSkillPointData =
+                Models.SkillPoint.getTotalSum() > 0 || Models.SkillPoint.getAssignedSum() > 0 || apiSkillPoints > 0;
         if (!hasSkillPointData) return false;
 
         return Math.max(Math.max(totalSkillPoints, assignedSkillPoints), apiSkillPoints) >= count;

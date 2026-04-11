@@ -264,7 +264,8 @@ public final class GearParsedTooltipComponent {
         Map<Skill, Boolean> parsedStates = new EnumMap<>(Skill.class);
 
         for (int i = requirementsStartLine; i < identificationDividerLine; i++) {
-            StyledText normalized = StyledText.fromComponent(tooltipLines.get(i)).getNormalized();
+            StyledText normalized =
+                    StyledText.fromComponent(tooltipLines.get(i)).getNormalized();
             Matcher skillMatcher = normalized.getMatcher(SKILL_REQ_PATTERN);
             if (!skillMatcher.matches()) {
                 continue;
@@ -282,7 +283,8 @@ public final class GearParsedTooltipComponent {
         return parsedStates;
     }
 
-    private static GearInstance createSyntheticHeaderInstance(IdentifiableItemProperty<GearInfo, GearInstance> itemProperty) {
+    private static GearInstance createSyntheticHeaderInstance(
+            IdentifiableItemProperty<GearInfo, GearInstance> itemProperty) {
         if (!(itemProperty instanceof ShinyItemProperty shinyItemProperty)
                 || shinyItemProperty.getShinyStat().isEmpty()) {
             return null;
@@ -292,7 +294,8 @@ public final class GearParsedTooltipComponent {
                 List.of(), List.of(), 0, Optional.empty(), shinyItemProperty.getShinyStat(), false, Optional.empty());
     }
 
-    private static int findUnidentifiedFooterStart(List<Component> tooltipLines, int lastDividerLine, int pageLineIndex) {
+    private static int findUnidentifiedFooterStart(
+            List<Component> tooltipLines, int lastDividerLine, int pageLineIndex) {
         if (pageLineIndex < 0) {
             return -1;
         }
