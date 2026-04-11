@@ -14,7 +14,7 @@ import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.Display;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
@@ -45,7 +45,7 @@ public class ShamanTotemTrackingFeature extends Feature {
         if (!highlightShamanTotems.get()) return;
 
         int totemNumber = e.getTotemNumber();
-        ArmorStand totemAS = e.getTotemEntity();
+        Display.ItemDisplay totemAS = e.getTotemEntity();
 
         CustomColor color =
                 switch (totemNumber) {
