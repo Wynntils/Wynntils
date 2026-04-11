@@ -92,10 +92,10 @@ public class ItemStatInfoFeature extends Feature {
     public final Config<Boolean> defective = new Config<>(true);
 
     @Persisted
-    public final Config<Float> obfuscationChanceStart = new Config<>(0.08f);
+    public final Config<Float> crimsonChanceStart = new Config<>(0.08f);
 
     @Persisted
-    public final Config<Float> obfuscationChanceEnd = new Config<>(0.04f);
+    public final Config<Float> crimsonChanceEnd = new Config<>(0.04f);
 
     @Persisted
     public final Config<StatListOrdering> identificationsOrdering = new Config<>(StatListOrdering.DEFAULT);
@@ -119,7 +119,7 @@ public class ItemStatInfoFeature extends Feature {
     public final Config<Boolean> showBestValueLastAlways = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showMaxValues = new Config<>(true);
+    public final Config<Boolean> showRollWheel = new Config<>(true);
 
     private static final NavigableMap<Float, TextColor> LERP_MAP = new TreeMap<>(Map.of(
             0f,

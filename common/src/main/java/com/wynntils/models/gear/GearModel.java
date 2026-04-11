@@ -145,7 +145,7 @@ public final class GearModel extends Model {
                 result.powderSlots(),
                 result.allRequirementsMet(),
                 result.durability(),
-                0);
+                result.currentPage());
     }
 
     public UnknownGearItem parseUnknownGearItem(

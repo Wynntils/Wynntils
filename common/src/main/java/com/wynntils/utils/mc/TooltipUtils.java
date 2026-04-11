@@ -129,6 +129,36 @@ public final class TooltipUtils {
         return false;
     }
 
+    public static Component extractTrailingSegmentWithFont(Component component, FontDescription font) {
+        List<Component> siblings = component.getSiblings();
+        if (siblings.isEmpty()) {
+            return containsFont(component, font) ? component.copy() : null;
+        }
+
+        int startIndex = -1;
+        for (int i = siblings.size() - 1; i >= 0; i--) {
+            if (containsFont(siblings.get(i), font)) {
+                startIndex = i;
+                break;
+            }
+        }
+
+        if (startIndex < 0) {
+            return containsFont(component, font) ? component.copy() : null;
+        }
+
+        if (startIndex > 0 && siblings.get(startIndex - 1).getString().isBlank()) {
+            startIndex--;
+        }
+
+        MutableComponent trailingSegment = Component.empty();
+        for (int i = startIndex; i < siblings.size(); i++) {
+            trailingSegment.append(siblings.get(i).copy());
+        }
+
+        return trailingSegment;
+    }
+
     private static List<Component> getIdentifiableItemTooltip(
             ItemStack itemStack, WynnItem wynnItem, IdentifiableItemProperty itemInfo) {
         ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
@@ -190,10 +220,16 @@ public final class TooltipUtils {
 
     private static List<Component> getCraftedItemTooltip(
             ItemStack itemStack, WynnItem wynnItem, CraftedItemProperty craftedItemProperty) {
-        TooltipBuilder builder = wynnItem.getData()
-                .getOrCalculate(
-                        WynnItemData.TOOLTIP_KEY,
-                        () -> Handlers.Tooltip.fromParsedItemStack(itemStack, craftedItemProperty));
+        if (craftedItemProperty instanceof PagedItemProperty pagedItemProperty && !pagedItemProperty.isStatPage()) {
+            return List.of();
+        }
+
+        TooltipBuilder builder = craftedItemProperty instanceof PagedItemProperty
+                ? Handlers.Tooltip.fromParsedItemStack(itemStack, craftedItemProperty)
+                : wynnItem.getData()
+                        .getOrCalculate(
+                                WynnItemData.TOOLTIP_KEY,
+                                () -> Handlers.Tooltip.fromParsedItemStack(itemStack, craftedItemProperty));
         if (builder == null) return null;
         ItemStatInfoFeature isif = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
 
@@ -202,7 +238,7 @@ public final class TooltipUtils {
                 isif.groupIdentifications.get(),
                 false,
                 false,
-                isif.showMaxValues.get());
+                isif.showRollWheel.get());
 
         return new LinkedList<>(builder.getTooltipLines(
                 Models.Character.getClassType(), currentIdentificationStyle, null, isif.itemWeights.get(), null));

@@ -6,21 +6,19 @@ package com.wynntils.handlers.tooltip.impl.crafted.components;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.tooltip.impl.crafted.CraftedTooltipComponent;
+import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
+import com.wynntils.handlers.tooltip.impl.identifiable.TooltipMarkers;
+import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearTooltipAlignmentComponent;
 import com.wynntils.models.activities.quests.QuestInfo;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.elements.type.Element;
-import com.wynntils.models.elements.type.Powder;
-import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.items.items.game.CraftedGearItem;
-import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.type.Pair;
-import com.wynntils.utils.type.RangedValue;
+import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.TooltipUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -28,158 +26,207 @@ import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
 
 public class CraftedGearTooltipComponent extends CraftedTooltipComponent<CraftedGearItem> {
+    private static final FontDescription EMBLEM_FRAME_FONT =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/emblem/frame"));
+    private static final FontDescription TOOLTIP_DIVIDER_FONT =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/divider"));
+    private static final FontDescription TOOLTIP_PAGE_FONT =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/page"));
+    private static final Style WYNNCRAFT_WHITE_STYLE = Style.EMPTY
+            .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+            .withColor(ChatFormatting.WHITE);
+
+    @Override
+    public TooltipParts buildTooltipParts(ItemStack itemStack, CraftedGearItem craftedItem) {
+        List<Component> tooltipLines = LoreUtils.getTooltipLines(itemStack);
+        if (tooltipLines.isEmpty()) {
+            return null;
+        }
+
+        int pageLineIndex = TooltipUtils.findFirstLineWithFont(tooltipLines, TOOLTIP_PAGE_FONT);
+        int contentEnd = pageLineIndex >= 0 ? pageLineIndex : tooltipLines.size();
+        int identificationDividerLine = findLastDividerBefore(tooltipLines, contentEnd);
+        if (identificationDividerLine < 0) {
+            return null;
+        }
+
+        int firstIdentificationLine = identificationDividerLine + 1;
+        while (firstIdentificationLine < contentEnd
+                && tooltipLines.get(firstIdentificationLine).getString().isBlank()) {
+            firstIdentificationLine++;
+        }
+
+        if (firstIdentificationLine >= contentEnd) {
+            return null;
+        }
+
+        List<Component> header = copyMarkedRange(
+                tooltipLines, 0, firstIdentificationLine, craftedItem.getRequirements(), this::classifyHeaderMarker);
+        removeDuplicateHoverNameLine(header, craftedItem.getName());
+
+        List<Component> footer = pageLineIndex >= 0
+                ? copyMarkedRange(
+                        tooltipLines,
+                        pageLineIndex,
+                        tooltipLines.size(),
+                        craftedItem.getRequirements(),
+                        line -> TooltipUtils.containsFont(line, TOOLTIP_PAGE_FONT) ? TooltipMarkers.ALIGN_CENTER : null)
+                : List.of();
+        return new TooltipParts(header, footer);
+    }
+
     @Override
     public List<Component> buildHeaderTooltip(CraftedGearItem craftedItem) {
-        List<Component> header = new ArrayList<>();
-
-        // name
-        header.add(Component.literal(craftedItem.getName())
-                .withStyle(ChatFormatting.DARK_AQUA)
-                .append(Component.literal(" [100%]").withStyle(ChatFormatting.AQUA)));
-
-        // attack speed
-        if (craftedItem.getAttackSpeed().isPresent())
-            header.add(Component.literal(
-                    ChatFormatting.GRAY + craftedItem.getAttackSpeed().get().getName()));
-
-        header.add(Component.literal(""));
-
-        // elemental damages
-        if (!craftedItem.getDamages().isEmpty()) {
-            List<Pair<DamageType, RangedValue>> damages = craftedItem.getDamages();
-            for (Pair<DamageType, RangedValue> damageStat : damages) {
-                DamageType type = damageStat.key();
-                String elementSymbol =
-                        type.getElement().isPresent() ? type.getElement().get().getSymbol() : type.getSymbol();
-                MutableComponent damage = Component.empty()
-                        .withStyle(type.getColorCode())
-                        .append(Component.literal(elementSymbol)
-                                .withStyle(Style.EMPTY.withFont(
-                                        new FontDescription.Resource(Identifier.withDefaultNamespace("common")))))
-                        .append(Component.literal(" " + type.getDisplayName()));
-                damage.append(Component.literal("Damage: " + damageStat.value().asString())
-                        .withStyle(
-                                type == DamageType.NEUTRAL
-                                        ? type.getColorCode()
-                                        : ChatFormatting.GRAY)); // neutral is all gold
-                header.add(damage);
-            }
-
-            header.add(Component.literal(""));
-        }
-
-        // health
-        int health = craftedItem.getHealth();
-        if (health != 0) {
-            MutableComponent healthComp = Component.literal("❤ Health: " + StringUtils.toSignedString(health))
-                    .withStyle(ChatFormatting.DARK_RED);
-            header.add(healthComp);
-        }
-
-        // elemental defenses
-        if (!craftedItem.getDefences().isEmpty()) {
-            List<Pair<Element, Integer>> defenses = craftedItem.getDefences();
-            for (Pair<Element, Integer> defenceStat : defenses) {
-                Element element = defenceStat.key();
-                MutableComponent defense = Component.empty()
-                        .withStyle(element.getColorCode())
-                        .append(Component.literal(element.getSymbol())
-                                .withStyle(Style.EMPTY.withFont(
-                                        new FontDescription.Resource(Identifier.withDefaultNamespace("common")))))
-                        .append(Component.literal(" " + element.getDisplayName()));
-                defense.append(Component.literal(" Defence: " + StringUtils.toSignedString(defenceStat.value()))
-                        .withStyle(ChatFormatting.GRAY));
-                header.add(defense);
-            }
-        }
-
-        if (health != 0 || !craftedItem.getDefences().isEmpty()) {
-            header.add(Component.literal(""));
-        }
-
-        // requirements
-        int requirementsCount = 0;
-        GearRequirements requirements = craftedItem.getRequirements();
-        if (requirements.classType().isPresent()) {
-            ClassType classType = requirements.classType().get();
-            boolean fulfilled = Models.Character.getClassType() == classType;
-            header.add(buildRequirementLine("Class Req: " + classType.getFullName(), fulfilled));
-            requirementsCount++;
-        }
-        if (requirements.quest().isPresent()) {
-            String questName = requirements.quest().get();
-            Optional<QuestInfo> quest = Models.Quest.getQuestFromName(questName);
-            boolean fulfilled = quest.isPresent() && quest.get().status() == ActivityStatus.COMPLETED;
-            header.add(buildRequirementLine("Quest Req: " + questName, fulfilled));
-            requirementsCount++;
-        }
-        int level = requirements.level();
-        if (level != 0) {
-            boolean fulfilled = Models.CombatXp.getCombatLevel().current() >= level;
-            header.add(buildRequirementLine("Combat Lv. Min: " + level, fulfilled));
-            requirementsCount++;
-        }
-        if (!requirements.skills().isEmpty()) {
-            for (Pair<Skill, Integer> skillRequirement : requirements.skills()) {
-                // FIXME: CharacterModel is still missing info about our skill points
-                header.add(buildRequirementLine(
-                        skillRequirement.key().getDisplayName() + " Min: " + skillRequirement.value(), false));
-                requirementsCount++;
-            }
-        }
-        if (requirementsCount > 0) {
-            header.add(Component.literal(""));
-        }
-
-        return header;
+        return List.of(Component.literal(craftedItem.getName()).withStyle(ChatFormatting.DARK_AQUA));
     }
 
     @Override
     public List<Component> buildFooterTooltip(CraftedGearItem craftedItem) {
-        List<Component> footer = new ArrayList<>();
+        return List.of();
+    }
 
-        footer.add(Component.empty());
+    @Override
+    public List<Component> finalizeTooltipLines(List<Component> tooltip, int targetWidth, CraftedGearItem craftedItem) {
+        List<Component> finalized = new ArrayList<>(tooltip);
+        GearTooltipAlignmentComponent.realignMarkedTooltipLines(finalized);
+        return finalized;
+    }
 
-        // powder slots
-        if (!craftedItem.getPowders().isEmpty()) {
-            MutableComponent powderLine = Component.literal("["
-                            + craftedItem.getPowders().size() + "/" + craftedItem.getPowderSlots() + "] Powder Slots ")
-                    .withStyle(ChatFormatting.GRAY);
-            if (!craftedItem.getPowders().isEmpty()) {
-                MutableComponent powderList = Component.literal("[");
-                for (Powder p : craftedItem.getPowders()) {
-                    String symbol = String.valueOf(p.getSymbol());
-                    if (!powderList.getSiblings().isEmpty()) {
-                        powderList.append(Component.empty()
-                                .withStyle(Style.EMPTY.withColor(p.getLightColor()))
-                                .append(Component.literal(" "))
-                                .append(Component.literal(symbol)
-                                        .withStyle(Style.EMPTY.withFont(new FontDescription.Resource(
-                                                Identifier.withDefaultNamespace("common"))))));
-                        continue;
-                    }
-                    powderList.append(Component.literal(symbol)
-                            .withStyle(Style.EMPTY
-                                    .withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("common")))
-                                    .withColor(p.getLightColor())));
-                }
-                powderList.append(Component.literal("]"));
-                powderLine.append(powderList);
-            }
-            footer.add(powderLine);
+    private void removeDuplicateHoverNameLine(List<Component> header, String itemName) {
+        if (header.size() < 2) {
+            return;
         }
 
-        // item type + durability
-        footer.add(Component.literal("Crafted "
-                        + StringUtils.capitalizeFirst(
-                                craftedItem.getGearType().name().toLowerCase(Locale.ROOT)))
-                .withStyle(ChatFormatting.DARK_AQUA)
-                .append(Component.literal(" [" + craftedItem.getDurability().current() + "/"
-                                + craftedItem.getDurability().max() + " Durability]")
-                        .withStyle(ChatFormatting.DARK_GRAY)));
+        int emblemTitleIndex = TooltipUtils.findFirstLineWithFont(header, EMBLEM_FRAME_FONT);
+        if (emblemTitleIndex > 0
+                && header.getFirst().getString().trim().equals(itemName)
+                && TooltipUtils.containsFont(header.get(emblemTitleIndex), EMBLEM_FRAME_FONT)) {
+            header.removeFirst();
+        }
+    }
 
-        return footer;
+    private TooltipMarkers classifyHeaderMarker(Component line) {
+        if (TooltipUtils.containsFont(line, TOOLTIP_DIVIDER_FONT)) {
+            return TooltipMarkers.SECTION_DIVIDER;
+        }
+
+        if (isRequirementValueLine(line)) {
+            return TooltipMarkers.ALIGN_RIGHT;
+        }
+
+        return null;
+    }
+
+    private boolean isRequirementValueLine(Component line) {
+        if (!TooltipUtils.containsFont(line, IdentifiableTooltipComponent.REQUIREMENT_STYLE.getFont())) {
+            return false;
+        }
+
+        String lineText = line.getString();
+        return lineText.contains("Combat Level") || lineText.contains("Class Type") || lineText.contains("Quest");
+    }
+
+    private List<Component> copyMarkedRange(
+            List<Component> lines,
+            int startInclusive,
+            int endExclusive,
+            GearRequirements requirements,
+            java.util.function.Function<Component, TooltipMarkers> markerResolver) {
+        List<Component> copy = new ArrayList<>(Math.max(0, endExclusive - startInclusive));
+        for (int i = startInclusive; i < endExclusive; i++) {
+            Component line = lines.get(i);
+            TooltipMarkers marker = markerResolver.apply(line);
+            if (marker == TooltipMarkers.ALIGN_RIGHT) {
+                copy.add(TooltipMarkers.markLine(
+                        rebuildRequirementLine(line, requirements), TooltipMarkers.ALIGN_RIGHT));
+                continue;
+            }
+
+            copy.add(marker == null ? line.copy() : TooltipMarkers.markLine(line.copy(), marker));
+        }
+
+        return copy;
+    }
+
+    private MutableComponent rebuildRequirementLine(Component originalLine, GearRequirements requirements) {
+        String lineText = originalLine.getString();
+        if (lineText.contains("Combat Level") && requirements.level() != 0) {
+            return buildRequirementValueLine(
+                    Component.literal(" Combat Level").withStyle(WYNNCRAFT_WHITE_STYLE),
+                    Component.literal(String.valueOf(requirements.level()))
+                            .withStyle(Style.EMPTY
+                                    .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                                    .withColor(ChatFormatting.GRAY)),
+                    Models.CharacterStats.getLevel() >= requirements.level());
+        }
+
+        if (lineText.contains("Class Type") && requirements.classType().isPresent()) {
+            ClassType classType = requirements.classType().get();
+            return buildRequirementValueLine(
+                    Component.literal(" Class Type").withStyle(WYNNCRAFT_WHITE_STYLE),
+                    Component.literal(classType.getFullName())
+                            .withStyle(Style.EMPTY
+                                    .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                                    .withColor(ChatFormatting.GRAY)),
+                    Models.Character.getClassType() == classType);
+        }
+
+        if (lineText.contains("Quest") && requirements.quest().isPresent()) {
+            String questName = requirements.quest().get();
+            Optional<QuestInfo> questInfo = Models.Quest.getQuestFromName(questName);
+            int questLevel = questInfo.map(QuestInfo::level).orElse(1);
+            boolean fulfilled = questInfo
+                    .map(info -> info.status() == ActivityStatus.COMPLETED)
+                    .orElse(false);
+
+            MutableComponent value = Component.literal(StringUtils.shorten(questName, 10) + " ")
+                    .withStyle(Style.EMPTY
+                            .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                            .withColor(ChatFormatting.GRAY));
+            value.append(Component.literal("(Lv. " + questLevel + ")")
+                    .withStyle(Style.EMPTY
+                            .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                            .withColor(ChatFormatting.DARK_GRAY)));
+
+            return buildRequirementValueLine(
+                    Component.literal(" Quest").withStyle(WYNNCRAFT_WHITE_STYLE), value, fulfilled);
+        }
+
+        return originalLine.copy();
+    }
+
+    private MutableComponent buildRequirementValueLine(Component label, Component value, boolean fulfilled) {
+        MutableComponent requirement = Component.empty();
+        requirement.append(withWhiteShadow(
+                fulfilled
+                        ? Component.literal("\uE006\uDAFF\uDFFF")
+                                .withStyle(IdentifiableTooltipComponent.REQUIREMENT_STYLE)
+                        : Component.literal("\uE007\uDAFF\uDFFF")
+                                .withStyle(IdentifiableTooltipComponent.REQUIREMENT_STYLE)));
+        requirement.append(label.copy());
+
+        MutableComponent paddedValue = Component.literal("  ").withStyle(value.getStyle());
+        paddedValue.append(value.copy());
+        requirement.append(paddedValue);
+        return requirement;
+    }
+
+    private MutableComponent withWhiteShadow(Component component) {
+        return Component.empty()
+                .withStyle(style -> style.withShadowColor(0xFFFFFF))
+                .append(component.copy());
+    }
+
+    private int findLastDividerBefore(List<Component> tooltipLines, int endExclusive) {
+        for (int i = endExclusive - 1; i >= 0; i--) {
+            if (TooltipUtils.containsFont(tooltipLines.get(i), TOOLTIP_DIVIDER_FONT)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }

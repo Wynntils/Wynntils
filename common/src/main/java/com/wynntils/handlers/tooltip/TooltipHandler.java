@@ -98,7 +98,13 @@ public final class TooltipHandler extends Handler {
      * Creates a tooltip builder that parses the header and footer from an existing tooltip
      */
     public TooltipBuilder fromParsedItemStack(ItemStack itemStack, CraftedItemProperty craftedItemProperty) {
-        return CraftedTooltipBuilder.fromParsedItemStack(itemStack, craftedItemProperty);
+        CraftedTooltipComponent tooltipComponent = craftedTooltipComponents.get(craftedItemProperty.getClass());
+        if (tooltipComponent == null) {
+            throw new IllegalArgumentException("No tooltip component registered for "
+                    + craftedItemProperty.getClass().getName());
+        }
+
+        return CraftedTooltipBuilder.buildFromItemStack(itemStack, craftedItemProperty, tooltipComponent);
     }
 
     private void registerTooltipComponents() {
