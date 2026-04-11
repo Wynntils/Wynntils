@@ -82,7 +82,9 @@ public final class GearTooltipComponent extends IdentifiableTooltipComponent<Gea
             } else if (marker == TooltipMarkers.IDENTIFICATION_DIVIDER) {
                 finalized.add(mark(dividerComponent.buildDivider(gearInfo.tier()), marker));
             } else if (marker == TooltipMarkers.REROLL_BANNER) {
-                finalized.add(mark(rerollBannerComponent.buildRerollBanner(gearInfo.tier(), gearInstance), marker));
+                if (gearInstance != null && gearInstance.rerolls() > 0) {
+                    finalized.add(mark(rerollBannerComponent.buildRerollBanner(gearInfo.tier(), gearInstance), marker));
+                }
             } else {
                 finalized.add(line);
             }
