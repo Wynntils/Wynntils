@@ -9,10 +9,8 @@ import com.wynntils.utils.type.Pair;
 import java.util.List;
 
 public class ItemStatInfoConfigRenameUpfixer extends RenamedKeysUpfixer {
-    private static final List<Pair<String, String>> RENAMED_KEYS = List.of(
-            Pair.of("itemStatInfoFeature.obfuscationChanceStart", "itemStatInfoFeature.crimsonChanceStart"),
-            Pair.of("itemStatInfoFeature.obfuscationChanceEnd", "itemStatInfoFeature.crimsonChanceEnd"),
-            Pair.of("itemStatInfoFeature.showMaxValues", "itemStatInfoFeature.showRollWheel"));
+    private static final List<Pair<String, String>> RENAMED_KEYS =
+            List.of(Pair.of("itemStatInfoFeature.showMaxValues", "itemStatInfoFeature.showRollWheel"));
 
     @Override
     protected List<Pair<String, String>> getRenamedKeys() {
