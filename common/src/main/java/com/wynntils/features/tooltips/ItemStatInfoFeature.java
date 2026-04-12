@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearItemWeightsComponent;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
@@ -129,9 +130,9 @@ public class ItemStatInfoFeature extends Feature {
     private NavigableMap<Float, TextColor> flatMap = createFlatMap();
 
     public ItemStatInfoFeature() {
-        // TODO: Revert to enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
-        //  when feature fixed
-        super(ProfileDefault.DISABLED);
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
+                .build());
     }
 
     @Override
