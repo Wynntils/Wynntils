@@ -7,14 +7,13 @@ package com.wynntils.handlers.tooltip.impl.identifiable.components;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.TooltipMarkers;
+import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.DividerComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearTooltipAlignmentComponent;
-import com.wynntils.models.gear.type.GearRestrictions;
-import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
 import com.wynntils.models.rewards.type.TomeRequirements;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import java.util.ArrayList;
@@ -30,6 +29,8 @@ import net.minecraft.world.item.ItemStack;
 public class TomeTooltipComponent extends IdentifiableTooltipComponent<TomeInfo, TomeInstance> {
     private static final FontDescription EMBLEM_FRAME_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/emblem/frame"));
+    private final RewardTitleComponent titleComponent = new RewardTitleComponent();
+    private final DividerComponent dividerComponent = new DividerComponent();
 
     @Override
     public TooltipParts buildTooltipParts(
@@ -77,59 +78,35 @@ public class TomeTooltipComponent extends IdentifiableTooltipComponent<TomeInfo,
     public List<Component> buildHeaderTooltip(TomeInfo tomeInfo, TomeInstance tomeInstance, boolean hideUnidentified) {
         List<Component> header = new ArrayList<>();
 
-        // name
-        String prefix = tomeInstance == null && !hideUnidentified ? "Unidentified " : "";
-        MutableComponent nameLine = Component.literal(prefix + tomeInfo.name())
-                .withStyle(tomeInfo.tier().getChatFormatting());
-        if (tomeInstance != null) {
-            appendOverallPercentageInName(
-                    nameLine,
-                    tomeInstance.hasOverallValue(),
-                    tomeInstance.getOverallPercentage(),
-                    tomeInstance.isPerfect(),
-                    tomeInstance.isDefective());
-        }
-        header.add(nameLine);
-        header.add(Component.empty());
+        MutableComponent itemName = buildRewardItemNameComponent(
+                tomeInfo.name(),
+                tomeInfo.tier().getChatFormatting(),
+                tomeInstance != null && tomeInstance.isPerfect(),
+                tomeInstance != null && tomeInstance.isDefective(),
+                tomeInstance != null && tomeInstance.hasOverallValue(),
+                tomeInstance != null ? tomeInstance.getOverallPercentage() : 0f);
+        header.add(
+                titleComponent.buildNameLine(GearType.MASTERY_TOME, itemName, tomeInstance == null, hideUnidentified));
+        header.add(titleComponent.buildTagsLine(
+                tomeInfo.tier(), "Tome", tomeInfo.metaInfo().restrictions()));
 
-        // requirements
         TomeRequirements requirements = tomeInfo.requirements();
         int level = requirements.level();
         if (level != 0) {
-            boolean fulfilled = Models.CombatXp.getCombatLevel().current() >= level;
-            header.add(buildRequirementLine("Combat Lv. Min: " + level, fulfilled));
-            header.add(Component.empty());
+            header.add(TooltipMarkers.markLine(
+                    dividerComponent.buildDivider(tomeInfo.tier()).copy(), TooltipMarkers.SECTION_DIVIDER));
+            header.add(TooltipMarkers.markLine(buildCombatLevelRequirementLine(level), TooltipMarkers.ALIGN_RIGHT));
         }
+
+        header.add(TooltipMarkers.markLine(
+                dividerComponent.buildDivider(tomeInfo.tier()).copy(), TooltipMarkers.IDENTIFICATION_DIVIDER));
 
         return header;
     }
 
     @Override
     public List<Component> buildFooterTooltip(TomeInfo tomeInfo, TomeInstance tomeInstance, boolean showItemType) {
-        List<Component> footer = new ArrayList<>();
-
-        footer.add(Component.empty());
-
-        // tier & rerolls
-        GearTier gearTier = tomeInfo.tier();
-        MutableComponent itemTypeName = showItemType ? Component.literal("Tome") : Component.literal("Raid Reward");
-        MutableComponent tier = Component.literal(gearTier.getName())
-                .withStyle(gearTier.getChatFormatting())
-                .append(" ")
-                .append(itemTypeName);
-        if (tomeInstance != null && tomeInstance.rerolls() > 1) {
-            tier.append(" [" + tomeInstance.rerolls() + "]");
-        }
-        footer.add(tier);
-
-        // restrictions (untradable, quest item)
-        if (tomeInfo.metaInfo().restrictions() != GearRestrictions.NONE) {
-            footer.add(Component.literal(StringUtils.capitalizeFirst(
-                            tomeInfo.metaInfo().restrictions().getDescription()))
-                    .withStyle(ChatFormatting.RED));
-        }
-
-        return footer;
+        return List.of();
     }
 
     @Override

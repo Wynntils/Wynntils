@@ -7,14 +7,13 @@ package com.wynntils.handlers.tooltip.impl.identifiable.components;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.TooltipMarkers;
+import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.DividerComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearTooltipAlignmentComponent;
-import com.wynntils.models.gear.type.GearRestrictions;
-import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.rewards.type.CharmInfo;
 import com.wynntils.models.rewards.type.CharmInstance;
 import com.wynntils.models.rewards.type.CharmRequirements;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import java.util.ArrayList;
@@ -30,6 +29,8 @@ import net.minecraft.world.item.ItemStack;
 public class CharmTooltipComponent extends IdentifiableTooltipComponent<CharmInfo, CharmInstance> {
     private static final FontDescription EMBLEM_FRAME_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/emblem/frame"));
+    private final RewardTitleComponent titleComponent = new RewardTitleComponent();
+    private final DividerComponent dividerComponent = new DividerComponent();
 
     @Override
     public TooltipParts buildTooltipParts(
@@ -87,62 +88,34 @@ public class CharmTooltipComponent extends IdentifiableTooltipComponent<CharmInf
             CharmInfo charmInfo, CharmInstance charmInstance, boolean hideUnidentified) {
         List<Component> header = new ArrayList<>();
 
-        // name
-        String prefix = charmInstance == null && !hideUnidentified ? "Unidentified " : "";
-        MutableComponent nameLine = Component.literal(prefix + charmInfo.name())
-                .withStyle(charmInfo.tier().getChatFormatting());
-        if (charmInstance != null) {
-            appendOverallPercentageInName(
-                    nameLine,
-                    charmInstance.hasOverallValue(),
-                    charmInstance.getOverallPercentage(),
-                    charmInstance.isPerfect(),
-                    charmInstance.isDefective());
-        }
-        header.add(nameLine);
+        MutableComponent itemName = buildRewardItemNameComponent(
+                charmInfo.name(),
+                charmInfo.tier().getChatFormatting(),
+                charmInstance != null && charmInstance.isPerfect(),
+                charmInstance != null && charmInstance.isDefective(),
+                charmInstance != null && charmInstance.hasOverallValue(),
+                charmInstance != null ? charmInstance.getOverallPercentage() : 0f);
+        header.add(titleComponent.buildNameLine(GearType.CHARM, itemName, charmInstance == null, hideUnidentified));
+        header.add(titleComponent.buildTagsLine(
+                charmInfo.tier(), "Charm", charmInfo.metaInfo().restrictions()));
 
-        // Keep in inventory to gain bonus
-        header.add(Component.literal("Keep in inventory to gain bonus").withStyle(ChatFormatting.GRAY));
-        header.add(Component.empty());
-
-        // requirements
         CharmRequirements requirements = charmInfo.requirements();
         int level = requirements.level();
         if (level != 0) {
-            boolean fulfilled = Models.CombatXp.getCombatLevel().current() >= level;
-            header.add(buildRequirementLine("Combat Lv. Min: " + level, fulfilled));
-            header.add(Component.empty());
+            header.add(TooltipMarkers.markLine(
+                    dividerComponent.buildDivider(charmInfo.tier()).copy(), TooltipMarkers.SECTION_DIVIDER));
+            header.add(TooltipMarkers.markLine(buildCombatLevelRequirementLine(level), TooltipMarkers.ALIGN_RIGHT));
         }
+
+        header.add(TooltipMarkers.markLine(
+                dividerComponent.buildDivider(charmInfo.tier()).copy(), TooltipMarkers.IDENTIFICATION_DIVIDER));
 
         return header;
     }
 
     @Override
     public List<Component> buildFooterTooltip(CharmInfo charmInfo, CharmInstance charmInstance, boolean showItemType) {
-        List<Component> footer = new ArrayList<>();
-
-        footer.add(Component.empty());
-
-        // tier & rerolls
-        GearTier gearTier = charmInfo.tier();
-        MutableComponent itemTypeName = showItemType ? Component.literal("Charm") : Component.literal("Raid Reward");
-        MutableComponent tier = Component.literal(gearTier.getName())
-                .withStyle(gearTier.getChatFormatting())
-                .append(" ")
-                .append(itemTypeName);
-        if (charmInstance != null && charmInstance.rerolls() > 1) {
-            tier.append(" [" + charmInstance.rerolls() + "]");
-        }
-        footer.add(tier);
-
-        // restrictions (untradable, quest item)
-        if (charmInfo.metaInfo().restrictions() != GearRestrictions.NONE) {
-            footer.add(Component.literal(StringUtils.capitalizeFirst(
-                            charmInfo.metaInfo().restrictions().getDescription()))
-                    .withStyle(ChatFormatting.RED));
-        }
-
-        return footer;
+        return List.of();
     }
 
     @Override
