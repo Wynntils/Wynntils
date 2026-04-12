@@ -20,6 +20,7 @@ import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
@@ -199,7 +200,7 @@ public class ItemStatInfoFeature extends Feature {
     }
 
     private boolean shouldKeepOriginalGearTooltip(IdentifiableItemProperty<?, ?> itemInfo) {
-        if (!(itemInfo.getItemInfo() instanceof com.wynntils.models.gear.type.GearInfo)) {
+        if (!(itemInfo.getItemInfo() instanceof GearInfo)) {
             return false;
         }
 

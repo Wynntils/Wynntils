@@ -199,9 +199,10 @@ public final class GearParsedTooltipComponent {
             String visibleText = styledText.getNormalized().getString().trim();
             boolean isEmblemTitleLine = containsFont(styledText, GearTooltipSupport.EMBLEM_FRAME_FONT);
 
-            if (visibleText.isBlank() || visibleText.contains("%]")) {
+            if (visibleText.isBlank()) {
                 continue;
             }
+
             if (!isEmblemTitleLine && !visibleText.endsWith(gearInfo.name())) {
                 continue;
             }

@@ -137,7 +137,7 @@ public class CraftedConsumableTooltipComponent extends CraftedTooltipComponent<C
             return;
         }
 
-        if (firstLineText.equals(craftedItem.getName()) || firstLineText.startsWith(craftedItem.getName() + " [")) {
+        if (firstLineText.equals(craftedItem.getName())) {
             header.removeFirst();
         }
     }

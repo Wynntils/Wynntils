@@ -14,6 +14,7 @@ import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.stats.StatCalculator;
+import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListDelimiter;
 import com.wynntils.models.stats.type.StatPossibleValues;
@@ -37,7 +38,7 @@ public final class CraftedTooltipIdentifications {
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/attribute/sprite"));
     private static final FontDescription IDENTIFICATION_METER_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/identification/meter"));
-    private static final String IDENTIFICATION_METER_PREFIX = "󏿷";
+    private static final String IDENTIFICATION_METER_PREFIX = "\uE023\uDBFF\uDFF7";
     private static final int IDENTIFICATION_METER_MIN = 0xE001;
     private static final int IDENTIFICATION_METER_MAX = 0xE01F;
 
@@ -211,7 +212,7 @@ public final class CraftedTooltipIdentifications {
 
     private static final class TooltipIdentificationsCompat {
         private static String getIconPrefix(StatType statType) {
-            if (!(statType instanceof com.wynntils.models.stats.type.SkillStatType skillStatType)) return "";
+            if (!(statType instanceof SkillStatType skillStatType)) return "";
 
             return switch (skillStatType.getSkill()) {
                 case STRENGTH -> "\uDAFF\uDFFF\uE010\uDB00\uDC02 ";

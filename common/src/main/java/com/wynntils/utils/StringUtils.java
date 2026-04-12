@@ -186,6 +186,8 @@ public final class StringUtils {
 
     /**
      * Shorten text in the middle while preferring word boundaries when possible.
+     *
+     * Credits for the original code: HeyZeer0
      */
     public static String shorten(String input, int keep) {
         if (input == null || input.isBlank()) return input;

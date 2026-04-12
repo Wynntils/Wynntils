@@ -6,6 +6,7 @@ package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.models.activities.quests.QuestInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.gear.type.GearInfo;
@@ -28,9 +29,7 @@ import net.minecraft.resources.Identifier;
 final class GearTooltipSupport {
     static final int ELEMENTAL_DEFENSES_WIDTH = 40;
     static final Style WYNNCRAFT_WHITE_STYLE = Style.EMPTY
-            .withFont(
-                    com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent
-                            .WYNNCRAFT_LANGUAGE_FONT)
+            .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
             .withColor(ChatFormatting.WHITE);
     static final FontDescription EMBLEM_FRAME_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/emblem/frame"));
@@ -57,7 +56,7 @@ final class GearTooltipSupport {
             }
         }
 
-        return com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent.SKILL_REQ_FRAME_NONE;
+        return IdentifiableTooltipComponent.SKILL_REQ_FRAME_NONE;
     }
 
     static String getSkillReqIcon(int ordinal, boolean active) {
@@ -119,13 +118,9 @@ final class GearTooltipSupport {
         requirement.append(withWhiteShadow(
                 fulfilled
                         ? Component.literal("\uE006\uDAFF\uDFFF")
-                                .withStyle(
-                                        com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent
-                                                .REQUIREMENT_STYLE)
+                                .withStyle(IdentifiableTooltipComponent.REQUIREMENT_STYLE)
                         : Component.literal("\uE007\uDAFF\uDFFF")
-                                .withStyle(
-                                        com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent
-                                                .REQUIREMENT_STYLE)));
+                                .withStyle(IdentifiableTooltipComponent.REQUIREMENT_STYLE)));
         requirement.append(label.copy());
 
         MutableComponent paddedValue = Component.literal("  ").withStyle(value.getStyle());
@@ -137,20 +132,15 @@ final class GearTooltipSupport {
     static MutableComponent buildShinyStatLine(ShinyStat shinyStat, GearTier gearTier) {
         MutableComponent left = Component.empty().withStyle(WYNNCRAFT_WHITE_STYLE);
         left.append(withWhiteShadow(Component.literal("\uE04F").withStyle(Style.EMPTY.withFont(COMMON_FONT))));
-        left.append(Component.literal("\uDAFF\uDFFF")
-                .withStyle(com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent.SPACING_STYLE));
+        left.append(Component.literal("\uDAFF\uDFFF").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
         left.append(Component.literal(" " + shinyStat.statType().displayName())
                 .withStyle(Style.EMPTY
-                        .withFont(
-                                com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent
-                                        .WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(getDividerColor(gearTier).asInt())));
 
         MutableComponent right = Component.literal(String.valueOf(shinyStat.value()))
                 .withStyle(Style.EMPTY
-                        .withFont(
-                                com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent
-                                        .WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(ChatFormatting.WHITE));
 
         return Component.empty().append(left).append(right);
@@ -198,10 +188,7 @@ final class GearTooltipSupport {
 
         String offset = Managers.Font.calculateOffset(0, pixels);
         if (!offset.isEmpty()) {
-            line.append(Component.literal(offset)
-                    .withStyle(
-                            com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent
-                                    .SPACING_STYLE));
+            line.append(Component.literal(offset).withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
         }
     }
 }
