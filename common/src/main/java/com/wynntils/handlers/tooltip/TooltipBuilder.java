@@ -39,6 +39,7 @@ public abstract class TooltipBuilder {
     private TooltipWeightDecorator cachedWeightDecorator;
     private List<Component> identificationsCache;
     private List<Component> weightedHeaderCache;
+    private List<Component> tooltipLinesCache;
 
     protected TooltipBuilder(List<Component> header, List<Component> footer, String source) {
         this.header = header;
@@ -57,61 +58,46 @@ public abstract class TooltipBuilder {
             ItemWeightSource weightSource,
             TooltipWeightDecorator weightDecorator) {
         List<Component> tooltip;
-        List<Component> identifications;
-        List<Component> weightings;
-        List<Component> headerToUse;
-
         // Identification lines are rendered differently depending on current class, requested
         // style and provided decorator. If all match, use cache.
-        if (currentClass != cachedCurrentClass
+        if (tooltipLinesCache == null
+                || currentClass != cachedCurrentClass
                 || cachedWeightSource != weightSource
                 || !Objects.equals(cachedStyle, style)
                 || !Objects.equals(this.cachedIdentificationDecorator, identificationDecorator)
                 || !Objects.equals(this.cachedWeightDecorator, weightDecorator)) {
-            weightings = null;
-
             if (weightSource != ItemWeightSource.NONE) {
-                weightings = getWeightedHeaderLines(header, weightSource, weightDecorator, style);
+                weightedHeaderCache = getWeightedHeaderLines(header, weightSource, weightDecorator, style);
+            } else {
+                weightedHeaderCache = null;
             }
 
-            weightedHeaderCache = weightings;
-            headerToUse = weightedHeaderCache != null ? weightedHeaderCache : header;
+            List<Component> headerToUse = weightedHeaderCache != null ? weightedHeaderCache : header;
             int targetWidth = calculateTargetWidth(headerToUse, footer);
-            identifications = getIdentificationLines(currentClass, style, identificationDecorator, targetWidth);
-
-            identificationsCache = identifications;
+            identificationsCache = getIdentificationLines(currentClass, style, identificationDecorator, targetWidth);
             cachedCurrentClass = currentClass;
             cachedWeightSource = weightSource;
             cachedStyle = style;
             this.cachedIdentificationDecorator = identificationDecorator;
             this.cachedWeightDecorator = weightDecorator;
-        }
 
-        // Determine header to use
-        if (weightSource != ItemWeightSource.NONE) {
-            // Recalculate weighted header if not cached
-            if (weightedHeaderCache == null) {
-                weightedHeaderCache = getWeightedHeaderLines(header, weightSource, weightDecorator, style);
+            tooltip = new ArrayList<>(headerToUse);
+            if (!source.isEmpty()) {
+                tooltip.add(0, buildSourceLine());
+                tooltip.add(1, Component.empty());
             }
-            tooltip = new ArrayList<>(weightedHeaderCache);
-        } else {
-            tooltip = new ArrayList<>(header);
+
+            tooltip.addAll(identificationsCache);
+            tooltip.addAll(footer);
+
+            int finalTargetWidth = tooltip.stream()
+                    .mapToInt(line -> McUtils.mc().font.width(line))
+                    .max()
+                    .orElse(0);
+            tooltipLinesCache = List.copyOf(postProcessTooltipLines(tooltip, finalTargetWidth));
         }
 
-        if (!source.isEmpty()) {
-            tooltip.add(0, buildSourceLine());
-            tooltip.add(1, Component.empty());
-        }
-
-        tooltip.addAll(identificationsCache);
-
-        tooltip.addAll(footer);
-
-        int finalTargetWidth = tooltip.stream()
-                .mapToInt(line -> McUtils.mc().font.width(line))
-                .max()
-                .orElse(0);
-        return postProcessTooltipLines(tooltip, finalTargetWidth);
+        return tooltipLinesCache;
     }
 
     private int calculateTargetWidth(List<Component> headerLines, List<Component> footerLines) {

@@ -23,7 +23,6 @@ import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.PagedItemProperty;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.Font;
@@ -179,13 +178,12 @@ public final class TooltipUtils {
                 feature.showBestValueLastAlways.get(),
                 feature.showStars.get(),
                 false);
-        LinkedList<Component> tooltips = new LinkedList<>(builder.getTooltipLines(
+        return builder.getTooltipLines(
                 Models.Character.getClassType(),
                 currentIdentificationStyle,
                 identificationDecorator,
                 feature.itemWeights.get(),
-                weightDecorator));
-        return tooltips;
+                weightDecorator);
     }
 
     private static TooltipBuilder getIdentifiableTooltipBuilder(
@@ -207,11 +205,17 @@ public final class TooltipUtils {
         }
 
         if (itemInfo.getItemInfo() instanceof GearInfo) {
-            return Handlers.Tooltip.buildFromItemStack(itemStack, itemInfo, false, true, "");
+            return wynnItem.getData()
+                    .getOrCalculate(
+                            WynnItemData.TOOLTIP_KEY,
+                            () -> Handlers.Tooltip.buildFromItemStack(itemStack, itemInfo, false, true, ""));
         }
 
         if (itemInfo instanceof PagedItemProperty) {
-            return Handlers.Tooltip.buildFromItemStack(itemStack, itemInfo, false, true, "");
+            return wynnItem.getData()
+                    .getOrCalculate(
+                            WynnItemData.TOOLTIP_KEY,
+                            () -> Handlers.Tooltip.buildFromItemStack(itemStack, itemInfo, false, true, ""));
         }
 
         return wynnItem.getData()
@@ -236,9 +240,8 @@ public final class TooltipUtils {
                 false,
                 false,
                 isif.showRollWheel.get());
-
-        return new LinkedList<>(builder.getTooltipLines(
-                Models.Character.getClassType(), currentIdentificationStyle, null, isif.itemWeights.get(), null));
+        return builder.getTooltipLines(
+                Models.Character.getClassType(), currentIdentificationStyle, null, isif.itemWeights.get(), null);
     }
 
     private static TooltipBuilder getCraftedTooltipBuilder(
@@ -251,7 +254,10 @@ public final class TooltipUtils {
         }
 
         if (craftedItemProperty instanceof PagedItemProperty) {
-            return Handlers.Tooltip.fromParsedItemStack(itemStack, craftedItemProperty);
+            return wynnItem.getData()
+                    .getOrCalculate(
+                            WynnItemData.TOOLTIP_KEY,
+                            () -> Handlers.Tooltip.fromParsedItemStack(itemStack, craftedItemProperty));
         }
 
         return wynnItem.getData()
