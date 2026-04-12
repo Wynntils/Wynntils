@@ -4,13 +4,14 @@
  */
 package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
 
+import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.models.gear.type.GearTier;
 import net.minecraft.network.chat.Component;
 
 public final class DividerComponent {
     public Component buildDivider(GearTier gearTier) {
-        return GearTooltipSupport.withWhiteShadow(IdentifiableTooltipComponent.DIVIDER
+        return TooltipStyleSupport.withWhiteShadow(IdentifiableTooltipComponent.DIVIDER
                 .copy()
                 .withStyle(style -> style.withColor(
                         GearTooltipSupport.getDividerColor(gearTier).asInt())));

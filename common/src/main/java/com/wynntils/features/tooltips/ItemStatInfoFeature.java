@@ -14,7 +14,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
+import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearItemWeightsComponent;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
@@ -395,7 +395,7 @@ public class ItemStatInfoFeature extends Feature {
 
     private static MutableComponent withWynncraftFont(MutableComponent component) {
         return Component.empty()
-                .withStyle(Style.EMPTY.withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT))
+                .withStyle(Style.EMPTY.withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT))
                 .append(component);
     }
 

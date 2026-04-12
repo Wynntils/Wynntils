@@ -5,7 +5,7 @@
 package com.wynntils.handlers.tooltip.impl.identifiable.components;
 
 import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
+import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
@@ -19,9 +19,8 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 
 final class RewardTitleComponent {
-    private static final Style WYNNCRAFT_WHITE_STYLE = Style.EMPTY
-            .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
-            .withColor(ChatFormatting.WHITE);
+    private static final Style WYNNCRAFT_WHITE_STYLE =
+            Style.EMPTY.withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT).withColor(ChatFormatting.WHITE);
     private static final FontDescription EMBLEM_FRAME_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/emblem/frame"));
     private static final FontDescription EMBLEM_SPRITE_FONT =
@@ -36,7 +35,7 @@ final class RewardTitleComponent {
         MutableComponent nameLine = Component.empty().withStyle(WYNNCRAFT_WHITE_STYLE);
 
         MutableComponent emblemComponent = Component.literal("\uDAFF\uDFF0")
-                .withStyle(style -> style.withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                .withStyle(style -> style.withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withShadowColor(0xFFFFFF));
         emblemComponent.append(
                 Component.literal(getRewardFrameCode(gearType)).withStyle(Style.EMPTY.withFont(EMBLEM_FRAME_FONT)));
@@ -47,12 +46,12 @@ final class RewardTitleComponent {
                         .withStyle(Style.EMPTY.withFont(EMBLEM_SPRITE_FONT))));
         nameLine.append(emblemComponent);
 
-        nameLine.append(Component.literal("\uDB00\uDC05").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+        nameLine.append(Component.literal("\uDB00\uDC05").withStyle(TooltipStyleSupport.SPACING_STYLE));
 
         if (unidentified && !hideUnidentified) {
-            nameLine.append(withWhiteShadow(
+            nameLine.append(TooltipStyleSupport.withWhiteShadow(
                     Component.literal("\uE008").withStyle(Style.EMPTY.withFont(ATTRIBUTE_SPRITE_FONT))));
-            nameLine.append(Component.literal("\uDB00\uDC02").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+            nameLine.append(Component.literal("\uDB00\uDC02").withStyle(TooltipStyleSupport.SPACING_STYLE));
         }
 
         nameLine.append(itemNameComponent);
@@ -61,21 +60,20 @@ final class RewardTitleComponent {
 
     public Component buildTagsLine(GearTier gearTier, String typeName, GearRestrictions restrictions) {
         MutableComponent rarityTypeLine = Component.empty().withStyle(WYNNCRAFT_WHITE_STYLE);
-        rarityTypeLine.append(Component.literal("\uDB00\uDC26").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+        rarityTypeLine.append(Component.literal("\uDB00\uDC26").withStyle(TooltipStyleSupport.SPACING_STYLE));
         rarityTypeLine.append(BannerBoxFont.buildMessage(
                 gearTier.getName(),
                 CustomColor.fromChatFormatting(gearTier.getChatFormatting()),
                 CommonColors.BLACK,
                 "\uDB00\uDC02"));
-        rarityTypeLine.append(Component.literal("\uDB00\uDC01").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+        rarityTypeLine.append(Component.literal("\uDB00\uDC01").withStyle(TooltipStyleSupport.SPACING_STYLE));
 
         boolean untradable = restrictions == GearRestrictions.UNTRADABLE;
         rarityTypeLine.append(BannerBoxFont.buildMessage(
                 typeName, getSecondaryTierColor(gearTier), CommonColors.BLACK, untradable ? "\uDB00\uDC02" : ""));
 
         if (untradable) {
-            rarityTypeLine.append(
-                    Component.literal("\uDB00\uDC01").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+            rarityTypeLine.append(Component.literal("\uDB00\uDC01").withStyle(TooltipStyleSupport.SPACING_STYLE));
             rarityTypeLine.append(buildRestrictionIcon());
         }
 
@@ -88,13 +86,7 @@ final class RewardTitleComponent {
                 .withStyle(Style.EMPTY.withFont(TOOLTIP_BANNER_FONT).withColor(0xff4242)));
         restrictionIcon.append(
                 Component.literal("\uDAFF\uDFF6\uF002").withStyle(Style.EMPTY.withFont(TOOLTIP_BANNER_FONT)));
-        return withWhiteShadow(restrictionIcon);
-    }
-
-    private static MutableComponent withWhiteShadow(Component component) {
-        return Component.empty()
-                .withStyle(style -> style.withShadowColor(0xFFFFFF))
-                .append(component.copy());
+        return TooltipStyleSupport.withWhiteShadow(restrictionIcon);
     }
 
     private static String getRewardFrameCode(GearType gearType) {

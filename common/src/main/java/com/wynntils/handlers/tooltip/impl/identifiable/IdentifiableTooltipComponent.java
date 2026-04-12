@@ -6,6 +6,7 @@ package com.wynntils.handlers.tooltip.impl.identifiable;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
+import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.models.gear.type.GearTier;
@@ -17,10 +18,8 @@ import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -28,40 +27,8 @@ import net.minecraft.world.item.ItemStack;
  * @param <T> The type of the gear info
  * @param <U> The type of the gear instance
  */
-public abstract class IdentifiableTooltipComponent<T, U> {
+public abstract class IdentifiableTooltipComponent<T, U> extends TooltipStyleSupport {
     public record TooltipParts(List<Component> header, List<Component> footer) {}
-
-    public static final Style SPACING_STYLE = Style.EMPTY
-            .withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("space")))
-            .withoutShadow();
-
-    public static final Style RESTRICTION_STYLE = Style.EMPTY
-            .withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/banner")))
-            .withoutShadow();
-
-    public static final Style SKILL_FRAME_STYLE = Style.EMPTY
-            .withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/requirement/frame")))
-            .withoutShadow();
-
-    public static final Style SKILL_SPRITE_STYLE = Style.EMPTY
-            .withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/requirement/sprite")))
-            .withoutShadow();
-
-    public static final FontDescription WYNNCRAFT_LANGUAGE_FONT =
-            new FontDescription.Resource(Identifier.fromNamespaceAndPath("wynntils", "language"));
-    protected static final FontDescription TOOLTIP_DIVIDER_FONT =
-            new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/divider"));
-    protected static final FontDescription TOOLTIP_PAGE_FONT =
-            new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/page"));
-    protected static final Style WYNNCRAFT_WHITE_STYLE =
-            Style.EMPTY.withFont(WYNNCRAFT_LANGUAGE_FONT).withColor(ChatFormatting.WHITE);
-
-    public static final Component DIVIDER = Component.literal("\uE000")
-            .withStyle(Style.EMPTY.withFont(
-                    new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/divider"))));
-
-    public static final Style REQUIREMENT_STYLE = Style.EMPTY.withFont(
-            new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/requirement/sprite")));
 
     private static final char SKILL_REQ_FRAME_BASE = '\uE000';
     public static final String SKILL_REQ_FRAME_NONE = "\uE007";
@@ -140,12 +107,6 @@ public abstract class IdentifiableTooltipComponent<T, U> {
             case MYTHIC -> CustomColor.fromInt(0xe0b3e6);
             default -> CustomColor.NONE;
         };
-    }
-
-    protected static MutableComponent withWhiteShadow(Component component) {
-        return Component.empty()
-                .withStyle(style -> style.withShadowColor(0xFFFFFF))
-                .append(component.copy());
     }
 
     protected MutableComponent appendOverallPercentageInName(

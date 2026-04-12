@@ -5,7 +5,7 @@
 package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
+import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.handlers.tooltip.impl.identifiable.TooltipMarkers;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
@@ -199,7 +199,7 @@ public final class GearTooltipAlignmentComponent {
             left.append(siblings.get(i).copy());
         }
 
-        Component right = siblings.get(siblings.size() - 1);
+        Component right = siblings.getLast();
         MutableComponent aligned = Component.empty().withStyle(line.getStyle()).append(left);
         int currentWidth = McUtils.mc().font.width(left) + McUtils.mc().font.width(right);
         appendOffset(aligned, Math.max(0, targetWidth - currentWidth));
@@ -224,12 +224,12 @@ public final class GearTooltipAlignmentComponent {
 
         String offset = Managers.Font.calculateOffset(0, pixels);
         if (!offset.isEmpty()) {
-            line.append(Component.literal(offset).withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+            line.append(Component.literal(offset).withStyle(TooltipStyleSupport.SPACING_STYLE));
         }
     }
 
     private static List<Component> flattenLeafComponents(Component component) {
-        ArrayList<Component> leaves = new ArrayList<>();
+        List<Component> leaves = new ArrayList<>();
         collectLeafComponents(component, Style.EMPTY, leaves);
         return leaves;
     }

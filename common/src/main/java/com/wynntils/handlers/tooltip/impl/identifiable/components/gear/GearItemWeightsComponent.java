@@ -6,7 +6,7 @@ package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
+import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.handlers.tooltip.impl.identifiable.TooltipMarkers;
 import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.models.gear.type.GearInfo;
@@ -131,7 +131,7 @@ public final class GearItemWeightsComponent {
 
     public static MutableComponent buildRightAlignedWeightLine(Component left, Component right) {
         MutableComponent line =
-                Component.empty().withStyle(Style.EMPTY.withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT));
+                Component.empty().withStyle(Style.EMPTY.withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT));
         line.append(left.copy());
         line.append(trimLeadingSpace(right));
         line.setStyle(line.getStyle().withInsertion(TooltipMarkers.ALIGN_RIGHT.token()));
@@ -140,7 +140,7 @@ public final class GearItemWeightsComponent {
 
     public static MutableComponent withLanguageFont(MutableComponent component) {
         return Component.empty()
-                .withStyle(Style.EMPTY.withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT))
+                .withStyle(Style.EMPTY.withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT))
                 .append(component);
     }
 

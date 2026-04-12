@@ -7,7 +7,7 @@ package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
+import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
@@ -38,13 +38,13 @@ public final class GearTitleComponent {
         header.add(buildNameLine(gearInfo, gearInstance, hideUnidentified, feature));
 
         MutableComponent rarityTypeLine = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
-        rarityTypeLine.append(Component.literal("\uDB00\uDC26").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+        rarityTypeLine.append(Component.literal("\uDB00\uDC26").withStyle(TooltipStyleSupport.SPACING_STYLE));
         rarityTypeLine.append(BannerBoxFont.buildMessage(
                 gearInfo.tier().getName(),
                 CustomColor.fromChatFormatting(gearInfo.tier().getChatFormatting()),
                 CommonColors.BLACK,
                 "\uDB00\uDC02"));
-        rarityTypeLine.append(Component.literal("\uDB00\uDC01").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+        rarityTypeLine.append(Component.literal("\uDB00\uDC01").withStyle(TooltipStyleSupport.SPACING_STYLE));
 
         boolean untradable = gearInfo.metaInfo().restrictions() == GearRestrictions.UNTRADABLE;
         CustomColor secondaryTierColor = GearTooltipSupport.getSecondaryTierColor(gearInfo.tier());
@@ -52,8 +52,7 @@ public final class GearTitleComponent {
                 gearInfo.type().name(), secondaryTierColor, CommonColors.BLACK, untradable ? "\uDB00\uDC02" : ""));
 
         if (untradable) {
-            rarityTypeLine.append(
-                    Component.literal("\uDB00\uDC01").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+            rarityTypeLine.append(Component.literal("\uDB00\uDC01").withStyle(TooltipStyleSupport.SPACING_STYLE));
 
             MutableComponent restrictionIcon = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
             restrictionIcon.append(Component.literal("\uE002")
@@ -62,7 +61,7 @@ public final class GearTitleComponent {
                             .withColor(0xff4242)));
             restrictionIcon.append(Component.literal("\uDAFF\uDFF6\uF002")
                     .withStyle(Style.EMPTY.withFont(GearTooltipSupport.TOOLTIP_BANNER_FONT)));
-            rarityTypeLine.append(GearTooltipSupport.withWhiteShadow(restrictionIcon));
+            rarityTypeLine.append(TooltipStyleSupport.withWhiteShadow(restrictionIcon));
         }
 
         header.add(rarityTypeLine);
@@ -97,10 +96,9 @@ public final class GearTitleComponent {
             spriteCode = String.valueOf((char) (spriteCode.charAt(0) + 0x1000));
         }
 
-        MutableComponent emblemComponent = Component.literal("\uDAFF\uDFF0").withStyle(style -> style.withFont(
-                        com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent
-                                .WYNNCRAFT_LANGUAGE_FONT)
-                .withShadowColor(0xFFFFFF));
+        MutableComponent emblemComponent = Component.literal("\uDAFF\uDFF0")
+                .withStyle(style -> style.withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
+                        .withShadowColor(0xFFFFFF));
         emblemComponent.append(
                 Component.literal(frameCode).withStyle(Style.EMPTY.withFont(GearTooltipSupport.EMBLEM_FRAME_FONT)));
         emblemComponent.append(Component.literal("\uDAFF\uDFCF"));
@@ -110,12 +108,12 @@ public final class GearTitleComponent {
                         .withStyle(Style.EMPTY.withFont(GearTooltipSupport.EMBLEM_SPRITE_FONT))));
         nameLine.append(emblemComponent);
 
-        nameLine.append(Component.literal("\uDB00\uDC05").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+        nameLine.append(Component.literal("\uDB00\uDC05").withStyle(TooltipStyleSupport.SPACING_STYLE));
 
         if (gearInstance == null && !hideUnidentified) {
-            nameLine.append(GearTooltipSupport.withWhiteShadow(Component.literal("\uE008")
+            nameLine.append(TooltipStyleSupport.withWhiteShadow(Component.literal("\uE008")
                     .withStyle(Style.EMPTY.withFont(GearTooltipSupport.ATTRIBUTE_SPRITE_FONT))));
-            nameLine.append(Component.literal("\uDB00\uDC02").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+            nameLine.append(Component.literal("\uDB00\uDC02").withStyle(TooltipStyleSupport.SPACING_STYLE));
         }
 
         MutableComponent itemNameComponent = buildItemNameComponent(gearInfo, gearInstance, feature);
@@ -137,9 +135,7 @@ public final class GearTitleComponent {
         } else {
             nameComponent = Component.literal(itemName)
                     .withStyle(Style.EMPTY
-                            .withFont(
-                                    com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent
-                                            .WYNNCRAFT_LANGUAGE_FONT)
+                            .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                             .withColor(gearInfo.tier().getChatFormatting()));
         }
 
@@ -157,7 +153,7 @@ public final class GearTitleComponent {
                         gearInstance.getOverallPercentage(),
                         feature.colorLerp.get(),
                         feature.decimalPlaces.get())
-                .withStyle(style -> style.withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)));
+                .withStyle(style -> style.withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)));
     }
 
     static boolean shouldAppendOverallPercentage(GearInstance gearInstance, ItemStatInfoFeature feature) {
@@ -195,7 +191,7 @@ public final class GearTitleComponent {
         boolean hasSetName = !setName.isBlank();
 
         if (hasSetName) {
-            line.append(Component.literal("\uDB00\uDC26").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+            line.append(Component.literal("\uDB00\uDC26").withStyle(TooltipStyleSupport.SPACING_STYLE));
             line.append(BannerBoxFont.buildMessage(setName + " set", tierColor, CommonColors.BLACK, ""));
         }
 
@@ -229,7 +225,7 @@ public final class GearTitleComponent {
             List<Element> elements, CustomColor tierColor, boolean includeLeadingPadding) {
         MutableComponent strip = Component.empty()
                 .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(tierColor.asInt())
                         .withShadowColor(0xFFFFFF));
 

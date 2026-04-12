@@ -8,6 +8,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
+import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.TooltipMarkers;
 import com.wynntils.models.elements.type.Skill;
@@ -222,7 +223,7 @@ public final class GearParsedTooltipComponent {
                             gearInstance.getOverallPercentage(),
                             feature.colorLerp.get(),
                             feature.decimalPlaces.get())
-                    .withStyle(style -> style.withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)));
+                    .withStyle(style -> style.withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)));
             header.set(i, updatedLine);
             return;
         }

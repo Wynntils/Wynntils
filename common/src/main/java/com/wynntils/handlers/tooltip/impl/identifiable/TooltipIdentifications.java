@@ -7,6 +7,7 @@ package com.wynntils.handlers.tooltip.impl.identifiable;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.character.type.ClassType;
@@ -109,7 +110,7 @@ public final class TooltipIdentifications {
             if (currentWidth < maxCombinedWidth) {
                 String offset = Managers.Font.calculateOffset(currentWidth, maxCombinedWidth);
                 if (!offset.isEmpty()) {
-                    line.append(Component.literal(offset).withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+                    line.append(Component.literal(offset).withStyle(TooltipStyleSupport.SPACING_STYLE));
                 }
             }
             line.append(right);
@@ -198,19 +199,19 @@ public final class TooltipIdentifications {
         appendIconPrefix(left, statType);
         left.append(Component.literal(displayName + " ")
                 .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(ChatFormatting.WHITE)));
 
         MutableComponent right = Component.literal(StringUtils.toSignedString(valueToShow)
                         + statType.getUnit().getDisplayName())
                 .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(hasPositiveEffect ? ChatFormatting.GREEN : ChatFormatting.RED));
 
         if (!starString.isEmpty()) {
             right.append(Component.literal(starString)
                     .withStyle(Style.EMPTY
-                            .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                            .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                             .withColor(hasPositiveEffect ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED)));
         }
 
@@ -244,20 +245,20 @@ public final class TooltipIdentifications {
         appendIconPrefix(left, statType);
         left.append(Component.literal(displayName + " ")
                 .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(ChatFormatting.WHITE)));
 
         MutableComponent right = Component.literal(StringUtils.toSignedString(displayRange.a()))
                 .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(colorCode));
         right.append(Component.literal(" to ")
                 .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(colorCodeDark)));
         right.append(Component.literal(displayRange.b() + statType.getUnit().getDisplayName())
                 .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(colorCode)));
 
         return Pair.of(left, right);
@@ -267,13 +268,13 @@ public final class TooltipIdentifications {
         String iconPrefix = getIconPrefix(statType);
         if (iconPrefix.isEmpty()) return;
 
-        line.append(IdentifiableTooltipComponent.withWhiteShadow(Component.literal(iconPrefix)
+        line.append(TooltipStyleSupport.withWhiteShadow(Component.literal(iconPrefix)
                 .withStyle(Style.EMPTY.withFont(ATTRIBUTE_SPRITE_FONT).withColor(ChatFormatting.WHITE))));
     }
 
     private static MutableComponent withWynncraftFont(MutableComponent component) {
         return Component.empty()
-                .withStyle(Style.EMPTY.withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT))
+                .withStyle(Style.EMPTY.withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT))
                 .append(component);
     }
 

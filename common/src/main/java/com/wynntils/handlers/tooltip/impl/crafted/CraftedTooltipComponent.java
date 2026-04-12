@@ -4,6 +4,7 @@
  */
 package com.wynntils.handlers.tooltip.impl.crafted;
 
+import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -11,7 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 
-public abstract class CraftedTooltipComponent<T extends CraftedItemProperty> {
+public abstract class CraftedTooltipComponent<T extends CraftedItemProperty> extends TooltipStyleSupport {
     public record TooltipParts(List<Component> header, List<Component> footer) {}
 
     public abstract List<Component> buildHeaderTooltip(T craftedItem);

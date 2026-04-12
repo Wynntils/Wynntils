@@ -5,6 +5,7 @@
 package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.TooltipMarkers;
 import com.wynntils.models.activities.quests.QuestInfo;
@@ -110,12 +111,12 @@ public final class GearRequirementsComponent {
 
         MutableComponent questReqLine = Component.literal(" Quest")
                 .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(ChatFormatting.WHITE));
         String shortenedQuestName = StringUtils.shorten(questReq, 10);
         MutableComponent questReqValue = Component.literal(shortenedQuestName)
                 .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(ChatFormatting.GRAY));
 
         header.add(TooltipMarkers.markLine(
@@ -133,11 +134,11 @@ public final class GearRequirementsComponent {
 
         MutableComponent classReqLine = Component.literal(" Class Type")
                 .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(ChatFormatting.WHITE));
         MutableComponent classReqValue = Component.literal(classType.getFullName())
                 .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(ChatFormatting.GRAY));
 
         header.add(TooltipMarkers.markLine(
@@ -156,11 +157,11 @@ public final class GearRequirementsComponent {
                 GearTooltipSupport.buildRequirementValueLine(
                         Component.literal(" Combat Level")
                                 .withStyle(Style.EMPTY
-                                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                                         .withColor(ChatFormatting.WHITE)),
                         Component.literal(String.valueOf(level))
                                 .withStyle(Style.EMPTY
-                                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                                         .withColor(ChatFormatting.GRAY)),
                         fulfilled),
                 TooltipMarkers.ALIGN_RIGHT));
@@ -181,11 +182,11 @@ public final class GearRequirementsComponent {
         String frame = count == 0
                 ? IdentifiableTooltipComponent.SKILL_REQ_FRAME_NONE
                 : GearTooltipSupport.getSkillReqFrame(gearInfo.tier());
-        iconCluster.append(Component.literal(frame).withStyle(IdentifiableTooltipComponent.SKILL_FRAME_STYLE));
+        iconCluster.append(Component.literal(frame).withStyle(TooltipStyleSupport.SKILL_FRAME_STYLE));
         iconCluster.append(Component.literal("\uDAFF\uDFE7"));
         iconCluster.append(Component.literal(GearTooltipSupport.getSkillReqIcon(skill.ordinal(), count != 0))
-                .withStyle(IdentifiableTooltipComponent.SKILL_SPRITE_STYLE));
-        cell.append(GearTooltipSupport.withWhiteShadow(iconCluster));
+                .withStyle(TooltipStyleSupport.SKILL_SPRITE_STYLE));
+        cell.append(TooltipStyleSupport.withWhiteShadow(iconCluster));
         return cell;
     }
 
@@ -201,9 +202,9 @@ public final class GearRequirementsComponent {
             reqCharacter = fulfilled ? "\uE006" : "\uE007";
         }
 
-        cell.append(GearTooltipSupport.withWhiteShadow(Component.literal(reqCharacter + "\uDAFF\uDFFF")
-                .withStyle(IdentifiableTooltipComponent.REQUIREMENT_STYLE)));
-        cell.append(Component.literal("\uDB00\uDC03").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+        cell.append(TooltipStyleSupport.withWhiteShadow(
+                Component.literal(reqCharacter + "\uDAFF\uDFFF").withStyle(TooltipStyleSupport.REQUIREMENT_STYLE)));
+        cell.append(Component.literal("\uDB00\uDC03").withStyle(TooltipStyleSupport.SPACING_STYLE));
 
         CustomColor color = CustomColor.fromChatFormatting(ChatFormatting.DARK_GRAY);
         if (count != 0) {
@@ -212,7 +213,7 @@ public final class GearRequirementsComponent {
 
         cell.append(Component.literal(String.valueOf(count))
                 .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(color.asInt())));
         return cell;
     }
@@ -233,7 +234,7 @@ public final class GearRequirementsComponent {
 
             line.append(centeredCell);
             if (i < cells.size() - 1) {
-                line.append(Component.literal("\uDB00\uDC02").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+                line.append(Component.literal("\uDB00\uDC02").withStyle(TooltipStyleSupport.SPACING_STYLE));
             }
         }
 

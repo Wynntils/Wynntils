@@ -5,7 +5,7 @@
 package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
 
 import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
+import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.utils.colors.CommonColors;
@@ -17,9 +17,8 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 
 public final class RerollBannerComponent {
-    private static final Style WYNNCRAFT_WHITE_STYLE = Style.EMPTY
-            .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
-            .withColor(ChatFormatting.WHITE);
+    private static final Style WYNNCRAFT_WHITE_STYLE =
+            Style.EMPTY.withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT).withColor(ChatFormatting.WHITE);
     private static final FontDescription TOOLTIP_BANNER_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/banner"));
 
@@ -37,12 +36,12 @@ public final class RerollBannerComponent {
                 CommonColors.BLACK,
                 "\uDB00\uDC02"));
 
-        rerollBanner.append(Component.literal("\uDAFF\uDFFF").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
-        rerollBanner.append(GearTooltipSupport.withWhiteShadow(Component.literal("\uE005")
+        rerollBanner.append(Component.literal("\uDAFF\uDFFF").withStyle(TooltipStyleSupport.SPACING_STYLE));
+        rerollBanner.append(TooltipStyleSupport.withWhiteShadow(Component.literal("\uE005")
                 .withStyle(Style.EMPTY
                         .withFont(TOOLTIP_BANNER_FONT)
                         .withColor(GearTooltipSupport.getDividerColor(gearTier).asInt()))));
-        rerollBanner.append(GearTooltipSupport.withWhiteShadow(
+        rerollBanner.append(TooltipStyleSupport.withWhiteShadow(
                 Component.literal("\uDAFF\uDFF6\uF005").withStyle(Style.EMPTY.withFont(TOOLTIP_BANNER_FONT))));
 
         return rerollBanner;

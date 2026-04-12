@@ -5,7 +5,7 @@
 package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
+import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.stats.type.DamageType;
@@ -27,8 +27,8 @@ public final class GearOverviewComponent {
         List<Component> header = new ArrayList<>();
 
         if (gearInfo.type().isArmor() || gearInfo.type().isAccessory()) {
-            MutableComponent healthLine = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
-            healthLine.append(Component.literal("\uDB00\uDC02").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+            MutableComponent healthLine = Component.empty().withStyle(TooltipStyleSupport.WYNNCRAFT_WHITE_STYLE);
+            healthLine.append(Component.literal("\uDB00\uDC02").withStyle(TooltipStyleSupport.SPACING_STYLE));
             healthLine.append(Component.literal(StringUtils.toSignedCommaString(
                             gearInfo.fixedStats().healthBuff()))
                     .withStyle(Style.EMPTY
@@ -37,11 +37,11 @@ public final class GearOverviewComponent {
                             .withColor(GearTooltipSupport.getSecondaryTierColor(gearInfo.tier())
                                     .asInt())));
             healthLine.append(Component.literal(" Health")
-                    .withStyle(Style.EMPTY.withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)));
+                    .withStyle(Style.EMPTY.withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)));
             header.add(healthLine);
         } else if (gearInfo.type().isWeapon()) {
-            MutableComponent dpsLine = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
-            dpsLine.append(Component.literal("\uDB00\uDC02").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+            MutableComponent dpsLine = Component.empty().withStyle(TooltipStyleSupport.WYNNCRAFT_WHITE_STYLE);
+            dpsLine.append(Component.literal("\uDB00\uDC02").withStyle(TooltipStyleSupport.SPACING_STYLE));
             dpsLine.append(Component.literal(String.format("%,d", GearTooltipSupport.getDisplayedDps(gearInfo)))
                     .withStyle(Style.EMPTY
                             .withFont(new FontDescription.Resource(
@@ -49,25 +49,24 @@ public final class GearOverviewComponent {
                             .withColor(GearTooltipSupport.getSecondaryTierColor(gearInfo.tier())
                                     .asInt())));
             dpsLine.append(Component.literal(" DPS")
-                    .withStyle(Style.EMPTY.withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)));
+                    .withStyle(Style.EMPTY.withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)));
             header.add(dpsLine);
         }
 
         if (gearInfo.fixedStats().attackSpeed().isPresent()) {
-            MutableComponent attackSpeedLine = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
-            attackSpeedLine.append(
-                    Component.literal("\uDB00\uDC02").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
-            attackSpeedLine.append(GearTooltipSupport.withWhiteShadow(Component.literal("\uE007")
+            MutableComponent attackSpeedLine = Component.empty().withStyle(TooltipStyleSupport.WYNNCRAFT_WHITE_STYLE);
+            attackSpeedLine.append(Component.literal("\uDB00\uDC02").withStyle(TooltipStyleSupport.SPACING_STYLE));
+            attackSpeedLine.append(TooltipStyleSupport.withWhiteShadow(Component.literal("\uE007")
                     .withStyle(Style.EMPTY.withFont(GearTooltipSupport.ATTRIBUTE_SPRITE_FONT))));
             attackSpeedLine.append(Component.literal(
                             " " + gearInfo.fixedStats().attackSpeed().get().getName() + " ")
                     .withStyle(Style.EMPTY
-                            .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                            .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                             .withColor(ChatFormatting.GRAY)));
             attackSpeedLine.append(Component.literal(
                             "(" + gearInfo.fixedStats().attackSpeed().get().getHitsPerSecond() + " hits/s)")
                     .withStyle(Style.EMPTY
-                            .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                            .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                             .withColor(ChatFormatting.DARK_GRAY)));
             header.add(attackSpeedLine);
         }
@@ -83,19 +82,18 @@ public final class GearOverviewComponent {
             return;
         }
 
-        MutableComponent defensesHeader = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
-        defensesHeader.append(Component.literal("\uDB00\uDC02").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+        MutableComponent defensesHeader = Component.empty().withStyle(TooltipStyleSupport.WYNNCRAFT_WHITE_STYLE);
+        defensesHeader.append(Component.literal("\uDB00\uDC02").withStyle(TooltipStyleSupport.SPACING_STYLE));
         defensesHeader.append(Component.literal("Elemental Defences")
                 .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(ChatFormatting.GRAY)));
         header.add(defensesHeader);
 
         MutableComponent defenseLine = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
         for (int i = 0; i < defenses.size(); i++) {
             if (i == 0 || i == 3) {
-                defenseLine.append(
-                        Component.literal("\uDB00\uDC02").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+                defenseLine.append(Component.literal("\uDB00\uDC02").withStyle(TooltipStyleSupport.SPACING_STYLE));
             }
 
             Pair<Element, Integer> defenseStat = defenses.get(i);
@@ -110,7 +108,7 @@ public final class GearOverviewComponent {
                 elementSymbol += "\uDAFF\uDFFF";
             }
 
-            elementComponent.append(GearTooltipSupport.withWhiteShadow(Component.empty()
+            elementComponent.append(TooltipStyleSupport.withWhiteShadow(Component.empty()
                     .append(Component.literal(elementSymbol)
                             .withStyle(Style.EMPTY
                                     .withFont(GearTooltipSupport.ATTRIBUTE_SPRITE_FONT)
@@ -118,14 +116,14 @@ public final class GearOverviewComponent {
                     .append(Component.literal(" ").withStyle(ChatFormatting.WHITE))));
             elementComponent.append(Component.literal(StringUtils.toSignedCommaString(defenseStat.b()))
                     .withStyle(Style.EMPTY
-                            .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                            .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                             .withColor(ChatFormatting.GRAY)));
 
             int width = McUtils.mc().font.width(elementComponent);
             if (width < GearTooltipSupport.ELEMENTAL_DEFENSES_WIDTH) {
                 String offset = Managers.Font.calculateOffset(width, GearTooltipSupport.ELEMENTAL_DEFENSES_WIDTH);
                 elementComponent.append(Component.literal(offset)
-                        .withStyle(IdentifiableTooltipComponent.SPACING_STYLE)
+                        .withStyle(TooltipStyleSupport.SPACING_STYLE)
                         .withStyle(ChatFormatting.GRAY));
             }
 
@@ -133,7 +131,7 @@ public final class GearOverviewComponent {
             if (!lastInRow) {
                 elementComponent.append(Component.literal(" ")
                         .withStyle(Style.EMPTY
-                                .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                                .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                                 .withColor(ChatFormatting.GRAY)));
             }
 
@@ -151,11 +149,10 @@ public final class GearOverviewComponent {
             return;
         }
 
-        MutableComponent damageLine = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
+        MutableComponent damageLine = Component.empty().withStyle(TooltipStyleSupport.WYNNCRAFT_WHITE_STYLE);
         for (int i = 0; i < damages.size(); i++) {
             if (i == 0 || i == 3) {
-                damageLine.append(
-                        Component.literal("\uDB00\uDC02").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+                damageLine.append(Component.literal("\uDB00\uDC02").withStyle(TooltipStyleSupport.SPACING_STYLE));
             }
 
             Pair<DamageType, RangedValue> damageStat = damages.get(i);
@@ -172,7 +169,7 @@ public final class GearOverviewComponent {
                 elementSymbol += "\uDAFF\uDFFF";
             }
 
-            elementComponent.append(GearTooltipSupport.withWhiteShadow(Component.empty()
+            elementComponent.append(TooltipStyleSupport.withWhiteShadow(Component.empty()
                     .append(Component.literal(elementSymbol)
                             .withStyle(Style.EMPTY
                                     .withFont(GearTooltipSupport.ATTRIBUTE_SPRITE_FONT)
@@ -180,7 +177,7 @@ public final class GearOverviewComponent {
                     .append(Component.literal(" ").withStyle(ChatFormatting.WHITE))));
             elementComponent.append(Component.literal(damageStat.b().asString())
                     .withStyle(Style.EMPTY
-                            .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                            .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                             .withColor(ChatFormatting.GRAY)));
 
             boolean lastInRow = i == 2 || i == damages.size() - 1;

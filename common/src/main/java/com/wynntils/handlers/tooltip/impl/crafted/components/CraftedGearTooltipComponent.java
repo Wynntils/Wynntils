@@ -5,8 +5,8 @@
 package com.wynntils.handlers.tooltip.impl.crafted.components;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.handlers.tooltip.impl.crafted.CraftedTooltipComponent;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.TooltipMarkers;
 import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearTooltipAlignmentComponent;
 import com.wynntils.models.activities.quests.QuestInfo;
@@ -35,9 +35,8 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/divider"));
     private static final FontDescription TOOLTIP_PAGE_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/page"));
-    private static final Style WYNNCRAFT_WHITE_STYLE = Style.EMPTY
-            .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
-            .withColor(ChatFormatting.WHITE);
+    private static final Style WYNNCRAFT_WHITE_STYLE =
+            Style.EMPTY.withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT).withColor(ChatFormatting.WHITE);
 
     @Override
     public TooltipParts buildTooltipParts(ItemStack itemStack, CraftedGearItem craftedItem) {
@@ -121,7 +120,7 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
     }
 
     private boolean isRequirementValueLine(Component line) {
-        if (!TooltipUtils.containsFont(line, IdentifiableTooltipComponent.REQUIREMENT_STYLE.getFont())) {
+        if (!TooltipUtils.containsFont(line, TooltipStyleSupport.REQUIREMENT_STYLE.getFont())) {
             return false;
         }
 
@@ -158,7 +157,7 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
                     Component.literal(" Combat Level").withStyle(WYNNCRAFT_WHITE_STYLE),
                     Component.literal(String.valueOf(requirements.level()))
                             .withStyle(Style.EMPTY
-                                    .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                                    .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                                     .withColor(ChatFormatting.GRAY)),
                     Models.CharacterStats.getLevel() >= requirements.level());
         }
@@ -169,7 +168,7 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
                     Component.literal(" Class Type").withStyle(WYNNCRAFT_WHITE_STYLE),
                     Component.literal(classType.getFullName())
                             .withStyle(Style.EMPTY
-                                    .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                                    .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                                     .withColor(ChatFormatting.GRAY)),
                     Models.Character.getClassType() == classType);
         }
@@ -184,11 +183,11 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
 
             MutableComponent value = Component.literal(StringUtils.shorten(questName, 10) + " ")
                     .withStyle(Style.EMPTY
-                            .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                            .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                             .withColor(ChatFormatting.GRAY));
             value.append(Component.literal("(Lv. " + questLevel + ")")
                     .withStyle(Style.EMPTY
-                            .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                            .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                             .withColor(ChatFormatting.DARK_GRAY)));
 
             return buildRequirementValueLine(
@@ -202,22 +201,14 @@ public class CraftedGearTooltipComponent extends CraftedTooltipComponent<Crafted
         MutableComponent requirement = Component.empty();
         requirement.append(withWhiteShadow(
                 fulfilled
-                        ? Component.literal("\uE006\uDAFF\uDFFF")
-                                .withStyle(IdentifiableTooltipComponent.REQUIREMENT_STYLE)
-                        : Component.literal("\uE007\uDAFF\uDFFF")
-                                .withStyle(IdentifiableTooltipComponent.REQUIREMENT_STYLE)));
+                        ? Component.literal("\uE006\uDAFF\uDFFF").withStyle(TooltipStyleSupport.REQUIREMENT_STYLE)
+                        : Component.literal("\uE007\uDAFF\uDFFF").withStyle(TooltipStyleSupport.REQUIREMENT_STYLE)));
         requirement.append(label.copy());
 
         MutableComponent paddedValue = Component.literal("  ").withStyle(value.getStyle());
         paddedValue.append(value.copy());
         requirement.append(paddedValue);
         return requirement;
-    }
-
-    private MutableComponent withWhiteShadow(Component component) {
-        return Component.empty()
-                .withStyle(style -> style.withShadowColor(0xFFFFFF))
-                .append(component.copy());
     }
 
     private int findLastDividerBefore(List<Component> tooltipLines, int endExclusive) {

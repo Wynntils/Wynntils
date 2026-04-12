@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
+import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.handlers.tooltip.impl.identifiable.TooltipMarkers;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.character.type.ClassType;
@@ -121,13 +121,13 @@ public final class CraftedTooltipIdentifications {
         appendIconPrefix(left, statType);
         left.append(Component.literal(displayName + " ")
                 .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(ChatFormatting.WHITE)));
 
         MutableComponent right = Component.literal(StringUtils.toSignedString(valueToShow)
                         + statType.getUnit().getDisplayName())
                 .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                        .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(hasPositiveEffect ? ChatFormatting.GREEN : ChatFormatting.RED));
 
         MutableComponent rollSuffix =
@@ -166,8 +166,7 @@ public final class CraftedTooltipIdentifications {
 
         MutableComponent suffix = ColorScaleUtils.getPercentageTextComponent(
                         feature.getColorMap(), percentage, feature.colorLerp.get(), feature.decimalPlaces.get())
-                .withStyle(
-                        styleOverride -> styleOverride.withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT));
+                .withStyle(styleOverride -> styleOverride.withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT));
 
         if (!style.showRollWheel()) {
             return suffix;
@@ -184,8 +183,8 @@ public final class CraftedTooltipIdentifications {
 
     private static MutableComponent buildRollWheel(float percentage, TextColor color) {
         int glyphOffset = Math.round((percentage / 100f) * (IDENTIFICATION_METER_MAX - IDENTIFICATION_METER_MIN));
-        int glyph = Math.max(
-                IDENTIFICATION_METER_MIN, Math.min(IDENTIFICATION_METER_MIN + glyphOffset, IDENTIFICATION_METER_MAX));
+        int glyph =
+                Math.clamp(IDENTIFICATION_METER_MIN + glyphOffset, IDENTIFICATION_METER_MIN, IDENTIFICATION_METER_MAX);
 
         MutableComponent wheel = Component.literal(" " + IDENTIFICATION_METER_PREFIX)
                 .withStyle(Style.EMPTY
