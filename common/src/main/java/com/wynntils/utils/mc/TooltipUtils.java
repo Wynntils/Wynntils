@@ -195,7 +195,10 @@ public final class TooltipUtils {
             }
 
             if (itemInfo.getItemInfo() instanceof GearInfo) {
-                return Handlers.Tooltip.buildNew(itemInfo, false, true, fakeItemStack.getSource());
+                return wynnItem.getData()
+                        .getOrCalculate(
+                                WynnItemData.TOOLTIP_KEY,
+                                () -> Handlers.Tooltip.buildNew(itemInfo, false, true, fakeItemStack.getSource()));
             }
 
             return wynnItem.getData()
