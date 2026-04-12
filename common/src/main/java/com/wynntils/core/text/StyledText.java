@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.text;
@@ -61,6 +61,12 @@ public final class StyledText implements Iterable<StyledTextPart> {
                 .collect(Collectors.toList());
         this.clickEvents = Collections.unmodifiableList(clickEvents);
         this.hoverEvents = Collections.unmodifiableList(hoverEvents);
+    }
+
+    public StyledText(Style style) {
+        this.parts = List.of(new StyledTextPart("", style, null, null));
+        this.clickEvents = null;
+        this.hoverEvents = null;
     }
 
     public static StyledText fromComponent(Component component) {
