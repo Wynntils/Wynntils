@@ -36,7 +36,10 @@ public final class CraftedConsumableAnnotator implements GameItemAnnotator {
                 parseResult.identifications(),
                 parseResult.namedEffects(),
                 parseResult.effects(),
-                new CappedValue(
-                        Integer.parseInt(matcher.group("currentUses")), Integer.parseInt(matcher.group("maxUses"))));
+                parseResult.uses().equals(CappedValue.EMPTY)
+                        ? new CappedValue(
+                                Integer.parseInt(matcher.group("currentUses")),
+                                Integer.parseInt(matcher.group("maxUses")))
+                        : parseResult.uses());
     }
 }

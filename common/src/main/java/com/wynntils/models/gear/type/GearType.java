@@ -203,6 +203,23 @@ public enum GearType {
         return encodingId;
     }
 
+    public String getFrameSpriteCode() {
+        return frameSpriteCode;
+    }
+
+    public String getFrameCode() {
+        if (this.isArmor()) {
+            return "\uE003";
+        } else if (this.isAccessory() || this == CHARM) {
+            return "\uE005";
+        } else if (this == MASTERY_TOME) {
+            return "\uE001";
+        }
+
+        // Weapon
+        return "\uE000";
+    }
+
     public boolean isReward() {
         return this == MASTERY_TOME || this == CHARM;
     }

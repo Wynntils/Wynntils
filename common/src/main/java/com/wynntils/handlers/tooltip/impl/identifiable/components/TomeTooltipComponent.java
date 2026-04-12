@@ -1,71 +1,63 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.identifiable.components;
 
-import com.wynntils.core.components.Models;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
-import com.wynntils.models.rewards.type.TomeRequirements;
-import com.wynntils.utils.StringUtils;
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 
-public class TomeTooltipComponent extends IdentifiableTooltipComponent<TomeInfo, TomeInstance> {
+public class TomeTooltipComponent extends RewardTooltipComponent<TomeInfo, TomeInstance> {
     @Override
-    public List<Component> buildHeaderTooltip(TomeInfo tomeInfo, TomeInstance tomeInstance, boolean hideUnidentified) {
-        List<Component> header = new ArrayList<>();
-
-        // name
-        String prefix = tomeInstance == null && !hideUnidentified ? "Unidentified " : "";
-        header.add(Component.literal(prefix + tomeInfo.name())
-                .withStyle(tomeInfo.tier().getChatFormatting()));
-        header.add(Component.empty());
-
-        // requirements
-        TomeRequirements requirements = tomeInfo.requirements();
-        int level = requirements.level();
-        if (level != 0) {
-            boolean fulfilled = Models.CombatXp.getCombatLevel().current() >= level;
-            header.add(buildRequirementLine("Combat Lv. Min: " + level, fulfilled));
-            header.add(Component.empty());
-        }
-
-        return header;
+    protected GearType getGearType() {
+        return GearType.MASTERY_TOME;
     }
 
     @Override
-    public List<Component> buildFooterTooltip(TomeInfo tomeInfo, TomeInstance tomeInstance, boolean showItemType) {
-        List<Component> footer = new ArrayList<>();
+    protected String getTypeName() {
+        return "Tome";
+    }
 
-        footer.add(Component.empty());
+    @Override
+    protected String getItemName(TomeInfo itemInfo) {
+        return itemInfo.name();
+    }
 
-        // tier & rerolls
-        GearTier gearTier = tomeInfo.tier();
-        MutableComponent itemTypeName = showItemType ? Component.literal("Tome") : Component.literal("Raid Reward");
-        MutableComponent tier = Component.literal(gearTier.getName())
-                .withStyle(gearTier.getChatFormatting())
-                .append(" ")
-                .append(itemTypeName);
-        if (tomeInstance != null && tomeInstance.rerolls() > 1) {
-            tier.append(" [" + tomeInstance.rerolls() + "]");
-        }
-        footer.add(tier);
+    @Override
+    protected GearTier getTier(TomeInfo itemInfo) {
+        return itemInfo.tier();
+    }
 
-        // restrictions (untradable, quest item)
-        if (tomeInfo.metaInfo().restrictions() != GearRestrictions.NONE) {
-            footer.add(Component.literal(StringUtils.capitalizeFirst(
-                            tomeInfo.metaInfo().restrictions().getDescription()))
-                    .withStyle(ChatFormatting.RED));
-        }
+    @Override
+    protected GearRestrictions getRestrictions(TomeInfo itemInfo) {
+        return itemInfo.metaInfo().restrictions();
+    }
 
-        return footer;
+    @Override
+    protected int getLevelRequirement(TomeInfo itemInfo) {
+        return itemInfo.requirements().level();
+    }
+
+    @Override
+    protected boolean isPerfect(TomeInstance itemInstance) {
+        return itemInstance.isPerfect();
+    }
+
+    @Override
+    protected boolean isDefective(TomeInstance itemInstance) {
+        return itemInstance.isDefective();
+    }
+
+    @Override
+    protected boolean hasOverallValue(TomeInstance itemInstance) {
+        return itemInstance.hasOverallValue();
+    }
+
+    @Override
+    protected float getOverallPercentage(TomeInstance itemInstance) {
+        return itemInstance.getOverallPercentage();
     }
 }

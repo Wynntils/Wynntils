@@ -106,7 +106,7 @@ public final class GearModel extends Model {
                     result.setInstance());
         }
 
-        return new GearItem(gearInfo, gearInstance, result.currentPage());
+        return new GearItem(gearInfo, gearInstance, result.currentPage(), result.shinyStat());
     }
 
     public CraftedGearItem parseCraftedGearItem(String name, ItemStack itemStack) {
@@ -145,7 +145,7 @@ public final class GearModel extends Model {
                 result.powderSlots(),
                 result.allRequirementsMet(),
                 result.durability(),
-                0);
+                result.currentPage());
     }
 
     public UnknownGearItem parseUnknownGearItem(
