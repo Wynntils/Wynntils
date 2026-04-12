@@ -23,10 +23,8 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.OptionalBoolean;
 import java.util.Locale;
 import java.util.Map;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -68,32 +66,17 @@ public class TelemetryFeature extends Feature {
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
         if (event.getNewState() != WorldState.WORLD) return;
+        if (!event.isFirstJoinWorld()) return;
         if (crashReports.get() != OptionalBoolean.NULL) return;
         if (!Services.LaunchCounter.hasCompletedLaunches(TELEMETRY_PROMPT_DELAY_LAUNCHES)) return;
 
-        MutableComponent component = Component.literal("Wynntils Telemetry\n").withStyle(ChatFormatting.AQUA);
-        component.append(Component.literal("""
-                        Wynntils can send telemetry data when a component fails.
-                        This data does not contain any personal information,
-                        but is helpful for developers for fixing bugs in Wynntils.
-                        """).withStyle(ChatFormatting.GRAY));
+        displayToast(
+                Component.literal(getTranslatedName()),
+                Component.literal(
+                        "Anonymous crash reports help fix bugs. No personal info is sent. Set Telemetry > Crash Reports in Wynntils settings."));
+    }
 
-        component.append(Component.literal("Click here")
-                .withStyle(ChatFormatting.GREEN)
-                .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(style -> style.withClickEvent(
-                        new ClickEvent.RunCommand("/wynntils config set Telemetry crashReports true"))));
-        component.append(
-                Component.literal(" to accept crash report telemetry\n").withStyle(ChatFormatting.GREEN));
-
-        component.append(Component.literal("Click here")
-                .withStyle(ChatFormatting.RED)
-                .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(style -> style.withClickEvent(
-                        new ClickEvent.RunCommand("/wynntils config set Telemetry crashReports false"))));
-        component.append(
-                Component.literal(" to opt out of crash report telemetry\n").withStyle(ChatFormatting.RED));
-
-        McUtils.sendMessageToClient(component);
+    private void displayToast(Component title, Component message) {
+        McUtils.mc().getToastManager().addToast(new SystemToast(new SystemToast.SystemToastId(10000L), title, message));
     }
 }
