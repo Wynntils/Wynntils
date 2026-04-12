@@ -102,7 +102,7 @@ public abstract class TooltipBuilder {
 
         if (!source.isEmpty()) {
             tooltip.add(
-                    1,
+                    0,
                     Component.literal(source)
                             .withStyle(ChatFormatting.DARK_GRAY)
                             .withStyle(ChatFormatting.ITALIC));

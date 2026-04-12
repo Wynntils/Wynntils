@@ -34,7 +34,6 @@ public final class GearTitleComponent {
         List<Component> header = new ArrayList<>();
         ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
         String setName = gearInfo.setInfo().map(SetInfo::name).orElse("");
-
         header.add(Component.empty());
         header.add(buildNameLine(gearInfo, gearInstance, hideUnidentified, feature));
 
@@ -74,24 +73,7 @@ public final class GearTitleComponent {
 
         List<Element> itemElements = collectItemElements(gearInfo);
         if (!setName.isBlank() || !itemElements.isEmpty()) {
-            MutableComponent tagsLine = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
-
-            if (!setName.isBlank()) {
-                tagsLine.append(
-                        BannerBoxFont.buildMessage(setName + " set", secondaryTierColor, CommonColors.BLACK, ""));
-            }
-
-            if (!itemElements.isEmpty()) {
-                if (!setName.isBlank()) {
-                    tagsLine.append(Component.literal("\uDB00\uDC01")
-                            .withStyle(
-                                    com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent
-                                            .SPACING_STYLE));
-                }
-                tagsLine.append(buildElementStrip(itemElements, secondaryTierColor));
-            }
-
-            header.add(tagsLine);
+            header.add(buildTagsLine(setName, itemElements, secondaryTierColor));
         }
 
         header.add(Component.empty());
@@ -202,8 +184,13 @@ public final class GearTitleComponent {
 
     private static List<Element> collectItemElements(GearInfo gearInfo) {
         Set<Element> seenElements = new LinkedHashSet<>();
+
         for (Pair<DamageType, RangedValue> damage : gearInfo.fixedStats().damages()) {
             damage.a().getElement().ifPresent(seenElements::add);
+        }
+
+        for (Pair<Element, Integer> defence : gearInfo.fixedStats().defences()) {
+            seenElements.add(defence.a());
         }
 
         return seenElements.stream()
@@ -211,25 +198,55 @@ public final class GearTitleComponent {
                 .toList();
     }
 
-    private static MutableComponent buildElementStrip(List<Element> elements, CustomColor dividerColor) {
-        MutableComponent strip = Component.literal("\uDB00\uDC26")
+    private static MutableComponent buildTagsLine(String setName, List<Element> elements, CustomColor tierColor) {
+        MutableComponent line = Component.empty().withStyle(GearTooltipSupport.WYNNCRAFT_WHITE_STYLE);
+        boolean hasSetName = !setName.isBlank();
+
+        if (hasSetName) {
+            line.append(Component.literal("\uDB00\uDC26").withStyle(IdentifiableTooltipComponent.SPACING_STYLE));
+            line.append(BannerBoxFont.buildMessage(setName + " set", tierColor, CommonColors.BLACK, ""));
+        }
+
+        if (elements.isEmpty()) {
+            return line;
+        }
+
+        if (hasSetName) {
+            line.append(Component.literal(" "));
+            line.append(buildElementStrip(elements, tierColor, false));
+            return line;
+        }
+
+        if (elements.size() == 1) {
+            line.append(buildSingleElementLine(elements.getFirst(), tierColor));
+            return line;
+        }
+
+        line.append(buildElementStrip(elements, tierColor, true));
+        return line;
+    }
+
+    private static MutableComponent buildSingleElementLine(Element element, CustomColor tierColor) {
+        MutableComponent line = buildElementStrip(List.of(element), tierColor, true);
+        line.append(Component.literal("\uDAFF\uDFFF"));
+        line.append(BannerBoxFont.buildMessage(element.getDisplayName(), tierColor, CommonColors.BLACK, ""));
+        return line;
+    }
+
+    private static MutableComponent buildElementStrip(
+            List<Element> elements, CustomColor tierColor, boolean includeLeadingPadding) {
+        MutableComponent strip = Component.empty()
                 .withStyle(Style.EMPTY
-                        .withFont(
-                                com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent
-                                        .WYNNCRAFT_LANGUAGE_FONT)
-                        .withColor(dividerColor.asInt())
+                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
+                        .withColor(tierColor.asInt())
                         .withShadowColor(0xFFFFFF));
 
-        for (int i = 0; i < elements.size(); i++) {
-            char elementGlyph = (char) ('\uE006' + elements.get(i).getEncodingId());
-            String glyph = String.valueOf(elementGlyph);
+        if (includeLeadingPadding) {
+            strip.append(Component.literal("\uDB00\uDC26"));
+        }
 
-            strip.append(
-                    Component.literal(glyph).withStyle(Style.EMPTY.withFont(GearTooltipSupport.TOOLTIP_BANNER_FONT)));
-            strip.append(Component.empty()
-                    .withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE))
-                    .append(Component.literal("\uDAFF\uDFF6" + glyph)
-                            .withStyle(Style.EMPTY.withFont(GearTooltipSupport.TOOLTIP_BANNER_FONT))));
+        for (int i = 0; i < elements.size(); i++) {
+            strip.append(buildElementIcon(elements.get(i)));
 
             if (i < elements.size() - 1) {
                 strip.append(Component.literal("\uDAFF\uDFFF"));
@@ -237,5 +254,36 @@ public final class GearTitleComponent {
         }
 
         return strip;
+    }
+
+    private static MutableComponent buildElementIcon(Element element) {
+        MutableComponent icon = Component.empty();
+        icon.append(Component.literal(getElementBannerGlyph(element))
+                .withStyle(Style.EMPTY.withFont(GearTooltipSupport.TOOLTIP_BANNER_FONT)));
+        icon.append(Component.empty()
+                .withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE))
+                .append(Component.literal("\uDAFF\uDFF6" + getElementBannerOverlayGlyph(element))
+                        .withStyle(Style.EMPTY.withFont(GearTooltipSupport.TOOLTIP_BANNER_FONT))));
+        return icon;
+    }
+
+    private static String getElementBannerGlyph(Element element) {
+        return switch (element) {
+            case EARTH -> "\uE006";
+            case THUNDER -> "\uE007";
+            case WATER -> "\uE008";
+            case FIRE -> "\uE009";
+            case AIR -> "\uE00A";
+        };
+    }
+
+    private static String getElementBannerOverlayGlyph(Element element) {
+        return switch (element) {
+            case EARTH -> "\uF006";
+            case THUNDER -> "\uF007";
+            case WATER -> "\uF008";
+            case FIRE -> "\uF009";
+            case AIR -> "\uF00A";
+        };
     }
 }

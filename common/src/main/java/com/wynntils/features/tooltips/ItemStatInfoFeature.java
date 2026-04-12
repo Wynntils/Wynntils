@@ -185,8 +185,7 @@ public class ItemStatInfoFeature extends Feature {
                 Models.Item.asWynnItemProperty(event.getItemStack(), IdentifiableItemProperty.class);
         if (itemInfoOpt.isEmpty()) return;
 
-        IdentifiableItemProperty itemInfo =
-                TooltipUtils.resolveTooltipItemProperty(event.getItemStack(), itemInfoOpt.get());
+        IdentifiableItemProperty itemInfo = itemInfoOpt.get();
         if (shouldKeepOriginalGearTooltip(itemInfo)) {
             return;
         }

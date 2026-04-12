@@ -18,7 +18,6 @@ import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
-import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.PagedItemProperty;
@@ -162,13 +161,12 @@ public final class TooltipUtils {
     private static List<Component> getIdentifiableItemTooltip(
             ItemStack itemStack, WynnItem wynnItem, IdentifiableItemProperty itemInfo) {
         ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
-        IdentifiableItemProperty effectiveItemInfo = resolveTooltipItemProperty(itemStack, itemInfo);
 
-        if (shouldKeepOriginalGearTooltip(itemStack, effectiveItemInfo)) {
+        if (shouldKeepOriginalGearTooltip(itemStack, itemInfo)) {
             return List.of();
         }
 
-        TooltipBuilder builder = getIdentifiableTooltipBuilder(itemStack, wynnItem, effectiveItemInfo);
+        TooltipBuilder builder = getIdentifiableTooltipBuilder(itemStack, wynnItem, itemInfo);
         if (builder == null) return null;
 
         TooltipIdentificationDecorator identificationDecorator =
@@ -192,20 +190,24 @@ public final class TooltipUtils {
 
     private static TooltipBuilder getIdentifiableTooltipBuilder(
             ItemStack itemStack, WynnItem wynnItem, IdentifiableItemProperty itemInfo) {
-        if (itemInfo.getItemInfo() instanceof GearInfo) {
-            String source = itemStack instanceof FakeItemStack fakeItemStack ? fakeItemStack.getSource() : "";
-            if (itemStack instanceof FakeItemStack) {
-                return Handlers.Tooltip.buildNew(itemInfo, false, true, source);
+        if (itemStack instanceof FakeItemStack fakeItemStack) {
+            if (fakeItemStack.shouldUseBackingTooltip()) {
+                return Handlers.Tooltip.buildFromItemStack(
+                        fakeItemStack.getBackingItemStack(), itemInfo, false, true, fakeItemStack.getSource());
             }
 
-            return Handlers.Tooltip.buildFromItemStack(itemStack, itemInfo, false, true, source);
-        }
+            if (itemInfo.getItemInfo() instanceof GearInfo) {
+                return Handlers.Tooltip.buildNew(itemInfo, false, true, fakeItemStack.getSource());
+            }
 
-        if (itemStack instanceof FakeItemStack fakeItemStack) {
             return wynnItem.getData()
                     .getOrCalculate(
                             WynnItemData.TOOLTIP_KEY,
                             () -> Handlers.Tooltip.buildNew(itemInfo, false, true, fakeItemStack.getSource()));
+        }
+
+        if (itemInfo.getItemInfo() instanceof GearInfo) {
+            return Handlers.Tooltip.buildFromItemStack(itemStack, itemInfo, false, true, "");
         }
 
         if (itemInfo instanceof PagedItemProperty) {
@@ -224,12 +226,7 @@ public final class TooltipUtils {
             return List.of();
         }
 
-        TooltipBuilder builder = craftedItemProperty instanceof PagedItemProperty
-                ? Handlers.Tooltip.fromParsedItemStack(itemStack, craftedItemProperty)
-                : wynnItem.getData()
-                        .getOrCalculate(
-                                WynnItemData.TOOLTIP_KEY,
-                                () -> Handlers.Tooltip.fromParsedItemStack(itemStack, craftedItemProperty));
+        TooltipBuilder builder = getCraftedTooltipBuilder(itemStack, wynnItem, craftedItemProperty);
         if (builder == null) return null;
         ItemStatInfoFeature isif = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
 
@@ -244,17 +241,23 @@ public final class TooltipUtils {
                 Models.Character.getClassType(), currentIdentificationStyle, null, isif.itemWeights.get(), null));
     }
 
-    public static IdentifiableItemProperty resolveTooltipItemProperty(
-            ItemStack itemStack, IdentifiableItemProperty itemInfo) {
-        if (itemStack instanceof FakeItemStack) {
-            return itemInfo;
+    private static TooltipBuilder getCraftedTooltipBuilder(
+            ItemStack itemStack, WynnItem wynnItem, CraftedItemProperty craftedItemProperty) {
+        if (itemStack instanceof FakeItemStack fakeItemStack) {
+            return wynnItem.getData()
+                    .getOrCalculate(
+                            WynnItemData.TOOLTIP_KEY,
+                            () -> Handlers.Tooltip.buildNew(craftedItemProperty, fakeItemStack.getSource()));
         }
 
-        if (!(itemInfo instanceof GearItem gearItem)) {
-            return itemInfo;
+        if (craftedItemProperty instanceof PagedItemProperty) {
+            return Handlers.Tooltip.fromParsedItemStack(itemStack, craftedItemProperty);
         }
 
-        return Models.Gear.parseInstance(gearItem.getItemInfo(), itemStack, gearItem.isUnidentified());
+        return wynnItem.getData()
+                .getOrCalculate(
+                        WynnItemData.TOOLTIP_KEY,
+                        () -> Handlers.Tooltip.fromParsedItemStack(itemStack, craftedItemProperty));
     }
 
     private static boolean shouldKeepOriginalGearTooltip(ItemStack itemStack, IdentifiableItemProperty itemInfo) {
