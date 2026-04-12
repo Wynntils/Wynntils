@@ -7,6 +7,7 @@ package com.wynntils.features.wynntils;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -27,6 +28,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.WYNNTILS)
 public class DataCrowdSourcingFeature extends Feature {
+    private static final int CROWD_SOURCING_PROMPT_DELAY_LAUNCHES = 3;
+
     @Persisted
     public final HiddenConfig<Map<CrowdSourcedDataType, OptionalBoolean>> crowdSourcedDataTypeEnabledMap =
             new HiddenConfig<>(new TreeMap<>());
@@ -38,6 +41,7 @@ public class DataCrowdSourcingFeature extends Feature {
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
         if (!event.isFirstJoinWorld()) return;
+        if (!Services.LaunchCounter.hasCompletedLaunches(CROWD_SOURCING_PROMPT_DELAY_LAUNCHES)) return;
 
         Map<CrowdSourcedDataType, OptionalBoolean> enabledMap = crowdSourcedDataTypeEnabledMap.get();
         List<CrowdSourcedDataType> nonConfirmedDataTypes = Arrays.stream(CrowdSourcedDataType.values())

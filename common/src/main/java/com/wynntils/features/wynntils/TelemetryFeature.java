@@ -6,6 +6,7 @@ package com.wynntils.features.wynntils;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
@@ -31,6 +32,8 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 @ConfigCategory(Category.WYNNTILS)
 public class TelemetryFeature extends Feature {
+    private static final int TELEMETRY_PROMPT_DELAY_LAUNCHES = 3;
+
     @Persisted
     private final Config<OptionalBoolean> crashReports = new Config<>(OptionalBoolean.NULL);
 
@@ -66,6 +69,7 @@ public class TelemetryFeature extends Feature {
     public void onWorldChange(WorldStateEvent event) {
         if (event.getNewState() != WorldState.WORLD) return;
         if (crashReports.get() != OptionalBoolean.NULL) return;
+        if (!Services.LaunchCounter.hasCompletedLaunches(TELEMETRY_PROMPT_DELAY_LAUNCHES)) return;
 
         MutableComponent component = Component.literal("Wynntils Telemetry\n").withStyle(ChatFormatting.AQUA);
         component.append(Component.literal("""
