@@ -12,7 +12,6 @@ import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipCompon
 import com.wynntils.handlers.tooltip.impl.identifiable.TooltipMarkers;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
@@ -99,14 +98,7 @@ public final class CraftedTooltipIdentifications {
             return null;
         }
 
-        if (craftedItem instanceof CraftedGearItem) {
-            return buildGearStyledLine(craftedItem, style, statActualValue, currentClass, originalRollWheelSuffixes);
-        }
-
-        MutableComponent line =
-                buildIdentifiedLine(craftedItem, style, statActualValue, currentClass, originalRollWheelSuffixes);
-
-        return line;
+        return buildGearStyledLine(craftedItem, style, statActualValue, currentClass, originalRollWheelSuffixes);
     }
 
     private static MutableComponent buildGearStyledLine(
@@ -145,41 +137,6 @@ public final class CraftedTooltipIdentifications {
 
         MutableComponent line = Component.empty().append(left).append(right);
         line.setStyle(line.getStyle().withInsertion(TooltipMarkers.ALIGN_RIGHT.token()));
-        return line;
-    }
-
-    private static MutableComponent buildIdentifiedLine(
-            CraftedItemProperty craftedItem,
-            TooltipStyle style,
-            StatActualValue actualValue,
-            ClassType currentClass,
-            Map<StatType, Component> originalRollWheelSuffixes) {
-        StatType statType = actualValue.statType();
-        int value = actualValue.value();
-        StatPossibleValues possibleValues = findPossibleValues(craftedItem, statType);
-
-        int valueToShow = statType.calculateAsInverted() ? -value : value;
-        boolean hasPositiveEffect = valueToShow > 0 ^ statType.displayAsInverted();
-
-        MutableComponent line = Component.literal(StringUtils.toSignedString(valueToShow)
-                        + statType.getUnit().getDisplayName())
-                .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
-                        .withColor(hasPositiveEffect ? ChatFormatting.GREEN : ChatFormatting.RED));
-
-        MutableComponent rollSuffix =
-                buildCraftedRollSuffix(actualValue, possibleValues, style, originalRollWheelSuffixes.get(statType));
-        if (rollSuffix != null) {
-            line.append(rollSuffix);
-        }
-
-        line.append(Component.literal(" "
-                        + Models.Stat.getDisplayName(
-                                statType, craftedItem.getRequiredClass(), currentClass, RangedValue.NONE))
-                .withStyle(Style.EMPTY
-                        .withFont(IdentifiableTooltipComponent.WYNNCRAFT_LANGUAGE_FONT)
-                        .withColor(ChatFormatting.GRAY)));
-
         return line;
     }
 

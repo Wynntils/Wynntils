@@ -323,11 +323,21 @@ public final class GearParsedTooltipComponent {
                 continue;
             }
 
-            int footerDividerLine = findLastDividerBefore(tooltipLines, i + 1);
+            int footerDividerLine = findLastDividerInRange(tooltipLines, lastDividerLine + 1, i);
             return footerDividerLine >= 0 ? footerDividerLine : i;
         }
 
         return pageLineIndex;
+    }
+
+    private static int findLastDividerInRange(List<Component> tooltipLines, int startInclusive, int endExclusive) {
+        for (int i = endExclusive - 1; i >= startInclusive; i--) {
+            if (containsFont(StyledText.fromComponent(tooltipLines.get(i)), DIVIDER_FONT)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     private static boolean isRequirementRelatedLine(Component line) {

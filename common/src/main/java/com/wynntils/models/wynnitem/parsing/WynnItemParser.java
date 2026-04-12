@@ -23,6 +23,7 @@ import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.wynnitem.type.ConsumableEffect;
 import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.models.wynnitem.type.NamedItemEffect;
 import com.wynntils.utils.colors.CommonColors;
@@ -56,6 +57,15 @@ public final class WynnItemParser {
 
     private static final Pattern DURABILITY_PATTERN =
             Pattern.compile("§f\uDB00\uDC02§8\uE023\uDAFF\uDFF7§#aed4d4ff.§7 Durability (\\d+)\\/(\\d+)");
+
+    private static final Pattern CONSUMABLE_CHARGES_PATTERN =
+            Pattern.compile(".*?(?<current>\\d+)\\/(?<max>\\d+) Charges$");
+
+    private static final Pattern CONSUMABLE_DURATION_PATTERN =
+            Pattern.compile(".*?(?<duration>(?:(?:\\d+h )?(?:\\d+m )?\\d+s)) Duration$");
+
+    private static final Pattern DISPLAY_DURATION_PATTERN =
+            Pattern.compile("(?:(?<hours>\\d+)h )?(?:(?<minutes>\\d+)m )?(?<seconds>\\d+)s");
 
     // Test in WynnItemParser_ITEM_ATTACK_SPEED_PATTERN
     private static final Pattern ITEM_ATTACK_SPEED_PATTERN =
@@ -146,6 +156,8 @@ public final class WynnItemParser {
         String questReq = null;
         int rerolls = 0;
         CappedValue durability = CappedValue.EMPTY;
+        CappedValue uses = CappedValue.EMPTY;
+        int durationSeconds = 0;
         GearTier tier = null;
         String itemType = extractFrameSpriteCode(itemStack);
         Optional<ShinyStat> shinyStat = Optional.empty();
@@ -214,6 +226,26 @@ public final class WynnItemParser {
                 if (durabilityMatcher.matches()) {
                     durability = new CappedValue(
                             Integer.parseInt(durabilityMatcher.group(1)), Integer.parseInt(durabilityMatcher.group(2)));
+                    continue;
+                }
+
+                String plainText = normalizedCoded.getStringWithoutFormatting().trim();
+
+                Matcher chargesMatcher = CONSUMABLE_CHARGES_PATTERN.matcher(plainText);
+                if (chargesMatcher.matches()) {
+                    uses = new CappedValue(
+                            Integer.parseInt(chargesMatcher.group("current")),
+                            Integer.parseInt(chargesMatcher.group("max")));
+                    continue;
+                }
+
+                Matcher durationMatcher = CONSUMABLE_DURATION_PATTERN.matcher(plainText);
+                if (durationMatcher.matches()) {
+                    durationSeconds = parseDisplayedDuration(durationMatcher.group("duration"));
+                    if (durationSeconds > 0
+                            && namedEffects.stream().noneMatch(effect -> effect.type() == ConsumableEffect.DURATION)) {
+                        namedEffects.add(new NamedItemEffect(ConsumableEffect.DURATION, durationSeconds));
+                    }
                     continue;
                 }
 
@@ -403,10 +435,24 @@ public final class WynnItemParser {
                 powderSlots,
                 rerolls,
                 durability,
+                uses,
+                durationSeconds,
                 shinyStat,
                 allRequirementsMet,
                 Optional.of(new SetInstance(setInfo, activeItems, setWynnCount, wynnBonuses)),
                 currentPage);
+    }
+
+    private static int parseDisplayedDuration(String durationText) {
+        Matcher matcher = DISPLAY_DURATION_PATTERN.matcher(durationText);
+        if (!matcher.matches()) {
+            return 0;
+        }
+
+        int hours = matcher.group("hours") != null ? Integer.parseInt(matcher.group("hours")) : 0;
+        int minutes = matcher.group("minutes") != null ? Integer.parseInt(matcher.group("minutes")) : 0;
+        int seconds = Integer.parseInt(matcher.group("seconds"));
+        return hours * 3600 + minutes * 60 + seconds;
     }
 
     public static int parseProfessionTier(ItemStack itemStack) {
