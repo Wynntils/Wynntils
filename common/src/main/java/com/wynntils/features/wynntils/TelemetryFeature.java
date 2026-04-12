@@ -6,7 +6,6 @@ package com.wynntils.features.wynntils;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
@@ -16,6 +15,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.JsonUtils;
@@ -35,8 +35,18 @@ public class TelemetryFeature extends Feature {
     @Persisted
     private final Config<OptionalBoolean> crashReports = new Config<>(OptionalBoolean.NULL);
 
+    @Persisted
+    private final Storage<Integer> launchCount = new Storage<>(0);
+
     public TelemetryFeature() {
         super(ProfileDefault.onlyDefault());
+    }
+
+    @Override
+    public void onStorageLoad(Storage<?> storage) {
+        if (storage != launchCount) return;
+
+        launchCount.store(launchCount.get() + 1);
     }
 
     @SubscribeEvent
@@ -65,11 +75,12 @@ public class TelemetryFeature extends Feature {
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
+        System.out.println("toast evt)");
         if (event.getNewState() != WorldState.WORLD) return;
-        if (!event.isFirstJoinWorld()) return;
         if (crashReports.get() != OptionalBoolean.NULL) return;
-        if (!Services.LaunchCounter.hasCompletedLaunches(TELEMETRY_PROMPT_DELAY_LAUNCHES)) return;
+        if (launchCount.get() <= TELEMETRY_PROMPT_DELAY_LAUNCHES) return;
 
+        System.out.println("trying to make toast");
         displayToast(
                 Component.literal(getTranslatedName()),
                 Component.literal(
