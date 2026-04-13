@@ -4,6 +4,8 @@
  */
 package com.wynntils.features.wynntils;
 
+import static com.wynntils.utils.mc.McUtils.displayToast;
+
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
@@ -15,27 +17,36 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.JsonUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.OptionalBoolean;
 import java.util.Locale;
 import java.util.Map;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 @ConfigCategory(Category.WYNNTILS)
 public class TelemetryFeature extends Feature {
+    private static final int TELEMETRY_PROMPT_DELAY_LAUNCHES = 3;
+
     @Persisted
     private final Config<OptionalBoolean> crashReports = new Config<>(OptionalBoolean.NULL);
 
+    @Persisted
+    private final Storage<Integer> launchCount = new Storage<>(0);
+
     public TelemetryFeature() {
         super(ProfileDefault.onlyDefault());
+    }
+
+    @Override
+    public void onStorageLoad(Storage<?> storage) {
+        if (storage != launchCount) return;
+
+        launchCount.store(launchCount.get() + 1);
     }
 
     @SubscribeEvent
@@ -66,30 +77,11 @@ public class TelemetryFeature extends Feature {
     public void onWorldChange(WorldStateEvent event) {
         if (event.getNewState() != WorldState.WORLD) return;
         if (crashReports.get() != OptionalBoolean.NULL) return;
+        if (launchCount.get() <= TELEMETRY_PROMPT_DELAY_LAUNCHES) return;
 
-        MutableComponent component = Component.literal("Wynntils Telemetry\n").withStyle(ChatFormatting.AQUA);
-        component.append(Component.literal("""
-                        Wynntils can send telemetry data when a component fails.
-                        This data does not contain any personal information,
-                        but is helpful for developers for fixing bugs in Wynntils.
-                        """).withStyle(ChatFormatting.GRAY));
-
-        component.append(Component.literal("Click here")
-                .withStyle(ChatFormatting.GREEN)
-                .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(style -> style.withClickEvent(
-                        new ClickEvent.RunCommand("/wynntils config set Telemetry crashReports true"))));
-        component.append(
-                Component.literal(" to accept crash report telemetry\n").withStyle(ChatFormatting.GREEN));
-
-        component.append(Component.literal("Click here")
-                .withStyle(ChatFormatting.RED)
-                .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(style -> style.withClickEvent(
-                        new ClickEvent.RunCommand("/wynntils config set Telemetry crashReports false"))));
-        component.append(
-                Component.literal(" to opt out of crash report telemetry\n").withStyle(ChatFormatting.RED));
-
-        McUtils.sendMessageToClient(component);
+        displayToast(
+                Component.literal(this.getTranslatedName()),
+                Component.translatable("feature.wynntils.telemetry.toastMessage"),
+                15000L);
     }
 }
