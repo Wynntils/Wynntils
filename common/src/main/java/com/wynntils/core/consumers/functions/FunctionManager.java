@@ -628,6 +628,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
         registerFunction(new InventoryFunctions.MaterialCountFunction());
         registerFunction(new InventoryFunctions.MoneyFunction());
+        registerFunction(new InventoryFunctions.TeleportScrollChargesFunction());
+        registerFunction(new InventoryFunctions.TeleportScrollRechargeTimerFunction());
 
         registerFunction(new LootrunFunctions.ChestOpenedFunction());
         registerFunction(new LootrunFunctions.ChestsOpenedThisSessionFunction());
