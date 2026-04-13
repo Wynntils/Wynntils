@@ -4,6 +4,8 @@
  */
 package com.wynntils.features.wynntils;
 
+import static com.wynntils.utils.mc.McUtils.displayToast;
+
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
@@ -19,11 +21,9 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.JsonUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.OptionalBoolean;
 import java.util.Locale;
 import java.util.Map;
-import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -75,19 +75,14 @@ public class TelemetryFeature extends Feature {
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
-        System.out.println("toast evt)");
         if (event.getNewState() != WorldState.WORLD) return;
         if (crashReports.get() != OptionalBoolean.NULL) return;
         if (launchCount.get() <= TELEMETRY_PROMPT_DELAY_LAUNCHES) return;
 
-        System.out.println("trying to make toast");
         displayToast(
                 Component.literal(getTranslatedName()),
                 Component.literal(
-                        "Anonymous crash reports help fix bugs. No personal info is sent. Set Telemetry > Crash Reports in Wynntils settings."));
-    }
-
-    private void displayToast(Component title, Component message) {
-        McUtils.mc().getToastManager().addToast(new SystemToast(new SystemToast.SystemToastId(10000L), title, message));
+                        "Anonymous crash reports help fix bugs. No personal info is sent. Set Telemetry > Crash Reports in Wynntils settings."),
+                15000L);
     }
 }
