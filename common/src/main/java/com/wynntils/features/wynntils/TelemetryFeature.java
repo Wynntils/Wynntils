@@ -80,9 +80,8 @@ public class TelemetryFeature extends Feature {
         if (launchCount.get() <= TELEMETRY_PROMPT_DELAY_LAUNCHES) return;
 
         displayToast(
-                Component.literal(getTranslatedName()),
-                Component.literal(
-                        "Anonymous crash reports help fix bugs. No personal info is sent. Set Telemetry > Crash Reports in Wynntils settings."),
+                Component.literal(this.getTranslatedName()),
+                Component.translatable("feature.wynntils.telemetry.toastMessage"),
                 15000L);
     }
 }
