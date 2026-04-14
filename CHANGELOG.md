@@ -1,28 +1,27 @@
-Game Bars
-- Removed distortion bar overlay
+Item Statistics Info
+- Re-enabled feature by default in the default, lite and minimal profiles
+- Updated displays to work with new item tooltips
+- Obfuscation Chance configs removed
+- Show Max Values config replaced with Show Roll Wheel (for crafteds)
+- New config Overall Percentage on Perfect/Defective, should the overall % be displayed alongside a Perfect/Defective marker, default enabled
 
-Mage Distortion Overlay
-- New overlay, shows the distortion count
-- Enabled in the default profile
-
-Mounts
-- New config Switch to Third Person on Mount, will put you into 3rd person view upon riding mount and revert to previous view after dismount, default disabled
+Item Text Overlay
+- New config Teleport Scroll Color By Charges, changes the text color based on charges remaining
+- Some locations now use a 3 letter abbreviation
 
 Functions
-- Character Functions
-  - `capped_distortion` removed
-  - `current_distortion` added, returns an Integer of the current distortion count
-- Color Functions
-  - `wynncraft_shader` returns the color for the given Wynncraft shader
-    - `shaderName` required String argument, the name of the shader to get, view the description to see options
-    - Going forward this function will be used instead of adding new functions for each shader
+- Inventory Functions
+  - `teleport_scroll_charges` or `tp_scroll_charges` returns the number of scroll charges you have remaining. Returns -1 if no scroll is present.
+  - `teleport_scroll_recharge_timer` or `tp_scroll_timer` returns seconds until the next teleport scroll charge. Returns -1 if no timer is active.
 
 Fixes
-- Trade market quick search now removes unicode padding
-- Fixed distortion count tracking
-- Item name functions now remove unicode padding
-- Equipped armor/accessory name functions now correctly return "NONE" when no item present
-- Fix custom content book items not updating
-- Added missing emerald icon to territory management map view
-- Fix death whistle quest being counted as a mount
-- Fixed bank searching not continuing automatically
+- Distortion count is now reset on death or /class
+- Fixed shaman mask and totem tracking
+- T4 amps and The Wartorn Palace crafter bags are now handled
+- Fixed rune parsing
+- Fixed level up chat filter
+- Fixed mana bar overlay removing background from final NPC dialogue choice
+- Possibly fixed Azael portrait being removed if health bar overlay enabled
+- Fixed character ID and other on join stats not being parsed sometimes
+- Fixed ping function not always working
+- Fixed various issues related to gear parsing
