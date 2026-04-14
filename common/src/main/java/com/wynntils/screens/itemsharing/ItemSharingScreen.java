@@ -161,7 +161,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
         WynnItem renderedItem = errorOrDecodedByteBuffer.getValue();
 
-        previewItemStack = new FakeItemStack(renderedItem, "From chat");
+        previewItemStack = new FakeItemStack(renderedItem, itemStack, "From chat", true);
 
         // Find the width of the tooltip
         int tooltipWidth = LoreUtils.getTooltipLines(previewItemStack).stream()

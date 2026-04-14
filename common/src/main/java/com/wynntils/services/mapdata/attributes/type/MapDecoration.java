@@ -15,10 +15,10 @@ public interface MapDecoration {
         }
 
         @Override
-        public void render(GuiGraphics guiGraphics, boolean hovered, float zoomLevel) {}
+        public void render(GuiGraphics guiGraphics, boolean hovered, boolean fullscreenMap, float zoomLevel) {}
     };
 
     boolean isVisible();
 
-    void render(GuiGraphics guiGraphics, boolean hovered, float zoomLevel);
+    void render(GuiGraphics guiGraphics, boolean hovered, boolean fullscreenMap, float zoomLevel);
 }

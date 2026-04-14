@@ -1,16 +1,19 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.mapdata.providers.json;
 
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
+import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
 
+// TODO: This class is to be removed
+@Deprecated
 public class JsonMapAttributes implements MapAttributes {
     private final String label;
     private final String icon;
@@ -91,6 +94,42 @@ public class JsonMapAttributes implements MapAttributes {
     @Override
     public Optional<MapDecoration> getIconDecoration() {
         // json files can never provide icon decorations; those are only for dynamic features
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Boolean> getHasMarker() {
+        // json files cannot provide marker information
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<MapMarkerOptions> getMarkerOptions() {
+        // json files cannot provide marker options
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Float> getBorderWidth() {
+        // json files cannot provide border width
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<CustomColor> getBorderColor() {
+        // json files cannot provide border color
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<CustomColor> getFillColor() {
+        // json files cannot provide fill color
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<String> getDescription() {
+        // json files cannot provide descriptions
         return Optional.empty();
     }
 }

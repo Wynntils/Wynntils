@@ -26,7 +26,9 @@ import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
+import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
@@ -273,7 +275,7 @@ public class ChatItemFeature extends Feature {
             style = style.withColor(tierItemProperty.getGearTier().getChatFormatting());
         }
 
-        ItemStack itemStack = new FakeItemStack(wynnItem, "From chat");
+        ItemStack itemStack = buildChatHoverItemStack(wynnItem);
         style = style.withHoverEvent(new HoverEvent.ShowItem(itemStack));
 
         // Add the item name
@@ -285,6 +287,24 @@ public class ChatItemFeature extends Feature {
                 .toList());
 
         return parts;
+    }
+
+    private static ItemStack buildChatHoverItemStack(WynnItem wynnItem) {
+        if (wynnItem instanceof GearItem gearItem) {
+            return new FakeItemStack(gearItem, "From chat");
+        }
+
+        if (wynnItem instanceof CharmItem charmItem) {
+            return new FakeItemStack(
+                    charmItem, charmItem.getItemInfo().metaInfo().material().itemStack(), "From chat");
+        }
+
+        if (wynnItem instanceof TomeItem tomeItem) {
+            return new FakeItemStack(
+                    tomeItem, tomeItem.getItemInfo().metaInfo().material().itemStack(), "From chat");
+        }
+
+        return new FakeItemStack(wynnItem, "From chat");
     }
 
     private void makeChatPrompt(WynnItem wynnItem) {

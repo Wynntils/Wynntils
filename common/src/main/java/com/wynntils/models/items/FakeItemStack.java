@@ -24,8 +24,13 @@ public class FakeItemStack extends ItemStack {
     private final WynnItem wynnItem;
     private final ItemStack itemStack;
     private final String source;
+    private final boolean useBackingTooltip;
 
     public FakeItemStack(WynnItem wynnItem, ItemStack itemStack, String source) {
+        this(wynnItem, itemStack, source, false);
+    }
+
+    public FakeItemStack(WynnItem wynnItem, ItemStack itemStack, String source, boolean useBackingTooltip) {
         super(itemStack.getItem(), 1);
         this.applyComponents(itemStack.getComponentsPatch());
 
@@ -36,6 +41,7 @@ public class FakeItemStack extends ItemStack {
         this.wynnItem = wynnItem;
         this.itemStack = itemStack;
         this.source = source;
+        this.useBackingTooltip = useBackingTooltip;
     }
 
     public FakeItemStack(GearItem gearItem, String source) {
@@ -47,9 +53,21 @@ public class FakeItemStack extends ItemStack {
         this(wynnItem, new ItemStack(Items.STONE), source);
     }
 
+    public String getSource() {
+        return source;
+    }
+
+    public ItemStack getBackingItemStack() {
+        return itemStack;
+    }
+
+    public boolean shouldUseBackingTooltip() {
+        return useBackingTooltip;
+    }
+
     @Override
     public ItemStack copy() {
-        return new FakeItemStack(wynnItem, itemStack, source);
+        return new FakeItemStack(wynnItem, itemStack, source, useBackingTooltip);
     }
 
     @Override

@@ -366,6 +366,30 @@ public class InventoryFunctions {
         }
     }
 
+    public static class TeleportScrollChargesFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.TeleportScroll.getTeleportScrollCharges();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("tp_scroll_charges");
+        }
+    }
+
+    public static class TeleportScrollRechargeTimerFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.TeleportScroll.getTeleportScrollRechargeTimerSeconds();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("tp_scroll_timer");
+        }
+    }
+
     public static class ItemCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
