@@ -35,7 +35,7 @@ public class MessageFilterFeature extends Feature {
 
     private static final List<Pattern> LEVEL_UP = List.of(
             Pattern.compile("^§6.* is now (?:combat )?level .*(?: in §.*)?$"),
-            Pattern.compile("^§8\\[§7!§8\\] §7Congratulations to (§r)?.* for reaching (combat )?§flevel .*!$"));
+            Pattern.compile("^§8\\[§7!§8\\]§7 Congratulations to (§f)?.* for reaching (combat )?§flevel .*§7!$"));
 
     // Test in MessageFilterFeature_PARTY_FINDER
     private static final Pattern PARTY_FINDER = Pattern.compile(
