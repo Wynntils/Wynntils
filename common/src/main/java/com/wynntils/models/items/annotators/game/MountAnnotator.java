@@ -22,14 +22,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class MountAnnotator implements GameItemAnnotator {
-    private static final Pattern MOUNT_PATTERN =
-            Pattern.compile("([\\p{L}\\p{N}'\\- ]+)\\s+(?:Whistle|Flute|Ocarina)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern MOUNT_PATTERN = Pattern.compile(
+            "\uDAFC\uDC00([\\p{L}\\p{N}'\\- ]+)\\s+(?:Whistle|Flute|Ocarina)\uDAFC\uDC00", Pattern.CASE_INSENSITIVE);
     private static final Map<MountStat, Pattern> CAPPED_STAT_PATTERNS = Map.of(
             MountStat.ACCELERATION, Pattern.compile("\\bAcceleration\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.ALTITUDE, Pattern.compile("\\bAltitude\\b.*?(\\d+)/(\\d+)\\b"),
+            MountStat.JUMP_HEIGHT, Pattern.compile("\\bJump Height\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.ENERGY, Pattern.compile("\\bEnergy\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.HANDLING, Pattern.compile("\\bHandling\\b.*?(\\d+)/(\\d+)\\b"),
-            MountStat.POWERUP, Pattern.compile("\\bPowerup\\b.*?(\\d+)/(\\d+)\\b"),
+            MountStat.BOOST, Pattern.compile("\\bBoost\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.SPEED, Pattern.compile("\\bSpeed\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.TOUGHNESS, Pattern.compile("\\bToughness\\b.*?(\\d+)/(\\d+)\\b"),
             MountStat.TRAINING, Pattern.compile("\\bTraining\\b.*?(\\d+)/(\\d+)\\b"));
@@ -40,7 +41,7 @@ public final class MountAnnotator implements GameItemAnnotator {
         if (itemStack.getItem() != Items.POTION) return null;
 
         Matcher matcher = name.getMatcher(MOUNT_PATTERN);
-        if (!matcher.find()) return null;
+        if (!matcher.matches()) return null;
 
         List<StyledText> lore = LoreUtils.getLore(itemStack);
         List<String> plainLore =
@@ -54,10 +55,11 @@ public final class MountAnnotator implements GameItemAnnotator {
                 stats.value(MountStat.ENERGY),
                 stats.value(MountStat.ACCELERATION),
                 stats.value(MountStat.ALTITUDE),
+                stats.value(MountStat.JUMP_HEIGHT),
                 stats.value(MountStat.ENERGY),
                 stats.value(MountStat.HANDLING),
                 stats.potentialValue(),
-                stats.value(MountStat.POWERUP),
+                stats.value(MountStat.BOOST),
                 stats.value(MountStat.SPEED),
                 stats.value(MountStat.TOUGHNESS),
                 stats.value(MountStat.TRAINING));

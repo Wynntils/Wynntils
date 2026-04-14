@@ -14,6 +14,7 @@ import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.SetLocalPlayerVehicleEvent;
+import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.character.type.VehicleType;
@@ -25,6 +26,7 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,6 +64,8 @@ public final class CharacterModel extends Model {
     private String id = "-";
 
     private String previousScanId = "";
+    private boolean scanCharacterInfoPending;
+    private boolean scanCharacterInfoAlreadyScanned;
 
     private VehicleType vehicle = VehicleType.NONE;
 
@@ -112,11 +116,12 @@ public final class CharacterModel extends Model {
         }
 
         if (e.getNewState() == WorldState.WORLD) {
-            // We need to parse the current character id from our inventory
-            updateCharacterId();
-
-            // We need to scan character info and profession info as well.
+            scanCharacterInfoPending = true;
+            scanCharacterInfoAlreadyScanned = false;
             scanCharacterInfo();
+        } else {
+            scanCharacterInfoPending = false;
+            scanCharacterInfoAlreadyScanned = false;
         }
     }
 
@@ -141,8 +146,16 @@ public final class CharacterModel extends Model {
     }
 
     public void scanCharacterInfo() {
+        if (!updateCharacterId()) {
+            scanCharacterInfoPending = true;
+            scanCharacterInfoAlreadyScanned = false;
+            return;
+        }
+
         if (id.equals(previousScanId)) {
             hasCharacter = true;
+            scanCharacterInfoPending = false;
+            scanCharacterInfoAlreadyScanned = true;
             return;
         }
 
@@ -161,6 +174,17 @@ public final class CharacterModel extends Model {
         queryBuilder.build().executeQuery();
 
         previousScanId = id;
+        scanCharacterInfoPending = false;
+        scanCharacterInfoAlreadyScanned = true;
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onSetSlot(SetSlotEvent.Post event) {
+        if (!scanCharacterInfoPending || scanCharacterInfoAlreadyScanned) return;
+        if (!Objects.equals(event.getContainer(), McUtils.inventory())) return;
+        if (event.getSlot() != InventoryUtils.COMPASS_SLOT_NUM) return;
+
+        scanCharacterInfo();
     }
 
     public VehicleType getVehicle() {
@@ -201,18 +225,23 @@ public final class CharacterModel extends Model {
         WynntilsMod.info("Deducing character " + getCharacterString());
     }
 
-    private void updateCharacterId() {
+    private boolean updateCharacterId() {
         ItemStack compassItem = McUtils.inventory().items.get(CHARACTER_INFO_SLOT);
         List<StyledText> compassLore = LoreUtils.getLore(compassItem);
+        if (compassLore.isEmpty()) {
+            WynntilsMod.warn("Compass item had no character ID line");
+            return false;
+        }
         StyledText idLine = compassLore.getFirst();
 
         if (idLine == null || !idLine.matches(CHARACTER_ID_PATTERN)) {
             WynntilsMod.warn("Compass item had unexpected character ID line: " + idLine);
-            return;
+            return false;
         }
 
         id = idLine.getString();
         WynntilsMod.info("Selected character: " + id);
+        return true;
     }
 
     private String getCharacterString() {

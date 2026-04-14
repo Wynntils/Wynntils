@@ -733,10 +733,11 @@ public class TestRegex {
     @Test
     public void RuneAnnotator_RUNE_PATTERN() {
         PatternTester p = new PatternTester(RuneAnnotator.class, "RUNE_PATTERN");
-        p.shouldMatch("§bAz Rune");
-        p.shouldMatch("§4Nii Rune");
-        p.shouldMatch("§3Uth Rune");
-        p.shouldMatch("§2Tol Rune");
+        p.shouldMatch("\uDAFC\uDC00§#b0f3fcffAz Rune\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§#fdb9feffNii Rune\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§#bacefbffUth Rune\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§#b8fcb3ffTol Rune\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§#ffd39effEk Rune\uDAFC\uDC00");
     }
 
     @Test

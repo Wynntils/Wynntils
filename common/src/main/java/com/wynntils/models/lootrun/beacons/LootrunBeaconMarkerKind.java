@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun.beacons;
@@ -10,11 +10,11 @@ import com.wynntils.models.lootrun.type.LootrunTaskType;
 import java.util.regex.Pattern;
 
 public enum LootrunBeaconMarkerKind implements BeaconMarkerKind {
-    SLAY("\uE00B", LootrunTaskType.SLAY),
-    TARGET("\uE00C", LootrunTaskType.TARGET),
-    DEFEND("\uE00D", LootrunTaskType.DEFEND),
-    SPELUNK("\uE00E", LootrunTaskType.LOOT),
-    DESTROY("\uE00F", LootrunTaskType.DESTROY);
+    SLAY("\uE020", LootrunTaskType.SLAY),
+    TARGET("\uE021", LootrunTaskType.TARGET),
+    DEFEND("\uE022", LootrunTaskType.DEFEND),
+    SPELUNK("\uE023", LootrunTaskType.LOOT),
+    DESTROY("\uE024", LootrunTaskType.DESTROY);
 
     private static final String MARKER_PREFIX = "\uDAFF\uDFF8[\uE010-\uE014]\uDAFF\uDFDE";
     private static final String MARKER_SUFFIX = "\n(\\d+m (§[a-z0-9])?(\uE000|\uE001)?)?";

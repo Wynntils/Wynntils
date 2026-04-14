@@ -6,6 +6,7 @@ package com.wynntils.services.hint;
 
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
@@ -123,20 +124,19 @@ public class HintService extends Service {
     }
 
     private MutableComponent createKeybindPart(String keybindName) {
-        for (KeyMapping keyMapping : McUtils.options().keyMappings) {
-            if (keyMapping.getName().equals(keybindName)) {
-                String translated = keyMapping.getTranslatedKeyMessage().getString();
-                if (translated.equals(I18n.get(UNBOUND_KEY))) {
-                    WynntilsMod.info("Skipping hint due to unbound key");
-                    return Component.empty();
-                }
-
-                return Component.literal(translated).withStyle(ChatFormatting.YELLOW);
-            }
+        KeyMapping keyMapping = Managers.KeyBind.getKeyMapping(keybindName);
+        if (keyMapping == null) {
+            WynntilsMod.info("Skipping hint due to unknown keybind " + keybindName);
+            return Component.empty();
         }
 
-        WynntilsMod.info("Skipping hint due to unknown keybind " + keybindName);
-        return Component.empty();
+        String translated = keyMapping.getTranslatedKeyMessage().getString();
+        if (translated.equals(I18n.get(UNBOUND_KEY))) {
+            WynntilsMod.info("Skipping hint due to unbound key");
+            return Component.empty();
+        }
+
+        return Component.literal(translated).withStyle(ChatFormatting.YELLOW);
     }
 
     private MutableComponent createCommandPart(String command, String argument) {
