@@ -9,9 +9,10 @@ import net.minecraft.ChatFormatting;
 
 public enum RuneType {
     AZ(CustomColor.fromChatFormatting(ChatFormatting.AQUA)),
-    NII(CustomColor.fromChatFormatting(ChatFormatting.DARK_RED)),
+    NII(CustomColor.fromChatFormatting(ChatFormatting.LIGHT_PURPLE)),
     UTH(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA)),
-    TOL(CustomColor.fromChatFormatting(ChatFormatting.DARK_GREEN));
+    TOL(CustomColor.fromChatFormatting(ChatFormatting.DARK_GREEN)),
+    EK(CustomColor.fromChatFormatting(ChatFormatting.YELLOW));
 
     private CustomColor color;
 

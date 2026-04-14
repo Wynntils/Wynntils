@@ -20,6 +20,7 @@ import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.NamedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
 import com.wynntils.utils.wynn.ItemUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -90,7 +91,7 @@ public class InventoryFunctions {
             if (ItemUtils.isEmptyAccessorySlot(accessoryStack)) return "NONE";
 
             StyledText hoverName = StyledText.fromComponent(accessoryStack.getHoverName());
-            return hoverName.getString(StyleType.NONE);
+            return WynnUtils.stripItemNameMarkers(hoverName.getString(StyleType.NONE));
         }
 
         @Override
@@ -108,10 +109,10 @@ public class InventoryFunctions {
             if (inventoryArmor == null) return "NONE";
 
             ItemStack armorStack = McUtils.inventory().getItem(inventoryArmor.getInventorySlot());
-            if (armorStack.isEmpty()) return "NONE";
+            if (ItemUtils.isEmptyArmorSlot(armorStack)) return "NONE";
 
             StyledText hoverName = StyledText.fromComponent(armorStack.getHoverName());
-            return hoverName.getString(StyleType.NONE);
+            return WynnUtils.stripItemNameMarkers(hoverName.getString(StyleType.NONE));
         }
 
         @Override
@@ -335,10 +336,10 @@ public class InventoryFunctions {
         public String getValue(FunctionArguments arguments) {
             ItemStack itemStack = InventoryUtils.getItemInHand();
             StyledText hoverName = StyledText.fromComponent(itemStack.getHoverName());
-            if (!arguments.getArgument("formatted").getBooleanValue()) {
-                return hoverName.getString(StyleType.NONE);
-            }
-            return hoverName.getString();
+            String itemName = arguments.getArgument("formatted").getBooleanValue()
+                    ? hoverName.getString()
+                    : hoverName.getString(StyleType.NONE);
+            return WynnUtils.stripItemNameMarkers(itemName);
         }
 
         @Override
@@ -362,6 +363,30 @@ public class InventoryFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("held_cooldown", "held_cd");
+        }
+    }
+
+    public static class TeleportScrollChargesFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.TeleportScroll.getTeleportScrollCharges();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("tp_scroll_charges");
+        }
+    }
+
+    public static class TeleportScrollRechargeTimerFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.TeleportScroll.getTeleportScrollRechargeTimerSeconds();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("tp_scroll_timer");
         }
     }
 
