@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
@@ -25,11 +25,7 @@ public final class TeleportScrollAnnotator implements GameItemAnnotator {
         String scrollName = nameMatcher.group(1);
         int remainingCharges = Integer.parseInt(nameMatcher.group(2));
 
-        if (scrollName.equals("The Forgery")) {
-            return new TeleportScrollItem("For", true, remainingCharges);
-        }
-
         String destination = Services.Destination.getAbbreviation(scrollName);
-        return new TeleportScrollItem(destination, false, remainingCharges);
+        return new TeleportScrollItem(destination, remainingCharges);
     }
 }
