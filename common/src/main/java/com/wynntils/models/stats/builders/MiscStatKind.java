@@ -38,10 +38,10 @@ public enum MiscStatKind {
 
     // Bonuses for emeralds, XP, loot and gathering
     STEALING("Stealing", StatUnit.PERCENT, "stealing", "EMERALDSTEALING"),
-    COMBAT_EXPERIENCE("XP Bonus", StatUnit.PERCENT, "combatExperience"),
-    LOOT("Loot Bonus", StatUnit.PERCENT, "lootBonus"),
+    COMBAT_EXPERIENCE("Combat Experience", StatUnit.PERCENT, "combatExperience"),
+    LOOT("Loot", StatUnit.PERCENT, "lootBonus"),
     LOOT_QUALITY("Loot Quality", StatUnit.PERCENT, "lootQuality", "LOOT_QUALITY"),
-    GATHERING_EXPERIENCE("Gather XP Bonus", StatUnit.PERCENT, "gatherXpBonus", "GATHER_XP_BONUS"),
+    GATHERING_EXPERIENCE("Gathering Experience", StatUnit.PERCENT, "gatherXpBonus", "GATHER_XP_BONUS"),
     GATHERING_SPEED("Gather Speed", StatUnit.PERCENT, "gatherSpeed", "GATHER_SPEED"),
     // (The last three are currently only found on crafted gear)
 

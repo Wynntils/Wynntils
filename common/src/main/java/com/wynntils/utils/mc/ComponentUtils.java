@@ -132,12 +132,10 @@ public final class ComponentUtils {
 
     public static MutableComponent makeRainbowStyle(String name, boolean useShader) {
         if (useShader) {
-            return Component.literal(name)
-                    .withColor(CommonColors.RAINBOW.asInt())
-                    .withStyle(ChatFormatting.BOLD);
+            return Component.literal(name).withColor(CommonColors.RAINBOW.asInt());
         }
 
-        MutableComponent newName = Component.literal("").withStyle(ChatFormatting.BOLD);
+        MutableComponent newName = Component.literal("");
 
         // This math was originally based off Avaritia code.
         // Special thanks for Morpheus1101 and SpitefulFox
@@ -153,6 +151,14 @@ public final class ComponentUtils {
         }
 
         return newName;
+    }
+
+    public static MutableComponent makeCrimsonStyle(String name, boolean useShader) {
+        if (useShader) {
+            return Component.literal(name).withColor(CommonColors.GRADIENT_2.asInt());
+        }
+
+        return Component.literal(name).withStyle(style -> style.withColor(ChatFormatting.DARK_RED));
     }
 
     public static MutableComponent makeObfuscated(
