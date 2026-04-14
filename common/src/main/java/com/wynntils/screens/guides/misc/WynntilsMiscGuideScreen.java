@@ -117,11 +117,9 @@ public final class WynntilsMiscGuideScreen extends WynntilsListScreen<GuideItemS
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideRuneItemStackButton guideAugmentItemStack) {
-            guiGraphics.setTooltipForNextFrame(
-                    FontRenderer.getInstance().getFont(), guideAugmentItemStack.getItemStack(), mouseX, mouseY);
+            guideAugmentItemStack.getItemStack().queueGuideTooltip(guiGraphics, mouseX, mouseY);
         } else if (hovered instanceof GuideDungeonKeyItemStackButton guideDungeonKeyItemStack) {
-            guiGraphics.setTooltipForNextFrame(
-                    FontRenderer.getInstance().getFont(), guideDungeonKeyItemStack.getItemStack(), mouseX, mouseY);
+            guideDungeonKeyItemStack.getItemStack().queueGuideTooltip(guiGraphics, mouseX, mouseY);
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);
