@@ -75,16 +75,19 @@ public final class RewardsModel extends Model {
             return null;
         }
 
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, charmInfo.getVariableStatsMap());
         if (isUnidentified) {
-            return new CharmItem(charmInfo, null);
+            return new CharmItem(charmInfo, null, result.currentPage());
         }
 
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, charmInfo.getVariableStatsMap());
         if (result.tier() != charmInfo.tier()) {
             WynntilsMod.warn("Tier for " + charmInfo.name() + " is reported as " + result.tier());
         }
 
-        return new CharmItem(charmInfo, CharmInstance.create(result.rerolls(), charmInfo, result.identifications()));
+        return new CharmItem(
+                charmInfo,
+                CharmInstance.create(result.rerolls(), charmInfo, result.identifications()),
+                result.currentPage());
     }
 
     public TomeItem fromTomeItemStack(ItemStack itemStack, StyledText name, String tomeName, boolean isUnidentified) {

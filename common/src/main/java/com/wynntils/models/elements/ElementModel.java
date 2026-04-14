@@ -36,7 +36,7 @@ public final class ElementModel extends Model {
     }
 
     public List<Element> getGearElementOrder() {
-        return List.of(Element.FIRE, Element.WATER, Element.AIR, Element.THUNDER, Element.EARTH);
+        return List.of(Element.EARTH, Element.THUNDER, Element.WATER, Element.FIRE, Element.AIR);
     }
 
     public static Element getOpposingElement(Element element) {
