@@ -16,6 +16,7 @@ import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -25,6 +26,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.OptionalBoolean;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -59,6 +61,9 @@ public final class AccountModel extends Model {
     private ScheduledFuture<?> scheduledFuture;
     private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
     private WynnPlayerInfo playerInfo;
+    private boolean scanRankInfoPending;
+    private boolean scanRankInfoAlreadyScanned;
+    private boolean scanRankInfoForceParseUnexpired;
 
     public AccountModel() {
         super(List.of());
@@ -75,8 +80,17 @@ public final class AccountModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onWorldStateChanged(WorldStateEvent e) {
-        if (e.getNewState() != WorldState.WORLD) return;
-        scanRankInfo(e.isFirstJoinWorld());
+        if (e.getOldState() == WorldState.WORLD) {
+            scanRankInfoPending = false;
+            scanRankInfoAlreadyScanned = false;
+            scanRankInfoForceParseUnexpired = false;
+        }
+
+        if (e.getNewState() == WorldState.WORLD) {
+            scanRankInfoForceParseUnexpired = e.isFirstJoinWorld();
+            scanRankInfoPending = true;
+            scanRankInfoAlreadyScanned = false;
+        }
     }
 
     @SubscribeEvent
@@ -101,6 +115,8 @@ public final class AccountModel extends Model {
     }
 
     public void scanRankInfo(boolean forceParseUnexpired) {
+        scanRankInfoForceParseUnexpired = forceParseUnexpired;
+
         WynntilsMod.info("Scheduling rank info query");
         QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Rank Info Query");
         queryBuilder.onError(msg -> WynntilsMod.warn("Error querying Rank Info: " + msg));
@@ -120,10 +136,23 @@ public final class AccountModel extends Model {
         } else {
             WynntilsMod.info("Skipping silverbull subscription query ("
                     + (silverbullExpiresAt.get() - System.currentTimeMillis()) + " ms left)");
+            scanRankInfoPending = false;
+            scanRankInfoAlreadyScanned = true;
             return;
         }
 
         queryBuilder.build().executeQuery();
+        scanRankInfoPending = false;
+        scanRankInfoAlreadyScanned = true;
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onSetSlot(SetSlotEvent.Post event) {
+        if (!scanRankInfoPending || scanRankInfoAlreadyScanned) return;
+        if (!Objects.equals(event.getContainer(), McUtils.inventory())) return;
+        if (event.getSlot() != InventoryUtils.COMPASS_SLOT_NUM) return;
+
+        scanRankInfo(scanRankInfoForceParseUnexpired);
     }
 
     private void parseStoreContainer(ContainerContent container) {
