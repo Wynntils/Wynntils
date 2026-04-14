@@ -132,8 +132,7 @@ public final class ComponentUtils {
 
     public static MutableComponent makeRainbowStyle(String name, boolean useShader) {
         if (useShader) {
-            return Component.literal(name)
-                    .withColor(WynncraftShaderColor.RAINBOW.color.asInt());
+            return Component.literal(name).withColor(WynncraftShaderColor.RAINBOW.color.asInt());
         }
 
         MutableComponent newName = Component.literal("");
@@ -156,7 +155,7 @@ public final class ComponentUtils {
 
     public static MutableComponent makeCrimsonStyle(String name, boolean useShader) {
         if (useShader) {
-            return Component.literal(name).withColor(CommonColors.GRADIENT_2.asInt());
+            return Component.literal(name).withColor(WynncraftShaderColor.GRADIENT_2.color.asInt());
         }
 
         return Component.literal(name).withStyle(style -> style.withColor(ChatFormatting.DARK_RED));

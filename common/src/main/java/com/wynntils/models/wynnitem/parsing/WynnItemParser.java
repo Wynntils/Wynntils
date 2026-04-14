@@ -28,6 +28,7 @@ import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.models.wynnitem.type.NamedItemEffect;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.colors.WynncraftShaderColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -405,7 +406,9 @@ public final class WynnItemParser {
                     }
 
                     boolean perfectInternalRoll = statMatcher.group("indicatorColor") != null
-                            && statMatcher.group("indicatorColor").equals(CommonColors.RAINBOW.toHexString());
+                            && statMatcher
+                                    .group("indicatorColor")
+                                    .equals(WynncraftShaderColor.RAINBOW.color.toHexString());
                     int stars = perfectInternalRoll ? 3 : 0;
 
                     // Load the possible values for this stat
