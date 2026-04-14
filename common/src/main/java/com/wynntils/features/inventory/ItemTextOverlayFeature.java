@@ -136,6 +136,9 @@ public class ItemTextOverlayFeature extends Feature {
     private final Config<TextShadow> teleportScrollShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
+    private final Config<Boolean> teleportScrollColorByCharges = new Config<>(true);
+
+    @Persisted
     private final Config<Boolean> tradeMarketFilterEnabled = new Config<>(true);
 
     @Persisted
@@ -485,10 +488,11 @@ public class ItemTextOverlayFeature extends Feature {
         @Override
         public TextOverlay getTextOverlay() {
             String text = item.getShorthand();
+            float scale = text.length() >= 3 ? 0.9f : 1f;
             TextRenderSetting style =
                     TextRenderSetting.DEFAULT.withCustomColor(CITY_COLOR).withTextShadow(teleportScrollShadow.get());
 
-            return new TextOverlay(new TextRenderTask(text, style), 0, 0, 1f);
+            return new TextOverlay(new TextRenderTask(text, style), 0, 0, scale);
         }
     }
 
@@ -547,8 +551,9 @@ public class ItemTextOverlayFeature extends Feature {
     }
 
     private final class TeleportScrollOverlay implements TextOverlayInfo {
-        private static final CustomColor CITY_COLOR = CustomColor.fromChatFormatting(ChatFormatting.AQUA);
-        private static final CustomColor DUNGEON_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GOLD);
+        private static final CustomColor MAX_CHARGES_COLOR = CustomColor.fromChatFormatting(ChatFormatting.AQUA);
+        private static final CustomColor TWO_CHARGES_COLOR = new CustomColor(123, 178, 255);
+        private static final CustomColor ONE_CHARGE_COLOR = new CustomColor(181, 90, 189);
         private static final CustomColor OUT_OF_CHARGES_COLOR = CustomColor.fromChatFormatting(ChatFormatting.RED);
 
         private final TeleportScrollItem item;
@@ -564,20 +569,21 @@ public class ItemTextOverlayFeature extends Feature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            CustomColor textColor;
-            if (item.getRemainingCharges() <= 0) {
-                textColor = OUT_OF_CHARGES_COLOR;
-            } else if (item.isDungeon()) {
-                textColor = DUNGEON_COLOR;
-            } else {
-                textColor = CITY_COLOR;
-            }
+            CustomColor textColor = teleportScrollColorByCharges.get()
+                    ? switch (item.getRemainingCharges()) {
+                        case 3 -> MAX_CHARGES_COLOR;
+                        case 2 -> TWO_CHARGES_COLOR;
+                        case 1 -> ONE_CHARGE_COLOR;
+                        default -> OUT_OF_CHARGES_COLOR;
+                    }
+                    : MAX_CHARGES_COLOR;
 
             String text = item.getDestination();
+            float scale = text.length() >= 3 ? 0.9f : 1f;
             TextRenderSetting style =
                     TextRenderSetting.DEFAULT.withCustomColor(textColor).withTextShadow(teleportScrollShadow.get());
 
-            return new TextOverlay(new TextRenderTask(text, style), 0, 0, 1f);
+            return new TextOverlay(new TextRenderTask(text, style), 0, 0, scale);
         }
     }
 
