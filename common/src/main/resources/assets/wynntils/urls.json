@@ -137,13 +137,13 @@
   },
   {
     "id": "dataStaticDestinations",
-    "md5": "8021e388b6c8ec682d3323fd7d2672f6",
+    "md5": "8b296692b963c938f8ece2ef3599bafb",
     "path": "Data-Storage/destinations.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/destinations.json"
   },
   {
     "id": "dataStaticGear",
-    "md5": "f1702e66c155b575aa3451e279d0424f",
+    "md5": "64cfd283318ba3a8fc9fdf8f354118d4",
     "path": "Reference/gear.json",
     "url": "https://cdn.wynntils.com/static/Reference/gear.json"
   },
