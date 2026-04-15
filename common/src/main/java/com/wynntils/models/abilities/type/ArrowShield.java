@@ -6,9 +6,7 @@ package com.wynntils.models.abilities.type;
 
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
-import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.entity.Display;
 
 public class ArrowShield extends ShieldType {
     private static final ClassType CLASS_TYPE = ClassType.ARCHER;
@@ -20,8 +18,10 @@ public class ArrowShield extends ShieldType {
     }
 
     @Override
-    protected boolean verifyArmorStand(ArmorStand armorStand) {
-        ItemStack heldItem = armorStand.getMainHandItem();
-        return heldItem.getItem().equals(Items.ARROW);
+    protected boolean verifyEntity(Display.ItemDisplay itemDisplay) {
+        // todo
+        return false;
+//        ItemStack heldItem = armorStand.getMainHandItem();
+//        return heldItem.getItem().equals(Items.ARROW);
     }
 }

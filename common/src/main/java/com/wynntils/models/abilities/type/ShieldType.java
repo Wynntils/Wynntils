@@ -7,7 +7,7 @@ package com.wynntils.models.abilities.type;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
-import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.Display;
 
 public abstract class ShieldType {
     private final ClassType validClass;
@@ -32,10 +32,10 @@ public abstract class ShieldType {
         return spellType == validSpell && shouldClearOnSpellCast();
     }
 
-    public boolean verifyShield(ArmorStand armorStand) {
-        if (!validClass()) return false;
+    public boolean verifyShield(Display.ItemDisplay itemDisplay) {
+        if (!validClass() || itemDisplay.itemRenderState() == null) return false;
 
-        return verifyArmorStand(armorStand);
+        return verifyEntity(itemDisplay);
     }
 
     // Arrow shield is part of the spell, so it will always be reset on the spell being cast
@@ -45,5 +45,5 @@ public abstract class ShieldType {
         return true;
     }
 
-    protected abstract boolean verifyArmorStand(ArmorStand armorStand);
+    protected abstract boolean verifyEntity(Display.ItemDisplay itemDisplay);
 }

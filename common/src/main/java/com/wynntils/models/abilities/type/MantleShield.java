@@ -8,10 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.entity.Display;
 
 public class MantleShield extends ShieldType {
     private static final ClassType CLASS_TYPE = ClassType.WARRIOR;
@@ -31,8 +28,10 @@ public class MantleShield extends ShieldType {
     }
 
     @Override
-    protected boolean verifyArmorStand(ArmorStand armorStand) {
-        ItemStack bootsItem = armorStand.getItemBySlot(EquipmentSlot.HEAD);
-        return bootsItem.getItem().equals(Items.DIAMOND_AXE) && bootsItem.getDamageValue() == MANTLE_DAMAGE_VALUE;
+    protected boolean verifyEntity(Display.ItemDisplay itemDisplay) {
+        // todo
+        return false;
+//        ItemStack bootsItem = armorStand.getItemBySlot(EquipmentSlot.HEAD);
+//        return bootsItem.getItem().equals(Items.DIAMOND_AXE) && bootsItem.getDamageValue() == MANTLE_DAMAGE_VALUE;
     }
 }
