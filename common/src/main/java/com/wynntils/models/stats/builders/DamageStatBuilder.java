@@ -29,7 +29,7 @@ public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
         // If a raw critical damage bonus stat is added, add to AttackType
         callback.accept(new DamageStatType(
                 "CRITICAL_DAMAGE_BONUS",
-                "Critical Damage Bonus",
+                "Critical Damage",
                 "criticalDamageBonus",
                 "CRITICAL_DAMAGE_BONUS",
                 StatUnit.PERCENT));
