@@ -70,10 +70,7 @@ public final class SpellModel extends Model {
 
     @SubscribeEvent
     public void onActionBarUpdate(ActionBarUpdatedEvent event) {
-        event.runIfPresentOrElse(
-                SpellInputsSegment.class,
-                spellInputsSegment -> updateFromSpellSegment(spellInputsSegment.getDirections()),
-                this::handleExpiredSpell);
+        event.runIfPresentOrElse(SpellInputsSegment.class, this::updateFromSpellSegment, this::handleExpiredSpell);
         event.runIfPresentOrElse(SpellCastSegment.class, this::handleSpellCast, this::spellCastExpire);
     }
 
@@ -218,7 +215,11 @@ public final class SpellModel extends Model {
         return ticksSinceSpecificSpellMap.getOrDefault(SpellType.fromName(name), -1);
     }
 
-    private void updateFromSpellSegment(SpellDirection[] directions) {
+    private void updateFromSpellSegment(SpellInputsSegment spellInputsSegment) {
+        updateFromSpellDimensionArray(spellInputsSegment.getDirections());
+    }
+
+    private void updateFromSpellDimensionArray(SpellDirection[] directions) {
         if (ignoreSpellInputsUntilClear) {
             if (directions.length == 0) {
                 ignoreSpellInputsUntilClear = false;
@@ -270,7 +271,7 @@ public final class SpellModel extends Model {
         if (spellTextActive) return;
 
         spellTextActive = true;
-        updateFromSpellSegment(spellCastSegment.getSpellType().getSpellDirectionArray());
+        updateFromSpellDimensionArray(spellCastSegment.getSpellType().getSpellDirectionArray());
         WynntilsMod.postEvent(new SpellEvent.Cast(
                 spellCastSegment.getSpellType(), spellCastSegment.getManaCost(), spellCastSegment.getHealthCost()));
     }
