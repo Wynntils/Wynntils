@@ -35,7 +35,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
-
 import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.InteractionHand;
@@ -165,9 +164,9 @@ public final class SpellModel extends Model {
      */
     @SubscribeEvent
     public void onSentPacket(PacketEvent.PacketSentEvent<?> event) {
-        if(event.getPacket() instanceof ServerboundUseItemPacket packet)
+        if (event.getPacket() instanceof ServerboundUseItemPacket packet)
             addLastSpellDirection(packet.getHand(), SpellDirection.RIGHT);
-        if(event.getPacket() instanceof ServerboundSwingPacket packet)
+        if (event.getPacket() instanceof ServerboundSwingPacket packet)
             addLastSpellDirection(packet.getHand(), SpellDirection.LEFT);
     }
 
