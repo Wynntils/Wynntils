@@ -493,13 +493,16 @@ public final class WynnItemParser {
         if (!rerollsString.endsWith("\uF005")) return 0;
 
         Matcher matcher = REROLL_EXTRACT_PATTERN.matcher(rerollsString);
+        String rawNumberSegment = null;
 
-        if (!matcher.find()) {
+        while (matcher.find()) {
+            rawNumberSegment = matcher.group(1);
+        }
+
+        if (rawNumberSegment == null) {
             WynntilsMod.warn("Could not find reroll segment");
             return -1;
         }
-
-        String rawNumberSegment = matcher.group(1);
 
         int rerolls = 0;
 
