@@ -14,6 +14,7 @@ import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.abilities.label.ShamanPuppetInfo;
 import com.wynntils.models.abilities.label.ShamanPuppetParser;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.Collections;
@@ -48,6 +49,11 @@ public class ShamanSummonModel extends Model {
         } else if (message.matches(HUMMINGBIRD_SENT_PATTERN)) {
             hummingBirdsState = true;
         }
+    }
+
+    @SubscribeEvent
+    public void onWorldChange(WorldStateEvent event) {
+        hummingBirdsState = false;
     }
 
     @SubscribeEvent
