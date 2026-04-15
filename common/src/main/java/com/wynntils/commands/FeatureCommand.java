@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -44,6 +44,10 @@ public class FeatureCommand extends Command {
                         .then(Commands.argument("feature", StringArgumentType.word())
                                 .suggests(FEATURE_SUGGESTION_PROVIDER)
                                 .executes(this::disableFeature)))
+                .then(Commands.literal("toggle")
+                        .then(Commands.argument("feature", StringArgumentType.word())
+                                .suggests(FEATURE_SUGGESTION_PROVIDER)
+                                .executes(this::toggleFeature)))
                 .then(Commands.literal("reload")
                         .then(Commands.argument("feature", StringArgumentType.word())
                                 .suggests(FEATURE_SUGGESTION_PROVIDER)
@@ -154,6 +158,32 @@ public class FeatureCommand extends Command {
         context.getSource()
                 .sendSuccess(
                         () -> Component.literal(feature.getTranslatedName() + " was disabled successfully.")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
+
+        return 1;
+    }
+
+    private int toggleFeature(CommandContext<CommandSourceStack> context) {
+        String featureName = context.getArgument("feature", String.class);
+
+        Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureName);
+
+        if (featureOptional.isEmpty()) {
+            context.getSource()
+                    .sendFailure(Component.literal("Feature not found!").withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        Feature feature = featureOptional.get();
+
+        feature.setUserEnabled(!feature.isEnabled());
+
+        Managers.Config.saveConfig();
+
+        context.getSource()
+                .sendSuccess(
+                        () -> Component.literal(feature.getTranslatedName() + " was toggled successfully.")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
