@@ -12,13 +12,14 @@ import java.util.List;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomModelData;
 
 public class MantleShield extends ShieldType {
     private static final ClassType CLASS_TYPE = ClassType.WARRIOR;
     private static final SpellType SPELL_TYPE = SpellType.WAR_SCREAM;
     private static final String NAME = "Mantle";
-    private static final int MANTLE_DAMAGE_VALUE = 62;
+    private static final float MANTLE_DAMAGE_VALUE = 17758f; // Other possibilities: 17757f, 17759f
     private static final StyledText SHIELD_COOLDOWN_NAME = StyledText.fromString("§7Shield");
 
     public MantleShield() {
@@ -36,7 +37,6 @@ public class MantleShield extends ShieldType {
         ItemStack stack = itemDisplay.itemRenderState().itemStack();
         List<Float> floats = stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.EMPTY)
                 .floats();
-        // System.out.println(Arrays.toString(floats.toArray()));
-        return false; // TODO: I don't have a Warrior
+        return stack.getItem().equals(Items.OAK_BOAT) && floats.contains(MANTLE_DAMAGE_VALUE);
     }
 }
