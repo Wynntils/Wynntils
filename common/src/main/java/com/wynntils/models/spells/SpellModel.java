@@ -70,7 +70,10 @@ public final class SpellModel extends Model {
 
     @SubscribeEvent
     public void onActionBarUpdate(ActionBarUpdatedEvent event) {
-        event.runIfPresentOrElse(SpellInputsSegment.class, this::updateFromSpellSegment, this::handleExpiredSpell);
+        event.runIfPresentOrElse(
+                SpellInputsSegment.class,
+                spellInputsSegment -> updateFromSpellSegment(spellInputsSegment.getDirections()),
+                this::handleExpiredSpell);
         event.runIfPresentOrElse(SpellCastSegment.class, this::handleSpellCast, this::spellCastExpire);
     }
 
@@ -215,9 +218,9 @@ public final class SpellModel extends Model {
         return ticksSinceSpecificSpellMap.getOrDefault(SpellType.fromName(name), -1);
     }
 
-    private void updateFromSpellSegment(SpellInputsSegment spellInputsSegment) {
+    private void updateFromSpellSegment(SpellDirection[] directions) {
         if (ignoreSpellInputsUntilClear) {
-            if (spellInputsSegment.getDirections().length == 0) {
+            if (directions.length == 0) {
                 ignoreSpellInputsUntilClear = false;
                 if (expireNextClear) {
                     expireNextClear = false;
@@ -228,12 +231,12 @@ public final class SpellModel extends Model {
             return;
         }
 
-        spellInputsActive = spellInputsSegment.getDirections().length > 0;
+        spellInputsActive = directions.length > 0;
         ticksSinceSpellInputActivity = spellInputsActive ? 0 : SPELL_COST_RESET_TICKS;
 
         // noop if the spell state hasn't changed
-        if (Arrays.equals(spellInputsSegment.getDirections(), lastSpell)) return;
-        lastSpell = spellInputsSegment.getDirections();
+        if (Arrays.equals(directions, lastSpell)) return;
+        lastSpell = directions;
 
         WynntilsMod.postEvent(new SpellEvent.Partial(lastSpell));
 
@@ -267,8 +270,7 @@ public final class SpellModel extends Model {
         if (spellTextActive) return;
 
         spellTextActive = true;
-        updateFromSpellSegment(
-                new SpellInputsSegment("", 0, 0, spellCastSegment.getSpellType().getSpellDirectionArray()));
+        updateFromSpellSegment(spellCastSegment.getSpellType().getSpellDirectionArray());
         WynntilsMod.postEvent(new SpellEvent.Cast(
                 spellCastSegment.getSpellType(), spellCastSegment.getManaCost(), spellCastSegment.getHealthCost()));
     }
