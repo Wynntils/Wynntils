@@ -7,11 +7,11 @@ package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.TooltipMarkers;
-import com.wynntils.core.text.type.StyleType;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
@@ -141,11 +141,7 @@ public final class GearParsedTooltipComponent {
         GearInstance headerInstance = createSyntheticHeaderInstance(itemProperty);
         Component originalShinyRerollTracker = extractOriginalShinyRerollTracker(tooltipLines);
         List<Component> header = buildHeaderWithSyntheticRequirements(
-                tooltipLines,
-                itemProperty.getItemInfo(),
-                headerInstance,
-                lastDividerLine,
-                originalShinyRerollTracker);
+                tooltipLines, itemProperty.getItemInfo(), headerInstance, lastDividerLine, originalShinyRerollTracker);
         int footerStartIndex = findUnidentifiedFooterStart(tooltipLines, lastDividerLine, pageLineIndex);
         List<Component> footer = footerStartIndex >= 0
                 ? copyMarkedRange(
@@ -377,7 +373,10 @@ public final class GearParsedTooltipComponent {
             Matcher matcher = styledLine.getMatcher(SHINY_STAT_PATTERN);
             if (matcher.matches()) {
                 try {
-                    return styledLine.substring(matcher.start(3), StyleType.DEFAULT).trim().getComponent();
+                    return styledLine
+                            .substring(matcher.start(3), StyleType.DEFAULT)
+                            .trim()
+                            .getComponent();
                 } catch (RuntimeException ignored) {
                     // Fall through to the next line if the substring cannot be reconstructed safely.
                 }

@@ -4,9 +4,9 @@
  */
 package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
 
-import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
 import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.models.activities.quests.QuestInfo;
