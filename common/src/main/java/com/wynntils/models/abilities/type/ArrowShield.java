@@ -1,18 +1,17 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities.type;
 
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
+import java.util.List;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomModelData;
-
-import java.util.List;
 
 public class ArrowShield extends ShieldType {
     private static final ClassType CLASS_TYPE = ClassType.ARCHER;
@@ -27,8 +26,8 @@ public class ArrowShield extends ShieldType {
     @Override
     protected boolean verifyEntity(Display.ItemDisplay itemDisplay) {
         ItemStack stack = itemDisplay.itemRenderState().itemStack();
-        List<Float> floats = stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.EMPTY).floats();
-        return stack.getItem().equals(Items.OAK_BOAT) &&
-                floats.contains(ARROW_SHIELD_DAMAGE_VALUE);
+        List<Float> floats = stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.EMPTY)
+                .floats();
+        return stack.getItem().equals(Items.OAK_BOAT) && floats.contains(ARROW_SHIELD_DAMAGE_VALUE);
     }
 }
