@@ -17,11 +17,7 @@ public class GuardianAngelsShield extends ShieldType {
     private static final ClassType CLASS_TYPE = ClassType.ARCHER;
     private static final SpellType SPELL_TYPE = SpellType.ARROW_SHIELD;
     private static final String NAME = "Guardian Angels";
-    // All-Seeing Panoptes ability changes the texture so we have to check for either
-    private static final List<Float> GUARDIAN_ANGEL_DAMAGE_VALUES = List.of(// https://endernon.crepe.moe/wynnpack-archive/wynnpack-archive/search/?path=&q=<texture>&mode=exact
-            11870f // Normal Guardian Angels - Other possibilities: 11869f, 11868f, 11871f, 11872f
-            // TODO: All-Seeing Panoptes - under divine intervention and recycling
-    );
+    private static final float GUARDIAN_ANGEL_DAMAGE_VALUE = 11870f; // Other possibilities: 11869f, 11868f, 11871f, 11872f
 
     public GuardianAngelsShield() {
         super(CLASS_TYPE, SPELL_TYPE, NAME);
@@ -32,6 +28,6 @@ public class GuardianAngelsShield extends ShieldType {
         ItemStack stack = itemDisplay.itemRenderState().itemStack();
         List<Float> floats = stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.EMPTY).floats();
         return stack.getItem().equals(Items.OAK_BOAT) &&
-                GUARDIAN_ANGEL_DAMAGE_VALUES.stream().anyMatch(floats::contains);
+                floats.contains(GUARDIAN_ANGEL_DAMAGE_VALUE);
     }
 }

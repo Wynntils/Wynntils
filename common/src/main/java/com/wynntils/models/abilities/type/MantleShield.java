@@ -8,7 +8,13 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Display;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class MantleShield extends ShieldType {
     private static final ClassType CLASS_TYPE = ClassType.WARRIOR;
@@ -29,9 +35,9 @@ public class MantleShield extends ShieldType {
 
     @Override
     protected boolean verifyEntity(Display.ItemDisplay itemDisplay) {
-        // todo
-        return false;
-//        ItemStack bootsItem = armorStand.getItemBySlot(EquipmentSlot.HEAD);
-//        return bootsItem.getItem().equals(Items.DIAMOND_AXE) && bootsItem.getDamageValue() == MANTLE_DAMAGE_VALUE;
+        ItemStack stack = itemDisplay.itemRenderState().itemStack();
+        List<Float> floats = stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.EMPTY).floats();
+//        System.out.println(Arrays.toString(floats.toArray()));
+        return false; // TODO: I don't have a Warrior
     }
 }
