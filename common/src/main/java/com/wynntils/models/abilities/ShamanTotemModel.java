@@ -43,15 +43,15 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class ShamanTotemModel extends Model {
     // Test in ShamanTotemModel_SHAMAN_TOTEM_TIMER_PATTERN
     private static final Pattern SHAMAN_TOTEM_TIMER = Pattern.compile(
-            "§b(?<username>.+)'(?:s)? §7Totem\n(§c\\+(?<regen>\\d+)❤§7/s )?(§e\uE013 §7(\\d+)s )?§d\uE01F §7(?<time>\\d+)s");
+            "§b(?<username>.+)'(?:s)? §7Totem\n(§c\\+(?<regen>\\d+)❤§7/s )?(§5\uE011 §7(?<poisonAmount>.+?) )?(§e\uE013 §7(\\d+)s )?§d\uE01F §7(?<time>\\d+)s");
     private static final int MAX_TOTEM_COUNT = 4;
     private static final double TOTEM_SEARCH_RADIUS = 5;
     private static final double TOTEM_VERTICAL_SEARCH_RADIUS = 10;
+    // TODO: CAST_MAX_DELAY could be a config when model configs eventually exist
+    // it kind of depends on ping and server lag
     private static final int CAST_MAX_DELAY_MS = 1000;
     private static final int DISPLAY_CONFIRM_MAX_DELAY_MS = 2000;
     private static final float SHAMAN_TOTEM_CUSTOM_MODEL_DATA = 30601.0f;
-    // TODO: CAST_MAX_DELAY could be a config when model configs eventually exist
-    // it kind of depends on ping and server lag
 
     private final ShamanTotem[] totems = new ShamanTotem[MAX_TOTEM_COUNT]; // 0-indexed list of totems 1-4
     private final Map<Integer, Integer> pendingVisibleEntityIds = new HashMap<>(); // entity id -> totem number
