@@ -282,7 +282,7 @@ public class CharacterFunctions {
     public static class HummingbirdsStateFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Ability.hummingBirdsState;
+            return Models.ShamanSummon.hummingBirdsState;
         }
     }
 
@@ -470,6 +470,38 @@ public class CharacterFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             return Models.Ability.mirrorImageBar.isActive() ? Models.Ability.mirrorImageBar.getDuration() : 0;
+        }
+    }
+
+    public static class PuppetCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.ShamanSummon.getActivePuppetsMap().size();
+        }
+    }
+
+    public static class PuppetsInTimeRangeFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            int min = arguments.getArgument("min").getIntegerValue();
+            int max = arguments.getArgument("max").getIntegerValue();
+            if (min > max) {
+                int tempMax = max;
+                max = min;
+                min = tempMax;
+            }
+            int finalMin = min;
+            int finalMax = max;
+            return Models.ShamanSummon.getActivePuppetsMap().values().stream()
+                    .filter(s -> s >= finalMin && finalMax >= s)
+                    .toList()
+                    .size();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("min", Integer.class, null), new Argument<>("max", Integer.class, null)));
         }
     }
 }
