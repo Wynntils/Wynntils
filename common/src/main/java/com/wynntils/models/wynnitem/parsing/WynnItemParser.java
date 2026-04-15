@@ -393,6 +393,7 @@ public final class WynnItemParser {
                     String statDisplayName = statMatcher.group("statName");
                     int value = Integer.parseInt(statMatcher.group("value").replace(",", ""));
                     String unit = statMatcher.group("unit");
+                    boolean hasIconPrefix = statMatcher.group("iconPrefix") != null;
 
                     StatType statType = Models.Stat.fromDisplayName(statDisplayName, unit);
                     if (statType == null) {
@@ -415,7 +416,8 @@ public final class WynnItemParser {
                     StatPossibleValues possibleValues =
                             possibleValuesMap != null ? possibleValuesMap.get(statType) : null;
 
-                    StatActualValue actualValue = Models.Stat.buildActualValue(statType, value, stars, possibleValues);
+                    StatActualValue actualValue =
+                            Models.Stat.buildActualValue(statType, value, stars, possibleValues, hasIconPrefix);
                     identifications.add(actualValue);
                 }
             }
@@ -491,13 +493,16 @@ public final class WynnItemParser {
         if (!rerollsString.endsWith("\uF005")) return 0;
 
         Matcher matcher = REROLL_EXTRACT_PATTERN.matcher(rerollsString);
+        String rawNumberSegment = null;
 
-        if (!matcher.find()) {
+        while (matcher.find()) {
+            rawNumberSegment = matcher.group(1);
+        }
+
+        if (rawNumberSegment == null) {
             WynntilsMod.warn("Could not find reroll segment");
             return -1;
         }
-
-        String rawNumberSegment = matcher.group(1);
 
         int rerolls = 0;
 
