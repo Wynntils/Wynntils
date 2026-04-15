@@ -118,7 +118,7 @@ public final class WynnItemParser {
 
     // Test in WynnItemParser_SHINY_STAT_PATTERN
     private static final Pattern SHINY_STAT_PATTERN = Pattern.compile(
-            "^§f\uE04F\uDAFF\uDFFF§#(?:[a-f0-9]{8}) ([a-zA-Z ]+).+?§f([\\d,]+)§#(?:[a-f0-9]{8})(\uDB00\uDC00|.+)$");
+            "^§f\uE04F\uDAFF\uDFFF§#(?:[a-f0-9]{8})(?: )? ([a-zA-Z ]+).+?§f([\\d,]+)§#(?:[a-f0-9]{8})(\uDB00\uDC00|.+)$");
 
     // Test in WynnItemParser_TOOLTIP_PAGE_PATTERN
     private static final Pattern TOOLTIP_PAGE_PATTERN = Pattern.compile("(§#ffea80ff)?\uE000");
