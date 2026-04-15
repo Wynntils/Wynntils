@@ -87,6 +87,11 @@ public enum SpellType {
         return forClass(otherClass, getSpellNumber());
     }
 
+    public SpellDirection[] getSpellDirectionArray() {
+        SpellDirection[] directionArray = SPELL_COMBOS.get(spellNumber - 1);
+        return Arrays.copyOf(directionArray, directionArray.length);
+    }
+
     public static SpellType fromName(String name) {
         for (SpellType spellType : values()) {
             // After the matching part, the string needs to be done, or a blank character

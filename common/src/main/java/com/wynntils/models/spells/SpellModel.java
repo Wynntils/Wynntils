@@ -7,14 +7,12 @@ package com.wynntils.models.spells;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
-import com.wynntils.mc.event.PacketEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.spells.actionbar.matchers.SpellCastSegmentMatcher;
 import com.wynntils.models.spells.actionbar.matchers.SpellInputsSegmentMatcher;
@@ -26,7 +24,6 @@ import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.spells.type.SpellFailureReason;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -35,9 +32,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
-import net.minecraft.network.protocol.game.ServerboundSwingPacket;
-import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
-import net.minecraft.world.InteractionHand;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class SpellModel extends Model {
@@ -155,21 +149,6 @@ public final class SpellModel extends Model {
         clearSpellInputsForHeldItemChange();
     }
 
-    /*
-     * This specifically uses the PacketSentEvent, because
-     *
-     * - Using already existing events (UseItemEvent and ArmSwingEvent) would not work,
-     *   since mods might send these packets directly without Wynntils knowing. (See QuickCastFeature)
-     * - Changing the existing events to listen to packets would be breaking change.
-     */
-    @SubscribeEvent
-    public void onSentPacket(PacketEvent.PacketSentEvent<?> event) {
-        if (event.getPacket() instanceof ServerboundUseItemPacket packet)
-            addLastSpellDirection(packet.getHand(), SpellDirection.RIGHT);
-        if (event.getPacket() instanceof ServerboundSwingPacket packet)
-            addLastSpellDirection(packet.getHand(), SpellDirection.LEFT);
-    }
-
     public void addSpellToQueue(List<SpellDirection> spell) {
         if (!SPELL_PACKET_QUEUE.isEmpty()) return;
 
@@ -269,14 +248,6 @@ public final class SpellModel extends Model {
         }
     }
 
-    private void addLastSpellDirection(InteractionHand hand, SpellDirection direction) {
-        if (hand != InteractionHand.MAIN_HAND) return;
-        if (Models.WorldState.getCurrentState() != WorldState.WORLD) return;
-        if (lastSpell.length != 2 /* last one doesn't update on the actionbar */) return;
-        SpellDirection[] directions = {lastSpell[0], lastSpell[1], direction};
-        updateFromSpellSegment(new SpellInputsSegment("", 0, 0, directions));
-    }
-
     private void handleExpiredSpell() {
         ignoreSpellInputsUntilClear = false;
         clearSpellInputActivity();
@@ -296,6 +267,8 @@ public final class SpellModel extends Model {
         if (spellTextActive) return;
 
         spellTextActive = true;
+        updateFromSpellSegment(
+                new SpellInputsSegment("", 0, 0, spellCastSegment.getSpellType().getSpellDirectionArray()));
         WynntilsMod.postEvent(new SpellEvent.Cast(
                 spellCastSegment.getSpellType(), spellCastSegment.getManaCost(), spellCastSegment.getHealthCost()));
     }
