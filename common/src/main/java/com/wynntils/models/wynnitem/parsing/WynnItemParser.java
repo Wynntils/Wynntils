@@ -393,6 +393,7 @@ public final class WynnItemParser {
                     String statDisplayName = statMatcher.group("statName");
                     int value = Integer.parseInt(statMatcher.group("value").replace(",", ""));
                     String unit = statMatcher.group("unit");
+                    boolean hasIconPrefix = statMatcher.group("iconPrefix") != null;
 
                     StatType statType = Models.Stat.fromDisplayName(statDisplayName, unit);
                     if (statType == null) {
@@ -415,7 +416,8 @@ public final class WynnItemParser {
                     StatPossibleValues possibleValues =
                             possibleValuesMap != null ? possibleValuesMap.get(statType) : null;
 
-                    StatActualValue actualValue = Models.Stat.buildActualValue(statType, value, stars, possibleValues);
+                    StatActualValue actualValue =
+                            Models.Stat.buildActualValue(statType, value, stars, possibleValues, hasIconPrefix);
                     identifications.add(actualValue);
                 }
             }

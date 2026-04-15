@@ -73,10 +73,15 @@ public final class StatModel extends Model {
 
     public StatActualValue buildActualValue(
             StatType statType, int value, int stars, StatPossibleValues possibleValues) {
+        return buildActualValue(statType, value, stars, possibleValues, false);
+    }
+
+    public StatActualValue buildActualValue(
+            StatType statType, int value, int stars, StatPossibleValues possibleValues, boolean hasIconPrefix) {
         RangedValue internalRoll = possibleValues != null
                 ? StatCalculator.calculateInternalRollRange(possibleValues, value, stars)
                 : RangedValue.NONE;
-        return new StatActualValue(statType, value, stars, internalRoll);
+        return new StatActualValue(statType, value, stars, internalRoll, hasIconPrefix);
     }
 
     public StatType fromDisplayName(String displayName, String unit) {
