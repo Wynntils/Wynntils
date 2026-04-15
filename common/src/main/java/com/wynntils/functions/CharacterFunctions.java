@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.models.abilities.label.ShamanPuppetInfo;
 import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.models.characterstats.type.PowderSpecialInfo;
 import com.wynntils.models.objectives.WynnObjective;
@@ -476,7 +477,7 @@ public class CharacterFunctions {
     public static class PuppetCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.ShamanSummon.getActivePuppetsMap().size();
+            return Models.ShamanSummon.getActivePuppetsLabels().size();
         }
     }
 
@@ -492,7 +493,8 @@ public class CharacterFunctions {
             }
             int finalMin = min;
             int finalMax = max;
-            return Models.ShamanSummon.getActivePuppetsMap().values().stream()
+            return Models.ShamanSummon.getActivePuppetsLabels().stream()
+                    .map(ShamanPuppetInfo::getSecondsLeft)
                     .filter(s -> s >= finalMin && finalMax >= s)
                     .toList()
                     .size();

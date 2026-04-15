@@ -17,7 +17,6 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,7 @@ public class ShamanSummonModel extends Model {
     private static final Pattern HUMMINGBIRD_RETURN_PATTERN =
             Pattern.compile("§e((\uE008\uE002)|\uE001) Your hummingbirds have returned to you!$");
 
-    private final Map<Integer, Integer> ActivePuppetsMap = new HashMap<>();
+    private final Map<Integer, ShamanPuppetInfo> ActivePuppetsMap = new HashMap<>();
 
     public boolean hummingBirdsState = false;
 
@@ -64,7 +63,7 @@ public class ShamanSummonModel extends Model {
         }
         ;
 
-        ActivePuppetsMap.put(labelInfo.getEntity().getId(), labelInfo.getSecondsLeft());
+        ActivePuppetsMap.put(labelInfo.getEntity().getId(), labelInfo);
     }
 
     @SubscribeEvent
@@ -74,7 +73,7 @@ public class ShamanSummonModel extends Model {
         event.getEntityIds().forEach(ActivePuppetsMap::remove);
     }
 
-    public Map<Integer, Integer> getActivePuppetsMap() {
-        return Collections.unmodifiableMap(ActivePuppetsMap);
+    public List<ShamanPuppetInfo> getActivePuppetsLabels() {
+        return ActivePuppetsMap.values().stream().toList();
     }
 }

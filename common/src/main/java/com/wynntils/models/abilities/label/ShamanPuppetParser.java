@@ -12,16 +12,25 @@ import java.util.regex.Pattern;
 import net.minecraft.world.entity.Entity;
 
 public class ShamanPuppetParser implements LabelParser<ShamanPuppetInfo> {
-    private static Pattern PUPPET_PATTERN = Pattern.compile("^(?<player>\\S+)('s|') Puppet\\n\uE01F (?<seconds>\\d+)s");
+    private static Pattern PUPPET_PATTERN = Pattern.compile(
+            "^(?<player>\\S+)('s|') Puppet\\n(?:\uE013 (?<invigorate>\\d+)s )?(?:\uE01B (?<friendlyFire>\\d+)s )?\uE01F (?<seconds>\\d+)s");
 
     @Override
     public ShamanPuppetInfo getInfo(StyledText label, Location location, Entity entity) {
         Matcher matcher = PUPPET_PATTERN.matcher(label.getStringWithoutFormatting());
         if (!matcher.matches()) return null;
 
-        int secondsLeft = Integer.parseInt(matcher.group("seconds"));
         String playerName = matcher.group("player");
+        int secondsLeft = Integer.parseInt(matcher.group("seconds"));
+        int invigorateTime = -1;
+        if (matcher.group("invigorate") != null) {
+            invigorateTime = Integer.parseInt(matcher.group("invigorate"));
+        }
+        int friendlyFireTime = -1;
+        if (matcher.group("friendlyFire") != null) {
+            friendlyFireTime = Integer.parseInt(matcher.group("friendlyFire"));
+        }
 
-        return new ShamanPuppetInfo(label, location, entity, secondsLeft, playerName);
+        return new ShamanPuppetInfo(label, location, entity, secondsLeft, playerName, invigorateTime, friendlyFireTime);
     }
 }

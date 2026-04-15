@@ -12,12 +12,23 @@ import net.minecraft.world.entity.Entity;
 public class ShamanPuppetInfo extends LabelInfo {
     private final int secondsLeft;
     private final String playerName;
+    private final int invigorateTime;
+    private final int friendlyFireTime;
 
-    protected ShamanPuppetInfo(StyledText label, Location location, Entity entity, int secondsLeft, String playerName) {
+    protected ShamanPuppetInfo(
+            StyledText label,
+            Location location,
+            Entity entity,
+            int secondsLeft,
+            String playerName,
+            int invigorateTime,
+            int friendlyFireTime) {
         super(label, location, entity);
 
         this.secondsLeft = secondsLeft;
         this.playerName = playerName;
+        this.invigorateTime = invigorateTime;
+        this.friendlyFireTime = friendlyFireTime;
     }
 
     public int getSecondsLeft() {
@@ -28,11 +39,20 @@ public class ShamanPuppetInfo extends LabelInfo {
         return playerName;
     }
 
+    public int getInvigorateTime() {
+        return invigorateTime;
+    }
+
+    public int getFriendlyFireTime() {
+        return friendlyFireTime;
+    }
+
     @Override
     public String toString() {
         return "ShamanPuppetInfo{" + "secondsLeft="
                 + secondsLeft + ", playerName="
-                + playerName + ", label="
+                + playerName + ", invigorateTime=" + invigorateTime + ", friendlyFireTime=" + friendlyFireTime
+                + ", label="
                 + label + ", name='"
                 + name + '\''
                 + ", location=" + location
