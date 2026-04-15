@@ -146,8 +146,7 @@ public final class ShieldModel extends Model {
      * @return true if there was either a valid cast recently, or there is a possibility of an auto cast
      */
     private boolean isValidSpawn() {
-        return true; //todo
-//        return System.currentTimeMillis() - shieldCastTime < 200 || Models.Inventory.hasAutoCasterItem();
+        return System.currentTimeMillis() - shieldCastTime < 200 || Models.Inventory.hasAutoCasterItem();
     }
 
     private void registerShieldTypes() {
