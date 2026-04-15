@@ -749,6 +749,8 @@ public class TestRegex {
         p.shouldMatch("§bShadowCat117's §7Totem\n§c+1644❤§7/s §d\uE01F §753s");
         // Timer + summons attack speed
         p.shouldMatch("§bShadowCat117's §7Totem\n§e\uE013 §71s §d\uE01F §749s");
+        // Timer + poison + regen
+        p.shouldMatch("§bShadowCat117's §7Totem\n§c+1644❤§7/s §5\uE011 §763.1k §d\uE01F §753s");
         // Timer + regen + summons attack speed
         p.shouldMatch("§bShadowCat117's §7Totem\n§c+986❤§7/s §e\uE013 §71s §d\uE01F §750s");
     }
