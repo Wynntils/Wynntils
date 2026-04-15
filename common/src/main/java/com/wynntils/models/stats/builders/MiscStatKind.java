@@ -42,7 +42,7 @@ public enum MiscStatKind {
     LOOT("Loot", StatUnit.PERCENT, "lootBonus"),
     LOOT_QUALITY("Loot Quality", StatUnit.PERCENT, "lootQuality", "LOOT_QUALITY"),
     GATHERING_EXPERIENCE("Gathering Experience", StatUnit.PERCENT, "gatherXpBonus", "GATHER_XP_BONUS"),
-    GATHERING_SPEED("Gather Speed", StatUnit.PERCENT, "gatherSpeed", "GATHER_SPEED"),
+    GATHERING_SPEED("Gathering Speed", StatUnit.PERCENT, "gatherSpeed", "GATHER_SPEED"),
     // (The last three are currently only found on crafted gear)
 
     // Special tome only stats, which are only found as base stats on tomes

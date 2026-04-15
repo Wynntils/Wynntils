@@ -7,6 +7,7 @@ package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
@@ -34,6 +35,9 @@ import net.minecraft.world.item.ItemStack;
 
 public final class GearParsedTooltipComponent {
     private static final String SHINY_STAT_ICON = "\uE04F";
+    // Keep this in sync with WynnItemParser.SHINY_STAT_PATTERN.
+    private static final Pattern SHINY_STAT_PATTERN = Pattern.compile(
+            "^§f\uE04F\uDAFF\uDFFF§#(?:[a-f0-9]{8}) ([a-zA-Z ]+).+?§f([\\d,]+)§#(?:[a-f0-9]{8})(\uDB00\uDC00|.+)$");
     private static final String SKILL_REQ_PART = ".+?(\\uE005|\\uE006|\\uE007).+?(?:§8|§#acfac6ff|§#faacacff)(\\d+).+?";
     private static final Pattern SKILL_REQ_PATTERN = Pattern.compile("(?:" + SKILL_REQ_PART + "){5}");
     private static final Pattern SKILL_REQ_PART_PATTERN = Pattern.compile(SKILL_REQ_PART);
@@ -85,11 +89,13 @@ public final class GearParsedTooltipComponent {
 
         final int firstIdentificationIndex = firstIdentificationLine;
         int identificationDividerLine = findLastDividerBefore(tooltipLines, firstIdentificationIndex);
+        Component originalShinyRerollTracker = extractOriginalShinyRerollTracker(tooltipLines);
         List<Component> header = buildHeaderWithSyntheticRequirements(
                 tooltipLines,
                 itemProperty.getItemInfo(),
                 itemProperty.getItemInstance().orElse(null),
-                identificationDividerLine);
+                identificationDividerLine,
+                originalShinyRerollTracker);
         List<Component> footer = copyMarkedRange(
                 tooltipLines,
                 lastIdentificationLine + 1,
@@ -133,8 +139,9 @@ public final class GearParsedTooltipComponent {
         }
 
         GearInstance headerInstance = createSyntheticHeaderInstance(itemProperty);
+        Component originalShinyRerollTracker = extractOriginalShinyRerollTracker(tooltipLines);
         List<Component> header = buildHeaderWithSyntheticRequirements(
-                tooltipLines, itemProperty.getItemInfo(), headerInstance, lastDividerLine);
+                tooltipLines, itemProperty.getItemInfo(), headerInstance, lastDividerLine, originalShinyRerollTracker);
         int footerStartIndex = findUnidentifiedFooterStart(tooltipLines, lastDividerLine, pageLineIndex);
         List<Component> footer = footerStartIndex >= 0
                 ? copyMarkedRange(
@@ -147,7 +154,11 @@ public final class GearParsedTooltipComponent {
     }
 
     private List<Component> buildHeaderWithSyntheticRequirements(
-            List<Component> tooltipLines, GearInfo gearInfo, GearInstance gearInstance, int identificationDividerLine) {
+            List<Component> tooltipLines,
+            GearInfo gearInfo,
+            GearInstance gearInstance,
+            int identificationDividerLine,
+            Component originalShinyRerollTracker) {
         if (identificationDividerLine < 0) {
             List<Component> header = copyMarkedRange(tooltipLines, 0, tooltipLines.size(), lineIndex -> null);
             removeVanillaHoverNameLine(header, gearInfo);
@@ -161,7 +172,8 @@ public final class GearParsedTooltipComponent {
         List<Component> header = copyMarkedRange(tooltipLines, 0, requirementsStartLine, lineIndex -> null);
         removeVanillaHoverNameLine(header, gearInfo);
         appendOverallPercentageToTitleLine(header, gearInfo, gearInstance);
-        header.addAll(requirementsComponent.buildHeaderLines(gearInfo, gearInstance, parsedSkillRequirementStates));
+        header.addAll(requirementsComponent.buildHeaderLines(
+                gearInfo, gearInstance, parsedSkillRequirementStates, originalShinyRerollTracker));
         return header;
     }
 
@@ -349,6 +361,29 @@ public final class GearParsedTooltipComponent {
                 || containsFont(styledText, REQUIREMENT_SPRITE_FONT)
                 || containsFont(styledText, GearTooltipSupport.COMMON_FONT)
                 || normalized.getString().contains(SHINY_STAT_ICON);
+    }
+
+    private static Component extractOriginalShinyRerollTracker(List<Component> tooltipLines) {
+        for (Component tooltipLine : tooltipLines) {
+            StyledText styledLine = StyledText.fromComponent(tooltipLine);
+            if (!styledLine.getNormalized().getString().contains(SHINY_STAT_ICON)) {
+                continue;
+            }
+
+            Matcher matcher = styledLine.getMatcher(SHINY_STAT_PATTERN);
+            if (matcher.matches()) {
+                try {
+                    return styledLine
+                            .substring(matcher.start(3), StyleType.DEFAULT)
+                            .trim()
+                            .getComponent();
+                } catch (RuntimeException ignored) {
+                    // Fall through to the next line if the substring cannot be reconstructed safely.
+                }
+            }
+        }
+
+        return null;
     }
 
     private static boolean isDividerLine(Component line) {

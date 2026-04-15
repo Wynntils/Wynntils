@@ -196,7 +196,7 @@ public final class TooltipIdentifications {
                 statType, itemInfo.getRequiredClass(), currentClass, itemInfo.getIdentificationLevelRange());
 
         MutableComponent left = Component.empty();
-        appendIconPrefix(left, statType);
+        appendIconPrefix(left, statType, actualValue.hasIconPrefix());
         left.append(Component.literal(displayName + " ")
                 .withStyle(Style.EMPTY
                         .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
@@ -242,7 +242,7 @@ public final class TooltipIdentifications {
         ChatFormatting colorCodeDark = hasPositiveEffect ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
 
         MutableComponent left = Component.empty();
-        appendIconPrefix(left, statType);
+        // Unidentified lines are synthesized, so they do not preserve the source icon prefix.
         left.append(Component.literal(displayName + " ")
                 .withStyle(Style.EMPTY
                         .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
@@ -264,7 +264,9 @@ public final class TooltipIdentifications {
         return Pair.of(left, right);
     }
 
-    private static void appendIconPrefix(MutableComponent line, StatType statType) {
+    private static void appendIconPrefix(MutableComponent line, StatType statType, boolean showIconPrefix) {
+        if (!showIconPrefix) return;
+
         String iconPrefix = getIconPrefix(statType);
         if (iconPrefix.isEmpty()) return;
 
