@@ -18,6 +18,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
+import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.models.gear.type.GearInfo;
@@ -28,8 +29,10 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.WynnUtils;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -37,6 +40,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -88,8 +92,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
     private boolean quickSearching = false;
     private boolean instantSearchingSendChat = false;
     private boolean instantSearchingCloseMenu = false;
-    private GearInfo selectedGuess = null;
-    private Button guessedGearList = null;
+    private final List<Button> guessedGearList = new ArrayList<>();
 
     public TradeMarketQuickSearchFeature() {
         super(new ProfileDefault.Builder()
@@ -99,7 +102,13 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
     @SubscribeEvent
     public void onScreenClosed(ScreenClosedEvent.Post event) {
-        if (Models.TradeMarket.inChatInput() && event.getScreen() instanceof ChatScreen) {
+        Screen oldScreen = event.getScreen();
+
+        if (!guessedGearList.isEmpty()) {
+            cleanupGuessGearList(oldScreen);
+        }
+
+        if (Models.TradeMarket.inChatInput() && oldScreen instanceof ChatScreen) {
             if (autoCancel.get() && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 McUtils.sendChat("cancel");
             }
@@ -147,32 +156,24 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
-//        if (!Models.TradeMarket.inTradeMarket()) return;
+        if (!Models.TradeMarket.inTradeMarket()) return;
 
-//        new Button.Builder(Component.literal("Boxed Item Name"), button -> System.out.println("Test onClicked: " + button))
-//                .pos(100, 100)
-//                .size(100, 50)
-//                .build()
-//                .render(event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTicks());
-//        Button widget = new Button.Builder(Component.literal("Boxed Item Name"), button -> System.out.println("Test onClicked: " + button))
-//                .pos(100, 100)
-//                .size(100, 50)
-//                .build();
-//        event.getScreen().addRenderableWidget(
-//                widget
-//        );
-//        event.getScreen().removeWidget(widget);
+        if (guessedGearList.isEmpty()) return;
 
-//        new BasicTexturedButton(
-//                0,
-//                0,
-//                Texture.BUTTON_BOTTOM.width(),
-//                Texture.BUTTON_BOTTOM.height() / 2,
-//                Texture.BUTTON_BOTTOM,
-//                button -> System.out.println("Test onClicked: " + i),
-//                List.of(),
-//                false
-//        ).render(event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTicks());
+        guessedGearList.forEach(button -> button.render(event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTicks()));
+    }
+
+    @SubscribeEvent
+    public void onInventoryMouseClicked(InventoryMouseClickedEvent event) {
+        if (!Models.TradeMarket.inTradeMarket()) return;
+
+        if (guessedGearList.isEmpty()) return;
+
+        guessedGearList.forEach(button -> {
+            if (button.mouseClicked(event.getMouseButtonEvent(), event.isDoubleClick())) {
+                event.setCanceled(true);
+            }
+        });
     }
 
     private void openChat() {
@@ -197,40 +198,33 @@ public class TradeMarketQuickSearchFeature extends Feature {
         ItemStack itemStack = hoveredSlot.getItem();
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
         if (gearBoxItemOpt.isPresent()) {
-            if (guessedGearList == null) {
-                List<GearInfo> possibleGear = Models.Gear.getPossibleGears(gearBoxItemOpt.get());
-                if (!possibleGear.isEmpty()) {
-                    guessedGearList = new Button.Builder(Component.literal("Boxed Item Name"), this::onGuessGearPress)
-                            .pos(100, 100)
-                            .size(100, 50)
-                            .build();
-                    McUtils.screen().addRenderableWidget(guessedGearList);
-                } else {
-                    // TODO: error log something
-                }
+            Screen screen = McUtils.screen();
+            cleanupGuessGearList(screen);
+            List<GearInfo> possibleGear = Models.Gear.getPossibleGears(gearBoxItemOpt.get());
+            if (possibleGear.isEmpty()) {
+                // TODO: error log something
+                return;
+            }
+            Font font = McUtils.mc().font;
+            final int yStart = screen.height / 2 - font.lineHeight * possibleGear.size();
+            final int buttonHeight = font.lineHeight + 2;
+            for (int i = 0; i < possibleGear.size(); i++) {
+                // TODO: check if can't fit vertically (leave some padding above and below) and then use multiple columns
+                Component itemName = Component.literal(possibleGear.get(i).name());
+                Button button = new Button.Builder(itemName, this::onGuessGearPress)
+                        .pos(screen.width / 2, yStart + buttonHeight * i)
+                        .size(font.width(itemName) + 2, buttonHeight)
+                        .build();
+                guessedGearList.add(button);
             }
             return;
-//            else {
-//                if (selectedGuess != null) {
-//                    searchQuery =
-//                            StyledText.fromUnformattedString(selectedGuess.name()).getStringWithoutFormatting();
-//                    selectedGuess = null;
-//                    McUtils.screen().removeWidget(guessedGearList);
-//                    guessedGearList = null;
-//                }
-//            }
-        } else {
-            searchQuery =
-                    StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
-            searchQuery = getSearchQuery(searchQuery);
         }
-        if (searchQuery == null || searchQuery.isBlank()) return;
 
-        ContainerUtils.clickOnSlot(
-                SEARCH_SLOT,
-                McUtils.containerMenu().containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                McUtils.containerMenu().getItems());
+        searchQuery =
+                StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
+        searchQuery = getSearchQuery(searchQuery);
+
+        clickOnSearchSlot();
     }
 
     private String getSearchQuery(String rawName) {
@@ -251,8 +245,22 @@ public class TradeMarketQuickSearchFeature extends Feature {
     }
 
     private void onGuessGearPress(Button button) {
-        System.out.println("Test onClicked: " + button);
-        McUtils.screen().removeWidget(guessedGearList);
-        guessedGearList = null;
+        cleanupGuessGearList(McUtils.screen());
+        searchQuery = button.getMessage().getString();
+        clickOnSearchSlot();
+    }
+
+    private void clickOnSearchSlot() {
+        if (searchQuery == null || searchQuery.isBlank()) return;
+        ContainerUtils.clickOnSlot(
+                SEARCH_SLOT,
+                McUtils.containerMenu().containerId,
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                McUtils.containerMenu().getItems());
+    }
+
+    private void cleanupGuessGearList(Screen screen) {
+        guessedGearList.forEach(screen::removeWidget);
+        guessedGearList.clear();
     }
 }
