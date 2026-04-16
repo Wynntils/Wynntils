@@ -493,11 +493,10 @@ public class CharacterFunctions {
             }
             int finalMin = min;
             int finalMax = max;
-            return Models.ShamanSummon.getActivePuppetsLabels()
+            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsLabels()
                     .map(ShamanPuppetInfo::getSecondsLeft)
                     .filter(s -> s >= finalMin && finalMax >= s)
-                    .toList()
-                    .size();
+                    .count());
         }
 
         @Override
