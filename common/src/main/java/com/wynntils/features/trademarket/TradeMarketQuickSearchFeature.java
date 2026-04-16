@@ -17,21 +17,30 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
+import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.trademarket.event.TradeMarketChatInputEvent;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.WynnUtils;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketQuickSearchFeature extends Feature {
@@ -79,6 +88,8 @@ public class TradeMarketQuickSearchFeature extends Feature {
     private boolean quickSearching = false;
     private boolean instantSearchingSendChat = false;
     private boolean instantSearchingCloseMenu = false;
+    private GearInfo selectedGuess = null;
+    private Button guessedGearList = null;
 
     public TradeMarketQuickSearchFeature() {
         super(new ProfileDefault.Builder()
@@ -134,6 +145,36 @@ public class TradeMarketQuickSearchFeature extends Feature {
         }
     }
 
+    @SubscribeEvent
+    public void onContainerRender(ContainerRenderEvent event) {
+//        if (!Models.TradeMarket.inTradeMarket()) return;
+
+//        new Button.Builder(Component.literal("Boxed Item Name"), button -> System.out.println("Test onClicked: " + button))
+//                .pos(100, 100)
+//                .size(100, 50)
+//                .build()
+//                .render(event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTicks());
+//        Button widget = new Button.Builder(Component.literal("Boxed Item Name"), button -> System.out.println("Test onClicked: " + button))
+//                .pos(100, 100)
+//                .size(100, 50)
+//                .build();
+//        event.getScreen().addRenderableWidget(
+//                widget
+//        );
+//        event.getScreen().removeWidget(widget);
+
+//        new BasicTexturedButton(
+//                0,
+//                0,
+//                Texture.BUTTON_BOTTOM.width(),
+//                Texture.BUTTON_BOTTOM.height() / 2,
+//                Texture.BUTTON_BOTTOM,
+//                button -> System.out.println("Test onClicked: " + i),
+//                List.of(),
+//                false
+//        ).render(event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTicks());
+    }
+
     private void openChat() {
         if (quickSearching) {
             McUtils.openChatScreen(searchQuery);
@@ -152,9 +193,37 @@ public class TradeMarketQuickSearchFeature extends Feature {
         } else {
             quickSearching = true;
         }
-        searchQuery =
-                StyledText.fromComponent((hoveredSlot.getItem().getHoverName())).getStringWithoutFormatting();
-        searchQuery = getSearchQuery(searchQuery);
+
+        ItemStack itemStack = hoveredSlot.getItem();
+        Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
+        if (gearBoxItemOpt.isPresent()) {
+            if (guessedGearList == null) {
+                List<GearInfo> possibleGear = Models.Gear.getPossibleGears(gearBoxItemOpt.get());
+                if (!possibleGear.isEmpty()) {
+                    guessedGearList = new Button.Builder(Component.literal("Boxed Item Name"), this::onGuessGearPress)
+                            .pos(100, 100)
+                            .size(100, 50)
+                            .build();
+                    McUtils.screen().addRenderableWidget(guessedGearList);
+                } else {
+                    // TODO: error log something
+                }
+            }
+            return;
+//            else {
+//                if (selectedGuess != null) {
+//                    searchQuery =
+//                            StyledText.fromUnformattedString(selectedGuess.name()).getStringWithoutFormatting();
+//                    selectedGuess = null;
+//                    McUtils.screen().removeWidget(guessedGearList);
+//                    guessedGearList = null;
+//                }
+//            }
+        } else {
+            searchQuery =
+                    StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
+            searchQuery = getSearchQuery(searchQuery);
+        }
         if (searchQuery == null || searchQuery.isBlank()) return;
 
         ContainerUtils.clickOnSlot(
@@ -179,5 +248,11 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
         WynntilsMod.info("Quick Searching: " + rawName + " -> " + searchTerm);
         return searchTerm;
+    }
+
+    private void onGuessGearPress(Button button) {
+        System.out.println("Test onClicked: " + button);
+        McUtils.screen().removeWidget(guessedGearList);
+        guessedGearList = null;
     }
 }
