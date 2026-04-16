@@ -61,7 +61,6 @@ public class ShamanSummonModel extends Model {
         if (!labelInfo.getPlayerName().equals(McUtils.playerName())) {
             return;
         }
-        ;
 
         ActivePuppetsMap.put(labelInfo.getEntity().getId(), labelInfo);
     }
