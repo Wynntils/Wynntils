@@ -126,15 +126,15 @@ public final class WynnItemParser {
     private static final Map<CustomColor, Integer> TIER_COLOR_CODES = Map.of(
             CommonColors.BLACK,
             0,
-            CustomColor.fromInt(0xebeb47),
+            CustomColor.fromInt(0xe6e647),
             1,
-            CustomColor.fromInt(0xeb47eb),
+            CustomColor.fromInt(0xe647e6),
             2,
-            CustomColor.fromInt(0x47ebeb),
+            CustomColor.fromInt(0x47e6e6),
             3);
 
     private static final Pattern PROFESSION_TIER_PATTERN =
-            Pattern.compile(".+?(?:§(0|#([a-f0-9]{8})))(?:\uE000){1,3}.+?");
+            Pattern.compile(".*§#([a-f0-9]{6})[a-f0-9]{2}\\uE000{1,3}(?=\\uDB00\\uDC02).*");
 
     private static final FontDescription SPRITE_FRAME_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/emblem/sprite"));
