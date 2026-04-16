@@ -477,7 +477,7 @@ public class CharacterFunctions {
     public static class PuppetCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.ShamanSummon.getActivePuppetsLabels().size();
+            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsLabels().count());
         }
     }
 
@@ -493,7 +493,7 @@ public class CharacterFunctions {
             }
             int finalMin = min;
             int finalMax = max;
-            return Models.ShamanSummon.getActivePuppetsLabels().stream()
+            return Models.ShamanSummon.getActivePuppetsLabels()
                     .map(ShamanPuppetInfo::getSecondsLeft)
                     .filter(s -> s >= finalMin && finalMax >= s)
                     .toList()

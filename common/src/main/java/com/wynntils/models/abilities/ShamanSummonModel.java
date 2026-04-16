@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class ShamanSummonModel extends Model {
@@ -72,7 +73,7 @@ public class ShamanSummonModel extends Model {
         event.getEntityIds().forEach(ActivePuppetsMap::remove);
     }
 
-    public List<ShamanPuppetInfo> getActivePuppetsLabels() {
-        return ActivePuppetsMap.values().stream().toList();
+    public Stream<ShamanPuppetInfo> getActivePuppetsLabels() {
+        return ActivePuppetsMap.values().stream();
     }
 }
