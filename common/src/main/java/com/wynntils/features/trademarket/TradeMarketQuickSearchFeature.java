@@ -105,7 +105,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
         Screen oldScreen = event.getScreen();
 
         if (!guessedGearList.isEmpty()) {
-            cleanupGuessGearList(oldScreen);
+            guessedGearList.clear();
         }
 
         if (Models.TradeMarket.inChatInput() && oldScreen instanceof ChatScreen) {
@@ -198,13 +198,13 @@ public class TradeMarketQuickSearchFeature extends Feature {
         ItemStack itemStack = hoveredSlot.getItem();
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
         if (gearBoxItemOpt.isPresent()) {
-            Screen screen = McUtils.screen();
-            cleanupGuessGearList(screen);
+            guessedGearList.clear();
             List<GearInfo> possibleGear = Models.Gear.getPossibleGears(gearBoxItemOpt.get());
             if (possibleGear.isEmpty()) {
                 // TODO: error log something
                 return;
             }
+            Screen screen = McUtils.screen();
             Font font = McUtils.mc().font;
             final int yStart = screen.height / 2 - font.lineHeight * possibleGear.size();
             final int buttonHeight = font.lineHeight + 2;
@@ -245,7 +245,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
     }
 
     private void onGuessGearPress(Button button) {
-        cleanupGuessGearList(McUtils.screen());
+        guessedGearList.clear();
         searchQuery = button.getMessage().getString();
         clickOnSearchSlot();
     }
@@ -257,10 +257,5 @@ public class TradeMarketQuickSearchFeature extends Feature {
                 McUtils.containerMenu().containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
                 McUtils.containerMenu().getItems());
-    }
-
-    private void cleanupGuessGearList(Screen screen) {
-        guessedGearList.forEach(screen::removeWidget);
-        guessedGearList.clear();
     }
 }
