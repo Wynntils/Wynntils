@@ -101,13 +101,11 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
     @SubscribeEvent
     public void onScreenClosed(ScreenClosedEvent.Post event) {
-        Screen oldScreen = event.getScreen();
-
         if (!guessedGearList.isEmpty()) {
             guessedGearList.clear();
         }
 
-        if (Models.TradeMarket.inChatInput() && oldScreen instanceof ChatScreen) {
+        if (Models.TradeMarket.inChatInput() && event.getScreen() instanceof ChatScreen) {
             if (autoCancel.get() && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
                 McUtils.sendChat("cancel");
             }
