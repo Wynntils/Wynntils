@@ -27,29 +27,23 @@ import com.wynntils.models.trademarket.event.TradeMarketChatInputEvent;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.WynnUtils;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.network.chat.Component;
-import net.minecraft.util.ARGB;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketQuickSearchFeature extends Feature {
@@ -210,7 +204,8 @@ public class TradeMarketQuickSearchFeature extends Feature {
             GearBoxItem gearBoxItem = gearBoxItemOpt.get();
             List<GearInfo> possibleGear = Models.Gear.getPossibleGears(gearBoxItem);
             if (possibleGear.isEmpty()) {
-                WynntilsMod.warn("Tried Quick Searching gear box item " + gearBoxItem + ", but found no possible gear.");
+                WynntilsMod.warn(
+                        "Tried Quick Searching gear box item " + gearBoxItem + ", but found no possible gear.");
                 return;
             }
 
@@ -237,27 +232,28 @@ public class TradeMarketQuickSearchFeature extends Feature {
             final int yStart = (screen.height - listHeight) / 2;
             for (int col = 0; col < colCount; col++) {
                 for (int row = 0; row < rowCount; row++) {
-                    guessedGearList.add(
-                            new Button.Builder(Component.literal(possibleGear.get(col * rowCount + row).name()), this::onGuessGearPress)
-                                    .pos(xStart + col * buttonWidth, yStart + buttonHeight * row)
-                                    .size(buttonWidth, buttonHeight)
-                                    .build()
-                    );
+                    guessedGearList.add(new Button.Builder(
+                                    Component.literal(possibleGear
+                                            .get(col * rowCount + row)
+                                            .name()),
+                                    this::onGuessGearPress)
+                            .pos(xStart + col * buttonWidth, yStart + buttonHeight * row)
+                            .size(buttonWidth, buttonHeight)
+                            .build());
                 }
             }
 
-            guessedGearList.add(
-                    new Button.Builder(Component.translatable("feature.wynntils.tradeMarketQuickSearch.guessGearList.header"), button -> guessedGearList.clear())
-                            .pos(xStart, yStart - buttonHeight)
-                            .size(listWidth, buttonHeight)
-                            .build()
-            );
+            guessedGearList.add(new Button.Builder(
+                            Component.translatable("feature.wynntils.tradeMarketQuickSearch.guessGearList.header"),
+                            button -> guessedGearList.clear())
+                    .pos(xStart, yStart - buttonHeight)
+                    .size(listWidth, buttonHeight)
+                    .build());
 
             return;
         }
 
-        searchQuery =
-                StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
+        searchQuery = StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
         searchQuery = getSearchQuery(searchQuery);
 
         clickOnSearchSlot();
