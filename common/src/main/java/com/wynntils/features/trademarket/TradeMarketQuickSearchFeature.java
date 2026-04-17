@@ -199,23 +199,27 @@ public class TradeMarketQuickSearchFeature extends Feature {
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
         if (gearBoxItemOpt.isPresent()) {
             guessedGearList.clear();
-            List<GearInfo> possibleGear = Models.Gear.getPossibleGears(gearBoxItemOpt.get());
+            GearBoxItem gearBoxItem = gearBoxItemOpt.get();
+            List<GearInfo> possibleGear = Models.Gear.getPossibleGears(gearBoxItem);
             if (possibleGear.isEmpty()) {
-                // TODO: error log something
+                WynntilsMod.warn("Tried Quick Searching gear box item " + gearBoxItem + ", but found no possible gear.");
                 return;
             }
             Screen screen = McUtils.screen();
             Font font = McUtils.mc().font;
-            final int yStart = screen.height / 2 - font.lineHeight * possibleGear.size();
-            final int buttonHeight = font.lineHeight + 2;
+            final float scale = 1.25f;
+            final int buttonHeight = Math.round(font.lineHeight * scale);
+            final int yStart = screen.height / 2 - buttonHeight * possibleGear.size();
             for (int i = 0; i < possibleGear.size(); i++) {
                 // TODO: check if can't fit vertically (leave some padding above and below) and then use multiple columns
                 Component itemName = Component.literal(possibleGear.get(i).name());
-                Button button = new Button.Builder(itemName, this::onGuessGearPress)
-                        .pos(screen.width / 2, yStart + buttonHeight * i)
-                        .size(font.width(itemName) + 2, buttonHeight)
-                        .build();
-                guessedGearList.add(button);
+                int buttonWidth = Math.round(font.width(itemName) * scale);
+                guessedGearList.add(
+                        new Button.Builder(itemName, this::onGuessGearPress)
+                                .pos((screen.width - buttonWidth) / 2, yStart + buttonHeight * i)
+                                .size(buttonWidth, buttonHeight)
+                                .build()
+                );
             }
             return;
         }
