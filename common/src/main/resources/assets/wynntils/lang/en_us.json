@@ -1570,6 +1570,7 @@
   "feature.wynntils.tradeMarketPriceMatch.undercutBy.description": "How many emeralds should the button undercut the current lowest sell offer by? Set to 0 to match the existing price.",
   "feature.wynntils.tradeMarketPriceMatch.undercutBy.name": "Undercut By",
   "feature.wynntils.tradeMarketPriceMatch.youReceive": "You receive: ",
+  "feature.wynntils.tradeMarketQuickSearch.guessGearList.header": "Select to search or press to cancel",
   "feature.wynntils.tradeMarketQuickSearch.autoCancel.description": "Cancels the market chat prompt when ESC is pressed.",
   "feature.wynntils.tradeMarketQuickSearch.autoCancel.name": "Auto Cancel",
   "feature.wynntils.tradeMarketQuickSearch.description": "Adds a hotkey for quick item search and auto-opens chat during trade market use.",

@@ -1432,6 +1432,7 @@
   "feature.wynntils.tradeMarketPriceMatch.undercutBy.description": "На сколько кнопки должны снижать существующие цены? Установите на 0, чтобы соответствовать существующим ценам.",
   "feature.wynntils.tradeMarketPriceMatch.undercutBy.name": "Снизить на",
   "feature.wynntils.tradeMarketPriceMatch.youReceive": "Вы получаете: ",
+  "feature.wynntils.tradeMarketQuickSearch.guessGearList.header": "Выберите для поиска или нажмите для отмены",
   "feature.wynntils.tradeMarketQuickSearch.autoCancel.description": "Отменяет запрос чата рынка при нажатии ESC.",
   "feature.wynntils.tradeMarketQuickSearch.autoCancel.name": "Автоотмена",
   "feature.wynntils.tradeMarketQuickSearch.description": "Добавляет горячую клавишу для быстрого поиска предметов и автоматически открывает чат во время использования торгового рынка.",
