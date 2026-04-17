@@ -48,7 +48,8 @@ public class DataCrowdSourcingFeature extends Feature {
 
         MutableComponent component =
                 Component.literal("Wynntils Crowd Sourcing\n").withStyle(ChatFormatting.AQUA);
-        component.append(Component.literal("""
+        component.append(Component.literal(
+                        """
                         Wynntils can collect data during your
                         gameplay to improve the mod.
                         This data does not contain any personal information,
@@ -56,7 +57,8 @@ public class DataCrowdSourcingFeature extends Feature {
                         To share this data with the Wynntils team,
                         you must copy it to the clipboard and send it to us,
                         during periods when we are collecting data.
-                        """).withStyle(ChatFormatting.GRAY));
+                        """)
+                .withStyle(ChatFormatting.GRAY));
 
         component.append(Component.literal("\nThe following data types are not confirmed to be collected:\n"));
         for (CrowdSourcedDataType dataType : nonConfirmedDataTypes) {
