@@ -34,9 +34,9 @@ import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.models.items.items.gui.TradeMarketIdentificationFilterItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.mount.type.MountStat;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
@@ -448,12 +448,10 @@ public class ItemTextOverlayFeature extends Feature {
                         StyledText.fromComponent(ComponentUtils.makeRainbowStyle(MARKER_SYMBOL, true)), style);
             } else if (overallPercentage >= BLUE_OVERALL_MIN) {
                 task = new TextRenderTask(
-                        MARKER_SYMBOL,
-                        style.withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.AQUA)));
+                        MARKER_SYMBOL, style.withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.AQUA)));
             } else {
                 task = new TextRenderTask(
-                        MARKER_SYMBOL,
-                        style.withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.GREEN)));
+                        MARKER_SYMBOL, style.withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.GREEN)));
             }
 
             return new TextOverlay(task, -1, 1, 0.85f);
