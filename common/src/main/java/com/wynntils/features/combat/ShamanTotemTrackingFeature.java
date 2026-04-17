@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.combat;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
@@ -14,7 +15,13 @@ import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
+import java.util.Comparator;
+import net.minecraft.core.Position;
 import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
@@ -41,11 +48,16 @@ public class ShamanTotemTrackingFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onTotemSummoned(TotemEvent.Summoned e) {
+    public void onTotemActivated(TotemEvent.Activated e) {
         if (!highlightShamanTotems.get()) return;
 
         int totemNumber = e.getTotemNumber();
-        Display.ItemDisplay totemAS = e.getTotemEntity();
+
+        Entity totemEntity = e.getTotemDisplay().getVehicle();
+
+        if (totemEntity == null) return;
+
+        WynntilsMod.info("Found vehicle " + totemEntity.toString());
 
         CustomColor color =
                 switch (totemNumber) {
@@ -58,9 +70,28 @@ public class ShamanTotemTrackingFeature extends Feature {
                                 "totemNumber should be 1, 2, 3 or 4! (color switch in #onTotemSummoned in ShamanTotemTrackingFeature");
                 };
 
-        ((EntityExtension) totemAS).setGlowColor(color);
+        ((EntityExtension) totemEntity).setGlowColor(color);
 
-        totemAS.setGlowingTag(true);
-        totemAS.setSharedFlag(ENTITY_GLOWING_FLAG, true);
+        totemEntity.setGlowingTag(true);
+        totemEntity.setSharedFlag(ENTITY_GLOWING_FLAG, true);
+    }
+
+    private Display.ItemDisplay findTotemDisplay(Position totemPosition) {
+        if (McUtils.mc().level == null) return null;
+
+        double x = totemPosition.x();
+        double y = totemPosition.y();
+        double z = totemPosition.z();
+
+        AABB search = new AABB(x - 1.25, y - 3.0, z - 1.25, x + 1.25, y + 0.25, z + 1.25);
+
+        return McUtils.mc().level.getEntitiesOfClass(Display.ItemDisplay.class, search).stream()
+                .filter(item -> {
+                    boolean isBoatDisplay = item.itemRenderState().itemStack().is(Items.OAK_BOAT);
+                    double yDelta = y - item.getY();
+                    return (yDelta >= 0.75 && yDelta <= 2.75) && isBoatDisplay;
+                })
+                .min(Comparator.comparingDouble(item -> Math.abs((y - item.getY()) - 1.5)))
+                .orElse(null);
     }
 }

@@ -21,14 +21,20 @@ public abstract class TotemEvent extends Event {
     }
 
     /**
-     * Fired when the totem's timer text display is bound to the visible totem
+     * Fired when a pending totem gets its timer text display bound.
      */
     public static class Activated extends TotemEvent {
         private final Position position;
+        private final Display.TextDisplay totemDisplay;
 
-        public Activated(int totemNumber, Position position) {
+        public Activated(int totemNumber, Display.TextDisplay totemDisplay, Position position) {
             super(totemNumber);
+            this.totemDisplay = totemDisplay;
             this.position = position;
+        }
+
+        public Display.TextDisplay getTotemDisplay() {
+            return totemDisplay;
         }
 
         public Position getPosition() {
@@ -37,7 +43,7 @@ public abstract class TotemEvent extends Event {
     }
 
     /**
-     * Fired when the totem's timer is updated (when it decreases by 1 sec)
+     * Fired when the totem's timer is updated (when it decreases by 1 sec).
      */
     public static class Updated extends TotemEvent {
         private final int time;
@@ -75,18 +81,18 @@ public abstract class TotemEvent extends Event {
     }
 
     /**
-     * Fired when totem is initially summoned by spell cast
+     * Fired when the timer label first identifies a totem.
      */
     public static class Summoned extends TotemEvent {
-        private final Display.ItemDisplay totemEntity;
+        private final Display.TextDisplay totemTimerDisplay;
 
-        public Summoned(int totemNumber, Display.ItemDisplay totemEntity) {
+        public Summoned(int totemNumber, Display.TextDisplay totemTimerDisplay) {
             super(totemNumber);
-            this.totemEntity = totemEntity;
+            this.totemTimerDisplay = totemTimerDisplay;
         }
 
-        public Display.ItemDisplay getTotemEntity() {
-            return totemEntity;
+        public Display.TextDisplay getTotemTimerDisplay() {
+            return totemTimerDisplay;
         }
     }
 }
