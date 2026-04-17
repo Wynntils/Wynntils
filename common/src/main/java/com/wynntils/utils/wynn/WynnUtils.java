@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public final class WynnUtils {
     private static final String ITEM_NAME_MARKER = "\uDAFC\uDC00";
+    private static final String UNIDENTIFIED_ITEM_MARKER = "\uDB00\uDC02";
 
     /**
      * Removes the characters 'À' ('\u00c0') and ֎ ('\u058e') that is sometimes added in Wynn APIs and
@@ -26,6 +27,6 @@ public final class WynnUtils {
      */
     public static String stripItemNameMarkers(String input) {
         if (input == null) return "";
-        return input.replace(ITEM_NAME_MARKER, "");
+        return input.replace(ITEM_NAME_MARKER, "").replace(UNIDENTIFIED_ITEM_MARKER, "");
     }
 }
