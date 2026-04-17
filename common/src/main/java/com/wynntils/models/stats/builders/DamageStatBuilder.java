@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats.builders;
@@ -29,7 +29,7 @@ public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
         // If a raw critical damage bonus stat is added, add to AttackType
         callback.accept(new DamageStatType(
                 "CRITICAL_DAMAGE_BONUS",
-                "Critical Damage Bonus",
+                "Critical Damage",
                 "criticalDamageBonus",
                 "CRITICAL_DAMAGE_BONUS",
                 StatUnit.PERCENT));
@@ -81,8 +81,8 @@ public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
 
     private static String buildInternalRollName(String apiName) {
         return switch (apiName) {
-                // A few damage stats do not follow normal rules, but instead has legacy names
-                // This list comes from Wynncraft internals, courtesy of HeyZeer0
+            // A few damage stats do not follow normal rules, but instead has legacy names
+            // This list comes from Wynncraft internals, courtesy of HeyZeer0
             case "spellDamageBonus" -> "SPELLDAMAGE";
             case "spellDamageBonusRaw" -> "SPELLDAMAGERAW";
             case "mainAttackDamageBonus" -> "DAMAGEBONUS";

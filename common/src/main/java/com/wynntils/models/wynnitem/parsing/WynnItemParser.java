@@ -118,7 +118,7 @@ public final class WynnItemParser {
 
     // Test in WynnItemParser_SHINY_STAT_PATTERN
     private static final Pattern SHINY_STAT_PATTERN = Pattern.compile(
-            "^§f\uE04F\uDAFF\uDFFF§#(?:[a-f0-9]{8}) ([a-zA-Z ]+).+?§f([\\d,]+)§#(?:[a-f0-9]{8})(\uDB00\uDC00|.+)$");
+            "^§f\uE04F\uDAFF\uDFFF§#(?:[a-f0-9]{8})(?: )? ([a-zA-Z ]+).+?§f([\\d,]+)§#(?:[a-f0-9]{8})(\uDB00\uDC00|.+)$");
 
     // Test in WynnItemParser_TOOLTIP_PAGE_PATTERN
     private static final Pattern TOOLTIP_PAGE_PATTERN = Pattern.compile("(§#ffea80ff)?\uE000");
@@ -126,15 +126,15 @@ public final class WynnItemParser {
     private static final Map<CustomColor, Integer> TIER_COLOR_CODES = Map.of(
             CommonColors.BLACK,
             0,
-            CustomColor.fromInt(0xebeb47),
+            CustomColor.fromInt(0xe6e647),
             1,
-            CustomColor.fromInt(0xeb47eb),
+            CustomColor.fromInt(0xe647e6),
             2,
-            CustomColor.fromInt(0x47ebeb),
+            CustomColor.fromInt(0x47e6e6),
             3);
 
     private static final Pattern PROFESSION_TIER_PATTERN =
-            Pattern.compile(".+?(?:§(0|#([a-f0-9]{8})))(?:\uE000){1,3}.+?");
+            Pattern.compile(".*§#([a-f0-9]{6})[a-f0-9]{2}\\uE000{1,3}(?=\\uDB00\\uDC02).*");
 
     private static final FontDescription SPRITE_FRAME_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/emblem/sprite"));
@@ -393,6 +393,7 @@ public final class WynnItemParser {
                     String statDisplayName = statMatcher.group("statName");
                     int value = Integer.parseInt(statMatcher.group("value").replace(",", ""));
                     String unit = statMatcher.group("unit");
+                    boolean hasIconPrefix = statMatcher.group("iconPrefix") != null;
 
                     StatType statType = Models.Stat.fromDisplayName(statDisplayName, unit);
                     if (statType == null) {
@@ -415,7 +416,8 @@ public final class WynnItemParser {
                     StatPossibleValues possibleValues =
                             possibleValuesMap != null ? possibleValuesMap.get(statType) : null;
 
-                    StatActualValue actualValue = Models.Stat.buildActualValue(statType, value, stars, possibleValues);
+                    StatActualValue actualValue =
+                            Models.Stat.buildActualValue(statType, value, stars, possibleValues, hasIconPrefix);
                     identifications.add(actualValue);
                 }
             }
@@ -491,13 +493,16 @@ public final class WynnItemParser {
         if (!rerollsString.endsWith("\uF005")) return 0;
 
         Matcher matcher = REROLL_EXTRACT_PATTERN.matcher(rerollsString);
+        String rawNumberSegment = null;
 
-        if (!matcher.find()) {
+        while (matcher.find()) {
+            rawNumberSegment = matcher.group(1);
+        }
+
+        if (rawNumberSegment == null) {
             WynntilsMod.warn("Could not find reroll segment");
             return -1;
         }
-
-        String rawNumberSegment = matcher.group(1);
 
         int rerolls = 0;
 

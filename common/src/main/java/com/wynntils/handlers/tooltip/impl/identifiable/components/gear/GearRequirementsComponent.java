@@ -33,11 +33,19 @@ import net.minecraft.network.chat.Style;
 
 public final class GearRequirementsComponent {
     public List<Component> buildHeaderLines(GearInfo gearInfo, GearInstance gearInstance) {
-        return buildHeaderLines(gearInfo, gearInstance, Map.of());
+        return buildHeaderLines(gearInfo, gearInstance, Map.of(), null);
     }
 
     public List<Component> buildHeaderLines(
             GearInfo gearInfo, GearInstance gearInstance, Map<Skill, Boolean> parsedSkillRequirementStates) {
+        return buildHeaderLines(gearInfo, gearInstance, parsedSkillRequirementStates, null);
+    }
+
+    public List<Component> buildHeaderLines(
+            GearInfo gearInfo,
+            GearInstance gearInstance,
+            Map<Skill, Boolean> parsedSkillRequirementStates,
+            Component originalShinyRerollTracker) {
         List<Component> header = new ArrayList<>();
         header.add(TooltipMarkers.markLine(Component.empty(), TooltipMarkers.SECTION_DIVIDER));
 
@@ -51,7 +59,7 @@ public final class GearRequirementsComponent {
             header.add(TooltipMarkers.markLine(Component.empty(), TooltipMarkers.SECTION_DIVIDER));
             header.add(TooltipMarkers.markLine(
                     GearTooltipSupport.buildShinyStatLine(
-                            gearInstance.shinyStat().get(), gearInfo.tier()),
+                            gearInstance.shinyStat().get(), gearInfo.tier(), originalShinyRerollTracker),
                     TooltipMarkers.ALIGN_RIGHT));
         }
 
