@@ -31,7 +31,7 @@ public class ShamanSummonModel extends Model {
     private static final Pattern HUMMINGBIRD_RETURN_PATTERN =
             Pattern.compile("§e((\uE008\uE002)|\uE001) Your hummingbirds have returned to you!$");
 
-    private final Map<Integer, ShamanPuppetInfo> ActivePuppetsMap = new HashMap<>();
+    private final Map<Integer, ShamanPuppetInfo> activePuppetsMap = new HashMap<>();
 
     public boolean hummingBirdsState = false;
 
@@ -63,17 +63,17 @@ public class ShamanSummonModel extends Model {
             return;
         }
 
-        ActivePuppetsMap.put(labelInfo.getEntity().getId(), labelInfo);
+        activePuppetsMap.put(labelInfo.getEntity().getId(), labelInfo);
     }
 
     @SubscribeEvent
     public void onPuppetRemoved(RemoveEntitiesEvent event) {
         if (!Models.WorldState.onWorld()) return;
         if (Models.Character.getClassType() != ClassType.SHAMAN) return;
-        event.getEntityIds().forEach(ActivePuppetsMap::remove);
+        event.getEntityIds().forEach(activePuppetsMap::remove);
     }
 
     public Stream<ShamanPuppetInfo> getActivePuppetsLabels() {
-        return ActivePuppetsMap.values().stream();
+        return activePuppetsMap.values().stream();
     }
 }
