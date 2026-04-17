@@ -27,13 +27,18 @@ import com.wynntils.models.trademarket.event.TradeMarketChatInputEvent;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
@@ -160,7 +165,9 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
         if (guessedGearList.isEmpty()) return;
 
-        guessedGearList.forEach(button -> button.render(event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTicks()));
+        for (Button button : guessedGearList) {
+            button.render(event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTicks());
+        }
     }
 
     @SubscribeEvent
@@ -169,11 +176,12 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
         if (guessedGearList.isEmpty()) return;
 
-        guessedGearList.forEach(button -> {
+        for (Button button : guessedGearList) {
             if (button.mouseClicked(event.getMouseButtonEvent(), event.isDoubleClick())) {
                 event.setCanceled(true);
+                break;
             }
-        });
+        }
     }
 
     private void openChat() {
@@ -205,22 +213,46 @@ public class TradeMarketQuickSearchFeature extends Feature {
                 WynntilsMod.warn("Tried Quick Searching gear box item " + gearBoxItem + ", but found no possible gear.");
                 return;
             }
+
             Screen screen = McUtils.screen();
             Font font = McUtils.mc().font;
             final float scale = 1.25f;
-            final int buttonHeight = Math.round(font.lineHeight * scale);
-            final int yStart = screen.height / 2 - buttonHeight * possibleGear.size();
-            for (int i = 0; i < possibleGear.size(); i++) {
-                // TODO: check if can't fit vertically (leave some padding above and below) and then use multiple columns
-                Component itemName = Component.literal(possibleGear.get(i).name());
-                int buttonWidth = Math.round(font.width(itemName) * scale);
-                guessedGearList.add(
-                        new Button.Builder(itemName, this::onGuessGearPress)
-                                .pos((screen.width - buttonWidth) / 2, yStart + buttonHeight * i)
-                                .size(buttonWidth, buttonHeight)
-                                .build()
-                );
+
+            int buttonWidth = Integer.MIN_VALUE;
+            for (GearInfo gearInfo : possibleGear) {
+                buttonWidth = Math.max(buttonWidth, Math.round(font.width(gearInfo.name()) * scale));
             }
+            final int buttonHeight = Math.round(font.lineHeight * scale);
+
+            int listHeight = buttonHeight * possibleGear.size();
+            int colCount = 1;
+            while (listHeight > screen.height) {
+                listHeight /= 2;
+                colCount += 1;
+            }
+
+            final int rowCount = listHeight / buttonHeight;
+            final int listWidth = colCount * buttonWidth;
+            final int xStart = (screen.width - listWidth) / 2;
+            final int yStart = (screen.height - listHeight) / 2;
+            for (int col = 0; col < colCount; col++) {
+                for (int row = 0; row < rowCount; row++) {
+                    guessedGearList.add(
+                            new Button.Builder(Component.literal(possibleGear.get(col * rowCount + row).name()), this::onGuessGearPress)
+                                    .pos(xStart + col * buttonWidth, yStart + buttonHeight * row)
+                                    .size(buttonWidth, buttonHeight)
+                                    .build()
+                    );
+                }
+            }
+
+            guessedGearList.add(
+                    new Button.Builder(Component.translatable("feature.wynntils.tradeMarketQuickSearch.guessGearList.header"), button -> guessedGearList.clear())
+                            .pos(xStart, yStart - buttonHeight)
+                            .size(listWidth, buttonHeight)
+                            .build()
+            );
+
             return;
         }
 
