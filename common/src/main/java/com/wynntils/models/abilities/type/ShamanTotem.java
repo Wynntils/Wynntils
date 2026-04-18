@@ -5,12 +5,14 @@
 package com.wynntils.models.abilities.type;
 
 import net.minecraft.core.Position;
+import net.minecraft.world.entity.Display;
 
 public class ShamanTotem {
     private final int totemNumber;
     private int timerEntityId;
     private int time;
     private TotemState state;
+    private Display.ItemDisplay itemDisplay;
     /**
      * Our internal representation of the timer label's position.
      * */
@@ -54,6 +56,14 @@ public class ShamanTotem {
 
     public Position getPosition() {
         return position;
+    }
+
+    public Display.ItemDisplay getItemDisplay() {
+        return itemDisplay;
+    }
+
+    public void setItemDisplay(Display.ItemDisplay itemDisplay) {
+        this.itemDisplay = itemDisplay;
     }
 
     public void setPosition(Position position) {
