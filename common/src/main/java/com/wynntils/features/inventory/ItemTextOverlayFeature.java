@@ -32,9 +32,11 @@ import com.wynntils.models.items.items.game.TeleportScrollItem;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.models.items.items.gui.TradeMarketIdentificationFilterItem;
+import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.mount.type.MountStat;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
@@ -98,6 +100,12 @@ public class ItemTextOverlayFeature extends Feature {
 
     @Persisted
     private final Config<TextShadow> gatheringToolTierShadow = new Config<>(TextShadow.OUTLINE);
+
+    @Persisted
+    private final Config<Boolean> overallRollMarkersEnabled = new Config<>(true);
+
+    @Persisted
+    private final Config<TextShadow> overallRollMarkersShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
     private final Config<Boolean> mountItemEnabled = new Config<>(true);
@@ -205,6 +213,9 @@ public class ItemTextOverlayFeature extends Feature {
         }
         if (wynnItem instanceof GatheringToolItem gatheringToolItem) {
             return new GatheringToolOverlay(gatheringToolItem);
+        }
+        if (wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty) {
+            return new OverallRollMarkerOverlay(identifiableItemProperty);
         }
         if (wynnItem instanceof MountItem mountItem) {
             return new MountItemOverlay(mountItem);
@@ -407,6 +418,46 @@ public class ItemTextOverlayFeature extends Feature {
         }
     }
 
+    private final class OverallRollMarkerOverlay implements TextOverlayInfo {
+        private static final float GREEN_OVERALL_MIN = 80.0f;
+        private static final float BLUE_OVERALL_MIN = 95.0f;
+        private static final float PERFECT_OVERALL_MIN = 100.0f;
+        private static final String MARKER_SYMBOL = "✦";
+
+        private final IdentifiableItemProperty<?, ?> item;
+
+        private OverallRollMarkerOverlay(IdentifiableItemProperty<?, ?> item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return overallRollMarkersEnabled.get()
+                    && item.hasOverallValue()
+                    && item.getOverallPercentage() >= GREEN_OVERALL_MIN;
+        }
+
+        @Override
+        public TextOverlay getTextOverlay() {
+            float overallPercentage = item.getOverallPercentage();
+            TextRenderSetting style = TextRenderSetting.DEFAULT.withTextShadow(overallRollMarkersShadow.get());
+            TextRenderTask task;
+
+            if (overallPercentage >= PERFECT_OVERALL_MIN) {
+                task = new TextRenderTask(
+                        StyledText.fromComponent(ComponentUtils.makeRainbowStyle(MARKER_SYMBOL, true)), style);
+            } else if (overallPercentage >= BLUE_OVERALL_MIN) {
+                task = new TextRenderTask(
+                        MARKER_SYMBOL, style.withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.AQUA)));
+            } else {
+                task = new TextRenderTask(
+                        MARKER_SYMBOL, style.withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.GREEN)));
+            }
+
+            return new TextOverlay(task, -1, 1, 0.85f);
+        }
+    }
+
     private final class MountItemOverlay implements TextOverlayInfo {
         private final MountItem item;
 
@@ -571,11 +622,11 @@ public class ItemTextOverlayFeature extends Feature {
         public TextOverlay getTextOverlay() {
             CustomColor textColor = teleportScrollColorByCharges.get()
                     ? switch (item.getRemainingCharges()) {
-                        case 3 -> MAX_CHARGES_COLOR;
-                        case 2 -> TWO_CHARGES_COLOR;
-                        case 1 -> ONE_CHARGE_COLOR;
-                        default -> OUT_OF_CHARGES_COLOR;
-                    }
+                case 3 -> MAX_CHARGES_COLOR;
+                case 2 -> TWO_CHARGES_COLOR;
+                case 1 -> ONE_CHARGE_COLOR;
+                default -> OUT_OF_CHARGES_COLOR;
+            }
                     : MAX_CHARGES_COLOR;
 
             String text = item.getDestination();
