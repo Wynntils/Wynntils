@@ -135,7 +135,10 @@ public final class McUtils {
     }
 
     public static void sendMessageToClient(Component component) {
-        mc().getChatListener().handleSystemMessage(ComponentUtils.addWynntilsBanner(component), false);
+        var styledText = StyledText.fromComponent(component);
+        var wrapedText = StyledTextUtils.softWrap(styledText, 200);
+
+        mc().getChatListener().handleSystemMessage(wrapedText.getComponent(), false);
     }
 
     public static void sendWynntilsMessage(Component component) {

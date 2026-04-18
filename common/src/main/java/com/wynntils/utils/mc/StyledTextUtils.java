@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -196,6 +197,78 @@ public final class StyledTextUtils {
         if (!newParts.isEmpty()
                 && newParts.getLast().getString(null, StyleType.NONE).equals(" ")) {
             newParts.removeLast();
+        }
+
+        return StyledText.fromParts(newParts);
+    }
+
+    public static StyledText softWrap(StyledText styledText, int maxWidth) {
+        Minecraft mc = Minecraft.getInstance();
+        List<StyledTextPart> newParts = new ArrayList<>();
+
+        WynntilsMod.error(styledText.toString());
+
+        int currentWidth = 0;
+        for (StyledTextPart part : styledText) {
+            var lines = part.split("\n");
+
+            for (int i = 0; i < lines.length; i++) {
+                var line = lines[i];
+                var displayLength = mc.font.width(line.getComponent());
+
+                if(currentWidth + displayLength <= maxWidth) {
+                    // If the currentPart is short enough to fit into the current line
+                    currentWidth += displayLength;
+                    newParts.add(line);
+                }else {
+                    // If the currentPart is to long and we need to wrap - try to add every word seperate
+                    var split = line.split("\s+");
+                    for (StyledTextPart splitPart : split) {
+                        var splitDisplayLength = mc.font.width(splitPart.getComponent());
+
+                        // If word fits add it
+                        if(currentWidth + splitDisplayLength <= maxWidth) {
+                            currentWidth += splitDisplayLength;
+                            newParts.add(splitPart);
+                            newParts.add(new StyledTextPart(
+                                    " ", splitPart.getPartStyle().getStyle(), null, null));
+                            continue;
+                        }
+
+                        if(currentWidth <= 0) {
+                            // TODO: If whole word is to large
+                        }
+
+                        newParts.add(new StyledTextPart(NEWLINE_PREPARATION, splitPart.getPartStyle().getStyle(), null,null ));
+                        newParts.add(splitPart);
+                        newParts.add(new StyledTextPart(
+                                " ", splitPart.getPartStyle().getStyle(), null, null));
+                        currentWidth = splitDisplayLength;
+                    }
+                }
+
+                // If this is not the last line of this Part
+                if (i < lines.length - 1) {
+                    newParts.add(new StyledTextPart(
+                            NEWLINE_PREPARATION,
+                            part.getPartStyle().getStyle(),
+                            null,
+                            null
+                    ));
+                    currentWidth = 0;
+                }
+            }
+
+            // If line has ended on \n or was only \n
+            if (part.endsWith("\n")) {
+                newParts.add(new StyledTextPart(
+                        NEWLINE_PREPARATION,
+                        part.getPartStyle().getStyle(),
+                        null,
+                        null
+                ));
+                currentWidth = 0;
+            }
         }
 
         return StyledText.fromParts(newParts);

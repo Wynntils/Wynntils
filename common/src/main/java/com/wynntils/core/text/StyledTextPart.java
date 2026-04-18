@@ -8,16 +8,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.WynnUtils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+
+import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Pattern;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -456,6 +456,22 @@ public final class StyledTextPart {
 
     StyledTextPart stripTrailing() {
         return new StyledTextPart(text.stripTrailing(), style.getStyle(), parent, null);
+    }
+
+    public StyledTextPart[] split(String regex) {
+        final Pattern pattern = Pattern.compile(regex);
+
+        var split = pattern.split(text);
+        List<StyledTextPart> newParts = new ArrayList<>();
+        for (String splitText : split) {
+            newParts.add(new StyledTextPart(splitText, style.getStyle(), parent,null));
+        }
+
+        return newParts.toArray(StyledTextPart[]::new);
+    }
+
+    public boolean endsWith(String string) {
+        return text.endsWith(string);
     }
 
     boolean isEmpty() {
