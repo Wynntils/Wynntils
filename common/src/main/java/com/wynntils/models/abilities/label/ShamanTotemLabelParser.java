@@ -12,12 +12,15 @@ import java.util.regex.Pattern;
 import net.minecraft.world.entity.Entity;
 
 public class ShamanTotemLabelParser implements LabelParser<ShamanTotemLabelInfo> {
-    private static final Pattern SHAMAN_TOTEM_PATTERN = Pattern.compile(
-            "^(?<playerName>\\S+)('s|') Totem\\n(?:\\+(?<regenPerSecond>\\d+)\u2764/s )?(?:\uE011 (?<poisonAmount>.+?) )?(?:\uE013 (?<invigorateTime>\\d+)s )?\uE01F (?<timeLeft>\\d+)s");
+    // Test in ShamanTotemLabelParser_SHAMAN_TOTEM_PATTERN
+    private static final Pattern SHAMAN_TOTEM_PATTERN =
+            Pattern.compile("§b(?<playerName>.+)'(?:s)? §7Totem\n ?(?:§c\\+(?<regenPerSecond>\\d+)❤§7/s )?"
+                    + "(?:§5\uE011 §7(?<poisonAmount>.+?) )?(?:§e\uE013 §7(?<invigorateTime>\\d+)s )?"
+                    + "§d\uE01F §7(?<timeLeft>\\d+)s");
 
     @Override
     public ShamanTotemLabelInfo getInfo(StyledText label, Location location, Entity entity) {
-        Matcher matcher = SHAMAN_TOTEM_PATTERN.matcher(label.getStringWithoutFormatting());
+        Matcher matcher = label.getMatcher(SHAMAN_TOTEM_PATTERN);
         if (!matcher.matches()) return null;
 
         String playerName = matcher.group("playerName");
