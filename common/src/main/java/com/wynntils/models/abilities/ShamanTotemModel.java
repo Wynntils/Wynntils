@@ -29,18 +29,12 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import net.minecraft.core.Position;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Display;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.CustomModelData;
-import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ShamanTotemModel extends Model {
     private static final int MAX_TOTEM_COUNT = 4;
     private static final long PENDING_SUMMON_TIMEOUT_MS = 3000L;
-    private static final float SHAMAN_TOTEM_CUSTOM_MODEL_DATA = 30628.0f;
 
     private final ShamanTotem[] totems = new ShamanTotem[MAX_TOTEM_COUNT];
     private final TimedSet<Integer> pendingSummonedTotems =
@@ -152,11 +146,7 @@ public final class ShamanTotemModel extends Model {
         totem.setState(ShamanTotem.TotemState.ACTIVE);
 
         pendingSummonedTotems.remove(totem.getTotemNumber());
-
-        Display.ItemDisplay totemDisplay = findTotemDisplay(position);
-        totem.setItemDisplay(totemDisplay);
-
-        WynntilsMod.postEvent(new TotemEvent.Activated(totem.getTotemNumber(), totemDisplay, position));
+        WynntilsMod.postEvent(new TotemEvent.Activated(totem.getTotemNumber(), position));
     }
 
     private void updateTotem(ShamanTotem totem, int parsedTime, Position position) {
@@ -164,48 +154,7 @@ public final class ShamanTotemModel extends Model {
         totem.setPosition(position);
         totem.setState(ShamanTotem.TotemState.ACTIVE);
 
-        if (totem.getItemDisplay() == null) {
-            Display.ItemDisplay resolvedDisplay = findTotemDisplay(position);
-            if (resolvedDisplay != null) {
-                totem.setItemDisplay(resolvedDisplay);
-                WynntilsMod.postEvent(new TotemEvent.Activated(totem.getTotemNumber(), resolvedDisplay, position));
-            }
-        }
-
         WynntilsMod.postEvent(new TotemEvent.Updated(totem.getTotemNumber(), parsedTime, position));
-    }
-
-    private Display.ItemDisplay findTotemDisplay(Position totemPosition) {
-        if (McUtils.mc().level == null) return null;
-
-        double x = totemPosition.x();
-        double y = totemPosition.y();
-        double z = totemPosition.z();
-
-        AABB search = new AABB(x - 1.5, y - 3.0, z - 1.5, x + 1.5, y + 0.5, z + 1.5);
-
-        return McUtils.mc().level.getEntitiesOfClass(Display.ItemDisplay.class, search).stream()
-                .filter(this::isShamanTotemDisplay)
-                .filter(item -> {
-                    double yDelta = y - item.getY();
-                    return yDelta >= 0.75 && yDelta <= 2.75;
-                })
-                .min(Comparator.comparingDouble(item -> {
-                    double dx = item.getX() - x;
-                    double dz = item.getZ() - z;
-                    double dy = Math.abs((y - item.getY()) - 1.5);
-                    return dx * dx + dz * dz + dy * dy;
-                }))
-                .orElse(null);
-    }
-
-    private boolean isShamanTotemDisplay(Display.ItemDisplay itemDisplay) {
-        ItemStack stack = itemDisplay.getEntityData().get(Display.ItemDisplay.DATA_ITEM_STACK_ID);
-        if (stack == null || stack.isEmpty()) return false;
-        if (!stack.is(Items.OAK_BOAT)) return false;
-
-        CustomModelData cmd = stack.get(DataComponents.CUSTOM_MODEL_DATA);
-        return cmd != null && Float.valueOf(SHAMAN_TOTEM_CUSTOM_MODEL_DATA).equals(cmd.getFloat(0));
     }
 
     private void removeTotem(int totemNumber) {

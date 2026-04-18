@@ -25,16 +25,10 @@ public abstract class TotemEvent extends Event {
      */
     public static class Activated extends TotemEvent {
         private final Position position;
-        private final Display.ItemDisplay totemDisplay;
 
-        public Activated(int totemNumber, Display.ItemDisplay totemDisplay, Position position) {
+        public Activated(int totemNumber, Position position) {
             super(totemNumber);
-            this.totemDisplay = totemDisplay;
             this.position = position;
-        }
-
-        public Display.ItemDisplay getTotemDisplay() {
-            return totemDisplay;
         }
 
         public Position getPosition() {
