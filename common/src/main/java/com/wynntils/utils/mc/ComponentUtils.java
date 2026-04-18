@@ -16,8 +16,6 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.FormattedText;
@@ -32,15 +30,6 @@ public final class ComponentUtils {
 
     private static final Style RESET_STYLE =
             Style.EMPTY.withFont(FontDescription.DEFAULT).withColor(ChatFormatting.WHITE);
-
-    private static final FontDescription CHAT_BANNER_FONT = new FontDescription.Resource(Identifier.parse("wynntils:prefix"));
-    private static final Style CHAT_BANNER_STYLE =
-            Style.EMPTY.withFont(CHAT_BANNER_FONT).withColor(ChatFormatting.DARK_GREEN);
-    private static final Component CHAT_BANNER_FIRST_LINE = Component.literal(
-                    "\uDAFF\uDFFC\uE100\uDAFF\uDFFF\uE002\uDAFF\uDFFE ")
-            .withStyle(CHAT_BANNER_STYLE);
-    private static final Component CHAT_BANNER_LINE_PREFIX =
-            Component.literal("\uDAFF\uDFFC\uE001\uDB00\uDC06 ").withStyle(CHAT_BANNER_STYLE);
 
     private static final FontDescription PILL_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("banner/pill"));
@@ -216,35 +205,5 @@ public final class ComponentUtils {
                 .append(WYNNTILS_BACKGROUND_PILL)
                 .append(WYNNTILS_FOREGROUND_PILL)
                 .append(component);
-    }
-
-    /**
-     * Adds a Wynntils chat banner to the left side of the provided text in the style of Wynncraft 2.1 chat banners.
-     * The formatting of the provided text is preserved.
-     *
-     * @param formattedText the formatted text to add the Wynntils chat banner to
-     * @return a {@code Component} holding the formatted text with the Wynntils chat banner added
-     */
-    public static Component addWynntilsBanner(Component component) {
-        Minecraft mc = Minecraft.getInstance();
-
-        List<Component> lines = splitComponent(
-                component,
-                ChatComponent.getWidth(mc.options.chatWidth().get()) - mc.font.width(CHAT_BANNER_LINE_PREFIX));
-
-        MutableComponent output = CHAT_BANNER_FIRST_LINE.copy();
-        output.append(Component.empty().withStyle(RESET_STYLE).append(lines.getFirst()))
-                .append("\n");
-
-        for (int i = 1; i < lines.size(); i++) {
-            output.append(CHAT_BANNER_LINE_PREFIX
-                    .copy()
-                    .append(Component.empty().withStyle(RESET_STYLE).append(lines.get(i))));
-            if (i != lines.size() - 1) {
-                output.append("\n");
-            }
-        }
-
-        return output;
     }
 }
