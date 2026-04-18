@@ -28,9 +28,6 @@ public final class ComponentUtils {
     private static final int RAINBOW_CYCLE_TIME = 5000;
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
 
-    private static final Style RESET_STYLE =
-            Style.EMPTY.withFont(FontDescription.DEFAULT).withColor(ChatFormatting.WHITE);
-
     private static final FontDescription PILL_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("banner/pill"));
     private static final Style BACKGROUND_STYLE =
