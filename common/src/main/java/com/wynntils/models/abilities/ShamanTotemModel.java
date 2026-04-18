@@ -240,7 +240,7 @@ public final class ShamanTotemModel extends Model {
         return toReturn;
     }
 
-    private ShamanTotem getTotemByTimerEntityId(int timerEntityId) {
+    public ShamanTotem getTotemByTimerEntityId(int timerEntityId) {
         for (ShamanTotem totem : totems) {
             if (totem != null && totem.getTimerEntityId() == timerEntityId) {
                 return totem;
