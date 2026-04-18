@@ -26,6 +26,7 @@ public final class ServiceLocation extends MapLocationImpl {
         DUNGEON_MERCHANT("Dungeon Merchant", Texture.DUNGEON_MERCHANT, "merchant:dungeon"),
         DUNGEON_SCROLL_MERCHANT("Dungeon Scroll Merchant", Texture.DUNGEON_SCROLL_MERCHANT, "merchant:dungeon-scroll"),
         EMERALD_MERCHANT("Emerald Merchant", Texture.EMERALD_MERCHANT, "merchant:emerald"),
+        EXCHANGE_MERCHANT("Exchange Merchant", Texture.EXCHANGE_MERCHANT, "merchant:exchange"),
         FAST_TRAVEL("Fast Travel", Texture.FAST_TRAVEL, "fast-travel"),
         HOUSING_BALLOON("Housing Balloon", Texture.HOUSING_BALLOON, "housing-balloon"),
         ITEM_IDENTIFIER("Item Identifier", Texture.ITEM_IDENTIFIER, "identifier"),
