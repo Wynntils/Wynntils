@@ -622,11 +622,11 @@ public class ItemTextOverlayFeature extends Feature {
         public TextOverlay getTextOverlay() {
             CustomColor textColor = teleportScrollColorByCharges.get()
                     ? switch (item.getRemainingCharges()) {
-                case 3 -> MAX_CHARGES_COLOR;
-                case 2 -> TWO_CHARGES_COLOR;
-                case 1 -> ONE_CHARGE_COLOR;
-                default -> OUT_OF_CHARGES_COLOR;
-            }
+                        case 3 -> MAX_CHARGES_COLOR;
+                        case 2 -> TWO_CHARGES_COLOR;
+                        case 1 -> ONE_CHARGE_COLOR;
+                        default -> OUT_OF_CHARGES_COLOR;
+                    }
                     : MAX_CHARGES_COLOR;
 
             String text = item.getDestination();
