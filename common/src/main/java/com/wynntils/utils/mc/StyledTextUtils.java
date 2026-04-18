@@ -19,7 +19,11 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ChatComponent;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 
 public final class StyledTextUtils {
@@ -35,7 +39,8 @@ public final class StyledTextUtils {
     private static final Pattern NEWLINE_WRAP_PATTERN = Pattern.compile("\uDAFF\uDFFC\uE001\uDB00\uDC06");
     private static final Pattern WHITESPACES_PATTERN = Pattern.compile("\\s+");
 
-    private static final FontDescription CHAT_PREFIX_FONT = new FontDescription.Resource(Identifier.parse("wynntils:prefix"));
+    private static final FontDescription CHAT_PREFIX_FONT =
+            new FontDescription.Resource(Identifier.parse("wynntils:prefix"));
     private static final Style CHAT_PREFIX_STYLE =
             Style.EMPTY.withFont(CHAT_PREFIX_FONT).withColor(ChatFormatting.DARK_GREEN);
     private static final String CHAT_PREFIX_FIRST_LINE = "\uDAFF\uDFFC\uE100\uDAFF\uDFFF\uE002\uDAFF\uDFFE ";
@@ -222,18 +227,19 @@ public final class StyledTextUtils {
                 var line = lines[i];
                 var displayLength = mc.font.width(line.getComponent());
 
-                if(currentWidth + displayLength <= maxWidth) {
+                if (currentWidth + displayLength <= maxWidth) {
                     // If the currentPart is short enough to fit into the current line
                     currentWidth += displayLength;
                     newParts.add(line);
-                }else {
+                } else {
                     // If the currentPart is to long and we need to wrap - try to add every word seperate
                     var split = line.split("\s+");
                     for (StyledTextPart splitPart : split) {
-                        var splitDisplayLength = mc.font.width(splitPart.getComponent().append(" "));
+                        var splitDisplayLength =
+                                mc.font.width(splitPart.getComponent().append(" "));
 
                         // If word fits add it
-                        if(currentWidth + splitDisplayLength <= maxWidth) {
+                        if (currentWidth + splitDisplayLength <= maxWidth) {
                             currentWidth += splitDisplayLength;
                             newParts.add(splitPart);
                             newParts.add(new StyledTextPart(
@@ -241,14 +247,15 @@ public final class StyledTextUtils {
                             continue;
                         }
 
-                        if(currentWidth <= 0) {
+                        if (currentWidth <= 0) {
                             // TODO: If whole word is to large
                         }
 
-                        newParts.add(new StyledTextPart(NEWLINE_PREPARATION, splitPart.getPartStyle().getStyle(), null,null ));
-                        newParts.add(splitPart);
                         newParts.add(new StyledTextPart(
-                                " ", splitPart.getPartStyle().getStyle(), null, null));
+                                NEWLINE_PREPARATION, splitPart.getPartStyle().getStyle(), null, null));
+                        newParts.add(splitPart);
+                        newParts.add(
+                                new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
                         currentWidth = splitDisplayLength;
                     }
                 }
@@ -256,11 +263,7 @@ public final class StyledTextUtils {
                 // If this is not the last line of this Part
                 if (i < lines.length - 1) {
                     newParts.add(new StyledTextPart(
-                            NEWLINE_PREPARATION,
-                            part.getPartStyle().getStyle(),
-                            null,
-                            null
-                    ));
+                            NEWLINE_PREPARATION, part.getPartStyle().getStyle(), null, null));
                     currentWidth = 0;
                 }
             }
@@ -268,11 +271,7 @@ public final class StyledTextUtils {
             // If line has ended on \n or was only \n
             if (part.endsWith("\n")) {
                 newParts.add(new StyledTextPart(
-                        NEWLINE_PREPARATION,
-                        part.getPartStyle().getStyle(),
-                        null,
-                        null
-                ));
+                        NEWLINE_PREPARATION, part.getPartStyle().getStyle(), null, null));
                 currentWidth = 0;
             }
         }
@@ -282,29 +281,19 @@ public final class StyledTextUtils {
 
     public static StyledText addWynntilsPrefix(StyledText styledText) {
         Minecraft mc = Minecraft.getInstance();
-        var maxWidth = ChatComponent.getWidth(mc.options.chatWidth().get()) - mc.font.width(Component.literal(
-                CHAT_PREFIX_FIRST_LINE).setStyle(
-                CHAT_PREFIX_STYLE));
+        var maxWidth = ChatComponent.getWidth(mc.options.chatWidth().get())
+                - mc.font.width(Component.literal(CHAT_PREFIX_FIRST_LINE).setStyle(CHAT_PREFIX_STYLE));
 
-        var text = softWrap(styledText, maxWidth).prependPart(new StyledTextPart(
-                CHAT_PREFIX_FIRST_LINE,
-                CHAT_PREFIX_STYLE,
-                null,
-                null
-        ));
+        var text = softWrap(styledText, maxWidth)
+                .prependPart(new StyledTextPart(CHAT_PREFIX_FIRST_LINE, CHAT_PREFIX_STYLE, null, null));
 
         return text.iterate((current, changes) -> {
-            if(current.endsWith("\n")) {
-                changes.add(new StyledTextPart(
-                        CHAT_PREFIX_LINE_PREFIX,
-                        CHAT_PREFIX_STYLE,
-                        null,
-                        null
-                ));
+            if (current.endsWith("\n")) {
+                changes.add(new StyledTextPart(CHAT_PREFIX_LINE_PREFIX, CHAT_PREFIX_STYLE, null, null));
             }
 
             return IterationDecision.CONTINUE;
-        } );
+        });
     }
 
     /**
