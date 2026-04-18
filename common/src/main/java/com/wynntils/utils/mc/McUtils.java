@@ -135,7 +135,7 @@ public final class McUtils {
     }
 
     public static void sendMessageToClient(Component component) {
-        mc().getChatListener().handleSystemMessage(component, false);
+        mc().getChatListener().handleSystemMessage(ComponentUtils.addWynntilsBanner(component), false);
     }
 
     public static void sendWynntilsMessage(Component component) {
