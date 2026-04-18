@@ -19,12 +19,14 @@ import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
+import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.trademarket.event.TradeMarketChatInputEvent;
 import com.wynntils.models.trademarket.type.TradeMarketState;
+import com.wynntils.screens.base.widgets.InfoButton;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -34,10 +36,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -91,7 +97,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
     private boolean quickSearching = false;
     private boolean instantSearchingSendChat = false;
     private boolean instantSearchingCloseMenu = false;
-    private final List<Button> guessedGearList = new ArrayList<>();
+    private final List<AbstractButton> guessedGearList = new ArrayList<>();
 
     public TradeMarketQuickSearchFeature() {
         super(new ProfileDefault.Builder()
@@ -153,25 +159,55 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
-        if (!Models.TradeMarket.inTradeMarket()) return;
+        if (!Models.TradeMarket.getTradeMarketState().isResults()) return;
 
         if (guessedGearList.isEmpty()) return;
 
-        for (Button button : guessedGearList) {
+        for (AbstractButton button : guessedGearList) {
             button.render(event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTicks());
         }
     }
 
     @SubscribeEvent
     public void onInventoryMouseClicked(InventoryMouseClickedEvent event) {
-        if (!Models.TradeMarket.inTradeMarket()) return;
+        if (!Models.TradeMarket.getTradeMarketState().isResults()) return;
 
         if (guessedGearList.isEmpty()) return;
 
-        for (Button button : guessedGearList) {
-            if (button.mouseClicked(event.getMouseButtonEvent(), event.isDoubleClick())) {
+        // Only allow LMB and RMB because default keybind is MMB which is clicked outside the list and therefore will
+        // immideatly close it
+        // Also dissallow any modifiers because someone might want to bind quick search to LMB/RMB + modifier which
+        // would result in the same thing
+        MouseButtonEvent mouseEvent = event.getMouseButtonEvent();
+        int keycode = mouseEvent.buttonInfo().button();
+        if (keycode != GLFW.GLFW_MOUSE_BUTTON_1 && keycode != GLFW.GLFW_MOUSE_BUTTON_2) return;
+        if (mouseEvent.hasControlDown()
+                || mouseEvent.hasControlDownWithQuirk()
+                || mouseEvent.hasShiftDown()
+                || mouseEvent.hasAltDown()) return;
+
+        for (AbstractButton button : guessedGearList) {
+            if (button.isMouseOver(event.getMouseX(), event.getMouseY())) {
+                button.playDownSound(Minecraft.getInstance().getSoundManager());
+                button.onClick(mouseEvent, event.isDoubleClick());
                 event.setCanceled(true);
-                break;
+                return;
+            }
+        }
+
+        guessedGearList.clear();
+    }
+
+    @SubscribeEvent
+    public void onItemTooltipRender(ItemTooltipRenderEvent.Pre event) {
+        if (!Models.TradeMarket.getTradeMarketState().isResults()) return;
+
+        if (guessedGearList.isEmpty()) return;
+
+        for (AbstractButton button : guessedGearList) {
+            if (button.isMouseOver(event.getMouseX(), event.getMouseY())) {
+                event.setCanceled(true);
+                return;
             }
         }
     }
@@ -186,7 +222,8 @@ public class TradeMarketQuickSearchFeature extends Feature {
     }
 
     private void tryQuickSearch(Slot hoveredSlot) {
-        if (!Models.TradeMarket.inTradeMarket() || hoveredSlot == null || !hoveredSlot.hasItem()) return;
+        if (!Models.TradeMarket.getTradeMarketState().isResults() || hoveredSlot == null || !hoveredSlot.hasItem())
+            return;
 
         if (instantSearch.get() != KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             instantSearchingSendChat = true;
@@ -241,11 +278,29 @@ public class TradeMarketQuickSearchFeature extends Feature {
                 }
             }
 
+            // This is what Wynntils uses for other buttons, it's not a global variable afaics, but just putting 20
+            // everywhere triggers me
+            final int buttonSize = 20;
+
+            guessedGearList.add(new InfoButton(
+                    xStart,
+                    yStart - buttonSize,
+                    Component.empty()
+                            .append(Component.translatable("feature.wynntils.tradeMarketQuickSearch.guessGearList.help")
+                                    .withStyle(ChatFormatting.UNDERLINE))
+                            .append(Component.literal("\n"))
+                            .append(Component.translatable(
+                                            "feature.wynntils.tradeMarketQuickSearch.guessGearList.help1")
+                                    .withStyle(ChatFormatting.GRAY))
+                            .append(Component.literal("\n"))
+                            .append(Component.translatable(
+                                            "feature.wynntils.tradeMarketQuickSearch.guessGearList.help2")
+                                    .withStyle(ChatFormatting.GRAY))));
+
             guessedGearList.add(new Button.Builder(
-                            Component.translatable("feature.wynntils.tradeMarketQuickSearch.guessGearList.header"),
-                            button -> guessedGearList.clear())
-                    .pos(xStart, yStart - buttonHeight)
-                    .size(listWidth, buttonHeight)
+                            Component.literal("X").withStyle(ChatFormatting.RED), button -> guessedGearList.clear())
+                    .pos(xStart + listWidth - buttonSize, yStart - buttonSize)
+                    .size(buttonSize, buttonSize)
                     .build());
 
             return;
