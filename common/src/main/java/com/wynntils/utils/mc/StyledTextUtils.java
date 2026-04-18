@@ -9,6 +9,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +18,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.Style;
+import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.network.chat.*;
+import net.minecraft.resources.Identifier;
 
 public final class StyledTextUtils {
     private static final Pattern COORDINATE_PATTERN =
@@ -34,6 +34,12 @@ public final class StyledTextUtils {
     private static final String NEWLINE_PREPARATION = "\n";
     private static final Pattern NEWLINE_WRAP_PATTERN = Pattern.compile("\uDAFF\uDFFC\uE001\uDB00\uDC06");
     private static final Pattern WHITESPACES_PATTERN = Pattern.compile("\\s+");
+
+    private static final FontDescription CHAT_PREFIX_FONT = new FontDescription.Resource(Identifier.parse("wynntils:prefix"));
+    private static final Style CHAT_PREFIX_STYLE =
+            Style.EMPTY.withFont(CHAT_PREFIX_FONT).withColor(ChatFormatting.DARK_GREEN);
+    private static final String CHAT_PREFIX_FIRST_LINE = "\uDAFF\uDFFC\uE100\uDAFF\uDFFF\uE002\uDAFF\uDFFE ";
+    private static final String CHAT_PREFIX_LINE_PREFIX = "\uDAFF\uDFFC\uE001\uDB00\uDC06 ";
 
     public static StyledTextPart createLocationPart(Location location) {
         String locationString = "[%d, %d, %d]".formatted(location.x, location.y, location.z);
@@ -224,7 +230,7 @@ public final class StyledTextUtils {
                     // If the currentPart is to long and we need to wrap - try to add every word seperate
                     var split = line.split("\s+");
                     for (StyledTextPart splitPart : split) {
-                        var splitDisplayLength = mc.font.width(splitPart.getComponent());
+                        var splitDisplayLength = mc.font.width(splitPart.getComponent().append(" "));
 
                         // If word fits add it
                         if(currentWidth + splitDisplayLength <= maxWidth) {
@@ -272,6 +278,33 @@ public final class StyledTextUtils {
         }
 
         return StyledText.fromParts(newParts);
+    }
+
+    public static StyledText addWynntilsPrefix(StyledText styledText) {
+        Minecraft mc = Minecraft.getInstance();
+        var maxWidth = ChatComponent.getWidth(mc.options.chatWidth().get()) - mc.font.width(Component.literal(
+                CHAT_PREFIX_FIRST_LINE).setStyle(
+                CHAT_PREFIX_STYLE));
+
+        var text = softWrap(styledText, maxWidth).prependPart(new StyledTextPart(
+                CHAT_PREFIX_FIRST_LINE,
+                CHAT_PREFIX_STYLE,
+                null,
+                null
+        ));
+
+        return text.iterate((current, changes) -> {
+            if(current.endsWith("\n")) {
+                changes.add(new StyledTextPart(
+                        CHAT_PREFIX_LINE_PREFIX,
+                        CHAT_PREFIX_STYLE,
+                        null,
+                        null
+                ));
+            }
+
+            return IterationDecision.CONTINUE;
+        } );
     }
 
     /**

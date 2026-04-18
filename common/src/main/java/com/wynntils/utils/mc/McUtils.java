@@ -136,7 +136,7 @@ public final class McUtils {
 
     public static void sendMessageToClient(Component component) {
         var styledText = StyledText.fromComponent(component);
-        var wrapedText = StyledTextUtils.softWrap(styledText, 200);
+        var wrapedText = StyledTextUtils.addWynntilsPrefix(styledText);
 
         mc().getChatListener().handleSystemMessage(wrapedText.getComponent(), false);
     }
