@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.npcdialogue;
 
 import com.wynntils.core.WynntilsMod;
@@ -8,6 +12,8 @@ import com.wynntils.models.npcdialogue.event.OverlayDisplayEvent;
 import com.wynntils.models.npcdialogue.event.TranslationRequestEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.DialogueUtils;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -15,11 +21,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.neoforged.bus.api.SubscribeEvent;
 
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-
 public final class NpcDialogueModel extends Model {
-
     // Read this 2 public variables if you want to make a custom wynntils overlay
     // Keep in Mind, they only get updated when NpcDialogueFeature is enabled
     // (TranslationFeature enabled or not doesn't matter)
@@ -65,15 +67,9 @@ public final class NpcDialogueModel extends Model {
         // §2Npcname: §aText
         Component message = Component.literal(content.getName() != null ? content.getName() + ": " : "")
                 .withStyle(darkGreen)
-                .append(
-                        Component.literal(tanslatedText)
-                        .withStyle(green.withHoverEvent(
-                                new HoverEvent.ShowText(
-                                        Component.literal(content.getText()).withStyle(green)
-                                )
-                        )
-                )
-        );
+                .append(Component.literal(tanslatedText)
+                        .withStyle(green.withHoverEvent(new HoverEvent.ShowText(
+                                Component.literal(content.getText()).withStyle(green)))));
 
         // TODO: send only in chattabs with RecipientType.NPC
 
@@ -87,8 +83,10 @@ public final class NpcDialogueModel extends Model {
      * this method will get called once per Dialogue
      * */
     public void dispatchContent(DialogueUtils.Content content, String tanslatedText, boolean sendToChat) {
-        WynntilsMod.getLogger().info("[{}] Original Text: \"{}\"", this.getClass().getSimpleName(), content.getText());
-        WynntilsMod.getLogger().info("[{}] Translated Text: \"{}\"", this.getClass().getSimpleName(), tanslatedText);
+        WynntilsMod.getLogger()
+                .info("[{}] Original Text: \"{}\"", this.getClass().getSimpleName(), content.getText());
+        WynntilsMod.getLogger()
+                .info("[{}] Translated Text: \"{}\"", this.getClass().getSimpleName(), tanslatedText);
 
         if (sendToChat) {
             sendChat(content, tanslatedText);

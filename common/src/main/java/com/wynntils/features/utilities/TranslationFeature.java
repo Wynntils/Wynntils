@@ -20,7 +20,6 @@ import com.wynntils.models.npcdialogue.event.TranslationRequestEvent;
 import com.wynntils.services.translation.TranslationService;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
-
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 

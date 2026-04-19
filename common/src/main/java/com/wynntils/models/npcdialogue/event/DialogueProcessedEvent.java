@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.npcdialogue.event;
 
 import com.wynntils.core.events.EventThread;
@@ -25,9 +29,11 @@ public class DialogueProcessedEvent extends Event {
     public DialogueUtils.Content getContent() {
         return content;
     }
+
     public String getTranslatedText() {
         return translatedText;
     }
+
     public void setTranslatedText(String translatedText) {
         this.translatedText = translatedText;
     }

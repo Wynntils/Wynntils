@@ -1,20 +1,22 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.utils.wynn;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.mc.McUtils;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
-
 public final class DialogueUtils {
-
     private static final int maxTextWidth = 234;
     private static final char specialChar = '\uDAFF';
     private static final char zeroWidthChar = '\uE000';
@@ -28,17 +30,22 @@ public final class DialogueUtils {
     private static final FontDescription[] font_body = new FontDescription[5];
     private static final Style[] style_body = new Style[5];
     private static final FontDescription[] font_choice = new FontDescription[4];
-    private static final FontDescription font_nameplate = new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/nameplate"));
-    private static final FontDescription font_picture = new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/portrait"));
-    private static final FontDescription font_press_shift = new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/control"));
+    private static final FontDescription font_nameplate =
+            new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/nameplate"));
+    private static final FontDescription font_picture =
+            new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/portrait"));
+    private static final FontDescription font_press_shift =
+            new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/control"));
 
     static {
         for (int i = 0; i < font_body.length; i++) {
-            font_body[i] = new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/wynncraft/body_" + i));
+            font_body[i] =
+                    new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/wynncraft/body_" + i));
             style_body[i] = Style.EMPTY.withFont(font_body[i]);
         }
         for (int i = 0; i < font_choice.length; i++) {
-            font_choice[i] = new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/wynncraft/choice_" + i));
+            font_choice[i] =
+                    new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/wynncraft/choice_" + i));
         }
     }
 
@@ -57,8 +64,8 @@ public final class DialogueUtils {
     public static Content getDialogueContent(Component component) {
         Content out = new Content();
 
-        for (Component sibling: component.getSiblings()) {
-            if (sibling.getStyle().getFont().equals(font_body[0]))  {
+        for (Component sibling : component.getSiblings()) {
+            if (sibling.getStyle().getFont().equals(font_body[0])) {
                 out.setText(getCleanText(sibling, true));
                 out.setStartPos(sibling.getString(2));
             } else if (sibling.getStyle().getFont().equals(font_nameplate)) {
@@ -116,7 +123,7 @@ public final class DialogueUtils {
 
         // looks worse than Pattern.compile, but is faster
         // "/uDAFF/u1234" -> " " and "  " -> " "
-        for (char c: text.toCharArray()) {
+        for (char c : text.toCharArray()) {
             if (skipNext) {
                 skipNext = false;
                 continue;
@@ -171,10 +178,11 @@ public final class DialogueUtils {
 
         // Insert text to Dialogue Hud
         // But only replace everything under "hud/dialogue/text/wynncraft/body_0"
-        for (Component sib: component.getSiblings()) {
+        for (Component sib : component.getSiblings()) {
             if (sib.getStyle().getFont().equals(font_body[0])) {
                 // start formatting character
-                MutableComponent newMsg = Component.literal(startPos).withStyle(sib.getStyle()).withStyle(style_body[0]);
+                MutableComponent newMsg =
+                        Component.literal(startPos).withStyle(sib.getStyle()).withStyle(style_body[0]);
 
                 // add the lines
                 MutableComponent line;
@@ -216,10 +224,10 @@ public final class DialogueUtils {
             // don't make more than 5 lines!
             if (lines.size() == 5) {
                 /*
-                * FIXME: fix the problem if text is too long.
-                *  Keep in mind, this method will get called multiple times, because the packet changes when "Press Shift to..." is blinking
-                *  Maybe someone can make a custom overlay instead of using the wynncraft overlay?
-                * */
+                 * FIXME: fix the problem if text is too long.
+                 *  Keep in mind, this method will get called multiple times, because the packet changes when "Press Shift to..." is blinking
+                 *  Maybe someone can make a custom overlay instead of using the wynncraft overlay?
+                 * */
                 // cut off or append the remaining text
                 if (append) {
                     lines.set(4, lines.get(4) + " " + remaining);
@@ -322,8 +330,7 @@ public final class DialogueUtils {
 
             if (modulo != 0) {
                 int negativeCompensation = 4 - modulo;
-                sb.append(specialChar)
-                        .append((char) ((int) zeroWidthChar - negativeCompensation));
+                sb.append(specialChar).append((char) ((int) zeroWidthChar - negativeCompensation));
             }
             specialChars = sb.toString();
         }
@@ -376,7 +383,7 @@ public final class DialogueUtils {
                     break;
                 }
 
-                switch(code) {
+                switch (code) {
                     case 'l' -> bold = true;
                     case 'o' -> italic = true;
                     case 'n' -> underline = true;
@@ -404,6 +411,7 @@ public final class DialogueUtils {
         public String getText() {
             return text;
         }
+
         private void setText(String text) {
             this.text = text;
         }
@@ -411,6 +419,7 @@ public final class DialogueUtils {
         public String getName() {
             return name;
         }
+
         private void setName(String name) {
             this.name = name;
         }
@@ -418,6 +427,7 @@ public final class DialogueUtils {
         public String getStartPos() {
             return startPos;
         }
+
         private void setStartPos(String startPos) {
             this.startPos = startPos;
         }
@@ -425,9 +435,11 @@ public final class DialogueUtils {
         public boolean hashPortrait() {
             return portrait != null;
         }
+
         public String getPortrait() {
             return portrait;
         }
+
         private void setPortrait(String portrait) {
             this.portrait = portrait;
         }
@@ -435,6 +447,7 @@ public final class DialogueUtils {
         public boolean isConfirmationless() {
             return confirmationless;
         }
+
         private void setConfirmationless() {
             this.confirmationless = true;
         }
@@ -442,20 +455,20 @@ public final class DialogueUtils {
         public boolean hasChoices() {
             return !Arrays.stream(getChoices()).allMatch(Objects::isNull);
         }
+
         public String[] getChoices() {
             return choices;
         }
 
         @Override
         public String toString() {
-            return "Content{" +
-                    "text='" + getText() + '\'' +
-                    ", name='" + getName() + '\'' +
-                    ", startPos='" + getStartPos() + '\'' +
-                    ", portrait='" + getPortrait() + '\'' +
-                    ", confirmationless=" + isConfirmationless() +
-                    ", choices=" + Arrays.toString(getChoices()) +
-                    '}';
+            return "Content{" + "text='"
+                    + getText() + '\'' + ", name='"
+                    + getName() + '\'' + ", startPos='"
+                    + getStartPos() + '\'' + ", portrait='"
+                    + getPortrait() + '\'' + ", confirmationless="
+                    + isConfirmationless() + ", choices="
+                    + Arrays.toString(getChoices()) + '}';
         }
     }
 }

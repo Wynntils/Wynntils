@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.npcdialogue.event;
 
 import com.wynntils.core.components.Models;
@@ -22,6 +26,7 @@ public class TranslationRequestEvent extends Event implements ICancellableEvent 
     public String getInput() {
         return input;
     }
+
     public void setInput(String input) {
         this.input = input;
     }

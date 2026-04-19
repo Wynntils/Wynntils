@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features.ui;
 
 import com.wynntils.core.components.Models;
@@ -15,7 +19,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class NpcDialogueFeature extends Feature {
-
     @Persisted
     private final Config<Boolean> sendToChat = new Config<>(false);
 
@@ -94,7 +97,8 @@ public class NpcDialogueFeature extends Feature {
         lastComponent = currentComponent;
 
         McUtils.mc().execute(() -> {
-            Component newContent = DialogueUtils.insertDialogueText(currentComponent, translatedText, overlay.getContent().getStartPos());
+            Component newContent = DialogueUtils.insertDialogueText(
+                    currentComponent, translatedText, overlay.getContent().getStartPos());
             lastModifiedComp = newContent;
             showNewContent(newContent);
         });
@@ -120,6 +124,4 @@ public class NpcDialogueFeature extends Feature {
         // skip all Wynntils events
         McUtils.mc().gui.setOverlayMessage(newContent, false);
     }
-
-
 }
