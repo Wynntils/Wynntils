@@ -19,6 +19,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class NpcDialogueFeature extends Feature {
+
+    @Persisted
+    private final Config<Boolean> tryKeepColors = new Config<>(true);
+
     @Persisted
     private final Config<Boolean> sendToChat = new Config<>(false);
 
@@ -107,6 +111,7 @@ public class NpcDialogueFeature extends Feature {
     @Override
     protected void onConfigUpdate(Config<?> config) {
         Models.NpcDialogue.clearCache();
+        Models.NpcDialogue.keepColors = tryKeepColors.get();
         eqCount = 0;
     }
 
@@ -118,6 +123,7 @@ public class NpcDialogueFeature extends Feature {
     @Override
     public void onEnable() {
         eqCount = 0;
+        Models.NpcDialogue.keepColors = tryKeepColors.get();
     }
 
     private void showNewContent(Component newContent) {

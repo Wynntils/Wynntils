@@ -899,6 +899,8 @@
   "feature.wynntils.notifications.name": "Benachrichtigungen",
   "feature.wynntils.npcDialogue.description": "Ermöglicht es, NPC-Dialoge zu übersetzen und/oder sie in den Chat senden zu lassen.",
   "feature.wynntils.npcDialogue.name": "NPC Dialoge",
+  "feature.wynntils.npcDialogue.tryKeepColors.description": "Versucht, die Farben des Originaltextes beizubehalten. Manchmal entfernt der Übersetzer sie oder macht Blödsinn damit.",
+  "feature.wynntils.npcDialogue.tryKeepColors.name": "Versuche Farben zu erhalten",
   "feature.wynntils.npcDialogue.replaceDialogueHud.description": "Ersetzt den Text im Wynncraft NPC Dialog Overlay.",
   "feature.wynntils.npcDialogue.replaceDialogueHud.name": "Dialog-Overlay ersetzen",
   "feature.wynntils.npcDialogue.sendToChat.description": "Wenn aktiviert, wird die übersetzte Ausgabe an den Chat gesendet.",

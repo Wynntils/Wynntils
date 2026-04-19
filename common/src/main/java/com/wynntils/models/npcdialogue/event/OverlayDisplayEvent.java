@@ -19,9 +19,9 @@ public class OverlayDisplayEvent extends Event implements ICancellableEvent {
     private final Component component;
     private final DialogueUtils.Content content;
 
-    public OverlayDisplayEvent(Component component) {
+    public OverlayDisplayEvent(Component component, DialogueUtils.Content content) {
         this.component = component;
-        this.content = DialogueUtils.getDialogueContent(component);
+        this.content = content;
     }
 
     public Component getComponent() {

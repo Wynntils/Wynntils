@@ -61,12 +61,12 @@ public final class DialogueUtils {
      * @param component the dialogue component to read from
      * @return the cleaned dialogue text wrapped in {@link Content}.
      */
-    public static Content getDialogueContent(Component component) {
+    public static Content getDialogueContent(Component component, boolean keepColors) {
         Content out = new Content();
 
         for (Component sibling : component.getSiblings()) {
             if (sibling.getStyle().getFont().equals(font_body[0])) {
-                out.setText(getCleanText(sibling, true));
+                out.setText(getCleanText(sibling, keepColors));
                 out.setStartPos(sibling.getString(2));
             } else if (sibling.getStyle().getFont().equals(font_nameplate)) {
                 // could be usefull for later or some APIs / Mod-Addons
@@ -100,12 +100,12 @@ public final class DialogueUtils {
      * Example: <br />
      * "󏾌It's a base filled with sky󏼝pirates!󐁓" -> "It's a base filled with sky pirates!" <br />
      *
-     * @param withColorCodes should Chatformating like §3§r from Component.style be included in the Text?
+     * @param keepColors should Chatformating like §3§r from Component.style be included in the Text?
      * @return a String with all special chars starting with {@code '/uDAFF'} and double {@code ' '} removed
      * */
-    public static String getCleanText(Component sibling, boolean withColorCodes) {
+    public static String getCleanText(Component sibling, boolean keepColors) {
         String text;
-        if (withColorCodes) {
+        if (keepColors) {
             text = StyledText.fromComponent(sibling).getString(StyleType.DEFAULT);
         } else {
             text = sibling.getString();

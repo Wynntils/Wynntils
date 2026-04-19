@@ -31,6 +31,8 @@ public final class NpcDialogueModel extends Model {
     // very fast small and synchronous cache
     private final ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<>();
 
+    public boolean keepColors;
+
     public NpcDialogueModel() {
         super(List.of());
     }
@@ -40,7 +42,8 @@ public final class NpcDialogueModel extends Model {
         if (event.getPacket() instanceof ClientboundSystemChatPacket chatPacket) {
             if (!chatPacket.overlay()) return;
 
-            OverlayDisplayEvent overlayEvent = new OverlayDisplayEvent(chatPacket.content());
+            DialogueUtils.Content content = DialogueUtils.getDialogueContent(chatPacket.content(), keepColors);
+            OverlayDisplayEvent overlayEvent = new OverlayDisplayEvent(chatPacket.content(), content);
             WynntilsMod.postEvent(overlayEvent);
 
             if (overlayEvent.isCanceled()) {
