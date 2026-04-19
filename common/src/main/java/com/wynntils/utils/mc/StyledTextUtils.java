@@ -212,6 +212,11 @@ public final class StyledTextUtils {
         return StyledText.fromParts(newParts);
     }
 
+    /**
+     * @param styledText The styled text to soft-wrap
+     * @param maxWidth The width at wich soft-wrap begins
+     * @return The soft-wraped styled text
+     */
     public static StyledText softWrap(StyledText styledText, int maxWidth) {
         List<StyledTextPart> newParts = new ArrayList<>();
 
@@ -224,8 +229,9 @@ public final class StyledTextUtils {
             for (StyledTextPart part : line) {
                 int displayLength = FontRenderer.getInstance().getFont().width(part.getComponent());
 
+                // If the currentPart is short enough to fit into the current line
+                // add the whole part at once
                 if (currentWidth + displayLength <= maxWidth) {
-                    // If the currentPart is short enough to fit into the current line
                     currentWidth += displayLength;
                     newParts.add(part);
                     continue;
@@ -243,6 +249,7 @@ public final class StyledTextUtils {
                     }
 
                     if (splitText.getPartCount() > 1) {
+                        // this should never happen since we split only a single StyledTextPart
                         WynntilsMod.warn("Unexpected multiPart StyledText - " + splitText);
                         continue;
                     }
@@ -252,7 +259,7 @@ public final class StyledTextUtils {
                             .getFont()
                             .width(splitPart.getComponent().append(" "));
 
-                    // If word fits add it
+                    // If word fits into the current line - append it including a space
                     if (currentWidth + splitDisplayLength <= maxWidth) {
                         currentWidth += splitDisplayLength;
                         newParts.add(splitPart);
@@ -262,7 +269,7 @@ public final class StyledTextUtils {
                     }
 
                     if (currentWidth <= 0) {
-                        // TODO: If whole word is to large
+                        // TODO: If a single world is larger than maxWidth
                     }
 
                     newParts.add(new StyledTextPart(
@@ -284,6 +291,12 @@ public final class StyledTextUtils {
         return StyledText.fromParts(newParts);
     }
 
+    /**
+     * Adds a prefix like Wynn gives to all messages post 2.1.
+     *
+     * @param styledText The styled text to add a prefix to
+     * @return The text with a prefix
+     */
     public static StyledText addWynntilsPrefix(StyledText styledText) {
         int maxWidth = McUtils.getChatWidth()
                 - FontRenderer.getInstance()
