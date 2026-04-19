@@ -39,7 +39,7 @@ public final class StyledTextUtils {
     private static final Pattern WHITESPACES_PATTERN = Pattern.compile("\\s+");
 
     private static final FontDescription CHAT_PREFIX_FONT =
-            new FontDescription.Resource(Identifier.fromNamespaceAndPath("wynntils","prefix"));
+            new FontDescription.Resource(Identifier.fromNamespaceAndPath("wynntils", "prefix"));
     private static final Style CHAT_PREFIX_STYLE =
             Style.EMPTY.withFont(CHAT_PREFIX_FONT).withColor(ChatFormatting.DARK_GREEN);
     private static final String CHAT_PREFIX_FIRST_LINE = "\uDAFF\uDFFC\uE100\uDAFF\uDFFF\uE002\uDAFF\uDFFE ";
