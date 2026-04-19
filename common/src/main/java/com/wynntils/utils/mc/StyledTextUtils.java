@@ -252,11 +252,7 @@ public final class StyledTextUtils {
     }
 
     private static int wrapPartAsWords(
-            StyledTextPart part,
-            int maxWidth,
-            int lastWidth,
-            List<StyledTextPart> newParts
-    ) {
+            StyledTextPart part, int maxWidth, int lastWidth, List<StyledTextPart> newParts) {
         int currentWidth = lastWidth;
 
         StyledText[] split = StyledText.fromPart(part).split("\s+");
@@ -283,15 +279,13 @@ public final class StyledTextUtils {
             if (currentWidth + splitDisplayLength <= maxWidth) {
                 currentWidth += splitDisplayLength;
                 newParts.add(splitPart);
-                newParts.add(
-                        new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
+                newParts.add(new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
                 continue;
             }
 
             if (currentWidth <= 0) {
                 currentWidth = wrapPartAsChars(splitPart, maxWidth, currentWidth, newParts);
-                newParts.add(
-                        new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
+                newParts.add(new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
                 currentWidth += FontRenderer.getInstance().getFont().width(" ");
                 continue;
             }
@@ -299,8 +293,7 @@ public final class StyledTextUtils {
             newParts.add(new StyledTextPart(
                     NEWLINE_PREPARATION, splitPart.getPartStyle().getStyle(), null, null));
             newParts.add(splitPart);
-            newParts.add(
-                    new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
+            newParts.add(new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
             currentWidth = splitDisplayLength;
         }
 
@@ -308,11 +301,7 @@ public final class StyledTextUtils {
     }
 
     private static int wrapPartAsChars(
-            StyledTextPart part,
-            int maxWidth,
-            int lastWidth,
-            List<StyledTextPart> newParts
-    ) {
+            StyledTextPart part, int maxWidth, int lastWidth, List<StyledTextPart> newParts) {
         int currentWidth = lastWidth;
 
         StyledText[] split = StyledText.fromPart(part).split("");
@@ -324,9 +313,7 @@ public final class StyledTextUtils {
             }
 
             StyledTextPart splitPart = splitText.getFirstPart();
-            int splitDisplayLength = FontRenderer.getInstance()
-                    .getFont()
-                    .width(splitPart.getComponent());
+            int splitDisplayLength = FontRenderer.getInstance().getFont().width(splitPart.getComponent());
 
             // If char fits into the current line - append it including a space
             if (currentWidth + splitDisplayLength <= maxWidth) {
