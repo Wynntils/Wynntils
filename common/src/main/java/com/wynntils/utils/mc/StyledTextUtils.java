@@ -10,17 +10,15 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
@@ -216,17 +214,16 @@ public final class StyledTextUtils {
     }
 
     public static StyledText softWrap(StyledText styledText, int maxWidth) {
-        Minecraft mc = Minecraft.getInstance();
         List<StyledTextPart> newParts = new ArrayList<>();
 
         int currentWidth = 0;
 
-        var lines = styledText.split("\n");
+        StyledText[] lines = styledText.split("\n");
         for (int i = 0; i < lines.length; i++) {
-            var line = lines[i];
+            StyledText line = lines[i];
 
             for (StyledTextPart part : line) {
-                var displayLength = mc.font.width(part.getComponent());
+                int displayLength = FontRenderer.getInstance().getFont().width(part.getComponent());
 
                 if (currentWidth + displayLength <= maxWidth) {
                     // If the currentPart is short enough to fit into the current line
@@ -234,7 +231,7 @@ public final class StyledTextUtils {
                     newParts.add(part);
                 } else {
                     // If the currentPart is to long and we need to wrap - try to add every word seperate
-                    var split = StyledText.fromPart(part).split("\s+");
+                    StyledText[] split = StyledText.fromPart(part).split("\s+");
 
                     for (StyledText splitText : split) {
                         if(splitText.getPartCount() > 1){
@@ -242,8 +239,8 @@ public final class StyledTextUtils {
                         }
 
                         for (StyledTextPart splitPart : splitText) {
-                            var splitDisplayLength =
-                                    mc.font.width(splitPart.getComponent().append(" "));
+                            int splitDisplayLength =
+                                    FontRenderer.getInstance().getFont().width(splitPart.getComponent().append(" "));
 
                             // If word fits add it
                             if (currentWidth + splitDisplayLength <= maxWidth) {
@@ -282,11 +279,10 @@ public final class StyledTextUtils {
     }
 
     public static StyledText addWynntilsPrefix(StyledText styledText) {
-        Minecraft mc = Minecraft.getInstance();
-        var maxWidth = ChatComponent.getWidth(mc.options.chatWidth().get())
-                - mc.font.width(Component.literal(CHAT_PREFIX_FIRST_LINE).setStyle(CHAT_PREFIX_STYLE));
+        int maxWidth = McUtils.getChatWidth()
+                - FontRenderer.getInstance().getFont().width(Component.literal(CHAT_PREFIX_FIRST_LINE).setStyle(CHAT_PREFIX_STYLE));
 
-        var text = softWrap(styledText, maxWidth)
+        StyledText text = softWrap(styledText, maxWidth)
                 .prependPart(new StyledTextPart(CHAT_PREFIX_FIRST_LINE, CHAT_PREFIX_STYLE, null, null));
 
         return text.iterate((current, changes) -> {

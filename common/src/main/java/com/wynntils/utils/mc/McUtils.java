@@ -134,6 +134,10 @@ public final class McUtils {
                         true));
     }
 
+    public static int getChatWidth() {
+        return ChatComponent.getWidth(mc().options.chatWidth().get());
+    }
+
     public static void sendMessageToClient(Component component) {
         var styledText = StyledText.fromComponent(component);
         var wrapedText = StyledTextUtils.addWynntilsPrefix(styledText);
