@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features.trademarket;
 
 import com.wynntils.core.consumers.features.Feature;
@@ -37,7 +41,8 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
     @SubscribeEvent
     public void onTradeMarketState(TradeMarketStateEvent event) {
         TradeMarketState newState = event.getNewState();
-        // Default sort order should only be applied once per opened TM since otherwise we risk overwriting user selected sort order
+        // Default sort order should only be applied once per opened TM since otherwise we risk overwriting user
+        // selected sort order
         if (!appliedDefaultSortOrder && newState == TradeMarketState.FILTERED_RESULTS) {
             appliedDefaultSortOrder = true;
             clicksLeftCount = defaultSortOrder.get().numberOfClicks;
@@ -92,6 +97,5 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
         SortOrderChangeSpeed(int ticksDelay) {
             this.ticksDelay = ticksDelay;
         }
-
     }
 }
