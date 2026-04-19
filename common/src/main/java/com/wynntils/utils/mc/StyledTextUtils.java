@@ -238,47 +238,7 @@ public final class StyledTextUtils {
                 }
 
                 // If the currentPart is to long and we need to wrap - try to add every word seperate
-                StyledText[] split = StyledText.fromPart(part).split("\s+");
-
-                for (StyledText splitText : split) {
-                    if (splitText.getPartCount() == 0) {
-                        // If orignal part started with space
-                        currentWidth += FontRenderer.getInstance().getFont().width(" ");
-                        newParts.add(new StyledTextPart(" ", Style.EMPTY, null, null));
-                        continue;
-                    }
-
-                    if (splitText.getPartCount() > 1) {
-                        // this should never happen since we split only a single StyledTextPart
-                        WynntilsMod.warn("Unexpected multiPart StyledText - " + splitText);
-                        continue;
-                    }
-
-                    StyledTextPart splitPart = splitText.getFirstPart();
-                    int splitDisplayLength = FontRenderer.getInstance()
-                            .getFont()
-                            .width(splitPart.getComponent().append(" "));
-
-                    // If word fits into the current line - append it including a space
-                    if (currentWidth + splitDisplayLength <= maxWidth) {
-                        currentWidth += splitDisplayLength;
-                        newParts.add(splitPart);
-                        newParts.add(
-                                new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
-                        continue;
-                    }
-
-                    if (currentWidth <= 0) {
-                        // TODO: If a single world is larger than maxWidth
-                    }
-
-                    newParts.add(new StyledTextPart(
-                            NEWLINE_PREPARATION, splitPart.getPartStyle().getStyle(), null, null));
-                    newParts.add(splitPart);
-                    newParts.add(
-                            new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
-                    currentWidth = splitDisplayLength;
-                }
+                currentWidth = wrapPartAsWords(part, maxWidth, currentWidth, newParts);
             }
 
             // If this is not the last line
@@ -289,6 +249,99 @@ public final class StyledTextUtils {
         }
 
         return StyledText.fromParts(newParts);
+    }
+
+    private static int wrapPartAsWords(
+            StyledTextPart part,
+            int maxWidth,
+            int lastWidth,
+            List<StyledTextPart> newParts
+    ) {
+        int currentWidth = lastWidth;
+
+        StyledText[] split = StyledText.fromPart(part).split("\s+");
+        for (StyledText splitText : split) {
+            if (splitText.getPartCount() == 0) {
+                // If orignal part started with space
+                currentWidth += FontRenderer.getInstance().getFont().width(" ");
+                newParts.add(new StyledTextPart(" ", Style.EMPTY, null, null));
+                continue;
+            }
+
+            if (splitText.getPartCount() > 1) {
+                // this should never happen since we split only a single StyledTextPart
+                WynntilsMod.warn("Unexpected multiPart StyledText - " + splitText);
+                continue;
+            }
+
+            StyledTextPart splitPart = splitText.getFirstPart();
+            int splitDisplayLength = FontRenderer.getInstance()
+                    .getFont()
+                    .width(splitPart.getComponent().append(" "));
+
+            // If word fits into the current line - append it including a space
+            if (currentWidth + splitDisplayLength <= maxWidth) {
+                currentWidth += splitDisplayLength;
+                newParts.add(splitPart);
+                newParts.add(
+                        new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
+                continue;
+            }
+
+            if (currentWidth <= 0) {
+                currentWidth = wrapPartAsChars(splitPart, maxWidth, currentWidth, newParts);
+                newParts.add(
+                        new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
+                currentWidth += FontRenderer.getInstance().getFont().width(" ");
+                continue;
+            }
+
+            newParts.add(new StyledTextPart(
+                    NEWLINE_PREPARATION, splitPart.getPartStyle().getStyle(), null, null));
+            newParts.add(splitPart);
+            newParts.add(
+                    new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
+            currentWidth = splitDisplayLength;
+        }
+
+        return currentWidth;
+    }
+
+    private static int wrapPartAsChars(
+            StyledTextPart part,
+            int maxWidth,
+            int lastWidth,
+            List<StyledTextPart> newParts
+    ) {
+        int currentWidth = lastWidth;
+
+        StyledText[] split = StyledText.fromPart(part).split("");
+        for (StyledText splitText : split) {
+            if (splitText.getPartCount() != 1) {
+                // this should never happen since we split only a single StyledTextPart
+                WynntilsMod.warn("Unexpected multiPart StyledText - " + splitText);
+                continue;
+            }
+
+            StyledTextPart splitPart = splitText.getFirstPart();
+            int splitDisplayLength = FontRenderer.getInstance()
+                    .getFont()
+                    .width(splitPart.getComponent());
+
+            // If char fits into the current line - append it including a space
+            if (currentWidth + splitDisplayLength <= maxWidth) {
+                currentWidth += splitDisplayLength;
+                newParts.add(splitPart);
+                continue;
+            }
+
+            newParts.add(new StyledTextPart(
+                    NEWLINE_PREPARATION, splitPart.getPartStyle().getStyle(), null, null));
+            newParts.add(splitPart);
+            currentWidth = splitDisplayLength;
+        }
+
+        return currentWidth;
     }
 
     /**
