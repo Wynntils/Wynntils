@@ -21,16 +21,13 @@ import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
-import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.network.chat.Component;
+import net.neoforged.bus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketDefaultSortOrderFeature extends Feature {
@@ -61,7 +58,8 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
         if (Models.TradeMarket.getTradeMarketState() != TradeMarketState.FILTERED_RESULTS) return;
         if (appliedDefaultSortOrder && applySortOrderOnce.get()) return;
 
-        SortOrder currentSortOrder = parseSortOrder(LoreUtils.getTooltipLines(event.getItems().get(SORT_ORDER_SLOT)));
+        SortOrder currentSortOrder =
+                parseSortOrder(LoreUtils.getTooltipLines(event.getItems().get(SORT_ORDER_SLOT)));
 
         // Find the shortest path from current sort order to the one we want to apply
         // Math.abs(path) is path's lenght, path < 0 -> right click else left click
@@ -100,9 +98,11 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
 
     private static SortOrder parseSortOrder(List<Component> tooltip) {
         for (Component component : tooltip) {
-            Matcher matcher = StyledText.fromComponent(component).getNormalized().getMatcher(SORT_ORDER_PATTERN);
+            Matcher matcher =
+                    StyledText.fromComponent(component).getNormalized().getMatcher(SORT_ORDER_PATTERN);
             if (matcher.matches()) {
-                return SortOrder.valueOf(matcher.group(1).trim().replace(" ", "_").toUpperCase(Locale.ROOT));
+                return SortOrder.valueOf(
+                        matcher.group(1).trim().replace(" ", "_").toUpperCase(Locale.ROOT));
             }
         }
 
