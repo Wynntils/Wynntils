@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.type;
@@ -17,14 +17,17 @@ public enum ServiceKind {
     DUNGEON_MERCHANT("Dungeon Merchant", Texture.DUNGEON_MERCHANT, "merchant:dungeon"),
     DUNGEON_SCROLL_MERCHANT("Dungeon Scroll Merchant", Texture.DUNGEON_SCROLL_MERCHANT, "merchant:dungeon-scroll"),
     EMERALD_MERCHANT("Emerald Merchant", Texture.EMERALD_MERCHANT, "merchant:emerald"),
+    EXCHANGE_MERCHANT("Emerald Merchant", Texture.EXCHANGE_MERCHANT, "merchant:exchange"),
     FAST_TRAVEL("Fast Travel", Texture.FAST_TRAVEL, "fast-travel"),
     HOUSING_BALLOON("Housing Balloon", Texture.HOUSING_BALLOON, "housing-balloon"),
     ITEM_IDENTIFIER("Item Identifier", Texture.ITEM_IDENTIFIER, "identifier"),
+    ITEM_UPGRADER("Item Upgrader", Texture.ITEM_UPGRADER, "item-upgrader"),
     JEWELING_STATION("Jeweling Station", Texture.JEWELING_STATION, "profession:jeweling"),
     LIQUID_MERCHANT("Liquid Merchant", Texture.LIQUID_MERCHANT, "merchant:liquid-emerald"),
+    MOUNT_ENCLOSURE("Mount Enclosure", Texture.MOUNT_ENCLOSURE, "mount-enclosure"),
+    MOUNT_MERCHANT("Mount Merchant", Texture.MOUNT_MERCHANT, "merchant:mount"),
     PARTY_FINDER("Party Finder", Texture.PARTY_FINDER, "party-finder"),
     POTION_MERCHANT("Potion Merchant", Texture.POTION_MERCHANT, "merchant:potion"),
-    POWDER_MASTER("Powder Master", Texture.POWDER_MASTER, "powder-master"),
     SCRIBING_STATION("Scribing Station", Texture.SCRIBING_STATION, "profession:scribing"),
     SCROLL_MERCHANT("Scroll Merchant", Texture.SCROLL_MERCHANT, "merchant:scroll"),
     SEASKIPPER("Seaskipper", Texture.SEASKIPPER, "seaskipper"),
