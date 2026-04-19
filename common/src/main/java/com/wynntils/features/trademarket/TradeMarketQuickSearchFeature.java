@@ -91,6 +91,8 @@ public class TradeMarketQuickSearchFeature extends Feature {
     private static final Pattern DUNGEON_KEY_PATTERN = Pattern.compile(".* KeyÀ*$");
     private static final Pattern TRAILING_KEY_PADDING_PATTERN = Pattern.compile("À+$");
 
+    private static final int BUTTON_SIZE = 20;
+
     private static final int SEARCH_SLOT = 47;
     private String searchQuery;
     private boolean openChatWhenContainerClosed = false;
@@ -175,7 +177,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
         if (guessedGearList.isEmpty()) return;
 
         // Only allow LMB and RMB because default keybind is MMB which is clicked outside the list and therefore will
-        // immideatly close it
+        // immediately close it
         // Also dissallow any modifiers because someone might want to bind quick search to LMB/RMB + modifier which
         // would result in the same thing
         MouseButtonEvent mouseEvent = event.getMouseButtonEvent();
@@ -204,6 +206,8 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
         if (guessedGearList.isEmpty()) return;
 
+        // Don't render item tooltips if mouse is hovering a button.
+        // Otherwise tooltip will be rendered over it and block the view.
         for (AbstractButton button : guessedGearList) {
             if (button.isMouseOver(event.getMouseX(), event.getMouseY())) {
                 event.setCanceled(true);
@@ -278,13 +282,9 @@ public class TradeMarketQuickSearchFeature extends Feature {
                 }
             }
 
-            // This is what Wynntils uses for other buttons, it's not a global variable afaics, but just putting 20
-            // everywhere triggers me
-            final int buttonSize = 20;
-
             guessedGearList.add(new InfoButton(
                     xStart,
-                    yStart - buttonSize,
+                    yStart - BUTTON_SIZE,
                     Component.empty()
                             .append(Component.translatable("feature.wynntils.tradeMarketQuickSearch.guessGearList.help")
                                     .withStyle(ChatFormatting.UNDERLINE))
@@ -299,8 +299,8 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
             guessedGearList.add(new Button.Builder(
                             Component.literal("X").withStyle(ChatFormatting.RED), button -> guessedGearList.clear())
-                    .pos(xStart + listWidth - buttonSize, yStart - buttonSize)
-                    .size(buttonSize, buttonSize)
+                    .pos(xStart + listWidth - BUTTON_SIZE, yStart - BUTTON_SIZE)
+                    .size(BUTTON_SIZE, BUTTON_SIZE)
                     .build());
 
             return;
