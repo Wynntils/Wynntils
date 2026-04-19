@@ -19,7 +19,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class NpcDialogueFeature extends Feature {
-
     @Persisted
     private final Config<Boolean> tryKeepColors = new Config<>(true);
 
