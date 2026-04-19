@@ -4,7 +4,6 @@
  */
 package com.wynntils.utils.mc;
 
-import com.google.common.collect.Iterables;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
@@ -236,29 +235,29 @@ public final class StyledTextUtils {
                 StyledText[] split = StyledText.fromPart(part).split("\s+");
 
                 for (StyledText splitText : split) {
-                    if(splitText.getPartCount() == 0) {
+                    if (splitText.getPartCount() == 0) {
                         // If orignal part started with space
-                        currentWidth +=  FontRenderer.getInstance().getFont().width(" ");
-                        newParts.add(new StyledTextPart(
-                                " ", Style.EMPTY, null, null));
+                        currentWidth += FontRenderer.getInstance().getFont().width(" ");
+                        newParts.add(new StyledTextPart(" ", Style.EMPTY, null, null));
                         continue;
                     }
 
-                    if(splitText.getPartCount() > 1){
+                    if (splitText.getPartCount() > 1) {
                         WynntilsMod.warn("Unexpected multiPart StyledText - " + splitText);
                         continue;
                     }
 
                     StyledTextPart splitPart = splitText.getFirstPart();
-                    int splitDisplayLength =
-                            FontRenderer.getInstance().getFont().width(splitPart.getComponent().append(" "));
+                    int splitDisplayLength = FontRenderer.getInstance()
+                            .getFont()
+                            .width(splitPart.getComponent().append(" "));
 
                     // If word fits add it
                     if (currentWidth + splitDisplayLength <= maxWidth) {
                         currentWidth += splitDisplayLength;
                         newParts.add(splitPart);
-                        newParts.add(new StyledTextPart(
-                                " ", splitPart.getPartStyle().getStyle(), null, null));
+                        newParts.add(
+                                new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
                         continue;
                     }
 
@@ -277,8 +276,7 @@ public final class StyledTextUtils {
 
             // If this is not the last line
             if (i < lines.length - 1) {
-                newParts.add(new StyledTextPart(
-                        NEWLINE_PREPARATION, Style.EMPTY, null, null));
+                newParts.add(new StyledTextPart(NEWLINE_PREPARATION, Style.EMPTY, null, null));
                 currentWidth = 0;
             }
         }
@@ -288,7 +286,9 @@ public final class StyledTextUtils {
 
     public static StyledText addWynntilsPrefix(StyledText styledText) {
         int maxWidth = McUtils.getChatWidth()
-                - FontRenderer.getInstance().getFont().width(Component.literal(CHAT_PREFIX_FIRST_LINE).setStyle(CHAT_PREFIX_STYLE));
+                - FontRenderer.getInstance()
+                        .getFont()
+                        .width(Component.literal(CHAT_PREFIX_FIRST_LINE).setStyle(CHAT_PREFIX_STYLE));
 
         StyledText text = softWrap(styledText, maxWidth)
                 .prependPart(new StyledTextPart(CHAT_PREFIX_FIRST_LINE, CHAT_PREFIX_STYLE, null, null));
