@@ -56,24 +56,27 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
         ContainerUtils.clickOnSlot(
                 SORT_ORDER_SLOT,
                 McUtils.containerMenu().containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                defaultSortOrder.get().isRightClick ? GLFW.GLFW_MOUSE_BUTTON_RIGHT : GLFW.GLFW_MOUSE_BUTTON_LEFT,
                 McUtils.containerMenu().getItems());
 
         clicksLeftCount -= 1;
     }
 
     public enum SortOrder {
-        MOST_RECENT(0),
-        LEAST_RECENT(1),
-        MOST_EXPENSIVE(2),
-        LEAST_EXPENSIVE(3),
-        HIGHEST_LEVEL_RANGE(4),
-        LOWEST_LEVEL_RANGE(5);
+        MOST_RECENT(0, false),
+        LEAST_RECENT(1, false),
+        MOST_EXPENSIVE(2, false),
+        LEAST_EXPENSIVE(3, false),
+        HIGHEST_LEVEL_RANGE(2, true),
+        LOWEST_LEVEL_RANGE(1, true);
 
+        // To get to the last 2 options it's faster to right click instead.
+        public final boolean isRightClick;
         public final int numberOfClicks;
 
-        SortOrder(int numberOfClicks) {
+        SortOrder(int numberOfClicks, boolean isRightClick) {
             this.numberOfClicks = numberOfClicks;
+            this.isRightClick = isRightClick;
         }
     }
 
