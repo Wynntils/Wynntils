@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.utilities;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -15,9 +16,12 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.models.npcdialogue.event.TranslationRequestEvent;
 import com.wynntils.services.translation.TranslationService;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
+
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
@@ -27,6 +31,9 @@ public class TranslationFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> translateTrackedQuest = new Config<>(true);
+
+    @Persisted
+    private final Config<Boolean> translateNpc = new Config<>(false);
 
     @Persisted
     private final Config<Boolean> translateInfo = new Config<>(true);
@@ -71,8 +78,27 @@ public class TranslationFeature extends Feature {
                     "ollamaModel" -> {
                 Services.Translation.resetTranslator();
             }
+            case "languageName" -> Models.NpcDialogue.clearCache();
             default -> {}
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onTranslationRequest(TranslationRequestEvent event) {
+        if (event.isCanceled()) return;
+        if (event.isTranslated()) return;
+        if (!translateNpc.get() || languageName.get().isEmpty()) return;
+
+        Services.Translation.getTranslator(translationService.get())
+                .translate(List.of(event.getInput()), languageName.get(), translatedMsgList -> {
+                    event.outputTranslated(translatedMsgList.getFirst());
+                });
+
+        // With this we can check, if the Translator has been started correctly.
+        // If the TranslationFeature is disabled, this Method doesn't get called and
+        // the NpcDialogueFeature waits forever for a translation
+        // It's to prevent issues with multithreading
+        event.setTranslated(true);
     }
 
     @SubscribeEvent
