@@ -9,7 +9,8 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
-import com.wynntils.mc.event.RemoveEntitiesEvent;
+import com.wynntils.handlers.labels.event.LabelsRemovedEvent;
+import com.wynntils.handlers.labels.type.LabelInfo;
 import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.models.abilities.label.ShamanTotemLabelInfo;
 import com.wynntils.models.abilities.label.ShamanTotemLabelParser;
@@ -84,10 +85,12 @@ public final class ShamanTotemModel extends Model {
     }
 
     @SubscribeEvent
-    public void onTotemDestroy(RemoveEntitiesEvent event) {
+    public void onTotemDestroy(LabelsRemovedEvent event) {
         if (!Models.WorldState.onWorld()) return;
 
-        for (int entityId : event.getEntityIds()) {
+        for (LabelInfo label : event.getRemovedLabels()) {
+            int entityId = label.getEntity().getId();
+
             ShamanTotem totem = getTotemByTimerEntityId(entityId);
             if (totem == null) continue;
 
