@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.trademarket;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
@@ -11,11 +12,13 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
+import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.trademarket.event.TradeMarketStateEvent;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import net.minecraft.util.Mth;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -27,10 +30,15 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
     @Persisted
     private final Config<SortOrderChangeSpeed> sortOrderChangeSpeed = new Config<>(SortOrderChangeSpeed.BALANCED);
 
+    @Persisted
+    private final Config<Boolean> applySortOrderOnce = new Config<>(true);
+
     private static final int SORT_ORDER_SLOT = 52;
 
     private boolean appliedDefaultSortOrder = false;
-    private int clicksLeftCount = 0;
+    private int clickCountdown = 0;
+    private boolean shouldRightClick = false;
+    private SortOrder currentSortOrder = SortOrder.MOST_RECENT;
 
     public TradeMarketDefaultSortOrderFeature() {
         super(new ProfileDefault.Builder()
@@ -41,47 +49,71 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
     @SubscribeEvent
     public void onTradeMarketState(TradeMarketStateEvent event) {
         TradeMarketState newState = event.getNewState();
-        // Default sort order should only be applied once per opened TM since otherwise we risk overwriting user
-        // selected sort order
-        if (!appliedDefaultSortOrder && newState == TradeMarketState.FILTERED_RESULTS) {
+        if (!(appliedDefaultSortOrder && applySortOrderOnce.get()) && newState == TradeMarketState.FILTERED_RESULTS) {
             appliedDefaultSortOrder = true;
-            clicksLeftCount = defaultSortOrder.get().numberOfClicks;
+            // Find the shortest path from current sort order to the one we want to apply
+            // Math.abs(path) is path's lenght, Math.sign(path) is path's direction (-1 = right, 1 == left)
+            final int path1 = defaultSortOrder.get().ordinal() - currentSortOrder.ordinal();
+            final int path2 = path1 + SortOrder.VALUES.length * (path1 > 0 ? 1 : -1);
+            if (Math.abs(path1) < Math.abs(path2)) {
+                clickCountdown = Math.abs(path1);
+                shouldRightClick = Mth.sign(path1) == -1;
+            } else {
+                clickCountdown = Math.abs(path2);
+                shouldRightClick = Mth.sign(path2) == -1;
+            }
+            currentSortOrder = defaultSortOrder.get();
         } else if (newState == TradeMarketState.NOT_ACTIVE) {
-            // When TM is closed reset the flag and the counter just in case
             appliedDefaultSortOrder = false;
-            clicksLeftCount = 0;
+            clickCountdown = 0;
+            shouldRightClick = false;
+            currentSortOrder = SortOrder.MOST_RECENT;
         }
     }
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        if (clicksLeftCount <= 0) return;
+        if (clickCountdown <= 0) return;
         if (McUtils.mc().level.getGameTime() % sortOrderChangeSpeed.get().ticksDelay != 0) return;
 
         ContainerUtils.clickOnSlot(
                 SORT_ORDER_SLOT,
                 McUtils.containerMenu().containerId,
-                defaultSortOrder.get().isRightClick ? GLFW.GLFW_MOUSE_BUTTON_RIGHT : GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                shouldRightClick ? GLFW.GLFW_MOUSE_BUTTON_RIGHT : GLFW.GLFW_MOUSE_BUTTON_LEFT,
                 McUtils.containerMenu().getItems());
 
-        clicksLeftCount -= 1;
+        clickCountdown -= 1;
+    }
+
+    @SubscribeEvent
+    public void onContainerClick(ContainerClickEvent event) {
+        if (Models.TradeMarket.getTradeMarketState() != TradeMarketState.FILTERED_RESULTS) return;
+        if (event.getSlotNum() != SORT_ORDER_SLOT) return;
+
+        final int mb = event.getMouseButton();
+        if (mb == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            currentSortOrder = currentSortOrder.next();
+        } else if (mb == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            currentSortOrder = currentSortOrder.prev();
+        }
     }
 
     public enum SortOrder {
-        MOST_RECENT(0, false),
-        LEAST_RECENT(1, false),
-        MOST_EXPENSIVE(2, false),
-        LEAST_EXPENSIVE(3, false),
-        HIGHEST_LEVEL_RANGE(2, true),
-        LOWEST_LEVEL_RANGE(1, true);
+        MOST_RECENT,
+        LEAST_RECENT,
+        MOST_EXPENSIVE,
+        LEAST_EXPENSIVE,
+        HIGHEST_LEVEL_RANGE,
+        LOWEST_LEVEL_RANGE;
 
-        // To get to the last 2 options it's faster to right click instead.
-        public final boolean isRightClick;
-        public final int numberOfClicks;
+        private static final SortOrder[] VALUES = SortOrder.values();
 
-        SortOrder(int numberOfClicks, boolean isRightClick) {
-            this.numberOfClicks = numberOfClicks;
-            this.isRightClick = isRightClick;
+        public SortOrder prev() {
+            return VALUES[Math.floorMod(ordinal() - 1, VALUES.length)];
+        }
+
+        public SortOrder next() {
+            return VALUES[(ordinal() + 1) % VALUES.length];
         }
     }
 
