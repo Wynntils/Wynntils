@@ -459,18 +459,6 @@ public final class StyledTextPart {
         return new StyledTextPart(text.stripTrailing(), style.getStyle(), parent, null);
     }
 
-    public StyledTextPart[] split(String regex) {
-        final Pattern pattern = Pattern.compile(regex);
-
-        var split = pattern.split(text);
-        List<StyledTextPart> newParts = new ArrayList<>();
-        for (String splitText : split) {
-            newParts.add(new StyledTextPart(splitText, style.getStyle(), parent, null));
-        }
-
-        return newParts.toArray(StyledTextPart[]::new);
-    }
-
     public boolean endsWith(String string) {
         return text.endsWith(string);
     }

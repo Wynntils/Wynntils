@@ -4,6 +4,7 @@
  */
 package com.wynntils.utils.mc;
 
+import com.google.common.collect.Iterables;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
@@ -12,6 +13,7 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -217,61 +219,61 @@ public final class StyledTextUtils {
         Minecraft mc = Minecraft.getInstance();
         List<StyledTextPart> newParts = new ArrayList<>();
 
-        WynntilsMod.error(styledText.toString());
-
         int currentWidth = 0;
-        for (StyledTextPart part : styledText) {
-            var lines = part.split("\n");
 
-            for (int i = 0; i < lines.length; i++) {
-                var line = lines[i];
-                var displayLength = mc.font.width(line.getComponent());
+        var lines = styledText.split("\n");
+        for (int i = 0; i < lines.length; i++) {
+            var line = lines[i];
+
+            for (StyledTextPart part : line) {
+                var displayLength = mc.font.width(part.getComponent());
 
                 if (currentWidth + displayLength <= maxWidth) {
                     // If the currentPart is short enough to fit into the current line
                     currentWidth += displayLength;
-                    newParts.add(line);
+                    newParts.add(part);
                 } else {
                     // If the currentPart is to long and we need to wrap - try to add every word seperate
-                    var split = line.split("\s+");
-                    for (StyledTextPart splitPart : split) {
-                        var splitDisplayLength =
-                                mc.font.width(splitPart.getComponent().append(" "));
+                    var split = StyledText.fromPart(part).split("\s+");
 
-                        // If word fits add it
-                        if (currentWidth + splitDisplayLength <= maxWidth) {
-                            currentWidth += splitDisplayLength;
-                            newParts.add(splitPart);
+                    for (StyledText splitText : split) {
+                        if(splitText.getPartCount() > 1){
+                            WynntilsMod.warn("Unexpected multiPart StyledText - " + splitText);
+                        }
+
+                        for (StyledTextPart splitPart : splitText) {
+                            var splitDisplayLength =
+                                    mc.font.width(splitPart.getComponent().append(" "));
+
+                            // If word fits add it
+                            if (currentWidth + splitDisplayLength <= maxWidth) {
+                                currentWidth += splitDisplayLength;
+                                newParts.add(splitPart);
+                                newParts.add(new StyledTextPart(
+                                        " ", splitPart.getPartStyle().getStyle(), null, null));
+                                continue;
+                            }
+
+                            if (currentWidth <= 0) {
+                                // TODO: If whole word is to large
+                            }
+
                             newParts.add(new StyledTextPart(
-                                    " ", splitPart.getPartStyle().getStyle(), null, null));
-                            continue;
+                                    NEWLINE_PREPARATION, splitPart.getPartStyle().getStyle(), null, null));
+                            newParts.add(splitPart);
+                            newParts.add(
+                                    new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
+                            currentWidth = splitDisplayLength;
                         }
 
-                        if (currentWidth <= 0) {
-                            // TODO: If whole word is to large
-                        }
-
-                        newParts.add(new StyledTextPart(
-                                NEWLINE_PREPARATION, splitPart.getPartStyle().getStyle(), null, null));
-                        newParts.add(splitPart);
-                        newParts.add(
-                                new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
-                        currentWidth = splitDisplayLength;
                     }
-                }
-
-                // If this is not the last line of this Part
-                if (i < lines.length - 1) {
-                    newParts.add(new StyledTextPart(
-                            NEWLINE_PREPARATION, part.getPartStyle().getStyle(), null, null));
-                    currentWidth = 0;
                 }
             }
 
-            // If line has ended on \n or was only \n
-            if (part.endsWith("\n")) {
+            // If this is not the last line
+            if (i < lines.length - 1) {
                 newParts.add(new StyledTextPart(
-                        NEWLINE_PREPARATION, part.getPartStyle().getStyle(), null, null));
+                        NEWLINE_PREPARATION, Style.EMPTY, null, null));
                 currentWidth = 0;
             }
         }
