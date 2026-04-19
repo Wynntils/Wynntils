@@ -132,10 +132,7 @@ import com.wynntils.features.tooltips.ItemGuessFeature;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.features.tooltips.TooltipFittingFeature;
 import com.wynntils.features.tooltips.TooltipVanillaHideFeature;
-import com.wynntils.features.trademarket.TradeMarketBulkSellFeature;
-import com.wynntils.features.trademarket.TradeMarketPriceConversionFeature;
-import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
-import com.wynntils.features.trademarket.TradeMarketQuickSearchFeature;
+import com.wynntils.features.trademarket.*;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.features.ui.ContainerScrollFeature;
 import com.wynntils.features.ui.CraftingProfessionLevelProgressBarFeature;
@@ -357,6 +354,7 @@ public final class FeatureManager extends Manager {
 
         // region trademarket
         registerFeature(new TradeMarketBulkSellFeature());
+        registerFeature(new TradeMarketDefaultSortOrderFeature());
         registerFeature(new TradeMarketPriceConversionFeature());
         registerFeature(new TradeMarketPriceMatchFeature());
         registerFeature(new TradeMarketQuickSearchFeature());
