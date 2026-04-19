@@ -229,41 +229,49 @@ public final class StyledTextUtils {
                     // If the currentPart is short enough to fit into the current line
                     currentWidth += displayLength;
                     newParts.add(part);
-                } else {
-                    // If the currentPart is to long and we need to wrap - try to add every word seperate
-                    StyledText[] split = StyledText.fromPart(part).split("\s+");
+                    continue;
+                }
 
-                    for (StyledText splitText : split) {
-                        if(splitText.getPartCount() > 1){
-                            WynntilsMod.warn("Unexpected multiPart StyledText - " + splitText);
-                        }
+                // If the currentPart is to long and we need to wrap - try to add every word seperate
+                StyledText[] split = StyledText.fromPart(part).split("\s+");
 
-                        for (StyledTextPart splitPart : splitText) {
-                            int splitDisplayLength =
-                                    FontRenderer.getInstance().getFont().width(splitPart.getComponent().append(" "));
-
-                            // If word fits add it
-                            if (currentWidth + splitDisplayLength <= maxWidth) {
-                                currentWidth += splitDisplayLength;
-                                newParts.add(splitPart);
-                                newParts.add(new StyledTextPart(
-                                        " ", splitPart.getPartStyle().getStyle(), null, null));
-                                continue;
-                            }
-
-                            if (currentWidth <= 0) {
-                                // TODO: If whole word is to large
-                            }
-
-                            newParts.add(new StyledTextPart(
-                                    NEWLINE_PREPARATION, splitPart.getPartStyle().getStyle(), null, null));
-                            newParts.add(splitPart);
-                            newParts.add(
-                                    new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
-                            currentWidth = splitDisplayLength;
-                        }
-
+                for (StyledText splitText : split) {
+                    if(splitText.getPartCount() == 0) {
+                        // If orignal part started with space
+                        currentWidth +=  FontRenderer.getInstance().getFont().width(" ");
+                        newParts.add(new StyledTextPart(
+                                " ", Style.EMPTY, null, null));
+                        continue;
                     }
+
+                    if(splitText.getPartCount() > 1){
+                        WynntilsMod.warn("Unexpected multiPart StyledText - " + splitText);
+                        continue;
+                    }
+
+                    StyledTextPart splitPart = splitText.getFirstPart();
+                    int splitDisplayLength =
+                            FontRenderer.getInstance().getFont().width(splitPart.getComponent().append(" "));
+
+                    // If word fits add it
+                    if (currentWidth + splitDisplayLength <= maxWidth) {
+                        currentWidth += splitDisplayLength;
+                        newParts.add(splitPart);
+                        newParts.add(new StyledTextPart(
+                                " ", splitPart.getPartStyle().getStyle(), null, null));
+                        continue;
+                    }
+
+                    if (currentWidth <= 0) {
+                        // TODO: If whole word is to large
+                    }
+
+                    newParts.add(new StyledTextPart(
+                            NEWLINE_PREPARATION, splitPart.getPartStyle().getStyle(), null, null));
+                    newParts.add(splitPart);
+                    newParts.add(
+                            new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
+                    currentWidth = splitDisplayLength;
                 }
             }
 

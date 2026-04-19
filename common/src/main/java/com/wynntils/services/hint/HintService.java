@@ -58,7 +58,7 @@ public class HintService extends Service {
 
         if (hints.isEmpty()) return;
 
-        int hintNum = RANDOM.nextInt(hints.size());
+        int hintNum = 0;
         Map<String, String> currentHint = hints.get(hintNum);
         String hint;
 
