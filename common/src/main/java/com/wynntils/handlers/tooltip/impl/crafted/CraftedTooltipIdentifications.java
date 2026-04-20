@@ -118,7 +118,7 @@ public final class CraftedTooltipIdentifications {
                 Models.Stat.getDisplayName(statType, craftedItem.getRequiredClass(), currentClass, RangedValue.NONE);
 
         MutableComponent left = Component.empty();
-        appendIconPrefix(left, statType);
+        appendIconPrefix(left, statType, actualValue.hasIconPrefix());
         left.append(Component.literal(displayName + " ")
                 .withStyle(Style.EMPTY
                         .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
@@ -199,7 +199,9 @@ public final class CraftedTooltipIdentifications {
         return wheel;
     }
 
-    private static void appendIconPrefix(MutableComponent line, StatType statType) {
+    private static void appendIconPrefix(MutableComponent line, StatType statType, boolean showIconPrefix) {
+        if (!showIconPrefix) return;
+
         String iconPrefix = TooltipIdentificationsCompat.getIconPrefix(statType);
         if (iconPrefix.isEmpty()) return;
 

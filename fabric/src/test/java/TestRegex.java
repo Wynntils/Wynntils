@@ -8,8 +8,8 @@ import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
+import com.wynntils.models.abilities.label.ShamanTotemLabelParser;
 import com.wynntils.models.account.AccountModel;
 import com.wynntils.models.activities.worldevents.WorldEventModel;
 import com.wynntils.models.bonustotems.label.BonusTotemLabelParser;
@@ -741,14 +741,16 @@ public class TestRegex {
     }
 
     @Test
-    public void ShamanTotemModel_SHAMAN_TOTEM_TIMER_PATTERN() {
-        PatternTester p = new PatternTester(ShamanTotemModel.class, "SHAMAN_TOTEM_TIMER");
+    public void ShamanTotemLabelParser_SHAMAN_TOTEM_PATTERN() {
+        PatternTester p = new PatternTester(ShamanTotemLabelParser.class, "SHAMAN_TOTEM_PATTERN");
         // Timer only
-        p.shouldMatch("§bShadowCat117's §7Totem\n§d\uE01F §77s");
+        p.shouldMatch("§bShadowCat117's §7Totem\n §d\uE01F §77s");
         // Timer + regen
         p.shouldMatch("§bShadowCat117's §7Totem\n§c+1644❤§7/s §d\uE01F §753s");
         // Timer + summons attack speed
         p.shouldMatch("§bShadowCat117's §7Totem\n§e\uE013 §71s §d\uE01F §749s");
+        // Timer + poison + regen
+        p.shouldMatch("§bShadowCat117's §7Totem\n§c+1644❤§7/s §5\uE011 §763.1k §d\uE01F §753s");
         // Timer + regen + summons attack speed
         p.shouldMatch("§bShadowCat117's §7Totem\n§c+986❤§7/s §e\uE013 §71s §d\uE01F §750s");
     }
