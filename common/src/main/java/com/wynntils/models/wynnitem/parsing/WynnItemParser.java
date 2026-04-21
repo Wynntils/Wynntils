@@ -133,8 +133,8 @@ public final class WynnItemParser {
             CustomColor.fromInt(0x47e6e6),
             3);
 
-    private static final Pattern PROFESSION_TIER_PATTERN =
-            Pattern.compile("^§f\\uDB00\\uDC26.*?(?:(?:§#(?<hexColor>e6e647|e647e6|47e6e6)ff)|(?<blackColor>§0))\\uE000{1,3}\\uDB00\\uDC02.*$");
+    private static final Pattern PROFESSION_TIER_PATTERN = Pattern.compile(
+            "^§f\\uDB00\\uDC26.*?(?:(?:§#(?<hexColor>e6e647|e647e6|47e6e6)ff)|(?<blackColor>§0))\\uE000{1,3}\\uDB00\\uDC02.*$");
 
     private static final FontDescription SPRITE_FRAME_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/emblem/sprite"));
