@@ -341,7 +341,14 @@ public final class ChatTabService extends Service {
                         : new ChatTabData(new ChatComponent(McUtils.mc()), false, chatTab.customRegexString())));
 
         if (focusedTab != null) {
-            setFocusedTab(chatTabs.getFirst());
+            if (chatTabs.isEmpty()) {
+                WynntilsMod.warn("Disabling Chat Tabs because the configured tab list is empty");
+                disable();
+                return;
+            }
+
+            ChatTab nextFocusedTab = chatTabs.contains(focusedTab) ? focusedTab : chatTabs.getFirst();
+            setFocusedTab(nextFocusedTab);
         }
     }
 }
