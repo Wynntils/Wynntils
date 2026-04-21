@@ -10,9 +10,15 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.fonts.WynnFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearTooltipAlignmentComponent;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
+import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.render.FontRenderer;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -22,6 +28,19 @@ public abstract class GuideItemStack extends ItemStack {
         super(itemStack.getItem(), 1);
         this.applyComponents(itemStack.getComponentsPatch());
         Handlers.Item.updateItem(this, annotation, StyledText.fromString(baseName));
+    }
+
+    public void queueGuideTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        List<Component> tooltipLines = new ArrayList<>(LoreUtils.getTooltipLines(this));
+        GearTooltipAlignmentComponent.realignMarkedTooltipLines(tooltipLines);
+
+        guiGraphics.setTooltipForNextFrame(
+                FontRenderer.getInstance().getFont(),
+                tooltipLines,
+                this.getTooltipImage(),
+                mouseX,
+                mouseY,
+                this.get(DataComponents.TOOLTIP_STYLE));
     }
 
     protected void appendObtainInfo(List<Component> tooltipLines, List<ItemObtainInfo> itemObtainInfos) {

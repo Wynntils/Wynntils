@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
@@ -13,12 +14,14 @@ import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Matcher;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public abstract class TooltipBuilder {
@@ -36,6 +39,7 @@ public abstract class TooltipBuilder {
     private TooltipWeightDecorator cachedWeightDecorator;
     private List<Component> identificationsCache;
     private List<Component> weightedHeaderCache;
+    private List<Component> tooltipLinesCache;
 
     protected TooltipBuilder(List<Component> header, List<Component> footer, String source) {
         this.header = header;
@@ -54,56 +58,68 @@ public abstract class TooltipBuilder {
             ItemWeightSource weightSource,
             TooltipWeightDecorator weightDecorator) {
         List<Component> tooltip;
-        List<Component> identifications;
-        List<Component> weightings;
-
         // Identification lines are rendered differently depending on current class, requested
         // style and provided decorator. If all match, use cache.
-        if (currentClass != cachedCurrentClass
+        if (tooltipLinesCache == null
+                || currentClass != cachedCurrentClass
                 || cachedWeightSource != weightSource
                 || !Objects.equals(cachedStyle, style)
                 || !Objects.equals(this.cachedIdentificationDecorator, identificationDecorator)
                 || !Objects.equals(this.cachedWeightDecorator, weightDecorator)) {
-            identifications = getIdentificationLines(currentClass, style, identificationDecorator);
-            identificationsCache = identifications;
+            if (weightSource != ItemWeightSource.NONE) {
+                weightedHeaderCache = getWeightedHeaderLines(header, weightSource, weightDecorator, style);
+            } else {
+                weightedHeaderCache = null;
+            }
+
+            List<Component> headerToUse = weightedHeaderCache != null ? weightedHeaderCache : header;
+            int targetWidth = calculateTargetWidth(headerToUse, footer);
+            identificationsCache = getIdentificationLines(currentClass, style, identificationDecorator, targetWidth);
             cachedCurrentClass = currentClass;
             cachedWeightSource = weightSource;
             cachedStyle = style;
             this.cachedIdentificationDecorator = identificationDecorator;
             this.cachedWeightDecorator = weightDecorator;
-            weightings = null;
 
-            if (weightSource != ItemWeightSource.NONE) {
-                weightings = getWeightedHeaderLines(header, weightSource, weightDecorator, style);
+            tooltip = new ArrayList<>(headerToUse);
+            if (!source.isEmpty()) {
+                tooltip.add(0, buildSourceLine());
+                tooltip.add(1, Component.empty());
             }
 
-            weightedHeaderCache = weightings;
+            tooltip.addAll(identificationsCache);
+            tooltip.addAll(footer);
+
+            int finalTargetWidth = tooltip.stream()
+                    .mapToInt(line -> McUtils.mc().font.width(line))
+                    .max()
+                    .orElse(0);
+            tooltipLinesCache = List.copyOf(postProcessTooltipLines(tooltip, finalTargetWidth));
         }
 
-        // Determine header to use
-        if (weightSource != ItemWeightSource.NONE) {
-            // Recalculate weighted header if not cached
-            if (weightedHeaderCache == null) {
-                weightedHeaderCache = getWeightedHeaderLines(header, weightSource, weightDecorator, style);
-            }
-            tooltip = new ArrayList<>(weightedHeaderCache);
-        } else {
-            tooltip = new ArrayList<>(header);
+        return tooltipLinesCache;
+    }
+
+    private int calculateTargetWidth(List<Component> headerLines, List<Component> footerLines) {
+        int targetWidth = 0;
+
+        for (Component line : headerLines) {
+            targetWidth = Math.max(targetWidth, McUtils.mc().font.width(line));
         }
 
-        tooltip.addAll(identificationsCache);
-
-        tooltip.addAll(footer);
+        for (Component line : footerLines) {
+            targetWidth = Math.max(targetWidth, McUtils.mc().font.width(line));
+        }
 
         if (!source.isEmpty()) {
-            tooltip.add(
-                    1,
-                    Component.literal(source)
-                            .withStyle(ChatFormatting.DARK_GRAY)
-                            .withStyle(ChatFormatting.ITALIC));
+            targetWidth = Math.max(targetWidth, McUtils.mc().font.width(buildSourceLine()));
         }
 
-        return tooltip;
+        return targetWidth;
+    }
+
+    private Component buildSourceLine() {
+        return BannerBoxFont.buildMessage(source.toLowerCase(Locale.ROOT), CommonColors.WHITE, CommonColors.BLACK, "");
     }
 
     protected abstract List<Component> getWeightedHeaderLines(
@@ -113,7 +129,11 @@ public abstract class TooltipBuilder {
             TooltipStyle style);
 
     protected abstract List<Component> getIdentificationLines(
-            ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator);
+            ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator, int targetWidth);
+
+    protected List<Component> postProcessTooltipLines(List<Component> tooltip, int targetWidth) {
+        return tooltip;
+    }
 
     protected static Pair<List<Component>, List<Component>> extractHeaderAndFooter(List<Component> lore) {
         List<Component> header = new ArrayList<>();
@@ -139,7 +159,7 @@ public abstract class TooltipBuilder {
                         // so reset the flag here
                         skillPointsStarted = false;
 
-                        String statName = matcher.group(6);
+                        String statName = matcher.group("statName");
 
                         if (Skill.isSkill(statName)) {
                             skillPointsStarted = true;

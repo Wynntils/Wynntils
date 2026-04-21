@@ -6,6 +6,7 @@ package com.wynntils.core.components;
 
 import com.wynntils.models.abilities.AbilityModel;
 import com.wynntils.models.abilities.ShamanMaskModel;
+import com.wynntils.models.abilities.ShamanSummonModel;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.ShieldModel;
 import com.wynntils.models.abilitytree.AbilityTreeModel;
@@ -57,6 +58,7 @@ import com.wynntils.models.spells.SpellModel;
 import com.wynntils.models.stats.ShinyModel;
 import com.wynntils.models.stats.StatModel;
 import com.wynntils.models.statuseffects.StatusEffectModel;
+import com.wynntils.models.teleportscroll.TeleportScrollModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.token.TokenModel;
@@ -116,6 +118,7 @@ public final class Models {
     public static final ServerListModel ServerList = new ServerListModel();
     public static final SetModel Set = new SetModel();
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();
+    public static final ShamanSummonModel ShamanSummon = new ShamanSummonModel();
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel();
     public static final ShieldModel Shield = new ShieldModel();
     public static final ShinyModel Shiny = new ShinyModel();
@@ -125,6 +128,7 @@ public final class Models {
     public static final StatModel Stat = new StatModel();
     public static final StatusEffectModel StatusEffect = new StatusEffectModel();
     public static final StreamerModeModel StreamerMode = new StreamerModeModel();
+    public static final TeleportScrollModel TeleportScroll = new TeleportScrollModel();
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final TokenModel Token = new TokenModel();
     public static final TradeMarketModel TradeMarket = new TradeMarketModel();

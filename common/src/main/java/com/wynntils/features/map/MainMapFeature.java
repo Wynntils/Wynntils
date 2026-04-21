@@ -25,7 +25,6 @@ import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.PoiCreationScreen;
 import com.wynntils.services.map.pois.CustomPoi;
-import com.wynntils.services.mapdata.providers.builtin.WaypointsProvider;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -215,8 +214,9 @@ public class MainMapFeature extends Feature {
     }
 
     public void updateWaypoints() {
-        WaypointsProvider.resetFeatures();
-        customPois.get().forEach(WaypointsProvider::registerFeature);
+        // TODO: Waypoints provider integration - PR2+
+        // WaypointsProvider.resetFeatures();
+        // customPois.get().forEach(WaypointsProvider::registerFeature);
     }
 
     private void handleEntity(Entity entity) {

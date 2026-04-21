@@ -139,6 +139,8 @@ public class ContainerSearchFeature extends Feature {
     private SearchWidget lastSearchWidget;
     private SearchableContainerProperty currentContainer;
     private boolean autoSearching = false;
+    private boolean awaitingAutoSearchUpdate = false;
+    private int lastAutoSearchUpdateStateId = -1;
     private boolean matchedItems = false;
     private int direction = 0;
     private ItemSearchQuery lastSearchQuery;
@@ -187,24 +189,60 @@ public class ContainerSearchFeature extends Feature {
     @SubscribeEvent
     public void onContainerSetContent(ContainerSetContentEvent.Post event) {
         if (currentContainer == null) return;
+        if (!(McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen)
+                || event.getContainerId() != abstractContainerScreen.getMenu().containerId) {
+            return;
+        }
+
         forceUpdateSearch();
 
-        if (!matchedItems
-                && autoSearching
-                && McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen) {
-            tryAutoSearch(abstractContainerScreen);
-        }
+        continueAutoSearch(abstractContainerScreen, event.getStateId());
     }
 
     @SubscribeEvent
     public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
         if (currentContainer == null) return;
+        if (!(McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen)
+                || event.getContainerId() != abstractContainerScreen.getMenu().containerId) {
+            return;
+        }
+
+        // During auto-search, PRE can still reflect the old page state. Ignore it until the page update lands.
+        if (autoSearching && awaitingAutoSearchUpdate) return;
         forceUpdateSearch();
     }
 
     @SubscribeEvent
+    public void onContainerSetSlot(ContainerSetSlotEvent.Post event) {
+        if (currentContainer == null || !autoSearching) return;
+        if (!(McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen)
+                || event.getContainerId() != abstractContainerScreen.getMenu().containerId) {
+            return;
+        }
+
+        int paginationSlot =
+                direction == 1 ? currentContainer.getNextItemSlot() : currentContainer.getPreviousItemSlot();
+        if (event.getSlot() != paginationSlot) return;
+
+        int eventContainerId = event.getContainerId();
+        int eventStateId = event.getStateId();
+        Managers.TickScheduler.scheduleLater(
+                () -> {
+                    if (currentContainer == null || !autoSearching) return;
+                    if (!(McUtils.screen() instanceof AbstractContainerScreen<?> currentScreen)
+                            || currentScreen.getMenu().containerId != eventContainerId) {
+                        return;
+                    }
+
+                    forceUpdateSearch();
+                    continueAutoSearch(currentScreen, eventStateId);
+                },
+                1);
+    }
+
+    @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
-        autoSearching = false;
+        stopAutoSearch();
     }
 
     @SubscribeEvent
@@ -212,7 +250,7 @@ public class ContainerSearchFeature extends Feature {
         lastSearchWidget = null;
         lastSearchQuery = null;
         currentContainer = null;
-        autoSearching = false;
+        stopAutoSearch();
         matchedItems = false;
         direction = 0;
         guildBankLastSearch = 0;
@@ -221,7 +259,8 @@ public class ContainerSearchFeature extends Feature {
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
         // Don't want to be able to search whilst the edit widget is open
-        if (event.getKeyCode() == GLFW.GLFW_KEY_ENTER && !Models.Bank.isEditingMode()) {
+        if ((event.getKeyCode() == GLFW.GLFW_KEY_ENTER || event.getKeyCode() == GLFW.GLFW_KEY_KP_ENTER)
+                && !Models.Bank.isEditingMode()) {
             if (lastSearchWidget == null
                     || lastSearchWidget.getTextBoxInput().isEmpty()
                     || currentContainer == null
@@ -253,7 +292,11 @@ public class ContainerSearchFeature extends Feature {
                 }
             }
 
+            // "Find next" should not immediately stop due to matches on the current page.
+            matchedItems = false;
             autoSearching = true;
+            awaitingAutoSearchUpdate = false;
+            lastAutoSearchUpdateStateId = -1;
 
             if (KeyboardUtils.isShiftDown() && currentContainer instanceof PersonalStorageContainer) {
                 ContainerUtils.pressKeyOnSlot(
@@ -270,6 +313,8 @@ public class ContainerSearchFeature extends Feature {
 
     private void tryAutoSearch(AbstractContainerScreen<?> abstractContainerScreen) {
         if (!autoSearching) return;
+        if (awaitingAutoSearchUpdate) return;
+
         if (currentContainer instanceof GuildBankContainer) {
             long diff = System.currentTimeMillis() - guildBankLastSearch;
             if (diff < GUILD_BANK_SEARCH_DELAY) {
@@ -289,7 +334,7 @@ public class ContainerSearchFeature extends Feature {
                 direction == 1 ? currentContainer.getNextItemPattern() : currentContainer.getPreviousItemPattern();
 
         if (!name.matches(itemPattern)) {
-            autoSearching = false;
+            stopAutoSearch();
             return;
         }
 
@@ -298,6 +343,31 @@ public class ContainerSearchFeature extends Feature {
                 abstractContainerScreen.getMenu().containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
                 abstractContainerScreen.getMenu().getItems());
+        awaitingAutoSearchUpdate = true;
+    }
+
+    private void continueAutoSearch(AbstractContainerScreen<?> abstractContainerScreen, int stateId) {
+        if (!autoSearching) return;
+        if (matchedItems) {
+            stopAutoSearch();
+            return;
+        }
+
+        if (awaitingAutoSearchUpdate) {
+            // Some containers emit both SetContent and SetSlot for a single page update. Only react once per state id.
+            if (stateId == lastAutoSearchUpdateStateId) return;
+
+            awaitingAutoSearchUpdate = false;
+            lastAutoSearchUpdateStateId = stateId;
+        }
+
+        tryAutoSearch(abstractContainerScreen);
+    }
+
+    private void stopAutoSearch() {
+        autoSearching = false;
+        awaitingAutoSearchUpdate = false;
+        lastAutoSearchUpdateStateId = -1;
     }
 
     private SearchableContainerProperty getCurrentSearchableContainer() {

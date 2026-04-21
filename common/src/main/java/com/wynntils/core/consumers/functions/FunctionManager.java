@@ -387,6 +387,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new ColorFunctions.SaturationShiftFunction());
         registerFunction(new ColorFunctions.ShineShaderFunction());
         registerFunction(new ColorFunctions.ToHexStringFunction());
+        registerFunction(new ColorFunctions.WynncraftShaderFunction());
 
         registerFunction(new ConditionalFunctions.IfCappedValueFunction());
         registerFunction(new ConditionalFunctions.IfCustomColorFunction());
@@ -493,7 +494,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.CappedAwakenedProgressFunction());
         registerFunction(new CharacterFunctions.CappedBloodPoolFunction());
         registerFunction(new CharacterFunctions.CappedCorruptedFunction());
-        registerFunction(new CharacterFunctions.CappedDistortionFunction());
         registerFunction(new CharacterFunctions.CappedFocusFunction());
         registerFunction(new CharacterFunctions.CappedHealthFunction());
         registerFunction(new CharacterFunctions.CappedHolyPowerFunction());
@@ -503,9 +503,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.ClassFunction());
         registerFunction(new CharacterFunctions.CommanderActivatedFunction());
         registerFunction(new CharacterFunctions.CommanderDurationFunction());
+        registerFunction(new CharacterFunctions.CurrentDistortionFunction());
         registerFunction(new CharacterFunctions.EquippedAspectFunction());
-        registerFunction(new CharacterFunctions.GuildObjectiveGoalFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveEventBonusFunction());
+        registerFunction(new CharacterFunctions.GuildObjectiveGoalFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveScoreFunction());
         registerFunction(new CharacterFunctions.HasNoGuiFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
@@ -519,17 +520,19 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
         registerFunction(new CharacterFunctions.ManaPctFunction());
-        registerFunction(new CharacterFunctions.MirrorImageDurationFunction());
         registerFunction(new CharacterFunctions.MirrorImageCloneFunction());
+        registerFunction(new CharacterFunctions.MirrorImageDurationFunction());
         registerFunction(new CharacterFunctions.MomentumFunction());
         registerFunction(new CharacterFunctions.MomentumPercentFunction());
         registerFunction(new CharacterFunctions.OphanimActive());
         registerFunction(new CharacterFunctions.OphanimHealingPercentFunction());
         registerFunction(new CharacterFunctions.OphanimOrb());
-        registerFunction(new CharacterFunctions.PersonalObjectiveGoalFunction());
         registerFunction(new CharacterFunctions.PersonalObjectiveEventBonusFunction());
+        registerFunction(new CharacterFunctions.PersonalObjectiveGoalFunction());
         registerFunction(new CharacterFunctions.PersonalObjectiveScoreFunction());
         registerFunction(new CharacterFunctions.PowderSpecialChargeFunction());
+        registerFunction(new CharacterFunctions.PuppetCountFunction());
+        registerFunction(new CharacterFunctions.PuppetsInTimeRangeFunction());
         registerFunction(new CharacterFunctions.SprintFunction());
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
@@ -627,6 +630,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
         registerFunction(new InventoryFunctions.MaterialCountFunction());
         registerFunction(new InventoryFunctions.MoneyFunction());
+        registerFunction(new InventoryFunctions.TeleportScrollChargesFunction());
+        registerFunction(new InventoryFunctions.TeleportScrollRechargeTimerFunction());
 
         registerFunction(new LootrunFunctions.ChestOpenedFunction());
         registerFunction(new LootrunFunctions.ChestsOpenedThisSessionFunction());
