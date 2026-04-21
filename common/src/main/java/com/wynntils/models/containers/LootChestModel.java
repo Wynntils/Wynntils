@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.containers;
@@ -27,6 +27,7 @@ import com.wynntils.models.items.items.game.EmeraldItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.WardItem;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.RangedValue;
@@ -159,6 +160,12 @@ public final class LootChestModel extends Model {
                     resetNormalDryStatistics();
                 }
             }
+            return;
+        }
+
+        Optional<WardItem> wardItem = Models.Item.asWynnItem(itemStack, WardItem.class);
+        if (wardItem.isPresent()) {
+            WynntilsMod.postEvent(new ValuableFoundEvent(itemStack, ValuableFoundEvent.ItemSource.LOOT_CHEST));
             return;
         }
 
