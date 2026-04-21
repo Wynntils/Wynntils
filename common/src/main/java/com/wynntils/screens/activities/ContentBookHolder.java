@@ -61,11 +61,13 @@ public class ContentBookHolder extends WrappedScreenHolder<WynntilsContentBookSc
         if (!(McUtils.screen() instanceof WynntilsContentBookScreen contentBookScreen)) return;
         if (wrappedScreen == null) return;
 
+        int inventoryContainerId = McUtils.inventoryMenu().containerId;
         int wrappedContainerId = wrappedScreen.getWrappedScreenInfo().containerId();
         int eventContainerId = event.getContainerId();
-        if (eventContainerId != McUtils.inventoryMenu().containerId && eventContainerId != wrappedContainerId) return;
+        if (eventContainerId != inventoryContainerId && eventContainerId != wrappedContainerId) return;
 
-        Optional<Integer> actionSlot = getActionSlotForSetSlot(event.getSlot());
+        Optional<Integer> actionSlot =
+                getActionSlotForSetSlot(event.getSlot(), eventContainerId, inventoryContainerId, wrappedContainerId);
         if (actionSlot.isPresent()) {
             handleActionSlot(event.getItemStack(), actionSlot.get());
             return;
@@ -184,9 +186,14 @@ public class ContentBookHolder extends WrappedScreenHolder<WynntilsContentBookSc
         }
     }
 
-    private Optional<Integer> getActionSlotForSetSlot(int slot) {
+    private Optional<Integer> getActionSlotForSetSlot(
+            int slot, int eventContainerId, int inventoryContainerId, int wrappedContainerId) {
         for (Pair<Integer, Integer> slotPair : ACTION_SLOTS) {
-            if (slotPair.a() == slot || slotPair.b() == slot) {
+            if (eventContainerId == inventoryContainerId && slotPair.a() == slot) {
+                return Optional.of(slotPair.b());
+            }
+
+            if (eventContainerId == wrappedContainerId && slotPair.b() == slot) {
                 return Optional.of(slotPair.b());
             }
         }
