@@ -87,7 +87,7 @@ public final class WynnItemParser {
             "§f(?<iconPrefix>(?:\uDAFF\uDFFF\uE010\uDB00\uDC02|\uE011\uDB00\uDC02|\uDAFF\uDFFF\uE012\uDB00\uDC02|\uDAFF\uDFFF\uE013\uDB00\uDC01\uDB00\uDC02|\uE014\uDB00\uDC02))?(?<statName>[\\w\\.\\- ]+).+?§#(acfac6ff|faacacff)(?<value>[-+][\\d,]+)(?<unit>%| tier|\\/[35]s)?(?:§f §8.+?(?:§(?<indicatorColor>#[a-zA-Z0-9]{8})(.)?)?)?");
 
     // Test in WynnItemParser_TIER_PATTERN
-    private static final Pattern TIER_PATTERN = Pattern.compile("§f\uDB00\uDC26§([5bcdef]).+");
+    private static final Pattern TIER_PATTERN = Pattern.compile("^(?:§.)*\\uDB00\\uDC26(?:§([5bcdef]))?.+");
 
     private static final Pattern REROLL_EXTRACT_PATTERN = Pattern.compile("\uE060(.*?)\uE062");
 
@@ -205,9 +205,16 @@ public final class WynnItemParser {
             if (segment == 1) {
                 Matcher tierMatcher = normalizedCoded.getMatcher(TIER_PATTERN);
                 if (tierMatcher.matches()) {
-                    ChatFormatting chatFormatting =
-                            ChatFormatting.getByCode(tierMatcher.group(1).charAt(0));
-                    tier = GearTier.fromChatFormatting(chatFormatting);
+                    if (tier == null) {
+                        String chatColor = tierMatcher.group(1);
+                        if (chatColor != null) {
+                            ChatFormatting chatFormatting = ChatFormatting.getByCode(chatColor.charAt(0));
+                            tier = GearTier.fromChatFormatting(chatFormatting);
+                        } else {
+                            // In current Wynn tooltip format, NORMAL tier may omit the explicit §<tierColor> code here.
+                            tier = GearTier.NORMAL;
+                        }
+                    }
                     continue;
                 }
 
