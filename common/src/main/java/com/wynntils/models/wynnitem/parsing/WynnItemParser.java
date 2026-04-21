@@ -87,7 +87,7 @@ public final class WynnItemParser {
             "§f(?<iconPrefix>(?:\uDAFF\uDFFF\uE010\uDB00\uDC02|\uE011\uDB00\uDC02|\uDAFF\uDFFF\uE012\uDB00\uDC02|\uDAFF\uDFFF\uE013\uDB00\uDC01\uDB00\uDC02|\uE014\uDB00\uDC02))?(?<statName>[\\w\\.\\- ]+).+?§#(acfac6ff|faacacff)(?<value>[-+][\\d,]+)(?<unit>%| tier|\\/[35]s)?(?:§f §8.+?(?:§(?<indicatorColor>#[a-zA-Z0-9]{8})(.)?)?)?");
 
     // Test in WynnItemParser_TIER_PATTERN
-    private static final Pattern TIER_PATTERN = Pattern.compile("§f\uDB00\uDC23§([5bcdef]).+");
+    private static final Pattern TIER_PATTERN = Pattern.compile("§f\uDB00\uDC26§([5bcdef]).+");
 
     private static final Pattern REROLL_EXTRACT_PATTERN = Pattern.compile("\uE060(.*?)\uE062");
 
@@ -134,7 +134,7 @@ public final class WynnItemParser {
             3);
 
     private static final Pattern PROFESSION_TIER_PATTERN =
-            Pattern.compile(".*§#([a-f0-9]{6})[a-f0-9]{2}\\uE000{1,3}(?=\\uDB00\\uDC02).*");
+            Pattern.compile("^§f\\uDB00\\uDC26.*?(?:(?:§#(?<hexColor>e6e647|e647e6|47e6e6)ff)|(?<blackColor>§0))\\uE000{1,3}\\uDB00\\uDC02.*$");
 
     private static final FontDescription SPRITE_FRAME_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/emblem/sprite"));
@@ -462,15 +462,16 @@ public final class WynnItemParser {
 
     public static int parseProfessionTier(ItemStack itemStack) {
         Matcher tierMatcher = LoreUtils.matchLoreLine(itemStack, 1, PROFESSION_TIER_PATTERN);
-        String tierColor = "";
-
-        if (tierMatcher.matches()) {
-            tierColor = tierMatcher.group(1);
+        if (!tierMatcher.matches()) {
+            return -1;
         }
 
-        if (tierColor.isEmpty()) return -1;
+        if (tierMatcher.group("blackColor") != null) {
+            return 0;
+        }
 
-        return TIER_COLOR_CODES.getOrDefault(CustomColor.fromHexString(tierColor), 0);
+        String tierColor = tierMatcher.group("hexColor");
+        return tierColor == null ? -1 : TIER_COLOR_CODES.getOrDefault(CustomColor.fromHexString(tierColor), 0);
     }
 
     private static int parseTooltipPage(Component line) {
