@@ -23,6 +23,8 @@ import net.minecraft.world.InteractionHand;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class SpellCasterModel extends Model {
+    private static final DirectClickTransport DEFAULT_DIRECT_CLICK_TRANSPORT = new MouseDirectClickTransport();
+
     private final BlockingQueue<QueuedSequence> queuedSequences;
     private final Object stateLock = new Object();
     private final ClickSender clickSender;
@@ -40,11 +42,45 @@ public final class SpellCasterModel extends Model {
 
     public SpellCasterModel() {
         this(
-                SpellCasterModel::dispatchClick,
+                DEFAULT_DIRECT_CLICK_TRANSPORT,
                 Thread::sleep,
                 click -> {},
                 new SpellCasterLagCorrectionTracker(),
                 System::currentTimeMillis);
+    }
+
+    // Package-private for unit tests that need to verify the production click transport.
+    SpellCasterModel(DirectClickTransport directClickTransport, DelayStrategy delayStrategy) {
+        this(
+                directClickTransport,
+                delayStrategy,
+                click -> {},
+                new SpellCasterLagCorrectionTracker(),
+                System::currentTimeMillis);
+    }
+
+    // Package-private for unit tests that need to verify the production transport with controlled timing.
+    SpellCasterModel(
+            DirectClickTransport directClickTransport,
+            DelayStrategy delayStrategy,
+            SpellCasterLagCorrectionTracker lagCorrectionTracker,
+            LongSupplier currentTimeMsSupplier) {
+        this(directClickTransport, delayStrategy, click -> {}, lagCorrectionTracker, currentTimeMsSupplier);
+    }
+
+    // Package-private for unit tests that need to pause precisely before a production click is dispatched.
+    SpellCasterModel(
+            DirectClickTransport directClickTransport,
+            DelayStrategy delayStrategy,
+            BeforeDispatchHook beforeDispatchHook,
+            SpellCasterLagCorrectionTracker lagCorrectionTracker,
+            LongSupplier currentTimeMsSupplier) {
+        this(
+                (click, usesRightClick, isArcher) -> dispatchClick(directClickTransport, usesRightClick),
+                delayStrategy,
+                beforeDispatchHook,
+                lagCorrectionTracker,
+                currentTimeMsSupplier);
     }
 
     // Package-private for unit tests that need to stub packet sending and timing.
@@ -346,16 +382,11 @@ public final class SpellCasterModel extends Model {
         }
     }
 
-    private static void dispatchClick(CombatClickType click, boolean usesRightClick, boolean isArcher) {
-        if (click == CombatClickType.MELEE) {
-            MouseUtils.sendDirectAttackInput(isArcher);
-            return;
-        }
-
+    private static void dispatchClick(DirectClickTransport directClickTransport, boolean usesRightClick) {
         if (usesRightClick) {
-            MouseUtils.sendDirectRightClickInput();
+            directClickTransport.sendDirectRightClickInput();
         } else {
-            MouseUtils.sendLeftClickInput();
+            directClickTransport.sendLeftClickInput();
         }
     }
 
@@ -371,6 +402,24 @@ public final class SpellCasterModel extends Model {
             int cooldownMs,
             boolean adaptiveLagCorrectionEnabled,
             long generation) {}
+
+    interface DirectClickTransport {
+        void sendDirectRightClickInput();
+
+        void sendLeftClickInput();
+    }
+
+    private static final class MouseDirectClickTransport implements DirectClickTransport {
+        @Override
+        public void sendDirectRightClickInput() {
+            MouseUtils.sendDirectRightClickInput();
+        }
+
+        @Override
+        public void sendLeftClickInput() {
+            MouseUtils.sendLeftClickInput();
+        }
+    }
 
     @FunctionalInterface
     interface ClickSender {
