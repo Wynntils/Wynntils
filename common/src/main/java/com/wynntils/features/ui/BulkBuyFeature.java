@@ -28,6 +28,7 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.type.ActionSpeed;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class BulkBuyFeature extends Feature {
     private final Config<Integer> bulkBuyAmount = new Config<>(4);
 
     @Persisted
-    private final Config<BulkBuySpeed> bulkBuySpeed = new Config<>(BulkBuySpeed.BALANCED);
+    private final Config<ActionSpeed> bulkBuySpeed = new Config<>(ActionSpeed.BALANCED);
 
     @Persisted
     private final Config<Integer> animationDuration = new Config<>(125);
@@ -294,23 +295,6 @@ public class BulkBuyFeature extends Feature {
         return title.startsWith(ChatFormatting.GREEN.toString())
                 && title.endsWith(" Shop")
                 && LoreUtils.getStringLore(toBuy).contains(PRICE_STR);
-    }
-
-    public enum BulkBuySpeed {
-        FAST(4),
-        BALANCED(5),
-        SAFE(6),
-        VERY_SAFE(8);
-
-        private final int ticksDelay;
-
-        BulkBuySpeed(int ticksDelay) {
-            this.ticksDelay = ticksDelay;
-        }
-
-        private int getTicksDelay() {
-            return ticksDelay;
-        }
     }
 
     public record BulkBoughtItem(ItemStack itemStack, int amount, int price) {}
