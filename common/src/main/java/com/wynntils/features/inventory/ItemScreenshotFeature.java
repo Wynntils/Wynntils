@@ -224,8 +224,9 @@ public class ItemScreenshotFeature extends Feature {
             }
 
             if (SystemUtils.isMac() || SystemUtils.isWayland()) {
-                McUtils.sendWynntilsPrefixMessage(Component.translatable("feature.wynntils.itemScreenshot.copy.osWarning")
-                        .withStyle(ChatFormatting.GRAY));
+                McUtils.sendWynntilsPrefixMessage(
+                        Component.translatable("feature.wynntils.itemScreenshot.copy.osWarning")
+                                .withStyle(ChatFormatting.GRAY));
                 return;
             }
         } else if (SystemUtils.isMac() || SystemUtils.isWayland()) {

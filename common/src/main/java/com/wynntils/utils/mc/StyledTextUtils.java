@@ -291,8 +291,7 @@ public final class StyledTextUtils {
                 continue;
             }
 
-            newParts.add(new StyledTextPart(
-                    NEWLINE_PREPARATION, partStyle, null, null));
+            newParts.add(new StyledTextPart(NEWLINE_PREPARATION, partStyle, null, null));
             newParts.add(splitPart);
             newParts.add(new StyledTextPart(" ", partStyle, null, null));
             currentWidth = splitDisplayLength;
@@ -323,8 +322,8 @@ public final class StyledTextUtils {
                 continue;
             }
 
-            newParts.add(new StyledTextPart(
-                    NEWLINE_PREPARATION, part.getPartStyle().getStyle(), null, null));
+            newParts.add(
+                    new StyledTextPart(NEWLINE_PREPARATION, part.getPartStyle().getStyle(), null, null));
             newParts.add(splitPart);
             currentWidth = splitDisplayLength;
         }

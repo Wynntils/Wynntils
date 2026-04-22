@@ -201,7 +201,8 @@ public class ContentBookDumpFeature extends Feature {
             WynntilsMod.error("Failed to save json file " + jsonFile, e);
         }
 
-        McUtils.sendWynntilsPrefixMessage(Component.literal("Saved content book dump to " + jsonFile.getAbsolutePath()));
+        McUtils.sendWynntilsPrefixMessage(
+                Component.literal("Saved content book dump to " + jsonFile.getAbsolutePath()));
     }
 
     // This method creates a consistent mapping and ordering for the dumped activities
