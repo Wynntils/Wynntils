@@ -14,6 +14,7 @@ import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
 import com.wynntils.core.text.fonts.wynnfonts.FancyFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynntilsKeybindsFont;
+import com.wynntils.core.text.fonts.wynnfonts.CoordinatesFont;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
@@ -47,6 +48,7 @@ public final class FontManager extends Manager {
         registerFont(new FancyFont());
         registerFont(new WynncraftKeybindsFont());
         registerFont(new WynntilsKeybindsFont());
+        registerFont(new CoordinatesFont());
     }
 
     private void registerFont(RegisteredFont font) {

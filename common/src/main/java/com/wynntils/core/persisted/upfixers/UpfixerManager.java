@@ -39,12 +39,12 @@ import com.wynntils.core.persisted.upfixers.config.QuestBookToContentRenamedConf
 import com.wynntils.core.persisted.upfixers.config.QuickCastTimingsToMillisecondsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.SacredSurgeToHolyPowerUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ShowAdditonalTextAboveToShowAdditionalTextAboveUpfixer;
-import com.wynntils.core.persisted.upfixers.config.TelemetryFeatureToWynntilsTelemetryFeatureUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMovedToCommonFeature;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer;
 import com.wynntils.core.persisted.upfixers.config.UniversalBarOverlayColorToColorTemplateUpfixer;
 import com.wynntils.core.persisted.upfixers.config.WynntilsContentBookReplaceToShiftBehaviourUpfixer;
+import com.wynntils.core.persisted.upfixers.config.CoordinateOverlayToCoordinatesOverlayUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankPageNameToBankPagePropertyUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankToAccountBankUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.DownloadSourceStringToEnumUpfixer;
@@ -99,7 +99,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new HorseMountFeatureToMountKeybindFeatureUpfixer());
         registerConfigUpfixer(new ChatRedirectHorseToMountUpfixer());
         registerConfigUpfixer(new ItemStatInfoConfigRenameUpfixer());
-        registerConfigUpfixer(new TelemetryFeatureToWynntilsTelemetryFeatureUpfixer());
+        registerConfigUpfixer(new CoordinateOverlayToCoordinatesOverlayUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());
