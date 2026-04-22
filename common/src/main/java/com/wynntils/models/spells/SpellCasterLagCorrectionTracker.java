@@ -10,29 +10,26 @@ import java.util.Deque;
 
 final class SpellCasterLagCorrectionTracker {
     static final int MAX_SAMPLE_COUNT = 5;
-    static final int MIN_OBSERVED_SAMPLE_COUNT = 3;
-    static final int MAX_EXTRA_DELAY_MS = 40;
+    static final int MIN_MELEE_OBSERVED_SAMPLE_COUNT = 3;
+    static final int MIN_SPELL_OBSERVED_SAMPLE_COUNT = 1;
+    static final int MAX_EXTRA_DELAY_MS = 30;
     static final long IDLE_RESET_MS = 250L;
     static final long STALE_PENDING_SAMPLE_MS = 2_000L;
-    private static final int ADJUST_MIN_EXCESS_MS = 25;
-    private static final int ADJUST_MIN_SPREAD_MS = 20;
-    private static final int ADJUST_MIN_LATEST_OVER_AVERAGE_MS = 8;
-    private static final int ADJUST_PENDING_BACKLOG = 3;
-    private static final int ADJUST_STEP_MS = 4;
-    private static final int DECAY_STEP_MS = 6;
-    private static final int EMERGENCY_EXCESS_MS = 120;
-    private static final int EMERGENCY_ABSOLUTE_LAG_MS = 400;
-    private static final int EMERGENCY_PENDING_BACKLOG = 4;
-    private static final int EMERGENCY_STEP_MS = 10;
 
-    private final Deque<Long> observedSpellLagMs = new ArrayDeque<>();
-    private final Deque<Long> observedItemCooldownLagMs = new ArrayDeque<>();
-    private final Deque<PendingInput> pendingInputs = new ArrayDeque<>();
+    private static final int FEEDBACK_SLACK_MS = 8;
+    private static final int MIN_EXCESS_DELAY_MS = 13;
+    private static final int RECENT_GAP_MARGIN_MS = 10;
+    private static final int INSTABILITY_THRESHOLD_MS = 14;
+    private static final double BASE_DELAY_SCALE = 0.65d;
+    private static final double RECENT_GAP_BONUS_SCALE = 0.22d;
+    private static final double INSTABILITY_BONUS_SCALE = 0.10d;
+    private static final double DELAY_CREDIT_SCALE = 0.40d;
+
+    private final ChannelState spellState = new ChannelState(MIN_SPELL_OBSERVED_SAMPLE_COUNT);
+    private final ChannelState itemCooldownState = new ChannelState(MIN_MELEE_OBSERVED_SAMPLE_COUNT);
 
     private boolean adaptiveWindowActive = false;
     private long lastActivityAtMs = -1L;
-    private int spellAppliedExtraDelayMs = 0;
-    private int itemCooldownAppliedExtraDelayMs = 0;
 
     synchronized void beginAdaptiveWindow(long nowMs) {
         adaptiveWindowActive = true;
@@ -40,179 +37,113 @@ final class SpellCasterLagCorrectionTracker {
     }
 
     synchronized void onInputSent(CombatClickType click, long nowMs) {
-        if (!adaptiveWindowActive) return;
+        if (!adaptiveWindowActive) {
+            return;
+        }
 
-        pendingInputs.addLast(new PendingInput(feedbackChannel(click), nowMs));
+        feedbackChannel(click).recordSend(nowMs);
         lastActivityAtMs = nowMs;
     }
 
     synchronized void onSpellProgressObserved(long nowMs) {
-        onProgressObserved(FeedbackChannel.SPELL_PROGRESS, nowMs);
+        onFeedbackObserved(spellState, nowMs);
     }
 
     synchronized void onItemCooldownObserved(long nowMs) {
-        onProgressObserved(FeedbackChannel.ITEM_COOLDOWN, nowMs);
-    }
-
-    private void onProgressObserved(FeedbackChannel feedbackChannel, long nowMs) {
-        if (!adaptiveWindowActive) return;
-
-        PendingInput pendingInput = pollFirstPending(feedbackChannel);
-        if (pendingInput == null) return;
-
-        addSample(getObservedSamples(feedbackChannel), nowMs - pendingInput.sentAtMs());
-        lastActivityAtMs = nowMs;
+        onFeedbackObserved(itemCooldownState, nowMs);
     }
 
     synchronized int computeExtraDelayMs(CombatClickType click, int baseDelayMs) {
-        FeedbackChannel feedbackChannel = feedbackChannel(click);
-        Deque<Long> observedLagMs = getObservedSamples(feedbackChannel);
-        if (!adaptiveWindowActive || observedLagMs.size() < MIN_OBSERVED_SAMPLE_COUNT) {
-            setAppliedExtraDelayMs(feedbackChannel, 0);
+        ChannelState channelState = feedbackChannel(click);
+        if (!adaptiveWindowActive || channelState.feedbackIntervalsMs.size() < channelState.minObservedSampleCount) {
+            channelState.lastDelayCreditMs = 0.0d;
             return 0;
         }
 
-        double averageLagMs = average(observedLagMs);
-        long latestLagMs = observedLagMs.peekLast();
-        long lagSpreadMs = spread(observedLagMs);
-        int pendingBacklog = countPendingInputs(feedbackChannel);
-
-        int appliedExtraDelayMs = getAppliedExtraDelayMs(feedbackChannel);
-        if (isEmergency(baseDelayMs, latestLagMs, pendingBacklog)) {
-            appliedExtraDelayMs = Math.min(appliedExtraDelayMs + EMERGENCY_STEP_MS, MAX_EXTRA_DELAY_MS);
-        } else if (shouldAdjust(baseDelayMs, averageLagMs, latestLagMs, lagSpreadMs, pendingBacklog)) {
-            appliedExtraDelayMs = Math.min(appliedExtraDelayMs + ADJUST_STEP_MS, MAX_EXTRA_DELAY_MS);
-        } else if (appliedExtraDelayMs > 0) {
-            appliedExtraDelayMs = Math.max(appliedExtraDelayMs - DECAY_STEP_MS, 0);
+        double feedbackAverageMs = average(channelState.feedbackIntervalsMs);
+        double sendAverageMs = average(channelState.sendIntervalsMs);
+        double excessDelayMs = feedbackAverageMs - sendAverageMs - channelState.lastDelayCreditMs - FEEDBACK_SLACK_MS;
+        if (excessDelayMs <= MIN_EXCESS_DELAY_MS || baseDelayMs < 0) {
+            channelState.lastDelayCreditMs = 0.0d;
+            return 0;
         }
 
-        setAppliedExtraDelayMs(feedbackChannel, appliedExtraDelayMs);
-        return appliedExtraDelayMs;
+        double latestGapMs = latest(channelState.feedbackIntervalsMs) - latest(channelState.sendIntervalsMs);
+        long instabilityMs = spread(channelState.feedbackIntervalsMs) - spread(channelState.sendIntervalsMs);
+
+        double baseDelayAdjustmentMs = (excessDelayMs - MIN_EXCESS_DELAY_MS) * BASE_DELAY_SCALE;
+        double recentGapBonusMs =
+                Math.max(0.0d, latestGapMs - excessDelayMs - RECENT_GAP_MARGIN_MS) * RECENT_GAP_BONUS_SCALE;
+        double instabilityBonusMs = Math.max(0.0d, instabilityMs - INSTABILITY_THRESHOLD_MS) * INSTABILITY_BONUS_SCALE;
+        int appliedDelayMs = (int)
+                Math.min(MAX_EXTRA_DELAY_MS, Math.round(baseDelayAdjustmentMs + recentGapBonusMs + instabilityBonusMs));
+        channelState.lastDelayCreditMs = appliedDelayMs > 0 ? appliedDelayMs * DELAY_CREDIT_SCALE : 0.0d;
+        return appliedDelayMs;
     }
 
     synchronized void onTick(long nowMs, boolean sendingInputs) {
-        if (!adaptiveWindowActive || sendingInputs) return;
+        if (!adaptiveWindowActive || sendingInputs) {
+            return;
+        }
 
         pruneStalePendingInputs(nowMs);
-        if (!pendingInputs.isEmpty()) {
+        if (hasPendingInputs()) {
             return;
         }
 
         if (lastActivityAtMs == -1L || nowMs - lastActivityAtMs > IDLE_RESET_MS) {
-            expireAdaptiveWindow();
+            clearWindowState();
         }
     }
 
     synchronized void reset() {
-        expireAdaptiveWindow();
-        observedSpellLagMs.clear();
-        observedItemCooldownLagMs.clear();
-    }
-
-    private void expireAdaptiveWindow() {
-        adaptiveWindowActive = false;
-        lastActivityAtMs = -1L;
-        spellAppliedExtraDelayMs = 0;
-        itemCooldownAppliedExtraDelayMs = 0;
-        pendingInputs.clear();
+        clearWindowState();
     }
 
     synchronized int getObservedSampleCount(CombatClickType click) {
-        return getObservedSamples(feedbackChannel(click)).size();
+        return feedbackChannel(click).feedbackIntervalsMs.size();
+    }
+
+    synchronized int getSentSampleCount(CombatClickType click) {
+        return feedbackChannel(click).sendIntervalsMs.size();
     }
 
     synchronized boolean isAdaptiveWindowActive() {
         return adaptiveWindowActive;
     }
 
-    synchronized int getPendingSendCount() {
-        return pendingInputs.size();
-    }
-
     synchronized int getAppliedExtraDelayMs(CombatClickType click) {
-        return getAppliedExtraDelayMs(feedbackChannel(click));
+        return (int) Math.round(feedbackChannel(click).lastDelayCreditMs / DELAY_CREDIT_SCALE);
     }
 
-    private void pruneStalePendingInputs(long nowMs) {
-        pendingInputs.removeIf(pendingInput -> nowMs - pendingInput.sentAtMs() > STALE_PENDING_SAMPLE_MS);
+    synchronized int getPendingSendCount(CombatClickType click) {
+        return feedbackChannel(click).pendingSentAtMs.size();
     }
 
-    private PendingInput pollFirstPending(FeedbackChannel feedbackChannel) {
-        PendingInput matchedInput = null;
-        for (PendingInput pendingInput : pendingInputs) {
-            if (pendingInput.feedbackChannel() != feedbackChannel) {
-                continue;
-            }
-
-            matchedInput = pendingInput;
-            break;
-        }
-        if (matchedInput != null) {
-            pendingInputs.removeFirstOccurrence(matchedInput);
+    private void onFeedbackObserved(ChannelState channelState, long nowMs) {
+        if (!adaptiveWindowActive) {
+            return;
         }
 
-        return matchedInput;
-    }
-
-    private static FeedbackChannel feedbackChannel(CombatClickType click) {
-        return click == CombatClickType.MELEE ? FeedbackChannel.ITEM_COOLDOWN : FeedbackChannel.SPELL_PROGRESS;
-    }
-
-    private static boolean shouldAdjust(
-            int baseDelayMs, double averageLagMs, long latestLagMs, long lagSpreadMs, int pendingBacklog) {
-        return latestLagMs >= Math.max(baseDelayMs, 0) + ADJUST_MIN_EXCESS_MS
-                && latestLagMs >= Math.round(averageLagMs) + ADJUST_MIN_LATEST_OVER_AVERAGE_MS
-                && (lagSpreadMs >= ADJUST_MIN_SPREAD_MS || pendingBacklog >= ADJUST_PENDING_BACKLOG);
-    }
-
-    private static boolean isEmergency(int baseDelayMs, long latestLagMs, int pendingBacklog) {
-        return latestLagMs >= Math.max(EMERGENCY_ABSOLUTE_LAG_MS, Math.max(baseDelayMs, 0) + EMERGENCY_EXCESS_MS)
-                || pendingBacklog >= EMERGENCY_PENDING_BACKLOG;
-    }
-
-    private Deque<Long> getObservedSamples(FeedbackChannel feedbackChannel) {
-        return switch (feedbackChannel) {
-            case SPELL_PROGRESS -> observedSpellLagMs;
-            case ITEM_COOLDOWN -> observedItemCooldownLagMs;
-        };
-    }
-
-    private int getAppliedExtraDelayMs(FeedbackChannel feedbackChannel) {
-        return switch (feedbackChannel) {
-            case SPELL_PROGRESS -> spellAppliedExtraDelayMs;
-            case ITEM_COOLDOWN -> itemCooldownAppliedExtraDelayMs;
-        };
-    }
-
-    private void setAppliedExtraDelayMs(FeedbackChannel feedbackChannel, int appliedExtraDelayMs) {
-        switch (feedbackChannel) {
-            case SPELL_PROGRESS -> spellAppliedExtraDelayMs = appliedExtraDelayMs;
-            case ITEM_COOLDOWN -> itemCooldownAppliedExtraDelayMs = appliedExtraDelayMs;
-        }
-    }
-
-    private int countPendingInputs(FeedbackChannel feedbackChannel) {
-        int count = 0;
-        for (PendingInput pendingInput : pendingInputs) {
-            if (pendingInput.feedbackChannel() == feedbackChannel) {
-                count++;
-            }
+        if (channelState.pollPendingSend() == null) {
+            return;
         }
 
-        return count;
+        channelState.recordFeedback(nowMs);
+        lastActivityAtMs = nowMs;
     }
 
-    private static void addSample(Deque<Long> samples, long value) {
-        if (value < 0L) return;
-
-        samples.addLast(value);
-        while (samples.size() > MAX_SAMPLE_COUNT) {
-            samples.removeFirst();
-        }
+    private void clearWindowState() {
+        adaptiveWindowActive = false;
+        lastActivityAtMs = -1L;
+        spellState.clear();
+        itemCooldownState.clear();
     }
 
     private static double average(Deque<Long> samples) {
-        if (samples.isEmpty()) return 0.0d;
+        if (samples.isEmpty()) {
+            return 0.0d;
+        }
 
         long total = 0L;
         for (long sample : samples) {
@@ -222,8 +153,14 @@ final class SpellCasterLagCorrectionTracker {
         return (double) total / samples.size();
     }
 
+    private static long latest(Deque<Long> samples) {
+        return samples.isEmpty() ? 0L : samples.peekLast();
+    }
+
     private static long spread(Deque<Long> samples) {
-        if (samples.isEmpty()) return 0L;
+        if (samples.isEmpty()) {
+            return 0L;
+        }
 
         long min = Long.MAX_VALUE;
         long max = Long.MIN_VALUE;
@@ -235,10 +172,78 @@ final class SpellCasterLagCorrectionTracker {
         return max - min;
     }
 
-    private enum FeedbackChannel {
-        SPELL_PROGRESS,
-        ITEM_COOLDOWN
+    private ChannelState feedbackChannel(CombatClickType click) {
+        return click == CombatClickType.MELEE ? itemCooldownState : spellState;
     }
 
-    private record PendingInput(FeedbackChannel feedbackChannel, long sentAtMs) {}
+    private void pruneStalePendingInputs(long nowMs) {
+        spellState.pruneStalePendingSends(nowMs);
+        itemCooldownState.pruneStalePendingSends(nowMs);
+    }
+
+    private boolean hasPendingInputs() {
+        return !spellState.pendingSentAtMs.isEmpty() || !itemCooldownState.pendingSentAtMs.isEmpty();
+    }
+
+    private static void addInterval(Deque<Long> samples, long intervalMs) {
+        if (intervalMs <= 1L) {
+            return;
+        }
+
+        samples.addLast(intervalMs);
+        while (samples.size() > MAX_SAMPLE_COUNT) {
+            samples.removeFirst();
+        }
+    }
+
+    private static final class ChannelState {
+        private final Deque<Long> feedbackIntervalsMs = new ArrayDeque<>();
+        private final Deque<Long> pendingSentAtMs = new ArrayDeque<>();
+        private final Deque<Long> sendIntervalsMs = new ArrayDeque<>();
+        private final int minObservedSampleCount;
+
+        private long lastAcceptedFeedbackAtMs = -1L;
+        private long lastSentAtMs = -1L;
+        private double lastDelayCreditMs = 0.0d;
+
+        private ChannelState(int minObservedSampleCount) {
+            this.minObservedSampleCount = minObservedSampleCount;
+        }
+
+        private void recordSend(long nowMs) {
+            if (lastSentAtMs != -1L) {
+                addInterval(sendIntervalsMs, nowMs - lastSentAtMs);
+            }
+
+            pendingSentAtMs.addLast(nowMs);
+            lastSentAtMs = nowMs;
+        }
+
+        private Long pollPendingSend() {
+            return pendingSentAtMs.pollFirst();
+        }
+
+        private void pruneStalePendingSends(long nowMs) {
+            while (!pendingSentAtMs.isEmpty() && nowMs - pendingSentAtMs.peekFirst() > STALE_PENDING_SAMPLE_MS) {
+                pendingSentAtMs.removeFirst();
+            }
+        }
+
+        private void recordFeedback(long nowMs) {
+            if (lastAcceptedFeedbackAtMs != -1L) {
+                addInterval(feedbackIntervalsMs, nowMs - lastAcceptedFeedbackAtMs);
+            }
+
+            lastAcceptedFeedbackAtMs = nowMs;
+        }
+
+        private void clear() {
+            feedbackIntervalsMs.clear();
+            pendingSentAtMs.clear();
+            sendIntervalsMs.clear();
+            lastAcceptedFeedbackAtMs = -1L;
+            lastSentAtMs = -1L;
+            lastDelayCreditMs = 0.0d;
+        }
+    }
 }
