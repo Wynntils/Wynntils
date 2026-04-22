@@ -20,6 +20,7 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.ActionSpeed;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.List;
 import java.util.Locale;
@@ -35,7 +36,7 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
     private final Config<SortOrder> defaultSortOrder = new Config<>(SortOrder.MOST_RECENT);
 
     @Persisted
-    private final Config<SortOrderChangeSpeed> sortOrderChangeSpeed = new Config<>(SortOrderChangeSpeed.BALANCED);
+    private final Config<ActionSpeed> sortOrderChangeSpeed = new Config<>(ActionSpeed.BALANCED);
 
     @Persisted
     private final Config<Boolean> applySortOrderOnce = new Config<>(true);
@@ -85,7 +86,7 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
     @SubscribeEvent
     public void onTick(TickEvent event) {
         if (clickCountdown <= 0) return;
-        if (McUtils.mc().level.getGameTime() % sortOrderChangeSpeed.get().ticksDelay != 0) return;
+        if (McUtils.mc().level.getGameTime() % sortOrderChangeSpeed.get().getTicksDelay() != 0) return;
 
         ContainerUtils.clickOnSlot(
                 SORT_ORDER_SLOT,
@@ -119,19 +120,5 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
         LOWEST_LEVEL_RANGE;
 
         private static final int LENGTH = values().length;
-    }
-
-    // Values taken from BulkBuyFeature
-    public enum SortOrderChangeSpeed {
-        FAST(4),
-        BALANCED(5),
-        SAFE(6),
-        VERY_SAFE(8);
-
-        public final int ticksDelay;
-
-        SortOrderChangeSpeed(int ticksDelay) {
-            this.ticksDelay = ticksDelay;
-        }
     }
 }
