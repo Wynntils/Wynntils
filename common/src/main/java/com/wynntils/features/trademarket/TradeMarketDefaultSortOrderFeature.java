@@ -50,7 +50,8 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
         if (Models.TradeMarket.getTradeMarketState() != TradeMarketState.FILTERED_RESULTS) return;
         if (appliedDefaultSortOrder && applySortOrderOnce.get()) return;
 
-        TradeMarketSortOrder currentSortOrder = Models.TradeMarket.getSortOrder(event.getItems().get(TradeMarketModel.SORT_ORDER_SLOT));
+        TradeMarketSortOrder currentSortOrder =
+                Models.TradeMarket.getSortOrder(event.getItems().get(TradeMarketModel.SORT_ORDER_SLOT));
 
         // Find the shortest path from current sort order to the one we want to apply
         // Math.abs(path) is path's length, path < 0 -> right click else left click
