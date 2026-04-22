@@ -4,23 +4,25 @@
  */
 package com.wynntils.features.combat;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.extension.EntityExtension;
-import com.wynntils.models.abilities.event.TotemEvent;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
+import com.wynntils.handlers.labels.event.TextDisplayChangedEvent;
+import com.wynntils.models.abilities.label.ShamanTotemLabelInfo;
+import com.wynntils.models.abilities.type.ShamanTotem;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import net.minecraft.world.entity.Display;
+import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class ShamanTotemTrackingFeature extends Feature {
-    private static final int ENTITY_GLOWING_FLAG = 6;
-
     @Persisted
     private final Config<Boolean> highlightShamanTotems = new Config<>(true);
 
@@ -41,12 +43,16 @@ public class ShamanTotemTrackingFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onTotemSummoned(TotemEvent.Summoned e) {
+    public void onLabelChanged(TextDisplayChangedEvent.Text event) {
         if (!highlightShamanTotems.get()) return;
+        if (event.getLabelInfo().isEmpty()) return;
+        if (!(event.getLabelInfo().get() instanceof ShamanTotemLabelInfo)) return;
 
-        int totemNumber = e.getTotemNumber();
-        Display.ItemDisplay totemAS = e.getTotemEntity();
+        ShamanTotem totem = Models.ShamanTotem.getTotemByTimerEntityId(
+                event.getTextDisplay().getId());
+        if (totem == null) return;
 
+        int totemNumber = totem.getTotemNumber();
         CustomColor color =
                 switch (totemNumber) {
                     case 1 -> firstTotemColor.get();
@@ -58,9 +64,12 @@ public class ShamanTotemTrackingFeature extends Feature {
                                 "totemNumber should be 1, 2, 3 or 4! (color switch in #onTotemSummoned in ShamanTotemTrackingFeature");
                 };
 
-        ((EntityExtension) totemAS).setGlowColor(color);
+        float[] hsb = color.asHSB();
+        float brightnessShift = hsb[2] < 0.5f ? 0.9f : -0.9f;
 
-        totemAS.setGlowingTag(true);
-        totemAS.setSharedFlag(ENTITY_GLOWING_FLAG, true);
+        Component totemBanner = BannerBoxFont.buildMessage(
+                "Totem " + totemNumber, color.saturationShift(-0.2f), color.brightnessShift(brightnessShift), "");
+
+        event.setText(StyledText.fromComponent(totemBanner).append("\n").append(event.getText()));
     }
 }
