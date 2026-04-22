@@ -139,13 +139,17 @@ public final class McUtils {
     }
 
     public static void sendMessageToClient(Component component) {
+        mc().getChatListener().handleSystemMessage(component, false);
+    }
+
+    public static void sendWynntilsPrefixMessage(Component component) {
         StyledText styledText = StyledText.fromComponent(component);
         StyledText wrapedText = StyledTextUtils.addWynntilsPrefix(styledText);
 
-        mc().getChatListener().handleSystemMessage(wrapedText.getComponent(), false);
+        sendMessageToClient(wrapedText.getComponent());
     }
 
-    public static void sendWynntilsMessage(Component component) {
+    public static void sendWynntilsPillMessage(Component component) {
         sendMessageToClient(ComponentUtils.addWynntilsPillHeader(component));
     }
 
