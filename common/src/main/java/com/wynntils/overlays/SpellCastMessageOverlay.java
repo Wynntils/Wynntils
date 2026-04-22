@@ -126,11 +126,6 @@ public class SpellCastMessageOverlay extends Overlay {
     }
 
     @SubscribeEvent
-    public void onSpellCastExpire(SpellEvent.Expired event) {
-        spellMessage = StyledText.EMPTY;
-    }
-
-    @SubscribeEvent
     public void onSpellCastExpire(SpellEvent.CastExpired event) {
         spellMessage = StyledText.EMPTY;
     }

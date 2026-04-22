@@ -850,10 +850,10 @@ public class TestRegex {
     @Test
     public void WynnItemParser_DURABILITY_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "DURABILITY_PATTERN");
-        p.shouldMatch("§f\uDB00\uDC02§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01B§7 Durability 163/194");
-        p.shouldMatch("§f\uDB00\uDC02§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01D§7 Durability 297/328");
-        p.shouldMatch("§f\uDB00\uDC02§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01A§7 Durability 88/109");
-        p.shouldMatch("§f\uDB00\uDC02§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01B§7 Durability 208/247");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01B§7 Durability 163/194");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01D§7 Durability 297/328");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01A§7 Durability 88/109");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01B§7 Durability 208/247");
     }
 
     @Test
