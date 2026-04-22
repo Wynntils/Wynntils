@@ -254,13 +254,14 @@ public final class StyledTextUtils {
     private static int wrapPartAsWords(
             StyledTextPart part, int maxWidth, int lastWidth, List<StyledTextPart> newParts) {
         int currentWidth = lastWidth;
+        Style partStyle = part.getPartStyle().getStyle();
 
         StyledText[] split = StyledText.fromPart(part).split("\s+");
         for (StyledText splitText : split) {
             if (splitText.getPartCount() == 0) {
                 // If orignal part started with space
                 currentWidth += FontRenderer.getInstance().getFont().width(" ");
-                newParts.add(new StyledTextPart(" ", Style.EMPTY, null, null));
+                newParts.add(new StyledTextPart(" ", partStyle, null, null));
                 continue;
             }
 
@@ -279,21 +280,21 @@ public final class StyledTextUtils {
             if (currentWidth + splitDisplayLength <= maxWidth) {
                 currentWidth += splitDisplayLength;
                 newParts.add(splitPart);
-                newParts.add(new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
+                newParts.add(new StyledTextPart(" ", partStyle, null, null));
                 continue;
             }
 
             if (currentWidth <= 0) {
                 currentWidth = wrapPartAsChars(splitPart, maxWidth, currentWidth, newParts);
-                newParts.add(new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
+                newParts.add(new StyledTextPart(" ", partStyle, null, null));
                 currentWidth += FontRenderer.getInstance().getFont().width(" ");
                 continue;
             }
 
             newParts.add(new StyledTextPart(
-                    NEWLINE_PREPARATION, splitPart.getPartStyle().getStyle(), null, null));
+                    NEWLINE_PREPARATION, partStyle, null, null));
             newParts.add(splitPart);
-            newParts.add(new StyledTextPart(" ", splitPart.getPartStyle().getStyle(), null, null));
+            newParts.add(new StyledTextPart(" ", partStyle, null, null));
             currentWidth = splitDisplayLength;
         }
 
@@ -323,7 +324,7 @@ public final class StyledTextUtils {
             }
 
             newParts.add(new StyledTextPart(
-                    NEWLINE_PREPARATION, splitPart.getPartStyle().getStyle(), null, null));
+                    NEWLINE_PREPARATION, part.getPartStyle().getStyle(), null, null));
             newParts.add(splitPart);
             currentWidth = splitDisplayLength;
         }
