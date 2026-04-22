@@ -209,7 +209,7 @@ public class ItemScreenshotFeature extends Feature {
                 File outputfile = new File(screenshotDir, filename);
                 ImageIO.write(bi, "png", outputfile);
 
-                McUtils.sendMessageToClient(Component.translatable(
+                McUtils.sendWynntilsPrefixMessage(Component.translatable(
                                 "feature.wynntils.itemScreenshot.save.message",
                                 itemStack.getHoverName(),
                                 Component.literal(outputfile.getName())
@@ -224,12 +224,12 @@ public class ItemScreenshotFeature extends Feature {
             }
 
             if (SystemUtils.isMac() || SystemUtils.isWayland()) {
-                McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.osWarning")
+                McUtils.sendWynntilsPrefixMessage(Component.translatable("feature.wynntils.itemScreenshot.copy.osWarning")
                         .withStyle(ChatFormatting.GRAY));
                 return;
             }
         } else if (SystemUtils.isMac() || SystemUtils.isWayland()) {
-            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.osWarning2")
+            McUtils.sendWynntilsPrefixMessage(Component.translatable("feature.wynntils.itemScreenshot.copy.osWarning2")
                     .withStyle(ChatFormatting.GRAY)
                     .append(Component.translatable("feature.wynntils.itemScreenshot.copy.osWarning.clickHere")
                             .withStyle(ChatFormatting.GRAY)
@@ -241,7 +241,7 @@ public class ItemScreenshotFeature extends Feature {
 
         try {
             SystemUtils.copyImageToClipboard(bi);
-            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.message")
+            McUtils.sendWynntilsPrefixMessage(Component.translatable("feature.wynntils.itemScreenshot.copy.message")
                     .withStyle(ChatFormatting.GREEN));
         } catch (HeadlessException ex) {
             WynntilsMod.error("Failed to copy image to clipboard", ex);

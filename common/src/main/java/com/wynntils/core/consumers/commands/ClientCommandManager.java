@@ -163,7 +163,7 @@ public final class ClientCommandManager extends Manager {
     }
 
     private void sendError(MutableComponent error) {
-        McUtils.sendMessageToClient(error.withStyle(ChatFormatting.RED));
+        McUtils.sendWynntilsPrefixMessage(error.withStyle(ChatFormatting.RED));
     }
 
     public List<Command> getCommandInstanceSet() {

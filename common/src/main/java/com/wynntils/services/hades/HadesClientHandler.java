@@ -95,7 +95,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
         }
 
         if (Managers.Connection.onServer()) {
-            McUtils.sendMessageToClient(userComponent);
+            McUtils.sendWynntilsPrefixMessage(userComponent);
         }
     }
 
@@ -137,7 +137,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
         WynntilsMod.info("Disconnected from the remote player server. Reason: " + packet.getReason());
 
         if (Managers.Connection.onServer()) {
-            McUtils.sendMessageToClient(Component.literal("[Wynntils] Disconnected from the remote player server.")
+            McUtils.sendWynntilsPrefixMessage(Component.literal("[Wynntils] Disconnected from the remote player server.")
                     .withStyle(ChatFormatting.YELLOW));
         }
 

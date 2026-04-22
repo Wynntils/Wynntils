@@ -161,7 +161,7 @@ public final class McUtils {
 
     public static void sendErrorToClient(String errorMsg) {
         WynntilsMod.warn("Chat error message sent: " + errorMsg);
-        McUtils.sendMessageToClient(Component.literal(errorMsg).withStyle(ChatFormatting.RED));
+        McUtils.sendWynntilsPrefixMessage(Component.literal(errorMsg).withStyle(ChatFormatting.RED));
     }
 
     public static void sendPacket(Packet<?> packet) {

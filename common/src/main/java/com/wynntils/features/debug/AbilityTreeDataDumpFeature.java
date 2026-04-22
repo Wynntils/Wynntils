@@ -61,6 +61,6 @@ public class AbilityTreeDataDumpFeature extends Feature {
         File jsonFile = new File(SAVE_FOLDER, fileName);
         Managers.Json.savePreciousJson(jsonFile, element.getAsJsonObject());
 
-        McUtils.sendMessageToClient(Component.literal("Saved ability tree dump to " + jsonFile.getAbsolutePath()));
+        McUtils.sendWynntilsPrefixMessage(Component.literal("Saved ability tree dump to " + jsonFile.getAbsolutePath()));
     }
 }
