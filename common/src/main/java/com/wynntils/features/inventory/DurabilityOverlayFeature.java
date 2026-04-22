@@ -72,7 +72,10 @@ public class DurabilityOverlayFeature extends Feature {
         if (itemStackModelData.floats().size() < 2) return;
 
         // Remove vanilla durability bar
-        itemStackModelData.floats().remove(1);
+        float value = itemStackModelData.floats().get(1);
+        if (value >= 1 && value <= 15) {
+            itemStackModelData.floats().remove(1);
+        }
     }
 
     @SubscribeEvent
