@@ -20,7 +20,7 @@ public class GatheringNodeLabelParser implements LabelParser<ProfessionGathering
     // A few nodes have an extra suffix so handle them here so that SourceMaterial
     // does not need a "node name" field
     private static final Pattern GATHERING_NODE_LABEL = Pattern.compile(
-            "^§(?<resourceColor>.)(?<resourceName>.+?)(?: Roots| Seed| Fish| Eel)?\\n§(?:a✔|c✖)(?: §f|§f ).(?: §7|§7 )(?:Woodcutting|Farming|Fishing|Mining) Lv\\.? Min: §f(?<lvlMin>\\d+)(?:\\n.*)+$");
+            "^§(?<resourceColor>.)(?:Cembra )?(?<resourceName>.+?)(?: Roots| Seed| Fish| Eel)?\\n§(?:a✔|c✖)(?: §f|§f ).(?: §7|§7 )(?:Woodcutting|Farming|Fishing|Mining) Lv\\.? Min: §f(?<lvlMin>\\d+)(?:\\n.*)+$");
 
     @Override
     public ProfessionGatheringNodeLabelInfo getInfo(StyledText label, Location location, Entity entity) {
