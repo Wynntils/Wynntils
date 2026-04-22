@@ -11,10 +11,13 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.mc.event.DataComponentGetEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.properties.DurableItemProperty;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -22,10 +25,14 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
+
+import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
@@ -37,32 +44,54 @@ public class DurabilityOverlayFeature extends Feature {
     private final Config<Boolean> renderDurabilityOverlayHotbar = new Config<>(true);
 
     @Persisted
-    private final Config<DurabilityRenderMode> durabilityRenderMode = new Config<>(DurabilityRenderMode.ARC);
+    private final Config<DurabilityRenderMode> durabilityRenderMode = new Config<>(DurabilityRenderMode.BAR);
+
+    @Persisted
+    private final Config<ColorScheme> colorScheme = new Config<>(ColorScheme.VANILLA);
+
+    @Persisted
+    private final Config<CustomColor> fullDurabilityColor = new Config<>(CommonColors.GREEN);
+
+    @Persisted
+    private final Config<CustomColor> noDurabilityColor = new Config<>(CommonColors.RED);
 
     public DurabilityOverlayFeature() {
-        // TODO: Revert to enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
-        //  when feature fixed
-        super(ProfileDefault.DISABLED);
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
+                .build());
     }
 
     @SubscribeEvent
-    public void onRenderHotbarSlot(HotbarSlotRenderEvent.Post e) {
+    public void onGetModelData(DataComponentGetEvent.CustomModelData event) {
+        Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(event.getItemStack(), DurableItemProperty.class);
+        if (durableItemOpt.isEmpty()) return;
+
+        CustomModelData itemStackModelData = event.getOriginalValue();
+
+        if (itemStackModelData.floats().size() < 2) return;
+
+        // Remove vanilla durability bar
+        itemStackModelData.floats().remove(1);
+    }
+
+    @SubscribeEvent
+    public void onRenderHotbarSlot(HotbarSlotRenderEvent.Post event) {
         if (!renderDurabilityOverlayHotbar.get()) return;
-        switch (durabilityRenderMode.get()) {
-            case ARC -> drawDurabilityArc(e.getGuiGraphics(), e.getItemStack(), e.getX(), e.getY());
-            case BAR -> drawDurabilityBar(e.getGuiGraphics(), e.getItemStack(), e.getX(), e.getY());
-            case PERCENTAGE -> drawDurabilityPercentage(e.getGuiGraphics(), e.getItemStack(), e.getX(), e.getY());
-        }
+        drawDurability(event.getGuiGraphics(), event.getItemStack(), event.getX(), event.getY());
     }
 
     @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.Post e) {
+    public void onRenderSlot(SlotRenderEvent.Post event) {
         if (!renderDurabilityOverlayInventories.get()) return;
+        Slot slot = event.getSlot();
+        drawDurability(event.getGuiGraphics(), slot.getItem(), slot.x, slot.y);
+    }
+
+    private void drawDurability(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
         switch (durabilityRenderMode.get()) {
-            case ARC -> drawDurabilityArc(e.getGuiGraphics(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
-            case BAR -> drawDurabilityBar(e.getGuiGraphics(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
-            case PERCENTAGE ->
-                drawDurabilityPercentage(e.getGuiGraphics(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
+            case ARC -> drawDurabilityArc(guiGraphics, itemStack, slotX, slotY);
+            case BAR -> drawDurabilityBar(guiGraphics, itemStack, slotX, slotY);
+            case PERCENTAGE -> drawDurabilityPercentage(guiGraphics, itemStack, slotX, slotY);
         }
     }
 
@@ -73,13 +102,16 @@ public class DurabilityOverlayFeature extends Feature {
 
         CappedValue durability = durableItemOpt.get().getDurability();
 
-        // calculate color of arc
-        float durabilityFraction = (float) durability.current() / durability.max();
-        int colorInt = Mth.hsvToRgb(Math.max(0f, durabilityFraction) / 3f, 1f, 1f);
-        CustomColor color = CustomColor.fromInt(colorInt).withAlpha(160);
-
         // draw
-        RenderUtils.drawArc(guiGraphics, color, slotX, slotY, durabilityFraction, 6, 8);
+        RenderUtils.drawArc(
+                guiGraphics,
+                getColor(durability).withAlpha(160),
+                slotX,
+                slotY,
+                (float) durability.getProgress(),
+                6,
+                8
+        );
     }
 
     private void drawDurabilityBar(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
@@ -91,15 +123,18 @@ public class DurabilityOverlayFeature extends Feature {
 
         if (durability.isAtCap()) return;
 
-        // calculate width and hue
-        int width = Mth.clamp(Math.round(13.0f * (float) durability.getProgress()), 0, 13);
-        float hue = Math.max(0.0F, (float) durability.getProgress()) / 3.0F;
-
         // draw
-        int i = slotX + 2;
-        int j = slotY + 13;
-        RenderUtils.drawRect(guiGraphics, CustomColor.fromInt(-16777216), i, j, 13, 2);
-        RenderUtils.drawRect(guiGraphics, CustomColor.fromHSV(hue, 1.0f, 1.0f, 1.0f), i, j, width, 1);
+        int x = slotX + 2;
+        int y = slotY + 13;
+        RenderUtils.drawRect(guiGraphics, CommonColors.BLACK, x, y, 13, 2);
+        RenderUtils.drawRect(
+                guiGraphics,
+                getColor(durability),
+                x,
+                y,
+                Mth.clamp(Math.round(13 * (float) durability.getProgress()), 0, 13),
+                1
+        );
     }
 
     // Inspiration taken from https://github.com/GTNewHorizons/DuraDisplay
@@ -110,21 +145,41 @@ public class DurabilityOverlayFeature extends Feature {
 
         CappedValue durability = durableItemOpt.get().getDurability();
 
-        float durabilityFraction = (float) durability.current() / durability.max();
-        CustomColor color = CustomColor.fromHSV(Math.max(0.0f, durabilityFraction) / 3.0f, 1.0f, 1.0f, 1.0f);
-        StyledText text = StyledText.fromString(Math.round(durabilityFraction * 100) + "%");
-
-        FontRenderer.getInstance()
-                .renderText(
+        FontRenderer.getInstance().renderText(
                         guiGraphics,
-                        text,
+                        StyledText.fromString(Math.round((float) durability.getProgress() * 100) + "%"),
                         (float) slotX + 8,
                         (float) slotY + 16,
-                        color,
+                        getColor(durability),
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL,
-                        0.5f);
+                        0.5f
+        );
+    }
+
+    private CustomColor getColor(CappedValue durability) {
+        return switch (colorScheme.get()) {
+            case ColorScheme.VANILLA -> CustomColor.fromHexString("00C8FF");
+            case ColorScheme.WYNNTILS -> CustomColor.fromHSV(Math.max(0f, (float) durability.getProgress()) / 3f, 1f, 1f, 1f);
+            case ColorScheme.CUSTOM -> {
+                final float progress = (float) durability.getProgress();
+                final CustomColor full = fullDurabilityColor.get();
+                final CustomColor no = noDurabilityColor.get();
+                yield new CustomColor(
+                        Mth.lerpInt(progress, no.r(), full.r()),
+                        Mth.lerpInt(progress, no.g(), full.g()),
+                        Mth.lerpInt(progress, no.b(), full.b()),
+                        Mth.lerpInt(progress, no.a(), full.a())
+                );
+            }
+        };
+    }
+
+    private enum ColorScheme {
+        VANILLA,
+        WYNNTILS,
+        CUSTOM
     }
 
     private enum DurabilityRenderMode {
