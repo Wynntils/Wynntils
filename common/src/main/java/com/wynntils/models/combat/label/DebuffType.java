@@ -15,7 +15,7 @@ public enum DebuffType {
     CONFUSED('\uE03C', CustomColor.fromInt(0xE1DCA4)),
     CONTAMINATED('\uE043', CustomColor.fromInt(0x94A771)),
     CRYSTALLIZED('\uE045', CustomColor.fromInt(0xB6FBFC)),
-    CURSE('\uE004', ChatFormatting.RED),
+    CURSE('\u2749', ChatFormatting.RED),
     DISCOMBOBULATED('\u2699', ChatFormatting.YELLOW),
     ENKINDLED('\uE03D', CustomColor.fromInt(0xFF8E8E)),
     FREEZING('\u2744', ChatFormatting.AQUA),
@@ -28,7 +28,7 @@ public enum DebuffType {
     TWILIGHT('\uE04B', CustomColor.fromInt(0x5B88FC)),
     WEAKNESS('\u2694', ChatFormatting.RED),
     WHIPPED('\u21F6', ChatFormatting.GOLD),
-    WIND_PRISON('\uE000', ChatFormatting.RED);
+    WIND_PRISON('\u274B', ChatFormatting.RED);
 
     private final char symbol;
     private final CustomColor color;
