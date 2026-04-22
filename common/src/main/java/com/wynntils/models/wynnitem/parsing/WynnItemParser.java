@@ -57,7 +57,7 @@ public final class WynnItemParser {
     private static final Pattern DPS_PATTERN = Pattern.compile("^§f\uDB00\uDC02§#(?:[a-f0-9]{8})([\\d,]+)§f DPS$");
 
     private static final Pattern DURABILITY_PATTERN =
-            Pattern.compile("§f\uDB00\uDC02§8\uE023\uDAFF\uDFF7§#aed4d4ff.§7 Durability (\\d+)\\/(\\d+)");
+            Pattern.compile("§8\uE023\uDAFF\uDFF7§#.{8}.§7 Durability (\\d+)\\/(\\d+)");
 
     private static final Pattern CONSUMABLE_CHARGES_PATTERN =
             Pattern.compile(".*?(?<current>\\d+)\\/(?<max>\\d+) Charges$");
