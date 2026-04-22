@@ -25,8 +25,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
-
-import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
@@ -63,7 +61,8 @@ public class DurabilityOverlayFeature extends Feature {
 
     @SubscribeEvent
     public void onGetModelData(DataComponentGetEvent.CustomModelData event) {
-        Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(event.getItemStack(), DurableItemProperty.class);
+        Optional<DurableItemProperty> durableItemOpt =
+                Models.Item.asWynnItemProperty(event.getItemStack(), DurableItemProperty.class);
         if (durableItemOpt.isEmpty()) return;
 
         CustomModelData itemStackModelData = event.getOriginalValue();
@@ -104,14 +103,7 @@ public class DurabilityOverlayFeature extends Feature {
 
         // draw
         RenderUtils.drawArc(
-                guiGraphics,
-                getColor(durability).withAlpha(160),
-                slotX,
-                slotY,
-                (float) durability.getProgress(),
-                6,
-                8
-        );
+                guiGraphics, getColor(durability).withAlpha(160), slotX, slotY, (float) durability.getProgress(), 6, 8);
     }
 
     private void drawDurabilityBar(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
@@ -133,8 +125,7 @@ public class DurabilityOverlayFeature extends Feature {
                 x,
                 y,
                 Mth.clamp(Math.round(13 * (float) durability.getProgress()), 0, 13),
-                1
-        );
+                1);
     }
 
     // Inspiration taken from https://github.com/GTNewHorizons/DuraDisplay
@@ -145,7 +136,8 @@ public class DurabilityOverlayFeature extends Feature {
 
         CappedValue durability = durableItemOpt.get().getDurability();
 
-        FontRenderer.getInstance().renderText(
+        FontRenderer.getInstance()
+                .renderText(
                         guiGraphics,
                         StyledText.fromString(Math.round((float) durability.getProgress() * 100) + "%"),
                         (float) slotX + 8,
@@ -154,14 +146,14 @@ public class DurabilityOverlayFeature extends Feature {
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL,
-                        0.5f
-        );
+                        0.5f);
     }
 
     private CustomColor getColor(CappedValue durability) {
         return switch (colorScheme.get()) {
             case ColorScheme.VANILLA -> CustomColor.fromHexString("00C8FF");
-            case ColorScheme.WYNNTILS -> CustomColor.fromHSV(Math.max(0f, (float) durability.getProgress()) / 3f, 1f, 1f, 1f);
+            case ColorScheme.WYNNTILS ->
+                CustomColor.fromHSV(Math.max(0f, (float) durability.getProgress()) / 3f, 1f, 1f, 1f);
             case ColorScheme.CUSTOM -> {
                 final float progress = (float) durability.getProgress();
                 final CustomColor full = fullDurabilityColor.get();
@@ -170,8 +162,7 @@ public class DurabilityOverlayFeature extends Feature {
                         Mth.lerpInt(progress, no.r(), full.r()),
                         Mth.lerpInt(progress, no.g(), full.g()),
                         Mth.lerpInt(progress, no.b(), full.b()),
-                        Mth.lerpInt(progress, no.a(), full.a())
-                );
+                        Mth.lerpInt(progress, no.a(), full.a()));
             }
         };
     }
