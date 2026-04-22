@@ -23,7 +23,8 @@ public final class CombatLocation extends MapLocationImpl {
         LOOTRUN_CAMPS("Lootrun Camps", Texture.LOOTRUN_CAMP, "lootrun-camp"),
         GRIND_SPOTS("Grind Spots", Texture.GRIND_SPOT, "grind-spot"),
         RAIDS("Raids", Texture.RAID_ENTRANCE, "raid"),
-        RUNE_SHRINES("Rune Shrines", Texture.SHRINE, "shrine");
+        RUNE_SHRINES("Rune Shrines", Texture.SHRINE, "shrine"),
+        LOOTRUN_CAMP("Lootrun Camps", Texture.LOOTRUN_CAMP, "lootrun-camp");
 
         private final String name;
         private final Texture texture;

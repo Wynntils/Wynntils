@@ -6,9 +6,7 @@ package com.wynntils.models.abilities;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.TrackedBar;
-import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.models.abilities.bossbars.AwakenedBar;
 import com.wynntils.models.abilities.bossbars.BloodPoolBar;
 import com.wynntils.models.abilities.bossbars.CommanderBar;
@@ -21,19 +19,10 @@ import com.wynntils.models.abilities.bossbars.MirrorImageBar;
 import com.wynntils.models.abilities.bossbars.MomentumBar;
 import com.wynntils.models.abilities.bossbars.NightcloakKnivesBar;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
-import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
-import net.neoforged.bus.api.SubscribeEvent;
 
 public final class AbilityModel extends Model {
-    private static final Pattern HUMMINGBIRD_SENT_PATTERN =
-            Pattern.compile("§e((\uE008\uE002)|\uE001) You sent your hummingbirds to attack!$");
-
-    private static final Pattern HUMMINGBIRD_RETURN_PATTERN =
-            Pattern.compile("§e((\uE008\uE002)|\uE001) Your hummingbirds have returned to you!$");
-
     public static final TrackedBar awakenedBar = new AwakenedBar();
 
     public static final TrackedBar bloodPoolBar = new BloodPoolBar();
@@ -58,8 +47,6 @@ public final class AbilityModel extends Model {
 
     public static final OphanimBar ophanimBar = new OphanimBar();
 
-    public boolean hummingBirdsState = false;
-
     private static final List<TrackedBar> ALL_BARS = Arrays.asList(
             awakenedBar,
             bloodPoolBar,
@@ -78,15 +65,5 @@ public final class AbilityModel extends Model {
         super(List.of());
 
         ALL_BARS.forEach(Handlers.BossBar::registerBar);
-    }
-
-    @SubscribeEvent
-    public void onChatMessage(ChatMessageEvent.Match event) {
-        StyledText message = StyledTextUtils.unwrap(event.getMessage().stripAlignment());
-        if (message.matches(HUMMINGBIRD_RETURN_PATTERN)) {
-            hummingBirdsState = false;
-        } else if (message.matches(HUMMINGBIRD_SENT_PATTERN)) {
-            hummingBirdsState = true;
-        }
     }
 }

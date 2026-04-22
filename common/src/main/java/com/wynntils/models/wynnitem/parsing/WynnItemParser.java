@@ -87,7 +87,7 @@ public final class WynnItemParser {
             "§f(?<iconPrefix>(?:\uDAFF\uDFFF\uE010\uDB00\uDC02|\uE011\uDB00\uDC02|\uDAFF\uDFFF\uE012\uDB00\uDC02|\uDAFF\uDFFF\uE013\uDB00\uDC01\uDB00\uDC02|\uE014\uDB00\uDC02))?(?<statName>[\\w\\.\\- ]+).+?§#(acfac6ff|faacacff)(?<value>[-+][\\d,]+)(?<unit>%| tier|\\/[35]s)?(?:§f §8.+?(?:§(?<indicatorColor>#[a-zA-Z0-9]{8})(.)?)?)?");
 
     // Test in WynnItemParser_TIER_PATTERN
-    private static final Pattern TIER_PATTERN = Pattern.compile("§f\uDB00\uDC23§([5bcdef]).+");
+    private static final Pattern TIER_PATTERN = Pattern.compile("^(?:§.)*\\uDB00\\uDC26(?:§([5bcdef]))?.+");
 
     private static final Pattern REROLL_EXTRACT_PATTERN = Pattern.compile("\uE060(.*?)\uE062");
 
@@ -118,7 +118,7 @@ public final class WynnItemParser {
 
     // Test in WynnItemParser_SHINY_STAT_PATTERN
     private static final Pattern SHINY_STAT_PATTERN = Pattern.compile(
-            "^§f\uE04F\uDAFF\uDFFF§#(?:[a-f0-9]{8}) ([a-zA-Z ]+).+?§f([\\d,]+)§#(?:[a-f0-9]{8})(\uDB00\uDC00|.+)$");
+            "^§f\uE04F\uDAFF\uDFFF§#(?:[a-f0-9]{8})(?: )? ([a-zA-Z ]+).+?§f([\\d,]+)§#(?:[a-f0-9]{8})(\uDB00\uDC00|.+)$");
 
     // Test in WynnItemParser_TOOLTIP_PAGE_PATTERN
     private static final Pattern TOOLTIP_PAGE_PATTERN = Pattern.compile("(§#ffea80ff)?\uE000");
@@ -126,15 +126,15 @@ public final class WynnItemParser {
     private static final Map<CustomColor, Integer> TIER_COLOR_CODES = Map.of(
             CommonColors.BLACK,
             0,
-            CustomColor.fromInt(0xebeb47),
+            CustomColor.fromInt(0xe6e647),
             1,
-            CustomColor.fromInt(0xeb47eb),
+            CustomColor.fromInt(0xe647e6),
             2,
-            CustomColor.fromInt(0x47ebeb),
+            CustomColor.fromInt(0x47e6e6),
             3);
 
-    private static final Pattern PROFESSION_TIER_PATTERN =
-            Pattern.compile(".+?(?:§(0|#([a-f0-9]{8})))(?:\uE000){1,3}.+?");
+    private static final Pattern PROFESSION_TIER_PATTERN = Pattern.compile(
+            "^§f\\uDB00\\uDC26.*?(?:(?:§#(?<hexColor>e6e647|e647e6|47e6e6)ff)|(?<blackColor>§0))\\uE000{1,3}\\uDB00\\uDC02.*$");
 
     private static final FontDescription SPRITE_FRAME_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/emblem/sprite"));
@@ -205,9 +205,16 @@ public final class WynnItemParser {
             if (segment == 1) {
                 Matcher tierMatcher = normalizedCoded.getMatcher(TIER_PATTERN);
                 if (tierMatcher.matches()) {
-                    ChatFormatting chatFormatting =
-                            ChatFormatting.getByCode(tierMatcher.group(1).charAt(0));
-                    tier = GearTier.fromChatFormatting(chatFormatting);
+                    if (tier == null) {
+                        String chatColor = tierMatcher.group(1);
+                        if (chatColor != null) {
+                            ChatFormatting chatFormatting = ChatFormatting.getByCode(chatColor.charAt(0));
+                            tier = GearTier.fromChatFormatting(chatFormatting);
+                        } else {
+                            // In current Wynn tooltip format, NORMAL tier may omit the explicit §<tierColor> code here.
+                            tier = GearTier.NORMAL;
+                        }
+                    }
                     continue;
                 }
 
@@ -393,6 +400,7 @@ public final class WynnItemParser {
                     String statDisplayName = statMatcher.group("statName");
                     int value = Integer.parseInt(statMatcher.group("value").replace(",", ""));
                     String unit = statMatcher.group("unit");
+                    boolean hasIconPrefix = statMatcher.group("iconPrefix") != null;
 
                     StatType statType = Models.Stat.fromDisplayName(statDisplayName, unit);
                     if (statType == null) {
@@ -415,7 +423,8 @@ public final class WynnItemParser {
                     StatPossibleValues possibleValues =
                             possibleValuesMap != null ? possibleValuesMap.get(statType) : null;
 
-                    StatActualValue actualValue = Models.Stat.buildActualValue(statType, value, stars, possibleValues);
+                    StatActualValue actualValue =
+                            Models.Stat.buildActualValue(statType, value, stars, possibleValues, hasIconPrefix);
                     identifications.add(actualValue);
                 }
             }
@@ -460,15 +469,16 @@ public final class WynnItemParser {
 
     public static int parseProfessionTier(ItemStack itemStack) {
         Matcher tierMatcher = LoreUtils.matchLoreLine(itemStack, 1, PROFESSION_TIER_PATTERN);
-        String tierColor = "";
-
-        if (tierMatcher.matches()) {
-            tierColor = tierMatcher.group(1);
+        if (!tierMatcher.matches()) {
+            return -1;
         }
 
-        if (tierColor.isEmpty()) return -1;
+        if (tierMatcher.group("blackColor") != null) {
+            return 0;
+        }
 
-        return TIER_COLOR_CODES.getOrDefault(CustomColor.fromHexString(tierColor), 0);
+        String tierColor = tierMatcher.group("hexColor");
+        return tierColor == null ? -1 : TIER_COLOR_CODES.getOrDefault(CustomColor.fromHexString(tierColor), 0);
     }
 
     private static int parseTooltipPage(Component line) {
@@ -491,13 +501,16 @@ public final class WynnItemParser {
         if (!rerollsString.endsWith("\uF005")) return 0;
 
         Matcher matcher = REROLL_EXTRACT_PATTERN.matcher(rerollsString);
+        String rawNumberSegment = null;
 
-        if (!matcher.find()) {
+        while (matcher.find()) {
+            rawNumberSegment = matcher.group(1);
+        }
+
+        if (rawNumberSegment == null) {
             WynntilsMod.warn("Could not find reroll segment");
             return -1;
         }
-
-        String rawNumberSegment = matcher.group(1);
 
         int rerolls = 0;
 

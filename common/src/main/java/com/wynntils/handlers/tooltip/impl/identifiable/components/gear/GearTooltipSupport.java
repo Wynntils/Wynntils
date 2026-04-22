@@ -6,6 +6,7 @@ package com.wynntils.handlers.tooltip.impl.identifiable.components.gear;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
 import com.wynntils.handlers.tooltip.TooltipStyleSupport;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
 import com.wynntils.models.activities.quests.QuestInfo;
@@ -14,6 +15,7 @@ import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.ShinyStat;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
@@ -121,7 +123,8 @@ final class GearTooltipSupport {
         return requirement;
     }
 
-    static MutableComponent buildShinyStatLine(ShinyStat shinyStat, GearTier gearTier) {
+    static MutableComponent buildShinyStatLine(
+            ShinyStat shinyStat, GearTier gearTier, Component originalRerollTracker) {
         MutableComponent left = Component.empty().withStyle(WYNNCRAFT_WHITE_STYLE);
         left.append(TooltipStyleSupport.withWhiteShadow(
                 Component.literal("\uE04F").withStyle(Style.EMPTY.withFont(COMMON_FONT))));
@@ -135,6 +138,24 @@ final class GearTooltipSupport {
                 .withStyle(Style.EMPTY
                         .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(ChatFormatting.WHITE));
+
+        if (originalRerollTracker != null) {
+            right.append(Component.literal(" ")
+                    .withStyle(Style.EMPTY
+                            .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
+                            .withColor(ChatFormatting.WHITE)));
+            right.append(originalRerollTracker.copy());
+        } else if (shinyStat.shinyRerolls() > 0) {
+            right.append(Component.literal(" ")
+                    .withStyle(Style.EMPTY
+                            .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
+                            .withColor(ChatFormatting.WHITE)));
+            right.append(BannerBoxFont.buildMessage(
+                    String.valueOf(shinyStat.shinyRerolls()),
+                    getDividerColor(gearTier),
+                    CommonColors.BLACK,
+                    "\uDB00\uDC02"));
+        }
 
         return Component.empty().append(left).append(right);
     }
