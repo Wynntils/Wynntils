@@ -53,6 +53,8 @@ public class DurabilityOverlayFeature extends Feature {
     @Persisted
     private final Config<CustomColor> noDurabilityColor = new Config<>(CommonColors.RED);
 
+    private static final CustomColor VANILLA_DURABILITY_COLOR = CustomColor.fromHexString("00C8FF");
+
     public DurabilityOverlayFeature() {
         super(new ProfileDefault.Builder()
                 .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
@@ -151,7 +153,7 @@ public class DurabilityOverlayFeature extends Feature {
 
     private CustomColor getColor(CappedValue durability) {
         return switch (colorScheme.get()) {
-            case ColorScheme.VANILLA -> CustomColor.fromHexString("00C8FF");
+            case ColorScheme.VANILLA -> VANILLA_DURABILITY_COLOR;
             case ColorScheme.WYNNTILS ->
                 CustomColor.fromHSV(Math.max(0f, (float) durability.getProgress()) / 3f, 1f, 1f, 1f);
             case ColorScheme.CUSTOM -> {
