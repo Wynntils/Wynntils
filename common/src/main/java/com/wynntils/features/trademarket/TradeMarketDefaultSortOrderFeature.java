@@ -62,9 +62,9 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
                 parseSortOrder(LoreUtils.getTooltipLines(event.getItems().get(SORT_ORDER_SLOT)));
 
         // Find the shortest path from current sort order to the one we want to apply
-        // Math.abs(path) is path's lenght, path < 0 -> right click else left click
+        // Math.abs(path) is path's length, path < 0 -> right click else left click
         final int path1 = defaultSortOrder.get().ordinal() - currentSortOrder.ordinal();
-        final int path2 = path1 + SortOrder.LENGHT * (path1 > 0 ? 1 : -1);
+        final int path2 = path1 + SortOrder.LENGTH * (path1 > 0 ? 1 : -1);
         if (Math.abs(path1) < Math.abs(path2)) {
             clickCountdown = Math.abs(path1);
             shouldRightClick = path1 < 0;
@@ -118,7 +118,7 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
         HIGHEST_LEVEL_RANGE,
         LOWEST_LEVEL_RANGE;
 
-        private static final int LENGHT = values().length;
+        private static final int LENGTH = values().length;
     }
 
     // Values taken from BulkBuyFeature
