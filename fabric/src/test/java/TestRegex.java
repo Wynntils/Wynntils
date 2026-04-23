@@ -850,10 +850,10 @@ public class TestRegex {
     @Test
     public void WynnItemParser_DURABILITY_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "DURABILITY_PATTERN");
-        p.shouldMatch("§f\uDB00\uDC02§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01B§7 Durability 163/194");
-        p.shouldMatch("§f\uDB00\uDC02§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01D§7 Durability 297/328");
-        p.shouldMatch("§f\uDB00\uDC02§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01A§7 Durability 88/109");
-        p.shouldMatch("§f\uDB00\uDC02§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01B§7 Durability 208/247");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01B§7 Durability 163/194");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01D§7 Durability 297/328");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01A§7 Durability 88/109");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01B§7 Durability 208/247");
     }
 
     @Test
@@ -922,7 +922,16 @@ public class TestRegex {
     public void WynnItemParser_TIER_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "TIER_PATTERN");
         p.shouldMatch(
-                "§f\uDB00\uDC23§5\uE060\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE048\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE037\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE062\uDAFF\uDFDC§0\uE00C\uE018\uE013\uE007\uE008\uE002\uDB00\uDC02§5\uDB00\uDC01§#e0b3e6ff\uE060\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE033\uDAFF\uDFFF\uE062\uDAFF\uDFE6§0\uE016\uE000\uE00D\uE003\uDB00\uDC02§5\uDB00\uDC01");
+                "§f\uDB00\uDC26§b\uE060\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE036\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE033\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE048\uDAFF\uDFFF\uE062\uDAFF\uDFF8§0\uE00B\uE004\uE006\uE004\uE00D\uE003\uE000\uE011\uE018\uDB00\uDC02§b\uDB00\uDC01§#cff9f9ff\uE060\uDAFF\uDFFF\uE031\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE062\uDAFF\uDFEC§0\uE001\uE00E\uE016\uDB00\uDC02§b\uDB00\uDC01");
+        p.shouldMatch(
+                "§f\uDB00\uDC26\uE060\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE062\uDAFF\uDFDA§0\uE00D\uE00E\uE011\uE00C\uE000\uE00B\uDB00\uDC02§f\uDB00\uDC01§#e0e0e0ff\uE060\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE033\uDAFF\uDFFF\uE062\uDAFF\uDFE6§0\uE016\uE000\uE00D\uE003\uDB00\uDC02§f\uDB00\uDC01");
+    }
+
+    @Test
+    public void WynnItemParser_PROFESSION_TIER_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "PROFESSION_TIER_PATTERN");
+        p.shouldMatch(
+                "§f\uDB00\uDC26§8\uE060\uDB3F\uDFFF\uE001\uDB3F\uDFFF\uE001\uDB3F\uDFFF\uE001\uDB3F\uDFFF\uE062\uDB3F\uDFE9§0\uE000\uE000\uE000\uDB00\uDC02§8\uDB00\uDC01§#7dc97dff\uE060\uDB3F\uDFFF\uE038\uDB3F\uDFFF\uE03D\uDB3F\uDFFF\uE036\uDB3F\uDFFF\uE041\uDB3F\uDFFF\uE034\uDB3F\uDFFF\uE033\uDB3F\uDFFF\uE038\uDB3F\uDFFF\uE034\uDB3F\uDFFF\uE03D\uDB3F\uDFFF\uE043\uDB3F\uDFFF\uE062\uDB3F\uDFC6§0\uE008\uE00D\uE006\uE011\uE004\uE003\uE008\uE004\uE00D\uE013\uDB00\uDC02");
     }
 
     @Test
