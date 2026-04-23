@@ -13,9 +13,9 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ContainerSetContentEvent;
-import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.trademarket.TradeMarketModel;
+import com.wynntils.models.trademarket.event.TradeMarketStateEvent;
 import com.wynntils.models.trademarket.type.TradeMarketSortOrder;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.utils.mc.McUtils;
@@ -68,10 +68,12 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onScreenClose(ScreenClosedEvent.Post event) {
-        clickCountdown = 0;
-        shouldRightClick = false;
-        appliedDefaultSortOrder = false;
+    public void onTradeMarketState(TradeMarketStateEvent event) {
+        if (event.getNewState() == TradeMarketState.NOT_ACTIVE) {
+            clickCountdown = 0;
+            shouldRightClick = false;
+            appliedDefaultSortOrder = false;
+        }
     }
 
     @SubscribeEvent
