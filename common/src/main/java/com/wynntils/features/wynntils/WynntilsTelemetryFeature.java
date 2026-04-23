@@ -35,7 +35,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.WYNNTILS)
-public class TelemetryFeature extends Feature {
+public class WynntilsTelemetryFeature extends Feature {
     private static final int TELEMETRY_PROMPT_DELAY_LAUNCHES = 3;
     private static final long TELEMETRY_PROMPT_DISPLAY_TIME = 15000L;
     private static final long TELEMETRY_CONFIRMATION_DISPLAY_TIME = 1000L;
@@ -51,7 +51,7 @@ public class TelemetryFeature extends Feature {
     private long promptExpire = 0L;
     private SystemToast telemetryPromptToast = null;
 
-    public TelemetryFeature() {
+    public WynntilsTelemetryFeature() {
         super(ProfileDefault.onlyDefault());
     }
 
@@ -98,11 +98,11 @@ public class TelemetryFeature extends Feature {
         if (launchCount.get() <= TELEMETRY_PROMPT_DELAY_LAUNCHES) return;
 
         MutableComponent toastMessage = Component.empty()
-                .append(Component.translatable("feature.wynntils.telemetry.toastMessage1"))
+                .append(Component.translatable("feature.wynntils.wynntilsTelemetry.toastMessage1"))
                 .append(WynnFont.asFont("key_left_bracket", WynntilsKeybindsFont.class))
-                .append(Component.translatable("feature.wynntils.telemetry.toastMessage2"))
+                .append(Component.translatable("feature.wynntils.wynntilsTelemetry.toastMessage2"))
                 .append(WynnFont.asFont("key_right_bracket", WynntilsKeybindsFont.class))
-                .append(Component.translatable("feature.wynntils.telemetry.toastMessage3"));
+                .append(Component.translatable("feature.wynntils.wynntilsTelemetry.toastMessage3"));
 
         clearPromptToast();
         telemetryPromptToast = new SystemToast(
@@ -149,8 +149,8 @@ public class TelemetryFeature extends Feature {
 
         if (telemetryPromptToast != null) {
             String translationKey = value == OptionalBoolean.TRUE
-                    ? "feature.wynntils.telemetry.toastEnabled"
-                    : "feature.wynntils.telemetry.toastDisabled";
+                    ? "feature.wynntils.wynntilsTelemetry.toastEnabled"
+                    : "feature.wynntils.wynntilsTelemetry.toastDisabled";
             telemetryPromptToast.reset(
                     Component.literal(this.getTranslatedName()), Component.translatable(translationKey));
             promptExpire = System.currentTimeMillis() + TELEMETRY_CONFIRMATION_DISPLAY_TIME;
