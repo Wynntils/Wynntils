@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.custommodel;
@@ -13,6 +13,17 @@ import com.wynntils.core.components.Service;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.type.Pair;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.resources.IoSupplier;
@@ -20,22 +31,18 @@ import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.apache.commons.lang3.concurrent.LazyInitializer;
 import org.jspecify.annotations.Nullable;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
 public class CustomModelService extends Service {
     private Map<String, Float> floatData = new ConcurrentHashMap<>();
     private Map<String, Pair<Float, Float>> rangeData = new ConcurrentHashMap<>();
 
     private final LazyInitializer<PackResources> pack = LazyInitializer.<PackResources>builder()
-            .setInitializer(() ->
-                    Minecraft.getInstance().getResourceManager().listPacks()
-                            .filter(packResources ->
-                                    packResources.location().title().getString().contains("Wynncraft")).findFirst().orElseThrow())
+            .setInitializer(() -> Minecraft.getInstance()
+                    .getResourceManager()
+                    .listPacks()
+                    .filter(packResources ->
+                            packResources.location().title().getString().contains("Wynncraft"))
+                    .findFirst()
+                    .orElseThrow())
             .get();
     private final Map<Float, List<Integer>> textureHashes = new ConcurrentHashMap<>();
 
@@ -50,28 +57,36 @@ public class CustomModelService extends Service {
 
     public List<Integer> getTextureHashes(List<Float> floats) throws IOException {
         List<Integer> hashes = new ArrayList<>();
-        for(float aFloat : floats) {
-            if(!textureHashes.containsKey(aFloat)) {
+        for (float aFloat : floats) {
+            if (!textureHashes.containsKey(aFloat)) {
                 PackResources resources;
                 try {
                     resources = pack.get();
                 } catch (ConcurrentException e) {
                     throw new IOException(e);
                 }
-                @Nullable IoSupplier<InputStream> supplier = resources.getRootResource("assets/minecraft/models/w" + Math.round(aFloat) +".json");
-                if(supplier == null) return Collections.emptyList();
-                JsonElement fileElement = JsonParser.parseReader(new JsonReader(new InputStreamReader(supplier.get(), StandardCharsets.UTF_8)));
+                @Nullable
+                IoSupplier<InputStream> supplier =
+                        resources.getRootResource("assets/minecraft/models/w" + Math.round(aFloat) + ".json");
+                if (supplier == null) return Collections.emptyList();
+                JsonElement fileElement = JsonParser.parseReader(
+                        new JsonReader(new InputStreamReader(supplier.get(), StandardCharsets.UTF_8)));
                 JsonObject texturesNode = fileElement.getAsJsonObject().getAsJsonObject("textures");
 
-                for(Map.Entry<String, JsonElement> entry : texturesNode.entrySet()) {
+                for (Map.Entry<String, JsonElement> entry : texturesNode.entrySet()) {
                     String texturePath = entry.getValue().getAsString();
-                    if("item/empty".equals(texturePath)) continue;
-                    int hash1 = Arrays.hashCode(resources.getRootResource("assets/minecraft/textures/" + entry.getValue().getAsString() + ".png").get().readAllBytes());
-                    //System.out.println(aFloat + " (#" + entry.getKey() + " -> " + entry.getValue().getAsString() + ") hash is: " + hash1);
+                    if ("item/empty".equals(texturePath)) continue;
+                    int hash1 = Arrays.hashCode(resources
+                            .getRootResource("assets/minecraft/textures/"
+                                    + entry.getValue().getAsString() + ".png")
+                            .get()
+                            .readAllBytes());
+                    // System.out.println(aFloat + " (#" + entry.getKey() + " -> " + entry.getValue().getAsString() + ")
+                    // hash is: " + hash1);
                     hashes.add(hash1);
                 }
                 textureHashes.put(aFloat, hashes);
-            }else{
+            } else {
                 hashes.addAll(textureHashes.get(aFloat));
             }
         }

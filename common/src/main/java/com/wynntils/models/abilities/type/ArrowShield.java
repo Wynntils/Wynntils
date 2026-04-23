@@ -7,7 +7,6 @@ package com.wynntils.models.abilities.type;
 import com.wynntils.core.components.Services;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
-
 import java.io.IOException;
 import java.util.List;
 import net.minecraft.core.component.DataComponents;
@@ -30,7 +29,7 @@ public class ArrowShield extends ShieldType {
     @Override
     protected boolean verifyEntity(Display.ItemDisplay itemDisplay) {
         ItemStack stack = itemDisplay.itemRenderState().itemStack();
-        if(!stack.getItem().equals(Items.OAK_BOAT)) return false;
+        if (!stack.getItem().equals(Items.OAK_BOAT)) return false;
         List<Float> floats = stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.EMPTY)
                 .floats();
         try {
