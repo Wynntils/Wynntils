@@ -1,22 +1,16 @@
-Durability Overlay
-- Re-enabled feature by default for default, new player and lite profiles
-- Durability Render Mode config is now bar by default
-- New config Durability Color Scheme, the color scheme to display the durability indicator as, default vanilla
-  - Vanilla uses a constant blue, Wynntils starts green and transitions to red as durability decreases, Custom will transition between the 2 set colors
-- New config Full Durability Color, the color to use for a full durability bar when using the custom color scheme
-- New config No Durability Color, the color to use for an empty durability bar when using the custom color scheme
+Auto Expand Use Items
+- New feature, enabled by default for default, new player and lite profiles
+- Automatically expands the Use Items category in the Store
 
-Market Default Sort Order
-- New feature, enabled for default, lite and minimal profiles
-- Automatically switches to set sorting when searching the trade market
-- Default Sort Order config, which sort to use by default, default most recent
-- Sort Order Change Speed config, how quickly to change sorts, using a higher speed may be less consistent, default is balanced (5 ticks)
-- Apply Sort Order Once config, whether or not to reapply the default sort after manually changing sort and searching for a new item, default enabled
+Crowd Sourcing
+- Disabled by default in all profiles
+- Removed chat prompt
 
-Curse, Twilight and Wind Prison are now supported debuffs for tracking
+Telemetry
+- Renamed to Wynntils Telemetry
+- Replaced chat prompt with a toast that shows after the 4th launch
+- Accept by pressing `[`, deny by pressing `]` whilst the toast is open
 
 Fixes
-- Fixed territory management screen not loading territories
-- Fixed parsing of profession nodes
-- Fixed parsing of new profession materials
-- Fixed gear durability parsing
+- You can no longer move whilst in the custom territory management screen
+- Fixed default trade market sorting applying on non quick searches
