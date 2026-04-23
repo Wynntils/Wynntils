@@ -10,7 +10,6 @@ import com.wynntils.core.net.event.DownloadEvent;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -22,26 +21,25 @@ public class DownloadProgressFeature extends Feature {
 
     @SubscribeEvent
     public void onDownloadStarted(DownloadEvent.Started event) {
-        displayToast(
+        McUtils.displayToast(
                 Component.translatable("feature.wynntils.downloadProgress.startingDownload"),
-                Component.translatable("feature.wynntils.downloadProgress.startingDownloadMessage"));
+                Component.translatable("feature.wynntils.downloadProgress.startingDownloadMessage"),
+                10000L);
     }
 
     @SubscribeEvent
     public void onDownloadCompleted(DownloadEvent.Completed event) {
-        displayToast(
+        McUtils.displayToast(
                 Component.translatable("feature.wynntils.downloadProgress.downloadCompleted"),
-                Component.translatable("feature.wynntils.downloadProgress.downloadCompletedMessage"));
+                Component.translatable("feature.wynntils.downloadProgress.downloadCompletedMessage"),
+                10000L);
     }
 
     @SubscribeEvent
     public void onDownloadFailed(DownloadEvent.Failed event) {
-        displayToast(
+        McUtils.displayToast(
                 Component.translatable("feature.wynntils.downloadProgress.downloadFailed"),
-                Component.translatable("feature.wynntils.downloadProgress.downloadFailedMessage"));
-    }
-
-    private void displayToast(Component title, Component message) {
-        McUtils.mc().getToastManager().addToast(new SystemToast(new SystemToast.SystemToastId(10000L), title, message));
+                Component.translatable("feature.wynntils.downloadProgress.downloadFailedMessage"),
+                10000L);
     }
 }
