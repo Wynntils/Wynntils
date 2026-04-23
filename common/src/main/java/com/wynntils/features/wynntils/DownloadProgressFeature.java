@@ -4,13 +4,12 @@
  */
 package com.wynntils.features.wynntils;
 
-import static com.wynntils.utils.mc.McUtils.displayToast;
-
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.net.event.DownloadEvent;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.utils.mc.McUtils;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -22,7 +21,7 @@ public class DownloadProgressFeature extends Feature {
 
     @SubscribeEvent
     public void onDownloadStarted(DownloadEvent.Started event) {
-        displayToast(
+        McUtils.displayToast(
                 Component.translatable("feature.wynntils.downloadProgress.startingDownload"),
                 Component.translatable("feature.wynntils.downloadProgress.startingDownloadMessage"),
                 10000L);
@@ -30,7 +29,7 @@ public class DownloadProgressFeature extends Feature {
 
     @SubscribeEvent
     public void onDownloadCompleted(DownloadEvent.Completed event) {
-        displayToast(
+        McUtils.displayToast(
                 Component.translatable("feature.wynntils.downloadProgress.downloadCompleted"),
                 Component.translatable("feature.wynntils.downloadProgress.downloadCompletedMessage"),
                 10000L);
@@ -38,7 +37,7 @@ public class DownloadProgressFeature extends Feature {
 
     @SubscribeEvent
     public void onDownloadFailed(DownloadEvent.Failed event) {
-        displayToast(
+        McUtils.displayToast(
                 Component.translatable("feature.wynntils.downloadProgress.downloadFailed"),
                 Component.translatable("feature.wynntils.downloadProgress.downloadFailedMessage"),
                 10000L);
