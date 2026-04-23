@@ -73,7 +73,7 @@ public class SpellInputsOverlay extends Overlay {
     }
 
     @SubscribeEvent
-    public void onSpellCast(SpellEvent.Partial event) {
+    public void onSpellPartial(SpellEvent.Partial event) {
         SpellDirection[] dirs = event.getSpellDirectionArray();
         SpellInputStyle style = inputStyle.get();
 
@@ -83,6 +83,11 @@ public class SpellInputsOverlay extends Overlay {
             case ORIGINAL -> buildUnicodeInputs(dirs, Models.CharacterStats.getLevel() >= SMALL_CHARACTERS_LEVEL);
             case LEGACY -> buildLegacyInputs(dirs);
         };
+    }
+
+    @SubscribeEvent
+    public void onSpellCast(SpellEvent.Cast event) {
+        spellText = StyledText.EMPTY;
     }
 
     @SubscribeEvent
