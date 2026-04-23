@@ -122,6 +122,8 @@
   "feature.wynntils.autoAttack.adaptiveLagCorrection.name": "Adaptive Lag Correction",
   "feature.wynntils.autoAttack.description": "Automatically continues melee attacking while holding down the normal attack input.",
   "feature.wynntils.autoAttack.name": "Auto Attack",
+  "feature.wynntils.autoExpandUseItems.description": "Automatically expands the Use Items category in the Store.",
+  "feature.wynntils.autoExpandUseItems.name": "Auto Expand Use Items",
   "feature.wynntils.autoJoinParty.description": "Adds the ability to automatically join a party when a friend invites you.",
   "feature.wynntils.autoJoinParty.name": "Auto Join Parties",
   "feature.wynntils.autoJoinParty.onlyFriends.description": "Should we only auto join party invites from friends?",
