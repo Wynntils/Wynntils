@@ -5,9 +5,12 @@
 package com.wynntils.models.abilities.type;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
+
+import java.io.IOException;
 import java.util.List;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Display;
@@ -19,7 +22,7 @@ public class MantleShield extends ShieldType {
     private static final ClassType CLASS_TYPE = ClassType.WARRIOR;
     private static final SpellType SPELL_TYPE = SpellType.WAR_SCREAM;
     private static final String NAME = "Mantle";
-    private static final float MANTLE_DAMAGE_VALUE = 17758f; // Other possibilities: 17757f, 17759f
+    private static final int MANTLE_TEXTURE_HASH = -2042749972; // 3 == 9, so div by 3
     private static final StyledText SHIELD_COOLDOWN_NAME = StyledText.fromString("§7Shield");
 
     public MantleShield() {
@@ -35,8 +38,13 @@ public class MantleShield extends ShieldType {
     @Override
     protected boolean verifyEntity(Display.ItemDisplay itemDisplay) {
         ItemStack stack = itemDisplay.itemRenderState().itemStack();
+        if(!stack.getItem().equals(Items.OAK_BOAT)) return false;
         List<Float> floats = stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.EMPTY)
                 .floats();
-        return stack.getItem().equals(Items.OAK_BOAT) && floats.contains(MANTLE_DAMAGE_VALUE);
+        try {
+            return Services.CustomModel.getTextureHashes(floats).contains(MANTLE_TEXTURE_HASH);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

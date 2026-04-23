@@ -4,8 +4,11 @@
  */
 package com.wynntils.models.abilities.type;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
+
+import java.io.IOException;
 import java.util.List;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Display;
@@ -17,7 +20,7 @@ public class ArrowShield extends ShieldType {
     private static final ClassType CLASS_TYPE = ClassType.ARCHER;
     private static final SpellType SPELL_TYPE = SpellType.ARROW_SHIELD;
     private static final String NAME = "Arrow";
-    private static final float ARROW_SHIELD_DAMAGE_VALUE = 1411f; // Other possibilities: 1412f, 1410f, 1409f
+    private static final int ARROW_SHIELD_TEXTURE_HASH = 1601346514; // 3 == 12, so div by 4
 
     public ArrowShield() {
         super(CLASS_TYPE, SPELL_TYPE, NAME);
@@ -26,8 +29,13 @@ public class ArrowShield extends ShieldType {
     @Override
     protected boolean verifyEntity(Display.ItemDisplay itemDisplay) {
         ItemStack stack = itemDisplay.itemRenderState().itemStack();
+        if(!stack.getItem().equals(Items.OAK_BOAT)) return false;
         List<Float> floats = stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.EMPTY)
                 .floats();
-        return stack.getItem().equals(Items.OAK_BOAT) && floats.contains(ARROW_SHIELD_DAMAGE_VALUE);
+        try {
+            return Services.CustomModel.getTextureHashes(floats).contains(ARROW_SHIELD_TEXTURE_HASH);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
