@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.resources.IoSupplier;
 import org.apache.commons.lang3.concurrent.ConcurrentException;
@@ -39,8 +40,11 @@ public class CustomModelService extends Service {
             .setInitializer(() -> Minecraft.getInstance()
                     .getResourceManager()
                     .listPacks()
-                    .filter(packResources ->
-                            packResources.location().title().getString().contains("Wynncraft"))
+                    .filter(packResources -> {
+                        Component title = packResources.location().title();
+                        return title.getString().contains("Wynncraft")
+                                || title.contains(Component.translatable("resourcePack.server.name"));
+                    })
                     .findFirst()
                     .orElseThrow())
             .get();
