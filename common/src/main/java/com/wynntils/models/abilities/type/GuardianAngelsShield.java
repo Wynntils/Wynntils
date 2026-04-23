@@ -21,10 +21,11 @@ public class GuardianAngelsShield extends ShieldType {
     private static final ClassType CLASS_TYPE = ClassType.ARCHER;
     private static final SpellType SPELL_TYPE = SpellType.ARROW_SHIELD;
     private static final String NAME = "Guardian Angels";
+    private static final int DIVIDE_BY = 5;
     private static final int GUARDIAN_ANGEL_TEXTURE_HASH = 14170136; // 2 == 10, so div by 5
 
     public GuardianAngelsShield() {
-        super(CLASS_TYPE, SPELL_TYPE, NAME);
+        super(CLASS_TYPE, SPELL_TYPE, NAME, DIVIDE_BY);
     }
 
     @Override

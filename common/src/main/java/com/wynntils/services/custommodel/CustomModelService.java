@@ -67,7 +67,7 @@ public class CustomModelService extends Service {
                     String texturePath = entry.getValue().getAsString();
                     if("item/empty".equals(texturePath)) continue;
                     int hash1 = Arrays.hashCode(resources.getRootResource("assets/minecraft/textures/" + entry.getValue().getAsString() + ".png").get().readAllBytes());
-                    System.out.println(aFloat + " (#" + entry.getKey() + " -> " + entry.getValue().getAsString() + ") hash is: " + hash1);
+                    //System.out.println(aFloat + " (#" + entry.getKey() + " -> " + entry.getValue().getAsString() + ") hash is: " + hash1);
                     hashes.add(hash1);
                 }
                 textureHashes.put(aFloat, hashes);

@@ -13,15 +13,21 @@ public abstract class ShieldType {
     private final ClassType validClass;
     private final SpellType validSpell;
     private final String name;
+    private final int divideBy;
 
-    protected ShieldType(ClassType classType, SpellType spellType, String name) {
+    protected ShieldType(ClassType classType, SpellType spellType, String name, int divideBy) {
         this.validClass = classType;
         this.validSpell = spellType;
         this.name = name;
+        this.divideBy = divideBy;
     }
 
     public String getName() {
         return name;
+    }
+
+    public int divideBy() {
+        return divideBy;
     }
 
     public boolean validClass() {

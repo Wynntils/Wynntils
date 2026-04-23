@@ -22,11 +22,12 @@ public class MantleShield extends ShieldType {
     private static final ClassType CLASS_TYPE = ClassType.WARRIOR;
     private static final SpellType SPELL_TYPE = SpellType.WAR_SCREAM;
     private static final String NAME = "Mantle";
+    private static final int DIVIDE_BY = 3;
     private static final int MANTLE_TEXTURE_HASH = -2042749972; // 3 == 9, so div by 3
     private static final StyledText SHIELD_COOLDOWN_NAME = StyledText.fromString("§7Shield");
 
     public MantleShield() {
-        super(CLASS_TYPE, SPELL_TYPE, NAME);
+        super(CLASS_TYPE, SPELL_TYPE, NAME, DIVIDE_BY);
     }
 
     @Override

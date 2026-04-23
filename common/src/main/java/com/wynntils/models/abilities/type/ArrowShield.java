@@ -20,10 +20,11 @@ public class ArrowShield extends ShieldType {
     private static final ClassType CLASS_TYPE = ClassType.ARCHER;
     private static final SpellType SPELL_TYPE = SpellType.ARROW_SHIELD;
     private static final String NAME = "Arrow";
+    private static final int DIVIDE_BY = 4;
     private static final int ARROW_SHIELD_TEXTURE_HASH = 1601346514; // 3 == 12, so div by 4
 
     public ArrowShield() {
-        super(CLASS_TYPE, SPELL_TYPE, NAME);
+        super(CLASS_TYPE, SPELL_TYPE, NAME, DIVIDE_BY);
     }
 
     @Override
