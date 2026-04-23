@@ -137,6 +137,7 @@ import com.wynntils.features.trademarket.TradeMarketDefaultSortOrderFeature;
 import com.wynntils.features.trademarket.TradeMarketPriceConversionFeature;
 import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
 import com.wynntils.features.trademarket.TradeMarketQuickSearchFeature;
+import com.wynntils.features.ui.AutoExpandUseItems;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.features.ui.ContainerScrollFeature;
 import com.wynntils.features.ui.CraftingProfessionLevelProgressBarFeature;
@@ -365,6 +366,7 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region ui
+        registerFeature(new AutoExpandUseItems());
         registerFeature(new BulkBuyFeature());
         registerFeature(new ContainerScrollFeature());
         registerFeature(new CraftingProfessionLevelProgressBarFeature());
