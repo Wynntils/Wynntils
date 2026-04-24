@@ -1808,7 +1808,7 @@
   "function.wynntils.activityTask.argument.formatted": "Whether to retain color codes",
   "function.wynntils.activityTask.description": "The current task of the tracked activity",
   "function.wynntils.activityTask.name": "Activity Task",
-  "function.wynntils.activityType.description": "The type of the current tracked activity. One of Recommended, Quest, Mini-Quest, World Event, Secret Discovery, World Discovery, Territorial Discovery, Cave, Dungeon, Raid, Boss Altar, or Lootrun Camp",
+  "function.wynntils.activityType.description": "The type of the current tracked activity. One of Quest, World Event, World Discovery, Cave, Dungeon, Raid, Boss Altar, or Lootrun Camp",
   "function.wynntils.activityType.name": "Activity Type",
   "function.wynntils.allShinyStats.description": "Shows a list of all shiny stats",
   "function.wynntils.allShinyStats.name": "All Shiny Stats",
