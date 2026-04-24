@@ -49,6 +49,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -662,6 +663,12 @@ public final class RaidModel extends Model {
         }
 
         return -1L;
+    }
+
+    public List<String> getChosenBuffs(String player) {
+        if (!partyRaidBuffs.containsKey(player)) return List.of();
+
+        return Collections.unmodifiableList(partyRaidBuffs.get(player));
     }
 
     private void completeRaid() {

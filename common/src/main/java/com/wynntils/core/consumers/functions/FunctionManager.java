@@ -712,6 +712,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new RaidFunctions.RaidTimeRemainingFunction());
         registerFunction(new RaidFunctions.RaidsRunsSinceFunction());
         registerFunction(new RaidFunctions.SpecificRaidRunsSinceFunction());
+        registerFunction(new RaidFunctions.ChosenGambitsFunction());
+        registerFunction(new RaidFunctions.ChosenGambitFunction());
+        registerFunction(new RaidFunctions.ChosenBuffsFunction());
+        registerFunction(new RaidFunctions.ChosenBuffFunction());
 
         registerFunction(new RangedFunctions.RangeHighFunction());
         registerFunction(new RangedFunctions.RangeLowFunction());
