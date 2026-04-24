@@ -41,6 +41,7 @@ import com.wynntils.models.containers.containers.RatingRewardsContainer;
 import com.wynntils.models.containers.containers.ScrapMenuContainer;
 import com.wynntils.models.containers.containers.SeaskipperContainer;
 import com.wynntils.models.containers.containers.StoreContainer;
+import com.wynntils.models.containers.containers.StorePageContainer;
 import com.wynntils.models.containers.containers.personal.AccountBankContainer;
 import com.wynntils.models.containers.containers.personal.BookshelfContainer;
 import com.wynntils.models.containers.containers.personal.CharacterBankContainer;
@@ -163,6 +164,7 @@ public final class ContainerModel extends Model {
         registerContainer(new RatingRewardsContainer());
         registerContainer(new ScrapMenuContainer());
         registerContainer(new SeaskipperContainer());
+        registerContainer(new StoreContainer());
         registerContainer(new TradeMarketBuyContainer());
         registerContainer(new TradeMarketContainer());
         registerContainer(new TradeMarketFiltersContainer());
@@ -183,7 +185,7 @@ public final class ContainerModel extends Model {
         }
 
         for (StoreItemType type : StoreItemType.values()) {
-            registerContainer(new StoreContainer(type));
+            registerContainer(new StorePageContainer(type));
         }
     }
 

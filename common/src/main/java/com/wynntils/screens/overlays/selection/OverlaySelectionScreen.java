@@ -702,7 +702,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 // Set the new info box as the selected overlay
                 setSelectedOverlay(group.getOverlays().getLast());
 
-                McUtils.sendMessageToClient(Component.translatable(
+                McUtils.sendWynntilsPrefixMessage(Component.translatable(
                                 "screens.wynntils.overlaySelection.createdOverlay",
                                 group.getOverlayClass().getSimpleName(),
                                 group.getFieldName(),

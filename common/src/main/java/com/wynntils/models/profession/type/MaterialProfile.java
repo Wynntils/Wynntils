@@ -28,23 +28,32 @@ public final class MaterialProfile {
                     new SourceMaterial("Molten", 90),
                     new SourceMaterial("Voidstone", 100),
                     new SourceMaterial("Larbonic Geode", 105),
-                    new SourceMaterial("Dernic", 110)),
+                    new SourceMaterial("Dernic", 105),
+                    new SourceMaterial("Titanium", 110),
+                    new SourceMaterial("Cinnabar", 115)),
             MaterialType.LOG,
             List.of(
                     new SourceMaterial("Oak", 1),
                     new SourceMaterial("Birch", 10),
+                    new SourceMaterial("Red Alder", 10),
                     new SourceMaterial("Willow", 20),
                     new SourceMaterial("Acacia", 30),
                     new SourceMaterial("Spruce", 40),
                     new SourceMaterial("Jungle", 50),
                     new SourceMaterial("Dark", 60),
                     new SourceMaterial("Light", 70),
+                    new SourceMaterial("Bamboo", 80),
                     new SourceMaterial("Pine", 80),
+                    new SourceMaterial("Douglas Fir", 80),
                     new SourceMaterial("Flerisi Tree", 85),
                     new SourceMaterial("Flerisi Trunk", 85),
                     new SourceMaterial("Avo", 90),
                     new SourceMaterial("Sky", 100),
-                    new SourceMaterial("Dernic", 110)),
+                    new SourceMaterial("Blossom", 100),
+                    new SourceMaterial("Dernic", 105),
+                    new SourceMaterial("Maple", 110),
+                    new SourceMaterial("Redwood", 115),
+                    new SourceMaterial("Industree", 133)),
             MaterialType.CROP,
             List.of(
                     new SourceMaterial("Wheat", 1),
@@ -59,7 +68,9 @@ public final class MaterialProfile {
                     new SourceMaterial("Sorghum", 90),
                     new SourceMaterial("Hemp", 100),
                     new SourceMaterial("Voidgloom", 105),
-                    new SourceMaterial("Dernic", 110)),
+                    new SourceMaterial("Dernic", 105),
+                    new SourceMaterial("Jute", 110),
+                    new SourceMaterial("Heather", 115)),
             MaterialType.FISH,
             List.of(
                     new SourceMaterial("Gudgeon", 1),
@@ -74,7 +85,9 @@ public final class MaterialProfile {
                     new SourceMaterial("Abyssal Matter", 90),
                     new SourceMaterial("Molten", 90),
                     new SourceMaterial("Starfish", 100),
-                    new SourceMaterial("Dernic", 110)));
+                    new SourceMaterial("Dernic", 105),
+                    new SourceMaterial("Sturgeon", 110),
+                    new SourceMaterial("Mahseer", 115)));
 
     private final ResourceType resourceType;
     private final SourceMaterial sourceMaterial;

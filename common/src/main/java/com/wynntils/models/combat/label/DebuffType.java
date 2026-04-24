@@ -10,22 +10,25 @@ import net.minecraft.ChatFormatting;
 
 public enum DebuffType {
     BLEEDING('\uE031', ChatFormatting.RED),
-    BLINDNESS('⬣', ChatFormatting.RED),
-    BURNING('✹', ChatFormatting.RED),
+    BLINDNESS('\u2B23', ChatFormatting.RED),
+    BURNING('\u2739', ChatFormatting.RED),
     CONFUSED('\uE03C', CustomColor.fromInt(0xE1DCA4)),
     CONTAMINATED('\uE043', CustomColor.fromInt(0x94A771)),
     CRYSTALLIZED('\uE045', CustomColor.fromInt(0xB6FBFC)),
-    DISCOMBOBULATED('⚙', ChatFormatting.YELLOW),
+    CURSE('\u2749', ChatFormatting.RED),
+    DISCOMBOBULATED('\u2699', ChatFormatting.YELLOW),
     ENKINDLED('\uE03D', CustomColor.fromInt(0xFF8E8E)),
-    FREEZING('❄', ChatFormatting.AQUA),
-    MARKED('✜', ChatFormatting.RED),
-    POISON('☠', ChatFormatting.DARK_PURPLE),
+    FREEZING('\u2744', ChatFormatting.AQUA),
+    MARKED('\u271C', ChatFormatting.RED),
+    POISON('\u2620', ChatFormatting.DARK_PURPLE),
     PROVOKED('\uE025', ChatFormatting.RED),
     RESISTANCE('\uE015', ChatFormatting.RED),
-    SLOWNESS('⬤', ChatFormatting.RED),
+    SLOWNESS('\u2B24', ChatFormatting.RED),
     TRICK('\uE03A', CustomColor.fromInt(0x6AFA65)),
-    WEAKNESS('⚔', ChatFormatting.RED),
-    WHIPPED('⇶', ChatFormatting.GOLD);
+    TWILIGHT('\uE04B', CustomColor.fromInt(0x5B88FC)),
+    WEAKNESS('\u2694', ChatFormatting.RED),
+    WHIPPED('\u21F6', ChatFormatting.GOLD),
+    WIND_PRISON('\u274B', ChatFormatting.RED);
 
     private final char symbol;
     private final CustomColor color;

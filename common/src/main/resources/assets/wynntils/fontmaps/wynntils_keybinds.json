@@ -2,6 +2,8 @@
   "fontId": "wynntils:keybind",
   "glyphs": {
     "key_y": "Y",
-    "key_control": "\uF010"
+    "key_control": "\uF010",
+    "key_left_bracket": "[",
+    "key_right_bracket": "]"
   }
 }

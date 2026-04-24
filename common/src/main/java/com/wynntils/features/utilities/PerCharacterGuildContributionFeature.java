@@ -111,6 +111,6 @@ public class PerCharacterGuildContributionFeature extends Feature {
         contributionMessage.append(
                 Component.literal(" to disable this functionality.").withStyle(ChatFormatting.DARK_AQUA));
 
-        McUtils.sendMessageToClient(contributionMessage);
+        McUtils.sendWynntilsPrefixMessage(contributionMessage);
     }
 }

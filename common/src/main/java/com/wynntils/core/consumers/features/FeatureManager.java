@@ -133,9 +133,11 @@ import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.features.tooltips.TooltipFittingFeature;
 import com.wynntils.features.tooltips.TooltipVanillaHideFeature;
 import com.wynntils.features.trademarket.TradeMarketBulkSellFeature;
+import com.wynntils.features.trademarket.TradeMarketDefaultSortOrderFeature;
 import com.wynntils.features.trademarket.TradeMarketPriceConversionFeature;
 import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
 import com.wynntils.features.trademarket.TradeMarketQuickSearchFeature;
+import com.wynntils.features.ui.AutoExpandUseItems;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.features.ui.ContainerScrollFeature;
 import com.wynntils.features.ui.CraftingProfessionLevelProgressBarFeature;
@@ -169,10 +171,10 @@ import com.wynntils.features.wynntils.CommandsFeature;
 import com.wynntils.features.wynntils.DataCrowdSourcingFeature;
 import com.wynntils.features.wynntils.DownloadProgressFeature;
 import com.wynntils.features.wynntils.FixPacketBugsFeature;
-import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
 import com.wynntils.features.wynntils.WeeklyConfigBackupFeature;
 import com.wynntils.features.wynntils.WynntilsHintMessagesFeature;
+import com.wynntils.features.wynntils.WynntilsTelemetryFeature;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -358,12 +360,14 @@ public final class FeatureManager extends Manager {
 
         // region trademarket
         registerFeature(new TradeMarketBulkSellFeature());
+        registerFeature(new TradeMarketDefaultSortOrderFeature());
         registerFeature(new TradeMarketPriceConversionFeature());
         registerFeature(new TradeMarketPriceMatchFeature());
         registerFeature(new TradeMarketQuickSearchFeature());
         // endregion
 
         // region ui
+        registerFeature(new AutoExpandUseItems());
         registerFeature(new BulkBuyFeature());
         registerFeature(new ContainerScrollFeature());
         registerFeature(new CraftingProfessionLevelProgressBarFeature());
@@ -403,7 +407,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new DataCrowdSourcingFeature());
         registerFeature(new DownloadProgressFeature());
         registerFeature(new FixPacketBugsFeature());
-        registerFeature(new TelemetryFeature());
+        registerFeature(new WynntilsTelemetryFeature());
         registerFeature(new UpdatesFeature());
         registerFeature(new WeeklyConfigBackupFeature());
         registerFeature(new WynntilsHintMessagesFeature());
@@ -604,7 +608,7 @@ public final class FeatureManager extends Manager {
                     .withStyle(style -> style.withClickEvent(
                             new ClickEvent.RunCommand("/feature enable " + feature.getShortName())));
 
-            McUtils.sendMessageToClient(enableMessage);
+            McUtils.sendWynntilsPrefixMessage(enableMessage);
         }
     }
 
