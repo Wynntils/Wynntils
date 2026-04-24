@@ -88,9 +88,15 @@ public class TranslationFeature extends Feature {
         if (event.isTranslated()) return;
         if (!translateNpc.get() || languageName.get().isEmpty()) return;
 
+        StyledText originalMessage = StyledText.fromString(event.getInput());
+        String wrappedIn = wrapCoding(originalMessage);
+
         Services.Translation.getTranslator(translationService.get())
-                .translate(List.of(event.getInput()), languageName.get(), translatedMsgList -> {
-                    event.outputTranslated(translatedMsgList.getFirst());
+                .translate(List.of(wrappedIn), languageName.get(), translatedMsgList -> {
+                    String wrappedOut = translatedMsgList.getFirst();
+                    StyledText out = unwrapCoding(wrappedOut, originalMessage);
+
+                    event.outputTranslated(out.getString());
                 });
 
         // With this we can check, if the Translator has been started correctly.
@@ -144,11 +150,15 @@ public class TranslationFeature extends Feature {
         // - §[x] is used for click events
         // - §<x> is used for hover events
 
+        // Removes double spaces: "Hello §3 World -> "Hello §3World".
+
         return StyledText.fromModifiedString(
                 codedTranslatedString
                         .replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1")
+                        .replaceAll("\\{ ?§ ?# ?([0-9a-fA-F]{8}) ?\\}", "§#$1") // Hex Colors like §#ff00aaff
                         .replaceAll("\\[ ?§ ?([0-9]+) ?\\]", "§[$1]")
                         .replaceAll("\\< ?§ ?([0-9]+) ?\\>", "§<$1>")
+                        .replaceAll(" (§(?:#[0-9a-fA-F]{8}|[0-9a-fklmnor])) ", " $1")
                         .replace('Á', 'A')
                         .replace('À', 'A'),
                 originalText);
@@ -157,6 +167,7 @@ public class TranslationFeature extends Feature {
     private String wrapCoding(StyledText origCoded) {
         return origCoded
                 .getString(StyleType.INCLUDE_EVENTS)
+                .replaceAll("(§#[0-9a-fA-F]{8})", "{$1}")
                 .replaceAll("(§[0-9a-fklmnor])", "{$1}")
                 .replaceAll("§\\[([0-9]+)\\]", "[§$1]")
                 .replaceAll("§<([0-9]+)>", "<§$1>");

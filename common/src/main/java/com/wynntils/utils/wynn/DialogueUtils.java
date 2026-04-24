@@ -5,7 +5,6 @@
 package com.wynntils.utils.wynn;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,6 +66,7 @@ public final class DialogueUtils {
         for (Component sibling : component.getSiblings()) {
             if (sibling.getStyle().getFont().equals(font_body[0])) {
                 out.setText(getCleanText(sibling, keepColors));
+                out.setCleanText(keepColors ? getCleanText(sibling, false) : out.getText());
                 out.setStartPos(sibling.getString(2));
             } else if (sibling.getStyle().getFont().equals(font_nameplate)) {
                 // could be usefull for later or some APIs / Mod-Addons
@@ -104,12 +104,7 @@ public final class DialogueUtils {
      * @return a String with all special chars starting with {@code '/uDAFF'} and double {@code ' '} removed
      * */
     public static String getCleanText(Component sibling, boolean keepColors) {
-        String text;
-        if (keepColors) {
-            text = StyledText.fromComponent(sibling).getString(StyleType.DEFAULT);
-        } else {
-            text = sibling.getString();
-        }
+        String text = keepColors ? StyledText.fromComponent(sibling).getString() : sibling.getString();
 
         if (text.length() <= 4) {
             return "";
@@ -186,9 +181,20 @@ public final class DialogueUtils {
 
                 // add the lines
                 MutableComponent line;
+                MutableComponent temp;
                 for (int i = 0; i < lines.size() && i < 5; i++) {
-                    line = Component.literal(lines.get(i)).withStyle(style_body[i]);
+                    line = Component.empty();
+                    temp = StyledText.fromString(lines.get(i)).getComponent();
+
+                    for (Component part : temp.getSiblings()) {
+                        if (part instanceof MutableComponent mutableContent) {
+                            line.append(mutableContent.withStyle(style_body[i]));
+                        }
+                    }
+
+                    line.withStyle(style_body[i]);
                     line = manageWidth(line);
+
                     newMsg.append(line);
                 }
 
@@ -344,7 +350,7 @@ public final class DialogueUtils {
      * This subclass is to append the {@code §<x>} chatcolors and formating style to another line.
      * */
     private static final class StyleState {
-        private char color = 0;
+        private String color = null;
         private boolean bold;
         private boolean italic;
         private boolean underline;
@@ -353,7 +359,7 @@ public final class DialogueUtils {
 
         public String getPrefix() {
             StringBuilder sb = new StringBuilder(12);
-            if (color != 0) sb.append('§').append(color);
+            if (color != null) sb.append('§').append(color);
             if (bold) sb.append("§l");
             if (italic) sb.append("§o");
             if (underline) sb.append("§n");
@@ -363,7 +369,7 @@ public final class DialogueUtils {
         }
 
         public void consume(String line) {
-            color = 0;
+            color = null;
             bold = false;
             italic = false;
             underline = false;
@@ -379,7 +385,13 @@ public final class DialogueUtils {
                     break;
                 }
                 if (isColorCode(code)) {
-                    color = code;
+                    color = code + "";
+                    break;
+                }
+
+                if (code == '#') { // §#f2d7fdff
+                    if (line.length() < i + 10) continue;
+                    color = line.substring(i + 1, i + 10);
                     break;
                 }
 
@@ -400,6 +412,7 @@ public final class DialogueUtils {
 
     public static final class Content {
         private String text;
+        private String cleanText;
         private String name;
         private String startPos;
         private String portrait;
@@ -408,6 +421,23 @@ public final class DialogueUtils {
 
         private Content() {}
 
+        /**
+         * If enabled, {@link #getText()} can contain chat formating codes like §0-9, §a-f or §#HEX-Color
+         * @return clean getText without formatings
+         * */
+        public String getCleanText() {
+            return cleanText;
+        }
+
+        private void setCleanText(String cleanText) {
+            this.cleanText = cleanText;
+        }
+
+        /**
+         * If enabled, can contain chat formating codes like §0-9, §a-f or §#HEX-Color <br />
+         * use {@link #getCleanText()} for Text without formatings. <br />
+         * use {@code StyledText.fromString(text).getComponent()} to format
+         * */
         public String getText() {
             return text;
         }
@@ -463,12 +493,13 @@ public final class DialogueUtils {
         @Override
         public String toString() {
             return "Content{" + "text='"
-                    + getText() + '\'' + ", name='"
-                    + getName() + '\'' + ", startPos='"
-                    + getStartPos() + '\'' + ", portrait='"
-                    + getPortrait() + '\'' + ", confirmationless="
-                    + isConfirmationless() + ", choices="
-                    + Arrays.toString(getChoices()) + '}';
+                    + text + '\'' + ", cleanText='"
+                    + cleanText + '\'' + ", name='"
+                    + name + '\'' + ", startPos='"
+                    + startPos + '\'' + ", portrait='"
+                    + portrait + '\'' + ", confirmationless="
+                    + confirmationless + ", choices="
+                    + Arrays.toString(choices) + '}';
         }
     }
 }
