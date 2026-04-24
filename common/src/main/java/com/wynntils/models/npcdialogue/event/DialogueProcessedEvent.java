@@ -5,6 +5,7 @@
 package com.wynntils.models.npcdialogue.event;
 
 import com.wynntils.core.events.EventThread;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.wynn.DialogueUtils;
 import net.neoforged.bus.api.Event;
 
@@ -19,11 +20,13 @@ import net.neoforged.bus.api.Event;
 @EventThread(EventThread.Type.ANY)
 public class DialogueProcessedEvent extends Event {
     private final DialogueUtils.Content content;
-    private String translatedText;
+    private final String formatedTranslatedText;
+    private final String translatedText;
 
-    public DialogueProcessedEvent(DialogueUtils.Content content, String translatedText) {
+    public DialogueProcessedEvent(DialogueUtils.Content content, StyledText translatedText) {
         this.content = content;
-        this.translatedText = translatedText;
+        this.formatedTranslatedText = translatedText.getString();
+        this.translatedText = translatedText.getComponent().getString();
     }
 
     public DialogueUtils.Content getContent() {
@@ -32,14 +35,16 @@ public class DialogueProcessedEvent extends Event {
 
     /**
      * If enabled, can contain chat formating codes like §0-9, §a-f or §#HEX-Color <br />
-     * use {@code StyledText.fromString(text).getComponent()} to format <br />
-     * use {@code StyledText.fromString(text).getText()} to remove formatings
+     * use {@code StyledText.fromString(text).getComponent()} to get formated Component
+     * */
+    public String getFormatedTranslatedText() {
+        return formatedTranslatedText;
+    }
+
+    /**
+     * @return the clean translated Text without Chatformatings
      * */
     public String getTranslatedText() {
         return translatedText;
-    }
-
-    public void setTranslatedText(String translatedText) {
-        this.translatedText = translatedText;
     }
 }
