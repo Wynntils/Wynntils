@@ -235,7 +235,7 @@ public final class RaidModel extends Model {
             partyRaidBuffs.clear();
             parasiteOvertaken = false;
 
-            McUtils.sendMessageToClient(Component.literal(
+            McUtils.sendWynntilsPrefixMessage(Component.literal(
                             "Raid tracking has been interrupted, you will not be able to see progress for the current raid")
                     .withStyle(ChatFormatting.DARK_RED));
         }
