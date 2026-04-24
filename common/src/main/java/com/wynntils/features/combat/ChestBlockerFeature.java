@@ -16,6 +16,7 @@ import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
+import com.wynntils.models.items.items.game.WardItem;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.utils.mc.McUtils;
@@ -38,6 +39,9 @@ public class ChestBlockerFeature extends Feature {
     @Persisted
     private final Config<EmeraldPouchTier> emeraldPouchTier = new Config<>(EmeraldPouchTier.EIGHT);
 
+    @Persisted
+    private final Config<Boolean> preventWards = new Config<>(true);
+
     public ChestBlockerFeature() {
         super(ProfileDefault.ENABLED);
     }
@@ -50,6 +54,7 @@ public class ChestBlockerFeature extends Feature {
         NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.screen());
         for (int i = 0; i < Models.LootChest.LOOT_CHEST_ITEM_COUNT; i++) {
             ItemStack itemStack = items.get(i);
+
             Optional<GearTierItemProperty> tieredItem =
                     Models.Item.asWynnItemProperty(itemStack, GearTierItemProperty.class);
             if (tieredItem.isPresent() && tieredItem.get().getGearTier() == GearTier.MYTHIC) {
@@ -59,18 +64,29 @@ public class ChestBlockerFeature extends Feature {
                 return;
             }
 
-            if (emeraldPouchTier.get() == EmeraldPouchTier.NONE) continue;
+            if (emeraldPouchTier.get() != EmeraldPouchTier.NONE) {
+                Optional<EmeraldPouchItem> emeraldPouchItem = Models.Item.asWynnItem(itemStack, EmeraldPouchItem.class);
+                if (emeraldPouchItem.isPresent()
+                        && emeraldPouchItem.get().getTier()
+                                >= emeraldPouchTier.get().getTier()) {
+                    McUtils.sendMessageToClient(Component.translatable(
+                                    "feature.wynntils.chestBlocker.closingBlockedPouch",
+                                    emeraldPouchItem.get().getTier())
+                            .withStyle(ChatFormatting.RED));
+                    e.setCanceled(true);
+                    return;
+                }
+            }
 
-            Optional<EmeraldPouchItem> emeraldPouchItem = Models.Item.asWynnItem(itemStack, EmeraldPouchItem.class);
-            if (emeraldPouchItem.isPresent()
-                    && emeraldPouchItem.get().getTier()
-                            >= emeraldPouchTier.get().getTier()) {
-                McUtils.sendMessageToClient(Component.translatable(
-                                "feature.wynntils.chestBlocker.closingBlockedPouch",
-                                emeraldPouchItem.get().getTier())
-                        .withStyle(ChatFormatting.RED));
-                e.setCanceled(true);
-                return;
+            if (preventWards.get()) {
+                Optional<WardItem> wardItem = Models.Item.asWynnItem(itemStack, WardItem.class);
+                if (wardItem.isPresent()) {
+                    McUtils.sendMessageToClient(
+                            Component.translatable("feature.wynntils.chestBlocker.closingBlockedWard")
+                                    .withStyle(ChatFormatting.RED));
+                    e.setCanceled(true);
+                    return;
+                }
             }
         }
     }
