@@ -5,7 +5,6 @@
 package com.wynntils.utils.wynn;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
