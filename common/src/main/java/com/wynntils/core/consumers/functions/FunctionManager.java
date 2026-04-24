@@ -73,6 +73,10 @@ public final class FunctionManager extends Manager {
     private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("&(?<!\\\\)(#[0-9A-Fa-f]{8})");
     private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("&(?<!\\\\)([0-9a-fA-Fk-oK-OrR])");
     private static final Pattern NBSP_PATTERN = Pattern.compile("\u00A0");
+    private static final Pattern ESCAPED_OPEN_BRACE_PATTERN = Pattern.compile(Pattern.quote("\\[\\"));
+    private static final Pattern ESCAPED_CLOSE_BRACE_PATTERN = Pattern.compile(Pattern.quote("\\]\\"));
+    private static final Pattern ESCAPED_AMPERSAND_PATTERN = Pattern.compile(Pattern.quote("\\&\\"));
+
     private final List<Function<?>> functions = new ArrayList<>();
     private final Set<Function<?>> crashedFunctions = new HashSet<>();
 
@@ -293,9 +297,9 @@ public final class FunctionManager extends Manager {
         String calculatedString = doFormat(escapedTemplate);
 
         // Turn escaped {}& (`\[\`, `\]\` `\&\`) back into real {}&
-        calculatedString = calculatedString.replace("\\[\\", "{");
-        calculatedString = calculatedString.replace("\\]\\", "}");
-        calculatedString = calculatedString.replace("\\&\\", "&");
+        calculatedString = ESCAPED_OPEN_BRACE_PATTERN.matcher(calculatedString).replaceAll("{");
+        calculatedString = ESCAPED_CLOSE_BRACE_PATTERN.matcher(calculatedString).replaceAll("}");
+        calculatedString = ESCAPED_AMPERSAND_PATTERN.matcher(calculatedString).replaceAll("&");
 
         return Arrays.stream(calculatedString.split("\n"))
                 .map(StyledText::fromString)
