@@ -185,9 +185,8 @@ public final class DialogueUtils {
                 for (int i = 0; i < lines.size() && i < 5; i++) {
                     line = Component.empty();
                     temp = StyledText.fromString(lines.get(i)).getComponent();
-//                    line = Component.literal(lines.get(i)).withStyle(style_body[i]);
 
-                    for (Component part : temp.getSiblings())  {
+                    for (Component part : temp.getSiblings()) {
                         if (part instanceof MutableComponent mutableContent) {
                             line.append(mutableContent.withStyle(style_body[i]));
                         }
@@ -390,7 +389,7 @@ public final class DialogueUtils {
                     break;
                 }
 
-                if (code == '#') {  // §#f2d7fdff
+                if (code == '#') { // §#f2d7fdff
                     if (line.length() < i + 10) continue;
                     color = line.substring(i + 1, i + 10);
                     break;
@@ -493,15 +492,14 @@ public final class DialogueUtils {
 
         @Override
         public String toString() {
-            return "Content{" +
-                    "text='" + text + '\'' +
-                    ", cleanText='" + cleanText + '\'' +
-                    ", name='" + name + '\'' +
-                    ", startPos='" + startPos + '\'' +
-                    ", portrait='" + portrait + '\'' +
-                    ", confirmationless=" + confirmationless +
-                    ", choices=" + Arrays.toString(choices) +
-                    '}';
+            return "Content{" + "text='"
+                    + text + '\'' + ", cleanText='"
+                    + cleanText + '\'' + ", name='"
+                    + name + '\'' + ", startPos='"
+                    + startPos + '\'' + ", portrait='"
+                    + portrait + '\'' + ", confirmationless="
+                    + confirmationless + ", choices="
+                    + Arrays.toString(choices) + '}';
         }
     }
 }

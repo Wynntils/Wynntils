@@ -150,13 +150,15 @@ public class TranslationFeature extends Feature {
         // - §[x] is used for click events
         // - §<x> is used for hover events
 
+        // Removes double spaces: "Hello §3 World -> "Hello §3World".
+
         return StyledText.fromModifiedString(
                 codedTranslatedString
                         .replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1")
                         .replaceAll("\\{ ?§ ?# ?([0-9a-fA-F]{8}) ?\\}", "§#$1") // Hex Colors like §#ff00aaff
                         .replaceAll("\\[ ?§ ?([0-9]+) ?\\]", "§[$1]")
                         .replaceAll("\\< ?§ ?([0-9]+) ?\\>", "§<$1>")
-                        .replaceAll(" (§(?:#[0-9a-fA-F]{8}|[0-9a-fklmnor])) ", " $1") // remove double spaces: "Hello §3 World -> "Hello §3World"
+                        .replaceAll(" (§(?:#[0-9a-fA-F]{8}|[0-9a-fklmnor])) ", " $1")
                         .replace('Á', 'A')
                         .replace('À', 'A'),
                 originalText);

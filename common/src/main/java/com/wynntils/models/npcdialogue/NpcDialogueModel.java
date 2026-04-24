@@ -67,15 +67,19 @@ public final class NpcDialogueModel extends Model {
     }
 
     private void sendChat(DialogueUtils.Content content, StyledText tanslatedText) {
-        Style green = Style.EMPTY.withColor(chatColor.getChatFormatting());
+        Style textColor = Style.EMPTY.withColor(chatColor.getChatFormatting());
         Style darkGreen = Style.EMPTY.withColor(ChatFormatting.DARK_GREEN);
 
         // §2Npcname: §aText
         Component message = Component.empty()
-                .append(Component.literal(content.getName() != null ? content.getName() + ": " : "").withStyle(darkGreen))
-                .append(tanslatedText.getComponent()
-                        .withStyle(green.withHoverEvent(new HoverEvent.ShowText(
-                                StyledText.fromString(content.getText()).getComponent().withStyle(green)))));
+                .append(Component.literal(content.getName() != null ? content.getName() + ": " : "")
+                        .withStyle(darkGreen))
+                .append(tanslatedText
+                        .getComponent()
+                        .withStyle(textColor.withHoverEvent(
+                                new HoverEvent.ShowText(StyledText.fromString(content.getText())
+                                        .getComponent()
+                                        .withStyle(textColor)))));
 
         // TODO: send only in chattabs with RecipientType.NPC
 

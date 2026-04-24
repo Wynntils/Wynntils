@@ -32,7 +32,6 @@ public class NpcDialogueFeature extends Feature {
     @Persisted
     private final Config<ColorChatFormatting> chatColor = new Config<>(ColorChatFormatting.GREEN);
 
-
     public NpcDialogueFeature() {
         super(ProfileDefault.DISABLED);
     }
