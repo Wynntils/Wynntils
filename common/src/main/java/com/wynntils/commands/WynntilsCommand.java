@@ -297,7 +297,7 @@ public class WynntilsCommand extends Command {
                             Matcher m = STATUS_HEADING.matcher(line);
                             if (m.matches()) {
                                 String status = m.group(1);
-                                McUtils.sendMessageToClient(Component.literal("Wynntils status: ")
+                                McUtils.sendWynntilsPrefixMessage(Component.literal("Wynntils status: ")
                                         .withStyle(ChatFormatting.WHITE)
                                         .append(Component.literal(status).withStyle(ChatFormatting.AQUA)));
                                 return;
@@ -389,7 +389,8 @@ public class WynntilsCommand extends Command {
             WynntilsMod.info("Attempting to fetch Wynntils update.");
             CompletableFuture<UpdateResult> completableFuture = Services.Update.tryUpdate();
 
-            completableFuture.whenComplete((result, throwable) -> McUtils.sendMessageToClient(result.getMessage()));
+            completableFuture.whenComplete(
+                    (result, throwable) -> McUtils.sendWynntilsPrefixMessage(result.getMessage()));
         });
 
         context.getSource()
