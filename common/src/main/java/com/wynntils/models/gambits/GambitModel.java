@@ -1,13 +1,14 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gambits;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ContainerSetContentEvent;
-import com.wynntils.models.containers.Container;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.models.containers.containers.RaidStartContainer;
 import com.wynntils.models.gambits.type.Gambit;
 import com.wynntils.models.gambits.type.GambitStatus;
@@ -21,6 +22,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public final class GambitModel extends Model {
     private final List<Gambit> activeGambits = new ArrayList<>();
+    private final List<GambitItem> gambitItems = new ArrayList<>();
 
     public GambitModel() {
         super(List.of());
@@ -32,35 +34,61 @@ public final class GambitModel extends Model {
 
     @SubscribeEvent
     public void onContentSet(ContainerSetContentEvent.Pre event) {
-        Container currentContainer = Models.Container.getCurrentContainer();
+        if (!(Models.Container.getCurrentContainer() instanceof RaidStartContainer container)) return;
 
-        if (currentContainer instanceof RaidStartContainer raidStartContainer) {
-            List<Integer> gambitSlots = new ArrayList<>(raidStartContainer.getGambitSlots());
-            boolean isFirst = true;
+        activeGambits.clear();
+        gambitItems.clear();
+        for (int slot : container.getGambitSlots()) {
+            ItemStack itemStack = event.getItems().get(slot);
+            if (itemStack.isEmpty()) continue;
 
-            for (Integer i : gambitSlots) {
-                ItemStack itemStack = event.getItems().get(i);
-                if (itemStack.isEmpty()) continue;
+            Optional<GambitItem> gambitItem = Models.Item.asWynnItem(itemStack, GambitItem.class);
+            if (gambitItem.isEmpty()) {
+                WynntilsMod.warn("Failed to parse GambitItem.");
+                return;
+            }
+
+            gambitItems.add(gambitItem.get());
+        }
+
+        parseGambitItems();
+    }
+
+    @SubscribeEvent
+    public void onSlotSet(ContainerSetSlotEvent.Pre event) {
+        if (!(Models.Container.getCurrentContainer() instanceof RaidStartContainer container)) return;
+        if (gambitItems.size() != 4) return;
+
+        List<Integer> gambitSlots = new ArrayList<>(container.getGambitSlots());
+        for (int i = 0; i < gambitSlots.size(); i++) {
+            int slot = gambitSlots.get(i);
+            if (slot == event.getSlot()) {
+                ItemStack itemStack = event.getItemStack();
+                if (itemStack.isEmpty()) return;
 
                 Optional<GambitItem> gambitItem = Models.Item.asWynnItem(itemStack, GambitItem.class);
-                Gambit gambit = null;
-                GambitStatus gambitStatus = null;
-                if (gambitItem.isPresent()) {
-                    gambit = gambitItem.get().getGambit();
-                    gambitStatus = gambitItem.get().getGambitStatus();
-                }
+                if (gambitItem.isEmpty()) return;
 
-                if (gambit == null) continue;
+                gambitItems.set(i, gambitItem.get());
+                parseGambitItems();
+                return;
+            }
+        }
+    }
 
-                // only clear the gambits before adding the first item, skip if player is readied up
-                if (isFirst && (gambitStatus != GambitStatus.PLAYER_READY)) {
-                    isFirst = false;
-                    activeGambits.clear();
-                }
+    private void parseGambitItems() {
+        boolean isFirst = true;
+        for (GambitItem item : gambitItems) {
+            GambitStatus status = item.getGambitStatus();
 
-                if (gambitStatus == gambitStatus.ENABLED) {
-                    activeGambits.add(gambit);
-                }
+            // only clear the gambits before adding the first item, skip if player is readied up
+            if (isFirst && (status != GambitStatus.PLAYER_READY)) {
+                isFirst = false;
+                activeGambits.clear();
+            }
+
+            if (status == GambitStatus.ENABLED) {
+                activeGambits.add(item.getGambit());
             }
         }
     }
