@@ -229,7 +229,7 @@ public final class HadesService extends Service {
                 failed.append(Component.translatable("service.wynntils.hades.clickToConnect3")
                         .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
 
-                McUtils.sendMessageToClient(failed);
+                McUtils.sendWynntilsPrefixMessage(failed);
 
                 return;
             }
