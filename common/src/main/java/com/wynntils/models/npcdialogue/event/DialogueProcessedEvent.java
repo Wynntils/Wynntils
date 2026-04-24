@@ -30,6 +30,11 @@ public class DialogueProcessedEvent extends Event {
         return content;
     }
 
+    /**
+     * If enabled, can contain chat formating codes like §0-9, §a-f or §#HEX-Color <br />
+     * use {@code StyledText.fromString(text).getComponent()} to format <br />
+     * use {@code StyledText.fromString(text).getText()} to remove formatings
+     * */
     public String getTranslatedText() {
         return translatedText;
     }
