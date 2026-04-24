@@ -153,9 +153,10 @@ public class TranslationFeature extends Feature {
         return StyledText.fromModifiedString(
                 codedTranslatedString
                         .replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1")
-                        .replaceAll("\\{ ?§ ?# ?([0-9a-fA-F]{8}) ?\\}", "§#$1")
+                        .replaceAll("\\{ ?§ ?# ?([0-9a-fA-F]{8}) ?\\}", "§#$1") // Hex Colors like §#ff00aaff
                         .replaceAll("\\[ ?§ ?([0-9]+) ?\\]", "§[$1]")
                         .replaceAll("\\< ?§ ?([0-9]+) ?\\>", "§<$1>")
+                        .replaceAll(" (§(?:#[0-9a-fA-F]{8}|[0-9a-fklmnor])) ", " $1") // remove double spaces: "Hello §3 World -> "Hello §3World"
                         .replace('Á', 'A')
                         .replace('À', 'A'),
                 originalText);
