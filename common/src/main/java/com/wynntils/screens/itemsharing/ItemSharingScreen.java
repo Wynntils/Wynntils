@@ -216,7 +216,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
             default -> {
                 McUtils.mc().keyboardHandler.setClipboard(Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
 
-                McUtils.sendMessageToClient(Component.translatable("screens.wynntils.itemSharing.copied")
+                McUtils.sendWynntilsPrefixMessage(Component.translatable("screens.wynntils.itemSharing.copied")
                         .withStyle(ChatFormatting.GREEN));
             }
         }

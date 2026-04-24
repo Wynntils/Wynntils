@@ -32,6 +32,6 @@ public class DeathCoordinatesFeature extends Feature {
                         .withStyle(ChatFormatting.DARK_RED));
         deathMessage = deathMessage.appendPart(StyledTextUtils.createLocationPart(e.getLocation()));
 
-        McUtils.sendMessageToClient(deathMessage.getComponent());
+        McUtils.sendWynntilsPrefixMessage(deathMessage.getComponent());
     }
 }

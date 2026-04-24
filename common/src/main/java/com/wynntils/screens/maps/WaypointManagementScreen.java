@@ -966,7 +966,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
 
         customPois.touched();
 
-        McUtils.sendMessageToClient(Component.translatable(
+        McUtils.sendWynntilsPrefixMessage(Component.translatable(
                         "screens.wynntils.waypointManagementGui.deletedWaypoints", selectedWaypoints.size())
                 .withStyle(ChatFormatting.GREEN));
 
@@ -1021,7 +1021,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         updateAllUsedIcons();
         populateWaypoints();
 
-        McUtils.sendMessageToClient(
+        McUtils.sendWynntilsPrefixMessage(
                 Component.translatable("screens.wynntils.waypointManagementGui.import.success", poisToAdd.size())
                         .withStyle(ChatFormatting.GREEN));
     }
@@ -1040,7 +1040,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                         .toList()
                         .toString());
 
-        McUtils.sendMessageToClient(
+        McUtils.sendWynntilsPrefixMessage(
                 Component.translatable("screens.wynntils.waypointManagementGui.exportedPois", poisToExport.size())
                         .withStyle(ChatFormatting.GREEN));
     }
