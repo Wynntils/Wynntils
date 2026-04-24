@@ -37,7 +37,7 @@ public final class StatusEffectModel extends Model {
      */
     /*
      * current regex:
-     * <prefix>         captures any characters before the §7 colour-indicator.
+     * <prefix>         captures any characters before the §... colour-indicator.
      * <modifier>       optionally captures effects' modifiers' values (+100, -20, 5)
      * <modifierSuffix> optionally captures the suffixes of the modifiers (/5s, /3s, %)
      * <name>           captures the effects name (Strength, and even +Lightweight)
