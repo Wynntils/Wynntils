@@ -15,6 +15,7 @@ import com.wynntils.core.consumers.functions.templates.Template;
 import com.wynntils.core.consumers.functions.templates.parser.TemplateParser;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.functions.ActivityFunctions;
 import com.wynntils.functions.BombFunctions;
 import com.wynntils.functions.CharacterFunctions;
@@ -215,6 +216,8 @@ public final class FunctionManager extends Manager {
             }
         } else if (value instanceof CustomColor color) {
             return "§" + color.toHexString();
+        } else if (value instanceof StyledText styledText) {
+            return styledText.getString(StyleType.COMPLETE);
         }
 
         return value.toString();
