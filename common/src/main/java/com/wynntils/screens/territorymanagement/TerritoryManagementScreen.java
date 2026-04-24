@@ -120,6 +120,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     private final TerritoryManagementHolder holder;
 
     public TerritoryManagementScreen(WrappedScreenInfo wrappedScreenInfo, TerritoryManagementHolder holder) {
+        super();
         this.wrappedScreenInfo = wrappedScreenInfo;
         this.holder = holder;
     }
@@ -814,14 +815,17 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        switch (event.key()) {
-            case GLFW.GLFW_KEY_1 -> setInfoType(TerritoryInfoType.DEFENSE);
-            case GLFW.GLFW_KEY_2 -> setInfoType(TerritoryInfoType.PRODUCTION);
-            case GLFW.GLFW_KEY_3 -> setInfoType(TerritoryInfoType.TREASURY);
-            case GLFW.GLFW_KEY_4 -> setInfoType(TerritoryInfoType.SEEKING);
-            case GLFW.GLFW_KEY_H -> centerOnHeadquarters();
+        if (mapMode) {
+            switch (event.key()) {
+                case GLFW.GLFW_KEY_1 -> setInfoType(TerritoryInfoType.DEFENSE);
+                case GLFW.GLFW_KEY_2 -> setInfoType(TerritoryInfoType.PRODUCTION);
+                case GLFW.GLFW_KEY_3 -> setInfoType(TerritoryInfoType.TREASURY);
+                case GLFW.GLFW_KEY_4 -> setInfoType(TerritoryInfoType.SEEKING);
+                case GLFW.GLFW_KEY_H -> centerOnHeadquarters();
+            }
         }
-        return super.keyPressed(event);
+
+        return keyPressedParent(event);
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.trademarket;
@@ -30,6 +30,7 @@ import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent
 import com.wynntils.models.trademarket.event.TradeMarketStateEvent;
 import com.wynntils.models.trademarket.type.TradeMarketPriceCheckInfo;
 import com.wynntils.models.trademarket.type.TradeMarketPriceInfo;
+import com.wynntils.models.trademarket.type.TradeMarketSortOrder;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.trademarket.TradeMarketSearchResultHolder;
@@ -38,6 +39,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -98,6 +100,9 @@ public final class TradeMarketModel extends Model {
 
     private static final Pattern SELL_ITEM_NAME_PATTERN = Pattern.compile("(.+)À");
     private static final String EMPTY_ITEM_SLOT = "Empty Item Slot";
+
+    public static final int SORT_ORDER_SLOT = 52;
+    private static final Pattern SORT_ORDER_PATTERN = Pattern.compile("§6- §f(.*)");
 
     private static final int SELLABLE_ITEM_SLOT = 22;
 
@@ -243,6 +248,21 @@ public final class TradeMarketModel extends Model {
     public void setPresetFilter(int presetId, String filter) {
         presetFilters.get().put(presetId, filter);
         presetFilters.touched();
+    }
+
+    public TradeMarketSortOrder getSortOrder(ItemStack itemStack) {
+        List<Component> tooltip = LoreUtils.getTooltipLines(itemStack);
+        for (Component component : tooltip) {
+            Matcher matcher =
+                    StyledText.fromComponent(component).getNormalized().getMatcher(SORT_ORDER_PATTERN);
+            if (matcher.matches()) {
+                return TradeMarketSortOrder.valueOf(
+                        matcher.group(1).trim().replace(" ", "_").toUpperCase(Locale.ROOT));
+            }
+        }
+
+        WynntilsMod.error("Could not parse TM sort order button!");
+        return TradeMarketSortOrder.MOST_RECENT;
     }
 
     public TradeMarketPriceInfo calculateItemPriceInfo(ItemStack itemStack) {
