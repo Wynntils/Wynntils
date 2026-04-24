@@ -1194,6 +1194,8 @@
   "feature.wynntils.mythicBoxScaler.scale.description": "How much more should mythic boxes should be scaled by?",
   "feature.wynntils.mythicBoxScaler.scale.name": "Mythic Box Scale",
   "feature.wynntils.notifications.name": "Notifications",
+  "feature.wynntils.npcDialogue.chatColor.description": "Changes the Color of the NPC Messages in the chat.",
+  "feature.wynntils.npcDialogue.chatColor.name": "Chat Color",
   "feature.wynntils.npcDialogue.description": "Allows to translate NPC dialogues and/or send it to chat.",
   "feature.wynntils.npcDialogue.name": "NPC Dialogues",
   "feature.wynntils.npcDialogue.replaceDialogueHud.description": "Replaces the text in wynncraft npc dialogue overlay.",

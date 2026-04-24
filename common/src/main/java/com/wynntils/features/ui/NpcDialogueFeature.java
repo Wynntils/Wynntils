@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.models.npcdialogue.event.OverlayDisplayEvent;
+import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.DialogueUtils;
 import net.minecraft.network.chat.Component;
@@ -23,10 +24,14 @@ public class NpcDialogueFeature extends Feature {
     private final Config<Boolean> tryKeepColors = new Config<>(true);
 
     @Persisted
+    private final Config<Boolean> replaceDialogueHud = new Config<>(true);
+
+    @Persisted
     private final Config<Boolean> sendToChat = new Config<>(false);
 
     @Persisted
-    private final Config<Boolean> replaceDialogueHud = new Config<>(true);
+    private final Config<ColorChatFormatting> chatColor = new Config<>(ColorChatFormatting.GREEN);
+
 
     public NpcDialogueFeature() {
         super(ProfileDefault.DISABLED);
@@ -109,9 +114,12 @@ public class NpcDialogueFeature extends Feature {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        Models.NpcDialogue.clearCache();
-        Models.NpcDialogue.keepColors = tryKeepColors.get();
+        switch (config.getFieldName()) {
+            case "tryKeepColors" -> Models.NpcDialogue.keepColors = ((Config<Boolean>) config).get();
+            case "chatColor" -> Models.NpcDialogue.chatColor = ((Config<ColorChatFormatting>) config).get();
+        }
         eqCount = 0;
+        Models.NpcDialogue.clearCache();
     }
 
     @Override
@@ -119,14 +127,10 @@ public class NpcDialogueFeature extends Feature {
         Models.NpcDialogue.clearCache();
     }
 
-    @Override
-    public void onEnable() {
-        eqCount = 0;
-        Models.NpcDialogue.keepColors = tryKeepColors.get();
-    }
-
     private void showNewContent(Component newContent) {
-        // skip all Wynntils events
-        McUtils.mc().gui.setOverlayMessage(newContent, false);
+        //TODO: ausprobieren -> skip all Wynntils events ?
+        McUtils.mc().getChatListener().handleSystemMessage(newContent, true);
+        // skip all Wynntils events ?
+//        McUtils.mc().gui.setOverlayMessage(newContent, false);
     }
 }
