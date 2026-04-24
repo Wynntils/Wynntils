@@ -8,6 +8,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
+import com.wynntils.handlers.labels.type.LabelInfo;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.abilities.label.ArcherCrowInfo;
 import com.wynntils.models.abilities.label.ArcherCrowParser;
@@ -52,53 +53,38 @@ public class ArcherBeastModel extends Model {
     }
 
     private void resetModel() {
-        activeHoundsMap.clear();
         activeCrowMap.clear();
-        activeSnakeMap.clear();
+        activeHoundsMap.clear();
         lastHoundId = NO_HOUND_ID;
+        activeSnakeMap.clear();
     }
 
     @SubscribeEvent
-    public void onCrowIdentified(LabelIdentifiedEvent event) {
-        if (!(event.getLabelInfo() instanceof ArcherCrowInfo labelInfo)) return;
-        if (!labelInfo.getPlayerName().equals(McUtils.playerName())) return;
-        activeCrowMap.put(labelInfo.getEntity().getId(), labelInfo);
+    public void onBeastIdentified(LabelIdentifiedEvent event) {
+        LabelInfo labelInfo = event.getLabelInfo();
+
+        if (labelInfo instanceof ArcherCrowInfo crowLabelInfo
+                && crowLabelInfo.getPlayerName().equals(McUtils.playerName())) {
+            activeCrowMap.put(labelInfo.getEntity().getId(), crowLabelInfo);
+        } else if (labelInfo instanceof ArcherHoundInfo houndLabelInfo
+                && houndLabelInfo.getPlayerName().equals(McUtils.playerName())) {
+            activeHoundsMap.put(labelInfo.getEntity().getId(), houndLabelInfo);
+            lastHoundId = houndLabelInfo.getEntity().getId();
+        } else if (labelInfo instanceof ArcherSnakeInfo snakeLabelInfo
+                && snakeLabelInfo.getPlayerName().equals(McUtils.playerName())) {
+            activeSnakeMap.put(labelInfo.getEntity().getId(), snakeLabelInfo);
+        }
     }
 
     @SubscribeEvent
-    public void onCrowRemoved(RemoveEntitiesEvent event) {
+    public void onBeastRemoved(RemoveEntitiesEvent event) {
         if (!Models.WorldState.onWorld()) return;
         if (Models.Character.getClassType() != ClassType.ARCHER) return;
-        event.getEntityIds().forEach(activeCrowMap::remove);
-    }
 
-    @SubscribeEvent
-    public void onHoundIdentified(LabelIdentifiedEvent event) {
-        if (!(event.getLabelInfo() instanceof ArcherHoundInfo labelInfo)) return;
-        if (!labelInfo.getPlayerName().equals(McUtils.playerName())) return;
-        activeHoundsMap.put(labelInfo.getEntity().getId(), labelInfo);
-        lastHoundId = labelInfo.getEntity().getId();
-    }
-
-    @SubscribeEvent
-    public void onHoundRemoved(RemoveEntitiesEvent event) {
-        if (!Models.WorldState.onWorld()) return;
-        if (Models.Character.getClassType() != ClassType.ARCHER) return;
-        event.getEntityIds().forEach(activeHoundsMap::remove);
-    }
-
-    @SubscribeEvent
-    public void onSnakeIdentified(LabelIdentifiedEvent event) {
-        if (!(event.getLabelInfo() instanceof ArcherSnakeInfo labelInfo)) return;
-        if (!labelInfo.getPlayerName().equals(McUtils.playerName())) return;
-        activeSnakeMap.put(labelInfo.getEntity().getId(), labelInfo);
-    }
-
-    @SubscribeEvent
-    public void onSnakeRemoved(RemoveEntitiesEvent event) {
-        if (!Models.WorldState.onWorld()) return;
-        if (Models.Character.getClassType() != ClassType.ARCHER) return;
-        event.getEntityIds().forEach(activeSnakeMap::remove);
+        List<Integer> entityIds = event.getEntityIds();
+        entityIds.forEach(activeCrowMap::remove);
+        entityIds.forEach(activeHoundsMap::remove);
+        entityIds.forEach(activeSnakeMap::remove);
     }
 
     public int getHoundsTimeLeft() {
