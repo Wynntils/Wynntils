@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.housing;
@@ -9,7 +9,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,7 +37,7 @@ public class HousingModel extends Model {
     public void onChatMessage(ChatMessageEvent.Match event) {
         if (!onHousing) return;
 
-        StyledText message = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
+        StyledText message = event.getMessage();
 
         Matcher matcher = message.getMatcher(HOUSING_EDIT_PATTERN);
         if (matcher.matches()) {

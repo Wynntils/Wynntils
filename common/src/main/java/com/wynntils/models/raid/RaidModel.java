@@ -178,10 +178,8 @@ public final class RaidModel extends Model {
             return;
         }
 
-        StyledText unwrapped = StyledTextUtils.unwrap(styledText).stripAlignment();
-
         if (inBuffRoom) {
-            Matcher matcher = unwrapped.getMatcher(RAID_CHOOSE_BUFF_PATTERN);
+            Matcher matcher = styledText.getMatcher(RAID_CHOOSE_BUFF_PATTERN);
             if (matcher.matches()) {
                 String playerName = matcher.group(4);
                 // if the player is nicknamed
@@ -201,7 +199,7 @@ public final class RaidModel extends Model {
             return;
         }
 
-        Matcher matcher = unwrapped.getMatcher(PARASITE_OVERTAKEN_PATTERN);
+        Matcher matcher = styledText.getMatcher(PARASITE_OVERTAKEN_PATTERN);
         if (matcher.matches()) {
             parasiteOvertaken = matcher.group("player").equals(McUtils.playerName());
             return;

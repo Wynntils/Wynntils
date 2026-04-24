@@ -132,7 +132,7 @@ public final class PartyModel extends Model {
 
     @SubscribeEvent
     public void onChatReceived(ChatMessageEvent.Match event) {
-        StyledText chatMessage = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
+        StyledText chatMessage = event.getMessage();
 
         if (tryParsePartyMessages(chatMessage)) return;
 

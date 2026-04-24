@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
@@ -26,7 +25,6 @@ import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.spells.type.SpellFailureReason;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -83,9 +81,7 @@ public final class SpellModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageEvent.Match e) {
-        StyledText message = StyledTextUtils.unwrap(e.getMessage()).stripAlignment();
-
-        failureReason = SpellFailureReason.fromMsg(message);
+        failureReason = SpellFailureReason.fromMsg(e.getMessage());
     }
 
     @SubscribeEvent

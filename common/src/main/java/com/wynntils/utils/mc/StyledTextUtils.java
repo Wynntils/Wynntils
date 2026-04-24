@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.type.IterationDecision;
@@ -40,9 +41,7 @@ public final class StyledTextUtils {
 
     private static final FontDescription CHAT_PREFIX_FONT =
             new FontDescription.Resource(Identifier.fromNamespaceAndPath("wynntils", "prefix"));
-    private static final Style CHAT_PREFIX_STYLE =
-            Style.EMPTY.withFont(CHAT_PREFIX_FONT).withColor(ChatFormatting.DARK_GREEN);
-    private static final String CHAT_PREFIX_FIRST_LINE = "\uDAFF\uDFFC\uE100\uDAFF\uDFFF\uE002\uDAFF\uDFFE ";
+    private static final String CHAT_PREFIX_FIRST_LINE_FORMAT = "\uDAFF\uDFFC%c\uDAFF\uDFFF\uE002\uDAFF\uDFFE ";
     private static final String CHAT_PREFIX_LINE_PREFIX = "\uDAFF\uDFFC\uE001\uDB00\uDC06 ";
 
     public static StyledTextPart createLocationPart(Location location) {
@@ -91,8 +90,8 @@ public final class StyledTextUtils {
 
     public static List<StyledText> stripEventsAndLinks(List<StyledText> lines) {
         List<StyledText> linesWithoutEvents = lines.stream()
-                .map(s -> s.getString())
-                .map(str -> StyledText.fromString(str))
+                .map(StyledText::getString)
+                .map(StyledText::fromString)
                 .toList();
         return linesWithoutEvents;
     }
@@ -152,19 +151,13 @@ public final class StyledTextUtils {
                             && newParts.getLast().getPartStyle().equals(lastWrappedPart.getPartStyle())) {
                         StyledTextPart lastPart = newParts.removeLast();
                         lastPartWithoutNewline = lastPart.getString(null, StyleType.NONE) + lastPartWithoutNewline;
-
-                        newParts.add(new StyledTextPart(
-                                lastPartWithoutNewline,
-                                lastWrappedPart.getPartStyle().getStyle(),
-                                null,
-                                null));
-                    } else {
-                        newParts.add(new StyledTextPart(
-                                lastPartWithoutNewline,
-                                lastWrappedPart.getPartStyle().getStyle(),
-                                null,
-                                null));
                     }
+
+                    newParts.add(new StyledTextPart(
+                            lastPartWithoutNewline,
+                            lastWrappedPart.getPartStyle().getStyle(),
+                            null,
+                            null));
 
                     // After a soft wrap, we need to insert a space
                     if (!newParts.getLast().getString(null, StyleType.NONE).equals(" ")) {
@@ -254,14 +247,18 @@ public final class StyledTextUtils {
     private static int wrapPartAsWords(
             StyledTextPart part, int maxWidth, int lastWidth, List<StyledTextPart> newParts) {
         int currentWidth = lastWidth;
+        int spaceWidth = FontRenderer.getInstance().getFont().width(" ");
         Style partStyle = part.getPartStyle().getStyle();
 
-        StyledText[] split = StyledText.fromPart(part).split("\s+");
+        StyledTextPart spacePart = new StyledTextPart(" ", partStyle, null, null);
+        StyledTextPart newlinePart = new StyledTextPart(NEWLINE_PREPARATION, partStyle, null, null);
+
+        StyledText[] split = StyledText.fromPart(part).split("\\s+");
         for (StyledText splitText : split) {
             if (splitText.getPartCount() == 0) {
                 // If orignal part started with space
                 currentWidth += FontRenderer.getInstance().getFont().width(" ");
-                newParts.add(new StyledTextPart(" ", partStyle, null, null));
+                newParts.add(spacePart);
                 continue;
             }
 
@@ -280,20 +277,50 @@ public final class StyledTextUtils {
             if (currentWidth + splitDisplayLength <= maxWidth) {
                 currentWidth += splitDisplayLength;
                 newParts.add(splitPart);
-                newParts.add(new StyledTextPart(" ", partStyle, null, null));
+                newParts.add(spacePart);
+                continue;
+            }
+
+            // Check if the word itself is too long to fit on max width (even on a fresh line)
+            int wordWidth = FontRenderer.getInstance().getFont().width(splitPart.getComponent());
+            if (wordWidth > maxWidth) {
+                // Word is too long, must split it character-by-character
+                // Move to next line if not already at start
+                if (currentWidth > 0) {
+                    newParts.add(newlinePart);
+                }
+                currentWidth = wrapPartAsChars(splitPart, maxWidth, 0, newParts);
+
+                // Check if space fits on the current line; if not, add it to the next line
+                if (currentWidth + spaceWidth <= maxWidth) {
+                    newParts.add(spacePart);
+                    currentWidth += spaceWidth;
+                } else {
+                    newParts.add(newlinePart);
+                    newParts.add(spacePart);
+                    currentWidth = spaceWidth;
+                }
                 continue;
             }
 
             if (currentWidth <= 0) {
                 currentWidth = wrapPartAsChars(splitPart, maxWidth, currentWidth, newParts);
-                newParts.add(new StyledTextPart(" ", partStyle, null, null));
-                currentWidth += FontRenderer.getInstance().getFont().width(" ");
+
+                // Check if space fits on the current line; if not, add it to the next line
+                if (currentWidth + spaceWidth <= maxWidth) {
+                    newParts.add(spacePart);
+                    currentWidth += spaceWidth;
+                } else {
+                    newParts.add(newlinePart);
+                    newParts.add(spacePart);
+                    currentWidth = spaceWidth;
+                }
                 continue;
             }
 
-            newParts.add(new StyledTextPart(NEWLINE_PREPARATION, partStyle, null, null));
+            newParts.add(newlinePart);
             newParts.add(splitPart);
-            newParts.add(new StyledTextPart(" ", partStyle, null, null));
+            newParts.add(spacePart);
             currentWidth = splitDisplayLength;
         }
 
@@ -332,23 +359,56 @@ public final class StyledTextUtils {
     }
 
     /**
+     * Remove the text prefix Wynn gives to all messages post 2.1.
+     *
+     * @param styledText The styled text to remove the prefix from
+     * @return The text without a prefix
+     */
+    public static StyledText removePrefix(StyledText styledText, RecipientType recipientType) {
+        Matcher matcher = styledText.getMatcher(recipientType.getPattern());
+        if (!matcher.matches()) return styledText;
+
+        // Extract the content group span and return a styled substring that preserves part styles/events.
+        int contentStart = matcher.start("content");
+        int contentEnd = matcher.end("content");
+        return styledText.substring(contentStart, contentEnd, StyleType.DEFAULT);
+    }
+
+    /**
      * Adds a prefix like Wynn gives to all messages post 2.1.
      *
      * @param styledText The styled text to add a prefix to
      * @return The text with a prefix
      */
     public static StyledText addWynntilsPrefix(StyledText styledText) {
+        return addPrefix(styledText, RecipientType.WYNNTILS, false);
+    }
+
+    /**
+     * Wrap styledText in a Wynn-like prefix.
+     *
+     * @param styledText The styled text to add a prefix to
+     * @param recipientType The recipient type to emulate
+     * @param isContinuation Whether this message is a continuation of the previous message
+     * @return The text with a prefix
+     */
+    public static StyledText addPrefix(StyledText styledText, RecipientType recipientType, boolean isContinuation) {
+        String firstLine = isContinuation
+                ? CHAT_PREFIX_LINE_PREFIX
+                : String.format(CHAT_PREFIX_FIRST_LINE_FORMAT, recipientType.getPrefixIcon());
+        Style prefixStyle = Style.EMPTY.withFont(CHAT_PREFIX_FONT).withColor(recipientType.getPrefixColor());
+
         int maxWidth = McUtils.getChatWidth()
                 - FontRenderer.getInstance()
                         .getFont()
-                        .width(Component.literal(CHAT_PREFIX_FIRST_LINE).setStyle(CHAT_PREFIX_STYLE));
+                        .width(Component.literal(firstLine).setStyle(prefixStyle));
 
-        StyledText text = softWrap(styledText, maxWidth)
-                .prependPart(new StyledTextPart(CHAT_PREFIX_FIRST_LINE, CHAT_PREFIX_STYLE, null, null));
+        StyledText text =
+                softWrap(styledText, maxWidth).prependPart(new StyledTextPart(firstLine, prefixStyle, null, null));
 
         return text.iterate((current, changes) -> {
             if (current.endsWith("\n")) {
-                changes.add(new StyledTextPart(CHAT_PREFIX_LINE_PREFIX, CHAT_PREFIX_STYLE, null, null));
+                changes.add(new StyledTextPart(CHAT_PREFIX_LINE_PREFIX, prefixStyle, null, null));
             }
 
             return IterationDecision.CONTINUE;

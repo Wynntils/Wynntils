@@ -11,6 +11,7 @@ import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.SystemMessageEvent;
+import com.wynntils.utils.mc.StyledTextUtils;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -32,6 +33,8 @@ import net.neoforged.bus.api.SubscribeEvent;
  * stage).
  */
 public final class ChatHandler extends Handler {
+    private RecipientType lastRecipientType = RecipientType.INFO;
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSystemChatReceived(SystemMessageEvent.ChatReceivedEvent event) {
         handleIncomingChatMessage(event);
@@ -58,13 +61,42 @@ public final class ChatHandler extends Handler {
         WynntilsMod.info("[CHAT/" + recipientType + "] "
                 + message.getString(StyleType.COMPLETE).replace("§", "&"));
 
+        // Prefix color is not null for any RecipientTypes that make use of Wynns chat type prefixes
+        if (recipientType.getPrefixColor() != null) {
+            return processTabbedChatMessage(message, recipientType);
+        } else {
+            return processUntabbedChatMessage(message, recipientType);
+        }
+    }
+
+    private StyledText processUntabbedChatMessage(StyledText message, RecipientType recipientType) {
         ChatMessageEvent.Match receivedEvent = new ChatMessageEvent.Match(message, recipientType);
         WynntilsMod.postEvent(receivedEvent);
         if (receivedEvent.isChatCanceled()) return null;
 
         ChatMessageEvent.Edit rewriteEvent = new ChatMessageEvent.Edit(message, recipientType);
         WynntilsMod.postEvent(rewriteEvent);
+
+        lastRecipientType = recipientType;
         return rewriteEvent.getMessage();
+    }
+
+    private StyledText processTabbedChatMessage(StyledText message, RecipientType recipientType) {
+        StyledText unwrapped = StyledTextUtils.unwrap(message);
+        StyledText unprefixed = StyledTextUtils.unwrap(StyledTextUtils.removePrefix(message, recipientType));
+
+        ChatMessageEvent.Match receivedEvent = new ChatMessageEvent.Match(unwrapped.stripAlignment(), recipientType);
+        WynntilsMod.postEvent(receivedEvent);
+        if (receivedEvent.isChatCanceled()) return null;
+
+        ChatMessageEvent.Edit rewriteEvent = new ChatMessageEvent.Edit(unprefixed, recipientType);
+        WynntilsMod.postEvent(rewriteEvent);
+
+        StyledText prefixed =
+                StyledTextUtils.addPrefix(rewriteEvent.getMessage(), recipientType, lastRecipientType == recipientType);
+
+        lastRecipientType = recipientType;
+        return prefixed;
     }
 
     public RecipientType getRecipientType(StyledText codedMessage) {
