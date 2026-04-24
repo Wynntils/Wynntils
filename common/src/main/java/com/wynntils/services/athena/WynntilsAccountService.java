@@ -67,7 +67,7 @@ public final class WynntilsAccountService extends Service {
             failed.append(Component.translatable("service.wynntils.wynntilsAccount.clickToConnect3")
                     .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
 
-            McUtils.sendMessageToClient(failed);
+            McUtils.sendWynntilsPrefixMessage(failed);
         }
     }
 
