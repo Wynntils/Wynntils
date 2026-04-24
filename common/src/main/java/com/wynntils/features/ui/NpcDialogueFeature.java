@@ -128,9 +128,6 @@ public class NpcDialogueFeature extends Feature {
     }
 
     private void showNewContent(Component newContent) {
-        //TODO: ausprobieren -> skip all Wynntils events ?
         McUtils.mc().getChatListener().handleSystemMessage(newContent, true);
-        // skip all Wynntils events ?
-//        McUtils.mc().gui.setOverlayMessage(newContent, false);
     }
 }
