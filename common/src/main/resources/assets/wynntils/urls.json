@@ -107,7 +107,7 @@
   },
   {
     "id": "dataStaticAspects",
-    "md5": "f86c82eb94a9d76492536f2e952cea96",
+    "md5": "b3d43465a179bd07c56fdb1df873006a",
     "path": "Reference/aspects.json",
     "url": "https://cdn.wynntils.com/static/Reference/aspects.json"
   },
@@ -143,7 +143,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "3ad650cb521610bb21c19bbc98c3316d",
+    "md5": "992589bf946d7c50c49ecd94a3576818",
     "path": "Reference/gear.json",
     "url": "https://cdn.wynntils.com/static/Reference/gear.json"
   },
@@ -173,7 +173,7 @@
   },
   {
     "id": "dataStaticIngredients",
-    "md5": "08f8a50323689a9e46e6998734a5f702",
+    "md5": "eaa3274410f412124cad72fd805cd244",
     "path": "Reference/ingredients.json",
     "url": "https://cdn.wynntils.com/static/Reference/ingredients.json"
   },
