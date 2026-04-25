@@ -5,6 +5,7 @@
 package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.AbilityTreeContainer;
@@ -19,6 +20,7 @@ import com.wynntils.models.containers.containers.CraftingStationContainer;
 import com.wynntils.models.containers.containers.EmeraldPouchContainer;
 import com.wynntils.models.containers.containers.GuildBadgesContainer;
 import com.wynntils.models.containers.containers.GuildBankContainer;
+import com.wynntils.models.containers.containers.GuildDiplomacyContainer;
 import com.wynntils.models.containers.containers.GuildLogContainer;
 import com.wynntils.models.containers.containers.GuildManagementContainer;
 import com.wynntils.models.containers.containers.GuildMemberListContainer;
@@ -33,6 +35,7 @@ import com.wynntils.models.containers.containers.JukeboxContainer;
 import com.wynntils.models.containers.containers.LeaderboardRewardsContainer;
 import com.wynntils.models.containers.containers.LobbyContainer;
 import com.wynntils.models.containers.containers.LootrunRewardChestContainer;
+import com.wynntils.models.containers.containers.MasteryTomesContainer;
 import com.wynntils.models.containers.containers.PartyFinderMatchFoundContainer;
 import com.wynntils.models.containers.containers.RaidRewardChestContainer;
 import com.wynntils.models.containers.containers.RaidRewardPreviewContainer;
@@ -68,22 +71,11 @@ import com.wynntils.models.store.type.CosmeticItemType;
 import com.wynntils.models.store.type.StoreItemType;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ContainerModel extends Model {
-    // Test in ContainerModel_ABILITY_TREE_PATTERN
-    public static final Pattern ABILITY_TREE_PATTERN = Pattern.compile("\uDAFF\uDFEA\uE000");
-
-    public static final String CHARACTER_INFO_NAME = "\uDAFF\uDFDC\uE003";
-    public static final String STORE_MENU_NAME =
-            "\uDAFF\uDFF4\uE02C\uDAFF\uDF7C\uF027\uDAFF\uDF52\uDB00\uDC3D.\uDAFF\uDF22\uDB00\uDC40.\uDAFF\uDF2F";
-    public static final String GUILD_MENU_NAME = "[a-zA-Z\\s]+: Manage";
-    public static final String GUILD_DIPLOMACY_MENU_NAME = "[a-zA-Z\\s]+: Diplomacy";
-    public static final String MASTERY_TOMES_NAME = "\uDAFF\uDFDB\uE005";
-
     private static final List<Container> containerTypes = new ArrayList<>();
     private Container currentContainer = null;
 
@@ -94,10 +86,24 @@ public final class ContainerModel extends Model {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onMenuOpened(MenuEvent.MenuOpenedEvent.Pre e) {
+        currentContainer = null;
+
+        for (Container container : containerTypes) {
+            if (container.matchesTitle(e.getTitle())) {
+                currentContainer = container;
+                currentContainer.setContainerId(e.getContainerId());
+                break;
+            }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScreenInit(ScreenInitEvent.Pre e) {
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
 
-        currentContainer = null;
+        // Only update if we haven't already detected the container via MenuOpenedEvent
+        if (currentContainer != null) return;
 
         for (Container container : containerTypes) {
             if (container.isScreen(screen)) {
@@ -137,6 +143,7 @@ public final class ContainerModel extends Model {
         registerContainer(new FlyingChestContainer());
         registerContainer(new GuildBadgesContainer());
         registerContainer(new GuildBankContainer());
+        registerContainer(new GuildDiplomacyContainer());
         registerContainer(new GuildManagementContainer());
         registerContainer(new GuildMemberListContainer());
         registerContainer(new GuildTerritoriesContainer());
@@ -154,6 +161,7 @@ public final class ContainerModel extends Model {
         registerContainer(new LobbyContainer());
         registerContainer(new LootChestContainer());
         registerContainer(new LootrunRewardChestContainer());
+        registerContainer(new MasteryTomesContainer());
         registerContainer(new MiscBucketContainer());
         registerContainer(new ObjectiveRewardContainer());
         registerContainer(new PartyFinderMatchFoundContainer());
