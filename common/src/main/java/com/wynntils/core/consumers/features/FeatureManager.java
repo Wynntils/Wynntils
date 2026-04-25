@@ -84,6 +84,7 @@ import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.features.map.WorldWaypointDistanceFeature;
 import com.wynntils.features.overlays.AnnihilationSunOverlayFeature;
+import com.wynntils.features.overlays.ArcherBeastTrackerOverlayFeature;
 import com.wynntils.features.overlays.ArrowShieldTrackerOverlayFeature;
 import com.wynntils.features.overlays.BombBellOverlayFeature;
 import com.wynntils.features.overlays.BonusTotemTimerOverlayFeature;
@@ -298,6 +299,7 @@ public final class FeatureManager extends Manager {
 
         // region overlays
         registerFeature(new AnnihilationSunOverlayFeature());
+        registerFeature(new ArcherBeastTrackerOverlayFeature());
         registerFeature(new ArrowShieldTrackerOverlayFeature());
         registerFeature(new BombBellOverlayFeature());
         registerFeature(new BonusTotemTimerOverlayFeature());
