@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.container.scriptedquery;
@@ -14,6 +14,7 @@ import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.handlers.container.type.ContainerContentVerification;
 import com.wynntils.handlers.container.type.ContainerPredicate;
 import com.wynntils.handlers.container.type.ContainerVerification;
+import com.wynntils.models.containers.Container;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.function.Supplier;
 import net.minecraft.world.item.Item;
@@ -21,7 +22,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class QueryStep {
     // We should never get to MenuOpenedEvent
-    private static final ContainerVerification EXPECT_SAME_MENU = (title, type) -> false;
+    private static final ContainerVerification EXPECT_SAME_MENU = (type) -> false;
     private static final ContainerContentVerification WAIT_FOR_SET_CONTENT =
             (container, changes, changeType) -> changeType == ContainerContentChangeType.SET_CONTENT;
     private static final ContainerAction IGNORE_INCOMING_CONTAINER = c -> {};
@@ -81,8 +82,8 @@ public class QueryStep {
         });
     }
 
-    public QueryStep expectContainerTitle(String regExp) {
-        this.verification = (title, type) -> title.getString().matches(regExp);
+    public QueryStep expectContainer(Class<? extends Container> expectedContainerType) {
+        this.verification = (type) -> type == expectedContainerType;
         return this;
     }
 

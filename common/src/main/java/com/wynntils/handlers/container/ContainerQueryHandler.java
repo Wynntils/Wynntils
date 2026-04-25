@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.container;
@@ -7,6 +7,7 @@ package com.wynntils.handlers.container;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.mc.event.ContainerSetContentEvent;
@@ -14,6 +15,7 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.models.containers.Container;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
@@ -169,7 +171,8 @@ public final class ContainerQueryHandler extends Handler {
         // Are we processing a query?
         if (currentStep == null) return;
 
-        if (currentStep.verifyContainer(e.getTitle(), e.getMenuType())) {
+        Container container = Models.Container.getCurrentContainer();
+        if (container != null && currentStep.verifyContainer(container.getClass())) {
             containerId = e.getContainerId();
             currentTitle = e.getTitle();
             currentMenuType = e.getMenuType();
@@ -201,8 +204,9 @@ public final class ContainerQueryHandler extends Handler {
         if (e.getContainerId() == 0) return;
 
         if (containerId == NO_CONTAINER) {
-            // We have not registered a MenuOpenedEvent. Assume this means that this is the
-            // content of another container, so just pass it on
+            // MenuOpenedEvent.Pre should have already set the containerId if we were expecting a container.
+            // If it's still NO_CONTAINER here, we're not actively querying a container.
+            // This is the content of another container, so just pass it on
             return;
         }
 
@@ -256,8 +260,9 @@ public final class ContainerQueryHandler extends Handler {
         if (e.getContainerId() == -1) return;
 
         if (containerId == NO_CONTAINER) {
-            // We have not registered a MenuOpenedEvent. Assume this means that this is the
-            // content of another container, so just pass it on
+            // MenuOpenedEvent.Pre should have already set the containerId if we were expecting a container.
+            // If it's still NO_CONTAINER here, we're not actively querying a container.
+            // This is the content of another container, so just pass it on
             return;
         }
 

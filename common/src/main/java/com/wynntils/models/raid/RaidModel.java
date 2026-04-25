@@ -49,6 +49,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -235,7 +236,7 @@ public final class RaidModel extends Model {
             partyRaidBuffs.clear();
             parasiteOvertaken = false;
 
-            McUtils.sendMessageToClient(Component.literal(
+            McUtils.sendWynntilsPrefixMessage(Component.literal(
                             "Raid tracking has been interrupted, you will not be able to see progress for the current raid")
                     .withStyle(ChatFormatting.DARK_RED));
         }
@@ -662,6 +663,12 @@ public final class RaidModel extends Model {
         }
 
         return -1L;
+    }
+
+    public List<String> getChosenBuffs(String player) {
+        if (!partyRaidBuffs.containsKey(player)) return List.of();
+
+        return Collections.unmodifiableList(partyRaidBuffs.get(player));
     }
 
     private void completeRaid() {

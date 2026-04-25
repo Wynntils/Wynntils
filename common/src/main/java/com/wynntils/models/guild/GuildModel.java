@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.guild;
@@ -23,7 +23,8 @@ import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.models.character.CharacterModel;
-import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.containers.containers.GuildDiplomacyContainer;
+import com.wynntils.models.containers.containers.GuildManagementContainer;
 import com.wynntils.models.guild.event.GuildEvent;
 import com.wynntils.models.guild.label.GuildSeasonLeaderboardLabelParser;
 import com.wynntils.models.guild.profile.GuildProfile;
@@ -54,7 +55,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -315,10 +315,7 @@ public final class GuildModel extends Model {
 
     @SubscribeEvent
     public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
-        if (!(McUtils.screen() instanceof ContainerScreen containerScreen)) return;
-
-        StyledText title = StyledText.fromComponent(containerScreen.getTitle());
-        if (!title.matches(Pattern.compile(ContainerModel.GUILD_DIPLOMACY_MENU_NAME))) return;
+        if (!(Models.Container.getCurrentContainer() instanceof GuildDiplomacyContainer)) return;
 
         parseDiplomacyContent(event.getItems());
     }
@@ -357,14 +354,14 @@ public final class GuildModel extends Model {
                         // Upon execution the guild name has already been parsed
                         container -> !guildName.isEmpty(),
                         QueryStep.clickOnSlot(CharacterModel.GUILD_MENU_SLOT)
-                                .expectContainerTitle(ContainerModel.GUILD_MENU_NAME)
+                                .expectContainer(GuildManagementContainer.class)
                                 .processIncomingContainer(this::parseGuildContainer))
                 .conditionalThen(
                         container -> !guildName.isEmpty(),
                         // We always check diplomacy in case its changed while we weren't looking (ex. in /class or
                         // switching accounts)
                         QueryStep.clickOnSlot(DIPLOMACY_MENU_SLOT)
-                                .expectContainerTitle(ContainerModel.GUILD_DIPLOMACY_MENU_NAME)
+                                .expectContainer(GuildDiplomacyContainer.class)
                                 .processIncomingContainer(content -> this.parseDiplomacyContent(content.items())));
     }
 

@@ -135,11 +135,22 @@ public final class McUtils {
                         true));
     }
 
+    public static int getChatWidth() {
+        return ChatComponent.getWidth(mc().options.chatWidth().get());
+    }
+
     public static void sendMessageToClient(Component component) {
         mc().getChatListener().handleSystemMessage(component, false);
     }
 
-    public static void sendWynntilsMessage(Component component) {
+    public static void sendWynntilsPrefixMessage(Component component) {
+        StyledText styledText = StyledText.fromComponent(component);
+        StyledText wrapedText = StyledTextUtils.addWynntilsPrefix(styledText);
+
+        sendMessageToClient(wrapedText.getComponent());
+    }
+
+    public static void sendWynntilsPillMessage(Component component) {
         sendMessageToClient(ComponentUtils.addWynntilsPillHeader(component));
     }
 
@@ -151,7 +162,7 @@ public final class McUtils {
 
     public static void sendErrorToClient(String errorMsg) {
         WynntilsMod.warn("Chat error message sent: " + errorMsg);
-        McUtils.sendMessageToClient(Component.literal(errorMsg).withStyle(ChatFormatting.RED));
+        McUtils.sendWynntilsPrefixMessage(Component.literal(errorMsg).withStyle(ChatFormatting.RED));
     }
 
     public static void sendPacket(Packet<?> packet) {

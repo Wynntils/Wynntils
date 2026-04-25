@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemrecord;
@@ -49,7 +49,7 @@ public class ItemRecordService extends Service {
 
         // Check if the item is already saved
         if (savedItems.get().contains(itemToSave)) {
-            McUtils.sendMessageToClient(Component.translatable(
+            McUtils.sendWynntilsPrefixMessage(Component.translatable(
                             "screens.wynntils.itemSharing.alreadySaved",
                             StyledText.fromComponent(itemName).getString() + ChatFormatting.RED)
                     .withStyle(ChatFormatting.RED));
@@ -60,7 +60,7 @@ public class ItemRecordService extends Service {
 
         Services.ItemRecord.savedItems.touched();
 
-        McUtils.sendMessageToClient(Component.translatable(
+        McUtils.sendWynntilsPrefixMessage(Component.translatable(
                         "screens.wynntils.itemSharing.savedToRecord",
                         StyledText.fromComponent(itemName).getString() + ChatFormatting.GREEN)
                 .withStyle(ChatFormatting.GREEN));
@@ -202,7 +202,7 @@ public class ItemRecordService extends Service {
 
         WynntilsMod.warn("Item record cleanup complete. Removed " + itemsToRemove.size() + " invalid items. Readded "
                 + itemsToReadd.size() + " items that can now be decoded.");
-        McUtils.sendMessageToClient(Component.translatable(
+        McUtils.sendWynntilsPrefixMessage(Component.translatable(
                         "service.wynntils.itemRecord.cleanupComplete", itemsToRemove.size(), itemsToReadd.size())
                 .withStyle(ChatFormatting.YELLOW));
     }
