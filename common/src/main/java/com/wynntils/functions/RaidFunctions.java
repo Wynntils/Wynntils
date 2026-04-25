@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -8,8 +8,10 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.models.gambits.type.Gambit;
 import com.wynntils.models.raid.type.RaidInfo;
 import com.wynntils.models.raid.type.RaidRoomInfo;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Time;
 import java.util.List;
@@ -337,6 +339,60 @@ public class RaidFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
                     new Argument<>("raidName", String.class, null), new Argument<>("sinceDays", Integer.class, null)));
+        }
+    }
+
+    public static class ChosenGambitsFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return 0;
+
+            return Models.Gambit.getActiveGambits().size();
+        }
+    }
+
+    public static class ChosenGambitFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return "";
+
+            List<Gambit> gambits = Models.Gambit.getActiveGambits();
+            int index = arguments.getArgument("index").getIntegerValue();
+            if (index < 0 || index >= gambits.size()) return "";
+
+            return gambits.get(index).getName();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
+        }
+    }
+
+    public static class ChosenBuffsFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return 0;
+
+            return Models.Raid.getChosenBuffs(McUtils.playerName()).size();
+        }
+    }
+
+    public static class ChosenBuffFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            if (Models.Raid.getCurrentRaid() == null) return "";
+
+            List<String> buffs = Models.Raid.getChosenBuffs(McUtils.playerName());
+            int index = arguments.getArgument("index").getIntegerValue();
+            if (index < 0 || index >= buffs.size()) return "";
+
+            return buffs.get(index);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
         }
     }
 }
