@@ -36,6 +36,14 @@ public class NpcDialogueFeature extends Feature {
         super(ProfileDefault.DISABLED);
     }
 
+    /**
+     * If you make a custom Overlay, turn this to true when it's enabled
+     * to clear to original wynncraft hud
+     * */
+    private boolean isCustomOverlayEnabled() {
+        return false;
+    }
+
     private String lastText;
     private String lastDispatched;
     private volatile Component lastComponent;
@@ -104,10 +112,14 @@ public class NpcDialogueFeature extends Feature {
         lastComponent = currentComponent;
 
         McUtils.mc().execute(() -> {
-            Component newContent = DialogueUtils.insertDialogueText(
-                    currentComponent, translatedText, overlay.getContent().getStartPos());
-            lastModifiedComp = newContent;
-            showNewContent(newContent);
+            if (isCustomOverlayEnabled()) {
+                lastModifiedComp = DialogueUtils.insertDialogueText(
+                        currentComponent, "", overlay.getContent().getStartPos());
+            } else {
+                lastModifiedComp = DialogueUtils.insertDialogueText(
+                        currentComponent, translatedText, overlay.getContent().getStartPos());
+            }
+            showNewContent(lastModifiedComp);
         });
     }
 
