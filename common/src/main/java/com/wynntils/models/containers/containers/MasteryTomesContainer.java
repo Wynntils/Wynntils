@@ -7,11 +7,10 @@ package com.wynntils.models.containers.containers;
 import com.wynntils.models.containers.Container;
 import java.util.regex.Pattern;
 
-public class StoreContainer extends Container {
-    private static Pattern TITLE_PATTERN = Pattern.compile(
-            "\uDAFF\uDFF4\uE02C\uDAFF\uDF7C\uF027\uDAFF\uDF52\uDB00\uDC3D.\uDAFF\uDF22\uDB00\uDC40.\uDAFF\uDF2F");
+public class MasteryTomesContainer extends Container {
+    private static final Pattern TITLE_PATTERN = Pattern.compile("\uDAFF\uDFDB\uE005");
 
-    public StoreContainer() {
+    public MasteryTomesContainer() {
         super(TITLE_PATTERN);
     }
 }

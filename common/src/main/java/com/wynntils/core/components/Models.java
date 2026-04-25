@@ -5,6 +5,7 @@
 package com.wynntils.core.components;
 
 import com.wynntils.models.abilities.AbilityModel;
+import com.wynntils.models.abilities.ArcherBeastModel;
 import com.wynntils.models.abilities.ShamanMaskModel;
 import com.wynntils.models.abilities.ShamanSummonModel;
 import com.wynntils.models.abilities.ShamanTotemModel;
@@ -77,6 +78,7 @@ public final class Models {
     public static final AbilityModel Ability = new AbilityModel();
     public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();
     public static final AccountModel Account = new AccountModel();
+    public static final ArcherBeastModel ArcherBeast = new ArcherBeastModel();
     public static final AspectModel Aspect = new AspectModel();
     public static final BankModel Bank = new BankModel();
     public static final BeaconModel Beacon = new BeaconModel();
