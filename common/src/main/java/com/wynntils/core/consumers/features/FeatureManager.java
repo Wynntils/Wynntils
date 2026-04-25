@@ -608,7 +608,7 @@ public final class FeatureManager extends Manager {
                     .withStyle(style -> style.withClickEvent(
                             new ClickEvent.RunCommand("/feature enable " + feature.getShortName())));
 
-            McUtils.sendMessageToClient(enableMessage);
+            McUtils.sendWynntilsPrefixMessage(enableMessage);
         }
     }
 

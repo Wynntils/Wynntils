@@ -19,7 +19,7 @@ import com.wynntils.models.bonustotems.label.BonusTotemLabelParser;
 import com.wynntils.models.combat.bossbar.DamageBar;
 import com.wynntils.models.combat.label.DamageLabelParser;
 import com.wynntils.models.combat.label.KillLabelParser;
-import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.containers.containers.AbilityTreeContainer;
 import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.guild.GuildModel;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
@@ -131,6 +131,12 @@ public class TestRegex {
     }
 
     @Test
+    public void AbilityTreeContainer_TITLE_PATTERN() {
+        PatternTester p = new PatternTester(AbilityTreeContainer.class, "TITLE_PATTERN");
+        p.shouldMatch("\uDAFF\uDFEA\uE000");
+    }
+
+    @Test
     public void AccountModel_SILVERBULL_DURATION_PATTERN() {
         PatternTester p = new PatternTester(AccountModel.class, "SILVERBULL_DURATION_PATTERN");
         p.shouldMatch("§#00a2e8ff- §7Expiration: §f1 week 5 days");
@@ -231,12 +237,6 @@ public class TestRegex {
         p.shouldMatch("§f\uE024 §#4c8dfcff§owater abso§f §3has just logged in!");
         // champion nickname
         p.shouldMatch("§f\uE017 §#e8c00cff§oInfernal Defender§f §6has just logged in!");
-    }
-
-    @Test
-    public void ContainerModel_ABILITY_TREE_PATTERN() {
-        PatternTester p = new PatternTester(ContainerModel.class, "ABILITY_TREE_PATTERN");
-        p.shouldMatch("\uDAFF\uDFEA\uE000");
     }
 
     @Test

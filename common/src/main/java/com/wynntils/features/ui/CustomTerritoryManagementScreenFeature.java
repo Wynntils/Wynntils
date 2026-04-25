@@ -23,6 +23,9 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
+import com.wynntils.models.containers.Container;
+import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.containers.containers.GuildManagementContainer;
 import com.wynntils.models.containers.containers.GuildTerritoriesContainer;
 import com.wynntils.screens.territorymanagement.TerritoryManagementScreen;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -145,21 +148,22 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
 
         openTerritoryManagement = false;
 
-        // We cannot use ContainerModel here, as it is too early in the event chain.
-        StyledText title = StyledText.fromComponent(event.getTitle());
-        if (title.matches(MANAGE_TITLE_PATTERN)) {
+        Container container = Models.Container.getCurrentContainer();
+        if (container instanceof GuildManagementContainer) {
             event.setCanceled(true);
 
-            AbstractContainerMenu container = event.getMenuType().create(event.getContainerId(), McUtils.inventory());
-            ContainerUtils.clickOnSlot(TERRITORY_MANAGEMENT_SLOT, event.getContainerId(), 0, container.getItems());
-        } else if (title.equalsString(Models.Container.CHARACTER_INFO_NAME)) {
+            AbstractContainerMenu containerMenu =
+                    event.getMenuType().create(event.getContainerId(), McUtils.inventory());
+            ContainerUtils.clickOnSlot(TERRITORY_MANAGEMENT_SLOT, event.getContainerId(), 0, containerMenu.getItems());
+        } else if (container instanceof CharacterInfoContainer) {
             event.setCanceled(true);
 
             // We still need to do a second click to open the territory management screen
             openTerritoryManagement = true;
 
-            AbstractContainerMenu container = event.getMenuType().create(event.getContainerId(), McUtils.inventory());
-            ContainerUtils.clickOnSlot(GUILD_MANAGEMENT_SLOT, event.getContainerId(), 0, container.getItems());
+            AbstractContainerMenu containerMenu =
+                    event.getMenuType().create(event.getContainerId(), McUtils.inventory());
+            ContainerUtils.clickOnSlot(GUILD_MANAGEMENT_SLOT, event.getContainerId(), 0, containerMenu.getItems());
         }
     }
 
