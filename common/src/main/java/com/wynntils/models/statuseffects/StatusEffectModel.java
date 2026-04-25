@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.statuseffects;
@@ -37,7 +37,7 @@ public final class StatusEffectModel extends Model {
      */
     /*
      * current regex:
-     * <prefix>         captures any characters before the §7 colour-indicator.
+     * <prefix>         captures any characters before the §... colour-indicator.
      * <modifier>       optionally captures effects' modifiers' values (+100, -20, 5)
      * <modifierSuffix> optionally captures the suffixes of the modifiers (/5s, /3s, %)
      * <name>           captures the effects name (Strength, and even +Lightweight)
@@ -47,7 +47,7 @@ public final class StatusEffectModel extends Model {
 
     // Test in StatusEffectModel_STATUS_EFFECT_PATTERN
     private static final Pattern STATUS_EFFECT_PATTERN = Pattern.compile(
-            "(?<prefix>.+?)§7\\s?(?<modifier>(\\-|\\+)?([\\-\\.\\d]+))?(?<modifierSuffix>((\\/\\d+s)|%)?)?\\s?(?<name>\\+?['a-zA-Z\\/\\s]+?)\\s(?<timer>§[84a]\\((?<minutes>(\\d{2}|\\*{2})):(?<seconds>(\\d{2}|\\*{2}))\\))");
+            "(?<prefix>.+?)(§\\w)?\\s?(?<modifier>(\\-|\\+)?([\\-\\.\\d]+))?(?<modifierSuffix>((\\/\\d+s)|%)?)?\\s?(?<name>\\+?['a-zA-Z\\/\\s]+?)\\s(?<timer>§[84a]\\((?<minutes>(\\d{2}|\\*{2})):(?<seconds>(\\d{2}|\\*{2}))\\))");
 
     private static final StyledText STATUS_EFFECTS_TITLE = StyledText.fromString("§d§lStatus Effects");
 

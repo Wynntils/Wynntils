@@ -9,6 +9,9 @@ import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
+import com.wynntils.models.abilities.label.ArcherCrowParser;
+import com.wynntils.models.abilities.label.ArcherHoundParser;
+import com.wynntils.models.abilities.label.ArcherSnakeParser;
 import com.wynntils.models.abilities.label.ShamanTotemLabelParser;
 import com.wynntils.models.account.AccountModel;
 import com.wynntils.models.activities.worldevents.WorldEventModel;
@@ -16,7 +19,7 @@ import com.wynntils.models.bonustotems.label.BonusTotemLabelParser;
 import com.wynntils.models.combat.bossbar.DamageBar;
 import com.wynntils.models.combat.label.DamageLabelParser;
 import com.wynntils.models.combat.label.KillLabelParser;
-import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.containers.containers.AbilityTreeContainer;
 import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.guild.GuildModel;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
@@ -128,12 +131,36 @@ public class TestRegex {
     }
 
     @Test
+    public void AbilityTreeContainer_TITLE_PATTERN() {
+        PatternTester p = new PatternTester(AbilityTreeContainer.class, "TITLE_PATTERN");
+        p.shouldMatch("\uDAFF\uDFEA\uE000");
+    }
+
+    @Test
     public void AccountModel_SILVERBULL_DURATION_PATTERN() {
         PatternTester p = new PatternTester(AccountModel.class, "SILVERBULL_DURATION_PATTERN");
         p.shouldMatch("§#00a2e8ff- §7Expiration: §f1 week 5 days");
         p.shouldMatch("§#00a2e8ff- §7Expiration: §f5 days");
         p.shouldMatch("§#00a2e8ff- §7Expiration: §f1 week");
         p.shouldMatch("§#00a2e8ff- §7Expiration: §f2 days 12 hours");
+    }
+
+    @Test
+    public void ArcherCrowParser_CROW_PATTERN() {
+        PatternTester p = new PatternTester(ArcherCrowParser.class, "CROW_PATTERN");
+        p.shouldMatch("ShadowCat117's Crow\n57s");
+    }
+
+    @Test
+    public void ArcherHoundParser_HOUND_PATTERN() {
+        PatternTester p = new PatternTester(ArcherHoundParser.class, "HOUND_PATTERN");
+        p.shouldMatch("ShadowCat117's Hound\n17s");
+    }
+
+    @Test
+    public void ArcherSnakeParser_SNAKE_PATTERN() {
+        PatternTester p = new PatternTester(ArcherSnakeParser.class, "SNAKE_PATTERN");
+        p.shouldMatch("ShadowCat117's Snake\n9s");
     }
 
     @Test
@@ -210,12 +237,6 @@ public class TestRegex {
         p.shouldMatch("§f\uE024 §#4c8dfcff§owater abso§f §3has just logged in!");
         // champion nickname
         p.shouldMatch("§f\uE017 §#e8c00cff§oInfernal Defender§f §6has just logged in!");
-    }
-
-    @Test
-    public void ContainerModel_ABILITY_TREE_PATTERN() {
-        PatternTester p = new PatternTester(ContainerModel.class, "ABILITY_TREE_PATTERN");
-        p.shouldMatch("\uDAFF\uDFEA\uE000");
     }
 
     @Test

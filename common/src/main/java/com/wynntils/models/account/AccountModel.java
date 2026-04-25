@@ -17,7 +17,8 @@ import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.SetSlotEvent;
-import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.containers.containers.StoreContainer;
 import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -123,7 +124,7 @@ public final class AccountModel extends Model {
 
         // Open compass/character menu
         queryBuilder.then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME));
+                .expectContainer(CharacterInfoContainer.class));
 
         if (forceParseUnexpired
                 || silverbullSubscriber.get() == OptionalBoolean.NULL
@@ -131,7 +132,7 @@ public final class AccountModel extends Model {
                         && System.currentTimeMillis() > silverbullExpiresAt.get())) {
             // Open Cosmetics Menu
             queryBuilder.then(QueryStep.clickOnSlot(COSMETICS_SLOT)
-                    .expectContainerTitle(ContainerModel.STORE_MENU_NAME)
+                    .expectContainer(StoreContainer.class)
                     .processIncomingContainer(this::parseStoreContainer));
         } else {
             WynntilsMod.info("Skipping silverbull subscription query ("

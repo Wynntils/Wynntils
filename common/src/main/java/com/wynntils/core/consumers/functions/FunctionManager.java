@@ -15,6 +15,7 @@ import com.wynntils.core.consumers.functions.templates.Template;
 import com.wynntils.core.consumers.functions.templates.parser.TemplateParser;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.functions.ActivityFunctions;
 import com.wynntils.functions.BombFunctions;
 import com.wynntils.functions.CharacterFunctions;
@@ -55,6 +56,7 @@ import com.wynntils.utils.type.ErrorOr;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -71,9 +73,6 @@ public final class FunctionManager extends Manager {
     private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("&(?<!\\\\)(#[0-9A-Fa-f]{8})");
     private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("&(?<!\\\\)([0-9a-fA-Fk-oK-OrR])");
     private static final Pattern NBSP_PATTERN = Pattern.compile("\u00A0");
-    private static final Pattern ESCAPED_OPEN_BRACE_PATTERN = Pattern.compile(Pattern.quote("\\[\\"));
-    private static final Pattern ESCAPED_CLOSE_BRACE_PATTERN = Pattern.compile(Pattern.quote("\\]\\"));
-    private static final Pattern ESCAPED_AMPERSAND_PATTERN = Pattern.compile(Pattern.quote("\\&\\"));
     private final List<Function<?>> functions = new ArrayList<>();
     private final Set<Function<?>> crashedFunctions = new HashSet<>();
 
@@ -187,18 +186,12 @@ public final class FunctionManager extends Manager {
 
     public String getStringFunctionValue(
             Function<?> function, FunctionArguments arguments, boolean formatted, int decimals) {
-        return getStyledTextFunctionValue(function, arguments, formatted, decimals)
-                .getString();
-    }
-
-    public StyledText getStyledTextFunctionValue(
-            Function<?> function, FunctionArguments arguments, boolean formatted, int decimals) {
         Optional<Object> value = getFunctionValueSafely(function, arguments);
         if (value.isEmpty()) {
-            return StyledText.fromString("??");
+            return "??";
         }
 
-        return formatStyledText(value.get(), formatted, decimals);
+        return format(value.get(), formatted, decimals);
     }
 
     private String format(Object value, boolean formatted, int decimals) {
@@ -223,17 +216,11 @@ public final class FunctionManager extends Manager {
             }
         } else if (value instanceof CustomColor color) {
             return "§" + color.toHexString();
+        } else if (value instanceof StyledText styledText) {
+            return styledText.getString(StyleType.COMPLETE);
         }
 
         return value.toString();
-    }
-
-    private StyledText formatStyledText(Object value, boolean formatted, int decimals) {
-        if (value instanceof StyledText styledText) {
-            return styledText;
-        }
-
-        return StyledText.fromString(format(value, formatted, decimals));
     }
 
     // endregion
@@ -273,9 +260,9 @@ public final class FunctionManager extends Manager {
 
     // region Template formatting
 
-    private StyledText doFormat(String templateString) {
+    private String doFormat(String templateString) {
         calculatedTemplateCache.computeIfAbsent(templateString, TemplateParser::getTemplateFromString);
-        return calculatedTemplateCache.get(templateString).getStyledText();
+        return calculatedTemplateCache.get(templateString).getString();
     }
 
     public StyledText[] doFormatLines(String templateString) {
@@ -303,14 +290,16 @@ public final class FunctionManager extends Manager {
         // Parse color codes before calculating the templates
         String escapedTemplate = parseColorCodes(resultBuilder.toString());
 
-        StyledText calculatedText = doFormat(escapedTemplate);
+        String calculatedString = doFormat(escapedTemplate);
 
         // Turn escaped {}& (`\[\`, `\]\` `\&\`) back into real {}&
-        calculatedText = calculatedText.replaceAll(ESCAPED_OPEN_BRACE_PATTERN, "{");
-        calculatedText = calculatedText.replaceAll(ESCAPED_CLOSE_BRACE_PATTERN, "}");
-        calculatedText = calculatedText.replaceAll(ESCAPED_AMPERSAND_PATTERN, "&");
+        calculatedString = calculatedString.replace("\\[\\", "{");
+        calculatedString = calculatedString.replace("\\]\\", "}");
+        calculatedString = calculatedString.replace("\\&\\", "&");
 
-        return calculatedText.split("\n");
+        return Arrays.stream(calculatedString.split("\n"))
+                .map(StyledText::fromString)
+                .toArray(StyledText[]::new);
     }
 
     private String parseColorCodes(String toProcess) {
@@ -503,6 +492,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.ClassFunction());
         registerFunction(new CharacterFunctions.CommanderActivatedFunction());
         registerFunction(new CharacterFunctions.CommanderDurationFunction());
+        registerFunction(new CharacterFunctions.CrowCountFunction());
         registerFunction(new CharacterFunctions.CurrentDistortionFunction());
         registerFunction(new CharacterFunctions.EquippedAspectFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveEventBonusFunction());
@@ -512,6 +502,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
         registerFunction(new CharacterFunctions.HealthPctFunction());
+        registerFunction(new CharacterFunctions.HoundsTimeLeftFunction());
         registerFunction(new CharacterFunctions.HummingbirdsStateFunction());
         registerFunction(new CharacterFunctions.IdFunction());
         registerFunction(new CharacterFunctions.IsAspectEquippedFunction());
@@ -533,6 +524,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.PowderSpecialChargeFunction());
         registerFunction(new CharacterFunctions.PuppetCountFunction());
         registerFunction(new CharacterFunctions.PuppetsInTimeRangeFunction());
+        registerFunction(new CharacterFunctions.SnakeCountFunction());
         registerFunction(new CharacterFunctions.SprintFunction());
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
