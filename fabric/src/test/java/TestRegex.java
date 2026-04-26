@@ -752,6 +752,67 @@ public class TestRegex {
     }
 
     @Test
+    public void RecipientType_BOMB_BELL_pattern() {
+        PatternTester p = new PatternTester(RecipientType.BOMB_BELL, "pattern");
+        p.shouldMatch(
+                "§#fddd5cff\uDAFF\uDFFC\uE01E\uDAFF\uDFFF\uE002\uDAFF\uDFFE FoXr8 has thrown a §#f3e6b2ffCombat Experience Bomb§#fddd5cff on §#f3e6b2ff§nAS14");
+        p.shouldMatch(
+                "§#fddd5cff\uDAFF\uDFFC\uE001\uDB00\uDC06 _Smm has thrown a §#f3e6b2ffProfession Speed Bomb§#fddd5cff on §#f3e6b2ff§nAS13");
+    }
+
+    @Test
+    public void RecipientType_BOMB_pattern() {
+        PatternTester p = new PatternTester(RecipientType.BOMB, "pattern");
+        p.shouldMatch(
+                "§#a0c84bff\uDAFF\uDFFC\uE014\uDAFF\uDFFF\uE002\uDAFF\uDFFE §#ffd750ffBritishLesbian§#a0c84bff Profession Speed Bomb has expired!\n\uDAFF\uDFFC\uE001\uDB00\uDC06 Get your own bombs at §#ffd750ff§n§[1]wynncraft.com/store");
+        p.shouldMatch("§#a0c84bff\uDAFF\uDFFC\uE014\uDAFF\uDFFF\uE002\uDAFF\uDFFE \uDB00\uDC4C§lProfession Speed Bomb");
+        p.shouldMatch(
+                "§#a0c84bff\uDAFF\uDFFC\uE014\uDAFF\uDFFF\uE002\uDAFF\uDFFE Flyxdre has gotten a §#dd55ffffFuturistic Relik§#a0c84bff from their crate!\n\uDAFF\uDFFC\uE001\uDB00\uDC06 Get your own at §#ffd750ff§[1]wynncraft.com/store§#a0c84bff or type §#ffd750ff§[2]/store");
+    }
+
+    @Test
+    public void RecipientType_WORLD_EVENT_pattern() {
+        PatternTester p = new PatternTester(RecipientType.WORLD_EVENT, "pattern");
+        p.shouldMatch("§#00bdbfff\uDAFF\uDFFC\uE00D\uDAFF\uDFFF\uE002\uDAFF\uDFFE You are now within the event radius");
+        p.shouldMatch("§#00bdbfff\uDAFF\uDFFC\uE001\uDB00\uDC06 Create a party to play with others");
+        p.shouldMatch(
+                "§#00bdbfff\uDAFF\uDFFC\uE001\uDB00\uDC06 \uDB00\uDC78\uE060\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE033\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE045\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE062\uDAFF\uDFBE§0\uE016\uE00E\uE011\uE00B\uE003 \uE004\uE015\uE004\uE00D\uE013\uDB00\uDC02");
+        p.shouldMatch("§#00bdbfff\uDAFF\uDFFC\uE001\uDB00\uDC06 \uDB00\uDC72§fEvent Completed");
+        // The completed message contains empty ones (just the prefix)
+        p.shouldMatch("§#00bdbfff\uDAFF\uDFFC\uE001\uDB00\uDC06 ");
+    }
+
+    @Test
+    public void RecipientType_SYSTEM_INFO_pattern() {
+        PatternTester p = new PatternTester(RecipientType.SYSTEM_INFO, "pattern");
+        p.shouldMatch(
+                "§#a0aec0ff\uDAFF\uDFFC\uE01B\uDAFF\uDFFF\uE002\uDAFF\uDFFE §#da43e8ff&lFestival of the Heroes:§#a0aec0ff §#deabebffGrab 3 free Gilded Heroes\n§#a0aec0ff\uDAFF\uDFFC\uE001\uDB00\uDC06 §#deabebffCrates on our store at §#5198fcff&n§[1]wynncraft.com/store!§#deabebff The festival\n§#a0aec0ff\uDAFF\uDFFC\uE001\uDB00\uDC06 §#deabebffcloses its doors in §#da43e8ff15 days.");
+    }
+
+    @Test
+    public void RecipientType_MERCHANT_pattern() {
+        PatternTester p = new PatternTester(RecipientType.MERCHANT, "pattern");
+        p.shouldMatch(
+                "§5\uDAFF\uDFFC\uE00A\uDAFF\uDFFF\uE002\uDAFF\uDFFE Party Finder:§d Hey Flyxdre, over here! Join the §bNest of the\n§5\uDAFF\uDFFC\uE001\uDB00\uDC06 §bGrootslangs§d queue and match up with §e2§d other players!");
+        p.shouldMatch(
+                "§5\uDAFF\uDFFC\uE00A\uDAFF\uDFFF\uE002\uDAFF\uDFFE Blacksmith: §dYou have sold §51 item&d for §a3²");
+    }
+
+    @Test
+    public void RecipientType_ERROR_OR_WARNING_pattern() {
+        PatternTester p = new PatternTester(RecipientType.ERROR_OR_WARNING, "pattern");
+        p.shouldMatch(
+                "§4\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE Sorry, you can't teleport... Try moving away from blocks.");
+    }
+
+    @Test
+    public void RecipientType_COMMAND_pattern() {
+        PatternTester p = new PatternTester(RecipientType.COMMAND, "pattern");
+        p.shouldMatch(
+                "§a\uDAFF\uDFFC\uE008\uDAFF\uDFFF\uE002\uDAFF\uDFFE You can no longer see level 100 popups in game!");
+    }
+
+    @Test
     public void RuneAnnotator_RUNE_PATTERN() {
         PatternTester p = new PatternTester(RuneAnnotator.class, "RUNE_PATTERN");
         p.shouldMatch("\uDAFC\uDC00§#b0f3fcffAz Rune\uDAFC\uDC00");
