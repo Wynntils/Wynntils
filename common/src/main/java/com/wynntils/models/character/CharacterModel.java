@@ -46,6 +46,8 @@ import org.lwjgl.glfw.GLFW;
  */
 public final class CharacterModel extends Model {
     private static final Pattern CHARACTER_ID_PATTERN = Pattern.compile("^[a-z0-9]{8}$");
+    private static final Pattern INFO_MENU_NAME_PATTERN =
+            Pattern.compile("^\uDB00\uDC00(§f[\uE022\uE024\uE01B\uE08A\uE017] )?§(#[0-9A-Fa-f]{6,8})§o(?<name>.+)$");
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §f(.+)");
     private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §f(\\d+)");
 
@@ -58,6 +60,7 @@ public final class CharacterModel extends Model {
     private ClassType classType = ClassType.NONE;
     private boolean reskinned;
     private int level;
+    private String nickname;
 
     // A hopefully unique string for each character ("class"). This is part of the
     // full character uuid, as presented by Wynncraft in the tooltip.
@@ -89,6 +92,10 @@ public final class CharacterModel extends Model {
      */
     public String getActualName() {
         return getClassType().getActualName(isReskinned());
+    }
+
+    public String getNickname() {
+        return nickname;
     }
 
     public boolean hasCharacter() {
@@ -139,9 +146,10 @@ public final class CharacterModel extends Model {
         WynntilsMod.info("Selected character " + getCharacterString());
     }
 
-    public void setSelectedCharacterFromCharacterSelection(ClassType classType, boolean isReskinned, int level) {
+    public void setSelectedCharacterFromCharacterSelection(
+            ClassType classType, boolean isReskinned, int level, String nickname) {
         hasCharacter = true;
-        updateCharacterInfo(classType, isReskinned, level);
+        updateCharacterInfo(classType, isReskinned, level, nickname);
         WynntilsMod.info("Selected character " + getCharacterString());
     }
 
@@ -249,7 +257,8 @@ public final class CharacterModel extends Model {
                 + classType + ", reskinned="
                 + reskinned + ", level="
                 + level + ", id="
-                + id + '}';
+                + id + ", nickname="
+                + nickname + "}";
     }
 
     private void parseCharacterFromCharacterMenu(ItemStack characterInfoItem) {
@@ -273,7 +282,15 @@ public final class CharacterModel extends Model {
         }
         ClassType foundClassType = ClassType.fromName(className);
 
-        updateCharacterInfo(foundClassType, foundClassType != null && ClassType.isReskinned(className), foundLevel);
+        Matcher matcher =
+                StyledText.fromComponent(characterInfoItem.getHoverName()).getMatcher(INFO_MENU_NAME_PATTERN);
+        String nickname = null;
+        if (matcher.matches()) {
+            nickname = matcher.group("name");
+        }
+
+        updateCharacterInfo(
+                foundClassType, foundClassType != null && ClassType.isReskinned(className), foundLevel, nickname);
     }
 
     private boolean parseCharacter(ItemStack itemStack) {
@@ -282,13 +299,18 @@ public final class CharacterModel extends Model {
 
         CharacterItem characterItem = characterItemOpt.get();
 
-        updateCharacterInfo(characterItem.getClassType(), characterItem.isReskinned(), characterItem.getLevel());
+        updateCharacterInfo(
+                characterItem.getClassType(),
+                characterItem.isReskinned(),
+                characterItem.getLevel(),
+                characterItem.getClassName());
         return true;
     }
 
-    private void updateCharacterInfo(ClassType classType, boolean reskinned, int level) {
+    private void updateCharacterInfo(ClassType classType, boolean reskinned, int level, String nickname) {
         this.classType = classType;
         this.reskinned = reskinned;
         this.level = level;
+        this.nickname = nickname;
     }
 }

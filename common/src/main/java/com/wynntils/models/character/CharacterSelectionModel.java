@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.character;
@@ -85,7 +85,7 @@ public final class CharacterSelectionModel extends Model {
         if (Models.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) return;
 
         Models.Character.setSelectedCharacterFromCharacterSelection(
-                currentCharacterClass, isReskinned, currentCharacterLevel);
+                currentCharacterClass, isReskinned, currentCharacterLevel, null);
     }
 
     public void playWithCharacter(int slot) {
