@@ -243,7 +243,7 @@ public final class DialogueUtils {
             }
 
             // if remaining is short enough, add it and all is done
-            if (getRenderWidth(Component.literal(StyledText.fromString(remaining).getString(StyleType.NONE)).withStyle(style_body[0])) <= maxTextWidth - adjustWidth) {
+            if (getRenderWidth(remaining, style_body[0]) <= maxTextWidth - adjustWidth) {
                 lines.add(styleState.getPrefix() + remaining);
                 break;
             }
@@ -273,7 +273,7 @@ public final class DialogueUtils {
             int mid = (low + high + 1) >>> 1;
             String candidate = text.substring(0, mid);
 
-            int width = getRenderWidth(Component.literal(StyledText.fromString(candidate).getString(StyleType.NONE)).withStyle(style));
+            int width = getRenderWidth(candidate, style);
             if (width <= maxWidth) {
                 low = mid;
             } else {
@@ -303,6 +303,16 @@ public final class DialogueUtils {
     public static int getRenderWidth(Component component) {
         net.minecraft.client.gui.Font font = McUtils.mc().gui.getFont();
         return font.width(component);
+    }
+
+    /**
+     * Returns the rendered width (in pixels) of the given text without Chatformatings
+     * @return the width in pixels
+     */
+    private static int getRenderWidth(String text, Style style) {
+        String filtered = StyledText.fromString(text).getString(StyleType.NONE);
+        Component comp = Component.literal(filtered).withStyle(style);
+        return getRenderWidth(comp);
     }
 
     /**
