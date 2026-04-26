@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
@@ -50,6 +50,10 @@ public class CharacterAnnotator implements GuiItemAnnotator {
         }
 
         if (classType == null || classType == ClassType.NONE) return null;
+
+        if (className.equals(classType.getName())) {
+            className = null;
+        }
 
         return new CharacterItem(className, level, classType, reskinned);
     }
