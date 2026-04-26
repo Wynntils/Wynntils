@@ -40,8 +40,8 @@ public enum LeaderboardType {
     TCC_COMPLETION("colossusCompletion"),
     TNA_SCORE("namelessSrPlayers"),
     TNA_COMPLETION("namelessCompletion"),
-    WTP_SCORE("wartornSrPlayers"),
-    WTP_COMPLETION("wartornCompletion"),
+    WTP_SCORE("frumaSrPlayers"),
+    WTP_COMPLETION("frumaCompletion"),
     // Solo Gamemodes
     IRONMAN("ironmanContent"),
     ULTIMATE_IRONMAN("ultimateIronmanContent"),
@@ -64,7 +64,7 @@ public enum LeaderboardType {
     GUILD_NOL("orphionSrGuilds", true),
     GUILD_TCC("colossusSrGuilds", true),
     GUILD_TNA("namelessSrGuilds", true),
-    GUILD_WTP("wartornSrGuilds", true);
+    GUILD_WTP("frumaSrGuilds", true);
 
     private final String key;
     private final boolean guildLeaderboard;
