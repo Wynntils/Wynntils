@@ -150,7 +150,7 @@ public class TranslationFeature extends Feature {
         // - §[x] is used for click events
         // - §<x> is used for hover events
 
-        // Removes double spaces: "Hello §3 World -> "Hello §3World".
+        // Removes double spaces: "Hello §3 World" -> "Hello §3World".
 
         return StyledText.fromModifiedString(
                 codedTranslatedString
