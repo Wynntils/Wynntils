@@ -122,7 +122,7 @@ public final class ShieldModel extends Model {
     }
 
     public int getShieldCharge() {
-        return spawnedIds == null ? 0 : spawnedIds.size() / activeShieldType.divideBy();
+        return spawnedIds == null || activeShieldType == null ? 0 : spawnedIds.size() / activeShieldType.divideBy();
     }
 
     public ShieldType getActiveShieldType() {
