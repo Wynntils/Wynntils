@@ -94,9 +94,9 @@ public final class NpcDialogueModel extends Model {
      * */
     public void dispatchContent(DialogueUtils.Content content, String tanslatedText, boolean sendToChat) {
         WynntilsMod.getLogger()
-                .info("[{}] Original Text: \"{}\"", this.getClass().getSimpleName(), content.getText());
+                .debug("[{}] Original Text: \"{}\"", this.getClass().getSimpleName(), content.getText());
         WynntilsMod.getLogger()
-                .info("[{}] Translated Text: \"{}\"", this.getClass().getSimpleName(), tanslatedText);
+                .debug("[{}] Translated Text: \"{}\"", this.getClass().getSimpleName(), tanslatedText);
 
         StyledText styledTranslatedText = StyledText.fromString(tanslatedText);
         if (sendToChat) {
