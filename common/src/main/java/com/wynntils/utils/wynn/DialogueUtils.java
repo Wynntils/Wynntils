@@ -5,6 +5,7 @@
 package com.wynntils.utils.wynn;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -242,7 +243,7 @@ public final class DialogueUtils {
             }
 
             // if remaining is short enough, add it and all is done
-            if (getRenderWidth(Component.literal(remaining).withStyle(style_body[0])) <= maxTextWidth - adjustWidth) {
+            if (getRenderWidth(Component.literal(StyledText.fromString(remaining).getString(StyleType.NONE)).withStyle(style_body[0])) <= maxTextWidth - adjustWidth) {
                 lines.add(styleState.getPrefix() + remaining);
                 break;
             }
@@ -272,7 +273,7 @@ public final class DialogueUtils {
             int mid = (low + high + 1) >>> 1;
             String candidate = text.substring(0, mid);
 
-            int width = getRenderWidth(Component.literal(candidate).withStyle(style));
+            int width = getRenderWidth(Component.literal(StyledText.fromString(candidate).getString(StyleType.NONE)).withStyle(style));
             if (width <= maxWidth) {
                 low = mid;
             } else {
