@@ -27,14 +27,14 @@ public final class DialogueUtils {
      * */
     private static final boolean append = true;
 
-    private static final FontDescription[] font_body = new FontDescription[5];
-    private static final Style[] style_body = new Style[5];
-    private static final FontDescription[] font_choice = new FontDescription[4];
-    private static final FontDescription font_nameplate =
+    public static final FontDescription[] font_body = new FontDescription[5];
+    public static final Style[] style_body = new Style[5];
+    public static final FontDescription[] font_choice = new FontDescription[4];
+    public static final FontDescription font_nameplate =
             new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/nameplate"));
-    private static final FontDescription font_picture =
+    public static final FontDescription font_picture =
             new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/portrait"));
-    private static final FontDescription font_press_shift =
+    public static final FontDescription font_press_shift =
             new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/control"));
 
     static {
