@@ -166,7 +166,7 @@ public final class DialogueUtils {
         if (component == null) {
             return null;
         }
-        MutableComponent modified = Component.literal("");
+        MutableComponent modified = Component.empty();
 
         // split a long text into max 5 lines with the right Render-Width
         int adjustWidth = (int) startPos.charAt(1) - (int) normalStartPosChar;
