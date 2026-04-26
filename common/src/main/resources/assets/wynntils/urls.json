@@ -113,7 +113,7 @@
   },
   {
     "id": "dataStaticCaveInfo",
-    "md5": "7aaf1c50ebd9e075f15404e88eadbb88",
+    "md5": "ef98c782956bef8cff07700b51c2bda4",
     "path": "Reference/caves.json",
     "url": "https://cdn.wynntils.com/static/Reference/caves.json"
   },
@@ -125,7 +125,7 @@
   },
   {
     "id": "dataStaticCombatLocations",
-    "md5": "8a93ed6ba70c5c26a12cafcbeb52b73b",
+    "md5": "73d4b8d230ac2d6dee19c6e5b67e4000",
     "path": "Data-Storage/combat_locations.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/combat_locations.json"
   },
@@ -209,7 +209,7 @@
   },
   {
     "id": "dataStaticLootrunTasksNamedV2",
-    "md5": "466ae94cac4d7f393e3e8e2212c8f075",
+    "md5": "33d2211ad7e768236c1613effa51d27e",
     "path": "Data-Storage/lootrun_tasks_named_v2.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/lootrun_tasks_named_v2.json"
   },
@@ -275,7 +275,7 @@
   },
   {
     "id": "dataStaticServicesCrowdsourced",
-    "md5": "698d6234382436e04f4a2812e08ff451",
+    "md5": "1b4af6d6fd016c7644489bf7066e0410",
     "path": "Data-Storage/services_crowdsourced.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/services_crowdsourced.json"
   },
