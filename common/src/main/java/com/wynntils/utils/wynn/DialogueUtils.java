@@ -56,7 +56,7 @@ public final class DialogueUtils {
      * ({@code "hud/dialogue/text/wynncraft/body_0"}) and returns its cleaned content. All special
      * markers are removed and replaced by normal spaces. (Keeps Colors as color codes with {@code "§x"})
      * </p>
-     * And some more usefull values.
+     * And some more useful values.
      * @param component the dialogue component to read from
      * @return the cleaned dialogue text wrapped in {@link Content}.
      */
@@ -462,7 +462,7 @@ public final class DialogueUtils {
             this.startPos = startPos;
         }
 
-        public boolean hashPortrait() {
+        public boolean hasPortrait() {
             return portrait != null;
         }
 

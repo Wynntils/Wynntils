@@ -60,13 +60,13 @@ public final class NpcDialogueModel extends Model {
         WynntilsMod.postEvent(event);
 
         if (!event.isTranslated() && !event.isCanceled()) {
-            // Translator ist not enabled (or something similar),
+            // Translator is not enabled (or something similar),
             // so we don't translate and provide the unmodified english text.
             addCache(event.getInput(), event.getInput());
         }
     }
 
-    private void sendChat(DialogueUtils.Content content, StyledText tanslatedText) {
+    private void sendChat(DialogueUtils.Content content, StyledText translatedText) {
         Style textColor = Style.EMPTY.withColor(chatColor.getChatFormatting());
         Style darkGreen = Style.EMPTY.withColor(ChatFormatting.DARK_GREEN);
 
@@ -74,7 +74,7 @@ public final class NpcDialogueModel extends Model {
         Component message = Component.empty()
                 .append(Component.literal(content.getName() != null ? content.getName() + ": " : "")
                         .withStyle(darkGreen))
-                .append(tanslatedText
+                .append(translatedText
                         .getComponent()
                         .withStyle(textColor.withHoverEvent(
                                 new HoverEvent.ShowText(StyledText.fromString(content.getText())
