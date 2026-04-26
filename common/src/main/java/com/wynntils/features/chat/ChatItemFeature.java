@@ -326,7 +326,7 @@ public class ChatItemFeature extends Feature {
                     + errorOrEncodedByteBuffer.getValue().toUtf16String());
         }
 
-        McUtils.sendMessageToClient(Component.translatable("feature.wynntils.chatItem.chatItemMessage")
+        McUtils.sendWynntilsPrefixMessage(Component.translatable("feature.wynntils.chatItem.chatItemMessage")
                 .withStyle(ChatFormatting.DARK_GREEN)
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(s -> s.withClickEvent(new ClickEvent.CopyToClipboard(

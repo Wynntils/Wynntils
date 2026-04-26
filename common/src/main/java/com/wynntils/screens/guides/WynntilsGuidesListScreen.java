@@ -112,7 +112,7 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
             if (name.isBlank()) return;
             Services.Favorites.addFavorite(name);
         });
-        McUtils.sendMessageToClient(
+        McUtils.sendWynntilsPrefixMessage(
                 Component.translatable("screens.wynntils.wynntilsGuides.importedFavorites", names.size())
                         .withStyle(ChatFormatting.GREEN));
     }
@@ -121,7 +121,7 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
         McUtils.mc()
                 .keyboardHandler
                 .setClipboard("wynntilsFavorites," + String.join(",", Services.Favorites.getFavoriteItems()));
-        McUtils.sendMessageToClient(Component.translatable(
+        McUtils.sendWynntilsPrefixMessage(Component.translatable(
                         "screens.wynntils.wynntilsGuides.exportedFavorites",
                         Services.Favorites.getFavoriteItems().size())
                 .withStyle(ChatFormatting.GREEN));

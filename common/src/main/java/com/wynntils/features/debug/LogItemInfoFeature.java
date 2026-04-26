@@ -56,7 +56,7 @@ public class LogItemInfoFeature extends Feature {
         String description = getDescription(itemStack);
 
         WynntilsMod.info(description);
-        McUtils.sendMessageToClient(Component.literal(description).withStyle(ChatFormatting.AQUA));
+        McUtils.sendWynntilsPrefixMessage(Component.literal(description).withStyle(ChatFormatting.AQUA));
     }
 
     private int showCommand(CommandContext<CommandSourceStack> context) {

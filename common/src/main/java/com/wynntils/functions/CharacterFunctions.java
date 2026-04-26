@@ -505,4 +505,25 @@ public class CharacterFunctions {
                     List.of(new Argument<>("min", Integer.class, null), new Argument<>("max", Integer.class, null)));
         }
     }
+
+    public static class CrowCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.ArcherBeast.getActiveCrowCount();
+        }
+    }
+
+    public static class HoundsTimeLeftFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.ArcherBeast.getHoundsTimeLeft();
+        }
+    }
+
+    public static class SnakeCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.ArcherBeast.getActiveSnakeCount();
+        }
+    }
 }
