@@ -81,7 +81,7 @@ public final class DialogueUtils {
                     out.setPortrait(value);
                 }
             } else if (sibling.getStyle().getFont().equals(font_press_shift)) {
-                out.setConfirmationless();
+                out.setNotConfirmationless();
             } else {
                 // minecraft:hud/dialogue/text/wynncraft/choice_X
                 for (int i = 0; i < font_choice.length; i++) {
@@ -478,8 +478,8 @@ public final class DialogueUtils {
             return confirmationless;
         }
 
-        private void setConfirmationless() {
-            this.confirmationless = true;
+        private void setNotConfirmationless() {
+            this.confirmationless = false;
         }
 
         public boolean hasChoices() {
