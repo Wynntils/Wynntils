@@ -818,6 +818,7 @@ public class TestRegex {
         p.shouldMatch("§8⬤ §7Vanish §a(00:04)");
         p.shouldMatch("§fⒺ§7 +250/3s Life Steal §8(00:41)");
         p.shouldMatch("§8⬤ §7Boiling Blood §a(00:02)");
+        p.shouldMatch("§fⒶ§7 +65% Air Defence §8(01:38:09)");
     }
 
     @Test

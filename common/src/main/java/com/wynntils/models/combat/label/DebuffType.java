@@ -17,6 +17,7 @@ public enum DebuffType {
     CRYSTALLIZED('\uE045', CustomColor.fromInt(0xB6FBFC)),
     CURSE('\u2749', ChatFormatting.RED),
     DISCOMBOBULATED('\u2699', ChatFormatting.YELLOW),
+    DRAINED('\uE03F', CustomColor.fromInt(0xA1FAD9FF)),
     ENKINDLED('\uE03D', CustomColor.fromInt(0xFF8E8E)),
     FREEZING('\u2744', ChatFormatting.AQUA),
     MARKED('\u271C', ChatFormatting.RED),
