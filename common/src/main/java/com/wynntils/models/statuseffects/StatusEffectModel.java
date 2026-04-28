@@ -103,12 +103,14 @@ public final class StatusEffectModel extends Model {
             int duration = -1;
 
             try {
-                int hours = 0;
+                duration = Integer.parseInt(minutes.getString()) * 60 + Integer.parseInt(seconds.getString());
+
+                // Hours are optional and don't always appear
                 String hoursString = m.group("hours");
-                if (hoursString != null) hours = Integer.parseInt(hoursString);
-                duration = hours * 3600
-                        + Integer.parseInt(minutes.getString()) * 60
-                        + Integer.parseInt(seconds.getString());
+                if (hoursString != null) {
+                    duration += Integer.parseInt(hoursString) * 3600;
+                }
+
             } catch (NumberFormatException ignored) {
             }
 
