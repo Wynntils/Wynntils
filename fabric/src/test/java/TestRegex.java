@@ -813,6 +813,13 @@ public class TestRegex {
     }
 
     @Test
+    public void RecipientType_MOUNT_pattern() {
+        PatternTester p = new PatternTester(RecipientType.MOUNT, "pattern");
+        p.shouldMatch(
+                "§#8f663dff\uDAFF\uDFFC\uE01F\uDAFF\uDFFF\uE002\uDAFF\uDFFE You have destroyed the item used to summon your mount.");
+    }
+
+    @Test
     public void RuneAnnotator_RUNE_PATTERN() {
         PatternTester p = new PatternTester(RuneAnnotator.class, "RUNE_PATTERN");
         p.shouldMatch("\uDAFC\uDC00§#b0f3fcffAz Rune\uDAFC\uDC00");

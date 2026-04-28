@@ -359,6 +359,23 @@ public final class StyledTextUtils {
     }
 
     /**
+     * Add a Wynn-style prefix to a message
+     *
+     * @param styledText The styled text to add a prefix to
+     * @param recipientType he recipient type to emulate
+     * @param isContinuation Whether this message is a continuation of the previous message
+     * @return The text with a prefix
+     */
+    public static StyledText addPrefix(StyledText styledText, RecipientType recipientType, boolean isContinuation) {
+        String firstLine = isContinuation
+                ? CHAT_PREFIX_LINE_PREFIX
+                : String.format(CHAT_PREFIX_FIRST_LINE_FORMAT, recipientType.getPrefixIcon());
+        Style prefixStyle = Style.EMPTY.withFont(CHAT_PREFIX_FONT).withColor(recipientType.getPrefixColor());
+
+        return styledText.prependPart(new StyledTextPart(firstLine, prefixStyle, null, null));
+    }
+
+    /**
      * Remove the text prefix Wynn gives to all messages post 2.1.
      *
      * @param styledText The styled text to remove the prefix from
@@ -380,31 +397,43 @@ public final class StyledTextUtils {
      * @param styledText The styled text to add a prefix to
      * @return The text with a prefix
      */
-    public static StyledText addWynntilsPrefix(StyledText styledText) {
-        return addPrefix(styledText, RecipientType.WYNNTILS, false);
+    public static StyledText softWrapWithWynntilsPrefix(StyledText styledText) {
+        Style prefixStyle = Style.EMPTY.withFont(CHAT_PREFIX_FONT).withColor(RecipientType.WYNNTILS.getPrefixColor());
+
+        int maxWidth = McUtils.getChatWidth()
+                - FontRenderer.getInstance()
+                        .getFont()
+                        .width(Component.literal(CHAT_PREFIX_LINE_PREFIX).setStyle(prefixStyle));
+
+        String prefix = String.format(CHAT_PREFIX_FIRST_LINE_FORMAT, RecipientType.WYNNTILS.getPrefixIcon());
+        StyledTextPart prefixPart = new StyledTextPart(prefix, prefixStyle, null, null);
+        StyledText wrapped = softWrap(styledText, maxWidth).prependPart(prefixPart);
+
+        return wrapped.iterate((current, changes) -> {
+            if (current.endsWith("\n")) {
+                changes.add(new StyledTextPart(CHAT_PREFIX_LINE_PREFIX, prefixStyle, null, null));
+            }
+
+            return IterationDecision.CONTINUE;
+        });
     }
 
     /**
-     * Wrap styledText in a Wynn-like prefix.
+     * Wrap styledText in a Wynn-like tab.
      *
-     * @param styledText The styled text to add a prefix to
+     * @param styledText The styled text to wrap
      * @param recipientType The recipient type to emulate
-     * @param isContinuation Whether this message is a continuation of the previous message
-     * @return The text with a prefix
+     * @return The text wrapped in Wynn-like tab format
      */
-    public static StyledText addPrefix(StyledText styledText, RecipientType recipientType, boolean isContinuation) {
-        String firstLine = isContinuation
-                ? CHAT_PREFIX_LINE_PREFIX
-                : String.format(CHAT_PREFIX_FIRST_LINE_FORMAT, recipientType.getPrefixIcon());
+    public static StyledText tabWrap(StyledText styledText, RecipientType recipientType) {
         Style prefixStyle = Style.EMPTY.withFont(CHAT_PREFIX_FONT).withColor(recipientType.getPrefixColor());
 
         int maxWidth = McUtils.getChatWidth()
                 - FontRenderer.getInstance()
                         .getFont()
-                        .width(Component.literal(firstLine).setStyle(prefixStyle));
+                        .width(Component.literal(CHAT_PREFIX_LINE_PREFIX).setStyle(prefixStyle));
 
-        StyledText text =
-                softWrap(styledText, maxWidth).prependPart(new StyledTextPart(firstLine, prefixStyle, null, null));
+        StyledText text = softWrap(styledText, maxWidth);
 
         return text.iterate((current, changes) -> {
             if (current.endsWith("\n")) {

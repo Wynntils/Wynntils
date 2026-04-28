@@ -145,7 +145,7 @@ public final class McUtils {
 
     public static void sendWynntilsPrefixMessage(Component component) {
         StyledText styledText = StyledText.fromComponent(component);
-        StyledText wrapedText = StyledTextUtils.addWynntilsPrefix(styledText);
+        StyledText wrapedText = StyledTextUtils.softWrapWithWynntilsPrefix(styledText);
 
         sendMessageToClient(wrapedText.getComponent());
     }

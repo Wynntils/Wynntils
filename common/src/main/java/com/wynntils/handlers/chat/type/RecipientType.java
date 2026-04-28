@@ -42,6 +42,8 @@ public enum RecipientType {
     RAID("#d6401eff", '\uE009', null, "Raid"),
     // Test in RecipientType_COMMAND_pattern
     COMMAND("a", '\uE008', null, "Command"),
+    // Test in RecipientType_MOUNT_pattern
+    MOUNT("#8f663dff", '\uE01F', null, "Mount"),
     GAME_MESSAGE("^§7[A-Z0-9].*$", "Game Message"); // Like dialogues but not uttered by an NPC
 
     private final Pattern pattern;
