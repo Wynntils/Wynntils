@@ -47,7 +47,7 @@ public final class StatusEffectModel extends Model {
 
     // Test in StatusEffectModel_STATUS_EFFECT_PATTERN
     private static final Pattern STATUS_EFFECT_PATTERN = Pattern.compile(
-            "(?<prefix>.+?)(?:§[0-9a-fk-or])*\\s?(?<modifier>(\\-|\\+)?([\\-\\.\\d,]+))?(?<modifierSuffix>((\\/\\d+s)|%))?\\s?(?<name>\\+?['a-zA-Z\\/\\s]+?)\\s+(?<timer>§[84ac]\\((?<minutes>(\\d{2}|\\*{2})):(?<seconds>(\\d{2}|\\*{2}))\\))");
+            "(?<prefix>.+?)(?:§[0-9a-fk-or])*\\s?(?<modifier>(\\-|\\+)?([\\-\\.\\d,]+))?(?<modifierSuffix>((\\/\\d+s)|%))?\\s?(?<name>\\+?['a-zA-Z\\/\\s]+?)\\s+(?<timer>§[84ac]\\((?<hours>\\d{2})?:?(?<minutes>(\\d{2}|\\*{2})):(?<seconds>(\\d{2}|\\*{2}))\\))");
 
     private static final StyledText STATUS_EFFECTS_TITLE = StyledText.fromString("§d§lStatus Effects");
 
@@ -103,7 +103,12 @@ public final class StatusEffectModel extends Model {
             int duration = -1;
 
             try {
-                duration = Integer.parseInt(minutes.getString()) * 60 + Integer.parseInt(seconds.getString());
+                int hours = 0;
+                String hoursString = m.group("hours");
+                if (hoursString != null) hours = Integer.parseInt(hoursString);
+                duration = hours * 3600
+                        + Integer.parseInt(minutes.getString()) * 60
+                        + Integer.parseInt(seconds.getString());
             } catch (NumberFormatException ignored) {
             }
 
