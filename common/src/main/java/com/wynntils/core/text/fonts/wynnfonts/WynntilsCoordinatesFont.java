@@ -17,14 +17,14 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 
-public class CoordinatesFont extends RegisteredFont {
+public class WynntilsCoordinatesFont extends RegisteredFont {
     private static final FontDescription WYNNTILS_COORDINATES_FONT =
             new FontDescription.Resource(Identifier.fromNamespaceAndPath("wynntils", "coordinates"));
     private static final Component NEGATIVE_SPACE_CHARACTER = Component.literal("\uDAFF\uDFFF")
             .withStyle(Style.EMPTY.withFont(
                     new FontDescription.Resource(Identifier.fromNamespaceAndPath("minecraft", "space"))));
 
-    public CoordinatesFont() {
+    public WynntilsCoordinatesFont() {
         super("wynntils_coordinates");
     }
 
@@ -39,79 +39,82 @@ public class CoordinatesFont extends RegisteredFont {
         char[] lastCardinalDirectionChars = lastCardinalDirection.getShortName().toCharArray();
         if (compassEnd == CoordinatesOverlay.CompassEnd.HEAD) {
             if (compassStyle == CoordinatesOverlay.CompassStyle.STATIC) {
-                component.append(Component.literal(WynnFont.toGlyph("compass_head_n", CoordinatesFont.class)));
+                component.append(fromGlyphKey("compass_head_n"));
             } else if (compassStyle == CoordinatesOverlay.CompassStyle.NONE) {
-                component.append(Component.literal(WynnFont.toGlyph("head", CoordinatesFont.class)));
+                component.append(fromGlyphKey("head"));
             } else if (compassStyle == CoordinatesOverlay.CompassStyle.ANIMATED) {
-                component.append(Component.literal(WynnFont.toGlyph(
-                        "compass_head_" + lastCardinalDirection.getShortName().toLowerCase(Locale.ROOT),
-                        CoordinatesFont.class)));
+                component.append(fromGlyphKey(
+                        "compass_head_" + lastCardinalDirection.getShortName().toLowerCase(Locale.ROOT)));
             }
+            component.append(NEGATIVE_SPACE_CHARACTER);
         } else {
-            component.append(WynnFont.toGlyph("head", CoordinatesFont.class));
+            component.append(fromGlyphKey("head"));
             component.append(NEGATIVE_SPACE_CHARACTER);
             if (compassDirectionYPos == CoordinatesOverlay.CompassDirectionYPos.BOTH) {
                 for (char c : lastCardinalDirectionChars) {
-                    component.append(Component.literal(WynnFont.toGlyph(String.valueOf(c), CoordinatesFont.class)));
+                    component.append(fromGlyphKey(String.valueOf(c)));
                     component.append(NEGATIVE_SPACE_CHARACTER);
                 }
             }
         }
 
-        component.append(Component.literal(WynnFont.toGlyph("large_space", CoordinatesFont.class)));
+        component.append(fromGlyphKey("large_space"));
         component.append(NEGATIVE_SPACE_CHARACTER);
 
         for (char c : String.valueOf(lastBlockPos.getX()).toCharArray()) {
-            component.append(Component.literal(WynnFont.toGlyph(String.valueOf(c), CoordinatesFont.class)));
+            component.append(fromGlyphKey(String.valueOf(c)));
             component.append(NEGATIVE_SPACE_CHARACTER);
         }
 
-        component.append(Component.literal(WynnFont.toGlyph("large_space", CoordinatesFont.class)));
+        component.append(fromGlyphKey("large_space"));
         component.append(NEGATIVE_SPACE_CHARACTER);
 
         if (compassDirectionYPos == CoordinatesOverlay.CompassDirectionYPos.DIRECTION) {
             for (char c : lastCardinalDirectionChars) {
-                component.append(Component.literal(WynnFont.toGlyph(String.valueOf(c), CoordinatesFont.class)));
+                component.append(fromGlyphKey(String.valueOf(c)));
                 component.append(NEGATIVE_SPACE_CHARACTER);
             }
         } else {
             for (char c : String.valueOf(lastBlockPos.getY()).toCharArray()) {
-                component.append(Component.literal(WynnFont.toGlyph(String.valueOf(c), CoordinatesFont.class)));
+                component.append(fromGlyphKey(String.valueOf(c)));
                 component.append(NEGATIVE_SPACE_CHARACTER);
             }
         }
 
-        component.append(Component.literal(WynnFont.toGlyph("large_space", CoordinatesFont.class)));
+        component.append(fromGlyphKey("large_space"));
         component.append(NEGATIVE_SPACE_CHARACTER);
 
         for (char c : String.valueOf(lastBlockPos.getZ()).toCharArray()) {
-            component.append(Component.literal(WynnFont.toGlyph(String.valueOf(c), CoordinatesFont.class)));
+            component.append(fromGlyphKey(String.valueOf(c)));
             component.append(NEGATIVE_SPACE_CHARACTER);
         }
 
-        component.append(Component.literal(WynnFont.toGlyph("large_space", CoordinatesFont.class)));
+        component.append(fromGlyphKey("large_space"));
         component.append(NEGATIVE_SPACE_CHARACTER);
 
         if (compassEnd == CoordinatesOverlay.CompassEnd.TAIL) {
             if (compassStyle == CoordinatesOverlay.CompassStyle.STATIC) {
-                component.append(Component.literal(WynnFont.toGlyph("compass_tail_n", CoordinatesFont.class)));
+                component.append(fromGlyphKey("compass_tail_n"));
             } else if (compassStyle == CoordinatesOverlay.CompassStyle.NONE) {
-                component.append(Component.literal(WynnFont.toGlyph("tail", CoordinatesFont.class)));
+                component.append(fromGlyphKey("tail"));
             } else if (compassStyle == CoordinatesOverlay.CompassStyle.ANIMATED) {
-                component.append(Component.literal(WynnFont.toGlyph(
-                        "compass_tail_" + lastCardinalDirection.getShortName().toLowerCase(Locale.ROOT),
-                        CoordinatesFont.class)));
+                component.append(fromGlyphKey(
+                        "compass_tail_" + lastCardinalDirection.getShortName().toLowerCase(Locale.ROOT)));
             }
         } else {
             if (compassDirectionYPos == CoordinatesOverlay.CompassDirectionYPos.BOTH) {
                 for (char c : lastCardinalDirectionChars) {
-                    component.append(Component.literal(WynnFont.toGlyph(String.valueOf(c), CoordinatesFont.class)));
+                    component.append(fromGlyphKey(String.valueOf(c)));
                     component.append(NEGATIVE_SPACE_CHARACTER);
                 }
             }
-            component.append(Component.literal(WynnFont.toGlyph("tail", CoordinatesFont.class)));
+            component.append(fromGlyphKey("tail"));
         }
 
         return component;
+    }
+
+    private static Component fromGlyphKey(String glyphKey) {
+        return Component.literal(WynnFont.toGlyph(glyphKey, WynntilsCoordinatesFont.class));
     }
 }

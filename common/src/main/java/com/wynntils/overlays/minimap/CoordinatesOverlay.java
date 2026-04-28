@@ -13,7 +13,7 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.core.text.fonts.wynnfonts.CoordinatesFont;
+import com.wynntils.core.text.fonts.wynnfonts.WynntilsCoordinatesFont;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.utils.colors.CommonColors;
@@ -102,7 +102,7 @@ public class CoordinatesOverlay extends Overlay {
 
     @Override
     protected void onConfigUpdate(Config<?> config) {
-        coordinatesText = StyledText.fromComponent(CoordinatesFont.buildCoordinates(
+        coordinatesText = StyledText.fromComponent(WynntilsCoordinatesFont.buildCoordinates(
                 compassStyle.get(), compassDirectionYPos.get(), compassEnd.get(), lastCardinalDirection, lastBlockPos));
     }
 
@@ -117,7 +117,7 @@ public class CoordinatesOverlay extends Overlay {
         lastBlockPos = currentPos;
         lastCardinalDirection = cardinalDirection;
 
-        coordinatesText = StyledText.fromComponent(CoordinatesFont.buildCoordinates(
+        coordinatesText = StyledText.fromComponent(WynntilsCoordinatesFont.buildCoordinates(
                 compassStyle.get(), compassDirectionYPos.get(), compassEnd.get(), lastCardinalDirection, lastBlockPos));
     }
 
