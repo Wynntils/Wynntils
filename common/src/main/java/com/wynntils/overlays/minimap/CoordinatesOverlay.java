@@ -103,11 +103,7 @@ public class CoordinatesOverlay extends Overlay {
     @Override
     protected void onConfigUpdate(Config<?> config) {
         coordinatesText = StyledText.fromComponent(CoordinatesFont.buildCoordinates(
-                compassStyle.get(),
-                compassDirectionYPos.get(),
-                compassEnd.get(),
-                lastCardinalDirection,
-                lastBlockPos));
+                compassStyle.get(), compassDirectionYPos.get(), compassEnd.get(), lastCardinalDirection, lastBlockPos));
     }
 
     @Override
@@ -122,11 +118,7 @@ public class CoordinatesOverlay extends Overlay {
         lastCardinalDirection = cardinalDirection;
 
         coordinatesText = StyledText.fromComponent(CoordinatesFont.buildCoordinates(
-                compassStyle.get(),
-                compassDirectionYPos.get(),
-                compassEnd.get(),
-                lastCardinalDirection,
-                lastBlockPos));
+                compassStyle.get(), compassDirectionYPos.get(), compassEnd.get(), lastCardinalDirection, lastBlockPos));
     }
 
     public enum CompassDirectionYPos {

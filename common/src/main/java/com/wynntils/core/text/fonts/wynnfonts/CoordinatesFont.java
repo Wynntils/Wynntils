@@ -1,8 +1,14 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.core.text.fonts.wynnfonts;
+
 import com.wynntils.core.text.fonts.RegisteredFont;
 import com.wynntils.core.text.fonts.WynnFont;
 import com.wynntils.overlays.minimap.CoordinatesOverlay;
 import com.wynntils.utils.type.CardinalDirection;
+import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -10,7 +16,6 @@ import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
-import java.util.Locale;
 
 public class CoordinatesFont extends RegisteredFont {
     private static final FontDescription WYNNTILS_COORDINATES_FONT =
@@ -23,10 +28,14 @@ public class CoordinatesFont extends RegisteredFont {
         super("wynntils_coordinates");
     }
 
-    public static Component buildCoordinates(CoordinatesOverlay.CompassStyle compassStyle, CoordinatesOverlay.CompassDirectionYPos compassDirectionYPos, CoordinatesOverlay.CompassEnd compassEnd, CardinalDirection lastCardinalDirection, BlockPos lastBlockPos) {
+    public static Component buildCoordinates(
+            CoordinatesOverlay.CompassStyle compassStyle,
+            CoordinatesOverlay.CompassDirectionYPos compassDirectionYPos,
+            CoordinatesOverlay.CompassEnd compassEnd,
+            CardinalDirection lastCardinalDirection,
+            BlockPos lastBlockPos) {
         MutableComponent component = Component.empty()
-                .withStyle(Style.EMPTY.withFont(WYNNTILS_COORDINATES_FONT)
-                .withColor(ChatFormatting.WHITE));
+                .withStyle(Style.EMPTY.withFont(WYNNTILS_COORDINATES_FONT).withColor(ChatFormatting.WHITE));
         char[] lastCardinalDirectionChars = lastCardinalDirection.getShortName().toCharArray();
         if (compassEnd == CoordinatesOverlay.CompassEnd.HEAD) {
             if (compassStyle == CoordinatesOverlay.CompassStyle.STATIC) {
@@ -34,7 +43,9 @@ public class CoordinatesFont extends RegisteredFont {
             } else if (compassStyle == CoordinatesOverlay.CompassStyle.NONE) {
                 component.append(Component.literal(WynnFont.toGlyph("head", CoordinatesFont.class)));
             } else if (compassStyle == CoordinatesOverlay.CompassStyle.ANIMATED) {
-                component.append(Component.literal(WynnFont.toGlyph("compass_head_" + lastCardinalDirection.getShortName().toLowerCase(Locale.ROOT), CoordinatesFont.class)));
+                component.append(Component.literal(WynnFont.toGlyph(
+                        "compass_head_" + lastCardinalDirection.getShortName().toLowerCase(Locale.ROOT),
+                        CoordinatesFont.class)));
             }
         } else {
             component.append(WynnFont.toGlyph("head", CoordinatesFont.class));
@@ -63,8 +74,7 @@ public class CoordinatesFont extends RegisteredFont {
                 component.append(Component.literal(WynnFont.toGlyph(String.valueOf(c), CoordinatesFont.class)));
                 component.append(NEGATIVE_SPACE_CHARACTER);
             }
-        }
-        else {
+        } else {
             for (char c : String.valueOf(lastBlockPos.getY()).toCharArray()) {
                 component.append(Component.literal(WynnFont.toGlyph(String.valueOf(c), CoordinatesFont.class)));
                 component.append(NEGATIVE_SPACE_CHARACTER);
@@ -88,7 +98,9 @@ public class CoordinatesFont extends RegisteredFont {
             } else if (compassStyle == CoordinatesOverlay.CompassStyle.NONE) {
                 component.append(Component.literal(WynnFont.toGlyph("tail", CoordinatesFont.class)));
             } else if (compassStyle == CoordinatesOverlay.CompassStyle.ANIMATED) {
-                component.append(Component.literal(WynnFont.toGlyph("compass_tail_" + lastCardinalDirection.getShortName().toLowerCase(Locale.ROOT), CoordinatesFont.class)));
+                component.append(Component.literal(WynnFont.toGlyph(
+                        "compass_tail_" + lastCardinalDirection.getShortName().toLowerCase(Locale.ROOT),
+                        CoordinatesFont.class)));
             }
         } else {
             if (compassDirectionYPos == CoordinatesOverlay.CompassDirectionYPos.BOTH) {
