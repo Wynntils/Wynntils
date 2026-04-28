@@ -16,7 +16,6 @@ import com.wynntils.models.abilities.label.ShamanPuppetParser;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +42,7 @@ public class ShamanSummonModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageEvent.Match event) {
-        StyledText message = StyledTextUtils.unwrap(event.getMessage().stripAlignment());
+        StyledText message = event.getMessage();
         if (message.matches(HUMMINGBIRD_RETURN_PATTERN)) {
             hummingBirdsState = false;
         } else if (message.matches(HUMMINGBIRD_SENT_PATTERN)) {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.worldevents;
@@ -36,7 +36,6 @@ import com.wynntils.models.items.items.game.CorruptedCacheItem;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.Time;
 import java.util.HashMap;
 import java.util.List;
@@ -143,7 +142,7 @@ public final class WorldEventModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageEvent.Match event) {
-        StyledText styledText = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
+        StyledText styledText = event.getMessage();
 
         if (styledText.matches(IN_RADIUS_PATTERN)) {
             inWorldEventRadius = true;

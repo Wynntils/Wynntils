@@ -36,7 +36,6 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.trademarket.TradeMarketSearchResultHolder;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
@@ -178,7 +177,7 @@ public final class TradeMarketModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChatMessageReceive(ChatMessageEvent.Match event) {
-        StyledText styledText = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
+        StyledText styledText = event.getMessage();
 
         TradeMarketState newState;
 
