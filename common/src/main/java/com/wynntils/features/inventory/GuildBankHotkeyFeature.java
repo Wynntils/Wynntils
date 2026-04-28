@@ -52,6 +52,6 @@ public class GuildBankHotkeyFeature extends Feature {
 
     private void onOpenGuildBankKeyPress() {
         openGuildBank = true;
-        Handlers.Command.queueCommand("guild manage");
+        Handlers.Command.sendCommandImmediately("guild manage");
     }
 }

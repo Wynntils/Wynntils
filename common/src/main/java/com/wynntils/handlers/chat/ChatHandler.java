@@ -6,6 +6,7 @@ package com.wynntils.handlers.chat;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
@@ -37,9 +38,9 @@ import net.neoforged.bus.api.SubscribeEvent;
  * stage).
  */
 public final class ChatHandler extends Handler {
-    private static final int TICKS_PER_EXECUTE = 7;
+    private static final int TICKS_PER_EXECUTE = 100;
 
-    private final Queue<String> chatQueue = new LinkedList<>();
+    private final Queue<QueuedMessage> chatQueue = new LinkedList<>();
     private int chatQueueTicks = 0;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -96,27 +97,38 @@ public final class ChatHandler extends Handler {
         chatQueueTicks--;
 
         if (chatQueueTicks <= 0 && !chatQueue.isEmpty()) {
-            String message = chatQueue.poll();
-            WynntilsMod.info("Executing queued chat message: " + message);
-            McUtils.mc().getConnection().sendChat(message);
+            QueuedMessage queued = chatQueue.poll();
+            WynntilsMod.info("Executing queued chat message: " + queued.content());
+            queued.send();
             chatQueueTicks = TICKS_PER_EXECUTE;
         }
     }
 
-    /**
-     * Sends a chat message to the Wynncraft server, respecting the server ratelimit.
-     * Use this when the mod sends chat automatically (button-triggered, event-triggered)
-     * to prevent accidental spam. Queued messages may take up to {@link #TICKS_PER_EXECUTE}
-     * ticks each to send.
-     * @param message The chat message to queue.
-     */
     public void queueChat(String message) {
+        enqueue(new QueuedMessage(message, false));
+    }
+
+    public void queueChatCommand(String command) {
+        enqueue(new QueuedMessage(command, true));
+    }
+
+    private void enqueue(QueuedMessage queued) {
         if (chatQueueTicks <= 0) {
-            WynntilsMod.info("Executing queued chat message immediately: " + message);
-            McUtils.mc().getConnection().sendChat(message);
+            WynntilsMod.info("Executing queued chat message immediately: " + queued.content());
+            queued.send();
             chatQueueTicks = TICKS_PER_EXECUTE;
         } else {
-            chatQueue.add(message);
+            chatQueue.add(queued);
+        }
+    }
+
+    private record QueuedMessage(String content, boolean isCommand) {
+        void send() {
+            if (isCommand) {
+                Handlers.Command.queueCommand(content);
+            } else {
+                McUtils.mc().getConnection().sendChat(content);
+            }
         }
     }
 }

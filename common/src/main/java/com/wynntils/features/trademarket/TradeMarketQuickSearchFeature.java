@@ -5,7 +5,6 @@
 package com.wynntils.features.trademarket;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -116,7 +115,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
 
         if (Models.TradeMarket.inChatInput() && event.getScreen() instanceof ChatScreen) {
             if (autoCancel.get() && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
-                Handlers.Chat.queueChat("cancel");
+                McUtils.sendChat("cancel");
             }
             return;
         }

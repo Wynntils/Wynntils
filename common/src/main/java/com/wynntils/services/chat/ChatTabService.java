@@ -315,16 +315,16 @@ public final class ChatTabService extends Service {
         if (message.isBlank()) return;
 
         if (!isEnabled()) {
-            Handlers.Chat.queueChat(message);
+            McUtils.sendChat(message);
             return;
         }
 
         String autoCommand = getFocusedTab().autoCommand();
         if (autoCommand != null && !autoCommand.isBlank()) {
             autoCommand = autoCommand.startsWith("/") ? autoCommand.substring(1) : autoCommand;
-            Handlers.Command.queueCommand(autoCommand + " " + message);
+            Handlers.Command.sendCommandImmediately(autoCommand + " " + message);
         } else {
-            Handlers.Chat.queueChat(message);
+            McUtils.sendChat(message);
         }
     }
 
