@@ -170,7 +170,7 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
             InventoryUtils.sendInventorySlotMouseClick(
                     COMPASS_INVENTORY_SLOT, InventoryUtils.MouseClickType.LEFT_CLICK);
         } else {
-            Handlers.Command.sendCommandImmediately("guild manage");
+            Handlers.Command.queueCommand("guild manage");
         }
     }
 }

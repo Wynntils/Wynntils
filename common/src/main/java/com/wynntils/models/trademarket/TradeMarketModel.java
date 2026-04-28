@@ -204,7 +204,7 @@ public final class TradeMarketModel extends Model {
                     event.cancelChat();
                 }
                 if (inputEvent.getResponse() != null) {
-                    McUtils.sendChat(inputEvent.getResponse());
+                    Handlers.Chat.queueChat(inputEvent.getResponse());
                 }
             }
         }

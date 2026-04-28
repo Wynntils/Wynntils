@@ -349,7 +349,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
             }
         } else {
             if (!Models.War.isWarActive()) {
-                Handlers.Command.sendCommandImmediately("gu territory " + territoryItem.getName());
+                Handlers.Command.queueCommand("gu territory " + territoryItem.getName());
                 return;
             }
 

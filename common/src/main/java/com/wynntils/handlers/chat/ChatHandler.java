@@ -6,11 +6,16 @@ package com.wynntils.handlers.chat;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.SystemMessageEvent;
+import com.wynntils.mc.event.TickEvent;
+import com.wynntils.utils.mc.McUtils;
+import java.util.LinkedList;
+import java.util.Queue;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -32,6 +37,11 @@ import net.neoforged.bus.api.SubscribeEvent;
  * stage).
  */
 public final class ChatHandler extends Handler {
+    private static final int TICKS_PER_EXECUTE = 7;
+
+    private final Queue<String> chatQueue = new LinkedList<>();
+    private int chatQueueTicks = 0;
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSystemChatReceived(SystemMessageEvent.ChatReceivedEvent event) {
         handleIncomingChatMessage(event);
@@ -77,5 +87,36 @@ public final class ChatHandler extends Handler {
 
         // If no specific recipient matched, it is an "info" message
         return RecipientType.INFO;
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent e) {
+        if (!Models.WorldState.onWorld()) return;
+
+        chatQueueTicks--;
+
+        if (chatQueueTicks <= 0 && !chatQueue.isEmpty()) {
+            String message = chatQueue.poll();
+            WynntilsMod.info("Executing queued chat message: " + message);
+            McUtils.mc().getConnection().sendChat(message);
+            chatQueueTicks = TICKS_PER_EXECUTE;
+        }
+    }
+
+    /**
+     * Sends a chat message to the Wynncraft server, respecting the server ratelimit.
+     * Use this when the mod sends chat automatically (button-triggered, event-triggered)
+     * to prevent accidental spam. Queued messages may take up to {@link #TICKS_PER_EXECUTE}
+     * ticks each to send.
+     * @param message The chat message to queue.
+     */
+    public void queueChat(String message) {
+        if (chatQueueTicks <= 0) {
+            WynntilsMod.info("Executing queued chat message immediately: " + message);
+            McUtils.mc().getConnection().sendChat(message);
+            chatQueueTicks = TICKS_PER_EXECUTE;
+        } else {
+            chatQueue.add(message);
+        }
     }
 }
