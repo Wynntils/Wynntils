@@ -127,7 +127,7 @@ public final class ChatHandler extends Handler {
             if (isCommand) {
                 Handlers.Command.queueCommand(content);
             } else {
-                McUtils.mc().getConnection().sendChat(content);
+                McUtils.sendChat(content);
             }
         }
     }
