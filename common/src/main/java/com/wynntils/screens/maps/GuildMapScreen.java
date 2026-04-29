@@ -333,7 +333,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT
                 && KeyboardUtils.isShiftDown()
                 && hovered instanceof TerritoryPoi territoryPoi) {
-            Handlers.Chat.queueChatCommand("gu territory " + territoryPoi.getName());
+            Handlers.Command.queueCommand("gu territory " + territoryPoi.getName());
         } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (hovered instanceof WaypointPoi) {
                 Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
