@@ -83,7 +83,7 @@ public class TowerStatsFeature extends Feature {
                 style -> style.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to copy to clipboard.")))
                         .withClickEvent(new ClickEvent.CopyToClipboard(messageString)));
 
-        McUtils.sendMessageToClient(message);
+        McUtils.sendWynntilsPrefixMessage(message);
     }
 
     private static MutableComponent getSeparatorComponent(String text, int separatorLength) {

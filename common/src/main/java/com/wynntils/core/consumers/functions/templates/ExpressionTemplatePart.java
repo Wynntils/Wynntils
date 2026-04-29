@@ -6,7 +6,6 @@ package com.wynntils.core.consumers.functions.templates;
 
 import com.wynntils.core.consumers.functions.expressions.Expression;
 import com.wynntils.core.consumers.functions.expressions.parser.ExpressionParser;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.type.ErrorOr;
 
 public class ExpressionTemplatePart extends TemplatePart {
@@ -23,15 +22,15 @@ public class ExpressionTemplatePart extends TemplatePart {
     }
 
     @Override
-    public StyledText getValue() {
+    public String getValue() {
         if (expression.hasError()) {
-            return StyledText.fromString(expression.getError());
+            return expression.getError();
         }
 
-        ErrorOr<StyledText> calculatedValue = expression.getValue().calculateFormattedStyledText();
+        ErrorOr<String> calculatedValue = expression.getValue().calculateFormattedString();
 
         if (calculatedValue.hasError()) {
-            return StyledText.fromString(calculatedValue.getError());
+            return calculatedValue.getError();
         }
 
         return calculatedValue.getValue();

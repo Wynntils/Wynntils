@@ -458,6 +458,10 @@ public final class StyledTextPart {
         return new StyledTextPart(text.stripTrailing(), style.getStyle(), parent, null);
     }
 
+    public boolean endsWith(String string) {
+        return text.endsWith(string);
+    }
+
     boolean isEmpty() {
         return text.isEmpty();
     }

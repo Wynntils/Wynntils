@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players.type.wynnplayer;
@@ -113,7 +113,7 @@ public record WynnPlayerInfo(
                     try {
                         guild = completableFuture.get();
                     } catch (InterruptedException | ExecutionException e) {
-                        McUtils.sendMessageToClient(Component.literal("Error trying to parse player guild")
+                        McUtils.sendWynntilsPrefixMessage(Component.literal("Error trying to parse player guild")
                                 .withStyle(ChatFormatting.RED));
                         guild = null;
                     }

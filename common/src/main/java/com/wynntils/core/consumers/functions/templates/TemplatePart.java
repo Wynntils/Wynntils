@@ -4,9 +4,6 @@
  */
 package com.wynntils.core.consumers.functions.templates;
 
-import com.wynntils.core.text.StyledText;
-import com.wynntils.core.text.type.StyleType;
-
 /**
  * Represents a part of an info variable template.
  * A template part can be either a (string) literal or en expression that will be evaluated.
@@ -18,11 +15,7 @@ public abstract class TemplatePart {
         this.part = part;
     }
 
-    public abstract StyledText getValue();
-
-    public String getCodedValue() {
-        return getValue().getString(StyleType.INCLUDE_SPECIALS);
-    }
+    public abstract String getValue();
 
     @Override
     public abstract String toString();

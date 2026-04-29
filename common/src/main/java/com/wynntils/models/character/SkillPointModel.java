@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.character;
@@ -16,7 +16,8 @@ import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.character.type.SavableSkillPointSet;
-import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.containers.containers.MasteryTomesContainer;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
@@ -136,7 +137,7 @@ public final class SkillPointModel extends Model {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Loading Skill Point Loadout Query")
                 .onError(msg -> WynntilsMod.warn("Failed to load skill point loadout: " + msg))
                 .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                        .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
+                        .expectContainer(CharacterInfoContainer.class)
                         .verifyContentChange((container, changes, changeType) ->
                                 verifyChange(container, changes, changeType, CONTENT_BOOK_SLOT))
                         .processIncomingContainer((container) -> loadSkillPointsOnServer(container, name)))
@@ -353,14 +354,14 @@ public final class SkillPointModel extends Model {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Total and Tome Skill Point Query")
                 .onError(msg -> WynntilsMod.warn("Failed to query skill points: " + msg))
                 .then(QueryStep.useItemInHotbar(CharacterModel.CHARACTER_INFO_SLOT)
-                        .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
+                        .expectContainer(CharacterInfoContainer.class)
                         .verifyContentChange((container, changes, changeType) ->
                                 verifyChange(container, changes, changeType, CONTENT_BOOK_SLOT))
                         .processIncomingContainer(this::processTotalSkillPoints))
                 .conditionalThen(
                         this::checkTomesUnlocked,
                         QueryStep.clickOnSlot(TOME_SLOT)
-                                .expectContainerTitle(ContainerModel.MASTERY_TOMES_NAME)
+                                .expectContainer(MasteryTomesContainer.class)
                                 .verifyContentChange((container, changes, changeType) ->
                                         verifyChange(container, changes, changeType, TOME_MENU_CONTENT_BOOK_SLOT))
                                 .processIncomingContainer(this::processTomeSkillPoints))

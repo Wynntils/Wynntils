@@ -8,7 +8,7 @@ import com.wynntils.models.containers.Container;
 import java.util.regex.Pattern;
 
 public class StoreContainer extends Container {
-    public static Pattern TITLE_PATTERN = Pattern.compile(
+    private static Pattern TITLE_PATTERN = Pattern.compile(
             "\uDAFF\uDFF4\uE02C\uDAFF\uDF7C\uF027\uDAFF\uDF52\uDB00\uDC3D.\uDAFF\uDF22\uDB00\uDC40.\uDAFF\uDF2F");
 
     public StoreContainer() {

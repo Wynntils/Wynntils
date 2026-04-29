@@ -210,7 +210,7 @@ public class ValuableFoundFeature extends Feature {
     }
 
     private void sendLootrunDryStreakMessage(StyledText itemName) {
-        McUtils.sendMessageToClient(Component.literal("Dry streak broken! Found an ")
+        McUtils.sendWynntilsPrefixMessage(Component.literal("Dry streak broken! Found an ")
                 .withStyle(ChatFormatting.LIGHT_PURPLE)
                 .append(itemName.getComponent())
                 .append(Component.literal(" after ")
@@ -221,7 +221,7 @@ public class ValuableFoundFeature extends Feature {
     }
 
     private static void sendNormalDryStreakMessage(StyledText itemName) {
-        McUtils.sendMessageToClient(Component.literal("Dry streak broken! Found an ")
+        McUtils.sendWynntilsPrefixMessage(Component.literal("Dry streak broken! Found an ")
                 .withStyle(ChatFormatting.LIGHT_PURPLE)
                 .append(itemName.getComponent())
                 .append(Component.literal(" in chest ")
@@ -239,7 +239,7 @@ public class ValuableFoundFeature extends Feature {
     }
 
     private static void sendCacheDryStreakMessage(StyledText itemName) {
-        McUtils.sendMessageToClient(Component.literal("Dry streak broken! Found a ")
+        McUtils.sendWynntilsPrefixMessage(Component.literal("Dry streak broken! Found a ")
                 .withColor(CustomColor.fromHexString("#800080").asInt())
                 .append(itemName.getComponent())
                 .append(Component.literal(" after ")
@@ -251,7 +251,7 @@ public class ValuableFoundFeature extends Feature {
     }
 
     private static void sendEmeraldPouchDryStreakMessage(StyledText itemName, int tier) {
-        McUtils.sendMessageToClient(Component.literal("Dry streak broken! Found an ")
+        McUtils.sendWynntilsPrefixMessage(Component.literal("Dry streak broken! Found an ")
                 .withColor(CustomColor.fromHexString("#7CFC00").asInt())
                 .append(itemName.getComponent())
                 .append(Component.literal(" in chest ")
@@ -282,7 +282,7 @@ public class ValuableFoundFeature extends Feature {
     }
 
     private static void sendRaidDryStreakMessage(StyledText itemName, int numRaids, int numPulls, String pullType) {
-        McUtils.sendMessageToClient(Component.literal("Dry streak broken! Found ")
+        McUtils.sendWynntilsPrefixMessage(Component.literal("Dry streak broken! Found ")
                 .withStyle(ChatFormatting.LIGHT_PURPLE)
                 .append(itemName.getComponent())
                 .append(Component.literal(" after ")

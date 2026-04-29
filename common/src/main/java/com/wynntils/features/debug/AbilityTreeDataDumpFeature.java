@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
@@ -61,6 +61,7 @@ public class AbilityTreeDataDumpFeature extends Feature {
         File jsonFile = new File(SAVE_FOLDER, fileName);
         Managers.Json.savePreciousJson(jsonFile, element.getAsJsonObject());
 
-        McUtils.sendMessageToClient(Component.literal("Saved ability tree dump to " + jsonFile.getAbsolutePath()));
+        McUtils.sendWynntilsPrefixMessage(
+                Component.literal("Saved ability tree dump to " + jsonFile.getAbsolutePath()));
     }
 }

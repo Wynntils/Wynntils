@@ -1271,27 +1271,29 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             boolean imported = Managers.Config.importConfig(clipboard, configsToImport);
 
             if (imported) {
-                McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.importedAll")
+                McUtils.sendWynntilsPrefixMessage(Component.translatable("screens.wynntils.settingsScreen.importedAll")
                         .withStyle(ChatFormatting.GREEN));
             } else {
-                McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.import.failed")
-                        .withStyle(ChatFormatting.RED));
+                McUtils.sendWynntilsPrefixMessage(
+                        Component.translatable("screens.wynntils.settingsScreen.import.failed")
+                                .withStyle(ChatFormatting.RED));
             }
         } else if (clicked == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (selectedConfigurable != null) {
                 boolean imported = Managers.Config.importConfig(clipboard, List.of(selectedConfigurable));
 
                 if (imported) {
-                    McUtils.sendMessageToClient(Component.translatable(
+                    McUtils.sendWynntilsPrefixMessage(Component.translatable(
                                     "screens.wynntils.settingsScreen.imported",
                                     selectedConfigurable.getTranslatedName())
                             .withStyle(ChatFormatting.GREEN));
                 } else {
-                    McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.import.failed")
-                            .withStyle(ChatFormatting.RED));
+                    McUtils.sendWynntilsPrefixMessage(
+                            Component.translatable("screens.wynntils.settingsScreen.import.failed")
+                                    .withStyle(ChatFormatting.RED));
                 }
             } else {
-                McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.needToSelect")
+                McUtils.sendWynntilsPrefixMessage(Component.translatable("screens.wynntils.settingsScreen.needToSelect")
                         .withStyle(ChatFormatting.RED));
             }
         }
@@ -1315,17 +1317,17 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
             exportedSettings = Managers.Config.exportConfig(featuresToExport);
 
-            McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.exportedAll")
+            McUtils.sendWynntilsPrefixMessage(Component.translatable("screens.wynntils.settingsScreen.exportedAll")
                     .withStyle(ChatFormatting.GREEN));
         } else if (clicked == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (selectedConfigurable != null) {
                 exportedSettings = Managers.Config.exportConfig(List.of(selectedConfigurable));
 
-                McUtils.sendMessageToClient(Component.translatable(
+                McUtils.sendWynntilsPrefixMessage(Component.translatable(
                                 "screens.wynntils.settingsScreen.exported", selectedConfigurable.getTranslatedName())
                         .withStyle(ChatFormatting.GREEN));
             } else {
-                McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.needToSelect")
+                McUtils.sendWynntilsPrefixMessage(Component.translatable("screens.wynntils.settingsScreen.needToSelect")
                         .withStyle(ChatFormatting.RED));
             }
         }

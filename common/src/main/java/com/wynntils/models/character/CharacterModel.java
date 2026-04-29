@@ -18,7 +18,7 @@ import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.character.type.VehicleType;
-import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.items.items.gui.CharacterItem;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -165,7 +165,7 @@ public final class CharacterModel extends Model {
 
         // Open compass/character menu
         queryBuilder.then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
+                .expectContainer(CharacterInfoContainer.class)
                 .processIncomingContainer(this::parseCharacterContainer));
 
         // Scan guild container, if the player is in a guild

@@ -11,7 +11,7 @@ import java.util.TreeMap;
 
 public class TheWartornPalaceRaid extends RaidKind {
     private static final String RAID_NAME = "The Wartorn Palace";
-    private static final String ABBREVIATION = "TWP";
+    private static final String ABBREVIATION = "WTP";
     private static final CustomColor RAID_COLOR = CustomColor.fromHexString("#FF5555FF");
     private static final StyledText ENTRY_TITLE = StyledText.fromString("§#00F010FFThe Wartorn Palace");
 

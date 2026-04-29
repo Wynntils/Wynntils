@@ -77,7 +77,7 @@ public class HintService extends Service {
 
         if (component.equals(Component.empty())) return;
 
-        McUtils.sendWynntilsMessage(component);
+        McUtils.sendWynntilsPillMessage(component);
     }
 
     private MutableComponent formatHint(String hint) {
