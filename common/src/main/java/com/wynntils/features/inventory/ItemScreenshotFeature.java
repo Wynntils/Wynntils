@@ -30,6 +30,7 @@ import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.wynn.ItemUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -202,6 +203,8 @@ public class ItemScreenshotFeature extends Feature {
                     .replaceAll("[/ ]", "_")
                     .getNormalized()
                     .getString(StyleType.NONE);
+            itemNameForFile = WynnUtils.normalizeBadString(itemNameForFile);
+            itemNameForFile = WynnUtils.stripItemNameMarkers(itemNameForFile);
             File screenshotDir = new File(McUtils.mc().gameDirectory, "screenshots");
             String filename = Util.getFilenameFormattedDateTime() + "-" + itemNameForFile + ".png";
             try {

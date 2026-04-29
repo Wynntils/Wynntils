@@ -59,11 +59,11 @@ public final class LocationUtils {
 
     private static void sendShareMessage(String target, String locationString) {
         if (target.equals("guild")) {
-            Handlers.Command.sendCommandImmediately("g " + locationString);
+            Handlers.Chat.queueChatCommand("g " + locationString);
         } else if (target.equals("party")) {
-            Handlers.Command.sendCommandImmediately("p " + locationString);
+            Handlers.Chat.queueChatCommand("p " + locationString);
         } else {
-            Handlers.Command.sendCommandImmediately("msg " + target + " " + locationString);
+            Handlers.Chat.queueChatCommand("msg " + target + " " + locationString);
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.gui;
@@ -46,5 +46,15 @@ public class GambitItem extends GuiItem {
 
     public List<StyledText> getDescription() {
         return Collections.unmodifiableList(description);
+    }
+
+    @Override
+    public String toString() {
+        return "GambitItem{" + "gambit="
+                + gambit + ", name="
+                + name + ", color="
+                + color + ", description="
+                + description + ", gambitStatus="
+                + gambitStatus + '}';
     }
 }

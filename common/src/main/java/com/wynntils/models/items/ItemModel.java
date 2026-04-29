@@ -47,6 +47,7 @@ import com.wynntils.models.items.annotators.gui.GambitAnnotator;
 import com.wynntils.models.items.annotators.gui.GuildLogAnnotator;
 import com.wynntils.models.items.annotators.gui.IngredientPouchAnnotator;
 import com.wynntils.models.items.annotators.gui.LeaderboardSeasonAnnotator;
+import com.wynntils.models.items.annotators.gui.RaidPlayerAnnotator;
 import com.wynntils.models.items.annotators.gui.SeaskipperDestinationAnnotator;
 import com.wynntils.models.items.annotators.gui.ServerAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillCrystalAnnotator;
@@ -105,6 +106,7 @@ public final class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new GuildLogAnnotator());
         Handlers.Item.registerAnnotator(new IngredientPouchAnnotator());
         Handlers.Item.registerAnnotator(new LeaderboardSeasonAnnotator());
+        Handlers.Item.registerAnnotator(new RaidPlayerAnnotator());
         Handlers.Item.registerAnnotator(new SeaskipperDestinationAnnotator());
         Handlers.Item.registerAnnotator(new ServerAnnotator());
         Handlers.Item.registerAnnotator(new SkillCrystalAnnotator());
