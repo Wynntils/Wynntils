@@ -154,7 +154,8 @@ public class ValuableFoundFeature extends Feature {
                 }
 
                 if (!showDryStreakMessage.get()) return;
-                sendLootrunDryStreakMessage(resolveItemName(itemStack, event.getItem().getHoverName()));
+                sendLootrunDryStreakMessage(
+                        resolveItemName(itemStack, event.getItem().getHoverName()));
             }
         }
 
