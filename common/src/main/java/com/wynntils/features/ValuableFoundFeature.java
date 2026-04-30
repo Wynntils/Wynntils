@@ -20,8 +20,10 @@ import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.InsulatorItem;
 import com.wynntils.models.items.items.game.SimulatorItem;
 import com.wynntils.models.items.items.game.TomeItem;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -152,8 +154,7 @@ public class ValuableFoundFeature extends Feature {
                 }
 
                 if (!showDryStreakMessage.get()) return;
-                sendLootrunDryStreakMessage(
-                        StyledText.fromComponent(event.getItem().getHoverName()));
+                sendLootrunDryStreakMessage(resolveItemName(itemStack, event.getItem().getHoverName()));
             }
         }
 
@@ -207,6 +208,23 @@ public class ValuableFoundFeature extends Feature {
                 }
             }
         }
+    }
+
+    /**
+     * Resolves a clean item name for dry-streak messages. Wynncraft surrounds certain
+     * item names with non-printable boundary markers in the raw hover name, which leak
+     * through to the chat message via {@code StyledText.fromComponent(getHoverName())}
+     * (see #4016). Prefer the WynnItem's {@link NamedItemProperty#getName()} when
+     * available, then fall back to stripping the marker characters from the hover name.
+     */
+    private static StyledText resolveItemName(ItemStack itemStack, Component hoverName) {
+        Optional<NamedItemProperty> namedItemProperty =
+                Models.Item.asWynnItemProperty(itemStack, NamedItemProperty.class);
+        if (namedItemProperty.isPresent()) {
+            return StyledText.fromString(namedItemProperty.get().getName());
+        }
+        StyledText hover = StyledText.fromComponent(hoverName);
+        return StyledText.fromString(WynnUtils.stripItemNameMarkers(hover.getString()));
     }
 
     private void sendLootrunDryStreakMessage(StyledText itemName) {
