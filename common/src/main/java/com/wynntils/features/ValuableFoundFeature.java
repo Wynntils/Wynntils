@@ -193,8 +193,10 @@ public class ValuableFoundFeature extends Feature {
                                 tomeFoundSound.get().getSoundEvent(), soundVolume.get(), soundPitch.get());
                     }
                     if (showTomeDryStreakMessage.get()) {
-                        sendTomeDryStreakMessage(
-                                StyledText.fromComponent(event.getItem().getHoverName()));
+                        StyledText itemName = buildItemName(
+                                event.getItem().getHoverName().getString(),
+                                tomeItem.get().getGearTier().getChatFormatting());
+                        sendTomeDryStreakMessage(itemName);
                     }
                     return;
                 }
