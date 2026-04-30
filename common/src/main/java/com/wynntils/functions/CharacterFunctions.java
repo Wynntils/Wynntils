@@ -529,32 +529,32 @@ public class CharacterFunctions {
     }
 
     public static class PlayerStatFunction extends Function<String> {
-
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("name", String.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("name", String.class, null)));
         }
+
         @Override
         public String getValue(FunctionArguments arguments) {
-            return Models.CharacterStats
-                    .getStatByApiName(arguments.getArgument("name").getStringValue())
-                    .orElse(PlayerStat.NONE).toDisplay();
+            return Models.CharacterStats.getStatByApiName(
+                            arguments.getArgument("name").getStringValue())
+                    .orElse(PlayerStat.NONE)
+                    .toDisplay();
         }
     }
 
     public static class PlayerStatRawFunction extends Function<Integer> {
-
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("name", String.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("name", String.class, null)));
         }
+
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.CharacterStats
-                    .getStatByApiName(arguments.getArgument("name").getStringValue())
-                    .orElse(PlayerStat.NONE).value();
+            return Models.CharacterStats.getStatByApiName(
+                            arguments.getArgument("name").getStringValue())
+                    .orElse(PlayerStat.NONE)
+                    .value();
         }
     }
 }

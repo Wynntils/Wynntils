@@ -2688,6 +2688,12 @@
   "function.wynntils.ping.name": "Ping",
   "function.wynntils.playerName.description": "Your username",
   "function.wynntils.playerName.name": "Player Name",
+  "function.wynntils.playerStat.argument.name": "Stat API name",
+  "function.wynntils.playerStat.description": "Player statistic",
+  "function.wynntils.playerStat.name": "Player statistic",
+  "function.wynntils.playerStatRaw.argument.name": "Stat API name",
+  "function.wynntils.playerStatRaw.description": "Player statistic (raw number)",
+  "function.wynntils.playerStatRaw.name": "Player statistic (raw number)",
   "function.wynntils.playerUuid.description": "Your UUID",
   "function.wynntils.playerUuid.name": "Player UUID",
   "function.wynntils.powderSpecialCharge.description": "The percent of charge of your powder special",
@@ -3848,12 +3854,5 @@
   "wynntils.keybind.toggleFavorite": "Favorite/Unfavorite Item",
   "wynntils.keybind.toggleSilencer": "Toggle Silencer",
   "wynntils.keybind.toggleStopwatch": "Toggle Stopwatch",
-  "wynntils.keybind.viewPlayer": "View Player",
-
-  "function.wynntils.playerStat.name": "Player statistic",
-  "function.wynntils.playerStat.description": "Player statistic",
-  "function.wynntils.playerStatRaw.name": "Player statistic (raw number)",
-  "function.wynntils.playerStatRaw.description": "Player statistic (raw number)",
-  "function.wynntils.playerStat.argument.name": "Stat API name",
-  "function.wynntils.playerStatRaw.argument.name": "Stat API name"
+  "wynntils.keybind.viewPlayer": "View Player"
 }

@@ -48,11 +48,11 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.HashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
@@ -102,6 +102,7 @@ public final class CharacterStatsModel extends Model {
     }
 
     private int ticksUntilNextLookup = 0;
+
     @SubscribeEvent
     public void onTick(TickEvent event) {
         if (ticksUntilNextLookup > 0) {
@@ -234,7 +235,7 @@ public final class CharacterStatsModel extends Model {
 
     public Optional<PlayerStat> getStatByApiName(String statName) {
         StatType type = Models.Stat.fromApiName(statName);
-        if(type == null) return Optional.empty();
+        if (type == null) return Optional.empty();
         return Optional.of(this.playerStats.getOrDefault(type, null));
     }
 

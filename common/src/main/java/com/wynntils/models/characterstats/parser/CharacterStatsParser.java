@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.characterstats.parser;
 
 import com.wynntils.core.WynntilsMod;
@@ -12,22 +16,21 @@ import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class CharacterStatsParser {
-
     private static final int CHARACTER_STAT_SLOT = 7;
 
     private final Pattern PLAYERSTAT_IDENTIFICATION_PATTERN = Pattern.compile("§dIdentifications: ");
-    private final Pattern PLAYERSTAT_ITEM_PATTERN = Pattern.compile("§7(?!§)(.*?)(?<statName>[\\w ]+): (?<positiveNegative>§a|§c)(?<value>[-+\\d]+)(?<unit>.*?$)");
+    private final Pattern PLAYERSTAT_ITEM_PATTERN = Pattern.compile(
+            "§7(?!§)(.*?)(?<statName>[\\w ]+): (?<positiveNegative>§a|§c)(?<value>[-+\\d]+)(?<unit>.*?$)");
     private final Pattern PLAYERSTAT_END_PATTERN = Pattern.compile("§5 ");
     private int pageCount = 0;
     private Consumer<PlayerStat> playerStatConsumer;
@@ -38,19 +41,18 @@ public class CharacterStatsParser {
 
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Player Stats Query")
                 .onError(msg -> WynntilsMod.warn("Player stats querying: " + msg))
-
                 .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                         .expectContainer(CharacterInfoContainer.class))
-
                 .execute(() -> pageCount = 0)
                 .reprocess(this::processPage)
-                .repeat((c) -> {
-                    pageCount++;
-                    return pageCount < 4;
-                }, QueryStep.clickOnSlot(CHARACTER_STAT_SLOT)
-                        .verifyContentChange((a, b, c) -> true)
-                        .processIncomingContainer(this::processPage))
-
+                .repeat(
+                        (c) -> {
+                            pageCount++;
+                            return pageCount < 4;
+                        },
+                        QueryStep.clickOnSlot(CHARACTER_STAT_SLOT)
+                                .verifyContentChange((a, b, c) -> true)
+                                .processIncomingContainer(this::processPage))
                 .build();
 
         query.executeQuery();
