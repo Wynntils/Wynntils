@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 public final class WynnUtils {
     private static final String ITEM_NAME_MARKER = "\uDAFC\uDC00";
     private static final String UNIDENTIFIED_ITEM_MARKER = "\uDB00\uDC02";
+    // This marker's purpose is currently unknown but is present on some items.
     private static final String UNKNOWN_MARKER = "\uE008";
 
     /**
