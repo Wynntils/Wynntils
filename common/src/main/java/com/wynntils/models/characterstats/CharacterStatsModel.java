@@ -10,6 +10,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
+import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.characterstats.actionbar.matchers.HealthBarSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.matchers.HealthTextSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.matchers.HotbarSegmentMatcher;
@@ -35,10 +37,13 @@ import com.wynntils.models.characterstats.actionbar.segments.ManaTextSegment;
 import com.wynntils.models.characterstats.actionbar.segments.MeterBarSegment;
 import com.wynntils.models.characterstats.actionbar.segments.PowderSpecialSegment;
 import com.wynntils.models.characterstats.actionbar.segments.ProfessionExperienceSegment;
+import com.wynntils.models.characterstats.parser.CharacterStatsParser;
 import com.wynntils.models.characterstats.type.MeterBarInfo;
+import com.wynntils.models.characterstats.type.PlayerStat;
 import com.wynntils.models.characterstats.type.PowderSpecialInfo;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
@@ -47,6 +52,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.HashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
@@ -55,6 +61,8 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class CharacterStatsModel extends Model {
+    public static final int TICKS_BETWEEN_STAT_LOOKUP = 20 * 20; // 20 seconds
+    private static final CharacterStatsParser CHARACTER_STATS_PARSER = new CharacterStatsParser();
     private final Set<Class<? extends ActionBarSegment>> hiddenSegments = new HashSet<>();
 
     private int level = 0;
@@ -62,6 +70,7 @@ public final class CharacterStatsModel extends Model {
     private CappedValue mana = CappedValue.EMPTY;
     private CappedValue sprint = CappedValue.EMPTY;
     private PowderSpecialInfo powderSpecialInfo = PowderSpecialInfo.EMPTY;
+    private final HashMap<StatType, PlayerStat> playerStats = new HashMap<>();
 
     private boolean isProfessionExperience = false;
 
@@ -85,6 +94,23 @@ public final class CharacterStatsModel extends Model {
         Handlers.ActionBar.registerSegment(new HealthTextSegmentMatcher());
         Handlers.ActionBar.registerSegment(new PowderSpecialSegmentMatcher());
         Handlers.ActionBar.registerSegment(new ProfessionExperienceSegmentMatcher());
+    }
+
+    @SubscribeEvent
+    public void onOpenScreen(ScreenOpenedEvent.Pre event) {
+        CHARACTER_STATS_PARSER.postponeQuery();
+    }
+
+    private int ticksUntilNextLookup = 0;
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        if (ticksUntilNextLookup > 0) {
+            ticksUntilNextLookup--;
+            return;
+        }
+
+        CHARACTER_STATS_PARSER.queryPlayerStats(stat -> playerStats.put(stat.statType(), stat));
+        ticksUntilNextLookup = TICKS_BETWEEN_STAT_LOOKUP;
     }
 
     @SubscribeEvent
@@ -200,6 +226,16 @@ public final class CharacterStatsModel extends Model {
     public Optional<CappedValue> getSprint() {
         if (sprint == CappedValue.EMPTY) return Optional.empty();
         return Optional.of(sprint);
+    }
+
+    public HashMap<StatType, PlayerStat> getPlayerStats() {
+        return playerStats;
+    }
+
+    public Optional<PlayerStat> getStatByApiName(String statName) {
+        StatType type = Models.Stat.fromApiName(statName);
+        if(type == null) return Optional.empty();
+        return Optional.of(this.playerStats.getOrDefault(type, null));
     }
 
     public Optional<PowderSpecialInfo> getPowderSpecialInfo() {

@@ -3848,5 +3848,12 @@
   "wynntils.keybind.toggleFavorite": "Favorite/Unfavorite Item",
   "wynntils.keybind.toggleSilencer": "Toggle Silencer",
   "wynntils.keybind.toggleStopwatch": "Toggle Stopwatch",
-  "wynntils.keybind.viewPlayer": "View Player"
+  "wynntils.keybind.viewPlayer": "View Player",
+
+  "function.wynntils.playerStat.name": "Player statistic",
+  "function.wynntils.playerStat.description": "Player statistic",
+  "function.wynntils.playerStatRaw.name": "Player statistic (raw number)",
+  "function.wynntils.playerStatRaw.description": "Player statistic (raw number)",
+  "function.wynntils.playerStat.argument.name": "Stat API name",
+  "function.wynntils.playerStatRaw.argument.name": "Stat API name"
 }
