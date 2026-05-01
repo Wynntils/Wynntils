@@ -6,11 +6,17 @@ package com.wynntils.handlers.chat;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.SystemMessageEvent;
+import com.wynntils.mc.event.TickEvent;
+import com.wynntils.utils.mc.McUtils;
+import java.util.LinkedList;
+import java.util.Queue;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -32,6 +38,11 @@ import net.neoforged.bus.api.SubscribeEvent;
  * stage).
  */
 public final class ChatHandler extends Handler {
+    private static final int TICKS_PER_EXECUTE = 100;
+
+    private final Queue<QueuedMessage> chatQueue = new LinkedList<>();
+    private int chatQueueTicks = 0;
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSystemChatReceived(SystemMessageEvent.ChatReceivedEvent event) {
         handleIncomingChatMessage(event);
@@ -77,5 +88,47 @@ public final class ChatHandler extends Handler {
 
         // If no specific recipient matched, it is an "info" message
         return RecipientType.INFO;
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent e) {
+        if (!Models.WorldState.onWorld()) return;
+
+        chatQueueTicks--;
+
+        if (chatQueueTicks <= 0 && !chatQueue.isEmpty()) {
+            QueuedMessage queued = chatQueue.poll();
+            WynntilsMod.info("Executing queued chat message: " + queued.content());
+            queued.send();
+            chatQueueTicks = TICKS_PER_EXECUTE;
+        }
+    }
+
+    public void queueChat(String message) {
+        enqueue(new QueuedMessage(message, false));
+    }
+
+    public void queueChatCommand(String command) {
+        enqueue(new QueuedMessage(command, true));
+    }
+
+    private void enqueue(QueuedMessage queued) {
+        if (chatQueueTicks <= 0) {
+            WynntilsMod.info("Executing queued chat message immediately: " + queued.content());
+            queued.send();
+            chatQueueTicks = TICKS_PER_EXECUTE;
+        } else {
+            chatQueue.add(queued);
+        }
+    }
+
+    private record QueuedMessage(String content, boolean isCommand) {
+        void send() {
+            if (isCommand) {
+                Handlers.Command.queueCommand(content);
+            } else {
+                McUtils.sendChat(content);
+            }
+        }
     }
 }

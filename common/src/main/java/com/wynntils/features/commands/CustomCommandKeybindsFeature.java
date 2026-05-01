@@ -87,7 +87,7 @@ public class CustomCommandKeybindsFeature extends Feature {
 
     private void executeKeybind(String keybindCommand, CommandType commandType) {
         switch (commandType) {
-            case EXECUTE -> Handlers.Command.sendCommandImmediately(keybindCommand);
+            case EXECUTE -> Handlers.Command.queueCommand(keybindCommand);
             case SUGGEST -> McUtils.openChatScreen(keybindCommand);
         }
     }

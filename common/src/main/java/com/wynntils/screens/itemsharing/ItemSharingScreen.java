@@ -191,11 +191,9 @@ public final class ItemSharingScreen extends WynntilsScreen {
     private void shareItem(String target) {
         switch (target) {
             case "guild" ->
-                Handlers.Command.sendCommandImmediately(
-                        "g " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
+                Handlers.Chat.queueChatCommand("g " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
             case "party" ->
-                Handlers.Command.sendCommandImmediately(
-                        "p " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
+                Handlers.Chat.queueChatCommand("p " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
             case "save" -> {
                 ItemStack itemStackToSave = itemStack;
 
