@@ -15,8 +15,8 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -40,7 +40,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class ChatHandler extends Handler {
     private static final int TICKS_PER_EXECUTE = 100;
 
-    private final Queue<QueuedMessage> chatQueue = new LinkedList<>();
+    private final LinkedHashSet<QueuedMessage> chatQueue = new LinkedHashSet<>();
     private int chatQueueTicks = 0;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -97,7 +97,10 @@ public final class ChatHandler extends Handler {
         chatQueueTicks--;
 
         if (chatQueueTicks <= 0 && !chatQueue.isEmpty()) {
-            QueuedMessage queued = chatQueue.poll();
+            Iterator<QueuedMessage> it = chatQueue.iterator();
+            QueuedMessage queued = it.next();
+            it.remove();
+
             WynntilsMod.info("Executing queued chat message: " + queued.content());
             queued.send();
             chatQueueTicks = TICKS_PER_EXECUTE;
