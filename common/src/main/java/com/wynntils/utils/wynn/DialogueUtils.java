@@ -32,7 +32,7 @@ public final class DialogueUtils {
     public static final FontDescription[] font_choice = new FontDescription[4];
     public static final FontDescription font_nameplate =
             new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/nameplate"));
-    public static final FontDescription font_picture =
+    public static final FontDescription font_portrait =
             new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/portrait"));
     public static final FontDescription font_press_shift =
             new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/control"));
@@ -72,7 +72,7 @@ public final class DialogueUtils {
             } else if (sibling.getStyle().getFont().equals(font_nameplate)) {
                 // could be usefull for later or some APIs / Mod-Addons
                 out.setName(getCleanText(sibling, false));
-            } else if (sibling.getStyle().getFont().equals(font_picture)) {
+            } else if (sibling.getStyle().getFont().equals(font_portrait)) {
                 String value = sibling.getString();
                 if (value.length() == 5) {
                     // Example: "\uDAFF\uDF68\uE1C3\uDB00\uDC67"
