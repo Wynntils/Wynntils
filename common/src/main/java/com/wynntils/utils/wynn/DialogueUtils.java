@@ -485,6 +485,9 @@ public final class DialogueUtils {
             this.portrait = portrait;
         }
 
+        /**
+         * May return {@code true} even when the dialog still requires confirmation with pressing Shift.
+         * */
         public boolean isConfirmationless() {
             return confirmationless;
         }
