@@ -36,6 +36,7 @@ public final class NpcDialogueModel extends Model {
 
     public boolean keepColors;
     public ColorChatFormatting chatColor;
+    public boolean renderOverChat;
 
     public NpcDialogueModel() {
         super(List.of());

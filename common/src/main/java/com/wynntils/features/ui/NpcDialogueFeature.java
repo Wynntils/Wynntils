@@ -25,6 +25,8 @@ public class NpcDialogueFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> replaceDialogueHud = new Config<>(false);
+    @Persisted
+    private final Config<Boolean> renderOverChat = new Config<>(true);
 
     @Persisted
     private final Config<Boolean> sendToChat = new Config<>(true);
@@ -126,7 +128,7 @@ public class NpcDialogueFeature extends Feature {
     @Override
     protected void onConfigUpdate(Config<?> config) {
         switch (config.getFieldName()) {
-            case "tryKeepColors" -> Models.NpcDialogue.keepColors = ((Config<Boolean>) config).get();
+            case "renderOverChat" -> Models.NpcDialogue.renderOverChat = ((Config<Boolean>) config).get();
             case "chatColor" -> Models.NpcDialogue.chatColor = ((Config<ColorChatFormatting>) config).get();
         }
         eqCount = 0;
