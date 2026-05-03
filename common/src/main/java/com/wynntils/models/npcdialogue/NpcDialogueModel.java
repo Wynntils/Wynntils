@@ -61,7 +61,7 @@ public final class NpcDialogueModel extends Model {
                                         .getComponent()
                                         .withStyle(textColor)))));
 
-        // TODO: send only in chattabs with RecipientType.NPC
+        // TODO: send only in chattabs with RecipientType.NPC and "ALL"
 
         McUtils.mc().execute(() -> {
             McUtils.mc().gui.getChat().addMessage(Component.empty());
