@@ -50,6 +50,39 @@ public final class DialogueUtils {
     }
 
     /**
+     * removes all parts under {@code "minecraft:hud/dialogue/"} except for the choices parts
+     * from the component
+     * */
+    public static MutableComponent hideDialogueHud(Component component) {
+        MutableComponent out = Component.empty();
+
+        for (Component sibling : component.getSiblings()) {
+            FontDescription font = sibling.getStyle().getFont();
+
+            if (font instanceof FontDescription.Resource resource) {
+                String path = resource.id().getPath();
+
+                if (path.startsWith("hud/dialogue/")) {
+                    if (path.endsWith("/choice")) {
+                        // hud/dialogue/style/*/choice
+                    } else if(path.substring(0, path.length() - 1).endsWith("/choice_")) {
+                        // hud/dialogue/text/*/choice_*
+                    } else if(font.equals(font_press_shift)) {
+                        // hud/dialogue/text/control
+                    } else {
+                        // part of the dialogue, but not the choices and not PRESS SHIFT -> skip
+                        continue;
+                    }
+                }
+            }
+            // keep everything other
+            out.append(sibling);
+        }
+
+        return out;
+    }
+
+    /**
      * Extracts the actual dialogue text from a {@link Component}
      * (the root component of the Dialogue HUD).
      * <p>

@@ -4,10 +4,12 @@
  */
 package com.wynntils.models.npcdialogue.event;
 
-import com.wynntils.core.components.Models;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.events.EventThread;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
+
+import java.util.function.Consumer;
 
 /**
  * With this Event you could also use your own Translator for
@@ -17,10 +19,13 @@ import net.neoforged.bus.api.ICancellableEvent;
 @EventThread(EventThread.Type.ANY)
 public class TranslationRequestEvent extends Event implements ICancellableEvent {
     private String input;
+    private final Consumer<String> consumer;
+
     private boolean translated = false;
 
-    public TranslationRequestEvent(String inputText) {
-        this.input = inputText;
+    public TranslationRequestEvent(String input, Consumer<String> consumer) {
+        this.input = input;
+        this.consumer = consumer;
     }
 
     public String getInput() {
@@ -49,7 +54,10 @@ public class TranslationRequestEvent extends Event implements ICancellableEvent 
      * Call this Asynchronous when your translation is done
      * */
     public void outputTranslated(String translatedText) {
-        // Called directly, because of Multithreading
-        Models.NpcDialogue.addCache(input, translatedText);
+        try {
+            consumer.accept(translatedText);
+        } catch (RuntimeException exception) {
+            WynntilsMod.getLogger().error(exception.getMessage(), exception);
+        }
     }
 }

@@ -11,11 +11,11 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.models.npcdialogue.event.OverlayDisplayEvent;
+import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.utils.colors.ColorChatFormatting;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.DialogueUtils;
 import net.minecraft.network.chat.Component;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
@@ -24,7 +24,8 @@ public class NpcDialogueFeature extends Feature {
     private final Config<Boolean> tryKeepColors = new Config<>(true);
 
     @Persisted
-    private final Config<Boolean> replaceDialogueHud = new Config<>(false);
+    private final Config<DialogueHudOptions> dialogueHudOptions = new Config<>(DialogueHudOptions.KEEP_UNMODIFIED);
+
     @Persisted
     private final Config<Boolean> renderOverChat = new Config<>(true);
 
@@ -34,34 +35,35 @@ public class NpcDialogueFeature extends Feature {
     @Persisted
     private final Config<ColorChatFormatting> chatColor = new Config<>(ColorChatFormatting.GREEN);
 
+    // TODO: add Button for downloading extra fonts resource pack
+
     public NpcDialogueFeature() {
         super(ProfileDefault.DISABLED);
     }
 
-    /**
-     * If you make a custom Overlay, turn this to true when it's enabled
-     * to clear to original wynncraft hud
-     * */
-    private boolean isCustomOverlayEnabled() {
-        return false;
-    }
-
     private String lastText;
-    private String lastDispatched;
+    private volatile String lastDispatched;
     private volatile Component lastComponent;
     private volatile Component lastModifiedComp;
     private int eqCount = 0;
 
-    @SubscribeEvent
-    public void onOverlayReceived(OverlayDisplayEvent overlay) {
-        if (overlay.isCanceled()) return;
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onActionBarUpdate(SystemMessageEvent.GameInfoReceivedEvent event) {
+        if (event.isCanceled()) return;
 
-        Models.NpcDialogue.lastDialogueContent = overlay.getContent();
-        String currentText = overlay.getText();
+        manageDialogueHud(event);
+
+        if (dialogueHudOptions.get() == DialogueHudOptions.HIDE) {
+            event.setMessage(DialogueUtils.hideDialogueHud(event.getMessage()));
+        }
+    }
+
+    private void manageDialogueHud(SystemMessageEvent.GameInfoReceivedEvent event) {
+        DialogueUtils.Content content = DialogueUtils.getDialogueContent(event.getMessage(), tryKeepColors.get());
+        String currentText = content.getText();
 
         if (currentText == null || currentText.isBlank()) {
-            Models.NpcDialogue.lastTranslatedText = null;
-            lastComponent = overlay.getComponent();
+            lastComponent = event.getMessage();
             return;
         }
 
@@ -69,59 +71,58 @@ public class NpcDialogueFeature extends Feature {
         lastText = currentText;
         eqCount = sameText ? eqCount + 1 : 0;
 
-        // We get many packets per second.
         // Only start translating, when the message writing is done and not changing anymore.
-        if (eqCount < 6) {
-            Models.NpcDialogue.lastTranslatedText = null;
-            return;
-        }
+        // 6 packets with the same text content = message is complete
+        if (eqCount < 6) return;
 
+        // Get tanslated Text from Cache or Null if isn't present.
         String translatedText = Models.NpcDialogue.getFromCache(currentText);
-        Models.NpcDialogue.lastTranslatedText = translatedText;
 
         // Only send translation request if text isn't found in small cache
         if (translatedText == null) {
             lastModifiedComp = null;
-            lastComponent = overlay.getComponent();
+            lastComponent = event.getMessage();
 
             if (eqCount == 6) {
-                Models.NpcDialogue.requestDialogueTranslation(overlay.getContent());
+                // start translation (only once)
+                startTranslationAndDispatch(currentText, content);
             }
             return;
         }
 
-        // send only once to chat and other listeners
+        // dispatch only once to chat and other listeners
         if (!translatedText.equals(lastDispatched)) {
             lastDispatched = translatedText;
-            Models.NpcDialogue.dispatchContent(overlay.getContent(), translatedText, sendToChat.get());
+            Models.NpcDialogue.dispatchContent(content, translatedText, sendToChat.get());
         }
 
-        if (currentText.equals(translatedText)) return;
-        if (!replaceDialogueHud.get()) return;
+        if (currentText.equals(translatedText)) return; // translator disabled
+        if (dialogueHudOptions.get() != DialogueHudOptions.REPLACE_ORIGINAL) return;
 
-        // Cancel the original overlay because we render our own modified version.
-        overlay.setCanceled(true);
-        Component currentComponent = overlay.getComponent();
+        Component currentComponent = event.getMessage();
 
-        // if it's the same component as before, we can reuse the cached one. (Performance)
+        // If it's the same component as before, we can reuse the cached one. (Performance)
         if (lastModifiedComp != null && currentComponent.equals(lastComponent)) {
-            Component cached = lastModifiedComp;
-            McUtils.mc().execute(() -> showNewContent(cached));
+            event.setMessage(lastModifiedComp);
             return;
         }
 
-        lastModifiedComp = null;
+        // Modify the component and cache it
         lastComponent = currentComponent;
+        lastModifiedComp = DialogueUtils.insertDialogueText(
+                currentComponent, translatedText, content.getStartPos());
+        event.setMessage(lastModifiedComp);
+    }
 
-        McUtils.mc().execute(() -> {
-            if (isCustomOverlayEnabled()) {
-                lastModifiedComp = DialogueUtils.insertDialogueText(
-                        currentComponent, "", overlay.getContent().getStartPos());
-            } else {
-                lastModifiedComp = DialogueUtils.insertDialogueText(
-                        currentComponent, translatedText, overlay.getContent().getStartPos());
+    private void startTranslationAndDispatch(String message, DialogueUtils.Content content) {
+        String capturedLastDispatched = lastDispatched;
+        Models.NpcDialogue.requestDialogueTranslation(message, (result) -> {
+            // run after translation is done
+            if(capturedLastDispatched == null || capturedLastDispatched.equals(lastDispatched)) {
+                lastDispatched = result;
             }
-            showNewContent(lastModifiedComp);
+            Models.NpcDialogue.dispatchContent(content, result, sendToChat.get());
+            Models.NpcDialogue.addCache(message, result);
         });
     }
 
@@ -140,7 +141,9 @@ public class NpcDialogueFeature extends Feature {
         Models.NpcDialogue.clearCache();
     }
 
-    private void showNewContent(Component newContent) {
-        McUtils.mc().getChatListener().handleSystemMessage(newContent, true);
+    private enum DialogueHudOptions {
+        KEEP_UNMODIFIED,
+        REPLACE_ORIGINAL,
+        HIDE
     }
 }

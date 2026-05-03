@@ -10,7 +10,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.characterstats.actionbar.matchers.DialogueSegmentMatcher;
 import com.wynntils.models.npcdialogue.event.DialogueProcessedEvent;
-import com.wynntils.models.npcdialogue.event.OverlayDisplayEvent;
 import com.wynntils.models.npcdialogue.event.TranslationRequestEvent;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
@@ -21,8 +20,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
-import net.neoforged.bus.api.SubscribeEvent;
 
 public final class NpcDialogueModel extends Model {
     // Read this 2 public variables if you want to make a custom wynntils overlay
@@ -43,23 +40,8 @@ public final class NpcDialogueModel extends Model {
         Handlers.ActionBar.registerSegment(new DialogueSegmentMatcher());
     }
 
-    @SubscribeEvent
-    public void onPacketReceived(PacketEvent.PacketReceivedEvent<?> event) {
-        if (event.getPacket() instanceof ClientboundSystemChatPacket chatPacket) {
-            if (!chatPacket.overlay()) return;
-
-            DialogueUtils.Content content = DialogueUtils.getDialogueContent(chatPacket.content(), keepColors);
-            OverlayDisplayEvent overlayEvent = new OverlayDisplayEvent(chatPacket.content(), content);
-            WynntilsMod.postEvent(overlayEvent);
-
-            if (overlayEvent.isCanceled()) {
-                event.setCanceled(true);
-            }
-        }
-    }
-
-    public void requestDialogueTranslation(DialogueUtils.Content content) {
-        TranslationRequestEvent event = new TranslationRequestEvent(content.getText());
+    public void requestDialogueTranslation(String text, Consumer<String> consumer) {
+        TranslationRequestEvent event = new TranslationRequestEvent(text, consumer);
         WynntilsMod.postEvent(event);
 
         if (!event.isTranslated() && !event.isCanceled()) {
