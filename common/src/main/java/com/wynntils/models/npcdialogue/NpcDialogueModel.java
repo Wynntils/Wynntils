@@ -23,16 +23,10 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 
 public final class NpcDialogueModel extends Model {
-    // Read this 2 public variables if you want to make a custom wynntils overlay
-    // Keep in Mind, they only get updated when NpcDialogueFeature is enabled
-    // (TranslationFeature enabled or not doesn't matter)
-    public volatile DialogueUtils.Content lastDialogueContent;
-    public volatile String lastTranslatedText;
 
     // very fast small and synchronous cache
     private final ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<>();
 
-    public boolean keepColors;
     public ColorChatFormatting chatColor;
     public boolean renderOverChat;
 
