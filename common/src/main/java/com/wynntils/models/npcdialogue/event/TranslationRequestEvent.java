@@ -37,13 +37,17 @@ public class TranslationRequestEvent extends Event implements ICancellableEvent 
 
     /**
      * Call this after starting your Translation
-     * (synchronous after starting the translation Thread, not in the new Thread!) <br />
-     * to prevent issues with multithreading.
+     * (synchronous after starting the translation Thread, not in the new Thread!).
+     * To prevent issues with multithreading. <br />
+     * {@code event.setTranslated(true);}
      * */
     public void setTranslated(boolean translated) {
         this.translated = translated;
     }
 
+    /**
+     * Call this Asynchronous when your translation is done
+     * */
     public void outputTranslated(String translatedText) {
         // Called directly, because of Multithreading
         Models.NpcDialogue.addCache(input, translatedText);
