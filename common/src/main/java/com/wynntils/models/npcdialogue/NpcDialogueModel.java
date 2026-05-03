@@ -14,6 +14,7 @@ import com.wynntils.models.npcdialogue.event.TranslationRequestEvent;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.DialogueUtils;
+import java.util.function.Consumer;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.ChatFormatting;
