@@ -22,9 +22,11 @@ import com.wynntils.models.items.items.game.SimulatorItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
@@ -99,8 +101,11 @@ public class ValuableFoundFeature extends Feature {
                         }
 
                         if (!showDryStreakMessage.get()) return;
-                        sendNormalDryStreakMessage(
-                                StyledText.fromComponent(event.getItem().getHoverName()));
+
+                        StyledText itemName = buildItemName(
+                                event.getItem().getHoverName().getString(),
+                                gearBoxItem.get().getGearTier().getChatFormatting());
+                        sendNormalDryStreakMessage(itemName);
                     }
                     return;
                 }
@@ -132,18 +137,22 @@ public class ValuableFoundFeature extends Feature {
                 && (showDryStreakMessage.get() || lootrunSound.get() != ValuableFoundSound.NONE)) {
             boolean validLootrunMythic = false;
             Optional<GearItem> gearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
+            ChatFormatting color = ChatFormatting.DARK_PURPLE;
             if (gearItem.isPresent()) {
                 validLootrunMythic = true;
+                color = gearItem.get().getGearTier().getChatFormatting();
             }
 
             Optional<InsulatorItem> insulatorItem = Models.Item.asWynnItem(itemStack, InsulatorItem.class);
             if (insulatorItem.isPresent()) {
                 validLootrunMythic = true;
+                color = insulatorItem.get().getGearTier().getChatFormatting();
             }
 
             Optional<SimulatorItem> simulatorItem = Models.Item.asWynnItem(itemStack, SimulatorItem.class);
             if (simulatorItem.isPresent()) {
                 validLootrunMythic = true;
+                color = simulatorItem.get().getGearTier().getChatFormatting();
             }
 
             if (validLootrunMythic) {
@@ -152,8 +161,10 @@ public class ValuableFoundFeature extends Feature {
                 }
 
                 if (!showDryStreakMessage.get()) return;
-                sendLootrunDryStreakMessage(
-                        StyledText.fromComponent(event.getItem().getHoverName()));
+
+                StyledText itemName =
+                        buildItemName(event.getItem().getHoverName().getString(), color);
+                sendLootrunDryStreakMessage(itemName);
             }
         }
 
@@ -182,8 +193,10 @@ public class ValuableFoundFeature extends Feature {
                                 tomeFoundSound.get().getSoundEvent(), soundVolume.get(), soundPitch.get());
                     }
                     if (showTomeDryStreakMessage.get()) {
-                        sendTomeDryStreakMessage(
-                                StyledText.fromComponent(event.getItem().getHoverName()));
+                        StyledText itemName = buildItemName(
+                                event.getItem().getHoverName().getString(),
+                                tomeItem.get().getGearTier().getChatFormatting());
+                        sendTomeDryStreakMessage(itemName);
                     }
                     return;
                 }
@@ -292,6 +305,13 @@ public class ValuableFoundFeature extends Feature {
                 .append(Component.literal(numPulls + " " + pullType + " pulls").withStyle(ChatFormatting.GOLD))
                 .append(Component.literal(" without a mythic."))
                 .withStyle(ChatFormatting.LIGHT_PURPLE));
+    }
+
+    private static StyledText buildItemName(String itemName, ChatFormatting chatFormatting) {
+        MutableComponent nameComponent =
+                Component.empty().withStyle(chatFormatting).append(WynnUtils.stripItemNameMarkers(itemName));
+
+        return StyledText.fromComponent(nameComponent);
     }
 
     private enum ValuableFoundSound {

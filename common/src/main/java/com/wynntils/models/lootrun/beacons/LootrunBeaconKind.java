@@ -11,6 +11,7 @@ import com.wynntils.models.beacons.type.BeaconKind;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.colors.WynncraftShaderColor;
+import com.wynntils.utils.type.Pair;
 
 public enum LootrunBeaconKind implements BeaconKind, NullableConfig {
     GREEN(CustomColor.fromInt(0x00FF80), CommonColors.GREEN),
@@ -44,9 +45,9 @@ public enum LootrunBeaconKind implements BeaconKind, NullableConfig {
     }
 
     @Override
-    public float getCustomModelData() {
-        return Services.CustomModel.getFloat(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA_KEY)
-                .orElse(-1f);
+    public Pair<Float, Float> getCustomModelData() {
+        return Services.CustomModel.getRange(Models.Beacon.BEACON_COLOR_CUSTOM_MODEL_DATA_KEY)
+                .orElse(Pair.of(-1f, -1f));
     }
 
     public static LootrunBeaconKind fromName(String name) {
