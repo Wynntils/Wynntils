@@ -14,16 +14,15 @@ import com.wynntils.models.npcdialogue.event.TranslationRequestEvent;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.DialogueUtils;
-import java.util.function.Consumer;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 
 public final class NpcDialogueModel extends Model {
-
     // very fast small and synchronous cache
     private final ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<>();
 

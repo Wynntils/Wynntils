@@ -109,8 +109,7 @@ public class NpcDialogueFeature extends Feature {
 
         // Modify the component and cache it
         lastComponent = currentComponent;
-        lastModifiedComp = DialogueUtils.insertDialogueText(
-                currentComponent, translatedText, content.getStartPos());
+        lastModifiedComp = DialogueUtils.insertDialogueText(currentComponent, translatedText, content.getStartPos());
         event.setMessage(lastModifiedComp);
     }
 
@@ -118,7 +117,7 @@ public class NpcDialogueFeature extends Feature {
         String capturedLastDispatched = lastDispatched;
         Models.NpcDialogue.requestDialogueTranslation(message, (result) -> {
             // run after translation is done
-            if(capturedLastDispatched == null || capturedLastDispatched.equals(lastDispatched)) {
+            if (capturedLastDispatched == null || capturedLastDispatched.equals(lastDispatched)) {
                 lastDispatched = result;
             }
             Models.NpcDialogue.dispatchContent(content, result, sendToChat.get());

@@ -65,9 +65,9 @@ public final class DialogueUtils {
                 if (path.startsWith("hud/dialogue/")) {
                     if (path.endsWith("/choice")) {
                         // hud/dialogue/style/*/choice
-                    } else if(path.substring(0, path.length() - 1).endsWith("/choice_")) {
+                    } else if (path.substring(0, path.length() - 1).endsWith("/choice_")) {
                         // hud/dialogue/text/*/choice_*
-                    } else if(font.equals(font_press_shift)) {
+                    } else if (font.equals(font_press_shift)) {
                         // hud/dialogue/text/control
                     } else {
                         // part of the dialogue, but not the choices and not PRESS SHIFT -> skip

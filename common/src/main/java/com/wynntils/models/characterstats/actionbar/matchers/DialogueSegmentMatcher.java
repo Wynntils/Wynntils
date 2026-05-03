@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.characterstats.actionbar.matchers;
 
 import com.wynntils.core.text.StyledText;
@@ -5,12 +9,10 @@ import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.segments.DialogueSegment;
+import java.util.Iterator;
 import net.minecraft.network.chat.FontDescription;
 
-import java.util.Iterator;
-
 public class DialogueSegmentMatcher implements ActionBarSegmentMatcher {
-
     @Override
     public ActionBarSegment parse(StyledText actionBar) {
         Iterator<StyledTextPart> parts = actionBar.iterator();

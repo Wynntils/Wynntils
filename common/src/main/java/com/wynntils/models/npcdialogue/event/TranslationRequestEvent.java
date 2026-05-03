@@ -6,10 +6,9 @@ package com.wynntils.models.npcdialogue.event;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.events.EventThread;
+import java.util.function.Consumer;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
-
-import java.util.function.Consumer;
 
 /**
  * With this Event you could also use your own Translator for
