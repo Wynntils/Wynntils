@@ -107,8 +107,12 @@ public final class NpcDialogueModel extends Model {
         }
 
         // for other Features or as an API Hook for Addons
-        DialogueProcessedEvent dialogueProcessedEvent = new DialogueProcessedEvent(content, styledTranslatedText);
-        WynntilsMod.postEvent(dialogueProcessedEvent);
+        try {
+            DialogueProcessedEvent dialogueProcessedEvent = new DialogueProcessedEvent(content, styledTranslatedText);
+            WynntilsMod.postEvent(dialogueProcessedEvent);
+        } catch (RuntimeException exception) {
+            WynntilsMod.warn(exception.getMessage(), exception);
+        }
     }
 
     public String getFromCache(String inputText) {
