@@ -5,9 +5,10 @@
 package com.wynntils.models.npcdialogue;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.mc.event.PacketEvent;
+import com.wynntils.models.characterstats.actionbar.matchers.DialogueSegmentMatcher;
 import com.wynntils.models.npcdialogue.event.DialogueProcessedEvent;
 import com.wynntils.models.npcdialogue.event.OverlayDisplayEvent;
 import com.wynntils.models.npcdialogue.event.TranslationRequestEvent;
@@ -38,6 +39,7 @@ public final class NpcDialogueModel extends Model {
 
     public NpcDialogueModel() {
         super(List.of());
+        Handlers.ActionBar.registerSegment(new DialogueSegmentMatcher());
     }
 
     @SubscribeEvent
