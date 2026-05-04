@@ -22,5 +22,6 @@ public class RemoveWynncraftChatWrapFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onChatReceived(ChatMessageEvent.Edit event) {
         event.setMessage(StyledTextUtils.unwrap(event.getMessage()));
+        event.disableRewrap();
     }
 }

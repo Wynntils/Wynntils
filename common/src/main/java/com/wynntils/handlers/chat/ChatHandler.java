@@ -61,15 +61,14 @@ public final class ChatHandler extends Handler {
         WynntilsMod.info("[CHAT/" + recipientType + "] "
                 + message.getString(StyleType.COMPLETE).replace("§", "&"));
 
-        // Prefix color is not null for any RecipientTypes that make use of Wynns chat type prefixes
-        if (recipientType.getPrefixColor() != null) {
-            return processTabbedChatMessage(message, recipientType);
+        if (!recipientType.hasPrefix()) {
+            return processPrefixedChatMessage(message, recipientType);
         } else {
-            return processUntabbedChatMessage(message, recipientType);
+            return processNormalChatMessage(message, recipientType);
         }
     }
 
-    private StyledText processUntabbedChatMessage(StyledText message, RecipientType recipientType) {
+    private StyledText processNormalChatMessage(StyledText message, RecipientType recipientType) {
         ChatMessageEvent.Match receivedEvent = new ChatMessageEvent.Match(message, recipientType);
         WynntilsMod.postEvent(receivedEvent);
         if (receivedEvent.isChatCanceled()) return null;
@@ -81,7 +80,7 @@ public final class ChatHandler extends Handler {
         return rewriteEvent.getMessage();
     }
 
-    private StyledText processTabbedChatMessage(StyledText message, RecipientType recipientType) {
+    private StyledText processPrefixedChatMessage(StyledText message, RecipientType recipientType) {
         // We unwrap and strip the alignment of all messages in the soft wrapped format to better match content.
         StyledText preprocessed = StyledTextUtils.unwrap(message).stripAlignment();
         ChatMessageEvent.Match receivedEvent = new ChatMessageEvent.Match(preprocessed, recipientType);
@@ -92,14 +91,14 @@ public final class ChatHandler extends Handler {
         WynntilsMod.postEvent(rewriteEvent);
         StyledText rewritten = rewriteEvent.getMessage();
 
-        if (!rewritten.equals(message)) {
+        if (!rewritten.equals(message) && rewriteEvent.isRewrapAllowed()) {
             // We have altered the message so we need to manually rewrap it to avoid visual breakage.
-            rewritten = StyledTextUtils.tabWrap(StyledTextUtils.unwrap(rewritten), recipientType);
+            rewritten = StyledTextUtils.prefixWrap(StyledTextUtils.unwrap(rewritten), recipientType);
         }
 
         // We may have filtered or inserted messages so we need to strip the prefix and reapply the correct one
         boolean isContinuation = lastRecipientType == recipientType;
-        StyledText unprefixed = StyledTextUtils.removePrefix(rewritten, recipientType);
+        StyledText unprefixed = StyledTextUtils.removeFirstPrefix(rewritten, recipientType);
         StyledText prefixed = StyledTextUtils.addPrefix(unprefixed, recipientType, isContinuation);
 
         lastRecipientType = recipientType;

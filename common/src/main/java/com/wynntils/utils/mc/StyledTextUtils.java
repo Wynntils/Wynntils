@@ -376,12 +376,12 @@ public final class StyledTextUtils {
     }
 
     /**
-     * Remove the text prefix Wynn gives to all messages post 2.1.
+     * Remove the first text prefix Wynn gives to all messages post 2.1.
      *
      * @param styledText The styled text to remove the prefix from
      * @return The text without a prefix
      */
-    public static StyledText removePrefix(StyledText styledText, RecipientType recipientType) {
+    public static StyledText removeFirstPrefix(StyledText styledText, RecipientType recipientType) {
         Matcher matcher = styledText.getMatcher(recipientType.getPattern());
         if (!matcher.matches()) return styledText;
 
@@ -419,13 +419,13 @@ public final class StyledTextUtils {
     }
 
     /**
-     * Wrap styledText in a Wynn-like tab.
+     * Wrap styledText in a Wynn-like prefix.
      *
      * @param styledText The styled text to wrap
      * @param recipientType The recipient type to emulate
-     * @return The text wrapped in Wynn-like tab format
+     * @return The text wrapped in Wynn-like prefix format
      */
-    public static StyledText tabWrap(StyledText styledText, RecipientType recipientType) {
+    public static StyledText prefixWrap(StyledText styledText, RecipientType recipientType) {
         Style prefixStyle = Style.EMPTY.withFont(CHAT_PREFIX_FONT).withColor(recipientType.getPrefixColor());
 
         int maxWidth = McUtils.getChatWidth()

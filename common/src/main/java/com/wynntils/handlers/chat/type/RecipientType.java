@@ -46,6 +46,9 @@ public enum RecipientType {
     MOUNT("#8f663dff", '\uE01F', null, "Mount"),
     GAME_MESSAGE("^§7[A-Z0-9].*$", "Game Message"); // Like dialogues but not uttered by an NPC
 
+    private static final String PREFIX_PATTERN_FORMAT =
+            "^§%s((\uDAFF\uDFFC%c\uDAFF\uDFFF\uE002\uDAFF\uDFFE)|(\uDAFF\uDFFC\uE001\uDB00\uDC06)) (?<content>%s)$";
+
     private final Pattern pattern;
     private final TextColor prefixColor;
     private final char prefixIcon;
@@ -59,15 +62,9 @@ public enum RecipientType {
     }
 
     RecipientType(String color, char icon, String contentPattern, String name) {
-        StringBuilder builder = new StringBuilder()
-                .append("^§")
-                .append(color)
-                .append("((\uDAFF\uDFFC")
-                .append(icon)
-                .append("\uDAFF\uDFFF\uE002\uDAFF\uDFFE)|(\uDAFF\uDFFC\uE001\uDB00\uDC06)) (?<content>")
-                .append(contentPattern == null ? ".*" : contentPattern)
-                .append(")$");
-        this.pattern = Pattern.compile(builder.toString(), Pattern.DOTALL);
+        this.pattern = Pattern.compile(
+                PREFIX_PATTERN_FORMAT.formatted(color, icon, contentPattern == null ? ".*" : contentPattern),
+                Pattern.DOTALL);
         if (color.charAt(0) == '#') {
             // The complete color string includes alpha, but we are only interested in the rgb part
             this.prefixColor = TextColor.fromRgb(Integer.parseInt(color.substring(1, 7), 16));
@@ -92,6 +89,10 @@ public enum RecipientType {
         }
 
         return null;
+    }
+
+    public boolean hasPrefix() {
+        return prefixColor != null;
     }
 
     public Pattern getPattern() {
