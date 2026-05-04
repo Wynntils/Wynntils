@@ -125,7 +125,7 @@
   },
   {
     "id": "dataStaticCombatLocations",
-    "md5": "73d4b8d230ac2d6dee19c6e5b67e4000",
+    "md5": "fd9cbfa568fb10084bc52f862b97b0f2",
     "path": "Data-Storage/combat_locations.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/combat_locations.json"
   },
@@ -275,7 +275,7 @@
   },
   {
     "id": "dataStaticServicesCrowdsourced",
-    "md5": "e410d1181b478019ee9257714c4480cf",
+    "md5": "85adbe98fc45bee48a3d66a00cc72b77",
     "path": "Data-Storage/services_crowdsourced.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/services_crowdsourced.json"
   },
