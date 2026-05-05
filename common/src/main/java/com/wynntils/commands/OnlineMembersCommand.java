@@ -58,15 +58,19 @@ public class OnlineMembersCommand extends Command {
 
         completableFuture.whenComplete((guild, throwable) -> {
             if (throwable != null) {
-                McUtils.sendWynntilsPrefixMessage(Component.literal(
-                                "Unable to view online members for " + context.getArgument("guildName", String.class))
-                        .withStyle(ChatFormatting.RED));
+                McUtils.mc().execute(() -> {
+                    McUtils.sendWynntilsPrefixMessage(Component.literal("Unable to view online members for "
+                                    + context.getArgument("guildName", String.class))
+                            .withStyle(ChatFormatting.RED));
+                });
                 WynntilsMod.error("Error trying to parse guild online members", throwable);
             } else {
                 if (guild == null) {
-                    McUtils.sendWynntilsPrefixMessage(
-                            Component.literal("Unknown guild " + context.getArgument("guildName", String.class))
-                                    .withStyle(ChatFormatting.RED));
+                    McUtils.mc().execute(() -> {
+                        McUtils.sendWynntilsPrefixMessage(
+                                Component.literal("Unknown guild " + context.getArgument("guildName", String.class))
+                                        .withStyle(ChatFormatting.RED));
+                    });
                     return;
                 }
 
@@ -106,7 +110,9 @@ public class OnlineMembersCommand extends Command {
                     }
                 }
 
-                McUtils.sendWynntilsPrefixMessage(response);
+                McUtils.mc().execute(() -> {
+                    McUtils.sendWynntilsPrefixMessage(response);
+                });
             }
         });
 

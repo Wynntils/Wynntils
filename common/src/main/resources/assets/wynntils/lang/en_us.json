@@ -1278,6 +1278,8 @@
   "feature.wynntils.playerGhostTransparency.playerGhostTranslucenceLevel.name": "Player Ghost Translucence",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.description": "Should player ghosts' armor be transparent?",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.name": "Transparent Ghost Armor",
+  "feature.wynntils.playerInfoFooterDebugger.description": "Logs player info footer updates, including a JSON component form.",
+  "feature.wynntils.playerInfoFooterDebugger.name": "Player Info Footer Debugger",
   "feature.wynntils.playerViewer.description": "Adds the ability to view other players in a GUI.",
   "feature.wynntils.playerViewer.name": "Player Viewer",
   "feature.wynntils.powderSpecialBarOverlay.description": "Adds an overlay to see the current powder special bar.",
