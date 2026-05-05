@@ -1,3 +1,7 @@
+Added support for new lootrun missions and trials
+
 Fixes
-- Chat messages sent to the queue introduced in previous version now have to be unique
-- Fixed crowd sourced data being reset every launch
+- Fixed status effect parsing
+- Chat items are now decoded when not on a world
+- Fixed functions not preserving style on new lines
+- Fixed /player and /onlinemembers commands not always displaying response
