@@ -8,10 +8,8 @@ import com.wynntils.core.components.Services;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
 import net.minecraft.core.component.DataComponents;
@@ -21,23 +19,24 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomModelData;
 
 public enum GearType {
-    SPEAR(ClassType.WARRIOR, "spear", Items.IRON_SHOVEL, 0),
-    WAND(ClassType.MAGE, "wand", Items.WOODEN_SHOVEL, 1),
-    DAGGER(ClassType.ASSASSIN, "dagger", Items.SHEARS, 2),
-    BOW(ClassType.ARCHER, "bow", Items.BOW, 3),
-    RELIK(ClassType.SHAMAN, "relik", Items.STONE_SHOVEL, 4),
+    SPEAR(ClassType.WARRIOR, "\uE008", "spear", Items.POTION, 0),
+    WAND(ClassType.MAGE, "\uE006", "wand", Items.POTION, 1),
+    DAGGER(ClassType.ASSASSIN, "\uE005", "dagger", Items.POTION, 2),
+    BOW(ClassType.ARCHER, "\uE004", "bow", Items.POTION, 3),
+    RELIK(ClassType.SHAMAN, "\uE007", "relik", Items.POTION, 4),
 
     // This is a fallback for signed, crafted gear with a skin
-    WEAPON(null, null, 12),
+    WEAPON(null, null, null, 12),
     // Note: This fallback should basically be never be matched, but we use it in item encoding
     //       (as it's the same as WEAPON, and we have no other info)
-    ACCESSORY(null, null, 13),
-    RING(null, "ring", 5),
-    BRACELET(null, "bracelet", 6),
-    NECKLACE(null, "necklace", 7),
+    ACCESSORY(null, null, null, 13),
+    RING(null, "\uE014", "ring", 5),
+    BRACELET(null, "\uE015", "bracelet", 6),
+    NECKLACE(null, "\uE016", "necklace", 7),
     HELMET(
             null,
             Items.LEATHER_HELMET,
+            "\uE000",
             "helmet",
             "helmet_skin",
             List.of(
@@ -52,6 +51,7 @@ public enum GearType {
     CHESTPLATE(
             null,
             Items.LEATHER_CHESTPLATE,
+            "\uE001",
             "chestplate",
             List.of(
                     Items.CHAINMAIL_CHESTPLATE,
@@ -63,6 +63,7 @@ public enum GearType {
     LEGGINGS(
             null,
             Items.LEATHER_LEGGINGS,
+            "\uE002",
             "leggings",
             List.of(
                     Items.CHAINMAIL_LEGGINGS,
@@ -74,6 +75,7 @@ public enum GearType {
     BOOTS(
             null,
             Items.LEATHER_BOOTS,
+            "\uE003",
             "boots",
             List.of(
                     Items.CHAINMAIL_BOOTS,
@@ -82,44 +84,52 @@ public enum GearType {
                     Items.DIAMOND_BOOTS,
                     Items.NETHERITE_BOOTS),
             11),
-    MASTERY_TOME(null, "tome", -1),
-    CHARM(null, "charm", -1);
+    MASTERY_TOME(null, "\uE028", "tome", -1),
+    CHARM(null, "\uE029", "charm", -1);
 
     private final ClassType classReq;
     private final Item defaultItem;
+    private final String frameSpriteCode;
     private final String modelKey;
     private final String skinModelKey;
     private final List<Item> otherItems;
     private final int encodingId;
 
     private List<Float> modelList = new ArrayList<>();
-    private static final Map<Integer, GearType> craftedAccessoryMap = buildCraftedAccessoryMap();
 
     GearType(
             ClassType classReq,
             Item defaultItem,
+            String frameSpriteCode,
             String modelKey,
             String skinModelKey,
             List<Item> otherItems,
             int encodingId) {
         this.classReq = classReq;
         this.defaultItem = defaultItem;
+        this.frameSpriteCode = frameSpriteCode;
         this.modelKey = modelKey;
         this.skinModelKey = skinModelKey;
         this.otherItems = otherItems;
         this.encodingId = encodingId;
     }
 
-    GearType(ClassType classReq, Item defaultItem, String modelKey, List<Item> otherItems, int encodingId) {
-        this(classReq, defaultItem, modelKey, null, otherItems, encodingId);
+    GearType(
+            ClassType classReq,
+            Item defaultItem,
+            String frameSpriteCode,
+            String modelKey,
+            List<Item> otherItems,
+            int encodingId) {
+        this(classReq, defaultItem, frameSpriteCode, modelKey, null, otherItems, encodingId);
     }
 
-    GearType(ClassType classReq, String modelKey, Item craftedItem, int encodingId) {
-        this(classReq, Items.POTION, modelKey, List.of(craftedItem), encodingId);
+    GearType(ClassType classReq, String frameSpriteCode, String modelKey, Item craftedItem, int encodingId) {
+        this(classReq, Items.POTION, frameSpriteCode, modelKey, List.of(craftedItem), encodingId);
     }
 
-    GearType(ClassType classReq, String modelKey, int encodingId) {
-        this(classReq, Items.POTION, modelKey, List.of(), encodingId);
+    GearType(ClassType classReq, String frameSpriteCode, String modelKey, int encodingId) {
+        this(classReq, Items.POTION, frameSpriteCode, modelKey, List.of(), encodingId);
     }
 
     public static GearType fromString(String typeStr) {
@@ -130,7 +140,7 @@ public enum GearType {
         }
     }
 
-    public static GearType fromItemStack(ItemStack itemStack, boolean crafted) {
+    public static GearType fromItemStack(ItemStack itemStack) {
         Item item = itemStack.getItem();
         CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
 
@@ -147,26 +157,15 @@ public enum GearType {
                     }
                 }
             }
-        } else if (crafted) {
-            // Crafted items still use the old textures, they have no custom model data but we can still
-            // match them based on the item itself
-
-            // For armor and weapons we can just match based on the item itself
-            for (GearType gearType : values()) {
-                if ((gearType.isArmor() && (gearType.defaultItem.equals(item) || gearType.otherItems.contains(item)))
-                        || (gearType.isWeapon() && gearType.otherItems.contains(item))) {
-                    return gearType;
-                }
-            }
-
-            // For accessories, we use the damage value
-            if (item == Items.FLINT_AND_STEEL) {
-                int damage = itemStack.getDamageValue();
-
-                return craftedAccessoryMap.getOrDefault(damage, null);
-            }
         }
 
+        return null;
+    }
+
+    public static GearType fromFrameSprite(String frameSpriteCode) {
+        for (GearType gearType : values()) {
+            if (frameSpriteCode.equals(gearType.frameSpriteCode)) return gearType;
+        }
         return null;
     }
 
@@ -202,6 +201,23 @@ public enum GearType {
 
     public int getEncodingId() {
         return encodingId;
+    }
+
+    public String getFrameSpriteCode() {
+        return frameSpriteCode;
+    }
+
+    public String getFrameCode() {
+        if (this.isArmor()) {
+            return "\uE003";
+        } else if (this.isAccessory() || this == CHARM) {
+            return "\uE005";
+        } else if (this == MASTERY_TOME) {
+            return "\uE001";
+        }
+
+        // Weapon
+        return "\uE000";
     }
 
     public boolean isReward() {
@@ -253,13 +269,5 @@ public enum GearType {
             int max = range.b().intValue();
             IntStream.rangeClosed(min, max).mapToObj(i -> (float) i).forEach(out::add);
         });
-    }
-
-    private static Map<Integer, GearType> buildCraftedAccessoryMap() {
-        Map<Integer, GearType> map = new HashMap<>();
-        IntStream.rangeClosed(1, 17).forEach(i -> map.put(i, RING));
-        IntStream.rangeClosed(18, 34).forEach(i -> map.put(i, NECKLACE));
-        IntStream.rangeClosed(35, 49).forEach(i -> map.put(i, BRACELET));
-        return Map.copyOf(map);
     }
 }

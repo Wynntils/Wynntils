@@ -1,13 +1,12 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.container.type;
 
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.MenuType;
+import com.wynntils.models.containers.Container;
 
 @FunctionalInterface
 public interface ContainerVerification {
-    boolean verify(Component title, MenuType<?> menuType);
+    boolean verify(Class<? extends Container> containerType);
 }

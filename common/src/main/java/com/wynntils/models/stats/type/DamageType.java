@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats.type;
@@ -25,6 +25,7 @@ public enum DamageType {
     private final String displayName;
     private final String apiName;
     private final String symbol;
+    private final String tooltipSprite;
     private final ChatFormatting colorCode;
     private final int encodingId;
 
@@ -34,6 +35,7 @@ public enum DamageType {
         this.displayName = name.isEmpty() ? "" : name + " ";
         this.apiName = name;
         this.symbol = "";
+        this.tooltipSprite = "";
         this.colorCode = null;
         this.encodingId = -1;
     }
@@ -45,6 +47,7 @@ public enum DamageType {
         this.apiName = name;
 
         this.symbol = symbol;
+        this.tooltipSprite = "";
         this.colorCode = colorCode;
         this.encodingId = -1;
     }
@@ -56,6 +59,7 @@ public enum DamageType {
         this.apiName = name;
 
         this.symbol = symbol;
+        this.tooltipSprite = symbol;
         this.colorCode = colorCode;
         this.encodingId = encodingId;
     }
@@ -66,6 +70,7 @@ public enum DamageType {
         this.displayName = element.getDisplayName() + " ";
         this.apiName = element.getDisplayName();
         this.symbol = element.getSymbol();
+        this.tooltipSprite = element.getTooltipSprite();
         this.colorCode = element.getColorCode();
 
         // Encoding id is the element id
@@ -87,6 +92,13 @@ public enum DamageType {
     public static DamageType fromSymbol(String symbol) {
         for (DamageType type : values()) {
             if (type.symbol.equals(symbol)) return type;
+        }
+        return null;
+    }
+
+    public static DamageType fromTooltipSprite(String sprite) {
+        for (DamageType type : values()) {
+            if (type.tooltipSprite.equals(sprite)) return type;
         }
         return null;
     }
@@ -114,6 +126,10 @@ public enum DamageType {
 
     public String getSymbol() {
         return symbol;
+    }
+
+    public String getTooltipSprite() {
+        return tooltipSprite;
     }
 
     public ChatFormatting getColorCode() {

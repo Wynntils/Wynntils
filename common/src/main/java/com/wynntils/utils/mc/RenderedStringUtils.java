@@ -6,7 +6,8 @@ package com.wynntils.utils.mc;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.render.FontRenderer;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -20,28 +21,39 @@ public final class RenderedStringUtils {
         Font font = McUtils.mc().font;
         int spaceSize = font.width(" ");
 
-        StyledText[] stringArray = s.split(" ");
-        StringBuilder result = new StringBuilder();
+        StyledText[] words = s.split(" ");
+
+        List<StyledText> lines = new ArrayList<>();
+        StyledText currentLine = StyledText.EMPTY;
+
         int length = 0;
 
-        for (StyledText string : stringArray) {
-            StyledText[] lines = string.split("\\\\n");
-            for (int i = 0; i < lines.length; i++) {
-                StyledText line = lines[i];
-                if (i > 0 || length + font.width(line.getString()) >= maxPixels) {
-                    result.append('\n');
+        for (StyledText word : words) {
+            StyledText[] parts = word.split("\\n");
+
+            for (int i = 0; i < parts.length; i++) {
+                StyledText part = parts[i];
+
+                int width = font.width(part.getString());
+
+                if (i > 0 || length + width >= maxPixels) {
+                    lines.add(currentLine);
+                    currentLine = StyledText.EMPTY;
                     length = 0;
                 }
-                if (!line.isEmpty()) {
-                    result.append(line.getString()).append(' ');
-                    length += font.width(line.getString()) + spaceSize;
+
+                if (!part.isEmpty()) {
+                    currentLine = currentLine.append(part).append(" ");
+                    length += width + spaceSize;
                 }
             }
         }
 
-        return Arrays.stream(result.toString().split("\n"))
-                .map(StyledText::fromString)
-                .toArray(StyledText[]::new);
+        if (!currentLine.isEmpty()) {
+            lines.add(currentLine);
+        }
+
+        return lines.toArray(new StyledText[0]);
     }
 
     public static String getMaxFittingText(String text, float maxTextWidth, Font font) {

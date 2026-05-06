@@ -89,8 +89,7 @@ public final class WynntilsAspectGuideScreen
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideAspectItemStackButton guideAspectItemStackButton) {
-            guiGraphics.setTooltipForNextFrame(
-                    FontRenderer.getInstance().getFont(), guideAspectItemStackButton.getItemStack(), mouseX, mouseY);
+            guideAspectItemStackButton.getItemStack().queueGuideTooltip(guiGraphics, mouseX, mouseY);
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);

@@ -64,6 +64,9 @@ public final class StyledTextPart {
         List<StyledTextPart> parts = new ArrayList<>();
 
         Style currentStyle = style;
+        // Preserve inherited font across color code resets
+        Style inheritedStyle = parentStyle == null ? style : style.applyTo(parentStyle);
+        FontDescription inheritedFont = inheritedStyle.getFont();
         StringBuilder currentString = new StringBuilder();
 
         boolean nextIsFormatting = false;
@@ -131,9 +134,14 @@ public final class StyledTextPart {
                     currentString = new StringBuilder();
                 }
 
-                // Color formatting resets the style besides the font
+                // Color formatting resets the style
                 if (formatting.isColor()) {
-                    currentStyle = Style.EMPTY.withColor(formatting).withFont(currentStyle.getFont());
+                    currentStyle = Style.EMPTY.withColor(formatting);
+
+                    // But we keep the inherited font
+                    if (inheritedFont != null) {
+                        currentStyle = currentStyle.withFont(inheritedFont);
+                    }
                 } else {
                     currentStyle = currentStyle.applyFormat(formatting);
                 }
@@ -448,6 +456,10 @@ public final class StyledTextPart {
 
     StyledTextPart stripTrailing() {
         return new StyledTextPart(text.stripTrailing(), style.getStyle(), parent, null);
+    }
+
+    public boolean endsWith(String string) {
+        return text.endsWith(string);
     }
 
     boolean isEmpty() {

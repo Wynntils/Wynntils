@@ -185,7 +185,7 @@ public final class LootrunPathsService extends Service {
             Position startingPoint = Services.LootrunPaths.getStartingPoint();
 
             BlockPos start = PosUtils.newBlockPos(startingPoint);
-            McUtils.sendMessageToClient(Component.translatable(
+            McUtils.sendWynntilsPrefixMessage(Component.translatable(
                             "service.wynntils.lootrunPaths.lootrunStart", start.getX(), start.getY(), start.getZ())
                     .withStyle(ChatFormatting.GREEN));
         } else {

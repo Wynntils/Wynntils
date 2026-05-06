@@ -101,6 +101,8 @@ public final class GuidePowderItemStack extends GuideItemStack {
                 .append(Component.literal(element.getLightColor() + " " + name)));
         itemLore.add(Component.empty());
         itemLore.add(Component.literal("Effect on Armour:").withStyle(element.getDarkColor()));
+        itemLore.add(
+                Component.literal("- +" + powderTierInfo.health() + " Health").withStyle(ChatFormatting.GRAY));
         itemLore.add(Component.empty()
                 .append(Component.literal(element.getDarkColor() + "— " + ChatFormatting.GRAY + "+"
                         + powderTierInfo.addedDefence() + " " + element.getLightColor()))
@@ -122,7 +124,7 @@ public final class GuidePowderItemStack extends GuideItemStack {
                         + ChatFormatting.GRAY + "Defence")));
         itemLore.add(Component.empty());
         itemLore.add(Component.literal(
-                        "Add this powder to your items by visiting a Powder Master or use it as an ingredient when crafting.")
+                        "Add this powder to your items by holding the item in your cursor and right-clicking a piece of equipment with an available Powder Socket or use it as an ingredient when crafting.")
                 .withStyle(ChatFormatting.DARK_GRAY));
 
         if (tier > 3) {

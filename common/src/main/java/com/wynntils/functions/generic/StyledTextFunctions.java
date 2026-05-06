@@ -27,6 +27,11 @@ public class StyledTextFunctions {
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", String.class, null)));
         }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("st");
+        }
     }
 
     public static class ConcatStyledTextFunction extends GenericFunction<StyledText> {

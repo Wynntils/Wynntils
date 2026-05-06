@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.profession.type;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.type.Pair;
 import java.util.Collection;
 import java.util.List;
@@ -29,23 +28,32 @@ public final class MaterialProfile {
                     new SourceMaterial("Molten", 90),
                     new SourceMaterial("Voidstone", 100),
                     new SourceMaterial("Larbonic Geode", 105),
-                    new SourceMaterial("Dernic", 110)),
+                    new SourceMaterial("Dernic", 105),
+                    new SourceMaterial("Titanium", 110),
+                    new SourceMaterial("Cinnabar", 115)),
             MaterialType.LOG,
             List.of(
                     new SourceMaterial("Oak", 1),
                     new SourceMaterial("Birch", 10),
+                    new SourceMaterial("Red Alder", 10),
                     new SourceMaterial("Willow", 20),
                     new SourceMaterial("Acacia", 30),
                     new SourceMaterial("Spruce", 40),
                     new SourceMaterial("Jungle", 50),
                     new SourceMaterial("Dark", 60),
                     new SourceMaterial("Light", 70),
+                    new SourceMaterial("Bamboo", 80),
                     new SourceMaterial("Pine", 80),
+                    new SourceMaterial("Douglas Fir", 80),
                     new SourceMaterial("Flerisi Tree", 85),
                     new SourceMaterial("Flerisi Trunk", 85),
                     new SourceMaterial("Avo", 90),
                     new SourceMaterial("Sky", 100),
-                    new SourceMaterial("Dernic", 110)),
+                    new SourceMaterial("Blossom", 100),
+                    new SourceMaterial("Dernic", 105),
+                    new SourceMaterial("Maple", 110),
+                    new SourceMaterial("Redwood", 115),
+                    new SourceMaterial("Industree", 133)),
             MaterialType.CROP,
             List.of(
                     new SourceMaterial("Wheat", 1),
@@ -60,7 +68,9 @@ public final class MaterialProfile {
                     new SourceMaterial("Sorghum", 90),
                     new SourceMaterial("Hemp", 100),
                     new SourceMaterial("Voidgloom", 105),
-                    new SourceMaterial("Dernic", 110)),
+                    new SourceMaterial("Dernic", 105),
+                    new SourceMaterial("Jute", 110),
+                    new SourceMaterial("Heather", 115)),
             MaterialType.FISH,
             List.of(
                     new SourceMaterial("Gudgeon", 1),
@@ -75,7 +85,9 @@ public final class MaterialProfile {
                     new SourceMaterial("Abyssal Matter", 90),
                     new SourceMaterial("Molten", 90),
                     new SourceMaterial("Starfish", 100),
-                    new SourceMaterial("Dernic", 110)));
+                    new SourceMaterial("Dernic", 105),
+                    new SourceMaterial("Sturgeon", 110),
+                    new SourceMaterial("Mahseer", 115)));
 
     private final ResourceType resourceType;
     private final SourceMaterial sourceMaterial;
@@ -87,7 +99,7 @@ public final class MaterialProfile {
         this.tier = tier;
     }
 
-    public static MaterialProfile lookup(String sourceMaterialName, String resourceTypeName, String tier) {
+    public static MaterialProfile lookup(String sourceMaterialName, String resourceTypeName, int tier) {
         SourceMaterial sourceMaterial = SOURCE_MATERIALS.values().stream()
                 .flatMap(Collection::stream)
                 .filter(material -> material.name().equals(sourceMaterialName))
@@ -98,7 +110,7 @@ public final class MaterialProfile {
         ResourceType resourceType = ResourceType.fromString(resourceTypeName);
         if (resourceType == null) return null;
 
-        return new MaterialProfile(resourceType, sourceMaterial, parseTier(tier));
+        return new MaterialProfile(resourceType, sourceMaterial, tier);
     }
 
     public static Optional<Pair<MaterialType, SourceMaterial>> findByMaterialName(
@@ -148,7 +160,7 @@ public final class MaterialProfile {
     public enum ResourceType {
         INGOT(MaterialType.ORE),
         GEM(MaterialType.ORE),
-        WOOD(MaterialType.LOG),
+        PLANK(MaterialType.LOG),
         PAPER(MaterialType.LOG),
         STRING(MaterialType.CROP),
         GRAINS(MaterialType.CROP),
@@ -172,18 +184,6 @@ public final class MaterialProfile {
         public MaterialType getMaterialType() {
             return materialType;
         }
-    }
-
-    private static int parseTier(String tierIndicator) {
-        return switch (tierIndicator) {
-            case "§8✫" -> 1;
-            case "✫§8" -> 2;
-            case "✫" -> 3;
-            default -> {
-                WynntilsMod.warn("Cannot parse tier from: " + tierIndicator);
-                yield 1;
-            }
-        };
     }
 
     @Override

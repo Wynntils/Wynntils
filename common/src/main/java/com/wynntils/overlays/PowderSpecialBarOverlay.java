@@ -45,7 +45,7 @@ public class PowderSpecialBarOverlay extends Overlay {
     private final Config<UniversalTexture> barTexture = new Config<>(UniversalTexture.A);
 
     @Persisted
-    private final Config<Boolean> onlyIfWeaponHeld = new Config<>(true);
+    private final Config<Boolean> onlyIfWeaponHeld = new Config<>(false);
 
     @Persisted
     private final Config<Boolean> hideIfNoCharge = new Config<>(true);

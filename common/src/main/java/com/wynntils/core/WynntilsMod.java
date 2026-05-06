@@ -328,7 +328,7 @@ public final class WynntilsMod {
     }
 
     public enum ModLoader {
-        FORGE,
+        NEOFORGE,
         FABRIC
     }
 }

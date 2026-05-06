@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.segments;
@@ -7,8 +7,8 @@ package com.wynntils.models.characterstats.actionbar.segments;
 import com.wynntils.utils.type.CappedValue;
 
 public class ProfessionExperienceSegment extends ExperienceSegment {
-    public ProfessionExperienceSegment(String segmentText, CappedValue progress) {
-        super(segmentText, progress);
+    public ProfessionExperienceSegment(String segmentText, int startIndex, int endIndex, CappedValue progress) {
+        super(segmentText, startIndex, endIndex, progress);
     }
 
     @Override

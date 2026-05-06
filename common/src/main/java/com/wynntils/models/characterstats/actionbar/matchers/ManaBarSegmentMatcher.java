@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.segments.ManaBarSegment;
@@ -24,20 +25,22 @@ public class ManaBarSegmentMatcher implements ActionBarSegmentMatcher {
     private static final Pattern MANA_BAR_PATTERN = Pattern.compile("(.[" + MANA_BAR_CHARS + "]){10}");
 
     @Override
-    public ActionBarSegment parse(String actionBar) {
-        if (!actionBar.contains(BACKGROUND_STRING)) {
+    public ActionBarSegment parse(StyledText actionBar) {
+        String actionBarString = actionBar.getStringWithoutFormatting();
+        if (!actionBarString.contains(BACKGROUND_STRING)) {
             return null;
         }
 
-        int beginIndex = actionBar.indexOf(BACKGROUND_STRING);
-        int endIndex = actionBar.indexOf(LAST_SPACE_STRING, beginIndex);
+        int beginIndex = actionBarString.indexOf(BACKGROUND_STRING);
+        int endIndex = actionBarString.indexOf(LAST_SPACE_STRING, beginIndex);
 
         if (endIndex == -1) {
-            WynntilsMod.warn("Found mana bar background, but couldn't find the end of the segment: " + actionBar);
+            WynntilsMod.warn("Found mana bar background, but couldn't find the end of the segment: " + actionBarString);
             return null;
         }
 
-        String segmentText = actionBar.substring(beginIndex, endIndex + LAST_SPACE_STRING.length());
+        int segmentEndIndex = endIndex + LAST_SPACE_STRING.length();
+        String segmentText = actionBarString.substring(beginIndex, segmentEndIndex);
 
         // Remove the background and last space characters to get the characters that build the mana bar
         String manaBarText =
@@ -48,6 +51,6 @@ public class ManaBarSegmentMatcher implements ActionBarSegmentMatcher {
             return null;
         }
 
-        return new ManaBarSegment(segmentText);
+        return new ManaBarSegment(segmentText, beginIndex, segmentEndIndex);
     }
 }

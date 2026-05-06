@@ -13,7 +13,6 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.TooltipRenderEvent;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import java.util.List;
@@ -34,9 +33,6 @@ public class TooltipFittingFeature extends Feature {
     @Persisted
     private final Config<Boolean> fitToScreen = new Config<>(true);
 
-    @Persisted
-    private final Config<Boolean> wrapText = new Config<>(true);
-
     private boolean scaledLast = false;
     private float lastScaleFactor = 1f;
 
@@ -48,17 +44,6 @@ public class TooltipFittingFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onTooltipPre(ItemTooltipRenderEvent.Pre e) {
         Window window = McUtils.mc().getWindow();
-
-        if (wrapText.get()) {
-            // calculate optimal wrapping for scaled up tooltips
-            int tooltipWidth = ComponentUtils.getOptimalTooltipWidth(
-                    e.getTooltips(), (int) (window.getGuiScaledWidth() / universalScale.get()), (int)
-                            (e.getMouseX() / universalScale.get()));
-
-            List<Component> wrappedTooltips = ComponentUtils.wrapTooltips(e.getTooltips(), tooltipWidth);
-
-            e.setTooltips(wrappedTooltips);
-        }
 
         // calculate scale factor
         float scaleFactor = universalScale.get();

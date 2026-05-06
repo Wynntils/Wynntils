@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.container.scriptedquery;
@@ -10,12 +10,11 @@ import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.ContainerQueryStep;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
+import com.wynntils.models.containers.Container;
 import com.wynntils.utils.wynn.ItemUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.LinkedList;
 import java.util.function.Consumer;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -54,8 +53,8 @@ public final class ScriptedContainerQuery implements ContainerQueryStep {
     }
 
     @Override
-    public boolean verifyContainer(Component title, MenuType<?> menuType) {
-        return currentStep.getVerification().verify(title, menuType);
+    public boolean verifyContainer(Class<? extends Container> containerType) {
+        return currentStep.getVerification().verify(containerType);
     }
 
     @Override

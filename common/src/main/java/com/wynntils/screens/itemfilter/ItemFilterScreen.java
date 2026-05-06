@@ -9,6 +9,9 @@ import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.WynnFont;
+import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
+import com.wynntils.core.text.fonts.wynnfonts.WynntilsKeybindsFont;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
@@ -57,6 +60,7 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import org.lwjgl.glfw.GLFW;
 
 public final class ItemFilterScreen extends WynntilsScreen {
@@ -830,10 +834,43 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
             List<Component> tooltip = new ArrayList<>();
             tooltip.add(Component.literal(presetName));
-            tooltip.add(Component.translatable("screens.wynntils.itemFilter.presetHelp1"));
-            tooltip.add(Component.translatable("screens.wynntils.itemFilter.presetHelp2"));
-            tooltip.add(Component.translatable("screens.wynntils.itemFilter.presetHelp3"));
-            tooltip.add(Component.translatable("screens.wynntils.itemFilter.presetHelp4"));
+
+            MutableComponent selectPreset = Component.empty()
+                    .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(Component.translatable("screens.wynntils.itemFilter.presetHelp1"));
+
+            MutableComponent deletePreset = Component.empty()
+                    .append(WynnFont.asFont("key_control", WynntilsKeybindsFont.class))
+                    .append(" ")
+                    .append(WynnFont.asFont("key_plus", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(WynnFont.asFont("right_click", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(Component.translatable("screens.wynntils.itemFilter.presetHelp2"));
+
+            MutableComponent movePresetUp = Component.empty()
+                    .append(WynnFont.asFont("key_shift", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(WynnFont.asFont("key_plus", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(Component.translatable("screens.wynntils.itemFilter.presetHelp3"));
+
+            MutableComponent movePresetDown = Component.empty()
+                    .append(WynnFont.asFont("key_shift", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(WynnFont.asFont("key_plus", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(WynnFont.asFont("right_click", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(Component.translatable("screens.wynntils.itemFilter.presetHelp4"));
+
+            tooltip.add(selectPreset);
+            tooltip.add(deletePreset);
+            tooltip.add(movePresetUp);
+            tooltip.add(movePresetDown);
 
             tooltip = ComponentUtils.wrapTooltips(tooltip, 200);
 

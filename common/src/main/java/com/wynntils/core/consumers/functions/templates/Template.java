@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.consumers.functions.templates;
 
-import com.wynntils.core.text.StyledText;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,9 +14,7 @@ public class Template {
         this.parts = parts;
     }
 
-    public StyledText getStyledText() {
-        String codedString = parts.stream().map(TemplatePart::getCodedValue).collect(Collectors.joining());
-
-        return StyledText.fromString(codedString);
+    public String getString() {
+        return parts.stream().map(TemplatePart::getValue).collect(Collectors.joining());
     }
 }

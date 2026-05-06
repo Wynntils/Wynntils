@@ -20,6 +20,7 @@ import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.models.containers.type.FullscreenContainerProperty;
 import com.wynntils.models.items.items.game.MultiHealthPotionItem;
+import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -30,16 +31,20 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemLockFeature extends Feature {
+    private static final String INTERACT_MODEL_DATA_KEY = "interact";
+
     @RegisterKeyBind
     private final KeyBind lockSlotKeyBind = KeyBindDefinition.LOCK_SLOT.create(this::tryChangeLockStateOnHoveredSlot);
 
@@ -87,6 +92,16 @@ public class ItemLockFeature extends Feature {
                 || Models.Container.getCurrentContainer() instanceof FullscreenContainerProperty) return;
         if (!blockAllActionsOnLockedItems.get() && event.getClickType() != ClickType.THROW) return;
         if (Models.Housing.isInEditMode()) return;
+
+        if (event.getClickType() == ClickType.SWAP
+                && Models.Item.asWynnItemProperty(event.getItemStack(), GearTypeItemProperty.class)
+                        .isPresent()) {
+            return;
+        } else if (event.getClickType() == ClickType.PICKUP) {
+            CustomModelData modelData = event.getItemStack().get(DataComponents.CUSTOM_MODEL_DATA);
+
+            if (modelData != null && modelData.strings().contains(INTERACT_MODEL_DATA_KEY)) return;
+        }
 
         // We have to match slot.index here, because the event slot number is an index as well
         Optional<Slot> slotOptional = abstractContainerScreen.getMenu().slots.stream()

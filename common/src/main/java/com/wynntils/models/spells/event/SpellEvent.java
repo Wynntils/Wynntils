@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.spells.event;
@@ -84,6 +84,8 @@ public abstract class SpellEvent extends Event {
             return healthCost;
         }
     }
+
+    public static final class CastExpired extends SpellEvent {}
 
     public static final class Failed extends SpellEvent {
         private final SpellFailureReason failureReason;

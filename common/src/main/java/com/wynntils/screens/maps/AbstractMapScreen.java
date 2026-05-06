@@ -355,6 +355,10 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         return false;
     }
 
+    protected boolean keyPressedParent(KeyEvent event) {
+        return super.keyPressed(event);
+    }
+
     protected void renderCoordinates(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
         int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);

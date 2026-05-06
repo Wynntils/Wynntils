@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.character.actionbar.matchers;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.models.character.actionbar.segments.CharacterSelectionLevelSegment;
@@ -30,8 +31,9 @@ public class CharacterSelectionLevelSegmentMatcher implements ActionBarSegmentMa
             Pattern.compile(".(?<level>([" + LEVEL_CHAR_START + "-" + LEVEL_CHAR_END + "]" + SEPARATOR + "?){1,6}).");
 
     @Override
-    public ActionBarSegment parse(String actionBar) {
-        Matcher matcher = CHARACTER_LEVEL_PATTERN.matcher(actionBar);
+    public ActionBarSegment parse(StyledText actionBar) {
+        String actionBarString = actionBar.getStringWithoutFormatting();
+        Matcher matcher = CHARACTER_LEVEL_PATTERN.matcher(actionBarString);
         if (!matcher.find()) return null;
 
         String segmentText = matcher.group();
@@ -50,7 +52,7 @@ public class CharacterSelectionLevelSegmentMatcher implements ActionBarSegmentMa
 
         int level = parseLevel(matcher.group("level"));
 
-        return new CharacterSelectionLevelSegment(matcher.group(), level);
+        return new CharacterSelectionLevelSegment(matcher.group(), matcher.start(), matcher.end(), level);
     }
 
     private int parseLevel(String levelText) {

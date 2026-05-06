@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -8,7 +8,9 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.models.abilities.label.ShamanPuppetInfo;
 import com.wynntils.models.character.type.VehicleType;
+import com.wynntils.models.characterstats.type.PowderSpecialInfo;
 import com.wynntils.models.objectives.WynnObjective;
 import com.wynntils.services.leaderboard.type.LeaderboardType;
 import com.wynntils.utils.mc.McUtils;
@@ -263,6 +265,7 @@ public class CharacterFunctions {
         }
     }
 
+    // TODO: Change this to IsRidingMountFunction after parsing energy action bar segment.
     public static class IsRidingHorseFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
@@ -280,7 +283,7 @@ public class CharacterFunctions {
     public static class HummingbirdsStateFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Ability.hummingBirdsState;
+            return Models.ShamanSummon.hummingBirdsState;
         }
     }
 
@@ -429,6 +432,98 @@ public class CharacterFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new Argument<>("leaderboardKey", String.class, null)));
+        }
+    }
+
+    public static class PowderSpecialChargeFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            Optional<PowderSpecialInfo> powderSpecialInfoOpt = Models.CharacterStats.getPowderSpecialInfo();
+            if (powderSpecialInfoOpt.isEmpty()) return CappedValue.EMPTY;
+            return CappedValue.fromProgress(powderSpecialInfoOpt.get().charge(), 100);
+        }
+    }
+
+    public static class CurrentDistortionFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Ability.distortionBar.getCurrent();
+        }
+    }
+
+    public static class MirrorImageCloneFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            int cloneNumber = arguments.getArgument("cloneNumber").getIntegerValue();
+            return cloneNumber < Models.Ability.mirrorImageBar.getClones().size() && cloneNumber >= 0
+                    ? Models.Ability.mirrorImageBar.getClones().get(cloneNumber).getActiveState()
+                    : -1;
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("cloneNumber", Integer.class, null)));
+        }
+    }
+
+    public static class MirrorImageDurationFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Ability.mirrorImageBar.isActive() ? Models.Ability.mirrorImageBar.getDuration() : 0;
+        }
+    }
+
+    public static class PuppetCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsLabels().count());
+        }
+    }
+
+    public static class PuppetsInTimeRangeFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            int min = arguments.getArgument("min").getIntegerValue();
+            int max = arguments.getArgument("max").getIntegerValue();
+            if (min > max) {
+                int tempMax = max;
+                max = min;
+                min = tempMax;
+            }
+            int finalMin = min;
+            int finalMax = max;
+            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsLabels()
+                    .map(ShamanPuppetInfo::getSecondsLeft)
+                    .filter(s -> s >= finalMin && finalMax >= s)
+                    .count());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("min", Integer.class, null), new Argument<>("max", Integer.class, null)));
+        }
+    }
+
+    public static class CrowCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.ArcherBeast.getActiveCrowCount();
+        }
+    }
+
+    public static class HoundsTimeLeftFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.ArcherBeast.getHoundsTimeLeft();
+        }
+    }
+
+    public static class SnakeCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.ArcherBeast.getActiveSnakeCount();
         }
     }
 }

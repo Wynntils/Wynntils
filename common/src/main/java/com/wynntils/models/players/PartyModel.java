@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players;
@@ -10,7 +10,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
-import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
@@ -133,8 +132,6 @@ public final class PartyModel extends Model {
 
     @SubscribeEvent
     public void onChatReceived(ChatMessageEvent.Match event) {
-        if (event.getMessageType() != MessageType.FOREGROUND) return;
-
         StyledText chatMessage = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
 
         if (tryParsePartyMessages(chatMessage)) return;

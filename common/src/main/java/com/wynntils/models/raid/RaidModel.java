@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.raid;
@@ -35,6 +35,7 @@ import com.wynntils.models.raid.raids.OrphionsNexusOfLightRaid;
 import com.wynntils.models.raid.raids.RaidKind;
 import com.wynntils.models.raid.raids.TheCanyonColossusRaid;
 import com.wynntils.models.raid.raids.TheNamelessAnomalyRaid;
+import com.wynntils.models.raid.raids.TheWartornPalaceRaid;
 import com.wynntils.models.raid.scoreboard.RaidScoreboardPart;
 import com.wynntils.models.raid.type.HistoricRaidInfo;
 import com.wynntils.models.raid.type.RaidInfo;
@@ -48,6 +49,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -234,7 +236,7 @@ public final class RaidModel extends Model {
             partyRaidBuffs.clear();
             parasiteOvertaken = false;
 
-            McUtils.sendMessageToClient(Component.literal(
+            McUtils.sendWynntilsPrefixMessage(Component.literal(
                             "Raid tracking has been interrupted, you will not be able to see progress for the current raid")
                     .withStyle(ChatFormatting.DARK_RED));
         }
@@ -663,6 +665,12 @@ public final class RaidModel extends Model {
         return -1L;
     }
 
+    public List<String> getChosenBuffs(String player) {
+        if (!partyRaidBuffs.containsKey(player)) return List.of();
+
+        return Collections.unmodifiableList(partyRaidBuffs.get(player));
+    }
+
     private void completeRaid() {
         if (currentRaid == null) return;
 
@@ -775,6 +783,7 @@ public final class RaidModel extends Model {
         registerRaid(new OrphionsNexusOfLightRaid());
         registerRaid(new TheCanyonColossusRaid());
         registerRaid(new TheNamelessAnomalyRaid());
+        registerRaid(new TheWartornPalaceRaid());
     }
 
     private void registerRaid(RaidKind raidKind) {

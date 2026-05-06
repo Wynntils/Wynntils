@@ -7,15 +7,20 @@ package com.wynntils.screens.guides;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.WynnFont;
+import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearTooltipAlignmentComponent;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
+import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.render.FontRenderer;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class GuideItemStack extends ItemStack {
@@ -23,6 +28,19 @@ public abstract class GuideItemStack extends ItemStack {
         super(itemStack.getItem(), 1);
         this.applyComponents(itemStack.getComponentsPatch());
         Handlers.Item.updateItem(this, annotation, StyledText.fromString(baseName));
+    }
+
+    public void queueGuideTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        List<Component> tooltipLines = new ArrayList<>(LoreUtils.getTooltipLines(this));
+        GearTooltipAlignmentComponent.realignMarkedTooltipLines(tooltipLines);
+
+        guiGraphics.setTooltipForNextFrame(
+                FontRenderer.getInstance().getFont(),
+                tooltipLines,
+                this.getTooltipImage(),
+                mouseX,
+                mouseY,
+                this.get(DataComponents.TOOLTIP_STYLE));
     }
 
     protected void appendObtainInfo(List<Component> tooltipLines, List<ItemObtainInfo> itemObtainInfos) {
@@ -43,22 +61,43 @@ public abstract class GuideItemStack extends ItemStack {
     protected void appendFavoriteInfo(List<Component> tooltipLines) {
         tooltipLines.add(Component.empty());
         if (Services.Favorites.isFavorite(this)) {
-            tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
-                    .withStyle(ChatFormatting.YELLOW));
+            MutableComponent keybind = Component.empty()
+                    .append(WynnFont.asFont("key_shift", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(WynnFont.asFont("key_plus", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(WynnFont.asFont("right_click", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
+                            .withStyle(ChatFormatting.YELLOW));
+
+            tooltipLines.add(keybind);
         } else {
-            tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
-                    .withStyle(ChatFormatting.GREEN));
+            MutableComponent keybind = Component.empty()
+                    .append(WynnFont.asFont("key_shift", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(WynnFont.asFont("key_plus", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
+                            .withStyle(ChatFormatting.GREEN));
+
+            tooltipLines.add(keybind);
         }
     }
 
     protected void appendWebGuideInfo(List<Component> tooltipLines) {
-        MutableComponent component = Component.empty()
-                .append(Component.literal("\uE004\uDB00\uDC02\uE014\uDB00\uDC02\uE001")
-                        .withStyle(Style.EMPTY.withFont(
-                                new FontDescription.Resource(Identifier.withDefaultNamespace("keybind")))))
+        MutableComponent keybind = Component.empty()
+                .append(WynnFont.asFont("key_shift", WynncraftKeybindsFont.class))
+                .append(" ")
+                .append(WynnFont.asFont("key_plus", WynncraftKeybindsFont.class))
+                .append(" ")
+                .append(WynnFont.asFont("right_click", WynncraftKeybindsFont.class))
+                .append(" ")
                 .append(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.open")
                         .withStyle(ChatFormatting.RED));
 
-        tooltipLines.add(component);
+        tooltipLines.add(keybind);
     }
 }

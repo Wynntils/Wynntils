@@ -100,8 +100,7 @@ public final class WynntilsIngredientGuideScreen
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideIngredientItemStackButton guideGearItemStack) {
-            guiGraphics.setTooltipForNextFrame(
-                    FontRenderer.getInstance().getFont(), guideGearItemStack.getItemStack(), mouseX, mouseY);
+            guideGearItemStack.getItemStack().queueGuideTooltip(guiGraphics, mouseX, mouseY);
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);

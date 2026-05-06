@@ -5,11 +5,13 @@
 package com.wynntils.services.map.pois;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.items.items.gui.TerritoryItem;
 import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.TerritoryConnectionType;
+import com.wynntils.models.territories.type.TerritoryUpgrade;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
 import com.wynntils.screens.territorymanagement.TerritoryManagementScreen;
 import com.wynntils.services.map.type.DisplayPriority;
@@ -30,7 +32,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public class ManageTerritoryPoi implements Poi {
@@ -101,12 +105,15 @@ public class ManageTerritoryPoi implements Poi {
                 case DEFENSE:
                     colors.add(CustomColor.fromChatFormatting(
                             territoryItem.getDefenseDifficulty().getDefenceColor()));
+                    if (territoryItem.getUpgrades().getOrDefault(TerritoryUpgrade.TOWER_MULTI_ATTACKS, 0) > 0) {
+                        colors.add(CustomColor.fromHSV(1 / 2f, 0.8f, 0.9f, 1));
+                    }
                     break;
                 case PRODUCTION:
-                    colors.add(territoryItem.getProductionColor());
+                    colors = territoryItem.getProductionColors();
                     break;
                 case SEEKING:
-                    colors.add(territoryItem.getSeekingColor());
+                    colors = territoryItem.getSeekingColors();
                     break;
                 case TREASURY:
                     colors.add(territoryItem.getTreasuryColor());
@@ -144,7 +151,7 @@ public class ManageTerritoryPoi implements Poi {
                 .filter(GuildResource::isMaterialResource)
                 .collect(Collectors.toUnmodifiableSet());
 
-        if (!productionTypes.isEmpty() && zoomRenderScale >= 0.25f) {
+        if (!productionTypes.isEmpty() && zoomRenderScale >= 0.2f) {
             // Render the production types
 
             int iconYOffset = 4;
@@ -158,13 +165,16 @@ public class ManageTerritoryPoi implements Poi {
                 symbol += productionTypes.size() == 2
                         ? productionTypes.iterator().next().getPrettySymbol().trim()
                         : "";
+                if (territoryItem.getDoubleResource()) {
+                    symbol += symbol;
+                }
 
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 guiGraphics,
                                 StyledText.fromString(symbol),
                                 actualRenderX,
-                                actualRenderX + renderWidth,
+                                actualRenderX + renderWidth + (territoryItem.getDoubleEmeralds() ? 8 : 0),
                                 actualRenderZ + renderHeight / 2 + iconYOffset,
                                 actualRenderZ + renderHeight,
                                 0,
@@ -172,8 +182,25 @@ public class ManageTerritoryPoi implements Poi {
                                 HorizontalAlignment.CENTER,
                                 VerticalAlignment.TOP,
                                 TextShadow.NORMAL);
+
+                // Render E icon separately so we can shift it down to be aligned
+                if (territoryItem.getDoubleEmeralds()) {
+                    FontRenderer.getInstance()
+                            .renderAlignedTextInBox(
+                                    guiGraphics,
+                                    StyledText.fromComponent(Component.literal(EmeraldUnits.EMERALD.getSymbol())
+                                            .withStyle(ChatFormatting.GREEN)),
+                                    actualRenderX,
+                                    actualRenderX + renderWidth - 8,
+                                    actualRenderZ + renderHeight / 2 + iconYOffset + 1,
+                                    actualRenderZ + renderHeight,
+                                    0,
+                                    CommonColors.WHITE,
+                                    HorizontalAlignment.CENTER,
+                                    VerticalAlignment.TOP,
+                                    TextShadow.NORMAL);
+                }
             } else {
-                // Render the production types in two lines, 2 icons per line
                 int i = 0;
                 for (GuildResource productionType : productionTypes) {
                     String symbol = productionType.getPrettySymbol().trim();

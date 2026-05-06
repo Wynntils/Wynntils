@@ -25,15 +25,18 @@ import com.wynntils.models.items.items.game.CrafterBagItem;
 import com.wynntils.models.items.items.game.DungeonKeyItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
-import com.wynntils.models.items.items.game.HorseItem;
+import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.items.game.PotionItem;
 import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.models.items.items.gui.TradeMarketIdentificationFilterItem;
+import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.models.mount.type.MountStat;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
@@ -99,13 +102,19 @@ public class ItemTextOverlayFeature extends Feature {
     private final Config<TextShadow> gatheringToolTierShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
-    private final Config<Boolean> horseTierEnabled = new Config<>(true);
+    private final Config<Boolean> overallRollMarkersEnabled = new Config<>(true);
 
     @Persisted
-    private final Config<Boolean> horseTierRomanNumerals = new Config<>(false);
+    private final Config<TextShadow> overallRollMarkersShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
-    private final Config<TextShadow> horseTierShadow = new Config<>(TextShadow.OUTLINE);
+    private final Config<Boolean> mountItemEnabled = new Config<>(true);
+
+    @Persisted
+    private final Config<MountStat> mountItemStat = new Config<>(MountStat.POTENTIAL);
+
+    @Persisted
+    private final Config<TextShadow> mountItemShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
     private final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
@@ -133,6 +142,9 @@ public class ItemTextOverlayFeature extends Feature {
 
     @Persisted
     private final Config<TextShadow> teleportScrollShadow = new Config<>(TextShadow.OUTLINE);
+
+    @Persisted
+    private final Config<Boolean> teleportScrollColorByCharges = new Config<>(true);
 
     @Persisted
     private final Config<Boolean> tradeMarketFilterEnabled = new Config<>(true);
@@ -202,8 +214,11 @@ public class ItemTextOverlayFeature extends Feature {
         if (wynnItem instanceof GatheringToolItem gatheringToolItem) {
             return new GatheringToolOverlay(gatheringToolItem);
         }
-        if (wynnItem instanceof HorseItem horseItem) {
-            return new HorseOverlay(horseItem);
+        if (wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty) {
+            return new OverallRollMarkerOverlay(identifiableItemProperty);
+        }
+        if (wynnItem instanceof MountItem mountItem) {
+            return new MountItemOverlay(mountItem);
         }
         if (wynnItem instanceof PowderItem powderItem) {
             return new PowderOverlay(powderItem);
@@ -403,26 +418,83 @@ public class ItemTextOverlayFeature extends Feature {
         }
     }
 
-    private final class HorseOverlay implements TextOverlayInfo {
-        private final HorseItem item;
+    private final class OverallRollMarkerOverlay implements TextOverlayInfo {
+        private static final float GREEN_OVERALL_MIN = 80.0f;
+        private static final float BLUE_OVERALL_MIN = 95.0f;
+        private static final float PERFECT_OVERALL_MIN = 100.0f;
+        private static final String MARKER_SYMBOL = "✦";
 
-        private HorseOverlay(HorseItem item) {
+        private final IdentifiableItemProperty<?, ?> item;
+
+        private OverallRollMarkerOverlay(IdentifiableItemProperty<?, ?> item) {
             this.item = item;
         }
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return horseTierEnabled.get();
+            return overallRollMarkersEnabled.get()
+                    && item.hasOverallValue()
+                    && item.getOverallPercentage() >= GREEN_OVERALL_MIN;
         }
 
         @Override
         public TextOverlay getTextOverlay() {
-            String text = valueToString(item.getTier().getNumeral(), horseTierRomanNumerals.get());
+            float overallPercentage = item.getOverallPercentage();
+            TextRenderSetting style = TextRenderSetting.DEFAULT.withTextShadow(overallRollMarkersShadow.get());
+            TextRenderTask task;
+
+            if (overallPercentage >= PERFECT_OVERALL_MIN) {
+                task = new TextRenderTask(
+                        StyledText.fromComponent(ComponentUtils.makeRainbowStyle(MARKER_SYMBOL, true)), style);
+            } else if (overallPercentage >= BLUE_OVERALL_MIN) {
+                task = new TextRenderTask(
+                        MARKER_SYMBOL, style.withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.AQUA)));
+            } else {
+                task = new TextRenderTask(
+                        MARKER_SYMBOL, style.withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.GREEN)));
+            }
+
+            return new TextOverlay(task, -1, 1, 0.85f);
+        }
+    }
+
+    private final class MountItemOverlay implements TextOverlayInfo {
+        private final MountItem item;
+
+        private MountItemOverlay(MountItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            return mountItemEnabled.get();
+        }
+
+        @Override
+        public TextOverlay getTextOverlay() {
+            int value = getSelectedMountStatValue();
+            String text = String.valueOf(value);
+            float scale = text.length() >= 4 ? 0.75f : 0.9f;
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
-                    .withTextShadow(horseTierShadow.get());
+                    .withTextShadow(mountItemShadow.get());
 
-            return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
+            return new TextOverlay(new TextRenderTask(text, style), -1, 1, scale);
+        }
+
+        private int getSelectedMountStatValue() {
+            return switch (mountItemStat.get()) {
+                case ACCELERATION -> item.getAcceleration().current();
+                case ALTITUDE -> item.getAltitude().current();
+                case JUMP_HEIGHT -> item.getJumpHeight().current();
+                case ENERGY -> item.getEnergy().current();
+                case HANDLING -> item.getHandling().current();
+                case POTENTIAL -> item.getPotential();
+                case BOOST -> item.getBoost().current();
+                case SPEED -> item.getSpeed().current();
+                case TOUGHNESS -> item.getToughness().current();
+                case TRAINING -> item.getTraining().current();
+            };
         }
     }
 
@@ -467,10 +539,11 @@ public class ItemTextOverlayFeature extends Feature {
         @Override
         public TextOverlay getTextOverlay() {
             String text = item.getShorthand();
+            float scale = text.length() >= 3 ? 0.9f : 1f;
             TextRenderSetting style =
                     TextRenderSetting.DEFAULT.withCustomColor(CITY_COLOR).withTextShadow(teleportScrollShadow.get());
 
-            return new TextOverlay(new TextRenderTask(text, style), 0, 0, 1f);
+            return new TextOverlay(new TextRenderTask(text, style), 0, 0, scale);
         }
     }
 
@@ -529,8 +602,9 @@ public class ItemTextOverlayFeature extends Feature {
     }
 
     private final class TeleportScrollOverlay implements TextOverlayInfo {
-        private static final CustomColor CITY_COLOR = CustomColor.fromChatFormatting(ChatFormatting.AQUA);
-        private static final CustomColor DUNGEON_COLOR = CustomColor.fromChatFormatting(ChatFormatting.GOLD);
+        private static final CustomColor MAX_CHARGES_COLOR = CustomColor.fromChatFormatting(ChatFormatting.AQUA);
+        private static final CustomColor TWO_CHARGES_COLOR = new CustomColor(123, 178, 255);
+        private static final CustomColor ONE_CHARGE_COLOR = new CustomColor(181, 90, 189);
         private static final CustomColor OUT_OF_CHARGES_COLOR = CustomColor.fromChatFormatting(ChatFormatting.RED);
 
         private final TeleportScrollItem item;
@@ -546,20 +620,21 @@ public class ItemTextOverlayFeature extends Feature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            CustomColor textColor;
-            if (item.getRemainingCharges() <= 0) {
-                textColor = OUT_OF_CHARGES_COLOR;
-            } else if (item.isDungeon()) {
-                textColor = DUNGEON_COLOR;
-            } else {
-                textColor = CITY_COLOR;
-            }
+            CustomColor textColor = teleportScrollColorByCharges.get()
+                    ? switch (item.getRemainingCharges()) {
+                        case 3 -> MAX_CHARGES_COLOR;
+                        case 2 -> TWO_CHARGES_COLOR;
+                        case 1 -> ONE_CHARGE_COLOR;
+                        default -> OUT_OF_CHARGES_COLOR;
+                    }
+                    : MAX_CHARGES_COLOR;
 
             String text = item.getDestination();
+            float scale = text.length() >= 3 ? 0.9f : 1f;
             TextRenderSetting style =
                     TextRenderSetting.DEFAULT.withCustomColor(textColor).withTextShadow(teleportScrollShadow.get());
 
-            return new TextOverlay(new TextRenderTask(text, style), 0, 0, 1f);
+            return new TextOverlay(new TextRenderTask(text, style), 0, 0, scale);
         }
     }
 

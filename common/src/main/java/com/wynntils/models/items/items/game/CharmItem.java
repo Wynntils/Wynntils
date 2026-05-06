@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
@@ -11,6 +11,7 @@ import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
+import com.wynntils.models.items.properties.PagedItemProperty;
 import com.wynntils.models.items.properties.RerollableItemProperty;
 import com.wynntils.models.rewards.type.CharmInfo;
 import com.wynntils.models.rewards.type.CharmInstance;
@@ -27,13 +28,20 @@ public class CharmItem extends GameItem
                 GearTypeItemProperty,
                 RerollableItemProperty,
                 LeveledItemProperty,
-                IdentifiableItemProperty<CharmInfo, CharmInstance> {
+                IdentifiableItemProperty<CharmInfo, CharmInstance>,
+                PagedItemProperty {
     private final CharmInfo charmInfo;
     private final CharmInstance charmInstance;
+    private final int currentPage;
 
-    public CharmItem(CharmInfo charmInfo, CharmInstance charmInstance) {
+    public CharmItem(CharmInfo charmInfo, CharmInstance charmInstance, int currentPage) {
         this.charmInfo = charmInfo;
         this.charmInstance = charmInstance;
+        this.currentPage = currentPage;
+    }
+
+    public CharmItem(CharmInfo charmInfo, CharmInstance charmInstance) {
+        this(charmInfo, charmInstance, 0);
     }
 
     @Override
@@ -117,6 +125,11 @@ public class CharmItem extends GameItem
     @Override
     public float getOverallPercentage() {
         return charmInstance != null ? charmInstance.getOverallPercentage() : 0.0f;
+    }
+
+    @Override
+    public int currentPage() {
+        return currentPage;
     }
 
     @Override

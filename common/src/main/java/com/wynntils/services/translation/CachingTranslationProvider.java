@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2018-2025.
+ * Copyright © Wynntils 2018-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.translation;
@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -29,8 +30,10 @@ public abstract class CachingTranslationProvider implements TranslationProvider 
     protected abstract void translateNew(
             List<String> message, String toLanguage, Consumer<List<String>> handleTranslation);
 
+    protected abstract String getCacheNamespace();
+
     protected void saveTranslation(String toLanguage, List<String> message, List<String> translatedMessage) {
-        Map<String, List<String>> translationCache = translationCaches.get(toLanguage);
+        Map<String, List<String>> translationCache = translationCaches.get(createLanguageCacheKey(toLanguage));
         translationCache.put(createKey(message), translatedMessage);
         counter++;
         if (counter % 16 == 0) {
@@ -47,7 +50,7 @@ public abstract class CachingTranslationProvider implements TranslationProvider 
         }
 
         Map<String, List<String>> translationCache =
-                translationCaches.computeIfAbsent(toLanguage, k -> new ConcurrentHashMap<>());
+                translationCaches.computeIfAbsent(createLanguageCacheKey(toLanguage), k -> new ConcurrentHashMap<>());
         List<String> cachedTranslation = translationCache.get(createKey(message));
         if (cachedTranslation != null) {
             TaskUtils.runAsync(() -> handleTranslation.accept(cachedTranslation));
@@ -101,5 +104,9 @@ public abstract class CachingTranslationProvider implements TranslationProvider 
 
     private String createKey(List<String> message) {
         return String.join("", message);
+    }
+
+    private String createLanguageCacheKey(String toLanguage) {
+        return getCacheNamespace() + ":" + toLanguage.toLowerCase(Locale.ROOT);
     }
 }

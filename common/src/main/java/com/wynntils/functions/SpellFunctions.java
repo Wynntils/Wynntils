@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -132,6 +132,10 @@ public class SpellFunctions {
                 return "";
             }
 
+            if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) {
+                return "";
+            }
+
             return Location.containing(shamanTotem.getPosition()).toString();
         }
 
@@ -153,6 +157,10 @@ public class SpellFunctions {
                 return 0;
             }
 
+            if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) {
+                return 0;
+            }
+
             return shamanTotem.getTime();
         }
 
@@ -171,6 +179,10 @@ public class SpellFunctions {
             ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
 
             if (shamanTotem == null) {
+                return 0d;
+            }
+
+            if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) {
                 return 0d;
             }
 

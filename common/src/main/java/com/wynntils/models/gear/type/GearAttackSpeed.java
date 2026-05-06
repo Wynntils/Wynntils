@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear.type;
@@ -7,21 +7,23 @@ package com.wynntils.models.gear.type;
 import com.wynntils.core.WynntilsMod;
 
 public enum GearAttackSpeed {
-    SUPER_FAST("Super Fast Attack Speed", "superFast", 0),
-    VERY_FAST("Very Fast Attack Speed", "veryFast", 1),
-    FAST("Fast Attack Speed", "fast", 2),
-    NORMAL("Normal Attack Speed", "normal", 3),
-    SLOW("Slow Attack Speed", "slow", 4),
-    VERY_SLOW("Very Slow Attack Speed", "verySlow", 5),
-    SUPER_SLOW("Super Slow Attack Speed", "superSlow", 6);
+    SUPER_FAST("Super Fast", "superFast", 4.3, 0),
+    VERY_FAST("Very Fast", "veryFast", 3.1, 1),
+    FAST("Fast", "fast", 2.5, 2),
+    NORMAL("Normal", "normal", 2.05, 3),
+    SLOW("Slow", "slow", 1.5, 4),
+    VERY_SLOW("Very Slow", "verySlow", 0.83, 5),
+    SUPER_SLOW("Super Slow", "superSlow", 0.51, 6);
 
     private final String name;
     private final String apiName;
+    private final double hitsPerSecond;
     private final int encodingId;
 
-    GearAttackSpeed(String name, String apiName, int encodingId) {
+    GearAttackSpeed(String name, String apiName, double hitsPerSecond, int encodingId) {
         this.name = name;
         this.apiName = apiName;
+        this.hitsPerSecond = hitsPerSecond;
         this.encodingId = encodingId;
     }
 
@@ -54,6 +56,10 @@ public enum GearAttackSpeed {
 
     public String getApiName() {
         return apiName;
+    }
+
+    public double getHitsPerSecond() {
+        return hitsPerSecond;
     }
 
     public int getEncodingId() {

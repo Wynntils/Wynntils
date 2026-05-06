@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats;
@@ -22,9 +22,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public final class CombatXpModel extends Model {
     /*
-     * These values were provided by HeyZeer0 in #artemis-dev
+     * These values were provided by HeyZeer0 in #fruma-beta
      * Note that the last value is the sum of all preceding values
      */
+    // spotless:off
     private static final int[] LEVEL_UP_XP_REQUIREMENTS = {
         150, 320, 520, 730, 950, 1060, 1260, 1300, 1500, 1850, 2110, 2400, 2760, 3010, 3380, 3810, 4200, 4790, 5490,
         5730, 6310, 6820, 7750, 8450, 9700, 10500, 12000, 13700, 15400, 16600, 18800, 21200, 24000, 25200, 28400, 30000,
@@ -33,9 +34,11 @@ public final class CombatXpModel extends Model {
         728000, 792000, 860000, 935000, 1040400, 1154400, 1282600, 1414800, 1567500, 1730400, 1837000, 1954800, 2077600,
         2194400, 2325600, 2455000, 2645000, 2845000, 3141100, 3404710, 3782160, 4151400, 4604100, 5057300, 5533840,
         6087120, 6685120, 7352800, 8080800, 8725600, 9578400, 10545600, 11585600, 12740000, 14418250, 16280000,
-        21196500, 23315500, 25649000, 248721250
+        21196500, 23315500, 25649000, 28213900, 31035290, 34138820, 37552700, 41307970, 45438770, 49982640,
+        54980910, 60479000, 66526900, 73179590, 80497550, 88547300, 97402030, 107142240, 1145146860
     };
-    private static final int MAX_LEVEL = 106;
+    // spotless:on
+    private static final int MAX_LEVEL = 121;
 
     private float lastTickXp = 0;
     private int trackedLevel = 0;

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities;
@@ -8,7 +8,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.AddEntityEvent;
-import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.abilities.type.ArrowShield;
 import com.wynntils.models.abilities.type.GuardianAngelsShield;
@@ -114,11 +113,6 @@ public final class ShieldModel extends Model {
 
     @SubscribeEvent
     public void onClassChange(CharacterUpdateEvent e) {
-        removeShield();
-    }
-
-    @SubscribeEvent
-    public void onHeldItemChange(ChangeCarriedItemEvent e) {
         removeShield();
     }
 

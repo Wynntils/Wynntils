@@ -7,9 +7,11 @@ package com.wynntils.models.inventory;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.models.inventory.type.InventoryAccessory;
+import com.wynntils.models.inventory.type.InventoryArmor;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.models.items.items.game.MaterialItem;
@@ -18,6 +20,7 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.ItemUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,6 +37,8 @@ public final class InventoryModel extends Model {
 
     private final InventoryWatcher emptySlotWatcher = new InventoryWatcher(ItemStack::isEmpty);
     private final List<InventoryWatcher> watchers = new ArrayList<>(List.of(emptySlotWatcher));
+    private List<ItemStack> equippedItemsCache = List.of();
+    private boolean equippedItemsCacheDirty = true;
 
     public InventoryModel() {
         super(List.of());
@@ -56,31 +61,11 @@ public final class InventoryModel extends Model {
      * @return List of all equipped armor, accessories, and held item that meets requirements
      */
     public List<ItemStack> getEquippedItems() {
-        List<ItemStack> returnable =
-                new ArrayList<>(McUtils.inventory().equipment.items.values());
-        Collections.reverse(returnable); // Reverse so that helmet is first
-
-        for (int i : InventoryAccessory.getSlots()) {
-            int baseSize = 0;
-            if (McUtils.player().hasContainerOpen()) {
-                // Scale according to server chest size
-                // Eg. 3 row chest size = 27 (ends on i=26 since 0-index), we would get accessory slots {27, 28, 29, 30}
-                baseSize = McUtils.player().containerMenu.getItems().size();
-            }
-            ItemStack accessory = McUtils.inventory().getItem(i + baseSize);
-            if (ItemUtils.isEmptyAccessorySlot(accessory)) continue;
-            returnable.add(McUtils.inventory().getItem(i + baseSize));
+        if (equippedItemsCacheDirty) {
+            updateEquippedItemsCache();
         }
 
-        Optional<GearItem> handItemOpt =
-                Models.Item.asWynnItem(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND), GearItem.class);
-        if (handItemOpt.isPresent()
-                && handItemOpt.get().meetsActualRequirements()
-                && handItemOpt.get().getGearType().isWeapon()) {
-            returnable.add(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
-        }
-
-        return returnable.stream().filter(itemStack -> !itemStack.isEmpty()).toList();
+        return equippedItemsCache;
     }
 
     /**
@@ -112,7 +97,7 @@ public final class InventoryModel extends Model {
             StyledText itemName = StyledText.fromComponent(itemStack.getHoverName())
                     .getNormalized()
                     .trim();
-            if (itemName.getString().endsWith(name)) {
+            if (WynnUtils.stripItemNameMarkers(itemName.getString()).endsWith(name)) {
                 amount += itemStack.getCount();
             }
         }
@@ -125,7 +110,8 @@ public final class InventoryModel extends Model {
                 .filter(itemStack -> {
                     Optional<IngredientItem> ingredientItem = Models.Item.asWynnItem(itemStack, IngredientItem.class);
                     if (ingredientItem.isEmpty()) return false;
-                    return ingredientItem.get().getName().startsWith(name);
+                    return WynnUtils.stripItemNameMarkers(ingredientItem.get().getName())
+                            .startsWith(name);
                 })
                 .mapToInt(itemStack -> itemStack.count)
                 .sum();
@@ -137,7 +123,8 @@ public final class InventoryModel extends Model {
                     Optional<MaterialItem> materialItemOpt = Models.Item.asWynnItem(itemStack, MaterialItem.class);
                     if (materialItemOpt.isEmpty()) return false;
                     MaterialItem materialItem = materialItemOpt.get();
-                    if (!itemStack.getHoverName().getString().startsWith(name)) return false;
+                    if (!WynnUtils.stripItemNameMarkers(itemStack.getHoverName().getString())
+                            .startsWith(name)) return false;
                     return exact ? materialItem.getQualityTier() == tier : materialItem.getQualityTier() >= tier;
                 })
                 .mapToInt(itemStack -> itemStack.count)
@@ -151,6 +138,8 @@ public final class InventoryModel extends Model {
         } else {
             resetCache();
         }
+
+        resetEquippedItemsCache();
     }
 
     @SubscribeEvent
@@ -158,13 +147,22 @@ public final class InventoryModel extends Model {
         // Only update if the container is the player inventory
         if (e.getContainerId() == McUtils.inventoryMenu().containerId) {
             updateCache();
+            invalidateEquippedItemsCache();
         }
+    }
+
+    @SubscribeEvent
+    public void onChangeCarriedItemEvent(ChangeCarriedItemEvent event) {
+        invalidateEquippedItemsCache();
     }
 
     @SubscribeEvent
     public void onSlotSetEvent(SetSlotEvent.Post e) {
         // Only update if the container is the player inventory
         if (Objects.equals(e.getContainer(), McUtils.inventory())) {
+            if (isRelevantEquippedSlot(e.getSlot())) {
+                invalidateEquippedItemsCache();
+            }
             updateCache();
         }
     }
@@ -195,5 +193,63 @@ public final class InventoryModel extends Model {
 
     private void resetCache() {
         watchers.forEach(watcher -> watcher.updateFromModel(0, 0));
+    }
+
+    private void updateEquippedItemsCache() {
+        if (McUtils.player() == null) {
+            equippedItemsCache = List.of();
+            return;
+        }
+
+        List<ItemStack> returnable =
+                new ArrayList<>(McUtils.inventory().equipment.items.values());
+        Collections.reverse(returnable); // Reverse so that helmet is first
+
+        for (int i : InventoryAccessory.getSlots()) {
+            int baseSize = 0;
+            if (McUtils.player().hasContainerOpen()) {
+                // Scale according to server chest size
+                // Eg. 3 row chest size = 27 (ends on i=26 since 0-index), we would get accessory slots {27, 28, 29, 30}
+                baseSize = McUtils.player().containerMenu.getItems().size();
+            }
+            ItemStack accessory = McUtils.inventory().getItem(i + baseSize);
+            if (ItemUtils.isEmptyAccessorySlot(accessory)) continue;
+            returnable.add(accessory);
+        }
+
+        Optional<GearItem> handItemOpt =
+                Models.Item.asWynnItem(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND), GearItem.class);
+        if (handItemOpt.isPresent()
+                && handItemOpt.get().meetsActualRequirements()
+                && handItemOpt.get().getGearType().isWeapon()) {
+            returnable.add(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
+        }
+
+        equippedItemsCache =
+                returnable.stream().filter(itemStack -> !itemStack.isEmpty()).toList();
+        equippedItemsCacheDirty = false;
+    }
+
+    private void invalidateEquippedItemsCache() {
+        equippedItemsCacheDirty = true;
+    }
+
+    private void resetEquippedItemsCache() {
+        equippedItemsCache = List.of();
+        equippedItemsCacheDirty = true;
+    }
+
+    private boolean isRelevantEquippedSlot(int slot) {
+        if (slot == McUtils.inventory().selected) return true;
+
+        for (InventoryAccessory accessory : InventoryAccessory.values()) {
+            if (slot == accessory.getSlot()) return true;
+        }
+
+        for (InventoryArmor armor : InventoryArmor.values()) {
+            if (slot == armor.getInventorySlot()) return true;
+        }
+
+        return false;
     }
 }

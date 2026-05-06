@@ -101,8 +101,7 @@ public final class WynntilsAugmentsGuideScreen
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideAugmentItemStackButton guideAugmentItemStack) {
-            guiGraphics.setTooltipForNextFrame(
-                    FontRenderer.getInstance().getFont(), guideAugmentItemStack.getItemStack(), mouseX, mouseY);
+            guideAugmentItemStack.getItemStack().queueGuideTooltip(guiGraphics, mouseX, mouseY);
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);

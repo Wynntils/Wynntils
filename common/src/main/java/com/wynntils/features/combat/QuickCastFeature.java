@@ -17,232 +17,558 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
+import com.wynntils.mc.event.DestroyBlockEvent;
+import com.wynntils.mc.event.PlayerAttackEvent;
+import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.items.properties.ClassableItemProperty;
-import com.wynntils.models.items.properties.RequirementItemProperty;
-import com.wynntils.models.spells.type.SpellDirection;
+import com.wynntils.models.spells.QueuedMeleeScheduler;
+import com.wynntils.models.spells.type.CombatClickType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.wynn.ItemUtils;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class QuickCastFeature extends Feature {
-    @RegisterKeyBind
-    private final KeyBind castFirstSpell = KeyBindDefinition.CAST_FIRST_SPELL.create(this::castFirstSpell);
+    private static final int NO_PENDING_SPELL = -1;
+    private static final List<CombatClickType> FIRST_SPELL_SEQUENCE =
+            List.of(CombatClickType.PRIMARY, CombatClickType.SECONDARY, CombatClickType.PRIMARY);
+    private static final List<CombatClickType> SECOND_SPELL_SEQUENCE =
+            List.of(CombatClickType.PRIMARY, CombatClickType.PRIMARY, CombatClickType.PRIMARY);
+    private static final List<CombatClickType> THIRD_SPELL_SEQUENCE =
+            List.of(CombatClickType.PRIMARY, CombatClickType.SECONDARY, CombatClickType.SECONDARY);
+    private static final List<CombatClickType> FOURTH_SPELL_SEQUENCE =
+            List.of(CombatClickType.PRIMARY, CombatClickType.PRIMARY, CombatClickType.SECONDARY);
 
     @RegisterKeyBind
-    private final KeyBind castSecondSpell = KeyBindDefinition.CAST_SECOND_SPELL.create(this::castSecondSpell);
+    private final KeyBind castFirstSpell = KeyBindDefinition.CAST_FIRST_SPELL.create(() -> {});
 
     @RegisterKeyBind
-    private final KeyBind castThirdSpell = KeyBindDefinition.CAST_THIRD_SPELL.create(this::castThirdSpell);
+    private final KeyBind castSecondSpell = KeyBindDefinition.CAST_SECOND_SPELL.create(() -> {});
 
     @RegisterKeyBind
-    private final KeyBind castFourthSpell = KeyBindDefinition.CAST_FOURTH_SPELL.create(this::castFourthSpell);
+    private final KeyBind castThirdSpell = KeyBindDefinition.CAST_THIRD_SPELL.create(() -> {});
+
+    @RegisterKeyBind
+    private final KeyBind castFourthSpell = KeyBindDefinition.CAST_FOURTH_SPELL.create(() -> {});
+
+    @RegisterKeyBind
+    private final KeyBind castMeleeAttack = KeyBindDefinition.CAST_MELEE_ATTACK.create(() -> {});
+
+    private final SpellBinding[] spellBindings = {
+        new SpellBinding(castFirstSpell, FIRST_SPELL_SEQUENCE),
+        new SpellBinding(castSecondSpell, SECOND_SPELL_SEQUENCE),
+        new SpellBinding(castThirdSpell, THIRD_SPELL_SEQUENCE),
+        new SpellBinding(castFourthSpell, FOURTH_SPELL_SEQUENCE)
+    };
+    private final boolean[] spellKeysWereDown = new boolean[spellBindings.length];
+    private final boolean[] spellKeysJustPressed = new boolean[spellBindings.length];
+    private final long[] spellPressOrders = new long[spellBindings.length];
+    private boolean meleeKeyWasDown = false;
+    private boolean meleeKeyJustPressed = false;
+    private long spellPressOrderCounter = 0L;
+    private int pendingNextSpellIndex = NO_PENDING_SPELL;
+    private final QuickCastMeleeInsertionState meleeInsertionState = new QuickCastMeleeInsertionState();
 
     @Persisted
-    private final Config<Integer> leftClickTickDelay = new Config<>(3);
+    private final Config<Integer> leftClickDelayMs = new Config<>(100);
 
     @Persisted
-    private final Config<Integer> rightClickTickDelay = new Config<>(3);
+    private final Config<Integer> rightClickDelayMs = new Config<>(100);
 
     @Persisted
-    private final Config<Boolean> blockAttacks = new Config<>(true);
+    private final Config<Boolean> repeatMelee = new Config<>(false);
 
     @Persisted
     private final Config<Boolean> checkValidWeapon = new Config<>(true);
 
     @Persisted
-    private final Config<SafeCastType> safeCasting = new Config<>(SafeCastType.NONE);
+    private final Config<Integer> spellCooldownMs = new Config<>(0);
 
     @Persisted
-    private final Config<Integer> spellCooldown = new Config<>(0);
-
-    private int lastSpellTick = 0;
-    private int packetCountdown = 0;
+    private final Config<Boolean> adaptiveLagCorrection = new Config<>(true);
 
     public QuickCastFeature() {
         super(ProfileDefault.ENABLED);
     }
 
-    @SubscribeEvent
-    public void onSwing(ArmSwingEvent event) {
-        lastSpellTick = McUtils.player().tickCount;
-
-        if (!blockAttacks.get()) return;
-        if (event.getActionContext() != ArmSwingEvent.ArmSwingContext.ATTACK_OR_START_BREAKING_BLOCK) return;
-        if (event.getHand() != InteractionHand.MAIN_HAND) return;
-        if (Models.Spell.isSpellQueueEmpty()) return;
-
-        event.setCanceled(true);
+    @Override
+    public void onEnable() {
+        clearInputSelectionState();
+        Models.SpellCaster.setIdleListener(this::tryCastHeldInputsImmediately);
     }
 
-    @SubscribeEvent
-    public void onUseItem(UseItemEvent event) {
-        if (Models.WorldState.inCharacterWardrobe()) return;
-
-        lastSpellTick = McUtils.player().tickCount;
-
-        if (!blockAttacks.get()) return;
-        if (Models.Spell.isSpellQueueEmpty()) return;
-
-        event.setCanceled(true);
+    @Override
+    public void onDisable() {
+        Models.SpellCaster.setIdleListener(null);
+        Models.SpellCaster.clear();
+        clearInputSelectionState();
     }
 
     @SubscribeEvent
     public void onHeldItemChange(ChangeCarriedItemEvent event) {
-        resetState();
+        clearInputSelectionState();
+        Models.SpellCaster.clear();
     }
 
     @SubscribeEvent
-    public void onWorldChange(WorldStateEvent e) {
-        resetState();
+    public void onWorldChange(WorldStateEvent event) {
+        clearInputSelectionState();
+        Models.SpellCaster.clear();
     }
 
-    private void castFirstSpell() {
-        tryCastSpell(SpellUnit.PRIMARY, SpellUnit.SECONDARY, SpellUnit.PRIMARY);
-    }
-
-    private void castSecondSpell() {
-        tryCastSpell(SpellUnit.PRIMARY, SpellUnit.PRIMARY, SpellUnit.PRIMARY);
-    }
-
-    private void castThirdSpell() {
-        tryCastSpell(SpellUnit.PRIMARY, SpellUnit.SECONDARY, SpellUnit.SECONDARY);
-    }
-
-    private void castFourthSpell() {
-        tryCastSpell(SpellUnit.PRIMARY, SpellUnit.PRIMARY, SpellUnit.SECONDARY);
-    }
-
-    private void tryCastSpell(SpellUnit a, SpellUnit b, SpellUnit c) {
-        if (!Models.Spell.isSpellQueueEmpty()) return;
-
-        SpellDirection[] spellInProgress = Models.Spell.getLastSpell();
-        // SpellModel keeps the last spell for other uses but here we just want to know the inputs so if a full spell
-        // is the last spell then we just reset it to empty
-        if (spellInProgress.length == 3) {
-            spellInProgress = SpellDirection.NO_SPELL;
+    @SubscribeEvent
+    public void onSwing(ArmSwingEvent event) {
+        if (shouldSuppressAttackInput(Models.SpellCaster.isSendingInputs(), shouldSuppressNormalAttackTriggerInput())) {
+            event.setCanceled(true);
         }
+    }
 
-        if (safeCasting.get() == SafeCastType.BLOCK_ALL && spellInProgress.length != 0) {
-            sendCancelReason(Component.translatable("feature.wynntils.quickCast.spellInProgress"));
+    @SubscribeEvent
+    public void onAttack(PlayerAttackEvent event) {
+        if (shouldSuppressAttackInput(Models.SpellCaster.isSendingInputs(), shouldSuppressNormalAttackTriggerInput())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onDestroyBlock(DestroyBlockEvent event) {
+        if (shouldSuppressDestroyBlockInput(
+                Models.SpellCaster.isSendingInputs(), shouldSuppressNormalAttackTriggerInput())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onUseItem(UseItemEvent event) {
+        if (shouldSuppressMainHandInput(
+                Models.SpellCaster.isSendingInputs(), shouldSuppressNormalUseTriggerInput(), event.getHand())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onInteract(PlayerInteractEvent.Interact event) {
+        if (shouldSuppressMainHandInput(
+                Models.SpellCaster.isSendingInputs(), shouldSuppressNormalUseTriggerInput(), event.getHand())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onInteractAt(PlayerInteractEvent.InteractAt event) {
+        if (shouldSuppressMainHandInput(
+                Models.SpellCaster.isSendingInputs(), shouldSuppressNormalUseTriggerInput(), event.getHand())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onUseItemOnBlock(PlayerInteractEvent.RightClickBlock event) {
+        if (shouldSuppressMainHandInput(
+                Models.SpellCaster.isSendingInputs(), shouldSuppressNormalUseTriggerInput(), event.getHand())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        if (!Models.WorldState.onWorld()) {
+            refreshInputSelectionState();
+            discardBlockedPendingInputs();
             return;
         }
-        if (safeCasting.get() == SafeCastType.FINISH_COMPATIBLE && spellInProgress.length != 0 && lastSpellTick == 0) {
-            sendCancelReason(Component.translatable("feature.wynntils.quickCast.spellInProgress"));
+
+        tryCastHeldInputsImmediately();
+    }
+
+    private void tryCastHeldInputsImmediately() {
+        refreshInputSelectionState();
+        if (!isEnabled()) return;
+        if (!QueuedMeleeScheduler.canHandleCombatInput()) {
+            discardBlockedPendingInputs();
             return;
         }
+        if (meleeKeyJustPressed) {
+            meleeInsertionState.onStandaloneMeleePressed();
+        }
 
-        boolean isArcher = Models.Character.getClassType() == ClassType.ARCHER;
+        if (hasSelectedOrHeldSpell()) {
+            meleeInsertionState.onSpellSelected();
+        }
+        tryCastHeldSpell();
+        tryCastBufferedStandaloneMelee();
+        tryCastHeldMelee();
+    }
 
-        if (checkValidWeapon.get()) {
-            ItemStack heldItem = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+    private void tryCastHeldSpell() {
+        if (Models.SpellCaster.isBusy()) return;
 
-            if (!ItemUtils.isWeapon(heldItem)) {
-                sendCancelReason(Component.translatable("feature.wynntils.quickCast.notAWeapon"));
-                return;
+        SpellSelection spellSelection = getNextSpellSelection();
+        if (spellSelection == null) return;
+
+        boolean autoInsertMelee = shouldAutoInsertMelee();
+        boolean quickMeleeLegal = isQuickMeleeLegal();
+        List<CombatClickType> clicks = spellSelection.spellBinding().clicks();
+        // Quick Cast stays responsive: if melee is still on cooldown, cast the spell now.
+        if (meleeInsertionState.shouldPrependMelee(autoInsertMelee, quickMeleeLegal)) {
+            clicks = prependMelee(clicks);
+        }
+
+        if (tryCastSpell(clicks, spellSelection.notifyInvalidWeapon())) {
+            meleeInsertionState.onSpellQueued();
+            if (spellSelection.index() == pendingNextSpellIndex) {
+                pendingNextSpellIndex = NO_PENDING_SPELL;
             }
+        }
+    }
 
-            // First check if the character is an archer or not in case CharacterModel failed to parse correctly
-            Optional<ClassableItemProperty> classItemPropOpt =
-                    Models.Item.asWynnItemProperty(heldItem, ClassableItemProperty.class);
+    private void tryCastHeldMelee() {
+        boolean meleeHeld = castMeleeAttack.getKeyMapping().isDown();
+        boolean pendingStandaloneMeleePress = meleeInsertionState.hasPendingStandaloneMeleePress();
+        if (!meleeHeld && !pendingStandaloneMeleePress) return;
+        if (Models.SpellCaster.isBusy()) return;
+        if (pendingStandaloneMeleePress) {
+            if (!shouldQueueDeferredStandaloneMelee(meleeHeld, meleeKeyJustPressed, repeatMelee.get())) return;
 
-            if (classItemPropOpt.isEmpty()) {
-                sendCancelReason(Component.translatable("feature.wynntils.quickCast.notAWeapon"));
-                return;
+            QueuedMeleeScheduler.MeleeQueueResult meleeAttemptResult = tryCastMelee(true);
+            if (meleeAttemptResult == QueuedMeleeScheduler.MeleeQueueResult.QUEUED) {
+                meleeInsertionState.onStandaloneMeleeQueued();
+            } else if (meleeAttemptResult == QueuedMeleeScheduler.MeleeQueueResult.BLOCKED_BY_COOLDOWN) {
+                meleeInsertionState.onStandaloneMeleeCooldownBlocked();
             } else {
-                isArcher = classItemPropOpt.get().getRequiredClass() == ClassType.ARCHER;
+                meleeInsertionState.onStandaloneMeleeRejected();
             }
-
-            // Now check for met requirements
-            Optional<RequirementItemProperty> reqItemPropOpt =
-                    Models.Item.asWynnItemProperty(heldItem, RequirementItemProperty.class);
-
-            if (reqItemPropOpt.isPresent() && !reqItemPropOpt.get().meetsActualRequirements()) {
-                sendCancelReason(Component.translatable("feature.wynntils.quickCast.notMetRequirements"));
-                return;
-            }
+            return;
         }
 
-        boolean isSpellInverted = isArcher;
-        List<SpellDirection> unconfirmedSpell = Stream.of(a, b, c)
-                .map(x -> (x == SpellUnit.PRIMARY) == isSpellInverted ? SpellDirection.LEFT : SpellDirection.RIGHT)
-                .toList();
+        if (!repeatMelee.get()) return;
 
-        List<SpellDirection> confirmedSpell = new ArrayList<>(unconfirmedSpell);
-
-        if (safeCasting.get() == SafeCastType.FINISH_COMPATIBLE && spellInProgress.length != 0) {
-            for (int i = 0; i < spellInProgress.length; i++) {
-                if (spellInProgress[i] == unconfirmedSpell.get(i)) {
-                    confirmedSpell.removeFirst();
-                } else {
-                    sendCancelReason(Component.translatable("feature.wynntils.quickCast.incompatibleInProgress"));
-                    return;
-                }
-            }
-        }
-
-        Models.Spell.addSpellToQueue(confirmedSpell);
-    }
-
-    @SubscribeEvent
-    public void onTick(TickEvent e) {
-        if (!Models.WorldState.onWorld()) return;
-
-        if (packetCountdown > 0) {
-            packetCountdown--;
-        }
-
-        if (packetCountdown > 0) return;
-
-        if (Models.Spell.isSpellQueueEmpty()) return;
-
-        SpellDirection nextDirection = Models.Spell.checkNextSpellDirection();
-
-        if (nextDirection == null) return;
-
-        int comparisonTime =
-                nextDirection == SpellDirection.LEFT ? leftClickTickDelay.get() : rightClickTickDelay.get();
-        if (McUtils.player().tickCount - lastSpellTick < comparisonTime) return;
-
-        Models.Spell.sendNextSpell();
-        lastSpellTick = McUtils.player().tickCount;
-
-        if (Models.Spell.isSpellQueueEmpty()) {
-            lastSpellTick = 0;
-            packetCountdown = Math.max(packetCountdown, spellCooldown.get());
+        if (tryCastMelee(false) == QueuedMeleeScheduler.MeleeQueueResult.QUEUED) {
+            meleeInsertionState.onStandaloneMeleeQueued();
         }
     }
 
-    private void resetState() {
-        lastSpellTick = 0;
-        packetCountdown = 0;
+    private void tryCastBufferedStandaloneMelee() {
+        if (!meleeInsertionState.hasBufferedStandaloneMelee()) return;
+        if (Models.SpellCaster.isBusy()) return;
+
+        QueuedMeleeScheduler.MeleeQueueResult meleeAttemptResult = tryCastMelee(false);
+        if (meleeAttemptResult == QueuedMeleeScheduler.MeleeQueueResult.QUEUED) {
+            meleeInsertionState.onStandaloneMeleeQueued();
+        } else if (meleeAttemptResult != QueuedMeleeScheduler.MeleeQueueResult.BLOCKED_BY_COOLDOWN) {
+            meleeInsertionState.onSpellSelected();
+        }
     }
 
-    private static void sendCancelReason(MutableComponent reason) {
+    private boolean tryCastSpell(List<CombatClickType> clicks, boolean notifyInvalidWeapon) {
+        if (!QueuedMeleeScheduler.canHandleCombatInput()) return false;
+
+        QueuedMeleeScheduler.WeaponContext weaponContext = getWeaponContext(notifyInvalidWeapon);
+        if (!weaponContext.valid()) return false;
+
+        return Models.SpellCaster.queueClicks(
+                clicks,
+                weaponContext.isArcher(),
+                leftClickDelayMs.get(),
+                rightClickDelayMs.get(),
+                spellCooldownMs.get(),
+                adaptiveLagCorrection.get());
+    }
+
+    private QueuedMeleeScheduler.MeleeQueueResult tryCastMelee(boolean notifyInvalidWeapon) {
+        if (!QueuedMeleeScheduler.canHandleCombatInput()) return QueuedMeleeScheduler.MeleeQueueResult.NOT_QUEUED;
+        if (!meleeInsertionState.shouldQueueStandaloneMelee(isQuickMeleeLegal())) {
+            return QueuedMeleeScheduler.MeleeQueueResult.BLOCKED_BY_COOLDOWN;
+        }
+
+        QueuedMeleeScheduler.WeaponContext weaponContext = getWeaponContext(notifyInvalidWeapon);
+        if (!weaponContext.valid()) return QueuedMeleeScheduler.MeleeQueueResult.NOT_QUEUED;
+
+        return QueuedMeleeScheduler.queueCurrentMelee(
+                weaponContext, leftClickDelayMs.get(), rightClickDelayMs.get(), adaptiveLagCorrection.get());
+    }
+
+    private void discardBlockedPendingInputs() {
+        Arrays.fill(spellKeysJustPressed, false);
+        meleeKeyJustPressed = false;
+        pendingNextSpellIndex = NO_PENDING_SPELL;
+        meleeInsertionState.clear();
+    }
+
+    private void refreshInputSelectionState() {
+        for (int i = 0; i < spellBindings.length; i++) {
+            boolean isDown = spellBindings[i].keyBind().getKeyMapping().isDown();
+            boolean justPressed = isDown && !spellKeysWereDown[i];
+            spellKeysJustPressed[i] = justPressed;
+
+            if (justPressed) {
+                spellPressOrders[i] = ++spellPressOrderCounter;
+                pendingNextSpellIndex = i;
+            }
+
+            spellKeysWereDown[i] = isDown;
+        }
+
+        boolean meleeDown = castMeleeAttack.getKeyMapping().isDown();
+        meleeKeyJustPressed = meleeDown && !meleeKeyWasDown;
+        meleeKeyWasDown = meleeDown;
+    }
+
+    private SpellSelection getNextSpellSelection() {
+        if (pendingNextSpellIndex >= 0 && pendingNextSpellIndex < spellBindings.length) {
+            return new SpellSelection(
+                    pendingNextSpellIndex,
+                    spellBindings[pendingNextSpellIndex],
+                    spellKeysJustPressed[pendingNextSpellIndex]);
+        }
+
+        int newestHeldSpellIndex = getNewestHeldSpellIndex();
+        if (newestHeldSpellIndex == NO_PENDING_SPELL) return null;
+
+        return new SpellSelection(
+                newestHeldSpellIndex, spellBindings[newestHeldSpellIndex], spellKeysJustPressed[newestHeldSpellIndex]);
+    }
+
+    private int getNewestHeldSpellIndex() {
+        int newestHeldSpellIndex = NO_PENDING_SPELL;
+        long newestHeldPressOrder = Long.MIN_VALUE;
+
+        for (int i = 0; i < spellBindings.length; i++) {
+            if (!spellKeysWereDown[i]) continue;
+            if (spellPressOrders[i] <= newestHeldPressOrder) continue;
+
+            newestHeldSpellIndex = i;
+            newestHeldPressOrder = spellPressOrders[i];
+        }
+
+        return newestHeldSpellIndex;
+    }
+
+    private void clearInputSelectionState() {
+        Arrays.fill(spellKeysWereDown, false);
+        Arrays.fill(spellKeysJustPressed, false);
+        Arrays.fill(spellPressOrders, 0L);
+        meleeKeyWasDown = false;
+        meleeKeyJustPressed = false;
+        spellPressOrderCounter = 0L;
+        pendingNextSpellIndex = NO_PENDING_SPELL;
+        meleeInsertionState.clear();
+    }
+
+    private boolean hasSelectedOrHeldSpell() {
+        if (pendingNextSpellIndex >= 0 && pendingNextSpellIndex < spellBindings.length) {
+            return true;
+        }
+
+        return getNewestHeldSpellIndex() != NO_PENDING_SPELL;
+    }
+
+    private boolean shouldAutoInsertMelee() {
+        return isAutoInsertMeleeTriggerHeld(
+                Models.Character.getClassType(),
+                Managers.Feature.getFeatureInstance(AutoAttackFeature.class).isEnabled(),
+                castMeleeAttack.getKeyMapping().isDown(),
+                McUtils.options().keyAttack.isDown(),
+                McUtils.options().keyUse.isDown());
+    }
+
+    static boolean isAutoInsertMeleeTriggerHeld(
+            ClassType classType,
+            boolean autoAttackEnabled,
+            boolean quickCastMeleeHeld,
+            boolean normalAttackHeld,
+            boolean normalUseHeld) {
+        if (quickCastMeleeHeld) {
+            return true;
+        }
+
+        if (!autoAttackEnabled) {
+            return false;
+        }
+
+        return classType == ClassType.ARCHER ? normalUseHeld : normalAttackHeld;
+    }
+
+    boolean isNormalAutoAttackTriggerActingAsSpellModifier() {
+        return isNormalAutoAttackTriggerActingAsSpellModifier(
+                isEnabled(),
+                canQuickCastNowSilently(),
+                Models.Character.getClassType(),
+                Managers.Feature.getFeatureInstance(AutoAttackFeature.class).isEnabled(),
+                McUtils.options().keyAttack.isDown(),
+                McUtils.options().keyUse.isDown(),
+                hasRawSpellKeyDown(),
+                hasSelectedOrHeldSpell(),
+                Models.SpellCaster.isSendingInputs());
+    }
+
+    static boolean isNormalAutoAttackTriggerActingAsSpellModifier(
+            boolean quickCastEnabled,
+            boolean quickCastCastable,
+            ClassType classType,
+            boolean autoAttackEnabled,
+            boolean normalAttackHeld,
+            boolean normalUseHeld,
+            boolean rawSpellKeyDown,
+            boolean spellSelectedOrHeld,
+            boolean spellCasterSendingInputs) {
+        if (!quickCastEnabled || !quickCastCastable || !autoAttackEnabled) {
+            return false;
+        }
+
+        boolean triggerHeld = classType == ClassType.ARCHER ? normalUseHeld : normalAttackHeld;
+        if (!triggerHeld) {
+            return false;
+        }
+
+        return rawSpellKeyDown || spellSelectedOrHeld || spellCasterSendingInputs;
+    }
+
+    static boolean shouldSuppressAttackInput(boolean sendingInputs, boolean suppressNormalAttackTriggerInput) {
+        return sendingInputs || suppressNormalAttackTriggerInput;
+    }
+
+    static boolean shouldSuppressDestroyBlockInput(boolean sendingInputs, boolean suppressNormalAttackTriggerInput) {
+        return sendingInputs || suppressNormalAttackTriggerInput;
+    }
+
+    static boolean shouldSuppressMainHandInput(
+            boolean sendingInputs, boolean suppressNormalUseTriggerInput, InteractionHand hand) {
+        return hand == InteractionHand.MAIN_HAND && (sendingInputs || suppressNormalUseTriggerInput);
+    }
+
+    static boolean shouldQueueDeferredStandaloneMelee(
+            boolean meleeHeld, boolean meleeJustPressed, boolean repeatMeleeEnabled) {
+        if (meleeJustPressed) {
+            return false;
+        }
+
+        return repeatMeleeEnabled || !meleeHeld;
+    }
+
+    private boolean isQuickMeleeLegal() {
+        return QueuedMeleeScheduler.isMeleeReady();
+    }
+
+    private boolean shouldSuppressNormalAttackTriggerInput() {
+        return isNormalAutoAttackTriggerActingAsSpellModifier() && Models.Character.getClassType() != ClassType.ARCHER;
+    }
+
+    private boolean shouldSuppressNormalUseTriggerInput() {
+        return isNormalAutoAttackTriggerActingAsSpellModifier() && Models.Character.getClassType() == ClassType.ARCHER;
+    }
+
+    private boolean hasRawSpellKeyDown() {
+        for (SpellBinding spellBinding : spellBindings) {
+            if (spellBinding.keyBind().getKeyMapping().isDown()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static List<CombatClickType> prependMelee(List<CombatClickType> clicks) {
+        List<CombatClickType> combinedClicks = new ArrayList<>(clicks.size() + 1);
+        combinedClicks.add(CombatClickType.MELEE);
+        combinedClicks.addAll(clicks);
+        return List.copyOf(combinedClicks);
+    }
+
+    private boolean canQuickCastNowSilently() {
+        return QueuedMeleeScheduler.canQueueCombatInput(checkValidWeapon.get());
+    }
+
+    private QueuedMeleeScheduler.WeaponContext getWeaponContext(boolean notifyInvalidWeapon) {
+        QueuedMeleeScheduler.WeaponContext weaponContext =
+                QueuedMeleeScheduler.resolveWeaponContext(checkValidWeapon.get());
+        if (!weaponContext.valid()) {
+            if (weaponContext.invalidWeaponReason() == QueuedMeleeScheduler.InvalidWeaponReason.NOT_A_WEAPON) {
+                sendCancelReason(notifyInvalidWeapon, Component.translatable("feature.wynntils.quickCast.notAWeapon"));
+            } else if (weaponContext.invalidWeaponReason()
+                    == QueuedMeleeScheduler.InvalidWeaponReason.REQUIREMENTS_UNMET) {
+                sendCancelReason(
+                        notifyInvalidWeapon, Component.translatable("feature.wynntils.quickCast.notMetRequirements"));
+            }
+        }
+
+        return weaponContext;
+    }
+
+    private static void sendCancelReason(boolean notifyInvalidWeapon, MutableComponent reason) {
+        if (!notifyInvalidWeapon) return;
+
         Managers.Notification.queueMessage(reason.withStyle(ChatFormatting.RED));
     }
 
-    public enum SpellUnit {
-        PRIMARY,
-        SECONDARY
-    }
+    private record SpellBinding(KeyBind keyBind, List<CombatClickType> clicks) {}
 
-    public enum SafeCastType {
-        NONE,
-        BLOCK_ALL,
-        FINISH_COMPATIBLE
+    private record SpellSelection(int index, SpellBinding spellBinding, boolean notifyInvalidWeapon) {}
+
+    static final class QuickCastMeleeInsertionState {
+        private boolean standaloneMeleeQueued;
+        private boolean bufferedStandaloneMelee;
+        private boolean pendingStandaloneMeleePress;
+
+        boolean shouldPrependMelee(boolean autoInsertionEnabled, boolean meleeReady) {
+            return autoInsertionEnabled && meleeReady && !standaloneMeleeQueued;
+        }
+
+        boolean hasBufferedStandaloneMelee() {
+            return bufferedStandaloneMelee;
+        }
+
+        boolean hasPendingStandaloneMeleePress() {
+            return pendingStandaloneMeleePress;
+        }
+
+        boolean shouldQueueStandaloneMelee(boolean meleeReady) {
+            return meleeReady;
+        }
+
+        void onStandaloneMeleePressed() {
+            pendingStandaloneMeleePress = true;
+        }
+
+        void onStandaloneMeleeCooldownBlocked() {
+            bufferedStandaloneMelee = true;
+            pendingStandaloneMeleePress = false;
+        }
+
+        void onStandaloneMeleeQueued() {
+            standaloneMeleeQueued = true;
+            bufferedStandaloneMelee = false;
+            pendingStandaloneMeleePress = false;
+        }
+
+        void onStandaloneMeleeRejected() {
+            pendingStandaloneMeleePress = false;
+        }
+
+        void onSpellSelected() {
+            bufferedStandaloneMelee = false;
+            pendingStandaloneMeleePress = false;
+        }
+
+        void onSpellQueued() {
+            standaloneMeleeQueued = false;
+            bufferedStandaloneMelee = false;
+            pendingStandaloneMeleePress = false;
+        }
+
+        void clear() {
+            standaloneMeleeQueued = false;
+            bufferedStandaloneMelee = false;
+            pendingStandaloneMeleePress = false;
+        }
     }
 }

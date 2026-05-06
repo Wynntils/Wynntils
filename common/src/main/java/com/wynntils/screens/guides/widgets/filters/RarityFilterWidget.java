@@ -29,10 +29,9 @@ public class RarityFilterWidget extends GuideFilterWidget {
         rarityButtons.add(new RarityButton(x, y, GearTier.MYTHIC, Texture.MYTHIC_FILTER_ICON, searchQuery));
         rarityButtons.add(new RarityButton(x + 20, y, GearTier.FABLED, Texture.FABLED_FILTER_ICON, searchQuery));
         rarityButtons.add(new RarityButton(x + 40, y, GearTier.LEGENDARY, Texture.LEGENDARY_FILTER_ICON, searchQuery));
-        rarityButtons.add(new RarityButton(x + 60, y, GearTier.SET, Texture.SET_FILTER_ICON, searchQuery));
-        rarityButtons.add(new RarityButton(x + 80, y, GearTier.RARE, Texture.RARE_FILTER_ICON, searchQuery));
-        rarityButtons.add(new RarityButton(x + 100, y, GearTier.UNIQUE, Texture.UNIQUE_FILTER_ICON, searchQuery));
-        rarityButtons.add(new RarityButton(x + 120, y, GearTier.NORMAL, Texture.NORMAL_FILTER_ICON, searchQuery));
+        rarityButtons.add(new RarityButton(x + 60, y, GearTier.RARE, Texture.RARE_FILTER_ICON, searchQuery));
+        rarityButtons.add(new RarityButton(x + 80, y, GearTier.UNIQUE, Texture.UNIQUE_FILTER_ICON, searchQuery));
+        rarityButtons.add(new RarityButton(x + 100, y, GearTier.NORMAL, Texture.NORMAL_FILTER_ICON, searchQuery));
     }
 
     @Override

@@ -4,6 +4,7 @@
  */
 package com.wynntils.functions;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
@@ -11,6 +12,7 @@ import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
+import java.util.Comparator;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 
@@ -18,8 +20,18 @@ public class HadesPartyFunctions {
     private abstract static class HadesPartyFunctionBase<T> extends Function<T> {
         @Override
         public T getValue(FunctionArguments arguments) {
+            // Get War members first
+            List<HadesUser> members = Models.War.getHadesUsers();
             int index = arguments.getArgument("index").getIntegerValue();
-            List<HadesUser> members = Services.Hades.getHadesUsers().toList();
+
+            // If there are no War members get regular party members and order them
+            if (members.isEmpty()) {
+                List<String> partyMembers = Models.Party.getPartyMembers();
+                members = Services.Hades.getHadesUsers()
+                        .filter(hadesUser -> partyMembers.contains(hadesUser.getName()))
+                        .sorted(Comparator.comparing(hadesUser -> partyMembers.indexOf(hadesUser.getName())))
+                        .toList();
+            }
             return !members.isEmpty() && index >= 0 && index < members.size()
                     ? processMember(members.get(index))
                     : whenAbsent();

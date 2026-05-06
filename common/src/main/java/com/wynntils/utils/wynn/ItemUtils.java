@@ -6,7 +6,6 @@ package com.wynntils.utils.wynn;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
@@ -14,15 +13,13 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.HashedStack;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public final class ItemUtils {
-    private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
+    private static final Pattern EMPTY_ARMOR_SLOT_PATTERN =
+            Pattern.compile("§7(?:Helmet|Chestplate|Leggings|Boots) Slot");
+    private static final Pattern EMPTY_ACCESSORY_SLOT_PATTERN = Pattern.compile("§7(?:Ring|Bracelet|Necklace) Slot");
     public static final Pattern ITEM_RARITY_PATTERN =
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
 
@@ -41,8 +38,12 @@ public final class ItemUtils {
                 .isPresent();
     }
 
+    public static boolean isEmptyArmorSlot(ItemStack itemStack) {
+        return getItemName(itemStack).matches(EMPTY_ARMOR_SLOT_PATTERN);
+    }
+
     public static boolean isEmptyAccessorySlot(ItemStack itemStack) {
-        return itemStack.getHoverName().getString().equals(EMPTY_ACCESSORY_SLOT);
+        return getItemName(itemStack).matches(EMPTY_ACCESSORY_SLOT_PATTERN);
     }
 
     public static StyledText getItemName(ItemStack itemStack) {
@@ -76,23 +77,6 @@ public final class ItemUtils {
             return !b.isEmpty()
                     && a.getHoverName().getString().equals(b.getHoverName().getString());
         }
-    }
-
-    public static MutableComponent getNonGearDescription(ItemStack itemStack, String gearName) {
-        if (gearName.contains("Crafted")) {
-            return Component.literal(gearName).withStyle(ChatFormatting.DARK_AQUA);
-        }
-
-        // this solves an unidentified item showcase exploit
-        // boxes items are STONE_SHOVEL, 1 represents UNIQUE boxes and 6 MYTHIC boxes
-        if (itemStack.getItem() == Items.STONE_SHOVEL
-                && itemStack.getDamageValue() >= 1
-                && itemStack.getDamageValue() <= 6) {
-            return Component.literal("Unidentified Item")
-                    .withStyle(
-                            GearTier.fromBoxDamage(itemStack.getDamageValue()).getChatFormatting());
-        }
-        return null;
     }
 
     public static HashedStack createHashedItem(ItemStack itemStack) {

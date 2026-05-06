@@ -107,25 +107,25 @@
   },
   {
     "id": "dataStaticAspects",
-    "md5": "7dd551a438b5163e30076c62ad74c7a1",
+    "md5": "965195a29cb781bc43ac23e7f097433e",
     "path": "Reference/aspects.json",
     "url": "https://cdn.wynntils.com/static/Reference/aspects.json"
   },
   {
     "id": "dataStaticCaveInfo",
-    "md5": "e3a64e7b576951b7260f9c4ed4a5db01",
+    "md5": "ef98c782956bef8cff07700b51c2bda4",
     "path": "Reference/caves.json",
     "url": "https://cdn.wynntils.com/static/Reference/caves.json"
   },
   {
     "id": "dataStaticCharms",
-    "md5": "944096cd59a3f189d7e276c841af49f8",
+    "md5": "4d443b0acb8bb919a6f79b4ff8665a9d",
     "path": "Reference/charms.json",
     "url": "https://cdn.wynntils.com/static/Reference/charms.json"
   },
   {
     "id": "dataStaticCombatLocations",
-    "md5": "5217e28bf1e91686a2258418ed7f27c3",
+    "md5": "fd9cbfa568fb10084bc52f862b97b0f2",
     "path": "Data-Storage/combat_locations.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/combat_locations.json"
   },
@@ -137,13 +137,13 @@
   },
   {
     "id": "dataStaticDestinations",
-    "md5": "8021e388b6c8ec682d3323fd7d2672f6",
+    "md5": "8b296692b963c938f8ece2ef3599bafb",
     "path": "Data-Storage/destinations.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/destinations.json"
   },
   {
     "id": "dataStaticGear",
-    "md5": "d80da48ffbba64e29ef11cfcbb6cedd2",
+    "md5": "a0aa8ac094cc3be96f6c2447676d38c8",
     "path": "Reference/gear.json",
     "url": "https://cdn.wynntils.com/static/Reference/gear.json"
   },
@@ -155,13 +155,13 @@
   },
   {
     "id": "dataStaticHints",
-    "md5": "5497f7fb130f6ea87eb2b9890a2cc36a",
+    "md5": "315e1cfbd8fbbc6d6940fd29a76f4472",
     "path": "Data-Storage/hint_messages.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/hint_messages.json"
   },
   {
     "id": "dataStaticIdentificationKeys",
-    "md5": "745366b87899dfa650e7a9a2b0d5f4d3",
+    "md5": "a6617793c2790b7cafc222f6c54e7e27",
     "path": "Reference/id_keys.json",
     "url": "https://cdn.wynntils.com/static/Reference/id_keys.json"
   },
@@ -173,7 +173,7 @@
   },
   {
     "id": "dataStaticIngredients",
-    "md5": "38ab896484bb1700cbcd1152c7091fdb",
+    "md5": "6cf9fb683164279ebae891e14057fad0",
     "path": "Reference/ingredients.json",
     "url": "https://cdn.wynntils.com/static/Reference/ingredients.json"
   },
@@ -197,7 +197,7 @@
   },
   {
     "id": "dataStaticItemSets",
-    "md5": "932f38585cba5fe98502a393a5729a41",
+    "md5": "c3d578efe823698d9b174355738a8ef6",
     "path": "Data-Storage/item_sets.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/item_sets.json"
   },
@@ -209,7 +209,7 @@
   },
   {
     "id": "dataStaticLootrunTasksNamedV2",
-    "md5": "c8adc1151cb31ae30e3de9e1a7dd842b",
+    "md5": "0bc51ca15cc70905c398ed06971fbfa3",
     "path": "Data-Storage/lootrun_tasks_named_v2.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/lootrun_tasks_named_v2.json"
   },
@@ -221,7 +221,7 @@
   },
   {
     "id": "dataStaticMaps",
-    "md5": "96913e54566a0f088ec799c5c5795bac",
+    "md5": "b8ab7f71d44e56369fefbac883e8205e",
     "path": "Reference/maps.json",
     "url": "https://cdn.wynntils.com/static/Reference/maps.json"
   },
@@ -233,31 +233,31 @@
   },
   {
     "id": "dataStaticMaterials",
-    "md5": "4340bf2689dd0021540f83901ef9fe44",
+    "md5": "66aec0be52886a525a2937af8c218514",
     "path": "Reference/materials.json",
     "url": "https://cdn.wynntils.com/static/Reference/materials.json"
   },
   {
     "id": "dataStaticModelData",
-    "md5": "942ffb6d0ea8780b9aea8fc319b9aabd",
+    "md5": "2fdb1190ab8c5f40e2586339e57888c0",
     "path": "Data-Storage/model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/model_data.json"
   },
   {
     "id": "dataStaticPlaceMapFeatures",
-    "md5": "152da6dd432af0306b7d84868b050cd0",
+    "md5": "8b3c5bd8b33b70e3b63c2b8045fc045b",
     "path": "Reference/place_mapfeatures.json",
     "url": "https://cdn.wynntils.com/static/Reference/place_mapfeatures.json"
   },
   {
     "id": "dataStaticPlaces",
-    "md5": "d25458ae7f877a250463428e62a78468",
+    "md5": "ea5886d525137c8fce196b2a8283b669",
     "path": "Reference/places.json",
     "url": "https://cdn.wynntils.com/static/Reference/places.json"
   },
   {
     "id": "dataStaticSeaskipperDestinations",
-    "md5": "9316de06eb80ef9a26f8b604e9ac13bd",
+    "md5": "dc9eb0e70e689368aec0ef0e41a77a96",
     "path": "Data-Storage/seaskipper_destinations.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/seaskipper_destinations.json"
   },
@@ -275,7 +275,7 @@
   },
   {
     "id": "dataStaticServicesCrowdsourced",
-    "md5": "48ccb62960b490d43be6055fde9b9574",
+    "md5": "85adbe98fc45bee48a3d66a00cc72b77",
     "path": "Data-Storage/services_crowdsourced.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/services_crowdsourced.json"
   },
@@ -293,13 +293,13 @@
   },
   {
     "id": "dataStaticTomes",
-    "md5": "d7f2b89aa9c908aac1093202102ae5dc",
+    "md5": "66ee2cd22b01ba8f5308857e3317c216",
     "path": "Reference/tomes.json",
     "url": "https://cdn.wynntils.com/static/Reference/tomes.json"
   },
   {
     "id": "dataStaticTools",
-    "md5": "d22edcddf11403142c147ef75e952c76",
+    "md5": "e56f6afca4ee8c3b255e35b9606e25a2",
     "path": "Reference/tools.json",
     "url": "https://cdn.wynntils.com/static/Reference/tools.json"
   },

@@ -88,6 +88,7 @@ allprojects {
             palantirJavaFormat(spotless_palantir_version)
             trimTrailingWhitespace()
             endWithNewline()
+            toggleOffOn()
             ratchetFrom('origin/main')
             // Custom rule from https://github.com/apache/geode
             custom "Refuse wildcard imports", {
@@ -117,6 +118,7 @@ allprojects {
              */
             targetExclude(
                     "src/main/resources/assets/wynntils/font/*.json",
+                    "src/main/resources/assets/wynntils/fontmaps/*.json",
                     "src/main/resources/fabric.mod.json")
             gson()
                     .indentWithSpaces(2)

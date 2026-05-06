@@ -18,6 +18,7 @@ import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.colors.WynncraftShaderColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
@@ -100,7 +101,7 @@ public class BeaconBeamFeature extends Feature {
                     marker.beaconColor() == CustomColor.NONE ? waypointBeamColor.get() : marker.beaconColor();
 
             int colorInt;
-            if (color == CommonColors.RAINBOW) {
+            if (color == WynncraftShaderColor.RAINBOW.color) {
                 colorInt = currentRainbowColor.withAlpha(alpha).asInt();
             } else {
                 colorInt = color.withAlpha(alpha).asInt();

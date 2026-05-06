@@ -9,7 +9,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.rewards.type.AmplifierInfo;
@@ -68,26 +67,30 @@ public final class RewardsModel extends Model {
         return allRuneInfo;
     }
 
-    public ItemAnnotation fromCharmItemStack(ItemStack itemStack, StyledText name, String displayName, String type) {
-        GearTier tier = GearTier.fromStyledText(name);
-
-        CharmInfo charmInfo = charmInfoRegistry.getFromDisplayName(name.getStringWithoutFormatting());
+    public ItemAnnotation fromCharmItemStack(
+            ItemStack itemStack, StyledText name, String displayName, String type, boolean isUnidentified) {
+        CharmInfo charmInfo = charmInfoRegistry.getFromDisplayName(displayName);
         if (charmInfo == null) {
-            WynntilsMod.warn("Could not find charm info for " + name.getStringWithoutFormatting());
+            WynntilsMod.warn("Could not find charm info for " + displayName);
             return null;
         }
 
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, charmInfo.getVariableStatsMap());
+        if (isUnidentified) {
+            return new CharmItem(charmInfo, null, result.currentPage());
+        }
+
         if (result.tier() != charmInfo.tier()) {
             WynntilsMod.warn("Tier for " + charmInfo.name() + " is reported as " + result.tier());
         }
 
-        return new CharmItem(charmInfo, CharmInstance.create(result.rerolls(), charmInfo, result.identifications()));
+        return new CharmItem(
+                charmInfo,
+                CharmInstance.create(result.rerolls(), charmInfo, result.identifications()),
+                result.currentPage());
     }
 
     public TomeItem fromTomeItemStack(ItemStack itemStack, StyledText name, String tomeName, boolean isUnidentified) {
-        GearTier gearTier = GearTier.fromStyledText(name);
-
         TomeInfo tomeInfo = tomeInfoRegistry.getFromDisplayName(tomeName);
         if (tomeInfo == null) {
             WynntilsMod.warn("Could not find tome info for " + tomeName + " (Originally "
@@ -108,7 +111,8 @@ public final class RewardsModel extends Model {
     }
 
     private List<AmplifierInfo> buildAmplifierInfo() {
-        return List.of(new AmplifierInfo(1, 5), new AmplifierInfo(2, 10), new AmplifierInfo(3, 15));
+        return List.of(
+                new AmplifierInfo(1, 5), new AmplifierInfo(2, 10), new AmplifierInfo(3, 15), new AmplifierInfo(4, 20));
     }
 
     private List<RuneType> buildRuneInfo() {

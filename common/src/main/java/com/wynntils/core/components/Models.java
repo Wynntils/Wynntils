@@ -5,7 +5,9 @@
 package com.wynntils.core.components;
 
 import com.wynntils.models.abilities.AbilityModel;
+import com.wynntils.models.abilities.ArcherBeastModel;
 import com.wynntils.models.abilities.ShamanMaskModel;
+import com.wynntils.models.abilities.ShamanSummonModel;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilities.ShieldModel;
 import com.wynntils.models.abilitytree.AbilityTreeModel;
@@ -34,7 +36,6 @@ import com.wynntils.models.gambits.GambitModel;
 import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.gear.SetModel;
 import com.wynntils.models.guild.GuildModel;
-import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.housing.HousingModel;
 import com.wynntils.models.ingredients.IngredientModel;
 import com.wynntils.models.inventory.IngredientPouchModel;
@@ -43,8 +44,8 @@ import com.wynntils.models.items.ItemEncodingModel;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootrun.LootrunModel;
 import com.wynntils.models.marker.MarkerModel;
+import com.wynntils.models.mount.MountModel;
 import com.wynntils.models.npc.NpcModel;
-import com.wynntils.models.npcdialogue.NpcDialogueModel;
 import com.wynntils.models.objectives.ObjectivesModel;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.PartyModel;
@@ -53,10 +54,12 @@ import com.wynntils.models.profession.ProfessionModel;
 import com.wynntils.models.raid.RaidModel;
 import com.wynntils.models.rewards.RewardsModel;
 import com.wynntils.models.seaskipper.SeaskipperModel;
+import com.wynntils.models.spells.SpellCasterModel;
 import com.wynntils.models.spells.SpellModel;
 import com.wynntils.models.stats.ShinyModel;
 import com.wynntils.models.stats.StatModel;
 import com.wynntils.models.statuseffects.StatusEffectModel;
+import com.wynntils.models.teleportscroll.TeleportScrollModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.token.TokenModel;
@@ -68,13 +71,13 @@ import com.wynntils.models.worlds.ServerListModel;
 import com.wynntils.models.worlds.StreamerModeModel;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.wynnalphabet.WynnAlphabetModel;
-import com.wynntils.models.wynnfont.WynnFontModel;
 import com.wynntils.models.wynnitem.WynnItemModel;
 
 public final class Models {
     public static final AbilityModel Ability = new AbilityModel();
     public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();
     public static final AccountModel Account = new AccountModel();
+    public static final ArcherBeastModel ArcherBeast = new ArcherBeastModel();
     public static final AspectModel Aspect = new AspectModel();
     public static final BankModel Bank = new BankModel();
     public static final BeaconModel Beacon = new BeaconModel();
@@ -96,7 +99,6 @@ public final class Models {
     public static final GearModel Gear = new GearModel();
     public static final GuildModel Guild = new GuildModel();
     public static final GuildWarTowerModel GuildWarTower = new GuildWarTowerModel();
-    public static final HorseModel Horse = new HorseModel();
     public static final HousingModel Housing = new HousingModel();
     public static final IngredientModel Ingredient = new IngredientModel();
     public static final IngredientPouchModel IngredientPouch = new IngredientPouchModel();
@@ -105,7 +107,7 @@ public final class Models {
     public static final ItemModel Item = new ItemModel();
     public static final LootChestModel LootChest = new LootChestModel();
     public static final MarkerModel Marker = new MarkerModel();
-    public static final NpcDialogueModel NpcDialogue = new NpcDialogueModel();
+    public static final MountModel Mount = new MountModel();
     public static final NpcModel Npc = new NpcModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PartyModel Party = new PartyModel();
@@ -118,14 +120,17 @@ public final class Models {
     public static final ServerListModel ServerList = new ServerListModel();
     public static final SetModel Set = new SetModel();
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();
+    public static final ShamanSummonModel ShamanSummon = new ShamanSummonModel();
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel();
     public static final ShieldModel Shield = new ShieldModel();
     public static final ShinyModel Shiny = new ShinyModel();
     public static final SkillPointModel SkillPoint = new SkillPointModel();
     public static final SpellModel Spell = new SpellModel();
+    public static final SpellCasterModel SpellCaster = new SpellCasterModel();
     public static final StatModel Stat = new StatModel();
     public static final StatusEffectModel StatusEffect = new StatusEffectModel();
     public static final StreamerModeModel StreamerMode = new StreamerModeModel();
+    public static final TeleportScrollModel TeleportScroll = new TeleportScrollModel();
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final TokenModel Token = new TokenModel();
     public static final TradeMarketModel TradeMarket = new TradeMarketModel();
@@ -133,7 +138,6 @@ public final class Models {
     public static final WorldEventModel WorldEvent = new WorldEventModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
     public static final WynnAlphabetModel WynnAlphabet = new WynnAlphabetModel();
-    public static final WynnFontModel WynnFont = new WynnFontModel();
     public static final WynnItemModel WynnItem = new WynnItemModel();
 
     // Models with constructor dependencies, ordered alphabetically as far as possible

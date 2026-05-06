@@ -14,7 +14,6 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
-import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.models.players.type.PlayerRank;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
@@ -49,7 +48,7 @@ public class ChatRedirectFeature extends Feature {
     private final Config<RedirectAction> heal = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
-    private final Config<RedirectAction> horse = new Config<>(RedirectAction.REDIRECT);
+    private final Config<RedirectAction> mount = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
     private final Config<RedirectAction> housingMaster = new Config<>(RedirectAction.REDIRECT);
@@ -116,9 +115,6 @@ public class ChatRedirectFeature extends Feature {
         register(new GuildRewardRedirector());
         register(new HealRedirector());
         register(new HealedByOtherRedirector());
-        register(new HorseDespawnedRedirector());
-        register(new HorseScaredRedirector());
-        register(new HorseSpawnFailRedirector());
         register(new HousingMasterRedirector());
         register(new HousingTeleportArrivalCooldownRedirector());
         register(new HousingTeleportArrivalRedirector());
@@ -130,6 +126,8 @@ public class ChatRedirectFeature extends Feature {
         register(new MageTeleportationFailRedirector());
         register(new ManaDeficitRedirector());
         register(new MerchantRedirector());
+        register(new MountScaredRedirector());
+        register(new MountSpawnFailRedirector());
         register(new NoTotemRedirector());
         register(new PotionAlreadyActiveRedirector());
         register(new PotionsMaxRedirector());
@@ -150,14 +148,11 @@ public class ChatRedirectFeature extends Feature {
     @SubscribeEvent
     public void onChatMessage(ChatMessageEvent.Match e) {
         StyledText message = StyledTextUtils.unwrap(e.getMessage()).stripAlignment();
-        MessageType messageType = e.getMessageType();
-
         for (Redirector redirector : redirectors) {
             RedirectAction action = redirector.getAction();
             if (action == RedirectAction.KEEP) continue;
 
-            Pattern pattern = redirector.getPattern(messageType);
-            if (pattern == null) continue;
+            Pattern pattern = redirector.getPattern();
 
             Matcher matcher = message.getMatcher(pattern);
 
@@ -179,7 +174,7 @@ public class ChatRedirectFeature extends Feature {
     }
 
     protected interface Redirector {
-        Pattern getPattern(MessageType messageType);
+        Pattern getPattern();
 
         ChatRedirectFeature.RedirectAction getAction();
 
@@ -187,22 +182,6 @@ public class ChatRedirectFeature extends Feature {
     }
 
     public abstract static class SimpleRedirector implements Redirector {
-        @Override
-        public Pattern getPattern(MessageType messageType) {
-            return switch (messageType) {
-                case FOREGROUND -> getForegroundPattern();
-                case BACKGROUND -> getBackgroundPattern();
-            };
-        }
-
-        protected Pattern getForegroundPattern() {
-            return null;
-        }
-
-        protected Pattern getBackgroundPattern() {
-            return null;
-        }
-
         @Override
         public List<StyledText> getNotifications(Matcher matcher) {
             return List.of(getNotification(matcher));
@@ -212,12 +191,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class BlacksmithRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
+        private static final Pattern PATTERN =
                 Pattern.compile("§5(\uE00A\uE002|\uE001) Blacksmith: §dYou have (sold|repaired) (.*)§d for §(a|3)(.*)");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -235,12 +214,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class BloodPactHealthDeficitRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
+        private static final Pattern PATTERN =
                 Pattern.compile("^§4(?:\uE008\uE002|\uE001) You don't have enough health to cast that spell!$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -257,12 +236,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class CraftedDurabilityRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+        private static final Pattern PATTERN = Pattern.compile(
                 "^§4(?:\uE008\uE002|\uE001) Your items are damaged and have become less effective. Bring them to a Blacksmith to repair them.$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -279,17 +258,11 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class EmptyManaBankRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("§4Your mana bank is empty!");
-        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("§7Your mana bank is empty!");
+        private static final Pattern PATTERN = Pattern.compile("§4Your mana bank is empty!");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
-        }
-
-        @Override
-        protected Pattern getBackgroundPattern() {
-            return BACKGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -306,19 +279,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class FriendJoinRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
+        private static final Pattern PATTERN =
                 Pattern.compile("§a(§o)?(?<name>.+)§2 has logged into server §a(?<server>.+)§2 as §aan? (?<class>.+)");
-        private static final Pattern BACKGROUND_PATTERN = Pattern.compile(
-                "§7(§o)?(?<name>.+)§8(§o)? has logged into server §7(§o)?(?<server>.+)§8(§o)? as §7(§o)?an? (?<class>.+)");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
-        }
-
-        @Override
-        protected Pattern getBackgroundPattern() {
-            return BACKGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -340,17 +306,11 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class FriendLeaveRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("§a(?<name>.+) left the game\\.");
-        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("§7(?<name>.+) left the game\\.");
+        private static final Pattern PATTERN = Pattern.compile("§a(?<name>.+) left the game\\.");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
-        }
-
-        @Override
-        protected Pattern getBackgroundPattern() {
-            return BACKGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -367,11 +327,11 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class HealRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§c\\[\\+(\\d+) ❤\\]$");
+        private static final Pattern PATTERN = Pattern.compile("^§c\\[\\+(\\d+) ❤\\]$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -388,17 +348,11 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class HealedByOtherRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^.+ gave you §c\\[\\+(\\d+) ❤\\]$");
-        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("^.+ gave you §7§o\\[\\+(\\d+) ❤\\]$");
+        private static final Pattern PATTERN = Pattern.compile("^.+ gave you §c\\[\\+(\\d+) ❤\\]$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
-        }
-
-        @Override
-        protected Pattern getBackgroundPattern() {
-            return BACKGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -414,79 +368,12 @@ public class ChatRedirectFeature extends Feature {
         }
     }
 
-    private class HorseDespawnedRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§dSince you interacted with your inventory, your horse has despawned\\.$");
-
-        @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
-        }
-
-        @Override
-        public RedirectAction getAction() {
-            return horse.get();
-        }
-
-        @Override
-        protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromComponent(
-                    Component.translatable("feature.wynntils.chatRedirect.horse.notificationDespawned")
-                            .withStyle(ChatFormatting.DARK_PURPLE));
-        }
-    }
-
-    private class HorseScaredRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§dYour horse is scared to come out right now, too many mobs are nearby\\.$");
-
-        @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
-        }
-
-        @Override
-        public RedirectAction getAction() {
-            return horse.get();
-        }
-
-        @Override
-        protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromComponent(
-                    Component.translatable("feature.wynntils.chatRedirect.horse.notificationScared")
-                            .withStyle(ChatFormatting.DARK_RED));
-        }
-    }
-
-    private class HorseSpawnFailRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§4(?:\uE008\uE002|\uE001) There is no room for a horse\\.$");
-
-        @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
-        }
-
-        @Override
-        public RedirectAction getAction() {
-            return horse.get();
-        }
-
-        @Override
-        protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromComponent(
-                    Component.translatable("feature.wynntils.chatRedirect.horse.notificationNoRoom")
-                            .withStyle(ChatFormatting.DARK_RED));
-        }
-    }
-
     private class HousingTeleportArrivalRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("^§aYou have flown to your housing island\\.$");
+        private static final Pattern PATTERN = Pattern.compile("^§aYou have flown to your housing island\\.$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -503,12 +390,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class HousingMasterRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
+        private static final Pattern PATTERN =
                 Pattern.compile("§7The blocks have been added to your building inventory");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -524,12 +411,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class HousingTeleportArrivalCooldownRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
+        private static final Pattern PATTERN =
                 Pattern.compile("^§4(?:\uE008\uE002|\uE001) You need to wait before joining another house\\.$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -546,12 +433,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class HousingTeleportDepartureRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
+        private static final Pattern PATTERN =
                 Pattern.compile("^§a(?:\uE008\uE002|\uE001) You have flown to your original position\\.$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -568,12 +455,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class HousingTeleportDepartureCooldownRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
+        private static final Pattern PATTERN =
                 Pattern.compile("^§4(?:\uE008\uE002|\uE001) You need to wait a bit before leaving a house\\.$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -590,12 +477,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class IngredientPouchSellRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
+        private static final Pattern PATTERN =
                 Pattern.compile("§dYou have sold §7(.+)§d ingredients for a total of §a(.+)§d\\.$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -626,21 +513,13 @@ public class ChatRedirectFeature extends Feature {
     public class LoginRedirector extends SimpleRedirector {
         private static final String RANK_STRING =
                 Arrays.stream(PlayerRank.values()).map(PlayerRank::getTag).collect(Collectors.joining());
-        // Test in ChatRedirectFeature_LoginRedirector_FOREGROUND_PATTERN
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§f(?<rank>[" + RANK_STRING
+        // Test in ChatRedirectFeature_LoginRedirector_PATTERN
+        private static final Pattern PATTERN = Pattern.compile("^§f(?<rank>[" + RANK_STRING
                 + "]) §(?:#[0-9a-f]{6,8}|.)(?:§o)?(?:§<\\d>)?(?<name>[\\w ]{1,20})§f §.has just logged in!$");
-        private static final Pattern BACKGROUND_PATTERN =
-                Pattern.compile("^(?:§8)?\\[(§.)+\\|?(§.)*(?<rank>[" + RANK_STRING
-                        + "]) §(?:#[0-9a-f]{6,8}|.)(?:§o)?(?:§<\\d>)?(?<name>[\\w ]{1,20})§. has just logged in!$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
-        }
-
-        @Override
-        protected Pattern getBackgroundPattern() {
-            return BACKGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -660,12 +539,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class MageTeleportationFailRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+        private static final Pattern PATTERN = Pattern.compile(
                 "^§4(?:\uE008\uE002|\uE001) Sorry, you can't teleport\\.\\.\\. Try moving away from blocks\\.$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -682,12 +561,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class ManaDeficitRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
+        private static final Pattern PATTERN =
                 Pattern.compile("^§4(?:\uE008\uE002|\uE001) You don't have enough mana to cast that spell!$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -703,13 +582,79 @@ public class ChatRedirectFeature extends Feature {
         }
     }
 
+    private final class MerchantRedirector extends SimpleRedirector {
+        private static final Pattern PATTERN = Pattern.compile(
+                "^§5(?:\uE00A\uE002|\uE001) (?<merchant>.*):§d Thank you for your business\\. Come again!$");
+
+        @Override
+        public Pattern getPattern() {
+            return PATTERN;
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromComponent(Component.translatable(
+                            "feature.wynntils.chatRedirect.merchant.notification", matcher.group("merchant"))
+                    .withStyle(ChatFormatting.LIGHT_PURPLE));
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return merchant.get();
+        }
+    }
+
+    private class MountScaredRedirector extends SimpleRedirector {
+        private static final Pattern PATTERN =
+                Pattern.compile("^§dYour mount is scared to come out right now, too many mobs are nearby\\.$");
+
+        @Override
+        public Pattern getPattern() {
+            return PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return mount.get();
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.mount.notificationScared")
+                            .withStyle(ChatFormatting.DARK_RED));
+        }
+    }
+
+    private class MountSpawnFailRedirector extends SimpleRedirector {
+        private static final Pattern PATTERN =
+                Pattern.compile("^§4(?:\uE008\uE002|\uE001) Your mount does not have enough room to be used!$");
+
+        @Override
+        public Pattern getPattern() {
+            return PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return mount.get();
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromComponent(
+                    Component.translatable("feature.wynntils.chatRedirect.mount.notificationNoRoom")
+                            .withStyle(ChatFormatting.DARK_RED));
+        }
+    }
+
     private class NoTotemRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
+        private static final Pattern PATTERN =
                 Pattern.compile("^§4(?:\uE008\uE002|\uE001) You have no active totems near you$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -725,12 +670,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class PotionAlreadyActiveRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
+        private static final Pattern PATTERN =
                 Pattern.compile("^§4(?:\uE008\uE002|\uE001) You already have that potion active\\.\\.\\.$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -747,12 +692,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class PotionsMaxRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+        private static final Pattern PATTERN = Pattern.compile(
                 "^§4(?:\uE008\uE002|\uE001) You already are holding the maximum amount of potions allowed\\.");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -769,12 +714,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class PotionsMovedRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+        private static final Pattern PATTERN = Pattern.compile(
                 "^§7You already are holding the maximum amount of potions allowed so your crafting result was moved to your Character Bank\\.$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -791,12 +736,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class PotionsReplacedRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
+        private static final Pattern PATTERN =
                 Pattern.compile("§7One less powerful potion was replaced to open space for the added one\\.");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -813,12 +758,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class ScrollTeleportationHousingFailRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
+        private static final Pattern PATTERN =
                 Pattern.compile("^§4(?:\uE008\uE002|\uE001) You can not teleport while inside a house$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -835,11 +780,11 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class SpeedBoostRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§b\\+([23]) minutes§7 speed boost\\.$");
+        private static final Pattern PATTERN = Pattern.compile("^§b\\+([23]) minutes§7 speed boost\\.$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -859,12 +804,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class ToolDurabilityRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+        private static final Pattern PATTERN = Pattern.compile(
                 "^§4(?:\uE008\uE002|\uE001) Your tool has 0 durability left! You will not receive any new resources until you repair it at a Blacksmith\\.$");
 
         @Override
-        public Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -881,12 +826,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class UnusedAbilityPointsRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+        private static final Pattern PATTERN = Pattern.compile(
                 "^§4You have §b§l(\\d+) unused Ability Points?! §4Right-Click while holding your compass to use them$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -911,16 +856,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class UnusedSkillAndAbilityPointsRedirector implements Redirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+        private static final Pattern PATTERN = Pattern.compile(
                 "^§4You have §c§l(\\d+) unused Skill Points?§4 and §b§l(\\d+) unused Ability Points?! §4Right-Click while holding your compass to use them$");
 
         @Override
-        public Pattern getPattern(MessageType messageType) {
-            if (messageType == MessageType.FOREGROUND) {
-                return FOREGROUND_PATTERN;
-            } else {
-                return null;
-            }
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -940,12 +881,12 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class UnusedSkillPointsRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+        private static final Pattern PATTERN = Pattern.compile(
                 "^§4You have §c§l(\\d+) unused Skill Points?! §4Right-Click while holding your compass to use them$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -972,12 +913,12 @@ public class ChatRedirectFeature extends Feature {
     private final class GuildBankRedirector extends SimpleRedirector {
         private static final String DEPOSIT_SYMBOL = "←";
         private static final String WITHDRAW_SYMBOL = "→";
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+        private static final Pattern PATTERN = Pattern.compile(
                 "^§b(?:\uE006\uE002|\uE001) §3(?<player>.+)§b (?<transactiontype>withdrew|deposited) §e(?<count>\\d+)x (?<item>.+)§b (?:from|to) the Guild Bank \\(§3(?<banktype>Everyone|High Ranked)§b\\)$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -1002,12 +943,12 @@ public class ChatRedirectFeature extends Feature {
     private final class GuildRewardRedirector extends SimpleRedirector {
         private static final String REWARD_SYMBOL = "→";
 
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
+        private static final Pattern PATTERN = Pattern.compile(
                 "^§b(?:\uE006\uE002|\uE001) §3(?<sender>.+) rewarded §e(?<reward>.+)§3 to (?<recipient>.+)$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override
@@ -1026,35 +967,13 @@ public class ChatRedirectFeature extends Feature {
         }
     }
 
-    private final class MerchantRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§5(?:\uE00A\uE002|\uE001) (?<merchant>.*):§d Thank you for your business\\. Come again!$");
-
-        @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
-        }
-
-        @Override
-        protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromComponent(Component.translatable(
-                            "feature.wynntils.chatRedirect.merchant.notification", matcher.group("merchant"))
-                    .withStyle(ChatFormatting.LIGHT_PURPLE));
-        }
-
-        @Override
-        public RedirectAction getAction() {
-            return merchant.get();
-        }
-    }
-
     private final class ItemDroppedRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN =
+        private static final Pattern PATTERN =
                 Pattern.compile("^§7There wasn't enough room in your inventory\\, so items were dropped\\.$");
 
         @Override
-        protected Pattern getForegroundPattern() {
-            return FOREGROUND_PATTERN;
+        public Pattern getPattern() {
+            return PATTERN;
         }
 
         @Override

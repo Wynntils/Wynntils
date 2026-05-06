@@ -19,6 +19,7 @@ import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.CooldownUpdateEvent;
 import com.wynntils.mc.event.EntityPositionSyncEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.MenuEvent;
@@ -59,6 +60,7 @@ import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.network.protocol.game.ClientboundCooldownPacket;
 import net.minecraft.network.protocol.game.ClientboundEntityPositionSyncPacket;
 import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
@@ -606,6 +608,15 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         if (!isRenderThread()) return;
 
         MixinHelper.postAlways(new ConnectionEvent.ConnectedEvent());
+    }
+
+    @Inject(
+            method = "handleItemCooldown(Lnet/minecraft/network/protocol/game/ClientboundCooldownPacket;)V",
+            at = @At("RETURN"))
+    private void handleItemCooldownPost(ClientboundCooldownPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+
+        MixinHelper.post(new CooldownUpdateEvent(packet.cooldownGroup(), packet.duration()));
     }
 
     @Inject(

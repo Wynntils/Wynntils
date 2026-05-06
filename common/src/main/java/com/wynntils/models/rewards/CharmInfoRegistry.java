@@ -102,7 +102,7 @@ public class CharmInfoRegistry {
             String displayName = names.key();
             String internalName = names.value();
 
-            GearTier tier = GearTier.fromString(json.get("rarity").getAsString());
+            GearTier tier = GearTier.fromString(json.get("tier").getAsString());
             if (tier == null) {
                 throw new RuntimeException("Invalid Wynncraft data: charm has no tier");
             }
@@ -151,11 +151,11 @@ public class CharmInfoRegistry {
             }
 
             int level = JsonUtils.getNullableJsonInt(requirementsJson, "level");
-            JsonObject levelRangeJson = JsonUtils.getNullableJsonObject(requirementsJson, "levelRange");
-            int min = levelRangeJson.get("min").getAsInt();
-            int max = levelRangeJson.get("max").getAsInt();
 
-            return new CharmRequirements(level, RangedValue.of(min, max));
+            int max = level + 20;
+
+            // Minimum is always the required level of the charm
+            return new CharmRequirements(level, RangedValue.of(level, max));
         }
     }
 }

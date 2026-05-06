@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
@@ -36,6 +36,7 @@ public enum UrlId {
     DATA_STATIC_CAVE_INFO("dataStaticCaveInfo"),
     DATA_STATIC_CHARMS("dataStaticCharms"),
     DATA_STATIC_COMBAT_LOCATIONS("dataStaticCombatLocations"),
+    DATA_STATIC_COMBAT_MAPFEATURES("dataStaticCombatMapFeatures"),
     DATA_STATIC_DESTINATIONS("dataStaticDestinations"),
     DATA_STATIC_GEAR("dataStaticGear"),
     DATA_STATIC_HINTS("dataStaticHints"),
@@ -47,9 +48,11 @@ public enum UrlId {
     DATA_STATIC_MAPS("dataStaticMaps"),
     DATA_STATIC_MATERIAL_CONVERSION("dataStaticMaterialConversion"),
     DATA_STATIC_MODEL_DATA("dataStaticModelData"),
+    DATA_STATIC_PLACE_MAPFEATURES("dataStaticPlaceMapFeatures"),
     DATA_STATIC_PLACES("dataStaticPlaces"),
     DATA_STATIC_SEASKIPPER_DESTINATIONS("dataStaticSeaskipperDestinations"),
     DATA_STATIC_SERVICES("dataStaticServices"),
+    DATA_STATIC_SERVICE_MAPFEATURES("dataStaticServiceMapFeatures"),
     DATA_STATIC_SERVICES_CROWDSOURCED("dataStaticServicesCrowdsourced"),
     DATA_STATIC_SHINY_STATS("dataStaticShinyStats"),
     DATA_STATIC_SPLASHES("dataStaticSplashes"),

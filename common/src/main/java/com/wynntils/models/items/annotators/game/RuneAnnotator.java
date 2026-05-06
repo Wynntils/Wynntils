@@ -16,7 +16,8 @@ import net.minecraft.world.item.ItemStack;
 
 public final class RuneAnnotator implements GameItemAnnotator {
     // Test in RuneAnnotator_RUNE_PATTERN
-    private static final Pattern RUNE_PATTERN = Pattern.compile("§[b432]([A-Z][a-z]{1,2}) Rune");
+    private static final Pattern RUNE_PATTERN =
+            Pattern.compile("\uDAFC\uDC00§#[0-9a-fA-F]{8}([A-Z][a-z]{1,2}) Rune\uDAFC\uDC00");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {

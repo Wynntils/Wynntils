@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.characterstats.actionbar.matchers;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.segments.HealthBarSegment;
@@ -37,22 +38,24 @@ public class HealthBarSegmentMatcher implements ActionBarSegmentMatcher {
             Pattern.compile("(.[" + String.join("", HEALTH_BAR_CHARS) + "]){10}");
 
     @Override
-    public ActionBarSegment parse(String actionBar) {
-        Matcher matcher = BACKGROUND_PATTERN.matcher(actionBar);
+    public ActionBarSegment parse(StyledText actionBar) {
+        String actionBarString = actionBar.getStringWithoutFormatting();
+        Matcher matcher = BACKGROUND_PATTERN.matcher(actionBarString);
 
         if (!matcher.find()) {
             return null;
         }
 
-        int beginIndex = actionBar.indexOf(matcher.group());
-        Matcher endMatcher = BAR_END_PATTERN.matcher(actionBar);
+        int beginIndex = actionBarString.indexOf(matcher.group());
+        Matcher endMatcher = BAR_END_PATTERN.matcher(actionBarString);
 
         if (!endMatcher.find(beginIndex)) {
-            WynntilsMod.warn("Found health bar background, but couldn't find the end of the segment: " + actionBar);
+            WynntilsMod.warn(
+                    "Found health bar background, but couldn't find the end of the segment: " + actionBarString);
             return null;
         }
 
-        String segmentText = actionBar.substring(beginIndex, endMatcher.end());
+        String segmentText = actionBarString.substring(beginIndex, endMatcher.end());
 
         // Remove the background and last space characters to get the characters that build the health bar
         String healthBarText = segmentText.substring(
@@ -64,6 +67,6 @@ public class HealthBarSegmentMatcher implements ActionBarSegmentMatcher {
             return null;
         }
 
-        return new HealthBarSegment(segmentText);
+        return new HealthBarSegment(segmentText, beginIndex, endMatcher.end());
     }
 }

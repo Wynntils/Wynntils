@@ -148,13 +148,7 @@ public class CompatibilityService extends Service {
         }
 
         // TODO: Replace with Athena call
-        //  Temporary to force old clients to have a warning on Fruma (v2.2)
-        if (wynncraftVersion.versionGroup().equals("2")
-                && wynncraftVersion.majorVersion().equals("2")) {
-            compatibilityTier = CompatibilityTier.MAJOR_ERRORS;
-        } else {
-            compatibilityTier = CompatibilityTier.COMPATIBLE;
-        }
+        compatibilityTier = CompatibilityTier.COMPATIBLE;
 
         if (compatibilityTier.shouldScreenPrompt() && !isCompatible()) {
             // This has to be done on the main thread

@@ -119,11 +119,9 @@ public final class WynntilsEmeraldGuideScreen extends WynntilsListScreen<GuideIt
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideEmeraldItemStackButton guideEmeraldItemStack) {
-            guiGraphics.setTooltipForNextFrame(
-                    FontRenderer.getInstance().getFont(), guideEmeraldItemStack.getItemStack(), mouseX, mouseY);
+            guideEmeraldItemStack.getItemStack().queueGuideTooltip(guiGraphics, mouseX, mouseY);
         } else if (hovered instanceof GuideEmeraldPouchItemStackButton guideEmeraldPouchItemStack) {
-            guiGraphics.setTooltipForNextFrame(
-                    FontRenderer.getInstance().getFont(), guideEmeraldPouchItemStack.getItemStack(), mouseX, mouseY);
+            guideEmeraldPouchItemStack.getItemStack().queueGuideTooltip(guiGraphics, mouseX, mouseY);
         }
 
         super.renderTooltip(guiGraphics, mouseX, mouseY);

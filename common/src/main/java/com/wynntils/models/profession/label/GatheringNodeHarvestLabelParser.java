@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.profession.label;
@@ -44,9 +44,9 @@ public class GatheringNodeHarvestLabelParser implements LabelParser<GatheringNod
                 if (materialMatcher.matches()) {
                     String type = materialMatcher.group("type");
                     String material = materialMatcher.group("material");
-                    String tierGroup = materialMatcher.group(8);
 
-                    gatheredMaterial = Optional.ofNullable(MaterialProfile.lookup(type, material, tierGroup));
+                    // Tier isn't shown in the label anymore
+                    gatheredMaterial = Optional.ofNullable(MaterialProfile.lookup(type, material, 1));
                 }
             }
 

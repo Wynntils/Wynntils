@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats;
@@ -105,12 +105,12 @@ public final class StatListOrderer {
             "MISC_JUMP_HEIGHT",
             "", // delimiter
             "MISC_SOUL_POINT_REGEN",
-            "MISC_LOOT_BONUS",
+            "MISC_LOOT",
             "MISC_LOOT_QUALITY",
             "MISC_STEALING",
-            "MISC_XP_BONUS",
-            "MISC_GATHER_XP_BONUS",
-            "MISC_GATHER_SPEED",
+            "MISC_COMBAT_EXPERIENCE",
+            "MISC_GATHERING_EXPERIENCE",
+            "MISC_GATHERING_SPEED",
             "", // delimiter
             "SPELL_FIRST_SPELL_COST_RAW",
             "SPELL_FIRST_SPELL_COST_PERCENT",
@@ -146,8 +146,8 @@ public final class StatListOrderer {
             MiscStatKind.MANA_REGEN,
             MiscStatKind.LIFE_STEAL,
             MiscStatKind.MANA_STEAL,
-            MiscStatKind.XP_BONUS,
-            MiscStatKind.LOOT_BONUS,
+            MiscStatKind.COMBAT_EXPERIENCE,
+            MiscStatKind.LOOT,
             MiscStatKind.REFLECTION,
             MiscStatKind.THORNS,
             MiscStatKind.EXPLODING,
@@ -166,8 +166,8 @@ public final class StatListOrderer {
             List.of(MiscStatKind.SPRINT, MiscStatKind.SPRINT_REGEN);
     private static final List<MiscStatKind> WYNNCRAFT_MISC_ORDER_3 = List.of(
             MiscStatKind.JUMP_HEIGHT,
-            MiscStatKind.GATHER_XP_BONUS,
-            MiscStatKind.GATHER_SPEED,
+            MiscStatKind.GATHERING_EXPERIENCE,
+            MiscStatKind.GATHERING_SPEED,
             MiscStatKind.LOOT_QUALITY);
 
     public static Map<StatListOrdering, List<StatType>> createOrderingMap(

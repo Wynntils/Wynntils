@@ -1,0 +1,17 @@
+{
+  "providers": [
+    {
+      "id": "minecraft:chat/prefix",
+      "type": "reference"
+    },
+    {
+      "ascent": 8,
+      "chars": [
+        "\uE100"
+      ],
+      "file": "wynntils:font/chat/prefix.png",
+      "height": 9,
+      "type": "bitmap"
+    }
+  ]
+}

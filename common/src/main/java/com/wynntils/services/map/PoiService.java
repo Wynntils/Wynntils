@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map;
@@ -24,9 +24,6 @@ import com.wynntils.services.map.pois.ServicePoi;
 import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.map.type.CustomPoiProvider;
 import com.wynntils.services.map.type.ServiceKind;
-import com.wynntils.services.mapdata.providers.builtin.CombatListProvider;
-import com.wynntils.services.mapdata.providers.builtin.PlaceListProvider;
-import com.wynntils.services.mapdata.providers.builtin.ServiceListProvider;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.Texture;
@@ -141,7 +138,6 @@ public class PoiService extends Service {
         PlacesProfile places = GSON.fromJson(reader, PlacesProfile.class);
         for (Label label : places.labels) {
             labelPois.add(new LabelPoi(label));
-            PlaceListProvider.registerFeature(label);
         }
     }
 
@@ -154,7 +150,6 @@ public class PoiService extends Service {
             if (kind != null) {
                 for (PoiLocation location : service.locations) {
                     servicePois.add(new ServicePoi(location, kind));
-                    ServiceListProvider.registerFeature(new Location(location), kind);
                 }
             } else {
                 WynntilsMod.warn("Unknown service type in services.json: " + service.type);
@@ -172,7 +167,6 @@ public class PoiService extends Service {
             if (kind != null && kind != CombatKind.CAVES) {
                 for (CombatProfile profile : combatList.locations) {
                     combatPois.add(new CombatPoi(profile.coordinates, profile.name, kind));
-                    CombatListProvider.registerFeature(new Location(profile.coordinates), kind, profile.name);
                 }
             } else {
                 WynntilsMod.warn("Unknown combat type in combat.json: " + combatList.type);
@@ -187,7 +181,6 @@ public class PoiService extends Service {
 
         cavePois.addAll(profiles.stream()
                 .map(profile -> {
-                    CombatListProvider.registerFeature(profile.location, CombatKind.CAVES, profile.name);
                     return new CombatPoi(PoiLocation.fromLocation(profile.location), profile.name, CombatKind.CAVES);
                 })
                 .collect(Collectors.toUnmodifiableSet()));

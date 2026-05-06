@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip;
@@ -58,6 +58,22 @@ public final class TooltipHandler extends Handler {
                 identifiableItem, tooltipComponent, hideUnidentified, showItemType, source);
     }
 
+    public IdentifiableTooltipBuilder buildFromItemStack(
+            ItemStack itemStack,
+            IdentifiableItemProperty identifiableItem,
+            boolean hideUnidentified,
+            boolean showItemType,
+            String source) {
+        IdentifiableTooltipComponent tooltipComponent = identifiableTooltipComponents.get(identifiableItem.getClass());
+        if (tooltipComponent == null) {
+            throw new IllegalArgumentException("No tooltip component registered for "
+                    + identifiableItem.getClass().getName());
+        }
+
+        return IdentifiableTooltipBuilder.buildFromItemStack(
+                itemStack, identifiableItem, tooltipComponent, hideUnidentified, showItemType, source);
+    }
+
     /**
      * Creates a tooltip builder that provides a synthetic header and footer with the given source
      */
@@ -82,7 +98,13 @@ public final class TooltipHandler extends Handler {
      * Creates a tooltip builder that parses the header and footer from an existing tooltip
      */
     public TooltipBuilder fromParsedItemStack(ItemStack itemStack, CraftedItemProperty craftedItemProperty) {
-        return CraftedTooltipBuilder.fromParsedItemStack(itemStack, craftedItemProperty);
+        CraftedTooltipComponent tooltipComponent = craftedTooltipComponents.get(craftedItemProperty.getClass());
+        if (tooltipComponent == null) {
+            throw new IllegalArgumentException("No tooltip component registered for "
+                    + craftedItemProperty.getClass().getName());
+        }
+
+        return CraftedTooltipBuilder.buildFromItemStack(itemStack, craftedItemProperty, tooltipComponent);
     }
 
     private void registerTooltipComponents() {

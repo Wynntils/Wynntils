@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear.type;
@@ -20,7 +20,7 @@ public enum GearRestrictions {
 
     public static GearRestrictions fromString(String typeStr) {
         for (GearRestrictions type : GearRestrictions.values()) {
-            if (type.name().replaceAll("_", " ").toLowerCase(Locale.ROOT).equals(typeStr.toLowerCase(Locale.ROOT))) {
+            if (type.name().toLowerCase(Locale.ROOT).equals(typeStr.toLowerCase(Locale.ROOT))) {
                 return type;
             }
         }

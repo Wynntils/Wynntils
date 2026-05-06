@@ -139,7 +139,6 @@ public enum Texture {
     RELIK_FILTER_ICON("icons/guide_filters/relik_filter_icon.png", 16, 16),
     RING_FILTER_ICON("icons/guide_filters/ring_filter_icon.png", 16, 16),
     SCRIBING_FILTER_ICON("icons/guide_filters/scribing_filter_icon.png", 16, 16),
-    SET_FILTER_ICON("icons/guide_filters/set_filter_icon.png", 16, 16),
     SPEAR_FILTER_ICON("icons/guide_filters/spear_filter_icon.png", 16, 16),
     TAILORING_FILTER_ICON("icons/guide_filters/tailoring_filter_icon.png", 16, 16),
     TIER_0_FILTER_ICON("icons/guide_filters/tier_0_filter_icon.png", 16, 16),
@@ -219,6 +218,7 @@ public enum Texture {
     DUNGEON_MERCHANT("icons/map/dungeon_merchant.png", 15, 15),
     DUNGEON_SCROLL_MERCHANT("icons/map/dungeon_scroll_merchant.png", 18, 17),
     EMERALD_MERCHANT("icons/map/emerald_merchant.png", 17, 18),
+    EXCHANGE_MERCHANT("icons/map/exchange_merchant.png", 17, 17),
     FARMING("icons/map/farming.png", 15, 19),
     FAST_TRAVEL("icons/map/fast_travel.png", 18, 18),
     FIREBALL("icons/map/fireball.png", 14, 14),
@@ -228,14 +228,16 @@ public enum Texture {
     GUILD_HEADQUARTERS("icons/map/guild_headquarters.png", 16, 13),
     HOUSING_BALLOON("icons/map/housing_balloon.png", 13, 23),
     ITEM_IDENTIFIER("icons/map/item_identifier.png", 18, 17),
+    ITEM_UPGRADER("icons/map/item_upgrader.png", 16, 17),
     JEWELING_STATION("icons/map/jeweling_station.png", 17, 16),
     LIQUID_MERCHANT("icons/map/liquid_merchant.png", 15, 17),
     LOOTRUN_CAMP("icons/map/lootrun_camp.png", 18, 16),
     MINING("icons/map/mining.png", 18, 14),
+    MOUNT_ENCLOSURE("icons/map/mount_enclosure.png", 17, 16),
+    MOUNT_MERCHANT("icons/map/mount_merchant.png", 16, 17),
     PARTY_FINDER("icons/map/party_finder.png", 18, 18),
     POINTER("icons/map/pointer.png", 10, 8),
     POTION_MERCHANT("icons/map/potion_merchant.png", 16, 18),
-    POWDER_MASTER("icons/map/powder_master.png", 17, 17),
     RAID_ENTRANCE("icons/map/raid_entrance.png", 12, 12),
     SCRIBING_STATION("icons/map/scribing_station.png", 18, 17),
     SCROLL_MERCHANT("icons/map/scroll_merchant.png", 18, 17),
@@ -342,7 +344,7 @@ public enum Texture {
     // endregion
 
     // region Players
-    LEADERBOARD_BADGES("players/leaderboard_badges.png", 722, 54),
+    LEADERBOARD_BADGES("players/leaderboard_badges.png", 760, 54),
     // endregion
 
     // region Seaskipper

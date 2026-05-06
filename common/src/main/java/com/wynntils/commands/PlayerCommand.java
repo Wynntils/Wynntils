@@ -70,15 +70,19 @@ public class PlayerCommand extends Command {
 
         completableFuture.whenComplete((player, throwable) -> {
             if (throwable != null) {
-                McUtils.sendMessageToClient(Component.literal(
-                                "Unable to view player guild for " + context.getArgument("username", String.class))
-                        .withStyle(ChatFormatting.RED));
+                McUtils.mc().execute(() -> {
+                    McUtils.sendWynntilsPrefixMessage(Component.literal(
+                                    "Unable to view player guild for " + context.getArgument("username", String.class))
+                            .withStyle(ChatFormatting.RED));
+                });
                 WynntilsMod.error("Error trying to parse player guild", throwable);
             } else {
                 if (player == null) {
-                    McUtils.sendMessageToClient(
-                            Component.literal("Unknown player " + context.getArgument("username", String.class))
-                                    .withStyle(ChatFormatting.RED));
+                    McUtils.mc().execute(() -> {
+                        McUtils.sendWynntilsPrefixMessage(
+                                Component.literal("Unknown player " + context.getArgument("username", String.class))
+                                        .withStyle(ChatFormatting.RED));
+                    });
                     return;
                 }
 
@@ -112,7 +116,9 @@ public class PlayerCommand extends Command {
                     response.append(Component.literal(" is not in a guild").withStyle(ChatFormatting.GRAY));
                 }
 
-                McUtils.sendMessageToClient(response);
+                McUtils.mc().execute(() -> {
+                    McUtils.sendWynntilsPrefixMessage(response);
+                });
             }
         });
 
@@ -131,15 +137,19 @@ public class PlayerCommand extends Command {
 
         completableFuture.whenComplete((player, throwable) -> {
             if (throwable != null) {
-                McUtils.sendMessageToClient(Component.literal(
-                                "Unable to view player last seen for " + context.getArgument("username", String.class))
-                        .withStyle(ChatFormatting.RED));
+                McUtils.mc().execute(() -> {
+                    McUtils.sendWynntilsPrefixMessage(Component.literal("Unable to view player last seen for "
+                                    + context.getArgument("username", String.class))
+                            .withStyle(ChatFormatting.RED));
+                });
                 WynntilsMod.error("Error trying to parse player last seen", throwable);
             } else {
                 if (player == null) {
-                    McUtils.sendMessageToClient(
-                            Component.literal("Unknown player " + context.getArgument("username", String.class))
-                                    .withStyle(ChatFormatting.RED));
+                    McUtils.mc().execute(() -> {
+                        McUtils.sendWynntilsPrefixMessage(
+                                Component.literal("Unknown player " + context.getArgument("username", String.class))
+                                        .withStyle(ChatFormatting.RED));
+                    });
                     return;
                 }
 
@@ -170,7 +180,9 @@ public class PlayerCommand extends Command {
                                     .withUnderlined(true)));
                 }
 
-                McUtils.sendMessageToClient(response);
+                McUtils.mc().execute(() -> {
+                    McUtils.sendWynntilsPrefixMessage(response);
+                });
             }
         });
 
