@@ -37,6 +37,9 @@ public final class DialogueUtils {
     public static final FontDescription font_press_shift =
             new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/control"));
 
+    public static final FontDescription font_bottom_middle =
+            new FontDescription.Resource(Identifier.parse("minecraft:hud/gameplay/default/bottom_middle"));
+
     static {
         for (int i = 0; i < font_body.length; i++) {
             font_body[i] =
@@ -98,14 +101,16 @@ public final class DialogueUtils {
         Content out = new Content();
 
         for (Component sibling : component.getSiblings()) {
-            if (sibling.getStyle().getFont().equals(font_body[0])) {
+            FontDescription siblingFont = sibling.getStyle().getFont();
+
+            if (siblingFont.equals(font_body[0])) {
                 out.setText(getCleanText(sibling, keepColors));
                 out.setCleanText(keepColors ? getCleanText(sibling, false) : out.getText());
                 out.setStartPos(sibling.getString(2));
-            } else if (sibling.getStyle().getFont().equals(font_nameplate)) {
+            } else if (siblingFont.equals(font_nameplate)) {
                 // could be usefull for later or some APIs / Mod-Addons
                 out.setName(getCleanText(sibling, false));
-            } else if (sibling.getStyle().getFont().equals(font_portrait)) {
+            } else if (siblingFont.equals(font_portrait)) {
                 String value = sibling.getString();
                 if (value.length() == 5) {
                     // Example: "\uDAFF\uDF68\uE1C3\uDB00\uDC67"
@@ -114,8 +119,16 @@ public final class DialogueUtils {
                     value = value.substring(2, value.length() - 2);
                     out.setPortrait(value);
                 }
-            } else if (sibling.getStyle().getFont().equals(font_press_shift)) {
+            } else if (siblingFont.equals(font_press_shift)) {
                 out.setNotConfirmationless();
+            } else if (siblingFont.equals(font_bottom_middle)) {
+                String start = sibling.getString(2);
+                String value = sibling.getString();
+
+                if (start.equals("\uDAFF\uDF9C") && value.endsWith("\uDB00\uDC20")) { // Health Bar
+                    // Health Bar found -> not protected
+                    out.setVulnerable();
+                }
             } else {
                 // minecraft:hud/dialogue/text/wynncraft/choice_X
                 for (int i = 0; i < font_choice.length; i++) {
@@ -461,6 +474,7 @@ public final class DialogueUtils {
         private String startPos;
         private String portrait;
         private boolean confirmationless = true;
+        private boolean vulnerable = false;
         private final String[] choices = new String[4];
 
         private Content() {}
@@ -529,6 +543,17 @@ public final class DialogueUtils {
             this.confirmationless = false;
         }
 
+        /**
+         * when the health bar is invisible, the player is invulnerable -> false
+         * */
+        public boolean isVulnerable() {
+            return vulnerable;
+        }
+
+        private void setVulnerable() {
+            this.vulnerable = true;
+        }
+
         public boolean hasChoices() {
             return !Arrays.stream(getChoices()).allMatch(Objects::isNull);
         }
@@ -539,14 +564,16 @@ public final class DialogueUtils {
 
         @Override
         public String toString() {
-            return "Content{" + "text='"
-                    + text + '\'' + ", cleanText='"
-                    + cleanText + '\'' + ", name='"
-                    + name + '\'' + ", startPos='"
-                    + startPos + '\'' + ", portrait='"
-                    + portrait + '\'' + ", confirmationless="
-                    + confirmationless + ", choices="
-                    + Arrays.toString(choices) + '}';
+            return "Content{" +
+                    "text='" + text + '\'' +
+                    ", cleanText='" + cleanText + '\'' +
+                    ", name='" + name + '\'' +
+                    ", startPos='" + startPos + '\'' +
+                    ", portrait='" + portrait + '\'' +
+                    ", confirmationless=" + confirmationless +
+                    ", vulnerable=" + vulnerable +
+                    ", choices=" + Arrays.toString(choices) +
+                    '}';
         }
     }
 }
