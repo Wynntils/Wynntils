@@ -4,12 +4,18 @@
  */
 package com.wynntils.handlers.playerlist;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.handlers.playerlist.event.PlayerListColumnUpdatedEvent;
 import com.wynntils.mc.event.PlayerInfoUpdateEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -34,6 +40,9 @@ public class PlayerListHandler extends Handler {
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.WORLD) return;
 
+        // Friends and guild don't change often through world swap.
+        party.clear();
+
         recordingColumn = Column.Unknown;
     }
 
@@ -52,7 +61,6 @@ public class PlayerListHandler extends Handler {
                 || !event.getActions().contains(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME)) return;
 
         ClientboundPlayerInfoUpdatePacket.Entry entry = entries.getFirst();
-        System.out.println(entry.displayName().getString().equals(FRIEND_COLUMN_TITLE));
         if (entry.displayName().getString().equals(FRIEND_COLUMN_TITLE)) {
             newFriends = new ArrayList<>();
             newParty = new ArrayList<>();
@@ -72,26 +80,45 @@ public class PlayerListHandler extends Handler {
             return;
         }
 
+        boolean emptyOrOffline = entry.displayName().getString().isEmpty() ||
+                entry.displayName().getString().startsWith(ChatFormatting.GRAY.toString());
+
         if (recordingColumn == Column.Guild) {
-            if (!entry.displayName().getString().isEmpty()) {
+            if (!emptyOrOffline) {
                 newGuild.add(entry);
             }
 
             // We have reached the end.
             // 19 since each column is of size 20 including the title.
-            if (entry.displayName().getString().isEmpty() || guild.size() >= 19) {
+            if (emptyOrOffline || guild.size() >= 19) {
                 recordingColumn = Column.Unknown;
-                friends = newFriends;
-                party = newParty;
-                guild = newGuild;
+
+                // Only send the event if the old list was empty and we found something or if something changed.
+                if (isListDifferent(friends, newFriends) || friends.removeAll(newFriends)) {
+                    WynntilsMod.postEvent(new PlayerListColumnUpdatedEvent.Friends(new ArrayList<>(friends)));
+                }
+                if  (isListDifferent(party, newParty) || party.removeAll(newParty)) {
+                    WynntilsMod.postEvent(new PlayerListColumnUpdatedEvent.Party(newParty));
+                }
+                if  (isListDifferent(guild, newGuild) || guild.removeAll(newGuild)) {
+                    WynntilsMod.postEvent(new PlayerListColumnUpdatedEvent.Guild(newGuild));
+                }
+
+                this.friends = newFriends;
+                this.party = newParty;
+                this.guild = newGuild;
             }
-        } else if (entry.displayName().getString().isEmpty()) {
+        } else if (emptyOrOffline) {
             return;
         } else if (recordingColumn == Column.Friends) {
             newFriends.add(entry);
         } else if (recordingColumn == Column.Party) {
             newParty.add(entry);
         }
+    }
+
+    private boolean isListDifferent(List<ClientboundPlayerInfoUpdatePacket.Entry> list1, List<ClientboundPlayerInfoUpdatePacket.Entry> list2) {
+        return list1.size() != list2.size() || !new HashSet<>(list1).equals(new HashSet<>(list2));
     }
 
     private enum Column {

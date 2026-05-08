@@ -10,6 +10,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
+import com.wynntils.handlers.playerlist.event.PlayerListColumnUpdatedEvent;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
@@ -32,6 +33,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.neoforged.bus.api.SubscribeEvent;
 
 /**
@@ -41,6 +45,8 @@ public final class PartyModel extends Model {
     // \uE005\uE002 is for the first line
     // \uE001  is for the other lines
     private static final String PARTY_PREFIX_REGEX = "§e(?:\uE005\uE002|\uE001) ";
+
+    private static final Pattern PARTY_PLAYER_LIST_REGEX = Pattern.compile("§(?<role>c|e)(?<username>\\w{1,16})");
 
     // region Party Regexes
     /*
@@ -98,6 +104,8 @@ public final class PartyModel extends Model {
 
     public static final int MAX_PARTY_MEMBER_COUNT = 10;
 
+    private boolean useCommands = false;
+
     private boolean expectingPartyMessage = false; // Whether the client is expecting a response from "/party list"
     private long lastPartyRequest = 0; // The last time the client requested party data
 
@@ -143,6 +151,33 @@ public final class PartyModel extends Model {
                 return;
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onPlayerListColumnUpdated(PlayerListColumnUpdatedEvent.Party event) {
+        if (!event.isExhaustive()) {
+            useCommands = true;
+            if (partyLeader.isEmpty()) {
+                requestData();
+            }
+            return;
+        }
+
+        List<String> newParty = new ArrayList<>();
+        for (ClientboundPlayerInfoUpdatePacket.Entry entry : event.getEntries()) {
+            String displayName = entry.displayName().getString();
+            Matcher matcher = PARTY_PLAYER_LIST_REGEX.matcher(displayName);
+
+            String username = matcher.group("username");
+            newParty.add(username);
+            if (matcher.group("role").charAt(0) == ChatFormatting.RED.getChar()) {
+                partyLeader = username;
+            }
+        }
+
+        partyMembers = newParty;
+        WynntilsMod.postEvent(new HadesRelationsUpdateEvent.PartyList(
+                Set.copyOf(partyMembers), HadesRelationsUpdateEvent.ChangeType.RELOAD));
     }
 
     private boolean tryParsePartyMessages(StyledText styledText) {
@@ -348,7 +383,7 @@ public final class PartyModel extends Model {
      * Hades relations will be updated and PartyEvent.Listed will be posted.
      */
     public void requestData() {
-        if (McUtils.player() == null) return;
+        if (!useCommands || McUtils.player() == null) return;
 
         if (System.currentTimeMillis() - lastPartyRequest < 250) {
             WynntilsMod.info("Skipping party list request because it was requested less than 250ms ago.");
