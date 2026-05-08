@@ -45,6 +45,8 @@ import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -176,7 +178,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         if (!isRenderThread()) return;
         if (!MixinHelper.onWynncraft()) return;
 
-        PlayerInfoUpdateEvent e = new PlayerInfoUpdateEvent(packet.entries(), packet.newEntries());
+        PlayerInfoUpdateEvent e = new PlayerInfoUpdateEvent(packet.actions(), packet.entries(), packet.newEntries());
         MixinHelper.post(e);
         if (e.getEntries() != packet.entries()) {
             ((ClientboundPlayerInfoUpdatePacketAccessor) packet).setEntries(e.getEntries());
