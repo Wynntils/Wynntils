@@ -13,8 +13,6 @@ import com.wynntils.models.worlds.type.WorldState;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.neoforged.bus.api.EventPriority;
@@ -80,8 +78,8 @@ public class PlayerListHandler extends Handler {
             return;
         }
 
-        boolean emptyOrOffline = entry.displayName().getString().isEmpty() ||
-                entry.displayName().getString().startsWith(ChatFormatting.GRAY.toString());
+        boolean emptyOrOffline = entry.displayName().getString().isEmpty()
+                || entry.displayName().getString().startsWith(ChatFormatting.GRAY.toString());
 
         if (recordingColumn == Column.Guild) {
             if (!emptyOrOffline) {
@@ -97,10 +95,10 @@ public class PlayerListHandler extends Handler {
                 if (isListDifferent(friends, newFriends) || friends.removeAll(newFriends)) {
                     WynntilsMod.postEvent(new PlayerListColumnUpdatedEvent.Friends(new ArrayList<>(friends)));
                 }
-                if  (isListDifferent(party, newParty) || party.removeAll(newParty)) {
+                if (isListDifferent(party, newParty) || party.removeAll(newParty)) {
                     WynntilsMod.postEvent(new PlayerListColumnUpdatedEvent.Party(newParty));
                 }
-                if  (isListDifferent(guild, newGuild) || guild.removeAll(newGuild)) {
+                if (isListDifferent(guild, newGuild) || guild.removeAll(newGuild)) {
                     WynntilsMod.postEvent(new PlayerListColumnUpdatedEvent.Guild(newGuild));
                 }
 
@@ -117,7 +115,8 @@ public class PlayerListHandler extends Handler {
         }
     }
 
-    private boolean isListDifferent(List<ClientboundPlayerInfoUpdatePacket.Entry> list1, List<ClientboundPlayerInfoUpdatePacket.Entry> list2) {
+    private boolean isListDifferent(
+            List<ClientboundPlayerInfoUpdatePacket.Entry> list1, List<ClientboundPlayerInfoUpdatePacket.Entry> list2) {
         return list1.size() != list2.size() || !new HashSet<>(list1).equals(new HashSet<>(list2));
     }
 

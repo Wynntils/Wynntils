@@ -18,12 +18,16 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -32,7 +36,8 @@ public final class FriendsModel extends Model {
     // \uE001  is for the other lines
     private static final String FRIEND_PREFIX_REGEX = "(?:§(?:a|4))?(?:\uE008\uE002|\uE001) ";
 
-    private static final Pattern FRIEND_PLAYER_LIST_REGEX = Pattern.compile("§.\\[(?<server>[A-Z]+\\d{1,3})\\] §.(?<username>\\w{1,16})");
+    private static final Pattern FRIEND_PLAYER_LIST_REGEX =
+            Pattern.compile("§.\\[(?<server>[A-Z]+\\d{1,3})\\] §.(?<username>\\w{1,16})");
 
     // region Friend Regexes
     /*

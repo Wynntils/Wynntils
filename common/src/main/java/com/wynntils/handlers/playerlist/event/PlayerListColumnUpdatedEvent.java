@@ -4,11 +4,10 @@
  */
 package com.wynntils.handlers.playerlist.event;
 
+import java.util.List;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
-
-import java.util.List;
 
 public class PlayerListColumnUpdatedEvent extends Event implements ICancellableEvent {
     private final List<ClientboundPlayerInfoUpdatePacket.Entry> entries;
@@ -17,7 +16,9 @@ public class PlayerListColumnUpdatedEvent extends Event implements ICancellableE
         this.entries = entries;
     }
 
-    public List<ClientboundPlayerInfoUpdatePacket.Entry> getEntries() { return entries; }
+    public List<ClientboundPlayerInfoUpdatePacket.Entry> getEntries() {
+        return entries;
+    }
 
     /**
      * Indicates whether the list is exhaustive, and thus contains all friends or members of the party/guild.
