@@ -1,21 +1,20 @@
 {
-  "providers":
-  [
+  "providers": [
     {
-      "type": "reference",
-      "id": "wynntils:dialogue/providers/german/body_3"
+      "id": "wynntils:dialogue/providers/german/body_3",
+      "type": "reference"
     },
     {
-      "type": "reference",
-      "id": "wynntils:dialogue/providers/russian/body_3"
+      "id": "wynntils:dialogue/providers/russian/body_3",
+      "type": "reference"
     },
     {
-      "type": "reference",
-      "id": "wynntils:dialogue/providers/special/body_3"
+      "id": "wynntils:dialogue/providers/special/body_3",
+      "type": "reference"
     },
     {
-      "type": "reference",
-      "id": "minecraft:hud/dialogue/text/common/body_3"
+      "id": "minecraft:hud/dialogue/text/common/body_3",
+      "type": "reference"
     }
   ]
 }

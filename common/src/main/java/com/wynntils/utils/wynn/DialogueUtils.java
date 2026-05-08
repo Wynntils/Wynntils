@@ -564,16 +564,15 @@ public final class DialogueUtils {
 
         @Override
         public String toString() {
-            return "Content{" +
-                    "text='" + text + '\'' +
-                    ", cleanText='" + cleanText + '\'' +
-                    ", name='" + name + '\'' +
-                    ", startPos='" + startPos + '\'' +
-                    ", portrait='" + portrait + '\'' +
-                    ", confirmationless=" + confirmationless +
-                    ", vulnerable=" + vulnerable +
-                    ", choices=" + Arrays.toString(choices) +
-                    '}';
+            return "Content{" + "text='"
+                    + text + '\'' + ", cleanText='"
+                    + cleanText + '\'' + ", name='"
+                    + name + '\'' + ", startPos='"
+                    + startPos + '\'' + ", portrait='"
+                    + portrait + '\'' + ", confirmationless="
+                    + confirmationless + ", vulnerable="
+                    + vulnerable + ", choices="
+                    + Arrays.toString(choices) + '}';
         }
     }
 }

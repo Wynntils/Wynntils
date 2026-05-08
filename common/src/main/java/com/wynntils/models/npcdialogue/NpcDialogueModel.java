@@ -111,8 +111,7 @@ public final class NpcDialogueModel extends Model {
      * Replaces common Wynncraft Element Symbols like Earth, Fire, Thunder, ... for Chat display.
      * */
     public String replaceCommonSymbols(String input) {
-        return input
-                .replace("\uE000", "❋") // air
+        return input.replace("\uE000", "❋") // air
                 .replace("\uE001", "✤") // earth
                 .replace("\uE002", "✹") // fire🛡
                 .replace("\uE003", "✦") // thunder
