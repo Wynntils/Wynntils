@@ -1,0 +1,13 @@
+{
+  "providers": [
+    {
+      "ascent": -11,
+      "chars": [
+        "„“«»…–"
+      ],
+      "file": "wynntils:font/hud/dialogue/text/special.png",
+      "height": 128,
+      "type": "bitmap"
+    }
+  ]
+}
