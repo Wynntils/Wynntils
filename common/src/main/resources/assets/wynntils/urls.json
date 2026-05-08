@@ -97,7 +97,7 @@
   },
   {
     "id": "dataAthenaTerritoryListV2",
-    "url": "https://athena.wynntils.com/v2/cache/get/territoryList"
+    "url": "https://athena.wynntils.com/cache/get/territoryList"
   },
   {
     "id": "dataStaticAbilities",
@@ -119,7 +119,7 @@
   },
   {
     "id": "dataStaticCharms",
-    "md5": "4d443b0acb8bb919a6f79b4ff8665a9d",
+    "md5": "7d9c175c4a13f154eabb8cf77af1cb82",
     "path": "Reference/charms.json",
     "url": "https://cdn.wynntils.com/static/Reference/charms.json"
   },
@@ -143,7 +143,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "a0aa8ac094cc3be96f6c2447676d38c8",
+    "md5": "b66550f8fdb3f5fedff41fea7ffbff7e",
     "path": "Reference/gear.json",
     "url": "https://cdn.wynntils.com/static/Reference/gear.json"
   },
@@ -239,19 +239,19 @@
   },
   {
     "id": "dataStaticModelData",
-    "md5": "2fdb1190ab8c5f40e2586339e57888c0",
+    "md5": "d04164f8d113c637f4208645cf4e7db0",
     "path": "Data-Storage/model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/model_data.json"
   },
   {
     "id": "dataStaticPlaceMapFeatures",
-    "md5": "8b3c5bd8b33b70e3b63c2b8045fc045b",
+    "md5": "cb890e5fa52b1b3e40f203f456ce9c26",
     "path": "Reference/place_mapfeatures.json",
     "url": "https://cdn.wynntils.com/static/Reference/place_mapfeatures.json"
   },
   {
     "id": "dataStaticPlaces",
-    "md5": "ea5886d525137c8fce196b2a8283b669",
+    "md5": "f11f6350ee38aa662e7adfd9e8b1e95f",
     "path": "Reference/places.json",
     "url": "https://cdn.wynntils.com/static/Reference/places.json"
   },
