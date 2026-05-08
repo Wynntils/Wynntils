@@ -45,18 +45,19 @@ public final class NpcDialogueModel extends Model {
         }
     }
 
-    private void sendChat(DialogueUtils.Content content, StyledText translatedText) {
+    private void sendChat(DialogueUtils.Content content, String translatedText) {
         Style textColor = Style.EMPTY.withColor(chatColor.getChatFormatting());
         Style darkGreen = Style.EMPTY.withColor(ChatFormatting.DARK_GREEN);
+        StyledText styledTranslatedText = StyledText.fromString(replaceCommonSymbols(translatedText));
 
         // §2Npcname: §aText
         Component message = Component.empty()
                 .append(Component.literal(content.getName() != null ? content.getName() + ": " : "")
                         .withStyle(darkGreen))
-                .append(translatedText
+                .append(styledTranslatedText
                         .getComponent()
                         .withStyle(textColor.withHoverEvent(
-                                new HoverEvent.ShowText(StyledText.fromString(content.getText())
+                                new HoverEvent.ShowText(StyledText.fromString(replaceCommonSymbols(content.getText()))
                                         .getComponent()
                                         .withStyle(textColor)))));
 
@@ -71,19 +72,19 @@ public final class NpcDialogueModel extends Model {
     /**
      * this method will get called once per Dialogue
      * */
-    public void dispatchContent(DialogueUtils.Content content, String tanslatedText, boolean sendToChat) {
+    public void dispatchContent(DialogueUtils.Content content, String translatedText, boolean sendToChat) {
         WynntilsMod.getLogger()
                 .debug("[{}] Original Text: \"{}\"", this.getClass().getSimpleName(), content.getText());
         WynntilsMod.getLogger()
-                .debug("[{}] Translated Text: \"{}\"", this.getClass().getSimpleName(), tanslatedText);
+                .debug("[{}] Translated Text: \"{}\"", this.getClass().getSimpleName(), translatedText);
 
-        StyledText styledTranslatedText = StyledText.fromString(tanslatedText);
         if (sendToChat) {
-            sendChat(content, styledTranslatedText);
+            sendChat(content, translatedText);
         }
 
         // for other Features or as an API Hook for Addons
         try {
+            StyledText styledTranslatedText = StyledText.fromString(translatedText);
             DialogueProcessedEvent dialogueProcessedEvent = new DialogueProcessedEvent(content, styledTranslatedText);
             WynntilsMod.postEvent(dialogueProcessedEvent);
         } catch (RuntimeException exception) {
@@ -104,5 +105,21 @@ public final class NpcDialogueModel extends Model {
      * */
     public void clearCache() {
         cache.clear();
+    }
+
+    /**
+     * Replaces common Wynncraft Element Symbols like Earth, Fire, Thunder, ... for Chat display.
+     * */
+    public String replaceCommonSymbols(String input) {
+        return input
+                .replace("\uE000", "❋") // air
+                .replace("\uE001", "✤") // earth
+                .replace("\uE002", "✹") // fire🛡
+                .replace("\uE003", "✦") // thunder
+                .replace("\uE004", "❉") // water
+                .replace("\uE005", "Ⰾ") // neutral Ⰾ or ⚛
+                .replace("\uE006", "♥") // heart
+                .replace("\uE008", "\uD83D\uDDE1") // sword
+                .replace("\uE009", "\uD83D\uDEE1"); // shield
     }
 }
