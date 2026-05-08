@@ -1,15 +1,18 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.handlers.playerlist;
 
 import com.wynntils.core.components.Handler;
 import com.wynntils.mc.event.PlayerInfoUpdateEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PlayerListHandler extends Handler {
     private static final String FRIEND_COLUMN_TITLE = "§a  §lFriends";
@@ -45,7 +48,8 @@ public class PlayerListHandler extends Handler {
     public void onPlayerUpdateEvent(PlayerInfoUpdateEvent event) {
         List<ClientboundPlayerInfoUpdatePacket.Entry> entries = event.getEntries();
         if (entries.size() != 1) return;
-        if (event.getActions().size() != 1 || !event.getActions().contains(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME)) return;
+        if (event.getActions().size() != 1
+                || !event.getActions().contains(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME)) return;
 
         ClientboundPlayerInfoUpdatePacket.Entry entry = entries.getFirst();
         System.out.println(entry.displayName().getString().equals(FRIEND_COLUMN_TITLE));
@@ -75,7 +79,7 @@ public class PlayerListHandler extends Handler {
 
             // We have reached the end.
             // 19 since each column is of size 20 including the title.
-            if (entry.displayName().getString().isEmpty() || guild.size() >= 19){
+            if (entry.displayName().getString().isEmpty() || guild.size() >= 19) {
                 recordingColumn = Column.Unknown;
                 friends = newFriends;
                 party = newParty;
