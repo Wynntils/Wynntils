@@ -10,6 +10,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
+import com.wynntils.handlers.actionbar.matchers.DialogueSegmentMatcher;
 import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.type.IterationDecision;
@@ -29,6 +30,10 @@ public final class ActionBarHandler extends Handler {
 
     private StyledText lastParsedActionBarText = StyledText.EMPTY;
     private List<ActionBarSegment> lastMatchedSegments = new ArrayList<>();
+
+    public ActionBarHandler() {
+        registerSegment(new DialogueSegmentMatcher());
+    }
 
     public void registerSegment(ActionBarSegmentMatcher segmentMatcher) {
         segmentMatchers.add(segmentMatcher);

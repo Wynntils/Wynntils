@@ -497,6 +497,14 @@ public record KeyBindDefinition(
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             true);
+
+    public static final KeyBindDefinition CANCEL_DIALOGUE_AUTO_PROGRESS = register(
+            "cancelDialogueAutoProgress",
+            "Cancel Dialogue Auto Progress",
+            Managers.KeyBind.UTILITIES_CATEGORY,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_Y,
+            true);
     // endregion
 
     private static KeyBindDefinition register(
