@@ -120,6 +120,7 @@ public class WorldWaypointDistanceFeature extends Feature {
             if (distance > maxDistance) {
                 double posScale = maxDistance / distance;
                 dx *= posScale;
+                dy *= posScale;
                 dz *= posScale;
             }
 
