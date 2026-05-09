@@ -8,9 +8,11 @@ import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.annotations.OverlayGroup;
 import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
+import com.wynntils.core.consumers.overlays.annotations.RemoteOverlayHolder;
 import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Config;
@@ -19,8 +21,10 @@ import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.overlays.remoteoverlays.RemoteInfoBox;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
+import com.wynntils.services.remoteoverlay.type.RemoteOverlayInfo;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.type.RenderElementType;
@@ -52,6 +56,9 @@ public final class OverlayManager extends Manager {
     private final List<SectionCoordinates> sections = new ArrayList<>(9);
     private final Map<Class<?>, Integer> profilingTimes = new HashMap<>();
     private final Map<Class<?>, Integer> profilingCounts = new HashMap<>();
+
+    private Feature remoteOverlayHolder;
+    private final List<RemoteOverlayBase> remoteOverlayList = new ArrayList<>();
 
     public OverlayManager(CrashReportManager crashReportManager) {
         super(List.of(crashReportManager));
@@ -130,6 +137,25 @@ public final class OverlayManager extends Manager {
                 WynntilsMod.error("Unable to get field " + overlayField, e);
             }
         }
+    }
+
+    public void discoverRemoteOverlay(Feature feature) {
+        if (!feature.getClass().isAnnotationPresent(RemoteOverlayHolder.class)) return;
+        remoteOverlayList.clear();
+        remoteOverlayHolder = feature;
+        Services.RemoteOverlay.getRemoteOverlayProviders().forEach(overlayProvider -> {
+            RemoteOverlayInfo info = Services.RemoteOverlay.providedRemoteOverlays.get(overlayProvider);
+            RemoteOverlayBase remoteOverlay =
+                    new RemoteInfoBox(info.getFunction(), info.getName(), overlayProvider.getName());
+            remoteOverlayList.add(remoteOverlay);
+            registerOverlay(remoteOverlay, feature, RenderElementType.CHAT, remoteOverlay.isUserEnabled());
+        });
+    }
+
+    public void rediscoverRemoteOverlays() {
+        remoteOverlayList.forEach(this::unregisterOverlay);
+        remoteOverlayList.clear();
+        discoverRemoteOverlay(remoteOverlayHolder);
     }
 
     public void discoverOverlayGroups(Feature feature) {

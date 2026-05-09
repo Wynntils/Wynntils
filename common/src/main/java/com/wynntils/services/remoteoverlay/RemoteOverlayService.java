@@ -62,6 +62,7 @@ public class RemoteOverlayService extends Service {
         if (provider.isEmpty()) return false;
 
         remoteOverlayProviders.get().remove(provider.get());
+        remoteOverlayProviders.touched();
         providedRemoteOverlays.remove(provider.get());
 
         return true;

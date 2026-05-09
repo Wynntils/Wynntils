@@ -105,6 +105,7 @@ import com.wynntils.features.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.overlays.PartyMembersOverlayFeature;
 import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
 import com.wynntils.features.overlays.RaidProgressFeature;
+import com.wynntils.features.overlays.RemoteOverlaysFeature;
 import com.wynntils.features.overlays.ScoreboardOverlayFeature;
 import com.wynntils.features.overlays.ServerUptimeInfoOverlayFeature;
 import com.wynntils.features.overlays.ShamanMaskOverlayFeature;
@@ -320,6 +321,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new PartyMembersOverlayFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());
         registerFeature(new RaidProgressFeature());
+        registerFeature(new RemoteOverlaysFeature());
         registerFeature(new ScoreboardOverlayFeature());
         registerFeature(new ServerUptimeInfoOverlayFeature());
         registerFeature(new ShamanMaskOverlayFeature());
@@ -463,6 +465,7 @@ public final class FeatureManager extends Manager {
 
         Managers.Overlay.discoverOverlays(feature);
         Managers.Overlay.discoverOverlayGroups(feature);
+        Managers.Overlay.discoverRemoteOverlay(feature);
 
         // Assert that the feature name is properly translated
         assert !feature.getTranslatedName().startsWith("feature.wynntils.")

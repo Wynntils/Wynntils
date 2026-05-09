@@ -333,6 +333,9 @@ public class ConfigCommand extends Command {
     private int reloadRemoteOverlayProviders(CommandContext<CommandSourceStack> context) {
         Services.RemoteOverlay.loadRemoteOverlayProviders();
 
+        Managers.Overlay.rediscoverRemoteOverlays();
+        Managers.Config.reloadConfiguration(true);
+
         context.getSource()
                 .sendSuccess(
                         () -> Component.literal("Successfully reloaded RemoteOverlay providers.")
@@ -370,6 +373,9 @@ public class ConfigCommand extends Command {
             return 0;
         }
 
+        Managers.Overlay.rediscoverRemoteOverlays();
+        Managers.Config.reloadConfiguration(true);
+
         context.getSource()
                 .sendSuccess(
                         () -> Component.literal("Successfully removed RemoteOverlayInfo provider.")
@@ -390,6 +396,9 @@ public class ConfigCommand extends Command {
                             Component.literal("The provided URL is invalid").withStyle(ChatFormatting.RED));
             return 0;
         }
+
+        Managers.Overlay.rediscoverRemoteOverlays();
+        Managers.Config.reloadConfiguration(true);
 
         context.getSource()
                 .sendSuccess(
