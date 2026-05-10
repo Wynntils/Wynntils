@@ -4,7 +4,6 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.core.components.Models;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.RenderEvent;
@@ -22,7 +21,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Gui.class)
@@ -110,38 +108,6 @@ public abstract class GuiMixin {
     }
 
     @Inject(
-            method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/Gui;renderScoreboardSidebar(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
-                            shift = At.Shift.AFTER))
-    private void renderChatAfterTitle(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        if (Models.NpcDialogue.renderOverChat) {
-            this.renderChat(guiGraphics, deltaTracker);
-        }
-    }
-
-    @Redirect(
-            method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/Gui;renderChat(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V"))
-    private void skipOriginalChatCall(Gui instance, GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
-        if (!Models.NpcDialogue.renderOverChat) {
-            this.renderChat(guiGraphics, deltaTracker);
-        }
-    }
-
-    @Shadow
-    private void renderChat(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
-        throw new AssertionError();
-    }
-
-    @Inject(
             method = "renderCameraOverlays(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
             at = @At("HEAD"))
     private void onRenderCameraOverlaysPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
@@ -225,6 +191,14 @@ public abstract class GuiMixin {
     private void onRenderChatPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         MixinHelper.post(
                 new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.CHAT));
+    }
+
+    @Inject(
+            method = "renderChat(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
+            at = @At("TAIL"))
+    private void onRenderChatPost(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        MixinHelper.post(
+                new RenderEvent.Post(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.CHAT));
     }
 
     @Inject(

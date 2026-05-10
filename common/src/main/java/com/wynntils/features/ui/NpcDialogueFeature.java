@@ -11,10 +11,19 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.handlers.actionbar.ActionBarSegment;
+import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
+import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.SystemMessageEvent;
+import com.wynntils.models.characterstats.actionbar.segments.DialogueSegment;
 import com.wynntils.utils.colors.ColorChatFormatting;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.DialogueUtils;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.profiling.Profiler;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -46,6 +55,40 @@ public class NpcDialogueFeature extends Feature {
     private volatile Component lastComponent;
     private volatile Component lastModifiedComp;
     private int eqCount = 0;
+
+    private Component renderDialogue;
+
+    @SubscribeEvent
+    public void onActionBarRender(ActionBarRenderEvent event) {
+        renderDialogue = null;
+        for (ActionBarSegment segment : event.getSegments()) {
+            if (segment instanceof DialogueSegment dialogueSegment) {
+                renderDialogue = dialogueSegment.getDialogue().getComponent();
+            }
+        }
+        event.setSegmentEnabled(DialogueSegment.class, !Models.NpcDialogue.renderOverChat);
+    }
+
+    @SubscribeEvent
+    public void onChatRenderPost(RenderEvent.Post event) {
+        if (Models.NpcDialogue.renderOverChat && renderDialogue != null) {
+            Profiler.get().push("dialogueOverlay");
+
+            Font font = McUtils.mc().font;
+            GuiGraphics guiGraphics = event.getGuiGraphics();
+
+            guiGraphics.nextStratum();
+            guiGraphics.pose().pushMatrix();
+            guiGraphics.pose().translate((float) (guiGraphics.guiWidth() / 2), (float) (guiGraphics.guiHeight() - 68));
+            int j = ARGB.white(255);
+
+            int k = font.width(renderDialogue);
+            guiGraphics.drawStringWithBackdrop(font, renderDialogue, -k / 2, -4, k, j);
+            guiGraphics.pose().popMatrix();
+
+            Profiler.get().pop();
+        }
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onActionBarUpdate(SystemMessageEvent.GameInfoReceivedEvent event) {
@@ -139,6 +182,7 @@ public class NpcDialogueFeature extends Feature {
     @Override
     public void onDisable() {
         Models.NpcDialogue.clearCache();
+        lastModifiedComp = null;
     }
 
     private enum DialogueHudOptions {
