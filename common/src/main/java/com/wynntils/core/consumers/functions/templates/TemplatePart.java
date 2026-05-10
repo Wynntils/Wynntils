@@ -4,11 +4,13 @@
  */
 package com.wynntils.core.consumers.functions.templates;
 
+import com.wynntils.core.consumers.functions.vm.TemplateNode;
+
 /**
  * Represents a part of an info variable template.
  * A template part can be either a (string) literal or en expression that will be evaluated.
  */
-public abstract class TemplatePart {
+public abstract class TemplatePart implements TemplateNode {
     protected final String part;
 
     protected TemplatePart(String part) {

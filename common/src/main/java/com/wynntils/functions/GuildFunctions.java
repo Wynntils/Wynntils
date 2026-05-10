@@ -8,10 +8,16 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.expressions.Expression;
+import com.wynntils.core.consumers.functions.vm.FunctionNode;
+import com.wynntils.core.consumers.functions.vm.TemplateCompiler;
 import com.wynntils.models.guild.type.GuildRank;
 import com.wynntils.models.players.type.wynnplayer.PlayerGuildInfo;
 import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.utils.type.CappedValue;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -77,15 +83,30 @@ public class GuildFunctions {
         }
     }
 
-    public static class IsGuildMemberFunction extends Function<Boolean> {
+    public static class IsGuildMemberFunction extends Function<Boolean> implements FunctionNode {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Guild.isGuildMember(arguments.getArgument("member").getStringValue());
+            return isGuildMember(arguments.getArgument("member").getStringValue());
+        }
+
+        public static boolean isGuildMember(String member) {
+            return Models.Guild.isGuildMember(member);
         }
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("member", String.class, null)));
+        }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+
+            Type t1 = arguments.getFirst().emit(mv);
+            TemplateCompiler.ensureType(t1, String.class);
+
+            TemplateCompiler.emitInvokeStatic(mv, IsGuildMemberFunction.class, "isGuildMember", boolean.class ,String.class);
+
+            return Type.BOOLEAN_TYPE;
         }
     }
 

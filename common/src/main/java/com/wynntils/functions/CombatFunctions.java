@@ -8,11 +8,17 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.expressions.Expression;
+import com.wynntils.core.consumers.functions.vm.FunctionNode;
+import com.wynntils.core.consumers.functions.vm.TemplateCompiler;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.combat.label.DebuffType;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Time;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
+
 import java.util.List;
 
 public class CombatFunctions {
@@ -28,11 +34,15 @@ public class CombatFunctions {
         }
     }
 
-    public static class AreaDamageAverageFunction extends Function<Double> {
+    public static class AreaDamageAverageFunction extends Function<Double> implements FunctionNode {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return Models.Combat.getAverageAreaDamagePerSecond(
+            return areaDamageAverage(
                     arguments.getArgument("seconds").getIntegerValue());
+        }
+
+        public static double areaDamageAverage(int seconds) {
+            return Models.Combat.getAverageAreaDamagePerSecond(seconds);
         }
 
         @Override
@@ -43,6 +53,17 @@ public class CombatFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("adavg");
+        }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+
+            Type t1 = arguments.getFirst().emit(mv);
+            TemplateCompiler.emitCastToInt(t1, mv);
+
+            TemplateCompiler.emitInvokeStatic(mv, CombatFunctions.AreaDamageAverageFunction.class, "areaDamageAverage", double.class, int.class);
+
+            return Type.DOUBLE_TYPE;
         }
     }
 

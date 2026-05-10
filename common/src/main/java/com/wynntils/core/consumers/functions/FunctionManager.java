@@ -13,6 +13,7 @@ import com.wynntils.core.consumers.functions.expressions.Expression;
 import com.wynntils.core.consumers.functions.expressions.parser.ExpressionParser;
 import com.wynntils.core.consumers.functions.templates.Template;
 import com.wynntils.core.consumers.functions.templates.parser.TemplateParser;
+import com.wynntils.core.consumers.functions.vm.TemplateCompiler;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
@@ -52,6 +53,7 @@ import com.wynntils.functions.generic.StyledTextFunctions;
 import com.wynntils.functions.generic.TimeFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.performance.Profiler;
 import com.wynntils.utils.type.ErrorOr;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -119,25 +121,29 @@ public final class FunctionManager extends Manager {
     }
 
     private Optional<Object> getFunctionValueSafely(Function<?> function, FunctionArguments arguments) {
-        if (crashedFunctions.contains(function)) {
+        try (Profiler.Scope ignored = Profiler.scope("FunctionManager::getFunctionValueSafely")) {
+            if (crashedFunctions.contains(function)) {
+                return Optional.empty();
+            }
+
+            try {
+                try (Profiler.Scope ignored_ = Profiler.scope(function.getClass().getSimpleName() + "::getValue")) {
+                    Object value = function.getValue(arguments);
+                    return Optional.ofNullable(value);
+                }
+            } catch (Throwable throwable) {
+                crashFunction(function);
+
+                WynntilsMod.reportCrash(
+                        CrashType.FUNCTION,
+                        function.getTranslatedName(),
+                        function.getClass().getName(),
+                        "calculation",
+                        throwable);
+            }
+
             return Optional.empty();
         }
-
-        try {
-            Object value = function.getValue(arguments);
-            return Optional.ofNullable(value);
-        } catch (Throwable throwable) {
-            crashFunction(function);
-
-            WynntilsMod.reportCrash(
-                    CrashType.FUNCTION,
-                    function.getTranslatedName(),
-                    function.getClass().getName(),
-                    "calculation",
-                    throwable);
-        }
-
-        return Optional.empty();
     }
 
     // region String value calculations
@@ -261,9 +267,17 @@ public final class FunctionManager extends Manager {
     // region Template formatting
 
     private String doFormat(String templateString) {
-        calculatedTemplateCache.computeIfAbsent(templateString, TemplateParser::getTemplateFromString);
-        return calculatedTemplateCache.get(templateString).getString();
+        Template template = calculatedTemplateCache.computeIfAbsent(templateString, TemplateParser::getTemplateFromString);
+
+        try (Profiler.Scope ignored = Profiler.scope("ti) doFormat")) {
+            template.getString();
+        }
+
+        try (Profiler.Scope ignored2 = Profiler.scope("tc) doFormat")) {
+            return TemplateCompiler.run(template);
+        }
     }
+
 
     public StyledText[] doFormatLines(String templateString) {
         StringBuilder resultBuilder = new StringBuilder();

@@ -4,9 +4,10 @@
  */
 package com.wynntils.core.consumers.functions.expressions;
 
+import com.wynntils.core.consumers.functions.vm.TemplateNode;
 import com.wynntils.utils.type.ErrorOr;
 
-public abstract class Expression {
+public abstract class Expression implements TemplateNode {
     private final String rawExpression;
 
     protected Expression(String rawExpression) {

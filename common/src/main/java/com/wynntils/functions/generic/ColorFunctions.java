@@ -8,12 +8,17 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.expressions.Expression;
+import com.wynntils.core.consumers.functions.vm.FunctionNode;
+import com.wynntils.core.consumers.functions.vm.TemplateCompiler;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.colors.WynncraftShaderColor;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.client.resources.language.I18n;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
 
 public final class ColorFunctions {
     public static class FromRgbFunction extends GenericFunction<CustomColor> {
@@ -52,7 +57,7 @@ public final class ColorFunctions {
         }
     }
 
-    public static class FromHexFunction extends GenericFunction<CustomColor> {
+    public static class FromHexFunction extends GenericFunction<CustomColor> implements FunctionNode {
         @Override
         public CustomColor getValue(FunctionArguments arguments) {
             return CustomColor.fromHexString(arguments.getArgument("hex").getStringValue());
@@ -61,6 +66,16 @@ public final class ColorFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("hex", String.class, null)));
+        }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+            Type t1 = arguments.getFirst().emit(mv);
+            TemplateCompiler.ensureType(t1, String.class);
+
+            TemplateCompiler.emitInvokeStatic(mv, CustomColor.class, "fromHexString", CustomColor.class, String.class);
+
+            return Type.getType(CustomColor.class);
         }
     }
 

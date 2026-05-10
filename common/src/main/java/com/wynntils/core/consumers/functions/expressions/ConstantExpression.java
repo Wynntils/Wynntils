@@ -6,6 +6,9 @@ package com.wynntils.core.consumers.functions.expressions;
 
 import com.google.common.collect.ImmutableMap;
 import com.wynntils.utils.type.ErrorOr;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
+
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
@@ -83,6 +86,29 @@ public final class ConstantExpression extends Expression {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public Type emit(MethodVisitor mv) {
+        switch (value) {
+            case String s -> {
+                mv.visitLdcInsn(value);
+                return Type.getType(String.class);
+            }
+            case Integer i -> {
+                mv.visitLdcInsn(value);
+                return Type.INT_TYPE;
+            }
+            case Double v -> {
+                mv.visitLdcInsn(value);
+                return Type.DOUBLE_TYPE;
+            }
+            case Boolean b -> {
+                mv.visitLdcInsn(value);
+                return Type.BOOLEAN_TYPE;
+            }
+            default -> throw new IllegalStateException("Unsupported constant expression type: " + value.getClass());
+        }
     }
 
     // endregion

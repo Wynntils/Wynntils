@@ -8,6 +8,9 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.expressions.Expression;
+import com.wynntils.core.consumers.functions.vm.FunctionNode;
+import com.wynntils.core.consumers.functions.vm.TemplateCompiler;
 import com.wynntils.models.abilities.label.ShamanPuppetInfo;
 import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.models.characterstats.type.PowderSpecialInfo;
@@ -20,19 +23,44 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.client.player.LocalPlayer;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
 
 public class CharacterFunctions {
-    public static class CappedManaFunction extends Function<CappedValue> {
+    public static class CappedManaFunction extends Function<CappedValue> implements FunctionNode {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
+            return cappedMana();
+        }
+
+        public static CappedValue cappedMana() {
             return Models.CharacterStats.getMana().orElse(CappedValue.EMPTY);
+        }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+            TemplateCompiler.emitInvokeStatic(mv, CappedManaFunction.class, "cappedMana", CappedValue.class);
+
+            return Type.getType(CappedValue.class);
         }
     }
 
-    public static class CappedHealthFunction extends Function<CappedValue> {
+    public static class CappedHealthFunction extends Function<CappedValue> implements FunctionNode {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
+            return cappedHealth();
+        }
+
+        public static CappedValue cappedHealth() {
             return Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY);
+        }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+
+            TemplateCompiler.emitInvokeStatic(mv, CappedHealthFunction.class, "cappedHealth", CappedValue.class);
+
+            return Type.getType(CappedValue.class);
         }
     }
 

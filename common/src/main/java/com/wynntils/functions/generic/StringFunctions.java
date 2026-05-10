@@ -8,6 +8,10 @@ import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.consumers.functions.arguments.ListArgument;
+import com.wynntils.core.consumers.functions.expressions.Expression;
+import com.wynntils.core.consumers.functions.vm.FunctionNode;
+import com.wynntils.core.consumers.functions.vm.TemplateCompiler;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -16,6 +20,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import net.minecraft.network.chat.Component;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 public class StringFunctions {
     public static class FormatFunction extends GenericFunction<String> {
@@ -31,10 +38,14 @@ public class StringFunctions {
         }
     }
 
-    public static class FormatCappedFunction extends GenericFunction<String> {
+    public static class FormatCappedFunction extends GenericFunction<String> implements FunctionNode {
         @Override
         public String getValue(FunctionArguments arguments) {
             CappedValue value = arguments.getArgument("value").getCappedValue();
+            return formatCapped(value);
+        }
+
+        public static String formatCapped(CappedValue value) {
             return StringUtils.integerToShortString(value.current()) + "/"
                     + StringUtils.integerToShortString(value.max());
         }
@@ -43,6 +54,17 @@ public class StringFunctions {
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new Argument<>("value", CappedValue.class, null)));
+        }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+
+            Type t1 = arguments.getFirst().emit(mv);
+            TemplateCompiler.ensureType(t1, CappedValue.class);
+
+            TemplateCompiler.emitInvokeStatic(mv, FormatCappedFunction.class, "formatCapped", String.class, CappedValue.class);
+
+            return Type.getType(String.class);
         }
     }
 
@@ -86,7 +108,7 @@ public class StringFunctions {
         }
     }
 
-    public static class StringFunction extends GenericFunction<String> {
+    public static class StringFunction extends GenericFunction<String> implements FunctionNode {
         @Override
         public String getValue(FunctionArguments arguments) {
             return arguments.getArgument("value").getValue().toString();
@@ -101,9 +123,18 @@ public class StringFunctions {
         protected List<String> getAliases() {
             return List.of("str");
         }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+
+            Type t1 = arguments.getFirst().emit(mv);
+            TemplateCompiler.emitToString(t1, mv);
+
+            return Type.getType(String.class);
+        }
     }
 
-    public static class ConcatFunction extends GenericFunction<String> {
+    public static class ConcatFunction extends GenericFunction<String> implements FunctionNode {
         @Override
         public String getValue(FunctionArguments arguments) {
             List<String> values = arguments.getArgument("values").getStringList();
@@ -114,6 +145,53 @@ public class StringFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(new ListArgument<>("values", String.class)));
+        }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+
+            mv.visitTypeInsn(Opcodes.NEW, "java/util/ArrayList");
+            mv.visitInsn(Opcodes.DUP);
+
+            mv.visitMethodInsn(
+                    Opcodes.INVOKESPECIAL,
+                    "java/util/ArrayList",
+                    "<init>",
+                    "()V",
+                    false
+            );
+
+            for (Expression arg : arguments) {
+
+                mv.visitInsn(Opcodes.DUP);
+
+                Type t1 = arg.emit(mv);
+                TemplateCompiler.emitToString(t1, mv);
+
+                mv.visitMethodInsn(
+                        Opcodes.INVOKEVIRTUAL,
+                        "java/util/ArrayList",
+                        "add",
+                        "(Ljava/lang/Object;)Z",
+                        false
+                );
+
+                mv.visitInsn(Opcodes.POP);
+            }
+
+            mv.visitLdcInsn("");
+            mv.visitInsn(Opcodes.SWAP);
+
+            TemplateCompiler.emitInvokeStatic(
+                    mv,
+                    String.class,
+                    "join",
+                    String.class,
+                    CharSequence.class,
+                    Iterable.class
+            );
+
+            return Type.getType(String.class);
         }
     }
 
@@ -138,7 +216,7 @@ public class StringFunctions {
         }
     }
 
-    public static class StringContainsFunction extends GenericFunction<Boolean> {
+    public static class StringContainsFunction extends GenericFunction<Boolean> implements FunctionNode {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
             return arguments
@@ -156,6 +234,26 @@ public class StringFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("contains_str");
+        }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+
+            Type t1 = arguments.get(0).emit(mv);
+            TemplateCompiler.ensureType(t1, String.class);
+
+            Type t2 = arguments.get(1).emit(mv);
+            TemplateCompiler.ensureType(t2, String.class);
+
+            mv.visitMethodInsn(
+                    Opcodes.INVOKEVIRTUAL,
+                    "java/lang/String",
+                    "contains",
+                    "(Ljava/lang/CharSequence;)Z",
+                    false
+            );
+
+            return Type.BOOLEAN_TYPE;
         }
     }
 
@@ -266,12 +364,16 @@ public class StringFunctions {
         }
     }
 
-    public static class RegexMatchFunction extends GenericFunction<Boolean> {
+    public static class RegexMatchFunction extends GenericFunction<Boolean> implements FunctionNode {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
             String value = arguments.getArgument("source").getStringValue();
             String regex = arguments.getArgument("regex").getStringValue();
 
+            return regexMatch(value, regex);
+        }
+
+        public static boolean regexMatch(String value, String regex) {
             try {
                 return value.matches(regex);
             } catch (PatternSyntaxException ignored) {
@@ -283,6 +385,20 @@ public class StringFunctions {
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new Argument<>("source", String.class, null), new Argument<>("regex", String.class, null)));
+        }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+
+            Type t1 = arguments.get(0).emit(mv);
+            TemplateCompiler.ensureType(t1, String.class);
+
+            Type t2 = arguments.get(1).emit(mv);
+            TemplateCompiler.ensureType(t2, String.class);
+
+            TemplateCompiler.emitInvokeStatic(mv, RegexMatchFunction.class, "regexMatch", boolean.class, String.class, String.class);
+
+            return Type.BOOLEAN_TYPE;
         }
     }
 
@@ -306,13 +422,17 @@ public class StringFunctions {
         }
     }
 
-    public static class RegexReplaceFunction extends GenericFunction<String> {
+    public static class RegexReplaceFunction extends GenericFunction<String> implements FunctionNode {
         @Override
         public String getValue(FunctionArguments arguments) {
             String value = arguments.getArgument("source").getStringValue();
             String regex = arguments.getArgument("regex").getStringValue();
             String replacement = arguments.getArgument("replacement").getStringValue();
 
+            return regexReplace(value, regex, replacement);
+        }
+
+        public static String regexReplace(String value, String regex, String replacement) {
             try {
                 return value.replaceAll(regex, replacement);
             } catch (PatternSyntaxException ignored) {
@@ -327,6 +447,23 @@ public class StringFunctions {
                     new Argument<>("source", String.class, null),
                     new Argument<>("regex", String.class, null),
                     new Argument<>("replacement", String.class, null)));
+        }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+
+            Type t1 = arguments.get(0).emit(mv);
+            TemplateCompiler.ensureType(t1, String.class);
+
+            Type t2 = arguments.get(1).emit(mv);
+            TemplateCompiler.ensureType(t2, String.class);
+
+            Type t3 = arguments.get(2).emit(mv);
+            TemplateCompiler.ensureType(t3, String.class);
+
+            TemplateCompiler.emitInvokeStatic(mv, RegexReplaceFunction.class, "regexReplace", String.class, String.class, String.class, String.class);
+
+            return Type.getType(String.class);
         }
     }
 

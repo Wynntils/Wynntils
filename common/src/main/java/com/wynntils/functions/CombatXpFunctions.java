@@ -7,26 +7,56 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.expressions.Expression;
+import com.wynntils.core.consumers.functions.vm.FunctionNode;
+import com.wynntils.core.consumers.functions.vm.TemplateCompiler;
 import com.wynntils.models.players.type.wynnplayer.CharacterData;
 import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.CappedValue;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class CombatXpFunctions {
-    public static class CappedLevelFunction extends Function<CappedValue> {
+    public static class CappedLevelFunction extends Function<CappedValue> implements FunctionNode {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
+            return level();
+        }
+
+
+        public static CappedValue level() {
             return Models.CombatXp.getCombatLevel();
+        }
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+
+            TemplateCompiler.emitInvokeStatic(mv, CombatXpFunctions.CappedLevelFunction.class, "level", CappedValue.class);
+
+            return Type.getType(CappedValue.class);
         }
     }
 
-    public static class CappedXpFunction extends Function<CappedValue> {
+    public static class CappedXpFunction extends Function<CappedValue> implements FunctionNode {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
+            return xp();
+        }
+
+        public static CappedValue xp() {
             return Models.CombatXp.getXp();
+        }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+
+            TemplateCompiler.emitInvokeStatic(mv, CombatXpFunctions.CappedXpFunction.class, "xp", CappedValue.class);
+
+            return Type.getType(CappedValue.class);
         }
     }
 

@@ -8,13 +8,21 @@ import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.AnyArgument;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.expressions.Expression;
+import com.wynntils.core.consumers.functions.vm.FunctionNode;
+import com.wynntils.core.consumers.functions.vm.TemplateCompiler;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.CappedValue;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+
 import java.util.List;
 
 public class ConditionalFunctions {
     // NOTE: This class' generic type is only used in the superclass's getFunctionType() method.
-    private abstract static class IfFunctionBase<T> extends GenericFunction<Object> {
+    private abstract static class IfFunctionBase<T> extends GenericFunction<Object> implements FunctionNode {
         @Override
         public Object getValue(FunctionArguments arguments) {
             if (arguments.getArgument("condition").getBooleanValue()) {
@@ -22,6 +30,33 @@ public class ConditionalFunctions {
             } else {
                 return arguments.getArgument("ifFalse").getValue();
             }
+        }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> args) {
+
+            Label falseLabel = new Label();
+            Label endLabel = new Label();
+
+            args.get(0).emit(mv);
+            mv.visitJumpInsn(Opcodes.IFEQ, falseLabel);
+
+            Type trueType = args.get(1).emit(mv);
+
+            mv.visitJumpInsn(Opcodes.GOTO, endLabel);
+
+            mv.visitLabel(falseLabel);
+
+            Type falseType = args.get(2).emit(mv);
+
+            mv.visitLabel(endLabel);
+
+            Type resultType = TemplateCompiler.promote(trueType, falseType);
+
+            TemplateCompiler.emitCastIfNeeded(trueType, resultType, mv);
+            TemplateCompiler.emitCastIfNeeded(falseType, resultType, mv);
+
+            return resultType;
         }
     }
 

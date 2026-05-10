@@ -8,7 +8,14 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.consumers.functions.arguments.parser.ArgumentParser;
+import com.wynntils.core.consumers.functions.vm.FunctionNode;
+import com.wynntils.core.consumers.functions.vm.TemplateCompiler;
+import com.wynntils.utils.performance.Profiler;
 import com.wynntils.utils.type.ErrorOr;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -46,6 +53,16 @@ public final class FunctionExpression extends Expression {
         this.decimals = decimals;
     }
 
+    public static FunctionExpression fromFunction(Function<?> function,List<Expression> argumentExpressions) {
+        return new FunctionExpression(
+                "",
+                function,
+                argumentExpressions,
+                false,
+                0
+        );
+    }
+
     @Override
     public ErrorOr<Object> calculate() {
         ErrorOr<FunctionArguments> arguments = getArguments();
@@ -58,13 +75,15 @@ public final class FunctionExpression extends Expression {
 
     @Override
     public ErrorOr<String> calculateFormattedString() {
-        ErrorOr<FunctionArguments> arguments = getArguments();
-        if (arguments.hasError()) {
-            return ErrorOr.error(arguments.getError());
-        }
+        try (Profiler.Scope ignored = Profiler.scope("FunctionExpression::calculateFormattedString")) {
+            ErrorOr<FunctionArguments> arguments = getArguments();
+            if (arguments.hasError()) {
+                return ErrorOr.error(arguments.getError());
+            }
 
-        return ErrorOr.of(
-                Managers.Function.getStringFunctionValue(function, arguments.getValue(), formatted, decimals));
+            return ErrorOr.of(
+                    Managers.Function.getStringFunctionValue(function, arguments.getValue(), formatted, decimals));
+        }
     }
 
     private ErrorOr<FunctionArguments> getArguments() {
@@ -140,5 +159,49 @@ public final class FunctionExpression extends Expression {
                 ? ErrorOr.error(argumentExpressions.getError())
                 : ErrorOr.of(Optional.of(new FunctionExpression(
                         rawExpression, function, argumentExpressions.getValue(), isFormatted, decimals)));
+    }
+
+    @Override
+    public Type emit(MethodVisitor mv) {
+
+        if (!(function instanceof FunctionNode functionNode)) {
+            throw new RuntimeException(
+                    "Function " + function.getName() +
+                            " is not a FunctionNode, cannot emit bytecode."
+            );
+        }
+
+        String helperName = "expr_" + TemplateCompiler.nextMethodId();
+
+        MethodVisitor helper = TemplateCompiler.CLASS_WRITER.visitMethod(
+                Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC,
+                helperName,
+                "()Ljava/lang/Object;",
+                null,
+                null
+        );
+
+        helper.visitCode();
+
+        Type returnType = functionNode.emit(helper, argumentExpressions);
+
+        TemplateCompiler.emitCastToObject(returnType, helper);
+
+        helper.visitInsn(Opcodes.ARETURN);
+
+        helper.visitMaxs(0, 0);
+        helper.visitEnd();
+
+        mv.visitMethodInsn(
+                Opcodes.INVOKESTATIC,
+                "CompiledTemplate",
+                helperName,
+                "()Ljava/lang/Object;",
+                false
+        );
+
+        TemplateCompiler.emitCastFromObject(returnType, mv);
+
+        return returnType;
     }
 }

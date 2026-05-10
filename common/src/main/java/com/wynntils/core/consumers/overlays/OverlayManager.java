@@ -315,6 +315,8 @@ public final class OverlayManager extends Manager {
             overlay.tick();
             overlay.updateEnabledCache();
         });
+        com.wynntils.utils.performance.Profiler.printToFile();
+        com.wynntils.utils.performance.Profiler.reset();
     }
 
     // endregion

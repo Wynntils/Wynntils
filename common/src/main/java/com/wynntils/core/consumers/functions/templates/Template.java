@@ -4,6 +4,8 @@
  */
 package com.wynntils.core.consumers.functions.templates;
 
+import com.wynntils.utils.performance.Profiler;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,6 +17,12 @@ public class Template {
     }
 
     public String getString() {
-        return parts.stream().map(TemplatePart::getValue).collect(Collectors.joining());
+        try (Profiler.Scope ignored = Profiler.scope("Template::getString")) {
+            return parts.stream().map(TemplatePart::getValue).collect(Collectors.joining());
+        }
+    }
+
+    public List<TemplatePart> getParts() {
+        return parts;
     }
 }

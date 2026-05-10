@@ -4,6 +4,9 @@
  */
 package com.wynntils.core.consumers.functions.templates;
 
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
+
 public class LiteralTemplatePart extends TemplatePart {
     public LiteralTemplatePart(String part) {
         super(part);
@@ -17,5 +20,11 @@ public class LiteralTemplatePart extends TemplatePart {
     @Override
     public String toString() {
         return "LiteralTemplatePart{" + "part='" + part + "'}";
+    }
+
+    @Override
+    public Type emit(MethodVisitor mv) {
+        mv.visitLdcInsn(part);
+        return Type.getType(String.class);
     }
 }

@@ -8,6 +8,10 @@ import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.consumers.functions.arguments.ListArgument;
+import com.wynntils.core.consumers.functions.expressions.Expression;
+import com.wynntils.core.consumers.functions.templates.Template;
+import com.wynntils.core.consumers.functions.vm.FunctionNode;
+import com.wynntils.core.consumers.functions.vm.TemplateCompiler;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.List;
@@ -15,9 +19,12 @@ import java.util.UUID;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.component.ResolvableProfile;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 public class StyledTextFunctions {
-    public static class StyledTextFunction extends GenericFunction<StyledText> {
+    public static class StyledTextFunction extends GenericFunction<StyledText> implements FunctionNode {
         @Override
         public StyledText getValue(FunctionArguments arguments) {
             return StyledText.fromString(arguments.getArgument("value").getStringValue());
@@ -32,9 +39,19 @@ public class StyledTextFunctions {
         protected List<String> getAliases() {
             return List.of("st");
         }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+            Type t1 = arguments.getFirst().emit(mv);
+            TemplateCompiler.emitToString(t1, mv);
+
+            TemplateCompiler.emitInvokeStatic(mv, StyledText.class, "fromString", StyledText.class, String.class);
+
+            return Type.getType(StyledText.class);
+        }
     }
 
-    public static class ConcatStyledTextFunction extends GenericFunction<StyledText> {
+    public static class ConcatStyledTextFunction extends GenericFunction<StyledText> implements FunctionNode {
         @Override
         public StyledText getValue(FunctionArguments arguments) {
             List<StyledText> values = arguments.getArgument("values").getStyledTextList();
@@ -51,14 +68,56 @@ public class StyledTextFunctions {
         protected List<String> getAliases() {
             return List.of("concat_st");
         }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+            mv.visitTypeInsn(Opcodes.NEW, "java/util/ArrayList");
+            mv.visitInsn(Opcodes.DUP);
+
+            mv.visitMethodInsn(
+                    Opcodes.INVOKESPECIAL,
+                    "java/util/ArrayList",
+                    "<init>",
+                    "()V",
+                    false
+            );
+
+            for (Expression arg : arguments) {
+
+                mv.visitInsn(Opcodes.DUP);
+
+                arg.emit(mv);
+
+                mv.visitMethodInsn(
+                        Opcodes.INVOKEVIRTUAL,
+                        "java/util/ArrayList",
+                        "add",
+                        "(Ljava/lang/Object;)Z",
+                        false
+                );
+
+                mv.visitInsn(Opcodes.POP);
+            }
+
+            mv.visitLdcInsn("");
+            mv.visitInsn(Opcodes.SWAP);
+
+            TemplateCompiler.emitInvokeStatic(mv, StyledText.class, "join", StyledText.class, String.class, Iterable.class);
+
+            return Type.getType(StyledText.class);
+        }
     }
 
-    public static class WithColorFunction extends GenericFunction<StyledText> {
+    public static class WithColorFunction extends GenericFunction<StyledText> implements FunctionNode {
         @Override
         public StyledText getValue(FunctionArguments arguments) {
             StyledText styledText = arguments.getArgument("value").getStyledText();
             CustomColor customColor = arguments.getArgument("color").getColorValue();
 
+            return withColor(styledText, customColor);
+        }
+
+        public static StyledText withColor(StyledText styledText, CustomColor customColor) {
             return styledText.map(part -> {
                 if (part.getPartStyle().getColor() != CustomColor.NONE) {
                     return part;
@@ -72,6 +131,20 @@ public class StyledTextFunctions {
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
                     new Argument<>("value", StyledText.class, null), new Argument<>("color", CustomColor.class, null)));
+        }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+
+            Type t1 = arguments.get(0).emit(mv);
+            TemplateCompiler.ensureType(t1, StyledText.class);
+
+            Type t2 = arguments.get(1).emit(mv);
+            TemplateCompiler.ensureType(t2, CustomColor.class);
+
+            TemplateCompiler.emitInvokeStatic(mv, WithColorFunction.class, "withColor", StyledText.class, StyledText.class, CustomColor.class);
+
+            return Type.getType(StyledText.class);
         }
     }
 
@@ -172,13 +245,26 @@ public class StyledTextFunctions {
         }
     }
 
-    public static class WithPlayerSpriteFontFunction extends GenericFunction<StyledText> {
+    public static class WithPlayerSpriteFontFunction extends GenericFunction<StyledText> implements FunctionNode {
         @Override
         public StyledText getValue(FunctionArguments arguments) {
             StyledText styledText = arguments.getArgument("value").getStyledText();
             String uuid = arguments.getArgument("uuid").getStringValue();
             boolean hat = arguments.getArgument("hat").getBooleanValue();
 
+            return withPlayerSpriteFont(styledText, uuid, hat);
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("value", StyledText.class, null),
+                    new Argument<>("uuid", String.class, null),
+                    new Argument<>("hat", Boolean.class, null)));
+        }
+
+
+        public static StyledText withPlayerSpriteFont(StyledText styledText, String uuid, boolean hat) {
             UUID uuidObject;
             try {
                 uuidObject = UUID.fromString(uuid);
@@ -199,19 +285,44 @@ public class StyledTextFunctions {
         }
 
         @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", StyledText.class, null),
-                    new Argument<>("uuid", String.class, null),
-                    new Argument<>("hat", Boolean.class, null)));
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+
+            Type t1 = arguments.get(0).emit(mv);
+            TemplateCompiler.ensureType(t1, StyledText.class);
+
+            Type t2 = arguments.get(1).emit(mv);
+            TemplateCompiler.ensureType(t2, String.class);
+
+            Type t3 = arguments.get(2).emit(mv);
+            TemplateCompiler.ensureType(t3, Type.BOOLEAN_TYPE);
+
+            TemplateCompiler.emitInvokeStatic(mv, WithPlayerSpriteFontFunction.class, "withPlayerSpriteFont", StyledText.class, StyledText.class, String.class, boolean.class);
+
+            return Type.getType(StyledText.class);
         }
     }
 
-    public static class WithResourceFontFunction extends GenericFunction<StyledText> {
+    public static class WithResourceFontFunction extends GenericFunction<StyledText> implements FunctionNode {
         @Override
         public StyledText getValue(FunctionArguments arguments) {
             StyledText styledText = arguments.getArgument("value").getStyledText();
             String font = arguments.getArgument("font").getStringValue();
+            return withResourceFont(styledText, font);
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("value", StyledText.class, null), new Argument<>("font", String.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("with_font");
+        }
+
+
+        public static StyledText withResourceFont(StyledText styledText, String font) {
             Identifier fontLocation = Identifier.tryParse(font);
 
             if (fontLocation == null) return styledText;
@@ -225,24 +336,36 @@ public class StyledTextFunctions {
                 return part.withStyle(style -> style.withFont(fontDescription));
             });
         }
-
         @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", StyledText.class, null), new Argument<>("font", String.class, null)));
-        }
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("with_font");
+            Type t1 = arguments.get(0).emit(mv);
+            TemplateCompiler.ensureType(t1, StyledText.class);
+
+            Type t2 = arguments.get(1).emit(mv);
+            TemplateCompiler.ensureType(t2, String.class);
+
+            TemplateCompiler.emitInvokeStatic(mv, WithResourceFontFunction.class, "withResourceFont", StyledText.class, StyledText.class, String.class);
+
+            return Type.getType(StyledText.class);
         }
     }
 
-    public static class WithShadowColorFunction extends GenericFunction<StyledText> {
+    public static class WithShadowColorFunction extends GenericFunction<StyledText> implements FunctionNode {
         @Override
         public StyledText getValue(FunctionArguments arguments) {
             StyledText styledText = arguments.getArgument("value").getStyledText();
             CustomColor customColor = arguments.getArgument("color").getColorValue();
+            return withShadowColor(styledText, customColor);
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("value", StyledText.class, null), new Argument<>("color", CustomColor.class, null)));
+        }
+
+        public static StyledText withShadowColor(StyledText styledText, CustomColor customColor) {
 
             return styledText.map(part -> {
                 if (part.getPartStyle().getShadowColor() != CustomColor.NONE) {
@@ -254,9 +377,17 @@ public class StyledTextFunctions {
         }
 
         @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", StyledText.class, null), new Argument<>("color", CustomColor.class, null)));
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+
+            Type t1 = arguments.get(0).emit(mv);
+            TemplateCompiler.ensureType(t1, StyledText.class);
+
+            Type t2 = arguments.get(1).emit(mv);
+            TemplateCompiler.ensureType(t2, CustomColor.class);
+
+            TemplateCompiler.emitInvokeStatic(mv, WithShadowColorFunction.class, "withShadowColor", StyledText.class, StyledText.class, CustomColor.class);
+
+            return Type.getType(StyledText.class);
         }
     }
 

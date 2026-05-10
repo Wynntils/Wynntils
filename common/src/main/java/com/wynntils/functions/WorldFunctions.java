@@ -9,6 +9,9 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.expressions.Expression;
+import com.wynntils.core.consumers.functions.vm.FunctionNode;
+import com.wynntils.core.consumers.functions.vm.TemplateCompiler;
 import com.wynntils.models.bonustotems.BonusTotem;
 import com.wynntils.models.bonustotems.type.BonusTotemType;
 import com.wynntils.models.territories.profile.TerritoryProfile;
@@ -17,16 +20,23 @@ import com.wynntils.models.worlds.profile.ServerProfile;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
+
 import java.util.List;
 import java.util.Locale;
 
 public class WorldFunctions {
-    public static class CurrentWorldFunction extends Function<String> {
+    public static class CurrentWorldFunction extends Function<String> implements FunctionNode {
         private static final String NO_DATA = "<unknown>";
         private static final String NO_WORLD = "<not on world>";
 
         @Override
         public String getValue(FunctionArguments arguments) {
+            return currentWorld();
+        }
+
+        public static String currentWorld() {
             if (!Models.WorldState.onWorld()) {
                 return NO_WORLD;
             }
@@ -38,6 +48,18 @@ public class WorldFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("world");
+        }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+
+            TemplateCompiler.emitInvokeStatic(
+                    mv,
+                    WorldFunctions.CurrentWorldFunction.class,
+                    "currentWorld",
+                    String.class);
+
+            return Type.getType(String.class);
         }
     }
 
@@ -378,9 +400,13 @@ public class WorldFunctions {
         }
     }
 
-    public static class CurrentTerritoryFunction extends Function<String> {
+    public static class CurrentTerritoryFunction extends Function<String> implements FunctionNode {
         @Override
         public String getValue(FunctionArguments arguments) {
+            return currentTerritory();
+        }
+
+        public static String currentTerritory() {
             TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(
                     McUtils.player().position());
 
@@ -394,6 +420,19 @@ public class WorldFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("territory");
+        }
+
+        @Override
+        public Type emit(MethodVisitor mv, List<Expression> arguments) {
+
+            TemplateCompiler.emitInvokeStatic(
+                    mv,
+                    WorldFunctions.CurrentTerritoryFunction.class,
+                    "currentTerritory",
+                    String.class
+            );
+
+            return Type.getType(String.class);
         }
     }
 
