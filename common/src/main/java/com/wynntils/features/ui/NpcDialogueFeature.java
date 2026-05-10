@@ -128,7 +128,8 @@ public class NpcDialogueFeature extends Feature {
     @Override
     protected void onConfigUpdate(Config<?> config) {
         switch (config.getFieldName()) {
-            case "renderOverChat" -> Models.NpcDialogue.renderOverChat = ((Config<Boolean>) config).get();
+            case "renderOverChat" ->
+                Models.NpcDialogue.renderOverChat = ((Config<Boolean>) config).get() && this.isEnabled();
             case "chatColor" -> Models.NpcDialogue.chatColor = ((Config<ColorChatFormatting>) config).get();
         }
         eqCount = 0;
