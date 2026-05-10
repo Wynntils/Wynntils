@@ -161,7 +161,9 @@ public class NpcDialogueFeature extends Feature {
             if (capturedLastDispatched == null || capturedLastDispatched.equals(lastDispatched)) {
                 lastDispatched = result;
             }
-            Models.NpcDialogue.dispatchContent(content, result, sendToChat.get());
+            if (!result.equals(capturedLastDispatched)) {
+                Models.NpcDialogue.dispatchContent(content, result, sendToChat.get());
+            }
             Models.NpcDialogue.addCache(message, result);
         });
     }
