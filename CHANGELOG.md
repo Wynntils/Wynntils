@@ -1,7 +1,49 @@
-Added support for new lootrun missions and trials
+Functions
+- Math Functions
+  - `abs` Returns the absolute value of a number
+    - Required numeric argument `value`, the number to return the absolute value of
+  - `ceil` Rounds a number up to the nearest integer
+    - Required numeric argument `value`, the number to round up
+  - `clamp` Constrains a value between minimum and maximum
+    - Required numeric argument `value`, the number to constrain
+    - Required numeric argument `min`, the minimum allowed value
+    - Required numeric argument `max`, the maximum allowed value
+  - `dec_to_hex` Converts an integer to a hexadecimal string
+    - Required numeric argument `value`, the integer value to convert to hexadecimal
+  - `euler` or `e` Returns Euler's number
+  - `floor` Rounds a number down to the nearest integer
+    - Required numeric argument `value`, the number to round down
+  - `hex_to_dec` Converts a hexadecimal string to an integer
+    - Required String argument `hex`, the hexadecimal string to convert to a decimal integer
+  - `is_finite` Checks if a value is finite (not NaN or infinite)
+    - Required numeric argument `value`, the number to check
+  - `is_infinite` Checks if a value is infinite
+    - Required numeric argument `value`, the number to check
+  - `is_nan` Checks if a value is NaN
+    - Required numeric argument `value`, the number to check
+  - `log` Returns the logarithm of a value in the given base
+    - Required numeric argument `value`, the value to calculate the logarithm of
+    - Required numeric argument `base`, the logarithm base to use
+  - `map` Remaps a value from one range to another
+    - Required numeric argument `value`, the number to remap
+    - Required numeric argument `inMin`, the minimum value of the input range
+    - Required numeric argument `inMax`, the maximum value of the input range
+    - Required numeric argument `outMin`, the minimum value of the output range
+    - Required numeric argument `outMax`, the maximum value of the output range
+  - `naturalLog` or `ln` Returns the natural logarithm of a value
+    - Required numeric argument `value`, the value to calculate the natural logarithm of
+  - `pi` Returns the mathematical constant pi
+  - `safe_divide` or `safe_div` Divides two numbers, returning fallback when divisor is zero
+    - Required numeric argument `dividend`, the number to divide
+    - Required numeric argument `divisor`, the number to divide by
+    - Required numeric argument `fallback`, the value to return if the divisor is zero
+  - `wrap` Wraps a value into the [min, max) range
+    - Required numeric argument `value`, the number to wrap into the range
+    - Required numeric argument `min`, the inclusive lower bound of the range
+    - Required numeric argument `max`, the exclusive upper bound of the range
+- String Functions
+  - `parse_long` Parses a string to a long
+    - Required String argument `value`, the string to parse
 
 Fixes
-- Fixed status effect parsing
-- Chat items are now decoded when not on a world
-- Fixed functions not preserving style on new lines
-- Fixed /player and /onlinemembers commands not always displaying response
+- Fixed waypoint y position not scaling properly when outside render distance
