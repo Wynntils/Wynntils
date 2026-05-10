@@ -27,6 +27,8 @@ public final class NpcDialogueModel extends Model {
     private final ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<>();
 
     public ColorChatFormatting chatColor;
+
+    // maybe some other features need this. It's only true when the renderOverChat option AND the feature is enabled
     public boolean renderOverChat;
 
     public NpcDialogueModel() {

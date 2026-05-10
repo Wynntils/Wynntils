@@ -181,6 +181,8 @@ public class NpcDialogueFeature extends Feature {
 
     @Override
     public void onDisable() {
+        // Just the be sure it is false.
+        // Even if the render-events only get called when feature is enabled!
         Models.NpcDialogue.renderOverChat = false;
         Models.NpcDialogue.clearCache();
     }
