@@ -44,8 +44,6 @@ public class NpcDialogueFeature extends Feature {
     @Persisted
     private final Config<ColorChatFormatting> chatColor = new Config<>(ColorChatFormatting.GREEN);
 
-    // TODO: add Button for downloading extra fonts resource pack
-
     public NpcDialogueFeature() {
         super(ProfileDefault.DISABLED);
     }
