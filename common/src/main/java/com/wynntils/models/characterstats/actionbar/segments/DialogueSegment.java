@@ -4,10 +4,18 @@
  */
 package com.wynntils.models.characterstats.actionbar.segments;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 
 public class DialogueSegment extends ActionBarSegment {
-    public DialogueSegment(String segmentText, int startIndex, int endIndex) {
+    private final StyledText dialogue;
+
+    public DialogueSegment(String segmentText, int startIndex, int endIndex, StyledText dialogue) {
         super(segmentText, startIndex, endIndex);
+        this.dialogue = dialogue;
+    }
+
+    public StyledText getDialogue() {
+        return dialogue;
     }
 }

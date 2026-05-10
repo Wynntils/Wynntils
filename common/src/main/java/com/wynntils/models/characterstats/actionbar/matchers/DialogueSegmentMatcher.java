@@ -10,12 +10,15 @@ import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.segments.DialogueSegment;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import net.minecraft.network.chat.FontDescription;
 
 public class DialogueSegmentMatcher implements ActionBarSegmentMatcher {
     @Override
     public ActionBarSegment parse(StyledText actionBar) {
         Iterator<StyledTextPart> parts = actionBar.iterator();
+        List<StyledTextPart> dialogueParts = new LinkedList<>();
         String actionBarString = actionBar.getStringWithoutFormatting();
         StringBuilder segmentBuilder = new StringBuilder();
         String beginning = null;
@@ -32,6 +35,7 @@ public class DialogueSegmentMatcher implements ActionBarSegmentMatcher {
                         beginning = part.getComponent().getString();
                     }
                     segmentBuilder.append(part.getComponent().getString());
+                    dialogueParts.add(part);
                 }
             }
         }
@@ -43,7 +47,7 @@ public class DialogueSegmentMatcher implements ActionBarSegmentMatcher {
             int endIndex = startIndex + segmentBuilder.length();
 
             if (startIndex < 0) return null;
-            return new DialogueSegment(segmentText, startIndex, endIndex);
+            return new DialogueSegment(segmentText, startIndex, endIndex, StyledText.fromParts(dialogueParts));
         }
         return null;
     }
