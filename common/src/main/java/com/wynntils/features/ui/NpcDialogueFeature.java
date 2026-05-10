@@ -181,8 +181,8 @@ public class NpcDialogueFeature extends Feature {
 
     @Override
     public void onDisable() {
+        Models.NpcDialogue.renderOverChat = false;
         Models.NpcDialogue.clearCache();
-        lastModifiedComp = null;
     }
 
     private enum DialogueHudOptions {
