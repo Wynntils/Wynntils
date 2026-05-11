@@ -159,6 +159,8 @@ private final Overlay scoreboardOverlay = new ScoreboardOverlay();
 | `HOTBAR` | Replaces/augments the hotbar |
 | `CROSSHAIR` | Crosshair area |
 | `PLAYER_TAB_LIST` | Player tab list |
+| `CAMERA_OVERLAYS` | World-space / camera overlay area |
+| `TITLE` | Replaces/augments the title display |
 | `GUI_POST` | Must render after all other GUI |
 
 ---
@@ -199,6 +201,8 @@ See `docs/CREATING_FEATURES.md` for the full feature registration guide.
 Open `common/src/main/resources/assets/wynntils/lang/en_us.json` and add entries at the **correct alphabetical position**:
 
 ```json
+"feature.wynntils.spellCooldownOverlay.description": "Displays remaining spell cooldown time.",
+"feature.wynntils.spellCooldownOverlay.name": "Spell Cooldown Overlay",
 "feature.wynntils.spellCooldownOverlay.overlay.spellCooldown.name": "Spell Cooldown",
 "feature.wynntils.spellCooldownOverlay.overlay.spellCooldown.showMilliseconds.description": "Show milliseconds in the cooldown timer.",
 "feature.wynntils.spellCooldownOverlay.overlay.spellCooldown.showMilliseconds.name": "Show Milliseconds"
@@ -208,6 +212,8 @@ Open `common/src/main/resources/assets/wynntils/lang/en_us.json` and add entries
 
 | String | Key pattern |
 |--------|-------------|
+| Feature name | `feature.wynntils.<featureCamel>.name` |
+| Feature description | `feature.wynntils.<featureCamel>.description` |
 | Overlay name | `feature.wynntils.<featureCamel>.overlay.<overlayCamel>.name` |
 | Config name | `feature.wynntils.<featureCamel>.overlay.<overlayCamel>.<fieldName>.name` |
 | Config description | `feature.wynntils.<featureCamel>.overlay.<overlayCamel>.<fieldName>.description` |
@@ -294,6 +300,8 @@ public class SpellCooldownOverlayFeature extends Feature {
 }
 ```
 
+> **Profile default:** `ProfileDefault.onlyDefault()` enables the feature only in the `DEFAULT` config profile — the standard choice for overlay features. See `docs/CREATING_FEATURES.md` for the full Profile Defaults table.
+
 **`FeatureManager.java`** (inside `// region overlays`):
 
 ```java
@@ -303,6 +311,8 @@ registerFeature(new SpellCooldownOverlayFeature());
 **`en_us.json`** (at correct alphabetical position):
 
 ```json
+"feature.wynntils.spellCooldownOverlay.description": "Displays remaining spell cooldown time.",
+"feature.wynntils.spellCooldownOverlay.name": "Spell Cooldown Overlay",
 "feature.wynntils.spellCooldownOverlay.overlay.spellCooldown.name": "Spell Cooldown"
 ```
 
