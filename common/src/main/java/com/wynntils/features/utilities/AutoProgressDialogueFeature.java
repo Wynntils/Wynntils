@@ -35,7 +35,7 @@ public class AutoProgressDialogueFeature extends Feature {
 
     @RegisterKeyBind
     private final KeyBind cancelAutoProgress =
-            KeyBindDefinition.CANCEL_DIALOGUE_AUTO_PROGRESS.create(this::cancelPendingProgress);
+            KeyBindDefinition.CANCEL_DIALOGUE_AUTO_PROGRESS.create(this::onKeyBindPressed);
 
     @Persisted
     private final Config<Boolean> skipDirectly = new Config<>(false);
@@ -121,7 +121,7 @@ public class AutoProgressDialogueFeature extends Feature {
     @SubscribeEvent
     public void onTick(TickEvent event) {
         if (!Models.WorldState.onWorld()) {
-            cancelPendingProgress();
+            clearDialogueState();
             return;
         }
 
@@ -151,12 +151,12 @@ public class AutoProgressDialogueFeature extends Feature {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        cancelPendingProgress();
+        clearDialogueState();
     }
 
     @Override
     public void onDisable() {
-        cancelPendingProgress();
+        clearDialogueState();
     }
 
     private long getProgressDelayMs(String dialogueText) {
@@ -194,10 +194,6 @@ public class AutoProgressDialogueFeature extends Feature {
                 input.forward(), input.backward(), input.left(), input.right(), input.jump(), shift, input.sprint())));
     }
 
-    private void cancelPendingProgress() {
-        clearDialogueState();
-    }
-
     private void clearDialogueState() {
         cancelScheduledProgress();
         lastDialogueText = "";
@@ -214,5 +210,9 @@ public class AutoProgressDialogueFeature extends Feature {
             releaseShiftAtMs = 0L;
             sendShift(false);
         }
+    }
+
+    private void onKeyBindPressed() {
+        clearDialogueState();
     }
 }
