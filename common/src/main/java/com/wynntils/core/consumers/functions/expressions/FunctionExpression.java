@@ -161,6 +161,7 @@ public final class FunctionExpression extends Expression {
                         rawExpression, function, argumentExpressions.getValue(), isFormatted, decimals)));
     }
 
+    // TODO: might be an idea to cache methods themselves, this shrinks the size of the compiled class
     @Override
     public Type emit(MethodVisitor mv) {
 

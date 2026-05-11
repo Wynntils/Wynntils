@@ -1,5 +1,6 @@
 package com.wynntils.core.consumers.functions.vm;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.functions.templates.Template;
 import com.wynntils.core.consumers.functions.templates.TemplatePart;
 import com.wynntils.core.text.StyledText;
@@ -15,6 +16,17 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class TemplateCompiler {
+    private static class ExpandedClassLoader extends ClassLoader {
+
+        public ExpandedClassLoader() {
+            super(WynntilsMod.class.getClassLoader());
+        }
+
+        public Class<?> define(byte[] bytes) {
+            return defineClass(null, bytes, 0, bytes.length);
+        }
+    }
+
     public static Map<Template, Supplier<String>> compiledTemplates = new HashMap<>();
     public static ClassWriter CLASS_WRITER;
     private static int methodIndex = 0;
@@ -282,7 +294,6 @@ public class TemplateCompiler {
             );
         }
     }
-
     public static void ensureType(Type actual, Type expected) {
         if (!actual.equals(expected)) {
             throw new IllegalArgumentException("Expected type " + expected + " but got " + actual);
