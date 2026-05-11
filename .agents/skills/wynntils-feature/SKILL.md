@@ -71,12 +71,27 @@ If **yes**, loop:
 1. Ask: "What should this keybind trigger?"
 2. Infer:
    - Constant name: `SCREAMING_SNAKE_CASE` matching the feature and action (e.g., `TOGGLE_ENEMY_HIGHLIGHT`)
-   - Category: match to feature's category — combat → `Managers.KeyBind.COMBAT_CATEGORY`, UI/misc → `Managers.KeyBind.WYNNTILS_CATEGORY`
+   - Category: match to feature's `@ConfigCategory` using the table below Step 4
    - Default key: **always `GLFW.GLFW_KEY_UNKNOWN`** — never assign a specific key; users set their own bindings
 3. Ask: "What should this keybind be called in the keybind settings?"
 4. Ask: "Any more keybinds?" — repeat or continue to Step 5.
 
 If **no**, proceed to Step 5.
+
+**Keybind category mapping** (match to the feature's `@ConfigCategory`):
+
+| Feature category | Keybind category constant |
+|-----------------|--------------------------|
+| CHAT | `Managers.KeyBind.CHAT_CATEGORY` |
+| COMBAT | `Managers.KeyBind.COMBAT_CATEGORY` |
+| EMBELLISHMENTS | `Managers.KeyBind.UI_CATEGORY` |
+| INVENTORY | `Managers.KeyBind.INVENTORY_CATEGORY` |
+| MAP | `Managers.KeyBind.MAP_CATEGORY` |
+| OVERLAYS | `Managers.KeyBind.OVERLAYS_CATEGORY` |
+| PLAYERS | `Managers.KeyBind.PLAYERS_CATEGORY` |
+| UI | `Managers.KeyBind.UI_CATEGORY` |
+| UTILITIES | `Managers.KeyBind.UTILITIES_CATEGORY` |
+| DEBUG | `Managers.KeyBind.DEBUG_CATEGORY` |
 
 ### Step 5 — Profile default
 
@@ -189,10 +204,12 @@ Insert keys at the **correct alphabetical position**. Never append to the end.
 "feature.wynntils.<camelName>.name": "<human-readable name>",
 "feature.wynntils.<camelName>.<fieldName>.description": "<user-provided config description>",
 "feature.wynntils.<camelName>.<fieldName>.name": "<user-provided config name>",
-"feature.wynntils.<camelName>.<keybindCamel>.name": "<user-provided keybind name>"
+"wynntils.keybind.<keybindId>": "<user-provided keybind name>"
 ```
 
-One `.name` + `.description` per config field. One `.name` per keybind. Omit entries for things that don't exist.
+One `.name` + `.description` per config field. One `wynntils.keybind.*` entry per keybind. Omit entries for things that don't exist.
+
+> **Keybinds use a different namespace.** Feature and config keys are under `feature.wynntils.*`. Keybind keys are under `wynntils.keybind.*` — never `feature.wynntils.<camelName>.<keybindCamel>.name`.
 
 **Locale key format:**
 | Thing | Key pattern |
@@ -201,9 +218,9 @@ One `.name` + `.description` per config field. One `.name` per keybind. Omit ent
 | Feature description | `feature.wynntils.<camelName>.description` |
 | Config field name | `feature.wynntils.<camelName>.<fieldName>.name` |
 | Config field description | `feature.wynntils.<camelName>.<fieldName>.description` |
-| Keybind name | `feature.wynntils.<camelName>.<keybindCamel>.name` |
+| Keybind name | `wynntils.keybind.<keybindId>` |
 
-`<keybindCamel>` = camelCase of the constant (e.g., `TOGGLE_ENEMY_HIGHLIGHT` → `toggleEnemyHighlight`).
+`<keybindId>` is the `id` string (first arg) passed to `KeyBindDefinition.register()` (e.g., `"toggleEnemyHighlight"`).
 
 ### File 3 — `KeyBindDefinition.java` entry (keybinds only)
 
@@ -317,7 +334,7 @@ public class EnemyHighlightFeature extends Feature {
 "feature.wynntils.enemyHighlight.highlightColor.description": "Color used to highlight nearby enemies",
 "feature.wynntils.enemyHighlight.highlightColor.name": "Highlight Color",
 "feature.wynntils.enemyHighlight.name": "Enemy Highlight",
-"feature.wynntils.enemyHighlight.toggleEnemyHighlight.name": "Toggle Enemy Highlight"
+"wynntils.keybind.toggleEnemyHighlight": "Toggle Enemy Highlight"
 ```
 
 ---
@@ -350,7 +367,7 @@ registerFeature(new EnemyHighlightFeature());
 |---------|-----|
 | **Not adding to `FeatureManager.init()`** — feature silently does nothing | File 4 is mandatory. Features are not auto-discovered. |
 | Setting a specific default keybind key (e.g., `GLFW_KEY_H`) | Always use `GLFW.GLFW_KEY_UNKNOWN` — users set their own bindings |
-| Keybind locale key format wrong (e.g., `"wynntils.keybind.foo"`) | Correct format: `"feature.wynntils.<camelName>.<keybindCamel>.name"` |
+| Keybind locale key in feature namespace (e.g., `"feature.wynntils.<name>.<keybindCamel>.name"`) | Correct format: `"wynntils.keybind.<keybindId>"` |
 | Adding a `featureEnabled` config field | The base `Feature` class already provides `userEnabled` — don't duplicate it |
 | Adding configs the user didn't request | Scaffold only what was asked for (YAGNI) |
 | `Config<>` field without `@Persisted` | Every `Config<>` field must be annotated `@Persisted` |
