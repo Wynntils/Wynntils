@@ -19,6 +19,7 @@ import com.wynntils.handlers.actionbar.segments.DialogueSegment;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.protocol.game.ServerboundPlayerInputPacket;
 import net.minecraft.world.entity.player.Input;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -131,21 +132,23 @@ public class AutoProgressDialogueFeature extends Feature {
             progressAtMs = 0L;
             scheduledDialogueText = "";
 
-            sendShiftPulse();
-            // Direct skip may need one press to reveal the full line and one more to advance it.
-            if (skipDirectly.get()) {
-                lastDirectSkipPressedText = lastDialogueText.isBlank() ? progressedDialogueText : lastDialogueText;
-                directSkipPressesForDialogue++;
-            }
+            boolean shiftPulseSent = sendShiftPulse();
+            if (shiftPulseSent) {
+                // Direct skip may need one press to reveal the full line and one more to advance it.
+                if (skipDirectly.get()) {
+                    lastDirectSkipPressedText = lastDialogueText.isBlank() ? progressedDialogueText : lastDialogueText;
+                    directSkipPressesForDialogue++;
+                }
 
-            releaseShiftAtMs = now + SHIFT_RELEASE_DELAY_MS;
-            waitingToReleaseShift = true;
+                releaseShiftAtMs = now + SHIFT_RELEASE_DELAY_MS;
+                waitingToReleaseShift = true;
+            }
         }
 
         if (waitingToReleaseShift && now >= releaseShiftAtMs) {
             waitingToReleaseShift = false;
             releaseShiftAtMs = 0L;
-            sendShift(false);
+            restoreShiftState();
         }
     }
 
@@ -177,21 +180,44 @@ public class AutoProgressDialogueFeature extends Feature {
                 && (lastDirectSkipPressedText.isBlank() || !dialogueText.startsWith(lastDirectSkipPressedText));
     }
 
-    private void sendShiftPulse() {
-        sendShift(false);
-        sendShift(true);
+    private boolean sendShiftPulse() {
+        LocalPlayer player = McUtils.player();
+        if (player == null || isPlayerSneaking(player)) return false;
+
+        sendShift(player, true);
+        return true;
     }
 
-    private void sendShift(boolean shift) {
-        if (McUtils.player() == null) return;
+    private void restoreShiftState() {
+        LocalPlayer player = McUtils.player();
+        // If the player is already sneaking, don't send a release packet as that would interfere with their intended input.
+        if (player == null || isPlayerSneaking(player)) return;
 
-        Input input = McUtils.player().getLastSentInput();
+        sendShift(player, isPlayerSneaking(player));
+    }
+
+    private boolean isPlayerSneaking(LocalPlayer player) {
+        Input input = getLastSentInput(player);
+
+        // Respect both the current key/toggle state and Minecraft's last sent input so auto progress never releases a
+        // real player sneak.
+        return player.isShiftKeyDown() || McUtils.options().keyShift.isDown() || input.shift();
+    }
+
+    private void sendShift(LocalPlayer player, boolean shift) {
+        Input input = getLastSentInput(player);
+
+        McUtils.sendPacket(new ServerboundPlayerInputPacket(new Input(
+                input.forward(), input.backward(), input.left(), input.right(), input.jump(), shift, input.sprint())));
+    }
+
+    private Input getLastSentInput(LocalPlayer player) {
+        Input input = player.getLastSentInput();
         if (input == null) {
             input = Input.EMPTY;
         }
 
-        McUtils.sendPacket(new ServerboundPlayerInputPacket(new Input(
-                input.forward(), input.backward(), input.left(), input.right(), input.jump(), shift, input.sprint())));
+        return input;
     }
 
     private void clearDialogueState() {
@@ -208,7 +234,7 @@ public class AutoProgressDialogueFeature extends Feature {
         if (waitingToReleaseShift) {
             waitingToReleaseShift = false;
             releaseShiftAtMs = 0L;
-            sendShift(false);
+            restoreShiftState();
         }
     }
 
