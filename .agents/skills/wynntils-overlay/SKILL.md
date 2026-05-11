@@ -99,6 +99,7 @@ import com.wynntils.core.consumers.overlays.TextOverlay;
 // only if configs exist:
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 
@@ -116,17 +117,16 @@ public class <Name>Overlay extends TextOverlay {
                         VerticalAlignment.<TOP|MIDDLE|BOTTOM>,
                         HorizontalAlignment.<LEFT|CENTER|RIGHT>,
                         OverlayPosition.AnchorSection.<SECTION>),
-                <width>,
-                <height>);
+                new OverlaySize(<width>, <height>));
     }
 
     @Override
-    protected String getTemplate() {
+    public String getTemplate() {
         return TEMPLATE;
     }
 
     @Override
-    protected String getPreviewTemplate() {
+    public String getPreviewTemplate() {
         return getTemplate();
     }
 }
@@ -141,17 +141,17 @@ public class <Name>Overlay extends TextOverlay {
  */
 package com.wynntils.overlays;
 
-import com.wynntils.core.components.Models;
+import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
+import com.wynntils.core.consumers.overlays.OverlaySize;
 // only if configs exist:
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.util.DeltaTracker;
-import net.minecraft.client.renderer.Window;
 
 public class <Name>Overlay extends Overlay {
 
@@ -166,13 +166,11 @@ public class <Name>Overlay extends Overlay {
                         VerticalAlignment.<TOP|MIDDLE|BOTTOM>,
                         HorizontalAlignment.<LEFT|CENTER|RIGHT>,
                         OverlayPosition.AnchorSection.<SECTION>),
-                <width>,
-                <height>);
+                new OverlaySize(<width>, <height>));
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
-        if (!Models.WorldState.onWorld()) return;
         // TODO: implement <Name>Overlay rendering
     }
 }
@@ -233,7 +231,6 @@ private final List<<Name>Overlay> <camelName>Overlays = new ArrayList<>();
 | Replaces/augments action bar | `ACTION_BAR` |
 | Replaces/augments boss bars | `BOSS_BARS` |
 | Replaces/augments hotbar | `HOTBAR` |
-| Must render before all GUI | `GUI_PRE` |
 | Must render after all GUI | `GUI_POST` |
 
 ### File 3 — `en_us.json` additions
@@ -292,6 +289,7 @@ If a **new** Feature was created in Step 4, register it (handled by `wynntils-fe
 package com.wynntils.overlays;
 
 import com.wynntils.core.consumers.overlays.OverlayPosition;
+import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.TextOverlay;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -307,17 +305,16 @@ public class SpellCooldownOverlay extends TextOverlay {
                         VerticalAlignment.TOP,
                         HorizontalAlignment.RIGHT,
                         OverlayPosition.AnchorSection.TOP_RIGHT),
-                150,
-                30);
+                new OverlaySize(150, 30));
     }
 
     @Override
-    protected String getTemplate() {
+    public String getTemplate() {
         return TEMPLATE;
     }
 
     @Override
-    protected String getPreviewTemplate() {
+    public String getPreviewTemplate() {
         return getTemplate();
     }
 }
@@ -332,7 +329,7 @@ import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.overlays.SpellCooldownOverlay;
 
-@RegisterOverlay
+@RegisterOverlay // renderType omitted — defaults to CHAT
 private final Overlay spellCooldownOverlay = new SpellCooldownOverlay();
 ```
 
