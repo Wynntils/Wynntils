@@ -231,6 +231,10 @@ private final List<<Name>Overlay> <camelName>Overlays = new ArrayList<>();
 | Replaces/augments action bar | `ACTION_BAR` |
 | Replaces/augments boss bars | `BOSS_BARS` |
 | Replaces/augments hotbar | `HOTBAR` |
+| Crosshair area | `CROSSHAIR` |
+| Player tab list | `PLAYER_TAB_LIST` |
+| World-space / camera overlay area | `CAMERA_OVERLAYS` |
+| Replaces/augments title display | `TITLE` |
 | Must render after all GUI | `GUI_POST` |
 
 ### File 3 — `en_us.json` additions
