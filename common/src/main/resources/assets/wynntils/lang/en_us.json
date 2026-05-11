@@ -141,7 +141,7 @@
   "feature.wynntils.autoProgressDialogue.delayPerWordMs.name": "Delay Per Word (Ms)",
   "feature.wynntils.autoProgressDialogue.description": "Automatically presses shift to progress NPC dialogue after the text finishes writing.",
   "feature.wynntils.autoProgressDialogue.name": "Auto Progress Dialogue",
-  "feature.wynntils.autoProgressDialogue.skipDirectly.description": "Press shift directly after only the base delay without waiting for dialogue text to finish. If the first press reveals the full text instead of advancing, auto progress can press shift once more after the base delay.",
+  "feature.wynntils.autoProgressDialogue.skipDirectly.description": "Press shift directly after the base delay without waiting for dialogue text to finish. If the first press reveals the full text instead of advancing, it will press shift again after the base delay.",
   "feature.wynntils.autoProgressDialogue.skipDirectly.name": "Skip Directly",
   "feature.wynntils.autoSkipCutscenes.cutsceneSkipped": "Cutscene Automatically Skipped",
   "feature.wynntils.autoSkipCutscenes.description": "Automatically presses the key to skip cutscenes when prompted.",

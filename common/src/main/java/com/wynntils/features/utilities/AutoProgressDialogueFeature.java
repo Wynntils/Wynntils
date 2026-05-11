@@ -41,10 +41,10 @@ public class AutoProgressDialogueFeature extends Feature {
     private final Config<Boolean> skipDirectly = new Config<>(false);
 
     @Persisted
-    private final Config<Integer> baseDelayMs = new Config<>(1500);
+    private final Config<Integer> baseDelayMs = new Config<>(500);
 
     @Persisted
-    private final Config<Integer> delayPerWordMs = new Config<>(200);
+    private final Config<Integer> delayPerWordMs = new Config<>(50);
 
     private String lastDialogueText = "";
     private String lastDirectSkipPressedText = "";
