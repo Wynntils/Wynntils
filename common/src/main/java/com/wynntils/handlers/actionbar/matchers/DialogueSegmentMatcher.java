@@ -83,9 +83,11 @@ public final class DialogueSegmentMatcher implements ActionBarSegmentMatcher {
         // Wynncraft uses spacer glyphs inside dialogue text; collapse them without trimming real characters.
         StringBuilder output = new StringBuilder(text.length());
         boolean pendingSpace = false;
-        int[] codePoints = text.codePoints().toArray();
 
-        for (int codePoint : codePoints) {
+        for (int index = 0; index < text.length(); ) {
+            int codePoint = text.codePointAt(index);
+            index += Character.charCount(codePoint);
+
             if (isDialogueSeparator(codePoint)) {
                 pendingSpace = output.length() > 0;
                 continue;

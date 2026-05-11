@@ -86,11 +86,13 @@ public class HadesClientHandler implements IHadesClientAdapter {
                         "Got invalid token when trying to connect to the remote player server: " + packet.getMessage());
                 userComponent = Component.literal("Got invalid token when connecting the remote player server.")
                         .withStyle(ChatFormatting.RED);
+                hadesConnection.disconnect();
             }
             case ERROR -> {
                 WynntilsMod.error("Got an error trying to connect to the remote player server: " + packet.getMessage());
                 userComponent = Component.literal("Got error when connecting the remote player server.")
                         .withStyle(ChatFormatting.RED);
+                hadesConnection.disconnect();
             }
         }
 
@@ -143,5 +145,6 @@ public class HadesClientHandler implements IHadesClientAdapter {
         }
 
         userRegistry.getHadesUserMap().clear();
+        hadesConnection.disconnect();
     }
 }
