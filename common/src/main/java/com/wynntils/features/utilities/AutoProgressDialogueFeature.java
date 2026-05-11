@@ -190,7 +190,8 @@ public class AutoProgressDialogueFeature extends Feature {
 
     private void restoreShiftState() {
         LocalPlayer player = McUtils.player();
-        // If the player is already sneaking, don't send a release packet as that would interfere with their intended input.
+        // If the player is already sneaking, don't send a release packet as that would interfere with their intended
+        // input.
         if (player == null || isPlayerSneaking(player)) return;
 
         sendShift(player, isPlayerSneaking(player));
