@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.upfixers.config.ChatRedirectHorseToMountUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CombatXpGainToXpGainUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ContentTrackerTextOverlayUpfixer;
+import com.wynntils.core.persisted.upfixers.config.CoordinateOverlayToCoordinatesOverlayUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomBankQuickJumpsBankNameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomBankQuickJumpsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomCommandKeybindSlashStartUpfixer;
@@ -100,6 +101,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new ChatRedirectHorseToMountUpfixer());
         registerConfigUpfixer(new ItemStatInfoConfigRenameUpfixer());
         registerConfigUpfixer(new TelemetryFeatureToWynntilsTelemetryFeatureUpfixer());
+        registerConfigUpfixer(new CoordinateOverlayToCoordinatesOverlayUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());

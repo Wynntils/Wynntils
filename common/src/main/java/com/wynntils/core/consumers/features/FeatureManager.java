@@ -55,6 +55,7 @@ import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
+import com.wynntils.features.debug.PlayerInfoFooterDebuggerFeature;
 import com.wynntils.features.embellishments.RemoveShinyGlintFeature;
 import com.wynntils.features.embellishments.WarHornFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
@@ -215,6 +216,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new LogItemInfoFeature());
         registerFeature(new MappingProgressFeature());
         registerFeature(new PacketDebuggerFeature());
+        registerFeature(new PlayerInfoFooterDebuggerFeature());
 
         // always on
         registerFeature(new LootrunFeature());

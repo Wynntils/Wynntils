@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun.type;
@@ -9,28 +9,32 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 
 public enum MissionType {
+    // Order these the same way like https://wynncraft.wiki.gg/wiki/Lootrunning#Missions
     UNKNOWN("Unknown", ChatFormatting.WHITE),
     FAILED("Failed", ChatFormatting.DARK_RED),
 
     CLEANSING_GREED("Cleansing Greed", ChatFormatting.YELLOW),
-    HIGH_ROLLER("High Roller", ChatFormatting.YELLOW, 0, 1),
-    HOARDER("Hoarder", ChatFormatting.YELLOW),
     MATERIALISM("Materialism", ChatFormatting.YELLOW),
-    GOURMAND("Gourmand", ChatFormatting.BLUE),
+    HOARDER("Hoarder", ChatFormatting.YELLOW),
+    JESTERS_TRICK("Jester's Trick", ChatFormatting.YELLOW),
+    INTEREST_SCHEME("Interest Scheme", ChatFormatting.YELLOW),
     ORPHIONS_GRACE("Orphion's Grace", ChatFormatting.BLUE),
-    PORPHYROPHOBIA("Porphyrophobia", ChatFormatting.BLUE),
-    CHRONOKINESIS("Chronokinesis", ChatFormatting.BLUE),
-    CLEANSING_RITUAL("Cleansing Ritual", ChatFormatting.DARK_PURPLE),
+    OPAL_OFFERING("Opal Offering", ChatFormatting.BLUE),
+    GOURMAND("Gourmand", ChatFormatting.BLUE),
+    PORPHYROPHOBIA("Porphyrophobia", ChatFormatting.DARK_PURPLE),
+    SACRIFICIAL_RITUAL("Sacrificial Ritual", ChatFormatting.DARK_PURPLE),
+    RADIANT_HUNTER("Radiant Hunter", ChatFormatting.DARK_PURPLE),
     EQUILIBRIUM("Equilibrium", ChatFormatting.DARK_PURPLE),
     INNER_PEACE("Inner Peace", ChatFormatting.DARK_PURPLE),
-    COMPLETE_CHAOS("Complete Chaos", ChatFormatting.DARK_PURPLE),
-    JESTERS_TRICK("Jester's Trick", ChatFormatting.DARK_PURPLE),
-    INTEREST_SCHEME("Interest Scheme", ChatFormatting.DARK_PURPLE),
-    BACKUP_BEAT("Backup Beat", ChatFormatting.GREEN),
+    OPTIMISM("Optimism", ChatFormatting.GOLD),
+    BACKUP_BEAT("Backup Beat", ChatFormatting.GOLD),
+    REQUIEM("Requiem", ChatFormatting.GREEN),
     STASIS("Stasis", ChatFormatting.GREEN),
-    OPTIMISM("Optimism", ChatFormatting.GREEN),
-    REDEMPTION("Redemption", ChatFormatting.RED, 1, 0),
-    THRILL_SEEKER("Thrill Seeker", ChatFormatting.RED);
+    CHRONOKINESIS("Chronokinesis", ChatFormatting.GREEN),
+    THRILL_SEEKER("Thrill Seeker", ChatFormatting.RED),
+    HIGH_ROLLER("High Roller", ChatFormatting.WHITE, 0, 1),
+    REDEMPTION("Redemption", ChatFormatting.WHITE, 1, 0),
+    COMPLETE_CHAOS("Complete Chaos", ChatFormatting.WHITE);
 
     private final String name;
     private final ChatFormatting color;

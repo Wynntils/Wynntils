@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.statuseffects.type;
@@ -39,8 +39,9 @@ public class StatusEffect implements Comparable<StatusEffect> {
                 name,
                 StyledText.fromString(" "),
                 displayedTime);
-        this.modifierValue =
-                modifier == StyledText.EMPTY ? null : Double.parseDouble(modifier.getStringWithoutFormatting());
+        this.modifierValue = modifier == StyledText.EMPTY
+                ? null
+                : Double.parseDouble(modifier.getStringWithoutFormatting().replace(",", ""));
         this.duration = duration;
     }
 
