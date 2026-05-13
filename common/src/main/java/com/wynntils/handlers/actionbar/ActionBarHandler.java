@@ -48,7 +48,15 @@ public final class ActionBarHandler extends Handler {
         });
 
         if (actionBarText.isEmpty()) {
-            WynntilsMod.warn("Failed to find action bar text in packet: " + packetText.getString());
+            lastParsedActionBarText = packetText;
+            lastMatchedSegments = List.of();
+
+            WynntilsMod.postEvent(new ActionBarUpdatedEvent(lastMatchedSegments));
+
+            if (WynntilsMod.isDevelopmentBuild() || WynntilsMod.isDevelopmentEnvironment()) {
+                WynntilsMod.warn("Failed to find action bar text in packet: " + packetText.getString());
+            }
+
             return;
         }
 
