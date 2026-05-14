@@ -92,6 +92,12 @@ public class NpcDialogueFeature extends Feature {
     public void onActionBarUpdate(SystemMessageEvent.GameInfoReceivedEvent event) {
         if (event.isCanceled()) return;
 
+        // because ActionBarRenderEvent doesn't get called with empty Actionbar Text
+        // TODO: remove this block, when pull-request #4058 is merged
+        if (event.getMessage().getString().isBlank()) {
+            renderDialogue = null;
+        }
+
         manageDialogueHud(event);
 
         if (dialogueHudOptions.get() == DialogueHudOptions.HIDE) {
