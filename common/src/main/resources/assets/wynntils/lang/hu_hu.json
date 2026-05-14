@@ -224,7 +224,6 @@
   "feature.wynntils.worldWaypointDistance.backgroundOpacity.description": "Milyen átlátszósági szintje legyen a szöveg hátterének?",
   "feature.wynntils.worldWaypointDistance.textShadow.description": "Hogyan nézzen ki a szöveg árnyéka?",
   "feature.wynntils.worldWaypointDistance.textShadow.name": "Szöveg Árnyék",
-  "function.wynntils.generic.map.name": "Térkép",
   "function.wynntils.level.description": "Jelenlegi harc szinted",
   "function.wynntils.level.name": "Szint",
   "function.wynntils.xp.description": "Jelenlegi XP-d ezen a szinten pontokban kifejezve (formázott)",
@@ -240,9 +239,6 @@
   "screens.wynntils.lootruns.lootrunButton.viewInFolder": "Középső kattintás a lootrun megnyitásához a mappában",
   "screens.wynntils.lootruns.name": "Lootrunok",
   "screens.wynntils.lootruns.noLootruns": "Nem találtunk lootrunokat! Próbáld megváltoztatni a keresett kifejezést vagy töltsd újra a lootrunokat a jobb felső sarokban lévő gomb megnyomásával..",
-  "screens.wynntils.map.guildMap.name": "Szövetség Térképe",
-  "screens.wynntils.wynntilsGuides.augments.obtainLootruns": "Lootrunok",
   "screens.wynntils.wynntilsQuestBook.lootruns.description": "Kattints ide hogy megnézd a lootrunjaid.",
-  "screens.wynntils.wynntilsQuestBook.lootruns.name": "Lootrunok",
-  "wynntils.keybind.gammabright": "Gammafény"
+  "screens.wynntils.wynntilsQuestBook.lootruns.name": "Lootrunok"
 }
