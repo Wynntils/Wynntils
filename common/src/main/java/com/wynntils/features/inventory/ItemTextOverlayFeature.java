@@ -424,22 +424,23 @@ public class ItemTextOverlayFeature extends Feature {
         private static final float PERFECT_OVERALL_MIN = 100.0f;
         private static final String MARKER_SYMBOL = "✦";
 
-        private final IdentifiableItemProperty<?, ?> item;
+        private final boolean hasOverallValue;
+        private final float overallPercentage;
 
         private OverallRollMarkerOverlay(IdentifiableItemProperty<?, ?> item) {
-            this.item = item;
+            hasOverallValue = item.hasOverallValue();
+            overallPercentage = hasOverallValue ? item.getOverallPercentage() : 0.0f;
         }
 
         @Override
         public boolean isTextOverlayEnabled() {
             return overallRollMarkersEnabled.get()
-                    && item.hasOverallValue()
-                    && item.getOverallPercentage() >= GREEN_OVERALL_MIN;
+                    && hasOverallValue
+                    && overallPercentage >= GREEN_OVERALL_MIN;
         }
 
         @Override
         public TextOverlay getTextOverlay() {
-            float overallPercentage = item.getOverallPercentage();
             TextRenderSetting style = TextRenderSetting.DEFAULT.withTextShadow(overallRollMarkersShadow.get());
             TextRenderTask task;
 
