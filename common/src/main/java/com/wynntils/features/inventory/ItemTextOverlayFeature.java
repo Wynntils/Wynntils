@@ -434,9 +434,7 @@ public class ItemTextOverlayFeature extends Feature {
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return overallRollMarkersEnabled.get()
-                    && hasOverallValue
-                    && overallPercentage >= GREEN_OVERALL_MIN;
+            return overallRollMarkersEnabled.get() && hasOverallValue && overallPercentage >= GREEN_OVERALL_MIN;
         }
 
         @Override
