@@ -54,7 +54,8 @@ public final class WynnItemParser {
     private static final Pattern HEALTH_PATTERN =
             Pattern.compile("^§f\uDB00\uDC02§#(?:[a-f0-9]{8})([+-][\\d,]+)§f Health$");
 
-    private static final Pattern DPS_PATTERN = Pattern.compile("^§f\uDB00\uDC02§#(?:[a-f0-9]{8})([\\d,]+)§f DPS$");
+    // Test in WynnItemParser_DPS_PATTERN
+    private static final Pattern DPS_PATTERN = Pattern.compile("^§#(?:[a-f0-9]{8})([\\d,]+)§f DPS$");
 
     private static final Pattern DURABILITY_PATTERN =
             Pattern.compile("§8\uE023\uDAFF\uDFF7§#.{8}.§7 Durability (\\d+)\\/(\\d+)");
@@ -70,11 +71,11 @@ public final class WynnItemParser {
 
     // Test in WynnItemParser_ITEM_ATTACK_SPEED_PATTERN
     private static final Pattern ITEM_ATTACK_SPEED_PATTERN =
-            Pattern.compile("^§f\uDB00\uDC02\uE007§7 ([\\w ]+) §8\\((\\d+.\\d+) hits\\/s\\)$");
+            Pattern.compile("^§f\uE007§7 ([\\w ]+) §8\\((\\d+.\\d+) hits\\/s\\)$");
 
     // Test in WynnItemParser_ITEM_DAMAGE_PATTERN
     private static final Pattern ITEM_DAMAGE_PATTERN =
-            Pattern.compile("§f[^§]*?(?<spriteSymbol>[\uE000-\uE005])[^§]*?§7(?<range>\\d+-\\d+)");
+            Pattern.compile("§f(?:[^§]|§.)*?(?<spriteSymbol>[\uE000-\uE005])(?:[^§]|§.)*?§7(?<range>\\d+-\\d+)");
 
     private static final String ELEMENTAL_DEFENSES_LINE = "§f\uDB00\uDC02§7Elemental Defences";
 
@@ -203,6 +204,12 @@ public final class WynnItemParser {
             }
 
             if (segment == 1) {
+                StyledTextPart lastPart = normalizedCoded.getLastPart();
+                if (lastPart != null && lastPart.getPartStyle().getFont().equals(DIVIDER_FONT)) {
+                    segment++;
+                    continue;
+                }
+
                 Matcher tierMatcher = normalizedCoded.getMatcher(TIER_PATTERN);
                 if (tierMatcher.matches()) {
                     if (tier == null) {
@@ -266,6 +273,8 @@ public final class WynnItemParser {
                 }
 
                 if (parsingDamages) {
+                    if (normalizedCoded.isEmpty()) continue;
+
                     if (!normalizedCoded.getLastPart().getPartStyle().getFont().equals(DIVIDER_FONT)) {
                         Matcher damageMatcher = normalizedCoded.getMatcher(ITEM_DAMAGE_PATTERN);
 
@@ -294,12 +303,6 @@ public final class WynnItemParser {
                         }
                         continue;
                     }
-                }
-
-                StyledTextPart lastPart = normalizedCoded.getLastPart();
-                if (lastPart != null && lastPart.getPartStyle().getFont().equals(DIVIDER_FONT)) {
-                    segment++;
-                    continue;
                 }
             }
 

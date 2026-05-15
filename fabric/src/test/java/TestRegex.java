@@ -870,6 +870,15 @@ public class TestRegex {
     }
 
     @Test
+    public void WynnItemParser_DPS_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "DPS_PATTERN");
+        p.shouldMatch("§#f2c2f2ff330§f DPS");
+        p.shouldMatch("§#e0b3e6ff759§f DPS");
+        p.shouldMatch("§#cff9f9ff516§f DPS");
+        p.shouldMatch("§#e0b3e6ff1,009§f DPS");
+    }
+
+    @Test
     public void WynnItemParser_DURABILITY_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "DURABILITY_PATTERN");
         p.shouldMatch("§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01B§7 Durability 163/194");
@@ -881,8 +890,9 @@ public class TestRegex {
     @Test
     public void WynnItemParser_ITEM_ATTACK_SPEED_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "ITEM_ATTACK_SPEED_PATTERN");
-        p.shouldMatch("§f\uDB00\uDC02\uE007§7 Slow §8(1.5 hits/s)");
-        p.shouldMatch("§f\uDB00\uDC02\uE007§7 Very Fast §8(3.1 hits/s)");
+        p.shouldMatch("§f\uE007§7 Slow §8(1.5 hits/s)");
+        p.shouldMatch("§f\uE007§7 Very Fast §8(3.1 hits/s)");
+        p.shouldMatch("§f\uE007§7 Normal §8(2.05 hits/s)");
     }
 
     @Test
@@ -904,6 +914,7 @@ public class TestRegex {
         p.shouldFind(
                 "§f\uDB00\uDC02\uDAFF\uDFFF\uE005\uDAFF\uDFFF §766-90§f \uE001\uDAFF\uDFFF §774-139§f \uE002 §7170-310",
                 3);
+        p.shouldFind("§f\uE003§r§f §7215-343", 1);
     }
 
     @Test

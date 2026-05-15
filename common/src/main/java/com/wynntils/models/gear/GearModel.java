@@ -94,6 +94,18 @@ public final class GearModel extends Model {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
 
+        // Temporary check for ascended items as they have no visible difference beside the stats at the moment
+        if (result.level() != gearInfo.requirements().level() && gearInfo.tier() == GearTier.MYTHIC) {
+            WynntilsMod.warn("Gear level for " + gearInfo.name() + " is reported as " + result.level());
+            GearInfo ascendedGearInfo = Models.Gear.getGearInfoFromDisplayName("Masterwork " + gearInfo.name());
+            if (ascendedGearInfo != null && ascendedGearInfo.requirements().level() == result.level()) {
+                WynntilsMod.info("Parsing " + gearInfo.name() + " as an ascended item");
+                return parseInstance(ascendedGearInfo, itemStack, isUnidentified);
+            } else {
+                WynntilsMod.warn("No ascended gear info found for " + gearInfo.name());
+            }
+        }
+
         GearInstance gearInstance = null;
         if (!isUnidentified) {
             gearInstance = GearInstance.create(
