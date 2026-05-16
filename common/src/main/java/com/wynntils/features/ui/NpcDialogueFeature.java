@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
+import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.models.characterstats.actionbar.segments.DialogueSegment;
@@ -58,13 +59,17 @@ public class NpcDialogueFeature extends Feature {
 
     @SubscribeEvent
     public void onActionBarRender(ActionBarRenderEvent event) {
+        event.setSegmentEnabled(DialogueSegment.class, !Models.NpcDialogue.renderOverChat);
+    }
+
+    @SubscribeEvent
+    public void onActionBarUpdate(ActionBarUpdatedEvent event) {
         renderDialogue = null;
         for (ActionBarSegment segment : event.getSegments()) {
             if (segment instanceof DialogueSegment dialogueSegment) {
                 renderDialogue = dialogueSegment.getDialogue().getComponent();
             }
         }
-        event.setSegmentEnabled(DialogueSegment.class, !Models.NpcDialogue.renderOverChat);
     }
 
     @SubscribeEvent
