@@ -57,26 +57,11 @@ public class NpcDialogueFeature extends Feature {
     private volatile Component lastModifiedComp;
     private int eqCount = 0;
 
-    private Component renderDialogue;
-
-    @SubscribeEvent
-    public void onActionBarRender(ActionBarRenderEvent event) {
-        event.setSegmentEnabled(DialogueSegment.class, !Models.NpcDialogue.renderOverChat);
-    }
-
-    @SubscribeEvent
-    public void onActionBarUpdate(ActionBarUpdatedEvent event) {
-        renderDialogue = null;
-        for (ActionBarSegment segment : event.getSegments()) {
-            if (segment instanceof DialogueSegment dialogueSegment) {
-                renderDialogue = dialogueSegment.getDialogue().getComponent();
-            }
-        }
-    }
-
     @SubscribeEvent
     public void onChatRenderPost(RenderEvent.Post event) {
-        if (Models.NpcDialogue.renderOverChat && renderDialogue != null) {
+        Component tempDialogue = Models.NpcDialogue.renderDialogue;
+
+        if (Models.NpcDialogue.renderOverChat && tempDialogue != null) {
             Profiler.get().push("dialogueOverlay");
 
             Font font = McUtils.mc().font;
@@ -87,8 +72,8 @@ public class NpcDialogueFeature extends Feature {
             guiGraphics.pose().translate((float) (guiGraphics.guiWidth() / 2), (float) (guiGraphics.guiHeight() - 68));
             int j = ARGB.white(255);
 
-            int k = font.width(renderDialogue);
-            guiGraphics.drawStringWithBackdrop(font, renderDialogue, -k / 2, -4, k, j);
+            int k = font.width(tempDialogue);
+            guiGraphics.drawStringWithBackdrop(font, tempDialogue, -k / 2, -4, k, j);
             guiGraphics.pose().popMatrix();
 
             Profiler.get().pop();

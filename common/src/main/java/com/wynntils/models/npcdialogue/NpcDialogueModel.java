@@ -8,7 +8,11 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.actionbar.ActionBarSegment;
+import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
+import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.models.characterstats.actionbar.matchers.DialogueSegmentMatcher;
+import com.wynntils.models.characterstats.actionbar.segments.DialogueSegment;
 import com.wynntils.models.npcdialogue.event.DialogueProcessedEvent;
 import com.wynntils.models.npcdialogue.event.TranslationRequestEvent;
 import com.wynntils.utils.colors.ColorChatFormatting;
@@ -21,6 +25,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class NpcDialogueModel extends Model {
     // very fast small and synchronous cache
@@ -30,10 +35,26 @@ public final class NpcDialogueModel extends Model {
 
     // maybe some other features need this. It's only true when the renderOverChat option AND the feature is enabled
     public boolean renderOverChat;
+    public Component renderDialogue;
 
     public NpcDialogueModel() {
         super(List.of());
         Handlers.ActionBar.registerSegment(new DialogueSegmentMatcher());
+    }
+
+    @SubscribeEvent
+    public void onActionBarRender(ActionBarRenderEvent event) {
+        event.setSegmentEnabled(DialogueSegment.class, renderOverChat);
+    }
+
+    @SubscribeEvent
+    public void onActionBarUpdate(ActionBarUpdatedEvent event) {
+        renderDialogue = null;
+        for (ActionBarSegment segment : event.getSegments()) {
+            if (segment instanceof DialogueSegment dialogueSegment) {
+                renderDialogue = dialogueSegment.getDialogue().getComponent();
+            }
+        }
     }
 
     public void requestDialogueTranslation(String text, Consumer<String> consumer) {
