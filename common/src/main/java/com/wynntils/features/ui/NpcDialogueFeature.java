@@ -39,13 +39,13 @@ public class NpcDialogueFeature extends Feature {
     private final Config<Boolean> renderOverChat = new Config<>(true);
 
     @Persisted
-    private final Config<Boolean> sendToChat = new Config<>(true);
+    private final Config<Boolean> sendToChat = new Config<>(false);
 
     @Persisted
     private final Config<ColorChatFormatting> chatColor = new Config<>(ColorChatFormatting.GREEN);
 
     public NpcDialogueFeature() {
-        super(ProfileDefault.DISABLED);
+        super(ProfileDefault.ENABLED);
     }
 
     private String lastText;
