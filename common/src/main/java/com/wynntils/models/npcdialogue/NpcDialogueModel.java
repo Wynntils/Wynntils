@@ -49,12 +49,11 @@ public final class NpcDialogueModel extends Model {
 
     @SubscribeEvent
     public void onActionBarUpdate(ActionBarUpdatedEvent event) {
-        renderDialogue = null;
-        for (ActionBarSegment segment : event.getSegments()) {
-            if (segment instanceof DialogueSegment dialogueSegment) {
-                renderDialogue = dialogueSegment.getDialogue().getComponent();
-            }
-        }
+        event.runIfPresentOrElse(DialogueSegment.class, dialogueSegment -> {
+            renderDialogue = dialogueSegment.getDialogue().getComponent();
+        }, () -> {
+            renderDialogue = null;
+        });
     }
 
     public void requestDialogueTranslation(String text, Consumer<String> consumer) {
