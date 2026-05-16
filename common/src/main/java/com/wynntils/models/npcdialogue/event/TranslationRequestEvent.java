@@ -56,7 +56,7 @@ public class TranslationRequestEvent extends Event implements ICancellableEvent 
         try {
             consumer.accept(translatedText);
         } catch (RuntimeException exception) {
-            WynntilsMod.getLogger().error(exception.getMessage(), exception);
+            WynntilsMod.error(exception.getMessage(), exception);
         }
     }
 }
