@@ -10,21 +10,21 @@ import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.wynn.LocationUtils;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.network.chat.Style;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class ChatCoordinatesFeature extends Feature {
@@ -40,7 +40,7 @@ public class ChatCoordinatesFeature extends Feature {
     public void onChatReceived(ChatMessageEvent.Edit e) {
         if (!Models.WorldState.onWorld()) return;
 
-        StyledText message = e.getMessage();
+        StyledText message = StyledTextUtils.unwrap(e.getMessage());
 
         StyledText modified = getStyledTextWithCoordinatesInserted(message);
 
@@ -51,49 +51,82 @@ public class ChatCoordinatesFeature extends Feature {
     }
 
     private static StyledText getStyledTextWithCoordinatesInserted(StyledText styledText) {
-        return styledText.iterateBackwards((part, changes) -> {
-            if (END_OF_HEADER_PATTERN
-                    .matcher(part.getString(null, StyleType.NONE))
-                    .matches()) {
-                return IterationDecision.BREAK;
+        String message = styledText.getString(StyleType.NONE);
+        int headerEndIndex = getHeaderEndIndex(styledText);
+
+        StringBuilder searchableMessage = new StringBuilder(message.length());
+        int[] originalIndexes = new int[message.length()];
+
+        // Match against one plain string so coordinates split across styled chat parts still count as one location.
+        for (int i = 0; i < message.length(); i++) {
+            char character = message.charAt(i);
+            if (character == '\n' || character == '\r') continue;
+
+            originalIndexes[searchableMessage.length()] = i;
+            searchableMessage.append(character);
+        }
+
+        Matcher matcher = LocationUtils.strictCoordinateMatcher(searchableMessage.toString());
+        List<StyledTextPart> parts = null;
+        int currentIndex = 0;
+
+        while (matcher.find()) {
+            Optional<Location> location = LocationUtils.parseFromString(matcher.group(1));
+
+            if (location.isEmpty()) {
+                continue;
             }
 
-            StyledTextPart partToReplace = part;
-            Matcher matcher = LocationUtils.strictCoordinateMatcher(partToReplace.getString(null, StyleType.NONE));
+            int startIndex = originalIndexes[matcher.start(1)];
+            int endIndex = originalIndexes[matcher.end(1) - 1] + 1;
 
-            while (matcher.find()) {
-                Optional<Location> location = LocationUtils.parseFromString(matcher.group(1));
-
-                if (location.isEmpty()) {
-                    continue;
-                }
-
-                String match = partToReplace.getString(null, StyleType.NONE);
-
-                String firstPart = match.substring(0, matcher.start(1));
-                String lastPart = match.substring(matcher.end(1));
-
-                if (firstPart.endsWith("[") && lastPart.startsWith("]")) {
-                    firstPart = firstPart.substring(0, firstPart.length() - 1);
-                    lastPart = lastPart.substring(1);
-                }
-
-                PartStyle partStyle = partToReplace.getPartStyle();
-
-                StyledTextPart first = new StyledTextPart(firstPart, partStyle.getStyle(), null, Style.EMPTY);
-                StyledTextPart coordinate = StyledTextUtils.createLocationPart(location.get());
-                StyledTextPart last = new StyledTextPart(lastPart, partStyle.getStyle(), null, Style.EMPTY);
-
-                changes.remove(partToReplace);
-                changes.add(first);
-                changes.add(coordinate);
-                changes.add(last);
-
-                partToReplace = last;
-                matcher = LocationUtils.strictCoordinateMatcher(lastPart);
+            if (startIndex < headerEndIndex) {
+                continue;
             }
 
-            return IterationDecision.CONTINUE;
-        });
+            if (startIndex > 0
+                    && endIndex < message.length()
+                    && message.charAt(startIndex - 1) == '['
+                    && message.charAt(endIndex) == ']') {
+                startIndex--;
+                endIndex++;
+            }
+
+            if (parts == null) {
+                parts = new ArrayList<>();
+            }
+
+            // Rebuild from original StyledText ranges so formatting around the coordinate is preserved.
+            addParts(parts, styledText.substring(currentIndex, startIndex, StyleType.NONE));
+            parts.add(StyledTextUtils.createLocationPart(location.get()));
+            currentIndex = endIndex;
+        }
+
+        if (parts == null) return styledText;
+
+        addParts(parts, styledText.substring(currentIndex, StyleType.NONE));
+
+        return StyledText.fromParts(parts);
+    }
+
+    private static int getHeaderEndIndex(StyledText styledText) {
+        int currentIndex = 0;
+
+        for (StyledTextPart part : styledText) {
+            String partText = part.getString(null, StyleType.NONE);
+            currentIndex += partText.length();
+
+            if (END_OF_HEADER_PATTERN.matcher(partText).matches()) {
+                return currentIndex;
+            }
+        }
+
+        return 0;
+    }
+
+    private static void addParts(List<StyledTextPart> parts, StyledText text) {
+        for (StyledTextPart part : text) {
+            parts.add(part);
+        }
     }
 }
