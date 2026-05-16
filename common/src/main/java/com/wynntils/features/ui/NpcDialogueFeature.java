@@ -20,6 +20,7 @@ import com.wynntils.models.characterstats.actionbar.segments.DialogueSegment;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.DialogueUtils;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -62,6 +63,10 @@ public class NpcDialogueFeature extends Feature {
         Component tempDialogue = Models.NpcDialogue.renderDialogue;
 
         if (Models.NpcDialogue.renderOverChat && tempDialogue != null) {
+            /**
+             * This mirrors the dialogue overlay rendering logic from Minecraft's
+             * {@link net.minecraft.client.gui.Gui#renderOverlayMessage(GuiGraphics, DeltaTracker)}.
+             */
             Profiler.get().push("dialogueOverlay");
 
             Font font = McUtils.mc().font;
