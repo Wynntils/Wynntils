@@ -8,8 +8,6 @@ import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import java.io.File;
-import java.util.UUID;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -28,6 +26,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
+
+import java.io.File;
+import java.util.UUID;
 
 /**
  * This is a "high-quality misc" class for Minecraft utilities without an aspect on Wynntils
@@ -145,7 +146,7 @@ public final class McUtils {
 
     public static void sendWynntilsPrefixMessage(Component component) {
         StyledText styledText = StyledText.fromComponent(component);
-        StyledText wrapedText = StyledTextUtils.addWynntilsPrefix(styledText);
+        StyledText wrapedText = StyledTextUtils.softWrapWithWynntilsPrefix(styledText);
 
         sendMessageToClient(wrapedText.getComponent());
     }

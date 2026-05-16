@@ -16,7 +16,8 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.StyledTextUtils;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,7 +28,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import net.neoforged.bus.api.SubscribeEvent;
 
 public final class FriendsModel extends Model {
     // \uE008\uE002 is for the first line
@@ -102,7 +102,7 @@ public final class FriendsModel extends Model {
 
     @SubscribeEvent
     public void onChatReceived(ChatMessageEvent.Match event) {
-        StyledText styledText = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
+        StyledText styledText = event.getMessage();
         String unformatted = styledText.getStringWithoutFormatting();
 
         Matcher joinMatcher = styledText.getMatcher(JOIN_PATTERN);

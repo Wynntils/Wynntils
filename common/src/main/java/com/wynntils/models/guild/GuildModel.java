@@ -39,8 +39,10 @@ import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.CappedValue;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,8 +57,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.SubscribeEvent;
 
 public final class GuildModel extends Model {
     private static final Gson GUILD_PROFILE_GSON = new GsonBuilder()
@@ -192,9 +192,7 @@ public final class GuildModel extends Model {
             return;
         }
 
-        StyledText unwrapped = StyledTextUtils.unwrap(message).stripAlignment();
-
-        Matcher memberLeftMatcher = unwrapped.getMatcher(MEMBER_LEFT);
+        Matcher memberLeftMatcher = message.getMatcher(MEMBER_LEFT);
         if (memberLeftMatcher.matches()) {
             String playerName = memberLeftMatcher.group(2);
             WynntilsMod.info("Player " + playerName + " left guild");
@@ -204,7 +202,7 @@ public final class GuildModel extends Model {
             return;
         }
 
-        Matcher memberJoinedMatcher = unwrapped.getMatcher(MEMBER_JOIN);
+        Matcher memberJoinedMatcher = message.getMatcher(MEMBER_JOIN);
         if (memberJoinedMatcher.matches()) {
             String playerName = memberJoinedMatcher.group(2);
             WynntilsMod.info("Player " + playerName + " joined guild");
@@ -214,7 +212,7 @@ public final class GuildModel extends Model {
             return;
         }
 
-        Matcher memberKickedMatcher = unwrapped.getMatcher(MEMBER_KICKED);
+        Matcher memberKickedMatcher = message.getMatcher(MEMBER_KICKED);
         if (memberKickedMatcher.matches()) {
             String playerName = memberKickedMatcher.group(2);
 

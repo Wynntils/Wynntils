@@ -17,7 +17,8 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombSortOrder;
 import com.wynntils.models.worlds.type.BombType;
-import com.wynntils.utils.mc.StyledTextUtils;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
@@ -29,7 +30,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import net.neoforged.bus.api.SubscribeEvent;
 
 public final class BombModel extends Model {
     private static final TrackedBar InfoBar = new InfoBar();
@@ -59,9 +59,8 @@ public final class BombModel extends Model {
     @SubscribeEvent
     public void onChat(ChatMessageEvent.Match event) {
         StyledText message = event.getMessage();
-        StyledText unwrapped = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
 
-        Matcher bellMatcher = unwrapped.getMatcher(BOMB_BELL_PATTERN);
+        Matcher bellMatcher = message.getMatcher(BOMB_BELL_PATTERN);
         if (bellMatcher.matches()) {
             BombInfo bombInfo = addBombFromChat(
                     bellMatcher.group("user"),
@@ -75,7 +74,7 @@ public final class BombModel extends Model {
             return;
         }
 
-        Matcher localMatcher = unwrapped.getMatcher(BOMB_THROWN_PATTERN);
+        Matcher localMatcher = message.getMatcher(BOMB_THROWN_PATTERN);
         if (localMatcher.matches()) {
             // FIXME: User is sent on following chat line, we don't currently use the name anywhere but if we do in
             //  the future then this needs fixing
@@ -88,7 +87,7 @@ public final class BombModel extends Model {
             return;
         }
 
-        Matcher expiredMatcher = unwrapped.getMatcher(BOMB_EXPIRED_PATTERN);
+        Matcher expiredMatcher = message.getMatcher(BOMB_EXPIRED_PATTERN);
         if (expiredMatcher.matches()) {
             String bomb = expiredMatcher.group("bomb");
 
