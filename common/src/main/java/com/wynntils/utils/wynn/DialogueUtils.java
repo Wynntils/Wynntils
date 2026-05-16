@@ -31,21 +31,21 @@ public final class DialogueUtils {
     public static final Style[] style_body = new Style[5];
     public static final FontDescription[] font_choice = new FontDescription[4];
     public static final FontDescription font_nameplate =
-            new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/nameplate"));
+            new FontDescription.Resource(Identifier.withDefaultNamespace("hud/dialogue/text/nameplate"));
     public static final FontDescription font_portrait =
-            new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/portrait"));
+            new FontDescription.Resource(Identifier.withDefaultNamespace("hud/dialogue/portrait"));
     public static final FontDescription font_press_shift =
-            new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/control"));
+            new FontDescription.Resource(Identifier.withDefaultNamespace("hud/dialogue/text/control"));
 
     static {
         for (int i = 0; i < font_body.length; i++) {
             font_body[i] =
-                    new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/wynncraft/body_" + i));
+                    new FontDescription.Resource(Identifier.withDefaultNamespace("hud/dialogue/text/wynncraft/body_" + i));
             style_body[i] = Style.EMPTY.withFont(font_body[i]);
         }
         for (int i = 0; i < font_choice.length; i++) {
             font_choice[i] =
-                    new FontDescription.Resource(Identifier.parse("minecraft:hud/dialogue/text/wynncraft/choice_" + i));
+                    new FontDescription.Resource(Identifier.withDefaultNamespace("hud/dialogue/text/wynncraft/choice_" + i));
         }
     }
 
