@@ -20,6 +20,7 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -106,6 +107,7 @@ public final class PartyModel extends Model {
     private List<String> partyMembers = new ArrayList<>(); // A set of Strings representing all party members
     private Set<String> offlineMembers =
             new HashSet<>(); // A set of Strings representing all offline (disconnected) party members
+    private List<CappedValue> partyMemberHealths = new ArrayList<>();
 
     public PartyModel() {
         super(List.of());
@@ -334,6 +336,7 @@ public final class PartyModel extends Model {
         partyLeader = null;
         inParty = false;
         offlineMembers = new HashSet<>();
+        partyMemberHealths = new ArrayList<>();
 
         WynntilsMod.postEvent(new HadesRelationsUpdateEvent.PartyList(
                 Set.copyOf(partyMembers), HadesRelationsUpdateEvent.ChangeType.RELOAD));
@@ -396,6 +399,14 @@ public final class PartyModel extends Model {
 
     public Set<String> getOfflineMembers() {
         return offlineMembers;
+    }
+
+    public List<CappedValue> getPartyMemberHealths() {
+        return partyMemberHealths;
+    }
+
+    public void setPartyMemberHealth(int index, CappedValue value) {
+        partyMemberHealths.set(index, value);
     }
 
     @SubscribeEvent

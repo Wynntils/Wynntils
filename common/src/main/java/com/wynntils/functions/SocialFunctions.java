@@ -11,6 +11,8 @@ import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
+
+import com.wynntils.utils.type.CappedValue;
 import net.minecraft.network.chat.Component;
 
 public class SocialFunctions {
@@ -43,6 +45,38 @@ public class SocialFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             return Models.Party.getPartyLeader().orElse("");
+        }
+    }
+
+    public static class PartyMemberNameFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("index").getIntegerValue();
+            List<String> members = Models.Party.getPartyMembers();
+            return !members.isEmpty() && index >= 0 && index < members.size()
+                    ? members.get(index)
+                    : "";
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
+        }
+    }
+
+    public static class PartyMemberHealthFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("index").getIntegerValue();
+            List<CappedValue> healths = Models.Party.getPartyMemberHealths();
+            return !healths.isEmpty() && index >= 0 && index < healths.size()
+                    ? healths.get(index)
+                    : CappedValue.EMPTY;
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
         }
     }
 
