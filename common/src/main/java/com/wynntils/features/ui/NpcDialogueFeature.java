@@ -45,7 +45,7 @@ public class NpcDialogueFeature extends Feature {
         super(ProfileDefault.ENABLED);
     }
 
-    private static final int minimumEqualMessages = 6;
+    private static final int MINIMUM_EQUAL_MESSAGES = 6;
 
     private String lastText;
     private volatile String lastDispatched;
@@ -106,7 +106,7 @@ public class NpcDialogueFeature extends Feature {
 
         // Only start translating, when the message writing is done and not changing anymore.
         // 6 packets with the same text content = message is complete
-        if (eqCount < minimumEqualMessages) return;
+        if (eqCount < MINIMUM_EQUAL_MESSAGES) return;
 
         // Get tanslated Text from Cache or Null if isn't present.
         String translatedText = Models.NpcDialogue.getFromCache(currentText);
@@ -116,7 +116,7 @@ public class NpcDialogueFeature extends Feature {
             lastModifiedComp = null;
             lastComponent = event.getMessage();
 
-            if (eqCount == minimumEqualMessages) {
+            if (eqCount == MINIMUM_EQUAL_MESSAGES) {
                 // start translation (only once)
                 startTranslationAndDispatch(currentText, content);
             }
