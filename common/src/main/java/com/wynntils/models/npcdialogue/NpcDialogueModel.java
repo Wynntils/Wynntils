@@ -95,10 +95,10 @@ public final class NpcDialogueModel extends Model {
      * this method will get called once per Dialogue
      * */
     public void dispatchContent(DialogueUtils.Content content, String translatedText, boolean sendToChat) {
-        WynntilsMod.getLogger()
-                .debug("[{}] Original Text: \"{}\"", this.getClass().getSimpleName(), content.getText());
-        WynntilsMod.getLogger()
-                .debug("[{}] Translated Text: \"{}\"", this.getClass().getSimpleName(), translatedText);
+        WynntilsMod.info(
+                "[" + this.getClass().getSimpleName() + "] Original Text: \"" + content.getText() + "\"");
+        WynntilsMod.info(
+                "[" + this.getClass().getSimpleName() + "] Translated Text: \"" + translatedText + "\"");
 
         if (sendToChat) {
             sendChat(content, translatedText);
