@@ -89,15 +89,9 @@ public class ChatCoordinatesFeature extends Feature {
 
             int replacementStartIndex = getBracketAwareStartIndex(message, startIndex);
             int replacementEndIndex = getBracketAwareEndIndex(message, endIndex);
-            String trailingText = replacementStartIndex == startIndex
-                            && replacementEndIndex == endIndex
-                            && shouldInsertComma(message, endIndex)
-                    ? ","
-                    : "";
 
             // Replace only the logical coordinate range; ChatHandler rebuilds the chat wrap after edit events.
-            replacements.add(
-                    new LocationReplacement(replacementStartIndex, replacementEndIndex, trailingText, location.get()));
+            replacements.add(new LocationReplacement(replacementStartIndex, replacementEndIndex, location.get()));
         }
 
         if (replacements == null) return styledText;
@@ -145,7 +139,6 @@ public class ChatCoordinatesFeature extends Feature {
 
                 if (replacement.startIndex >= partStartIndex) {
                     parts.add(StyledTextUtils.createLocationPart(replacement.location));
-                    addOriginalPart(parts, part, replacement.trailingText);
                 }
 
                 partOffset = replacementEndInPart;
@@ -241,32 +234,14 @@ public class ChatCoordinatesFeature extends Feature {
         return index < message.length() && message.charAt(index) == ']' ? index + 1 : coordinateEndIndex;
     }
 
-    /**
-     * Adds a comma after a normalized coordinate only when the original message had plain whitespace after it.
-     * <p>
-     * Example: {@code at -1437,124,-1256 on the side} becomes {@code at [-1437, 124, -1256], on the side}.
-     */
-    private static boolean shouldInsertComma(String message, int coordinateEndIndex) {
-        for (int i = coordinateEndIndex; i < message.length(); i++) {
-            char character = message.charAt(i);
-            if (character == ',' || character == '.' || character == ';' || character == ':') return false;
-            if (Character.isWhitespace(character)) return true;
-            return false;
-        }
-
-        return false;
-    }
-
     private static class LocationReplacement {
         private final int startIndex;
         private final int endIndex;
-        private final String trailingText;
         private final Location location;
 
-        private LocationReplacement(int startIndex, int endIndex, String trailingText, Location location) {
+        private LocationReplacement(int startIndex, int endIndex, Location location) {
             this.startIndex = startIndex;
             this.endIndex = endIndex;
-            this.trailingText = trailingText;
             this.location = location;
         }
     }

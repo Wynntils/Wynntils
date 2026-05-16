@@ -252,28 +252,16 @@ public final class StyledTextUtils {
         int currentWidth = lastWidth;
         int spaceWidth = FontRenderer.getInstance().getFont().width(" ");
         Style partStyle = part.getPartStyle().getStyle();
-        int displayLength = FontRenderer.getInstance().getFont().width(part.getComponent());
-
-        if (part.getPartStyle().getClickEvent() != null || part.getPartStyle().getHoverEvent() != null) {
-            if (currentWidth + displayLength <= maxWidth) {
-                newParts.add(part);
-                return currentWidth + displayLength;
-            }
-
-            if (displayLength <= maxWidth) {
-                if (currentWidth > 0) {
-                    newParts.add(new StyledTextPart(NEWLINE_PREPARATION, partStyle, null, null));
-                }
-                newParts.add(part);
-                return displayLength;
-            }
-        }
-
         StyledTextPart spacePart = new StyledTextPart(" ", partStyle, null, null);
         StyledTextPart newlinePart = new StyledTextPart(NEWLINE_PREPARATION, partStyle, null, null);
 
+        String partText = part.getString(null, StyleType.NONE);
+        boolean hasTrailingWhitespace =
+                !partText.isEmpty() && Character.isWhitespace(partText.charAt(partText.length() - 1));
+
         StyledText[] split = StyledText.fromPart(part).split("\\s+");
-        for (StyledText splitText : split) {
+        for (int splitIndex = 0; splitIndex < split.length; splitIndex++) {
+            StyledText splitText = split[splitIndex];
             if (splitText.getPartCount() == 0) {
                 // If orignal part started with space
                 currentWidth += spaceWidth;
@@ -288,15 +276,18 @@ public final class StyledTextUtils {
             }
 
             StyledTextPart splitPart = splitText.getFirstPart();
+            boolean addSpaceAfterSplitPart = splitIndex < split.length - 1 || hasTrailingWhitespace;
             int splitDisplayLength = FontRenderer.getInstance()
                     .getFont()
-                    .width(splitPart.getComponent().append(" "));
+                    .width(addSpaceAfterSplitPart ? splitPart.getComponent().append(" ") : splitPart.getComponent());
 
             // If word fits into the current line - append it including a space
             if (currentWidth + splitDisplayLength <= maxWidth) {
                 currentWidth += splitDisplayLength;
                 newParts.add(splitPart);
-                newParts.add(spacePart);
+                if (addSpaceAfterSplitPart) {
+                    newParts.add(spacePart);
+                }
                 continue;
             }
 
@@ -307,6 +298,10 @@ public final class StyledTextUtils {
                     newParts.add(newlinePart);
                 }
                 currentWidth = wrapPartAsChars(splitPart, maxWidth, 0, newParts);
+
+                if (!addSpaceAfterSplitPart) {
+                    continue;
+                }
 
                 if (currentWidth + spaceWidth <= maxWidth) {
                     newParts.add(spacePart);
@@ -321,6 +316,10 @@ public final class StyledTextUtils {
 
             if (currentWidth <= 0) {
                 currentWidth = wrapPartAsChars(splitPart, maxWidth, currentWidth, newParts);
+                if (!addSpaceAfterSplitPart) {
+                    continue;
+                }
+
                 if (currentWidth + spaceWidth <= maxWidth) {
                     newParts.add(spacePart);
                     currentWidth += spaceWidth;
@@ -334,7 +333,9 @@ public final class StyledTextUtils {
 
             newParts.add(newlinePart);
             newParts.add(splitPart);
-            newParts.add(spacePart);
+            if (addSpaceAfterSplitPart) {
+                newParts.add(spacePart);
+            }
             currentWidth = splitDisplayLength;
         }
 
