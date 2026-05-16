@@ -28,11 +28,13 @@ import net.neoforged.bus.api.SubscribeEvent;
  * Automatically sends short shift pulses for Wynncraft NPC dialogue.
  *
  * <p>Normal mode waits until the dialogue HUD exposes its shift-to-continue control. Skip Directly mode starts from the
- * first dialogue update so it can interrupt the text animation after the base delay.
+ * first dialogue update so it can interrupt the text animation after the base delay. When the direct base delay is
+ * smaller and less than MIN_DELAY_FOR_SHIFT_PULSE, it holds shift instead of sending repeated pulses.
  */
 @ConfigCategory(Category.UTILITIES)
 public class AutoProgressDialogueFeature extends Feature {
     private static final int SHIFT_RELEASE_DELAY_MS = 200;
+    private static final int MIN_DELAY_FOR_SHIFT_PULSE = 50;
 
     @RegisterKeyBind
     private final KeyBind cancelAutoProgress =
@@ -54,6 +56,7 @@ public class AutoProgressDialogueFeature extends Feature {
     private long progressAtMs = 0L;
     private long releaseShiftAtMs = 0L;
     private boolean waitingToReleaseShift = false;
+    private boolean holdingDirectSkipShift = false;
 
     public AutoProgressDialogueFeature() {
         super(ProfileDefault.DISABLED);
@@ -93,6 +96,11 @@ public class AutoProgressDialogueFeature extends Feature {
     }
 
     private void onDirectDialogueUpdate(DialogueSegment dialogueSegment) {
+        if (isDirectHoldMode()) {
+            onDirectHoldDialogueUpdate(dialogueSegment);
+            return;
+        }
+
         String dialogueText = dialogueSegment.getDialogueText();
         if (dialogueSegment.hasChoices()) {
             cancelScheduledProgress();
@@ -115,6 +123,21 @@ public class AutoProgressDialogueFeature extends Feature {
         progressAtMs = System.currentTimeMillis() + getProgressDelayMs(dialogueText);
     }
 
+    private void onDirectHoldDialogueUpdate(DialogueSegment dialogueSegment) {
+        String dialogueText = dialogueSegment.getDialogueText();
+        lastDialogueText = dialogueText;
+
+        if (dialogueSegment.hasChoices() || !dialogueSegment.requiresShift()) {
+            cancelScheduledProgress();
+            return;
+        }
+
+        if (holdingDirectSkipShift || progressAtMs > 0L) return;
+
+        scheduledDialogueText = dialogueText;
+        progressAtMs = System.currentTimeMillis() + getBaseDelayMs();
+    }
+
     private void onDialogueGone() {
         clearDialogueState();
     }
@@ -127,21 +150,30 @@ public class AutoProgressDialogueFeature extends Feature {
         }
 
         long now = System.currentTimeMillis();
+        if (holdingDirectSkipShift && !isDirectHoldMode()) {
+            stopDirectSkipHold();
+        }
+
         if (progressAtMs > 0L && now >= progressAtMs) {
             String progressedDialogueText = scheduledDialogueText;
             progressAtMs = 0L;
             scheduledDialogueText = "";
 
-            boolean shiftPulseSent = sendShiftPulse();
-            if (shiftPulseSent) {
-                // Direct skip may need one press to reveal the full line and one more to advance it.
-                if (skipDirectly.get()) {
-                    lastDirectSkipPressedText = lastDialogueText.isBlank() ? progressedDialogueText : lastDialogueText;
-                    directSkipPressesForDialogue++;
-                }
+            if (isDirectHoldMode()) {
+                holdingDirectSkipShift = holdShiftForDirectSkip();
+            } else {
+                boolean shiftPulseSent = sendShiftPulse();
+                if (shiftPulseSent) {
+                    // Direct skip may need one press to reveal the full line and one more to advance it.
+                    if (skipDirectly.get()) {
+                        lastDirectSkipPressedText =
+                                lastDialogueText.isBlank() ? progressedDialogueText : lastDialogueText;
+                        directSkipPressesForDialogue++;
+                    }
 
-                releaseShiftAtMs = now + SHIFT_RELEASE_DELAY_MS;
-                waitingToReleaseShift = true;
+                    releaseShiftAtMs = now + SHIFT_RELEASE_DELAY_MS;
+                    waitingToReleaseShift = true;
+                }
             }
         }
 
@@ -163,13 +195,21 @@ public class AutoProgressDialogueFeature extends Feature {
     }
 
     private long getProgressDelayMs(String dialogueText) {
-        int baseDelay = Math.max(0, baseDelayMs.get());
+        int baseDelay = getBaseDelayMs();
         if (skipDirectly.get()) return baseDelay;
 
         int words = dialogueText.isBlank() ? 0 : dialogueText.trim().split("\\s+").length;
         int wordDelay = Math.max(0, delayPerWordMs.get());
 
         return baseDelay + ((long) words * wordDelay);
+    }
+
+    private int getBaseDelayMs() {
+        return Math.max(0, baseDelayMs.get());
+    }
+
+    private boolean isDirectHoldMode() {
+        return skipDirectly.get() && getBaseDelayMs() <= MIN_DELAY_FOR_SHIFT_PULSE;
     }
 
     private boolean isNewDirectDialogue(String dialogueText) {
@@ -188,9 +228,28 @@ public class AutoProgressDialogueFeature extends Feature {
         return true;
     }
 
+    private boolean holdShiftForDirectSkip() {
+        LocalPlayer player = McUtils.player();
+        if (player == null) return false;
+
+        if (!isPlayerSneaking(player)) {
+            sendShift(player, true);
+        }
+
+        return true;
+    }
+
+    private void stopDirectSkipHold() {
+        if (!holdingDirectSkipShift) return;
+
+        holdingDirectSkipShift = false;
+        restoreShiftState();
+    }
+
     private void restoreShiftState() {
         LocalPlayer player = McUtils.player();
-        // If the player is already sneaking, don't send a release packet as that would interfere with their intended input.
+        // If the player is already sneaking, don't send a release packet as that would interfere with their intended
+        // input.
         if (player == null || isPlayerSneaking(player)) return;
 
         sendShift(player, isPlayerSneaking(player));
@@ -236,6 +295,8 @@ public class AutoProgressDialogueFeature extends Feature {
             releaseShiftAtMs = 0L;
             restoreShiftState();
         }
+
+        stopDirectSkipHold();
     }
 
     private void onKeyBindPressed() {
