@@ -39,13 +39,13 @@ public final class DialogueUtils {
 
     static {
         for (int i = 0; i < font_body.length; i++) {
-            font_body[i] =
-                    new FontDescription.Resource(Identifier.withDefaultNamespace("hud/dialogue/text/wynncraft/body_" + i));
+            font_body[i] = new FontDescription.Resource(
+                    Identifier.withDefaultNamespace("hud/dialogue/text/wynncraft/body_" + i));
             style_body[i] = Style.EMPTY.withFont(font_body[i]);
         }
         for (int i = 0; i < font_choice.length; i++) {
-            font_choice[i] =
-                    new FontDescription.Resource(Identifier.withDefaultNamespace("hud/dialogue/text/wynncraft/choice_" + i));
+            font_choice[i] = new FontDescription.Resource(
+                    Identifier.withDefaultNamespace("hud/dialogue/text/wynncraft/choice_" + i));
         }
     }
 

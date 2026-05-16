@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.models.characterstats.actionbar.matchers.DialogueSegmentMatcher;
@@ -49,11 +48,14 @@ public final class NpcDialogueModel extends Model {
 
     @SubscribeEvent
     public void onActionBarUpdate(ActionBarUpdatedEvent event) {
-        event.runIfPresentOrElse(DialogueSegment.class, dialogueSegment -> {
-            renderDialogue = dialogueSegment.getDialogue().getComponent();
-        }, () -> {
-            renderDialogue = null;
-        });
+        event.runIfPresentOrElse(
+                DialogueSegment.class,
+                dialogueSegment -> {
+                    renderDialogue = dialogueSegment.getDialogue().getComponent();
+                },
+                () -> {
+                    renderDialogue = null;
+                });
     }
 
     public void requestDialogueTranslation(String text, Consumer<String> consumer) {
@@ -95,10 +97,8 @@ public final class NpcDialogueModel extends Model {
      * this method will get called once per Dialogue
      * */
     public void dispatchContent(DialogueUtils.Content content, String translatedText, boolean sendToChat) {
-        WynntilsMod.info(
-                "[" + this.getClass().getSimpleName() + "] Original Text: \"" + content.getText() + "\"");
-        WynntilsMod.info(
-                "[" + this.getClass().getSimpleName() + "] Translated Text: \"" + translatedText + "\"");
+        WynntilsMod.info("[" + this.getClass().getSimpleName() + "] Original Text: \"" + content.getText() + "\"");
+        WynntilsMod.info("[" + this.getClass().getSimpleName() + "] Translated Text: \"" + translatedText + "\"");
 
         if (sendToChat) {
             sendChat(content, translatedText);
