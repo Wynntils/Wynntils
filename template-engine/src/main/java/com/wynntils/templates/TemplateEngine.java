@@ -1,17 +1,22 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.templates;
 
 import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.templates.compiler.TemplateBackend;
 import com.wynntils.templates.functions.FunctionDefinition;
 import com.wynntils.templates.language.TemplateLanguage;
-
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class TemplateEngine {
-    private final Map<String, FunctionDefinition> functions = new HashMap<>();
+    public record FunctionKey(String name, int argCount) {}
+
+    private final Map<FunctionKey, FunctionDefinition> functions = new HashMap<>();
     private final TemplateBackend backend;
     private final TemplateLanguage language;
 
@@ -25,15 +30,29 @@ public class TemplateEngine {
             TemplateFunction annotation = method.getAnnotation(TemplateFunction.class);
 
             if (annotation != null) {
-                FunctionDefinition functionDef = new FunctionDefinition(annotation.name(), annotation.aliases(), method, method.getReturnType(), method.getParameterTypes());
+                FunctionDefinition functionDef = new FunctionDefinition(
+                        annotation.name(),
+                        annotation.aliases(),
+                        method,
+                        method.getReturnType(),
+                        method.getParameterTypes(),
+                        annotation.isPure());
 
-                functions.put(annotation.name(), functionDef);
+                functions.put(new FunctionKey(functionDef.name(), method.getParameterCount()), functionDef);
+
+                for (String alias : annotation.aliases()) {
+                    functions.put(new FunctionKey(alias, method.getParameterCount()), functionDef);
+                }
             }
         }
     }
 
-    public FunctionDefinition getFunction(String name) {
-        return functions.get(name);
+    public FunctionDefinition getFunction(String name, int argCount) {
+        return functions.get(new FunctionKey(name, argCount));
+    }
+
+    public boolean hasFunction(String name, int argCount) {
+        return functions.containsKey(new FunctionKey(name, argCount));
     }
 
     public List<FunctionDefinition> getFunctions() {

@@ -1,7 +1,10 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.templates.language;
 
 import com.wynntils.templates.TemplateEngine;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,5 +27,9 @@ public class TemplateLanguage {
 
     public Template parse(String input) {
         return templateCache.computeIfAbsent(input, (str) -> verifier.verify(parser.parse(tokenize(str))));
+    }
+
+    public Template parseUnverified(String input) {
+        return templateCache.computeIfAbsent(input, (str) -> parser.parse(tokenize(str)));
     }
 }

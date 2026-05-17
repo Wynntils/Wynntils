@@ -1,22 +1,37 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.templates.language;
 
 import com.wynntils.templates.language.exception.LanguageException;
-
 import java.util.ArrayList;
 import java.util.List;
 
 class TemplateLexer {
-
     public enum TokenType {
-        TEMPLATE_START, TEMPLATE_END, IDENTIFIER, STRING, NUMBER, ARGUMENTS_START, ARGUMENTS_END, HASH, COMMENT, SEMICOLON, TEXT, EOF
+        TEMPLATE_START,
+        TEMPLATE_END,
+        IDENTIFIER,
+        STRING,
+        NUMBER,
+        ARGUMENTS_START,
+        ARGUMENTS_END,
+        HASH,
+        COMMENT,
+        SEMICOLON,
+        TEXT,
+        EOF
     }
 
     private enum Mode {
-        TEXT, TEMPLATE, STRING, DIRECTIVE
+        TEXT,
+        TEMPLATE,
+        STRING,
+        DIRECTIVE
     }
 
-    public record Token(TokenType type, String value) {
-    }
+    public record Token(TokenType type, String value) {}
 
     private final List<Token> tokens = new ArrayList<>();
 
@@ -68,7 +83,7 @@ class TemplateLexer {
                 break;
             }
 
-            if((peek() == '\n' || pos == 0) && peekNext() == '#') {
+            if ((peek() == '\n' || pos == 0) && peekNext() == '#') {
                 break;
             }
 
@@ -84,7 +99,7 @@ class TemplateLexer {
             mode = Mode.TEMPLATE;
         }
 
-        if((match('\n') || pos == 0) && match('#')) {
+        if ((match('\n') || pos == 0) && match('#')) {
             tokens.add(new Token(TokenType.HASH, "#"));
             mode = Mode.DIRECTIVE;
         }
@@ -123,7 +138,7 @@ class TemplateLexer {
     }
 
     private void skipWhitespace() {
-        while(match(' ')){}
+        while (match(' ')) {}
     }
 
     private void lexNumber() {
@@ -134,7 +149,6 @@ class TemplateLexer {
         }
 
         if (peek() == '.') {
-
             do {
                 sb.append(advance());
             } while (Character.isDigit(peek()));
@@ -165,7 +179,6 @@ class TemplateLexer {
         StringBuilder sb = new StringBuilder();
 
         while (!isAtEnd() && peek() != '"') {
-
             if (peek() == '\\') {
                 advance();
 

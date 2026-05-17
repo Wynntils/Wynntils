@@ -1,38 +1,23 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.templates.language.expression;
 
 public class LiteralExpression implements Expression {
-    private String stringValue;
-    private double numberValue;
+    private Object value;
+    private Class<?> type;
 
-    public LiteralExpression(String stringValue) {
-        this.stringValue = stringValue;
+    public LiteralExpression(Object value, Class<?> type) {
+        this.value = value;
+        this.type = type;
     }
 
-    public LiteralExpression(double numberValue) {
-        this.numberValue = numberValue;
+    public Object getValue() {
+        return value;
     }
 
-    public boolean hasStringValue() {
-        return stringValue != null;
-    }
-
-    public boolean hasNumberValue() {
-        return !hasStringValue();
-    }
-
-    public String getStringValue() {
-        return stringValue;
-    }
-
-    public void setStringValue(String stringValue) {
-        this.stringValue = stringValue;
-    }
-
-    public double getNumberValue() {
-        return numberValue;
-    }
-
-    public void setNumberValue(double numberValue) {
-        this.numberValue = numberValue;
+    public Class<?> getValueType() {
+        return type;
     }
 }

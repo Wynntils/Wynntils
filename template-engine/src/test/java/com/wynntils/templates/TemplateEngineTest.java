@@ -1,30 +1,34 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.templates;
 
 import com.wynntils.templates.compiler.CompilerBackend;
 import com.wynntils.templates.compiler.TemplateBackend;
 import com.wynntils.templates.functions.TestFunctions;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class TemplateEngineTest {
-     private TemplateEngine engine;
+    private TemplateEngine engine;
 
-     @BeforeEach
-     void setup() {
-          TemplateBackend backend = new CompilerBackend(this.getClass().getClassLoader());
-          engine = new TemplateEngine(backend);
-     }
-     @Test
-     void testTemplateEngine() {
-          assertNotNull(engine);
-     }
+    @BeforeEach
+    void setup() {
+        TemplateBackend backend = new CompilerBackend(this.getClass().getClassLoader());
+        engine = new TemplateEngine(backend);
+    }
 
-     @Test
-     void registerFunctions() {
-          engine.registerFunctions(TestFunctions.class);
+    @Test
+    void testTemplateEngine() {
+        Assertions.assertNotNull(engine);
+    }
 
-          assertEquals(1, engine.getFunctions().size());
-     }
+    @Test
+    void registerFunctions() {
+        engine.registerFunctions(TestFunctions.class);
+
+        Assertions.assertEquals(1, engine.getFunctions().size());
+    }
 }

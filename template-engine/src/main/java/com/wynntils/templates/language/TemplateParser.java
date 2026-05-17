@@ -1,6 +1,11 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.templates.language;
 
 import com.wynntils.templates.TemplateEngine;
+import com.wynntils.templates.functions.FunctionDefinition;
 import com.wynntils.templates.language.exception.LanguageException;
 import com.wynntils.templates.language.expression.Expression;
 import com.wynntils.templates.language.expression.FunctionExpression;
@@ -8,12 +13,10 @@ import com.wynntils.templates.language.expression.LiteralExpression;
 import com.wynntils.templates.language.parts.TemplateExpressionPart;
 import com.wynntils.templates.language.parts.TemplateLiteralPart;
 import com.wynntils.templates.language.parts.TemplatePart;
-
 import java.util.ArrayList;
 import java.util.List;
 
 class TemplateParser {
-
     private final TemplateEngine engine;
     private List<TemplateLexer.Token> tokens;
     private int pos = 0;
@@ -40,9 +43,9 @@ class TemplateParser {
     private TemplatePart parsePart() {
         TemplateLexer.Token t = peek();
 
-        if(t.type() == TemplateLexer.TokenType.TEXT) {
+        if (t.type() == TemplateLexer.TokenType.TEXT) {
             return parseTextPart();
-        } else if(t.type() == TemplateLexer.TokenType.TEMPLATE_START) {
+        } else if (t.type() == TemplateLexer.TokenType.TEMPLATE_START) {
             return parseExpressionPart();
         }
 
@@ -56,7 +59,6 @@ class TemplateParser {
 
     private TemplateExpressionPart parseExpressionPart() {
         expect(TemplateLexer.TokenType.TEMPLATE_START); // {
-
         Expression expr = parseExpression();
 
         expect(TemplateLexer.TokenType.TEMPLATE_END); // }
@@ -67,12 +69,12 @@ class TemplateParser {
     private Expression parseExpression() {
         TemplateLexer.Token t = peek();
 
-        if(t.type() == TemplateLexer.TokenType.IDENTIFIER) {
+        if (t.type() == TemplateLexer.TokenType.IDENTIFIER) {
             return parseFunctionExpression();
-        } else if(t.type() == TemplateLexer.TokenType.STRING) {
-            return new LiteralExpression(next().value());
-        } else if(t.type() == TemplateLexer.TokenType.NUMBER) {
-            return new LiteralExpression(Double.parseDouble(next().value()));
+        } else if (t.type() == TemplateLexer.TokenType.STRING) {
+            return new LiteralExpression(next().value(), String.class);
+        } else if (t.type() == TemplateLexer.TokenType.NUMBER) {
+            return new LiteralExpression(Double.parseDouble(next().value()), double.class);
         } else {
             throw new LanguageException("Unexpected token in expression: " + t.type());
         }
@@ -81,11 +83,15 @@ class TemplateParser {
     private FunctionExpression parseFunctionExpression() {
         String identifier = expect(TemplateLexer.TokenType.IDENTIFIER).value();
 
-        if(peek().type() == TemplateLexer.TokenType.ARGUMENTS_START) {
+        if (peek().type() == TemplateLexer.TokenType.ARGUMENTS_START) {
             Expression[] args = parseArguments();
-            return new FunctionExpression(identifier, args, engine.getFunction(identifier));
-        } else if(peek().type() == TemplateLexer.TokenType.TEMPLATE_END) {
-            return new FunctionExpression(identifier, engine.getFunction(identifier));
+
+            FunctionDefinition def = engine.getFunction(identifier, args.length);
+            if (def == null) def = engine.getFunction(identifier, 1);
+
+            return new FunctionExpression(identifier, args, def);
+        } else if (peek().type() == TemplateLexer.TokenType.TEMPLATE_END) {
+            return new FunctionExpression(identifier, engine.getFunction(identifier, 0));
         } else {
             throw new LanguageException("Unexpected token after function name: " + peek().type());
         }
@@ -99,9 +105,9 @@ class TemplateParser {
         while (peek().type() != TemplateLexer.TokenType.ARGUMENTS_END) {
             args.add(parseExpression());
 
-            if(peek().type() == TemplateLexer.TokenType.SEMICOLON) {
+            if (peek().type() == TemplateLexer.TokenType.SEMICOLON) {
                 next(); // ;
-            } else if(peek().type() != TemplateLexer.TokenType.ARGUMENTS_END) {
+            } else if (peek().type() != TemplateLexer.TokenType.ARGUMENTS_END) {
                 throw new LanguageException("Expected ; or ) but got " + peek().type());
             }
         }
