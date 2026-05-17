@@ -5,7 +5,7 @@
 package com.wynntils.templates.compiler;
 
 import com.wynntils.templates.TemplateEngine;
-import com.wynntils.templates.functions.TestFunctions;
+import com.wynntils.templates.functions.BaseFunctions;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ class CompilerBackendTest {
     void setup() {
         backend = new CompilerBackend(this.getClass().getClassLoader());
         engine = new TemplateEngine(backend);
-        engine.registerFunctions(TestFunctions.class);
+        engine.registerFunctions(BaseFunctions.class);
     }
 
     @Test

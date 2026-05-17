@@ -7,7 +7,7 @@ package com.wynntils.templates.functions;
 import com.wynntils.templates.annotations.TemplateFunction;
 
 @SuppressWarnings("unused") // shut up intellij we do use these
-public final class TestFunctions {
+public final class BaseFunctions {
     @TemplateFunction(
             name = "add",
             aliases = {"sum", "plus"},
