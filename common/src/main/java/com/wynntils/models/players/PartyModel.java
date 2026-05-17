@@ -33,6 +33,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.neoforged.bus.api.SubscribeEvent;
 
 /**
@@ -107,7 +110,11 @@ public final class PartyModel extends Model {
     private List<String> partyMembers = new ArrayList<>(); // A set of Strings representing all party members
     private Set<String> offlineMembers =
             new HashSet<>(); // A set of Strings representing all offline (disconnected) party members
-    private List<CappedValue> partyMemberHealths = new ArrayList<>();
+    private List<Integer> partyMemberHealths = new ArrayList<>(); // A set of Integers representing all party members health
+    private List<Integer> partyMemberLevels = new ArrayList<>(); // A set of Integers representing all party members level
+    private List<Boolean> partyMemberOnlines = new ArrayList<>();
+    private List<Boolean> partyMemberAlives = new ArrayList<>();
+    private int totalPartyLevel = 0; // A value representing the total level of a party
 
     public PartyModel() {
         super(List.of());
@@ -401,12 +408,44 @@ public final class PartyModel extends Model {
         return offlineMembers;
     }
 
-    public List<CappedValue> getPartyMemberHealths() {
+    public List<Integer> getPartyMemberHealths() {
         return partyMemberHealths;
     }
 
-    public void setPartyMemberHealth(int index, CappedValue value) {
-        partyMemberHealths.set(index, value);
+    public void setPartyMemberHealths(List<Integer> value) {
+        partyMemberHealths = value;
+    }
+
+    public List<Integer> getPartyMemberLevels() {
+        return partyMemberLevels;
+    }
+
+    public void setPartyMemberLevels(List<Integer> value) {
+        partyMemberLevels = value;
+    }
+
+    public List<Boolean> getPartyMemberOnlines() {
+        return partyMemberOnlines;
+    }
+
+    public void setPartyMemberOnlines(List<Boolean> value) {
+        partyMemberOnlines = value;
+    }
+
+    public List<Boolean> getPartyMemberAlives() {
+        return partyMemberAlives;
+    }
+
+    public void setPartyMemberAlives(List<Boolean> value) {
+        partyMemberAlives = value;
+    }
+
+    public int getTotalPartyLevel() {
+        return totalPartyLevel;
+    }
+
+    public void setTotalPartyLevel(int value) {
+        totalPartyLevel = value;
     }
 
     @SubscribeEvent

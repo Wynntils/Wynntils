@@ -12,7 +12,6 @@ import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 
-import com.wynntils.utils.type.CappedValue;
 import net.minecraft.network.chat.Component;
 
 public class SocialFunctions {
@@ -64,19 +63,74 @@ public class SocialFunctions {
         }
     }
 
-    public static class PartyMemberHealthFunction extends Function<CappedValue> {
+    public static class PartyMemberHealthFunction extends Function<Integer> {
         @Override
-        public CappedValue getValue(FunctionArguments arguments) {
+        public Integer getValue(FunctionArguments arguments) {
             int index = arguments.getArgument("index").getIntegerValue();
-            List<CappedValue> healths = Models.Party.getPartyMemberHealths();
-            return !healths.isEmpty() && index >= 0 && index < healths.size()
-                    ? healths.get(index)
-                    : CappedValue.EMPTY;
+            List<Integer> list = Models.Party.getPartyMemberHealths();
+            return !list.isEmpty() && index >= 0 && index < list.size()
+                    ? list.get(index)
+                    : 0;
         }
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
+        }
+    }
+
+    public static class PartyMemberLevelFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("index").getIntegerValue();
+            List<Integer> list = Models.Party.getPartyMemberLevels();
+            return !list.isEmpty() && index >= 0 && index < list.size()
+                    ? list.get(index)
+                    : 0;
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
+        }
+    }
+
+    public static class IsPartyMemberOnlineFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("index").getIntegerValue();
+            List<Boolean> list = Models.Party.getPartyMemberOnlines();
+            return !list.isEmpty() && index >= 0 && index < list.size()
+                    ? list.get(index)
+                    : false;
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
+        }
+    }
+
+    public static class IsPartyMemberAliveFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("index").getIntegerValue();
+            List<Boolean> list = Models.Party.getPartyMemberAlives();
+            return !list.isEmpty() && index >= 0 && index < list.size()
+                    ? list.get(index)
+                    : false;
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
+        }
+    }
+
+    public static class PartyTotalLevelFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Party.getTotalPartyLevel();
         }
     }
 
