@@ -15,25 +15,29 @@ import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.models.players.scoreboard.PartyScoreboardPart;
+import com.wynntils.models.players.type.PartyMember;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.Pair;
+import net.neoforged.bus.api.SubscribeEvent;
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import net.neoforged.bus.api.SubscribeEvent;
 
 /**
  * This model handles the player's party relations.
@@ -107,10 +111,8 @@ public final class PartyModel extends Model {
     private List<String> partyMembers = new ArrayList<>(); // A set of Strings representing all party members
     private Set<String> offlineMembers =
             new HashSet<>(); // A set of Strings representing all offline (disconnected) party members
-    private List<Integer> partyMemberHealths = new ArrayList<>(); // A set of Integers representing all party members health
-    private List<Integer> partyMemberLevels = new ArrayList<>(); // A set of Integers representing all party members level
-    private List<Boolean> partyMemberOnlines = new ArrayList<>(); // A set of Booleans representing all party members online status
-    private List<Boolean> partyMemberAlives = new ArrayList<>(); // A set of Booleans representing all party members alive status
+    // A mapping from player list name or scoreboard name to party member record
+    private Map<String, PartyMember> partyMembersByName = new HashMap<>();
 
     public PartyModel() {
         super(List.of());
@@ -339,7 +341,7 @@ public final class PartyModel extends Model {
         partyLeader = null;
         inParty = false;
         offlineMembers = new HashSet<>();
-        partyMemberHealths = new ArrayList<>();
+        resetScoreboardData();
 
         WynntilsMod.postEvent(new HadesRelationsUpdateEvent.PartyList(
                 Set.copyOf(partyMembers), HadesRelationsUpdateEvent.ChangeType.RELOAD));
@@ -404,67 +406,36 @@ public final class PartyModel extends Model {
         return offlineMembers;
     }
 
-    public List<Integer> getPartyMemberHealths() {
-        return partyMemberHealths;
+    public PartyMember getPartyMember(int index) {
+        if (index < 0 || index >= partyMembers.size()) return PartyMember.EMPTY;
+        return getPartyMember(partyMembers.get(index));
     }
 
-    public void addPartyMemberHealth(Integer value) {
-        partyMemberHealths.add(value);
+    public PartyMember getPartyMember(String name) {
+        return partyMembersByName.getOrDefault(name, PartyMember.EMPTY);
     }
 
-    public void removePartyMemberHealth(Integer value) {
-        partyMemberHealths.remove(value);
+    public void putPartyMember(String name, PartyMember member) {
+        // There could be an issue if 2 players with long, identical (down to scoreboard trimming)
+        // names join the same party. Using putIfAbsent instead of regular put allows for both players
+        // to get added instead of overwriting
+        partyMembersByName.putIfAbsent(name, member);
     }
 
-    public List<Integer> getPartyMemberLevels() {
-        return partyMemberLevels;
+    public void removePartyMember(String name) {
+        partyMembersByName.remove(name);
     }
 
-    public void addPartyMemberLevel(Integer value) {
-        partyMemberLevels.add(value);
-    }
-
-    public void removePartyMemberLevel(Integer value) {
-        partyMemberLevels.remove(value);
-    }
-
-    public List<Boolean> getPartyMemberOnlines() {
-        return partyMemberOnlines;
-    }
-
-    public void addPartyMemberOnline(Boolean value) {
-        partyMemberOnlines.add(value);
-    }
-
-    public void removePartyMemberOnline(Boolean value) {
-        partyMemberOnlines.remove(value);
-    }
-
-    public List<Boolean> getPartyMemberAlives() {
-        return partyMemberAlives;
-    }
-
-    public void addPartyMemberAlive(Boolean value) {
-        partyMemberAlives.add(value);
-    }
-
-    public void removePartyMemberAlive(Boolean value) {
-        partyMemberAlives.remove(value);
-    }
-
-    public Integer getTotalPartyLevel() {
+    public Integer getPartyTotalLevel() {
         Integer sum = 0;
-        for (Integer level : partyMemberLevels) {
-            sum += level;
+        for (PartyMember member : partyMembersByName.values()) {
+            sum += member.level();
         }
         return sum;
     }
 
     public void resetScoreboardData() {
-        partyMemberHealths = new ArrayList<>();
-        partyMemberLevels = new ArrayList<>();
-        partyMemberOnlines = new ArrayList<>();
-        partyMemberAlives = new ArrayList<>();
+        partyMembersByName = new HashMap<>();
     }
 
     @SubscribeEvent
@@ -483,6 +454,7 @@ public final class PartyModel extends Model {
     }
 
     // region Party Commands
+
     /**
      * Kicks a player from the party.
      */

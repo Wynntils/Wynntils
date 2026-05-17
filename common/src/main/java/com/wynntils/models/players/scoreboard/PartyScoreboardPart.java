@@ -10,18 +10,17 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
+import com.wynntils.models.players.type.PartyMember;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PartyScoreboardPart extends ScoreboardPart {
     private static final SegmentMatcher PARTY_MATCHER = SegmentMatcher.fromPattern("Party:\\s\\[Lv. (\\d+)]");
 
-    private static final Pattern ONLINE_PLAYER = Pattern.compile("§e- §4\\[(?:§c|§8|\\|)+(?<health>(?:§|[0-9])+)\\|+§4] (?<alive>§7§m|§f)(?<name>[^§]+)(?:§r)?§7 \\[(?<level>[0-9]+)\\]");
+    private static final Pattern ONLINE_PLAYER = Pattern.compile("§e- §4\\[(?:§c|§8|\\|)+(?<health>(?:\\||§|[0-9])+)\\|+§4] (?<alive>§7§m|§f)(?<name>[^§]+)(?:§r)?§7 \\[(?<level>[0-9]+)\\]");
     private static final Pattern OFFLINE_PLAYER = Pattern.compile("§e- §7(?<name>.+)");
 
     @Override
@@ -34,38 +33,27 @@ public class PartyScoreboardPart extends ScoreboardPart {
         List<PartyMember> parsedMembers = parsePartyMembers(newValue.getContent());
         List<String> partyMembers = Models.Party.getPartyMembers();
 
-        // Sort entries so that name matches with one stored in PartyModel
-        // but scoreboard can trim names so we use startsWith to check match
-        parsedMembers = parsedMembers.stream()
-                .filter(m -> {
-                    for (String member : partyMembers) {
-                        if (member.startsWith(m.name())) return true;
-                    }
-                    return false;
-                })
-                .sorted(Comparator.comparingInt(m -> {
-                    for (int i = 0; i < partyMembers.size(); i++) {
-                        if (partyMembers.get(i).startsWith(m.name())) return i;
-                    }
-                    return Integer.MAX_VALUE;
-                }))
-                .toList();
-
+        Models.Party.resetScoreboardData();
         for (PartyMember member : parsedMembers) {
-            Models.Party.addPartyMemberHealth(member.health());
-            Models.Party.addPartyMemberLevel(member.level());
-            Models.Party.addPartyMemberOnline(member.online());
-            Models.Party.addPartyMemberAlive(member.alive());
+            for (String name : partyMembers) {
+                if (name.startsWith(member.name())) {
+                    Models.Party.putPartyMember(name, member);
+                }
+            }
         }
     }
 
     @Override
     public void onSegmentRemove(ScoreboardSegment segment) {
-        for (PartyMember member : parsePartyMembers(segment.getContent())) {
-            Models.Party.removePartyMemberHealth(member.health());
-            Models.Party.removePartyMemberLevel(member.level());
-            Models.Party.removePartyMemberOnline(member.online());
-            Models.Party.removePartyMemberAlive(member.alive());
+        for (StyledText line : segment.getContent()) {
+            for (String name : Models.Party.getPartyMembers()) {
+                // Reference equality usage instead .equals() is intended
+                // to work around scoreboard name trimming so we can be sure that
+                // the PartyMember we are about to remove came from this line specifically
+                if (line == Models.Party.getPartyMember(name).line()) {
+                    Models.Party.removePartyMember(name);
+                }
+            }
         }
     }
 
@@ -88,12 +76,6 @@ public class PartyScoreboardPart extends ScoreboardPart {
         }
     }
 
-    private static Boolean isAlive(String s) {
-        // Dead player's name is prefixed with §7§m
-        // Alive player's name is prefixed with §f
-        return Objects.equals(s, "§f");
-    }
-
     private static List<PartyMember> parsePartyMembers(List<StyledText> lines) {
         List<PartyMember> members = new ArrayList<>();
         for (StyledText line : lines) {
@@ -101,23 +83,21 @@ public class PartyScoreboardPart extends ScoreboardPart {
             if (onlineMatcher.matches()) {
                 members.add(
                         new PartyMember(
+                                line,
                                 onlineMatcher.group("name"),
-                                safeParseInt(onlineMatcher.group("health").replace("§8", "")),
+                                safeParseInt(onlineMatcher.group("health").replace("§8", "").replace("|", "")),
                                 safeParseInt(onlineMatcher.group("level")),
                                 true,
-                                isAlive(onlineMatcher.group("alive"))
+                                onlineMatcher.group("alive").equals("§f")
                         )
                 );
                 continue;
             }
             Matcher offlineMatcher = line.getMatcher(OFFLINE_PLAYER);
             if (offlineMatcher.matches()) {
-                members.add(new PartyMember(offlineMatcher.group("name"), 0, 0, false, false));
+                members.add(new PartyMember(line, offlineMatcher.group("name"), 0, 0, false, false));
             }
         }
         return members;
-    }
-
-    private record PartyMember(String name, Integer health, Integer level, Boolean online, Boolean alive) {
     }
 }
