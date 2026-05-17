@@ -17,7 +17,7 @@ def usingHotswapAgent = project.hasProperty("wynntils.hotswap") ? project.getPro
 // Do not change this in the main branch!
 version = "4.0.0-SNAPSHOT"
 
-subprojects {
+configure([project(":common"), project(":fabric"), project(":neoforge")]) {
     apply plugin: "dev.architectury.loom"
 
     repositories {
@@ -96,9 +96,9 @@ allprojects {
                     throw new AssertionError("Do not use wildcard imports. 'spotlessApply' cannot resolve this issue.")
                 }
             }
-            custom "Refuse IntelliJ annotations", {
-                if (it =~ /\nimport org\.jetbrains\.annotations\./) {
-                    throw new AssertionError("Do not use IntelliJ annotations. 'spotlessApply' cannot resolve this issue.")
+            custom "Refuse IntelliJ com.wynntils.templates.annotations", {
+                if (it =~ /\nimport org\.jetbrains\.com.wynntils.templates.annotations\./) {
+                    throw new AssertionError("Do not use IntelliJ com.wynntils.templates.annotations. 'spotlessApply' cannot resolve this issue.")
                 }
             }
             custom "No empty line after opening curly brace", {
