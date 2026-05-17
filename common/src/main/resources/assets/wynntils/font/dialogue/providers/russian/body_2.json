@@ -1,0 +1,16 @@
+{
+  "providers": [
+    {
+      "ascent": 13,
+      "chars": [
+        "АБВГДЕЁЖЗИЙКЛМНОП",
+        "РСТУФХЦЧШЩЪЫЬЭЮЯ\u0000",
+        "абвгдеёжзийклмноп",
+        "рстуфхцчшщъыьэюя\u0001"
+      ],
+      "file": "wynntils:font/hud/dialogue/text/cyrillic.png",
+      "height": 128,
+      "type": "bitmap"
+    }
+  ]
+}

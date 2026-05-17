@@ -10,7 +10,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
-import com.wynntils.handlers.actionbar.matchers.DialogueSegmentMatcher;
 import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.type.IterationDecision;
@@ -31,10 +30,6 @@ public final class ActionBarHandler extends Handler {
     private StyledText lastParsedActionBarText = StyledText.EMPTY;
     private List<ActionBarSegment> lastMatchedSegments = new ArrayList<>();
 
-    public ActionBarHandler() {
-        registerSegment(new DialogueSegmentMatcher());
-    }
-
     public void registerSegment(ActionBarSegmentMatcher segmentMatcher) {
         segmentMatchers.add(segmentMatcher);
     }
@@ -42,6 +37,15 @@ public final class ActionBarHandler extends Handler {
     @SubscribeEvent
     public void onActionBarUpdate(SystemMessageEvent.GameInfoReceivedEvent event) {
         StyledText packetText = StyledText.fromComponent(event.getMessage());
+
+        if (packetText.isEmpty()) {
+            lastParsedActionBarText = packetText;
+            lastMatchedSegments = List.of();
+
+            WynntilsMod.postEvent(new ActionBarUpdatedEvent(lastMatchedSegments));
+
+            return;
+        }
 
         // Separate the action bar text from the coordinates
         StyledText actionBarText = packetText.iterate((part, changes) -> {
@@ -53,7 +57,10 @@ public final class ActionBarHandler extends Handler {
         });
 
         if (actionBarText.isEmpty()) {
-            WynntilsMod.warn("Failed to find action bar text in packet: " + packetText.getString());
+            if (WynntilsMod.isDevelopmentBuild() || WynntilsMod.isDevelopmentEnvironment()) {
+                WynntilsMod.warn("Failed to find action bar text in packet: " + packetText.getString());
+            }
+
             return;
         }
 

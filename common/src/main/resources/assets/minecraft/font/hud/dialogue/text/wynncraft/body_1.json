@@ -1,0 +1,20 @@
+{
+  "providers": [
+    {
+      "id": "wynntils:dialogue/providers/german/body_1",
+      "type": "reference"
+    },
+    {
+      "id": "wynntils:dialogue/providers/russian/body_1",
+      "type": "reference"
+    },
+    {
+      "id": "wynntils:dialogue/providers/special/body_1",
+      "type": "reference"
+    },
+    {
+      "id": "minecraft:hud/dialogue/text/common/body_1",
+      "type": "reference"
+    }
+  ]
+}

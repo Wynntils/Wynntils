@@ -194,6 +194,14 @@ public abstract class GuiMixin {
     }
 
     @Inject(
+            method = "renderChat(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
+            at = @At("TAIL"))
+    private void onRenderChatPost(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        MixinHelper.post(
+                new RenderEvent.Post(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.CHAT));
+    }
+
+    @Inject(
             method = "renderTabList(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
             at = @At("HEAD"),
             cancellable = true)
