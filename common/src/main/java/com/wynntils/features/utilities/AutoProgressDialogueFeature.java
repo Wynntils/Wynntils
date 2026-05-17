@@ -14,9 +14,8 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.characterstats.actionbar.segments.DialogueSegment;
+import com.wynntils.models.npcdialogue.event.NpcDialogueUpdatedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.player.LocalPlayer;
@@ -63,11 +62,16 @@ public class AutoProgressDialogueFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onActionBarUpdate(ActionBarUpdatedEvent event) {
-        event.runIfPresentOrElse(DialogueSegment.class, this::onDialogueUpdate, this::onDialogueGone);
+    public void onNpcDialogueUpdate(NpcDialogueUpdatedEvent event) {
+        if (!event.isDialoguePresent()) {
+            onDialogueGone();
+            return;
+        }
+
+        onDialogueUpdate(event);
     }
 
-    private void onDialogueUpdate(DialogueSegment dialogueSegment) {
+    private void onDialogueUpdate(NpcDialogueUpdatedEvent dialogueSegment) {
         if (skipDirectly.get()) {
             onDirectDialogueUpdate(dialogueSegment);
             return;
@@ -95,7 +99,7 @@ public class AutoProgressDialogueFeature extends Feature {
         progressAtMs = System.currentTimeMillis() + getProgressDelayMs(dialogueText);
     }
 
-    private void onDirectDialogueUpdate(DialogueSegment dialogueSegment) {
+    private void onDirectDialogueUpdate(NpcDialogueUpdatedEvent dialogueSegment) {
         if (isDirectHoldMode()) {
             onDirectHoldDialogueUpdate(dialogueSegment);
             return;
@@ -123,7 +127,7 @@ public class AutoProgressDialogueFeature extends Feature {
         progressAtMs = System.currentTimeMillis() + getProgressDelayMs(dialogueText);
     }
 
-    private void onDirectHoldDialogueUpdate(DialogueSegment dialogueSegment) {
+    private void onDirectHoldDialogueUpdate(NpcDialogueUpdatedEvent dialogueSegment) {
         String dialogueText = dialogueSegment.getDialogueText();
         lastDialogueText = dialogueText;
 

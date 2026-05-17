@@ -13,6 +13,7 @@ import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.models.characterstats.actionbar.matchers.DialogueSegmentMatcher;
 import com.wynntils.models.characterstats.actionbar.segments.DialogueSegment;
 import com.wynntils.models.npcdialogue.event.DialogueProcessedEvent;
+import com.wynntils.models.npcdialogue.event.NpcDialogueUpdatedEvent;
 import com.wynntils.models.npcdialogue.event.TranslationRequestEvent;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
@@ -52,9 +53,14 @@ public final class NpcDialogueModel extends Model {
                 DialogueSegment.class,
                 dialogueSegment -> {
                     renderDialogue = dialogueSegment.getDialogue().getComponent();
+                    WynntilsMod.postEvent(new NpcDialogueUpdatedEvent(
+                            dialogueSegment.getDialogueText(),
+                            dialogueSegment.requiresShift(),
+                            dialogueSegment.hasChoices()));
                 },
                 () -> {
                     renderDialogue = null;
+                    WynntilsMod.postEvent(NpcDialogueUpdatedEvent.dialogueGone());
                 });
     }
 
