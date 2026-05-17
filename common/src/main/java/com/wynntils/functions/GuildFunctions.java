@@ -5,117 +5,78 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.consumers.functions.Function;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.guild.type.GuildRank;
 import com.wynntils.models.players.type.wynnplayer.PlayerGuildInfo;
 import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
+import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.type.CappedValue;
-import java.util.List;
+
 import java.util.Optional;
 
+@SuppressWarnings("unused") // Functions are accessed via reflection
 public class GuildFunctions {
-    public static class CappedGuildLevelProgressFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Guild.getGuildLevelProgress();
-        }
+
+    @TemplateFunction(name = "capped_guild_level_progress")
+    public static CappedValue cappedGuildLevelProgressFunction() {
+        return Models.Guild.getGuildLevelProgress();
     }
 
-    public static class CappedGuildObjectivesProgressFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Guild.getObjectivesCompletedProgress();
-        }
+    @TemplateFunction(name = "capped_guild_objectives_progress")
+    public static CappedValue cappedGuildObjectivesProgressFunction() {
+        return Models.Guild.getObjectivesCompletedProgress();
     }
 
-    public static class GuildLevelFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Guild.getGuildLevel();
-        }
+    @TemplateFunction(name = "guild_level")
+    public static int guildLevelFunction() {
+        return Models.Guild.getGuildLevel();
     }
 
-    public static class GuildNameFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            return Models.Guild.getGuildName();
-        }
+    @TemplateFunction(name = "guild_name")
+    public static String guildNameFunction() {
+        return Models.Guild.getGuildName();
     }
 
-    public static class GuildRankFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            GuildRank guildRank = Models.Guild.getGuildRank();
-            if (guildRank == null) return "";
-            return guildRank.getName();
-        }
+    @TemplateFunction(name = "guild_rank")
+    public static String guildRankFunction() {
+        GuildRank guildRank = Models.Guild.getGuildRank();
+        if (guildRank == null) return "";
+        return guildRank.getName();
     }
 
-    public static class IsAlliedGuildFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return Models.Guild.isAllied(arguments.getArgument("guild").getStringValue());
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("guild", String.class, null)));
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("is_allied", "is_ally");
-        }
+    @TemplateFunction(name = "is_allied_guild", aliases = {"is_allied", "is_ally"})
+    public static boolean isAlliedGuildFunction(String guild) {
+        return Models.Guild.isAllied(guild);
     }
 
-    public static class ObjectiveStreakFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Guild.getObjectiveStreak();
-        }
+    @TemplateFunction(name = "objective_streak")
+    public static int objectiveStreakFunction() {
+        return Models.Guild.getObjectiveStreak();
     }
 
-    public static class IsGuildMemberFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return Models.Guild.isGuildMember(arguments.getArgument("member").getStringValue());
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("member", String.class, null)));
-        }
+    @TemplateFunction(name = "is_guild_member")
+    public static boolean isGuildMemberFunction(String member) {
+        return Models.Guild.isGuildMember(member);
     }
 
-    public static class ContributedGuildXpFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            WynnPlayerInfo playerInfo = Models.Account.getPlayerInfo();
+    @TemplateFunction(name = "contributed_guild_xp")
+    public static long contributedGuildXpFunction() {
+        WynnPlayerInfo playerInfo = Models.Account.getPlayerInfo();
 
-            if (playerInfo == null) return 0L;
+        if (playerInfo == null) return 0L;
 
-            Optional<PlayerGuildInfo> guildInfoOpt = playerInfo.guildInfo();
+        Optional<PlayerGuildInfo> guildInfoOpt = playerInfo.guildInfo();
 
-            return guildInfoOpt
-                    .map(playerGuildInfo -> playerGuildInfo.contributionXp().orElse(0L))
-                    .orElse(0L);
-        }
+        return guildInfoOpt.map(playerGuildInfo -> playerGuildInfo.contributionXp().orElse(0L)).orElse(0L);
     }
 
-    public static class ContributionRankFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            WynnPlayerInfo playerInfo = Models.Account.getPlayerInfo();
+    @TemplateFunction(name = "contributed_rank")
+    public static int contributedRankFunction() {
+        WynnPlayerInfo playerInfo = Models.Account.getPlayerInfo();
 
-            if (playerInfo == null) return 0;
+        if (playerInfo == null) return 0;
 
-            Optional<PlayerGuildInfo> guildInfoOpt = playerInfo.guildInfo();
+        Optional<PlayerGuildInfo> guildInfoOpt = playerInfo.guildInfo();
 
-            return guildInfoOpt
-                    .map(playerGuildInfo -> playerGuildInfo.contributionRank().orElse(0))
-                    .orElse(0);
-        }
+        return guildInfoOpt.map(playerGuildInfo -> playerGuildInfo.contributionRank().orElse(0)).orElse(0);
     }
 }

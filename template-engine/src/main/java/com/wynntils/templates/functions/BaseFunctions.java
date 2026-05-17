@@ -8,18 +8,12 @@ import com.wynntils.templates.annotations.TemplateFunction;
 
 @SuppressWarnings("unused") // shut up intellij we do use these
 public final class BaseFunctions {
-    @TemplateFunction(
-            name = "add",
-            aliases = {"sum", "plus"},
-            isPure = true)
+    @TemplateFunction(name = "add", aliases = {"sum", "plus"}, isPure = true)
     public static double addFunction(double a, double b) {
         return a + b;
     }
 
-    @TemplateFunction(
-            name = "add",
-            aliases = {"sum", "plus"},
-            isPure = true)
+    @TemplateFunction(name = "add", aliases = {"sum", "plus"}, isPure = true)
     public static double addFunction(double... values) {
         double sum = 0;
         for (double value : values) {
