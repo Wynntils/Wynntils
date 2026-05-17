@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.players.scoreboard;
@@ -11,7 +11,6 @@ import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import com.wynntils.models.players.type.PartyMember;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -20,7 +19,8 @@ import java.util.regex.Pattern;
 public class PartyScoreboardPart extends ScoreboardPart {
     private static final SegmentMatcher PARTY_MATCHER = SegmentMatcher.fromPattern("Party:\\s\\[Lv. (\\d+)]");
 
-    private static final Pattern ONLINE_PLAYER = Pattern.compile("§e- §4\\[(?:§c|§8|\\|)+(?<health>(?:\\||§|[0-9])+)\\|+§4] (?<alive>§7§m|§f)(?<name>[^§]+)(?:§r)?§7 \\[(?<level>[0-9]+)\\]");
+    private static final Pattern ONLINE_PLAYER = Pattern.compile(
+            "§e- §4\\[(?:§c|§8|\\|)+(?<health>(?:\\||§|[0-9])+)\\|+§4] (?<alive>§7§m|§f)(?<name>[^§]+)(?:§r)?§7 \\[(?<level>[0-9]+)\\]");
     private static final Pattern OFFLINE_PLAYER = Pattern.compile("§e- §7(?<name>.+)");
 
     @Override
@@ -31,27 +31,22 @@ public class PartyScoreboardPart extends ScoreboardPart {
     @Override
     public void onSegmentChange(ScoreboardSegment newValue) {
         List<PartyMember> parsedMembers = parsePartyMembers(newValue.getContent());
-        List<String> partyMembers = Models.Party.getPartyMembers();
 
         Models.Party.resetScoreboardData();
-        for (PartyMember member : parsedMembers) {
-            for (String name : partyMembers) {
-                if (name.startsWith(member.name())) {
-                    Models.Party.putPartyMember(name, member);
-                }
-            }
+        for (PartyMember parsedMember : parsedMembers) {
+            Models.Party.addSbPartyMember(parsedMember);
         }
     }
 
     @Override
     public void onSegmentRemove(ScoreboardSegment segment) {
-        for (StyledText line : segment.getContent()) {
-            for (String name : Models.Party.getPartyMembers()) {
+        for (int i = Models.Party.getSbPartyMemberCount() - 1; i >= 0; i--) {
+            for (StyledText line : segment.getContent()) {
                 // Reference equality usage instead .equals() is intended
-                // to work around scoreboard name trimming so we can be sure that
+                // to work around possible scoreboard name duplication so we can be sure that
                 // the PartyMember we are about to remove came from this line specifically
-                if (line == Models.Party.getPartyMember(name).line()) {
-                    Models.Party.removePartyMember(name);
+                if (line == Models.Party.getSbPartyMember(i).line()) {
+                    Models.Party.removeSbPartyMember(i);
                 }
             }
         }
@@ -81,16 +76,14 @@ public class PartyScoreboardPart extends ScoreboardPart {
         for (StyledText line : lines) {
             Matcher onlineMatcher = line.getMatcher(ONLINE_PLAYER);
             if (onlineMatcher.matches()) {
-                members.add(
-                        new PartyMember(
-                                line,
-                                onlineMatcher.group("name"),
-                                safeParseInt(onlineMatcher.group("health").replace("§8", "").replace("|", "")),
-                                safeParseInt(onlineMatcher.group("level")),
-                                true,
-                                onlineMatcher.group("alive").equals("§f")
-                        )
-                );
+                members.add(new PartyMember(
+                        line,
+                        onlineMatcher.group("name"),
+                        safeParseInt(
+                                onlineMatcher.group("health").replace("§8", "").replace("|", "")),
+                        safeParseInt(onlineMatcher.group("level")),
+                        true,
+                        onlineMatcher.group("alive").equals("§f")));
                 continue;
             }
             Matcher offlineMatcher = line.getMatcher(OFFLINE_PLAYER);

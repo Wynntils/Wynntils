@@ -11,9 +11,8 @@ import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.PartyMember;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.network.chat.Component;
-
 import java.util.List;
+import net.minecraft.network.chat.Component;
 
 public class SocialFunctions {
     public static class FriendsFunction extends Function<Integer> {
@@ -51,11 +50,9 @@ public class SocialFunctions {
     public static class PartyMemberNameFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            int index = arguments.getArgument("index").getIntegerValue();
-            List<String> members = Models.Party.getPartyMembers();
-            return !members.isEmpty() && index >= 0 && index < members.size()
-                    ? members.get(index)
-                    : "";
+            PartyMember member =
+                    Models.Party.getSbPartyMember(arguments.getArgument("index").getIntegerValue());
+            return member != PartyMember.EMPTY ? member.name() : "";
         }
 
         @Override
@@ -67,7 +64,8 @@ public class SocialFunctions {
     public static class PartyMemberHealthFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            PartyMember member = Models.Party.getPartyMember(arguments.getArgument("index").getIntegerValue());
+            PartyMember member =
+                    Models.Party.getSbPartyMember(arguments.getArgument("index").getIntegerValue());
             return member != PartyMember.EMPTY ? member.health() : 0;
         }
 
@@ -80,7 +78,8 @@ public class SocialFunctions {
     public static class PartyMemberLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            PartyMember member = Models.Party.getPartyMember(arguments.getArgument("index").getIntegerValue());
+            PartyMember member =
+                    Models.Party.getSbPartyMember(arguments.getArgument("index").getIntegerValue());
             return member != PartyMember.EMPTY ? member.level() : 0;
         }
 
@@ -93,7 +92,8 @@ public class SocialFunctions {
     public static class IsPartyMemberOnlineFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            PartyMember member = Models.Party.getPartyMember(arguments.getArgument("index").getIntegerValue());
+            PartyMember member =
+                    Models.Party.getSbPartyMember(arguments.getArgument("index").getIntegerValue());
             return member != PartyMember.EMPTY ? member.online() : false;
         }
 
@@ -106,7 +106,8 @@ public class SocialFunctions {
     public static class IsPartyMemberAliveFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            PartyMember member = Models.Party.getPartyMember(arguments.getArgument("index").getIntegerValue());
+            PartyMember member =
+                    Models.Party.getSbPartyMember(arguments.getArgument("index").getIntegerValue());
             return member != PartyMember.EMPTY ? member.alive() : false;
         }
 

@@ -22,22 +22,18 @@ import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.Pair;
-import net.neoforged.bus.api.SubscribeEvent;
-import org.jspecify.annotations.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /**
  * This model handles the player's party relations.
@@ -111,8 +107,8 @@ public final class PartyModel extends Model {
     private List<String> partyMembers = new ArrayList<>(); // A set of Strings representing all party members
     private Set<String> offlineMembers =
             new HashSet<>(); // A set of Strings representing all offline (disconnected) party members
-    // A mapping from player list name or scoreboard name to party member record
-    private Map<String, PartyMember> partyMembersByName = new HashMap<>();
+    // A set of PartyMembers representing all party members parsed from scoreboard
+    private List<PartyMember> sbPartyMembers = new ArrayList<>();
 
     public PartyModel() {
         super(List.of());
@@ -406,36 +402,33 @@ public final class PartyModel extends Model {
         return offlineMembers;
     }
 
-    public PartyMember getPartyMember(int index) {
-        if (index < 0 || index >= partyMembers.size()) return PartyMember.EMPTY;
-        return getPartyMember(partyMembers.get(index));
+    public void addSbPartyMember(PartyMember member) {
+        sbPartyMembers.add(member);
     }
 
-    public PartyMember getPartyMember(String name) {
-        return partyMembersByName.getOrDefault(name, PartyMember.EMPTY);
+    public void removeSbPartyMember(int index) {
+        sbPartyMembers.remove(index);
     }
 
-    public void putPartyMember(String name, PartyMember member) {
-        // There could be an issue if 2 players with long, identical (down to scoreboard trimming)
-        // names join the same party. Using putIfAbsent instead of regular put allows for both players
-        // to get added instead of overwriting
-        partyMembersByName.putIfAbsent(name, member);
+    public PartyMember getSbPartyMember(int index) {
+        if (index < 0 || index >= sbPartyMembers.size()) return PartyMember.EMPTY;
+        return sbPartyMembers.get(index);
     }
 
-    public void removePartyMember(String name) {
-        partyMembersByName.remove(name);
+    public int getSbPartyMemberCount() {
+        return sbPartyMembers.size();
     }
 
     public Integer getPartyTotalLevel() {
         Integer sum = 0;
-        for (PartyMember member : partyMembersByName.values()) {
+        for (PartyMember member : sbPartyMembers) {
             sum += member.level();
         }
         return sum;
     }
 
     public void resetScoreboardData() {
-        partyMembersByName = new HashMap<>();
+        sbPartyMembers = new ArrayList<>();
     }
 
     @SubscribeEvent
