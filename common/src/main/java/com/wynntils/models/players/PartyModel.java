@@ -20,7 +20,6 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
-import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,8 +33,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
 import net.neoforged.bus.api.SubscribeEvent;
 
 /**
@@ -112,9 +109,8 @@ public final class PartyModel extends Model {
             new HashSet<>(); // A set of Strings representing all offline (disconnected) party members
     private List<Integer> partyMemberHealths = new ArrayList<>(); // A set of Integers representing all party members health
     private List<Integer> partyMemberLevels = new ArrayList<>(); // A set of Integers representing all party members level
-    private List<Boolean> partyMemberOnlines = new ArrayList<>();
-    private List<Boolean> partyMemberAlives = new ArrayList<>();
-    private int totalPartyLevel = 0; // A value representing the total level of a party
+    private List<Boolean> partyMemberOnlines = new ArrayList<>(); // A set of Booleans representing all party members online status
+    private List<Boolean> partyMemberAlives = new ArrayList<>(); // A set of Booleans representing all party members alive status
 
     public PartyModel() {
         super(List.of());
@@ -412,40 +408,63 @@ public final class PartyModel extends Model {
         return partyMemberHealths;
     }
 
-    public void setPartyMemberHealths(List<Integer> value) {
-        partyMemberHealths = value;
+    public void addPartyMemberHealth(Integer value) {
+        partyMemberHealths.add(value);
+    }
+
+    public void removePartyMemberHealth(Integer value) {
+        partyMemberHealths.remove(value);
     }
 
     public List<Integer> getPartyMemberLevels() {
         return partyMemberLevels;
     }
 
-    public void setPartyMemberLevels(List<Integer> value) {
-        partyMemberLevels = value;
+    public void addPartyMemberLevel(Integer value) {
+        partyMemberLevels.add(value);
+    }
+
+    public void removePartyMemberLevel(Integer value) {
+        partyMemberLevels.remove(value);
     }
 
     public List<Boolean> getPartyMemberOnlines() {
         return partyMemberOnlines;
     }
 
-    public void setPartyMemberOnlines(List<Boolean> value) {
-        partyMemberOnlines = value;
+    public void addPartyMemberOnline(Boolean value) {
+        partyMemberOnlines.add(value);
+    }
+
+    public void removePartyMemberOnline(Boolean value) {
+        partyMemberOnlines.remove(value);
     }
 
     public List<Boolean> getPartyMemberAlives() {
         return partyMemberAlives;
     }
 
-    public void setPartyMemberAlives(List<Boolean> value) {
-        partyMemberAlives = value;
+    public void addPartyMemberAlive(Boolean value) {
+        partyMemberAlives.add(value);
     }
 
-    public int getTotalPartyLevel() {
-        return totalPartyLevel;
+    public void removePartyMemberAlive(Boolean value) {
+        partyMemberAlives.remove(value);
     }
 
-    public void setTotalPartyLevel(int value) {
-        totalPartyLevel = value;
+    public Integer getTotalPartyLevel() {
+        Integer sum = 0;
+        for (Integer level : partyMemberLevels) {
+            sum += level;
+        }
+        return sum;
+    }
+
+    public void resetScoreboardData() {
+        partyMemberHealths = new ArrayList<>();
+        partyMemberLevels = new ArrayList<>();
+        partyMemberOnlines = new ArrayList<>();
+        partyMemberAlives = new ArrayList<>();
     }
 
     @SubscribeEvent
