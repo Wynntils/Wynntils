@@ -93,6 +93,7 @@ import com.wynntils.features.overlays.CombatExperienceOverlayFeature;
 import com.wynntils.features.overlays.ContentTrackerOverlayFeature;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.overlays.CustomPlayerListOverlayFeature;
+import com.wynntils.features.overlays.DialoguesFeature;
 import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.overlays.GuardianAngelsTrackerOverlayFeature;
@@ -309,6 +310,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ContentTrackerOverlayFeature());
         registerFeature(new CustomBarsOverlayFeature());
         registerFeature(new CustomPlayerListOverlayFeature());
+        registerFeature(new DialoguesFeature());
         registerFeature(new GameBarsOverlayFeature());
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GuardianAngelsTrackerOverlayFeature());

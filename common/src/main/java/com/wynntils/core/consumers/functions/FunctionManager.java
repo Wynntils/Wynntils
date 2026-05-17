@@ -21,6 +21,7 @@ import com.wynntils.functions.BombFunctions;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.CombatFunctions;
 import com.wynntils.functions.CombatXpFunctions;
+import com.wynntils.functions.DialogueFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.GuildFunctions;
 import com.wynntils.functions.HadesPartyFunctions;
@@ -576,6 +577,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatXpFunctions.XpRawFunction());
         registerFunction(new CombatXpFunctions.XpReqFunction());
         registerFunction(new CombatXpFunctions.XpReqRawFunction());
+
+        registerFunction(new DialogueFunctions.IsDialoguePresentFunction());
 
         registerFunction(new EnvironmentFunctions.CappedMemFunction());
         registerFunction(new EnvironmentFunctions.ClockFunction());
