@@ -4,10 +4,8 @@
  */
 package com.wynntils.services.lootrunpaths;
 
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import com.wynntils.core.components.Managers;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.services.lootrunpaths.type.BlockValidness;
@@ -25,7 +23,7 @@ import java.util.Set;
 import net.minecraft.client.Camera;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.BlockPos;
@@ -43,27 +41,16 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public final class LootrunRenderer {
-    private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
-            MultiBufferSource.immediate(new ByteBufferBuilder(256));
-
-    public static void renderLootrun(PoseStack poseStack, LootrunPathInstance lootrun, int color) {
-        if (lootrun == null) {
-            return;
-        }
+    public static void renderLootrun(
+            PoseStack poseStack, OrderedSubmitNodeCollector submitNodeStorage, LootrunPathInstance lootrun, int color) {
+        if (lootrun == null) return;
 
         ClientLevel level = McUtils.mc().level;
-
-        if (level == null) {
-            return;
-        }
+        if (level == null) return;
 
         poseStack.pushPose();
 
         Camera camera = McUtils.mc().gameRenderer.getMainCamera();
-
-        poseStack.mulPose(Axis.XP.rotationDegrees(camera.xRot()));
-        poseStack.mulPose(Axis.YP.rotationDegrees(camera.yRot() + 180.0F));
-
         poseStack.translate(-camera.position().x, -camera.position().y, -camera.position().z);
 
         Long2ObjectMap<List<ColoredPath>> points = lootrun.points();
@@ -76,14 +63,12 @@ public final class LootrunRenderer {
                 int x = j + origin.x - (renderDistance / 2);
                 int z = i + origin.z - (renderDistance / 2);
                 ChunkPos chunk = new ChunkPos(x, z);
-                if (!level.hasChunk(chunk.x, chunk.z)) {
-                    continue;
-                }
+                if (!level.hasChunk(chunk.x, chunk.z)) continue;
 
                 long chunkLong = chunk.toLong();
 
                 if (points.containsKey(chunkLong)) {
-                    renderPoints(poseStack, points, chunkLong);
+                    renderPoints(poseStack, submitNodeStorage, points.get(chunkLong), level);
                 }
 
                 if (lootrun.chests().containsKey(chunkLong)) {
@@ -94,7 +79,7 @@ public final class LootrunRenderer {
                                 .showNotes
                                 .get()
                         && lootrun.notes().containsKey(chunkLong)) {
-                    renderNotes(poseStack, lootrun, color, chunkLong);
+                    renderNotes(poseStack, submitNodeStorage, lootrun, color, chunkLong);
                 }
             }
         }
@@ -102,7 +87,12 @@ public final class LootrunRenderer {
         poseStack.popPose();
     }
 
-    private static void renderNotes(PoseStack poseStack, LootrunPathInstance lootrun, int color, long chunkLong) {
+    private static void renderNotes(
+            PoseStack poseStack,
+            OrderedSubmitNodeCollector submitNodeStorage,
+            LootrunPathInstance lootrun,
+            int color,
+            long chunkLong) {
         List<LootrunNote> notes = lootrun.notes().get(chunkLong);
 
         Font font = McUtils.mc().font;
@@ -113,22 +103,21 @@ public final class LootrunRenderer {
             poseStack.translate(position.x(), position.y() + 2, position.z());
             poseStack.mulPose(McUtils.mc().gameRenderer.getMainCamera().rotation());
             poseStack.scale(0.025f, -0.025f, 0.025f);
-            Matrix4f pose = poseStack.last().pose();
             List<FormattedCharSequence> lines = font.split(note.component(), 200);
             int offsetY = -(font.lineHeight * lines.size()) / 2;
             for (FormattedCharSequence line : lines) {
                 int offsetX = -font.width(line) / 2;
-                font.drawInBatch(
-                        line,
+                submitNodeStorage.submitText(
+                        poseStack,
                         offsetX,
                         offsetY,
-                        color,
+                        line,
                         false,
-                        pose,
-                        BUFFER_SOURCE,
                         Font.DisplayMode.NORMAL,
+                        0xF000F0,
+                        color,
                         0x80000000,
-                        0xf000f0);
+                        0);
                 offsetY += font.lineHeight + 2;
             }
             poseStack.popPose();
@@ -147,145 +136,98 @@ public final class LootrunRenderer {
         }
     }
 
-    private static void renderPoints(PoseStack poseStack, Long2ObjectMap<List<ColoredPath>> points, long chunkLong) {
-        List<ColoredPath> locations = points.get(chunkLong);
-
-        Level level = McUtils.mc().level;
-        if (level == null) return;
-
+    private static void renderPoints(
+            PoseStack poseStack,
+            OrderedSubmitNodeCollector submitNodeStorage,
+            List<ColoredPath> locations,
+            Level level) {
         switch (Managers.Feature.getFeatureInstance(LootrunFeature.class)
                 .pathType
                 .get()) {
-            case TEXTURED -> renderTexturedLootrunPoints(poseStack, locations, level, CustomRenderTypes.LOOTRUN_QUAD);
-            case LINE -> renderNonTexturedLootrunPoints(poseStack, locations, level, RenderTypes.LINES);
+            case TEXTURED ->
+                renderTexturedLootrunPoints(
+                        poseStack, submitNodeStorage, locations, level, CustomRenderTypes.LOOTRUN_QUAD);
+            case LINE ->
+                renderNonTexturedLootrunPoints(poseStack, submitNodeStorage, locations, level, RenderTypes.LINES);
         }
     }
 
     private static void renderNonTexturedLootrunPoints(
-            PoseStack poseStack, List<ColoredPath> locations, Level level, RenderType renderType) {
+            PoseStack poseStack,
+            OrderedSubmitNodeCollector submitNodeStorage,
+            List<ColoredPath> locations,
+            Level level,
+            RenderType renderType) {
         for (ColoredPath locationsInRoute : locations) {
-            VertexConsumer consumer = BUFFER_SOURCE.getBuffer(renderType);
-            Matrix4f lastMatrix = poseStack.last().pose();
-            boolean sourceBatchEnded = false;
+            submitNodeStorage.submitCustomGeometry(poseStack, renderType, (entry, consumer) -> {
+                Matrix4f matrix = entry.pose();
+                BlockPos lastBlockPos = null;
 
-            ColoredPath toRender = new ColoredPath(new ArrayList<>());
+                for (ColoredPosition point : locationsInRoute.points()) {
+                    BlockPos blockPos = PosUtils.newBlockPos(point.position());
 
-            boolean pauseDraw = false;
-            BlockPos lastBlockPos = null;
+                    if (!blockPos.equals(lastBlockPos)) {
+                        BlockValidness blockValidness = BlockValidness.checkBlockValidness(level, point);
 
-            for (ColoredPosition point : locationsInRoute.points()) {
-                BlockPos blockPos = PosUtils.newBlockPos(point.position());
-
-                if (blockPos.equals(lastBlockPos)) { // Do not recalculate block validness
-                    if (!toRender.points().isEmpty()) {
-                        toRender.points().add(point);
-                    }
-                } else {
-                    BlockValidness blockValidness = BlockValidness.checkBlockValidness(level, point);
-
-                    if (blockValidness == BlockValidness.VALID) {
-                        pauseDraw = false;
-                        if (sourceBatchEnded) {
-                            consumer = BUFFER_SOURCE.getBuffer(renderType);
-                            sourceBatchEnded = false;
+                        if (blockValidness == BlockValidness.HAS_BARRIER) {
+                            lastBlockPos = blockPos;
+                            continue;
                         }
-                        renderQueuedPoints(consumer, lastMatrix, toRender);
-                        toRender.points().clear();
-                    } else if (blockValidness == BlockValidness.HAS_BARRIER) {
-                        pauseDraw = true;
-                        toRender.points().clear();
-                    } else {
-                        pauseDraw = false;
-                        toRender.points().add(point);
-                        continue;
                     }
-                }
 
-                lastBlockPos = blockPos;
-
-                if (!pauseDraw) {
-                    renderPoint(consumer, lastMatrix, point);
-                } else if (!sourceBatchEnded) {
-                    BUFFER_SOURCE.endBatch();
-                    sourceBatchEnded = true;
+                    lastBlockPos = blockPos;
+                    renderPoint(consumer, matrix, point);
                 }
-            }
-            if (!sourceBatchEnded) {
-                renderQueuedPoints(consumer, lastMatrix, toRender);
-                BUFFER_SOURCE.endBatch();
-            }
+            });
         }
     }
 
     private static void renderTexturedLootrunPoints(
-            PoseStack poseStack, List<ColoredPath> locations, Level level, RenderType renderType) {
+            PoseStack poseStack,
+            OrderedSubmitNodeCollector submitNodeStorage,
+            List<ColoredPath> locations,
+            Level level,
+            RenderType renderType) {
         Camera camera = McUtils.mc().gameRenderer.getMainCamera();
+
         poseStack.pushPose();
         poseStack.translate(camera.position().x, camera.position().y, camera.position().z);
 
         for (ColoredPath locationsInRoute : locations) {
-            VertexConsumer consumer = BUFFER_SOURCE.getBuffer(renderType);
-            List<Pair<ColoredPosition, ColoredPosition>> toRender = new ArrayList<>();
-            boolean sourceBatchEnded = false;
-            BlockPos lastBlockPos = null;
+            submitNodeStorage.submitCustomGeometry(poseStack, renderType, (entry, consumer) -> {
+                List<Pair<ColoredPosition, ColoredPosition>> toRender = new ArrayList<>();
+                BlockPos lastBlockPos = null;
 
-            boolean pauseDraw = false;
+                for (int i = 0; i < locationsInRoute.points().size() - 1; i += 10) {
+                    ColoredPosition point = locationsInRoute.points().get(i);
+                    ColoredPosition end = locationsInRoute
+                            .points()
+                            .get(Math.min(locationsInRoute.points().size() - 1, i + 1));
 
-            for (int i = 0; i < locationsInRoute.points().size() - 1; i += 10) {
-                ColoredPosition point = locationsInRoute.points().get(i);
-                BlockPos blockPos = PosUtils.newBlockPos(point.position());
+                    Pair<ColoredPosition, ColoredPosition> pair = new Pair<>(point, end);
 
-                ColoredPosition end = locationsInRoute
-                        .points()
-                        .get(Math.min(locationsInRoute.points().size() - 1, i + 1));
-                Pair<ColoredPosition, ColoredPosition> pointPair = new Pair<>(point, end);
+                    BlockPos blockPos = PosUtils.newBlockPos(point.position());
 
-                if (blockPos.equals(lastBlockPos)) { // Do not recalculate block validness
-                    if (!toRender.isEmpty()) {
-                        toRender.add(pointPair);
-                    }
-                } else {
-                    BlockValidness blockValidness = BlockValidness.checkBlockValidness(level, point);
+                    if (!blockPos.equals(lastBlockPos)) {
+                        BlockValidness blockValidness = BlockValidness.checkBlockValidness(level, point);
 
-                    if (blockValidness == BlockValidness.VALID) {
-                        pauseDraw = false;
-                        if (sourceBatchEnded) {
-                            consumer = BUFFER_SOURCE.getBuffer(renderType);
-                            sourceBatchEnded = false;
+                        if (blockValidness == BlockValidness.HAS_BARRIER) {
+                            lastBlockPos = blockPos;
+                            continue;
                         }
-                        renderTexturedQueuedPoints(toRender, poseStack, consumer);
-                        toRender.clear();
-                    } else if (blockValidness == BlockValidness.HAS_BARRIER) {
-                        pauseDraw = true;
-                        toRender.clear();
-                    } else {
-                        pauseDraw = false;
-                        toRender.add(pointPair);
-                        continue;
                     }
+
+                    lastBlockPos = blockPos;
+                    toRender.add(pair);
                 }
 
-                lastBlockPos = blockPos;
-
-                if (!pauseDraw) {
-                    renderTexturedPoint(pointPair, poseStack, consumer);
-                } else if (!sourceBatchEnded) {
-                    BUFFER_SOURCE.endBatch();
-                    sourceBatchEnded = true;
+                for (Pair<ColoredPosition, ColoredPosition> pair : toRender) {
+                    renderTexturedPoint(pair.a(), pair.b(), poseStack, consumer);
                 }
-            }
-            if (!sourceBatchEnded) {
-                renderTexturedQueuedPoints(toRender, poseStack, consumer);
-                BUFFER_SOURCE.endBatch();
-            }
+            });
         }
+
         poseStack.popPose();
-    }
-
-    private static void renderQueuedPoints(VertexConsumer consumer, Matrix4f lastMatrix, ColoredPath toRender) {
-        for (ColoredPosition position : toRender.points()) {
-            renderPoint(consumer, lastMatrix, position);
-        }
     }
 
     private static void renderPoint(VertexConsumer consumer, Matrix4f lastMatrix, ColoredPosition coloredPosition) {
@@ -295,20 +237,6 @@ public final class LootrunRenderer {
                 .setColor(pathColor)
                 .setNormal(0, 0, 1)
                 .setLineWidth(3);
-    }
-
-    private static void renderTexturedQueuedPoints(
-            List<Pair<ColoredPosition, ColoredPosition>> pointPairList,
-            PoseStack poseStack,
-            VertexConsumer vertexConsumer) {
-        for (Pair<ColoredPosition, ColoredPosition> pointPair : pointPairList) {
-            renderTexturedPoint(pointPair.a(), pointPair.b(), poseStack, vertexConsumer);
-        }
-    }
-
-    private static void renderTexturedPoint(
-            Pair<ColoredPosition, ColoredPosition> pointPair, PoseStack poseStack, VertexConsumer vertexConsumer) {
-        renderTexturedPoint(pointPair.a(), pointPair.b(), poseStack, vertexConsumer);
     }
 
     private static void renderTexturedPoint(
