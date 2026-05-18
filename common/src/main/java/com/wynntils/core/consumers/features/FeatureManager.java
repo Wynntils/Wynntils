@@ -149,11 +149,13 @@ import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
 import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.features.ui.CustomTradeMarketResultScreenFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
+import com.wynntils.features.ui.NpcDialogueFeature;
 import com.wynntils.features.ui.ProfessionHighlightFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
+import com.wynntils.features.utilities.AutoProgressDialogueFeature;
 import com.wynntils.features.utilities.AutoSkipCutscenesFeature;
 import com.wynntils.features.utilities.CharacterSelectionUtilitiesFeature;
 import com.wynntils.features.utilities.EnhancedStreamerModeFeature;
@@ -380,6 +382,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomTerritoryManagementScreenFeature());
         registerFeature(new CustomTradeMarketResultScreenFeature());
         registerFeature(new LobbyUptimeFeature());
+        registerFeature(new NpcDialogueFeature());
         registerFeature(new ProfessionHighlightFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
@@ -388,6 +391,7 @@ public final class FeatureManager extends Manager {
 
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
+        registerFeature(new AutoProgressDialogueFeature());
         registerFeature(new AutoSkipCutscenesFeature());
         registerFeature(new CharacterSelectionUtilitiesFeature());
         registerFeature(new EnhancedStreamerModeFeature());
