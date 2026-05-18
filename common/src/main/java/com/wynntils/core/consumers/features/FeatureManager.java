@@ -57,6 +57,7 @@ import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.debug.PlayerInfoFooterDebuggerFeature;
 import com.wynntils.features.embellishments.RemoveShinyGlintFeature;
+import com.wynntils.features.embellishments.SeemlessWeaponFeature;
 import com.wynntils.features.embellishments.WarHornFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
@@ -264,6 +265,7 @@ public final class FeatureManager extends Manager {
 
         // region embellishments
         registerFeature(new RemoveShinyGlintFeature());
+        registerFeature(new SeemlessWeaponFeature());
         registerFeature(new WarHornFeature());
         registerFeature(new WybelSoundFeature());
         registerFeature(new WynntilsCosmeticsFeature());
