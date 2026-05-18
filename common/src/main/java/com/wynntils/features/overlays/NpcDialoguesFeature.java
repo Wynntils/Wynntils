@@ -14,25 +14,25 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
-import com.wynntils.overlays.DetachedDialogueOverlay;
+import com.wynntils.overlays.DialogueOverlay;
 import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
-public class DialoguesFeature extends Feature {
+public class NpcDialoguesFeature extends Feature {
+    @RegisterOverlay(renderType = RenderElementType.TITLE)
+    private final Overlay detachedDialogueOverlay = new DialogueOverlay();
+
     @Persisted
     protected final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
 
     @Persisted
     public final Config<Boolean> hideFadeEffect = new Config<>(false);
 
-    public DialoguesFeature() {
+    public NpcDialoguesFeature() {
         super(new ProfileDefault.Builder()
                 .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER)
                 .build());
     }
-
-    @RegisterOverlay(renderType = RenderElementType.TITLE)
-    private final Overlay detachedDialogueOverlay = new DetachedDialogueOverlay();
 
     @Override
     protected void onConfigUpdate(Config<?> config) {

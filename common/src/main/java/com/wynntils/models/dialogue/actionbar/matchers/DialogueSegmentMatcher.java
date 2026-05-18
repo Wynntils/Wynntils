@@ -12,8 +12,12 @@ import com.wynntils.models.dialogue.actionbar.segments.DialogueSegment;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.concurrent.atomic.AtomicReference;
 import net.minecraft.network.chat.FontDescription;
+import net.minecraft.resources.Identifier;
 
 public class DialogueSegmentMatcher implements ActionBarSegmentMatcher {
+    private static final String DIALOGUE_START_PATH = "hud/dialogue";
+    private static final String FADE_END_PATH = "effect/fade";
+
     @Override
     public ActionBarSegment parse(StyledText actionBar) {
         StringBuilder segmentBuilder = new StringBuilder();
@@ -24,10 +28,10 @@ public class DialogueSegmentMatcher implements ActionBarSegmentMatcher {
 
             // Dialogue is made out of many special fonts, all of them are located in hud/dialogue
             // The exception is the fade effect which is matched in a separate segment
-            if (font instanceof FontDescription.Resource(net.minecraft.resources.Identifier id)) {
+            if (font instanceof FontDescription.Resource(Identifier id)) {
                 String resourcePath = id.getPath();
 
-                if (resourcePath.startsWith("hud/dialogue") && !resourcePath.endsWith("effect/fade")) {
+                if (resourcePath.startsWith(DIALOGUE_START_PATH) && !resourcePath.endsWith(FADE_END_PATH)) {
                     segmentBuilder.append(currentPart.getString(null, StyleType.NONE));
                     content.getAndUpdate(styledText -> styledText.appendPart(currentPart));
                 }

@@ -19,11 +19,11 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 
-public class DetachedDialogueOverlay extends Overlay {
+public class DialogueOverlay extends Overlay {
     @Persisted
     public final Config<Float> scale = new Config<>(1f);
 
-    public DetachedDialogueOverlay() {
+    public DialogueOverlay() {
         super(
                 new OverlayPosition(
                         -9,

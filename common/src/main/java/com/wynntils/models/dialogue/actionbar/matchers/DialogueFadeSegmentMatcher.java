@@ -11,18 +11,21 @@ import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.models.dialogue.actionbar.segments.DialogueSegment;
 import com.wynntils.utils.type.IterationDecision;
 import net.minecraft.network.chat.FontDescription;
+import net.minecraft.resources.Identifier;
 
 public class DialogueFadeSegmentMatcher implements ActionBarSegmentMatcher {
+    private static final String FADE_PATH = "hud/dialogue/effect/fade";
+
     @Override
     public ActionBarSegment parse(StyledText actionBar) {
         StringBuilder segmentBuilder = new StringBuilder();
         actionBar.iterate((currentPart, changes) -> {
             FontDescription font = currentPart.getPartStyle().getFont();
 
-            if (font instanceof FontDescription.Resource(net.minecraft.resources.Identifier id)) {
+            if (font instanceof FontDescription.Resource(Identifier id)) {
                 String resourcePath = id.getPath();
 
-                if (resourcePath.startsWith("hud/dialogue/effect/fade")) {
+                if (resourcePath.startsWith(FADE_PATH)) {
                     segmentBuilder.append(currentPart.getString(null, StyleType.NONE));
                 }
             }
