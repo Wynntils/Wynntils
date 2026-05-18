@@ -14,7 +14,7 @@ public class StoreModel extends Model {
 
     private static final int SELECTED_COSMETIC_SLOT = 4;
 
-    private float weaponModel = 0.0f;
+    private Float weaponModel = null;
 
     public StoreModel() {
         super(List.of());
@@ -31,7 +31,7 @@ public class StoreModel extends Model {
         }
     }
 
-    public float getWeaponModel() {
+    public Float getWeaponModel() {
         return weaponModel;
     }
 }
