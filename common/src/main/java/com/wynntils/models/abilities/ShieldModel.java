@@ -20,8 +20,8 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -62,7 +62,7 @@ public final class ShieldModel extends Model {
                 // So we must collect all possible spawns
                 Entity entity = McUtils.mc().level.getEntity(event.getId());
                 if (entity == null) return;
-                if (!(entity instanceof ArmorStand shieldAS)) return;
+                if (!(entity instanceof Display.ItemDisplay shieldID)) return;
 
                 Vec3 playerPos = McUtils.player().position();
                 Managers.TickScheduler.scheduleLater(
@@ -71,19 +71,19 @@ public final class ShieldModel extends Model {
 
                             // This must be ran with a delay, as inventory contents are set a couple ticks after the
                             // entity spawns.
-                            if (!shieldType.verifyShield(shieldAS)) return;
+                            if (!shieldType.verifyShield(shieldID)) return;
 
                             // If the player is standing still, the armor stands spawn about 2.1 blocks away
                             // from the player. But if the player moves, it can be up to ~ 4 blocks depending
                             // on walk speed.
-                            if (shieldAS.position().distanceTo(playerPos) > SEARCH_RADIUS) return;
+                            if (shieldID.position().distanceTo(playerPos) > SEARCH_RADIUS) return;
 
                             // Save field in local variable to avoid surprises where it is overwritten by null
                             List<Integer> collector = collectedIds;
                             // If we're not collecting shields, do nothing.
                             if (collector == null) return;
 
-                            collector.add(shieldAS.getId());
+                            collector.add(shieldID.getId());
 
                             activeShieldType = shieldType;
 
@@ -122,7 +122,7 @@ public final class ShieldModel extends Model {
     }
 
     public int getShieldCharge() {
-        return spawnedIds == null ? 0 : spawnedIds.size();
+        return spawnedIds == null || activeShieldType == null ? 0 : spawnedIds.size() / activeShieldType.divideBy();
     }
 
     public ShieldType getActiveShieldType() {
