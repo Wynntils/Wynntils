@@ -1,20 +1,11 @@
 package com.wynntils.features.embellishments;
 
-import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
-import com.wynntils.mc.event.DataComponentGetEvent;
-import com.wynntils.models.items.properties.GearTypeItemProperty;
-import com.wynntils.utils.mc.McUtils;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.SubscribeEvent;
 
-import java.util.Optional;
+public class ApplyWeaponSkinFeature extends Feature {
 
-public class SeemlessWeaponFeature extends Feature {
-
-    public SeemlessWeaponFeature() {
+    public ApplyWeaponSkinFeature() {
         super(ProfileDefault.onlyDefault());
     }
 

@@ -34,6 +34,7 @@
     "GuiMixin",
     "HumanoidArmorLayerMixin",
     "ItemEntityRendererMixin",
+    "ItemInHandRendererMixin",
     "ItemStackLayerRenderStateMixin",
     "ItemStackMixin",
     "ItemStackRenderStateMixin",
