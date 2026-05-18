@@ -16,16 +16,16 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.models.players.type.PlayerRank;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.mc.StyledTextUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.REDIRECTS)
 public class ChatRedirectFeature extends Feature {
@@ -147,7 +147,7 @@ public class ChatRedirectFeature extends Feature {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageEvent.Match e) {
-        StyledText message = StyledTextUtils.unwrap(e.getMessage()).stripAlignment();
+        StyledText message = e.getMessage();
         for (Redirector redirector : redirectors) {
             RedirectAction action = redirector.getAction();
             if (action == RedirectAction.KEEP) continue;

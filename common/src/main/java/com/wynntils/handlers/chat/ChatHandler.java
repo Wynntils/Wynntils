@@ -15,10 +15,12 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
+import com.wynntils.utils.mc.StyledTextUtils;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 /**
  * The responsibility of this class is to act as the first gateway for incoming
@@ -42,6 +44,7 @@ public final class ChatHandler extends Handler {
 
     private final LinkedHashSet<QueuedMessage> chatQueue = new LinkedHashSet<>();
     private int chatQueueTicks = 0;
+    private RecipientType lastRecipientType = RecipientType.INFO;
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSystemChatReceived(SystemMessageEvent.ChatReceivedEvent event) {
@@ -69,13 +72,44 @@ public final class ChatHandler extends Handler {
         WynntilsMod.info("[CHAT/" + recipientType + "] "
                 + message.getString(StyleType.COMPLETE).replace("§", "&"));
 
-        ChatMessageEvent.Match receivedEvent = new ChatMessageEvent.Match(message, recipientType);
+        boolean prefixWrapped = recipientType.hasPrefix() || StyledTextUtils.hasWynnChatPrefix(message);
+        StyledText matchMessage =
+                prefixWrapped ? StyledTextUtils.unwrap(message).stripAlignment() : message;
+
+        ChatMessageEvent.Match receivedEvent = new ChatMessageEvent.Match(matchMessage, recipientType);
         WynntilsMod.postEvent(receivedEvent);
         if (receivedEvent.isChatCanceled()) return null;
 
         ChatMessageEvent.Edit rewriteEvent = new ChatMessageEvent.Edit(message, recipientType);
         WynntilsMod.postEvent(rewriteEvent);
-        return rewriteEvent.getMessage();
+        StyledText rewritten = rewriteEvent.getMessage();
+
+        if (!rewritten.equals(message) && rewriteEvent.isRewrapAllowed()) {
+            rewritten = rewrapEditedMessage(message, rewritten, recipientType);
+        }
+
+        lastRecipientType = recipientType;
+        return rewritten;
+    }
+
+    private StyledText rewrapEditedMessage(
+            StyledText originalMessage, StyledText rewritten, RecipientType recipientType) {
+        StyledText unwrapped = StyledTextUtils.unwrap(rewritten);
+
+        if (recipientType.hasPrefix()) {
+            StyledText logicalMessage = StyledTextUtils.removeFirstPrefix(unwrapped, recipientType);
+            StyledText prefixed = StyledTextUtils.prefixWrap(logicalMessage, recipientType);
+            boolean isContinuation = lastRecipientType == recipientType;
+            StyledText unprefixed = StyledTextUtils.removeFirstPrefix(prefixed, recipientType);
+
+            return StyledTextUtils.addPrefix(unprefixed, recipientType, isContinuation);
+        }
+
+        if (StyledTextUtils.hasWynnChatPrefix(originalMessage)) {
+            return StyledTextUtils.rewrapWithOriginalPrefix(unwrapped, originalMessage);
+        }
+
+        return rewritten;
     }
 
     public RecipientType getRecipientType(StyledText codedMessage) {

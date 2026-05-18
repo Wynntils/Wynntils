@@ -10,21 +10,22 @@ import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.wynn.LocationUtils;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.network.chat.Style;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @ConfigCategory(Category.CHAT)
 public class ChatCoordinatesFeature extends Feature {
@@ -50,50 +51,198 @@ public class ChatCoordinatesFeature extends Feature {
         e.setMessage(modified);
     }
 
+    /**
+     * Detects coordinates in the plain unwrapped chat string, then rebuilds the styled chat text only when a
+     * coordinate was found.
+     * <p>
+     * Example: {@code wind chime is at -1437,124,-1256 on the side} becomes a clickable
+     * {@code [-1437, 124, -1256]} location part, while the surrounding message keeps its original style.
+     */
     private static StyledText getStyledTextWithCoordinatesInserted(StyledText styledText) {
-        return styledText.iterateBackwards((part, changes) -> {
-            if (END_OF_HEADER_PATTERN
-                    .matcher(part.getString(null, StyleType.NONE))
-                    .matches()) {
-                return IterationDecision.BREAK;
+        // Cheap filter before unwrapping or regex work; a coordinate cannot exist without a digit.
+        if (!containsDigit(styledText.getString(StyleType.NONE))) return styledText;
+
+        StyledText unwrappedText = StyledTextUtils.unwrap(styledText);
+        String message = unwrappedText.getString(StyleType.NONE);
+        if (message.isEmpty()) return styledText;
+
+        Matcher matcher = LocationUtils.strictCoordinateMatcher(message);
+        List<LocationReplacement> replacements = null;
+        int headerEndIndex = getHeaderEndIndex(unwrappedText);
+
+        while (matcher.find()) {
+            Optional<Location> location = LocationUtils.parseFromString(matcher.group(1));
+
+            if (location.isEmpty()) {
+                continue;
             }
 
-            StyledTextPart partToReplace = part;
-            Matcher matcher = LocationUtils.strictCoordinateMatcher(partToReplace.getString(null, StyleType.NONE));
-
-            while (matcher.find()) {
-                Optional<Location> location = LocationUtils.parseFromString(matcher.group(1));
-
-                if (location.isEmpty()) {
-                    continue;
-                }
-
-                String match = partToReplace.getString(null, StyleType.NONE);
-
-                String firstPart = match.substring(0, matcher.start(1));
-                String lastPart = match.substring(matcher.end(1));
-
-                if (firstPart.endsWith("[") && lastPart.startsWith("]")) {
-                    firstPart = firstPart.substring(0, firstPart.length() - 1);
-                    lastPart = lastPart.substring(1);
-                }
-
-                PartStyle partStyle = partToReplace.getPartStyle();
-
-                StyledTextPart first = new StyledTextPart(firstPart, partStyle.getStyle(), null, Style.EMPTY);
-                StyledTextPart coordinate = StyledTextUtils.createLocationPart(location.get());
-                StyledTextPart last = new StyledTextPart(lastPart, partStyle.getStyle(), null, Style.EMPTY);
-
-                changes.remove(partToReplace);
-                changes.add(first);
-                changes.add(coordinate);
-                changes.add(last);
-
-                partToReplace = last;
-                matcher = LocationUtils.strictCoordinateMatcher(lastPart);
+            int startIndex = matcher.start(1);
+            int endIndex = matcher.end(1);
+            if (startIndex < headerEndIndex) {
+                continue;
             }
 
-            return IterationDecision.CONTINUE;
-        });
+            if (replacements == null) {
+                replacements = new ArrayList<>();
+            }
+
+            int replacementStartIndex = getBracketAwareStartIndex(message, startIndex);
+            int replacementEndIndex = getBracketAwareEndIndex(message, endIndex);
+
+            // Replace only the logical coordinate range; ChatHandler rebuilds the chat wrap after edit events.
+            replacements.add(new LocationReplacement(replacementStartIndex, replacementEndIndex, location.get()));
+        }
+
+        if (replacements == null) return styledText;
+
+        return applyLocationReplacements(unwrappedText, replacements);
+    }
+
+    /**
+     * Replaces matched coordinate ranges with {@link StyledTextUtils#createLocationPart(Location)} while streaming the
+     * original parts once. This keeps the original prefix/name/message styling instead of rebuilding the whole message
+     * from one flat color.
+     */
+    private static StyledText applyLocationReplacements(StyledText styledText, List<LocationReplacement> replacements) {
+        List<StyledTextPart> parts = new ArrayList<>();
+        int globalIndex = 0;
+        int replacementIndex = 0;
+
+        // Stream original parts once, only coordinate ranges are replaced with the normalized location part.
+        for (StyledTextPart part : styledText) {
+            String partText = part.getString(null, StyleType.NONE);
+            int partStartIndex = globalIndex;
+            int partEndIndex = partStartIndex + partText.length();
+
+            while (replacementIndex < replacements.size()
+                    && replacements.get(replacementIndex).endIndex <= partStartIndex) {
+                replacementIndex++;
+            }
+
+            if (replacementIndex >= replacements.size()
+                    || replacements.get(replacementIndex).startIndex >= partEndIndex) {
+                parts.add(part);
+                globalIndex = partEndIndex;
+                continue;
+            }
+
+            int partOffset = 0;
+            while (replacementIndex < replacements.size()) {
+                LocationReplacement replacement = replacements.get(replacementIndex);
+                if (replacement.startIndex >= partEndIndex) break;
+
+                int replacementStartInPart = Math.max(replacement.startIndex - partStartIndex, 0);
+                int replacementEndInPart = Math.min(replacement.endIndex - partStartIndex, partText.length());
+
+                addOriginalPart(parts, part, partText.substring(partOffset, replacementStartInPart));
+
+                if (replacement.startIndex >= partStartIndex) {
+                    parts.add(StyledTextUtils.createLocationPart(replacement.location));
+                }
+
+                partOffset = replacementEndInPart;
+                if (replacement.endIndex <= partEndIndex) {
+                    replacementIndex++;
+                } else {
+                    break;
+                }
+            }
+
+            addOriginalPart(parts, part, partText.substring(partOffset));
+            globalIndex = partEndIndex;
+        }
+
+        return StyledText.fromParts(parts);
+    }
+
+    /**
+     * Adds plain text using an original part's style and merges adjacent parts with the same style.
+     * <p>
+     * This avoids creating one component per word/space during replacement.
+     */
+    private static void addOriginalPart(List<StyledTextPart> parts, StyledTextPart originalPart, String text) {
+        addStyledPart(parts, text, originalPart.getPartStyle().getStyle());
+    }
+
+    /**
+     * Finds the end of the chat header, such as the player name plus colon, so anything in the prefix are ignored.
+     */
+    private static int getHeaderEndIndex(StyledText styledText) {
+        int currentIndex = 0;
+
+        for (StyledTextPart part : styledText) {
+            String partText = part.getString(null, StyleType.NONE);
+            currentIndex += partText.length();
+
+            if (END_OF_HEADER_PATTERN.matcher(partText).matches()) {
+                return currentIndex;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * Adds a styled part and merges it with the previous part when possible.
+     */
+    private static void addStyledPart(List<StyledTextPart> parts, String text, Style style) {
+        if (text.isEmpty()) return;
+
+        if (!parts.isEmpty() && parts.getLast().getPartStyle().getStyle().equals(style)) {
+            StyledTextPart lastPart = parts.removeLast();
+            String mergedText = lastPart.getString(null, StyleType.NONE) + text;
+            parts.add(new StyledTextPart(mergedText, style, null, null));
+            return;
+        }
+
+        parts.add(new StyledTextPart(text, style, null, null));
+    }
+
+    /**
+     * Fast pre-check before regex/unwrapping work; valid coordinates always contain at least one digit.
+     */
+    private static boolean containsDigit(String message) {
+        for (int i = 0; i < message.length(); i++) {
+            if (Character.isDigit(message.charAt(i))) return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * If the coordinate starts after an opening bracket, include the bracket and any inner whitespace in the replacement.
+     */
+    private static int getBracketAwareStartIndex(String message, int coordinateStartIndex) {
+        int index = coordinateStartIndex - 1;
+        while (index >= 0 && Character.isWhitespace(message.charAt(index))) {
+            index--;
+        }
+
+        return index >= 0 && message.charAt(index) == '[' ? index : coordinateStartIndex;
+    }
+
+    /**
+     * If the coordinate ends before a closing bracket, include any inner whitespace and the bracket in the replacement.
+     */
+    private static int getBracketAwareEndIndex(String message, int coordinateEndIndex) {
+        int index = coordinateEndIndex;
+        while (index < message.length() && Character.isWhitespace(message.charAt(index))) {
+            index++;
+        }
+
+        return index < message.length() && message.charAt(index) == ']' ? index + 1 : coordinateEndIndex;
+    }
+
+    private static class LocationReplacement {
+        private final int startIndex;
+        private final int endIndex;
+        private final Location location;
+
+        private LocationReplacement(int startIndex, int endIndex, Location location) {
+            this.startIndex = startIndex;
+            this.endIndex = endIndex;
+            this.location = location;
+        }
     }
 }

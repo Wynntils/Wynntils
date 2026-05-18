@@ -48,6 +48,11 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.CappedValue;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -57,10 +62,6 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.SubscribeEvent;
 
 public final class RaidModel extends Model {
     // These should be set to whatever the highest amount in any raid is.
@@ -178,10 +179,8 @@ public final class RaidModel extends Model {
             return;
         }
 
-        StyledText unwrapped = StyledTextUtils.unwrap(styledText).stripAlignment();
-
         if (inBuffRoom) {
-            Matcher matcher = unwrapped.getMatcher(RAID_CHOOSE_BUFF_PATTERN);
+            Matcher matcher = styledText.getMatcher(RAID_CHOOSE_BUFF_PATTERN);
             if (matcher.matches()) {
                 String playerName = matcher.group(4);
                 // if the player is nicknamed
@@ -201,7 +200,7 @@ public final class RaidModel extends Model {
             return;
         }
 
-        Matcher matcher = unwrapped.getMatcher(PARASITE_OVERTAKEN_PATTERN);
+        Matcher matcher = styledText.getMatcher(PARASITE_OVERTAKEN_PATTERN);
         if (matcher.matches()) {
             parasiteOvertaken = matcher.group("player").equals(McUtils.playerName());
             return;

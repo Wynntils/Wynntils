@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.territories;
@@ -19,8 +19,9 @@ import com.wynntils.models.territories.markers.GuildAttackMarkerProvider;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.TimedSet;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,7 +34,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import net.neoforged.bus.api.SubscribeEvent;
 
 /**
  * A note about territory attack timers:
@@ -76,7 +76,7 @@ public final class GuildAttackTimerModel extends Model {
     public void onMessage(ChatMessageEvent.Match event) {
         // TODO: Once RecipientType supports Wynncraft 2.1 messages, we can check for RecipientType.GUILD
 
-        StyledText cleanMessage = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
+        StyledText cleanMessage = event.getMessage();
         Matcher matcher = cleanMessage.getMatcher(WAR_MESSAGE_PATTERN);
         if (matcher.matches()) {
             long timerEnd = System.currentTimeMillis();

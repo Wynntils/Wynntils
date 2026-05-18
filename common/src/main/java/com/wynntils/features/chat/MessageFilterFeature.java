@@ -12,10 +12,10 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
-import com.wynntils.utils.mc.StyledTextUtils;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import java.util.List;
 import java.util.regex.Pattern;
-import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class MessageFilterFeature extends Feature {
@@ -71,14 +71,12 @@ public class MessageFilterFeature extends Feature {
             return;
         }
 
-        StyledText unwrapped = StyledTextUtils.unwrap(msg).stripAlignment();
-
-        if (hideSystemInfo.get() && processFilter(unwrapped, List.of(SYSTEM_INFO))) {
+        if (hideSystemInfo.get() && processFilter(msg, List.of(SYSTEM_INFO))) {
             e.cancelChat();
             return;
         }
 
-        if (hidePartyFinder.get() && processFilter(unwrapped, List.of(PARTY_FINDER))) {
+        if (hidePartyFinder.get() && processFilter(msg, List.of(PARTY_FINDER))) {
             e.cancelChat();
             return;
         }

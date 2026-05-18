@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.worldevents;
@@ -36,18 +36,18 @@ import com.wynntils.models.items.items.game.CorruptedCacheItem;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.Time;
+import net.minecraft.core.Position;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.core.Position;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
-import net.neoforged.bus.api.SubscribeEvent;
 
 public final class WorldEventModel extends Model {
     public static final AnnihilationSunBar annihilationSunBar = new AnnihilationSunBar();
@@ -143,7 +143,7 @@ public final class WorldEventModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageEvent.Match event) {
-        StyledText styledText = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
+        StyledText styledText = event.getMessage();
 
         if (styledText.matches(IN_RADIUS_PATTERN)) {
             inWorldEventRadius = true;
