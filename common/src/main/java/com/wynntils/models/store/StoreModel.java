@@ -4,11 +4,14 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.models.containers.containers.CosmeticContainer;
+import com.wynntils.models.items.items.gui.StoreItem;
 import com.wynntils.models.store.type.CosmeticItemType;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 import java.util.List;
+import java.util.Optional;
 
 public class StoreModel extends Model {
 
@@ -26,8 +29,14 @@ public class StoreModel extends Model {
         if (!(Models.Container.getCurrentContainer() instanceof CosmeticContainer container)) return;
         CosmeticItemType cosmeticItemType = container.getCosmeticItemType();
         if (cosmeticItemType == null) return;
+        ItemStack itemStack = event.getItemStack();
+        Optional<StoreItem> storeItemOpt = Models.Item.asWynnItem(itemStack, StoreItem.class);
+        if (storeItemOpt.isEmpty()) {
+            weaponModel = null;
+            return;
+        }
         if (cosmeticItemType == CosmeticItemType.WEAPON_SKIN) {
-            weaponModel = event.getItemStack().getComponents().get(DataComponents.CUSTOM_MODEL_DATA).getFloat(0);
+            weaponModel = itemStack.getComponents().get(DataComponents.CUSTOM_MODEL_DATA).getFloat(0);
         }
     }
 

@@ -3,6 +3,8 @@ package com.wynntils.features.embellishments;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
+import com.wynntils.mc.event.DataComponentGetEvent;
+import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.RenderArmWithItemEvent;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.RequirementItemProperty;
@@ -40,14 +42,26 @@ public class ApplyWeaponSkinFeature extends Feature {
         if (!reqItemOpt.get().meetsActualRequirements()) return;
 
         data.floats().set(MODEL_FLOAT_INDEX, value);
+
+//        event.setEquippedProgress(1.0f);
     }
 
-//    @SubscribeEvent
-//    public void onGetModelData(DataComponentGetEvent.CustomModelData event) {
-//        if (true) return;
-//        ItemStack itemStack = event.getItemStack();
-//        if (!itemStack.equals(McUtils.player().getMainHandItem())) return;
-//        if (Models.Character.getClassType() != gearItemOpt.get().getGearType().getClassReq()) return;
-//        System.out.println("gearItemModel " + itemStack.getComponents().get(DataComponents.CUSTOM_MODEL_DATA));
-//    }
+    @SubscribeEvent
+    public void onHotbarSlotRender(HotbarSlotRenderEvent.Pre event) {
+
+    }
+
+
+    @SubscribeEvent
+    public void onGetModelData(DataComponentGetEvent.CustomModelData event) {
+        Float value = Models.Store.getWeaponModel();
+        if (value == null) return;
+
+        ItemStack itemStack = event.getItemStack();
+        if (!ItemStack.matches(itemStack, McUtils.player().getMainHandItem())) return;
+        CustomModelData data = itemStack.getComponents().get(DataComponents.CUSTOM_MODEL_DATA);
+
+        if (!data.getFloat(MODEL_FLOAT_INDEX).equals(value)) return;
+        if (event.getValue().getFloat(MODEL_FLOAT_INDEX).equals(value)) return;
+    }
 }
