@@ -15,6 +15,7 @@ import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.models.players.scoreboard.PartyScoreboardPart;
+import com.wynntils.models.players.type.PartyMember;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.services.hades.event.HadesEvent;
@@ -106,6 +107,8 @@ public final class PartyModel extends Model {
     private List<String> partyMembers = new ArrayList<>(); // A set of Strings representing all party members
     private Set<String> offlineMembers =
             new HashSet<>(); // A set of Strings representing all offline (disconnected) party members
+    // A set of PartyMembers representing all party members parsed from scoreboard
+    private List<PartyMember> sbPartyMembers = new ArrayList<>();
 
     public PartyModel() {
         super(List.of());
@@ -334,6 +337,7 @@ public final class PartyModel extends Model {
         partyLeader = null;
         inParty = false;
         offlineMembers = new HashSet<>();
+        resetScoreboardData();
 
         WynntilsMod.postEvent(new HadesRelationsUpdateEvent.PartyList(
                 Set.copyOf(partyMembers), HadesRelationsUpdateEvent.ChangeType.RELOAD));
@@ -398,6 +402,35 @@ public final class PartyModel extends Model {
         return offlineMembers;
     }
 
+    public void addSbPartyMember(PartyMember member) {
+        sbPartyMembers.add(member);
+    }
+
+    public void removeSbPartyMember(int index) {
+        sbPartyMembers.remove(index);
+    }
+
+    public PartyMember getSbPartyMember(int index) {
+        if (index < 0 || index >= sbPartyMembers.size()) return PartyMember.EMPTY;
+        return sbPartyMembers.get(index);
+    }
+
+    public int getSbPartyMemberCount() {
+        return sbPartyMembers.size();
+    }
+
+    public Integer getPartyTotalLevel() {
+        Integer sum = 0;
+        for (PartyMember member : sbPartyMembers) {
+            sum += member.level();
+        }
+        return sum;
+    }
+
+    public void resetScoreboardData() {
+        sbPartyMembers = new ArrayList<>();
+    }
+
     @SubscribeEvent
     public void onSetTeam(SetPlayerTeamEvent e) {
         if (!inParty) return;
@@ -414,6 +447,7 @@ public final class PartyModel extends Model {
     }
 
     // region Party Commands
+
     /**
      * Kicks a player from the party.
      */
