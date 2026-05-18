@@ -18,16 +18,19 @@ public class CosmeticContainer extends Container implements SearchableContainerP
     private static final Pattern NEXT_PAGE_PATTERN = Pattern.compile("§7Next Page");
     private static final Pattern PREVIOUS_PAGE_PATTERN = Pattern.compile("§7Previous Page");
 
-    private CosmeticContainer(String titleCharacter) {
+    private final CosmeticItemType cosmeticItemType;
+
+    private CosmeticContainer(CosmeticItemType cosmeticItemType, String titleCharacter) {
         super(Pattern.compile(TITLE_START + titleCharacter));
+        this.cosmeticItemType = cosmeticItemType;
     }
 
     public CosmeticContainer(CosmeticItemType cosmeticItemType) {
-        this(cosmeticItemType.getTitleCharacter());
+        this(cosmeticItemType, cosmeticItemType.getTitleCharacter());
     }
 
     public CosmeticContainer() {
-        this(COSMETIC_PREVIEW_TITLE_CHARACTER);
+        this(null, COSMETIC_PREVIEW_TITLE_CHARACTER);
     }
 
     @Override
@@ -63,5 +66,9 @@ public class CosmeticContainer extends Container implements SearchableContainerP
     @Override
     public int renderYOffset() {
         return 20;
+    }
+
+    public CosmeticItemType getCosmeticItemType() {
+        return cosmeticItemType;
     }
 }
