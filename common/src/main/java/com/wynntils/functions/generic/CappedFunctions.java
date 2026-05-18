@@ -4,105 +4,44 @@
  */
 package com.wynntils.functions.generic;
 
-import com.wynntils.core.consumers.functions.GenericFunction;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.type.CappedValue;
-import java.util.List;
 
+
+@SuppressWarnings("unused") // Functions are accessed via reflection
 public final class CappedFunctions {
-    public static class CurrentFunction extends GenericFunction<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return arguments.getArgument("capped").getCappedValue().current();
-        }
 
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("capped", CappedValue.class, null)));
-        }
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("curr");
-        }
+    @TemplateFunction(name = "current", aliases = "curr")
+    public static int currentFunction(CappedValue cappedValue) {
+        return cappedValue.current();
     }
 
-    public static class CapFunction extends GenericFunction<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return arguments.getArgument("capped").getCappedValue().max();
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("capped", CappedValue.class, null)));
-        }
+    @TemplateFunction(name = "cap")
+    public static int capFunction(CappedValue cappedValue) {
+        return cappedValue.max();
     }
 
-    public static class RemainingFunction extends GenericFunction<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return arguments.getArgument("capped").getCappedValue().getRemaining();
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("capped", CappedValue.class, null)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("rem");
-        }
+    @TemplateFunction(name = "remaining", aliases = "rem")
+    public static int remainingFunction(CappedValue cappedValue) {
+        return cappedValue.getRemaining();
     }
 
-    public static class PercentageFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return arguments.getArgument("capped").getCappedValue().getPercentage();
-        }
 
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("capped", CappedValue.class, null)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("pct");
-        }
+    @TemplateFunction(name = "percentage", aliases = "pct")
+    public static double percentageFunction(CappedValue cappedValue) {
+        return cappedValue.getPercentage();
     }
 
-    public static class AtCapFunction extends GenericFunction<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return arguments.getArgument("capped").getCappedValue().isAtCap();
-        }
 
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("capped", CappedValue.class, null)));
-        }
+    @TemplateFunction(name = "at_cap")
+    public static boolean atCapFunction(CappedValue cappedValue) {
+        return cappedValue.isAtCap();
     }
 
-    public static class CappedFunction extends GenericFunction<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return new CappedValue(
-                    arguments.getArgument("current").getIntegerValue(),
-                    arguments.getArgument("cap").getIntegerValue());
-        }
 
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("current", Number.class, null), new Argument<>("cap", Number.class, null)));
-        }
+    @TemplateFunction(name = "capped", isPure = true)
+    public static CappedValue cappedFunction(int current, int cap) {
+        return new CappedValue(current, cap);
     }
 }

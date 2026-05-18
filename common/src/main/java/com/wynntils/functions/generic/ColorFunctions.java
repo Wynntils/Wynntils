@@ -4,191 +4,86 @@
  */
 package com.wynntils.functions.generic;
 
-import com.wynntils.core.consumers.functions.Function;
-import com.wynntils.core.consumers.functions.GenericFunction;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+
+import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.colors.WynncraftShaderColor;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import net.minecraft.client.resources.language.I18n;
 
+@SuppressWarnings("unused") // Functions are accessed via reflection
 public final class ColorFunctions {
-    public static class FromRgbFunction extends GenericFunction<CustomColor> {
-        @Override
-        public CustomColor getValue(FunctionArguments arguments) {
-            int r = arguments.getArgument("r").getIntegerValue();
-            int g = arguments.getArgument("g").getIntegerValue();
-            int b = arguments.getArgument("b").getIntegerValue();
-            return new CustomColor(r, g, b);
-        }
 
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("r", Integer.class, null),
-                    new Argument<>("g", Integer.class, null),
-                    new Argument<>("b", Integer.class, null)));
-        }
+    @TemplateFunction(name = "from_rgb", isPure = true)
+    public static CustomColor fromRgbFunction(int r, int g, int b) {
+        return new CustomColor(r, g, b);
     }
 
-    public static class FromRgbPercentFunction extends GenericFunction<CustomColor> {
-        @Override
-        public CustomColor getValue(FunctionArguments arguments) {
-            float r = arguments.getArgument("r").getDoubleValue().floatValue();
-            float g = arguments.getArgument("g").getDoubleValue().floatValue();
-            float b = arguments.getArgument("b").getDoubleValue().floatValue();
-            return new CustomColor(r, g, b);
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("r", Number.class, null),
-                    new Argument<>("g", Number.class, null),
-                    new Argument<>("b", Number.class, null)));
-        }
+    @TemplateFunction(name = "from_rgb_percent", isPure = true)
+    public static CustomColor fromRgbPercentFunction(double r, double g, double b) {
+        return new CustomColor((float) r, (float) g, (float) b);
     }
 
-    public static class FromHexFunction extends GenericFunction<CustomColor> {
-        @Override
-        public CustomColor getValue(FunctionArguments arguments) {
-            return CustomColor.fromHexString(arguments.getArgument("hex").getStringValue());
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("hex", String.class, null)));
-        }
+    @TemplateFunction(name = "from_hex", isPure = true)
+    public static CustomColor fromHexFunction(String hex) {
+        return CustomColor.fromHexString(hex);
     }
 
-    public static class HueShiftFunction extends GenericFunction<CustomColor> {
-        @Override
-        public CustomColor getValue(FunctionArguments arguments) {
-            CustomColor color = arguments.getArgument("color").getColorValue();
-            float degree = arguments.getArgument("degree").getDoubleValue().floatValue();
-            return color.hueShift(degree);
-        }
 
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("color", CustomColor.class, null), new Argument<>("degree", Number.class, null)));
-        }
+    @TemplateFunction(name = "hue_shift")
+    public CustomColor hueShiftFunction(CustomColor color, double degree) {
+        return color.hueShift((float) degree);
     }
 
-    public static class SaturationShiftFunction extends GenericFunction<CustomColor> {
-        @Override
-        public CustomColor getValue(FunctionArguments arguments) {
-            CustomColor color = arguments.getArgument("color").getColorValue();
-            float degree = arguments.getArgument("degree").getDoubleValue().floatValue();
-            return color.saturationShift(degree);
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("color", CustomColor.class, null), new Argument<>("degree", Number.class, null)));
-        }
+    @TemplateFunction(name = "saturation_shift")
+    public static CustomColor saturationShiftFunction(CustomColor color, double degree) {
+        return color.saturationShift((float) degree);
     }
 
-    public static class BrightnessShiftFunction extends GenericFunction<CustomColor> {
-        @Override
-        public CustomColor getValue(FunctionArguments arguments) {
-            CustomColor color = arguments.getArgument("color").getColorValue();
-            float degree = arguments.getArgument("degree").getDoubleValue().floatValue();
-            return color.brightnessShift(degree);
-        }
 
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("color", CustomColor.class, null), new Argument<>("degree", Number.class, null)));
-        }
+    @TemplateFunction(name = "brightness_shift")
+    public static CustomColor brightnessShiftFunction(CustomColor color, double degree) {
+        return color.brightnessShift((float) degree);
     }
 
-    public static class RainbowShaderFunction extends Function<CustomColor> {
-        @Override
-        public CustomColor getValue(FunctionArguments arguments) {
-            return WynncraftShaderColor.RAINBOW.color;
-        }
+
+    @TemplateFunction(name = "rainbow_shader", isPure = true)
+    public static CustomColor rainbowShaderFunction() {
+        return WynncraftShaderColor.RAINBOW.color;
     }
 
-    public static class GradientShaderFunction extends Function<CustomColor> {
-        @Override
-        public CustomColor getValue(FunctionArguments arguments) {
-            return switch (arguments.getArgument("style").getIntegerValue()) {
-                case 2 -> WynncraftShaderColor.GRADIENT_2.color;
-                default -> WynncraftShaderColor.GRADIENT.color;
-            };
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("style", Integer.class, 1)));
-        }
+    @TemplateFunction(name = "gradient_shader", isPure = true)
+    public static CustomColor gradientShaderFunction(int style) {
+        return switch (style) {
+            case 2 -> WynncraftShaderColor.GRADIENT_2.color;
+            default -> WynncraftShaderColor.GRADIENT.color;
+        };
     }
 
-    public static class FadeShaderFunction extends Function<CustomColor> {
-        @Override
-        public CustomColor getValue(FunctionArguments arguments) {
-            return WynncraftShaderColor.FADE.color;
-        }
+    @TemplateFunction(name = "fade_shader", isPure = true)
+    public static CustomColor fadeShaderFunction() {
+        return WynncraftShaderColor.FADE.color;
     }
 
-    public static class BlinkShaderFunction extends Function<CustomColor> {
-        @Override
-        public CustomColor getValue(FunctionArguments arguments) {
-            return WynncraftShaderColor.BLINK.color;
-        }
+    @TemplateFunction(name = "blink_shader", isPure = true)
+    public static CustomColor blinkShaderFunction() {
+        return WynncraftShaderColor.BLINK.color;
     }
 
-    public static class ShineShaderFunction extends Function<CustomColor> {
-        @Override
-        public CustomColor getValue(FunctionArguments arguments) {
-            return WynncraftShaderColor.SHINE.color;
-        }
+
+    @TemplateFunction(name = "shine_shader", isPure = true)
+    public static CustomColor shineShaderFunction() {
+        return WynncraftShaderColor.SHINE.color;
+
     }
 
-    public static class ToHexStringFunction extends GenericFunction<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            return arguments.getArgument("color").getColorValue().toHexString();
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("color", CustomColor.class, null)));
-        }
+    @TemplateFunction(name = "to_hex_string")
+    public static String toHexStringFunction(CustomColor color) {
+        return color.toHexString();
     }
 
-    public static class WynncraftShaderFunction extends Function<CustomColor> {
-        @Override
-        public CustomColor getValue(FunctionArguments arguments) {
-            WynncraftShaderColor shaderName = WynncraftShaderColor.fromString(
-                    arguments.getArgument("shaderName").getStringValue());
-            return shaderName == null ? CustomColor.NONE : shaderName.color;
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("shaderName", String.class, null)));
-        }
-
-        @Override
-        public String getTranslation(String keySuffix, Object... parameters) {
-            return I18n.get(
-                    getTypeName().toLowerCase(Locale.ROOT) + ".wynntils." + getTranslationKeyName() + "." + keySuffix,
-                    String.join(
-                            ", ",
-                            Arrays.stream(WynncraftShaderColor.values())
-                                    .map(Enum::name)
-                                    .sorted()
-                                    .toList()));
-        }
+    @TemplateFunction(name = "wynncraft_shader", isPure = true)
+    public static CustomColor wynncraftShaderFunction(String shaderName) {
+        WynncraftShaderColor shaderColor = WynncraftShaderColor.fromString(shaderName);
+        return shaderColor == null ? CustomColor.NONE : shaderColor.color;
     }
+
 }

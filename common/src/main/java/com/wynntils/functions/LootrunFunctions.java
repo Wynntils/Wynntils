@@ -5,321 +5,193 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.consumers.functions.Function;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.lootrun.beacons.LootrunBeaconKind;
 import com.wynntils.models.lootrun.type.TaskLocation;
+import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
+
 import java.util.Comparator;
 import java.util.List;
 
+@SuppressWarnings("unused") // Functions are accessed via reflection
 public class LootrunFunctions {
-    public static class DryStreakFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.LootChest.getDryCount();
-        }
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("dry_s");
-        }
+    @TemplateFunction(name = "dry_streak", aliases = "dry_s")
+    public static int dryStreakFunction() {
+        return Models.LootChest.getDryCount();
     }
 
-    public static class DryBoxesFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.LootChest.getDryBoxes();
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("dry_b", "dry_boxes_count");
-        }
+    @TemplateFunction(name = "dry_boxes", aliases = {"dry_b", "dry_boxes_count"})
+    public static int dryBoxesFunction() {
+        return Models.LootChest.getDryBoxes();
     }
 
-    public static class DryPullsFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.dryPulls.get();
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("dry_p", "dry_pulls_count");
-        }
+    @TemplateFunction(name = "dry_pulls", aliases = {"dry_p", "dry_pulls_count"})
+    public static int dryPullsFunction() {
+        return Models.Lootrun.dryPulls.get();
     }
 
-    public static class HighestDryStreakFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.LootChest.getMythicFinds().stream()
-                    .max(Comparator.comparing(MythicFind::dryCount))
-                    .map(MythicFind::dryCount)
-                    .orElse(0);
-        }
+    @TemplateFunction(name = "highest_dry_streak")
+    public static int highestDryStreakFunction() {
+        return Models.LootChest.getMythicFinds().stream().max(Comparator.comparing(MythicFind::dryCount)).map(MythicFind::dryCount).orElse(0);
     }
 
-    public static class LastDryStreakFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            List<MythicFind> mythicFinds = Models.LootChest.getMythicFinds();
+    @TemplateFunction(name = "last_dry_streak")
+    public static int lastDryStreakFunction() {
+        List<MythicFind> mythicFinds = Models.LootChest.getMythicFinds();
 
-            if (mythicFinds.isEmpty()) return 0;
+        if (mythicFinds.isEmpty()) return 0;
 
-            return mythicFinds.getLast().dryCount();
-        }
+        return mythicFinds.getLast().dryCount();
     }
 
-    public static class LastMythicFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            List<MythicFind> mythicFinds = Models.LootChest.getMythicFinds();
+    @TemplateFunction(name = "last_mythic")
+    public static String lastMythicFunction() {
+        List<MythicFind> mythicFinds = Models.LootChest.getMythicFinds();
 
-            if (mythicFinds.isEmpty()) return "";
+        if (mythicFinds.isEmpty()) return "";
 
-            return mythicFinds.getLast().itemName();
-        }
+        return mythicFinds.getLast().itemName();
     }
 
-    public static class ChestOpenedFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.LootChest.getOpenedChestCount();
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("chest_count");
-        }
+    @TemplateFunction(name ="chest_opened", aliases = "chest_count")
+    public static int chestOpenedFunction() {
+        return Models.LootChest.getOpenedChestCount();
     }
 
-    public static class LootrunStateFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getState().toString();
-        }
+    @TemplateFunction(name = "lootrun_state")
+    public static String lootrunStateFunction() {
+        return Models.Lootrun.getState().toString();
+
     }
 
-    public static class LootrunBeaconCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            String color = arguments.getArgument("color").getStringValue();
+    @TemplateFunction(name = "lootrun_beacon_count")
+    public static int lootrunBeaconCountFunction(String color) {
+        LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
+        if (lootrunBeaconKind == null) return -1;
 
-            LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
-            if (lootrunBeaconKind == null) return -1;
-
-            return Models.Lootrun.getBeaconCount(lootrunBeaconKind);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("color", String.class, null)));
-        }
+        return Models.Lootrun.getBeaconCount(lootrunBeaconKind);
     }
 
-    public static class LootrunMissionFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            int missionIndex = arguments.getArgument("index").getIntegerValue();
-            boolean colored = arguments.getArgument("colored").getBooleanValue();
-
-            return Models.Lootrun.getMissionStatus(missionIndex, colored);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("index", Integer.class, null), new Argument<>("colored", Boolean.class, null)));
-        }
+    @TemplateFunction(name = "lootrun_mission")
+    public static String lootrunMissionFunction(int missionIndex, boolean colored) {
+        return Models.Lootrun.getMissionStatus(missionIndex, colored);
     }
 
-    public static class LootrunTrialFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            int trialIndex = arguments.getArgument("index").getIntegerValue();
-
-            return Models.Lootrun.getTrial(trialIndex);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
-        }
+    @TemplateFunction(name = "lootrun_trial")
+    public static String lootrunTrialFunction(int trialIndex) {
+        return Models.Lootrun.getTrial(trialIndex);
     }
 
-    public static class LootrunTaskNameFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            String color = arguments.getArgument("color").getStringValue();
+    @TemplateFunction(name = "lootrun_task_name")
+    public static String lootrunTaskNameFunction(String color) {
+        LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
+        if (lootrunBeaconKind == null) return "";
 
-            LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
-            if (lootrunBeaconKind == null) return "";
+        TaskLocation taskLocation = Models.Lootrun.getTaskForColor(lootrunBeaconKind);
+        if (taskLocation == null) return "";
 
-            TaskLocation taskLocation = Models.Lootrun.getTaskForColor(lootrunBeaconKind);
-            if (taskLocation == null) return "";
-
-            return taskLocation.name();
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("color", String.class, null)));
-        }
+        return taskLocation.name();
     }
 
-    public static class LootrunTaskLocationFunction extends Function<Location> {
-        @Override
-        public Location getValue(FunctionArguments arguments) {
-            String color = arguments.getArgument("color").getStringValue();
+    @TemplateFunction(name = "lootrun_task_location")
+    public static Location lootrunTaskLocationFunction(String color) {
+        LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
+        if (lootrunBeaconKind == null) return new Location(0, 0, 0);
 
-            LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
-            if (lootrunBeaconKind == null) return new Location(0, 0, 0);
+        TaskLocation taskLocation = Models.Lootrun.getTaskForColor(lootrunBeaconKind);
+        if (taskLocation == null) return new Location(0, 0, 0);
 
-            TaskLocation taskLocation = Models.Lootrun.getTaskForColor(lootrunBeaconKind);
-            if (taskLocation == null) return new Location(0, 0, 0);
-
-            return taskLocation.location();
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("color", String.class, null)));
-        }
+        return taskLocation.location();
     }
 
-    public static class LootrunTaskTypeFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            String color = arguments.getArgument("color").getStringValue();
+    @TemplateFunction(name = "lootrun_task_type")
+    public static String lootrunTaskTypeFunction(String color) {
 
-            LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
-            if (lootrunBeaconKind == null) return "";
+        LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
+        if (lootrunBeaconKind == null) return "";
 
-            TaskLocation taskLocation = Models.Lootrun.getTaskForColor(lootrunBeaconKind);
-            if (taskLocation == null) return "";
+        TaskLocation taskLocation = Models.Lootrun.getTaskForColor(lootrunBeaconKind);
+        if (taskLocation == null) return "";
 
-            return EnumUtils.toNiceString(taskLocation.taskType());
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("color", String.class, null)));
-        }
+        return EnumUtils.toNiceString(taskLocation.taskType());
     }
 
-    public static class LootrunBeaconVibrantFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            String color = arguments.getArgument("color").getStringValue();
+    @TemplateFunction(name = "lootrun_beacon_vibrant")
+    public static boolean lootrunBeaconVibrantFunction(String color) {
+        LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
+        if (lootrunBeaconKind == null) return false;
 
-            LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
-            if (lootrunBeaconKind == null) return false;
-
-            return Models.Lootrun.isBeaconVibrant(lootrunBeaconKind);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("color", String.class, null)));
-        }
+        return Models.Lootrun.isBeaconVibrant(lootrunBeaconKind);
     }
 
-    public static class LootrunTimeFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getCurrentTime();
-        }
+    @TemplateFunction(name = "lootrun_time")
+    public static int lootrunTimeFunction() {
+        return Models.Lootrun.getCurrentTime();
     }
 
-    public static class LootrunChallengesFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getChallenges();
-        }
+    @TemplateFunction(name = "lootrun_challenges")
+    public static CappedValue lootrunChallengesFunction() {
+        return Models.Lootrun.getChallenges();
     }
 
-    public static class LootrunLastSelectedBeaconColorFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            LootrunBeaconKind lootrunBeaconKind = Models.Lootrun.getLastTaskBeaconColor();
-            if (lootrunBeaconKind == null) return "";
+    @TemplateFunction(name = "lootrun_last_selected_beacon_color")
+    public static String lootrunLastSelectedBeaconColorFunction() {
+        LootrunBeaconKind lootrunBeaconKind = Models.Lootrun.getLastTaskBeaconColor();
+        if (lootrunBeaconKind == null) return "";
 
-            return EnumUtils.toNiceString(lootrunBeaconKind);
-        }
+        return EnumUtils.toNiceString(lootrunBeaconKind);
     }
 
-    public static class LootrunLastSelectedBeaconVibrantFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return Models.Lootrun.wasLastBeaconVibrant();
-        }
+    @TemplateFunction(name = "lootrun_last_selected_beacon_vibrant")
+    public static boolean lootrunLastSelectedBeaconVibrant() {
+        return Models.Lootrun.wasLastBeaconVibrant();
     }
 
-    public static class LootrunRedBeaconChallengeCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getRedBeaconTaskCount();
-        }
+    @TemplateFunction(name = "lootrun_red_beacon_challenge_count")
+    public static int lootrunRedBeaconChallengeCountFunction() {
+        return Models.Lootrun.getRedBeaconTaskCount();
     }
 
-    public static class LootrunOrangeBeaconCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getActiveOrangeBeacons();
-        }
+    @TemplateFunction(name = "lootrun_orange_beacon_count")
+    public static int lootrunOrangeBeaconCountFunction() {
+        return Models.Lootrun.getActiveOrangeBeacons();
     }
 
-    public static class LootrunNextOrangeExpireFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getChallengesTillNextOrangeExpires();
-        }
+    @TemplateFunction(name = "lootrun_next_orange_expire")
+    public static int lootrunNextOrangeExpireFunction() {
+        return Models.Lootrun.getChallengesTillNextOrangeExpires();
     }
 
-    public static class LootrunRainbowBeaconCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getActiveRainbowBeacons();
-        }
+
+    @TemplateFunction(name = "lootrun_rainbow_beacon_count")
+    public static int lootrunRainbowBeaconCountFunction() {
+        return Models.Lootrun.getActiveRainbowBeacons();
+
     }
 
-    public static class LootrunSacrificesFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getSacrifices();
-        }
+    @TemplateFunction(name = "lootrun_sacrifices")
+    public static int lootrunSacrificesFunction() {
+        return Models.Lootrun.getSacrifices();
+
     }
 
-    public static class LootrunRerollsFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getRerolls();
-        }
+    @TemplateFunction(name = "lootrun_rerolls")
+    public static int lootrunRerollsFunction() {
+        return Models.Lootrun.getRerolls();
     }
 
-    public static class ChestsOpenedThisSessionFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            int tier = arguments.getArgument("tier").getIntegerValue();
-            boolean exact = arguments.getArgument("exact").getBooleanValue();
 
-            return Models.LootChest.getLootChestOpenedThisSession(tier, exact);
-        }
+    @TemplateFunction(name = "chests_opened_this_session", aliases = "session_chests")
+    public static int chestsOpenedThisSessionFunction(int tier, boolean exact) {
+        return Models.LootChest.getLootChestOpenedThisSession(tier, exact);
+    }
 
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new Argument<>("tier", Integer.class, 1), new Argument<>("exact", Boolean.class, false)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("session_chests");
-        }
+    @TemplateFunction(name = "chests_opened_this_session", aliases = "session_chests")
+    public static int chestsOpenedThisSessionFunction() {
+        return chestsOpenedThisSessionFunction(1, false);
     }
 }

@@ -17,41 +17,6 @@ import java.util.List;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public class HadesPartyFunctions {
-//    private abstract static class HadesPartyFunctionBase<T> extends Function<T> {
-//        @Override
-//        public T getValue(FunctionArguments arguments) {
-//            // Get War members first
-//            List<HadesUser> members = Models.War.getHadesUsers();
-//            int index = arguments.getArgument("index").getIntegerValue();
-//
-//            // If there are no War members get regular party members and order them
-//            if (members.isEmpty()) {
-//                List<String> partyMembers = Models.Party.getPartyMembers();
-//                members = Services.Hades.getHadesUsers()
-//                        .filter(hadesUser -> partyMembers.contains(hadesUser.getName()))
-//                        .sorted(Comparator.comparing(hadesUser -> partyMembers.indexOf(hadesUser.getName())))
-//                        .toList();
-//            }
-//            return !members.isEmpty() && index >= 0 && index < members.size()
-//                    ? processMember(members.get(index))
-//                    : whenAbsent();
-//        }
-//
-//        @Override
-//        public FunctionArguments.Builder getArgumentsBuilder() {
-//            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
-//        }
-//
-//        @Override
-//        public String getArgumentDescription(String argumentName) {
-//            return I18n.get("function.wynntils.hadesPartyFunctionBase.argument." + argumentName);
-//        }
-//
-//        public abstract T processMember(HadesUser member);
-//
-//        public abstract T whenAbsent();
-//    }
-
     private static HadesUser hadesPartyFunctionBase(int index) {
         List<HadesUser> members = Models.War.getHadesUsers();
 

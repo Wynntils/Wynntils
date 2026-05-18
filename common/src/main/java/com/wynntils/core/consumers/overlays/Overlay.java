@@ -164,7 +164,8 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
 
         String formattedTemplate =
                 StyledText.join("", Managers.Function.doFormatLines(template)).getString();
-        this.enabledTemplateCache = Managers.Function.tryGetRawValueOfType(formattedTemplate, Boolean.class);
+        // TODO: FIX
+//        this.enabledTemplateCache = Managers.Function.tryGetRawValueOfType(formattedTemplate, Boolean.class);
     }
 
     @Override

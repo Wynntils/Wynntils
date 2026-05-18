@@ -36,12 +36,12 @@ public class CompilerBackend implements TemplateBackend {
         }
     }
 
-    private final ExpandedClassLoader classLoader;
+    private final ClassLoader parentClassLoader;
     private ClassWriter classWriter;
     private final Map<Template, Supplier<String>> compiledTemplates = new HashMap<>();
 
     public CompilerBackend(ClassLoader parentClassLoader) {
-        classLoader = new ExpandedClassLoader(parentClassLoader);
+        this.parentClassLoader = parentClassLoader;
     }
 
     public Supplier<String> compile(Template template) {
@@ -105,7 +105,7 @@ public class CompilerBackend implements TemplateBackend {
                 fos.write(bytes);
             }
 
-            Class<?> clazz = classLoader.define(bytes);
+            Class<?> clazz = new ExpandedClassLoader(parentClassLoader).define(bytes);
 
             Method method = clazz.getMethod("run");
 

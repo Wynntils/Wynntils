@@ -107,4 +107,14 @@ class TemplateLanguageTest {
                         .getExpression()
                         .getClass());
     }
+
+    @Test
+    void parseExample1() {
+        language.parseUnverified("§cX: {x(my_loc)}, §9Y: {y(my_loc)}, §aZ: {z(my_loc)}");
+    }
+
+    @Test
+    void parseExample2() {
+        language.parseUnverified("{player_name} {format_capped(capped_xp)}");
+    }
 }

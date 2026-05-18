@@ -5,9 +5,6 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.consumers.functions.Function;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.models.inventory.type.InventoryAccessory;
@@ -15,442 +12,237 @@ import com.wynntils.models.inventory.type.InventoryArmor;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.models.stats.type.ShinyStat;
+import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.NamedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
 import com.wynntils.utils.wynn.ItemUtils;
 import com.wynntils.utils.wynn.WynnUtils;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import net.minecraft.world.item.ItemStack;
 
+@SuppressWarnings("unused") // Functions are accessed via reflection
 public class InventoryFunctions {
-    public static class AccessoryDurabilityFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            InventoryAccessory inventoryAccessory = InventoryAccessory.fromString(
-                    arguments.getArgument("accessory").getStringValue());
-            if (inventoryAccessory == null) return CappedValue.EMPTY;
 
-            Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(
-                    McUtils.inventory().items.get(inventoryAccessory.getSlot()), DurableItemProperty.class);
+    @TemplateFunction(name = "accessory_durability")
+    public static CappedValue accesoryDurabilityFunction(String accesory) {
+        InventoryAccessory inventoryAccessory = InventoryAccessory.fromString(accesory);
+        if (inventoryAccessory == null) return CappedValue.EMPTY;
 
-            if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
+        Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(McUtils.inventory().items.get(inventoryAccessory.getSlot()), DurableItemProperty.class);
 
-            return durableItemOpt.get().getDurability();
-        }
+        if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
 
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("accessory", String.class, null)));
-        }
+        return durableItemOpt.get().getDurability();
     }
 
-    public static class AllShinyStatsFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            List<ShinyStat> allShinyStats = Models.Shiny.getAllShinyStats();
-            return allShinyStats.stream()
-                    .map(s -> s.statType().displayName() + ": " + s.value())
-                    .collect(Collectors.joining("\n"));
-        }
+    @TemplateFunction(name = "all_shiny_stats")
+    public static String allShinyStatsFunction() {
+        List<ShinyStat> allShinyStats = Models.Shiny.getAllShinyStats();
+        return allShinyStats.stream().map(s -> s.statType().displayName() + ": " + s.value()).collect(Collectors.joining("\n"));
     }
 
-    public static class ArmorDurabilityFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            InventoryArmor inventoryArmor =
-                    InventoryArmor.fromString(arguments.getArgument("armor").getStringValue());
-            if (inventoryArmor == null) return CappedValue.EMPTY;
+    @TemplateFunction(name = "armor_durability")
+    public static CappedValue armorDurabilityFunction(String armor) {
+        InventoryArmor inventoryArmor = InventoryArmor.fromString(armor);
+        if (inventoryArmor == null) return CappedValue.EMPTY;
 
-            Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(
-                    McUtils.inventory().getItem(inventoryArmor.getInventorySlot()), DurableItemProperty.class);
+        Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(McUtils.inventory().getItem(inventoryArmor.getInventorySlot()), DurableItemProperty.class);
 
-            if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
+        if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
 
-            return durableItemOpt.get().getDurability();
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("armor", String.class, null)));
-        }
+        return durableItemOpt.get().getDurability();
     }
 
-    public static class EquippedAccessoryNameFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            InventoryAccessory inventoryAccessory = InventoryAccessory.fromString(
-                    arguments.getArgument("accessory").getStringValue());
-            if (inventoryAccessory == null) return "NONE";
+    @TemplateFunction(name = "equipped_accessory_name")
+    public static String equippedAccesoryNameFunction(String accesory) {
+        InventoryAccessory inventoryAccessory = InventoryAccessory.fromString(accesory);
+        if (inventoryAccessory == null) return "NONE";
 
-            ItemStack accessoryStack = McUtils.inventory().items.get(inventoryAccessory.getSlot());
-            if (ItemUtils.isEmptyAccessorySlot(accessoryStack)) return "NONE";
+        ItemStack accessoryStack = McUtils.inventory().items.get(inventoryAccessory.getSlot());
+        if (ItemUtils.isEmptyAccessorySlot(accessoryStack)) return "NONE";
 
-            StyledText hoverName = StyledText.fromComponent(accessoryStack.getHoverName());
-            return WynnUtils.stripItemNameMarkers(hoverName.getString(StyleType.NONE));
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("accessory", String.class, null)));
-        }
+        StyledText hoverName = StyledText.fromComponent(accessoryStack.getHoverName());
+        return WynnUtils.stripItemNameMarkers(hoverName.getString(StyleType.NONE));
     }
 
-    public static class EquippedArmorNameFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            InventoryArmor inventoryArmor =
-                    InventoryArmor.fromString(arguments.getArgument("armor").getStringValue());
-            if (inventoryArmor == null) return "NONE";
+    @TemplateFunction(name = "equipped_armor_name")
+    public static String equippedArmorNameFunction(String armor) {
+        InventoryArmor inventoryArmor = InventoryArmor.fromString(armor);
+        if (inventoryArmor == null) return "NONE";
 
-            ItemStack armorStack = McUtils.inventory().getItem(inventoryArmor.getInventorySlot());
-            if (ItemUtils.isEmptyArmorSlot(armorStack)) return "NONE";
+        ItemStack armorStack = McUtils.inventory().getItem(inventoryArmor.getInventorySlot());
+        if (ItemUtils.isEmptyArmorSlot(armorStack)) return "NONE";
 
-            StyledText hoverName = StyledText.fromComponent(armorStack.getHoverName());
-            return WynnUtils.stripItemNameMarkers(hoverName.getString(StyleType.NONE));
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("armor", String.class, null)));
-        }
+        StyledText hoverName = StyledText.fromComponent(armorStack.getHoverName());
+        return WynnUtils.stripItemNameMarkers(hoverName.getString(StyleType.NONE));
     }
 
-    public static class CappedInventorySlotsFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Inventory.getInventorySlots();
-        }
+    @TemplateFunction(name = "capped_inventory_slots")
+    public static CappedValue cappedInventorySlotsFunction() {
+        return Models.Inventory.getInventorySlots();
     }
 
-    public static class CappedIngredientPouchSlotsFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.IngredientPouch.getIngredientPouchSlots();
-        }
+    @TemplateFunction(name = "capped_ingredient_pouch_slots")
+    public static CappedValue cappedIngredientPouchSlotsFunction() {
+        return Models.IngredientPouch.getIngredientPouchSlots();
     }
 
-    public static class CappedHeldItemDurabilityFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            ItemStack itemStack = InventoryUtils.getItemInHand();
-            Optional<DurableItemProperty> durableItemOpt =
-                    Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
-            if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
+    @TemplateFunction(name = "capped_held_item_durability")
+    public static CappedValue cappedHeldItemDurabilityFunction() {
+        ItemStack itemStack = InventoryUtils.getItemInHand();
+        Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
+        if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
 
-            return durableItemOpt.get().getDurability();
-        }
+        return durableItemOpt.get().getDurability();
     }
 
-    public static class EmeraldStringFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            return Models.Emerald.getFormattedString(
-                    Models.Emerald.getAmountInInventory(),
-                    arguments.getArgument("zeros").getBooleanValue());
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new Argument<>("zeros", Boolean.class, false)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("estr");
-        }
+    @TemplateFunction(name = "emerald_string")
+    public static String emeraldStringFunction(boolean zeros) {
+        return Models.Emerald.getFormattedString(Models.Emerald.getAmountInInventory(), zeros);
     }
 
-    public static class LiquidEmeraldFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            int ems = Models.Emerald.getAmountInInventory();
-            return ems / 4096;
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("le");
-        }
+    @TemplateFunction(name = "liquid_emeralds", aliases = "le")
+    public static int liquidEmeraldFunction() {
+        int ems = Models.Emerald.getAmountInInventory();
+        return ems / 4096;
     }
 
-    public static class EmeraldBlockFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            int ems = Models.Emerald.getAmountInInventory();
-            return (ems % 4096) / 64;
-        }
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("eb");
-        }
+    @TemplateFunction(name = "emerald_block", aliases = "eb")
+    public static int emeraldBlockFunction() {
+        int ems = Models.Emerald.getAmountInInventory();
+        return (ems % 4096) / 64;
     }
 
-    public static class EmeraldsFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Emerald.getAmountInInventory() % 64;
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("em");
-        }
+    @TemplateFunction(name = "emeralds", aliases = "em")
+    public static int emeraldsFunction() {
+        return Models.Emerald.getAmountInInventory() % 64;
     }
 
-    public static class MoneyFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Emerald.getAmountInInventory();
-        }
+    @TemplateFunction(name = "money")
+    public static int moneyFunction() {
+        return Models.Emerald.getAmountInInventory();
+
     }
 
-    public static class InventoryFreeFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Inventory.getInventorySlots().getRemaining();
-        }
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("inv_free");
-        }
+    @TemplateFunction(name = "inventory_free", aliases = "inv_free")
+    public static int inventoryFreeFunction() {
+        return Models.Inventory.getInventorySlots().getRemaining();
     }
 
-    public static class InventoryUsedFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Inventory.getInventorySlots().current();
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("inv_used");
-        }
+    @TemplateFunction(name = "inventory_used", aliases = "inv_used")
+    public static int inventoryUsedFunction() {
+        return Models.Inventory.getInventorySlots().current();
     }
 
-    public static class IngredientPouchOpenSlotsFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.IngredientPouch.getIngredientPouchSlots().getRemaining();
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("pouch_open", "pouch_free");
-        }
+    @TemplateFunction(name = "ingredient_pouch_open_slots", aliases = {"pouch_open", "pouch_free"})
+    public static int ingredientPouchOpenSlotsFunction() {
+        return Models.IngredientPouch.getIngredientPouchSlots().getRemaining();
     }
 
-    public static class IngredientPouchUsedSlotsFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.IngredientPouch.getIngredientPouchSlots().current();
-        }
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("pouch_used");
-        }
+    @TemplateFunction(name = "ingredient_pouch_used_slots", aliases = "pouch_used")
+    public static int ingredientPouchUsedSlotsFunction() {
+        return Models.IngredientPouch.getIngredientPouchSlots().current();
+
     }
 
-    public static class HeldItemCurrentDurabilityFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            ItemStack itemStack = InventoryUtils.getItemInHand();
-            Optional<DurableItemProperty> durableItemOpt =
-                    Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
-            if (durableItemOpt.isEmpty()) return -1;
+    @TemplateFunction(name = "held_item_current_durability", aliases = "current_held_durability")
+    public static int heldItemCurrentDurabilityFunction() {
+        ItemStack itemStack = InventoryUtils.getItemInHand();
+        Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
+        if (durableItemOpt.isEmpty()) return -1;
 
-            return durableItemOpt.get().getDurability().current();
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("current_held_durability");
-        }
+        return durableItemOpt.get().getDurability().current();
     }
 
-    public static class HeldItemMaxDurabilityFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            ItemStack itemStack = InventoryUtils.getItemInHand();
-            Optional<DurableItemProperty> durableItemOpt =
-                    Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
-            if (durableItemOpt.isEmpty()) return -1;
+    @TemplateFunction(name = "held_item_max_durability", aliases = "max_held_durability")
+    public static int heldItemMaxDurablityFunction() {
+        ItemStack itemStack = InventoryUtils.getItemInHand();
+        Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
+        if (durableItemOpt.isEmpty()) return -1;
 
-            return durableItemOpt.get().getDurability().max();
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("max_held_durability");
-        }
+        return durableItemOpt.get().getDurability().max();
     }
 
-    public static class HeldItemShinyStatFunction extends Function<NamedValue> {
-        @Override
-        public NamedValue getValue(FunctionArguments arguments) {
-            ItemStack itemStack = InventoryUtils.getItemInHand();
-            Optional<ShinyStat> shinyStatOpt = Models.Shiny.getShinyStat(itemStack);
-            if (shinyStatOpt.isEmpty()) return NamedValue.EMPTY;
+    @TemplateFunction(name = "held_item_shiny_stat")
+    public static NamedValue heldItemShinyStatFunction() {
+        ItemStack itemStack = InventoryUtils.getItemInHand();
+        Optional<ShinyStat> shinyStatOpt = Models.Shiny.getShinyStat(itemStack);
+        if (shinyStatOpt.isEmpty()) return NamedValue.EMPTY;
 
-            // FIXME: The function system can't handle longs, so we have to cast to int
-            return new NamedValue(shinyStatOpt.get().statType().displayName(), (int)
-                    shinyStatOpt.get().value());
-        }
+        // FIXME: The function system can't handle longs, so we have to cast to int
+        return new NamedValue(shinyStatOpt.get().statType().displayName(), (int) shinyStatOpt.get().value());
     }
 
-    public static class HeldItemTypeFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            ItemStack itemInHand = InventoryUtils.getItemInHand();
+    @TemplateFunction(name = "held_item_type", aliases = "held_type")
+    public static String heldItemTypeFunction() {
+        ItemStack itemInHand = InventoryUtils.getItemInHand();
 
-            if (itemInHand.isEmpty()) {
-                return "NONE";
-            }
-
-            Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemInHand);
-
-            if (wynnItem.isEmpty()) {
-                return "NONE";
-            }
-
-            return wynnItem.get().getClass().getSimpleName();
+        if (itemInHand.isEmpty()) {
+            return "NONE";
         }
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("held_type");
+        Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemInHand);
+
+        if (wynnItem.isEmpty()) {
+            return "NONE";
         }
+
+        return wynnItem.get().getClass().getSimpleName();
     }
 
-    public static class HeldItemNameFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            ItemStack itemStack = InventoryUtils.getItemInHand();
-            StyledText hoverName = StyledText.fromComponent(itemStack.getHoverName());
-            String itemName = arguments.getArgument("formatted").getBooleanValue()
-                    ? hoverName.getString()
-                    : hoverName.getString(StyleType.NONE);
-            return WynnUtils.stripItemNameMarkers(itemName);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new Argument<>("formatted", Boolean.class, false)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("held_item", "held_name");
-        }
+    @TemplateFunction(name = "held_item_name", aliases = {"held_item", "held_name"})
+    public static String heldItemNameFunction(boolean formatted) {
+        ItemStack itemStack = InventoryUtils.getItemInHand();
+        StyledText hoverName = StyledText.fromComponent(itemStack.getHoverName());
+        String itemName = formatted ? hoverName.getString() : hoverName.getString(StyleType.NONE);
+        return WynnUtils.stripItemNameMarkers(itemName);
     }
 
-    public static class HeldItemCooldownFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getItemCooldownTicks(InventoryUtils.getItemInHand());
-        }
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("held_cooldown", "held_cd");
-        }
+    @TemplateFunction(name = "held_item_cooldown", aliases = {"held_cooldown", "held_cd"})
+    public static CappedValue heldItemCooldownFunction() {
+        return Models.CharacterStats.getItemCooldownTicks(InventoryUtils.getItemInHand());
     }
 
-    public static class TeleportScrollChargesFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.TeleportScroll.getTeleportScrollCharges();
-        }
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("tp_scroll_charges");
-        }
+    @TemplateFunction(name = "teleport_scroll_charges", aliases = "tp_scroll_charges")
+    public static int teleportScrollChargesFunction() {
+        return Models.TeleportScroll.getTeleportScrollCharges();
     }
 
-    public static class TeleportScrollRechargeTimerFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.TeleportScroll.getTeleportScrollRechargeTimerSeconds();
-        }
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("tp_scroll_timer");
-        }
+    @TemplateFunction(name = "teleport_scroll_recharge_timer", aliases = "tp_scroll_timer")
+    public static int teleportScrollRechargeTimerFunction() {
+        return Models.TeleportScroll.getTeleportScrollRechargeTimerSeconds();
     }
 
-    public static class ItemCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            String name = arguments.getArgument("name").getStringValue();
-            return Models.Inventory.getAmountInInventory(name);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("name", String.class, "")));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("item_amount");
-        }
+    @TemplateFunction(name = "item_count", aliases = "item_amount")
+    public static int itemCountFunction(String name) {
+        return Models.Inventory.getAmountInInventory(name);
     }
 
-    public static class InventoryIngredientsFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            String name = arguments.getArgument("name").getStringValue();
 
-            return Models.Inventory.getIngredientAmountInInventory(name);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("name", String.class, null)));
-        }
+    @TemplateFunction(name = "inventory_ingredients")
+    public static int inventoryIngredientsFunction(String name) {
+        return Models.Inventory.getIngredientAmountInInventory(name);
     }
 
-    public static class IngredientPouchIngredientsFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            String name = arguments.getArgument("name").getStringValue();
-
-            return Models.IngredientPouch.getIngredientAmountInPouch(name);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("name", String.class, null)));
-        }
+    @TemplateFunction(name = "ingredient_pouch_ingredients")
+    public static int ingredientPouchIngredientsFunction(String name) {
+        return Models.IngredientPouch.getIngredientAmountInPouch(name);
     }
 
-    public static class MaterialCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            String name = arguments.getArgument("name").getStringValue();
-            int tier = arguments.getArgument("tier").getIntegerValue();
-            boolean exact = arguments.getArgument("exact").getBooleanValue();
-            return Models.Inventory.getMaterialsAmountInInventory(name, tier, exact);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("name", String.class, null),
-                    new Argument<>("tier", Integer.class, null),
-                    new Argument<>("exact", Boolean.class, null)));
-        }
+    @TemplateFunction(name = "material_count")
+    public static int materialCountFunction(String name, int tier, boolean exact) {
+        return Models.Inventory.getMaterialsAmountInInventory(name, tier, exact);
     }
 }

@@ -4,87 +4,36 @@
  */
 package com.wynntils.functions.generic;
 
-import com.wynntils.core.consumers.functions.GenericFunction;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
 
+@SuppressWarnings("unused") // Functions are accessed via reflection
 public final class LocationFunctions {
-    public static class XFunction extends GenericFunction<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return arguments.getArgument("location").getLocation().x();
-        }
 
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("location", Location.class, null)));
-        }
+    @TemplateFunction(name = "x", isPure = true)
+    public static int xFunction(Location location) {
+        return location.x();
     }
 
-    public static class YFunction extends GenericFunction<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return arguments.getArgument("location").getLocation().y();
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("location", Location.class, null)));
-        }
+    @TemplateFunction(name = "y", isPure = true)
+    public static int yFunction(Location location) {
+        return location.y();
     }
 
-    public static class ZFunction extends GenericFunction<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return arguments.getArgument("location").getLocation().z();
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("location", Location.class, null)));
-        }
+    @TemplateFunction(name = "z", isPure = true)
+    public static int zFunction(Location location) {
+        return location.z();
     }
 
-    public static class LocationFunction extends GenericFunction<Location> {
-        @Override
-        public Location getValue(FunctionArguments arguments) {
-            return new Location(
-                    arguments.getArgument("x").getIntegerValue(),
-                    arguments.getArgument("y").getIntegerValue(),
-                    arguments.getArgument("z").getIntegerValue());
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("x", Number.class, null),
-                    new Argument<>("y", Number.class, null),
-                    new Argument<>("z", Number.class, null)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("loc");
-        }
+    @TemplateFunction(name = "location", aliases = "loc", isPure = true)
+    public static Location locationFunction(int x, int y, int z) {
+        return new Location(x, y, z);
     }
 
-    public static class DistanceFunction extends GenericFunction<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            Location first = arguments.getArgument("first").getLocation();
-            Location second = arguments.getArgument("second").getLocation();
-            return first.toVec3().distanceTo(second.toVec3());
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("first", Location.class, null), new Argument<>("second", Location.class, null)));
-        }
+    @TemplateFunction(name = "distance", isPure = true)
+    public static double distanceFunction(Location from, Location to) {
+        return from.toVec3().distanceTo(to.toVec3());
     }
+
 }

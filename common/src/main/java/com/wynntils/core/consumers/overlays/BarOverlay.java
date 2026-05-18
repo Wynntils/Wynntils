@@ -82,25 +82,8 @@ public abstract class BarOverlay extends DynamicOverlay {
     protected void renderOrErrorMessage(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (templateCache == null) return;
         if (templateCache.b().hasError()) {
-            StyledText[] errorMessage = {
-                StyledText.fromString("§c§l" + I18n.get("overlay.wynntils.barOverlay.valueTemplate.error") + " "
-                        + getTranslatedName()),
-                StyledText.fromUnformattedString(templateCache.b().getError())
-            };
-            FontRenderer.getInstance()
-                    .renderAlignedTextInBox(
-                            guiGraphics,
-                            errorMessage,
-                            getRenderX(),
-                            getRenderX() + getWidth(),
-                            getRenderY(),
-                            getRenderY() + getHeight(),
-                            0,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL,
-                            1);
+            StyledText[] errorMessage = {StyledText.fromString("§c§l" + I18n.get("overlay.wynntils.barOverlay.valueTemplate.error") + " " + getTranslatedName()), StyledText.fromUnformattedString(templateCache.b().getError())};
+            FontRenderer.getInstance().renderAlignedTextInBox(guiGraphics, errorMessage, getRenderX(), getRenderX() + getWidth(), getRenderY(), getRenderY() + getHeight(), 0, CommonColors.WHITE, HorizontalAlignment.CENTER, VerticalAlignment.MIDDLE, TextShadow.NORMAL, 1);
 
         } else {
             super.renderOrErrorMessage(guiGraphics, deltaTracker, window);
@@ -140,9 +123,8 @@ public abstract class BarOverlay extends DynamicOverlay {
     }
 
     private Pair<StyledText, ErrorOr<CappedValue>> calculateTemplate(BarOverlayTemplatePair template) {
-        return Pair.of(
-                StyledText.join(" ", Managers.Function.doFormatLines(template.textTemplate)),
-                Managers.Function.tryGetRawValueOfType(template.valueTemplate, CappedValue.class));
+        // TODO: fix
+        return Pair.of(StyledText.join(" ", Managers.Function.doFormatLines(template.textTemplate)), ErrorOr.of(new CappedValue(0, 1)));
     }
 
     protected abstract float getTextureHeight();
@@ -151,47 +133,14 @@ public abstract class BarOverlay extends DynamicOverlay {
         Texture texture = getTexture();
 
         if (getRenderColor() == CommonColors.WHITE) {
-            RenderUtils.drawProgressBar(
-                    guiGraphics,
-                    texture,
-                    getRenderX(),
-                    renderY,
-                    getRenderX() + getWidth(),
-                    renderY + renderHeight,
-                    0,
-                    0,
-                    texture.width(),
-                    texture.height(),
-                    progress);
+            RenderUtils.drawProgressBar(guiGraphics, texture, getRenderX(), renderY, getRenderX() + getWidth(), renderY + renderHeight, 0, 0, texture.width(), texture.height(), progress);
         } else {
-            RenderUtils.drawColoredProgressBar(
-                    guiGraphics,
-                    texture,
-                    getRenderColor(),
-                    getRenderX(),
-                    renderY,
-                    getRenderX() + getWidth(),
-                    renderY + renderHeight,
-                    0,
-                    0,
-                    texture.width(),
-                    texture.height(),
-                    progress);
+            RenderUtils.drawColoredProgressBar(guiGraphics, texture, getRenderColor(), getRenderX(), renderY, getRenderX() + getWidth(), renderY + renderHeight, 0, 0, texture.width(), texture.height(), progress);
         }
     }
 
     private void renderText(GuiGraphics guiGraphics, float renderY, StyledText text) {
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        guiGraphics,
-                        text,
-                        getRenderX(),
-                        getRenderX() + getWidth(),
-                        renderY,
-                        0,
-                        getRenderColor(),
-                        getRenderHorizontalAlignment(),
-                        textShadow.get());
+        FontRenderer.getInstance().renderAlignedTextInBox(guiGraphics, text, getRenderX(), getRenderX() + getWidth(), renderY, 0, getRenderColor(), getRenderHorizontalAlignment(), textShadow.get());
     }
 
     private float getModifiedRenderY(float renderedHeight) {
@@ -216,5 +165,6 @@ public abstract class BarOverlay extends DynamicOverlay {
 
     protected abstract BarOverlayTemplatePair getPreviewTemplate();
 
-    public record BarOverlayTemplatePair(String textTemplate, String valueTemplate) {}
+    public record BarOverlayTemplatePair(String textTemplate, String valueTemplate) {
+    }
 }

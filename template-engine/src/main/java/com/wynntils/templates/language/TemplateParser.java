@@ -15,6 +15,7 @@ import com.wynntils.templates.language.parts.TemplateLiteralPart;
 import com.wynntils.templates.language.parts.TemplatePart;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class TemplateParser {
     private final TemplateEngine engine;
@@ -90,10 +91,8 @@ class TemplateParser {
             if (def == null) def = engine.getFunction(identifier, 1);
 
             return new FunctionExpression(identifier, args, def);
-        } else if (peek().type() == TemplateLexer.TokenType.TEMPLATE_END) {
+        } else  {
             return new FunctionExpression(identifier, engine.getFunction(identifier, 0));
-        } else {
-            throw new LanguageException("Unexpected token after function name: " + peek().type());
         }
     }
 
