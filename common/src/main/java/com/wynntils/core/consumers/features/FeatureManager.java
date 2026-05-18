@@ -84,6 +84,7 @@ import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.features.map.WorldWaypointDistanceFeature;
+import com.wynntils.features.overlays.AbilityCooldownsOverlayFeature;
 import com.wynntils.features.overlays.AnnihilationSunOverlayFeature;
 import com.wynntils.features.overlays.ArcherBeastTrackerOverlayFeature;
 import com.wynntils.features.overlays.ArrowShieldTrackerOverlayFeature;
@@ -125,7 +126,6 @@ import com.wynntils.features.players.PartyManagementScreenFeature;
 import com.wynntils.features.players.PlayerArmorHidingFeature;
 import com.wynntils.features.players.PlayerGhostTransparencyFeature;
 import com.wynntils.features.players.PlayerViewerFeature;
-import com.wynntils.features.redirects.AbilityRefreshRedirectFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.redirects.InventoryRedirectFeature;
 import com.wynntils.features.redirects.TerritoryMessageRedirectFeature;
@@ -300,6 +300,7 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region overlays
+        registerFeature(new AbilityCooldownsOverlayFeature());
         registerFeature(new AnnihilationSunOverlayFeature());
         registerFeature(new ArcherBeastTrackerOverlayFeature());
         registerFeature(new ArrowShieldTrackerOverlayFeature());
@@ -347,7 +348,6 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region redirects
-        registerFeature(new AbilityRefreshRedirectFeature());
         registerFeature(new ChatRedirectFeature());
         registerFeature(new InventoryRedirectFeature());
         registerFeature(new TerritoryMessageRedirectFeature());
