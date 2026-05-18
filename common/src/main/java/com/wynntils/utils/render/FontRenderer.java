@@ -114,37 +114,18 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             GuiGraphics guiGraphics,
-            StyledText[] lines,
+            List<StyledText> adjustedLines,
             float x1,
             float x2,
             float y1,
             float y2,
-            float maxWidth,
             CustomColor customColor,
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment,
             TextShadow textShadow,
             float textScale) {
-        int lineHeight = font.lineHeight;
-        List<StyledText> adjustedLines = new ArrayList<>();
-        for (StyledText line : lines) {
-            if (maxWidth == 0 || font.width(line.getComponent()) < maxWidth / textScale) {
-                adjustedLines.add(line);
-            } else {
-                List<FormattedText> parts =
-                        font.getSplitter().splitLines(line.getComponent(), (int) (maxWidth / textScale), Style.EMPTY);
-                StyledText lastPart = StyledText.EMPTY;
-                for (FormattedText part : parts) {
-                    Style lastStyle = ComponentUtils.getLastPartCodes(lastPart);
-                    StyledText text = StyledText.fromComponent(
-                                    Component.literal("").withStyle(lastStyle))
-                            .append(StyledText.fromComponent(ComponentUtils.formattedTextToComponent(part)));
-                    lastPart = text;
-                    adjustedLines.add(text);
-                }
-            }
-        }
 
+        int lineHeight = font.lineHeight;
         float calculatedTextHeight = (adjustedLines.size() - 1) * lineHeight * textScale;
         float renderX =
                 switch (horizontalAlignment) {
@@ -174,6 +155,53 @@ public final class FontRenderer {
                     textScale);
             lineOffset += lineHeight * textScale;
         }
+    }
+
+    public void renderAlignedTextInBox(
+            GuiGraphics guiGraphics,
+            StyledText[] lines,
+            float x1,
+            float x2,
+            float y1,
+            float y2,
+            float maxWidth,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow textShadow,
+            float textScale) {
+        List<StyledText> adjustedLines = new ArrayList<>();
+        for (StyledText line : lines) {
+            if (maxWidth == 0 || font.width(line.getComponent()) < maxWidth / textScale) {
+                adjustedLines.add(line);
+            } else {
+                List<FormattedText> parts =
+                        font.getSplitter().splitLines(line.getComponent(), (int) (maxWidth / textScale), Style.EMPTY);
+                StyledText lastPart = StyledText.EMPTY;
+                for (FormattedText part : parts) {
+                    Style lastStyle = ComponentUtils.getLastPartCodes(lastPart);
+                    StyledText text = StyledText.fromComponent(
+                                    Component.literal("").withStyle(lastStyle))
+                            .append(StyledText.fromComponent(ComponentUtils.formattedTextToComponent(part)));
+                    lastPart = text;
+                    adjustedLines.add(text);
+                }
+            }
+        }
+
+        renderAlignedTextInBox(
+                guiGraphics,
+                adjustedLines,
+                x1,
+                x2,
+                y1,
+                y2,
+                customColor,
+                horizontalAlignment,
+                verticalAlignment,
+                textShadow,
+                textScale
+        );
     }
 
     public void renderAlignedTextInBox(
@@ -285,6 +313,86 @@ public final class FontRenderer {
                 verticalAlignment,
                 TextShadow.NONE,
                 1f);
+    }
+
+    public void renderAlignedHighlightedTextInBox(
+            GuiGraphics guiGraphics,
+            StyledText[] lines,
+            float x1,
+            float x2,
+            float y1,
+            float y2,
+            float maxWidth,
+            float borderWidth,
+            CustomColor textColor,
+            CustomColor backgroundColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow textShadow,
+            float textScale) {
+
+        List<StyledText> adjustedLines = new ArrayList<>();
+        for (StyledText line : lines) {
+            if (maxWidth == 0 || font.width(line.getComponent()) < maxWidth / textScale) {
+                adjustedLines.add(line);
+            } else {
+                List<FormattedText> parts =
+                        font.getSplitter().splitLines(line.getComponent(), (int) (maxWidth / textScale), Style.EMPTY);
+                StyledText lastPart = StyledText.EMPTY;
+                for (FormattedText part : parts) {
+                    Style lastStyle = ComponentUtils.getLastPartCodes(lastPart);
+                    StyledText text = StyledText.fromComponent(
+                                    Component.literal("").withStyle(lastStyle))
+                            .append(StyledText.fromComponent(ComponentUtils.formattedTextToComponent(part)));
+                    lastPart = text;
+                    adjustedLines.add(text);
+                }
+            }
+        }
+
+        int lineHeight = font.lineHeight;
+        float calculatedTextHeight = (adjustedLines.size()) * lineHeight * textScale;
+        float calculatedTextWidth = adjustedLines.stream()
+                .filter(line -> !line.getComponent().getString().isBlank())
+                .map(line -> (float) font.width(line.getComponent()))
+                .reduce(0f, Math::max);
+
+        float renderX =
+                switch (horizontalAlignment) {
+                    case LEFT -> x1;
+                    case CENTER -> ((x1 + x2) / 2f) - (calculatedTextWidth / 2F * textScale);
+                    case RIGHT -> x2 - calculatedTextWidth * textScale;
+                };
+
+        float renderY =
+                switch (verticalAlignment) {
+                    case TOP -> y1;
+                    case MIDDLE -> (y1 + y2) / 2f - calculatedTextHeight / 2f;
+                    case BOTTOM -> y2 - calculatedTextHeight;
+                };
+
+        float totalBorderWidth = calculatedTextWidth == 0 ? 0 : (borderWidth * 2);
+
+        RenderUtils.drawRect(
+                guiGraphics,
+                backgroundColor,
+                renderX - borderWidth,
+                renderY - borderWidth,
+                calculatedTextWidth + totalBorderWidth,
+                calculatedTextHeight + totalBorderWidth);
+
+        renderAlignedTextInBox(
+                guiGraphics,
+                adjustedLines,
+                x1,
+                x2,
+                y1,
+                y2,
+                textColor,
+                horizontalAlignment,
+                verticalAlignment,
+                textShadow,
+                textScale);
     }
 
     public void renderAlignedTextInBox(

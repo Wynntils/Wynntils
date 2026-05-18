@@ -31,6 +31,12 @@ public abstract class TextOverlay extends DynamicOverlay {
     @Persisted(i18nKey = "overlay.wynntils.textOverlay.fontScale.fitText")
     protected final Config<Boolean> fitText = new Config<>(false);
 
+    @Persisted(i18nKey = "overlay.wynntils.textOverlay.backgroundColor")
+    private final Config<CustomColor> backgroundColor = new Config<>(CustomColor.fromHexString("#00000000"));
+
+    @Persisted(i18nKey = "overlay.wynntils.textOverlay.backgroundBorderWidth")
+    private final Config<Float> backgroundBorderWidth = new Config<>(1.0f);
+
     private StyledText[] cachedLines = new StyledText[0];
 
     protected TextOverlay(OverlayPosition position, float width, float height) {
@@ -75,16 +81,19 @@ public abstract class TextOverlay extends DynamicOverlay {
     private void renderTemplate(GuiGraphics guiGraphics, StyledText[] lines, float textScale) {
         float renderX = this.getRenderX();
         float renderY = this.getRenderY();
+        float maxWidth = fitText.get() ? this.getWidth() : 0;
         FontRenderer.getInstance()
-                .renderAlignedTextInBox(
+                .renderAlignedHighlightedTextInBox(
                         guiGraphics,
                         lines,
                         renderX,
                         renderX + this.getWidth(),
                         renderY,
                         renderY + this.getHeight(),
-                        fitText.get() ? this.getWidth() : 0,
+                        maxWidth,
+                        this.backgroundBorderWidth.get(),
                         this.getRenderColor(),
+                        this.backgroundColor.get(),
                         this.getRenderHorizontalAlignment(),
                         this.getRenderVerticalAlignment(),
                         this.textShadow.get(),
