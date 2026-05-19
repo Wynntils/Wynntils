@@ -124,7 +124,6 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow textShadow,
             float textScale) {
-
         int lineHeight = font.lineHeight;
         float calculatedTextHeight = (adjustedLines.size() - 1) * lineHeight * textScale;
         float renderX =
@@ -200,8 +199,7 @@ public final class FontRenderer {
                 horizontalAlignment,
                 verticalAlignment,
                 textShadow,
-                textScale
-        );
+                textScale);
     }
 
     public void renderAlignedTextInBox(
@@ -330,7 +328,6 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow textShadow,
             float textScale) {
-
         List<StyledText> adjustedLines = new ArrayList<>();
         for (StyledText line : lines) {
             if (maxWidth == 0 || font.width(line.getComponent()) < maxWidth / textScale) {
