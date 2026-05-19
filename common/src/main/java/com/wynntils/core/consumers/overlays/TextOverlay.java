@@ -81,7 +81,6 @@ public abstract class TextOverlay extends DynamicOverlay {
     private void renderTemplate(GuiGraphics guiGraphics, StyledText[] lines, float textScale) {
         float renderX = this.getRenderX();
         float renderY = this.getRenderY();
-        float maxWidth = fitText.get() ? this.getWidth() : 0;
         FontRenderer.getInstance()
                 .renderAlignedHighlightedTextInBox(
                         guiGraphics,
@@ -90,7 +89,7 @@ public abstract class TextOverlay extends DynamicOverlay {
                         renderX + this.getWidth(),
                         renderY,
                         renderY + this.getHeight(),
-                        maxWidth,
+                        fitText.get() ? this.getWidth() : 0,
                         this.backgroundBorderWidth.get(),
                         this.getRenderColor(),
                         this.backgroundColor.get(),

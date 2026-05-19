@@ -378,7 +378,7 @@ public final class FontRenderer {
                     guiGraphics,
                     backgroundColor,
                     renderX - borderWidth,
-                    renderY - borderWidth,
+                    renderY - borderWidth - 1,
                     calculatedTextWidth + totalBorderWidth,
                     calculatedTextHeight + totalBorderWidth);
         }

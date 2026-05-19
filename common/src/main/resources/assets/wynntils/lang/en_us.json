@@ -3052,7 +3052,7 @@
   "overlay.wynntils.textOverlay.fontScale.name": "Font Scale",
   "overlay.wynntils.textOverlay.textShadow.description": "Should the text be drawn with a shadow?",
   "overlay.wynntils.textOverlay.textShadow.name": "Text Shadow",
-  "overlay.wynntils.textOverlay.backgroundColor.description": "The color of the background behind the text.",
+  "overlay.wynntils.textOverlay.backgroundColor.description": "The color of the background behind the text",
   "overlay.wynntils.textOverlay.backgroundColor.name": "Background Color",
   "overlay.wynntils.textOverlay.backgroundBorderWidth.description": "The extra border width for the background",
   "overlay.wynntils.textOverlay.backgroundBorderWidth.name": "Background Border Width",
