@@ -37,6 +37,7 @@ import com.wynntils.models.npc.label.FastTravelLabelParser;
 import com.wynntils.models.npc.label.NpcLabelParser;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.PartyModel;
+import com.wynntils.models.players.scoreboard.PartyScoreboardPart;
 import com.wynntils.models.profession.label.GatheringNodeHarvestLabelParser;
 import com.wynntils.models.raid.RaidModel;
 import com.wynntils.models.raid.bossbar.ParasiteOvertakenBar;
@@ -1130,6 +1131,22 @@ public class TestRegex {
         PatternTester p = new PatternTester(PartyModel.class, "PARTY_LIST_ALL");
         p.shouldMatch("§e\uE001 Party members: §bShadowCat118, and §fShadowCat117");
         p.shouldMatch("§e\uE005\uE002 Party members: §be_z_x, §fSaunt, Dopeul, IM_NoOne,§e §f6bccy, and ShadowCat117");
+    }
+
+    @Test
+    public void PartyScoreboardPart_ONLINE_PLAYER() {
+        PatternTester p = new PatternTester(PartyScoreboardPart.class, "ONLINE_PLAYER");
+        p.shouldMatch("§e- §4[§8||0||§4] §7§mTM47§r§7 [120]");
+        p.shouldMatch("§e- §4[§c|§8|2448||§4] §fDarkerG§7 [120]");
+        p.shouldMatch("§e- §4[§c||17702§8||§4] §fuTa4u§7 [120]");
+        p.shouldMatch("§e- §4[§c||3189|§8|§4] §fIkawanit§7 [65]");
+    }
+
+    @Test
+    public void PartyScoreboardPart_OFFLINE_PLAYER() {
+        PatternTester p = new PatternTester(PartyScoreboardPart.class, "OFFLINE_PLAYER");
+        p.shouldMatch("§e- §7Bigblackman");
+        p.shouldMatch("§e- §7uTa4u");
     }
 
     @Test
