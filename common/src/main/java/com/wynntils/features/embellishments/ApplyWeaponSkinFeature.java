@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features.embellishments;
 
 import com.wynntils.core.components.Models;
@@ -10,15 +14,14 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.utils.mc.McUtils;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-
-import java.util.List;
-import java.util.Optional;
 
 @ConfigCategory(Category.EMBELLISHMENTS)
 public class ApplyWeaponSkinFeature extends Feature {
@@ -66,19 +69,20 @@ public class ApplyWeaponSkinFeature extends Feature {
         if (itemStack.isEmpty()) return;
         CustomModelData data = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
         if (data == null) return;
-//        if (!data.getFloat(MODEL_FLOAT_INDEX).equals(value)) return;
+        //        if (!data.getFloat(MODEL_FLOAT_INDEX).equals(value)) return;
         if (!isUsableWeapon(itemStack)) return;
 
         items.set(inventory.selected + Inventory.INVENTORY_SIZE, handItem);
     }
 
-
     private static boolean isUsableWeapon(ItemStack itemStack) {
-        Optional<GearTypeItemProperty> gearItemOpt = Models.Item.asWynnItemProperty(itemStack, GearTypeItemProperty.class);
+        Optional<GearTypeItemProperty> gearItemOpt =
+                Models.Item.asWynnItemProperty(itemStack, GearTypeItemProperty.class);
         if (gearItemOpt.isEmpty()) return false;
         if (!gearItemOpt.get().getGearType().isValidWeapon(Models.Character.getClassType())) return false;
 
-        Optional<RequirementItemProperty> reqItemOpt = Models.Item.asWynnItemProperty(itemStack, RequirementItemProperty.class);
+        Optional<RequirementItemProperty> reqItemOpt =
+                Models.Item.asWynnItemProperty(itemStack, RequirementItemProperty.class);
         if (reqItemOpt.isEmpty()) return false;
         if (!reqItemOpt.get().meetsActualRequirements()) return false;
 

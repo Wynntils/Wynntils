@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.store;
 
 import com.wynntils.core.components.Model;
@@ -9,15 +13,13 @@ import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.models.containers.containers.CosmeticContainer;
 import com.wynntils.models.items.items.gui.StoreItem;
 import com.wynntils.models.store.type.CosmeticItemType;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
-import java.util.List;
-import java.util.Optional;
-
 public class StoreModel extends Model {
-
     private static final int SELECTED_COSMETIC_SLOT = 4;
 
     @Persisted
@@ -40,7 +42,10 @@ public class StoreModel extends Model {
             return;
         }
         if (cosmeticItemType == CosmeticItemType.WEAPON_SKIN) {
-            weaponModel.store(itemStack.getComponents().get(DataComponents.CUSTOM_MODEL_DATA).getFloat(0));
+            weaponModel.store(itemStack
+                    .getComponents()
+                    .get(DataComponents.CUSTOM_MODEL_DATA)
+                    .getFloat(0));
         }
     }
 
