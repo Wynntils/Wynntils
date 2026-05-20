@@ -47,6 +47,14 @@ public class ShamanTotemLabelParser implements LabelParser<ShamanTotemLabelInfo>
         int timeLeft = Integer.parseInt(matcher.group("timeLeft"));
 
         return new ShamanTotemLabelInfo(
-                label, location, entity, playerName, regenPerSecond, transfusedAmount, poisonAmount, invigorateTime, timeLeft);
+                label,
+                location,
+                entity,
+                playerName,
+                regenPerSecond,
+                transfusedAmount,
+                poisonAmount,
+                invigorateTime,
+                timeLeft);
     }
 }
