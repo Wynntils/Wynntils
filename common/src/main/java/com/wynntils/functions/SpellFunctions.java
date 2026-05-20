@@ -221,22 +221,22 @@ public class SpellFunctions {
         }
     }
 
-    public static class ShamanTotemPoisonAmountFunction extends Function<Integer> {
+    public static class ShamanTotemPoisonAmountFunction extends Function<String> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
+        public String getValue(FunctionArguments arguments) {
             int totemNumber = arguments.getArgument("totemNumber").getIntegerValue();
 
             ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
 
             if (shamanTotem == null) {
-                return 0;
+                return "";
             }
 
             if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) {
-                return 0;
+                return "";
             }
 
-            return shamanTotem.getPoisonAmount();
+            return shamanTotem.getPoisonAmount().toString();
         }
 
         @Override
