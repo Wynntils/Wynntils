@@ -19,8 +19,10 @@ import java.util.regex.Pattern;
 public class PartyScoreboardPart extends ScoreboardPart {
     private static final SegmentMatcher PARTY_MATCHER = SegmentMatcher.fromPattern("Party:\\s\\[Lv. (\\d+)]");
 
+    // Test in PartyScoreboardPart_ONLINE_PLAYER
     private static final Pattern ONLINE_PLAYER = Pattern.compile(
             "§e- §4\\[(?:§c|§8|\\|)+(?<health>(?:\\||§|[0-9])+)\\|+§4] (?<alive>§7§m|§f)(?<name>[^§]+)(?:§r)?§7 \\[(?<level>[0-9]+)\\]");
+    // Test in PartyScoreboardPart_OFFLINE_PLAYER
     private static final Pattern OFFLINE_PLAYER = Pattern.compile("§e- §7(?<name>.+)");
 
     @Override
