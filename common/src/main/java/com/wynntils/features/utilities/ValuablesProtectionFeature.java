@@ -20,7 +20,7 @@ import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.containers.Container;
-import com.wynntils.models.containers.containers.BlacksmithContainer;
+import com.wynntils.models.containers.containers.BlacksmithSellContainer;
 import com.wynntils.models.containers.containers.ItemIdentifierAugmentsContainer;
 import com.wynntils.models.containers.containers.ItemIdentifierContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
@@ -383,16 +383,16 @@ public class ValuablesProtectionFeature extends Feature {
 
     private enum ProtectableNPCs {
         NONE(List.of()),
-        BLACKSMITH(List.of(BlacksmithContainer.class)),
+        BLACKSMITH(List.of(BlacksmithSellContainer.class)),
         TRADE_MARKET(List.of(TradeMarketSellContainer.class)),
         IDENTIFIER(List.of(ItemIdentifierContainer.class, ItemIdentifierAugmentsContainer.class)),
-        BLACKSMITH_AND_TRADE_MARKET(List.of(BlacksmithContainer.class, TradeMarketSellContainer.class)),
+        BLACKSMITH_AND_TRADE_MARKET(List.of(BlacksmithSellContainer.class, TradeMarketSellContainer.class)),
         BLACKSMITH_AND_IDENTIFIER(List.of(
-                BlacksmithContainer.class, ItemIdentifierContainer.class, ItemIdentifierAugmentsContainer.class)),
+                BlacksmithSellContainer.class, ItemIdentifierContainer.class, ItemIdentifierAugmentsContainer.class)),
         TRADE_MARKET_AND_IDENTIFIER(List.of(
                 TradeMarketSellContainer.class, ItemIdentifierContainer.class, ItemIdentifierAugmentsContainer.class)),
         ALL(List.of(
-                BlacksmithContainer.class,
+                BlacksmithSellContainer.class,
                 TradeMarketSellContainer.class,
                 ItemIdentifierContainer.class,
                 ItemIdentifierAugmentsContainer.class));
