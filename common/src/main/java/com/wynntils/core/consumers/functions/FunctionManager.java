@@ -734,6 +734,12 @@ public final class FunctionManager extends Manager {
         registerFunction(new SocialFunctions.IsPartyMemberFunction());
         registerFunction(new SocialFunctions.PartyLeaderFunction());
         registerFunction(new SocialFunctions.PartyMembersFunction());
+        registerFunction(new SocialFunctions.PartyMemberNameFunction());
+        registerFunction(new SocialFunctions.PartyMemberHealthFunction());
+        registerFunction(new SocialFunctions.PartyMemberLevelFunction());
+        registerFunction(new SocialFunctions.IsPartyMemberOnlineFunction());
+        registerFunction(new SocialFunctions.IsPartyMemberAliveFunction());
+        registerFunction(new SocialFunctions.PartyTotalLevelFunction());
         registerFunction(new SocialFunctions.PlayerNameFunction());
         registerFunction(new SocialFunctions.PlayerUuidFunction());
         registerFunction(new SocialFunctions.WynntilsRoleFunction());
