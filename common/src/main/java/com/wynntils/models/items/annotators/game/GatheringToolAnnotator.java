@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class GatheringToolAnnotator implements GameItemAnnotator {
     private static final Pattern GATHERING_TOOL_PATTERN =
-            Pattern.compile("^\uDAFC\uDC00§fGathering (Axe|Rod|Scythe|Pickaxe) T(\\d+)\uDAFC\uDC00$");
+            Pattern.compile("^\uDAFC\uDC00.+ (Axe|Rod|Scythe|Pickaxe) T(\\d+)\uDAFC\uDC00$");
     private static final Pattern DURABILITY_PATTERN = Pattern.compile(".+?§7 Durability (\\d+)/(\\d+)");
 
     @Override

@@ -37,6 +37,7 @@ import com.wynntils.models.npc.label.FastTravelLabelParser;
 import com.wynntils.models.npc.label.NpcLabelParser;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.PartyModel;
+import com.wynntils.models.players.scoreboard.PartyScoreboardPart;
 import com.wynntils.models.profession.label.GatheringNodeHarvestLabelParser;
 import com.wynntils.models.raid.RaidModel;
 import com.wynntils.models.raid.bossbar.ParasiteOvertakenBar;
@@ -770,6 +771,10 @@ public class TestRegex {
         p.shouldMatch("§bShadowCat117's §7Totem\n§c+1644❤§7/s §d\uE01F §753s");
         // Timer + summons attack speed
         p.shouldMatch("§bShadowCat117's §7Totem\n§e\uE013 §71s §d\uE01F §749s");
+        // Timer + transfused
+        p.shouldMatch("§bShadowCat117's §7Totem\n§4\uE020 §72 §d\uE01F §749s");
+        // Timer + transfused + poison
+        p.shouldMatch("§bShadowCat117's §7Totem\n§4\uE020 §72 §5\uE011 §763.1k §d\uE01F §749s");
         // Timer + poison + regen
         p.shouldMatch("§bShadowCat117's §7Totem\n§c+1644❤§7/s §5\uE011 §763.1k §d\uE01F §753s");
         // Timer + regen + summons attack speed
@@ -870,6 +875,15 @@ public class TestRegex {
     }
 
     @Test
+    public void WynnItemParser_DPS_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "DPS_PATTERN");
+        p.shouldMatch("§#f2c2f2ff330§f DPS");
+        p.shouldMatch("§#e0b3e6ff759§f DPS");
+        p.shouldMatch("§#cff9f9ff516§f DPS");
+        p.shouldMatch("§#e0b3e6ff1,009§f DPS");
+    }
+
+    @Test
     public void WynnItemParser_DURABILITY_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "DURABILITY_PATTERN");
         p.shouldMatch("§8\uE023\uDAFF\uDFF7§#aed4d4ff\uE01B§7 Durability 163/194");
@@ -881,8 +895,9 @@ public class TestRegex {
     @Test
     public void WynnItemParser_ITEM_ATTACK_SPEED_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "ITEM_ATTACK_SPEED_PATTERN");
-        p.shouldMatch("§f\uDB00\uDC02\uE007§7 Slow §8(1.5 hits/s)");
-        p.shouldMatch("§f\uDB00\uDC02\uE007§7 Very Fast §8(3.1 hits/s)");
+        p.shouldMatch("§f\uE007§7 Slow §8(1.5 hits/s)");
+        p.shouldMatch("§f\uE007§7 Very Fast §8(3.1 hits/s)");
+        p.shouldMatch("§f\uE007§7 Normal §8(2.05 hits/s)");
     }
 
     @Test
@@ -904,6 +919,7 @@ public class TestRegex {
         p.shouldFind(
                 "§f\uDB00\uDC02\uDAFF\uDFFF\uE005\uDAFF\uDFFF §766-90§f \uE001\uDAFF\uDFFF §774-139§f \uE002 §7170-310",
                 3);
+        p.shouldFind("§f\uE003§r§f §7215-343", 1);
     }
 
     @Test
@@ -1119,6 +1135,22 @@ public class TestRegex {
         PatternTester p = new PatternTester(PartyModel.class, "PARTY_LIST_ALL");
         p.shouldMatch("§e\uE001 Party members: §bShadowCat118, and §fShadowCat117");
         p.shouldMatch("§e\uE005\uE002 Party members: §be_z_x, §fSaunt, Dopeul, IM_NoOne,§e §f6bccy, and ShadowCat117");
+    }
+
+    @Test
+    public void PartyScoreboardPart_ONLINE_PLAYER() {
+        PatternTester p = new PatternTester(PartyScoreboardPart.class, "ONLINE_PLAYER");
+        p.shouldMatch("§e- §4[§8||0||§4] §7§mTM47§r§7 [120]");
+        p.shouldMatch("§e- §4[§c|§8|2448||§4] §fDarkerG§7 [120]");
+        p.shouldMatch("§e- §4[§c||17702§8||§4] §fuTa4u§7 [120]");
+        p.shouldMatch("§e- §4[§c||3189|§8|§4] §fIkawanit§7 [65]");
+    }
+
+    @Test
+    public void PartyScoreboardPart_OFFLINE_PLAYER() {
+        PatternTester p = new PatternTester(PartyScoreboardPart.class, "OFFLINE_PLAYER");
+        p.shouldMatch("§e- §7Bigblackman");
+        p.shouldMatch("§e- §7uTa4u");
     }
 
     @Test
