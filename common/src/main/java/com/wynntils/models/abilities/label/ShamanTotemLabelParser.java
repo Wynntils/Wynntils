@@ -31,7 +31,7 @@ public class ShamanTotemLabelParser implements LabelParser<ShamanTotemLabelInfo>
 
         int transfusedAmount = -1;
         if (matcher.group("transfusedAmount") != null) {
-            invigorateTime = Integer.parseInt(matcher.group("transfusedAmount"));
+            transfusedAmount = Integer.parseInt(matcher.group("transfusedAmount"));
         }
 
         String poisonAmount = "";
