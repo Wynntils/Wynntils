@@ -1359,7 +1359,7 @@
   "feature.wynntils.removeShinyGlint.name": "Remove Shiny Glint",
   "feature.wynntils.removeShinyGlint.replaceGlint.description": "Should shiny items be given the vanilla enchantment glint?",
   "feature.wynntils.removeShinyGlint.replaceGlint.name": "Replace Glint",
-  "feature.wynntils.applyWeaponSkin.description": "Applies selected weapon skin manually to work around vanilla delay on application.",
+  "feature.wynntils.applyWeaponSkin.description": "Applies selected weapon skin manually to bypass vanilla delay.",
   "feature.wynntils.applyWeaponSkin.name": "Apply Weapon Skin",
   "feature.wynntils.removeWynncraftChatWrap.description": "Removes the default Wynncraft chat wrap that's applied to most messages.",
   "feature.wynntils.removeWynncraftChatWrap.name": "Remove Wynncraft Chat Wrap",

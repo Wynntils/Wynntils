@@ -1241,7 +1241,7 @@
   "feature.wynntils.removeShinyGlint.name": "Убрать Блестящий Блеск",
   "feature.wynntils.removeShinyGlint.replaceGlint.description": "Дать блестящим предметам ванильный блеск зачарования?",
   "feature.wynntils.removeShinyGlint.replaceGlint.name": "Заменить Блеск",
-  "feature.wynntils.applyWeaponSkin.description": "Применяет выбранный скин оружия вручную, чтобы избежать ванильную задержку при применении.",
+  "feature.wynntils.applyWeaponSkin.description": "Применяет выбранный скин оружия вручную, чтобы избежать ванильную задержку.",
   "feature.wynntils.applyWeaponSkin.name": "Применить Скин Оружия",
   "feature.wynntils.removeWynncraftChatWrap.description": "Удаляет стандартную обертку чата Wynncraft, применяемую к большинству сообщений.",
   "feature.wynntils.removeWynncraftChatWrap.name": "Удалить обертку чата Wynncraft",

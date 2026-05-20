@@ -3,13 +3,15 @@ package com.wynntils.features.embellishments;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ContainerSetContentEvent;
-import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.EventPriority;
@@ -18,6 +20,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import java.util.List;
 import java.util.Optional;
 
+@ConfigCategory(Category.EMBELLISHMENTS)
 public class ApplyWeaponSkinFeature extends Feature {
     private static final int MODEL_FLOAT_INDEX = 0;
     private static final int HOTBAR_FIRST_SLOT = 36;
@@ -49,24 +52,26 @@ public class ApplyWeaponSkinFeature extends Feature {
         Float value = Models.Store.getWeaponModel();
         if (value == null) return;
 
-        ItemStack handItem = McUtils.player().getMainHandItem();
+        List<ItemStack> items = event.getItems();
+        Inventory inventory = McUtils.player().getInventory();
+
+        ItemStack handItem = inventory.getSelectedItem();
         if (handItem.isEmpty()) return;
         CustomModelData handData = handItem.get(DataComponents.CUSTOM_MODEL_DATA);
         if (handData == null) return;
+        if (!handData.getFloat(MODEL_FLOAT_INDEX).equals(value)) return;
         if (!isUsableWeapon(handItem)) return;
 
-        List<ItemStack> items = event.getItems();
-        for (int i = HOTBAR_FIRST_SLOT; i < HOTBAR_FIRST_SLOT + 9; i++) {
-            if (!handData.getFloat(MODEL_FLOAT_INDEX).equals(value)) continue;
-            ItemStack itemStack = items.get(i);
-            if (itemStack.isEmpty()) continue;
-            CustomModelData data = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
-            if (data == null) continue;
-            if (!isUsableWeapon(itemStack)) continue;
-            if (!data.getFloat(MODEL_FLOAT_INDEX).equals(value)) continue;
-            items.set(i, handItem);
-        }
+        ItemStack itemStack = items.get(inventory.selected + Inventory.INVENTORY_SIZE);
+        if (itemStack.isEmpty()) return;
+        CustomModelData data = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
+        if (data == null) return;
+//        if (!data.getFloat(MODEL_FLOAT_INDEX).equals(value)) return;
+        if (!isUsableWeapon(itemStack)) return;
+
+        items.set(inventory.selected + Inventory.INVENTORY_SIZE, handItem);
     }
+
 
     private static boolean isUsableWeapon(ItemStack itemStack) {
         Optional<GearTypeItemProperty> gearItemOpt = Models.Item.asWynnItemProperty(itemStack, GearTypeItemProperty.class);

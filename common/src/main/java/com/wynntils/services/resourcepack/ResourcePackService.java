@@ -15,14 +15,15 @@ import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public final class ResourcePackService extends Service {
     private static final String PRELOADED_PACK_PREFIX = "wynntils_preloaded/";
@@ -37,6 +38,7 @@ public final class ResourcePackService extends Service {
     }
 
     public void setRequestedPreloadHash(UUID id, String hash) {
+        WynntilsMod.postEvent(new ServerResourcePackEvent.Change());
         resourcePackIdHash.store(Pair.of(id, hash));
     }
 

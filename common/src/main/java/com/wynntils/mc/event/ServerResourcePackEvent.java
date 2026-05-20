@@ -5,7 +5,9 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.EventThread;
+
 import java.util.UUID;
+
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
@@ -46,4 +48,7 @@ public abstract class ServerResourcePackEvent extends Event {
 
     @EventThread(EventThread.Type.ANY)
     public static class Clear extends ServerResourcePackEvent {}
+
+    @EventThread(EventThread.Type.ANY)
+    public static class Change extends ServerResourcePackEvent {}
 }
