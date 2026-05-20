@@ -752,6 +752,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new SpellFunctions.ShamanTotemLocationFunction());
         registerFunction(new SpellFunctions.ShamanTotemStateFunction());
         registerFunction(new SpellFunctions.ShamanTotemTimeLeftFunction());
+        registerFunction(new SpellFunctions.ShamanTotemTransfusedAmountFunction());
+        registerFunction(new SpellFunctions.ShamanTotemPoisonAmountFunction());
         registerFunction(new SpellFunctions.ShieldTypeNameFunction());
 
         registerFunction(new StatisticFunctions.StatisticsAverageFunction());
