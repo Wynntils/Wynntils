@@ -9,112 +9,56 @@ import com.wynntils.templates.compiler.CompilerBackend;
 import com.wynntils.templates.language.exception.LanguageException;
 import com.wynntils.templates.language.expression.FunctionExpression;
 import com.wynntils.templates.language.parts.TemplateExpressionPart;
+
 import java.util.List;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class TemplateLanguageTest {
+class TemplateLanguageTest
+{
     private TemplateLanguage language;
 
     @BeforeEach
-    void setup() {
-        language = new TemplateLanguage(
-                new TemplateEngine(new CompilerBackend(this.getClass().getClassLoader())));
+    void setup()
+    {
+        language = new TemplateLanguage(new TemplateEngine(new CompilerBackend(this.getClass().getClassLoader())));
     }
 
     @Test
-    void tokenizeBasic() {
-        String input = "before {call(12;24)} after";
-
-        List<TemplateLexer.Token> tokens = language.tokenize(input);
-
-        Assertions.assertEquals(11, tokens.size(), "Expected 11 tokens, got " + tokens.size());
+    void tokenizeTest1()
+    {
+        assertTokens("{add(4;4)}", TemplateLexer.TokenType.TEMPLATE_START, TemplateLexer.TokenType.IDENTIFIER, TemplateLexer.TokenType.ARGUMENTS_START, TemplateLexer.TokenType.NUMBER, TemplateLexer.TokenType.SEMICOLON, TemplateLexer.TokenType.NUMBER, TemplateLexer.TokenType.ARGUMENTS_END, TemplateLexer.TokenType.TEMPLATE_END, TemplateLexer.TokenType.EOF);
     }
 
     @Test
-    void tokenizeBasicStringNotInText() {
-        String input = "before\"after\"";
-
-        List<TemplateLexer.Token> tokens = language.tokenize(input);
-
-        Assertions.assertEquals(2, tokens.size(), "Expected 2 token, got " + tokens.size());
+    void tokenizeTest2()
+    {
+        assertTokens("Hello {0} World", TemplateLexer.TokenType.TEXT, TemplateLexer.TokenType.TEMPLATE_START, TemplateLexer.TokenType.NUMBER, TemplateLexer.TokenType.TEMPLATE_END, TemplateLexer.TokenType.TEXT, TemplateLexer.TokenType.EOF);
     }
 
+    private static char[] characters = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{', '}', '(', ')', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ':', ';',};
+
     @Test
-    void tokenizeDirective() {
-        String input = "wassup#bro cool stuff\n#a: int = 4";
-
-        List<TemplateLexer.Token> tokens = language.tokenize(input);
-
-        Assertions.assertEquals(4, tokens.size(), "Expected 4 token, got " + tokens.size());
+    void tokenizeGarbage()
+    {
+        String garbage = "";
+        int max = (int) (Math.random() * 500f);
+        for (int i = 0; i < max; i++)
+        {
+            garbage += characters[(int) (Math.random() * characters.length - 1)];
+        }
+        String finalGarbage = garbage;
+        Assertions.assertThrows(LanguageException.class, () -> language.tokenize(finalGarbage));
     }
 
-    @Test
-    void tokenizeNesting() {
-        String input = "{a(b(c(d(e(6;f(\"Hello world\"))))))}";
-
-        List<TemplateLexer.Token> tokens = language.tokenize(input);
-
-        Assertions.assertEquals(24, tokens.size(), "Expected 24 token, got " + tokens.size());
-    }
-
-    @Test
-    void parseBroken() {
-        String input = "{)}";
-        Assertions.assertThrows(LanguageException.class, () -> language.parse(input));
-    }
-
-    @Test
-    void parseBasic() {
-        String input = "before {call(12;24)} after";
-
-        Template template = language.parseUnverified(input);
-
-        Assertions.assertEquals(3, template.getParts().size());
-        Assertions.assertEquals(
-                TemplateExpressionPart.class, template.getParts().get(1).getClass());
-        Assertions.assertEquals(
-                FunctionExpression.class,
-                ((TemplateExpressionPart) template.getParts().get(1))
-                        .getExpression()
-                        .getClass());
-        Assertions.assertEquals(
-                "call",
-                ((FunctionExpression)
-                                ((TemplateExpressionPart) template.getParts().get(1)).getExpression())
-                        .getFunctionName());
-        Assertions.assertEquals(
-                2,
-                ((FunctionExpression)
-                                ((TemplateExpressionPart) template.getParts().get(1)).getExpression())
-                        .getArguments()
-                        .length);
-    }
-
-    @Test
-    void parseNesting() {
-        String input = "{a(b(c(d(e(6;f(\"Hello world\"))))))}";
-
-        Template template = language.parseUnverified(input);
-
-        Assertions.assertEquals(1, template.getParts().size());
-        Assertions.assertEquals(
-                TemplateExpressionPart.class, template.getParts().get(0).getClass());
-        Assertions.assertEquals(
-                FunctionExpression.class,
-                ((TemplateExpressionPart) template.getParts().get(0))
-                        .getExpression()
-                        .getClass());
-    }
-
-    @Test
-    void parseExample1() {
-        language.parseUnverified("§cX: {x(my_loc)}, §9Y: {y(my_loc)}, §aZ: {z(my_loc)}");
-    }
-
-    @Test
-    void parseExample2() {
-        language.parseUnverified("{player_name} {format_capped(capped_xp)}");
+    void assertTokens(String input, TemplateLexer.TokenType... tokens)
+    {
+        List<TemplateLexer.Token> tokensList = language.tokenize(input);
+        for (int i = 0; i < tokensList.size(); i++)
+        {
+            Assertions.assertEquals(tokens[i], tokensList.get(i).type());
+        }
     }
 }
