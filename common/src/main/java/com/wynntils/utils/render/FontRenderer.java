@@ -356,13 +356,14 @@ public final class FontRenderer {
             float calculatedTextWidth = adjustedLines.stream()
                     .filter(line -> !line.getComponent().getString().isBlank())
                     .map(line -> (float) font.width(line.getComponent()))
-                    .reduce(0f, Math::max);
+                    .reduce(0f, Math::max)
+                    * textScale;
 
             float renderX =
                     switch (horizontalAlignment) {
                         case LEFT -> x1;
-                        case CENTER -> ((x1 + x2) / 2f) - (calculatedTextWidth / 2F * textScale);
-                        case RIGHT -> x2 - calculatedTextWidth * textScale;
+                        case CENTER -> ((x1 + x2) / 2f) - (calculatedTextWidth / 2F);
+                        case RIGHT -> x2 - calculatedTextWidth;
                     };
 
             float renderY =
@@ -377,10 +378,10 @@ public final class FontRenderer {
             RenderUtils.drawRect(
                     guiGraphics,
                     backgroundColor,
-                    renderX - borderWidth,
-                    renderY - borderWidth - 1,
-                    calculatedTextWidth + totalBorderWidth,
-                    calculatedTextHeight + totalBorderWidth);
+                    renderX - (borderWidth),
+                    renderY - (borderWidth),
+                    calculatedTextWidth - (1 * textScale) + totalBorderWidth,
+                    calculatedTextHeight - (2 * textScale) + totalBorderWidth);
         }
 
         renderAlignedTextInBox(
