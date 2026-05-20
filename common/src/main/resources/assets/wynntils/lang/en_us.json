@@ -2804,6 +2804,8 @@
   "function.wynntils.raidsRunsSince.name": "Raid Runs Since",
   "function.wynntils.rainbowShader.description": "Returns color value that triggers Wynncraft's rainbow text shader",
   "function.wynntils.rainbowShader.name": "Wynncraft Rainbow Shader",
+  "function.wynntils.remnantCount.description": "Returns the amount of your currently active Remnants",
+  "function.wynntils.remnantCount.name": "Shaman Remnant Count",
   "function.wynntils.shamanMask.argument.isColored": "Should the name be colored according to the mask's color?",
   "function.wynntils.shamanMask.argument.useShortName": "Should the short name be used instead of the full name?",
   "function.wynntils.shamanMask.description": "What shaman mask you are currently wearing. Full names: None, Lunatic, Fanatic, Heretic, Awakened. Short names: None, L, F, H, A",

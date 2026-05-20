@@ -539,6 +539,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.PersonalObjectiveScoreFunction());
         registerFunction(new CharacterFunctions.PowderSpecialChargeFunction());
         registerFunction(new CharacterFunctions.PuppetCountFunction());
+        registerFunction(new CharacterFunctions.RemnantCountFunction());
         registerFunction(new CharacterFunctions.PuppetsInTimeRangeFunction());
         registerFunction(new CharacterFunctions.SnakeCountFunction());
         registerFunction(new CharacterFunctions.SprintFunction());
