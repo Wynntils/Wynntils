@@ -12,7 +12,7 @@ import net.minecraft.world.entity.Entity;
 public class ShamanTotemLabelInfo extends LabelInfo {
     private final String playerName;
     private final int regenPerSecond;
-    private final String transfusedAmount;
+    private final int transfusedAmount;
     private final String poisonAmount;
     private final int invigorateTime;
     private final int timeLeft;
