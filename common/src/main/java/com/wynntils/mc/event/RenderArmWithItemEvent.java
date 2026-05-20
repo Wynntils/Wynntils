@@ -20,7 +20,6 @@ public class RenderArmWithItemEvent extends Event implements ICancellableEvent {
     private SubmitNodeCollector nodeCollector;
     private int packedLight;
 
-
     public RenderArmWithItemEvent(
             AbstractClientPlayer player,
             float partialTick,

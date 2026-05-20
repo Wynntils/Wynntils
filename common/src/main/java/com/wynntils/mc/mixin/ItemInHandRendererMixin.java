@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.ItemUsedEvent;
 import com.wynntils.mc.event.RenderArmWithItemEvent;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;
@@ -11,11 +12,14 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemInHandRenderer.class)
 public class ItemInHandRendererMixin {
 
-    @WrapMethod(method = "renderArmWithItem")
+    @WrapMethod(method = "renderArmWithItem(Lnet/minecraft/client/player/AbstractClientPlayer;FFLnet/minecraft/world/InteractionHand;FLnet/minecraft/world/item/ItemStack;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/RenderStateShard$SubmitNodeCollector;I)V")
     private void renderArmWithItem(
             AbstractClientPlayer player,
             float partialTick,
@@ -57,6 +61,18 @@ public class ItemInHandRendererMixin {
                     event.getNodeCollector(),
                     event.getPackedLight()
             );
+        }
+    }
+
+    @Inject(
+            method = "itemUsed(Lnet/minecraft/world/InteractionHand;)V",
+            at = @At("HEAD")
+    )
+    private void itemUsed(InteractionHand hand, CallbackInfo ci) {
+        ItemUsedEvent event = new ItemUsedEvent(hand);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
+            ci.cancel();
         }
     }
 }
