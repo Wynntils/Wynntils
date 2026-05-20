@@ -133,6 +133,7 @@ class TemplateLexer {
             case ')' -> tokens.add(new Token(TokenType.ARGUMENTS_END, ")"));
             case ';' -> tokens.add(new Token(TokenType.SEMICOLON, ";"));
             case '"' -> lexString();
+            case ':' -> throw new LanguageException("Unexpected character: ':' (using colons as formatters is no longer supported)");
             default -> throw new LanguageException("Unexpected character: " + c);
         }
     }

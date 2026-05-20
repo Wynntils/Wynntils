@@ -38,13 +38,59 @@ class TemplateLanguageTest
         assertTokens("Hello {0} World", TemplateLexer.TokenType.TEXT, TemplateLexer.TokenType.TEMPLATE_START, TemplateLexer.TokenType.NUMBER, TemplateLexer.TokenType.TEMPLATE_END, TemplateLexer.TokenType.TEXT, TemplateLexer.TokenType.EOF);
     }
 
-    private static char[] characters = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{', '}', '(', ')', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ':', ';',};
+    @Test
+    void tokenizeTest3()
+    {
+        assertTokens("{1.2;111.2356;1.7445;0.5;20;20000;10}",
+                TemplateLexer.TokenType.TEMPLATE_START,
+                TemplateLexer.TokenType.NUMBER, TemplateLexer.TokenType.SEMICOLON,
+                TemplateLexer.TokenType.NUMBER, TemplateLexer.TokenType.SEMICOLON,
+                TemplateLexer.TokenType.NUMBER, TemplateLexer.TokenType.SEMICOLON,
+                TemplateLexer.TokenType.NUMBER, TemplateLexer.TokenType.SEMICOLON,
+                TemplateLexer.TokenType.NUMBER, TemplateLexer.TokenType.SEMICOLON,
+                TemplateLexer.TokenType.NUMBER, TemplateLexer.TokenType.SEMICOLON,
+                TemplateLexer.TokenType.NUMBER,
+                TemplateLexer.TokenType.TEMPLATE_END,
+                TemplateLexer.TokenType.EOF);
+    }
+
+    @Test
+    void tokenizeTest4()
+    {
+        assertTokens("\"escape me \\\"\"{\"string\"}",
+                TemplateLexer.TokenType.TEXT,
+                TemplateLexer.TokenType.TEMPLATE_START,
+                TemplateLexer.TokenType.STRING,
+                TemplateLexer.TokenType.TEMPLATE_END,
+                TemplateLexer.TokenType.EOF);
+    }
+
+    @Test
+    void tokenizeTest5()
+    {
+        assertTokens("{NAME; name; testname0123; doors}",
+                TemplateLexer.TokenType.TEMPLATE_START,
+                TemplateLexer.TokenType.IDENTIFIER, TemplateLexer.TokenType.SEMICOLON,
+                TemplateLexer.TokenType.IDENTIFIER, TemplateLexer.TokenType.SEMICOLON,
+                TemplateLexer.TokenType.IDENTIFIER, TemplateLexer.TokenType.SEMICOLON,
+                TemplateLexer.TokenType.IDENTIFIER,
+                TemplateLexer.TokenType.TEMPLATE_END,
+                TemplateLexer.TokenType.EOF);
+    }
+
+    @Test
+    void tokenizeTest6()
+    {
+        Assertions.assertThrows(LanguageException.class, () -> language.tokenize("{123.4:3}"));
+    }
+
+    private static final char[] characters = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{', '}', '(', ')', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', ':', ';', ' ', '\n', '\t'};
 
     @Test
     void tokenizeGarbage()
     {
         String garbage = "";
-        int max = (int) (Math.random() * 500f);
+        int max = (int) (Math.random() * 500);
         for (int i = 0; i < max; i++)
         {
             garbage += characters[(int) (Math.random() * characters.length - 1)];
