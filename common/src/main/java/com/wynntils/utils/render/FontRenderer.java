@@ -351,9 +351,9 @@ public final class FontRenderer {
             int lineHeight = font.lineHeight;
             float calculatedTextHeight = (adjustedLines.size()) * lineHeight * textScale;
             float calculatedTextWidth = adjustedLines.stream()
-                    .filter(line -> !line.getComponent().getString().isBlank())
-                    .map(line -> (float) font.width(line.getComponent()))
-                    .reduce(0f, Math::max)
+                            .filter(line -> !line.getComponent().getString().isBlank())
+                            .map(line -> (float) font.width(line.getComponent()))
+                            .reduce(0f, Math::max)
                     * textScale;
 
             float renderX =
