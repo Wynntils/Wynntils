@@ -20,6 +20,7 @@ import java.util.Optional;
 
 public class ApplyWeaponSkinFeature extends Feature {
     private static final int MODEL_FLOAT_INDEX = 0;
+    private static final int HOTBAR_FIRST_SLOT = 36;
 
     public ApplyWeaponSkinFeature() {
         super(ProfileDefault.onlyDefault());
@@ -55,7 +56,7 @@ public class ApplyWeaponSkinFeature extends Feature {
         if (!isUsableWeapon(handItem)) return;
 
         List<ItemStack> items = event.getItems();
-        for (int i = 36; i < 45; i++) {
+        for (int i = HOTBAR_FIRST_SLOT; i < HOTBAR_FIRST_SLOT + 9; i++) {
             if (!handData.getFloat(MODEL_FLOAT_INDEX).equals(value)) continue;
             ItemStack itemStack = items.get(i);
             if (itemStack.isEmpty()) continue;

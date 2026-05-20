@@ -2,6 +2,8 @@ package com.wynntils.models.store;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.models.containers.containers.CosmeticContainer;
 import com.wynntils.models.items.items.gui.StoreItem;
@@ -17,7 +19,8 @@ public class StoreModel extends Model {
 
     private static final int SELECTED_COSMETIC_SLOT = 4;
 
-    private Float weaponModel = null;
+    @Persisted
+    private Storage<Float> weaponModel = new Storage<>(null);
 
     public StoreModel() {
         super(List.of());
@@ -36,11 +39,11 @@ public class StoreModel extends Model {
             return;
         }
         if (cosmeticItemType == CosmeticItemType.WEAPON_SKIN) {
-            weaponModel = itemStack.getComponents().get(DataComponents.CUSTOM_MODEL_DATA).getFloat(0);
+            weaponModel.store(itemStack.getComponents().get(DataComponents.CUSTOM_MODEL_DATA).getFloat(0));
         }
     }
 
     public Float getWeaponModel() {
-        return weaponModel;
+        return weaponModel.get();
     }
 }
