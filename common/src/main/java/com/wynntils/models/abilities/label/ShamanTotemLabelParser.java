@@ -15,7 +15,7 @@ public class ShamanTotemLabelParser implements LabelParser<ShamanTotemLabelInfo>
     // Test in ShamanTotemLabelParser_SHAMAN_TOTEM_PATTERN
     private static final Pattern SHAMAN_TOTEM_PATTERN =
             Pattern.compile("§b(?<playerName>.+)'(?:s)? §7Totem\n ?(?:§c\\+(?<regenPerSecond>\\d+)❤§7/s )?"
-                    + "(?:§5\uE011 §7(?<poisonAmount>.+?) )?(?:§e\uE013 §7(?<invigorateTime>\\d+)s )?"
+                    + "(?:§4\uE020 §7(?<transfusedAmount>.+?) )?(?:§5\uE011 §7(?<poisonAmount>.+?) )?(?:§e\uE013 §7(?<invigorateTime>\\d+)s )?"
                     + "§d\uE01F §7(?<timeLeft>\\d+)s");
 
     @Override
@@ -27,6 +27,11 @@ public class ShamanTotemLabelParser implements LabelParser<ShamanTotemLabelInfo>
         int regenPerSecond = -1;
         if (matcher.group("regenPerSecond") != null) {
             regenPerSecond = Integer.parseInt(matcher.group("regenPerSecond"));
+        }
+
+        int transfusedAmount = -1;
+        if (matcher.group("transfusedAmount") != null) {
+            invigorateTime = Integer.parseInt(matcher.group("transfusedAmount"));
         }
 
         String poisonAmount = "";
@@ -42,6 +47,6 @@ public class ShamanTotemLabelParser implements LabelParser<ShamanTotemLabelInfo>
         int timeLeft = Integer.parseInt(matcher.group("timeLeft"));
 
         return new ShamanTotemLabelInfo(
-                label, location, entity, playerName, regenPerSecond, poisonAmount, invigorateTime, timeLeft);
+                label, location, entity, playerName, regenPerSecond, transfusedAmount, poisonAmount, invigorateTime, timeLeft);
     }
 }
