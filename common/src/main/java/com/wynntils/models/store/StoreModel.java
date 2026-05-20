@@ -22,6 +22,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class StoreModel extends Model {
     private static final int SELECTED_COSMETIC_SLOT = 4;
 
+    public static final int WEAPON_MODEL_FLOAT_INDEX = 0;
+
     @Persisted
     private Storage<Float> weaponModel = new Storage<>(null);
 
@@ -45,7 +47,7 @@ public class StoreModel extends Model {
             weaponModel.store(itemStack
                     .getComponents()
                     .get(DataComponents.CUSTOM_MODEL_DATA)
-                    .getFloat(0));
+                    .getFloat(WEAPON_MODEL_FLOAT_INDEX));
         }
     }
 

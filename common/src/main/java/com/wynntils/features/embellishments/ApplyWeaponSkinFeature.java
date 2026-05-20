@@ -13,6 +13,7 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.RequirementItemProperty;
+import com.wynntils.models.store.StoreModel;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
@@ -25,9 +26,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.EMBELLISHMENTS)
 public class ApplyWeaponSkinFeature extends Feature {
-    private static final int MODEL_FLOAT_INDEX = 0;
-    private static final int HOTBAR_FIRST_SLOT = 36;
-
     public ApplyWeaponSkinFeature() {
         super(ProfileDefault.onlyDefault());
     }
@@ -44,8 +42,8 @@ public class ApplyWeaponSkinFeature extends Feature {
         if (data == null) return;
         if (!isUsableWeapon(itemStack)) return;
 
-        if (!data.getFloat(MODEL_FLOAT_INDEX).equals(value)) {
-            data.floats().set(MODEL_FLOAT_INDEX, value);
+        if (!data.getFloat(StoreModel.WEAPON_MODEL_FLOAT_INDEX).equals(value)) {
+            data.floats().set(StoreModel.WEAPON_MODEL_FLOAT_INDEX, value);
         }
     }
 
@@ -62,16 +60,19 @@ public class ApplyWeaponSkinFeature extends Feature {
         if (handItem.isEmpty()) return;
         CustomModelData handData = handItem.get(DataComponents.CUSTOM_MODEL_DATA);
         if (handData == null) return;
-        if (!handData.getFloat(MODEL_FLOAT_INDEX).equals(value)) return;
+        if (!handData.getFloat(StoreModel.WEAPON_MODEL_FLOAT_INDEX).equals(value)) return;
         if (!isUsableWeapon(handItem)) return;
 
         ItemStack itemStack = items.get(inventory.selected + Inventory.INVENTORY_SIZE);
         if (itemStack.isEmpty()) return;
         CustomModelData data = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
         if (data == null) return;
-        //        if (!data.getFloat(MODEL_FLOAT_INDEX).equals(value)) return;
         if (!isUsableWeapon(itemStack)) return;
 
+        // ItemInHandRenderer#tick() checks ItemStack changes by reference instead of ItemStack#matches
+        // so to not trigger equipped animation we have to overwrite the ItemStack for selected slot
+        // Wynncraft also sometimes sends unskinned weapon ItemStack which is why we don't check that
+        // itemStack's model value is equal to handItem's
         items.set(inventory.selected + Inventory.INVENTORY_SIZE, handItem);
     }
 
