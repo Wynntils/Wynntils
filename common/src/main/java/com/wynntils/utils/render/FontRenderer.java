@@ -356,29 +356,31 @@ public final class FontRenderer {
                             .reduce(0f, Math::max)
                     * textScale;
 
-            float renderX =
-                    switch (horizontalAlignment) {
-                        case LEFT -> x1;
-                        case CENTER -> ((x1 + x2) / 2f) - (calculatedTextWidth / 2F);
-                        case RIGHT -> x2 - calculatedTextWidth;
-                    };
+            if (calculatedTextWidth != 0) {
+                float renderX =
+                        switch (horizontalAlignment) {
+                            case LEFT -> x1;
+                            case CENTER -> ((x1 + x2) / 2f) - (calculatedTextWidth / 2F);
+                            case RIGHT -> x2 - calculatedTextWidth;
+                        };
 
-            float renderY =
-                    switch (verticalAlignment) {
-                        case TOP -> y1;
-                        case MIDDLE -> (y1 + y2) / 2f - calculatedTextHeight / 2f;
-                        case BOTTOM -> y2 - calculatedTextHeight;
-                    };
+                float renderY =
+                        switch (verticalAlignment) {
+                            case TOP -> y1;
+                            case MIDDLE -> (y1 + y2) / 2f - calculatedTextHeight / 2f;
+                            case BOTTOM -> y2 - calculatedTextHeight;
+                        };
 
-            float totalBorderWidth = calculatedTextWidth == 0 ? 0 : (borderWidth * 2);
+                float totalBorderWidth = (borderWidth * 2);
 
-            RenderUtils.drawRect(
-                    guiGraphics,
-                    backgroundColor,
-                    renderX - (borderWidth),
-                    renderY - (borderWidth),
-                    calculatedTextWidth - (1 * textScale) + totalBorderWidth,
-                    calculatedTextHeight - (2 * textScale) + totalBorderWidth);
+                RenderUtils.drawRect(
+                        guiGraphics,
+                        backgroundColor,
+                        renderX - (borderWidth),
+                        renderY - (borderWidth),
+                        calculatedTextWidth - (1 * textScale) + totalBorderWidth,
+                        calculatedTextHeight - (2 * textScale) + totalBorderWidth);
+            }
         }
 
         renderAlignedTextInBox(
