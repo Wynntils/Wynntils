@@ -3,47 +3,26 @@ package com.wynntils.features.embellishments;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
-import com.wynntils.mc.event.ItemUsedEvent;
-import com.wynntils.mc.event.RenderArmWithItemEvent;
+import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
+import java.util.List;
 import java.util.Optional;
 
 public class ApplyWeaponSkinFeature extends Feature {
     private static final int MODEL_FLOAT_INDEX = 0;
 
-    private ItemStack lastTickItemStack = ItemStack.EMPTY;
-    private ItemStack weaponItemStack;
-    private boolean isRising = false;
-    private boolean animationDone = false;
-    private float oHandHeight;
-    private float handHeight;
-
     public ApplyWeaponSkinFeature() {
         super(ProfileDefault.onlyDefault());
-    }
-
-    @SubscribeEvent
-    public void onRenderArmWithItem(RenderArmWithItemEvent event) {
-        if (!Models.WorldState.onWorld()) return;
-        Float value = Models.Store.getWeaponModel();
-        if (value == null) return;
-        ItemStack itemStack = event.getItem();
-
-        if (isUsableWeapon(itemStack)) return;
-
-        // Have to manage equippedProgress ourselves since otherwise it will sometimes get reset
-        // when Wynncraft sends a new ItemStack with weapon skin applied which causes an item to jump up and down
-        event.setEquippedProgress(McUtils.mc().getItemModelResolver().swapAnimationScale(lastTickItemStack) * (1.0f - Mth.lerp(event.getPartialTick(), oHandHeight, handHeight)));
     }
 
     @SubscribeEvent
@@ -52,56 +31,40 @@ public class ApplyWeaponSkinFeature extends Feature {
         Float value = Models.Store.getWeaponModel();
         if (value == null) return;
 
-        LocalPlayer player = McUtils.player();
-        ItemStack itemStack = player.getMainHandItem();
-
-        boolean itemStackChanged = lastTickItemStack != itemStack;
-
-        lastTickItemStack = itemStack;
-
+        ItemStack itemStack = McUtils.player().getMainHandItem();
+        if (itemStack.isEmpty()) return;
         CustomModelData data = itemStack.getComponents().get(DataComponents.CUSTOM_MODEL_DATA);
         if (data == null) return;
-
         if (!isUsableWeapon(itemStack)) return;
-
-        // If we swapped back to reskinned weapon, restart the animation
-        if (itemStackChanged && weaponItemStack != null && ItemStack.matches(weaponItemStack, itemStack)) {
-            animationDone = false;
-        }
-
-        if (animationDone) {
-            // Force item to be at full height
-            handHeight = 1.0f;
-            oHandHeight = 1.0f;
-        } else {
-            // Adapted from ItemInHandRenderer
-            oHandHeight = handHeight;
-            if (player.isHandsBusy()) {
-                handHeight = Mth.clamp(handHeight - 0.4f, 0.0f, 1.0f);
-            } else {
-                float f = player.getItemSwapScale(1.0f);
-                float g = !isRising ? 0.0F : f * f * f;
-                handHeight = handHeight + Mth.clamp(g - handHeight, -0.4f, 0.4f);
-            }
-            if (handHeight < 0.1f) {
-                isRising = true;
-            }
-            if (handHeight >= 0.9f) {
-                animationDone = true;
-                isRising = false;
-            }
-        }
 
         if (!data.getFloat(MODEL_FLOAT_INDEX).equals(value)) {
             data.floats().set(MODEL_FLOAT_INDEX, value);
-            animationDone = false;
-            weaponItemStack = itemStack;
         }
     }
 
-    @SubscribeEvent
-    public void onItemUsed(ItemUsedEvent event) {
-        handHeight = 0.0f;
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
+        if (!Models.WorldState.onWorld()) return;
+        Float value = Models.Store.getWeaponModel();
+        if (value == null) return;
+
+        ItemStack handItem = McUtils.player().getMainHandItem();
+        if (handItem.isEmpty()) return;
+        CustomModelData handData = handItem.get(DataComponents.CUSTOM_MODEL_DATA);
+        if (handData == null) return;
+        if (!isUsableWeapon(handItem)) return;
+
+        List<ItemStack> items = event.getItems();
+        for (int i = 36; i < 45; i++) {
+            if (!handData.getFloat(MODEL_FLOAT_INDEX).equals(value)) continue;
+            ItemStack itemStack = items.get(i);
+            if (itemStack.isEmpty()) continue;
+            CustomModelData data = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
+            if (data == null) continue;
+            if (!isUsableWeapon(itemStack)) continue;
+            if (!data.getFloat(MODEL_FLOAT_INDEX).equals(value)) continue;
+            items.set(i, handItem);
+        }
     }
 
     private static boolean isUsableWeapon(ItemStack itemStack) {
