@@ -9,7 +9,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.utils.type.CappedValue;
-
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -123,7 +122,7 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
 
         if (!matcher.matches()) {
             // If dialogue is ongoing, the health/mana text is gone, ending out value = 0
-            if(value.equals("0")) {
+            if (value.equals("0")) {
                 return CappedValue.EMPTY;
             }
             WynntilsMod.warn("Could not parse text action bar segment value as capped: " + value);
