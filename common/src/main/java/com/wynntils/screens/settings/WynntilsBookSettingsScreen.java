@@ -764,7 +764,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                         renderY += 12;
                     }
                 }
-
                 for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature).stream()
                         .filter(this::isOverlayFiltered)
                         .sorted()
