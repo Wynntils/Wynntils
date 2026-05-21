@@ -10,11 +10,10 @@ import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.ActionBarSegmentMatcher;
 import com.wynntils.models.dialogue.actionbar.segments.DialogueSegment;
-import net.minecraft.network.chat.FontDescription;
-import net.minecraft.resources.Identifier;
-
 import java.util.LinkedList;
 import java.util.List;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.resources.Identifier;
 
 public class DialogueSegmentMatcher implements ActionBarSegmentMatcher {
     private static final String DIALOGUE_FONT_PREFIX = "hud/dialogue/";

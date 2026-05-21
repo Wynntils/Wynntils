@@ -6,14 +6,13 @@ package com.wynntils.core.keybinds;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Managers;
-import net.minecraft.client.KeyMapping;
-import net.minecraft.world.inventory.Slot;
-import org.lwjgl.glfw.GLFW;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.world.inventory.Slot;
+import org.lwjgl.glfw.GLFW;
 
 public record KeyBindDefinition(
         String id,
