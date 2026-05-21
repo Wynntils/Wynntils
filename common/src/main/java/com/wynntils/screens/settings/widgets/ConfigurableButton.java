@@ -23,13 +23,14 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+
+import java.util.List;
+import java.util.Optional;
 
 public class ConfigurableButton extends WynntilsButton {
     private final Configurable configurable;
@@ -72,7 +73,7 @@ public class ConfigurableButton extends WynntilsButton {
         if (configurable instanceof Overlay selectedOverlay) {
             enabled = Managers.Overlay.isEnabled(selectedOverlay);
         } else if (configurable instanceof Feature selectedFeature) {
-            enabled = selectedFeature.isEnabled();
+            enabled = selectedFeature.userEnabled.get();
         }
 
         this.enabledCheckbox = new WynntilsCheckbox(x + width - 10, y, 10, Component.literal(""), enabled, 0);
@@ -97,7 +98,19 @@ public class ConfigurableButton extends WynntilsButton {
             }
         }
 
-        boolean isOverlay = configurable instanceof Overlay;
+        int indent = 0;
+        if (configurable instanceof Feature feature) {
+            if (Managers.Feature.isSubFeature(feature)) {
+                indent = 12;
+            }
+        } else if (configurable instanceof Overlay overlay) {
+            Feature parent = Managers.Overlay.getOverlayParent(overlay);
+            if (parent != null && Managers.Feature.isSubFeature(parent)) {
+                indent = 24;
+            } else {
+                indent = 12;
+            }
+        }
 
         String textToRender = configurable.getTranslatedName();
 
@@ -115,9 +128,9 @@ public class ConfigurableButton extends WynntilsButton {
                 .renderScrollingText(
                         guiGraphics,
                         StyledText.fromString(textToRender),
-                        (isOverlay ? this.getX() + 12 : this.getX()),
+                        this.getX() + indent,
                         this.getY(),
-                        (isOverlay ? this.width - 12 : this.width) - 11,
+                        this.width - indent - 11,
                         color,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -145,7 +158,7 @@ public class ConfigurableButton extends WynntilsButton {
         // Toggle the enabled state of the configurable when toggling the checkbox
         if (enabledCheckbox.isMouseOver(event.x(), event.y())) {
             if (configurable instanceof Feature feature) {
-                feature.setUserEnabled(!feature.isEnabled());
+                feature.setUserEnabled(!feature.userEnabled.get());
             } else if (configurable instanceof Overlay) {
                 Optional<Config<?>> configOpt = configurable.getConfigOptionFromString("userEnabled");
 

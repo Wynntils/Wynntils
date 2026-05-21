@@ -21,6 +21,7 @@ import com.wynntils.functions.BombFunctions;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.CombatFunctions;
 import com.wynntils.functions.CombatXpFunctions;
+import com.wynntils.functions.DialogueFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.GuildFunctions;
 import com.wynntils.functions.HadesPartyFunctions;
@@ -53,6 +54,10 @@ import com.wynntils.functions.generic.TimeFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.ErrorOr;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -63,9 +68,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 
 /** Manage all built-in {@link Function}s */
 public final class FunctionManager extends Manager {
@@ -576,6 +578,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatXpFunctions.XpRawFunction());
         registerFunction(new CombatXpFunctions.XpReqFunction());
         registerFunction(new CombatXpFunctions.XpReqRawFunction());
+
+        registerFunction(new DialogueFunctions.IsDialoguePresentFunction());
 
         registerFunction(new EnvironmentFunctions.CappedMemFunction());
         registerFunction(new EnvironmentFunctions.ClockFunction());

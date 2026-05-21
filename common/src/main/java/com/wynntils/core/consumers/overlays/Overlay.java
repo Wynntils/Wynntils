@@ -11,6 +11,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.AbstractConfigurable;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
@@ -242,7 +243,15 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     }
 
     public final boolean isParentEnabled() {
-        return Managers.Overlay.getOverlayParent(this).isEnabled();
+        Feature parent = Managers.Overlay.getOverlayParent(this);
+        if (!parent.isEnabled()) {
+            return false;
+        }
+        if (Managers.Feature.isSubFeature(parent)) {
+            Feature grandparent = Managers.Feature.getParentFeature(parent);
+            return grandparent != null && grandparent.isEnabled();
+        }
+        return true;
     }
 
     public final String getParentTranslatedName() {

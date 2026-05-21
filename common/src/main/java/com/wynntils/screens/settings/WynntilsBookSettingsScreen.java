@@ -41,17 +41,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -64,6 +53,18 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     // Constants
@@ -728,6 +729,42 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             renderY += 12;
 
             if (configurable instanceof Feature feature) {
+                for (Feature subFeature : Managers.Feature.getSubFeatures(feature).stream()
+                        .filter(this::isFeatureFiltered)
+                        .sorted()
+                        .toList()) {
+                    int subMatchingConfigs = 0;
+                    for (Config<?> config : subFeature.getVisibleConfigOptions()) {
+                        if (configOptionContains(config)) {
+                            subMatchingConfigs++;
+                        }
+                    }
+                    ConfigurableButton subFeatureButton = new ConfigurableButton(
+                            12 + offsetX, renderY, 170, 12, subFeature, this, subMatchingConfigs);
+                    subFeatureButton.visible =
+                            renderY >= (21 - 12) && renderY <= (21 + (CONFIGURABLES_PER_PAGE + 1) * 11);
+                    configurables.add(subFeatureButton);
+                    renderY += 12;
+
+                    for (Overlay subOverlay : Managers.Overlay.getFeatureOverlays(subFeature).stream()
+                            .filter(this::isOverlayFiltered)
+                            .sorted()
+                            .toList()) {
+                        int subOverlayMatchingConfigs = 0;
+                        for (Config<?> config : subOverlay.getVisibleConfigOptions()) {
+                            if (configOptionContains(config)) {
+                                subOverlayMatchingConfigs++;
+                            }
+                        }
+                        ConfigurableButton subOverlayButton = new ConfigurableButton(
+                                12 + offsetX, renderY, 170, 12, subOverlay, this, subOverlayMatchingConfigs);
+                        subOverlayButton.visible =
+                                renderY >= (21 - 12) && renderY <= (21 + (CONFIGURABLES_PER_PAGE + 1) * 11);
+                        configurables.add(subOverlayButton);
+                        renderY += 12;
+                    }
+                }
+
                 for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature).stream()
                         .filter(this::isOverlayFiltered)
                         .sorted()
@@ -889,6 +926,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         // Add all configurables for selected category
         if (selectedCategory != null) {
             configurableList.addAll(Managers.Feature.getFeatures().stream()
+                    .filter(feature -> !Managers.Feature.isSubFeature(feature))
                     .filter(this::isFeatureFiltered)
                     .filter(feature -> isCategoryMatching(feature, selectedCategory))
                     .sorted()
@@ -897,6 +935,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             // If there is a search query, add all matches from every other category
             if (hasSearch) {
                 configurableList.addAll(Managers.Feature.getFeatures().stream()
+                        .filter(feature -> !Managers.Feature.isSubFeature(feature))
                         .filter(this::isFeatureFiltered)
                         .filter(feature -> !isCategoryMatching(feature, selectedCategory))
                         .sorted()
@@ -904,6 +943,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             }
         } else { // All tab, add all configurables
             configurableList.addAll(Managers.Feature.getFeatures().stream()
+                    .filter(feature -> !Managers.Feature.isSubFeature(feature))
                     .filter(this::isFeatureFiltered)
                     .sorted()
                     .toList());
@@ -1012,13 +1052,20 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         boolean anyOverlayMatches =
                 Managers.Overlay.getFeatureOverlays(feature).stream().anyMatch(this::overlaySearchMatches);
 
-        return (featureSearchMatch || anyOverlayMatches);
+        boolean anySubFeatureMatches =
+                Managers.Feature.getSubFeatures(feature).stream().anyMatch(this::isFeatureFiltered);
+
+        return (featureSearchMatch || anyOverlayMatches || anySubFeatureMatches);
     }
 
     private boolean isOverlayFiltered(Overlay overlay) {
         if (searchWidget.getTextBoxInput().isEmpty()) {
             Feature parent = Managers.Overlay.getOverlayParent(overlay);
             boolean parentEnabled = parent.isEnabled();
+            if (parentEnabled && Managers.Feature.isSubFeature(parent)) {
+                Feature grandparent = Managers.Feature.getParentFeature(parent);
+                parentEnabled = grandparent != null && grandparent.isEnabled();
+            }
 
             return switch (enabledFilterType) {
                 case ENABLED -> parentEnabled;
