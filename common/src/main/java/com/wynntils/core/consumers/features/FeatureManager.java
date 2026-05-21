@@ -181,13 +181,6 @@ import com.wynntils.features.wynntils.WynntilsTelemetryFeature;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.neoforged.bus.api.Event;
-import net.neoforged.bus.api.SubscribeEvent;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -196,6 +189,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.WeakHashMap;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.SubscribeEvent;
 
 /** Loads {@link Feature}s */
 public final class FeatureManager extends Manager {

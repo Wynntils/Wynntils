@@ -9,7 +9,6 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.TextOverlay;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
-
 import java.util.function.BooleanSupplier;
 
 public class AutoProgressDialogueOverlay extends TextOverlay {

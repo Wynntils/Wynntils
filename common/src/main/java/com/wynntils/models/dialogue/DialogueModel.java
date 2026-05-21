@@ -15,11 +15,10 @@ import com.wynntils.models.dialogue.actionbar.matchers.DialogueFadeSegmentMatche
 import com.wynntils.models.dialogue.actionbar.matchers.DialogueSegmentMatcher;
 import com.wynntils.models.dialogue.actionbar.segments.DialogueSegment;
 import com.wynntils.models.dialogue.event.NpcDialogueEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class DialogueModel extends Model {
     private final Set<Class<? extends ActionBarSegment>> hiddenSegments = new HashSet<>();
@@ -49,8 +48,7 @@ public class DialogueModel extends Model {
             return;
         }
 
-        boolean wasDoneRendering =
-                currentDialogueSegment.getDialogueText().equals(dialogueSegment.getDialogueText());
+        boolean wasDoneRendering = currentDialogueSegment.getDialogueText().equals(dialogueSegment.getDialogueText());
         setCurrentDialogue(dialogueSegment);
 
         if (wasDoneRendering) {
