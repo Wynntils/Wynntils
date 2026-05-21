@@ -61,6 +61,6 @@ public class HadesPartyFunctions {
     @TemplateFunction(name = "hades_party_member_uuid")
     public static String hadesPartyMemberUuidFunction(int index) {
         HadesUser user = hadesPartyFunctionBase(index);
-        return user.getUuid().toString();
+        return user != null ? user.getUuid().toString() : "";
     }
 }

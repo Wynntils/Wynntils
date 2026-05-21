@@ -83,7 +83,7 @@ public class TemplateLanguage {
                 ? "%d: %s%n".formatted(row + 2, lines.get(row + 1))
                 : "";
 
-        String pointer = " ".repeat(Math.max(column + 3, 0)) + "^ here";
+        String pointer = " ".repeat(Math.max(column + 2, 0)) + "^ here";
 
         String message = "%s: %s".formatted(
                 exception.getClass().getSimpleName(),
@@ -91,10 +91,10 @@ public class TemplateLanguage {
         );
 
         return """
-            Error in template:
-                (%d:%d) %s
-            %s%s                %s
-            %s"""
+Error in template:
+(%d:%d) %s
+%s%s%s
+%s"""
                 .formatted(
                         row + 1,
                         column,

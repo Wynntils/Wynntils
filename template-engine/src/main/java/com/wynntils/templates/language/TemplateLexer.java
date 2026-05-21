@@ -21,6 +21,8 @@ class TemplateLexer {
         HASH,
         COMMENT,
         SEMICOLON,
+        TRUE,
+        FALSE,
         TEXT,
         EOF
     }
@@ -167,7 +169,14 @@ class TemplateLexer {
             sb.append(advance());
         }
 
-        tokens.add(new Token(TokenType.IDENTIFIER, sb.toString(), pos));
+        if(sb.toString().equals("true")) {
+            tokens.add(new Token(TokenType.TRUE, "true", pos));
+        } else if(sb.toString().equals("false")) {
+            tokens.add(new Token(TokenType.FALSE, "false", pos));
+        } else {
+            tokens.add(new Token(TokenType.IDENTIFIER, sb.toString(), pos));
+        }
+
     }
 
     private boolean isIdentifierStart(char c) {

@@ -56,22 +56,22 @@ public class LogicFunctions {
     }
 
     @TemplateFunction(name = "less_than", aliases = "lt", isPure = true)
-    public static boolean lessThanFunction(double a, double b) {
-        return a < b;
+    public static boolean lessThanFunction(Number a, Number b) {
+        return a.doubleValue() < b.doubleValue();
     }
 
     @TemplateFunction(name = "less_than_or_equals", aliases = {"lte", "less_than_equals", "leq"}, isPure = true)
-    public static boolean lessThanOrEqualsFunction(double a, double b) {
-        return a <= b;
+    public static boolean lessThanOrEqualsFunction(Number a, Number b) {
+        return a.doubleValue() <= b.doubleValue();
     }
 
     @TemplateFunction(name = "greater_than", aliases = {"mt", "more_than", "gt"}, isPure = true)
-    public static boolean greaterThanFunction(double a, double b) {
-        return a > b;
+    public static boolean greaterThanFunction(Number a, Number b) {
+        return a.doubleValue() > b.doubleValue();
     }
 
     @TemplateFunction(name = "greater_than_or_equals", aliases = {"mte", "more_than_equals", "greater_than_equals", "gte", "geq"}, isPure = true)
-    public static boolean greaterThanOrEqualsFunction(double a, double b) {
-        return a >= b;
+    public static boolean greaterThanOrEqualsFunction(Number a, Number b) {
+        return a.doubleValue() >= b.doubleValue();
     }
 }

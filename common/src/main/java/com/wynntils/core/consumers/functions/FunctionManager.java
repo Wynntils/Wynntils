@@ -22,6 +22,7 @@ import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.MountFunctions;
 import com.wynntils.functions.ProfessionFunctions;
 import com.wynntils.functions.SocialFunctions;
+import com.wynntils.functions.WynnFontFunctions;
 import com.wynntils.functions.generic.CappedFunctions;
 import com.wynntils.functions.generic.ColorFunctions;
 import com.wynntils.functions.generic.ConditionalFunctions;
@@ -163,6 +164,7 @@ public final class FunctionManager extends Manager {
         templateEngine.registerFunctions(NamedFunctions.class);
         templateEngine.registerFunctions(StringFunctions.class);
         templateEngine.registerFunctions(StyledTextFunctions.class);
+        templateEngine.registerFunctions(WynnFontFunctions.class);
 
         templateEngine.registerFunctions(ActivityFunctions.class);
         templateEngine.registerFunctions(BombFunctions.class);

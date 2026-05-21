@@ -138,7 +138,6 @@ public class StringFunctions {
         }
     }
 
-
     @TemplateFunction(name = "regex_find")
     public static boolean regexFindFunction(String value, String regex) {
         try {

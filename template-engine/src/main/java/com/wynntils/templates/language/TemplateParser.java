@@ -14,6 +14,7 @@ import com.wynntils.templates.language.expression.LiteralExpression;
 import com.wynntils.templates.language.parts.TemplateExpressionPart;
 import com.wynntils.templates.language.parts.TemplateLiteralPart;
 import com.wynntils.templates.language.parts.TemplatePart;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +76,15 @@ class TemplateParser {
         } else if (t.type() == TemplateLexer.TokenType.STRING) {
             return new LiteralExpression(next().value(), String.class);
         } else if (t.type() == TemplateLexer.TokenType.NUMBER) {
-            return new LiteralExpression(Double.parseDouble(next().value()), double.class);
+            String num = next().value();
+            try {
+                return new LiteralExpression(Long.parseLong(num), long.class);
+            } catch (NumberFormatException e2) {
+                return new LiteralExpression(Double.parseDouble(num), double.class);
+            }
+
+        } else if (t.type() == TemplateLexer.TokenType.TRUE || t.type() == TemplateLexer.TokenType.FALSE) {
+            return new LiteralExpression(next().type() == TemplateLexer.TokenType.TRUE, boolean.class);
         } else {
             throw new ParseException(t.position(), "Unexpected token in expression: " + t.type());
         }
@@ -91,7 +100,7 @@ class TemplateParser {
             if (def == null) def = engine.getFunction(identifier, 1);
 
             return new FunctionExpression(identifier, args, def);
-        } else  {
+        } else {
             return new FunctionExpression(identifier, engine.getFunction(identifier, 0));
         }
     }

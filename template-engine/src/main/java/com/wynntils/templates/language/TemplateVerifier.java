@@ -35,25 +35,18 @@ class TemplateVerifier {
                 throw new VerificationException(expression, "Function " + def.name() + " expects " + def.parameterTypes().length + " arguments, but got " + functionExpression.getArguments().length);
             }
 
-            for (int i = 0; i < functionExpression.getArguments().length; i++) {
-                Class<?> actual = getType(functionExpression.getArguments()[i]);
-                Class<?> expected = def.isVarArgs() ? def.parameterTypes()[0].componentType() : def.parameterTypes()[i];
-                if (!expected.isAssignableFrom(actual) && !canBeSafelyDownCast(expected, actual)) {
-                    throw new VerificationException(expression, "Argument " + (i + 1) + " of function " + def.name() + " expects type " + expected.getSimpleName() + ", but got " + actual.getSimpleName());
-                }
-            }
+//            for (int i = 0; i < functionExpression.getArguments().length; i++) {
+//                Class<?> actual = getType(functionExpression.getArguments()[i]);
+//                Class<?> expected = def.isVarArgs() ? def.parameterTypes()[0].componentType() : def.parameterTypes()[i];
+//                if (!expected.isAssignableFrom(actual) && !canBeSafelyDownCast(expected, actual)) {
+//                    throw new VerificationException(expression, "Argument " + (i + 1) + " of function '" + def.name() + "' expects type " + expected.getSimpleName() + ", but got " + actual.getSimpleName());
+//                }
+//            }
 
             for (Expression arg : functionExpression.getArguments()) {
                 verifyExpression(arg);
             }
         }
-    }
-
-    private boolean canBeSafelyDownCast(Class<?> expected, Class<?> actual) {
-        if (expected.equals(Number.class) && (actual.equals(Integer.class) || actual.equals(Double.class) || actual.equals(Float.class) || actual.equals(Long.class) || actual.equals(int.class) || actual.equals(double.class) || actual.equals(float.class) || actual.equals(long.class))) {
-            return true;
-        }
-        return expected.equals(Object.class) && !actual.isPrimitive();
     }
 
     private Class<?> getType(Expression expression) {
