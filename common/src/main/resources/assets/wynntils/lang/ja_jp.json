@@ -77,8 +77,6 @@
   "crowdSourcedDataType.wynntils.professionCraftingStationLocations.name": "職業ステーションの位置",
   "crowdSourcedDataType.wynntils.professionNodeLocations.description": "職業ノードの位置を収集します。職業ノードの名前タグが読み込まれると、職業ノードの位置が収集されます。",
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "職業ノードの位置",
-  "feature.wynntils.abbreviateMobHealth.description": "モブの体力をより読みやすい形式に短縮します。",
-  "feature.wynntils.abbreviateMobHealth.name": "モブの体力を短縮",
   "feature.wynntils.abilityRefreshRedirect.description": "能力更新メッセージをゲーム更新オーバーレイにリダイレクトする機能を追加します。",
   "feature.wynntils.abilityRefreshRedirect.name": "能力更新",
   "feature.wynntils.abilityTreeDataDump.description": "能力ツリーデータをファイルにダンプする機能を追加します。",

@@ -77,8 +77,6 @@
   "crowdSourcedDataType.wynntils.professionCraftingStationLocations.name": "Localizações das Estações de Profissão",
   "crowdSourcedDataType.wynntils.professionNodeLocations.description": "Recolhe as localizações dos nós de profissão. Uma localização de nó de profissão é recolhida quando uma etiqueta de nome de nó de profissão é carregada.",
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "Localizações dos Nós de Profissão",
-  "feature.wynntils.abbreviateMobHealth.description": "Abrevia a saúde dos mobs para um formato mais legível.",
-  "feature.wynntils.abbreviateMobHealth.name": "Abreviar Saúde dos Mobs",
   "feature.wynntils.abilityRefreshRedirect.description": "Adiciona a capacidade de redirecionar mensagens de atualização de habilidades para o overlay de atualização do jogo.",
   "feature.wynntils.abilityRefreshRedirect.name": "Atualizações de Habilidades",
   "feature.wynntils.abilityTreeDataDump.description": "Adiciona a capacidade de exportar os dados da árvore de habilidades para um arquivo.",

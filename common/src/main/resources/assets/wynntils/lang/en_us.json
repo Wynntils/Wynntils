@@ -92,8 +92,6 @@
   "crowdSourcedDataType.wynntils.professionCraftingStationLocations.name": "Profession Station Locations",
   "crowdSourcedDataType.wynntils.professionNodeLocations.description": "Collects the locations of profession nodes. A profession node location is collected when a profession node nametag is loaded.",
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "Profession Node Locations",
-  "feature.wynntils.abbreviateMobHealth.description": "Shortens mob health to a more readable format.",
-  "feature.wynntils.abbreviateMobHealth.name": "Abbreviate Mob Health",
   "feature.wynntils.abilityRefreshRedirect.description": "Adds the ability to redirect ability refresh messages to the game update overlay.",
   "feature.wynntils.abilityRefreshRedirect.name": "Ability Refreshes",
   "feature.wynntils.abilityTreeDataDump.description": "Adds the ability to dump the ability tree data to a file.",

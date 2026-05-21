@@ -77,8 +77,6 @@
   "crowdSourcedDataType.wynntils.professionCraftingStationLocations.name": "Berufs-Station-Standorte",
   "crowdSourcedDataType.wynntils.professionNodeLocations.description": "Sammelt die Standorte von Berufs-Knoten. Ein Berufs-Knoten-Standort wird erfasst, wenn ein Berufs-Knoten-Namensschild geladen wird.",
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "Berufs-Knoten-Standorte",
-  "feature.wynntils.abbreviateMobHealth.description": "Verkürzt die Gesundheit von Mobs in ein lesbareres Format.",
-  "feature.wynntils.abbreviateMobHealth.name": "Mob-Gesundheit Abkürzen",
   "feature.wynntils.abilityRefreshRedirect.description": "Fügt die Möglichkeit hinzu, Nachrichten zur Fähigkeitserneuerung an das Spielaktualisierungs-Overlay weiterzuleiten.",
   "feature.wynntils.abilityRefreshRedirect.name": "Fähigkeitserneuerungen",
   "feature.wynntils.abilityTreeDataDump.description": "Fügt die Möglichkeit hinzu, die Fähigkeitsbaumdaten in eine Datei zu exportieren.",

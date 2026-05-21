@@ -27,7 +27,6 @@ import com.wynntils.features.chat.InputTranscriptionFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.chat.RemoveWynncraftChatWrapFeature;
 import com.wynntils.features.chat.RevealNicknamesFeature;
-import com.wynntils.features.combat.AbbreviateMobHealthFeature;
 import com.wynntils.features.combat.AutoAttackFeature;
 import com.wynntils.features.combat.ChestBlockerFeature;
 import com.wynntils.features.combat.ContentTrackerFeature;
@@ -236,7 +235,6 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region combat
-        registerFeature(new AbbreviateMobHealthFeature());
         registerFeature(new AutoAttackFeature());
         registerFeature(new ChestBlockerFeature());
         registerFeature(new ContentTrackerFeature());

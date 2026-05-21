@@ -79,8 +79,6 @@
   "crowdSourcedDataType.wynntils.professionCraftingStationLocations.name": "생활 콘텐츠 제작대 위치",
   "crowdSourcedDataType.wynntils.professionNodeLocations.description": "생활 콘텐츠 채집 노드 위치를 수집합니다. 정보는 노드의 이름표가 로드될 때 수집됩니다.",
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "생활 콘텐츠 채집 노드 위치",
-  "feature.wynntils.abbreviateMobHealth.description": "몹 체력을 읽기 쉬운 방식으로 변환합니다.",
-  "feature.wynntils.abbreviateMobHealth.name": "몹 체력 간략화",
   "feature.wynntils.abilityRefreshRedirect.description": "기술의 쿨다운 완료 알림을 리디렉션합니다.",
   "feature.wynntils.abilityRefreshRedirect.name": "기술 쿨다운 알림",
   "feature.wynntils.abilityTreeDataDump.description": "기술 트리를 저장합니다.",

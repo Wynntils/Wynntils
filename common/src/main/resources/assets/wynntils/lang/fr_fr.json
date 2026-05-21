@@ -77,8 +77,6 @@
   "crowdSourcedDataType.wynntils.professionCraftingStationLocations.name": "Emplacements des Stations de Profession",
   "crowdSourcedDataType.wynntils.professionNodeLocations.description": "Collecte les emplacements des nœuds de profession. Un emplacement de nœud de profession est collecté lorsqu'une étiquette de nom de nœud de profession est chargée.",
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "Emplacements des Nœuds de Profession",
-  "feature.wynntils.abbreviateMobHealth.description": "Abrège la santé des mobs dans un format plus lisible.",
-  "feature.wynntils.abbreviateMobHealth.name": "Abréger la Santé des Mobs",
   "feature.wynntils.abilityRefreshRedirect.description": "Ajoute la capacité de rediriger les messages de rafraîchissement des capacités vers l'overlay de mise à jour du jeu.",
   "feature.wynntils.abilityRefreshRedirect.name": "Rafraîchissements des Capacités",
   "feature.wynntils.abilityTreeDataDump.description": "Ajoute la capacité de déverser les données de l'arbre des capacités dans un fichier.",

@@ -77,8 +77,6 @@
   "crowdSourcedDataType.wynntils.professionCraftingStationLocations.name": "Lokalizacje Stacji Rzemieślniczych",
   "crowdSourcedDataType.wynntils.professionNodeLocations.description": "Zbiera lokalizacje węzłów zawodowych. Lokalizacja węzła zawodowego jest zbierana, gdy załadowany zostanie tag z nazwą węzła zawodowego.",
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "Lokalizacje Węzłów Zawodowych",
-  "feature.wynntils.abbreviateMobHealth.description": "Skraca zdrowie mobów do bardziej czytelnego formatu.",
-  "feature.wynntils.abbreviateMobHealth.name": "Skróć Zdrowie Moba",
   "feature.wynntils.abilityRefreshRedirect.description": "Dodaje możliwość przekierowania wiadomości o odświeżeniu umiejętności do nakładki aktualizacji gry.",
   "feature.wynntils.abilityRefreshRedirect.name": "Odświeżenia Umiejętności",
   "feature.wynntils.abilityTreeDataDump.description": "Dodaje możliwość zrzutu danych drzewa umiejętności do pliku.",

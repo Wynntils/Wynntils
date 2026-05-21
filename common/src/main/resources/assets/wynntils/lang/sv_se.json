@@ -77,8 +77,6 @@
   "crowdSourcedDataType.wynntils.professionCraftingStationLocations.name": "Yrkesstationsplatser",
   "crowdSourcedDataType.wynntils.professionNodeLocations.description": "Samlar in platserna för yrkesnoder. En yrkesnodplats samlas in när en yrkesnodnamnskylt laddas.",
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "Yrkesnodplatser",
-  "feature.wynntils.abbreviateMobHealth.description": "Förkortar mobbens hälsa till ett mer läsbart format.",
-  "feature.wynntils.abbreviateMobHealth.name": "Förkorta Mobbens Hälsa",
   "feature.wynntils.abilityRefreshRedirect.description": "Lägger till möjligheten att omdirigera meddelanden om förmågeuppdateringar till speluppdateringsöverlägget.",
   "feature.wynntils.abilityRefreshRedirect.name": "Förmågeuppdateringar",
   "feature.wynntils.abilityTreeDataDump.description": "Lägger till möjligheten att exportera förmågeträdets data till en fil.",

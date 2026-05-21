@@ -77,8 +77,6 @@
   "crowdSourcedDataType.wynntils.professionCraftingStationLocations.name": "Beroepsstation Locaties",
   "crowdSourcedDataType.wynntils.professionNodeLocations.description": "Verzamelt de locaties van beroepknooppunten. Een beroepknooppuntlocatie wordt verzameld wanneer een beroepknooppunt-naambordje wordt geladen.",
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "Beroepsknooppunt Locaties",
-  "feature.wynntils.abbreviateMobHealth.description": "Verkort de gezondheid van mobs naar een leesbaarder formaat.",
-  "feature.wynntils.abbreviateMobHealth.name": "Verkort Mob Gezondheid",
   "feature.wynntils.abilityRefreshRedirect.description": "Voegt de mogelijkheid toe om vaardigheidverversingsberichten naar de spelupdate-overlay te leiden.",
   "feature.wynntils.abilityRefreshRedirect.name": "Vaardigheid Verversingen",
   "feature.wynntils.abilityTreeDataDump.description": "Voegt de mogelijkheid toe om de vaardigheidsboomgegevens naar een bestand te dumpen.",

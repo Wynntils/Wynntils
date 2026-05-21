@@ -77,8 +77,6 @@
   "crowdSourcedDataType.wynntils.professionCraftingStationLocations.name": "Szakma А́llomások Helyszínei",
   "crowdSourcedDataType.wynntils.professionNodeLocations.description": "Összegyűjti a szakma csomópontok helyszíneit. Egy szakma csomópont helyszín akkor kerül összegyűjtésre, amikor egy szakma csomópont névtábla betöltődik.",
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "Szakma Csomópontok Helyszínei",
-  "feature.wynntils.abbreviateMobHealth.description": "Rövidíti a mobok életerejét egy olvashatóbb formátumra.",
-  "feature.wynntils.abbreviateMobHealth.name": "Mob Életerő Rövidítése",
   "feature.wynntils.abilityRefreshRedirect.description": "Hozzáadja a képességfrissítési üzenetek átirányításának lehetőségét a játékfrissítési felületre.",
   "feature.wynntils.abilityRefreshRedirect.name": "Képesség Frissítések",
   "feature.wynntils.abilityTreeDataDump.description": "Hozzáadja a képességfa adatok fájlba mentésének lehetőségét.",
