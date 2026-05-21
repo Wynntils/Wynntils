@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun.type;
@@ -8,9 +8,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum TrialType {
+    // Order these the same way like https://wynncraft.wiki.gg/wiki/Lootrunning#Trials
     UNKNOWN("Unknown"),
     FAILED("Failed"),
 
+    ADRENALINE_JUNKIE("Adrenaline Junkie"),
+    DYING_LIGHT("Dying Light"),
+    MONOCHROMOKOPIA("Monochromokopia"),
+    CHRONOTRIGGER("Chronotrigger"),
     ALL_IN("All In"),
     GAMBLING_BEAST("Gambling Beast"),
     HUBRIS("Hubris"),

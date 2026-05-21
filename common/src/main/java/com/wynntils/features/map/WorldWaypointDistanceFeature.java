@@ -120,6 +120,7 @@ public class WorldWaypointDistanceFeature extends Feature {
             if (distance > maxDistance) {
                 double posScale = maxDistance / distance;
                 dx *= posScale;
+                dy *= posScale;
                 dz *= posScale;
             }
 
@@ -134,7 +135,7 @@ public class WorldWaypointDistanceFeature extends Feature {
 
     @SubscribeEvent
     public void onRenderGuiPost(RenderEvent.Pre event) {
-        if (event.getType() != RenderElementType.ACTION_BAR) return;
+        if (event.getType() != RenderElementType.HOTBAR) return;
 
         for (RenderedMarkerInfo renderedMarker : renderedMarkers) {
             if (maxWaypointTextDistance.get() != 0 && maxWaypointTextDistance.get() < renderedMarker.distance) continue;

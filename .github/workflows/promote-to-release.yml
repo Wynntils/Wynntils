@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.PRIVATE_TOKEN }}
@@ -38,16 +38,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout release branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           token: ${{ secrets.PRIVATE_TOKEN }}
           ref: release
+          persist-credentials: false
 
       - name: Clear Changelog File
         run: echo "" > CHANGELOG.md
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.PRIVATE_TOKEN }}
           commit-message: "chore: Clear changelog"
