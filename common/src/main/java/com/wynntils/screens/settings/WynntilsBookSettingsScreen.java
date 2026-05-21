@@ -731,6 +731,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             if (configurable instanceof Feature feature) {
                 for (Feature subFeature : Managers.Feature.getSubFeatures(feature).stream()
                         .filter(this::isFeatureFiltered)
+                        .filter(subFeature -> shouldShowNestedConfigurable(feature, subFeature))
                         .sorted()
                         .toList()) {
                     int subMatchingConfigs = 0;
@@ -748,6 +749,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
                     for (Overlay subOverlay : Managers.Overlay.getFeatureOverlays(subFeature).stream()
                             .filter(this::isOverlayFiltered)
+                            .filter(subOverlay -> shouldShowNestedConfigurable(feature, subOverlay))
                             .sorted()
                             .toList()) {
                         int subOverlayMatchingConfigs = 0;
@@ -766,6 +768,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                 }
                 for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature).stream()
                         .filter(this::isOverlayFiltered)
+                        .filter(overlay -> shouldShowNestedConfigurable(feature, overlay))
                         .sorted()
                         .toList()) {
                     matchingConfigs = 0;
@@ -927,7 +930,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             configurableList.addAll(Managers.Feature.getFeatures().stream()
                     .filter(feature -> !Managers.Feature.isSubFeature(feature))
                     .filter(this::isFeatureFiltered)
-                    .filter(feature -> isCategoryMatching(feature, selectedCategory))
+                    .filter(feature -> isCategoryMatchingTree(feature, selectedCategory))
                     .sorted()
                     .toList());
 
@@ -936,7 +939,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
                 configurableList.addAll(Managers.Feature.getFeatures().stream()
                         .filter(feature -> !Managers.Feature.isSubFeature(feature))
                         .filter(this::isFeatureFiltered)
-                        .filter(feature -> !isCategoryMatching(feature, selectedCategory))
+                        .filter(feature -> !isCategoryMatchingTree(feature, selectedCategory))
                         .sorted()
                         .toList());
             }
@@ -1034,6 +1037,20 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     private boolean isCategoryMatching(Configurable configurable, Category selectedCategory) {
         return getCategory(configurable) == selectedCategory;
+    }
+
+    private boolean isCategoryMatchingTree(Feature feature, Category selectedCategory) {
+        return isCategoryMatching(feature, selectedCategory)
+                || Managers.Overlay.getFeatureOverlays(feature).stream()
+                        .anyMatch(overlay -> isCategoryMatching(overlay, selectedCategory))
+                || Managers.Feature.getSubFeatures(feature).stream()
+                        .anyMatch(subFeature -> isCategoryMatchingTree(subFeature, selectedCategory));
+    }
+
+    private boolean shouldShowNestedConfigurable(Feature parent, Configurable configurable) {
+        if (selectedCategory == null || !searchWidget.getTextBoxInput().isEmpty()) return true;
+
+        return isCategoryMatching(parent, selectedCategory) || isCategoryMatching(configurable, selectedCategory);
     }
 
     private boolean isFeatureFiltered(Feature feature) {
