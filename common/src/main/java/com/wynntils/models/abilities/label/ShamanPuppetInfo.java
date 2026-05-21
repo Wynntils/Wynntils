@@ -12,7 +12,7 @@ import net.minecraft.world.entity.Entity;
 public class ShamanPuppetInfo extends LabelInfo {
     private final int secondsLeft;
     private final String playerName;
-    private final String puppetType;
+    private final PuppetType puppetType;
     private final int invigorateTime;
     private final int friendlyFireTime;
 
@@ -22,7 +22,7 @@ public class ShamanPuppetInfo extends LabelInfo {
             Entity entity,
             int secondsLeft,
             String playerName,
-            String puppetType,
+            PuppetType puppetType,
             int invigorateTime,
             int friendlyFireTime) {
         super(label, location, entity);
@@ -42,7 +42,7 @@ public class ShamanPuppetInfo extends LabelInfo {
         return playerName;
     }
 
-    public String getPuppetType() {
+    public PuppetType getPuppetType() {
         return puppetType;
     }
 
@@ -52,6 +52,11 @@ public class ShamanPuppetInfo extends LabelInfo {
 
     public int getFriendlyFireTime() {
         return friendlyFireTime;
+    }
+
+    public enum PuppetType {
+        PUPPET,
+        REMNANT
     }
 
     @Override

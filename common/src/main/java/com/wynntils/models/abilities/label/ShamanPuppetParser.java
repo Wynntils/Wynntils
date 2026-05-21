@@ -23,9 +23,10 @@ public class ShamanPuppetParser implements LabelParser<ShamanPuppetInfo> {
         String playerName = matcher.group("player");
         int secondsLeft = Integer.parseInt(matcher.group("seconds"));
 
-        String puppetType = "";
+        ShamanPuppetInfo.PuppetType puppetType = ShamanPuppetInfo.PuppetType.PUPPET;
         if (matcher.group("puppetType") != null) {
-            puppetType = matcher.group("puppetType");
+            puppetType = ShamanPuppetInfo.PuppetType.valueOf(
+                    matcher.group("puppetType").toUpperCase());
         }
 
         int invigorateTime = -1;

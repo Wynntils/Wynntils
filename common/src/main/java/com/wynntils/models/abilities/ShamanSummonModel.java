@@ -76,4 +76,8 @@ public class ShamanSummonModel extends Model {
     public Stream<ShamanPuppetInfo> getActivePuppetsLabels() {
         return activePuppetsMap.values().stream();
     }
+
+    public Stream<ShamanPuppetInfo> getActivePuppetsByType(ShamanPuppetInfo.PuppetType type) {
+        return activePuppetsMap.values().stream().filter(info -> info.getPuppetType() == type);
+    }
 }

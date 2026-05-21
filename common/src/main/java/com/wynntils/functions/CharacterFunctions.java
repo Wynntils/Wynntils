@@ -477,9 +477,7 @@ public class CharacterFunctions {
     public static class PuppetCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsLabels()
-                    .map(ShamanPuppetInfo::getPuppetType)
-                    .filter(type -> "Puppet".equals(type))
+            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsByType(ShamanPuppetInfo.PuppetType.PUPPET)
                     .count());
         }
     }
@@ -487,9 +485,7 @@ public class CharacterFunctions {
     public static class RemnantCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsLabels()
-                    .map(ShamanPuppetInfo::getPuppetType)
-                    .filter(type -> "Remnant".equals(type))
+            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsByType(ShamanPuppetInfo.PuppetType.REMNANT)
                     .count());
         }
     }
