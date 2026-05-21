@@ -1038,11 +1038,20 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     private boolean isFeatureFiltered(Feature feature) {
         if (searchWidget.getTextBoxInput().isEmpty()) {
-            return switch (enabledFilterType) {
-                case NEUTRAL -> true;
-                case ENABLED -> feature.isEnabled();
-                case DISABLED -> !feature.isEnabled();
-            };
+            boolean featureMatches =
+                    switch (enabledFilterType) {
+                        case NEUTRAL -> true;
+                        case ENABLED -> feature.isEnabled();
+                        case DISABLED -> !feature.isEnabled();
+                    };
+
+            boolean anyOverlayMatches =
+                    Managers.Overlay.getFeatureOverlays(feature).stream().anyMatch(this::isOverlayFiltered);
+
+            boolean anySubFeatureMatches =
+                    Managers.Feature.getSubFeatures(feature).stream().anyMatch(this::isFeatureFiltered);
+
+            return featureMatches || anyOverlayMatches || anySubFeatureMatches;
         }
 
         boolean featureSearchMatch = searchMatches(feature)
@@ -1059,12 +1068,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     private boolean isOverlayFiltered(Overlay overlay) {
         if (searchWidget.getTextBoxInput().isEmpty()) {
-            Feature parent = Managers.Overlay.getOverlayParent(overlay);
-            boolean parentEnabled = parent.isEnabled();
-            if (parentEnabled && Managers.Feature.isSubFeature(parent)) {
-                Feature grandparent = Managers.Feature.getParentFeature(parent);
-                parentEnabled = grandparent != null && grandparent.isEnabled();
-            }
+            boolean parentEnabled = overlay.isParentEnabled();
 
             return switch (enabledFilterType) {
                 case ENABLED -> parentEnabled;
