@@ -4,7 +4,8 @@
  */
 package com.wynntils.templates.language;
 
-import com.wynntils.templates.language.exception.LanguageException;
+import com.wynntils.templates.language.exception.LexException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ class TemplateLexer {
         DIRECTIVE
     }
 
-    public record Token(TokenType type, String value) {}
+    public record Token(TokenType type, String value, int position) {}
 
     private final List<Token> tokens = new ArrayList<>();
 
@@ -42,8 +43,9 @@ class TemplateLexer {
 
     public List<Token> tokenize(String input) {
         tokens.clear();
-        this.input = input;
         pos = 0;
+        mode = Mode.TEXT;
+        this.input = input;
 
         while (!isAtEnd()) {
             switch (mode) {
@@ -53,7 +55,7 @@ class TemplateLexer {
             }
         }
 
-        tokens.add(new Token(TokenType.EOF, ""));
+        tokens.add(new Token(TokenType.EOF, "", pos));
         return tokens;
     }
 
@@ -69,7 +71,7 @@ class TemplateLexer {
         }
 
         if (!text.isEmpty()) {
-            tokens.add(new Token(TokenType.COMMENT, text.toString()));
+            tokens.add(new Token(TokenType.COMMENT, text.toString(), pos));
         }
 
         mode = Mode.TEXT;
@@ -91,16 +93,16 @@ class TemplateLexer {
         }
 
         if (!text.isEmpty()) {
-            tokens.add(new Token(TokenType.TEXT, text.toString()));
+            tokens.add(new Token(TokenType.TEXT, text.toString(), pos));
         }
 
         if (match('{')) {
-            tokens.add(new Token(TokenType.TEMPLATE_START, "{"));
+            tokens.add(new Token(TokenType.TEMPLATE_START, "{", pos));
             mode = Mode.TEMPLATE;
         }
 
         if ((match('\n') || pos == 0) && match('#')) {
-            tokens.add(new Token(TokenType.HASH, "#"));
+            tokens.add(new Token(TokenType.HASH, "#", pos));
             mode = Mode.DIRECTIVE;
         }
     }
@@ -111,7 +113,7 @@ class TemplateLexer {
         if (peek() == '}') {
             advance();
 
-            tokens.add(new Token(TokenType.TEMPLATE_END, "}"));
+            tokens.add(new Token(TokenType.TEMPLATE_END, "}", pos));
             mode = Mode.TEXT;
             return;
         }
@@ -129,12 +131,12 @@ class TemplateLexer {
         }
 
         switch (advance()) {
-            case '(' -> tokens.add(new Token(TokenType.ARGUMENTS_START, "("));
-            case ')' -> tokens.add(new Token(TokenType.ARGUMENTS_END, ")"));
-            case ';' -> tokens.add(new Token(TokenType.SEMICOLON, ";"));
+            case '(' -> tokens.add(new Token(TokenType.ARGUMENTS_START, "(", pos));
+            case ')' -> tokens.add(new Token(TokenType.ARGUMENTS_END, ")", pos));
+            case ';' -> tokens.add(new Token(TokenType.SEMICOLON, ";", pos));
             case '"' -> lexString();
-            case ':' -> throw new LanguageException("Unexpected character: ':' (using colons as formatters is no longer supported)");
-            default -> throw new LanguageException("Unexpected character: " + c);
+            case ':' -> throw new LexException(pos, "Unexpected character: ':' (using colons as formatters is no longer supported)");
+            default -> throw new LexException(pos, "Unexpected character: " + c);
         }
     }
 
@@ -155,7 +157,7 @@ class TemplateLexer {
             } while (Character.isDigit(peek()));
         }
 
-        tokens.add(new Token(TokenType.NUMBER, sb.toString()));
+        tokens.add(new Token(TokenType.NUMBER, sb.toString(), pos));
     }
 
     private void lexIdentifier() {
@@ -165,7 +167,7 @@ class TemplateLexer {
             sb.append(advance());
         }
 
-        tokens.add(new Token(TokenType.IDENTIFIER, sb.toString()));
+        tokens.add(new Token(TokenType.IDENTIFIER, sb.toString(), pos));
     }
 
     private boolean isIdentifierStart(char c) {
@@ -185,25 +187,19 @@ class TemplateLexer {
 
                 char escaped = advance();
 
-                switch (escaped) {
-                    case 'n' -> sb.append('\n');
-                    case 't' -> sb.append('\t');
-                    case '"' -> sb.append('"');
-                    case '\\' -> sb.append('\\');
-                    default -> throw new LanguageException("Invalid escape: \\" + escaped);
-                }
+                sb.append(escaped);
             } else {
                 sb.append(advance());
             }
         }
 
         if (isAtEnd()) {
-            throw new LanguageException("Unterminated string");
+            throw new LexException(pos, "Unterminated string");
         }
 
         advance(); // closing "
 
-        tokens.add(new Token(TokenType.STRING, sb.toString()));
+        tokens.add(new Token(TokenType.STRING, sb.toString(), pos));
     }
 
     private boolean isAtEnd() {

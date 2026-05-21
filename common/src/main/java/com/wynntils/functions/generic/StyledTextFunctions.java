@@ -1,22 +1,34 @@
-///*
-// * Copyright © Wynntils 2026.
-// * This file is released under LGPLv3. See LICENSE for full license details.
-// */
-//package com.wynntils.functions.generic;
-//
-//import com.wynntils.core.consumers.functions.GenericFunction;
-//import com.wynntils.core.consumers.functions.arguments.Argument;
-//import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-//import com.wynntils.core.consumers.functions.arguments.ListArgument;
-//import com.wynntils.core.text.StyledText;
-//import com.wynntils.utils.colors.CustomColor;
-//import java.util.List;
-//import java.util.UUID;
-//import net.minecraft.network.chat.FontDescription;
-//import net.minecraft.resources.Identifier;
-//import net.minecraft.world.item.component.ResolvableProfile;
-//
-//public class StyledTextFunctions {
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.functions.generic;
+
+import com.wynntils.core.text.StyledText;
+import com.wynntils.templates.annotations.TemplateFunction;
+import com.wynntils.utils.colors.CustomColor;
+
+import java.util.List;
+import java.util.UUID;
+
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.component.ResolvableProfile;
+
+@SuppressWarnings("unused") // Functions are accessed via reflection
+public class StyledTextFunctions {
+
+
+    @TemplateFunction(name = "concat_styled_text", aliases = "concat_st")
+    public static StyledText concatStyledTextFunction(StyledText a, StyledText b) {
+        return StyledText.join("", a, b);
+    }
+
+    @TemplateFunction(name = "concat_styled_text", aliases = "concat_st")
+    public static StyledText concatStyledTextFunction(StyledText... values) {
+        return StyledText.join("", values);
+    }
+
 //    public static class StyledTextFunction extends GenericFunction<StyledText> {
 //        @Override
 //        public StyledText getValue(FunctionArguments arguments) {
@@ -276,4 +288,4 @@
 //                    new Argument<>("isUnderlined", Boolean.class, null)));
 //        }
 //    }
-//}
+}

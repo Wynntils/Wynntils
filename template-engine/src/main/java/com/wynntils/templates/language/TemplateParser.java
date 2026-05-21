@@ -7,6 +7,7 @@ package com.wynntils.templates.language;
 import com.wynntils.templates.TemplateEngine;
 import com.wynntils.templates.functions.FunctionDefinition;
 import com.wynntils.templates.language.exception.LanguageException;
+import com.wynntils.templates.language.exception.ParseException;
 import com.wynntils.templates.language.expression.Expression;
 import com.wynntils.templates.language.expression.FunctionExpression;
 import com.wynntils.templates.language.expression.LiteralExpression;
@@ -15,7 +16,6 @@ import com.wynntils.templates.language.parts.TemplateLiteralPart;
 import com.wynntils.templates.language.parts.TemplatePart;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 class TemplateParser {
     private final TemplateEngine engine;
@@ -50,7 +50,7 @@ class TemplateParser {
             return parseExpressionPart();
         }
 
-        throw new LanguageException("Unexpected token: " + t.type());
+        throw new ParseException(t.position(), "Unexpected token: " + t.type());
     }
 
     private TemplateLiteralPart parseTextPart() {
@@ -77,7 +77,7 @@ class TemplateParser {
         } else if (t.type() == TemplateLexer.TokenType.NUMBER) {
             return new LiteralExpression(Double.parseDouble(next().value()), double.class);
         } else {
-            throw new LanguageException("Unexpected token in expression: " + t.type());
+            throw new ParseException(t.position(), "Unexpected token in expression: " + t.type());
         }
     }
 
@@ -107,7 +107,7 @@ class TemplateParser {
             if (peek().type() == TemplateLexer.TokenType.SEMICOLON) {
                 next(); // ;
             } else if (peek().type() != TemplateLexer.TokenType.ARGUMENTS_END) {
-                throw new LanguageException("Expected ; or ) but got " + peek().type());
+                throw new ParseException(peek().position(), "Expected ; or ) but got " + peek().type());
             }
         }
 
@@ -131,7 +131,7 @@ class TemplateParser {
     private TemplateLexer.Token expect(TemplateLexer.TokenType type) {
         TemplateLexer.Token t = next();
         if (t == null || t.type() != type) {
-            throw new LanguageException("Expected " + type + " but got " + (t == null ? "EOF" : t.type()));
+            throw new ParseException(t.position(), "Expected " + type + " but got " + (t == null ? "EOF" : t.type()));
         }
         return t;
     }

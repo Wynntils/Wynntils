@@ -29,6 +29,8 @@ import com.wynntils.functions.generic.LocationFunctions;
 import com.wynntils.functions.generic.LogicFunctions;
 import com.wynntils.functions.generic.MathFunctions;
 import com.wynntils.functions.generic.NamedFunctions;
+import com.wynntils.functions.generic.StringFunctions;
+import com.wynntils.functions.generic.StyledTextFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.templates.TemplateEngine;
 import com.wynntils.templates.compiler.CompilerBackend;
@@ -68,15 +70,13 @@ public final class FunctionManager extends Manager {
     // region Template formatting
 
     private String evaluate(String template) {
-        try {
-            return templateEngine.evaluate(template);
-        } catch (LanguageException e) {
-            WynntilsMod.error("Error evaluating template: " + template, e);
-            return "";
-        } catch(Exception e) {
-            WynntilsMod.error("Unexpected error evaluating template: " + template, e);
-            return "";
+        String ret = templateEngine.evaluate(template);
+
+        if(templateEngine.hasError()) {
+            WynntilsMod.error("\n" + templateEngine.getError());
         }
+
+        return ret;
     }
 
     public StyledText[] doFormatLines(String templateString) {
@@ -161,7 +161,8 @@ public final class FunctionManager extends Manager {
         templateEngine.registerFunctions(LogicFunctions.class);
         templateEngine.registerFunctions(MathFunctions.class);
         templateEngine.registerFunctions(NamedFunctions.class);
-
+        templateEngine.registerFunctions(StringFunctions.class);
+        templateEngine.registerFunctions(StyledTextFunctions.class);
 
         templateEngine.registerFunctions(ActivityFunctions.class);
         templateEngine.registerFunctions(BombFunctions.class);

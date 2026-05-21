@@ -8,17 +8,23 @@ import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.templates.compiler.TemplateBackend;
 import com.wynntils.templates.functions.FunctionDefinition;
 import com.wynntils.templates.language.TemplateLanguage;
+import com.wynntils.templates.language.exception.LanguageException;
+import com.wynntils.templates.language.exception.LexException;
+
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class TemplateEngine {
+
+
     public record FunctionKey(String name, int argCount) {}
 
     private final Map<FunctionKey, FunctionDefinition> functions = new HashMap<>();
     private final TemplateBackend backend;
     private final TemplateLanguage language;
+    private String error = "";
 
     public TemplateEngine(TemplateBackend backend) {
         this.backend = backend;
@@ -59,7 +65,24 @@ public class TemplateEngine {
         return functions.values().stream().toList();
     }
 
+    public String getError() {
+        return error;
+    }
+
+    public boolean hasError() {
+        return !error.isEmpty();
+    }
+
     public String evaluate(String input) {
-        return backend.evaluate(language.parse(input));
+        error = "";
+        try {
+            return backend.evaluate(language.parse(input));
+        } catch(LanguageException lexException) {
+            error = language.formatError(input, lexException);
+            return "Error evaluating template";
+        } catch(RuntimeException e) {
+            error = "Template crashed during evaluation, report this to the Wynntils developers with the template and stack trace:\n" + e.getMessage();
+            return "Unexpected error evaluating template";
+        }
     }
 }
