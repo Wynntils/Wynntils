@@ -4,7 +4,9 @@
  */
 package com.wynntils.features.utilities;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
@@ -12,6 +14,7 @@ import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindDefinition;
+import com.wynntils.core.mod.TickSchedulerManager;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -63,6 +66,8 @@ public class AutoProgressDialogueFeature extends Feature {
     private long progressAtMs = 0L;
     private long releaseShiftAtMs = 0L;
     private boolean syntheticShiftDown = false;
+    private boolean skipAttempted = false;
+    private TickSchedulerManager.ScheduledTask scheduledSkipTask = null;
 
     public AutoProgressDialogueFeature() {
         super(ProfileDefault.DISABLED);
@@ -83,19 +88,27 @@ public class AutoProgressDialogueFeature extends Feature {
     public void onNpcDialogueUpdate(NpcDialogueEvent.Updated event) {
         if (!autoProgressToggle.get() || event.hasChoices()) {
             clearProgressState();
+            return;
         }
+
+        scheduleRetryIfSkipDidNotProgress(event.getDialogueText());
     }
 
     @SubscribeEvent
     public void onNpcDialogueFinished(NpcDialogueEvent.Finished event) {
         if (!autoProgressToggle.get() || event.hasChoices()) return;
 
+        skipDialogue(event.getDialogueText());
+    }
+
+    private void skipDialogue(String dialogueText) {
+        cancelScheduledSkipRetry();
+
         if (skipDirectly.get()) {
             scheduleProgress(getBaseDelayMs());
-            return;
+        } else {
+            scheduleProgress(getProgressDelayMs(dialogueText));
         }
-
-        scheduleProgress(getProgressDelayMs(event.getDialogueText()));
     }
 
     @SubscribeEvent
@@ -121,12 +134,14 @@ public class AutoProgressDialogueFeature extends Feature {
             progressAtMs = 0L;
 
             if (isDirectHoldMode()) {
-                holdShiftForDirectSkip();
+                if (!holdShiftForDirectSkip()) {
+                    scheduleProgress(getBaseDelayMs());
+                }
             } else {
                 boolean shiftPulseSent = sendShiftPulse();
                 if (shiftPulseSent) {
                     releaseShiftAtMs = now + SHIFT_RELEASE_DELAY_MS;
-                } else if (skipDirectly.get()) {
+                } else {
                     scheduleProgress(getBaseDelayMs());
                 }
             }
@@ -185,6 +200,13 @@ public class AutoProgressDialogueFeature extends Feature {
         LocalPlayer player = McUtils.player();
         if (player == null) return false;
 
+        if (isPlayerPressingShift(player)) return true;
+
+        if (isServerShiftDown(player) && !syntheticShiftDown) {
+            sendShift(player, false);
+            return false;
+        }
+
         if (!isPlayerPressingShift(player) && !isServerShiftDown(player)) {
             sendShift(player, true);
             syntheticShiftDown = true;
@@ -234,10 +256,10 @@ public class AutoProgressDialogueFeature extends Feature {
 
     private void clearProgressState() {
         progressAtMs = 0L;
+        skipAttempted = false;
+        releaseShiftAtMs = 0L;
 
-        if (releaseShiftAtMs > 0L) {
-            releaseShiftAtMs = 0L;
-        }
+        cancelScheduledSkipRetry();
 
         restoreShiftState();
     }
@@ -245,7 +267,36 @@ public class AutoProgressDialogueFeature extends Feature {
     private void scheduleProgress(long delayMs) {
         if (progressAtMs > 0L || releaseShiftAtMs > 0L) return;
 
+        skipAttempted = true;
         progressAtMs = System.currentTimeMillis() + delayMs;
+    }
+
+    private void scheduleRetryIfSkipDidNotProgress(String dialogueText) {
+        if (!skipAttempted || releaseShiftAtMs > 0L || progressAtMs > 0L || scheduledSkipTask != null) return;
+
+        LocalPlayer player = McUtils.player();
+        if (player == null || isPlayerPressingShift(player) || isServerShiftDown(player)) return;
+
+        scheduledSkipTask = Managers.TickScheduler.scheduleLater(() -> {
+            scheduledSkipTask = null;
+
+            if (!autoProgressToggle.get() || !Models.WorldState.onWorld() || !Models.Dialogue.isDialoguePresent()) {
+                return;
+            }
+
+            skipDialogue(dialogueText);
+        }, getPingDelayTicks());
+    }
+
+    private int getPingDelayTicks() {
+        return Math.max(2, Services.Ping.getPing() / 50 + 2);
+    }
+
+    private void cancelScheduledSkipRetry() {
+        if (scheduledSkipTask == null) return;
+
+        Managers.TickScheduler.cancel(scheduledSkipTask);
+        scheduledSkipTask = null;
     }
 
     private void toggleAutoProgress() {

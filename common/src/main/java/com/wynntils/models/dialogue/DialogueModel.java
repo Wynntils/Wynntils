@@ -24,11 +24,7 @@ import java.util.Set;
 public class DialogueModel extends Model {
     private final Set<Class<? extends ActionBarSegment>> hiddenSegments = new HashSet<>();
 
-    private StyledText currentDialogue;
-    private boolean dialogueActive = false;
-    private String currentDialogueText = "";
-    private boolean currentDialogueRequiresShift = false;
-    private boolean currentDialogueHasChoices = false;
+    private DialogueSegment currentDialogueSegment;
 
     public DialogueModel() {
         super(List.of());
@@ -53,75 +49,69 @@ public class DialogueModel extends Model {
             return;
         }
 
-        boolean wasDoneRendering = currentDialogueText.equals(dialogueSegment.getDialogueText());
+        boolean wasDoneRendering =
+                currentDialogueSegment.getDialogueText().equals(dialogueSegment.getDialogueText());
         setCurrentDialogue(dialogueSegment);
 
-        if (!wasDoneRendering && currentDialogueRequiresShift) {
+        if (wasDoneRendering) {
             WynntilsMod.postEvent(new NpcDialogueEvent.Finished(
-                    currentDialogueText, currentDialogueRequiresShift, currentDialogueHasChoices));
+                    currentDialogueSegment.getDialogueText(),
+                    currentDialogueSegment.requiresShift(),
+                    currentDialogueSegment.hasChoices()));
             return;
         }
 
         WynntilsMod.postEvent(new NpcDialogueEvent.Updated(
-                currentDialogueText, currentDialogueRequiresShift, currentDialogueHasChoices));
+                currentDialogueSegment.getDialogueText(),
+                currentDialogueSegment.requiresShift(),
+                currentDialogueSegment.hasChoices()));
     }
 
     private void startDialogue(DialogueSegment dialogueSegment) {
-        if (dialogueActive) {
+        if (currentDialogueSegment != null) {
             endDialogue();
         }
 
         setCurrentDialogue(dialogueSegment);
-        dialogueActive = true;
 
         WynntilsMod.postEvent(new NpcDialogueEvent.Started(
-                currentDialogueText, currentDialogueRequiresShift, currentDialogueHasChoices));
-
-        if (!currentDialogueHasChoices && currentDialogueRequiresShift) {
-            WynntilsMod.postEvent(new NpcDialogueEvent.Finished(
-                    currentDialogueText, currentDialogueRequiresShift, currentDialogueHasChoices));
-        }
+                currentDialogueSegment.getDialogueText(),
+                currentDialogueSegment.requiresShift(),
+                currentDialogueSegment.hasChoices()));
     }
 
     private void endDialogue() {
-        if (!dialogueActive) return;
+        if (currentDialogueSegment == null) return;
 
-        String endedDialogueText = currentDialogueText;
-        boolean endedDialogueRequiresShift = currentDialogueRequiresShift;
-        boolean endedDialogueHasChoices = currentDialogueHasChoices;
-        dialogueActive = false;
-        currentDialogue = null;
-        currentDialogueText = "";
-        currentDialogueRequiresShift = false;
-        currentDialogueHasChoices = false;
+        DialogueSegment endedDialogueSegment = currentDialogueSegment;
+        currentDialogueSegment = null;
 
-        WynntilsMod.postEvent(
-                new NpcDialogueEvent.Ended(endedDialogueText, endedDialogueRequiresShift, endedDialogueHasChoices));
+        WynntilsMod.postEvent(new NpcDialogueEvent.Ended(
+                endedDialogueSegment.getDialogueText(),
+                endedDialogueSegment.requiresShift(),
+                endedDialogueSegment.hasChoices()));
     }
 
     private void setCurrentDialogue(DialogueSegment dialogueSegment) {
-        currentDialogue = dialogueSegment.getContent();
-        currentDialogueText = dialogueSegment.getDialogueText();
-        currentDialogueRequiresShift = dialogueSegment.requiresShift();
-        currentDialogueHasChoices = dialogueSegment.hasChoices();
+        currentDialogueSegment = dialogueSegment;
     }
 
     private boolean isNewDialogue(DialogueSegment dialogueSegment) {
-        if (!dialogueActive) return true;
+        if (currentDialogueSegment == null) return true;
 
         String dialogueText = dialogueSegment.getDialogueText();
-        if (!currentDialogueRequiresShift) return false;
-        if (dialogueText.equals(currentDialogueText) || dialogueText.startsWith(currentDialogueText)) return false;
+        String currentDialogueText = currentDialogueSegment.getDialogueText();
 
-        return !currentDialogueHasChoices && !dialogueSegment.hasChoices();
+        // On purpose doing !() so if is equals, don't check startsWith, performance optimization
+        return !(dialogueText.equals(currentDialogueText) || dialogueText.startsWith(currentDialogueText));
     }
 
     public StyledText getCurrentDialogue() {
-        return currentDialogue;
+        return currentDialogueSegment.getContent();
     }
 
     public boolean isDialoguePresent() {
-        return currentDialogue != null;
+        return currentDialogueSegment != null;
     }
 
     public void setHideSegments(boolean disabled, boolean dialogue, boolean fade) {
