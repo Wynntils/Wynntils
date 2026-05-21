@@ -203,13 +203,9 @@ public class SpellFunctions {
 
             ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
 
-            if (shamanTotem == null) {
-                return 0;
-            }
+            if (shamanTotem == null) return 0;
 
-            if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) {
-                return 0;
-            }
+            if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) return 0;
 
             return shamanTotem.getTransfusedAmount();
         }
@@ -228,13 +224,9 @@ public class SpellFunctions {
 
             ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
 
-            if (shamanTotem == null) {
-                return "";
-            }
+            if (shamanTotem == null) return "";
 
-            if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) {
-                return "";
-            }
+            if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) return "";
 
             return shamanTotem.getPoisonAmount().toString();
         }
