@@ -41,7 +41,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UTILITIES)
 public class AutoProgressDialogueFeature extends Feature {
     private static final int SHIFT_RELEASE_DELAY_MS = 200;
-    private static final int MIN_DELAY_FOR_SHIFT_PULSE = 50;
+    private static final int MIN_DELAY_FOR_SHIFT_PULSE = 100;
 
     @RegisterKeyBind
     private final KeyBind toggleAutoProgress =
@@ -75,9 +75,14 @@ public class AutoProgressDialogueFeature extends Feature {
 
     @SubscribeEvent
     public void onNpcDialogueStarted(NpcDialogueEvent.Started event) {
-        clearProgressState();
+        if (!autoProgressToggle.get() || event.hasChoices()) {
+            clearProgressState();
+            return;
+        }
 
-        if (!autoProgressToggle.get() || event.hasChoices()) return;
+        if (isDirectHoldActive()) return;
+
+        clearProgressState();
 
         if (skipDirectly.get()) {
             scheduleProgress(getBaseDelayMs());
@@ -96,13 +101,17 @@ public class AutoProgressDialogueFeature extends Feature {
 
     @SubscribeEvent
     public void onNpcDialogueFinished(NpcDialogueEvent.Finished event) {
-        if (!autoProgressToggle.get() || event.hasChoices()) return;
+        if (!autoProgressToggle.get() || event.hasChoices()) {
+            clearProgressState();
+            return;
+        }
 
         skipDialogue(event.getDialogueText());
     }
 
     private void skipDialogue(String dialogueText) {
         cancelScheduledSkipRetry();
+        if (isDirectHoldActive()) return;
 
         if (skipDirectly.get()) {
             scheduleProgress(getBaseDelayMs());
@@ -113,6 +122,16 @@ public class AutoProgressDialogueFeature extends Feature {
 
     @SubscribeEvent
     public void onNpcDialogueEnded(NpcDialogueEvent.Ended event) {
+        if (isDirectHoldActive() && !event.hasChoices()) {
+            // Dialogue line transitions post Ended then Started in the same tick; keep the hold through that handoff.
+            Managers.TickScheduler.scheduleNextTick(() -> {
+                if (isDirectHoldActive() && !Models.Dialogue.isDialoguePresent()) {
+                    clearProgressState();
+                }
+            });
+            return;
+        }
+
         clearProgressState();
     }
 
@@ -200,6 +219,8 @@ public class AutoProgressDialogueFeature extends Feature {
         LocalPlayer player = McUtils.player();
         if (player == null) return false;
 
+        if (syntheticShiftDown) return true;
+
         if (isPlayerPressingShift(player)) return true;
 
         if (isServerShiftDown(player) && !syntheticShiftDown) {
@@ -265,31 +286,45 @@ public class AutoProgressDialogueFeature extends Feature {
     }
 
     private void scheduleProgress(long delayMs) {
-        if (progressAtMs > 0L || releaseShiftAtMs > 0L) return;
+        if (progressAtMs > 0L || releaseShiftAtMs > 0L || isDirectHoldActive()) return;
 
         skipAttempted = true;
         progressAtMs = System.currentTimeMillis() + delayMs;
     }
 
     private void scheduleRetryIfSkipDidNotProgress(String dialogueText) {
-        if (!skipAttempted || releaseShiftAtMs > 0L || progressAtMs > 0L || scheduledSkipTask != null) return;
+        if (!skipAttempted
+                || releaseShiftAtMs > 0L
+                || progressAtMs > 0L
+                || scheduledSkipTask != null
+                || isDirectHoldActive()) {
+            return;
+        }
 
         LocalPlayer player = McUtils.player();
         if (player == null || isPlayerPressingShift(player) || isServerShiftDown(player)) return;
 
-        scheduledSkipTask = Managers.TickScheduler.scheduleLater(() -> {
-            scheduledSkipTask = null;
+        scheduledSkipTask = Managers.TickScheduler.scheduleLater(
+                () -> {
+                    scheduledSkipTask = null;
 
-            if (!autoProgressToggle.get() || !Models.WorldState.onWorld() || !Models.Dialogue.isDialoguePresent()) {
-                return;
-            }
+                    if (!autoProgressToggle.get()
+                            || !Models.WorldState.onWorld()
+                            || !Models.Dialogue.isDialoguePresent()) {
+                        return;
+                    }
 
-            skipDialogue(dialogueText);
-        }, getPingDelayTicks());
+                    skipDialogue(dialogueText);
+                },
+                getPingDelayTicks());
     }
 
     private int getPingDelayTicks() {
         return Math.max(2, Services.Ping.getPing() / 50 + 2);
+    }
+
+    private boolean isDirectHoldActive() {
+        return isDirectHoldMode() && syntheticShiftDown;
     }
 
     private void cancelScheduledSkipRetry() {
