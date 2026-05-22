@@ -9,7 +9,6 @@ import com.wynntils.templates.language.exception.LanguageException;
 import com.wynntils.templates.language.exception.LexException;
 import com.wynntils.templates.language.exception.ParseException;
 import com.wynntils.templates.language.exception.VerificationException;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,21 +37,22 @@ public class TemplateLanguage {
         return templateCache.computeIfAbsent(input, (str) -> parser.parse(tokenize(str)));
     }
 
-
     public String formatError(String input, LanguageException exception) {
         if (exception instanceof VerificationException verificationException) {
             return """
                 VerificationException: %s
-                """.formatted(verificationException.getMessage());
+                """
+                    .formatted(verificationException.getMessage());
         }
 
         List<String> lines = input.lines().toList();
 
-        int position = switch (exception) {
-            case ParseException parse -> parse.getPosition();
-            case LexException lex -> lex.getPosition();
-            default -> -1;
-        };
+        int position =
+                switch (exception) {
+                    case ParseException parse -> parse.getPosition();
+                    case LexException lex -> lex.getPosition();
+                    default -> -1;
+                };
 
         int row = 0;
         int column = 0;
@@ -71,38 +71,21 @@ public class TemplateLanguage {
             currentPosition = lineEnd + 1; // newline
         }
 
-        String previousLine = row > 0
-                ? "%d: %s%n".formatted(row, lines.get(row - 1))
-                : "";
+        String previousLine = row > 0 ? "%d: %s%n".formatted(row, lines.get(row - 1)) : "";
 
-        String currentLine = row < lines.size()
-                ? "%d: %s%n".formatted(row + 1, lines.get(row))
-                : "";
+        String currentLine = row < lines.size() ? "%d: %s%n".formatted(row + 1, lines.get(row)) : "";
 
-        String nextLine = row + 1 < lines.size()
-                ? "%d: %s%n".formatted(row + 2, lines.get(row + 1))
-                : "";
+        String nextLine = row + 1 < lines.size() ? "%d: %s%n".formatted(row + 2, lines.get(row + 1)) : "";
 
         String pointer = " ".repeat(Math.max(column + 2, 0)) + "^ here";
 
-        String message = "%s: %s".formatted(
-                exception.getClass().getSimpleName(),
-                exception.getMessage()
-        );
+        String message = "%s: %s".formatted(exception.getClass().getSimpleName(), exception.getMessage());
 
         return """
 Error in template:
 (%d:%d) %s
 %s%s%s
 %s"""
-                .formatted(
-                        row + 1,
-                        column,
-                        message,
-                        previousLine,
-                        currentLine,
-                        pointer,
-                        nextLine
-                );
+                .formatted(row + 1, column, message, previousLine, currentLine, pointer, nextLine);
     }
 }

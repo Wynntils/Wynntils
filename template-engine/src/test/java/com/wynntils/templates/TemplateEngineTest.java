@@ -4,8 +4,8 @@
  */
 package com.wynntils.templates;
 
-import com.wynntils.templates.compiler.CompilerBackend;
-import com.wynntils.templates.compiler.TemplateBackend;
+import com.wynntils.templates.backends.TemplateBackend;
+import com.wynntils.templates.backends.compiler.CompilerBackend;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

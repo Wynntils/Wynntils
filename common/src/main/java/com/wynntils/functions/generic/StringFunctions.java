@@ -147,7 +147,6 @@ public class StringFunctions {
         }
     }
 
-
     @TemplateFunction(name = "regex_replace")
     public static String regexReplaceFunction(String value, String regex, String replacement) {
         try {

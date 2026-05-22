@@ -6,7 +6,6 @@ package com.wynntils.templates.language;
 
 import com.wynntils.templates.TemplateEngine;
 import com.wynntils.templates.functions.FunctionDefinition;
-import com.wynntils.templates.language.exception.LanguageException;
 import com.wynntils.templates.language.exception.ParseException;
 import com.wynntils.templates.language.expression.Expression;
 import com.wynntils.templates.language.expression.FunctionExpression;
@@ -14,7 +13,6 @@ import com.wynntils.templates.language.expression.LiteralExpression;
 import com.wynntils.templates.language.parts.TemplateExpressionPart;
 import com.wynntils.templates.language.parts.TemplateLiteralPart;
 import com.wynntils.templates.language.parts.TemplatePart;
-
 import java.util.ArrayList;
 import java.util.List;
 

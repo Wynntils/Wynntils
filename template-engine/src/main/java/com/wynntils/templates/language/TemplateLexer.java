@@ -5,7 +5,6 @@
 package com.wynntils.templates.language;
 
 import com.wynntils.templates.language.exception.LexException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,7 +136,9 @@ class TemplateLexer {
             case ')' -> tokens.add(new Token(TokenType.ARGUMENTS_END, ")", pos));
             case ';' -> tokens.add(new Token(TokenType.SEMICOLON, ";", pos));
             case '"' -> lexString();
-            case ':' -> throw new LexException(pos, "Unexpected character: ':' (using colons as formatters is no longer supported)");
+            case ':' ->
+                throw new LexException(
+                        pos, "Unexpected character: ':' (using colons as formatters is no longer supported)");
             default -> throw new LexException(pos, "Unexpected character: " + c);
         }
     }
@@ -169,14 +170,13 @@ class TemplateLexer {
             sb.append(advance());
         }
 
-        if(sb.toString().equals("true")) {
+        if (sb.toString().equals("true")) {
             tokens.add(new Token(TokenType.TRUE, "true", pos));
-        } else if(sb.toString().equals("false")) {
+        } else if (sb.toString().equals("false")) {
             tokens.add(new Token(TokenType.FALSE, "false", pos));
         } else {
             tokens.add(new Token(TokenType.IDENTIFIER, sb.toString(), pos));
         }
-
     }
 
     private boolean isIdentifierStart(char c) {

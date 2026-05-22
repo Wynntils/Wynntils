@@ -34,9 +34,8 @@ import com.wynntils.functions.generic.StringFunctions;
 import com.wynntils.functions.generic.StyledTextFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.templates.TemplateEngine;
-import com.wynntils.templates.compiler.CompilerBackend;
+import com.wynntils.templates.backends.compiler.CompilerBackend;
 import com.wynntils.templates.functions.FunctionDefinition;
-import com.wynntils.templates.language.exception.LanguageException;
 
 import java.util.List;
 import java.util.Objects;
