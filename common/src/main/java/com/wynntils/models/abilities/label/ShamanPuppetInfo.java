@@ -6,6 +6,7 @@ package com.wynntils.models.abilities.label;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.type.LabelInfo;
+import com.wynntils.models.abilities.type.PuppetType;
 import com.wynntils.utils.mc.type.Location;
 import net.minecraft.world.entity.Entity;
 
@@ -52,11 +53,6 @@ public class ShamanPuppetInfo extends LabelInfo {
 
     public int getFriendlyFireTime() {
         return friendlyFireTime;
-    }
-
-    public enum PuppetType {
-        PUPPET,
-        REMNANT
     }
 
     @Override

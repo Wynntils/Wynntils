@@ -6,6 +6,7 @@ package com.wynntils.models.abilities.label;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.type.LabelParser;
+import com.wynntils.models.abilities.type.PuppetType;
 import com.wynntils.utils.mc.type.Location;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,7 +14,7 @@ import net.minecraft.world.entity.Entity;
 
 public class ShamanPuppetParser implements LabelParser<ShamanPuppetInfo> {
     private static Pattern PUPPET_PATTERN = Pattern.compile(
-            "^(?<player>\\S+)('s|') (?<puppetType>Puppet|Remnant)\\n(?:\uE013 (?<invigorate>\\d+)s )?(?:\uE01B (?<friendlyFire>\\d+)s )?\uE01F (?<seconds>\\d+)s");
+            "^(?<player>\\S+)('s|') (?<puppetType>Puppet|Remnant|(Patchwork Abomination))\\n(?:\uE013 (?<invigorate>\\d+)s )?(?:\uE01B (?<friendlyFire>\\d+)s )?\uE01F (?<seconds>\\d+)s");
 
     @Override
     public ShamanPuppetInfo getInfo(StyledText label, Location location, Entity entity) {
@@ -23,10 +24,9 @@ public class ShamanPuppetParser implements LabelParser<ShamanPuppetInfo> {
         String playerName = matcher.group("player");
         int secondsLeft = Integer.parseInt(matcher.group("seconds"));
 
-        ShamanPuppetInfo.PuppetType puppetType = ShamanPuppetInfo.PuppetType.PUPPET;
+        PuppetType puppetType = null;
         if (matcher.group("puppetType") != null) {
-            puppetType = ShamanPuppetInfo.PuppetType.valueOf(
-                    matcher.group("puppetType").toUpperCase());
+            puppetType = PuppetType.fromString(matcher.group("puppetType"));
         }
 
         int invigorateTime = -1;

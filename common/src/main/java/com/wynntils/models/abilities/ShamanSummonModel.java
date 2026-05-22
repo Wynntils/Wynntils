@@ -13,6 +13,7 @@ import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.abilities.label.ShamanPuppetInfo;
 import com.wynntils.models.abilities.label.ShamanPuppetParser;
+import com.wynntils.models.abilities.type.PuppetType;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -77,7 +78,7 @@ public class ShamanSummonModel extends Model {
         return activePuppetsMap.values().stream();
     }
 
-    public Stream<ShamanPuppetInfo> getActivePuppetsByType(ShamanPuppetInfo.PuppetType type) {
+    public Stream<ShamanPuppetInfo> getActivePuppetsByType(PuppetType type) {
         return activePuppetsMap.values().stream().filter(info -> info.getPuppetType() == type);
     }
 }

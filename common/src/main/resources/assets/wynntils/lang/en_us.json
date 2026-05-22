@@ -2751,6 +2751,8 @@
   "function.wynntils.partyMembers.name": "Party Members",
   "function.wynntils.partyTotalLevel.description": "Total level of your party",
   "function.wynntils.partyTotalLevel.name": "Total level of Party",
+  "function.wynntils.patchworkAbominationDuration.description": "Returns the time left on your Patchwork Abomination",
+  "function.wynntils.patchworkAbominationDuration.name": "Patchwork Abomination Duration",
   "function.wynntils.personalObjectiveEventBonus.argument.index": "The index of the objective",
   "function.wynntils.personalObjectiveEventBonus.description": "Whether your personal objective has an event bonus or not",
   "function.wynntils.personalObjectiveEventBonus.name": "Personal Objective Event Bonus",
