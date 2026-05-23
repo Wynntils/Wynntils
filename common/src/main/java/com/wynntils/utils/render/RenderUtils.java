@@ -25,6 +25,7 @@ import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -396,6 +397,7 @@ public final class RenderUtils {
             float y,
             float width,
             float height) {
+        Objects.requireNonNull(atlas, "texture must be an atlas texture; use drawTexturedRect for file-based textures");
         TextureAtlas textureAtlas = McUtils.mc().getAtlasManager().getAtlasOrThrow(atlas);
         TextureAtlasSprite sprite = textureAtlas.getSprite(identifier);
         guiGraphics.guiRenderState.submitGuiElement(new FloatBlitRenderState(

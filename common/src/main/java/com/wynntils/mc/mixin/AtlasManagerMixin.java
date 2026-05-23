@@ -4,9 +4,10 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.core.consumers.atlas.AtlasManager;
+import com.wynntils.core.consumers.atlas.WynntilsAtlasManager;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.resources.model.AtlasManager;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -15,18 +16,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(net.minecraft.client.resources.model.AtlasManager.class)
+@Mixin(AtlasManager.class)
 public class AtlasManagerMixin {
     @Shadow
     @Final
     @Mutable
-    private static List<net.minecraft.client.resources.model.AtlasManager.AtlasConfig> KNOWN_ATLASES;
+    private static List<AtlasManager.AtlasConfig> KNOWN_ATLASES;
 
+    // We assume here that our WynntilsAtlasManager loads earlier than Minecrafts AtlasManager
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void addAtlas(CallbackInfo ci) {
-        List<net.minecraft.client.resources.model.AtlasManager.AtlasConfig> atlases = new ArrayList<>(KNOWN_ATLASES);
+        List<AtlasManager.AtlasConfig> atlases = new ArrayList<>(KNOWN_ATLASES);
 
-        atlases.addAll(AtlasManager.ATLASES);
+        atlases.addAll(WynntilsAtlasManager.ATLASES);
 
         KNOWN_ATLASES = List.copyOf(atlases);
     }

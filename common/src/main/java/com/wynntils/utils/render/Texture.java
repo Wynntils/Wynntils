@@ -439,8 +439,4 @@ public enum Texture {
     public int height() {
         return height;
     }
-
-    public boolean isAtlasTexture() {
-        return this.atlas != null;
-    }
 }
