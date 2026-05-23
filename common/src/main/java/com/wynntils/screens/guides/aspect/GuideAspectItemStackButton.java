@@ -52,8 +52,7 @@ public class GuideAspectItemStackButton extends WynntilsButton {
         CustomColor color = CustomColor.fromChatFormatting(
                 itemStack.getAspectInfo().gearTier().getChatFormatting());
 
-        RenderUtils.drawSprite(
-                guiGraphics, Texture.HIGHLIGHT_WYNN, color, getX() - 8, getY() - 8);
+        RenderUtils.drawSprite(guiGraphics, Texture.HIGHLIGHT_WYNN, color, getX() - 8, getY() - 8);
 
         RenderUtils.renderItem(guiGraphics, itemStack, getX(), getY());
 

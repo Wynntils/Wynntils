@@ -332,11 +332,7 @@ public final class RenderUtils {
                 textureHeight);
     }
 
-
-    public static void drawSprite(GuiGraphics guiGraphics,
-                                  Texture texture,
-                                  float x,
-                                  float y) {
+    public static void drawSprite(GuiGraphics guiGraphics, Texture texture, float x, float y) {
         drawSprite(
                 guiGraphics,
                 RenderPipelines.GUI_TEXTURED,
@@ -346,15 +342,10 @@ public final class RenderUtils {
                 x,
                 y,
                 texture.width(),
-                texture.height()
-        );
+                texture.height());
     }
 
-    public static void drawSprite(GuiGraphics guiGraphics,
-                                  Texture texture,
-                                  CustomColor color,
-                                  float x,
-                                  float y) {
+    public static void drawSprite(GuiGraphics guiGraphics, Texture texture, CustomColor color, float x, float y) {
         drawSprite(
                 guiGraphics,
                 RenderPipelines.GUI_TEXTURED,
@@ -364,15 +355,11 @@ public final class RenderUtils {
                 x,
                 y,
                 texture.width(),
-                texture.height()
-        );
+                texture.height());
     }
-    public static void drawSprite(GuiGraphics guiGraphics,
-                                  Texture texture,
-                                  float x,
-                                  float y,
-                                  float width,
-                                  float height) {
+
+    public static void drawSprite(
+            GuiGraphics guiGraphics, Texture texture, float x, float y, float width, float height) {
         drawSprite(
                 guiGraphics,
                 RenderPipelines.GUI_TEXTURED,
@@ -382,17 +369,11 @@ public final class RenderUtils {
                 x,
                 y,
                 width,
-                height
-        );
+                height);
     }
 
-    public static void drawSprite(GuiGraphics guiGraphics,
-                                  Texture texture,
-                                  CustomColor color,
-                                  float x,
-                                  float y,
-                                  float width,
-                                  float height) {
+    public static void drawSprite(
+            GuiGraphics guiGraphics, Texture texture, CustomColor color, float x, float y, float width, float height) {
         drawSprite(
                 guiGraphics,
                 RenderPipelines.GUI_TEXTURED,
@@ -402,19 +383,19 @@ public final class RenderUtils {
                 x,
                 y,
                 width,
-                height
-        );
+                height);
     }
 
-    public static void drawSprite(GuiGraphics guiGraphics,
-                                  RenderPipeline pipeline,
-                                  Identifier identifier,
-                                  Identifier atlas,
-                                  CustomColor color,
-                                  float x,
-                                  float y,
-                                  float width,
-                                  float height) {
+    public static void drawSprite(
+            GuiGraphics guiGraphics,
+            RenderPipeline pipeline,
+            Identifier identifier,
+            Identifier atlas,
+            CustomColor color,
+            float x,
+            float y,
+            float width,
+            float height) {
         TextureAtlas textureAtlas = McUtils.mc().getAtlasManager().getAtlasOrThrow(atlas);
         TextureAtlasSprite sprite = textureAtlas.getSprite(identifier);
         guiGraphics.guiRenderState.submitGuiElement(new FloatBlitRenderState(

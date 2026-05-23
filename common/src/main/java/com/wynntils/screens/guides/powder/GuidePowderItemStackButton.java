@@ -34,8 +34,7 @@ public class GuidePowderItemStackButton extends WynntilsButton {
     public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         CustomColor color = itemStack.getElement().getColor();
 
-        RenderUtils.drawSprite(
-                guiGraphics, Texture.HIGHLIGHT_WYNN, color, getX() - 8, getY() - 8);
+        RenderUtils.drawSprite(guiGraphics, Texture.HIGHLIGHT_WYNN, color, getX() - 8, getY() - 8);
 
         RenderUtils.renderItem(guiGraphics, itemStack, getX(), getY());
 

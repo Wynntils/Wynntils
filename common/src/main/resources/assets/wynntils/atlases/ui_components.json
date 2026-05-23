@@ -1,9 +1,9 @@
 {
   "sources": [
     {
-      "type": "minecraft:directory",
       "prefix": "",
-      "source": "ui_components/sprites"
+      "source": "ui_components/sprites",
+      "type": "minecraft:directory"
     }
   ]
 }

@@ -36,8 +36,7 @@ public class GuideAugmentItemStackButton extends WynntilsButton {
         CustomColor color =
                 CustomColor.fromChatFormatting(itemStack.getGearTier().getChatFormatting());
 
-        RenderUtils.drawSprite(
-                guiGraphics, Texture.HIGHLIGHT_WYNN, color, getX() - 8, getY() - 8);
+        RenderUtils.drawSprite(guiGraphics, Texture.HIGHLIGHT_WYNN, color, getX() - 8, getY() - 8);
 
         RenderUtils.renderItem(guiGraphics, itemStack, getX(), getY());
 

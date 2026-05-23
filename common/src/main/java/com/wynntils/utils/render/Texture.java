@@ -385,7 +385,7 @@ public enum Texture {
     HIGHLIGHT_BOX_OPAQUE("ui_components", "highlight_box_opaque", 32, 32),
     HIGHLIGHT_BOX_GRADIENT_1("ui_components", "highlight_box_gradient_1", 32, 32),
     HIGHLIGHT_BOX_GRADIENT_2("ui_components", "highlight_box_gradient_2", 32, 32),
-    HOTBAR_SELECTED_HIGHLIGHT("ui_components", "hotbar_selected_highlight", 32,  32),
+    HOTBAR_SELECTED_HIGHLIGHT("ui_components", "hotbar_selected_highlight", 32, 32),
     ITEM_FILTER_BACKGROUND("ui_components/item_filter_background.png", 358, 206),
     ITEM_SHARING_BACKGROUND("ui_components/item_sharing_background.png", 250, 100),
     LIST_SEARCH("ui_components/list_search.png", 133, 23),
@@ -424,7 +424,9 @@ public enum Texture {
         this.height = height;
     }
 
-    public Identifier atlas() { return atlas; }
+    public Identifier atlas() {
+        return atlas;
+    }
 
     public Identifier identifier() {
         return identifier;
@@ -438,5 +440,7 @@ public enum Texture {
         return height;
     }
 
-    public boolean isAtlasTexture() { return this.atlas != null; }
+    public boolean isAtlasTexture() {
+        return this.atlas != null;
+    }
 }
