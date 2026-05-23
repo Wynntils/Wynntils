@@ -1,5 +1,6 @@
 {
   "client": [
+    "AtlasManagerMixin",
     "AbstractContainerMenuMixin",
     "AbstractContainerScreenMixin",
     "AbstractRecipeBookScreenMixin",

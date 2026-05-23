@@ -164,27 +164,28 @@ public class ItemHighlightFeature extends Feature {
         CustomColor color = getHighlightColor(e.getSlot().getItem(), false);
         if (color == CustomColor.NONE) return;
 
+        int x = e.getSlot().x - 8;
+        int y = e.getSlot().y - 8;
+
         if (selectedItemHighlight.get()
                 && McUtils.inventory().getSelectedItem().equals(e.getSlot().getItem())) {
-            RenderUtils.drawTexturedRect(
-                    e.getGuiGraphics(), Texture.HOTBAR_SELECTED_HIGHLIGHT, color, e.getSlot().x, e.getSlot().y);
+            RenderUtils.drawSprite(
+                    e.getGuiGraphics(), Texture.HOTBAR_SELECTED_HIGHLIGHT, color, x, y);
             return;
         }
 
-        RenderUtils.drawTexturedRect(
-                e.getGuiGraphics(),
-                Texture.HIGHLIGHT.identifier(),
-                color,
-                e.getSlot().x - 1,
-                e.getSlot().y - 1,
-                18,
-                18,
-                highlightTexture.get().ordinal() * 18,
-                0,
-                18,
-                18,
-                Texture.HIGHLIGHT.width(),
-                Texture.HIGHLIGHT.height());
+        switch (highlightTexture.get()) {
+            case WYNN -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_WYNN, color, x, y);
+            case TAG -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_TAG, color, x, y);
+            case CIRCLE_TRANSPARENT -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_CIRCLE_TRANSPARENT, color, x, y);
+            case CIRCLE_OPAQUE -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_CIRCLE_OPAQUE, color, x, y);
+            case CIRCLE_OUTLINE_LARGE -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_CIRCLE_OUTLINE_LARGE, color, x, y);
+            case CIRCLE_OUTLINE_SMALL -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_CIRCLE_OUTLINE_SMALL, color, x, y);
+            case BOX_TRANSPARENT -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_BOX_TRANSPARENT, color, x, y);
+            case BOX_OPAQUE -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_BOX_OPAQUE, color, x, y);
+            case BOX_GRADIENT_1 -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_BOX_GRADIENT_1, color, x, y);
+            case BOX_GRADIENT_2 -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_BOX_GRADIENT_2, color, x, y);
+        }
     }
 
     @SubscribeEvent
@@ -194,26 +195,27 @@ public class ItemHighlightFeature extends Feature {
         CustomColor color = getHighlightColor(e.getItemStack(), true);
         if (color == CustomColor.NONE) return;
 
+        int x = e.getX() - 8;
+        int y = e.getY() - 8;
+
         if (selectedItemHighlight.get() && McUtils.inventory().getSelectedItem().equals(e.getItemStack())) {
-            RenderUtils.drawTexturedRect(
-                    e.getGuiGraphics(), Texture.HOTBAR_SELECTED_HIGHLIGHT, color, e.getX(), e.getY());
+            RenderUtils.drawSprite(
+                    e.getGuiGraphics(), Texture.HOTBAR_SELECTED_HIGHLIGHT, color, x, y);
             return;
         }
 
-        RenderUtils.drawTexturedRect(
-                e.getGuiGraphics(),
-                Texture.HIGHLIGHT.identifier(),
-                color,
-                e.getX() - 1,
-                e.getY() - 1,
-                18,
-                18,
-                highlightTexture.get().ordinal() * 18,
-                0,
-                18,
-                18,
-                Texture.HIGHLIGHT.width(),
-                Texture.HIGHLIGHT.height());
+        switch (highlightTexture.get()) {
+            case WYNN -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_WYNN, color, x, y);
+            case TAG -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_TAG, color, x, y);
+            case CIRCLE_TRANSPARENT -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_CIRCLE_TRANSPARENT, color, x, y);
+            case CIRCLE_OPAQUE -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_CIRCLE_OPAQUE, color, x, y);
+            case CIRCLE_OUTLINE_LARGE -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_CIRCLE_OUTLINE_LARGE, color, x, y);
+            case CIRCLE_OUTLINE_SMALL -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_CIRCLE_OUTLINE_SMALL, color, x, y);
+            case BOX_TRANSPARENT -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_BOX_TRANSPARENT, color, x, y);
+            case BOX_OPAQUE -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_BOX_OPAQUE, color, x, y);
+            case BOX_GRADIENT_1 -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_BOX_GRADIENT_1, color, x, y);
+            case BOX_GRADIENT_2 -> RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HIGHLIGHT_BOX_GRADIENT_2, color, x, y);
+        }
     }
 
     @SubscribeEvent
