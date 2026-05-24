@@ -991,7 +991,9 @@ public final class LootrunModel extends Model {
     }
 
     public CappedValue getCurrentMissionProgress(int index) {
-        return index >= 0 && index < currentMissionProgress.size() ? currentMissionProgress.get(index) : CappedValue.EMPTY;
+        return index >= 0 && index < currentMissionProgress.size()
+                ? currentMissionProgress.get(index)
+                : CappedValue.EMPTY;
     }
 
     private void resetTrials() {

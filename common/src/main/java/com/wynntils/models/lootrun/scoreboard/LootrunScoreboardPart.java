@@ -122,7 +122,8 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             matcher = line.getMatcher(MISSION_AND_TRIAL_OBJECTIVE_PATTERN);
             if (matcher.matches()) {
                 String name = matcher.group("objectiveStart") + " " + matcher.group("objectiveEnd");
-                CappedValue progress = new CappedValue(Integer.parseInt(matcher.group("current")), Integer.parseInt(matcher.group("total")));
+                CappedValue progress = new CappedValue(
+                        Integer.parseInt(matcher.group("current")), Integer.parseInt(matcher.group("total")));
                 if (state == MissionAndTrialState.MISSION) {
                     currentMissionObjective.add(name);
                     currentMissionProgress.add(progress);

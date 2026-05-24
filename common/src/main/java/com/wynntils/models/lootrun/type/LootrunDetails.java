@@ -6,7 +6,6 @@ package com.wynntils.models.lootrun.type;
 
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.lootrun.beacons.LootrunBeaconKind;
-import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
