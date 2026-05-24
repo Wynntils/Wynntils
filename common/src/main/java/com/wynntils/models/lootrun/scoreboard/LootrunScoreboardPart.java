@@ -14,6 +14,8 @@ import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
 import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.utils.type.CappedValue;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +35,9 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             Pattern.compile("^[-—] Time Left: (\\d+):(\\d+)(?: \\[[+-]\\d+[msMS]\\])?$");
     private static final Pattern CHALLENGES_PATTERN =
             Pattern.compile("^[-—] Challenges: (\\d+)/(\\d+)(?: \\[[+-]\\d+\\])?$");
+    private static final Pattern MISSION_NAME_PATTERN = Pattern.compile("§.(?<name>[^:]+)");
+    private static final Pattern MISSION_OBJECTIVE_PATTERN =
+            Pattern.compile("§.- (?:§.)?(?<objectiveStart>.+) (?:§.)?(?<current>[0-9]+)/(?<total>[0-9]+m?)(?:§.)? (?<objectiveEnd>.+)");
 
     @Override
     public SegmentMatcher getSegmentMatcher() {
@@ -88,6 +93,32 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             Models.Lootrun.setChallenges(
                     new CappedValue(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2))));
         }
+
+        StyledText missionNameLine = content.get(4);
+        matcher = missionNameLine.getMatcher(MISSION_NAME_PATTERN);
+        if (matcher.matches()) {
+            Models.Lootrun.setCurrentMission(matcher.group("name"));
+        }
+
+        // Mission objectives may take up multiple lines
+        StyledText missionObjectiveLine;
+        int i = 5;
+        List<String> currentMissionObjective = new ArrayList<>();
+        List<CappedValue> currentMissionProgress = new ArrayList<>();
+        do {
+            missionObjectiveLine = content.get(i);
+            matcher = missionObjectiveLine.getMatcher(MISSION_OBJECTIVE_PATTERN);
+            if (matcher.matches()) {
+                currentMissionObjective.add(matcher.group("objectiveStart") + " " + matcher.group("objectiveEnd"));
+                currentMissionProgress.add(new CappedValue(Integer.parseInt(matcher.group("current")), Integer.parseInt(matcher.group("total"))));
+            }
+
+            i += 1;
+        } while (!missionObjectiveLine.isEmpty());
+        Models.Lootrun.setCurrentMissionObjective(currentMissionObjective);
+        Models.Lootrun.setCurrentMissionProgress(currentMissionProgress);
+
+        content.forEach(s -> System.out.println(s.getString()));
     }
 
     @Override

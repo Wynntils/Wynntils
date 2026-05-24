@@ -963,6 +963,40 @@ public final class LootrunModel extends Model {
         expectMissionComplete = false;
     }
 
+    public void setCurrentMission(String currentMission) {
+        getCurrentLootrunDetails().setCurrentMission(currentMission);
+        lootrunDetailsStorage.touched();
+    }
+
+    public String getCurrentMission(boolean colored) {
+        String currentMission = getCurrentLootrunDetails().getCurrentMission();
+        return colored ? MissionType.fromName(currentMission).getColoredName() : currentMission;
+    }
+
+    public void setCurrentMissionObjective(List<String> currentMissionObjective) {
+        getCurrentLootrunDetails().setCurrentMissionObjective(currentMissionObjective);
+        lootrunDetailsStorage.touched();
+    }
+
+    public String getCurrentMissionObjective(int index) {
+        List<String> missionObjectives = getCurrentLootrunDetails().getCurrentMissionObjective();
+        return index >= 0 && index < missionObjectives.size()
+                ? missionObjectives.get(index)
+                : "";
+    }
+
+    public void setCurrentMissionProgress(List<CappedValue> currentMissionProgress) {
+        getCurrentLootrunDetails().setCurrentMissionProgress(currentMissionProgress);
+        lootrunDetailsStorage.touched();
+    }
+
+    public CappedValue getCurrentMissionProgress(int index) {
+        List<CappedValue> missionProgress = getCurrentLootrunDetails().getCurrentMissionProgress();
+        return index >= 0 && index < missionProgress.size()
+                ? missionProgress.get(index)
+                : CappedValue.EMPTY;
+    }
+
     private void resetTrials() {
         getCurrentLootrunDetails().setTrials(new ArrayList<>());
         lootrunDetailsStorage.touched();
