@@ -138,6 +138,45 @@ public class LootrunFunctions {
         }
     }
 
+    public static class LootrunCurrentMissionFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            boolean colored = arguments.getArgument("colored").getBooleanValue();
+            return Models.Lootrun.getCurrentMission(colored);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("colored", Boolean.class, null)));
+        }
+    }
+
+    public static class LootrunCurrentMissionObjectiveFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("index").getIntegerValue();
+            return Models.Lootrun.getCurrentMissionObjective(index);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
+        }
+    }
+
+    public static class LootrunCurrentMissionProgressFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("index").getIntegerValue();
+            return Models.Lootrun.getCurrentMissionProgress(index);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
+        }
+    }
+
     public static class LootrunTrialFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
