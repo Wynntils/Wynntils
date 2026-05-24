@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun.scoreboard;
@@ -13,8 +13,9 @@ import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
 import com.wynntils.models.lootrun.type.LootrunningState;
+import com.wynntils.models.lootrun.type.MissionType;
+import com.wynntils.models.lootrun.type.TrialType;
 import com.wynntils.utils.type.CappedValue;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -35,9 +36,9 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             Pattern.compile("^[-—] Time Left: (\\d+):(\\d+)(?: \\[[+-]\\d+[msMS]\\])?$");
     private static final Pattern CHALLENGES_PATTERN =
             Pattern.compile("^[-—] Challenges: (\\d+)/(\\d+)(?: \\[[+-]\\d+\\])?$");
-    private static final Pattern MISSION_NAME_PATTERN = Pattern.compile("§.(?<name>[^:]+):");
-    private static final Pattern MISSION_OBJECTIVE_PATTERN =
-            Pattern.compile("§.- (?:§.)?(?<objectiveStart>.+) (?:§.)?(?<current>[0-9]+)/(?<total>[0-9]+m?)(?:§.)? (?<objectiveEnd>.+)");
+    private static final Pattern MISSION_AND_TRIAL_NAME_PATTERN = Pattern.compile("§.(?<name>[^:]+):");
+    private static final Pattern MISSION_AND_TRIAL_OBJECTIVE_PATTERN = Pattern.compile(
+            "§.- (?:§.)?(?<objectiveStart>.+) (?:§.)?(?<current>[0-9]+)/(?<total>[0-9]+)m?(?:§.)? (?<objectiveEnd>.+)");
 
     @Override
     public SegmentMatcher getSegmentMatcher() {
@@ -94,29 +95,47 @@ public class LootrunScoreboardPart extends ScoreboardPart {
                     new CappedValue(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2))));
         }
 
-        StyledText missionNameLine = content.get(4);
-        matcher = missionNameLine.getMatcher(MISSION_NAME_PATTERN);
-        if (matcher.matches()) {
-            Models.Lootrun.setCurrentMission(matcher.group("name"));
-        }
-
-        // Mission objectives may take up multiple lines
+        // Mission and Trial objectives may take up multiple lines
         List<String> currentMissionObjective = new ArrayList<>();
         List<CappedValue> currentMissionProgress = new ArrayList<>();
-        int i = 5;
-        StyledText missionObjectiveLine = content.get(i);
-        while (!missionObjectiveLine.isEmpty()) {
-            matcher = missionObjectiveLine.getMatcher(MISSION_OBJECTIVE_PATTERN);
+        List<String> currentTrialObjective = new ArrayList<>();
+        List<CappedValue> currentTrialProgress = new ArrayList<>();
+        for (int i = 4; i < content.size(); i++) {
+            StyledText line = content.get(i);
+            matcher = line.getMatcher(MISSION_AND_TRIAL_NAME_PATTERN);
             if (matcher.matches()) {
-                currentMissionObjective.add(matcher.group("objectiveStart") + " " + matcher.group("objectiveEnd"));
-                currentMissionProgress.add(new CappedValue(Integer.parseInt(matcher.group("current")), Integer.parseInt(matcher.group("total"))));
+                String name = matcher.group("name");
+                if (MissionType.fromName(name) != MissionType.UNKNOWN) {
+                    Models.Lootrun.setCurrentMission(name);
+                } else if (TrialType.fromName(name) != TrialType.UNKNOWN) {
+                    Models.Lootrun.setCurrentTrial(name);
+                } else {
+                    WynntilsMod.warn("Found unknown Lootrun Mission Or Trial name: " + line.getString());
+                }
+                continue;
             }
-            i += 1;
-            if (i >= content.size()) break;
-            missionObjectiveLine = content.get(i);
+            matcher = line.getMatcher(MISSION_AND_TRIAL_OBJECTIVE_PATTERN);
+            if (matcher.matches()) {
+                String name = matcher.group("objectiveStart") + " " + matcher.group("objectiveEnd");
+                CappedValue progress = new CappedValue(Integer.parseInt(matcher.group("current")), Integer.parseInt(matcher.group("total")));
+                if (MissionType.fromName(name) != MissionType.UNKNOWN) {
+                    currentMissionObjective.add(name);
+                    currentMissionProgress.add(progress);
+                } else if (TrialType.fromName(name) != TrialType.UNKNOWN) {
+                    currentTrialObjective.add(name);
+                    currentTrialProgress.add(progress);
+                } else {
+                    WynntilsMod.warn("Found unknown Lootrun Mission Or Trial objective: " + line.getString());
+                }
+                continue;
+            }
+            // If hit the line that's neither a Mission nor a Trial (probably empty line) break immediately
+            break;
         }
         Models.Lootrun.setCurrentMissionObjective(currentMissionObjective);
         Models.Lootrun.setCurrentMissionProgress(currentMissionProgress);
+        Models.Lootrun.setCurrentTrialObjective(currentTrialObjective);
+        Models.Lootrun.setCurrentTrialProgress(currentTrialProgress);
 
         content.forEach(s -> System.out.println(s.getString()));
     }
