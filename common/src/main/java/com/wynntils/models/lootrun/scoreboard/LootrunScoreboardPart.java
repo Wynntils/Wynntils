@@ -35,7 +35,7 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             Pattern.compile("^[-—] Time Left: (\\d+):(\\d+)(?: \\[[+-]\\d+[msMS]\\])?$");
     private static final Pattern CHALLENGES_PATTERN =
             Pattern.compile("^[-—] Challenges: (\\d+)/(\\d+)(?: \\[[+-]\\d+\\])?$");
-    private static final Pattern MISSION_NAME_PATTERN = Pattern.compile("§.(?<name>[^:]+)");
+    private static final Pattern MISSION_NAME_PATTERN = Pattern.compile("§.(?<name>[^:]+):");
     private static final Pattern MISSION_OBJECTIVE_PATTERN =
             Pattern.compile("§.- (?:§.)?(?<objectiveStart>.+) (?:§.)?(?<current>[0-9]+)/(?<total>[0-9]+m?)(?:§.)? (?<objectiveEnd>.+)");
 
@@ -101,20 +101,20 @@ public class LootrunScoreboardPart extends ScoreboardPart {
         }
 
         // Mission objectives may take up multiple lines
-        StyledText missionObjectiveLine;
-        int i = 5;
         List<String> currentMissionObjective = new ArrayList<>();
         List<CappedValue> currentMissionProgress = new ArrayList<>();
-        do {
-            missionObjectiveLine = content.get(i);
+        int i = 5;
+        StyledText missionObjectiveLine = content.get(i);
+        while (!missionObjectiveLine.isEmpty()) {
             matcher = missionObjectiveLine.getMatcher(MISSION_OBJECTIVE_PATTERN);
             if (matcher.matches()) {
                 currentMissionObjective.add(matcher.group("objectiveStart") + " " + matcher.group("objectiveEnd"));
                 currentMissionProgress.add(new CappedValue(Integer.parseInt(matcher.group("current")), Integer.parseInt(matcher.group("total"))));
             }
-
             i += 1;
-        } while (!missionObjectiveLine.isEmpty());
+            if (i >= content.size()) break;
+            missionObjectiveLine = content.get(i);
+        }
         Models.Lootrun.setCurrentMissionObjective(currentMissionObjective);
         Models.Lootrun.setCurrentMissionProgress(currentMissionProgress);
 
