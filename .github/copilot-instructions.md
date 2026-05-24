@@ -135,7 +135,7 @@ The `common/src/main/java/com/wynntils/` directory contains:
 
 3. **Imports**: NO wildcard imports. Spotless will detect and reject them.
 
-4. **Annotations**: Do NOT use IntelliJ com.wynntils.templates.annotations (org.jetbrains.com.wynntils.templates.annotations.*). Spotless will reject them.
+4. **Annotations**: Do NOT use IntelliJ annotations (org.jetbrains.annotations.*). Spotless will reject them.
 
 5. **Method Organization**: Generally public (including @SubscribeEvent), then protected, then private methods. Adapt to surrounding code style.
 
@@ -147,7 +147,7 @@ The `common/src/main/java/com/wynntils/` directory contains:
 - Spotless runs automatically on PR creation via GitHub Actions
 - **Custom Rules**:
   - Refuses wildcard imports (cannot be auto-fixed)
-  - Refuses IntelliJ com.wynntils.templates.annotations (cannot be auto-fixed)
+  - Refuses IntelliJ annotations (cannot be auto-fixed)
   - No empty line after opening curly brace (auto-fixed)
   - License header with current year (auto-fixed)
   - Import ordering, unused import removal (auto-fixed)
@@ -215,7 +215,7 @@ The `.github/workflows/build.yml` runs on PRs and performs:
 
 2. **"Unsupported Java version"**: Verify `JAVA_HOME` points to JDK 21. Check with `java -version` (should show "21.x.x").
 
-3. **Spotless Check Failures**: Run `./gradlew spotlessApply` before committing. If errors persist about wildcard imports or IntelliJ com.wynntils.templates.annotations, manually fix them (spotlessApply cannot auto-fix these).
+3. **Spotless Check Failures**: Run `./gradlew spotlessApply` before committing. If errors persist about wildcard imports or IntelliJ annotations, manually fix them (spotlessApply cannot auto-fix these).
 
 ### File Locations
 - **Main entry point**: `common/src/main/java/com/wynntils/core/WynntilsMod.java`

@@ -4,14 +4,12 @@
  */
 package com.wynntils.functions;
 
-
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.services.hades.HadesUser;
 import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
-
 import java.util.Comparator;
 import java.util.List;
 
@@ -28,11 +26,8 @@ public class HadesPartyFunctions {
                     .sorted(Comparator.comparing(hadesUser -> partyMembers.indexOf(hadesUser.getName())))
                     .toList();
         }
-        return !members.isEmpty() && index >= 0 && index < members.size()
-                ? members.get(index)
-                : null;
+        return !members.isEmpty() && index >= 0 && index < members.size() ? members.get(index) : null;
     }
-
 
     @TemplateFunction(name = "hades_party_member_health")
     public static CappedValue hadesPartyMemberHealthFunction(int index) {

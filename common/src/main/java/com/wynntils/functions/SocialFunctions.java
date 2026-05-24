@@ -5,16 +5,13 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.mc.McUtils;
-import java.util.List;
 import net.minecraft.network.chat.Component;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public class SocialFunctions {
-
     @TemplateFunction(name = "friends")
     public static int friendsFunction() {
         return Models.Friends.getFriends().size();
@@ -38,7 +35,6 @@ public class SocialFunctions {
     @TemplateFunction(name = "party_leader")
     public static String partyLeaderFunction() {
         return Models.Party.getPartyLeader().orElse("");
-
     }
 
     @TemplateFunction(name = "is_friend")
@@ -62,11 +58,9 @@ public class SocialFunctions {
         return component.getString();
     }
 
-
     @TemplateFunction(name = "player_name")
     public static String playerNameFunction() {
         return McUtils.playerName();
-
     }
 
     @TemplateFunction(name = "player_uuid", aliases = "uuid")

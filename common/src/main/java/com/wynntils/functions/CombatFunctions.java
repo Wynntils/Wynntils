@@ -14,7 +14,6 @@ import com.wynntils.utils.type.Time;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public class CombatFunctions {
-
     @TemplateFunction(name = "area_damage_per_second", aliases = "adps")
     public static long areaDamagePerSecondFunction() {
         return Models.Combat.getAreaDamagePerSecond();
@@ -25,12 +24,16 @@ public class CombatFunctions {
         return Models.Combat.getAverageAreaDamagePerSecond(seconds);
     }
 
-    @TemplateFunction(name = "total_area_damage", aliases = {"total_dmg", "tdmg"})
+    @TemplateFunction(
+            name = "total_area_damage",
+            aliases = {"total_dmg", "tdmg"})
     public static double totalAreaDamageFunction(int seconds) {
         return Models.Combat.getTotalAreaDamageOverSeconds(seconds);
     }
 
-    @TemplateFunction(name = "blocks_above_ground", aliases = {"agl", "above_ground_level"})
+    @TemplateFunction(
+            name = "blocks_above_ground",
+            aliases = {"agl", "above_ground_level"})
     public static double blocksAboveGroundFunction() {
         return Models.CharacterStats.getBlocksAboveGround();
     }
@@ -40,17 +43,23 @@ public class CombatFunctions {
         return Models.Combat.getKillsPerMinute(includeShared);
     }
 
-    @TemplateFunction(name = "last_spell_name", aliases = {"recast_name"})
+    @TemplateFunction(
+            name = "last_spell_name",
+            aliases = {"recast_name"})
     public static String lastSpellNameFunction(boolean burst) {
         return burst ? Models.Spell.getLastBurstSpellName() : Models.Spell.getLastSpellName();
     }
 
-    @TemplateFunction(name = "last_spell_repeat_count", aliases = {"recast_count"})
+    @TemplateFunction(
+            name = "last_spell_repeat_count",
+            aliases = {"recast_count"})
     public static int lastSpellRepeatCountFunction(boolean burst) {
         return burst ? Models.Spell.getRepeatedBurstSpellCount() : Models.Spell.getRepeatedSpellCount();
     }
 
-    @TemplateFunction(name = "ticks_since_last_spell", aliases = {"recast_ticks"})
+    @TemplateFunction(
+            name = "ticks_since_last_spell",
+            aliases = {"recast_ticks"})
     public static int ticksSinceLastSpellFunction(boolean burst) {
         return burst ? Models.Spell.getTicksSinceCastBurst() : Models.Spell.getTicksSinceCast();
     }
@@ -64,7 +73,6 @@ public class CombatFunctions {
     public static long focusedMobHealthFunction() {
         return Models.Combat.getFocusedMobHealth();
     }
-
 
     @TemplateFunction(name = "focused_mob_health_percent", aliases = "foc_mob_hp_pct")
     public static CappedValue focusedMobHealthPercentFunction() {
@@ -91,15 +99,14 @@ public class CombatFunctions {
         return System.currentTimeMillis() - Models.Combat.getLastKillTimestamp(includeShared);
     }
 
-
     @TemplateFunction(name = "targeted_mob_debuff_count")
-    public static int targetedMobDebuffValueFunction(String debuffName, double range, double horizontalFovDegrees, double verticalFovDegrees) {
+    public static int targetedMobDebuffValueFunction(
+            String debuffName, double range, double horizontalFovDegrees, double verticalFovDegrees) {
         DebuffType debuffType = DebuffType.fromName(debuffName);
         if (debuffType == null) return 0;
 
         return Models.Combat.getTargetedDebuffCount(range, horizontalFovDegrees, verticalFovDegrees, debuffType);
     }
-
 
     @TemplateFunction(name = "debuffs_in_radius")
     public static int debuffsInRadiusValueFunction(String debuffName, double radius) {

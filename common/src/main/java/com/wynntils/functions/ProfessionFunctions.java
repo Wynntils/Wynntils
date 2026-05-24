@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -14,7 +14,6 @@ import java.util.Optional;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public class ProfessionFunctions {
-
     @TemplateFunction(name = "profession_xp", aliases = "prof_xp")
     public static CappedValue professionXpFunction(String profession) {
         ProfessionType professionType = ProfessionType.fromString(profession);
@@ -23,7 +22,7 @@ public class ProfessionFunctions {
     }
 
     @TemplateFunction(name = "profession_level", aliases = "prof_lvl")
-    public static int professionLevelFunction(String profession){
+    public static int professionLevelFunction(String profession) {
         ProfessionType professionType = ProfessionType.fromString(profession);
         if (professionType == null) return -1;
 
@@ -82,7 +81,6 @@ public class ProfessionFunctions {
                 .name();
     }
 
-
     @TemplateFunction(name = "last_harvest_material_name")
     public static String lastHarvestMaterialNameFunction() {
         Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
@@ -119,12 +117,10 @@ public class ProfessionFunctions {
         return lastHarvest.get().xpGain();
     }
 
-
     @TemplateFunction(name = "material_dry_streak", aliases = "mat_dry")
     public static int materialDryStreakFunction() {
         return Models.Profession.getProfessionDryStreak();
     }
-
 
     @TemplateFunction(name = "last_profession_xp_gain")
     public static String lastProfessionXpGainFunction() {

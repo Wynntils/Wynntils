@@ -13,7 +13,6 @@ import com.wynntils.utils.colors.CustomColor;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public class ActivityFunctions {
-
     @TemplateFunction(name = "activity_name")
     public static String activityNameFunction() {
         return Models.Activity.getTrackedName();

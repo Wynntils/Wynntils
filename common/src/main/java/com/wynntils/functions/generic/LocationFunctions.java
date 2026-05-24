@@ -1,16 +1,14 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
 
 import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.mc.type.Location;
-import java.util.List;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public final class LocationFunctions {
-
     @TemplateFunction(name = "x", isPure = true)
     public static int xFunction(Location location) {
         return location.x();
@@ -35,5 +33,4 @@ public final class LocationFunctions {
     public static double distanceFunction(Location from, Location to) {
         return from.toVec3().distanceTo(to.toVec3());
     }
-
 }

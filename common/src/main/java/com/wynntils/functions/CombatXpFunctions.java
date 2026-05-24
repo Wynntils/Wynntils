@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -10,13 +10,11 @@ import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.CappedValue;
-
 import java.util.Optional;
 import java.util.UUID;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public class CombatXpFunctions {
-
     @TemplateFunction(name = "capped_level")
     public static CappedValue cappedLevelFunction() {
         return Models.CombatXp.getCombatLevel();
@@ -34,7 +32,6 @@ public class CombatXpFunctions {
                 .sum());
     }
 
-
     @TemplateFunction(name = "xp_per_minute", aliases = "xpm")
     public static String xpPerMinuteFunction() {
         return StringUtils.integerToShortString((int) (Models.CombatXp.getRawXpGainInLastMinute().stream()
@@ -49,7 +46,6 @@ public class CombatXpFunctions {
                 .sum();
     }
 
-
     @TemplateFunction(name = "level", aliases = "lvl")
     public static int levelFunction() {
         return Models.CombatXp.getCombatLevel().current();
@@ -58,7 +54,6 @@ public class CombatXpFunctions {
     @TemplateFunction(name = "xp")
     public static String xpFunction() {
         return StringUtils.integerToShortString(Models.CombatXp.getXp().current());
-
     }
 
     @TemplateFunction(name = "xp_raw")

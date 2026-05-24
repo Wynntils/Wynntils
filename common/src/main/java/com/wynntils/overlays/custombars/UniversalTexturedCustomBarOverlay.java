@@ -113,7 +113,7 @@ public class UniversalTexturedCustomBarOverlay extends CustomBarOverlayBase {
         // Get the color from the template
         String formattedTemplate =
                 StyledText.join("", Managers.Function.doFormatLines(template)).getString();
-//        colorCache = Managers.Function.tryGetRawValueOfType(formattedTemplate, CustomColor.class);
+        //        colorCache = Managers.Function.tryGetRawValueOfType(formattedTemplate, CustomColor.class);
     }
 
     @Override

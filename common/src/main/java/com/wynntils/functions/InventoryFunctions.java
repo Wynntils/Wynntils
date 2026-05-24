@@ -19,22 +19,20 @@ import com.wynntils.utils.type.NamedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
 import com.wynntils.utils.wynn.ItemUtils;
 import com.wynntils.utils.wynn.WynnUtils;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import net.minecraft.world.item.ItemStack;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public class InventoryFunctions {
-
     @TemplateFunction(name = "accessory_durability")
     public static CappedValue accesoryDurabilityFunction(String accesory) {
         InventoryAccessory inventoryAccessory = InventoryAccessory.fromString(accesory);
         if (inventoryAccessory == null) return CappedValue.EMPTY;
 
-        Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(McUtils.inventory().items.get(inventoryAccessory.getSlot()), DurableItemProperty.class);
+        Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(
+                McUtils.inventory().items.get(inventoryAccessory.getSlot()), DurableItemProperty.class);
 
         if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
 
@@ -44,7 +42,9 @@ public class InventoryFunctions {
     @TemplateFunction(name = "all_shiny_stats")
     public static String allShinyStatsFunction() {
         List<ShinyStat> allShinyStats = Models.Shiny.getAllShinyStats();
-        return allShinyStats.stream().map(s -> s.statType().displayName() + ": " + s.value()).collect(Collectors.joining("\n"));
+        return allShinyStats.stream()
+                .map(s -> s.statType().displayName() + ": " + s.value())
+                .collect(Collectors.joining("\n"));
     }
 
     @TemplateFunction(name = "armor_durability")
@@ -52,7 +52,8 @@ public class InventoryFunctions {
         InventoryArmor inventoryArmor = InventoryArmor.fromString(armor);
         if (inventoryArmor == null) return CappedValue.EMPTY;
 
-        Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(McUtils.inventory().getItem(inventoryArmor.getInventorySlot()), DurableItemProperty.class);
+        Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(
+                McUtils.inventory().getItem(inventoryArmor.getInventorySlot()), DurableItemProperty.class);
 
         if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
 
@@ -96,7 +97,8 @@ public class InventoryFunctions {
     @TemplateFunction(name = "capped_held_item_durability")
     public static CappedValue cappedHeldItemDurabilityFunction() {
         ItemStack itemStack = InventoryUtils.getItemInHand();
-        Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
+        Optional<DurableItemProperty> durableItemOpt =
+                Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
 
         return durableItemOpt.get().getDurability();
@@ -113,7 +115,6 @@ public class InventoryFunctions {
         return ems / 4096;
     }
 
-
     @TemplateFunction(name = "emerald_block", aliases = "eb")
     public static int emeraldBlockFunction() {
         int ems = Models.Emerald.getAmountInInventory();
@@ -128,9 +129,7 @@ public class InventoryFunctions {
     @TemplateFunction(name = "money")
     public static int moneyFunction() {
         return Models.Emerald.getAmountInInventory();
-
     }
-
 
     @TemplateFunction(name = "inventory_free", aliases = "inv_free")
     public static int inventoryFreeFunction() {
@@ -142,22 +141,23 @@ public class InventoryFunctions {
         return Models.Inventory.getInventorySlots().current();
     }
 
-    @TemplateFunction(name = "ingredient_pouch_open_slots", aliases = {"pouch_open", "pouch_free"})
+    @TemplateFunction(
+            name = "ingredient_pouch_open_slots",
+            aliases = {"pouch_open", "pouch_free"})
     public static int ingredientPouchOpenSlotsFunction() {
         return Models.IngredientPouch.getIngredientPouchSlots().getRemaining();
     }
 
-
     @TemplateFunction(name = "ingredient_pouch_used_slots", aliases = "pouch_used")
     public static int ingredientPouchUsedSlotsFunction() {
         return Models.IngredientPouch.getIngredientPouchSlots().current();
-
     }
 
     @TemplateFunction(name = "held_item_current_durability", aliases = "current_held_durability")
     public static int heldItemCurrentDurabilityFunction() {
         ItemStack itemStack = InventoryUtils.getItemInHand();
-        Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
+        Optional<DurableItemProperty> durableItemOpt =
+                Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemOpt.isEmpty()) return -1;
 
         return durableItemOpt.get().getDurability().current();
@@ -166,7 +166,8 @@ public class InventoryFunctions {
     @TemplateFunction(name = "held_item_max_durability", aliases = "max_held_durability")
     public static int heldItemMaxDurablityFunction() {
         ItemStack itemStack = InventoryUtils.getItemInHand();
-        Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
+        Optional<DurableItemProperty> durableItemOpt =
+                Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemOpt.isEmpty()) return -1;
 
         return durableItemOpt.get().getDurability().max();
@@ -179,7 +180,8 @@ public class InventoryFunctions {
         if (shinyStatOpt.isEmpty()) return NamedValue.EMPTY;
 
         // FIXME: The function system can't handle longs, so we have to cast to int
-        return new NamedValue(shinyStatOpt.get().statType().displayName(), (int) shinyStatOpt.get().value());
+        return new NamedValue(shinyStatOpt.get().statType().displayName(), (int)
+                shinyStatOpt.get().value());
     }
 
     @TemplateFunction(name = "held_item_type", aliases = "held_type")
@@ -199,7 +201,9 @@ public class InventoryFunctions {
         return wynnItem.get().getClass().getSimpleName();
     }
 
-    @TemplateFunction(name = "held_item_name", aliases = {"held_item", "held_name"})
+    @TemplateFunction(
+            name = "held_item_name",
+            aliases = {"held_item", "held_name"})
     public static String heldItemNameFunction(boolean formatted) {
         ItemStack itemStack = InventoryUtils.getItemInHand();
         StyledText hoverName = StyledText.fromComponent(itemStack.getHoverName());
@@ -207,18 +211,17 @@ public class InventoryFunctions {
         return WynnUtils.stripItemNameMarkers(itemName);
     }
 
-
-    @TemplateFunction(name = "held_item_cooldown", aliases = {"held_cooldown", "held_cd"})
+    @TemplateFunction(
+            name = "held_item_cooldown",
+            aliases = {"held_cooldown", "held_cd"})
     public static CappedValue heldItemCooldownFunction() {
         return Models.CharacterStats.getItemCooldownTicks(InventoryUtils.getItemInHand());
     }
-
 
     @TemplateFunction(name = "teleport_scroll_charges", aliases = "tp_scroll_charges")
     public static int teleportScrollChargesFunction() {
         return Models.TeleportScroll.getTeleportScrollCharges();
     }
-
 
     @TemplateFunction(name = "teleport_scroll_recharge_timer", aliases = "tp_scroll_timer")
     public static int teleportScrollRechargeTimerFunction() {
@@ -229,7 +232,6 @@ public class InventoryFunctions {
     public static int itemCountFunction(String name) {
         return Models.Inventory.getAmountInInventory(name);
     }
-
 
     @TemplateFunction(name = "inventory_ingredients")
     public static int inventoryIngredientsFunction(String name) {

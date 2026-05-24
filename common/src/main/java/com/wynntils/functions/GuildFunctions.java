@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -10,12 +10,10 @@ import com.wynntils.models.players.type.wynnplayer.PlayerGuildInfo;
 import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.type.CappedValue;
-
 import java.util.Optional;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public class GuildFunctions {
-
     @TemplateFunction(name = "capped_guild_level_progress")
     public static CappedValue cappedGuildLevelProgressFunction() {
         return Models.Guild.getGuildLevelProgress();
@@ -43,7 +41,9 @@ public class GuildFunctions {
         return guildRank.getName();
     }
 
-    @TemplateFunction(name = "is_allied_guild", aliases = {"is_allied", "is_ally"})
+    @TemplateFunction(
+            name = "is_allied_guild",
+            aliases = {"is_allied", "is_ally"})
     public static boolean isAlliedGuildFunction(String guild) {
         return Models.Guild.isAllied(guild);
     }
@@ -66,7 +66,9 @@ public class GuildFunctions {
 
         Optional<PlayerGuildInfo> guildInfoOpt = playerInfo.guildInfo();
 
-        return guildInfoOpt.map(playerGuildInfo -> playerGuildInfo.contributionXp().orElse(0L)).orElse(0L);
+        return guildInfoOpt
+                .map(playerGuildInfo -> playerGuildInfo.contributionXp().orElse(0L))
+                .orElse(0L);
     }
 
     @TemplateFunction(name = "contributed_rank")
@@ -77,6 +79,8 @@ public class GuildFunctions {
 
         Optional<PlayerGuildInfo> guildInfoOpt = playerInfo.guildInfo();
 
-        return guildInfoOpt.map(playerGuildInfo -> playerGuildInfo.contributionRank().orElse(0)).orElse(0);
+        return guildInfoOpt
+                .map(playerGuildInfo -> playerGuildInfo.contributionRank().orElse(0))
+                .orElse(0);
     }
 }

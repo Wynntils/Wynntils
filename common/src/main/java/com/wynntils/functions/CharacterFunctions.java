@@ -14,16 +14,13 @@ import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.NamedValue;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-
 import net.minecraft.client.player.LocalPlayer;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public class CharacterFunctions {
-
     @TemplateFunction(name = "capped_mana")
     public static CappedValue cappedManaFunction() {
         return Models.CharacterStats.getMana().orElse(CappedValue.EMPTY);
@@ -58,7 +55,9 @@ public class CharacterFunctions {
 
     @TemplateFunction(name = "class")
     public static String classFunction(boolean showReskinnedName, boolean uppercase) {
-        String name = showReskinnedName ? Models.Character.getActualName() : Models.Character.getClassType().getActualName(false);
+        String name = showReskinnedName
+                ? Models.Character.getActualName()
+                : Models.Character.getClassType().getActualName(false);
 
         if (uppercase) {
             return name.toUpperCase(Locale.ROOT);
@@ -104,37 +103,51 @@ public class CharacterFunctions {
 
     @TemplateFunction(name = "capped_awakened_progress")
     public static CappedValue cappedAwakenedFunction() {
-        return Models.Ability.awakenedBar.isActive() ? Models.Ability.awakenedBar.getBarProgress().value() : CappedValue.EMPTY;
+        return Models.Ability.awakenedBar.isActive()
+                ? Models.Ability.awakenedBar.getBarProgress().value()
+                : CappedValue.EMPTY;
     }
 
     @TemplateFunction(name = "capped_blood_pool")
     public static CappedValue cappedBloodPoolFunction() {
-        return Models.Ability.bloodPoolBar.isActive() ? Models.Ability.bloodPoolBar.getBarProgress().value() : CappedValue.EMPTY;
+        return Models.Ability.bloodPoolBar.isActive()
+                ? Models.Ability.bloodPoolBar.getBarProgress().value()
+                : CappedValue.EMPTY;
     }
 
     @TemplateFunction(name = "capped_corrupted")
     public static CappedValue cappedCorruptedFunction() {
-        return Models.Ability.corruptedBar.isActive() ? Models.Ability.corruptedBar.getBarProgress().value() : CappedValue.EMPTY;
+        return Models.Ability.corruptedBar.isActive()
+                ? Models.Ability.corruptedBar.getBarProgress().value()
+                : CappedValue.EMPTY;
     }
 
     @TemplateFunction(name = "capped_focus")
     public static CappedValue cappedFocusFunction() {
-        return Models.Ability.focusBar.isActive() ? Models.Ability.focusBar.getBarProgress().value() : CappedValue.EMPTY;
+        return Models.Ability.focusBar.isActive()
+                ? Models.Ability.focusBar.getBarProgress().value()
+                : CappedValue.EMPTY;
     }
 
     @TemplateFunction(name = "capped_mana_bank")
     public static CappedValue cappedManaBankFunction() {
-        return Models.Ability.manaBankBar.isActive() ? Models.Ability.manaBankBar.getBarProgress().value() : CappedValue.EMPTY;
+        return Models.Ability.manaBankBar.isActive()
+                ? Models.Ability.manaBankBar.getBarProgress().value()
+                : CappedValue.EMPTY;
     }
 
     @TemplateFunction(name = "capped_ophanim")
     public static CappedValue cappedOphanimFunction() {
-        return Models.Ability.ophanimBar.isActive() ? Models.Ability.ophanimBar.getBarProgress().value() : CappedValue.EMPTY;
+        return Models.Ability.ophanimBar.isActive()
+                ? Models.Ability.ophanimBar.getBarProgress().value()
+                : CappedValue.EMPTY;
     }
 
     @TemplateFunction(name = "ophanim_orb")
     public static int ophanimOrbFunction(int orbNumber) {
-        return orbNumber < Models.Ability.ophanimBar.getOrbs().size() && orbNumber >= 0 ? Models.Ability.ophanimBar.getOrbs().get(orbNumber).getHealthState() : -1;
+        return orbNumber < Models.Ability.ophanimBar.getOrbs().size() && orbNumber >= 0
+                ? Models.Ability.ophanimBar.getOrbs().get(orbNumber).getHealthState()
+                : -1;
     }
 
     @TemplateFunction(name = "ophanim_active")
@@ -144,7 +157,9 @@ public class CharacterFunctions {
 
     @TemplateFunction(name = "capped_holy_power", aliases = "capped_sacred_surge")
     public static CappedValue cappedHolyPowerFunction() {
-        return Models.Ability.holyPowerBar.isActive() ? Models.Ability.holyPowerBar.getBarProgress().value() : CappedValue.EMPTY;
+        return Models.Ability.holyPowerBar.isActive()
+                ? Models.Ability.holyPowerBar.getBarProgress().value()
+                : CappedValue.EMPTY;
     }
 
     @TemplateFunction(name = "commander_duration")
@@ -159,7 +174,9 @@ public class CharacterFunctions {
 
     @TemplateFunction(name = "momentum_percent", aliases = "momentum_pct")
     public static CappedValue momentumPercentFunction() {
-        return Models.Ability.momentumBar.isActive() ? Models.Ability.momentumBar.getBarProgress().value() : CappedValue.EMPTY;
+        return Models.Ability.momentumBar.isActive()
+                ? Models.Ability.momentumBar.getBarProgress().value()
+                : CappedValue.EMPTY;
     }
 
     @TemplateFunction(name = "momentum")
@@ -195,7 +212,6 @@ public class CharacterFunctions {
         return weekly.getScore();
     }
 
-
     @TemplateFunction(name = "guild_objective_goal")
     public static String guildObjectiveGoalFunction() {
         WynnObjective weekly = Models.Objectives.getGuildObjective();
@@ -213,19 +229,26 @@ public class CharacterFunctions {
     @TemplateFunction(name = "personal_objective_goal")
     public static CappedValue personalObjectiveScoreFunction(int index) {
         List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
-        return !daily.isEmpty() && index >= 0 && daily.size() > index ? daily.get(index).getScore() : CappedValue.EMPTY;
+        return !daily.isEmpty() && index >= 0 && daily.size() > index
+                ? daily.get(index).getScore()
+                : CappedValue.EMPTY;
     }
 
     @TemplateFunction(name = "personal_objective_goal")
     public static String personalObjectiveGoalFunction(int index) {
         List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
-        return !daily.isEmpty() && index >= 0 && daily.size() > index ? daily.get(index).getGoal() : "";
+        return !daily.isEmpty() && index >= 0 && daily.size() > index
+                ? daily.get(index).getGoal()
+                : "";
     }
 
     @TemplateFunction(name = "personal_objective_event_bonus")
     public static boolean personalObjectiveEventBonusFunction(int index) {
         List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
-        return !daily.isEmpty() && index >= 0 && daily.size() > index && daily.get(index).hasEventBonus();
+        return !daily.isEmpty()
+                && index >= 0
+                && daily.size() > index
+                && daily.get(index).hasEventBonus();
     }
 
     @TemplateFunction(name = "equipped_aspect")
@@ -234,7 +257,9 @@ public class CharacterFunctions {
         if (equippedAspectOpt.isEmpty()) return NamedValue.EMPTY;
 
         Optional<Integer> aspectTierOpt = Models.Aspect.getAspectTierByName(equippedAspectOpt.get());
-        return aspectTierOpt.map(s -> new NamedValue(equippedAspectOpt.get(), aspectTierOpt.get())).orElse(NamedValue.EMPTY);
+        return aspectTierOpt
+                .map(s -> new NamedValue(equippedAspectOpt.get(), aspectTierOpt.get()))
+                .orElse(NamedValue.EMPTY);
     }
 
     @TemplateFunction(name = "is_aspect_equipped")
@@ -268,10 +293,11 @@ public class CharacterFunctions {
         return Models.Ability.distortionBar.getCurrent();
     }
 
-
     @TemplateFunction(name = "mirror_image_clone")
     public static int mirrorImageCloneFunction(int cloneNumber) {
-        return cloneNumber < Models.Ability.mirrorImageBar.getClones().size() && cloneNumber >= 0 ? Models.Ability.mirrorImageBar.getClones().get(cloneNumber).getActiveState() : -1;
+        return cloneNumber < Models.Ability.mirrorImageBar.getClones().size() && cloneNumber >= 0
+                ? Models.Ability.mirrorImageBar.getClones().get(cloneNumber).getActiveState()
+                : -1;
     }
 
     @TemplateFunction(name = "mirror_image_duration")
@@ -279,11 +305,9 @@ public class CharacterFunctions {
         return Models.Ability.mirrorImageBar.isActive() ? Models.Ability.mirrorImageBar.getDuration() : 0;
     }
 
-
     @TemplateFunction(name = "puppet_count")
     public static int puppetCountFunction() {
         return Math.toIntExact(Models.ShamanSummon.getActivePuppetsLabels().count());
-
     }
 
     @TemplateFunction(name = "puppets_in_time_range")
@@ -295,7 +319,10 @@ public class CharacterFunctions {
         }
         int finalMin = min;
         int finalMax = max;
-        return Math.toIntExact(Models.ShamanSummon.getActivePuppetsLabels().map(ShamanPuppetInfo::getSecondsLeft).filter(s -> s >= finalMin && finalMax >= s).count());
+        return Math.toIntExact(Models.ShamanSummon.getActivePuppetsLabels()
+                .map(ShamanPuppetInfo::getSecondsLeft)
+                .filter(s -> s >= finalMin && finalMax >= s)
+                .count());
     }
 
     @TemplateFunction(name = "crow_count")
@@ -312,5 +339,4 @@ public class CharacterFunctions {
     public static int snakeCountFunction() {
         return Models.ArcherBeast.getActiveSnakeCount();
     }
-
 }

@@ -7,18 +7,13 @@ package com.wynntils.functions.generic;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.colors.CustomColor;
-
-import java.util.List;
 import java.util.UUID;
-
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.component.ResolvableProfile;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public class StyledTextFunctions {
-
-
     @TemplateFunction(name = "concat_styled_text", aliases = "concat_st")
     public static StyledText concatStyledTextFunction(StyledText a, StyledText b) {
         return StyledText.join("", a, b);
@@ -34,7 +29,6 @@ public class StyledTextFunctions {
         return StyledText.fromString(value);
     }
 
-
     @TemplateFunction(name = "with_color")
     public static StyledText withColorFunction(StyledText styledText, CustomColor customColor) {
         return styledText.map(part -> {
@@ -46,11 +40,9 @@ public class StyledTextFunctions {
         });
     }
 
-
     @TemplateFunction(name = "with_bold")
     public static StyledText withBoldFunction(StyledText styledText, boolean isBold) {
         return styledText.map(part -> part.withStyle(style -> style.withBold(isBold)));
-
     }
 
     @TemplateFunction(name = "with_bold")
@@ -68,7 +60,6 @@ public class StyledTextFunctions {
         return withItalicFunction(styledText, true);
     }
 
-
     @TemplateFunction(name = "with_strikethrough")
     public static StyledText withStrikeThroughFunction(StyledText styledText, boolean isStrikeThrough) {
         return styledText.map(part -> part.withStyle(style -> style.withStrikethrough(isStrikeThrough)));
@@ -79,7 +70,6 @@ public class StyledTextFunctions {
         return withStrikeThroughFunction(styledText, true);
     }
 
-
     @TemplateFunction(name = "with_obfuscated")
     public static StyledText withObfuscatedFunction(StyledText styledText, boolean isObfuscated) {
         return styledText.map(part -> part.withStyle(style -> style.withObfuscated(isObfuscated)));
@@ -89,7 +79,6 @@ public class StyledTextFunctions {
     public static StyledText withObfuscatedFunction(StyledText styledText) {
         return withObfuscatedFunction(styledText, true);
     }
-
 
     @TemplateFunction(name = "with_atlas_sprite_font")
     public static StyledText withAtlasSpriteFontFunction(StyledText styledText, String atlas, String sprite) {
@@ -109,7 +98,6 @@ public class StyledTextFunctions {
         });
     }
 
-
     @TemplateFunction(name = "with_player_sprite_font")
     public static StyledText withPlayerSpriteFontFunction(StyledText styledText, String uuid, boolean hat) {
         UUID uuidObject;
@@ -119,7 +107,8 @@ public class StyledTextFunctions {
             return styledText;
         }
 
-        FontDescription fontDescription = new FontDescription.PlayerSprite(ResolvableProfile.createUnresolved(uuidObject), hat);
+        FontDescription fontDescription =
+                new FontDescription.PlayerSprite(ResolvableProfile.createUnresolved(uuidObject), hat);
 
         return styledText.map(part -> {
             if (part.getPartStyle().getFont() != FontDescription.DEFAULT) {
@@ -129,7 +118,6 @@ public class StyledTextFunctions {
             return part.withStyle(style -> style.withFont(fontDescription));
         });
     }
-
 
     @TemplateFunction(name = "with_resource_font", aliases = "with_font")
     public static StyledText withResourceFontFunction(StyledText styledText, String font) {
@@ -149,7 +137,6 @@ public class StyledTextFunctions {
 
     @TemplateFunction(name = "with_shadow_color")
     public static StyledText withShadowColorFunction(StyledText styledText, CustomColor customColor) {
-
         return styledText.map(part -> {
             if (part.getPartStyle().getShadowColor() != CustomColor.NONE) {
                 return part;
@@ -162,12 +149,10 @@ public class StyledTextFunctions {
     @TemplateFunction(name = "with_underlined")
     public static StyledText withUnderlinedFunction(StyledText styledText, boolean isUnderlined) {
         return styledText.map(part -> part.withStyle(style -> style.withUnderlined(isUnderlined)));
-
     }
 
     @TemplateFunction(name = "with_underlined")
     public static StyledText withUnderlinedFunction(StyledText styledText) {
         return withUnderlinedFunction(styledText, true);
-
     }
 }

@@ -9,13 +9,10 @@ import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.mount.type.MountStat;
 import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.type.CappedValue;
-
 import java.util.Optional;
-
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public class MountFunctions {
-
     private static Optional<CappedValue> getRequestedCappedStat(String statArg) {
         Optional<MountItem> mount = getMount();
         if (mount.isEmpty()) return Optional.empty();
@@ -51,7 +48,6 @@ public class MountFunctions {
         return Models.Mount.getMount();
     }
 
-
     @TemplateFunction(name = "capped_mount_stat", aliases = "cap_mnt_stat")
     public static CappedValue cappedMountStatFunction(String stat) {
         return getRequestedCappedStat(stat).orElse(CappedValue.EMPTY);
@@ -67,12 +63,10 @@ public class MountFunctions {
         return getRequestedStatMax(stat).orElse(-1);
     }
 
-
     @TemplateFunction(name = "mount_name", aliases = "mnt_name")
     public static String mountNameFunction() {
         return getMount().flatMap(MountItem::getName).orElse("");
     }
-
 
     private static int getStatCurrentValue(MountItem mount, MountStat stat) {
         return switch (stat) {

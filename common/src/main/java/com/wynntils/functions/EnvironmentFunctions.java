@@ -14,13 +14,11 @@ import com.wynntils.utils.type.Time;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.List;
 import java.util.Locale;
 import net.minecraft.SharedConstants;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public class EnvironmentFunctions {
-
     @TemplateFunction(name = "capped_memory", aliases = "capped_mem")
     public static CappedValue cappedMemoryFunction() {
         return new CappedValue(SystemUtils.getMemUsed(), SystemUtils.getMemMax());
@@ -44,7 +42,6 @@ public class EnvironmentFunctions {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.ROOT);
         return date.format(formatter);
     }
-
 
     @TemplateFunction(name = "stopwatch_zero", aliases = "stopwatch_is_zero")
     public static boolean stopwatchZeroFunction() {
@@ -86,7 +83,9 @@ public class EnvironmentFunctions {
         return SystemUtils.getMemUsed();
     }
 
-    @TemplateFunction(name = "memory_percent", aliases = {"memorypct", "mempct"})
+    @TemplateFunction(
+            name = "memory_percent",
+            aliases = {"memorypct", "mempct"})
     public static int memoryPercentFunction() {
         return (int) (((float) SystemUtils.getMemUsed() / SystemUtils.getMemMax()) * 100f);
     }

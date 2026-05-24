@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -12,31 +12,36 @@ import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
-
 import java.util.Comparator;
 import java.util.List;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public class LootrunFunctions {
-
     @TemplateFunction(name = "dry_streak", aliases = "dry_s")
     public static int dryStreakFunction() {
         return Models.LootChest.getDryCount();
     }
 
-    @TemplateFunction(name = "dry_boxes", aliases = {"dry_b", "dry_boxes_count"})
+    @TemplateFunction(
+            name = "dry_boxes",
+            aliases = {"dry_b", "dry_boxes_count"})
     public static int dryBoxesFunction() {
         return Models.LootChest.getDryBoxes();
     }
 
-    @TemplateFunction(name = "dry_pulls", aliases = {"dry_p", "dry_pulls_count"})
+    @TemplateFunction(
+            name = "dry_pulls",
+            aliases = {"dry_p", "dry_pulls_count"})
     public static int dryPullsFunction() {
         return Models.Lootrun.dryPulls.get();
     }
 
     @TemplateFunction(name = "highest_dry_streak")
     public static int highestDryStreakFunction() {
-        return Models.LootChest.getMythicFinds().stream().max(Comparator.comparing(MythicFind::dryCount)).map(MythicFind::dryCount).orElse(0);
+        return Models.LootChest.getMythicFinds().stream()
+                .max(Comparator.comparing(MythicFind::dryCount))
+                .map(MythicFind::dryCount)
+                .orElse(0);
     }
 
     @TemplateFunction(name = "last_dry_streak")
@@ -57,7 +62,7 @@ public class LootrunFunctions {
         return mythicFinds.getLast().itemName();
     }
 
-    @TemplateFunction(name ="chest_opened", aliases = "chest_count")
+    @TemplateFunction(name = "chest_opened", aliases = "chest_count")
     public static int chestOpenedFunction() {
         return Models.LootChest.getOpenedChestCount();
     }
@@ -65,7 +70,6 @@ public class LootrunFunctions {
     @TemplateFunction(name = "lootrun_state")
     public static String lootrunStateFunction() {
         return Models.Lootrun.getState().toString();
-
     }
 
     @TemplateFunction(name = "lootrun_beacon_count")
@@ -110,7 +114,6 @@ public class LootrunFunctions {
 
     @TemplateFunction(name = "lootrun_task_type")
     public static String lootrunTaskTypeFunction(String color) {
-
         LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
         if (lootrunBeaconKind == null) return "";
 
@@ -166,24 +169,20 @@ public class LootrunFunctions {
         return Models.Lootrun.getChallengesTillNextOrangeExpires();
     }
 
-
     @TemplateFunction(name = "lootrun_rainbow_beacon_count")
     public static int lootrunRainbowBeaconCountFunction() {
         return Models.Lootrun.getActiveRainbowBeacons();
-
     }
 
     @TemplateFunction(name = "lootrun_sacrifices")
     public static int lootrunSacrificesFunction() {
         return Models.Lootrun.getSacrifices();
-
     }
 
     @TemplateFunction(name = "lootrun_rerolls")
     public static int lootrunRerollsFunction() {
         return Models.Lootrun.getRerolls();
     }
-
 
     @TemplateFunction(name = "chests_opened_this_session", aliases = "session_chests")
     public static int chestsOpenedThisSessionFunction(int tier, boolean exact) {

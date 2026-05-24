@@ -7,7 +7,6 @@ package com.wynntils.core.consumers.functions;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.text.StyledText;
-
 import com.wynntils.functions.ActivityFunctions;
 import com.wynntils.functions.BombFunctions;
 import com.wynntils.functions.CharacterFunctions;
@@ -36,7 +35,6 @@ import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.templates.TemplateEngine;
 import com.wynntils.templates.backends.compiler.CompilerBackend;
 import com.wynntils.templates.functions.FunctionDefinition;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -50,7 +48,8 @@ public final class FunctionManager extends Manager {
 
     public FunctionManager() {
         super(List.of());
-        this.templateEngine = new TemplateEngine(new CompilerBackend(this.getClass().getClassLoader()));
+        this.templateEngine =
+                new TemplateEngine(new CompilerBackend(this.getClass().getClassLoader()));
     }
 
     public List<FunctionDefinition> getFunctions() {
@@ -72,7 +71,7 @@ public final class FunctionManager extends Manager {
     private String evaluate(String template) {
         String ret = templateEngine.evaluate(template);
 
-        if(templateEngine.hasError()) {
+        if (templateEngine.hasError()) {
             WynntilsMod.error("\n" + templateEngine.getError());
         }
 
@@ -153,6 +152,7 @@ public final class FunctionManager extends Manager {
             }
         }
     }
+
     private void registerAllFunctions() {
         templateEngine.registerFunctions(CappedFunctions.class);
         templateEngine.registerFunctions(ColorFunctions.class);
@@ -180,6 +180,5 @@ public final class FunctionManager extends Manager {
         templateEngine.registerFunctions(ProfessionFunctions.class);
 
         templateEngine.registerFunctions(SocialFunctions.class);
-
     }
 }

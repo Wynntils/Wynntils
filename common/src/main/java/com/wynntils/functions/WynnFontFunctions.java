@@ -10,17 +10,14 @@ import com.wynntils.utils.colors.CustomColor;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public class WynnFontFunctions {
-
-
     @TemplateFunction(name = "to_fancy_text")
     public static String toFancyTextFunction(String text) {
         return WynnFont.asFancyFont(text);
-
     }
 
-
     @TemplateFunction(name = "to_background_text")
-    public static String toBackgroundTextFunction(String text, CustomColor textColor, CustomColor backgroundColor, String leftEdge, String rightEdge) {
+    public static String toBackgroundTextFunction(
+            String text, CustomColor textColor, CustomColor backgroundColor, String leftEdge, String rightEdge) {
         return WynnFont.asBackgroundFont(text, textColor, backgroundColor, leftEdge, rightEdge);
     }
 }

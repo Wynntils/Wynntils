@@ -4,14 +4,12 @@
  */
 package com.wynntils.functions.generic;
 
-
 import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.colors.WynncraftShaderColor;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public final class ColorFunctions {
-
     @TemplateFunction(name = "from_rgb", isPure = true)
     public static CustomColor fromRgbFunction(int r, int g, int b) {
         return new CustomColor(r, g, b);
@@ -27,7 +25,6 @@ public final class ColorFunctions {
         return CustomColor.fromHexString(hex);
     }
 
-
     @TemplateFunction(name = "hue_shift")
     public CustomColor hueShiftFunction(CustomColor color, double degree) {
         return color.hueShift((float) degree);
@@ -38,12 +35,10 @@ public final class ColorFunctions {
         return color.saturationShift((float) degree);
     }
 
-
     @TemplateFunction(name = "brightness_shift")
     public static CustomColor brightnessShiftFunction(CustomColor color, double degree) {
         return color.brightnessShift((float) degree);
     }
-
 
     @TemplateFunction(name = "rainbow_shader", isPure = true)
     public static CustomColor rainbowShaderFunction() {
@@ -68,11 +63,9 @@ public final class ColorFunctions {
         return WynncraftShaderColor.BLINK.color;
     }
 
-
     @TemplateFunction(name = "shine_shader", isPure = true)
     public static CustomColor shineShaderFunction() {
         return WynncraftShaderColor.SHINE.color;
-
     }
 
     @TemplateFunction(name = "to_hex_string")
@@ -85,5 +78,4 @@ public final class ColorFunctions {
         WynncraftShaderColor shaderColor = WynncraftShaderColor.fromString(shaderName);
         return shaderColor == null ? CustomColor.NONE : shaderColor.color;
     }
-
 }

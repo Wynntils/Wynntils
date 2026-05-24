@@ -9,7 +9,6 @@ import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-
 import net.minecraft.IdentifierException;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,7 +18,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public class MinecraftFunctions {
-
     @TemplateFunction(name = "my_location", aliases = "my_loc")
     public static Location myLocationFunction() {
         return new Location(McUtils.player().blockPosition());
@@ -28,7 +26,6 @@ public class MinecraftFunctions {
     @TemplateFunction(name = "dir")
     public static double dirFunction() {
         return McUtils.player().getYRot();
-
     }
 
     @TemplateFunction(name = "fps")
@@ -36,12 +33,10 @@ public class MinecraftFunctions {
         return MinecraftAccessor.getFps();
     }
 
-
     @TemplateFunction(name = "ticks")
     public static long ticksFunction() {
         return McUtils.mc().level.getGameTime();
     }
-
 
     @TemplateFunction(name = "key_pressed")
     public static boolean keyPressedFunction(int keyCode) {
@@ -57,7 +52,8 @@ public class MinecraftFunctions {
             return -1; // Effect name contains invalid characters
         }
 
-        Holder<MobEffect> effectHolder = BuiltInRegistries.MOB_EFFECT.get(effectLocation).orElse(null);
+        Holder<MobEffect> effectHolder =
+                BuiltInRegistries.MOB_EFFECT.get(effectLocation).orElse(null);
 
         if (effectHolder == null) return -1; // Effect holder not found
 
@@ -72,5 +68,4 @@ public class MinecraftFunctions {
 
         return -1; // Effect not active
     }
-
 }
