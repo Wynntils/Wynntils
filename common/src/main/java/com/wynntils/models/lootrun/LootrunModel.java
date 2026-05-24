@@ -1015,22 +1015,24 @@ public final class LootrunModel extends Model {
         return getCurrentLootrunDetails().getCurrentTrial();
     }
 
-    public void setCurrentTrialObjective(String currentTrialObjective) {
+    public void setCurrentTrialObjective(List<String> currentTrialObjective) {
         getCurrentLootrunDetails().setCurrentTrialObjective(currentTrialObjective);
         lootrunDetailsStorage.touched();
     }
 
-    public String getCurrentTrialObjective() {
-        return getCurrentLootrunDetails().getCurrentTrialObjective();
+    public String getCurrentTrialObjective(int index) {
+        List<String> trialObjectives = getCurrentLootrunDetails().getCurrentTrialObjective();
+        return index >= 0 && index < trialObjectives.size() ? trialObjectives.get(index) : "";
     }
 
-    public void setCurrentTrialProgress(CappedValue currentTrialProgress) {
+    public void setCurrentTrialProgress(List<CappedValue> currentTrialProgress) {
         getCurrentLootrunDetails().setCurrentTrialProgress(currentTrialProgress);
         lootrunDetailsStorage.touched();
     }
 
-    public CappedValue getCurrentTrialProgress() {
-        return getCurrentLootrunDetails().getCurrentTrialProgress();
+    public CappedValue getCurrentTrialProgress(int index) {
+        List<CappedValue> trialProgress = getCurrentLootrunDetails().getCurrentTrialProgress();
+        return index >= 0 && index < trialProgress.size() ? trialProgress.get(index) : CappedValue.EMPTY;
     }
 
     public void setTimeLeft(int seconds) {

@@ -31,8 +31,8 @@ public class LootrunDetails {
     private List<String> currentMissionObjective = new ArrayList<>();
     private List<CappedValue> currentMissionProgress = new ArrayList<>();
     private String currentTrial = "";
-    private String currentTrialObjective = "";
-    private CappedValue currentTrialProgress = CappedValue.EMPTY;
+    private List<String> currentTrialObjective = new ArrayList<>();
+    private List<CappedValue> currentTrialProgress = new ArrayList<>();
 
     public Map<LootrunBeaconKind, Integer> getSelectedBeacons() {
         return Collections.unmodifiableMap(selectedBeacons);
@@ -182,19 +182,19 @@ public class LootrunDetails {
         this.currentTrial = currentTrial;
     }
 
-    public String getCurrentTrialObjective() {
-        return currentTrialObjective;
+    public List<String> getCurrentTrialObjective() {
+        return Collections.unmodifiableList(currentTrialObjective);
     }
 
-    public void setCurrentTrialObjective(String currentTrialObjective) {
-        this.currentTrialObjective = currentTrialObjective;
+    public void setCurrentTrialObjective(List<String> currentTrialObjective) {
+        this.currentTrialObjective = new ArrayList<>(currentTrialObjective);
     }
 
-    public CappedValue getCurrentTrialProgress() {
-        return currentTrialProgress;
+    public List<CappedValue> getCurrentTrialProgress() {
+        return Collections.unmodifiableList(currentTrialProgress);
     }
 
-    public void setCurrentTrialProgress(CappedValue currentTrialProgress) {
-        this.currentTrialProgress = currentTrialProgress;
+    public void setCurrentTrialProgress(List<CappedValue> currentTrialProgress) {
+        this.currentTrialProgress = new ArrayList<>(currentTrialProgress);
     }
 }

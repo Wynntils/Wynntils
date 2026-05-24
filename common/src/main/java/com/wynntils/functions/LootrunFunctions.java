@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -147,15 +147,16 @@ public class LootrunFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("colored", Boolean.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("colored", Boolean.class, null)));
         }
     }
 
     public static class LootrunCurrentMissionObjectiveFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            int index = arguments.getArgument("index").getIntegerValue();
-            return Models.Lootrun.getCurrentMissionObjective(index);
+            int missionIndex = arguments.getArgument("index").getIntegerValue();
+            return Models.Lootrun.getCurrentMissionObjective(missionIndex);
         }
 
         @Override
@@ -167,8 +168,8 @@ public class LootrunFunctions {
     public static class LootrunCurrentMissionProgressFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            int index = arguments.getArgument("index").getIntegerValue();
-            return Models.Lootrun.getCurrentMissionProgress(index);
+            int missionIndex = arguments.getArgument("index").getIntegerValue();
+            return Models.Lootrun.getCurrentMissionProgress(missionIndex);
         }
 
         @Override
@@ -183,6 +184,39 @@ public class LootrunFunctions {
             int trialIndex = arguments.getArgument("index").getIntegerValue();
 
             return Models.Lootrun.getTrial(trialIndex);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
+        }
+    }
+
+    public static class LootrunCurrentTrialFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getCurrentTrial();
+        }
+    }
+
+    public static class LootrunCurrentTrialObjectiveFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int trialIndex = arguments.getArgument("index").getIntegerValue();
+            return Models.Lootrun.getCurrentTrialObjective(trialIndex);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
+        }
+    }
+
+    public static class LootrunCurrentTrialProgressFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            int trialIndex = arguments.getArgument("index").getIntegerValue();
+            return Models.Lootrun.getCurrentTrialProgress(trialIndex);
         }
 
         @Override
