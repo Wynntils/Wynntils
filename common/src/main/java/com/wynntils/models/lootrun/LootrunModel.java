@@ -980,9 +980,7 @@ public final class LootrunModel extends Model {
 
     public String getCurrentMissionObjective(int index) {
         List<String> missionObjectives = getCurrentLootrunDetails().getCurrentMissionObjective();
-        return index >= 0 && index < missionObjectives.size()
-                ? missionObjectives.get(index)
-                : "";
+        return index >= 0 && index < missionObjectives.size() ? missionObjectives.get(index) : "";
     }
 
     public void setCurrentMissionProgress(List<CappedValue> currentMissionProgress) {
@@ -992,9 +990,7 @@ public final class LootrunModel extends Model {
 
     public CappedValue getCurrentMissionProgress(int index) {
         List<CappedValue> missionProgress = getCurrentLootrunDetails().getCurrentMissionProgress();
-        return index >= 0 && index < missionProgress.size()
-                ? missionProgress.get(index)
-                : CappedValue.EMPTY;
+        return index >= 0 && index < missionProgress.size() ? missionProgress.get(index) : CappedValue.EMPTY;
     }
 
     private void resetTrials() {
@@ -1008,6 +1004,33 @@ public final class LootrunModel extends Model {
         }
 
         lootrunDetailsStorage.touched();
+    }
+
+    public void setCurrentTrial(String currentTrial) {
+        getCurrentLootrunDetails().setCurrentTrial(currentTrial);
+        lootrunDetailsStorage.touched();
+    }
+
+    public String getCurrentTrial() {
+        return getCurrentLootrunDetails().getCurrentTrial();
+    }
+
+    public void setCurrentTrialObjective(String currentTrialObjective) {
+        getCurrentLootrunDetails().setCurrentTrialObjective(currentTrialObjective);
+        lootrunDetailsStorage.touched();
+    }
+
+    public String getCurrentTrialObjective() {
+        return getCurrentLootrunDetails().getCurrentTrialObjective();
+    }
+
+    public void setCurrentTrialProgress(CappedValue currentTrialProgress) {
+        getCurrentLootrunDetails().setCurrentTrialProgress(currentTrialProgress);
+        lootrunDetailsStorage.touched();
+    }
+
+    public CappedValue getCurrentTrialProgress() {
+        return getCurrentLootrunDetails().getCurrentTrialProgress();
     }
 
     public void setTimeLeft(int seconds) {

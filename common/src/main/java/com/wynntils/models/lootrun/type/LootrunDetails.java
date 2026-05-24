@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun.type;
@@ -7,7 +7,6 @@ package com.wynntils.models.lootrun.type;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.lootrun.beacons.LootrunBeaconKind;
 import com.wynntils.utils.type.CappedValue;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +30,9 @@ public class LootrunDetails {
     private String currentMission = "";
     private List<String> currentMissionObjective = new ArrayList<>();
     private List<CappedValue> currentMissionProgress = new ArrayList<>();
+    private String currentTrial = "";
+    private String currentTrialObjective = "";
+    private CappedValue currentTrialProgress = CappedValue.EMPTY;
 
     public Map<LootrunBeaconKind, Integer> getSelectedBeacons() {
         return Collections.unmodifiableMap(selectedBeacons);
@@ -170,5 +172,29 @@ public class LootrunDetails {
 
     public void setCurrentMissionProgress(List<CappedValue> currentMissionProgress) {
         this.currentMissionProgress = new ArrayList<>(currentMissionProgress);
+    }
+
+    public String getCurrentTrial() {
+        return currentTrial;
+    }
+
+    public void setCurrentTrial(String currentTrial) {
+        this.currentTrial = currentTrial;
+    }
+
+    public String getCurrentTrialObjective() {
+        return currentTrialObjective;
+    }
+
+    public void setCurrentTrialObjective(String currentTrialObjective) {
+        this.currentTrialObjective = currentTrialObjective;
+    }
+
+    public CappedValue getCurrentTrialProgress() {
+        return currentTrialProgress;
+    }
+
+    public void setCurrentTrialProgress(CappedValue currentTrialProgress) {
+        this.currentTrialProgress = currentTrialProgress;
     }
 }
