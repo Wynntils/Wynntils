@@ -27,12 +27,6 @@ public class LootrunDetails {
     private List<TrialType> trials = new ArrayList<>();
     private int sacrifices = 0;
     private int rerolls = 0;
-    private String currentMission = "";
-    private List<String> currentMissionObjective = new ArrayList<>();
-    private List<CappedValue> currentMissionProgress = new ArrayList<>();
-    private String currentTrial = "";
-    private List<String> currentTrialObjective = new ArrayList<>();
-    private List<CappedValue> currentTrialProgress = new ArrayList<>();
 
     public Map<LootrunBeaconKind, Integer> getSelectedBeacons() {
         return Collections.unmodifiableMap(selectedBeacons);
@@ -148,53 +142,5 @@ public class LootrunDetails {
 
     public void setRerolls(int rerolls) {
         this.rerolls = rerolls;
-    }
-
-    public String getCurrentMission() {
-        return currentMission;
-    }
-
-    public void setCurrentMission(String currentMission) {
-        this.currentMission = currentMission;
-    }
-
-    public List<String> getCurrentMissionObjective() {
-        return Collections.unmodifiableList(currentMissionObjective);
-    }
-
-    public void setCurrentMissionObjective(List<String> currentMissionObjective) {
-        this.currentMissionObjective = new ArrayList<>(currentMissionObjective);
-    }
-
-    public List<CappedValue> getCurrentMissionProgress() {
-        return Collections.unmodifiableList(currentMissionProgress);
-    }
-
-    public void setCurrentMissionProgress(List<CappedValue> currentMissionProgress) {
-        this.currentMissionProgress = new ArrayList<>(currentMissionProgress);
-    }
-
-    public String getCurrentTrial() {
-        return currentTrial;
-    }
-
-    public void setCurrentTrial(String currentTrial) {
-        this.currentTrial = currentTrial;
-    }
-
-    public List<String> getCurrentTrialObjective() {
-        return Collections.unmodifiableList(currentTrialObjective);
-    }
-
-    public void setCurrentTrialObjective(List<String> currentTrialObjective) {
-        this.currentTrialObjective = new ArrayList<>(currentTrialObjective);
-    }
-
-    public List<CappedValue> getCurrentTrialProgress() {
-        return Collections.unmodifiableList(currentTrialProgress);
-    }
-
-    public void setCurrentTrialProgress(List<CappedValue> currentTrialProgress) {
-        this.currentTrialProgress = new ArrayList<>(currentTrialProgress);
     }
 }
