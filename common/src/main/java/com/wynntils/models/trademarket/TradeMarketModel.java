@@ -11,6 +11,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
@@ -46,6 +47,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.wynntils.utils.wynn.WynnUtils;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -98,7 +101,7 @@ public final class TradeMarketModel extends Model {
     private static final Pattern PRICE_PATTERN = Pattern.compile(
             "§[67] - (?:§f(?<amount>[\\d,]+) §7x )?§(?:(?:(?:c✖|a✔) §f)|f§m|f)(?<price>[\\d,]+)§7(?:§m)?²(?:§b ✮ (?<silverbullPrice>[\\d,]+)§3²)?(?: .+)?");
 
-    private static final Pattern SELL_ITEM_NAME_PATTERN = Pattern.compile("(.+)À");
+    private static final Pattern SELL_ITEM_NAME_PATTERN = Pattern.compile("\uDAFC\uDC00§.(.+)\uDAFC\uDC00");
     private static final String EMPTY_ITEM_SLOT = "Empty Item Slot";
 
     public static final int SORT_ORDER_SLOT = 52;
