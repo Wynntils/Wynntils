@@ -673,7 +673,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new MinecraftFunctions.KeyPressedFunction());
         registerFunction(new MinecraftFunctions.MinecraftEffectDurationFunction());
         registerFunction(new MinecraftFunctions.MyLocationFunction());
+        registerFunction(new MinecraftFunctions.LocationAtCrosshairFunction());
+        registerFunction(new MinecraftFunctions.PitchFunction());
         registerFunction(new MinecraftFunctions.TicksFunction());
+        registerFunction(new MinecraftFunctions.YawFunction());
 
         registerFunction(new MountFunctions.CappedMountStatFunction());
         registerFunction(new MountFunctions.MountStatFunction());

@@ -11,11 +11,15 @@ import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.wynn.RaycastUtils;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.IdentifierException;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 
@@ -29,6 +33,44 @@ public class MinecraftFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("my_loc");
+        }
+    }
+
+    public static class LocationAtCrosshairFunction extends Function<Location> {
+        @Override
+        public Location getValue(FunctionArguments arguments) {
+            double maxDistance = arguments.getArgument("distance").getDoubleValue();
+            Optional<BlockPos> hitBlock = RaycastUtils.getTargetedBlock(maxDistance);
+
+            if (hitBlock.isEmpty()) return new Location(0, 0, 0);
+
+            return new Location(hitBlock.get());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("distance", Double.class, 50.0)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("crosshair_loc");
+        }
+    }
+
+    public static class PitchFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            return (double) McUtils.player().getXRot();
+        }
+    }
+
+    public static class YawFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            double rawYawAngle = (double) McUtils.player().getYRot();
+            return Mth.wrapDegrees(rawYawAngle);
         }
     }
 
