@@ -237,13 +237,15 @@ public final class SpellModel extends Model {
 
         WynntilsMod.postEvent(new SpellEvent.Partial(lastSpell));
 
+        // As inputs are now removed when a spell is cast, if we ever get 3 inputs we know it is a failed cast.
         if (lastSpell.length == 3) {
             if (failureReason != null) {
                 WynntilsMod.postEvent(new SpellEvent.Failed(failureReason));
                 failureReason = null;
             } else {
-                WynntilsMod.postEvent(
-                        new SpellEvent.Completed(lastSpell, SpellType.fromSpellDirectionArray(lastSpell)));
+                // This can happen in cases where even though the inputs were sent, something else is blocking
+                // the cast such as archer casting escape again before touching the ground
+                WynntilsMod.postEvent(new SpellEvent.Failed(SpellFailureReason.UNAVAILABLE));
             }
         }
     }
