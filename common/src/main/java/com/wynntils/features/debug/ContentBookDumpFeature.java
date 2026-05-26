@@ -256,9 +256,11 @@ public class ContentBookDumpFeature extends Feature {
                     activityInfo.difficulty().orElse(null),
                     DumpableActivityRequirements.fromActivityRequirements(activityInfo.requirements()),
                     activityInfo.rewards().entrySet().stream()
-                            .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream()
-                                    .map(StyledText::getString)
-                                    .toList())),
+                            .collect(Collectors.toMap(
+                                    Map.Entry::getKey,
+                                    entry -> entry.getValue().stream()
+                                            .map(StyledText::getString)
+                                            .toList())),
                     StyledTextUtils.extractLocation(activityInfo.description().orElse(StyledText.EMPTY))
                             .orElse(null));
         }
