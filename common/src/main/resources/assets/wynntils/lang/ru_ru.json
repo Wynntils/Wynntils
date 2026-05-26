@@ -2492,6 +2492,8 @@
   "function.wynntils.raidsRunsSince.name": "Рейды с",
   "function.wynntils.rainbowShader.description": "Возвращает значение цвета, которое активирует шейдер радуги текста Wynncraft",
   "function.wynntils.rainbowShader.name": "Шейдер радуги Wynncraft",
+  "function.wynntils.scoreboardPartyMembers.description": "Количество участников группы взятых с табло",
+  "function.wynntils.scoreboardPartyMembers.name": "Участники группы с табло",
   "function.wynntils.shamanMask.argument.isColored": "Должно ли имя быть окрашено в соответствии с цветом маски?",
   "function.wynntils.shamanMask.argument.useShortName": "Следует ли использовать короткое имя вместо полного?",
   "function.wynntils.shamanMask.description": "Какую маску шамана вы сейчас носите",
