@@ -47,8 +47,7 @@ public class LootrunTaskNameOverlay extends TextOverlay {
             + "IF_STRING(STRING_EQUALS(lootrun_task_name(\"CRIMSON\"); \"\");\"\";CONCAT(if_string(lootrun_beacon_vibrant(\"crimson\");\"§#00f010ffVibrant \";\"\");\"§#00f010ffCrimson: \"; lootrun_task_type(\"CRIMSON\");\" at \";\"[\"; str(x(lootrun_task_location(\"CRIMSON\"))); \", \"; str(y(lootrun_task_location(\"CRIMSON\"))); \", \"; str(z(lootrun_task_location(\"CRIMSON\"))); \"]\";\"\\n\"));"
             + "IF_STRING(STRING_EQUALS(lootrun_task_name(\"RAINBOW\"); \"\");\"\";CONCAT(if_string(lootrun_beacon_vibrant(\"rainbow\");\"§#00f000ffVibrant \";\"\");\"§#00f000ffRainbow: \"; lootrun_task_type(\"RAINBOW\");\" at \";\"[\"; str(x(lootrun_task_location(\"RAINBOW\"))); \", \"; str(y(lootrun_task_location(\"RAINBOW\"))); \", \"; str(z(lootrun_task_location(\"RAINBOW\"))); \"]\")))}";
 
-    private static final String PREVIEW_TEMPLATE =
-            """
+    private static final String PREVIEW_TEMPLATE = """
             §eYellow: Slay at Yellow Task name
             §9Blue: Defend at Blue Task name
             """;
