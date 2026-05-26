@@ -40,6 +40,18 @@ public class SocialFunctions {
         }
     }
 
+    public static class ScoreboardPartyMembersFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Party.getSbPartyMemberCount();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("sb_party_members");
+        }
+    }
+
     public static class PartyLeaderFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
