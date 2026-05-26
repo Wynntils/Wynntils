@@ -71,17 +71,31 @@ public final class ShamanTotemModel extends Model {
         int timerEntityId = timerDisplay.getId();
         ShamanTotem boundTotem = getTotemByTimerEntityId(timerEntityId);
         if (boundTotem != null) {
-            updateTotem(boundTotem, totemLabelInfo.getTimeLeft(), timerDisplay.position());
+            updateTotem(
+                    boundTotem,
+                    totemLabelInfo.getTimeLeft(),
+                    timerDisplay.position(),
+                    totemLabelInfo.getTransfusedAmount(),
+                    totemLabelInfo.getPoisonAmount());
             return;
         }
 
         ShamanTotem pendingTotem = getNextPendingTotem();
         if (pendingTotem != null) {
-            bindPendingTotem(pendingTotem, timerDisplay, totemLabelInfo.getTimeLeft());
+            bindPendingTotem(
+                    pendingTotem,
+                    timerDisplay,
+                    totemLabelInfo.getTimeLeft(),
+                    totemLabelInfo.getTransfusedAmount(),
+                    totemLabelInfo.getPoisonAmount());
             return;
         }
 
-        registerTotem(timerDisplay, totemLabelInfo.getTimeLeft());
+        registerTotem(
+                timerDisplay,
+                totemLabelInfo.getTimeLeft(),
+                totemLabelInfo.getTransfusedAmount(),
+                totemLabelInfo.getPoisonAmount());
     }
 
     @SubscribeEvent
@@ -119,27 +133,41 @@ public final class ShamanTotemModel extends Model {
                 -1,
                 -1,
                 ShamanTotem.TotemState.SUMMONED,
-                McUtils.player().position());
+                McUtils.player().position(),
+                -1,
+                "");
 
         totems[totemNumber - 1] = newTotem;
         pendingSummonedTotems.remove(totemNumber);
         pendingSummonedTotems.put(totemNumber);
     }
 
-    private void registerTotem(Display.TextDisplay timerDisplay, int parsedTime) {
+    private void registerTotem(
+            Display.TextDisplay timerDisplay, int parsedTime, int transfusedAmount, String poisonAmount) {
         int totemNumber = getNextTotemSlot();
         if (totems[totemNumber - 1] != null) {
             removeTotem(totemNumber);
         }
 
         ShamanTotem newTotem = new ShamanTotem(
-                totemNumber, timerDisplay.getId(), parsedTime, ShamanTotem.TotemState.ACTIVE, timerDisplay.position());
+                totemNumber,
+                timerDisplay.getId(),
+                parsedTime,
+                ShamanTotem.TotemState.ACTIVE,
+                timerDisplay.position(),
+                transfusedAmount,
+                poisonAmount);
 
         totems[totemNumber - 1] = newTotem;
         WynntilsMod.postEvent(new TotemEvent.Summoned(totemNumber, timerDisplay));
     }
 
-    private void bindPendingTotem(ShamanTotem totem, Display.TextDisplay timerDisplay, int parsedTime) {
+    private void bindPendingTotem(
+            ShamanTotem totem,
+            Display.TextDisplay timerDisplay,
+            int parsedTime,
+            int transfusedAmount,
+            String poisonAmount) {
         int timerEntityId = timerDisplay.getId();
         Position position = timerDisplay.position();
 
@@ -147,17 +175,23 @@ public final class ShamanTotemModel extends Model {
         totem.setTime(parsedTime);
         totem.setPosition(position);
         totem.setState(ShamanTotem.TotemState.ACTIVE);
+        totem.setTransfusedAmount(transfusedAmount);
+        totem.setPoisonAmount(poisonAmount);
 
         pendingSummonedTotems.remove(totem.getTotemNumber());
         WynntilsMod.postEvent(new TotemEvent.Activated(totem.getTotemNumber(), position));
     }
 
-    private void updateTotem(ShamanTotem totem, int parsedTime, Position position) {
+    private void updateTotem(
+            ShamanTotem totem, int parsedTime, Position position, int transfusedAmount, String poisonAmount) {
         totem.setTime(parsedTime);
         totem.setPosition(position);
         totem.setState(ShamanTotem.TotemState.ACTIVE);
+        totem.setTransfusedAmount(transfusedAmount);
+        totem.setPoisonAmount(poisonAmount);
 
-        WynntilsMod.postEvent(new TotemEvent.Updated(totem.getTotemNumber(), parsedTime, position));
+        WynntilsMod.postEvent(
+                new TotemEvent.Updated(totem.getTotemNumber(), parsedTime, position, transfusedAmount, poisonAmount));
     }
 
     private void removeTotem(int totemNumber) {

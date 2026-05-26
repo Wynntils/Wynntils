@@ -29,7 +29,7 @@ public class ShamanTotemLabelParser implements LabelParser<ShamanTotemLabelInfo>
             regenPerSecond = Integer.parseInt(matcher.group("regenPerSecond"));
         }
 
-        int transfusedAmount = -1;
+        int transfusedAmount = 0;
         if (matcher.group("transfusedAmount") != null) {
             transfusedAmount = Integer.parseInt(matcher.group("transfusedAmount"));
         }
