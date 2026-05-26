@@ -16,8 +16,9 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.models.marker.type.MarkerInfo;
-import com.wynntils.services.map.pois.WaypointPoi;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
@@ -44,10 +45,11 @@ import org.joml.Vector4f;
 
 @ConfigCategory(Category.MAP)
 public class WorldWaypointDistanceFeature extends Feature {
-    private static final WaypointPoi DUMMY_WAYPOINT = new WaypointPoi(() -> null, "");
-
     @Persisted
     private final Config<Float> backgroundOpacity = new Config<>(0.2f);
+
+    @Persisted
+    private final Config<Float> distanceOpacity = new Config<>(1.0f);
 
     @Persisted
     private final Config<Float> scale = new Config<>(1.0f);
@@ -135,19 +137,24 @@ public class WorldWaypointDistanceFeature extends Feature {
 
     @SubscribeEvent
     public void onRenderGuiPost(RenderEvent.Pre event) {
-        if (event.getType() != RenderElementType.ACTION_BAR) return;
+        if (event.getType() != RenderElementType.HOTBAR) return;
+
+        float renderOpacity = MathUtils.clamp(distanceOpacity.get(), 0f, 1f);
+        float backgroundRenderOpacity = MathUtils.clamp(backgroundOpacity.get(), 0f, 1f) * renderOpacity;
 
         for (RenderedMarkerInfo renderedMarker : renderedMarkers) {
             if (maxWaypointTextDistance.get() != 0 && maxWaypointTextDistance.get() < renderedMarker.distance) continue;
 
             float backgroundWidth;
             float backgroundHeight = FontRenderer.getInstance().getFont().lineHeight;
+            CustomColor iconColor = applyOpacity(renderedMarker.markerInfo().textureColor(), renderOpacity);
+            CustomColor textColor = applyOpacity(renderedMarker.markerInfo().textColor(), renderOpacity);
 
             float displayPositionX;
             float displayPositionY;
 
             Vec2 intersectPoint = getBoundingIntersectPoint(renderedMarker.screenCoordinates, event.getWindow());
-            Texture icon = renderedMarker.markerInfo.texture();
+            Texture icon = renderedMarker.markerInfo().texture();
 
             // The set waypoint is visible on the screen, so we render the icon + distance
             if (intersectPoint == null) {
@@ -157,7 +164,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                 RenderUtils.drawScalingTexturedRect(
                         event.getGuiGraphics(),
                         icon.identifier(),
-                        renderedMarker.markerInfo().textureColor(),
+                        iconColor,
                         displayPositionX - scale.get() * icon.width() / 2,
                         displayPositionY - scale.get() * (icon.height() + backgroundHeight / 2 + 3f),
                         scale.get() * icon.width(),
@@ -169,7 +176,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                     backgroundWidth = FontRenderer.getInstance().getFont().width(renderedMarker.additionalText);
                     RenderUtils.drawRect(
                             event.getGuiGraphics(),
-                            CommonColors.BLACK.withAlpha(backgroundOpacity.get()),
+                            CommonColors.BLACK.withAlpha(backgroundRenderOpacity),
                             displayPositionX - scale.get() * (backgroundWidth / 2 + 2),
                             displayPositionY - scale.get() * (backgroundHeight / 2),
                             scale.get() * (backgroundWidth + 3),
@@ -183,7 +190,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                                     displayPositionY - scale.get() * backgroundHeight + 2 * scale.get(),
                                     displayPositionY + scale.get() * backgroundHeight + 2 * scale.get(),
                                     0,
-                                    renderedMarker.markerInfo.textColor(),
+                                    textColor,
                                     HorizontalAlignment.CENTER,
                                     VerticalAlignment.MIDDLE,
                                     textShadow.get(),
@@ -195,7 +202,7 @@ public class WorldWaypointDistanceFeature extends Feature {
 
                 RenderUtils.drawRect(
                         event.getGuiGraphics(),
-                        CommonColors.BLACK.withAlpha(backgroundOpacity.get()),
+                        CommonColors.BLACK.withAlpha(backgroundRenderOpacity),
                         displayPositionX - scale.get() * (backgroundWidth / 2 + 2),
                         displayPositionY - scale.get() * (backgroundHeight / 2),
                         scale.get() * (backgroundWidth + 3),
@@ -209,7 +216,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                                 displayPositionY - scale.get() * backgroundHeight + 2 * scale.get(),
                                 displayPositionY + scale.get() * backgroundHeight + 2 * scale.get(),
                                 0,
-                                renderedMarker.markerInfo.textColor(),
+                                textColor,
                                 HorizontalAlignment.CENTER,
                                 VerticalAlignment.MIDDLE,
                                 textShadow.get(),
@@ -219,7 +226,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                     backgroundWidth = FontRenderer.getInstance().getFont().width(renderedMarker.additionalText);
                     RenderUtils.drawRect(
                             event.getGuiGraphics(),
-                            CommonColors.BLACK.withAlpha(backgroundOpacity.get()),
+                            CommonColors.BLACK.withAlpha(backgroundRenderOpacity),
                             displayPositionX - scale.get() * (backgroundWidth / 2 + 2),
                             displayPositionY - scale.get() * (backgroundHeight / 2) - 35 * scale.get(),
                             scale.get() * (backgroundWidth + 2),
@@ -233,7 +240,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                                     displayPositionY - scale.get() * backgroundHeight - 33 * scale.get(),
                                     displayPositionY + scale.get() * backgroundHeight - 33 * scale.get(),
                                     0,
-                                    renderedMarker.markerInfo.textColor(),
+                                    textColor,
                                     HorizontalAlignment.CENTER,
                                     VerticalAlignment.MIDDLE,
                                     textShadow.get(),
@@ -259,7 +266,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                 RenderUtils.drawScalingTexturedRect(
                         event.getGuiGraphics(),
                         icon.identifier(),
-                        renderedMarker.markerInfo().textureColor(),
+                        iconColor,
                         displayPositionX - scale.get() * icon.width() / 2 + pointerOffsetX * (1 - scale.get()),
                         displayPositionY - scale.get() * icon.height() / 2 + pointerOffsetY * (1 - scale.get()),
                         scale.get() * icon.width(),
@@ -274,20 +281,21 @@ public class WorldWaypointDistanceFeature extends Feature {
                 guiGraphics.pose().mul(new Matrix3x2f().rotation((float) Math.toRadians(angle)));
                 guiGraphics.pose().translate(-pointerDisplayPositionX, -pointerDisplayPositionY);
 
-                DUMMY_WAYPOINT
-                        .getPointerPoi()
-                        .renderAt(
-                                guiGraphics,
-                                pointerDisplayPositionX,
-                                pointerDisplayPositionY,
-                                false,
-                                scale.get(),
-                                1,
-                                50,
-                                true);
+                RenderUtils.drawScalingTexturedRect(
+                        guiGraphics,
+                        Texture.POINTER,
+                        CommonColors.WHITE.withAlpha(renderOpacity),
+                        pointerDisplayPositionX - scale.get() * Texture.POINTER.width() / 2,
+                        pointerDisplayPositionY - scale.get() * Texture.POINTER.height() / 2,
+                        scale.get() * Texture.POINTER.width(),
+                        scale.get() * Texture.POINTER.height());
                 guiGraphics.pose().popMatrix();
             }
         }
+    }
+
+    private CustomColor applyOpacity(CustomColor color, float opacity) {
+        return color == CustomColor.NONE ? color : color.withAlpha(opacity);
     }
 
     private Vec3 worldToScreen(Vector3f delta, Matrix4f projection) {

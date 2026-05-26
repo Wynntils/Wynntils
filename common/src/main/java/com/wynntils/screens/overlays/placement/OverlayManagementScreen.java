@@ -488,13 +488,15 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             final int finalOffsetX = offsetX;
             final int finalOffsetY = offsetY;
 
-            selectedOverlay.getConfigOptionFromString("position").ifPresent(config -> ((Config<OverlayPosition>) config)
-                    .setValue(OverlayPosition.getBestPositionFor(
-                            selectedOverlay,
-                            selectedOverlay.getRenderX(),
-                            selectedOverlay.getRenderY(),
-                            finalOffsetX,
-                            finalOffsetY)));
+            selectedOverlay
+                    .getConfigOptionFromString("position")
+                    .ifPresent(config -> ((Config<OverlayPosition>) config)
+                            .setValue(OverlayPosition.getBestPositionFor(
+                                    selectedOverlay,
+                                    selectedOverlay.getRenderX(),
+                                    selectedOverlay.getRenderY(),
+                                    finalOffsetX,
+                                    finalOffsetY)));
         }
 
         if (event.key() == GLFW.GLFW_KEY_LEFT_SHIFT || event.key() == GLFW.GLFW_KEY_RIGHT_SHIFT) {
