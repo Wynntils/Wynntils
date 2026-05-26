@@ -142,6 +142,12 @@
     "url": "https://cdn.wynntils.com/static/Data-Storage/destinations.json"
   },
   {
+    "id": "dataStaticGatheringNodes",
+    "md5": "3edf9ef125979de9dc242253b16d1531",
+    "path": "Reference/gathering_nodes.json",
+    "url": "https://cdn.wynntils.com/static/Reference/gathering_nodes.json"
+  },
+  {
     "id": "dataStaticGear",
     "md5": "48e4e8f1e7db05aa65c3a6e320295682",
     "path": "Reference/gear.json",
@@ -233,7 +239,7 @@
   },
   {
     "id": "dataStaticMaterials",
-    "md5": "66aec0be52886a525a2937af8c218514",
+    "md5": "fd4df36b43befe98a733825ed120998d",
     "path": "Reference/materials.json",
     "url": "https://cdn.wynntils.com/static/Reference/materials.json"
   },
