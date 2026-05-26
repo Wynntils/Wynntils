@@ -30,7 +30,6 @@ import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.EventPriority;
@@ -174,7 +173,7 @@ public class ItemHighlightFeature extends Feature {
             return;
         }
 
-        drawHighlightSprite(e.getGuiGraphics(), color, x, y);
+        RenderUtils.drawSprite(e.getGuiGraphics(), highlightTexture.get().texture(), color, x, y);
     }
 
     @SubscribeEvent
@@ -192,22 +191,7 @@ public class ItemHighlightFeature extends Feature {
             return;
         }
 
-        drawHighlightSprite(e.getGuiGraphics(), color, x, y);
-    }
-
-    private void drawHighlightSprite(GuiGraphics e, CustomColor color, int x, int y) {
-        switch (highlightTexture.get()) {
-            case WYNN -> RenderUtils.drawSprite(e, Texture.HIGHLIGHT_WYNN, color, x, y);
-            case TAG -> RenderUtils.drawSprite(e, Texture.HIGHLIGHT_TAG, color, x, y);
-            case CIRCLE_TRANSPARENT -> RenderUtils.drawSprite(e, Texture.HIGHLIGHT_CIRCLE_TRANSPARENT, color, x, y);
-            case CIRCLE_OPAQUE -> RenderUtils.drawSprite(e, Texture.HIGHLIGHT_CIRCLE_OPAQUE, color, x, y);
-            case CIRCLE_OUTLINE_LARGE -> RenderUtils.drawSprite(e, Texture.HIGHLIGHT_CIRCLE_OUTLINE_LARGE, color, x, y);
-            case CIRCLE_OUTLINE_SMALL -> RenderUtils.drawSprite(e, Texture.HIGHLIGHT_CIRCLE_OUTLINE_SMALL, color, x, y);
-            case BOX_TRANSPARENT -> RenderUtils.drawSprite(e, Texture.HIGHLIGHT_BOX_TRANSPARENT, color, x, y);
-            case BOX_OPAQUE -> RenderUtils.drawSprite(e, Texture.HIGHLIGHT_BOX_OPAQUE, color, x, y);
-            case BOX_GRADIENT_1 -> RenderUtils.drawSprite(e, Texture.HIGHLIGHT_BOX_GRADIENT_1, color, x, y);
-            case BOX_GRADIENT_2 -> RenderUtils.drawSprite(e, Texture.HIGHLIGHT_BOX_GRADIENT_2, color, x, y);
-        }
+        RenderUtils.drawSprite(e.getGuiGraphics(), highlightTexture.get().texture(), color, x, y);
     }
 
     @SubscribeEvent
@@ -416,15 +400,25 @@ public class ItemHighlightFeature extends Feature {
     }
 
     public enum HighlightTexture {
-        WYNN,
-        TAG,
-        CIRCLE_TRANSPARENT,
-        CIRCLE_OPAQUE,
-        CIRCLE_OUTLINE_LARGE,
-        CIRCLE_OUTLINE_SMALL,
-        BOX_TRANSPARENT,
-        BOX_OPAQUE,
-        BOX_GRADIENT_1,
-        BOX_GRADIENT_2
+        WYNN(Texture.HIGHLIGHT_WYNN),
+        TAG(Texture.HIGHLIGHT_TAG),
+        CIRCLE_TRANSPARENT(Texture.HIGHLIGHT_CIRCLE_TRANSPARENT),
+        CIRCLE_OPAQUE(Texture.HIGHLIGHT_CIRCLE_OPAQUE),
+        CIRCLE_OUTLINE_LARGE(Texture.HIGHLIGHT_CIRCLE_OUTLINE_LARGE),
+        CIRCLE_OUTLINE_SMALL(Texture.HIGHLIGHT_CIRCLE_OUTLINE_SMALL),
+        BOX_TRANSPARENT(Texture.HIGHLIGHT_BOX_TRANSPARENT),
+        BOX_OPAQUE(Texture.HIGHLIGHT_BOX_OPAQUE),
+        BOX_GRADIENT_1(Texture.HIGHLIGHT_BOX_GRADIENT_1),
+        BOX_GRADIENT_2(Texture.HIGHLIGHT_BOX_GRADIENT_2);
+
+        private final Texture texture;
+
+        HighlightTexture(Texture texture) {
+            this.texture = texture;
+        }
+
+        public Texture texture() {
+            return this.texture;
+        }
     }
 }

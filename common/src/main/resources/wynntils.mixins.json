@@ -1,9 +1,9 @@
 {
   "client": [
-    "AtlasManagerMixin",
     "AbstractContainerMenuMixin",
     "AbstractContainerScreenMixin",
     "AbstractRecipeBookScreenMixin",
+    "AtlasManagerMixin",
     "AvatarRendererMixin",
     "BlockBehaviourMixin",
     "BossHealthOverlayMixin",
