@@ -33,6 +33,7 @@ import com.wynntils.models.items.annotators.gui.LeaderboardSeasonAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
 import com.wynntils.models.lootrun.LootrunModel;
+import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
 import com.wynntils.models.npc.label.FastTravelLabelParser;
 import com.wynntils.models.npc.label.NpcLabelParser;
 import com.wynntils.models.players.FriendsModel;
@@ -1151,6 +1152,24 @@ public class TestRegex {
         PatternTester p = new PatternTester(PartyScoreboardPart.class, "OFFLINE_PLAYER");
         p.shouldMatch("§e- §7Bigblackman");
         p.shouldMatch("§e- §7uTa4u");
+    }
+
+    @Test
+    public void LootrunScoreboardPart_MISSION_AND_TRIAL_NAME_PATTERN() {
+        PatternTester p = new PatternTester(LootrunScoreboardPart.class, "MISSION_AND_TRIAL_NAME_PATTERN");
+        p.shouldMatch("§6Orphion's Grace:");
+        p.shouldMatch("§eOrphion's Grace:");
+        p.shouldMatch("§cChronotrigger:");
+        p.shouldMatch("§4Chronotrigger:");
+    }
+
+    @Test
+    public void LootrunScoreboardPart_MISSION_AND_TRIAL_OBJECTIVE_PATTERN() {
+        PatternTester p = new PatternTester(LootrunScoreboardPart.class, "MISSION_AND_TRIAL_OBJECTIVE_PATTERN");
+        p.shouldMatch("§6- §7Get §f0/1§7 Boons");
+        p.shouldMatch("§e- Get 0/1 Boons");
+        p.shouldMatch("§4- §7Complete §f0/12§7 Challenges");
+        p.shouldMatch("§c- Complete 0/12 Challenges");
     }
 
     @Test
