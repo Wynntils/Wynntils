@@ -29,6 +29,7 @@ import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -100,13 +101,14 @@ public final class SkillPointModel extends Model {
 
             if (wynnItem instanceof GearTypeItemProperty gear) {
                 if (gear.getGearType().isArmor()) {
-                    armourNames.add(
-                            StyledText.fromComponent(itemStack.getHoverName()).getString());
+                    armourNames.add(WynnUtils.stripItemNameMarkers(
+                            StyledText.fromComponent(itemStack.getHoverName()).getString()));
                 } else if (gear.getGearType().isAccessory()) {
-                    accessoryNames.add(
-                            StyledText.fromComponent(itemStack.getHoverName()).getString());
+                    accessoryNames.add(WynnUtils.stripItemNameMarkers(
+                            StyledText.fromComponent(itemStack.getHoverName()).getString()));
                 } else if (gear.getGearType().isWeapon()) {
-                    weapon = StyledText.fromComponent(itemStack.getHoverName()).getString();
+                    weapon = WynnUtils.stripItemNameMarkers(
+                            StyledText.fromComponent(itemStack.getHoverName()).getString());
                 }
             }
         }
