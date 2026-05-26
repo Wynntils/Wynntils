@@ -11,6 +11,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.DynamicOverlay;
@@ -19,9 +20,13 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.config.OverlayGroupHolder;
 import com.wynntils.screens.settings.ConfigProfileScreen;
+import com.wynntils.services.remoteoverlay.type.RemoteOverlayProvider;
 import com.wynntils.utils.mc.McUtils;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -174,6 +179,13 @@ public class ConfigCommand extends Command {
                     },
                     builder);
 
+    private static final SuggestionProvider<CommandSourceStack> REMOTE_OVERLAY_REMOVE_NAME_SUGGESTION_PROVIDER =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    Services.RemoteOverlay.getRemoteOverlayProviders().stream()
+                            .map(RemoteOverlayProvider::getName)
+                            .toArray(String[]::new),
+                    builder);
+
     @Override
     public String getCommandName() {
         return "config";
@@ -188,6 +200,7 @@ public class ConfigCommand extends Command {
                 .then(this.buildReloadConfigNode())
                 .then(this.buildOverlayGroupNode())
                 .then(this.buildProfileNode())
+                .then(this.buildRemoteOverlayGroupNode())
                 .executes(this::syntaxError);
     }
 
@@ -300,6 +313,99 @@ public class ConfigCommand extends Command {
                         .executes(this::setConfigProfile))
                 .executes(this::openProfilesScreen)
                 .build();
+    }
+
+    private LiteralCommandNode<CommandSourceStack> buildRemoteOverlayGroupNode() {
+        return Commands.literal("remoteoverlay")
+                .then(Commands.literal("add")
+                        .then(Commands.argument("name", StringArgumentType.word())
+                                .then(Commands.argument("url", StringArgumentType.string())
+                                        .executes(this::addRemoteOverlayProvider))))
+                .then(Commands.literal("remove")
+                        .then(Commands.argument("name", StringArgumentType.word())
+                                .suggests(REMOTE_OVERLAY_REMOVE_NAME_SUGGESTION_PROVIDER)
+                                .executes(this::removeRemoteOverlayProvider)))
+                .then(Commands.literal("list").executes(this::listRemoteOverlayProviders))
+                .then(Commands.literal("reload").executes(this::reloadRemoteOverlayProviders))
+                .build();
+    }
+
+    private int reloadRemoteOverlayProviders(CommandContext<CommandSourceStack> context) {
+        Services.RemoteOverlay.loadRemoteOverlayProviders();
+
+        Managers.Overlay.rediscoverRemoteOverlays();
+        Managers.Config.reloadConfiguration(true);
+
+        context.getSource()
+                .sendSuccess(
+                        () -> Component.literal("Successfully reloaded RemoteOverlay providers.")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
+
+        return 1;
+    }
+
+    private int listRemoteOverlayProviders(CommandContext<CommandSourceStack> context) {
+        List<RemoteOverlayProvider> providerList = Services.RemoteOverlay.getRemoteOverlayProviders();
+        if (providerList.isEmpty()) {
+            context.getSource().sendSuccess(() -> Component.literal("There are no RemoteOverlayInfo providers"), false);
+            return 1;
+        }
+
+        MutableComponent message = Component.literal("RemoteOverlayInfo providers: ");
+
+        for (RemoteOverlayProvider provider : providerList) {
+            message.append(Component.literal("\n"));
+            message.append(Component.literal(provider.getName()).withStyle(ChatFormatting.GREEN));
+        }
+
+        context.getSource().sendSuccess(() -> message, false);
+        return 1;
+    }
+
+    private int removeRemoteOverlayProvider(CommandContext<CommandSourceStack> context) {
+        String name = context.getArgument("name", String.class);
+
+        if (!Services.RemoteOverlay.removeRemoteOverlayProvider(name)) {
+            context.getSource()
+                    .sendFailure(Component.literal("The provided name does not match any RemoteOverlayInfo providers"));
+
+            return 0;
+        }
+
+        Managers.Overlay.rediscoverRemoteOverlays();
+        Managers.Config.reloadConfiguration(true);
+
+        context.getSource()
+                .sendSuccess(
+                        () -> Component.literal("Successfully removed RemoteOverlayInfo provider.")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
+        return 1;
+    }
+
+    private int addRemoteOverlayProvider(CommandContext<CommandSourceStack> context) {
+        String name = context.getArgument("name", String.class);
+        String url = context.getArgument("url", String.class);
+
+        try {
+            Services.RemoteOverlay.addRemoteOverlayProvider(new RemoteOverlayProvider(name, new URI(url)));
+        } catch (URISyntaxException e) {
+            context.getSource()
+                    .sendFailure(
+                            Component.literal("The provided URL is invalid").withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        Managers.Overlay.rediscoverRemoteOverlays();
+        Managers.Config.reloadConfiguration(true);
+
+        context.getSource()
+                .sendSuccess(
+                        () -> Component.literal("Successfully added RemoteOverlayInfo")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
+        return 1;
     }
 
     private int addOverlayGroup(CommandContext<CommandSourceStack> context) {

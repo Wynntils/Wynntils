@@ -24,6 +24,7 @@ import com.wynntils.services.map.MapService;
 import com.wynntils.services.map.PoiService;
 import com.wynntils.services.mapdata.MapDataService;
 import com.wynntils.services.ping.PingService;
+import com.wynntils.services.remoteoverlay.RemoteOverlayService;
 import com.wynntils.services.resourcepack.ResourcePackService;
 import com.wynntils.services.secrets.SecretsService;
 import com.wynntils.services.splashes.SplashService;
@@ -50,6 +51,7 @@ public final class Services {
     public static final MapService Map = new MapService();
     public static final PingService Ping = new PingService();
     public static final PoiService Poi = new PoiService();
+    public static final RemoteOverlayService RemoteOverlay = new RemoteOverlayService();
     public static final ResourcePackService ResourcePack = new ResourcePackService();
     public static final SecretsService Secrets = new SecretsService();
     public static final SplashService Splash = new SplashService();
