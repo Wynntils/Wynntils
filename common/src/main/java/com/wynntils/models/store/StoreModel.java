@@ -13,11 +13,15 @@ import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.models.containers.containers.CosmeticContainer;
 import com.wynntils.models.items.items.gui.StoreItem;
 import com.wynntils.models.store.type.CosmeticItemType;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.SubscribeEvent;
+import org.jspecify.annotations.Nullable;
+
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class StoreModel extends Model {
     private static final int SELECTED_COSMETIC_SLOT = 4;
@@ -25,7 +29,7 @@ public class StoreModel extends Model {
     public static final int WEAPON_MODEL_FLOAT_INDEX = 0;
 
     @Persisted
-    private Storage<Float> weaponModel = new Storage<>(null);
+    private final Storage<Map<String, Float>> weaponModelStorage = new Storage<>(new TreeMap<>());
 
     public StoreModel() {
         super(List.of());
@@ -38,25 +42,36 @@ public class StoreModel extends Model {
         CosmeticItemType cosmeticItemType = container.getCosmeticItemType();
         if (cosmeticItemType == null) return;
         ItemStack itemStack = event.getItemStack();
-        Optional<StoreItem> storeItemOpt = Models.Item.asWynnItem(itemStack, StoreItem.class);
-        if (storeItemOpt.isEmpty()) {
-            weaponModel = null;
-            return;
-        }
+        // Actual skins are StoreItems, while an empty selected skin is not
+        boolean isStoreItem = Models.Item.asWynnItem(itemStack, StoreItem.class).isPresent();
+        CustomModelData data = itemStack.getComponents().get(DataComponents.CUSTOM_MODEL_DATA);
+
         if (cosmeticItemType == CosmeticItemType.WEAPON_SKIN) {
-            weaponModel.store(itemStack
-                    .getComponents()
-                    .get(DataComponents.CUSTOM_MODEL_DATA)
-                    .getFloat(WEAPON_MODEL_FLOAT_INDEX));
+            if (!isStoreItem || data == null) {
+                putWeaponModel(null);
+                return;
+            }
+            Float value = data.getFloat(WEAPON_MODEL_FLOAT_INDEX);
+            if (value == null) {
+                putWeaponModel(null);
+                return;
+            }
+            putWeaponModel(value);
         }
     }
 
     @SubscribeEvent
     public void onServerResourcePackChange(ServerResourcePackEvent.Change event) {
-        weaponModel.store(null);
+        weaponModelStorage.store(new TreeMap<>());
     }
 
+    @Nullable
     public Float getWeaponModel() {
-        return weaponModel.get();
+        return weaponModelStorage.get().get(Models.Character.getId());
+    }
+
+    private void putWeaponModel(Float value) {
+        weaponModelStorage.get().put(Models.Character.getId(), value);
+        weaponModelStorage.touched();
     }
 }

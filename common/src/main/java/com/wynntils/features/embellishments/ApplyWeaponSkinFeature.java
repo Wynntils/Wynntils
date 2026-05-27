@@ -17,6 +17,8 @@ import com.wynntils.models.store.StoreModel;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
+
+import com.wynntils.utils.wynn.ItemUtils;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -40,7 +42,7 @@ public class ApplyWeaponSkinFeature extends Feature {
         if (itemStack.isEmpty()) return;
         CustomModelData data = itemStack.getComponents().get(DataComponents.CUSTOM_MODEL_DATA);
         if (data == null) return;
-        if (!isUsableWeapon(itemStack)) return;
+        if (!ItemUtils.isUsableWeapon(itemStack)) return;
 
         if (!data.getFloat(StoreModel.WEAPON_MODEL_FLOAT_INDEX).equals(value)) {
             data.floats().set(StoreModel.WEAPON_MODEL_FLOAT_INDEX, value);
@@ -61,32 +63,18 @@ public class ApplyWeaponSkinFeature extends Feature {
         CustomModelData handData = handItem.get(DataComponents.CUSTOM_MODEL_DATA);
         if (handData == null) return;
         if (!handData.getFloat(StoreModel.WEAPON_MODEL_FLOAT_INDEX).equals(value)) return;
-        if (!isUsableWeapon(handItem)) return;
+        if (!ItemUtils.isUsableWeapon(handItem)) return;
 
         ItemStack itemStack = items.get(inventory.selected + Inventory.INVENTORY_SIZE);
         if (itemStack.isEmpty()) return;
         CustomModelData data = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
         if (data == null) return;
-        if (!isUsableWeapon(itemStack)) return;
+        if (!ItemUtils.isUsableWeapon(itemStack)) return;
 
         // ItemInHandRenderer#tick() checks ItemStack changes by reference instead of ItemStack#matches
         // so to not trigger equipped animation we have to overwrite the ItemStack for selected slot
         // Wynncraft also sometimes sends unskinned weapon ItemStack which is why we don't check that
         // itemStack's model value is equal to handItem's
         items.set(inventory.selected + Inventory.INVENTORY_SIZE, handItem);
-    }
-
-    private static boolean isUsableWeapon(ItemStack itemStack) {
-        Optional<GearTypeItemProperty> gearItemOpt =
-                Models.Item.asWynnItemProperty(itemStack, GearTypeItemProperty.class);
-        if (gearItemOpt.isEmpty()) return false;
-        if (!gearItemOpt.get().getGearType().isValidWeapon(Models.Character.getClassType())) return false;
-
-        Optional<RequirementItemProperty> reqItemOpt =
-                Models.Item.asWynnItemProperty(itemStack, RequirementItemProperty.class);
-        if (reqItemOpt.isEmpty()) return false;
-        if (!reqItemOpt.get().meetsActualRequirements()) return false;
-
-        return true;
     }
 }
