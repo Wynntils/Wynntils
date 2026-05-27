@@ -74,18 +74,15 @@ public class ContentTrackerOverlay extends TextOverlay {
     }
 
     private enum Style {
-        MODERN(
-                """
+        MODERN("""
                 {activity_icon}§rÀ{with_font(with_color(styled_text(concat(activity_type; " - "; activity_name));activity_color);"language/wynncraft")}§r
                 {activity_task(true)}
                 """),
-        NO_ICON(
-                """
+        NO_ICON("""
                 {with_font(with_color(styled_text(concat(activity_type; " - "; activity_name));activity_color);"language/wynncraft")}§r
                 {activity_task(true)}
                 """),
-        LEGACY(
-                """
+        LEGACY("""
                 §aTracked {activity_type}:
                 §6{activity_name}§r
                 {activity_task(true)}
