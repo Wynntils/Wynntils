@@ -13,15 +13,14 @@ import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.models.containers.containers.CosmeticContainer;
 import com.wynntils.models.items.items.gui.StoreItem;
 import com.wynntils.models.store.type.CosmeticItemType;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.jspecify.annotations.Nullable;
-
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class StoreModel extends Model {
     private static final int SELECTED_COSMETIC_SLOT = 4;

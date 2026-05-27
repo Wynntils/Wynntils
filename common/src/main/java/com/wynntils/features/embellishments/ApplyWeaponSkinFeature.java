@@ -11,14 +11,10 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.items.properties.GearTypeItemProperty;
-import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.store.StoreModel;
 import com.wynntils.utils.mc.McUtils;
-import java.util.List;
-import java.util.Optional;
-
 import com.wynntils.utils.wynn.ItemUtils;
+import java.util.List;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
