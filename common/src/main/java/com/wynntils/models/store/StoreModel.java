@@ -46,16 +46,11 @@ public class StoreModel extends Model {
         CustomModelData data = itemStack.getComponents().get(DataComponents.CUSTOM_MODEL_DATA);
 
         if (cosmeticItemType == CosmeticItemType.WEAPON_SKIN) {
-            if (!isStoreItem || data == null) {
+            if (!isStoreItem || data == null || data.floats().size() <= WEAPON_MODEL_FLOAT_INDEX) {
                 putWeaponModel(null);
                 return;
             }
-            Float value = data.getFloat(WEAPON_MODEL_FLOAT_INDEX);
-            if (value == null) {
-                putWeaponModel(null);
-                return;
-            }
-            putWeaponModel(value);
+            putWeaponModel(data.getFloat(WEAPON_MODEL_FLOAT_INDEX));
         }
     }
 
