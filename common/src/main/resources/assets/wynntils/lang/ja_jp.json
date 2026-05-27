@@ -1768,7 +1768,6 @@
   "function.wynntils.lootrunBeaconVibrant.argument.color": "ビーコンの色",
   "function.wynntils.lootrunChallenges.description": "チャレンジの数",
   "function.wynntils.lootrunChallenges.name": "ルートランチャレンジ",
-  "function.wynntils.lootrunCurrentMission.argument.colored": "出力をカラーにするかどうか",
   "function.wynntils.lootrunLastSelectedBeaconColor.description": "あなたのルートランで最後に選択したビーコンの色",
   "function.wynntils.lootrunLastSelectedBeaconColor.name": "ルートランで最後に選択したビーコンの色",
   "function.wynntils.lootrunMission.argument.colored": "出力をカラーにするかどうか",

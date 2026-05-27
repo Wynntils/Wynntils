@@ -1768,7 +1768,6 @@
   "function.wynntils.lootrunBeaconVibrant.argument.color": "Kolor latarni",
   "function.wynntils.lootrunChallenges.description": "Liczba wyzwań",
   "function.wynntils.lootrunChallenges.name": "Wyzwania lootrun",
-  "function.wynntils.lootrunCurrentMission.argument.colored": "Czy wynik powinien być kolorowy?",
   "function.wynntils.lootrunLastSelectedBeaconColor.description": "Kolor ostatnio wybranej latarni w trakcie lootrun",
   "function.wynntils.lootrunLastSelectedBeaconColor.name": "Kolor ostatnio wybranej latarni lootrun",
   "function.wynntils.lootrunMission.argument.colored": "Czy wynik powinien być kolorowy?",

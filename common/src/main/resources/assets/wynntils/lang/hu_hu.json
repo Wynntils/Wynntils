@@ -1768,7 +1768,6 @@
   "function.wynntils.lootrunBeaconVibrant.argument.color": "A jelzőfény színe",
   "function.wynntils.lootrunChallenges.description": "A kihívások száma",
   "function.wynntils.lootrunChallenges.name": "Lootrun kihívások",
-  "function.wynntils.lootrunCurrentMission.argument.colored": "Legyen-e színes a kimenet?",
   "function.wynntils.lootrunLastSelectedBeaconColor.description": "A legutóbb kiválasztott jelzőfény színe a lootrun során",
   "function.wynntils.lootrunLastSelectedBeaconColor.name": "Lootrun utolsó kiválasztott jelzőfény színe",
   "function.wynntils.lootrunMission.argument.colored": "Legyen-e színes a kimenet?",

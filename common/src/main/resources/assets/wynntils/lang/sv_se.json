@@ -1798,7 +1798,6 @@
   "function.wynntils.lootrunBeaconVibrant.argument.color": "Färgen på fyrtornet",
   "function.wynntils.lootrunChallenges.description": "Antalet utmaningar",
   "function.wynntils.lootrunChallenges.name": "Lootrun Utmaningar",
-  "function.wynntils.lootrunCurrentMission.argument.colored": "Om utdata ska returneras i färg",
   "function.wynntils.lootrunLastSelectedBeaconColor.description": "Färgen på fyrtornet du senast valde i din lootrun",
   "function.wynntils.lootrunLastSelectedBeaconColor.name": "Lootrun Senast Valda Fyrfärg",
   "function.wynntils.lootrunMission.argument.colored": "Om utdata ska returneras i färg",
