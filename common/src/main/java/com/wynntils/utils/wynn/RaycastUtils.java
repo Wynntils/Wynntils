@@ -106,16 +106,17 @@ public final class RaycastUtils {
         return Optional.ofNullable(best);
     }
 
-    public static Optional<BlockPos> getTargetedBlock(double maxDistance) {
+    public static Optional<BlockPos> getTargetedBlockPosition(double maxDistance, boolean colliderOnly) {
         LocalPlayer player = McUtils.player();
 
         Vec3 start = player.getEyePosition(1f);
         Vec3 look = player.getLookAngle();
         Vec3 end = start.add(look.x * maxDistance, look.y * maxDistance, look.z * maxDistance);
 
-        BlockHitResult hitResult = player.level()
-                .clip(new net.minecraft.world.level.ClipContext(
-                        start, end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
+        ClipContext.Block blockType = colliderOnly ? ClipContext.Block.COLLIDER : ClipContext.Block.OUTLINE;
+
+        BlockHitResult hitResult =
+                player.level().clip(new ClipContext(start, end, blockType, ClipContext.Fluid.NONE, player));
 
         if (hitResult.getType() == HitResult.Type.BLOCK) {
             return Optional.of(hitResult.getBlockPos());

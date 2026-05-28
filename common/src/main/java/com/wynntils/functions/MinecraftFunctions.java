@@ -39,7 +39,20 @@ public class MinecraftFunctions {
     public static class DirFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return (double) McUtils.player().getYRot();
+            boolean wrap = arguments.getArgument("wrap").getBooleanValue();
+            double dir = (double) McUtils.player().getYRot();
+
+            return wrap ? Mth.wrapDegrees(dir) : dir;
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("wrap", Boolean.class, false)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("yaw");
         }
     }
 
@@ -109,8 +122,10 @@ public class MinecraftFunctions {
     public static class LocationAtCrosshairFunction extends Function<Location> {
         @Override
         public Location getValue(FunctionArguments arguments) {
-            double maxDistance = arguments.getArgument("distance").getDoubleValue();
-            Optional<BlockPos> hitBlock = RaycastUtils.getTargetedBlock(maxDistance);
+            double distance = arguments.getArgument("distance").getDoubleValue();
+            boolean colliderOnly = arguments.getArgument("colliderOnly").getBooleanValue();
+
+            Optional<BlockPos> hitBlock = RaycastUtils.getTargetedBlockPosition(distance, colliderOnly);
 
             if (hitBlock.isEmpty()) return new Location(0, 0, 0);
 
@@ -119,8 +134,9 @@ public class MinecraftFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("distance", Double.class, null)));
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("distance", Double.class, null),
+                    new Argument<>("colliderOnly", Boolean.class, null)));
         }
 
         @Override
@@ -133,14 +149,6 @@ public class MinecraftFunctions {
         @Override
         public Double getValue(FunctionArguments arguments) {
             return (double) McUtils.player().getXRot();
-        }
-    }
-
-    public static class YawFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            double rawYawAngle = (double) McUtils.player().getYRot();
-            return Mth.wrapDegrees(rawYawAngle);
         }
     }
 }

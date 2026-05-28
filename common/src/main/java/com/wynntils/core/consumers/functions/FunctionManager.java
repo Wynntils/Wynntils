@@ -682,7 +682,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new MinecraftFunctions.LocationAtCrosshairFunction());
         registerFunction(new MinecraftFunctions.PitchFunction());
         registerFunction(new MinecraftFunctions.TicksFunction());
-        registerFunction(new MinecraftFunctions.YawFunction());
 
         registerFunction(new MountFunctions.CappedMountStatFunction());
         registerFunction(new MountFunctions.MountStatFunction());
