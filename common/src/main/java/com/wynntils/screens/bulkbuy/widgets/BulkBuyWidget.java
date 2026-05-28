@@ -107,8 +107,7 @@ public class BulkBuyWidget extends AbstractWidget {
                     .renderText(
                             guiGraphics,
                             StyledText.fromString(I18n.get(
-                                    "feature.wynntils.bulkBuy.widget.totalPrice",
-                                    (bulkBoughtItem.amount() * bulkBoughtItem.price()))),
+                                    "feature.wynntils.bulkBuy.widget.totalPrice", bulkBoughtItem.totalPrice())),
                             getX() + BULK_BUY_WIDGET_CENTER,
                             getY() + 89,
                             CommonColors.LIGHT_GREEN,

@@ -224,21 +224,19 @@ public class TestRegex {
     public void BulkBuyFeature_PRICE_PATTERN() {
         PatternTester p = new PatternTester(BulkBuyFeature.class, "PRICE_PATTERN");
         // normal font, simple items (tp scrolls, potions)
-        p.shouldMatch("\uDAFF\uDFFC\uE001\uDB00\uDC06 \uDAFF\uDFFC\uF001\uDB00\uDC06 ✔ 4² (4²)");
-        p.shouldMatch("\uDAFF\uDFFC\uE001\uDB00\uDC06 \uDAFF\uDFFC\uF001\uDB00\uDC06 ✔ 192² (3²½)");
-        p.shouldMatch("\uDAFF\uDFFC\uE001\uDB00\uDC06 \uDAFF\uDFFC\uF001\uDB00\uDC06 ✖ 192² (3²½)");
-        p.shouldMatch("\uDAFF\uDFFC\uE001\uDB00\uDC06 \uDAFF\uDFFC\uF001\uDB00\uDC06 ✖ 18,432² (4¼² 32²½)");
+        p.shouldMatch("§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §a✔§6 §f62² §8(62²)");
+        p.shouldMatch("§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §c✖§6 §f70² §8(1²½ 6²)");
         // wynncraft font, gear items
-        p.shouldMatch("\uDAFF\uDFFC\uE001\uDB00\uDC06 \uDB00\uDC05\uDAFF\uDFFC\uF001\uDB00\uDC06 \uDB00\uDC00✖ 7,552² (1¼² 54²½)");
-        p.shouldMatch("\uDAFF\uDFFC\uE001\uDB00\uDC06 \uDB00\uDC05\uDAFF\uDFFC\uF001\uDB00\uDC06 \uDB00\uDC00✔ 973² (15²½ 13²)");
+        p.shouldMatch("§f\uDB00\uDC05§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §f\uDB00\uDC00§c✖§f 7,552² §8(1¼² 54²½)");
+        p.shouldMatch("§f\uDB00\uDC05§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §f\uDB00\uDC00§a✔§f 896² §8(14²½)");
     }
 
     @Test
     public void BulkBuyFeature_TREASURE_MERCHANT_PRICE_PATTERN() {
         PatternTester p = new PatternTester(BulkBuyFeature.class, "TREASURE_MERCHANT_PRICE_PATTERN");
         // treasure merchant
-        p.shouldMatch("\uDAFF\uDFFC\uE001\uDB00\uDC06 \uDAFF\uDFFC\uF001\uDB00\uDC06 ✖ 1x Sunken Gold Nugget");
-        p.shouldMatch("\uDAFF\uDFFC\uE001\uDB00\uDC06 \uDAFF\uDFFC\uF001\uDB00\uDC06 ✔ 1x Sunken Block of Silver");
+        p.shouldMatch("§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §c✖§6 §f1x §6Sunken Artifact");
+        p.shouldMatch("§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §a✔§6 §f1x §6Sunken Gold Nugget");
     }
 
     @Test
