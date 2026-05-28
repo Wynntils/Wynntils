@@ -584,6 +584,15 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return splitTexts.toArray(StyledText[]::new);
     }
 
+    public StyledText repeat(Integer times) {
+        StyledText text = StyledText.EMPTY;
+
+        for (int i = 0; i < Math.max(0, times); i++) {
+            text = text.append(this);
+        }
+        return text;
+    }
+
     /**
      * Replaces the first occurrence of the given regex with the given replacement.
      * <p> Note that {@link StyleType.NONE} is used when matching and replacing.
@@ -849,14 +858,5 @@ public final class StyledText implements Iterable<StyledTextPart> {
         public JsonElement serialize(StyledText src, Type typeOfSrc, JsonSerializationContext context) {
             return context.serialize(src.getString());
         }
-    }
-
-    public StyledText repeat(Integer times) {
-        StyledText text = StyledText.fromParts(List.of());
-
-        for (int i = 0; i < Math.max(0, times); i++) {
-            text = text.append(this);
-        }
-        return text;
     }
 }
