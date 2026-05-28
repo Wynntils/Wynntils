@@ -36,44 +36,6 @@ public class MinecraftFunctions {
         }
     }
 
-    public static class LocationAtCrosshairFunction extends Function<Location> {
-        @Override
-        public Location getValue(FunctionArguments arguments) {
-            double maxDistance = arguments.getArgument("distance").getDoubleValue();
-            Optional<BlockPos> hitBlock = RaycastUtils.getTargetedBlock(maxDistance);
-
-            if (hitBlock.isEmpty()) return new Location(0, 0, 0);
-
-            return new Location(hitBlock.get());
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("distance", Double.class, 50.0)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("crosshair_loc");
-        }
-    }
-
-    public static class PitchFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return (double) McUtils.player().getXRot();
-        }
-    }
-
-    public static class YawFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            double rawYawAngle = (double) McUtils.player().getYRot();
-            return Mth.wrapDegrees(rawYawAngle);
-        }
-    }
-
     public static class DirFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
@@ -158,7 +120,7 @@ public class MinecraftFunctions {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("distance", Double.class, 50.0)));
+                    List.of(new Argument<>("distance", Double.class, null)));
         }
 
         @Override
