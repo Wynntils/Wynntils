@@ -262,6 +262,12 @@
     "url": "https://cdn.wynntils.com/static/Reference/places.json"
   },
   {
+    "id": "dataStaticRecipes",
+    "md5": "391e48e4f03e6b0f3e282235af5a1c12",
+    "path": "Reference/recipes.json",
+    "url": "https://cdn.wynntils.com/static/Reference/recipes.json"
+  },
+  {
     "id": "dataStaticSeaskipperDestinations",
     "md5": "dc9eb0e70e689368aec0ef0e41a77a96",
     "path": "Data-Storage/seaskipper_destinations.json",
