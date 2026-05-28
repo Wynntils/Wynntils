@@ -455,6 +455,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.ToRomanNumeralsFunction());
 
         registerFunction(new StyledTextFunctions.ConcatStyledTextFunction());
+        registerFunction(new StyledTextFunctions.RepeatStyledTextFunction());
         registerFunction(new StyledTextFunctions.StyledTextFunction());
         registerFunction(new StyledTextFunctions.WithAtlasSpriteFontFunction());
         registerFunction(new StyledTextFunctions.WithBoldFunction());
