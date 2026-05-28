@@ -86,7 +86,7 @@ public class BulkBuyFeature extends Feature {
         // This event handles the first init of the shop, we cannot use ScreenInitEvent for this as
         // it will be fired before the shop contents are sent by the server
 
-        // Shop titles are in slot 4, eg. §aScroll Shop
+        // Shop titles are in slot 4, eg. §aScroll Merchant
         // Shops are all size 54 for double chest, sometimes size 41 is sent (no idea what it's for)
         if (e.getSlot() != 4 || e.getContainer().getContainerSize() != 54) return;
 
@@ -224,6 +224,7 @@ public class BulkBuyFeature extends Feature {
 
     private ItemPrice findItemPrice(AbstractContainerMenu menu, List<StyledText> lore) {
         MerchantPriceType priceType = getPriceType(menu);
+
         for (StyledText styledTextParts : lore) {
             Matcher priceMatcher = styledTextParts.getMatcher(priceType.pattern());
             if (priceMatcher.find()) {
@@ -320,6 +321,7 @@ public class BulkBuyFeature extends Feature {
     private MerchantPriceType getPriceType(AbstractContainerMenu menu) {
         StyledText title = StyledText.fromComponent(menu.getSlot(4).getItem().getHoverName());
 
+        // most non-treasure merchants use emerald prices
         return title.getString().equals(TREASURE_MERCHANT_TITLE.getString())
                 ? MerchantPriceType.TREASURE
                 : MerchantPriceType.EMERALD;
@@ -345,6 +347,7 @@ public class BulkBuyFeature extends Feature {
 
             @Override
             String formatLineAmount(String originalPart, Matcher matcher, int amount) {
+                // Keep the currency name exactly as it appears in the lore
                 return amount + originalPart.substring(matcher.group(1).length());
             }
         };
