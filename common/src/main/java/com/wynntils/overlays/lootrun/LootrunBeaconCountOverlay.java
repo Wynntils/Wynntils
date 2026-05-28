@@ -12,8 +12,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 
 public class LootrunBeaconCountOverlay extends TextOverlay {
-    private static final String TEMPLATE =
-            """
+    private static final String TEMPLATE = """
             {concat(
             "§eYellow: ";string(lootrun_beacon_count("YELLOW"));"
             §9Blue: ";string(lootrun_beacon_count("BLUE"));"
@@ -30,8 +29,7 @@ public class LootrunBeaconCountOverlay extends TextOverlay {
             §#00f000ffRainbow: ";string(lootrun_beacon_count("RAINBOW"));" (";string(lootrun_rainbow_beacon_count);")")}
             """;
 
-    private static final String PREVIEW_TEMPLATE =
-            """
+    private static final String PREVIEW_TEMPLATE = """
             §eYellow: 0
             §9Blue: 0
             §5Purple: 0

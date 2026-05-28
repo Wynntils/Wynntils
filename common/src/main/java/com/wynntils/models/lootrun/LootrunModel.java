@@ -206,6 +206,13 @@ public final class LootrunModel extends Model {
     private int timeLeft = 0;
     private CappedValue challenges = CappedValue.EMPTY;
 
+    private String currentMission = "";
+    private List<String> currentMissionObjective = new ArrayList<>();
+    private List<CappedValue> currentMissionProgress = new ArrayList<>();
+    private String currentTrial = "";
+    private List<String> currentTrialObjective = new ArrayList<>();
+    private List<CappedValue> currentTrialProgress = new ArrayList<>();
+
     private boolean expectMissionComplete = false;
     private boolean expectTrialStarted = false;
     private boolean expectOrangeBeacon = false;
@@ -963,6 +970,32 @@ public final class LootrunModel extends Model {
         expectMissionComplete = false;
     }
 
+    public void setCurrentMission(String currentMission) {
+        this.currentMission = currentMission;
+    }
+
+    public String getCurrentMission(boolean colored) {
+        return colored ? MissionType.fromName(currentMission).getColoredName() : currentMission;
+    }
+
+    public void setCurrentMissionObjective(List<String> currentMissionObjective) {
+        this.currentMissionObjective = currentMissionObjective;
+    }
+
+    public String getCurrentMissionObjective(int index) {
+        return index >= 0 && index < currentMissionObjective.size() ? currentMissionObjective.get(index) : "";
+    }
+
+    public void setCurrentMissionProgress(List<CappedValue> currentMissionProgress) {
+        this.currentMissionProgress = currentMissionProgress;
+    }
+
+    public CappedValue getCurrentMissionProgress(int index) {
+        return index >= 0 && index < currentMissionProgress.size()
+                ? currentMissionProgress.get(index)
+                : CappedValue.EMPTY;
+    }
+
     private void resetTrials() {
         getCurrentLootrunDetails().setTrials(new ArrayList<>());
         lootrunDetailsStorage.touched();
@@ -974,6 +1007,30 @@ public final class LootrunModel extends Model {
         }
 
         lootrunDetailsStorage.touched();
+    }
+
+    public void setCurrentTrial(String currentTrial) {
+        this.currentTrial = currentTrial;
+    }
+
+    public String getCurrentTrial() {
+        return currentTrial;
+    }
+
+    public void setCurrentTrialObjective(List<String> currentTrialObjective) {
+        this.currentTrialObjective = currentTrialObjective;
+    }
+
+    public String getCurrentTrialObjective(int index) {
+        return index >= 0 && index < currentTrialObjective.size() ? currentTrialObjective.get(index) : "";
+    }
+
+    public void setCurrentTrialProgress(List<CappedValue> currentTrialProgress) {
+        this.currentTrialProgress = currentTrialProgress;
+    }
+
+    public CappedValue getCurrentTrialProgress(int index) {
+        return index >= 0 && index < currentTrialProgress.size() ? currentTrialProgress.get(index) : CappedValue.EMPTY;
     }
 
     public void setTimeLeft(int seconds) {
