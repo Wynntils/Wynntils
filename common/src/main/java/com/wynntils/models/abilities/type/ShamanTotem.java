@@ -11,17 +11,28 @@ public class ShamanTotem {
     private int timerEntityId;
     private int time;
     private TotemState state;
+    private int transfusedAmount;
+    private String poisonAmount;
     /**
      * Our internal representation of the timer label's position.
      * */
     private Position position;
 
-    public ShamanTotem(int totemNumber, int timerEntityId, int time, TotemState totemState, Position position) {
+    public ShamanTotem(
+            int totemNumber,
+            int timerEntityId,
+            int time,
+            TotemState totemState,
+            Position position,
+            int transfusedAmount,
+            String poisonAmount) {
         this.totemNumber = totemNumber;
         this.timerEntityId = timerEntityId;
         this.time = time;
         this.state = totemState;
         this.position = position;
+        this.transfusedAmount = transfusedAmount;
+        this.poisonAmount = poisonAmount;
     }
 
     public int getTotemNumber() {
@@ -63,5 +74,21 @@ public class ShamanTotem {
     public enum TotemState {
         SUMMONED,
         ACTIVE
+    }
+
+    public int getTransfusedAmount() {
+        return transfusedAmount;
+    }
+
+    public void setTransfusedAmount(int transfusedAmount) {
+        this.transfusedAmount = transfusedAmount;
+    }
+
+    public String getPoisonAmount() {
+        return poisonAmount;
+    }
+
+    public void setPoisonAmount(String poisonAmount) {
+        this.poisonAmount = poisonAmount;
     }
 }

@@ -655,6 +655,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconColorFunction());
         registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconVibrantFunction());
         registerFunction(new LootrunFunctions.LootrunMissionFunction());
+        registerFunction(new LootrunFunctions.LootrunCurrentMissionFunction());
+        registerFunction(new LootrunFunctions.LootrunCurrentMissionObjectiveFunction());
+        registerFunction(new LootrunFunctions.LootrunCurrentMissionProgressFunction());
         registerFunction(new LootrunFunctions.LootrunNextOrangeExpireFunction());
         registerFunction(new LootrunFunctions.LootrunOrangeBeaconCountFunction());
         registerFunction(new LootrunFunctions.LootrunRainbowBeaconCountFunction());
@@ -663,6 +666,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LootrunSacrificesFunction());
         registerFunction(new LootrunFunctions.LootrunStateFunction());
         registerFunction(new LootrunFunctions.LootrunTaskLocationFunction());
+        registerFunction(new LootrunFunctions.LootrunCurrentTrialFunction());
+        registerFunction(new LootrunFunctions.LootrunCurrentTrialObjectiveFunction());
+        registerFunction(new LootrunFunctions.LootrunCurrentTrialProgressFunction());
         registerFunction(new LootrunFunctions.LootrunTaskNameFunction());
         registerFunction(new LootrunFunctions.LootrunTaskTypeFunction());
         registerFunction(new LootrunFunctions.LootrunTimeFunction());
@@ -735,6 +741,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new SocialFunctions.FriendsFunction());
         registerFunction(new SocialFunctions.IsFriendFunction());
         registerFunction(new SocialFunctions.IsPartyMemberFunction());
+        registerFunction(new SocialFunctions.ScoreboardPartyMembersFunction());
         registerFunction(new SocialFunctions.PartyLeaderFunction());
         registerFunction(new SocialFunctions.PartyMembersFunction());
         registerFunction(new SocialFunctions.PartyMemberNameFunction());
@@ -755,6 +762,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new SpellFunctions.ShamanTotemLocationFunction());
         registerFunction(new SpellFunctions.ShamanTotemStateFunction());
         registerFunction(new SpellFunctions.ShamanTotemTimeLeftFunction());
+        registerFunction(new SpellFunctions.ShamanTotemTransfusedAmountFunction());
+        registerFunction(new SpellFunctions.ShamanTotemPoisonAmountFunction());
         registerFunction(new SpellFunctions.ShieldTypeNameFunction());
 
         registerFunction(new StatisticFunctions.StatisticsAverageFunction());

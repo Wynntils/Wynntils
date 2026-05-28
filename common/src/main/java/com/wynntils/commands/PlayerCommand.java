@@ -173,11 +173,12 @@ public class PlayerCommand extends Command {
                             .append(Component.literal(
                                             "\nIf you think you should be able to see this, add your Wynncraft API Token to ")
                                     .withStyle(ChatFormatting.RED))
-                            .append(Component.literal("Wynntils Secrets").withStyle(style -> style.withHoverEvent(
-                                            new HoverEvent.ShowText(Component.literal("Click to open secrets menu.")))
-                                    .withClickEvent(new ClickEvent.RunCommand("/wynntils secrets"))
-                                    .withColor(ChatFormatting.GOLD)
-                                    .withUnderlined(true)));
+                            .append(Component.literal("Wynntils Secrets")
+                                    .withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(
+                                                    Component.literal("Click to open secrets menu.")))
+                                            .withClickEvent(new ClickEvent.RunCommand("/wynntils secrets"))
+                                            .withColor(ChatFormatting.GOLD)
+                                            .withUnderlined(true)));
                 }
 
                 McUtils.mc().execute(() -> {
