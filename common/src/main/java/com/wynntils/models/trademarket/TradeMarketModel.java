@@ -36,7 +36,12 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.trademarket.TradeMarketSearchResultHolder;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.StyledTextUtils;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
@@ -46,11 +51,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.client.gui.screens.inventory.ContainerScreen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
 
 public final class TradeMarketModel extends Model {
     private static final Set<TradeMarketState> CHAT_INPUT_STATES = EnumSet.of(
@@ -178,7 +178,7 @@ public final class TradeMarketModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChatMessageReceive(ChatMessageEvent.Match event) {
-        StyledText styledText = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
+        StyledText styledText = event.getMessage();
 
         TradeMarketState newState;
 

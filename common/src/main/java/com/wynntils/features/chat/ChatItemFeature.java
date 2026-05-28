@@ -38,16 +38,8 @@ import com.wynntils.screens.itemsharing.SavedItemsScreen;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.IterationDecision;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -61,6 +53,14 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Matcher;
 
 @ConfigCategory(Category.CHAT)
 public class ChatItemFeature extends Feature {
@@ -143,18 +143,14 @@ public class ChatItemFeature extends Feature {
     public void onChatReceived(ChatMessageEvent.Edit e) {
         StyledText message = e.getMessage();
 
-        StyledText unwrapped = StyledTextUtils.unwrap(message);
-
         // Decode old chat item encoding
-        StyledText modified = unwrapped.iterate((part, changes) -> {
+        StyledText modified = message.iterate((part, changes) -> {
             decodeChatEncoding(changes, part);
             return IterationDecision.CONTINUE;
         });
 
-        if (modified.equals(unwrapped)) return;
+        if (modified.equals(message)) return;
 
-        // If the message had any chat items, we use our unwrapped version
-        // FIXME: This edited message could be re-wrapped if it is too long, to match the original message's style
         e.setMessage(modified);
     }
 

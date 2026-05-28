@@ -17,13 +17,13 @@ import com.wynntils.models.abilities.type.PuppetType;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.StyledTextUtils;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import net.neoforged.bus.api.SubscribeEvent;
 
 public class ShamanSummonModel extends Model {
     private static final Pattern HUMMINGBIRD_SENT_PATTERN =
@@ -44,7 +44,7 @@ public class ShamanSummonModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageEvent.Match event) {
-        StyledText message = StyledTextUtils.unwrap(event.getMessage().stripAlignment());
+        StyledText message = event.getMessage();
         if (message.matches(HUMMINGBIRD_RETURN_PATTERN)) {
             hummingBirdsState = false;
         } else if (message.matches(HUMMINGBIRD_SENT_PATTERN)) {

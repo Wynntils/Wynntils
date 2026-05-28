@@ -22,6 +22,8 @@ import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.Pair;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -33,7 +35,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import net.neoforged.bus.api.SubscribeEvent;
 
 /**
  * This model handles the player's party relations.
@@ -135,7 +136,7 @@ public final class PartyModel extends Model {
 
     @SubscribeEvent
     public void onChatReceived(ChatMessageEvent.Match event) {
-        StyledText chatMessage = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
+        StyledText chatMessage = event.getMessage();
 
         if (tryParsePartyMessages(chatMessage)) return;
 
