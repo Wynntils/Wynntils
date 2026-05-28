@@ -57,15 +57,13 @@ public class BulkBuyFeature extends Feature {
     @Persisted
     private final Config<ActionSpeed> bulkBuySpeed = new Config<>(ActionSpeed.BALANCED);
 
-    @Persisted
-    private final Config<Integer> animationDuration = new Config<>(125);
-
     private static final String MERCHANT_TITLE_SUFFIX = " Merchant";
     // Test in BulkBuyFeature_PRICE_PATTERN
-    private static final Pattern PRICE_PATTERN =
-            Pattern.compile("(?:§f\uDB00\uDC05)?§6\uDAFF\uDFFC\uF001\uDB00\uDC06 (?:§f\uDB00\uDC00)?§(?:a✔|c✖)§. (?:§f)?(\\d{1,3}(?:,\\d{3})*)² §8\\((.+)\\)");
+    private static final Pattern PRICE_PATTERN = Pattern.compile(
+            "(?:§f\uDB00\uDC05)?§6\uDAFF\uDFFC\uF001\uDB00\uDC06 (?:§f\uDB00\uDC00)?§(?:a✔|c✖)§. (?:§f)?(\\d{1,3}(?:,\\d{3})*)² §8\\((.+)\\)");
 
-    private static final StyledText TREASURE_MERCHANT_TITLE = StyledText.fromString(ChatFormatting.GREEN + "Treasure Merchant");
+    private static final StyledText TREASURE_MERCHANT_TITLE =
+            StyledText.fromString(ChatFormatting.GREEN + "Treasure Merchant");
     // Test in BulkBuyFeature_TREASURE_MERCHANT_PRICE_PATTERN
     private static final Pattern TREASURE_MERCHANT_PRICE_PATTERN =
             Pattern.compile("§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §(?:a✔|c✖)§6 §f(\\d+)x §6([\\w ]+)");
@@ -118,7 +116,7 @@ public class BulkBuyFeature extends Feature {
                 containerScreen.topPos - 5,
                 Texture.BULK_BUY_PANEL.width(),
                 Texture.BULK_BUY_PANEL.height(),
-                animationDuration.get());
+                250);
         // Using addRenderableWidget causes the widget's click box to cover the item slots
         // And we cannot change the Z level for widgets added like this
         // And since we don't need to handle clicks on the widget ever, this is fine
@@ -266,7 +264,8 @@ public class BulkBuyFeature extends Feature {
             ItemPrice itemPrice = priceType.createPrice(priceMatcher);
             int newPrice = Integer.parseInt(priceMatcher.group(1).replaceAll(",", "")) * bulkBuyAmount.get();
             StyledText newLine = oldLine.iterateBackwards((part, changes) -> {
-                if (!itemPrice.canAfford(bulkBuyAmount.get()) && part.getString(null, StyleType.NONE).equals("✔")) {
+                if (!itemPrice.canAfford(bulkBuyAmount.get())
+                        && part.getString(null, StyleType.NONE).equals("✔")) {
                     changes.remove(part);
                     StyledTextPart newPart = new StyledTextPart(
                             "✖", part.getPartStyle().getStyle().withColor(ChatFormatting.RED), null, Style.EMPTY);
@@ -313,7 +312,9 @@ public class BulkBuyFeature extends Feature {
         return title.startsWith(ChatFormatting.GREEN.toString())
                 && title.endsWith(MERCHANT_TITLE_SUFFIX)
                 && LoreUtils.getLore(toBuy).stream()
-                        .anyMatch(loreLine -> loreLine.getMatcher(getPriceType(menu).pattern(), StyleType.DEFAULT).find());
+                        .anyMatch(loreLine -> loreLine.getMatcher(
+                                        getPriceType(menu).pattern(), StyleType.DEFAULT)
+                                .find());
     }
 
     private MerchantPriceType getPriceType(AbstractContainerMenu menu) {
@@ -375,7 +376,7 @@ public class BulkBuyFeature extends Feature {
         String formatTotal(int buyAmount) {
             int totalPrice = amount * buyAmount;
 
-            return emerald ? totalPrice + "²" : totalPrice + "x " + currencyName;
+            return emerald ? Models.Emerald.getFormattedString(totalPrice, false) : totalPrice + "x " + currencyName;
         }
     }
 

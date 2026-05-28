@@ -14,6 +14,7 @@ import com.wynntils.utils.render.type.AnimationPercentage;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.time.Duration;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -23,6 +24,7 @@ import net.minecraft.network.chat.Component;
 
 public class BulkBuyWidget extends AbstractWidget {
     private static final int BULK_BUY_WIDGET_CENTER = 89;
+    private static final int TEXT_HORIZONTAL_PADDING = 20;
 
     private final int originalX;
     private final AnimationPercentage animationPercentage;
@@ -82,11 +84,11 @@ public class BulkBuyWidget extends AbstractWidget {
             FontRenderer.getInstance()
                     .renderScrollingText(
                             guiGraphics,
-                            StyledText.fromString(
-                                    bulkBoughtItem.itemStack().getHoverName().getString()),
+                            StyledText.fromString(WynnUtils.stripItemNameMarkers(
+                                    bulkBoughtItem.itemStack().getHoverName().getString())),
                             getX() + BULK_BUY_WIDGET_CENTER,
                             getY() + 63,
-                            getWidth() - 20,
+                            getWidth() - TEXT_HORIZONTAL_PADDING,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.BOTTOM,
@@ -103,13 +105,15 @@ public class BulkBuyWidget extends AbstractWidget {
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.BOTTOM,
                             TextShadow.NORMAL);
+
             FontRenderer.getInstance()
-                    .renderText(
+                    .renderScrollingText(
                             guiGraphics,
                             StyledText.fromString(I18n.get(
                                     "feature.wynntils.bulkBuy.widget.totalPrice", bulkBoughtItem.totalPrice())),
                             getX() + BULK_BUY_WIDGET_CENTER,
                             getY() + 89,
+                            getWidth() - TEXT_HORIZONTAL_PADDING,
                             CommonColors.LIGHT_GREEN,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.BOTTOM,
