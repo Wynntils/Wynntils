@@ -455,6 +455,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.ToRomanNumeralsFunction());
 
         registerFunction(new StyledTextFunctions.ConcatStyledTextFunction());
+        registerFunction(new StyledTextFunctions.RepeatStyledTextFunction());
         registerFunction(new StyledTextFunctions.StyledTextFunction());
         registerFunction(new StyledTextFunctions.WithAtlasSpriteFontFunction());
         registerFunction(new StyledTextFunctions.WithBoldFunction());
@@ -539,6 +540,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.PersonalObjectiveScoreFunction());
         registerFunction(new CharacterFunctions.PowderSpecialChargeFunction());
         registerFunction(new CharacterFunctions.PuppetCountFunction());
+        registerFunction(new CharacterFunctions.RemnantCountFunction());
+        registerFunction(new CharacterFunctions.PatchworkAbominationDurationFunction());
         registerFunction(new CharacterFunctions.PuppetsInTimeRangeFunction());
         registerFunction(new CharacterFunctions.SnakeCountFunction());
         registerFunction(new CharacterFunctions.SprintFunction());
