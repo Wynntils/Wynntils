@@ -42,11 +42,15 @@ public abstract class TotemEvent extends Event {
     public static class Updated extends TotemEvent {
         private final int time;
         private final Position position;
+        private final int transfusedAmount;
+        private final String poisonAmount;
 
-        public Updated(int totemNumber, int time, Position position) {
+        public Updated(int totemNumber, int time, Position position, int transfusedAmount, String poisonAmount) {
             super(totemNumber);
             this.time = time;
             this.position = position;
+            this.transfusedAmount = transfusedAmount;
+            this.poisonAmount = poisonAmount;
         }
 
         public int getTime() {
@@ -55,6 +59,14 @@ public abstract class TotemEvent extends Event {
 
         public Position getPosition() {
             return position;
+        }
+
+        public int getTransfusedAmount() {
+            return transfusedAmount;
+        }
+
+        public String getPoisonAmount() {
+            return poisonAmount;
         }
     }
 
