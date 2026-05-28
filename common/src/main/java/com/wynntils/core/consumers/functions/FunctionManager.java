@@ -466,6 +466,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StyledTextFunctions.WithShadowColorFunction());
         registerFunction(new StyledTextFunctions.WithStrikethroughFunction());
         registerFunction(new StyledTextFunctions.WithUnderlinedFunction());
+        registerFunction(new StyledTextFunctions.RepeatStyledTextFunction());
 
         registerFunction(new TimeFunctions.AbsoluteTimeFunction());
         registerFunction(new TimeFunctions.FormatTimeAdvancedFunction());
