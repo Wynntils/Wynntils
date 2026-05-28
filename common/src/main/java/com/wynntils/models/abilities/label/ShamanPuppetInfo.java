@@ -6,12 +6,14 @@ package com.wynntils.models.abilities.label;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.type.LabelInfo;
+import com.wynntils.models.abilities.type.PuppetType;
 import com.wynntils.utils.mc.type.Location;
 import net.minecraft.world.entity.Entity;
 
 public class ShamanPuppetInfo extends LabelInfo {
     private final int secondsLeft;
     private final String playerName;
+    private final PuppetType puppetType;
     private final int invigorateTime;
     private final int friendlyFireTime;
 
@@ -21,12 +23,14 @@ public class ShamanPuppetInfo extends LabelInfo {
             Entity entity,
             int secondsLeft,
             String playerName,
+            PuppetType puppetType,
             int invigorateTime,
             int friendlyFireTime) {
         super(label, location, entity);
 
         this.secondsLeft = secondsLeft;
         this.playerName = playerName;
+        this.puppetType = puppetType;
         this.invigorateTime = invigorateTime;
         this.friendlyFireTime = friendlyFireTime;
     }
@@ -37,6 +41,10 @@ public class ShamanPuppetInfo extends LabelInfo {
 
     public String getPlayerName() {
         return playerName;
+    }
+
+    public PuppetType getPuppetType() {
+        return puppetType;
     }
 
     public int getInvigorateTime() {
@@ -51,7 +59,8 @@ public class ShamanPuppetInfo extends LabelInfo {
     public String toString() {
         return "ShamanPuppetInfo{" + "secondsLeft="
                 + secondsLeft + ", playerName="
-                + playerName + ", invigorateTime=" + invigorateTime + ", friendlyFireTime=" + friendlyFireTime
+                + playerName + ", puppetType=" + puppetType
+                + ", invigorateTime=" + invigorateTime + ", friendlyFireTime=" + friendlyFireTime
                 + ", label="
                 + label + ", name='"
                 + name + '\''
