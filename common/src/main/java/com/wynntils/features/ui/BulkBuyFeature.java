@@ -60,13 +60,19 @@ public class BulkBuyFeature extends Feature {
     @Persisted
     private final Config<Integer> animationDuration = new Config<>(125);
 
-    private static final String SHOP_TITLE_SUFFIX = " Shop";
+    private static final String MERCHANT_TITLE_SUFFIX = " Merchant";
     // Test in BulkBuyFeature_PRICE_PATTERN
     private static final Pattern PRICE_PATTERN =
-            Pattern.compile("§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §(?:c✖|a✔)(?:§6)? §f(\\d{1,3}(?:,\\d{3})*)² §8(.+)");
+            Pattern.compile("\uDAFF\uDFFC\uE001\uDB00\uDC06 (?:\uDB00\uDC05)?\uDAFF\uDFFC\uF001\uDB00\uDC06 (?:\uDB00\uDC00)?(?:✔|✖) (\\d{1,3}(?:,\\d{3})*)² \\((.+)\\)");
+
+    private static final StyledText TREASURE_MERCHANT_TITLE = StyledText.fromString(ChatFormatting.GREEN + "Treasure Merchant");
+    // Test in BulkBuyFeature_TREASURE_MERCHANT_PRICE_PATTERN
+    private static final Pattern TREASURE_MERCHANT_PRICE_PATTERN =
+            Pattern.compile("\uDAFF\uDFFC\uE001\uDB00\uDC06 \uDAFF\uDFFC\uF001\uDB00\uDC06 (?:✔|✖) (\\d+)x ([\\w ]+)");
+
     private static final ChatFormatting BULK_BUY_ACTIVE_COLOR = ChatFormatting.GREEN;
     private static final StyledText PRICE_STR =
-            StyledText.fromString("§6\uDAFF\uDFFC\uE00A\uDAFF\uDFFF\uE002\uDAFF\uDFFE Price");
+            StyledText.fromString("\uDAFF\uDFFC\uE001\uDB00\uDC06 \uDAFF\uDFFC\uE00A\uDAFF\uDFFF\uE002\uDAFF\uDFFE Price");
 
     private BulkBuyWidget bulkBuyWidget;
     private int bulkBoughtSlotNumber = -1; // Slot number of the thing we're buying
@@ -107,7 +113,7 @@ public class BulkBuyFeature extends Feature {
         if (acm.getItems().size() != 90) return;
 
         StyledText title = StyledText.fromComponent(acm.getSlot(4).getItem().getHoverName());
-        if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(SHOP_TITLE_SUFFIX)) return;
+        if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(MERCHANT_TITLE_SUFFIX)) return;
 
         bulkBuyWidget = new BulkBuyWidget(
                 containerScreen.leftPos,
@@ -293,7 +299,7 @@ public class BulkBuyFeature extends Feature {
         StyledText title = StyledText.fromComponent(menu.getSlot(4).getItem().getHoverName());
 
         return title.startsWith(ChatFormatting.GREEN.toString())
-                && title.endsWith(" Shop")
+                && title.endsWith(MERCHANT_TITLE_SUFFIX)
                 && LoreUtils.getStringLore(toBuy).contains(PRICE_STR);
     }
 
