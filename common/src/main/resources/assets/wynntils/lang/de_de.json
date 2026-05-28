@@ -1771,6 +1771,7 @@
   "function.wynntils.lootrunBeaconVibrant.argument.color": "Die Farbe des Leuchtfeuers",
   "function.wynntils.lootrunChallenges.description": "Die Anzahl der Herausforderungen",
   "function.wynntils.lootrunChallenges.name": "Lootrun-Herausforderungen",
+  "function.wynntils.lootrunCurrentMission.argument.colored": "Ob die Ausgabe farbig sein soll oder nicht",
   "function.wynntils.lootrunLastSelectedBeaconColor.description": "Die Farbe des Leuchtfeuers, das du zuletzt in deinem Lootrun ausgewählt hast",
   "function.wynntils.lootrunLastSelectedBeaconColor.name": "Farbe des Zuletzt Ausgewählten Leuchtfeuers im Lootrun",
   "function.wynntils.lootrunMission.argument.colored": "Ob die Ausgabe farbig sein soll oder nicht",
