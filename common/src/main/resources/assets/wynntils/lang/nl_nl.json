@@ -1768,7 +1768,6 @@
   "function.wynntils.lootrunBeaconVibrant.argument.color": "De kleur van het baken",
   "function.wynntils.lootrunChallenges.description": "Het aantal uitdagingen",
   "function.wynntils.lootrunChallenges.name": "Lootrun uitdagingen",
-  "function.wynntils.lootrunCurrentMission.argument.colored": "Moet de uitvoer gekleurd zijn?",
   "function.wynntils.lootrunLastSelectedBeaconColor.description": "De kleur van het laatst geselecteerde baken tijdens je lootrun",
   "function.wynntils.lootrunLastSelectedBeaconColor.name": "Lootrun laatst geselecteerde bakenkleur",
   "function.wynntils.lootrunMission.argument.colored": "Moet de uitvoer gekleurd zijn?",
