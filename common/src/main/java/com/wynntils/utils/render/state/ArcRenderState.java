@@ -59,7 +59,7 @@ public record ArcRenderState(
 
     @Override
     public void buildVertices(VertexConsumer consumer) {
-        int segments = (int) Math.min(fill * MAX_STEPS, MAX_STEPS - 1);
+        int segments = (int) Math.min(fill * MAX_STEPS, MAX_STEPS);
 
         float midX = x + outerRadius;
         float midY = y + outerRadius;
@@ -70,8 +70,9 @@ public record ArcRenderState(
         float angle;
         float sinAngle;
         float cosAngle;
+        float numSteps = MAX_STEPS;
         for (int i = 0; i <= segments; i++) {
-            angle = (Mth.TWO_PI * i / (MAX_STEPS - 1f)) + angleOffset;
+            angle = (Mth.TWO_PI * i / numSteps) + angleOffset;
             sinAngle = Mth.sin(angle);
             cosAngle = Mth.cos(angle);
 

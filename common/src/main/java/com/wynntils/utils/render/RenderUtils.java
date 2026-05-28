@@ -630,6 +630,48 @@ public final class RenderUtils {
                 color,
                 guiGraphics.scissorStack.peek()));
     }
+    public static void drawRoundedRect(
+            GuiGraphics guiGraphics,
+            CustomColor fillColor,
+            float x,
+            float y,
+            float width,
+            float height,
+            int innerRadius,
+            int outerRadius) {
+        float x2 = x + width;
+        float y2 = y + height;
+
+        // Fill the rect
+        float offset = outerRadius - 1;
+        float offset2 = ((float) outerRadius / 2) - 0.5F;
+        float rectWidth = width - offset2 * 4;
+        float rectHeight = height - offset2 * 4;
+        drawRect(
+                guiGraphics,
+                fillColor,
+                x + offset2 * 2,
+                y + offset2 * 2,
+                rectWidth,
+                rectHeight);
+
+        // Edges
+        offset2 -= 0.4F;
+        drawLine(guiGraphics, fillColor, x + offset, y + offset2, x2 - offset,y + offset2, outerRadius);
+        drawLine(guiGraphics, fillColor, x2 - offset2, y + offset, x2 - offset2,y2 - offset, outerRadius);
+        drawLine(guiGraphics, fillColor, x + offset, y2 - offset2, x2 - offset, y2 - offset2, outerRadius);
+        drawLine(guiGraphics, fillColor, x + offset2, y + offset, x + offset2, y2 - offset, outerRadius);
+
+        // Corners
+        offset *= 2;
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(-1, -1);
+        drawRoundedCorner(guiGraphics, fillColor, x, y, innerRadius, outerRadius,Mth.HALF_PI * 3);
+        drawRoundedCorner(guiGraphics, fillColor, x, y2 - offset, innerRadius, outerRadius, (float) Math.PI);
+        drawRoundedCorner(guiGraphics, fillColor, x2 - offset, y2 - offset, innerRadius, outerRadius, Mth.HALF_PI);
+        drawRoundedCorner(guiGraphics, fillColor, x2 - offset, y, innerRadius, outerRadius, 0);
+        guiGraphics.pose().popMatrix();
+    }
 
     public static void drawRoundedRectWithBorder(
             GuiGraphics guiGraphics,
@@ -668,13 +710,18 @@ public final class RenderUtils {
         drawLine(guiGraphics, borderColor, x, y + offset, x, y2 - offset, lineWidth);
 
         // Corners
-        guiGraphics.pose().pushMatrix();
+        float offset2 = (lineWidth / 2) - 1;
+        offset = (offset * 2) - offset2;
+                guiGraphics.pose().pushMatrix();
         guiGraphics.pose().translate(-1, -1);
-        drawRoundedCorner(guiGraphics, borderColor, x, y, innerRadius, outerRadius, Mth.HALF_PI * 3);
-        drawRoundedCorner(guiGraphics, borderColor, x, y2 - offset * 2, innerRadius, outerRadius, (float) Math.PI);
-        drawRoundedCorner(
-                guiGraphics, borderColor, x2 - offset * 2, y2 - offset * 2, innerRadius, outerRadius, Mth.HALF_PI);
-        drawRoundedCorner(guiGraphics, borderColor, x2 - offset * 2, y, innerRadius, outerRadius, 0);
+        drawRoundedCorner(guiGraphics, borderColor, x - offset2, y - offset2, innerRadius,
+                outerRadius,Mth.HALF_PI * 3);
+        drawRoundedCorner(guiGraphics, borderColor, x - offset2, y2 - offset, innerRadius,
+                outerRadius, (float) Math.PI);
+        drawRoundedCorner(guiGraphics, borderColor, x2 - offset, y2 - offset, innerRadius,
+                outerRadius, Mth.HALF_PI);
+        drawRoundedCorner(guiGraphics, borderColor, x2 - offset, y - offset2, innerRadius,
+                outerRadius, 0);
         guiGraphics.pose().popMatrix();
     }
 
