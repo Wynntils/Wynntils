@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.abilities.label.ShamanPuppetInfo;
+import com.wynntils.models.abilities.type.PuppetType;
 import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.models.characterstats.type.PowderSpecialInfo;
 import com.wynntils.models.objectives.WynnObjective;
@@ -477,7 +478,26 @@ public class CharacterFunctions {
     public static class PuppetCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsLabels().count());
+            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsByType(PuppetType.PUPPET)
+                    .count());
+        }
+    }
+
+    public static class RemnantCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsByType(PuppetType.REMNANT)
+                    .count());
+        }
+    }
+
+    public static class PatchworkAbominationDurationFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.ShamanSummon.getActivePuppetsByType(PuppetType.PATCHWORK_ABOMINATION)
+                    .findFirst()
+                    .map(ShamanPuppetInfo::getSecondsLeft)
+                    .orElse(-1);
         }
     }
 
