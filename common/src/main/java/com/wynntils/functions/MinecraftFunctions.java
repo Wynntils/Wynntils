@@ -127,7 +127,7 @@ public class MinecraftFunctions {
 
             Optional<BlockPos> hitBlock = RaycastUtils.getTargetedBlockPosition(distance, colliderOnly);
 
-            if (hitBlock.isEmpty()) return new Location(0, 0, 0);
+            if (hitBlock.isEmpty()) return Location.ZERO;
 
             return new Location(hitBlock.get());
         }

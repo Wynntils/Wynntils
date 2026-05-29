@@ -23,6 +23,8 @@ public class Location implements Comparable<Location> {
     public final int y;
     public final int z;
 
+    public static final Location ZERO = new Location(0, 0, 0);
+
     public Location(int x, int y, int z) {
         this.x = x;
         this.y = y;
