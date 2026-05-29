@@ -17,7 +17,9 @@ public enum SpellFailureReason {
     NOT_UNLOCKED(
             Pattern.compile(
                     "§4(?:\uE008\uE002|\uE001) You have not unlocked this spell! Unlock it using your compass."),
-            "You have not unlocked this spell!");
+            "You have not unlocked this spell!"),
+    // Used for when 3 spell inputs were parsed, but no failure reason is given
+    UNAVAILABLE(null, "");
 
     private final Pattern pattern;
     private final String displayMessage;
@@ -29,7 +31,9 @@ public enum SpellFailureReason {
 
     public static SpellFailureReason fromMsg(StyledText msg) {
         for (SpellFailureReason failureReason : values()) {
-            if (msg.matches(failureReason.pattern)) return failureReason;
+            if (failureReason.pattern != null && msg.matches(failureReason.pattern)) {
+                return failureReason;
+            }
         }
         return null;
     }

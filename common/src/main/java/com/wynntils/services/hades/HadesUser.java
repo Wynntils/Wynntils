@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hades;
@@ -121,31 +121,33 @@ public class HadesUser {
         this.health = new CappedValue(packet.getHealth(), packet.getMaxHealth());
         this.mana = new CappedValue(packet.getMana(), packet.getMaxMana());
 
-        handleArmorData(InventoryArmor.HELMET, GearType.HELMET, packet.getHelmet());
-        handleArmorData(InventoryArmor.CHESTPLATE, GearType.CHESTPLATE, packet.getChestplate());
-        handleArmorData(InventoryArmor.LEGGINGS, GearType.LEGGINGS, packet.getLeggings());
-        handleArmorData(InventoryArmor.BOOTS, GearType.BOOTS, packet.getBoots());
+        if (packet.hasGear()) {
+            handleArmorData(InventoryArmor.HELMET, GearType.HELMET, packet.getHelmet());
+            handleArmorData(InventoryArmor.CHESTPLATE, GearType.CHESTPLATE, packet.getChestplate());
+            handleArmorData(InventoryArmor.LEGGINGS, GearType.LEGGINGS, packet.getLeggings());
+            handleArmorData(InventoryArmor.BOOTS, GearType.BOOTS, packet.getBoots());
 
-        handleAccessoryData(InventoryAccessory.RING_1, GearType.RING, packet.getRingOne());
-        handleAccessoryData(InventoryAccessory.RING_2, GearType.RING, packet.getRingTwo());
-        handleAccessoryData(InventoryAccessory.BRACELET, GearType.BRACELET, packet.getBracelet());
-        handleAccessoryData(InventoryAccessory.NECKLACE, GearType.NECKLACE, packet.getNecklace());
+            handleAccessoryData(InventoryAccessory.RING_1, GearType.RING, packet.getRingOne());
+            handleAccessoryData(InventoryAccessory.RING_2, GearType.RING, packet.getRingTwo());
+            handleAccessoryData(InventoryAccessory.BRACELET, GearType.BRACELET, packet.getBracelet());
+            handleAccessoryData(InventoryAccessory.NECKLACE, GearType.NECKLACE, packet.getNecklace());
 
-        if (packet.getHeldItem().isEmpty()) {
-            this.heldItem = null;
-            this.heldItemCache = "";
-        } else if (!this.heldItemCache.equals(packet.getHeldItem())) {
-            ErrorOr<WynnItem> errorOrDecodedItem = decodeItem(packet.getHeldItem());
+            if (packet.getHeldItem().isEmpty()) {
+                this.heldItem = null;
+                this.heldItemCache = "";
+            } else if (!this.heldItemCache.equals(packet.getHeldItem())) {
+                ErrorOr<WynnItem> errorOrDecodedItem = decodeItem(packet.getHeldItem());
 
-            if (errorOrDecodedItem.hasError()) {
-                WynntilsMod.warn("Failed to decode Hades user held item: " + errorOrDecodedItem.getError());
-            } else {
-                WynnItem item = errorOrDecodedItem.getValue();
+                if (errorOrDecodedItem.hasError()) {
+                    WynntilsMod.warn("Failed to decode Hades user held item: " + errorOrDecodedItem.getError());
+                } else {
+                    WynnItem item = errorOrDecodedItem.getValue();
 
-                if (item instanceof GearTypeItemProperty gearItemType
-                        && gearItemType.getGearType().isWeapon()) {
-                    this.heldItem = item;
-                    this.heldItemCache = packet.getHeldItem();
+                    if (item instanceof GearTypeItemProperty gearItemType
+                            && gearItemType.getGearType().isWeapon()) {
+                        this.heldItem = item;
+                        this.heldItemCache = packet.getHeldItem();
+                    }
                 }
             }
         }

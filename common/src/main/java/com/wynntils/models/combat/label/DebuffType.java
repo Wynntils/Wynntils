@@ -20,6 +20,7 @@ public enum DebuffType {
     DRAINED('\uE03F', CustomColor.fromInt(0xA1FAD9FF)),
     ENKINDLED('\uE03D', CustomColor.fromInt(0xFF8E8E)),
     FREEZING('\u2744', ChatFormatting.AQUA),
+    HYPOXIA('\uE03B', CustomColor.fromInt(0x799490FF)),
     MARKED('\u271C', ChatFormatting.RED),
     POISON('\u2620', ChatFormatting.DARK_PURPLE),
     PROVOKED('\uE025', ChatFormatting.RED),
@@ -27,6 +28,7 @@ public enum DebuffType {
     SLOWNESS('\u2B24', ChatFormatting.RED),
     TRICK('\uE03A', CustomColor.fromInt(0x6AFA65)),
     TWILIGHT('\uE04B', CustomColor.fromInt(0x5B88FC)),
+    UNSTABLE('\uE046', CustomColor.fromInt(0x7A3CFFFF)),
     WEAKNESS('\u2694', ChatFormatting.RED),
     WHIPPED('\u21F6', ChatFormatting.GOLD),
     WIND_PRISON('\u274B', ChatFormatting.RED);

@@ -43,9 +43,9 @@ public final class ShieldModel extends Model {
     }
 
     @SubscribeEvent
-    public void onShieldCast(SpellEvent.Completed e) {
+    public void onShieldCast(SpellEvent.Cast e) {
         for (ShieldType shieldType : shieldTypes) {
-            if (shieldType.validSpell(e.getSpell())) {
+            if (shieldType.validSpell(e.getSpellType())) {
                 shieldCastTime = System.currentTimeMillis();
                 collectedIds = new ArrayList<>();
                 spawnedIds = null;

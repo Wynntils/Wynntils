@@ -7,7 +7,6 @@ package com.wynntils.models.spells;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
@@ -15,7 +14,6 @@ import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.actionbar.matchers.SpellCastSegmentMatcher;
 import com.wynntils.models.spells.actionbar.matchers.SpellInputsSegmentMatcher;
 import com.wynntils.models.spells.actionbar.matchers.UltimateTypeSegmentMatcher;
@@ -218,12 +216,8 @@ public final class SpellModel extends Model {
     }
 
     private void updateFromSpellSegment(SpellInputsSegment spellInputsSegment) {
-        updateFromSpellDimensionArray(spellInputsSegment.getDirections());
-    }
-
-    private void updateFromSpellDimensionArray(SpellDirection[] directions) {
         if (ignoreSpellInputsUntilClear) {
-            if (directions.length == 0) {
+            if (spellInputsSegment.getDirections().length == 0) {
                 ignoreSpellInputsUntilClear = false;
                 if (expireNextClear) {
                     expireNextClear = false;
@@ -234,22 +228,24 @@ public final class SpellModel extends Model {
             return;
         }
 
-        spellInputsActive = directions.length > 0;
+        spellInputsActive = spellInputsSegment.getDirections().length > 0;
         ticksSinceSpellInputActivity = spellInputsActive ? 0 : SPELL_COST_RESET_TICKS;
 
         // noop if the spell state hasn't changed
-        if (Arrays.equals(directions, lastSpell)) return;
-        lastSpell = directions;
+        if (Arrays.equals(spellInputsSegment.getDirections(), lastSpell)) return;
+        lastSpell = spellInputsSegment.getDirections();
 
         WynntilsMod.postEvent(new SpellEvent.Partial(lastSpell));
 
+        // As inputs are now removed when a spell is cast, if we ever get 3 inputs we know it is a failed cast.
         if (lastSpell.length == 3) {
             if (failureReason != null) {
                 WynntilsMod.postEvent(new SpellEvent.Failed(failureReason));
                 failureReason = null;
             } else {
-                WynntilsMod.postEvent(
-                        new SpellEvent.Completed(lastSpell, SpellType.fromSpellDirectionArray(lastSpell)));
+                // This can happen in cases where even though the inputs were sent, something else is blocking
+                // the cast such as archer casting escape again before touching the ground
+                WynntilsMod.postEvent(new SpellEvent.Failed(SpellFailureReason.UNAVAILABLE));
             }
         }
     }
@@ -273,11 +269,6 @@ public final class SpellModel extends Model {
         if (spellTextActive) return;
 
         spellTextActive = true;
-        SpellDirection[] directions = spellCastSegment.getSpellType().getSpellDirectionArray();
-        directions = Models.Character.getClassType() == ClassType.ARCHER
-                ? SpellDirection.invertArray(directions)
-                : directions;
-        updateFromSpellDimensionArray(directions);
         WynntilsMod.postEvent(new SpellEvent.Cast(
                 spellCastSegment.getSpellType(), spellCastSegment.getManaCost(), spellCastSegment.getHealthCost()));
     }
