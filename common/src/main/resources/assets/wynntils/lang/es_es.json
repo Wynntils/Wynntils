@@ -1768,6 +1768,7 @@
   "function.wynntils.lootrunBeaconVibrant.argument.color": "El color del faro",
   "function.wynntils.lootrunChallenges.description": "El número de desafíos",
   "function.wynntils.lootrunChallenges.name": "Desafíos de Lootrun",
+  "function.wynntils.lootrunCurrentMission.argument.colored": "Si la salida debe ser coloreada o no",
   "function.wynntils.lootrunLastSelectedBeaconColor.description": "El color del faro que seleccionaste por última vez en tu lootrun",
   "function.wynntils.lootrunLastSelectedBeaconColor.name": "Color del Último Faro Seleccionado en Lootrun",
   "function.wynntils.lootrunMission.argument.colored": "Si la salida debe ser coloreada o no",
