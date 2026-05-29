@@ -109,20 +109,8 @@ public class ProfessionHighlightFeature extends Feature {
         if (selectedProfession == null) return;
         if (!professionItemPropertyOpt.get().getProfessionTypes().contains(selectedProfession)) return;
 
-        RenderUtils.drawTexturedRect(
-                event.getGuiGraphics(),
-                Texture.HIGHLIGHT.identifier(),
-                highlightColor.get(),
-                slot.x - 1,
-                slot.y - 1,
-                18,
-                18,
-                0,
-                0,
-                18,
-                18,
-                Texture.HIGHLIGHT.width(),
-                Texture.HIGHLIGHT.height());
+        RenderUtils.drawSprite(
+                event.getGuiGraphics(), Texture.HIGHLIGHT_WYNN, highlightColor.get(), slot.x - 8, slot.y - 8);
     }
 
     private void setSelectedProfession(ProfessionType professionType) {
