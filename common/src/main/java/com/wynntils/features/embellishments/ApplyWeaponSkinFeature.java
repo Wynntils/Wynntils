@@ -15,9 +15,11 @@ import com.wynntils.models.store.StoreModel;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ItemUtils;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -40,9 +42,18 @@ public class ApplyWeaponSkinFeature extends Feature {
         if (data == null) return;
         if (!ItemUtils.isUsableWeapon(itemStack)) return;
 
-        if (!data.getFloat(StoreModel.WEAPON_MODEL_FLOAT_INDEX).equals(value)) {
-            data.floats().set(StoreModel.WEAPON_MODEL_FLOAT_INDEX, value);
-        }
+        if (data.getFloat(StoreModel.WEAPON_MODEL_FLOAT_INDEX).equals(value)) return;
+        data.floats().set(StoreModel.WEAPON_MODEL_FLOAT_INDEX, value);
+
+        PotionContents potionContents = itemStack.get(DataComponents.POTION_CONTENTS);
+        if (potionContents == null) return;
+        itemStack.set(
+                DataComponents.POTION_CONTENTS,
+                new PotionContents(
+                        potionContents.potion(),
+                        Optional.of(Models.Store.getGlint(StoreModel.WARDROBE_WEAPON_GLINT_SLOT)),
+                        potionContents.customEffects(),
+                        potionContents.customName()));
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -66,9 +77,6 @@ public class ApplyWeaponSkinFeature extends Feature {
         CustomModelData data = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
         if (data == null) return;
         if (!ItemUtils.isUsableWeapon(itemStack)) return;
-
-        // Transfer the glint
-        handItem.set(DataComponents.POTION_CONTENTS, itemStack.get(DataComponents.POTION_CONTENTS));
 
         // ItemInHandRenderer#tick() checks ItemStack changes by reference instead of ItemStack#matches
         // so to not trigger equipped animation we have to overwrite the ItemStack for selected slot
