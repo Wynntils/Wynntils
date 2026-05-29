@@ -2057,6 +2057,7 @@
   "function.wynntils.lootrunBeaconVibrant.name": "찬란한 루트런 신호기",
   "function.wynntils.lootrunChallenges.description": "루트런에서 선택한 도전 수",
   "function.wynntils.lootrunChallenges.name": "루트런 도전 수",
+  "function.wynntils.lootrunCurrentMission.argument.colored": "출력에 색상이 포함되어야 합니까?",
   "function.wynntils.lootrunLastSelectedBeaconColor.description": "루트런에서 마지막으로 선택한 신호기 색",
   "function.wynntils.lootrunLastSelectedBeaconColor.name": "루트런 최근 선택 신호기 색",
   "function.wynntils.lootrunLastSelectedBeaconVibrant.description": "루트런에서 마지막으로 선택한 신호기가 찬란한지 여부",
