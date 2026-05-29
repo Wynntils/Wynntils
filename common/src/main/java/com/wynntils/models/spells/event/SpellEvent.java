@@ -32,23 +32,6 @@ public abstract class SpellEvent extends Event {
     }
 
     /**
-     * Fired upon successful, completed spell cast.
-     * This event fires upon every three-click sequence, no matter if the spell was actually casted or not.
-     */
-    public static final class Completed extends Casting {
-        private final SpellType spell;
-
-        public Completed(SpellDirection[] spellDirectionArray, SpellType spell) {
-            super(spellDirectionArray);
-            this.spell = spell;
-        }
-
-        public SpellType getSpell() {
-            return spell;
-        }
-    }
-
-    /**
      * Fired upon spell timeout from not finishing a cast
      */
     public static final class Expired extends Casting {

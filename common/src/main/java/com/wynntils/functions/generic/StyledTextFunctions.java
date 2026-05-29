@@ -276,4 +276,25 @@ public class StyledTextFunctions {
                     new Argument<>("isUnderlined", Boolean.class, null)));
         }
     }
+
+    public static class RepeatStyledTextFunction extends GenericFunction<StyledText> {
+        @Override
+        public StyledText getValue(FunctionArguments arguments) {
+            StyledText styledText = arguments.getArgument("value").getStyledText();
+            Integer times = arguments.getArgument("count").getIntegerValue();
+
+            return styledText.repeat(times);
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("value", StyledText.class, null), new Argument<>("count", Integer.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("repeat_st");
+        }
+    }
 }
