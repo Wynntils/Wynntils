@@ -109,6 +109,8 @@ public final class RaycastUtils {
     public static Optional<BlockPos> getTargetedBlockPosition(double maxDistance, boolean colliderOnly) {
         LocalPlayer player = McUtils.player();
 
+        if (player.level() == null) return Optional.empty();
+
         Vec3 start = player.getEyePosition(1f);
         Vec3 look = player.getLookAngle();
         Vec3 end = start.add(look.x * maxDistance, look.y * maxDistance, look.z * maxDistance);
