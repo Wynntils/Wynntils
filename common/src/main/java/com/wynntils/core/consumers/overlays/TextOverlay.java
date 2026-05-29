@@ -23,7 +23,7 @@ import net.minecraft.client.gui.GuiGraphics;
  */
 public abstract class TextOverlay extends DynamicOverlay {
     @Persisted(i18nKey = "overlay.wynntils.textOverlay.textShadow")
-    private final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+    protected final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted(i18nKey = "overlay.wynntils.textOverlay.fontScale")
     protected final Config<Float> fontScale = new Config<>(1.0f);
@@ -32,10 +32,10 @@ public abstract class TextOverlay extends DynamicOverlay {
     protected final Config<Boolean> fitText = new Config<>(false);
 
     @Persisted(i18nKey = "overlay.wynntils.textOverlay.backgroundColor")
-    private final Config<CustomColor> backgroundColor = new Config<>(CustomColor.fromHexString("#00000000"));
+    protected final Config<CustomColor> backgroundColor = new Config<>(CustomColor.fromHexString("#00000000"));
 
     @Persisted(i18nKey = "overlay.wynntils.textOverlay.backgroundBorderWidth")
-    private final Config<Float> backgroundBorderWidth = new Config<>(1.0f);
+    protected final Config<Float> backgroundBorderWidth = new Config<>(1.0f);
 
     private StyledText[] cachedLines = new StyledText[0];
 
@@ -78,7 +78,7 @@ public abstract class TextOverlay extends DynamicOverlay {
         renderTemplate(guiGraphics, calculateTemplateValue(getPreviewTemplate()), getTextScale());
     }
 
-    private void renderTemplate(GuiGraphics guiGraphics, StyledText[] lines, float textScale) {
+    protected void renderTemplate(GuiGraphics guiGraphics, StyledText[] lines, float textScale) {
         float renderX = this.getRenderX();
         float renderY = this.getRenderY();
         FontRenderer.getInstance()

@@ -251,10 +251,10 @@ public class LootrunFunctions {
             String color = arguments.getArgument("color").getStringValue();
 
             LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
-            if (lootrunBeaconKind == null) return new Location(0, 0, 0);
+            if (lootrunBeaconKind == null) return Location.ZERO;
 
             TaskLocation taskLocation = Models.Lootrun.getTaskForColor(lootrunBeaconKind);
-            if (taskLocation == null) return new Location(0, 0, 0);
+            if (taskLocation == null) return Location.ZERO;
 
             return taskLocation.location();
         }

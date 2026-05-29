@@ -147,7 +147,7 @@ public class ContentBookDumpFeature extends Feature {
             if (Objects.equals(info.name(), "Galleon\u0027s Graveyard")) continue;
 
             switch (info.type()) {
-                case BOSS_ALTAR, LOOTRUN_CAMP, DUNGEON, RAID -> trackingNeeded.add(info);
+                case BOSS_ALTAR, LOOTRUN_CAMP, DUNGEON, RAID, MOUNT_ENCLOSURE -> trackingNeeded.add(info);
             }
         }
 

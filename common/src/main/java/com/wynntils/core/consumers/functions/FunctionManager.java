@@ -455,6 +455,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.ToRomanNumeralsFunction());
 
         registerFunction(new StyledTextFunctions.ConcatStyledTextFunction());
+        registerFunction(new StyledTextFunctions.RepeatStyledTextFunction());
         registerFunction(new StyledTextFunctions.StyledTextFunction());
         registerFunction(new StyledTextFunctions.WithAtlasSpriteFontFunction());
         registerFunction(new StyledTextFunctions.WithBoldFunction());
@@ -539,6 +540,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.PersonalObjectiveScoreFunction());
         registerFunction(new CharacterFunctions.PowderSpecialChargeFunction());
         registerFunction(new CharacterFunctions.PuppetCountFunction());
+        registerFunction(new CharacterFunctions.RemnantCountFunction());
+        registerFunction(new CharacterFunctions.PatchworkAbominationDurationFunction());
         registerFunction(new CharacterFunctions.PuppetsInTimeRangeFunction());
         registerFunction(new CharacterFunctions.SnakeCountFunction());
         registerFunction(new CharacterFunctions.SprintFunction());
@@ -677,11 +680,14 @@ public final class FunctionManager extends Manager {
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());
         registerFunction(new MinecraftFunctions.KeyPressedFunction());
+        registerFunction(new MinecraftFunctions.LocationAtCrosshairFunction());
         registerFunction(new MinecraftFunctions.MinecraftEffectDurationFunction());
         registerFunction(new MinecraftFunctions.MyLocationFunction());
+        registerFunction(new MinecraftFunctions.PitchFunction());
         registerFunction(new MinecraftFunctions.TicksFunction());
 
         registerFunction(new MountFunctions.CappedMountStatFunction());
+        registerFunction(new MountFunctions.CurrentMountEnergyFunction());
         registerFunction(new MountFunctions.MountStatFunction());
         registerFunction(new MountFunctions.MountStatMaxFunction());
         registerFunction(new MountFunctions.MountNameFunction());

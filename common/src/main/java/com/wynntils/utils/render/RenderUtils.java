@@ -25,6 +25,7 @@ import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -38,6 +39,8 @@ import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -328,6 +331,89 @@ public final class RenderUtils {
                 v,
                 textureWidth,
                 textureHeight);
+    }
+
+    public static void drawSprite(GuiGraphics guiGraphics, Texture texture, float x, float y) {
+        drawSprite(
+                guiGraphics,
+                RenderPipelines.GUI_TEXTURED,
+                texture.identifier(),
+                texture.atlas(),
+                CustomColor.NONE,
+                x,
+                y,
+                texture.width(),
+                texture.height());
+    }
+
+    public static void drawSprite(GuiGraphics guiGraphics, Texture texture, CustomColor color, float x, float y) {
+        drawSprite(
+                guiGraphics,
+                RenderPipelines.GUI_TEXTURED,
+                texture.identifier(),
+                texture.atlas(),
+                color,
+                x,
+                y,
+                texture.width(),
+                texture.height());
+    }
+
+    public static void drawSprite(
+            GuiGraphics guiGraphics, Texture texture, float x, float y, float width, float height) {
+        drawSprite(
+                guiGraphics,
+                RenderPipelines.GUI_TEXTURED,
+                texture.identifier(),
+                texture.atlas(),
+                CustomColor.NONE,
+                x,
+                y,
+                width,
+                height);
+    }
+
+    public static void drawSprite(
+            GuiGraphics guiGraphics, Texture texture, CustomColor color, float x, float y, float width, float height) {
+        drawSprite(
+                guiGraphics,
+                RenderPipelines.GUI_TEXTURED,
+                texture.identifier(),
+                texture.atlas(),
+                color,
+                x,
+                y,
+                width,
+                height);
+    }
+
+    public static void drawSprite(
+            GuiGraphics guiGraphics,
+            RenderPipeline pipeline,
+            Identifier identifier,
+            Identifier atlas,
+            CustomColor color,
+            float x,
+            float y,
+            float width,
+            float height) {
+        Objects.requireNonNull(atlas, "texture must be an atlas texture; use drawTexturedRect for file-based textures");
+        TextureAtlas textureAtlas = McUtils.mc().getAtlasManager().getAtlasOrThrow(atlas);
+        TextureAtlasSprite sprite = textureAtlas.getSprite(identifier);
+        guiGraphics.guiRenderState.submitGuiElement(new FloatBlitRenderState(
+                pipeline,
+                TextureSetup.singleTexture(textureAtlas.getTextureView(), textureAtlas.getSampler()),
+                new Matrix3x2f(guiGraphics.pose()),
+                x,
+                y,
+                x + width,
+                y + height,
+                sprite.getU0(),
+                sprite.getU1(),
+                sprite.getV0(),
+                sprite.getV1(),
+                color,
+                guiGraphics.scissorStack.peek()));
     }
 
     public static void drawTexturedRect(

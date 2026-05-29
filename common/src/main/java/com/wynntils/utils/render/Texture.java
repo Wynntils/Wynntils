@@ -375,8 +375,17 @@ public enum Texture {
     EMERALD_COUNT_BACKGROUND("ui_components/emerald_count_background.png", 24, 24),
     EXIT_FLAG("ui_components/exit_flag.png", 73, 62),
     GEAR_ICONS("ui_components/gear_icons.png", 64, 192),
-    HIGHLIGHT("ui_components/highlight.png", 256, 256),
-    HOTBAR_SELECTED_HIGHLIGHT("ui_components/hotbar_selected_highlight.png", 16, 16),
+    HIGHLIGHT_WYNN("ui_components", "highlight_wynn", 32, 32),
+    HIGHLIGHT_TAG("ui_components", "highlight_tag", 32, 32),
+    HIGHLIGHT_CIRCLE_TRANSPARENT("ui_components", "highlight_circle_transparent", 32, 32),
+    HIGHLIGHT_CIRCLE_OPAQUE("ui_components", "highlight_circle_opaque", 32, 32),
+    HIGHLIGHT_CIRCLE_OUTLINE_LARGE("ui_components", "highlight_circle_outline_large", 32, 32),
+    HIGHLIGHT_CIRCLE_OUTLINE_SMALL("ui_components", "highlight_circle_outline_small", 32, 32),
+    HIGHLIGHT_BOX_TRANSPARENT("ui_components", "highlight_box_transparent", 32, 32),
+    HIGHLIGHT_BOX_OPAQUE("ui_components", "highlight_box_opaque", 32, 32),
+    HIGHLIGHT_BOX_GRADIENT_1("ui_components", "highlight_box_gradient_1", 32, 32),
+    HIGHLIGHT_BOX_GRADIENT_2("ui_components", "highlight_box_gradient_2", 32, 32),
+    HOTBAR_SELECTED_HIGHLIGHT("ui_components", "hotbar_selected_highlight", 32, 32),
     ITEM_FILTER_BACKGROUND("ui_components/item_filter_background.png", 358, 206),
     ITEM_SHARING_BACKGROUND("ui_components/item_sharing_background.png", 250, 100),
     LIST_SEARCH("ui_components/list_search.png", 133, 23),
@@ -397,6 +406,7 @@ public enum Texture {
     // endregion
 
     private final Identifier identifier;
+    private final Identifier atlas;
     private final int width;
     private final int height;
 
@@ -404,6 +414,18 @@ public enum Texture {
         this.identifier = Identifier.fromNamespaceAndPath("wynntils", "textures/" + name);
         this.width = width;
         this.height = height;
+        atlas = null;
+    }
+
+    Texture(String atlas, String name, int width, int height) {
+        this.identifier = Identifier.fromNamespaceAndPath("wynntils", name);
+        this.atlas = Identifier.fromNamespaceAndPath("wynntils", atlas);
+        this.width = width;
+        this.height = height;
+    }
+
+    public Identifier atlas() {
+        return atlas;
     }
 
     public Identifier identifier() {

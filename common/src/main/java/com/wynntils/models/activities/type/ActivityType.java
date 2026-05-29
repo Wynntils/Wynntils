@@ -36,7 +36,13 @@ public enum ActivityType {
     DUNGEON("Dungeon", "dungeons", CustomColor.fromInt(0xcc6677), Texture.DUNGEON_ENTRANCE, "dungeon"),
     RAID("Raid", "raids", CustomColor.fromInt(0xd6401e), Texture.RAID_ENTRANCE, "raid"),
     BOSS_ALTAR("Boss Altar", "boss altars", CustomColor.fromInt(0xf2d349), Texture.BOSS_ALTAR, "boss_altar"),
-    LOOTRUN_CAMP("Lootrun Camp", "lootrun camps", CustomColor.fromInt(0x3399cc), Texture.LOOTRUN_CAMP, "loot_camp");
+    LOOTRUN_CAMP("Lootrun Camp", "lootrun camps", CustomColor.fromInt(0x3399cc), Texture.LOOTRUN_CAMP, "loot_camp"),
+    MOUNT_ENCLOSURE(
+            "Mount Enclosure",
+            "mount enclosures",
+            CustomColor.fromInt(0x8f663d),
+            Texture.MOUNT_ENCLOSURE,
+            "mount_enclosure");
 
     private final String displayName;
     private final String groupName;
