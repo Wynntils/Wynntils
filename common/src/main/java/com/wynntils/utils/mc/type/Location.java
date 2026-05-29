@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc.type;
@@ -22,6 +22,8 @@ public class Location implements Comparable<Location> {
     public final int x;
     public final int y;
     public final int z;
+
+    public static final Location ZERO = new Location(0, 0, 0);
 
     public Location(int x, int y, int z) {
         this.x = x;
