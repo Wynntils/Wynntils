@@ -8,6 +8,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.ServerResourcePackEvent;
 import com.wynntils.models.containers.containers.CosmeticContainer;
@@ -24,6 +25,7 @@ import org.jspecify.annotations.Nullable;
 
 public class StoreModel extends Model {
     private static final int SELECTED_COSMETIC_SLOT = 4;
+    private static final int WARDROBE_WEAPOM_SLOT = 6;
 
     public static final int WEAPON_MODEL_FLOAT_INDEX = 0;
 
@@ -40,12 +42,27 @@ public class StoreModel extends Model {
         if (!(Models.Container.getCurrentContainer() instanceof CosmeticContainer container)) return;
         CosmeticItemType cosmeticItemType = container.getCosmeticItemType();
         if (cosmeticItemType == null) return;
-        ItemStack itemStack = event.getItemStack();
+        parseCosmeticItem(cosmeticItemType, event.getItemStack());
+    }
+
+    @SubscribeEvent
+    public void onContainerSetContent(ContainerSetContentEvent.Post event) {
+        List<ItemStack> items = event.getItems();
+        if (Models.Container.getCurrentContainer() instanceof CosmeticContainer container) {
+            if (items.size() <= SELECTED_COSMETIC_SLOT) return;
+            parseCosmeticItem(container.getCosmeticItemType(), items.get(SELECTED_COSMETIC_SLOT));
+        } else if (Models.WorldState.inCharacterWardrobe()) {
+            if (items.size() <= WARDROBE_WEAPOM_SLOT) return;
+            parseCosmeticItem(CosmeticItemType.WEAPON_SKIN, items.get(WARDROBE_WEAPOM_SLOT));
+        }
+    }
+
+    private void parseCosmeticItem(CosmeticItemType type, ItemStack itemStack) {
         // Actual skins are StoreItems, while an empty selected skin is not
         boolean isStoreItem = Models.Item.asWynnItem(itemStack, StoreItem.class).isPresent();
         CustomModelData data = itemStack.getComponents().get(DataComponents.CUSTOM_MODEL_DATA);
 
-        if (cosmeticItemType == CosmeticItemType.WEAPON_SKIN) {
+        if (type == CosmeticItemType.WEAPON_SKIN) {
             if (!isStoreItem || data == null || data.floats().size() <= WEAPON_MODEL_FLOAT_INDEX) {
                 putWeaponModel(null);
                 return;
