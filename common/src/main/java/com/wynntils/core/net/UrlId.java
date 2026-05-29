@@ -43,6 +43,7 @@ public enum UrlId {
     DATA_STATIC_IDENTIFICATION_KEYS("dataStaticIdentificationKeys"),
     DATA_STATIC_INGREDIENTS("dataStaticIngredients"),
     DATA_STATIC_ITEM_OBTAIN_V2("dataStaticItemObtainV2"),
+    DATA_STATIC_GATHERING_NODES("dataStaticGatheringNodes"),
     DATA_STATIC_ITEM_SETS("dataStaticItemSets"),
     DATA_STATIC_LOOTRUN_TASKS_NAMED_V2("dataStaticLootrunTasksNamedV2"),
     DATA_STATIC_MAPS("dataStaticMaps"),

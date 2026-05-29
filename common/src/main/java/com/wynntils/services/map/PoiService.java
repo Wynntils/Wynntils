@@ -19,6 +19,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.services.map.pois.CombatPoi;
 import com.wynntils.services.map.pois.CustomPoi;
+import com.wynntils.services.map.pois.GatheringNodePoi;
 import com.wynntils.services.map.pois.LabelPoi;
 import com.wynntils.services.map.pois.ServicePoi;
 import com.wynntils.services.map.type.CombatKind;
@@ -65,6 +66,7 @@ public class PoiService extends Service {
     private final Set<ServicePoi> servicePois = new HashSet<>();
     private final Set<CombatPoi> combatPois = new HashSet<>();
     private final Set<CombatPoi> cavePois = new HashSet<>();
+    private final Set<GatheringNodePoi> gatheringNodePois = new HashSet<>();
     private final Map<CustomPoiProvider, List<CustomPoi>> providedCustomPois = new ConcurrentHashMap<>();
 
     @Persisted
@@ -80,6 +82,7 @@ public class PoiService extends Service {
         registry.registerDownload(UrlId.DATA_STATIC_SERVICES_CROWDSOURCED).handleReader(this::handleServices);
         registry.registerDownload(UrlId.DATA_STATIC_COMBAT_LOCATIONS).handleReader(this::handleCombat);
         registry.registerDownload(UrlId.DATA_STATIC_CAVE_INFO).handleReader(this::handleCaves);
+        registry.registerDownload(UrlId.DATA_STATIC_GATHERING_NODES).handleReader(this::handleGatheringNodes);
     }
 
     @Override
@@ -97,6 +100,10 @@ public class PoiService extends Service {
 
     public Stream<CombatPoi> getCombatPois() {
         return Stream.concat(combatPois.stream(), cavePois.stream());
+    }
+
+    public Stream<GatheringNodePoi> getGatheringNodePois() {
+        return gatheringNodePois.stream();
     }
 
     public List<CustomPoi> getProvidedCustomPois() {
@@ -186,6 +193,23 @@ public class PoiService extends Service {
                 .collect(Collectors.toUnmodifiableSet()));
     }
 
+    private void handleGatheringNodes(Reader reader) {
+        Type type = new TypeToken<List<GatheringNodeProfile>>() {}.getType();
+
+        List<GatheringNodeProfile> profiles = GSON.fromJson(reader, type);
+
+        gatheringNodePois.addAll(profiles.stream()
+                .map(profile -> new GatheringNodePoi(
+                        profile.x(),
+                        profile.y(),
+                        profile.z(),
+                        profile.resource(),
+                        profile.type(),
+                        profile.angle(),
+                        profile.level()))
+                .collect(Collectors.toUnmodifiableSet()));
+    }
+
     public void loadCustomPoiProviders() {
         for (CustomPoiProvider poiProvider : customPoiProviders.get()) {
             try {
@@ -237,4 +261,6 @@ public class PoiService extends Service {
             int requirements,
             List<String> rewards,
             Location location) {}
+
+    private record GatheringNodeProfile(int x, int y, int z, int angle, String resource, String type, int level) {}
 }

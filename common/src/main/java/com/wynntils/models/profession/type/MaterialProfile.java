@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.profession.type;
 
+import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.Pair;
 import java.util.Collection;
 import java.util.List;
@@ -122,6 +123,13 @@ public final class MaterialProfile {
                 .findFirst();
     }
 
+    public static Optional<Pair<MaterialType, SourceMaterial>> findByMaterialName(String name) {
+        return SOURCE_MATERIALS.entrySet().stream()
+                .flatMap(entry -> entry.getValue().stream().map(material -> new Pair<>(entry.getKey(), material)))
+                .filter(pair -> pair.value().name().equals(name))
+                .findFirst();
+    }
+
     public ResourceType getResourceType() {
         return resourceType;
     }
@@ -135,17 +143,19 @@ public final class MaterialProfile {
     }
 
     public enum MaterialType {
-        ORE(ProfessionType.MINING, ChatFormatting.WHITE),
-        LOG(ProfessionType.WOODCUTTING, ChatFormatting.GOLD),
-        CROP(ProfessionType.FARMING, ChatFormatting.YELLOW),
-        FISH(ProfessionType.FISHING, ChatFormatting.AQUA);
+        ORE(ProfessionType.MINING, ChatFormatting.WHITE, Texture.MINING),
+        LOG(ProfessionType.WOODCUTTING, ChatFormatting.GOLD, Texture.WOODCUTTING),
+        CROP(ProfessionType.FARMING, ChatFormatting.YELLOW, Texture.FARMING),
+        FISH(ProfessionType.FISHING, ChatFormatting.AQUA, Texture.FISHING);
 
         private final ProfessionType professionType;
         private final ChatFormatting labelColor;
+        private final Texture materialTexture;
 
-        MaterialType(ProfessionType professionType, ChatFormatting labelColor) {
+        MaterialType(ProfessionType professionType, ChatFormatting labelColor, Texture materialTexture) {
             this.professionType = professionType;
             this.labelColor = labelColor;
+            this.materialTexture = materialTexture;
         }
 
         public ProfessionType getProfessionType() {
@@ -154,6 +164,10 @@ public final class MaterialProfile {
 
         public ChatFormatting getLabelColor() {
             return labelColor;
+        }
+
+        public Texture getMaterialTexture() {
+            return materialTexture;
         }
     }
 

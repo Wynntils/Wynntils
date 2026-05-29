@@ -301,6 +301,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         pois = Stream.concat(pois, Services.Poi.getCombatPois());
         pois = Stream.concat(pois, Services.Poi.getLabelPois());
+        pois = Stream.concat(pois, Services.Poi.getGatheringNodePois());
         pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
         pois = Stream.concat(pois, Services.Poi.getProvidedCustomPois().stream());
         pois = Stream.concat(pois, Models.Marker.getAllPois());
