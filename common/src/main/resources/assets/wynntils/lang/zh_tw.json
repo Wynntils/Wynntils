@@ -1768,6 +1768,7 @@
   "function.wynntils.lootrunBeaconVibrant.argument.color": "信標的顏色",
   "function.wynntils.lootrunChallenges.description": "挑戰的數量",
   "function.wynntils.lootrunChallenges.name": "戰利品運行挑戰",
+  "function.wynntils.lootrunCurrentMission.argument.colored": "輸出是否應為彩色",
   "function.wynntils.lootrunLastSelectedBeaconColor.description": "您在戰利品運行中最後選擇的信標顏色",
   "function.wynntils.lootrunLastSelectedBeaconColor.name": "戰利品運行中最後選擇的信標顏色",
   "function.wynntils.lootrunMission.argument.colored": "輸出是否應為彩色",
