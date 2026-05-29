@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
+import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
@@ -19,8 +20,10 @@ import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.SetLocalPlayerVehicleEvent;
 import com.wynntils.mc.event.UseItemEvent;
+import com.wynntils.overlays.MountEnergyOverlay;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.MouseUtils;
+import com.wynntils.utils.type.RenderElementType;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.CameraType;
@@ -51,6 +54,9 @@ public class MountKeybindFeature extends Feature {
 
     @RegisterKeyBind
     private final KeyBind rideMountKeybind = KeyBindDefinition.RIDE_MOUNT.create(this::rideMount);
+
+    @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)
+    private final MountEnergyOverlay mountEnergyOverlay = new MountEnergyOverlay();
 
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;

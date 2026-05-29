@@ -685,6 +685,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new MinecraftFunctions.TicksFunction());
 
         registerFunction(new MountFunctions.CappedMountStatFunction());
+        registerFunction(new MountFunctions.CurrentMountEnergyFunction());
         registerFunction(new MountFunctions.MountStatFunction());
         registerFunction(new MountFunctions.MountStatMaxFunction());
         registerFunction(new MountFunctions.MountNameFunction());
