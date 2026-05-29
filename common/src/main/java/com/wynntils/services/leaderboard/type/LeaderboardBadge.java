@@ -1,8 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.leaderboard.type;
+
+import com.wynntils.core.WynntilsMod;
 
 public record LeaderboardBadge(int uOffset, int vOffset) {
     public static final int WIDTH = 19;
@@ -11,16 +13,19 @@ public record LeaderboardBadge(int uOffset, int vOffset) {
     public static LeaderboardBadge from(LeaderboardType leaderboardType, int standing) {
         int uOffset = leaderboardType.ordinal() * WIDTH;
 
-        int color = 2; // just in case Athena gives a number not between 1 and 9
+        int color = 2; // just in case Athena gives a number not between 1 and 10
 
         if (standing >= 1 && standing <= 3) {
+            // Gold
             color = 0;
-        }
-        if (standing >= 4 && standing <= 6) {
+        } else if (standing >= 4 && standing <= 6) {
+            // Silver
             color = 1;
-        }
-        if (standing >= 7 && standing <= 9) {
+        } else if (standing >= 7 && standing <= 10) {
+            // Bronze
             color = 2;
+        } else {
+            WynntilsMod.warn("Unexpected leaderboard standing: " + standing + " for " + leaderboardType);
         }
 
         int vOffset = color * HEIGHT;
