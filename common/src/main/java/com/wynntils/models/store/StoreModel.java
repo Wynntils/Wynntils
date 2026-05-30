@@ -38,7 +38,7 @@ public class StoreModel extends Model {
     private final Storage<Map<String, Float>> weaponModelStorage = new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Map<String, Int2ObjectMap<Integer>>> glintStorage = new Storage<>(new TreeMap<>());
+    private final Storage<Map<String, Int2ObjectArrayMap<Integer>>> glintStorage = new Storage<>(new TreeMap<>());
 
     public StoreModel() {
         super(List.of());
