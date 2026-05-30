@@ -100,6 +100,8 @@ public class LootrunScoreboardPart extends ScoreboardPart {
         List<CappedValue> currentMissionProgress = new ArrayList<>();
         List<String> currentTrialObjective = new ArrayList<>();
         List<CappedValue> currentTrialProgress = new ArrayList<>();
+        String currentMission = "";
+        String currentTrial = "";
         MissionAndTrialState state = MissionAndTrialState.UNKNOWN;
         for (int i = 3; i < content.size(); i++) {
             StyledText line = content.get(i);
@@ -108,10 +110,10 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             if (matcher.matches()) {
                 String name = matcher.group("name");
                 if (MissionType.fromName(name) != MissionType.UNKNOWN) {
-                    Models.Lootrun.setCurrentMission(name);
+                    currentMission = name;
                     state = MissionAndTrialState.MISSION;
                 } else if (TrialType.fromName(name) != TrialType.UNKNOWN) {
-                    Models.Lootrun.setCurrentTrial(name);
+                    currentTrial = name;
                     state = MissionAndTrialState.TRIAL;
                 } else {
                     WynntilsMod.warn("Found unknown Lootrun Mission or Trial name: " + line.getString());
@@ -138,6 +140,8 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             // If we hit a line that's neither a Mission nor a Trial break immediately
             break;
         }
+        Models.Lootrun.setCurrentMission(currentMission);
+        Models.Lootrun.setCurrentTrial(currentTrial);
         Models.Lootrun.setCurrentMissionObjective(currentMissionObjective);
         Models.Lootrun.setCurrentMissionProgress(currentMissionProgress);
         Models.Lootrun.setCurrentTrialObjective(currentTrialObjective);
