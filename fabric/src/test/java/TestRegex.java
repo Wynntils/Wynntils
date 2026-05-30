@@ -1181,6 +1181,8 @@ public class TestRegex {
         p.shouldMatch("§e- Get 0/1 Boons");
         p.shouldMatch("§4- §7Complete §f0/12§7 Challenges");
         p.shouldMatch("§c- Complete 0/12 Challenges");
+        p.shouldMatch("§6- §fAdd §f6.5/8m§7 to your timer");
+        p.shouldMatch("§e- Add 6.5/8m to your timer");
     }
 
     @Test

@@ -63,6 +63,13 @@ public class MountFunctions {
         }
     }
 
+    public static class CurrentMountEnergyFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Mount.getCurrentMountEnergy().orElse(CappedValue.EMPTY);
+        }
+    }
+
     private abstract static class MountStatFunctionBase<T> extends Function<T> {
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
