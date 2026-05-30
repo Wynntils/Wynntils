@@ -16,6 +16,8 @@ import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.models.lootrun.type.MissionType;
 import com.wynntils.models.lootrun.type.TrialType;
 import com.wynntils.utils.type.CappedValue;
+import net.minecraft.util.Mth;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -38,7 +40,7 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             Pattern.compile("^[-—] Challenges: (\\d+)/(\\d+)(?: \\[[+-]\\d+\\])?$");
     private static final Pattern MISSION_AND_TRIAL_NAME_PATTERN = Pattern.compile("§.(?<name>[^:]+):");
     private static final Pattern MISSION_AND_TRIAL_OBJECTIVE_PATTERN = Pattern.compile(
-            "§.- (?:§.)?(?<objectiveStart>.+) (?:§.)?(?<current>[0-9]+)/(?<total>[0-9]+)m?(?:§.)? (?<objectiveEnd>.+)");
+            "§.- (?:§.)?(?<objectiveStart>.+) (?:§.)?(?<current>[0-9.]+)/(?<total>[0-9.]+)m?(?:§.)? (?<objectiveEnd>.+)");
 
     @Override
     public SegmentMatcher getSegmentMatcher() {
@@ -125,7 +127,7 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             if (matcher.matches()) {
                 String name = matcher.group("objectiveStart") + " " + matcher.group("objectiveEnd");
                 CappedValue progress = new CappedValue(
-                        Integer.parseInt(matcher.group("current")), Integer.parseInt(matcher.group("total")));
+                        Mth.floor(Float.parseFloat(matcher.group("current"))), Mth.floor(Float.parseFloat(matcher.group("total"))));
                 if (state == MissionAndTrialState.MISSION) {
                     currentMissionObjective.add(name);
                     currentMissionProgress.add(progress);
