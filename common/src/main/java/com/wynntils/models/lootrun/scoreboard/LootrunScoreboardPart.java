@@ -16,12 +16,11 @@ import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.models.lootrun.type.MissionType;
 import com.wynntils.models.lootrun.type.TrialType;
 import com.wynntils.utils.type.CappedValue;
-import net.minecraft.util.Mth;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.util.Mth;
 
 public class LootrunScoreboardPart extends ScoreboardPart {
     private static final Pattern CHOOSE_BEACON_PATTERN = Pattern.compile("^Choose a beacon!$");
@@ -127,7 +126,8 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             if (matcher.matches()) {
                 String name = matcher.group("objectiveStart") + " " + matcher.group("objectiveEnd");
                 CappedValue progress = new CappedValue(
-                        Mth.floor(Float.parseFloat(matcher.group("current"))), Mth.floor(Float.parseFloat(matcher.group("total"))));
+                        Mth.floor(Float.parseFloat(matcher.group("current"))),
+                        Mth.floor(Float.parseFloat(matcher.group("total"))));
                 if (state == MissionAndTrialState.MISSION) {
                     currentMissionObjective.add(name);
                     currentMissionProgress.add(progress);
