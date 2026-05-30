@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.util.Mth;
 
 public class LootrunScoreboardPart extends ScoreboardPart {
     private static final Pattern CHOOSE_BEACON_PATTERN = Pattern.compile("^Choose a beacon!$");
@@ -38,7 +39,7 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             Pattern.compile("^[-—] Challenges: (\\d+)/(\\d+)(?: \\[[+-]\\d+\\])?$");
     private static final Pattern MISSION_AND_TRIAL_NAME_PATTERN = Pattern.compile("§.(?<name>[^:]+):");
     private static final Pattern MISSION_AND_TRIAL_OBJECTIVE_PATTERN = Pattern.compile(
-            "§.- (?:§.)?(?<objectiveStart>.+) (?:§.)?(?<current>[0-9]+)/(?<total>[0-9]+)m?(?:§.)? (?<objectiveEnd>.+)");
+            "§.- (?:§.)?(?<objectiveStart>.+) (?:§.)?(?<current>[0-9.]+)/(?<total>[0-9.]+)m?(?:§.)? (?<objectiveEnd>.+)");
 
     @Override
     public SegmentMatcher getSegmentMatcher() {
@@ -100,6 +101,8 @@ public class LootrunScoreboardPart extends ScoreboardPart {
         List<CappedValue> currentMissionProgress = new ArrayList<>();
         List<String> currentTrialObjective = new ArrayList<>();
         List<CappedValue> currentTrialProgress = new ArrayList<>();
+        String currentMission = "";
+        String currentTrial = "";
         MissionAndTrialState state = MissionAndTrialState.UNKNOWN;
         for (int i = 3; i < content.size(); i++) {
             StyledText line = content.get(i);
@@ -108,10 +111,10 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             if (matcher.matches()) {
                 String name = matcher.group("name");
                 if (MissionType.fromName(name) != MissionType.UNKNOWN) {
-                    Models.Lootrun.setCurrentMission(name);
+                    currentMission = name;
                     state = MissionAndTrialState.MISSION;
                 } else if (TrialType.fromName(name) != TrialType.UNKNOWN) {
-                    Models.Lootrun.setCurrentTrial(name);
+                    currentTrial = name;
                     state = MissionAndTrialState.TRIAL;
                 } else {
                     WynntilsMod.warn("Found unknown Lootrun Mission or Trial name: " + line.getString());
@@ -123,7 +126,8 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             if (matcher.matches()) {
                 String name = matcher.group("objectiveStart") + " " + matcher.group("objectiveEnd");
                 CappedValue progress = new CappedValue(
-                        Integer.parseInt(matcher.group("current")), Integer.parseInt(matcher.group("total")));
+                        Mth.floor(Float.parseFloat(matcher.group("current"))),
+                        Mth.floor(Float.parseFloat(matcher.group("total"))));
                 if (state == MissionAndTrialState.MISSION) {
                     currentMissionObjective.add(name);
                     currentMissionProgress.add(progress);
@@ -138,6 +142,8 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             // If we hit a line that's neither a Mission nor a Trial break immediately
             break;
         }
+        Models.Lootrun.setCurrentMission(currentMission);
+        Models.Lootrun.setCurrentTrial(currentTrial);
         Models.Lootrun.setCurrentMissionObjective(currentMissionObjective);
         Models.Lootrun.setCurrentMissionProgress(currentMissionProgress);
         Models.Lootrun.setCurrentTrialObjective(currentTrialObjective);
