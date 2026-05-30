@@ -4,14 +4,11 @@
  */
 package com.wynntils.functions;
 
-import com.wynntils.core.consumers.functions.Function;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
+import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import java.util.List;
 import net.minecraft.IdentifierException;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,86 +16,56 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 
+@SuppressWarnings("unused") // Functions are accessed via reflection
 public class MinecraftFunctions {
-    public static class MyLocationFunction extends Function<Location> {
-        @Override
-        public Location getValue(FunctionArguments arguments) {
-            return new Location(McUtils.player().blockPosition());
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("my_loc");
-        }
+    @TemplateFunction(name = "my_location", aliases = "my_loc")
+    public static Location myLocationFunction() {
+        return new Location(McUtils.player().blockPosition());
     }
 
-    public static class DirFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return (double) McUtils.player().getYRot();
-        }
+    @TemplateFunction(name = "dir")
+    public static double dirFunction() {
+        return McUtils.player().getYRot();
     }
 
-    public static class FpsFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return MinecraftAccessor.getFps();
-        }
+    @TemplateFunction(name = "fps")
+    public static int fpsFunction() {
+        return MinecraftAccessor.getFps();
     }
 
-    public static class TicksFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            return McUtils.mc().level.getGameTime();
-        }
+    @TemplateFunction(name = "ticks")
+    public static long ticksFunction() {
+        return McUtils.mc().level.getGameTime();
     }
 
-    public static class KeyPressedFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            int keyCode = arguments.getArgument("keyCode").getIntegerValue();
-            return KeyboardUtils.isKeyDown(keyCode);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("keyCode", Integer.class, null)));
-        }
+    @TemplateFunction(name = "key_pressed")
+    public static boolean keyPressedFunction(int keyCode) {
+        return KeyboardUtils.isKeyDown(keyCode);
     }
 
-    public static class MinecraftEffectDurationFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            String effectName = arguments.getArgument("effectName").getStringValue();
-            Identifier effectLocation;
-            try {
-                effectLocation = Identifier.withDefaultNamespace(effectName);
-            } catch (IdentifierException e) {
-                return -1; // Effect name contains invalid characters
+    @TemplateFunction(name = "minecraft_effect_duration")
+    public static int minecraftEffectDurationFunction(String effectName) {
+        Identifier effectLocation;
+        try {
+            effectLocation = Identifier.withDefaultNamespace(effectName);
+        } catch (IdentifierException e) {
+            return -1; // Effect name contains invalid characters
+        }
+
+        Holder<MobEffect> effectHolder =
+                BuiltInRegistries.MOB_EFFECT.get(effectLocation).orElse(null);
+
+        if (effectHolder == null) return -1; // Effect holder not found
+
+        // Check if the player has the effect
+        if (McUtils.player().hasEffect(effectHolder)) {
+            MobEffectInstance effectInstance = McUtils.player().getEffect(effectHolder);
+
+            if (effectInstance != null && effectInstance.getDuration() >= 0) {
+                return effectInstance.getDuration();
             }
-
-            Holder<MobEffect> effectHolder =
-                    BuiltInRegistries.MOB_EFFECT.get(effectLocation).orElse(null);
-
-            if (effectHolder == null) return -1; // Effect holder not found
-
-            // Check if the player has the effect
-            if (McUtils.player().hasEffect(effectHolder)) {
-                MobEffectInstance effectInstance = McUtils.player().getEffect(effectHolder);
-
-                if (effectInstance != null && effectInstance.getDuration() >= 0) {
-                    return effectInstance.getDuration();
-                }
-            }
-
-            return -1; // Effect not active
         }
 
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("effectName", String.class, null)));
-        }
+        return -1; // Effect not active
     }
 }

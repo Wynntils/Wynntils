@@ -101,7 +101,7 @@ public class InfoBoxOverlay extends TextOverlay implements CustomNameProperty {
 
         String formattedText =
                 StyledText.join("", Managers.Function.doFormatLines(template)).getString();
-        colorCache = Managers.Function.tryGetRawValueOfType(formattedText, CustomColor.class);
+        //        colorCache = Managers.Function.tryGetRawValueOfType(formattedText, CustomColor.class);
     }
 
     @Override
