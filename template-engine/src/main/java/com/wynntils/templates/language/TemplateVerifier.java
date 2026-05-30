@@ -38,20 +38,62 @@ class TemplateVerifier {
                                 + functionExpression.getArguments().length);
             }
 
-            //            for (int i = 0; i < functionExpression.getArguments().length; i++) {
-            //                Class<?> actual = getType(functionExpression.getArguments()[i]);
-            //                Class<?> expected = def.isVarArgs() ? def.parameterTypes()[0].componentType() :
-            // def.parameterTypes()[i];
-            //                if (!expected.isAssignableFrom(actual) && !canBeSafelyDownCast(expected, actual)) {
-            //                    throw new VerificationException(expression, "Argument " + (i + 1) + " of function '" +
-            // def.name() + "' expects type " + expected.getSimpleName() + ", but got " + actual.getSimpleName());
-            //                }
-            //            }
+            for (int i = 0; i < functionExpression.getArguments().length; i++) {
+                Class<?> actual = getType(functionExpression.getArguments()[i]);
+                Class<?> expected = def.isVarArgs() ? def.parameterTypes()[0].componentType() :
+                        def.parameterTypes()[i];
+                if (!canConformTo(actual, expected)) {
+                    throw new VerificationException(expression, "Argument \"" + functionExpression.getFunctionDefinition().getParameterName(i) + "\" of function \"" +
+                            def.name() + "\" expects type " + expected.getSimpleName() + ", but got " + actual.getSimpleName());
+                }
+            }
 
             for (Expression arg : functionExpression.getArguments()) {
                 verifyExpression(arg);
             }
         }
+    }
+
+    private boolean canConformTo(Class<?> from, Class<?> to) {
+        if (from == to) {
+            return true;
+        }
+
+        if ((from.isArray() || !from.isPrimitive())
+                && (to.isArray() || !to.isPrimitive())) {
+            return true;
+        }
+
+        // Primitive numeric conversions
+        if (from == int.class) {
+            return to == long.class
+                    || to == float.class
+                    || to == double.class
+                    || !to.isPrimitive();
+        }
+
+        if (from == long.class) {
+            return to == int.class
+                    || to == float.class
+                    || to == double.class
+                    || !to.isPrimitive();
+        }
+
+        if (from == float.class) {
+            return to == int.class
+                    || to == long.class
+                    || to == double.class
+                    || !to.isPrimitive();
+        }
+
+        if (from == double.class) {
+            return to == int.class
+                    || to == long.class
+                    || to == float.class
+                    || !to.isPrimitive();
+        }
+
+        return false;
     }
 
     private Class<?> getType(Expression expression) {

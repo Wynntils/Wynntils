@@ -7,20 +7,25 @@ package com.wynntils.templates;
 import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.templates.backends.TemplateBackend;
 import com.wynntils.templates.functions.FunctionDefinition;
+import com.wynntils.templates.language.Error;
 import com.wynntils.templates.language.TemplateLanguage;
 import com.wynntils.templates.language.exception.LanguageException;
+
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class TemplateEngine {
-    public record FunctionKey(String name, int argCount) {}
+    public record FunctionKey(String name, int argCount) {
+    }
 
     private final Map<FunctionKey, FunctionDefinition> functions = new HashMap<>();
     private final TemplateBackend backend;
     private final TemplateLanguage language;
-    private String error = "";
+    private Optional<Error> error = Optional.empty();
 
     public TemplateEngine(TemplateBackend backend) {
         this.backend = backend;
@@ -32,13 +37,7 @@ public class TemplateEngine {
             TemplateFunction annotation = method.getAnnotation(TemplateFunction.class);
 
             if (annotation != null) {
-                FunctionDefinition functionDef = new FunctionDefinition(
-                        annotation.name(),
-                        annotation.aliases(),
-                        method,
-                        method.getReturnType(),
-                        method.getParameterTypes(),
-                        annotation.isPure());
+                FunctionDefinition functionDef = new FunctionDefinition(annotation.name(), annotation.aliases(), method, method.getReturnType(), method.getParameterTypes(), Arrays.stream(method.getParameters()).map(p -> p.getName()).toArray(String[]::new), annotation.isPure());
 
                 functions.put(new FunctionKey(functionDef.name(), method.getParameterCount()), functionDef);
 
@@ -61,25 +60,23 @@ public class TemplateEngine {
         return functions.values().stream().toList();
     }
 
-    public String getError() {
+    public Optional<Error> getError() {
         return error;
     }
 
     public boolean hasError() {
-        return !error.isEmpty();
+        return error.isPresent();
     }
 
     public String evaluate(String input) {
-        error = "";
+        error = Optional.empty();
         try {
             return backend.evaluate(language.parse(input));
         } catch (LanguageException lexException) {
-            error = language.formatError(input, lexException);
+            error = Optional.of(language.formatError(input, lexException));
             return "Error evaluating template";
         } catch (RuntimeException e) {
-            error =
-                    "Template crashed during evaluation, report this to the Wynntils developers with the template and stack trace:\n"
-                            + e.getMessage();
+            error = Optional.of(new Error(-1, -1, e.getClass().getSimpleName(), "Unexpected error, check console for more details:\n" + e.getMessage()));
             return "Unexpected error evaluating template";
         }
     }

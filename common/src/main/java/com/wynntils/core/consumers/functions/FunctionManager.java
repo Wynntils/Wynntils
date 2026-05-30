@@ -35,21 +35,22 @@ import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.templates.TemplateEngine;
 import com.wynntils.templates.backends.compiler.CompilerBackend;
 import com.wynntils.templates.functions.FunctionDefinition;
+import com.wynntils.templates.language.Error;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
 public final class FunctionManager extends Manager {
-    private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("&(?<!\\\\)(#[0-9A-Fa-f]{8})");
-    private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("&(?<!\\\\)([0-9a-fA-Fk-oK-OrR])");
-    private static final Pattern NBSP_PATTERN = Pattern.compile("\u00A0");
     private final TemplateEngine templateEngine;
+    private final HashMap<String, String> crashedTemplates = new HashMap<>();
 
     public FunctionManager() {
         super(List.of());
-        this.templateEngine =
-                new TemplateEngine(new CompilerBackend(this.getClass().getClassLoader()));
+        this.templateEngine = new TemplateEngine(new CompilerBackend(this.getClass().getClassLoader()));
     }
 
     public List<FunctionDefinition> getFunctions() {
@@ -69,13 +70,26 @@ public final class FunctionManager extends Manager {
     // region Template formatting
 
     private String evaluate(String template) {
+        if (crashedTemplates.containsKey(template)) {
+            return crashedTemplates.get(template);
+        }
+
         String ret = templateEngine.evaluate(template);
 
         if (templateEngine.hasError()) {
+            crashedTemplates.put(template, formatError(templateEngine.getError().get()));
             WynntilsMod.error("\n" + templateEngine.getError());
         }
 
         return ret;
+    }
+
+    private String formatError(Error error) {
+        if (error.row() > 0 && error.column() > 0) {
+            return ("§c[Template Error at " + (error.row() + 1) + ":" + (error.column() + 1) + "]§r " + "§7" + error.message() + "§r");
+        } else {
+            return "§c[Template Error]§r " + "§7" + error.message() + "§r";
+        }
     }
 
     public StyledText[] doFormatLines(String templateString) {
@@ -113,15 +127,60 @@ public final class FunctionManager extends Manager {
         return StyledText.fromString(calculatedString).split("\n");
     }
 
-    private String parseColorCodes(String toProcess) {
-        // Replace &<code> with §<code> if not escaped (e.g., &a → §a, but \&\a stays unchanged)
-        // doEscapeFormat preprocesses the string and replaces \& with \&\ so that it doesn't get replaced
-        String processed = FORMATTING_CODE_PATTERN.matcher(toProcess).replaceAll("§$1");
+    private String parseColorCodes(String input) {
+        StringBuilder out = new StringBuilder(input.length());
 
-        // Replace &#AARRGGBB with §#AARRGGBB for hex colors
-        processed = HEX_COLOR_PATTERN.matcher(processed).replaceAll("§$1");
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
 
-        return processed;
+            // escape: \&
+            if (c == '\\' && i + 1 < input.length()) {
+                char next = input.charAt(i + 1);
+                if (next == '&') {
+                    out.append('\\').append('&');
+                    i++;
+                    continue;
+                }
+            }
+
+            // hex color: &#AARRGGBB
+            if (c == '&' && i + 9 < input.length() && input.charAt(i + 1) == '#') {
+                String hex = input.substring(i + 2, i + 10);
+                if (isHex(hex)) {
+                    out.append('§').append('#').append(hex);
+                    i += 9;
+                    continue;
+                }
+            }
+
+            // normal color code: &a
+            if (c == '&' && i + 1 < input.length()) {
+                char code = input.charAt(i + 1);
+                if (isColorCode(code)) {
+                    out.append('§').append(code);
+                    i++;
+                    continue;
+                }
+            }
+
+            out.append(c);
+        }
+
+        return out.toString();
+    }
+
+    private boolean isColorCode(char c) {
+        return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F') || c == 'r' || c == 'k' || c == 'l' || c == 'm' || c == 'n' || c == 'o';
+    }
+
+    private boolean isHex(String s) {
+        if (s.length() != 8) return false;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            boolean hex = (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
+            if (!hex) return false;
+        }
+        return true;
     }
 
     private String doEscapeFormat(char escaped) {

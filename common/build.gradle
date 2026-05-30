@@ -14,6 +14,10 @@ dependencies {
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixinextras_version}"))
 }
 
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs.add("-parameters")
+}
+
 architectury {
     common(enabled_platforms.split(","))
 }
