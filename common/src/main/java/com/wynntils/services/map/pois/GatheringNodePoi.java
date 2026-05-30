@@ -24,7 +24,7 @@ public class GatheringNodePoi extends StaticIconPoi {
 
     public GatheringNodePoi(int x, int y, int z, String resourceName, String resourceType, int angle, int level) {
         super(new PoiLocation(x, y, z));
-        String capitalizedName = StringUtils.capitalizeFirst(resourceName.toLowerCase(Locale.ROOT));
+        String capitalizedName = StringUtils.capitalized(resourceName);
 
         this.resourceProfile = MaterialProfile.findByMaterialName(capitalizedName);
         this.resourceType = ResourceType.fromString(resourceType);
@@ -50,7 +50,11 @@ public class GatheringNodePoi extends StaticIconPoi {
 
     @Override
     public String getName() {
-        return (getSourceMaterial() != null ? getSourceMaterial().name() : rawName) + " Node (" + getLevel() + ")";
+        return (getSourceMaterial() != null
+                        ? getSourceMaterial().name() + " "
+                                + StringUtils.capitalized(getMaterialType().name())
+                        : rawName)
+                + " (" + getLevel() + ")";
     }
 
     public MaterialProfile.@Nullable MaterialType getMaterialType() {

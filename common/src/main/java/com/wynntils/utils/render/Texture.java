@@ -166,6 +166,7 @@ public enum Texture {
     CHECKMARK_YELLOW("icons/generic/check_yellow.png", 16, 16),
     CLOSE("icons/generic/close.png", 16, 16),
     DEFENSE_FILTER_ICON("icons/generic/defense_filter_icon.png", 16, 16),
+    DISABLED("icons/generic/disabled.png", 16, 16),
     DOWN_COLORED_ICON("icons/generic/down_colored.png", 16, 16),
     EDIT_ICON("icons/generic/edit_icon.png", 6, 16),
     EDIT_NAME_ICON("icons/generic/edit_name_icon.png", 16, 16),

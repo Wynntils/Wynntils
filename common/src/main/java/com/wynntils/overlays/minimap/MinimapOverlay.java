@@ -17,6 +17,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.services.hades.type.PlayerRelation;
 import com.wynntils.services.map.MapTexture;
+import com.wynntils.services.map.PoiService;
 import com.wynntils.services.map.pois.PlayerMiniMapPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.pois.WaypointPoi;
@@ -246,6 +247,15 @@ public class MinimapOverlay extends Overlay {
                         renderRemotePartyPlayers.get(),
                         renderRemoteFriendPlayers.get(),
                         renderRemoteGuildPlayers.get()));
+        PoiService.GatheringFilterMode filterMode = Services.Poi.getGatheringFilterMode();
+        if (filterMode == PoiService.GatheringFilterMode.ALL) {
+            poisToRender = Stream.concat(poisToRender, Services.Poi.getGatheringNodePois());
+        } else if (filterMode != PoiService.GatheringFilterMode.NONE) {
+            poisToRender = Stream.concat(
+                    poisToRender,
+                    Services.Poi.getGatheringNodePois()
+                            .filter(gatheringNodePoi -> gatheringNodePoi.getMaterialType() == filterMode.materialType));
+        }
 
         Poi[] pois = poisToRender.toArray(Poi[]::new);
         for (Poi poi : pois) {

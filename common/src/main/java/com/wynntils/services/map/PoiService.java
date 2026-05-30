@@ -17,6 +17,7 @@ import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.models.profession.type.MaterialProfile;
 import com.wynntils.services.map.pois.CombatPoi;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.GatheringNodePoi;
@@ -29,8 +30,10 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.Texture;
 import java.io.Reader;
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +42,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 
 public class PoiService extends Service {
+    private GatheringFilterMode gatheringFilterMode = GatheringFilterMode.NONE;
     private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(Label.class, new Label.LabelDeserializer())
             .enableComplexMapKeySerialization()
@@ -231,6 +237,18 @@ public class PoiService extends Service {
         }
     }
 
+    public GatheringFilterMode getGatheringFilterMode() {
+        return gatheringFilterMode;
+    }
+
+    public void setNextGatheringFilter() {
+        this.gatheringFilterMode = this.gatheringFilterMode.getNext();
+    }
+
+    public void setPreviousGatheringFilter() {
+        this.gatheringFilterMode = this.gatheringFilterMode.getPrevious();
+    }
+
     private static class PlacesProfile {
         List<Label> labels;
     }
@@ -263,4 +281,46 @@ public class PoiService extends Service {
             Location location) {}
 
     private record GatheringNodeProfile(int x, int y, int z, int angle, String resource, String type, int level) {}
+
+    public enum GatheringFilterMode {
+        NONE("None", Texture.DISABLED, null),
+        MINING("Mining", Texture.MINING, MaterialProfile.MaterialType.ORE),
+        LOG("Woodcutting", Texture.WOODCUTTING, MaterialProfile.MaterialType.LOG),
+        CROPS("Farming", Texture.FARMING, MaterialProfile.MaterialType.CROP),
+        FISH("Fishing", Texture.FISHING, MaterialProfile.MaterialType.FISH),
+        ALL(
+                Component.literal("All (")
+                        .append(Component.literal("Performance Impact").withStyle(ChatFormatting.RED))
+                        .append(Component.literal(")")),
+                Texture.ALL_CONFIG_ICON,
+                null);
+
+        public final Component displayText;
+        public final Texture texture;
+        public final MaterialProfile.MaterialType materialType;
+
+        GatheringFilterMode(Component displayText, Texture texture, MaterialProfile.MaterialType materialType) {
+            this.displayText = displayText;
+            this.texture = texture;
+            this.materialType = materialType;
+        }
+
+        GatheringFilterMode(String displayText, Texture texture, MaterialProfile.MaterialType materialType) {
+            this.displayText = Component.literal(displayText);
+            this.texture = texture;
+            this.materialType = materialType;
+        }
+
+        public GatheringFilterMode getNext() {
+            int index = Arrays.asList(values()).indexOf(this);
+            if (index == values().length - 1) return NONE;
+            return (GatheringFilterMode) Array.get(values(), index + 1);
+        }
+
+        public GatheringFilterMode getPrevious() {
+            int index = Arrays.asList(values()).indexOf(this);
+            if (index == 0) return ALL;
+            return (GatheringFilterMode) Array.get(values(), index - 1);
+        }
+    }
 }
