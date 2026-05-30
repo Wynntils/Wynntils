@@ -10,7 +10,7 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.items.items.gui.EmoteItem;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.List;
-import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
@@ -22,11 +22,10 @@ public final class EmoteAnnotator implements GuiItemAnnotator {
         List<StyledText> lore = LoreUtils.getLore(itemStack);
         if (lore.isEmpty()) return null;
 
-        MatchResult matchResult =
-                LoreUtils.matchLoreLine(itemStack, 4, EMOTE_LORE_PATTERN).toMatchResult();
+        Matcher matcher = LoreUtils.matchLoreLine(itemStack, 4, EMOTE_LORE_PATTERN);
 
-        if (!matchResult.hasMatch()) return null;
+        if (!matcher.matches()) return null;
 
-        return new EmoteItem(itemStack.getCustomName().getString(), matchResult.group(1));
+        return new EmoteItem(itemStack.getCustomName().getString().replace(" Emote", ""), matcher.group(1));
     }
 }

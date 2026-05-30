@@ -75,54 +75,8 @@ public class EmoteWheelFeature extends Feature {
         if (hoveredSlot == null || !hoveredSlot.hasItem()) return;
 
         Optional<EmoteItem> possibleEmoteItem = Models.Item.asWynnItem(hoveredSlot.getItem(), EmoteItem.class);
-        if (possibleEmoteItem.isEmpty()) return;
+        if (possibleEmoteItem.isEmpty() || possibleEmoteItem.get() == null) return;
 
-        String emoteCommand = possibleEmoteItem.get().getEmoteCommand();
-        if (emoteCommand != null && !emoteCommand.isBlank()) {
-            System.out.println(possibleEmoteItem.get());
-            Services.FavoritedEmotes.toggleFavorite(emoteCommand);
-        }
+        Services.FavoritedEmotes.toggleFavorite(possibleEmoteItem.get());
     }
-
-    //    @SubscribeEvent
-    //    public void onContainerSetContent(ContainerSetContentEvent.Post event) {
-    //        if (!openedEmoteMenu) return;
-    //
-    //        openedEmoteMenu = false;
-    //
-    //        Container container = Models.Container.getCurrentContainer();
-    //        if (container instanceof EmotesContainer) {
-    //            List<ItemStack> emojiItems = event.getItems().stream()
-    //                    .filter(itemStack -> !itemStack.isEmpty())
-    //                    .filter(itemStack -> itemStack.getCustomName().getString().contains("Emote"))
-    //                    .toList();
-    //
-    //            // Clearing the List every time instead of using a Set incase of deleted Emotes
-    //            availableEmotes.clear();
-    //            for (ItemStack emojiItem : emojiItems) {
-    //                String emote = patternMatchEmoteLore(emojiItem);
-    //                if (emote != null)
-    //                    availableEmotes.add(emote);
-    //            }
-    //
-    //            System.out.println(availableEmotes);
-    //        }
-    //
-    //        McUtils.setScreen(EmoteWheelScreen.create(
-    //                backgroundColor.get(), backgroundColorHovered.get(), buttonRadius.get(), numberOfButtons.get()));
-    //    }
-    //
-    //    @SubscribeEvent
-    //    public void onCommandSuggestions(CommandSuggestionEvent.Modify event) {
-    //        if (System.currentTimeMillis() - lastEmoteRequest > REQUEST_RATELIMIT) {
-    //            lastEmoteRequest = System.currentTimeMillis();
-    //
-    //            String input = event.getInput();
-    //
-    //            if (input.equals("emote ")) {
-    //                availableEmotes.clear();
-    //                availableEmotes.addAll(event.getSuggestions());
-    //            }
-    //        }
-    //    }
 }

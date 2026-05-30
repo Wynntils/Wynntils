@@ -11,8 +11,8 @@ import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.features.ui.EmoteWheelFeature;
+import com.wynntils.models.items.items.gui.EmoteItem;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -47,7 +47,7 @@ public final class EmoteWheelScreen extends WynntilsScreen {
     private int centerY = 0;
     private int hoveredEmoji = -1;
     private Pair<Integer, Integer> screenDimensions;
-    private List<String> emotes;
+    private List<EmoteItem> emotes;
 
     private EmoteWheelScreen(
             CustomColor backgroundColor, CustomColor hoverColor, int buttonRadius, int numOfEmotes, double scale) {
@@ -71,7 +71,9 @@ public final class EmoteWheelScreen extends WynntilsScreen {
         KeyMapping.set(keyMapping.key, KeyboardUtils.isKeyDown(keyMapping.key.getValue()));
         rememberKeyHolds();
 
-        emotes = emoteWheelFeature.favoritedEmotes.get();
+        emotes = emoteWheelFeature.favoritedEmotes.get().stream()
+                .map(EmoteItem::fromString)
+                .toList();
 
         screenDimensions = new Pair<>(width, height);
         calculateButtonPositions();
@@ -96,8 +98,8 @@ public final class EmoteWheelScreen extends WynntilsScreen {
             Pair<Integer, Integer> centerPos = buttonPositions.get(i);
             float buttonX = (float) (centerPos.key() - buttonSize / 2);
             float buttonY = (float) (centerPos.value() - buttonSize / 2);
-            String emoteName = !doesEmoteExistInWheel(i) ? "" : StringUtils.capitalizeFirst(emotes.get(i));
-            String emoteNumber = i == 9 ? "0" : Integer.toString(i + 1);
+            float buttonX2 = (float) (centerPos.key() + buttonSize / 2);
+            float buttonY2 = (float) (centerPos.value() + buttonSize / 2);
 
             RenderUtils.drawRoundedRect(
                     guiGraphics,
@@ -109,12 +111,17 @@ public final class EmoteWheelScreen extends WynntilsScreen {
                     0,
                     (int) (buttonRadius * scale));
 
+            float textMargin = 3;
+            String emoteName = !doesEmoteExistInWheel(i) ? "" : emotes.get(i).getEmoteName();
             FontRenderer.getInstance()
-                    .renderText(
+                    .renderAlignedTextInBox(
                             guiGraphics,
                             StyledText.fromPart(new StyledTextPart(emoteName, Style.EMPTY, null, Style.EMPTY)),
-                            centerPos.key(),
-                            centerPos.value(),
+                            buttonX + textMargin,
+                            buttonX2 - textMargin,
+                            buttonY,
+                            buttonY2,
+                            (float) buttonSize - textMargin * 2,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
@@ -122,8 +129,7 @@ public final class EmoteWheelScreen extends WynntilsScreen {
                             (float) (0.9F * scale));
 
             if (emoteWheelFeature.showNumbers.get()) {
-                float buttonX2 = (float) (centerPos.key() + buttonSize / 2);
-                float buttonY2 = (float) (centerPos.value() + buttonSize / 2);
+                String emoteNumber = i == 9 ? "0" : Integer.toString(i + 1);
                 float numberTextScale = (float) (0.8F * scale);
                 FontRenderer.getInstance()
                         .renderText(
@@ -201,7 +207,8 @@ public final class EmoteWheelScreen extends WynntilsScreen {
 
     private void executeEmote(int emoteNum) {
         if (doesEmoteExistInWheel(emoteNum)) {
-            Handlers.Command.sendCommandImmediately("emote " + emotes.get(emoteNum));
+            Handlers.Command.sendCommandImmediately(
+                    "emote " + emotes.get(emoteNum).getEmoteCommand());
         }
 
         onClose();

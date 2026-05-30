@@ -436,7 +436,7 @@ public class ItemTextOverlayFeature extends Feature {
         private String getEmoteNumber() {
             if (!Services.FavoritedEmotes.isFavorited(item)) return "";
 
-            int num = Services.FavoritedEmotes.getFavoritedEmotes().indexOf(item.getEmoteCommand());
+            int num = Services.FavoritedEmotes.getEmoteIndex(item);
             num = MathUtils.overflowInRange(num, 1, 0, 9);
             return String.valueOf(num);
         }

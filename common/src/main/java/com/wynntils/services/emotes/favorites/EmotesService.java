@@ -17,37 +17,37 @@ public final class EmotesService extends Service {
         super(List.of());
     }
 
-    public boolean isFavorited(String emoteName) {
-        return emoteName != null && getFavoritedEmotes().contains(emoteName);
+    public boolean isFavorited(String emote) {
+        return emote != null && getFavoritedEmotes().contains(emote);
     }
 
     public boolean isFavorited(EmoteItem emoteItem) {
-        return isFavorited(emoteItem.getEmoteCommand());
+        return isFavorited(emoteItem.toString());
     }
 
-    private void addFavorite(String emoteName) {
+    private void addFavorite(EmoteItem emote) {
         int firstNull = getFavoritedEmotes().indexOf(null);
         if (firstNull == -1 || firstNull > MAX_EMOTES - 1) return;
 
-        getFavoritedEmotes().set(firstNull, emoteName);
+        getFavoritedEmotes().set(firstNull, emote.toString());
         Managers.Feature.getFeatureInstance(EmoteWheelFeature.class)
                 .favoritedEmotes
                 .touched();
     }
 
-    private void removeFavorite(String emoteName) {
-        int index = getFavoritedEmotes().indexOf(emoteName);
+    private void removeFavorite(EmoteItem emote) {
+        int index = getFavoritedEmotes().indexOf(emote.toString());
         getFavoritedEmotes().set(index, null);
         Managers.Feature.getFeatureInstance(EmoteWheelFeature.class)
                 .favoritedEmotes
                 .touched();
     }
 
-    public void toggleFavorite(String emoteName) {
-        if (isFavorited(emoteName)) {
-            removeFavorite(emoteName);
+    public void toggleFavorite(EmoteItem emote) {
+        if (isFavorited(emote)) {
+            removeFavorite(emote);
         } else {
-            addFavorite(emoteName);
+            addFavorite(emote);
         }
     }
 
@@ -56,5 +56,9 @@ public final class EmotesService extends Service {
         return Managers.Feature.getFeatureInstance(EmoteWheelFeature.class)
                 .favoritedEmotes
                 .get();
+    }
+
+    public int getEmoteIndex(EmoteItem emote) {
+        return getFavoritedEmotes().indexOf(emote.toString());
     }
 }

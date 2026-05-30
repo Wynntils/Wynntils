@@ -4,7 +4,12 @@
  */
 package com.wynntils.models.items.items.gui;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class EmoteItem extends GuiItem {
+    private static final Pattern EMOTE_STRING_PATTERN =
+            Pattern.compile("EmoteItem\\{emoteName=([\\w\\s_-]+), emoteCommand=([\\w_-]+)}");
     private final String emoteName;
     private final String emoteCommand;
 
@@ -24,5 +29,13 @@ public class EmoteItem extends GuiItem {
     @Override
     public String toString() {
         return "EmoteItem{" + "emoteName=" + emoteName + ", emoteCommand=" + emoteCommand + '}';
+    }
+
+    public static EmoteItem fromString(String string) {
+        if (string == null) return null;
+        Matcher matcher = EMOTE_STRING_PATTERN.matcher(string);
+        if (!matcher.matches()) return null;
+
+        return new EmoteItem(matcher.group(1), matcher.group(2));
     }
 }
