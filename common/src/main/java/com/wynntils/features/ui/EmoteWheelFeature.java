@@ -16,21 +16,31 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.models.items.items.gui.EmoteItem;
 import com.wynntils.screens.emotewheel.EmoteWheelScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.render.type.EmoteWheelButton;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.world.inventory.Slot;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class EmoteWheelFeature extends Feature {
     public static final int MAX_EMOTES = 10;
+    private static final Pattern INACCESSIBLE_EMOTE_PATTERN =
+            Pattern.compile("§4(?:\uE008\uE002|\uE001) You do not have access to this emote\\.");
+    private static final Pattern NONEXISTENT_EMOTE_PATTERN =
+            Pattern.compile("§4(?:\uE008\uE002|\uE001) No emotes were found by the given name\\.");
 
     @RegisterKeyBind
     public final KeyBind openEmoteWheelKeybind =
@@ -69,6 +79,8 @@ public class EmoteWheelFeature extends Feature {
     @Persisted
     public final HiddenConfig<List<String>> favoritedEmotes;
 
+    private int lastEmoteNum = -1;
+
     public EmoteWheelFeature() {
         super(ProfileDefault.onlyDefault());
         favoritedEmotes = new HiddenConfig<>(Arrays.asList(new String[MAX_EMOTES]));
@@ -88,5 +100,24 @@ public class EmoteWheelFeature extends Feature {
         if (possibleEmoteItem.isEmpty() || possibleEmoteItem.get() == null) return;
 
         Services.FavoritedEmotes.toggleFavorite(possibleEmoteItem.get());
+    }
+
+    @SubscribeEvent
+    public void onChatMessage(ChatMessageEvent.Match event) {
+        if (lastEmoteNum == -1) return;
+
+        StyledText message = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
+        Matcher matcher = message.getMatcher(INACCESSIBLE_EMOTE_PATTERN);
+        Matcher matcher2 = message.getMatcher(NONEXISTENT_EMOTE_PATTERN);
+        if (matcher.matches() || matcher2.matches()) {
+            favoritedEmotes.get().set(lastEmoteNum, null);
+            favoritedEmotes.touched();
+        }
+
+        lastEmoteNum = -1;
+    }
+
+    public void setlastEmoteNum(int lastEmoteNum) {
+        this.lastEmoteNum = lastEmoteNum;
     }
 }
