@@ -54,27 +54,26 @@ public class OnlineMembersCommand extends Command {
 
     private int lookupGuild(CommandContext<CommandSourceStack> context, String guildName) {
         if (guildName.isEmpty()) {
-            context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
+            context.getSource()
+                    .sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
             return 0;
         }
 
-        CompletableFuture<GuildInfo> completableFuture =
-                Models.Guild.getGuild(guildName);
+        CompletableFuture<GuildInfo> completableFuture = Models.Guild.getGuild(guildName);
 
         completableFuture.whenComplete((guild, throwable) -> {
             if (throwable != null) {
                 McUtils.mc().execute(() -> {
-                    McUtils.sendWynntilsPrefixMessage(Component.literal("Unable to view online members for "
-                                    + guildName)
-                            .withStyle(ChatFormatting.RED));
+                    McUtils.sendWynntilsPrefixMessage(
+                            Component.literal("Unable to view online members for " + guildName)
+                                    .withStyle(ChatFormatting.RED));
                 });
                 WynntilsMod.error("Error trying to parse guild online members", throwable);
             } else {
                 if (guild == null) {
                     McUtils.mc().execute(() -> {
                         McUtils.sendWynntilsPrefixMessage(
-                                Component.literal("Unknown guild " + guildName)
-                                        .withStyle(ChatFormatting.RED));
+                                Component.literal("Unknown guild " + guildName).withStyle(ChatFormatting.RED));
                     });
                     return;
                 }
