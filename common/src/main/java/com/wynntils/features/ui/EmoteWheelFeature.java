@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2026.
+ * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -18,8 +18,11 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.models.items.items.gui.EmoteItem;
 import com.wynntils.screens.emotewheel.EmoteWheelScreen;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.type.EmoteWheelButton;
+import com.wynntils.utils.render.type.TextShadow;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -34,22 +37,34 @@ public class EmoteWheelFeature extends Feature {
             KeyBindDefinition.OPEN_EMOTE_WHEEL.create(this::openEmoteWheel, this::tryFavoritingEmoteOnHoveredSlot);
 
     @Persisted
-    private final Config<Integer> numberOfButtons = new Config<>(8);
+    public final Config<Integer> numberOfButtons = new Config<>(8);
 
     @Persisted
     public final Config<Boolean> showNumbers = new Config<>(true);
 
     @Persisted
-    private final Config<Double> scale = new Config<>(1.0);
+    public final Config<Double> scale = new Config<>(1.0);
 
     @Persisted
-    private final Config<CustomColor> backgroundColor = new Config<>(CustomColor.fromHexString("#000000BB"));
+    public final Config<EmoteWheelButton> buttonStyle = new Config<>(EmoteWheelButton.BUTTON);
 
     @Persisted
-    private final Config<CustomColor> backgroundColorHovered = new Config<>(CustomColor.fromHexString("#666666BB"));
+    public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
 
     @Persisted
-    private final Config<Integer> buttonRadius = new Config<>(5);
+    public final Config<CustomColor> textColorHovered = new Config<>(CommonColors.WHITE);
+
+    @Persisted
+    public final Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
+
+    @Persisted
+    public final Config<CustomColor> backgroundColor = new Config<>(CustomColor.fromHexString("#000000BB"));
+
+    @Persisted
+    public final Config<CustomColor> backgroundColorHovered = new Config<>(CustomColor.fromHexString("#4C8D2CBB"));
+
+    @Persisted
+    public final Config<Integer> buttonRadius = new Config<>(5);
 
     @Persisted
     public final HiddenConfig<List<String>> favoritedEmotes;
@@ -63,12 +78,7 @@ public class EmoteWheelFeature extends Feature {
         if (openEmoteWheelKeybind.isPressed()) return;
         if (McUtils.screen() != null && !(McUtils.screen() instanceof EmoteWheelScreen)) return;
 
-        McUtils.setScreen(EmoteWheelScreen.create(
-                backgroundColor.get(),
-                backgroundColorHovered.get(),
-                buttonRadius.get(),
-                numberOfButtons.get(),
-                scale.get()));
+        McUtils.setScreen(EmoteWheelScreen.create(numberOfButtons.get(), scale.get()));
     }
 
     private void tryFavoritingEmoteOnHoveredSlot(Slot hoveredSlot) {

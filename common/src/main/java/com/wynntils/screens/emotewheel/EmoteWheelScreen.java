@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2026.
+ * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.emotewheel;
@@ -12,12 +12,12 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.features.ui.EmoteWheelFeature;
 import com.wynntils.models.items.items.gui.EmoteItem;
-import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.EmoteWheelButton;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -35,9 +35,6 @@ import org.lwjgl.glfw.GLFW;
 
 public final class EmoteWheelScreen extends WynntilsScreen {
     private final List<Pair<Integer, Integer>> buttonPositions = new ArrayList<>();
-    private final CustomColor backgroundColor;
-    private final CustomColor hoverColor;
-    private final int buttonRadius;
     private final int numOfEmotes;
     private final double scale;
 
@@ -49,19 +46,14 @@ public final class EmoteWheelScreen extends WynntilsScreen {
     private Pair<Integer, Integer> screenDimensions;
     private List<EmoteItem> emotes;
 
-    private EmoteWheelScreen(
-            CustomColor backgroundColor, CustomColor hoverColor, int buttonRadius, int numOfEmotes, double scale) {
+    private EmoteWheelScreen(int numOfEmotes, double scale) {
         super(Component.literal("Emote Wheel"));
-        this.backgroundColor = backgroundColor;
-        this.hoverColor = hoverColor;
-        this.buttonRadius = buttonRadius;
-        this.numOfEmotes = MathUtils.clamp(numOfEmotes, 1, 10);
+        this.numOfEmotes = numOfEmotes;
         this.scale = scale;
     }
 
-    public static Screen create(
-            CustomColor backgroundColor, CustomColor hoverColor, int buttonRadius, int numOfEmotes, double scale) {
-        return new EmoteWheelScreen(backgroundColor, hoverColor, buttonRadius, numOfEmotes, scale);
+    public static Screen create(int numOfEmotes, double scale) {
+        return new EmoteWheelScreen(numOfEmotes, scale);
     }
 
     @Override
@@ -92,27 +84,47 @@ public final class EmoteWheelScreen extends WynntilsScreen {
         }
 
         hoveredEmoji = (getHoveredEmoji(mouseX, mouseY));
-        double buttonSize = squareSize * scale;
+        float buttonSize = (float) (squareSize * scale);
+        EmoteWheelButton buttonStyle = emoteWheelFeature.buttonStyle.get();
+        CustomColor textColor = emoteWheelFeature.textColor.get();
+        CustomColor textHoverColor = emoteWheelFeature.textColorHovered.get();
+        CustomColor buttonColor = emoteWheelFeature.backgroundColor.get();
+        CustomColor buttonHoverColor = emoteWheelFeature.backgroundColorHovered.get();
+        int buttonRadius = emoteWheelFeature.buttonRadius.get();
 
         for (int i = 0; i < buttonPositions.size(); i++) {
             Pair<Integer, Integer> centerPos = buttonPositions.get(i);
-            float buttonX = (float) (centerPos.key() - buttonSize / 2);
-            float buttonY = (float) (centerPos.value() - buttonSize / 2);
-            float buttonX2 = (float) (centerPos.key() + buttonSize / 2);
-            float buttonY2 = (float) (centerPos.value() + buttonSize / 2);
+            float buttonX = centerPos.key() - buttonSize / 2;
+            float buttonY = centerPos.value() - buttonSize / 2;
+            float buttonX2 = centerPos.key() + buttonSize / 2;
+            float buttonY2 = centerPos.value() + buttonSize / 2;
+            Texture buttonTexture = null;
 
-            RenderUtils.drawRoundedRect(
-                    guiGraphics,
-                    hoveredEmoji == i ? hoverColor : backgroundColor,
-                    buttonX,
-                    buttonY,
-                    (float) buttonSize,
-                    (float) buttonSize,
-                    0,
-                    (int) (buttonRadius * scale));
+            switch (buttonStyle) {
+                case TOOLTIP ->
+                    buttonTexture = hoveredEmoji == i
+                            ? Texture.EMOTE_WHEEL_STYLE_TOOLTIP_HOVERED
+                            : Texture.EMOTE_WHEEL_STYLE_TOOLTIP;
+                case BUTTON ->
+                    buttonTexture = hoveredEmoji == i
+                            ? Texture.EMOTE_WHEEL_STYLE_BUTTON_HOVERED
+                            : Texture.EMOTE_WHEEL_STYLE_BUTTON;
+            }
+
+            if (buttonTexture != null) {
+                RenderUtils.drawScalingTexturedRect(
+                        guiGraphics, buttonTexture, buttonX, buttonY, buttonSize, buttonSize);
+            } else {
+                CustomColor color = hoveredEmoji == i ? buttonHoverColor : buttonColor;
+                RenderUtils.drawRoundedRect(
+                        guiGraphics, color, buttonX, buttonY, buttonSize, buttonSize, 0, (int) (buttonRadius * scale));
+            }
 
             float textMargin = 3;
             String emoteName = !doesEmoteExistInWheel(i) ? "" : emotes.get(i).getEmoteName();
+            CustomColor fontColor = hoveredEmoji == i ? textHoverColor : textColor;
+            TextShadow textShadow = emoteWheelFeature.textShadow.get();
+
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             guiGraphics,
@@ -121,11 +133,11 @@ public final class EmoteWheelScreen extends WynntilsScreen {
                             buttonX2 - textMargin,
                             buttonY,
                             buttonY2,
-                            (float) buttonSize - textMargin * 2,
-                            CommonColors.WHITE,
+                            buttonSize - textMargin * 2,
+                            fontColor,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL,
+                            textShadow,
                             (float) (0.9F * scale));
 
             if (emoteWheelFeature.showNumbers.get()) {
@@ -135,12 +147,12 @@ public final class EmoteWheelScreen extends WynntilsScreen {
                         .renderText(
                                 guiGraphics,
                                 StyledText.fromPart(new StyledTextPart(emoteNumber, Style.EMPTY, null, Style.EMPTY)),
-                                buttonX2 - (font.width(emoteNumber) * numberTextScale),
-                                buttonY2 - (font.lineHeight * numberTextScale),
-                                CommonColors.WHITE,
+                                buttonX2 - (font.width(emoteNumber) * numberTextScale) - 1,
+                                buttonY2 - (font.lineHeight * numberTextScale) - 1,
+                                fontColor,
                                 HorizontalAlignment.CENTER,
                                 VerticalAlignment.MIDDLE,
-                                TextShadow.NORMAL,
+                                textShadow,
                                 numberTextScale);
             }
         }

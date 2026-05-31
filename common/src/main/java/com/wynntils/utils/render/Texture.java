@@ -25,6 +25,13 @@ public enum Texture {
     TAG_SEARCH("content_book/tag_search.png", 140, 30),
     // endregion
 
+    // region Emote Wheel
+    EMOTE_WHEEL_STYLE_TOOLTIP("emote_wheel/tooltip.png", 64, 64),
+    EMOTE_WHEEL_STYLE_TOOLTIP_HOVERED("emote_wheel/tooltip_hovered.png", 64, 64),
+    EMOTE_WHEEL_STYLE_BUTTON("emote_wheel/button.png", 64, 64),
+    EMOTE_WHEEL_STYLE_BUTTON_HOVERED("emote_wheel/button_hovered.png", 64, 64),
+    // endregion
+
     // region Guild Log
     ECONOMY_LOG_ICON("guild_log/economy_log_icon.png", 16, 16),
     GENERAL_LOG_ICON("guild_log/general_log_icon.png", 16, 16),
@@ -360,6 +367,7 @@ public enum Texture {
     TERRITORY_ITEM_ALERT("territory_management/territory_alert.png", 16, 16),
     TERRITORY_SIDEBAR("territory_management/territory_sidebar.png", 20, 136),
     TERRITORY_LOADOUT("territory_management/territory_loadout.png", 16, 16),
+    // endregion
 
     // region UI Components
     BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1009),

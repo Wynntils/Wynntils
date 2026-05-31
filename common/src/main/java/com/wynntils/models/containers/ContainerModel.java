@@ -19,7 +19,6 @@ import com.wynntils.models.containers.containers.ContentBookContainer;
 import com.wynntils.models.containers.containers.CosmeticContainer;
 import com.wynntils.models.containers.containers.CraftingStationContainer;
 import com.wynntils.models.containers.containers.EmeraldPouchContainer;
-import com.wynntils.models.containers.containers.EmotesContainer;
 import com.wynntils.models.containers.containers.GuildBadgesContainer;
 import com.wynntils.models.containers.containers.GuildBankContainer;
 import com.wynntils.models.containers.containers.GuildDiplomacyContainer;
@@ -142,7 +141,6 @@ public final class ContainerModel extends Model {
         registerContainer(new CosmeticContainer());
         registerContainer(new DailyRewardContainer());
         registerContainer(new EmeraldPouchContainer());
-        registerContainer(new EmotesContainer());
         registerContainer(new EventContainer());
         registerContainer(new FlyingChestContainer());
         registerContainer(new GuildBadgesContainer());
