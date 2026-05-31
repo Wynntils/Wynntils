@@ -606,7 +606,7 @@
   "feature.wynntils.emoteWheel.backgroundColor.name": "Button Color",
   "feature.wynntils.emoteWheel.backgroundColorHovered.description": "What color should the buttons be when hovered over?",
   "feature.wynntils.emoteWheel.backgroundColorHovered.name": "Button Hover Color",
-  "feature.wynntils.emoteWheel.buttonRadius.description": "The roundness of the button corners.",
+  "feature.wynntils.emoteWheel.buttonRadius.description": "The roundness of the button corners. This only applies to the Solid button style.",
   "feature.wynntils.emoteWheel.buttonRadius.name": "Button Corner Radius",
   "feature.wynntils.emoteWheel.buttonStyle.description": "What should the buttons look like?",
   "feature.wynntils.emoteWheel.buttonStyle.name": "Button Style",

@@ -37,7 +37,7 @@ public class EmoteWheelFeature extends Feature {
             KeyBindDefinition.OPEN_EMOTE_WHEEL.create(this::openEmoteWheel, this::tryFavoritingEmoteOnHoveredSlot);
 
     @Persisted
-    public final Config<Integer> numberOfButtons = new Config<>(8);
+    private final Config<Integer> numberOfButtons = new Config<>(8);
 
     @Persisted
     public final Config<Boolean> showNumbers = new Config<>(true);
@@ -55,7 +55,7 @@ public class EmoteWheelFeature extends Feature {
     public final Config<CustomColor> textColorHovered = new Config<>(CommonColors.WHITE);
 
     @Persisted
-    public final Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
+    public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
     public final Config<CustomColor> backgroundColor = new Config<>(CustomColor.NONE);

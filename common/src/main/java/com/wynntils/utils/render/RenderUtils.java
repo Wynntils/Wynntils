@@ -713,6 +713,32 @@ public final class RenderUtils {
                 innerRadius,
                 outerRadius,
                 angleOffset,
+                16F,
+                color,
+                guiGraphics.scissorStack.peek()));
+    }
+
+    public static void drawArc(
+            GuiGraphics guiGraphics,
+            CustomColor color,
+            float x,
+            float y,
+            float fill,
+            int innerRadius,
+            int outerRadius,
+            float angleOffset,
+            float maxSteps) {
+        guiGraphics.guiRenderState.submitGuiElement(new ArcRenderState(
+                RenderPipelines.GUI,
+                TextureSetup.noTexture(),
+                new Matrix3x2f(guiGraphics.pose()),
+                x,
+                y,
+                fill,
+                innerRadius,
+                outerRadius,
+                angleOffset,
+                maxSteps,
                 color,
                 guiGraphics.scissorStack.peek()));
     }

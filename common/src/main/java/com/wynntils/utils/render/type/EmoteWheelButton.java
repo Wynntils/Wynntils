@@ -9,5 +9,6 @@ import com.wynntils.core.persisted.config.NullableConfig;
 public enum EmoteWheelButton implements NullableConfig {
     BUTTON,
     TOOLTIP,
-    SOLID
+    SOLID,
+    WHEEL
 }

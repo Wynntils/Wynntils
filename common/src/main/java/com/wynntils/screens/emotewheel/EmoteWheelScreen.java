@@ -12,6 +12,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.features.ui.EmoteWheelFeature;
 import com.wynntils.models.items.items.gui.EmoteItem;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -48,7 +49,7 @@ public final class EmoteWheelScreen extends WynntilsScreen {
 
     private EmoteWheelScreen(int numOfEmotes, double scale) {
         super(Component.literal("Emote Wheel"));
-        this.numOfEmotes = numOfEmotes;
+        this.numOfEmotes = MathUtils.clamp(numOfEmotes, 1, 10);
         this.scale = scale;
     }
 
@@ -118,8 +119,28 @@ public final class EmoteWheelScreen extends WynntilsScreen {
                 RenderUtils.drawScalingTexturedRect(
                         guiGraphics, buttonTexture, color, buttonX, buttonY, buttonSize, buttonSize);
             } else {
-                RenderUtils.drawRoundedRect(
-                        guiGraphics, color, buttonX, buttonY, buttonSize, buttonSize, 0, (int) (buttonRadius * scale));
+                if (buttonStyle == EmoteWheelButton.WHEEL) {
+                    int innerRadius = (int) ((distanceFromCenter - 5 - (double) squareSize / 2) * scale);
+                    int outerRadius = (int) ((distanceFromCenter + 5 + (double) squareSize / 2) * scale);
+                    float segmentAngle = ((float) 1 / numOfEmotes);
+                    float angle = (segmentAngle * 360);
+                    float angleOffset = (float) Math.toRadians((angle * i) - angle / 2);
+                    float maxArcSegments = calculateMaxArcSegments();
+
+                    RenderUtils.drawArc(
+                            guiGraphics,
+                            color,
+                            centerX - outerRadius,
+                            centerY - outerRadius,
+                            segmentAngle,
+                            innerRadius,
+                            outerRadius,
+                            angleOffset,
+                            maxArcSegments);
+                } else {
+                    RenderUtils.drawRoundedRect(guiGraphics, color, buttonX, buttonY, buttonSize, buttonSize, 0, (int)
+                            (buttonRadius * scale));
+                }
             }
 
             float textMargin = 3;
@@ -156,6 +177,23 @@ public final class EmoteWheelScreen extends WynntilsScreen {
                                 VerticalAlignment.MIDDLE,
                                 textShadow,
                                 numberTextScale);
+            }
+        }
+    }
+
+    private float calculateMaxArcSegments() {
+        switch (numOfEmotes) {
+            case 3, 7 -> {
+                return 21;
+            }
+            case 6, 9 -> {
+                return 18;
+            }
+            case 8 -> {
+                return 16;
+            }
+            default -> {
+                return 20;
             }
         }
     }
