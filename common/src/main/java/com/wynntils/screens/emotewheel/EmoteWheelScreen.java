@@ -92,8 +92,14 @@ public final class EmoteWheelScreen extends WynntilsScreen {
         CustomColor buttonColor = emoteWheelFeature.backgroundColor.get();
         CustomColor buttonHoverColor = emoteWheelFeature.backgroundColorHovered.get();
         int buttonRadius = emoteWheelFeature.buttonRadius.get();
+        // Wheel button calculations
+        float segmentFillPercent = ((float) 1 / numOfEmotes);
+        double segmentAngleDegrees = (360.0 / numOfEmotes);
+        int innerRadius = (int) ((distanceFromCenter - 5 - (double) squareSize / 2) * scale);
+        int outerRadius = (int) ((distanceFromCenter + 5 + (double) squareSize / 2) * scale);
 
         for (int i = 0; i < buttonPositions.size(); i++) {
+            // General button calculations
             Pair<Integer, Integer> centerPos = buttonPositions.get(i);
             float buttonX = centerPos.key() - buttonSize / 2;
             float buttonY = centerPos.value() - buttonSize / 2;
@@ -120,19 +126,18 @@ public final class EmoteWheelScreen extends WynntilsScreen {
                         guiGraphics, buttonTexture, color, buttonX, buttonY, buttonSize, buttonSize);
             } else {
                 if (buttonStyle == EmoteWheelButton.WHEEL) {
-                    int innerRadius = (int) ((distanceFromCenter - 5 - (double) squareSize / 2) * scale);
-                    int outerRadius = (int) ((distanceFromCenter + 5 + (double) squareSize / 2) * scale);
-                    float segmentAngle = ((float) 1 / numOfEmotes);
-                    float angle = (segmentAngle * 360);
-                    float angleOffset = (float) Math.toRadians((angle * i) - angle / 2);
+                    float angleOffset = (float) Math.toRadians((segmentAngleDegrees * i) - segmentAngleDegrees / 2);
+                    double buttonAngle = Math.toRadians((segmentAngleDegrees * i) - 90);
+                    int xOffset = (int) (buttonRadius * scale * Math.cos(buttonAngle));
+                    int yOffset = (int) (buttonRadius * scale * Math.sin(buttonAngle));
                     float maxArcSegments = calculateMaxArcSegments();
 
                     RenderUtils.drawArc(
                             guiGraphics,
                             color,
-                            centerX - outerRadius,
-                            centerY - outerRadius,
-                            segmentAngle,
+                            centerX - outerRadius + xOffset,
+                            centerY - outerRadius + yOffset,
+                            segmentFillPercent,
                             innerRadius,
                             outerRadius,
                             angleOffset,
@@ -275,12 +280,18 @@ public final class EmoteWheelScreen extends WynntilsScreen {
         centerX = width / 2;
         centerY = height / 2;
         double segmentAngle = (360.0 / numOfEmotes);
+        int distFromCenter = this.distanceFromCenter;
+        EmoteWheelFeature emoteWheelFeature = Managers.Feature.getFeatureInstance(EmoteWheelFeature.class);
+
+        if (emoteWheelFeature.buttonStyle.get() == EmoteWheelButton.WHEEL) {
+            distFromCenter += emoteWheelFeature.buttonRadius.get();
+        }
 
         for (int i = 0; i < numOfEmotes; i++) {
             // Subtracting 90 degress so it starts at the top
             double angle = Math.toRadians((segmentAngle * i) - 90);
-            int x = (int) (centerX + (distanceFromCenter * scale * Math.cos(angle)));
-            int y = (int) (centerY + (distanceFromCenter * scale * Math.sin(angle)));
+            int x = (int) (centerX + (distFromCenter * scale * Math.cos(angle)));
+            int y = (int) (centerY + (distFromCenter * scale * Math.sin(angle)));
             buttonPositions.add(new Pair<>(x, y));
         }
     }
