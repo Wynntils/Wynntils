@@ -58,10 +58,10 @@ public class EmoteWheelFeature extends Feature {
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
 
     @Persisted
-    public final Config<CustomColor> backgroundColor = new Config<>(CustomColor.fromHexString("#000000BB"));
+    public final Config<CustomColor> backgroundColor = new Config<>(CustomColor.NONE);
 
     @Persisted
-    public final Config<CustomColor> backgroundColorHovered = new Config<>(CustomColor.fromHexString("#4C8D2CBB"));
+    public final Config<CustomColor> backgroundColorHovered = new Config<>(CustomColor.fromHexString("#4C8D2CFF"));
 
     @Persisted
     public final Config<Integer> buttonRadius = new Config<>(5);

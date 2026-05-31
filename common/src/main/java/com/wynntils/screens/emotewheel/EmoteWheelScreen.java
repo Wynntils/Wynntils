@@ -99,23 +99,25 @@ public final class EmoteWheelScreen extends WynntilsScreen {
             float buttonX2 = centerPos.key() + buttonSize / 2;
             float buttonY2 = centerPos.value() + buttonSize / 2;
             Texture buttonTexture = null;
+            CustomColor color = hoveredEmoji == i ? buttonHoverColor : buttonColor;
 
             switch (buttonStyle) {
                 case TOOLTIP ->
                     buttonTexture = hoveredEmoji == i
                             ? Texture.EMOTE_WHEEL_STYLE_TOOLTIP_HOVERED
                             : Texture.EMOTE_WHEEL_STYLE_TOOLTIP;
-                case BUTTON ->
+                case BUTTON -> {
                     buttonTexture = hoveredEmoji == i
                             ? Texture.EMOTE_WHEEL_STYLE_BUTTON_HOVERED
                             : Texture.EMOTE_WHEEL_STYLE_BUTTON;
+                    color = CustomColor.NONE;
+                }
             }
 
             if (buttonTexture != null) {
                 RenderUtils.drawScalingTexturedRect(
-                        guiGraphics, buttonTexture, buttonX, buttonY, buttonSize, buttonSize);
+                        guiGraphics, buttonTexture, color, buttonX, buttonY, buttonSize, buttonSize);
             } else {
-                CustomColor color = hoveredEmoji == i ? buttonHoverColor : buttonColor;
                 RenderUtils.drawRoundedRect(
                         guiGraphics, color, buttonX, buttonY, buttonSize, buttonSize, 0, (int) (buttonRadius * scale));
             }
