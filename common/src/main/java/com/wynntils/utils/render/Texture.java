@@ -28,8 +28,8 @@ public enum Texture {
     // region Emote Wheel
     EMOTE_WHEEL_STYLE_TOOLTIP("emote_wheel/tooltip.png", 64, 64),
     EMOTE_WHEEL_STYLE_TOOLTIP_HOVERED("emote_wheel/tooltip_hovered.png", 64, 64),
-    EMOTE_WHEEL_STYLE_BUTTON("emote_wheel/button.png", 64, 64),
-    EMOTE_WHEEL_STYLE_BUTTON_HOVERED("emote_wheel/button_hovered.png", 64, 64),
+    EMOTE_WHEEL_STYLE_BUTTON("emote_wheel/button.png", 32, 32),
+    EMOTE_WHEEL_STYLE_BUTTON_HOVERED("emote_wheel/button_hovered.png", 32, 32),
     // endregion
 
     // region Guild Log
