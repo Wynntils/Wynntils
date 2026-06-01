@@ -17,6 +17,7 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.mc.event.PlayerTeamEvent;
+import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.models.players.type.wynnplayer.CharacterData;
 import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -36,10 +37,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import net.neoforged.bus.api.SubscribeEvent;
+import org.jspecify.annotations.Nullable;
 
 public final class PlayerModel extends Model {
     public static final Gson PLAYER_GSON = new GsonBuilder()
@@ -70,6 +73,8 @@ public final class PlayerModel extends Model {
     private final TimedSet<Object> errors =
             new TimedSet<>(ERROR_TIMEOUT_MINUTE, TimeUnit.MINUTES, true, ConcurrentHashMap::newKeySet);
     private final Map<UUID, Integer> userFailures = new ConcurrentHashMap<>();
+
+    private Camera camera = null;
 
     public PlayerModel() {
         super(List.of());
@@ -185,6 +190,11 @@ public final class PlayerModel extends Model {
         ghosts.put(uuid, world);
     }
 
+    @SubscribeEvent
+    public void setCamera(RenderLevelEvent.Post event) {
+        camera = event.getCamera();
+    }
+
     public void loadSelf() {
         Player player = McUtils.player();
         if (player == null) return;
@@ -293,6 +303,10 @@ public final class PlayerModel extends Model {
                 onError -> future.complete(null));
 
         return future;
+    }
+
+    public @Nullable Camera getCamera() {
+        return camera;
     }
 
     private void saveUserFailures(UUID uuid, String userName) {

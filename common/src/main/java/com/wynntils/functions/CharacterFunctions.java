@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.models.abilities.label.ShamanPuppetInfo;
 import com.wynntils.models.abilities.type.PuppetType;
 import com.wynntils.models.character.type.VehicleType;
@@ -277,7 +278,7 @@ public class CharacterFunctions {
     public static class HasNoGuiFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Character.getVehicle() == VehicleType.DISPLAY;
+            return !Overlay.getDefaultRenderCondition();
         }
     }
 
