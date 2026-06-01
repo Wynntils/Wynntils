@@ -90,7 +90,7 @@ public class EmoteWheelFeature extends Feature {
         if (openEmoteWheelKeybind.isPressed()) return;
         if (McUtils.screen() != null && !(McUtils.screen() instanceof EmoteWheelScreen)) return;
 
-        McUtils.setScreen(EmoteWheelScreen.create(numberOfButtons.get(), scale.get()));
+        McUtils.setScreen(EmoteWheelScreen.create(numberOfButtons.get()));
     }
 
     private void tryFavoritingEmoteOnHoveredSlot(Slot hoveredSlot) {

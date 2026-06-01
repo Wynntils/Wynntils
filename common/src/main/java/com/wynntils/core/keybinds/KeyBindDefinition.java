@@ -464,6 +464,14 @@ public record KeyBindDefinition(
             GLFW.GLFW_KEY_UNKNOWN,
             true);
 
+    public static final KeyBindDefinition OPEN_EMOTE_WHEEL = register(
+            "emoteWheel",
+            "Emote Wheel",
+            Managers.KeyBind.UTILITIES_CATEGORY,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_UNKNOWN,
+            true);
+
     public static final KeyBindDefinition OPEN_MISC_GUIDE = register(
             "openMiscGuide",
             "Open Misc Guide",
@@ -493,14 +501,6 @@ public record KeyBindDefinition(
     public static final KeyBindDefinition TOGGLE_SILENCER = register(
             "toggleSilencer",
             "Toggle Silencer",
-            Managers.KeyBind.UTILITIES_CATEGORY,
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
-            true);
-
-    public static final KeyBindDefinition OPEN_EMOTE_WHEEL = register(
-            "emoteWheel",
-            "Emote Wheel",
             Managers.KeyBind.UTILITIES_CATEGORY,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
