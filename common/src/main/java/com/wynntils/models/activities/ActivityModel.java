@@ -81,7 +81,7 @@ public final class ActivityModel extends Model {
     private static final Pattern LEVEL_REQ_PATTERN =
             Pattern.compile("^§(.).À?§7(?: Recommended)? Combat Lv(?:\\. Min)?: (\\d+)$");
     private static final Pattern PROFESSION_REQ_PATTERN = Pattern.compile("^§(.).À?§7 (\\w+)? Lv\\. Min: (\\d+)$");
-    private static final Pattern QUEST_REQ_PATTERN = Pattern.compile("^§(.).À?§7 Quest Req: (.+)$");
+    private static final Pattern QUEST_REQ_PATTERN = Pattern.compile("^§(.).À?§7 Quest: (.+)$");
     private static final Pattern DISTANCE_PATTERN =
             Pattern.compile("^\uDB00\uDC0E§7Distance: §.([\\w\\s]*)(?:§8 \\((.+)\\))?$");
     private static final Pattern LENGTH_PATTERN = Pattern.compile("^\uDB00\uDC0E§7Length: (\\w*)(?:§8 \\((.+)\\))?$");

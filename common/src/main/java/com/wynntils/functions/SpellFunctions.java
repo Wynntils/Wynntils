@@ -195,4 +195,46 @@ public class SpellFunctions {
                     List.of(new Argument<>("totemNumber", Integer.class, null)));
         }
     }
+
+    public static class ShamanTotemTransfusedAmountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            int totemNumber = arguments.getArgument("totemNumber").getIntegerValue();
+
+            ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
+
+            if (shamanTotem == null) return 0;
+
+            if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) return 0;
+
+            return shamanTotem.getTransfusedAmount();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
+
+    public static class ShamanTotemPoisonAmountFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int totemNumber = arguments.getArgument("totemNumber").getIntegerValue();
+
+            ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
+
+            if (shamanTotem == null) return "";
+
+            if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) return "";
+
+            return shamanTotem.getPoisonAmount().toString();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
 }
