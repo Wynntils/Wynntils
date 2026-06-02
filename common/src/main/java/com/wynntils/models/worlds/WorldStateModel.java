@@ -19,9 +19,7 @@ import com.wynntils.models.character.actionbar.segments.CharacterSelectionSegmen
 import com.wynntils.models.worlds.actionbar.matchers.CharacterWardrobeSegmentMatcher;
 import com.wynntils.models.worlds.actionbar.segments.CharacterWardrobeSegment;
 import com.wynntils.models.worlds.bossbars.SkipCutsceneBar;
-import com.wynntils.models.worlds.event.CutsceneStartedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.models.worlds.type.CutsceneState;
 import com.wynntils.models.worlds.type.ServerRegion;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
@@ -44,7 +42,6 @@ public final class WorldStateModel extends Model {
     private static final String UNKNOWN_WORLD = "WC??";
 
     private static final SkipCutsceneBar skipCutsceneBar = new SkipCutsceneBar();
-    private CutsceneState cutsceneState = CutsceneState.NOT_IN_CUTSCENE;
 
     private String currentWorldName = "";
     private ServerRegion currentRegion = ServerRegion.WC;
@@ -82,7 +79,7 @@ public final class WorldStateModel extends Model {
         if (newState == currentState && newWorldName.equals(currentWorldName)) return;
 
         WynntilsMod.info("Changing world state to " + newState);
-        cutsceneEnded();
+        Models.Cutscene.cutsceneEnded();
         WorldState oldState = currentState;
         // Switch state before sending event
         currentState = newState;
@@ -210,23 +207,6 @@ public final class WorldStateModel extends Model {
             return true;
         }
         return false;
-    }
-
-    public void cutsceneStarted(boolean groupCutscene) {
-        if (cutsceneState == CutsceneState.NOT_IN_CUTSCENE) {
-            cutsceneState = CutsceneState.IN_CUTSCENE;
-
-            CutsceneStartedEvent event = new CutsceneStartedEvent(groupCutscene);
-            WynntilsMod.postEvent(event);
-
-            if (event.isCanceled()) {
-                cutsceneState = CutsceneState.SKIPPED_CUTSCENE;
-            }
-        }
-    }
-
-    public void cutsceneEnded() {
-        cutsceneState = CutsceneState.NOT_IN_CUTSCENE;
     }
 
     /**
