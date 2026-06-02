@@ -5,11 +5,13 @@
 package com.wynntils.models.cutscene;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.SetCameraEntityEvent;
 import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.models.cutscene.type.SkippableCutsceneState;
+import com.wynntils.models.worlds.bossbars.SkipCutsceneBar;
 import com.wynntils.models.worlds.event.CutsceneStartedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.List;
@@ -22,8 +24,12 @@ public class CutsceneModel extends Model {
     private Optional<Entity> cameraEntity = Optional.empty();
     private SkippableCutsceneState cutsceneState = SkippableCutsceneState.NOT_IN_CUTSCENE;
 
+    private static final SkipCutsceneBar skipCutsceneBar = new SkipCutsceneBar();
+
     public CutsceneModel() {
         super(List.of());
+
+        Handlers.BossBar.registerBar(skipCutsceneBar);
     }
 
     @SubscribeEvent

@@ -18,7 +18,6 @@ import com.wynntils.models.character.actionbar.segments.CharacterCreationSegment
 import com.wynntils.models.character.actionbar.segments.CharacterSelectionSegment;
 import com.wynntils.models.worlds.actionbar.matchers.CharacterWardrobeSegmentMatcher;
 import com.wynntils.models.worlds.actionbar.segments.CharacterWardrobeSegment;
-import com.wynntils.models.worlds.bossbars.SkipCutsceneBar;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.ServerRegion;
 import com.wynntils.models.worlds.type.WorldState;
@@ -41,8 +40,6 @@ public final class WorldStateModel extends Model {
     private static final String WYNNCRAFT_BETA_NAME = "beta";
     private static final String UNKNOWN_WORLD = "WC??";
 
-    private static final SkipCutsceneBar skipCutsceneBar = new SkipCutsceneBar();
-
     private String currentWorldName = "";
     private ServerRegion currentRegion = ServerRegion.WC;
     private long serverJoinTimestamp = 0;
@@ -54,7 +51,6 @@ public final class WorldStateModel extends Model {
         super(List.of());
 
         Handlers.ActionBar.registerSegment(new CharacterWardrobeSegmentMatcher());
-        Handlers.BossBar.registerBar(skipCutsceneBar);
     }
 
     private WorldState currentState = WorldState.NOT_CONNECTED;
