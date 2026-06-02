@@ -79,7 +79,6 @@ public final class WorldStateModel extends Model {
         if (newState == currentState && newWorldName.equals(currentWorldName)) return;
 
         WynntilsMod.info("Changing world state to " + newState);
-        Models.Cutscene.cutsceneEnded();
         WorldState oldState = currentState;
         // Switch state before sending event
         currentState = newState;

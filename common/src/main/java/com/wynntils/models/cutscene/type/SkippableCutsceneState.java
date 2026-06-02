@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.cutscene.type;
 
-public enum CutsceneState {
+public enum SkippableCutsceneState {
     NOT_IN_CUTSCENE,
     IN_CUTSCENE,
     SKIPPED_CUTSCENE,

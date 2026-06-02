@@ -9,8 +9,9 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.SetCameraEntityEvent;
 import com.wynntils.models.character.type.VehicleType;
-import com.wynntils.models.cutscene.type.CutsceneState;
+import com.wynntils.models.cutscene.type.SkippableCutsceneState;
 import com.wynntils.models.worlds.event.CutsceneStartedEvent;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.entity.Display;
@@ -19,7 +20,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class CutsceneModel extends Model {
     private Optional<Entity> cameraEntity = Optional.empty();
-    private CutsceneState cutsceneState = CutsceneState.NOT_IN_CUTSCENE;
+    private SkippableCutsceneState cutsceneState = SkippableCutsceneState.NOT_IN_CUTSCENE;
 
     public CutsceneModel() {
         super(List.of());
@@ -30,15 +31,20 @@ public class CutsceneModel extends Model {
         cameraEntity = Optional.ofNullable(event.getViewingEntity());
     }
 
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        cutsceneEnded();
+    }
+
     public void cutsceneStarted(boolean groupCutscene) {
-        if (cutsceneState == CutsceneState.NOT_IN_CUTSCENE) {
-            cutsceneState = CutsceneState.IN_CUTSCENE;
+        if (cutsceneState == SkippableCutsceneState.NOT_IN_CUTSCENE) {
+            cutsceneState = SkippableCutsceneState.IN_CUTSCENE;
 
             CutsceneStartedEvent event = new CutsceneStartedEvent(groupCutscene);
             WynntilsMod.postEvent(event);
 
             if (event.isCanceled()) {
-                cutsceneState = CutsceneState.SKIPPED_CUTSCENE;
+                cutsceneState = SkippableCutsceneState.SKIPPED_CUTSCENE;
             }
         }
     }
@@ -50,10 +56,10 @@ public class CutsceneModel extends Model {
     public boolean isCutsceneActive() {
         return Models.Character.getVehicle() == VehicleType.DISPLAY
                 || cameraEntity.filter(entity -> entity instanceof Display).isPresent()
-                || cutsceneState == CutsceneState.IN_CUTSCENE;
+                || cutsceneState == SkippableCutsceneState.IN_CUTSCENE;
     }
 
     public void cutsceneEnded() {
-        cutsceneState = CutsceneState.NOT_IN_CUTSCENE;
+        cutsceneState = SkippableCutsceneState.NOT_IN_CUTSCENE;
     }
 }
