@@ -104,8 +104,8 @@ public abstract class MinecraftMixin implements MinecraftExtension {
         MixinHelper.postAlways(event);
     }
 
-    @Inject(method = "setCameraEntity", at = @At("HEAD"))
-    private void setCameraEntityEvent(Entity viewingEntity, CallbackInfo ci) {
+    @Inject(method = "setCameraEntity(Lnet/minecraft/world/entity/Entity;)V", at = @At("HEAD"))
+    private void setCameraEntityPre(Entity viewingEntity, CallbackInfo ci) {
         SetCameraEntityEvent event = new SetCameraEntityEvent(viewingEntity);
         MixinHelper.post(event);
     }
