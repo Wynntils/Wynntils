@@ -17,6 +17,7 @@ import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.ServerResourcePackEvent;
+import com.wynntils.mc.event.SetCameraEntityEvent;
 import com.wynntils.mc.event.TickAlwaysEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.extension.MinecraftExtension;
@@ -24,6 +25,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.neoforged.bus.api.Event;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -100,6 +102,12 @@ public abstract class MinecraftMixin implements MinecraftExtension {
     private void handleResourcePackPopPre(CallbackInfo ci) {
         ServerResourcePackEvent.Clear event = new ServerResourcePackEvent.Clear();
         MixinHelper.postAlways(event);
+    }
+
+    @Inject(method = "setCameraEntity", at = @At("HEAD"))
+    private void setCameraEntityEvent(Entity viewingEntity, CallbackInfo ci) {
+        SetCameraEntityEvent event = new SetCameraEntityEvent(viewingEntity);
+        MixinHelper.post(event);
     }
 
     @WrapWithCondition(
