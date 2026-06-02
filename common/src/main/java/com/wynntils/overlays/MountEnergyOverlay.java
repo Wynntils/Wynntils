@@ -4,36 +4,47 @@
  */
 package com.wynntils.overlays;
 
+import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
-import com.wynntils.core.consumers.overlays.TextOverlay;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
-import com.wynntils.core.text.StyledText;
-import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
-import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.CappedValue;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.Identifier;
 
-public class MountEnergyOverlay extends TextOverlay {
+public class MountEnergyOverlay extends Overlay {
     @Persisted
     private final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
+
+    private static final Identifier TEXTURE_IDENTIFIER =
+            Identifier.withDefaultNamespace("textures/font/hud/gameplay/default/center_left/mount_energy.png");
+    private static final int TEXTURE_WIDTH = 256;
+    private static final int TEXTURE_HEIGHT = 192;
+    private static final int FRAME_WIDTH = 16;
+    private static final int FRAME_HEIGHT = 64;
+    private static final int TOTAL_FRAMES = 48;
+
+    private int uOffset = 0;
+    private int vOffset = 0;
 
     public MountEnergyOverlay() {
         super(
                 new OverlayPosition(
-                        // Doesn't mimic the vanilla position that well but it's good enough
-                        (float) (McUtils.guiScale() * 3.3),
-                        6,
+                        // Place it just below the minimap to prevent overlap
+                        140,
+                        8,
                         VerticalAlignment.TOP,
                         HorizontalAlignment.LEFT,
-                        OverlayPosition.AnchorSection.MIDDLE_LEFT),
-                new OverlaySize(20, 70));
-        textShadow.store(TextShadow.NONE);
+                        OverlayPosition.AnchorSection.TOP_LEFT),
+                new OverlaySize(FRAME_WIDTH, FRAME_HEIGHT));
     }
 
     @Override
@@ -42,36 +53,22 @@ public class MountEnergyOverlay extends TextOverlay {
     }
 
     @Override
-    protected String getTemplate() {
-        return "{with_font(styled_text(from_codepoint(subtract(57391;current(current_mount_energy))));\"hud/gameplay/default/center_left\")}";
-    }
-
-    @Override
-    protected String getPreviewTemplate() {
-        return "{with_font(styled_text(\"\uE017\");\"hud/gameplay/default/center_left\")}";
-    }
-
-    @Override
-    protected void renderTemplate(GuiGraphics guiGraphics, StyledText[] lines, float textScale) {
-        // Offset the text to counter the offset from the font
-        float renderX = this.getRenderX() + getXOffset();
-        float renderY = this.getRenderY() + getYOffset();
-        FontRenderer.getInstance()
-                .renderAlignedHighlightedTextInBox(
-                        guiGraphics,
-                        lines,
-                        renderX,
-                        renderX + this.getWidth(),
-                        renderY,
-                        renderY + this.getHeight(),
-                        fitText.get() ? this.getWidth() : 0,
-                        this.backgroundBorderWidth.get(),
-                        this.getRenderColor(),
-                        this.backgroundColor.get(),
-                        this.getRenderHorizontalAlignment(),
-                        this.getRenderVerticalAlignment(),
-                        this.textShadow.get(),
-                        textScale);
+    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+        float renderX = this.getRenderX();
+        float renderY = this.getRenderY();
+        RenderUtils.drawTexturedRect(
+                guiGraphics,
+                TEXTURE_IDENTIFIER,
+                renderX,
+                renderY,
+                FRAME_WIDTH,
+                FRAME_HEIGHT,
+                uOffset,
+                vOffset,
+                FRAME_WIDTH,
+                FRAME_HEIGHT,
+                TEXTURE_WIDTH,
+                TEXTURE_HEIGHT);
     }
 
     @Override
@@ -79,13 +76,18 @@ public class MountEnergyOverlay extends TextOverlay {
         return Models.Mount.getCurrentMountEnergy().isPresent();
     }
 
-    private float getXOffset() {
-        double guiScale = McUtils.guiScale();
-        return (float) (960.0 / guiScale + 2.0);
-    }
+    @Override
+    public void tick() {
+        if (Models.Mount.getCurrentMountEnergy().isEmpty()) {
+            uOffset = 0;
+            vOffset = 0;
+            return;
+        }
 
-    private float getYOffset() {
-        double guiScale = McUtils.guiScale();
-        return (float) (504.0 / guiScale - 28.0);
+        CappedValue mountEnergy = Models.Mount.getCurrentMountEnergy().get();
+        int frame = Math.round((float) ((1.0 - mountEnergy.getProgress()) * (TOTAL_FRAMES - 1)));
+
+        uOffset = (frame % FRAME_WIDTH) * FRAME_WIDTH;
+        vOffset = (frame / FRAME_WIDTH) * FRAME_HEIGHT;
     }
 }
