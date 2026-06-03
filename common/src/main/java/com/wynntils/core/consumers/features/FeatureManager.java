@@ -7,6 +7,7 @@ package com.wynntils.core.consumers.features;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.consumers.features.properties.RegisterSubFeature;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -180,10 +181,14 @@ import com.wynntils.features.wynntils.WynntilsTelemetryFeature;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.utils.mc.McUtils;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.WeakHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -195,6 +200,21 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class FeatureManager extends Manager {
     private static final Map<Feature, FeatureState> FEATURES = new LinkedHashMap<>();
     private static final Map<Class<? extends Feature>, Feature> FEATURE_INSTANCES = new LinkedHashMap<>();
+    private static final Map<Feature, Feature> SUB_FEATURE_TO_PARENT = Collections.synchronizedMap(new WeakHashMap<>());
+    private static final Map<Feature, List<Feature>> PARENT_TO_SUB_FEATURES =
+            Collections.synchronizedMap(new WeakHashMap<>());
+
+    public boolean isSubFeature(Feature feature) {
+        return SUB_FEATURE_TO_PARENT.containsKey(feature);
+    }
+
+    public Feature getParentFeature(Feature feature) {
+        return SUB_FEATURE_TO_PARENT.get(feature);
+    }
+
+    public List<Feature> getSubFeatures(Feature feature) {
+        return PARENT_TO_SUB_FEATURES.getOrDefault(feature, List.of());
+    }
 
     private final FeatureCommands commands = new FeatureCommands();
 
@@ -430,9 +450,63 @@ public final class FeatureManager extends Manager {
         addCrashCallbacks();
     }
 
+    private void checkNesting(Feature feature) {
+        Class<?> clazz = feature.getClass();
+        while (clazz != null && clazz != Feature.class) {
+            for (Field field : clazz.getDeclaredFields()) {
+                if (field.isAnnotationPresent(RegisterSubFeature.class)) {
+                    throw new RuntimeException("Nested sub-features are forbidden: "
+                            + feature.getClass().getName() + " cannot declare sub-feature " + field.getName());
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+    }
+
+    private void discoverAndRegisterSubFeatures(Feature feature) {
+        Class<?> clazz = feature.getClass();
+        while (clazz != null && clazz != Feature.class) {
+            for (Field field : clazz.getDeclaredFields()) {
+                if (field.isAnnotationPresent(RegisterSubFeature.class)) {
+                    if (!Feature.class.isAssignableFrom(field.getType())) {
+                        throw new RuntimeException("Field " + field.getName() + " in class " + clazz.getName()
+                                + " has @RegisterSubFeature but does not extend Feature.");
+                    }
+                    try {
+                        field.setAccessible(true);
+                        Object val = field.get(feature);
+                        if (val == null) {
+                            throw new RuntimeException("Field " + field.getName() + " in class " + clazz.getName()
+                                    + " is null but annotated with @RegisterSubFeature.");
+                        }
+                        Feature subFeature = (Feature) val;
+                        if (isSubFeature(feature)) {
+                            throw new RuntimeException("Nested sub-features are forbidden: "
+                                    + feature.getClass().getName()
+                                    + " is a sub-feature and cannot declare another sub-feature " + field.getName());
+                        }
+                        checkNesting(subFeature);
+
+                        SUB_FEATURE_TO_PARENT.put(subFeature, feature);
+                        PARENT_TO_SUB_FEATURES
+                                .computeIfAbsent(feature, k -> new ArrayList<>())
+                                .add(subFeature);
+
+                        registerFeature(subFeature);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException("Failed to access sub-feature field: " + field.getName(), e);
+                    }
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+    }
+
     private void registerFeature(Feature feature) {
         FEATURES.put(feature, FeatureState.DISABLED);
         FEATURE_INSTANCES.put(feature.getClass(), feature);
+
+        discoverAndRegisterSubFeatures(feature);
 
         try {
             initializeFeature(feature);
@@ -503,6 +577,13 @@ public final class FeatureManager extends Manager {
             throw new IllegalArgumentException("Tried to enable an unregistered feature: " + feature);
         }
 
+        if (isSubFeature(feature)) {
+            Feature parent = getParentFeature(feature);
+            if (parent != null && !isEnabled(parent)) {
+                return;
+            }
+        }
+
         FeatureState state = FEATURES.get(feature);
 
         if (state != FeatureState.DISABLED && state != FeatureState.CRASHED) return;
@@ -516,6 +597,12 @@ public final class FeatureManager extends Manager {
         Managers.Overlay.enableOverlays(feature);
 
         Managers.KeyBind.enableFeatureKeyBinds(feature);
+
+        for (Feature subFeature : getSubFeatures(feature)) {
+            if (subFeature.userEnabled.get()) {
+                enableFeature(subFeature);
+            }
+        }
     }
 
     public void disableFeature(Feature feature, boolean force) {
@@ -536,6 +623,10 @@ public final class FeatureManager extends Manager {
         Managers.Overlay.disableOverlays(feature);
 
         Managers.KeyBind.disableFeatureKeyBinds(feature);
+
+        for (Feature subFeature : getSubFeatures(feature)) {
+            disableFeature(subFeature, force);
+        }
     }
 
     public void crashFeature(Feature feature) {
