@@ -100,7 +100,7 @@ public class BombBellOverlay extends Overlay {
 
     @Override
     protected boolean isVisible() {
-        return !Models.Bomb.getBombBells().isEmpty() || !Models.Cutscene.isCutsceneActive();
+        return !Models.Bomb.getBombBells().isEmpty() && !Models.Cutscene.isCutsceneActive();
     }
 
     @Override
