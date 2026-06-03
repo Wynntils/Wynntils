@@ -9,7 +9,6 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.type.RenderElementType;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -17,9 +16,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UTILITIES)
 public class HideCrosshairInCutscenesFeature extends Feature {
     public HideCrosshairInCutscenesFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER)
-                .build());
+        super(ProfileDefault.ENABLED);
     }
 
     @SubscribeEvent
