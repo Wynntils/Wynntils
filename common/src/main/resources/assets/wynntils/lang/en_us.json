@@ -743,6 +743,8 @@
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.textShadow.name": "Text Shadow",
   "feature.wynntils.hideAttackCooldown.description": "Hides the attack cooldown indicator on items that are not weapons.",
   "feature.wynntils.hideAttackCooldown.name": "Hide Attack Cooldown",
+  "feature.wynntils.hideCrosshairInCutscenes.description": "Hides your while a cutscene is active",
+  "feature.wynntils.hideCrosshairInCutscenes.name": "Hide Crosshair In Cutscenes",
   "feature.wynntils.hideLabels.description": "Configure whether certain types of labels should be hidden.",
   "feature.wynntils.hideLabels.hideDamageLabels.description": "Hides the damage labels that popup when damaging enemies",
   "feature.wynntils.hideLabels.hideDamageLabels.name": "Hide Damage Labels",
