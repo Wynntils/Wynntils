@@ -30,6 +30,7 @@ import com.wynntils.models.combat.CombatModel;
 import com.wynntils.models.containers.BankModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
+import com.wynntils.models.dialogue.DialogueModel;
 import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.gambits.GambitModel;
@@ -92,6 +93,7 @@ public final class Models {
     public static final CombatModel Combat = new CombatModel();
     public static final CombatXpModel CombatXp = new CombatXpModel();
     public static final ContainerModel Container = new ContainerModel();
+    public static final DialogueModel Dialogue = new DialogueModel();
     public static final DiscoveryModel Discovery = new DiscoveryModel();
     public static final ElementModel Element = new ElementModel();
     public static final EmeraldModel Emerald = new EmeraldModel();

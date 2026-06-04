@@ -497,6 +497,14 @@ public record KeyBindDefinition(
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             true);
+
+    public static final KeyBindDefinition TOGGLE_DIALOGUE_AUTO_PROGRESS = register(
+            "toggleDialogueAutoProgress",
+            "Toggle Dialogue Auto Progress",
+            Managers.KeyBind.UTILITIES_CATEGORY,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_UNKNOWN,
+            true);
     // endregion
 
     private static KeyBindDefinition register(

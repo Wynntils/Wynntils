@@ -121,6 +121,10 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
         Matcher matcher = VALUE_PATTERN.matcher(value);
 
         if (!matcher.matches()) {
+            // If dialogue is ongoing, the health/mana text is gone, ending out value = 0
+            if (value.equals("0")) {
+                return CappedValue.EMPTY;
+            }
             WynntilsMod.warn("Could not parse text action bar segment value as capped: " + value);
             return null;
         }
