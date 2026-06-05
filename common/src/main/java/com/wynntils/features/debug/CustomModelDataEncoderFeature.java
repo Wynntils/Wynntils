@@ -42,7 +42,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 @ConfigCategory(Category.DEBUG)
 public class CustomModelDataEncoderFeature extends Feature {
     private static final File SAVE_FOLDER = WynntilsMod.getModStorageDir("debug");
-    private static final String OUTPUT_FILE = "encode_output.json";
+    private static final String OUTPUT_FILE = "custom_model_data_mappings.json";
     private static final String INPUT_JSON = """
             {
                 "models": {
@@ -76,12 +76,6 @@ public class CustomModelDataEncoderFeature extends Feature {
                         ],
                         "fingerprints": []
                     },
-                    "test": {
-                        "textures": [
-                            "test"
-                        ],
-                        "fingerprints": []
-                    }
                 }
             }
             """;
