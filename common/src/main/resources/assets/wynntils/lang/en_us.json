@@ -1510,7 +1510,7 @@
   "feature.wynntils.territoryDefenseMessage.name": "Send Territory Defenses",
   "feature.wynntils.territoryMessageRedirect.description": "Adds the ability to redirect territory messages to the game update overlay.",
   "feature.wynntils.territoryMessageRedirect.name": "Territory Messages",
-  "feature.wynntils.textureRecorder.description": "Logs discovered model IDs and their associated texture mappings, and exports referenced PNG files.",
+  "feature.wynntils.textureRecorder.description": "Logs discovered model IDs and exports referenced PNG files.",
   "feature.wynntils.textureRecorder.name": "Texture Recorder",
   "feature.wynntils.textureRecorder.recordingTicks.description": "How long should the texture recorder record?",
   "feature.wynntils.textureRecorder.recordingTicks.name": "Recording Ticks",
