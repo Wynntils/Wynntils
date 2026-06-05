@@ -277,7 +277,7 @@ public class CharacterFunctions {
     public static class HasNoGuiFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Character.getVehicle() == VehicleType.DISPLAY;
+            return Models.Cutscene.isCutsceneActive();
         }
     }
 

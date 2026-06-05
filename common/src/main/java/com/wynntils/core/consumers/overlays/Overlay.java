@@ -17,7 +17,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -109,8 +108,7 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
 
         // Otherwise render it according to defaults
         if (!isVisible()) return false;
-        boolean hasGui = Models.WorldState.onWorld() && Models.Character.getVehicle() != VehicleType.DISPLAY;
-        return hasGui || !hideWhenNoGui();
+        return (Models.WorldState.onWorld() && !Models.Cutscene.isCutsceneActive()) || !hideWhenNoGui();
     }
 
     @Override
