@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
+import com.wynntils.features.HideCrosshairInCutscenesFeature;
 import com.wynntils.features.HideTripwiresFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
@@ -413,12 +414,13 @@ public final class FeatureManager extends Manager {
         registerFeature(new EnhancedStreamerModeFeature());
         registerFeature(new FixCrosshairPositionFeature());
         registerFeature(new GammabrightFeature());
-        registerFeature(new ValuablesProtectionFeature());
+        registerFeature(new HideCrosshairInCutscenesFeature());
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
         registerFeature(new SkillPointLoadoutsFeature());
         registerFeature(new TranscribeMessagesFeature());
         registerFeature(new TranslationFeature());
+        registerFeature(new ValuablesProtectionFeature());
         registerFeature(new XpGainMessageFeature());
         // endregion
 

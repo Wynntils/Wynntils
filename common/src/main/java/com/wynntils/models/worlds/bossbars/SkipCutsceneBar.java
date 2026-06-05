@@ -20,13 +20,13 @@ public class SkipCutsceneBar extends TrackedBar {
     @Override
     public void onUpdateName(Matcher match) {
         boolean groupCutscene = match.group(1) != null;
-        Models.WorldState.cutsceneStarted(groupCutscene);
+        Models.Cutscene.cutsceneStarted(groupCutscene);
     }
 
     @Override
     protected void reset() {
         super.reset();
 
-        Models.WorldState.cutsceneEnded();
+        Models.Cutscene.cutsceneEnded();
     }
 }
