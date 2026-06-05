@@ -50,14 +50,7 @@ import com.wynntils.features.commands.AddCommandExpansionFeature;
 import com.wynntils.features.commands.CommandAliasesFeature;
 import com.wynntils.features.commands.CustomCommandKeybindsFeature;
 import com.wynntils.features.commands.FilterAdminCommandsFeature;
-import com.wynntils.features.debug.AbilityTreeDataDumpFeature;
-import com.wynntils.features.debug.ContentBookDumpFeature;
-import com.wynntils.features.debug.FunctionDumpFeature;
-import com.wynntils.features.debug.ItemDebugTooltipsFeature;
-import com.wynntils.features.debug.LogItemInfoFeature;
-import com.wynntils.features.debug.MappingProgressFeature;
-import com.wynntils.features.debug.PacketDebuggerFeature;
-import com.wynntils.features.debug.PlayerInfoFooterDebuggerFeature;
+import com.wynntils.features.debug.*;
 import com.wynntils.features.embellishments.ApplyWeaponSkinFeature;
 import com.wynntils.features.embellishments.WarHornFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
@@ -239,6 +232,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new MappingProgressFeature());
         registerFeature(new PacketDebuggerFeature());
         registerFeature(new PlayerInfoFooterDebuggerFeature());
+        registerFeature(new TextureRecorderFeature());
 
         // always on
         registerFeature(new LootrunFeature());
