@@ -4,10 +4,6 @@
  */
 package com.wynntils.features.debug;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -23,20 +19,15 @@ import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.wynn.ResourcepackUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HexFormat;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -50,7 +41,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.ResourceProvider;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -62,6 +52,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.DEBUG)
 public class TextureRecorderFeature extends Feature {
     private static final File SAVE_FOLDER = WynntilsMod.getModStorageDir("debug");
+    private static final String OUTPUT_FILE = "texture_dump.txt";
     private static final File TEXTURES_FOLDER = new File(SAVE_FOLDER, "textures");
 
     private final Map<Integer, List<Identifier>> modelIdToTextureIds = new LinkedHashMap<>();
@@ -71,8 +62,7 @@ public class TextureRecorderFeature extends Feature {
     private Integer recordingTicksRemaining = 0;
 
     @RegisterKeyBind
-    private final KeyBind textureRecorderKeybind =
-            KeyBindDefinition.TEXTURE_RECORDER.create(this::startRecording);
+    private final KeyBind textureRecorderKeybind = KeyBindDefinition.TEXTURE_RECORDER.create(this::startRecording);
 
     @Persisted
     private final Config<Integer> recordingTicks = new Config<>(200);
@@ -96,10 +86,7 @@ public class TextureRecorderFeature extends Feature {
     public void onTick(TickEvent event) {
         if (recordingTicksRemaining <= 0) return;
         recordingTicksRemaining--;
-
-        if (recordingTicksRemaining == 0) {
-            saveResults();
-        }
+        if (recordingTicksRemaining == 0) saveResults();
     }
 
     @SubscribeEvent
@@ -128,7 +115,6 @@ public class TextureRecorderFeature extends Feature {
         if (customModelData == null || customModelData.floats().isEmpty()) return;
 
         int modelId = customModelData.floats().getFirst().intValue();
-
         if (lastSeenModelToIds.containsKey(modelId)) return;
 
         List<Identifier> textureIds = modelIdToTextureIds.get(modelId);
@@ -139,8 +125,9 @@ public class TextureRecorderFeature extends Feature {
 
         lastSeenModelToIds.put(modelId, textureIds);
 
+        ResourceManager rm = McUtils.mc().getResourceManager();
         String firstName = getFilename(textureIds.getFirst());
-        String pixelHash = computePixelHash(textureIds.getFirst());
+        String pixelHash = ResourcepackUtils.computePixelHash(rm, textureIds.getFirst());
         String fingerprint = modelIdToFingerprint.getOrDefault(modelId, "none");
         WynntilsMod.info("id: " + modelId
                 + " png: " + firstName
@@ -151,98 +138,31 @@ public class TextureRecorderFeature extends Feature {
 
     private boolean buildModelMap() {
         ResourceManager rm = McUtils.mc().getResourceManager();
-        Identifier boatJson = Identifier.fromNamespaceAndPath("minecraft", "models/item/oak_boat.json");
-        Optional<Resource> overrideRes = rm.getResource(boatJson);
 
-        if (overrideRes.isEmpty()) {
-            WynntilsMod.error("Could not find oak_boat.json override file!");
-            return false;
-        }
-
-        try (InputStream stream = overrideRes.get().open();
-                InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
-            JsonObject baseJson = JsonParser.parseReader(reader).getAsJsonObject();
-            if (!baseJson.has("overrides")) return false;
-
-            JsonArray overrides = baseJson.getAsJsonArray("overrides");
-            WynntilsMod.info("Processing " + overrides.size() + " overrides from oak_boat.json");
-
-            for (int i = 0; i < overrides.size(); i++) {
-                JsonObject override = overrides.get(i).getAsJsonObject();
-                int cmd = override.getAsJsonObject("predicate")
-                        .get("custom_model_data")
-                        .getAsInt();
-                String modelPath = override.get("model").getAsString();
-                resolveModelTextures(rm, cmd, modelPath);
-            }
-
-        } catch (IOException e) {
-            WynntilsMod.error("Failed to parse oak_boat.json: " + e.getMessage());
-            return false;
-        }
-
-        return !modelIdToTextureIds.isEmpty();
-    }
-
-    private void resolveModelTextures(ResourceProvider rm, int cmd, String modelPath) {
-        Identifier parsedModel = Identifier.parse(modelPath);
-        Identifier modelId = parsedModel.withPath(p -> "models/" + p + ".json");
-
-        rm.getResource(modelId).ifPresent(res -> {
-            try (InputStream stream = res.open();
-                    InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
-                JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
-
-                if (!json.has("elements") || !json.has("textures")) return;
-
-                JsonArray elements = json.getAsJsonArray("elements");
-                String fingerprint = sha256(elements.toString());
-                modelIdToFingerprint.put(cmd, fingerprint);
-
-                Set<String> referencedSlots = new LinkedHashSet<>();
-                for (var element : json.getAsJsonArray("elements")) {
-                    JsonObject el = element.getAsJsonObject();
-                    if (!el.has("faces")) continue;
-                    for (String faceKey : el.getAsJsonObject("faces").keySet()) {
-                        JsonObject face = el.getAsJsonObject("faces").getAsJsonObject(faceKey);
-                        if (!face.has("texture")) continue;
-                        String ref = face.get("texture").getAsString();
-                        if (ref.startsWith("#")) referencedSlots.add(ref.substring(1));
-                    }
-                }
-
-                JsonObject textures = json.getAsJsonObject("textures");
-                List<Identifier> textureIds = new ArrayList<>();
-
-                for (String slot : referencedSlots) {
-                    if (!textures.has(slot)) continue;
-                    String texPath = textures.get(slot).getAsString();
-                    Identifier parsedTex = Identifier.parse(texPath);
-                    textureIds.add(parsedTex.withPath(p -> "textures/" + p + ".png"));
-                }
-
-                if (!textureIds.isEmpty()) {
-                    modelIdToTextureIds.put(cmd, textureIds);
-                }
-
-            } catch (IOException e) {
-                WynntilsMod.error("Failed to parse model JSON: " + modelId);
-            }
+        boolean ok = ResourcepackUtils.forEachOverride(rm, (cmd, modelPath) -> {
+            ResourcepackUtils.ModelData model = ResourcepackUtils.resolveModel(rm, modelPath);
+            if (model == null) return;
+            modelIdToFingerprint.put(cmd, model.fingerprint());
+            if (!model.textureIds().isEmpty()) modelIdToTextureIds.put(cmd, model.textureIds());
         });
+
+        if (!ok) WynntilsMod.error("Could not find oak_boat.json override file!");
+        return ok && !modelIdToTextureIds.isEmpty();
     }
 
     private void saveResults() {
         saveToDisk();
         saveTexturePngs();
-        resetState();
+        lastSeenModelToIds.clear();
+        WynntilsMod.info("Recording finished. Results saved.");
     }
 
     private void saveToDisk() {
-        String fileName = "texture_dump.txt";
-        File textFile = new File(SAVE_FOLDER, fileName);
-
+        File textFile = new File(SAVE_FOLDER, OUTPUT_FILE);
         FileUtils.mkdir(textFile.getParentFile());
-        Map<Identifier, String> textureHashCache = new HashMap<>();
+
+        ResourceManager rm = McUtils.mc().getResourceManager();
+        Map<Identifier, String> hashCache = new HashMap<>();
 
         try (PrintWriter writer =
                 new PrintWriter(new OutputStreamWriter(new FileOutputStream(textFile), StandardCharsets.UTF_8))) {
@@ -253,32 +173,25 @@ public class TextureRecorderFeature extends Feature {
             writer.println("--- Seen textures summary ---");
             for (Map.Entry<Integer, List<Identifier>> entry : lastSeenModelToIds.entrySet()) {
                 int modelId = entry.getKey();
-                String fingerprint = modelIdToFingerprint.getOrDefault(modelId, "none");
-                String label = getLabel(entry.getValue());
-                writer.println("  " + label + " (model ID: " + modelId + ", fingerprint: " + fingerprint + ")");
+                writer.println("  " + getLabel(entry.getValue())
+                        + " (model ID: " + modelId
+                        + ", fingerprint: " + modelIdToFingerprint.getOrDefault(modelId, "none") + ")");
             }
             writer.println();
 
             for (Map.Entry<Integer, List<Identifier>> entry : lastSeenModelToIds.entrySet()) {
                 int modelId = entry.getKey();
                 List<Identifier> textureIds = entry.getValue();
-                String label = getLabel(textureIds);
-                writer.println("Texture: " + label);
-
-                String fingerprint = modelIdToFingerprint.getOrDefault(modelId, "none");
-                writer.println("  model ID: " + modelId + "   fingerprint: " + fingerprint);
-
+                writer.println("Texture: " + getLabel(textureIds));
+                writer.println("  model ID: " + modelId + "   fingerprint: "
+                        + modelIdToFingerprint.getOrDefault(modelId, "none"));
                 for (Identifier texId : textureIds) {
-                    String pixelHash = textureHashCache.get(texId);
-                    if (pixelHash == null) {
-                        pixelHash = computePixelHash(texId);
-                        textureHashCache.put(texId, pixelHash);
-                    }
+                    String pixelHash =
+                            hashCache.computeIfAbsent(texId, id -> ResourcepackUtils.computePixelHash(rm, id));
                     writer.println("  texture: " + texId + "   pixel-hash: " + pixelHash);
                 }
                 writer.println();
             }
-
         } catch (IOException e) {
             WynntilsMod.error("Failed to save texture mapping dump " + textFile, e);
         }
@@ -287,30 +200,12 @@ public class TextureRecorderFeature extends Feature {
                 Component.literal("Saved texture mapping dump to " + textFile.getAbsolutePath()));
     }
 
-    private String computePixelHash(Identifier textureId) {
-        ResourceManager rm = McUtils.mc().getResourceManager();
-        Optional<Resource> res = rm.getResource(textureId);
-        if (res.isEmpty()) return "not found";
-
-        try (InputStream stream = res.get().open();
-                NativeImage img = NativeImage.read(stream)) {
-            int[] pixels = getPixels(img);
-            return sha256(Arrays.toString(pixels));
-        } catch (IOException e) {
-            WynntilsMod.error("Failed to compute pixel hash for " + textureId + ": " + e.getMessage());
-            return "error";
-        }
-    }
-
     private void saveTexturePngs() {
         ResourceManager rm = Minecraft.getInstance().getResourceManager();
-
         FileUtils.mkdir(TEXTURES_FOLDER);
 
         Set<Identifier> uniqueTextures = new LinkedHashSet<>();
-        for (List<Identifier> ids : lastSeenModelToIds.values()) {
-            uniqueTextures.addAll(ids);
-        }
+        for (List<Identifier> ids : lastSeenModelToIds.values()) uniqueTextures.addAll(ids);
 
         int exportedCount = 0;
         for (Identifier textureId : uniqueTextures) {
@@ -324,7 +219,7 @@ public class TextureRecorderFeature extends Feature {
             File outFile = new File(TEXTURES_FOLDER, filename);
 
             try (InputStream in = resource.get().open();
-                 FileOutputStream out = new FileOutputStream(outFile)) {
+                    FileOutputStream out = new FileOutputStream(outFile)) {
                 in.transferTo(out);
                 exportedCount++;
             } catch (IOException e) {
@@ -336,11 +231,6 @@ public class TextureRecorderFeature extends Feature {
                 Component.literal("Exported " + exportedCount + " textures to " + TEXTURES_FOLDER.getAbsolutePath()));
     }
 
-    private void resetState() {
-        lastSeenModelToIds.clear();
-        WynntilsMod.info("Recording finished. Results saved.");
-    }
-
     private static String getFilename(Identifier id) {
         String path = id.getPath();
         String name = path.substring(path.lastIndexOf('/') + 1);
@@ -350,29 +240,6 @@ public class TextureRecorderFeature extends Feature {
     private static String getLabel(List<Identifier> textureIds) {
         if (textureIds == null || textureIds.isEmpty()) return "(unknown)";
         String firstName = getFilename(textureIds.getFirst());
-        if (textureIds.size() == 1) return firstName;
-        return firstName + " (+" + (textureIds.size() - 1) + " more)";
-    }
-
-    private static String sha256(String input) {
-        try {
-            byte[] fullHash = MessageDigest.getInstance("SHA-256").digest(input.getBytes(StandardCharsets.UTF_8));
-            return HexFormat.of().formatHex(fullHash);
-        } catch (NoSuchAlgorithmException e) {
-            WynntilsMod.error("SHA-256 algorithm not available: " + e.getMessage());
-            return "hash-error";
-        }
-    }
-
-    private static int[] getPixels(NativeImage img) {
-        int width = img.getWidth();
-        int height = img.getHeight();
-        int[] pixels = new int[width * height];
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                pixels[y * width + x] = img.getPixel(x, y);
-            }
-        }
-        return pixels;
+        return textureIds.size() == 1 ? firstName : firstName + " (+" + (textureIds.size() - 1) + " more)";
     }
 }
