@@ -11,12 +11,12 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.AbstractConfigurable;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -108,8 +108,7 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
 
         // Otherwise render it according to defaults
         if (!isVisible()) return false;
-        boolean hasGui = Models.WorldState.onWorld() && Models.Character.getVehicle() != VehicleType.DISPLAY;
-        return hasGui || !hideWhenNoGui();
+        return (Models.WorldState.onWorld() && !Models.Cutscene.isCutsceneActive()) || !hideWhenNoGui();
     }
 
     @Override
@@ -242,7 +241,15 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     }
 
     public final boolean isParentEnabled() {
-        return Managers.Overlay.getOverlayParent(this).isEnabled();
+        Feature parent = Managers.Overlay.getOverlayParent(this);
+        if (!parent.isEnabled()) {
+            return false;
+        }
+        if (Managers.Feature.isSubFeature(parent)) {
+            Feature grandparent = Managers.Feature.getParentFeature(parent);
+            return grandparent != null && grandparent.isEnabled();
+        }
+        return true;
     }
 
     public final String getParentTranslatedName() {

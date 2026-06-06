@@ -246,6 +246,8 @@ public class MinimapOverlay extends Overlay {
                         renderRemotePartyPlayers.get(),
                         renderRemoteFriendPlayers.get(),
                         renderRemoteGuildPlayers.get()));
+        poisToRender = Stream.concat(
+                poisToRender, Services.Poi.getGatheringNodePois().filter(Services.Poi::isGatheringNodeTypeVisible));
 
         Poi[] pois = poisToRender.toArray(Poi[]::new);
         for (Poi poi : pois) {

@@ -176,7 +176,7 @@ public final class TooltipUtils {
                 feature.identificationsOrdering.get(),
                 feature.groupIdentifications.get(),
                 feature.showBestValueLastAlways.get(),
-                feature.showStars.get(),
+                feature.rainbowInternalRoll.get(),
                 false);
         return builder.getTooltipLines(
                 Models.Character.getClassType(),

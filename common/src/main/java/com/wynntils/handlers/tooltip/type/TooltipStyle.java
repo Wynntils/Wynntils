@@ -10,6 +10,6 @@ public record TooltipStyle(
         StatListOrdering identificationOrdering,
         boolean useDelimiters,
         boolean showBestValueLastAlways,
-        boolean showStars,
+        boolean rainbowPerfectInternalRoll,
         boolean showRollWheel // this only applies to crafted items
         ) {}
