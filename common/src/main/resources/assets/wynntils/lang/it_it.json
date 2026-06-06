@@ -546,6 +546,7 @@
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.name": "Nome dell'Oggetto in Mano",
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.textShadow.description": "Come dovrebbe apparire l'ombra del testo?",
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.textShadow.name": "Ombra del Testo",
+  "feature.wynntils.highlightGatheringNodes.highlightColor.name": "Colore di Evidenziazione",
   "feature.wynntils.infoBox.description": "Aggiunge la possibilità di aggiungere riquadri informativi personalizzati allo schermo come sovrapposizioni. I riquadri informativi possono visualizzare funzioni personalizzate.",
   "feature.wynntils.infoBox.name": "Riquadri Informativi",
   "feature.wynntils.infoBox.overlay.infoBox.content.description": "Cosa dovrebbe essere visualizzato nel riquadro informativo?",
