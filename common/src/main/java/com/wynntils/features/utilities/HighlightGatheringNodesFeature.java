@@ -11,6 +11,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.models.items.items.game.GatheringToolItem;
 import com.wynntils.models.profession.label.ProfessionGatheringNodeLabelInfo;
@@ -32,7 +33,9 @@ public class HighlightGatheringNodesFeature extends Feature {
     private final Config<Boolean> alwaysShow = new Config<>(false);
 
     public HighlightGatheringNodesFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
+                .build());
     }
 
     @SubscribeEvent
