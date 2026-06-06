@@ -546,6 +546,7 @@
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.name": "Tartott Tárgy Neve",
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.textShadow.description": "Milyen legyen a szöveg árnyéka?",
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.textShadow.name": "Szöveg А́rnyéka",
+  "feature.wynntils.highlightGatheringNodes.highlightColor.name": "Kiemelés Szín",
   "feature.wynntils.infoBox.description": "Lehetővé teszi egyedi információs dobozok hozzáadását a képernyőre átfedésként. Az információs dobozok egyedi funkciókat jeleníthetnek meg.",
   "feature.wynntils.infoBox.name": "Információs Dobozo",
   "feature.wynntils.infoBox.overlay.infoBox.content.description": "Mit kell megjeleníteni az információs dobozban?",
