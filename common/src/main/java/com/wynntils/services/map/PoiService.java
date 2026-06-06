@@ -30,10 +30,8 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.Texture;
 import java.io.Reader;
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -42,11 +40,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 
 public class PoiService extends Service {
-    private GatheringFilterMode gatheringFilterMode = GatheringFilterMode.NONE;
     private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(Label.class, new Label.LabelDeserializer())
             .enableComplexMapKeySerialization()
@@ -77,6 +72,9 @@ public class PoiService extends Service {
 
     @Persisted
     private final Storage<List<CustomPoiProvider>> customPoiProviders = new Storage<>(new ArrayList<>());
+
+    @Persisted
+    private final Storage<Map<String, Boolean>> visibleGatheringNodeTypes = new Storage<>(new ConcurrentHashMap<>());
 
     public PoiService() {
         super(List.of());
@@ -237,16 +235,39 @@ public class PoiService extends Service {
         }
     }
 
-    public GatheringFilterMode getGatheringFilterMode() {
-        return gatheringFilterMode;
+    public List<GatheringNodeType> getGatheringNodeTypes() {
+        return gatheringNodePois.stream()
+                .filter(gatheringNodePoi -> gatheringNodePoi.getMaterialType() != null)
+                .filter(gatheringNodePoi -> gatheringNodePoi.getSourceMaterial() != null)
+                .map(gatheringNodePoi ->
+                        new GatheringNodeType(gatheringNodePoi.getMaterialType(), gatheringNodePoi.getSourceMaterial()))
+                .distinct()
+                .sorted()
+                .toList();
     }
 
-    public void setNextGatheringFilter() {
-        this.gatheringFilterMode = this.gatheringFilterMode.getNext();
+    public boolean isGatheringNodeTypeVisible(GatheringNodePoi gatheringNodePoi) {
+        if (gatheringNodePoi.getMaterialType() == null || gatheringNodePoi.getSourceMaterial() == null) return true;
+
+        return isGatheringNodeTypeVisible(
+                new GatheringNodeType(gatheringNodePoi.getMaterialType(), gatheringNodePoi.getSourceMaterial()));
     }
 
-    public void setPreviousGatheringFilter() {
-        this.gatheringFilterMode = this.gatheringFilterMode.getPrevious();
+    public boolean isGatheringNodeTypeVisible(GatheringNodeType gatheringNodeType) {
+        return visibleGatheringNodeTypes.get().getOrDefault(gatheringNodeType.key(), false);
+    }
+
+    public void setGatheringNodeTypeVisible(GatheringNodeType gatheringNodeType, boolean visible) {
+        visibleGatheringNodeTypes.get().put(gatheringNodeType.key(), visible);
+        visibleGatheringNodeTypes.touched();
+    }
+
+    public void setAllGatheringNodeTypesVisible(boolean visible) {
+        getGatheringNodeTypes().stream()
+                .map(GatheringNodeType::key)
+                .forEach(key -> visibleGatheringNodeTypes.get().put(key, visible));
+
+        visibleGatheringNodeTypes.touched();
     }
 
     private static class PlacesProfile {
@@ -282,45 +303,22 @@ public class PoiService extends Service {
 
     private record GatheringNodeProfile(int x, int y, int z, int angle, String resource, String type, int level) {}
 
-    public enum GatheringFilterMode {
-        NONE("None", Texture.DISABLED, null),
-        MINING("Mining", Texture.MINING, MaterialProfile.MaterialType.ORE),
-        LOG("Woodcutting", Texture.WOODCUTTING, MaterialProfile.MaterialType.LOG),
-        CROPS("Farming", Texture.FARMING, MaterialProfile.MaterialType.CROP),
-        FISH("Fishing", Texture.FISHING, MaterialProfile.MaterialType.FISH),
-        ALL(
-                Component.literal("All (")
-                        .append(Component.literal("Performance Impact").withStyle(ChatFormatting.RED))
-                        .append(Component.literal(")")),
-                Texture.ALL_CONFIG_ICON,
-                null);
-
-        public final Component displayText;
-        public final Texture texture;
-        public final MaterialProfile.MaterialType materialType;
-
-        GatheringFilterMode(Component displayText, Texture texture, MaterialProfile.MaterialType materialType) {
-            this.displayText = displayText;
-            this.texture = texture;
-            this.materialType = materialType;
+    public record GatheringNodeType(
+            MaterialProfile.MaterialType materialType, MaterialProfile.SourceMaterial sourceMaterial)
+            implements Comparable<GatheringNodeType> {
+        public String key() {
+            return materialType.name() + ":" + sourceMaterial.name();
         }
 
-        GatheringFilterMode(String displayText, Texture texture, MaterialProfile.MaterialType materialType) {
-            this.displayText = Component.literal(displayText);
-            this.texture = texture;
-            this.materialType = materialType;
-        }
+        @Override
+        public int compareTo(GatheringNodeType other) {
+            int materialTypeCompare = Integer.compare(materialType.ordinal(), other.materialType.ordinal());
+            if (materialTypeCompare != 0) return materialTypeCompare;
 
-        public GatheringFilterMode getNext() {
-            int index = Arrays.asList(values()).indexOf(this);
-            if (index == values().length - 1) return NONE;
-            return (GatheringFilterMode) Array.get(values(), index + 1);
-        }
+            int levelCompare = Integer.compare(sourceMaterial.level(), other.sourceMaterial.level());
+            if (levelCompare != 0) return levelCompare;
 
-        public GatheringFilterMode getPrevious() {
-            int index = Arrays.asList(values()).indexOf(this);
-            if (index == 0) return ALL;
-            return (GatheringFilterMode) Array.get(values(), index - 1);
+            return sourceMaterial.name().compareToIgnoreCase(other.sourceMaterial.name());
         }
     }
 }

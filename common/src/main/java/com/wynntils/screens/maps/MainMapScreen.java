@@ -16,7 +16,6 @@ import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.hades.type.PlayerRelation;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
-import com.wynntils.services.map.PoiService;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.IconPoi;
 import com.wynntils.services.map.pois.PlayerMainMapPoi;
@@ -152,17 +151,17 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.GRAY))));
 
         gatheringFilterButton = new MapButton(
-                Services.Poi.getGatheringFilterMode().texture,
-                (b) -> {
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                        Services.Poi.setPreviousGatheringFilter();
-                    } else {
-                        Services.Poi.setNextGatheringFilter();
-                    }
-                    gatheringFilterButton.setTexture(Services.Poi.getGatheringFilterMode().texture);
-                    gatheringFilterButton.setTooltip(getGatheringModeTooltip());
-                },
-                getGatheringModeTooltip());
+                Texture.TOOL,
+                (b) -> McUtils.mc().setScreen(GatheringNodeFilterScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .append(Component.translatable("screens.wynntils.map.gatheringFilter.name"))
+                                .withStyle(ChatFormatting.DARK_PURPLE),
+                        Component.translatable("screens.wynntils.map.gatheringFilter.description1")
+                                .withStyle(ChatFormatting.GRAY),
+                        Component.empty(),
+                        Component.translatable("screens.wynntils.map.gatheringFilter.description2")
+                                .withStyle(ChatFormatting.GRAY)));
 
         addMapButton(gatheringFilterButton);
 
@@ -318,15 +317,8 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         pois = Stream.concat(pois, Services.Poi.getCombatPois());
         pois = Stream.concat(pois, Services.Poi.getLabelPois());
-        PoiService.GatheringFilterMode filterMode = Services.Poi.getGatheringFilterMode();
-        if (filterMode == PoiService.GatheringFilterMode.ALL) {
-            pois = Stream.concat(pois, Services.Poi.getGatheringNodePois());
-        } else if (filterMode != PoiService.GatheringFilterMode.NONE) {
-            pois = Stream.concat(
-                    pois,
-                    Services.Poi.getGatheringNodePois()
-                            .filter(gatheringNodePoi -> gatheringNodePoi.getMaterialType() == filterMode.materialType));
-        }
+        pois = Stream.concat(
+                pois, Services.Poi.getGatheringNodePois().filter(Services.Poi::isGatheringNodeTypeVisible));
         pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
         pois = Stream.concat(pois, Services.Poi.getProvidedCustomPois().stream());
         pois = Stream.concat(pois, Models.Marker.getAllPois());
@@ -512,17 +504,5 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     public void setHovered(Poi hovered) {
         this.hovered = hovered;
-    }
-
-    private List<Component> getGatheringModeTooltip() {
-        return List.of(
-                Component.literal("[>] ")
-                        .append(Component.translatable("screens.wynntils.map.gatheringFilter.name"))
-                        .withStyle(ChatFormatting.DARK_PURPLE),
-                Component.translatable("screens.wynntils.map.gatheringFilter.description"),
-                Component.empty(),
-                Component.translatable(
-                        "screens.wynntils.map.gatheringFilter.filter",
-                        Services.Poi.getGatheringFilterMode().displayText));
     }
 }
