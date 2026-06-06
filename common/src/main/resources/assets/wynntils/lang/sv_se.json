@@ -554,6 +554,7 @@
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.name": "Hållen föremåls namn",
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.textShadow.description": "Hur ska textskuggan se ut?",
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.textShadow.name": "Textskugga",
+  "feature.wynntils.highlightGatheringNodes.highlightColor.name": "Markeringsfärg",
   "feature.wynntils.infoBox.description": "Lägger till möjligheten att lägga till anpassade informationsrutor på skärmen som överlägg. Informationsrutorna kan visa anpassade funktioner.",
   "feature.wynntils.infoBox.name": "Informationsrutor",
   "feature.wynntils.infoBox.overlay.infoBox.content.description": "Vad ska visas i informationsrutan?",
