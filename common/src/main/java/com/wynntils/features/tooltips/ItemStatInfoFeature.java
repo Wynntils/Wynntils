@@ -33,6 +33,7 @@ import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import com.wynntils.services.itemweight.type.ItemWeighting;
+import com.wynntils.utils.colors.WynncraftShaderColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
@@ -73,9 +74,6 @@ public class ItemStatInfoFeature extends Feature {
     private final Set<WynnItem> brokenItems = new HashSet<>();
 
     @Persisted
-    public final Config<Boolean> showStars = new Config<>(true);
-
-    @Persisted
     public final Config<Boolean> colorLerp = new Config<>(true);
 
     @Persisted
@@ -113,6 +111,9 @@ public class ItemStatInfoFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> showBestValueLastAlways = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> rainbowInternalRoll = new Config<>(true);
 
     @Persisted
     public final Config<Boolean> showRollWheel = new Config<>(true);
@@ -269,6 +270,10 @@ public class ItemStatInfoFeature extends Feature {
             float percentage = StatCalculator.getPercentage(actualValue, possibleValues);
             MutableComponent percentageTextComponent = ColorScaleUtils.getPercentageTextComponent(
                     getColorMap(), percentage, colorLerp.get(), decimalPlaces.get());
+
+            if (style.rainbowPerfectInternalRoll() && actualValue.stars() == 3) {
+                percentageTextComponent.withColor(WynncraftShaderColor.RAINBOW.color.asInt());
+            }
 
             return percentageTextComponent;
         }
