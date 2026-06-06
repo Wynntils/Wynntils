@@ -20,6 +20,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Optional;
 import java.util.stream.Stream;
+import net.minecraft.core.BlockPos;
 import net.minecraft.gizmos.GizmoStyle;
 import net.minecraft.gizmos.Gizmos;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -53,9 +54,12 @@ public class HighlightGatheringNodesFeature extends Feature {
         }
 
         nodes.forEach(node -> {
-            Gizmos.cuboid(
-                    node.getLocation().toBlockPos(),
-                    GizmoStyle.stroke(highlightColor.get().asInt()));
+            BlockPos pos = node.getLocation().toBlockPos();
+            switch (node.getMaterialType().getProfessionType()) {
+                case MINING, FISHING -> pos = pos.below();
+                case FARMING -> pos = pos.below(2);
+            }
+            Gizmos.cuboid(pos, GizmoStyle.stroke(highlightColor.get().asInt()));
         });
     }
 }
