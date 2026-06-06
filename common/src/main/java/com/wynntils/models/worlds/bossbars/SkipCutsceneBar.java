@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class SkipCutsceneBar extends TrackedBar {
     private static final Pattern CUTSCENE_SKIP_PATTERN =
-            Pattern.compile("§7Press§r §f\uF005 Swap Hands §7to skip( §8- §f\\d+§7/§f\\d+)?");
+            Pattern.compile("§7Press§r §f\uF005 Swap Hands §7to skip(§r §8-§r §f\\d+§7/§f\\d+)?");
 
     public SkipCutsceneBar() {
         super(CUTSCENE_SKIP_PATTERN);
