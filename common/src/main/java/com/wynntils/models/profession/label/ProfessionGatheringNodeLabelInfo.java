@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.profession.label;
@@ -27,6 +27,10 @@ public class ProfessionGatheringNodeLabelInfo extends ProfessionLabelInfo {
 
     public MaterialProfile.SourceMaterial getSourceMaterial() {
         return sourceMaterial;
+    }
+
+    public MaterialProfile.MaterialType getMaterialType() {
+        return materialType;
     }
 
     @Override

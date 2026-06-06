@@ -6,8 +6,10 @@ package com.wynntils.models.raid;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.mod.TickSchedulerManager.ScheduledTask;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
@@ -81,6 +83,8 @@ public final class RaidModel extends Model {
     private static final Pattern RAID_CHOOSE_BUFF_PATTERN = Pattern.compile(
             "§#d6401eff(\\uE009\\uE002|\\uE001) §#fa7f63ff((§o)?(\\w+))§#d6401eff has chosen the §#fa7f63ff(\\w+ \\w+)§#d6401eff buff!");
 
+    private static final int RAID_RESUME_TIMEOUT_TICKS = 100;
+
     private static final ParasiteOvertakenBar PARASITE_OVERTAKEN_BAR = new ParasiteOvertakenBar();
     private static final Pattern PARASITE_OVERTAKEN_PATTERN = Pattern.compile(
             "§#d6401eff(?:\uE009\uE002|\uE001) §#fa7f63ff(?<player>.+?)§#d6401eff has been overtaken! Keep attacking §#ffc85fffThe Parasite§#d6401eff to save them!");
@@ -129,6 +133,9 @@ public final class RaidModel extends Model {
     private CappedValue challenges = CappedValue.EMPTY;
     private int timeLeft = 0;
     private RaidInfo currentRaid;
+
+    private boolean awaitingRaidResume = false;
+    private ScheduledTask raidResumeTask;
 
     public RaidModel() {
         super(List.of());
@@ -227,19 +234,47 @@ public final class RaidModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        // Only want to send the message once the user has returned to an actual world
-        if (currentRaid != null && event.getNewState() == WorldState.WORLD) {
-            currentRaid = null;
-            completedCurrentChallenge = false;
-            timeLeft = 0;
-            challenges = CappedValue.EMPTY;
-            partyRaidBuffs.clear();
-            parasiteOvertaken = false;
+        if (currentRaid == null || event.getNewState() != WorldState.WORLD) return;
 
-            McUtils.sendWynntilsPrefixMessage(Component.literal(
-                            "Raid tracking has been interrupted, you will not be able to see progress for the current raid")
-                    .withStyle(ChatFormatting.DARK_RED));
+        awaitingRaidResume = true;
+
+        if (raidResumeTask != null) {
+            Managers.TickScheduler.cancel(raidResumeTask);
         }
+        raidResumeTask = Managers.TickScheduler.scheduleLater(this::checkRaidResume, RAID_RESUME_TIMEOUT_TICKS);
+    }
+
+    public void notifyRaidScoreboardShown() {
+        if (!awaitingRaidResume) return;
+
+        awaitingRaidResume = false;
+        if (raidResumeTask != null) {
+            Managers.TickScheduler.cancel(raidResumeTask);
+            raidResumeTask = null;
+        }
+    }
+
+    private void checkRaidResume() {
+        raidResumeTask = null;
+        if (!awaitingRaidResume) return;
+
+        awaitingRaidResume = false;
+        interruptRaid();
+    }
+
+    private void interruptRaid() {
+        if (currentRaid == null) return;
+
+        currentRaid = null;
+        completedCurrentChallenge = false;
+        timeLeft = 0;
+        challenges = CappedValue.EMPTY;
+        partyRaidBuffs.clear();
+        parasiteOvertaken = false;
+
+        McUtils.sendWynntilsPrefixMessage(Component.literal(
+                        "Raid tracking has been interrupted, you will not be able to see progress for the current raid")
+                .withStyle(ChatFormatting.DARK_RED));
     }
 
     // Process raid rewards

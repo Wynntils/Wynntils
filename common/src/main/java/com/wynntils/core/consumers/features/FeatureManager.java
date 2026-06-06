@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
+import com.wynntils.features.HideCrosshairInCutscenesFeature;
 import com.wynntils.features.HideTripwiresFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
@@ -160,6 +161,7 @@ import com.wynntils.features.utilities.CharacterSelectionUtilitiesFeature;
 import com.wynntils.features.utilities.EnhancedStreamerModeFeature;
 import com.wynntils.features.utilities.FixCrosshairPositionFeature;
 import com.wynntils.features.utilities.GammabrightFeature;
+import com.wynntils.features.utilities.HighlightGatheringNodesFeature;
 import com.wynntils.features.utilities.PerCharacterGuildContributionFeature;
 import com.wynntils.features.utilities.SilencerFeature;
 import com.wynntils.features.utilities.SkillPointLoadoutsFeature;
@@ -413,12 +415,14 @@ public final class FeatureManager extends Manager {
         registerFeature(new EnhancedStreamerModeFeature());
         registerFeature(new FixCrosshairPositionFeature());
         registerFeature(new GammabrightFeature());
-        registerFeature(new ValuablesProtectionFeature());
+        registerFeature(new HideCrosshairInCutscenesFeature());
+        registerFeature(new HighlightGatheringNodesFeature());
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
         registerFeature(new SkillPointLoadoutsFeature());
         registerFeature(new TranscribeMessagesFeature());
         registerFeature(new TranslationFeature());
+        registerFeature(new ValuablesProtectionFeature());
         registerFeature(new XpGainMessageFeature());
         // endregion
 
