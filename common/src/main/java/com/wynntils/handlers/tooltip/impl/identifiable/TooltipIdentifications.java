@@ -191,7 +191,6 @@ public final class TooltipIdentifications {
 
         int valueToShow = statType.calculateAsInverted() ? -value : value;
         boolean hasPositiveEffect = valueToShow > 0 ^ statType.displayAsInverted();
-        String starString = style.showStars() ? "***".substring(3 - actualValue.stars()) : "";
         String displayName = Models.Stat.getDisplayName(
                 statType, itemInfo.getRequiredClass(), currentClass, itemInfo.getIdentificationLevelRange());
 
@@ -207,13 +206,6 @@ public final class TooltipIdentifications {
                 .withStyle(Style.EMPTY
                         .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
                         .withColor(hasPositiveEffect ? ChatFormatting.GREEN : ChatFormatting.RED));
-
-        if (!starString.isEmpty()) {
-            right.append(Component.literal(starString)
-                    .withStyle(Style.EMPTY
-                            .withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT)
-                            .withColor(hasPositiveEffect ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED)));
-        }
 
         if (suffix != null) {
             right.append(suffix);
