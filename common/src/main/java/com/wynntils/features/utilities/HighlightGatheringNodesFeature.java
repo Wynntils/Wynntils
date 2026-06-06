@@ -59,7 +59,7 @@ public class HighlightGatheringNodesFeature extends Feature {
                 case MINING, FISHING -> pos = pos.below();
                 case FARMING -> pos = pos.below(2);
             }
-            Gizmos.cuboid(pos, GizmoStyle.stroke(highlightColor.get().asInt()));
+            Gizmos.cuboid(pos, GizmoStyle.stroke(highlightColor.get().asInt())).setAlwaysOnTop();
         });
     }
 }
