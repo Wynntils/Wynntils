@@ -103,7 +103,7 @@ public class ItemStatInfoFeature extends Feature {
     public final Config<Boolean> identificationDecorations = new Config<>(true);
 
     @Persisted
-    public final Config<ItemWeightSource> itemWeights = new Config<>(ItemWeightSource.NONE);
+    public final Config<ItemWeightSource> itemWeights = new Config<>(ItemWeightSource.ALL);
 
     @Persisted
     public final Config<Boolean> overallPercentageInName = new Config<>(true);
