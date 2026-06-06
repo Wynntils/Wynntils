@@ -546,6 +546,7 @@
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.name": "Nazwa Trzymanego Przedmiotu",
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.textShadow.description": "Jak powinien wyglądać cień tekstu?",
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.textShadow.name": "Cień Tekstu",
+  "feature.wynntils.highlightGatheringNodes.highlightColor.name": "Kolor Podświetlenia",
   "feature.wynntils.infoBox.description": "Dodaje możliwość dodawania niestandardowych okienek informacyjnych na ekranie jako nakładki. Okienka informacyjne mogą wyświetlać niestandardowe funkcje.",
   "feature.wynntils.infoBox.name": "Okienka Informacyjne",
   "feature.wynntils.infoBox.overlay.infoBox.content.description": "Co powinno być wyświetlane w okienku informacyjnym?",
