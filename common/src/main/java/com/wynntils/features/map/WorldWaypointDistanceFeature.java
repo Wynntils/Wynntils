@@ -137,6 +137,7 @@ public class WorldWaypointDistanceFeature extends Feature {
 
     @SubscribeEvent
     public void onRenderGuiPost(RenderEvent.Pre event) {
+        if (Models.Cutscene.isCutsceneActive()) return;
         if (event.getType() != RenderElementType.HOTBAR) return;
 
         float renderOpacity = MathUtils.clamp(distanceOpacity.get(), 0f, 1f);
