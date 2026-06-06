@@ -546,7 +546,6 @@
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.name": "Nombre del Objeto en Mano",
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.textShadow.description": "¿Cómo debería verse la sombra del texto?",
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.textShadow.name": "Sombra del Texto",
-  "feature.wynntils.highlightGatheringNodes.highlightColor.name": "Color de Resaltado",
   "feature.wynntils.infoBox.description": "Añade la capacidad de agregar cuadros de información personalizados a la pantalla como superposiciones. Los cuadros de información pueden mostrar funciones personalizadas.",
   "feature.wynntils.infoBox.name": "Cuadros de Información",
   "feature.wynntils.infoBox.overlay.infoBox.content.description": "¿Qué se debe mostrar en el cuadro de información?",

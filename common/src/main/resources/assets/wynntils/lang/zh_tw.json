@@ -546,7 +546,6 @@
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.name": "手持物品名稱",
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.textShadow.description": "文字陰影應該是什麼樣的？",
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.textShadow.name": "文字陰影",
-  "feature.wynntils.highlightGatheringNodes.highlightColor.name": "高亮顏色",
   "feature.wynntils.infoBox.description": "添加將自訂資訊框作為覆蓋層添加到螢幕的功能。資訊框可以顯示自訂功能。",
   "feature.wynntils.infoBox.name": "資訊框",
   "feature.wynntils.infoBox.overlay.infoBox.content.description": "資訊框中應顯示什麼？",
