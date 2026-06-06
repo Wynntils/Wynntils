@@ -645,7 +645,6 @@
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.textShadow.name": "텍스트 그림자",
   "feature.wynntils.hideLabels.hideDamageLabels.description": "피해를 가할 때의 피해량 라벨 표시를 숨깁니다",
   "feature.wynntils.hideLabels.hideDamageLabels.name": "피해량 표시 숨기기",
-  "feature.wynntils.highlightGatheringNodes.highlightColor.name": "강조 색상",
   "feature.wynntils.infoBox.description": "커스텀 가능한 정보 박스를 오버레이에 제공합니다. 정보 박스는 다양한 함수를 사용할 수 있습니다.",
   "feature.wynntils.infoBox.name": "정보 박스",
   "feature.wynntils.infoBox.overlay.infoBox.colorTemplate.name": "색상 양식",

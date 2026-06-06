@@ -549,7 +549,6 @@
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.name": "Name des Gehaltenen Gegenstands",
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.textShadow.description": "Wie soll der Textschatten aussehen?",
   "feature.wynntils.heldItemNameOverlay.overlay.heldItemName.textShadow.name": "Textschatten",
-  "feature.wynntils.highlightGatheringNodes.highlightColor.name": "Hervorhebungsfarbe",
   "feature.wynntils.infoBox.description": "Fügt die Möglichkeit hinzu, benutzerdefinierte Infoboxen als Overlays auf dem Bildschirm hinzuzufügen. Infoboxen können benutzerdefinierte Funktionen anzeigen.",
   "feature.wynntils.infoBox.name": "Infoboxen",
   "feature.wynntils.infoBox.overlay.infoBox.content.description": "Was soll in der Infobox angezeigt werden?",
