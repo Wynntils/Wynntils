@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.profession;
@@ -12,11 +12,13 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
+import com.wynntils.handlers.labels.event.LabelsRemovedEvent;
 import com.wynntils.models.profession.event.ProfessionXpGainEvent;
 import com.wynntils.models.profession.label.CraftingStationLabelParser;
 import com.wynntils.models.profession.label.GatheringNodeHarvestLabelInfo;
 import com.wynntils.models.profession.label.GatheringNodeHarvestLabelParser;
 import com.wynntils.models.profession.label.GatheringNodeLabelParser;
+import com.wynntils.models.profession.label.ProfessionGatheringNodeLabelInfo;
 import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
@@ -25,9 +27,11 @@ import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.TimedSet;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -75,6 +79,7 @@ public final class ProfessionModel extends Model {
     private Map<ProfessionType, ProfessionProgress> professionProgressMap = new ConcurrentHashMap<>();
     private final Map<ProfessionType, TimedSet<Float>> rawXpGainInLastMinute = new HashMap<>();
     private ProfessionType lastProfessionXpGain;
+    private final Set<ProfessionGatheringNodeLabelInfo> nodesSet = new HashSet<>();
 
     public ProfessionModel() {
         super(List.of());
@@ -114,6 +119,10 @@ public final class ProfessionModel extends Model {
             lastProfessionXpGain = gatheringInfo.getProfessionType();
             WynntilsMod.postEvent(new ProfessionXpGainEvent(
                     gatheringInfo.getProfessionType(), gatheringInfo.getXpGain(), gatheringInfo.getCurrentXp()));
+        }
+
+        if (event.getLabelInfo() instanceof ProfessionGatheringNodeLabelInfo nodeInfo) {
+            nodesSet.add(nodeInfo);
         }
     }
 
@@ -158,6 +167,15 @@ public final class ProfessionModel extends Model {
         professionProgressMap.put(profession, new ProfessionProgress(oldValue.level(), newPercentage));
 
         rawXpGainInLastMinute.get(profession).put(event.getGainedXpRaw());
+    }
+
+    @SubscribeEvent
+    public void onLabelsRemoved(LabelsRemovedEvent event) {
+        event.getRemovedLabels().forEach(labelInfo -> {
+            if (labelInfo instanceof ProfessionGatheringNodeLabelInfo info) {
+                nodesSet.remove(info);
+            }
+        });
     }
 
     public void resetValueFromItem(ItemStack professionInfoItem) {
@@ -230,5 +248,9 @@ public final class ProfessionModel extends Model {
 
     public Optional<ProfessionType> getLastProfessionXpGain() {
         return Optional.ofNullable(lastProfessionXpGain);
+    }
+
+    public Set<ProfessionGatheringNodeLabelInfo> getNodesSet() {
+        return Collections.unmodifiableSet(nodesSet);
     }
 }
