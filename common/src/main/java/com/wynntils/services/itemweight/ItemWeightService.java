@@ -48,7 +48,7 @@ public class ItemWeightService extends Service {
                     "\uE060\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE048\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE062")
             .withStyle(WYNNPOOL_STYLE);
 
-    private final Map<ItemWeightSource, Map<String, List<ItemWeighting>>> weightings = new HashMap<>();
+    private Map<ItemWeightSource, Map<String, List<ItemWeighting>>> weightings = new HashMap<>();
 
     public ItemWeightService() {
         super(List.of());
@@ -143,19 +143,26 @@ public class ItemWeightService extends Service {
     private void handleItemWeights(Reader reader) {
         JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
 
+        Map<ItemWeightSource, Map<String, List<ItemWeighting>>> newWeightings = new HashMap<>();
+
         for (ItemWeightSource source : ItemWeightSource.values()) {
             if (!source.isSingleSource()) continue;
 
             String sourceName = source.name().toLowerCase(Locale.ROOT);
 
             if (jsonObject.has(sourceName)) {
-                parseWeightingGroup(jsonObject.getAsJsonObject(sourceName), source);
+                parseWeightingGroup(jsonObject.getAsJsonObject(sourceName), source, newWeightings);
             }
         }
+
+        weightings = newWeightings;
     }
 
-    private void parseWeightingGroup(JsonObject group, ItemWeightSource source) {
-        Map<String, List<ItemWeighting>> sourceMap = weightings.computeIfAbsent(source, s -> new HashMap<>());
+    private void parseWeightingGroup(
+            JsonObject group,
+            ItemWeightSource source,
+            Map<ItemWeightSource, Map<String, List<ItemWeighting>>> newWeightings) {
+        Map<String, List<ItemWeighting>> sourceMap = newWeightings.computeIfAbsent(source, s -> new HashMap<>());
 
         for (Map.Entry<String, JsonElement> itemEntry : group.entrySet()) {
             String itemName = itemEntry.getKey();
