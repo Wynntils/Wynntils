@@ -83,6 +83,9 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
                                 .withStyle(ChatFormatting.GRAY))
                         .append(Component.literal("\n"))
                         .append(Component.translatable("screens.wynntils.gatheringNodeFilterGui.help2")
+                                .withStyle(ChatFormatting.GRAY))
+                        .append(Component.literal("\n\n"))
+                        .append(Component.translatable("screens.wynntils.gatheringNodeFilterGui.help3")
                                 .withStyle(ChatFormatting.GRAY))));
 
         searchInput = new TextInputBoxWidget(

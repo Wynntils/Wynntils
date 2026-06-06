@@ -270,6 +270,13 @@ public class PoiService extends Service {
         visibleGatheringNodeTypes.touched();
     }
 
+    public void setAllGatheringNodeTypesVisible(MaterialProfile.MaterialType materialType, boolean visible) {
+        getGatheringNodeTypes().stream()
+                .filter(type -> type.materialType == materialType)
+                .map(GatheringNodeType::key)
+                .forEach(key -> visibleGatheringNodeTypes.get().put(key, visible));
+    }
+
     private static class PlacesProfile {
         List<Label> labels;
     }

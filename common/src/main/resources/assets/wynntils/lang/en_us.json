@@ -3229,6 +3229,7 @@
   "screens.wynntils.gatheringNodeFilterGui.help": "Gathering Node Filter Help",
   "screens.wynntils.gatheringNodeFilterGui.help1": "Choose which gathering node resources should be displayed on the map and minimap.",
   "screens.wynntils.gatheringNodeFilterGui.help2": "Click a row or its button to hide or show that resource.",
+  "screens.wynntils.gatheringNodeFilterGui.help3": "Holding ALT while left or right clicking filters will instead enable or disable respectively all of the selected type instead",
   "screens.wynntils.gatheringNodeFilterGui.hide": "Hide",
   "screens.wynntils.gatheringNodeFilterGui.hideAll": "Hide All",
   "screens.wynntils.gatheringNodeFilterGui.icon": "Icon",
