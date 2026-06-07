@@ -75,6 +75,24 @@ public class CustomModelDataEncoderFeature extends Feature {
                             "0a347b9ece55a7c131d926bb1c27caa63cb32c1d17d9fa2f057d373c1634cb5c"
                         ],
                         "fingerprints": []
+                    },
+                    "Meteor Trail": {
+                        "textures": [
+                            "662b0544d2eaa5f74a31c492a382cb5767cc441c832dfdde74b5de39661a0086"
+                        ],
+                        "fingerprints": [
+                          "4aa761cc79b8e1a17d786253ef423aca6bb92cd65f5afba467a6c38d36662702",
+                          "5559c862acd173f8f333eb409634cd6f5b7582e53a15013b98cb19348ea3c123",
+                          "fecc509fe5d212d14d9cf3bf93b339c80076f33cd7cc8254b0a93b8beeef0927"
+                        ]
+                    },
+                    "Meteor Ball": {
+                        "textures": [
+                            "662b0544d2eaa5f74a31c492a382cb5767cc441c832dfdde74b5de39661a0086"
+                        ],
+                        "fingerprints": [
+                            "4918908e2c891617ee71ca135251d6e17c610e40e7aa47670fd449b9a8dd3518"
+                        ]
                     }
                 }
             }
@@ -88,6 +106,14 @@ public class CustomModelDataEncoderFeature extends Feature {
         super(ProfileDefault.DISABLED);
     }
 
+    private record ModelEntry(String name, Set<String> textureHashes, Set<String> fingerprints) {
+        public boolean matches(String textureHash, String fingerprint) {
+            if (!textureHashes.contains(textureHash)) return false;
+            if (fingerprints == null || fingerprints.isEmpty()) return true;
+            return fingerprints.contains(fingerprint);
+        }
+    }
+
     private int encodeCustomModelData(CommandContext<CommandSourceStack> context) {
         WynntilsMod.info("[Encoder] Starting encode...");
 
@@ -99,31 +125,25 @@ public class CustomModelDataEncoderFeature extends Feature {
             return 1;
         }
 
-        Map<String, Set<String>> textureHashToNames = new HashMap<>();
-        Map<String, Set<String>> fingerprintToNames = new HashMap<>();
-
+        // Build one ModelEntry per model, collecting all its texture hashes and fingerprints
+        List<ModelEntry> modelEntries = new ArrayList<>();
         for (String modelName : inputModels.keySet()) {
             JsonObject entry = inputModels.getAsJsonObject(modelName);
+
+            Set<String> textureHashes = new LinkedHashSet<>();
             for (var element : JsonUtils.getNullableJsonArray(entry, "textures"))
-                textureHashToNames
-                        .computeIfAbsent(element.getAsString(), k -> new LinkedHashSet<>())
-                        .add(modelName);
+                textureHashes.add(element.getAsString());
+
+            Set<String> fingerprints = new LinkedHashSet<>();
             for (var element : JsonUtils.getNullableJsonArray(entry, "fingerprints"))
-                fingerprintToNames
-                        .computeIfAbsent(element.getAsString(), k -> new LinkedHashSet<>())
-                        .add(modelName);
+                fingerprints.add(element.getAsString());
+
+            modelEntries.add(new ModelEntry(modelName, textureHashes, fingerprints));
         }
 
         ResourceManager resourceManager = McUtils.mc().getResourceManager();
 
         Map<String, String> texturePathToHash = ResourcepackUtils.buildTexturePathToPixelHashMap(resourceManager);
-        Map<String, String> texturePathToName = new HashMap<>();
-        for (Map.Entry<String, String> entry : texturePathToHash.entrySet()) {
-            Set<String> names = textureHashToNames.get(entry.getValue());
-            if (names != null && !names.isEmpty())
-                texturePathToName.put(entry.getKey(), names.iterator().next());
-        }
-        WynntilsMod.info("[Encoder] Upfront texture scan matched " + texturePathToName.size() + " texture paths.");
 
         Map<String, List<Float>> result = new LinkedHashMap<>();
         for (String name : inputModels.keySet()) result.put(name, new ArrayList<>());
@@ -134,14 +154,19 @@ public class CustomModelDataEncoderFeature extends Feature {
 
             Set<String> matchedNames = new LinkedHashSet<>();
 
-            Set<String> fingerprintMatch = fingerprintToNames.get(model.fingerprint());
-            if (fingerprintMatch != null) matchedNames.addAll(fingerprintMatch);
+            for (ModelEntry entry : modelEntries) {
+                // Try each texture ID the override model references
+                for (Identifier textureId : model.textureIds()) {
+                    String cleanPath = textureId.getPath()
+                            .replaceFirst("^textures/", "")
+                            .replaceFirst("\\.png$", "");
+                    String hash = texturePathToHash.get(cleanPath);
 
-            for (Identifier textureId : model.textureIds()) {
-                String cleanPath =
-                        textureId.getPath().replaceFirst("^textures/", "").replaceFirst("\\.png$", "");
-                String name = texturePathToName.get(cleanPath);
-                if (name != null) matchedNames.add(name);
+                    if (entry.matches(hash, model.fingerprint())) {
+                        matchedNames.add(entry.name());
+                        break;
+                    }
+                }
             }
 
             if (!matchedNames.isEmpty()) {
@@ -175,7 +200,7 @@ public class CustomModelDataEncoderFeature extends Feature {
         FileUtils.mkdir(outFile.getParentFile());
 
         try (PrintWriter pw =
-                new PrintWriter(new OutputStreamWriter(new FileOutputStream(outFile), StandardCharsets.UTF_8))) {
+                     new PrintWriter(new OutputStreamWriter(new FileOutputStream(outFile), StandardCharsets.UTF_8))) {
             pw.print(new GsonBuilder().setPrettyPrinting().create().toJson(output));
         } catch (IOException e) {
             error("Failed to write output file: " + e.getMessage());
