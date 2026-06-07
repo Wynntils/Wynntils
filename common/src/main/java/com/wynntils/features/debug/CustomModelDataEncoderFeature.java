@@ -42,7 +42,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 @ConfigCategory(Category.DEBUG)
 public class CustomModelDataEncoderFeature extends Feature {
     private static final File SAVE_FOLDER = WynntilsMod.getModStorageDir("debug");
-    private static final String OUTPUT_FILE = "custom_model_data_mappings.json";
+    private static final String OUTPUT_FILE = "item_display_model_data.json";
     private static final String INPUT_JSON = """
             {
                 "models": {
@@ -52,30 +52,30 @@ public class CustomModelDataEncoderFeature extends Feature {
                         ],
                         "fingerprints": []
                     },
-                    "guardianangels": {
+                    "Guardian Angels": {
                         "textures": [
                             "dc24efe75918338d3f2f9bac61a48c632ed270f96c0e0a36f4f3c740520d57a5"
                         ],
                         "fingerprints": []
                     },
-                    "angelicascensionguardianangels": {
+                    "Angelic Ascension Guardian Angels": {
                         "textures": [
                             "03ef681add633b538ebc1b0d89ba9775840a9b823246c99583b4d4d763a0d6b0"
                         ],
                         "fingerprints": []
                     },
-                    "arrowshield": {
+                    "Arrow Shield": {
                         "textures": [
                             "ac92d13b690ddfbc013bba1134b2e1b56e04c2a865b2532a873c55be15b4a15e"
                         ],
                         "fingerprints": []
                     },
-                    "judrajim": {
+                    "Judrajim": {
                         "textures": [
                             "0a347b9ece55a7c131d926bb1c27caa63cb32c1d17d9fa2f057d373c1634cb5c"
                         ],
                         "fingerprints": []
-                    },
+                    }
                 }
             }
             """;
@@ -116,7 +116,7 @@ public class CustomModelDataEncoderFeature extends Feature {
 
         ResourceManager resourceManager = McUtils.mc().getResourceManager();
 
-        Map<String, String> texturePathToHash = ResourcepackUtils.buildTexPathToHashMap(resourceManager);
+        Map<String, String> texturePathToHash = ResourcepackUtils.buildTexturePathToPixelHashMap(resourceManager);
         Map<String, String> texturePathToName = new HashMap<>();
         for (Map.Entry<String, String> entry : texturePathToHash.entrySet()) {
             Set<String> names = textureHashToNames.get(entry.getValue());
@@ -125,11 +125,11 @@ public class CustomModelDataEncoderFeature extends Feature {
         }
         WynntilsMod.info("[Encoder] Upfront texture scan matched " + texturePathToName.size() + " texture paths.");
 
-        Map<String, List<Integer>> result = new LinkedHashMap<>();
+        Map<String, List<Float>> result = new LinkedHashMap<>();
         for (String name : inputModels.keySet()) result.put(name, new ArrayList<>());
 
-        boolean succeeded = ResourcepackUtils.forEachOverride(resourceManager, (customModelData, modelPath) -> {
-            ResourcepackUtils.ModelData model = ResourcepackUtils.resolveModel(resourceManager, modelPath);
+        boolean succeeded = ResourcepackUtils.forEachBoatModelOverride(resourceManager, (customModelData, modelPath) -> {
+            ResourcepackUtils.ModelData model = ResourcepackUtils.parseModelData(resourceManager, modelPath);
             if (model == null) return;
 
             Set<String> matchedNames = new LinkedHashSet<>();
@@ -155,16 +155,16 @@ public class CustomModelDataEncoderFeature extends Feature {
         }
 
         // Warn about models that didn't match any custom model data
-        for (Map.Entry<String, List<Integer>> entry : result.entrySet()) {
+        for (Map.Entry<String, List<Float>> entry : result.entrySet()) {
             if (entry.getValue().isEmpty()) {
                 error("No matches found for model: " + entry.getKey());
             }
         }
 
         JsonObject outputModels = new JsonObject();
-        for (Map.Entry<String, List<Integer>> entry : result.entrySet()) {
+        for (Map.Entry<String, List<Float>> entry : result.entrySet()) {
             JsonArray ids = new JsonArray();
-            for (int id : entry.getValue()) ids.add(id);
+            for (float id : entry.getValue()) ids.add(id);
             outputModels.add(entry.getKey(), ids);
         }
 

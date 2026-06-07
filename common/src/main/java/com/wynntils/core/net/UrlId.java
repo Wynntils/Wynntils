@@ -49,6 +49,7 @@ public enum UrlId {
     DATA_STATIC_MAPS("dataStaticMaps"),
     DATA_STATIC_MATERIAL_CONVERSION("dataStaticMaterialConversion"),
     DATA_STATIC_MODEL_DATA("dataStaticModelData"),
+    DATA_STATIC_ITEM_DISPLAY_MODEL_DATA("dataStaticItemDisplayModelData"),
     DATA_STATIC_PLACE_MAPFEATURES("dataStaticPlaceMapFeatures"),
     DATA_STATIC_PLACES("dataStaticPlaces"),
     DATA_STATIC_SEASKIPPER_DESTINATIONS("dataStaticSeaskipperDestinations"),

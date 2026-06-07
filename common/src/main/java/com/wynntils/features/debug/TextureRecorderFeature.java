@@ -55,9 +55,9 @@ public class TextureRecorderFeature extends Feature {
     private static final String OUTPUT_FILE = "texture_dump.txt";
     private static final File TEXTURES_FOLDER = new File(SAVE_FOLDER, "textures");
 
-    private final Map<Integer, List<Identifier>> modelIdToTextureIds = new LinkedHashMap<>();
-    private final Map<Integer, List<Identifier>> lastSeenModelToIds = new LinkedHashMap<>();
-    private final Map<Integer, String> modelIdToFingerprint = new LinkedHashMap<>();
+    private final Map<Float, List<Identifier>> modelIdToTextureIds = new LinkedHashMap<>();
+    private final Map<Float, List<Identifier>> lastSeenModelToIds = new LinkedHashMap<>();
+    private final Map<Float, String> modelIdToFingerprint = new LinkedHashMap<>();
 
     private Integer recordingTicksRemaining = 0;
 
@@ -114,7 +114,7 @@ public class TextureRecorderFeature extends Feature {
         CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
         if (customModelData == null || customModelData.floats().isEmpty()) return;
 
-        int modelId = customModelData.floats().getFirst().intValue();
+        float modelId = customModelData.floats().getFirst();
         if (lastSeenModelToIds.containsKey(modelId)) return;
 
         List<Identifier> textureIds = modelIdToTextureIds.get(modelId);
@@ -139,8 +139,8 @@ public class TextureRecorderFeature extends Feature {
     private boolean buildModelMap() {
         ResourceManager rm = McUtils.mc().getResourceManager();
 
-        boolean ok = ResourcepackUtils.forEachOverride(rm, (cmd, modelPath) -> {
-            ResourcepackUtils.ModelData model = ResourcepackUtils.resolveModel(rm, modelPath);
+        boolean ok = ResourcepackUtils.forEachBoatModelOverride(rm, (cmd, modelPath) -> {
+            ResourcepackUtils.ModelData model = ResourcepackUtils.parseModelData(rm, modelPath);
             if (model == null) return;
             modelIdToFingerprint.put(cmd, model.fingerprint());
             if (!model.textureIds().isEmpty()) modelIdToTextureIds.put(cmd, model.textureIds());
@@ -171,16 +171,16 @@ public class TextureRecorderFeature extends Feature {
             writer.println();
 
             writer.println("--- Seen textures summary ---");
-            for (Map.Entry<Integer, List<Identifier>> entry : lastSeenModelToIds.entrySet()) {
-                int modelId = entry.getKey();
+            for (Map.Entry<Float, List<Identifier>> entry : lastSeenModelToIds.entrySet()) {
+                float modelId = entry.getKey();
                 writer.println("  " + getLabel(entry.getValue())
                         + " (model ID: " + modelId
                         + ", fingerprint: " + modelIdToFingerprint.getOrDefault(modelId, "none") + ")");
             }
             writer.println();
 
-            for (Map.Entry<Integer, List<Identifier>> entry : lastSeenModelToIds.entrySet()) {
-                int modelId = entry.getKey();
+            for (Map.Entry<Float, List<Identifier>> entry : lastSeenModelToIds.entrySet()) {
+                float modelId = entry.getKey();
                 List<Identifier> textureIds = entry.getValue();
                 writer.println("Texture: " + getLabel(textureIds));
                 writer.println("  model ID: " + modelId + "   fingerprint: "

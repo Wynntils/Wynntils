@@ -33,7 +33,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 public final class ResourcepackUtils {
     private ResourcepackUtils() {}
 
-    public static boolean forEachOverride(ResourceManager rm, BiConsumer<Integer, String> consumer) {
+    public static boolean forEachBoatModelOverride(ResourceManager rm, BiConsumer<Float, String> consumer) {
         Identifier boatJson = Identifier.withDefaultNamespace("models/item/oak_boat.json");
         Optional<Resource> overrideRes = rm.getResource(boatJson);
         if (overrideRes.isEmpty()) return false;
@@ -46,9 +46,10 @@ public final class ResourcepackUtils {
 
             for (var el : overrides) {
                 JsonObject override = el.getAsJsonObject();
-                int cmd = override.getAsJsonObject("predicate")
+                float cmd = override.getAsJsonObject("predicate")
                         .get("custom_model_data")
-                        .getAsInt();
+                        .getAsFloat();
+                ;
                 String modelPath = override.get("model").getAsString();
                 consumer.accept(cmd, modelPath);
             }
@@ -61,7 +62,7 @@ public final class ResourcepackUtils {
 
     public record ModelData(String fingerprint, Set<String> referencedSlots, List<Identifier> textureIds) {}
 
-    public static ModelData resolveModel(ResourceManager rm, String modelPath) {
+    public static ModelData parseModelData(ResourceManager rm, String modelPath) {
         Identifier modelId = Identifier.parse(modelPath).withPath(p -> "models/" + p + ".json");
 
         Optional<Resource> res = rm.getResource(modelId);
@@ -92,7 +93,7 @@ public final class ResourcepackUtils {
         }
     }
 
-    public static Map<String, String> buildTexPathToHashMap(ResourceManager rm) {
+    public static Map<String, String> buildTexturePathToPixelHashMap(ResourceManager rm) {
         Map<String, String> pathToHash = new HashMap<>();
 
         Map<Identifier, Resource> resources =

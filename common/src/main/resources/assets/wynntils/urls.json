@@ -258,6 +258,12 @@
     "url": "https://cdn.wynntils.com/static/Data-Storage/model_data.json"
   },
   {
+    "id": "dataStaticItemDisplayModelData",
+    "md5": "a69119ad43d48fef708e6ca434c9e20d",
+    "path": "Data-Storage/item_display_model_data.json",
+    "url": "https://raw.githubusercontent.com/EshrealDev/Wynntils-Static-Storage/refs/heads/feature/resourcepack-handling/Data-Storage/item_display_model_data.json"
+  },
+  {
     "id": "dataStaticPlaceMapFeatures",
     "md5": "cb890e5fa52b1b3e40f203f456ce9c26",
     "path": "Reference/place_mapfeatures.json",
