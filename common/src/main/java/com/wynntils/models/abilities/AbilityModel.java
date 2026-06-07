@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.abilities;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.handlers.bossbar.TrackedBar;
@@ -19,10 +20,20 @@ import com.wynntils.models.abilities.bossbars.MirrorImageBar;
 import com.wynntils.models.abilities.bossbars.MomentumBar;
 import com.wynntils.models.abilities.bossbars.NightcloakKnivesBar;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
+import com.wynntils.models.abilities.event.AbilityCooldownsUpdatedEvent;
+import com.wynntils.models.abilities.type.AbilityCooldown;
+import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
+import com.wynntils.models.statuseffects.type.StatusEffect;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class AbilityModel extends Model {
+    public static final String COOLDOWN_PREFIX = "§8⬤";
+
     public static final TrackedBar awakenedBar = new AwakenedBar();
 
     public static final TrackedBar bloodPoolBar = new BloodPoolBar();
@@ -61,9 +72,44 @@ public final class AbilityModel extends Model {
             nightcloakKnivesBar,
             ophanimBar);
 
+    private final Set<AbilityCooldown> activeCooldowns = new HashSet<>();
+
     public AbilityModel() {
         super(List.of());
 
         ALL_BARS.forEach(Handlers.BossBar::registerBar);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onStatusEffectUpdate(StatusEffectsChangedEvent event) {
+        Set<AbilityCooldown> presentCooldowns = new HashSet<>();
+
+        for (StatusEffect statusEffect : event.getOriginalStatusEffects()) {
+            if (statusEffect.getPrefix().getString().equals(COOLDOWN_PREFIX)) {
+                AbilityCooldown cooldown = AbilityCooldown.fromStatusEffect(statusEffect);
+
+                if (cooldown != null) {
+                    // +1 because the cooldowns display as 00:00 even when still on cooldown for the final second
+                    float serverSeconds = (float) (statusEffect.getDuration() + 1);
+
+                    cooldown.setServerRemainingSeconds(serverSeconds);
+                    presentCooldowns.add(cooldown);
+                }
+            }
+        }
+
+        // Remove any cooldowns no longer present and clear their state
+        activeCooldowns.removeIf(cooldown -> {
+            if (!presentCooldowns.contains(cooldown)) {
+                cooldown.resetCooldownState();
+                return true;
+            }
+            return false;
+        });
+
+        // Add new ones
+        activeCooldowns.addAll(presentCooldowns);
+
+        WynntilsMod.postEvent(new AbilityCooldownsUpdatedEvent(activeCooldowns));
     }
 }
