@@ -261,7 +261,7 @@
     "id": "dataStaticItemDisplayModelData",
     "md5": "a69119ad43d48fef708e6ca434c9e20d",
     "path": "Data-Storage/item_display_model_data.json",
-    "url": "https://raw.githubusercontent.com/EshrealDev/Wynntils-Static-Storage/refs/heads/feature/resourcepack-handling/Data-Storage/item_display_model_data.json"
+    "url": "https://cdn.wynntils.com/static/Data-Storage/item_display_model_data.json"
   },
   {
     "id": "dataStaticPlaceMapFeatures",
