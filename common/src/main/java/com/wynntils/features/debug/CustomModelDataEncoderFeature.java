@@ -27,7 +27,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -148,31 +147,33 @@ public class CustomModelDataEncoderFeature extends Feature {
         Map<String, List<Float>> result = new LinkedHashMap<>();
         for (String name : inputModels.keySet()) result.put(name, new ArrayList<>());
 
-        boolean succeeded = ResourcepackUtils.forEachBoatModelOverride(resourceManager, (customModelData, modelPath) -> {
-            ResourcepackUtils.ModelData model = ResourcepackUtils.parseModelData(resourceManager, modelPath);
-            if (model == null) return;
+        boolean succeeded =
+                ResourcepackUtils.forEachBoatModelOverride(resourceManager, (customModelData, modelPath) -> {
+                    ResourcepackUtils.ModelData model = ResourcepackUtils.parseModelData(resourceManager, modelPath);
+                    if (model == null) return;
 
-            Set<String> matchedNames = new LinkedHashSet<>();
+                    Set<String> matchedNames = new LinkedHashSet<>();
 
-            for (ModelEntry entry : modelEntries) {
-                // Try each texture ID the override model references
-                for (Identifier textureId : model.textureIds()) {
-                    String cleanPath = textureId.getPath()
-                            .replaceFirst("^textures/", "")
-                            .replaceFirst("\\.png$", "");
-                    String hash = texturePathToHash.get(cleanPath);
+                    for (ModelEntry entry : modelEntries) {
+                        // Try each texture ID the override model references
+                        for (Identifier textureId : model.textureIds()) {
+                            String cleanPath = textureId
+                                    .getPath()
+                                    .replaceFirst("^textures/", "")
+                                    .replaceFirst("\\.png$", "");
+                            String hash = texturePathToHash.get(cleanPath);
 
-                    if (entry.matches(hash, model.fingerprint())) {
-                        matchedNames.add(entry.name());
-                        break;
+                            if (entry.matches(hash, model.fingerprint())) {
+                                matchedNames.add(entry.name());
+                                break;
+                            }
+                        }
                     }
-                }
-            }
 
-            if (!matchedNames.isEmpty()) {
-                for (String name : matchedNames) result.get(name).add(customModelData);
-            }
-        });
+                    if (!matchedNames.isEmpty()) {
+                        for (String name : matchedNames) result.get(name).add(customModelData);
+                    }
+                });
 
         if (!succeeded) {
             error("Could not find oak_boat.json override");
@@ -200,7 +201,7 @@ public class CustomModelDataEncoderFeature extends Feature {
         FileUtils.mkdir(outFile.getParentFile());
 
         try (PrintWriter pw =
-                     new PrintWriter(new OutputStreamWriter(new FileOutputStream(outFile), StandardCharsets.UTF_8))) {
+                new PrintWriter(new OutputStreamWriter(new FileOutputStream(outFile), StandardCharsets.UTF_8))) {
             pw.print(new GsonBuilder().setPrettyPrinting().create().toJson(output));
         } catch (IOException e) {
             error("Failed to write output file: " + e.getMessage());
