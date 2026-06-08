@@ -45,6 +45,8 @@ public final class ShieldModel extends Model {
     private List<Integer> spawnedIds;
     private long shieldCastTime = 0;
     private ShieldType activeShieldType;
+    private String activeShieldGroup;
+    private String pendingShieldGroup;
 
     public ShieldModel() {
         super(List.of());
@@ -112,7 +114,7 @@ public final class ShieldModel extends Model {
 
                 collectedRootIds.add(entityId);
                 activeShieldType = shieldType;
-
+                pendingShieldGroup = Services.ItemDisplayModel.getGroup(modelId).orElse(null);
 
                 Managers.TickScheduler.scheduleLater(this::registerShield, 4);
                 return;
@@ -142,8 +144,8 @@ public final class ShieldModel extends Model {
             Optional<String> group = Services.ItemDisplayModel.getGroup(modelId);
             if (group.isEmpty()) continue;
 
-            if (group.get().equals(GuardianAngelsShield.GROUP) || group.get().equals(GuardianAngelsShield.ULT_GROUP))
-                return true;
+            if (group.get().equals(activeShieldGroup)) return false;
+            return group.get().equals(GuardianAngelsShield.GROUP) || group.get().equals(GuardianAngelsShield.ULT_GROUP);
         }
 
         return false;
@@ -197,12 +199,16 @@ public final class ShieldModel extends Model {
         if (!collectedRootIds.isEmpty()) {
             spawnedIds = new ArrayList<>(collectedRootIds);
             collectedRootIds.clear();
+            activeShieldGroup = pendingShieldGroup;
+            pendingShieldGroup = null;
         }
     }
 
     private void removeShield() {
         spawnedIds = null;
         activeShieldType = null;
+        activeShieldGroup = null;
+        pendingShieldGroup = null;
         collectedRootIds.clear();
     }
 
