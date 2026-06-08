@@ -13,7 +13,6 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.Pair;
 import java.util.Locale;
 import java.util.Optional;
-import org.jspecify.annotations.Nullable;
 
 public class GatheringNodePoi extends StaticIconPoi {
     private final Optional<Pair<MaterialProfile.MaterialType, MaterialProfile.SourceMaterial>> resourceProfile;
@@ -57,11 +56,11 @@ public class GatheringNodePoi extends StaticIconPoi {
                 + " (" + getLevel() + ")";
     }
 
-    public MaterialProfile.@Nullable MaterialType getMaterialType() {
+    public MaterialProfile.MaterialType getMaterialType() {
         return resourceProfile.map(Pair::a).orElse(null);
     }
 
-    public MaterialProfile.@Nullable SourceMaterial getSourceMaterial() {
+    public MaterialProfile.SourceMaterial getSourceMaterial() {
         return resourceProfile.map(Pair::b).orElse(null);
     }
 

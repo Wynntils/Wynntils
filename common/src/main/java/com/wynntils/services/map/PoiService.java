@@ -68,6 +68,7 @@ public class PoiService extends Service {
     private final Set<CombatPoi> combatPois = new HashSet<>();
     private final Set<CombatPoi> cavePois = new HashSet<>();
     private final Set<GatheringNodePoi> gatheringNodePois = new HashSet<>();
+    private List<GatheringNodePoi> filteredGatheringNodePois = new ArrayList<>();
     private final Map<CustomPoiProvider, List<CustomPoi>> providedCustomPois = new ConcurrentHashMap<>();
 
     @Persisted
@@ -108,6 +109,16 @@ public class PoiService extends Service {
 
     public Stream<GatheringNodePoi> getGatheringNodePois() {
         return gatheringNodePois.stream();
+    }
+
+    private void filterGatheringNodes() {
+        filteredGatheringNodePois = gatheringNodePois.stream()
+                .filter(this::isGatheringNodeTypeVisible)
+                .toList();
+    }
+
+    public Stream<GatheringNodePoi> getFilteredGatheringNodePois() {
+        return filteredGatheringNodePois.stream();
     }
 
     public List<CustomPoi> getProvidedCustomPois() {
@@ -212,6 +223,8 @@ public class PoiService extends Service {
                         profile.angle(),
                         profile.level()))
                 .collect(Collectors.toUnmodifiableSet()));
+
+        filterGatheringNodes();
     }
 
     public void loadCustomPoiProviders() {
@@ -260,6 +273,8 @@ public class PoiService extends Service {
     public void setGatheringNodeTypeVisible(GatheringNodeType gatheringNodeType, boolean visible) {
         visibleGatheringNodeTypes.get().put(gatheringNodeType.key(), visible);
         visibleGatheringNodeTypes.touched();
+
+        filterGatheringNodes();
     }
 
     public void setAllGatheringNodeTypesVisible(boolean visible) {
@@ -268,6 +283,8 @@ public class PoiService extends Service {
                 .forEach(key -> visibleGatheringNodeTypes.get().put(key, visible));
 
         visibleGatheringNodeTypes.touched();
+
+        filterGatheringNodes();
     }
 
     public void setAllGatheringNodeTypesVisible(MaterialProfile.MaterialType materialType, boolean visible) {
@@ -275,6 +292,8 @@ public class PoiService extends Service {
                 .filter(type -> type.materialType == materialType)
                 .map(GatheringNodeType::key)
                 .forEach(key -> visibleGatheringNodeTypes.get().put(key, visible));
+
+        filterGatheringNodes();
     }
 
     private static class PlacesProfile {
