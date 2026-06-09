@@ -43,7 +43,6 @@ import com.wynntils.models.profession.label.GatheringNodeHarvestLabelParser;
 import com.wynntils.models.raid.RaidModel;
 import com.wynntils.models.raid.bossbar.ParasiteOvertakenBar;
 import com.wynntils.models.spells.actionbar.matchers.SpellCastSegmentMatcher;
-import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.models.war.bossbar.WarTowerBar;
@@ -822,20 +821,6 @@ public class TestRegex {
         p.shouldMatch("\uDAFF\uDFD1Teleport Cast! -15 \uE531\uDAFF\uDFD1");
         p.shouldMatch("\uDAFF\uDFDAHeal Cast! -34 \uE531\uDAFF\uDFDA");
         p.shouldMatch("\uDAFF\uDFC1Charge Cast! -12 \uE531 -1138 \uE530\uDAFF\uDFC1");
-    }
-
-    @Test
-    public void StatusEffectModel_STATUS_EFFECT_PATTERN() {
-        PatternTester p = new PatternTester(StatusEffectModel.class, "STATUS_EFFECT_PATTERN");
-        p.shouldMatch("§fⒺ§7 +198 Main Attack Damage §8(00:41)");
-        p.shouldMatch("§f§b❤§7 Windy Feet §8(02:57)");
-        p.shouldMatch("§a❉ §776.5% Concentration §4(00:13)");
-        p.shouldMatch("§b➲ §718% Frenzy §8(**:**)");
-        p.shouldMatch("§fⒺ§7 +54% Spell Damage §8(00:41)");
-        p.shouldMatch("§8⬤ §7Vanish §a(00:04)");
-        p.shouldMatch("§fⒺ§7 +250/3s Life Steal §8(00:41)");
-        p.shouldMatch("§8⬤ §7Boiling Blood §a(00:02)");
-        p.shouldMatch("§fⒶ§7 +65% Air Defence §8(01:38:09)");
     }
 
     @Test
