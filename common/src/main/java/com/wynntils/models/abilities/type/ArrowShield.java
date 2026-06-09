@@ -21,7 +21,7 @@ public class ArrowShield extends ShieldType {
 
     @Override
     protected boolean verifyCustomModelData(float customModelData) {
-        Optional<String> group = Services.ItemDisplayModel.getGroup(customModelData);
+        Optional<String> group = Services.CustomModel.getGroup(customModelData);
 
         return group.isPresent() && group.get().equals(GROUP);
     }

@@ -52,7 +52,6 @@ import com.wynntils.features.commands.CustomCommandKeybindsFeature;
 import com.wynntils.features.commands.FilterAdminCommandsFeature;
 import com.wynntils.features.debug.AbilityTreeDataDumpFeature;
 import com.wynntils.features.debug.ContentBookDumpFeature;
-import com.wynntils.features.debug.CustomModelDataEncoderFeature;
 import com.wynntils.features.debug.FunctionDumpFeature;
 import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
@@ -235,7 +234,6 @@ public final class FeatureManager extends Manager {
         // debug
         registerFeature(new AbilityTreeDataDumpFeature());
         registerFeature(new ContentBookDumpFeature());
-        registerFeature(new CustomModelDataEncoderFeature());
         registerFeature(new FunctionDumpFeature());
         registerFeature(new ItemDebugTooltipsFeature());
         registerFeature(new LogItemInfoFeature());

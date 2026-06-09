@@ -477,8 +477,6 @@
   "feature.wynntils.customLootrunBeacons.removeOriginalBeacons.name": "Remove Original Beacons",
   "feature.wynntils.customLootrunBeacons.showAdditionalTextInWorld.description": "Whether the color of beacons should be displayed in world",
   "feature.wynntils.customLootrunBeacons.showAdditionalTextInWorld.name": "Show beacon color in world",
-  "feature.wynntils.customModelDataEncoder.description": "Encodes static groups into CustomModelData IDs from the current resource pack",
-  "feature.wynntils.customModelDataEncoder.name": "Custom Model Data Encoder",
   "feature.wynntils.customNametagRenderer.badgeCount.description": "If badges are enabled, how many should be displayed at a time?",
   "feature.wynntils.customNametagRenderer.badgeCount.name": "Badges to Display",
   "feature.wynntils.customNametagRenderer.customNametagScale.description": "How large should the extra nametag lines be?",

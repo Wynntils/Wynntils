@@ -49,7 +49,7 @@ public final class ResourcepackUtils {
                 float cmd = override.getAsJsonObject("predicate")
                         .get("custom_model_data")
                         .getAsFloat();
-                ;
+
                 String modelPath = override.get("model").getAsString();
                 consumer.accept(cmd, modelPath);
             }
@@ -59,8 +59,6 @@ public final class ResourcepackUtils {
             return false;
         }
     }
-
-    public record ModelData(String fingerprint, Set<String> referencedSlots, List<Identifier> textureIds) {}
 
     public static ModelData parseModelData(ResourceManager rm, String modelPath) {
         Identifier modelId = Identifier.parse(modelPath).withPath(p -> "models/" + p + ".json");
@@ -93,7 +91,7 @@ public final class ResourcepackUtils {
         }
     }
 
-    public static Map<String, String> buildTexturePathToPixelHashMap(ResourceManager rm) {
+    public static Map<String, String> buildTexturePathToTextureHashMap(ResourceManager rm) {
         Map<String, String> pathToHash = new HashMap<>();
 
         Map<Identifier, Resource> resources =
@@ -111,7 +109,7 @@ public final class ResourcepackUtils {
         return pathToHash;
     }
 
-    public static String computePixelHash(ResourceManager rm, Identifier textureId) {
+    public static String computeTextureHash(ResourceManager rm, Identifier textureId) {
         Optional<Resource> res = rm.getResource(textureId);
         if (res.isEmpty()) return "not-found";
         try (InputStream stream = res.get().open();
@@ -152,9 +150,13 @@ public final class ResourcepackUtils {
             JsonObject faces = JsonUtils.getNullableJsonObject(el, "faces");
             for (String faceKey : faces.keySet()) {
                 String ref = JsonUtils.getNullableJsonString(faces.getAsJsonObject(faceKey), "texture");
-                if (ref != null && ref.startsWith("#")) slots.add(ref.substring(1));
+                if (ref != null && ref.startsWith("#")) {
+                    slots.add(ref.substring(1));
+                }
             }
         }
         return slots;
     }
+
+    public record ModelData(String fingerprint, Set<String> referencedSlots, List<Identifier> textureIds) {}
 }

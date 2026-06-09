@@ -86,7 +86,9 @@ public class TextureRecorderFeature extends Feature {
     public void onTick(TickEvent event) {
         if (recordingTicksRemaining <= 0) return;
         recordingTicksRemaining--;
-        if (recordingTicksRemaining == 0) saveResults();
+        if (recordingTicksRemaining == 0) {
+            saveResults();
+        }
     }
 
     @SubscribeEvent
@@ -127,11 +129,11 @@ public class TextureRecorderFeature extends Feature {
 
         ResourceManager rm = McUtils.mc().getResourceManager();
         String firstName = getFilename(textureIds.getFirst());
-        String pixelHash = ResourcepackUtils.computePixelHash(rm, textureIds.getFirst());
+        String textureHash = ResourcepackUtils.computeTextureHash(rm, textureIds.getFirst());
         String fingerprint = modelIdToFingerprint.getOrDefault(modelId, "none");
         WynntilsMod.info("id: " + modelId
                 + " png: " + firstName
-                + " pixel-hash: " + pixelHash
+                + " texturehash: " + textureHash
                 + " fingerprint: " + fingerprint
                 + (textureIds.size() > 1 ? " (+" + (textureIds.size() - 1) + " more)" : ""));
     }
@@ -139,15 +141,19 @@ public class TextureRecorderFeature extends Feature {
     private boolean buildModelMap() {
         ResourceManager rm = McUtils.mc().getResourceManager();
 
-        boolean ok = ResourcepackUtils.forEachBoatModelOverride(rm, (cmd, modelPath) -> {
+        boolean succeeded = ResourcepackUtils.forEachBoatModelOverride(rm, (cmd, modelPath) -> {
             ResourcepackUtils.ModelData model = ResourcepackUtils.parseModelData(rm, modelPath);
             if (model == null) return;
             modelIdToFingerprint.put(cmd, model.fingerprint());
-            if (!model.textureIds().isEmpty()) modelIdToTextureIds.put(cmd, model.textureIds());
+            if (!model.textureIds().isEmpty()) {
+                modelIdToTextureIds.put(cmd, model.textureIds());
+            }
         });
 
-        if (!ok) WynntilsMod.error("Could not find oak_boat.json override file!");
-        return ok && !modelIdToTextureIds.isEmpty();
+        if (!succeeded) {
+            WynntilsMod.error("Could not find oak_boat.json override file!");
+        }
+        return succeeded && !modelIdToTextureIds.isEmpty();
     }
 
     private void saveResults() {
@@ -173,8 +179,12 @@ public class TextureRecorderFeature extends Feature {
             writer.println("--- Seen textures summary ---");
             for (Map.Entry<Float, List<Identifier>> entry : lastSeenModelToIds.entrySet()) {
                 float modelId = entry.getKey();
-                writer.println("  " + getLabel(entry.getValue())
+                List<Identifier> textureIds = entry.getValue();
+                String textureHash = hashCache.computeIfAbsent(
+                        textureIds.getFirst(), id -> ResourcepackUtils.computeTextureHash(rm, id));
+                writer.println("  " + getLabel(textureIds)
                         + " (model ID: " + modelId
+                        + ", texturehash: " + textureHash
                         + ", fingerprint: " + modelIdToFingerprint.getOrDefault(modelId, "none") + ")");
             }
             writer.println();
@@ -186,9 +196,9 @@ public class TextureRecorderFeature extends Feature {
                 writer.println("  model ID: " + modelId + "   fingerprint: "
                         + modelIdToFingerprint.getOrDefault(modelId, "none"));
                 for (Identifier texId : textureIds) {
-                    String pixelHash =
-                            hashCache.computeIfAbsent(texId, id -> ResourcepackUtils.computePixelHash(rm, id));
-                    writer.println("  texture: " + texId + "   pixel-hash: " + pixelHash);
+                    String textureHash =
+                            hashCache.computeIfAbsent(texId, id -> ResourcepackUtils.computeTextureHash(rm, id));
+                    writer.println("  texture: " + texId + "   texturehash: " + textureHash);
                 }
                 writer.println();
             }
@@ -205,7 +215,9 @@ public class TextureRecorderFeature extends Feature {
         FileUtils.mkdir(TEXTURES_FOLDER);
 
         Set<Identifier> uniqueTextures = new LinkedHashSet<>();
-        for (List<Identifier> ids : lastSeenModelToIds.values()) uniqueTextures.addAll(ids);
+        for (List<Identifier> ids : lastSeenModelToIds.values()) {
+            uniqueTextures.addAll(ids);
+        }
 
         int exportedCount = 0;
         for (Identifier textureId : uniqueTextures) {

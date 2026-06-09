@@ -35,7 +35,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ShieldModel extends Model {
     private static final double SEARCH_RADIUS = 4.5;
-    private static final int CAST_MAX_DELAY_MS = 500;
+    private static final int CAST_MAX_DELAY_MS = 250;
 
     private final List<ShieldType> shieldTypes = new ArrayList<>();
 
@@ -114,7 +114,7 @@ public final class ShieldModel extends Model {
 
                 collectedRootIds.add(entityId);
                 activeShieldType = shieldType;
-                pendingShieldGroup = Services.ItemDisplayModel.getGroup(modelId).orElse(null);
+                pendingShieldGroup = Services.CustomModel.getGroup(modelId).orElse(null);
 
                 Managers.TickScheduler.scheduleLater(this::registerShield, 4);
                 return;
@@ -141,7 +141,7 @@ public final class ShieldModel extends Model {
             if (customModelData == null || customModelData.floats().isEmpty()) continue;
 
             float modelId = customModelData.floats().getFirst();
-            Optional<String> group = Services.ItemDisplayModel.getGroup(modelId);
+            Optional<String> group = Services.CustomModel.getGroup(modelId);
             if (group.isEmpty()) continue;
 
             if (group.get().equals(activeShieldGroup)) return false;
