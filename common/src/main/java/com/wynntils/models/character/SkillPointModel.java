@@ -158,7 +158,7 @@ public final class SkillPointModel extends Model {
             assignedSkillPoints = new EnumMap<>(Skill.class);
             calculateGearSkillPoints();
             calculateStatusEffectSkillPoints();
-            queryTotalAndTomeSkillPoints();
+            queryAssignedAndTomeSkillPoints();
         });
     }
 
@@ -349,8 +349,8 @@ public final class SkillPointModel extends Model {
     /**
      * Queries the compass (and tome) menu for skill point data.
      */
-    private void queryTotalAndTomeSkillPoints() {
-        totalSkillPoints = new EnumMap<>(Skill.class);
+    private void queryAssignedAndTomeSkillPoints() {
+        assignedSkillPoints = new EnumMap<>(Skill.class);
         tomeSkillPoints = new EnumMap<>(Skill.class);
 
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Total and Tome Skill Point Query")
@@ -359,7 +359,7 @@ public final class SkillPointModel extends Model {
                         .expectContainer(CharacterInfoContainer.class)
                         .verifyContentChange((container, changes, changeType) ->
                                 verifyChange(container, changes, changeType, CONTENT_BOOK_SLOT))
-                        .processIncomingContainer(this::processTotalSkillPoints))
+                        .processIncomingContainer(this::processAssignedSkillPoints))
                 .conditionalThen(
                         this::checkTomesUnlocked,
                         QueryStep.clickOnSlot(TOME_SLOT)
@@ -367,7 +367,7 @@ public final class SkillPointModel extends Model {
                                 .verifyContentChange((container, changes, changeType) ->
                                         verifyChange(container, changes, changeType, TOME_MENU_CONTENT_BOOK_SLOT))
                                 .processIncomingContainer(this::processTomeSkillPoints))
-                .execute(this::calculateAssignedSkillPoints)
+                .execute(this::calculateTotalSkillPoints)
                 .build();
 
         query.executeQuery();
@@ -388,12 +388,12 @@ public final class SkillPointModel extends Model {
                 && (content.items().get(contentBookSlot).getItem() == Items.POTION);
     }
 
-    private void processTotalSkillPoints(ContainerContent content) {
+    private void processAssignedSkillPoints(ContainerContent content) {
         for (Integer slot : SKILL_POINT_TOTAL_SLOTS) {
             Optional<WynnItem> wynnItemOptional =
                     Models.Item.getWynnItem(content.items().get(slot));
             if (wynnItemOptional.isPresent() && wynnItemOptional.get() instanceof SkillPointItem skillPoint) {
-                totalSkillPoints.merge(skillPoint.getSkill(), skillPoint.getSkillPoints(), Integer::sum);
+                assignedSkillPoints.merge(skillPoint.getSkill(), skillPoint.getAssignedAmount(), Integer::sum);
             } else {
                 WynntilsMod.warn("Skill Point Model failed to parse skill point item: "
                         + LoreUtils.getStringLore(content.items().get(slot)));
@@ -432,16 +432,16 @@ public final class SkillPointModel extends Model {
         });
     }
 
-    private void calculateAssignedSkillPoints() {
+    private void calculateTotalSkillPoints() {
         for (Skill skill : Skill.values()) {
-            assignedSkillPoints.put(
+            totalSkillPoints.put(
                     skill,
-                    getTotalSkillPoints(skill)
-                            - getGearSkillPoints(skill)
-                            - getSetBonusSkillPoints(skill)
-                            - getTomeSkillPoints(skill)
-                            - getCraftedSkillPoints(skill)
-                            - getStatusEffectSkillPoints(skill));
+                    getAssignedSkillPoints(skill)
+                            + getGearSkillPoints(skill)
+                            + getSetBonusSkillPoints(skill)
+                            + getTomeSkillPoints(skill)
+                            + getCraftedSkillPoints(skill)
+                            + getStatusEffectSkillPoints(skill));
         }
     }
 }
