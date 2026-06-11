@@ -21,17 +21,13 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.overlays.minimap.CoordinatesOverlay;
 import com.wynntils.overlays.minimap.MinimapOverlay;
 import com.wynntils.overlays.minimap.TerritoryOverlay;
-import com.wynntils.services.hades.type.PlayerRelation;
-import com.wynntils.services.map.pois.PlayerMiniMapPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.utils.type.RenderElementType;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 @ConfigCategory(Category.MAP)
 public class MinimapFeature extends Feature {
@@ -66,10 +62,7 @@ public class MinimapFeature extends Feature {
         Services.Poi.getCombatPois().forEach(result::add);
         Models.Marker.getAllPois().forEach(result::add);
         minimapOverlay.getMiniPlayerPois().forEach(result::add);
-        
-        Services.Poi.getGatheringNodePois()
-                .filter(Services.Poi::isGatheringNodeTypeVisible)
-                .forEach(result::add);
+        Services.Poi.getVisibleGatheringNodePois().forEach(result::add);
 
         result.addAll(Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get());
         result.addAll(Services.Poi.getProvidedCustomPois());

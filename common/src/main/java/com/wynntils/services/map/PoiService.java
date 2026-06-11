@@ -29,6 +29,9 @@ import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.Texture;
+import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
+import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
+
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -275,6 +278,23 @@ public class PoiService extends Service {
                 .filter(type -> type.materialType == materialType)
                 .map(GatheringNodeType::key)
                 .forEach(key -> visibleGatheringNodeTypes.get().put(key, visible));
+    }
+
+    public Stream<GatheringNodePoi> getVisibleGatheringNodePois() {
+        Object2BooleanMap<GatheringNodeType> visibility = new Object2BooleanOpenHashMap<>();
+
+        return getGatheringNodePois()
+                .filter((poi) -> {
+                    MaterialProfile.MaterialType materialType = poi.getMaterialType();
+                    MaterialProfile.SourceMaterial sourceMaterial = poi.getSourceMaterial();
+
+                    if (materialType == null || sourceMaterial == null) return true;
+
+                    return visibility.computeIfAbsent(
+                            new GatheringNodeType(materialType, sourceMaterial),
+                            (e) -> isGatheringNodeTypeVisible((GatheringNodeType) e)
+                    );
+                });
     }
 
     private static class PlacesProfile {
