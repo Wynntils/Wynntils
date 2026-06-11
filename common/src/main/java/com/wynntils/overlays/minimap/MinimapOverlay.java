@@ -118,10 +118,22 @@ public class MinimapOverlay extends Overlay {
     }
 
     public Stream<PlayerMiniMapPoi> getMiniPlayerPois() {
+        var isRelationVisible = EnumSet.noneOf(PlayerRelation.class);
+
+        if (renderRemotePartyPlayers.get()) {
+            isRelationVisible.add(PlayerRelation.PARTY);
+        }
+
+        if (renderRemoteFriendPlayers.get()) {
+            isRelationVisible.add(PlayerRelation.FRIEND);
+        }
+
+        if (renderRemoteGuildPlayers.get()) {
+            isRelationVisible.add(PlayerRelation.GUILD);
+        }
+
         return Services.Hades.getHadesUsers()
-                .filter(hadesUser -> (hadesUser.getRelation() == PlayerRelation.PARTY && renderRemotePartyPlayers.get())
-                        || (hadesUser.getRelation() == PlayerRelation.FRIEND && renderRemoteFriendPlayers.get())
-                        || (hadesUser.getRelation() == PlayerRelation.GUILD && renderRemoteGuildPlayers.get()))
+                .filter(hadesUser -> isRelationVisible.contains(hadesUser.getRelation()))
                 .map(PlayerMiniMapPoi::new);
     }
 
