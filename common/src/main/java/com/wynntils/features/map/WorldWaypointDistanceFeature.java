@@ -70,6 +70,12 @@ public class WorldWaypointDistanceFeature extends Feature {
     private final Config<Integer> maxWaypointTextDistance = new Config<>(5000);
 
     @Persisted
+    private final Config<Boolean> autoRemoveReachedWaypoints = new Config<>(false);
+
+    @Persisted
+    private final Config<Integer> autoRemoveReachedWaypointDistance = new Config<>(20);
+
+    @Persisted
     public final Config<Boolean> showAdditionalTextInWorld = new Config<>(true);
 
     @Persisted
@@ -84,6 +90,7 @@ public class WorldWaypointDistanceFeature extends Feature {
     @SubscribeEvent
     public void onRenderLevelPost(RenderLevelEvent.Post event) {
         this.renderedMarkers.clear();
+        removeReachedWaypoints();
 
         List<MarkerInfo> markers = Models.Marker.getAllMarkers().toList();
         if (markers.isEmpty()) return;
@@ -133,6 +140,35 @@ public class WorldWaypointDistanceFeature extends Feature {
                     worldToScreen(new Vector3f(dx, dy, dz), projection),
                     marker.additionalText()));
         }
+    }
+
+    private void removeReachedWaypoints() {
+        if (!autoRemoveReachedWaypoints.get()) return;
+        if (McUtils.player() == null) return;
+
+        Position playerPosition = McUtils.player().position();
+        int autoRemoveDistance = Math.max(0, autoRemoveReachedWaypointDistance.get());
+        double maxDistanceSqr = (double) autoRemoveDistance * autoRemoveDistance;
+
+        Models.Marker.USER_WAYPOINTS_PROVIDER
+                .getMarkerInfos()
+                .map(MarkerInfo::location)
+                .filter(location -> isWithinAutoRemoveDistance(location, playerPosition, maxDistanceSqr))
+                .toList()
+                .forEach(Models.Marker.USER_WAYPOINTS_PROVIDER::removeLocation);
+    }
+
+    private boolean isWithinAutoRemoveDistance(Location location, Position playerPosition, double maxDistanceSqr) {
+        double xDiff = location.x + 0.5 - playerPosition.x();
+        double zDiff = location.z + 0.5 - playerPosition.z();
+        double squaredDistance = xDiff * xDiff + zDiff * zDiff;
+
+        if (location.y > 0 && location.y <= 255) {
+            double yDiff = location.y + 0.5 - playerPosition.y();
+            squaredDistance += yDiff * yDiff;
+        }
+
+        return squaredDistance <= maxDistanceSqr;
     }
 
     @SubscribeEvent
