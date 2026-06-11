@@ -15,10 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
-    @Inject(
-            method = "renderItemInHand(FZLorg/joml/Matrix4f;)V",
-            at = @At("HEAD"),
-            cancellable = true)
+    @Inject(method = "renderItemInHand(FZLorg/joml/Matrix4f;)V", at = @At("HEAD"), cancellable = true)
     private void renderItemInHandPre(float partialTick, boolean sleeping, Matrix4f projectionMatrix, CallbackInfo ci) {
         FirstPersonHandRenderEvent event = new FirstPersonHandRenderEvent();
         MixinHelper.post(event);
