@@ -26,7 +26,10 @@ import com.wynntils.services.map.pois.PlayerMiniMapPoi;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.utils.type.RenderElementType;
 import net.neoforged.bus.api.SubscribeEvent;
+import org.jetbrains.annotations.UnmodifiableView;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -57,17 +60,21 @@ public class MinimapFeature extends Feature {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        Stream<? extends Poi> visiblePoiStream = Services.Poi.getServicePois();
-        visiblePoiStream = Stream.concat(visiblePoiStream, Services.Poi.getCombatPois());
-        visiblePoiStream = Stream.concat(
-                visiblePoiStream, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
-        visiblePoiStream = Stream.concat(visiblePoiStream, Services.Poi.getProvidedCustomPois().stream());
-        visiblePoiStream = Stream.concat(visiblePoiStream, Models.Marker.getAllPois());
-        visiblePoiStream = Stream.concat(visiblePoiStream, minimapOverlay.getMiniPlayerPois());
-        visiblePoiStream = Stream.concat(
-                visiblePoiStream, Services.Poi.getGatheringNodePois().filter(Services.Poi::isGatheringNodeTypeVisible));
+        var result = new ArrayList<Poi>();
 
-        this.visiblePois = visiblePoiStream.toList();
+        Services.Poi.getServicePois().forEach(result::add);
+        Services.Poi.getCombatPois().forEach(result::add);
+        Models.Marker.getAllPois().forEach(result::add);
+        minimapOverlay.getMiniPlayerPois().forEach(result::add);
+        
+        Services.Poi.getGatheringNodePois()
+                .filter(Services.Poi::isGatheringNodeTypeVisible)
+                .forEach(result::add);
+
+        result.addAll(Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get());
+        result.addAll(Services.Poi.getProvidedCustomPois());
+
+        this.visiblePois = Collections.unmodifiableList(result);
     }
 
     public List<? extends Poi> getVisiblePois() {
