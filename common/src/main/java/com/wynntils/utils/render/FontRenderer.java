@@ -822,7 +822,8 @@ public final class FontRenderer {
             return font.lineHeight * textScale;
         }
 
-        return calculateRenderHeight(textRenderTask.getText(), textRenderTask.getSetting().maxWidth() / textScale)
+        return calculateRenderHeight(
+                        textRenderTask.getText(), textRenderTask.getSetting().maxWidth() / textScale)
                 * textScale;
     }
 
