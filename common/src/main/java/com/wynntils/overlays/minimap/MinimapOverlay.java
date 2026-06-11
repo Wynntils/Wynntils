@@ -15,6 +15,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.services.hades.type.PlayerRelation;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.map.pois.PlayerMiniMapPoi;
@@ -37,6 +38,9 @@ import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
+
+import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.client.DeltaTracker;
@@ -111,6 +115,14 @@ public class MinimapOverlay extends Overlay {
 
     public void adjustZoomLevel(int delta) {
         setZoomLevel(zoomLevel.get() + delta);
+    }
+
+    public Stream<PlayerMiniMapPoi> getMiniPlayerPois() {
+        return Services.Hades.getHadesUsers()
+                .filter(hadesUser -> (hadesUser.getRelation() == PlayerRelation.PARTY && renderRemotePartyPlayers.get())
+                        || (hadesUser.getRelation() == PlayerRelation.FRIEND && renderRemoteFriendPlayers.get())
+                        || (hadesUser.getRelation() == PlayerRelation.GUILD && renderRemoteGuildPlayers.get()))
+                .map(PlayerMiniMapPoi::new);
     }
 
     @Override
@@ -234,23 +246,9 @@ public class MinimapOverlay extends Overlay {
             float zoomRenderScale,
             float zoomLevel,
             BoundingBox visibleWorldBox) {
-        Stream<? extends Poi> poisToRender = Services.Poi.getServicePois();
-        poisToRender = Stream.concat(poisToRender, Services.Poi.getCombatPois());
-        poisToRender = Stream.concat(
-                poisToRender, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
-        poisToRender = Stream.concat(poisToRender, Services.Poi.getProvidedCustomPois().stream());
-        poisToRender = Stream.concat(poisToRender, Models.Marker.getAllPois());
-        poisToRender = Stream.concat(
-                poisToRender,
-                getMiniPlayerPois(
-                        renderRemotePartyPlayers.get(),
-                        renderRemoteFriendPlayers.get(),
-                        renderRemoteGuildPlayers.get()));
-        poisToRender = Stream.concat(
-                poisToRender, Services.Poi.getGatheringNodePois().filter(Services.Poi::isGatheringNodeTypeVisible));
+        List<? extends Poi> poisToRender = Managers.Feature.getFeatureInstance(MinimapFeature.class).getVisiblePois();
 
-        Poi[] pois = poisToRender.toArray(Poi[]::new);
-        for (Poi poi : pois) {
+        for (Poi poi : poisToRender) {
             float poiWorldX = poi.getLocation().getX();
             float poiWorldZ = poi.getLocation().getZ();
 
@@ -402,15 +400,6 @@ public class MinimapOverlay extends Overlay {
 
             guiGraphics.pose().popMatrix();
         }
-    }
-
-    private Stream<PlayerMiniMapPoi> getMiniPlayerPois(
-            boolean renderRemotePartyPlayers, boolean renderRemoteFriendPlayers, boolean renderRemoteGuildPlayers) {
-        return Services.Hades.getHadesUsers()
-                .filter(hadesUser -> (hadesUser.getRelation() == PlayerRelation.PARTY && renderRemotePartyPlayers)
-                        || (hadesUser.getRelation() == PlayerRelation.FRIEND && renderRemoteFriendPlayers)
-                        || (hadesUser.getRelation() == PlayerRelation.GUILD && renderRemoteGuildPlayers))
-                .map(PlayerMiniMapPoi::new);
     }
 
     private void renderCardinalDirections(
