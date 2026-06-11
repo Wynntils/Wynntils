@@ -26,10 +26,16 @@ public abstract class NeoForgeGuiMixin {
 
     @Inject(
             method = "renderHotbar(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"))
+            at = @At("HEAD"),
+            cancellable = true)
     private void onRenderHotbarPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        MixinHelper.post(
-                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.HOTBAR));
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.HOTBAR);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
     }
 
     @Inject(

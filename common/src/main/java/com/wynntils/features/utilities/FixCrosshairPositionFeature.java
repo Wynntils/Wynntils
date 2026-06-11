@@ -40,6 +40,7 @@ public class FixCrosshairPositionFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderCrosshair(RenderEvent.Pre event) {
         if (event.getType() != RenderElementType.CROSSHAIR) return;
+        if (event.isCanceled()) return;
         if (!shouldOverrideCrosshair()) return;
         event.setCanceled(true);
 

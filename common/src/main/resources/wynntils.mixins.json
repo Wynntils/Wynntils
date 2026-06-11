@@ -29,6 +29,7 @@
     "EntityMixin",
     "EntityRenderStateMixin",
     "EntityRendererMixin",
+    "GameRendererMixin",
     "GuiGraphicsMixin",
     "GuiMessageLineMixin",
     "GuiMessageMixin",

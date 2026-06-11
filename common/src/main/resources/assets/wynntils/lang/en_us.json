@@ -751,6 +751,8 @@
   "feature.wynntils.hideLabels.hideKillLabels.description": "Hides the kill labels that popup when killing mobs displaying XP counts.",
   "feature.wynntils.hideLabels.hideKillLabels.name": "Hide Kill Labels",
   "feature.wynntils.hideLabels.name": "Hide Labels",
+  "feature.wynntils.hidePlayerHudDuringNpcDialogue.description": "Hides the crosshair, held item, and hotbar while NPC dialogue is active.",
+  "feature.wynntils.hidePlayerHudDuringNpcDialogue.name": "Hide Player HUD During NPC Dialogue",
   "feature.wynntils.hideSwapItemAnimation.description": "Hides the animation of swapping items when pressing the swap item key.",
   "feature.wynntils.hideSwapItemAnimation.name": "Hide Swap Item Animation",
   "feature.wynntils.hideTripwires.description": "Renders tripwires as invisible to fix an incompatibility between Sodium and the Wynncraft resource pack.",

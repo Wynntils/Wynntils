@@ -27,9 +27,15 @@ public abstract class FabricGuiMixin {
     @Inject(
             method =
                     "renderHotbarAndDecorations(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"))
+            at = @At("HEAD"),
+            cancellable = true)
     private void onRenderHotbarAndDecorationsPre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        MixinHelper.post(
-                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.HOTBAR));
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.HOTBAR);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
     }
 }
