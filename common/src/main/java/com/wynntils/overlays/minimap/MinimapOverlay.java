@@ -14,7 +14,6 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.services.hades.type.PlayerRelation;
 import com.wynntils.services.map.MapTexture;
@@ -38,8 +37,6 @@ import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
-
-import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Stream;
@@ -258,7 +255,8 @@ public class MinimapOverlay extends Overlay {
             float zoomRenderScale,
             float zoomLevel,
             BoundingBox visibleWorldBox) {
-        List<? extends Poi> poisToRender = Managers.Feature.getFeatureInstance(MinimapFeature.class).getVisiblePois();
+        List<? extends Poi> poisToRender =
+                Managers.Feature.getFeatureInstance(MinimapFeature.class).getVisiblePois();
 
         for (Poi poi : poisToRender) {
             float poiWorldX = poi.getLocation().getX();
