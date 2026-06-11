@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.item;
@@ -19,6 +19,7 @@ import com.wynntils.models.items.encoding.type.ItemTransformer;
 import com.wynntils.models.items.encoding.type.ItemType;
 import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.stats.type.StatActualValue;
+import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.wynnitem.type.NamedItemEffect;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -105,9 +106,24 @@ public class CraftedConsumableItemTransformer extends ItemTransformer<CraftedCon
         }
 
         dataList.add(new EffectsData(item.getNamedEffects()));
-        dataList.add(new CustomIdentificationsData(item.getPossibleValues()));
+        dataList.add(new CustomIdentificationsData(getEncodableIdentifications(item)));
 
         return dataList;
+    }
+
+    private List<StatPossibleValues> getEncodableIdentifications(CraftedConsumableItem item) {
+        List<StatPossibleValues> possibleValues = item.getPossibleValues();
+        if (!possibleValues.isEmpty()) {
+            return possibleValues;
+        }
+
+        // The 1.21.11 tooltip format no longer exposes the crafted stat roll ranges, so the parser
+        // cannot populate possible values. Fall back to encoding the actual identification values
+        // (as their own max) so the stats are still shared via chat instead of being dropped.
+        return item.getIdentifications().stream()
+                .map(stat -> new StatPossibleValues(
+                        stat.statType(), RangedValue.of(stat.value(), stat.value()), stat.value(), false))
+                .toList();
     }
 
     @Override

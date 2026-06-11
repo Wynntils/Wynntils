@@ -98,7 +98,9 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
 
         CustomIdentificationsData identificationsData = itemDataMap.get(CustomIdentificationsData.class);
         if (identificationsData != null) {
-            possibleValues = identificationsData.possibleValues();
+            // Note: possibleValues is intentionally left empty. The shared data does not carry real roll
+            // ranges for crafted items, so keeping it
+            // empty makes the chat tooltip render the stat values without a fabricated roll percentage/wheel.
             // For crafted items, the max values can be used to calculate the current values (from the overall
             // effectiveness).
             identifications = identificationsData.possibleValues().stream()
@@ -151,10 +153,25 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
 
         dataList.add(new DamageData(item.getAttackSpeed(), item.getDamages()));
         dataList.add(new DefenseData(item.getHealth(), item.getDefences()));
-        dataList.add(new CustomIdentificationsData(item.getPossibleValues()));
+        dataList.add(new CustomIdentificationsData(getEncodableIdentifications(item)));
         dataList.add(PowderData.from(item));
 
         return dataList;
+    }
+
+    private List<StatPossibleValues> getEncodableIdentifications(CraftedGearItem item) {
+        List<StatPossibleValues> possibleValues = item.getPossibleValues();
+        if (!possibleValues.isEmpty()) {
+            return possibleValues;
+        }
+
+        // The 1.21.11 tooltip format no longer exposes the crafted stat roll ranges, so the parser
+        // cannot populate possible values. Fall back to encoding the actual identification values
+        // (as their own max) so the stats are still shared via chat instead of being dropped.
+        return item.getIdentifications().stream()
+                .map(stat -> new StatPossibleValues(
+                        stat.statType(), RangedValue.of(stat.value(), stat.value()), stat.value(), false))
+                .toList();
     }
 
     @Override
