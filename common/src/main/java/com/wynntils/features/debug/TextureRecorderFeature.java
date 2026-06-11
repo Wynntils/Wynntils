@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -196,8 +195,8 @@ public class TextureRecorderFeature extends Feature {
                 writer.println("  model ID: " + modelId + "   fingerprint: "
                         + modelIdToFingerprint.getOrDefault(modelId, "none"));
                 for (Identifier texId : textureIds) {
-                    String textureHash =
-                            hashCache.computeIfAbsent(texId, id -> ResourcepackUtils.computeTextureHash(resourceManager, id));
+                    String textureHash = hashCache.computeIfAbsent(
+                            texId, id -> ResourcepackUtils.computeTextureHash(resourceManager, id));
                     writer.println("  texture: " + texId + "   texturehash: " + textureHash);
                 }
                 writer.println();

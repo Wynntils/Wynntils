@@ -32,7 +32,8 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 public final class ResourcepackUtils {
-    public static boolean forEachBoatModelOverride(ResourceManager resourceManager, BiConsumer<Float, String> consumer) {
+    public static boolean forEachBoatModelOverride(
+            ResourceManager resourceManager, BiConsumer<Float, String> consumer) {
         Identifier boatJson = Identifier.withDefaultNamespace("models/item/oak_boat.json");
         Optional<Resource> overrideRes = resourceManager.getResource(boatJson);
         if (overrideRes.isEmpty()) return false;
@@ -93,8 +94,8 @@ public final class ResourcepackUtils {
     public static Map<String, String> buildTexturePathToTextureHashMap(ResourceManager resourceManager) {
         Map<String, String> pathToHash = new HashMap<>();
 
-        Map<Identifier, Resource> resources =
-                resourceManager.listResources("textures/item", id -> id.getPath().endsWith(".png"));
+        Map<Identifier, Resource> resources = resourceManager.listResources(
+                "textures/item", id -> id.getPath().endsWith(".png"));
         for (Map.Entry<Identifier, Resource> entry : resources.entrySet()) {
             try (InputStream stream = entry.getValue().open();
                     NativeImage img = NativeImage.read(stream)) {
