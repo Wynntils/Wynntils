@@ -127,9 +127,9 @@ public class TextureRecorderFeature extends Feature {
 
         lastSeenModelToIds.put(modelId, textureIds);
 
-        ResourceManager rm = McUtils.mc().getResourceManager();
+        ResourceManager resourceManager = McUtils.mc().getResourceManager();
         String firstName = getFilename(textureIds.getFirst());
-        String textureHash = ResourcepackUtils.computeTextureHash(rm, textureIds.getFirst());
+        String textureHash = ResourcepackUtils.computeTextureHash(resourceManager, textureIds.getFirst());
         String fingerprint = modelIdToFingerprint.getOrDefault(modelId, "none");
         WynntilsMod.info("id: " + modelId
                 + " png: " + firstName
@@ -139,10 +139,10 @@ public class TextureRecorderFeature extends Feature {
     }
 
     private boolean buildModelMap() {
-        ResourceManager rm = McUtils.mc().getResourceManager();
+        ResourceManager resourceManager = McUtils.mc().getResourceManager();
 
-        boolean succeeded = ResourcepackUtils.forEachBoatModelOverride(rm, (cmd, modelPath) -> {
-            ResourcepackUtils.ModelData model = ResourcepackUtils.parseModelData(rm, modelPath);
+        boolean succeeded = ResourcepackUtils.forEachBoatModelOverride(resourceManager, (cmd, modelPath) -> {
+            ResourcepackUtils.ModelData model = ResourcepackUtils.parseModelData(resourceManager, modelPath);
             if (model == null) return;
             modelIdToFingerprint.put(cmd, model.fingerprint());
             if (!model.textureIds().isEmpty()) {
@@ -167,7 +167,7 @@ public class TextureRecorderFeature extends Feature {
         File textFile = new File(SAVE_FOLDER, OUTPUT_FILE);
         FileUtils.mkdir(textFile.getParentFile());
 
-        ResourceManager rm = McUtils.mc().getResourceManager();
+        ResourceManager resourceManager = McUtils.mc().getResourceManager();
         Map<Identifier, String> hashCache = new HashMap<>();
 
         try (PrintWriter writer =
@@ -181,7 +181,7 @@ public class TextureRecorderFeature extends Feature {
                 float modelId = entry.getKey();
                 List<Identifier> textureIds = entry.getValue();
                 String textureHash = hashCache.computeIfAbsent(
-                        textureIds.getFirst(), id -> ResourcepackUtils.computeTextureHash(rm, id));
+                        textureIds.getFirst(), id -> ResourcepackUtils.computeTextureHash(resourceManager, id));
                 writer.println("  " + getLabel(textureIds)
                         + " (model ID: " + modelId
                         + ", texturehash: " + textureHash
@@ -197,7 +197,7 @@ public class TextureRecorderFeature extends Feature {
                         + modelIdToFingerprint.getOrDefault(modelId, "none"));
                 for (Identifier texId : textureIds) {
                     String textureHash =
-                            hashCache.computeIfAbsent(texId, id -> ResourcepackUtils.computeTextureHash(rm, id));
+                            hashCache.computeIfAbsent(texId, id -> ResourcepackUtils.computeTextureHash(resourceManager, id));
                     writer.println("  texture: " + texId + "   texturehash: " + textureHash);
                 }
                 writer.println();
@@ -211,7 +211,7 @@ public class TextureRecorderFeature extends Feature {
     }
 
     private void saveTexturePngs() {
-        ResourceManager rm = Minecraft.getInstance().getResourceManager();
+        ResourceManager resourceManager = McUtils.mc().getResourceManager();
         FileUtils.mkdir(TEXTURES_FOLDER);
 
         Set<Identifier> uniqueTextures = new LinkedHashSet<>();
@@ -221,7 +221,7 @@ public class TextureRecorderFeature extends Feature {
 
         int exportedCount = 0;
         for (Identifier textureId : uniqueTextures) {
-            Optional<Resource> resource = rm.getResource(textureId);
+            Optional<Resource> resource = resourceManager.getResource(textureId);
             if (resource.isEmpty()) {
                 WynntilsMod.error("Texture not found in resource pack: " + textureId);
                 continue;

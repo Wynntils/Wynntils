@@ -212,6 +212,9 @@ public final class ShieldModel extends Model {
         collectedRootIds.clear();
     }
 
+    /**
+     * @return true if there was either a valid cast recently, or there is a possibility of an auto cast
+     */
     private boolean isValidSpawn() {
         return System.currentTimeMillis() - shieldCastTime < CAST_MAX_DELAY_MS || Models.Inventory.hasAutoCasterItem();
     }

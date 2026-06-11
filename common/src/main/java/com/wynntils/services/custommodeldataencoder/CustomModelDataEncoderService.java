@@ -130,13 +130,13 @@ public class CustomModelDataEncoderService extends Service {
                 });
 
         if (!succeeded) {
-            error("Could not find oak_boat.json override");
+            McUtils.sendErrorToClient("Could not find oak_boat.json override");
             return 1;
         }
 
         for (String name : outputModels.keySet()) {
             if (outputModels.getAsJsonArray(name).isEmpty()) {
-                error("No matches found for model: " + name);
+                McUtils.sendErrorToClient("No matches found for model: " + name);
             }
         }
 
@@ -150,7 +150,7 @@ public class CustomModelDataEncoderService extends Service {
                 new PrintWriter(new OutputStreamWriter(new FileOutputStream(outFile), StandardCharsets.UTF_8))) {
             pw.print(new GsonBuilder().setPrettyPrinting().create().toJson(output));
         } catch (IOException e) {
-            error("Failed to write output file: " + e.getMessage());
+            McUtils.sendErrorToClient("Failed to write output file: " + e.getMessage());
             return 1;
         }
 
@@ -158,11 +158,6 @@ public class CustomModelDataEncoderService extends Service {
         WynntilsMod.info("[Encoder] " + summary);
         McUtils.sendWynntilsPrefixMessage(Component.literal(summary));
         return 1;
-    }
-
-    private static void error(String msg) {
-        WynntilsMod.error("[Encoder] " + msg);
-        McUtils.sendWynntilsPrefixMessage(Component.literal("[Encoder] ERROR: " + msg));
     }
 
     private record ModelEntry(String name, Set<String> textureHashes, Set<String> fingerprints) {

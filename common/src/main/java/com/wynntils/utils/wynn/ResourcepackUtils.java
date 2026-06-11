@@ -5,6 +5,7 @@
 package com.wynntils.utils.wynn;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.platform.NativeImage;
@@ -31,11 +32,9 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 public final class ResourcepackUtils {
-    private ResourcepackUtils() {}
-
-    public static boolean forEachBoatModelOverride(ResourceManager rm, BiConsumer<Float, String> consumer) {
+    public static boolean forEachBoatModelOverride(ResourceManager resourceManager, BiConsumer<Float, String> consumer) {
         Identifier boatJson = Identifier.withDefaultNamespace("models/item/oak_boat.json");
-        Optional<Resource> overrideRes = rm.getResource(boatJson);
+        Optional<Resource> overrideRes = resourceManager.getResource(boatJson);
         if (overrideRes.isEmpty()) return false;
 
         try (InputStream stream = overrideRes.get().open();
@@ -44,8 +43,8 @@ public final class ResourcepackUtils {
             JsonArray overrides = JsonUtils.getNullableJsonArray(baseJson, "overrides");
             if (overrides.isEmpty()) return false;
 
-            for (var el : overrides) {
-                JsonObject override = el.getAsJsonObject();
+            for (JsonElement element : overrides) {
+                JsonObject override = element.getAsJsonObject();
                 float cmd = override.getAsJsonObject("predicate")
                         .get("custom_model_data")
                         .getAsFloat();
@@ -60,10 +59,10 @@ public final class ResourcepackUtils {
         }
     }
 
-    public static ModelData parseModelData(ResourceManager rm, String modelPath) {
+    public static ModelData parseModelData(ResourceManager resourceManager, String modelPath) {
         Identifier modelId = Identifier.parse(modelPath).withPath(p -> "models/" + p + ".json");
 
-        Optional<Resource> res = rm.getResource(modelId);
+        Optional<Resource> res = resourceManager.getResource(modelId);
         if (res.isEmpty()) return null;
 
         try (InputStream stream = res.get().open();
@@ -79,9 +78,9 @@ public final class ResourcepackUtils {
             List<Identifier> textureIds = new ArrayList<>();
             JsonObject textures = JsonUtils.getNullableJsonObject(json, "textures");
             for (String slot : referencedSlots) {
-                String texPath = JsonUtils.getNullableJsonString(textures, slot);
-                if (texPath == null) continue;
-                textureIds.add(Identifier.parse(texPath).withPath(p -> "textures/" + p + ".png"));
+                String texturePath = JsonUtils.getNullableJsonString(textures, slot);
+                if (texturePath == null) continue;
+                textureIds.add(Identifier.parse(texturePath).withPath(p -> "textures/" + p + ".png"));
             }
 
             return new ModelData(fingerprint, referencedSlots, textureIds);
@@ -91,11 +90,11 @@ public final class ResourcepackUtils {
         }
     }
 
-    public static Map<String, String> buildTexturePathToTextureHashMap(ResourceManager rm) {
+    public static Map<String, String> buildTexturePathToTextureHashMap(ResourceManager resourceManager) {
         Map<String, String> pathToHash = new HashMap<>();
 
         Map<Identifier, Resource> resources =
-                rm.listResources("textures/item", id -> id.getPath().endsWith(".png"));
+                resourceManager.listResources("textures/item", id -> id.getPath().endsWith(".png"));
         for (Map.Entry<Identifier, Resource> entry : resources.entrySet()) {
             try (InputStream stream = entry.getValue().open();
                     NativeImage img = NativeImage.read(stream)) {
@@ -109,8 +108,8 @@ public final class ResourcepackUtils {
         return pathToHash;
     }
 
-    public static String computeTextureHash(ResourceManager rm, Identifier textureId) {
-        Optional<Resource> res = rm.getResource(textureId);
+    public static String computeTextureHash(ResourceManager resourceManager, Identifier textureId) {
+        Optional<Resource> res = resourceManager.getResource(textureId);
         if (res.isEmpty()) return "not-found";
         try (InputStream stream = res.get().open();
                 NativeImage img = NativeImage.read(stream)) {
@@ -145,7 +144,7 @@ public final class ResourcepackUtils {
 
     private static Set<String> collectReferencedTextureSlots(JsonArray elements) {
         Set<String> slots = new LinkedHashSet<>();
-        for (var element : elements) {
+        for (JsonElement element : elements) {
             JsonObject el = element.getAsJsonObject();
             JsonObject faces = JsonUtils.getNullableJsonObject(el, "faces");
             for (String faceKey : faces.keySet()) {
