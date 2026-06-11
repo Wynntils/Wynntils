@@ -38,14 +38,12 @@ import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
-
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
-
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -168,7 +166,7 @@ public class MinimapOverlay extends Overlay {
         // enable mask
         switch (maskType.get()) {
             case RECTANGULAR ->
-                    RenderUtils.enableScissor(guiGraphics, (int) renderX, (int) renderY, (int) width, (int) height);
+                RenderUtils.enableScissor(guiGraphics, (int) renderX, (int) renderY, (int) width, (int) height);
         }
 
         // Always draw a black background to cover transparent map areas
@@ -306,8 +304,8 @@ public class MinimapOverlay extends Overlay {
             }
 
             final float compassSize = Math.max(
-                    waypointPoi.getWidth(currentZoom, poiScale.get()),
-                    waypointPoi.getHeight(currentZoom, poiScale.get()))
+                            waypointPoi.getWidth(currentZoom, poiScale.get()),
+                            waypointPoi.getHeight(currentZoom, poiScale.get()))
                     * 0.8f;
 
             float compassOffsetX = poiRenderX - centerX;
@@ -421,7 +419,7 @@ public class MinimapOverlay extends Overlay {
                     poisToRender, Services.Poi.getGatheringNodePois().filter(Services.Poi::isGatheringNodeTypeVisible));
 
             this.poisToRender = poisToRender.toArray(Poi[]::new);
-        } catch(ConcurrentModificationException ignored) {
+        } catch (ConcurrentModificationException ignored) {
             // CME are expected and are safe to ignore
             // Since the result here is isolated and will be redone in the future anyway
         } catch (RuntimeException t) {
@@ -615,6 +613,5 @@ public class MinimapOverlay extends Overlay {
         }
     }
 
-    private record BorderInfo(int tx1, int ty1, int tx2, int ty2) {
-    }
+    private record BorderInfo(int tx1, int ty1, int tx2, int ty2) {}
 }
