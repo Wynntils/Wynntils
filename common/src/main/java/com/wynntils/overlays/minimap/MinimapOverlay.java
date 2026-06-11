@@ -5,6 +5,7 @@
 package com.wynntils.overlays.minimap;
 
 import com.mojang.blaze3d.platform.Window;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -37,8 +38,14 @@ import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
+
+import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
+
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -88,6 +95,9 @@ public class MinimapOverlay extends Overlay {
     @Persisted
     public final Config<Float> remotePlayersHeadScale = new Config<>(0.4f);
 
+    private Poi[] poisToRender = new Poi[0];
+    private final ScheduledExecutorService executor;
+
     public MinimapOverlay() {
         super(
                 new OverlayPosition(
@@ -97,6 +107,9 @@ public class MinimapOverlay extends Overlay {
                         HorizontalAlignment.LEFT,
                         OverlayPosition.AnchorSection.TOP_LEFT),
                 new OverlaySize(DEFAULT_SIZE, DEFAULT_SIZE));
+
+        this.executor = Executors.newSingleThreadScheduledExecutor((r) -> new Thread(r, "Minimap POI worker"));
+        executor.scheduleAtFixedRate(this::collectPoisToRender, 0, 100, TimeUnit.MILLISECONDS);
     }
 
     private void setZoomLevel(float level) {
@@ -155,7 +168,7 @@ public class MinimapOverlay extends Overlay {
         // enable mask
         switch (maskType.get()) {
             case RECTANGULAR ->
-                RenderUtils.enableScissor(guiGraphics, (int) renderX, (int) renderY, (int) width, (int) height);
+                    RenderUtils.enableScissor(guiGraphics, (int) renderX, (int) renderY, (int) width, (int) height);
         }
 
         // Always draw a black background to cover transparent map areas
@@ -234,23 +247,7 @@ public class MinimapOverlay extends Overlay {
             float zoomRenderScale,
             float zoomLevel,
             BoundingBox visibleWorldBox) {
-        Stream<? extends Poi> poisToRender = Services.Poi.getServicePois();
-        poisToRender = Stream.concat(poisToRender, Services.Poi.getCombatPois());
-        poisToRender = Stream.concat(
-                poisToRender, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
-        poisToRender = Stream.concat(poisToRender, Services.Poi.getProvidedCustomPois().stream());
-        poisToRender = Stream.concat(poisToRender, Models.Marker.getAllPois());
-        poisToRender = Stream.concat(
-                poisToRender,
-                getMiniPlayerPois(
-                        renderRemotePartyPlayers.get(),
-                        renderRemoteFriendPlayers.get(),
-                        renderRemoteGuildPlayers.get()));
-        poisToRender = Stream.concat(
-                poisToRender, Services.Poi.getGatheringNodePois().filter(Services.Poi::isGatheringNodeTypeVisible));
-
-        Poi[] pois = poisToRender.toArray(Poi[]::new);
-        for (Poi poi : pois) {
+        for (Poi poi : poisToRender) {
             float poiWorldX = poi.getLocation().getX();
             float poiWorldZ = poi.getLocation().getZ();
 
@@ -309,8 +306,8 @@ public class MinimapOverlay extends Overlay {
             }
 
             final float compassSize = Math.max(
-                            waypointPoi.getWidth(currentZoom, poiScale.get()),
-                            waypointPoi.getHeight(currentZoom, poiScale.get()))
+                    waypointPoi.getWidth(currentZoom, poiScale.get()),
+                    waypointPoi.getHeight(currentZoom, poiScale.get()))
                     * 0.8f;
 
             float compassOffsetX = poiRenderX - centerX;
@@ -401,6 +398,34 @@ public class MinimapOverlay extends Overlay {
                     TextShadow.NORMAL);
 
             guiGraphics.pose().popMatrix();
+        }
+    }
+
+    private void collectPoisToRender() {
+        if (!isRendered()) return;
+
+        try {
+            Stream<? extends Poi> poisToRender = Services.Poi.getServicePois();
+            poisToRender = Stream.concat(poisToRender, Services.Poi.getCombatPois());
+            poisToRender = Stream.concat(
+                    poisToRender, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
+            poisToRender = Stream.concat(poisToRender, Services.Poi.getProvidedCustomPois().stream());
+            poisToRender = Stream.concat(poisToRender, Models.Marker.getAllPois());
+            poisToRender = Stream.concat(
+                    poisToRender,
+                    getMiniPlayerPois(
+                            renderRemotePartyPlayers.get(),
+                            renderRemoteFriendPlayers.get(),
+                            renderRemoteGuildPlayers.get()));
+            poisToRender = Stream.concat(
+                    poisToRender, Services.Poi.getGatheringNodePois().filter(Services.Poi::isGatheringNodeTypeVisible));
+
+            this.poisToRender = poisToRender.toArray(Poi[]::new);
+        } catch(ConcurrentModificationException ignored) {
+            // CME are expected and are safe to ignore
+            // Since the result here is isolated and will be redone in the future anyway
+        } catch (RuntimeException t) {
+            WynntilsMod.error("An exception was thrown during Minimap Poi collecting", t);
         }
     }
 
@@ -590,5 +615,6 @@ public class MinimapOverlay extends Overlay {
         }
     }
 
-    private record BorderInfo(int tx1, int ty1, int tx2, int ty2) {}
+    private record BorderInfo(int tx1, int ty1, int tx2, int ty2) {
+    }
 }
