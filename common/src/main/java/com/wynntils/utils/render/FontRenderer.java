@@ -460,7 +460,7 @@ public final class FontRenderer {
             float textScale) {
         if (text == null) return;
 
-        if (maxWidth == 0 || font.width(text.getComponent()) / textScale < maxWidth) {
+        if (maxWidth == 0 || font.width(text.getComponent()) * textScale < maxWidth) {
             renderText(guiGraphics, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, textScale);
             return;
         }
@@ -686,10 +686,7 @@ public final class FontRenderer {
         float currentY = y;
         for (TextRenderTask line : lines) {
             renderText(guiGraphics, x, currentY, line, textScale);
-            currentY += FontRenderer.getInstance()
-                            .calculateRenderHeight(
-                                    line.getText(), line.getSetting().maxWidth() / textScale)
-                    * textScale;
+            currentY += calculateRenderHeight(line, textScale);
         }
     }
 
@@ -757,8 +754,8 @@ public final class FontRenderer {
         float renderY =
                 switch (verticalAlignment) {
                     case TOP -> y;
-                    case MIDDLE -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender)) / 2;
-                    case BOTTOM -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender));
+                    case MIDDLE -> y + (height - calculateRenderTasksHeight(toRender, textScale)) / 2;
+                    case BOTTOM -> y + (height - calculateRenderTasksHeight(toRender, textScale));
                 };
 
         renderTexts(guiGraphics, renderX, renderY, toRender, textScale);
@@ -804,6 +801,30 @@ public final class FontRenderer {
         height += (totalLineCount - 1) * (NEWLINE_OFFSET - font.lineHeight);
 
         return height;
+    }
+
+    private float calculateRenderTasksHeight(List<TextRenderTask> toRender, float textScale) {
+        if (toRender.isEmpty()) return 0f;
+
+        float height = 0;
+
+        for (TextRenderTask textRenderTask : toRender) {
+            height += calculateRenderHeight(textRenderTask, textScale);
+        }
+
+        height += (toRender.size() - 1) * (NEWLINE_OFFSET - font.lineHeight) * textScale;
+
+        return height;
+    }
+
+    private float calculateRenderHeight(TextRenderTask textRenderTask, float textScale) {
+        if (textRenderTask.getSetting().maxWidth() == 0) {
+            return font.lineHeight * textScale;
+        }
+
+        return calculateRenderHeight(
+                        textRenderTask.getText(), textRenderTask.getSetting().maxWidth() / textScale)
+                * textScale;
     }
 
     public float calculateRenderHeight(List<StyledText> lines, float maxWidth) {

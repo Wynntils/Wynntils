@@ -39,6 +39,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ColorScaleUtils;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -349,7 +350,7 @@ public class ItemStatInfoFeature extends Feature {
                 ItemWeighting weighting, IdentifiableItemProperty<?, ?> itemInfo) {
             float percentage = Services.ItemWeight.calculateWeighting(weighting, itemInfo);
             return List.of(GearItemWeightsComponent.buildRightAlignedWeightLine(
-                    Component.literal(" - " + weighting.weightName() + " Scale").withStyle(ChatFormatting.WHITE),
+                    Component.literal(weighting.weightName() + " Scale").withStyle(ChatFormatting.WHITE),
                     ColorScaleUtils.getPercentageTextComponent(
                             getColorMap(), percentage, colorLerp.get(), decimalPlaces.get())));
         }
@@ -368,7 +369,7 @@ public class ItemStatInfoFeature extends Feature {
             List<MutableComponent> lines = new ArrayList<>();
             float weightPercentage = Services.ItemWeight.calculateWeighting(weighting, itemInfo);
             lines.add(GearItemWeightsComponent.buildRightAlignedWeightLine(
-                    Component.literal(" - " + weighting.weightName() + " Scale").withStyle(ChatFormatting.WHITE),
+                    Component.literal(weighting.weightName() + " Scale").withStyle(ChatFormatting.WHITE),
                     ColorScaleUtils.getPercentageTextComponent(
                             getColorMap(), weightPercentage, colorLerp.get(), decimalPlaces.get())));
 
@@ -381,18 +382,17 @@ public class ItemStatInfoFeature extends Feature {
                     displayName += "Raw ";
                 }
 
-                String weightStr = String.format(Locale.ROOT, "(%.1f%%)", weight.a());
+                String weightStr = new DecimalFormat("#.#").format(weight.a()) + "%";
                 float percentage = distribution ? weight.b() : ((weight.a() / 100f) * weight.b());
 
                 lines.add(GearItemWeightsComponent.buildRightAlignedWeightLine(
-                        Component.literal("   - ")
-                                .withStyle(ChatFormatting.WHITE)
-                                .append(Component.literal(displayName).withStyle(ChatFormatting.WHITE))
-                                .append(Component.literal(weightStr).withStyle(ChatFormatting.WHITE)),
+                        Component.literal(weightStr)
+                                .withStyle(ChatFormatting.DARK_GRAY)
+                                .append(Component.literal(" "))
+                                .append(Component.literal(displayName).withStyle(ChatFormatting.GRAY)),
                         ColorScaleUtils.getPercentageTextComponent(
                                 getColorMap(), percentage, colorLerp.get(), decimalPlaces.get())));
             });
-            lines.add(GearItemWeightsComponent.withLanguageFont(Component.empty()));
 
             return lines;
         }

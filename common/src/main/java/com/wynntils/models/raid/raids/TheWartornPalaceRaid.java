@@ -25,7 +25,8 @@ public class TheWartornPalaceRaid extends RaidKind {
         Map<String, String> challenge1Map = Map.of(
                 "Fight through the", "Grand Aisles",
                 "Collect the sonic", "Regal Ballroom");
-        Map<String, String> challenge2Map = Map.of("Slay the Knightmare", "Statuary Hall");
+        Map<String, String> challenge2Map =
+                Map.of("Slay the Knightmare", "Statuary Hall", "Defend the guards and", "Intruding Rifts");
         Map<String, String> challenge3Map = Map.of("Rip out the artifact", "The Spire's Shadow");
 
         nameMap.put(1, challenge1Map);
