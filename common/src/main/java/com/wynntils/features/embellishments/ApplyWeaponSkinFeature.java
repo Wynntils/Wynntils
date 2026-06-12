@@ -27,7 +27,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.EMBELLISHMENTS)
 public class ApplyWeaponSkinFeature extends Feature {
     public ApplyWeaponSkinFeature() {
-        super(ProfileDefault.onlyDefault());
+        // Disabled by defaults due to only being useful on high ping and having problems with glint parsing
+        super(ProfileDefault.DISABLED);
     }
 
     @SubscribeEvent
