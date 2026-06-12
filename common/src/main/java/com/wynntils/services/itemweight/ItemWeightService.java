@@ -7,6 +7,7 @@ package com.wynntils.services.itemweight;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
@@ -141,7 +142,10 @@ public class ItemWeightService extends Service {
     }
 
     private void handleItemWeights(Reader reader) {
-        JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
+        JsonElement root = JsonParser.parseReader(reader);
+        if (!root.isJsonObject()) return;
+
+        JsonObject jsonObject = root.getAsJsonObject();
 
         Map<ItemWeightSource, Map<String, List<ItemWeighting>>> newWeightings = new HashMap<>();
 
@@ -150,8 +154,10 @@ public class ItemWeightService extends Service {
 
             String sourceName = source.name().toLowerCase(Locale.ROOT);
 
-            if (jsonObject.has(sourceName)) {
+            if (jsonObject.has(sourceName) && jsonObject.get(sourceName).isJsonObject()) {
                 parseWeightingGroup(jsonObject.getAsJsonObject(sourceName), source, newWeightings);
+            } else {
+                WynntilsMod.warn("Item weight source " + sourceName + " is not a valid JSON object");
             }
         }
 
@@ -166,12 +172,24 @@ public class ItemWeightService extends Service {
 
         for (Map.Entry<String, JsonElement> itemEntry : group.entrySet()) {
             String itemName = itemEntry.getKey();
+
+            if (!itemEntry.getValue().isJsonObject()) {
+                WynntilsMod.warn("Item weight entry " + itemName + " is not a valid JSON object");
+                continue;
+            }
+
             JsonObject weights = itemEntry.getValue().getAsJsonObject();
 
             List<ItemWeighting> itemWeights = sourceMap.computeIfAbsent(itemName, k -> new ArrayList<>());
 
             for (Map.Entry<String, JsonElement> weightEntry : weights.entrySet()) {
                 String weightName = weightEntry.getKey();
+
+                if (!weightEntry.getValue().isJsonObject()) {
+                    WynntilsMod.warn("Item weight entry " + weightName + " is not a valid JSON object");
+                    continue;
+                }
+
                 JsonObject identificationsObj = weightEntry.getValue().getAsJsonObject();
 
                 Map<String, Double> identifications = identificationsObj.entrySet().stream()
