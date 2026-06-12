@@ -48,13 +48,17 @@ public class ApplyWeaponSkinFeature extends Feature {
 
         PotionContents potionContents = itemStack.get(DataComponents.POTION_CONTENTS);
         if (potionContents == null) return;
-        itemStack.set(
-                DataComponents.POTION_CONTENTS,
-                new PotionContents(
-                        potionContents.potion(),
-                        Optional.ofNullable(Models.Store.getGlint(StoreModel.WARDROBE_WEAPON_GLINT_SLOT)),
-                        potionContents.customEffects(),
-                        potionContents.customName()));
+
+        Integer glint = Models.Store.getGlint(StoreModel.WARDROBE_WEAPON_GLINT_SLOT);
+        if (glint != null) {
+            itemStack.set(
+                    DataComponents.POTION_CONTENTS,
+                    new PotionContents(
+                            potionContents.potion(),
+                            Optional.of(glint),
+                            potionContents.customEffects(),
+                            potionContents.customName()));
+        }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
