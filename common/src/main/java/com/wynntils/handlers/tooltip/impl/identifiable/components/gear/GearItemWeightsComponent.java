@@ -73,32 +73,12 @@ public final class GearItemWeightsComponent {
             currentIndex++;
             currentIndex =
                     addWeightingLines(weightedHeader, noriWeightings, weightDecorator, itemProperty, currentIndex);
-            addedAny = true;
-
-            if (!weightedHeader.get(currentIndex - 1).equals(Component.empty())) {
-                weightedHeader.add(currentIndex, Component.empty());
-                currentIndex++;
-            }
         }
 
         if (addWynnpool) {
             weightedHeader.add(currentIndex, buildWeightSourceHeader(ItemWeightSource.WYNNPOOL));
             currentIndex++;
-            currentIndex =
-                    addWeightingLines(weightedHeader, wynnpoolWeightings, weightDecorator, itemProperty, currentIndex);
-            addedAny = true;
-
-            if (!weightedHeader.get(currentIndex - 1).equals(Component.empty())) {
-                weightedHeader.add(currentIndex, Component.empty());
-                currentIndex++;
-            }
-        }
-
-        if (addedAny
-                && currentIndex > 0
-                && currentIndex <= weightedHeader.size()
-                && !weightedHeader.get(currentIndex - 1).equals(Component.empty())) {
-            weightedHeader.add(currentIndex, Component.empty());
+            addWeightingLines(weightedHeader, wynnpoolWeightings, weightDecorator, itemProperty, currentIndex);
         }
 
         return weightedHeader;
