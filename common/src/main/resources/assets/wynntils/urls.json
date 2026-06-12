@@ -198,6 +198,12 @@
     "url": "https://cdn.wynntils.com/static/Reference/advanced_ingredients.json"
   },
   {
+    "id": "dataStaticItemDisplayModelData",
+    "md5": "2744faa5c512e1807a3dad412cd70bbc",
+    "path": "Data-Storage/item_display_model_data.json",
+    "url": "https://cdn.wynntils.com/static/Data-Storage/item_display_model_data.json"
+  },
+  {
     "id": "dataStaticItemObtain",
     "md5": "20e9a265f5e2ed91b02d80623b3765bd",
     "path": "Data-Storage/item_obtain.json",
@@ -316,6 +322,12 @@
     "md5": "262f3c73093a1f0979beedb8b25e9420",
     "path": "Data-Storage/splashes.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/splashes.json"
+  },
+  {
+    "id": "dataStaticTextureAndFingerprintHashes",
+    "md5": "ef5709e7388f7711915f098e50f9dd8b",
+    "path": "Data-Storage/texture_and_fingerprint_hashes.json",
+    "url": "https://cdn.wynntils.com/static/Data-Storage/texture_and_fingerprint_hashes.json"
   },
   {
     "id": "dataStaticTomes",
