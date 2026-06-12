@@ -52,7 +52,7 @@ public class ApplyWeaponSkinFeature extends Feature {
                 DataComponents.POTION_CONTENTS,
                 new PotionContents(
                         potionContents.potion(),
-                        Optional.of(Models.Store.getGlint(StoreModel.WARDROBE_WEAPON_GLINT_SLOT)),
+                        Optional.ofNullable(Models.Store.getGlint(StoreModel.WARDROBE_WEAPON_GLINT_SLOT)),
                         potionContents.customEffects(),
                         potionContents.customName()));
     }
