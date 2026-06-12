@@ -7,8 +7,10 @@ package com.wynntils.models.abilities;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
+import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.models.abilities.type.ArrowShield;
 import com.wynntils.models.abilities.type.GuardianAngelsShield;
 import com.wynntils.models.abilities.type.MantleShield;
@@ -18,95 +20,159 @@ import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomModelData;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ShieldModel extends Model {
     private static final double SEARCH_RADIUS = 4.5;
+    private static final int CAST_MAX_DELAY_MS = 250;
 
     private final List<ShieldType> shieldTypes = new ArrayList<>();
 
-    private List<Integer> collectedIds;
+    private final Set<Integer> spawnedDuringCastWindow = new HashSet<>();
+    private final Set<Integer> collectedRootIds = new HashSet<>();
+
     private List<Integer> spawnedIds;
     private long shieldCastTime = 0;
-
     private ShieldType activeShieldType;
+    private String activeShieldGroup;
+    private String pendingShieldGroup;
 
     public ShieldModel() {
         super(List.of());
-
         registerShieldTypes();
     }
 
     @SubscribeEvent
     public void onShieldCast(SpellEvent.Cast e) {
         for (ShieldType shieldType : shieldTypes) {
-            if (shieldType.validSpell(e.getSpellType())) {
-                shieldCastTime = System.currentTimeMillis();
-                collectedIds = new ArrayList<>();
-                spawnedIds = null;
-                break;
+            if (!shieldType.validSpell(e.getSpellType())) continue;
+
+            shieldCastTime = System.currentTimeMillis();
+            collectedRootIds.clear();
+
+            // Entities that spawned just before the cast are already in spawnedDuringCastWindow
+            // but were skipped in onEntitySetData because isValidSpawn() was false then.
+            // Re-process them now that shieldCastTime is set.
+            for (int id : new HashSet<>(spawnedDuringCastWindow)) {
+                Entity entity = McUtils.mc().level.getEntity(id);
+                if (!(entity instanceof Display.ItemDisplay)) continue;
+                if (entity.position().distanceTo(McUtils.player().position()) > SEARCH_RADIUS) continue;
+
+                processShieldEntity(id);
+            }
+
+            break;
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onEntitySetData(SetEntityDataEvent event) {
+        Entity entity = McUtils.mc().level.getEntity(event.getId());
+        if (!(entity instanceof Display.ItemDisplay)) return;
+
+        if (!isValidSpawn() && !isGuardianAngelsTransition(entity)) return;
+
+        if (entity.position().distanceTo(McUtils.player().position()) > SEARCH_RADIUS) return;
+        if (collectedRootIds.contains(entity.getId())) return;
+        if (!spawnedDuringCastWindow.contains(entity.getId())) return;
+
+        processShieldEntity(entity.getId());
+    }
+
+    private void processShieldEntity(int entityId) {
+        Entity entity = McUtils.mc().level.getEntity(entityId);
+        if (!(entity instanceof Display.ItemDisplay)) return;
+
+        if (collectedRootIds.contains(entityId)) return;
+
+        for (Entity passenger : entity.getPassengers()) {
+            if (!(passenger instanceof Display.ItemDisplay passengerDisplay)) continue;
+
+            ItemStack itemStack = passengerDisplay.getEntityData().get(Display.ItemDisplay.DATA_ITEM_STACK_ID);
+
+            if (!itemStack.is(Items.OAK_BOAT)) continue;
+
+            CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
+
+            if (customModelData == null || customModelData.floats().isEmpty()) continue;
+
+            float modelId = customModelData.floats().getFirst();
+
+            for (ShieldType shieldType : shieldTypes) {
+                if (!shieldType.verifyShield(modelId)) continue;
+
+                collectedRootIds.add(entityId);
+                activeShieldType = shieldType;
+                pendingShieldGroup = Services.CustomModel.getGroup(modelId).orElse(null);
+
+                Managers.TickScheduler.scheduleLater(this::registerShield, 4);
+                return;
             }
         }
     }
 
-    @SubscribeEvent
-    public void onShieldSpawn(AddEntityEvent event) {
-        for (ShieldType shieldType : shieldTypes) {
-            if (shieldType.validClass()) {
-                // It is possible for us to receive the cast event just after the shield has actually spawned
-                // So we must collect all possible spawns
-                Entity entity = McUtils.mc().level.getEntity(event.getId());
-                if (entity == null) return;
-                if (!(entity instanceof ArmorStand shieldAS)) return;
+    /**
+     * this is a temporary fix, because SpellEvent does not support ultimates yet, which means
+     * isValidSpawn() never becomes true when switching from normal ga to ult ga or vice versa.
+     * to remove the fix we also need a way of knowing when the ult expires, because that also won't make isValidSpawn() true
+     */
+    private boolean isGuardianAngelsTransition(Entity entity) {
+        if (!(activeShieldType instanceof GuardianAngelsShield)) return false;
+        if (spawnedIds == null || spawnedIds.isEmpty()) return false;
 
-                Vec3 playerPos = McUtils.player().position();
-                Managers.TickScheduler.scheduleLater(
-                        () -> {
-                            if (!isValidSpawn()) return;
+        for (Entity passenger : entity.getPassengers()) {
+            if (!(passenger instanceof Display.ItemDisplay passengerDisplay)) continue;
 
-                            // This must be ran with a delay, as inventory contents are set a couple ticks after the
-                            // entity spawns.
-                            if (!shieldType.verifyShield(shieldAS)) return;
+            ItemStack itemStack = passengerDisplay.getEntityData().get(Display.ItemDisplay.DATA_ITEM_STACK_ID);
+            if (!itemStack.is(Items.OAK_BOAT)) continue;
 
-                            // If the player is standing still, the armor stands spawn about 2.1 blocks away
-                            // from the player. But if the player moves, it can be up to ~ 4 blocks depending
-                            // on walk speed.
-                            if (shieldAS.position().distanceTo(playerPos) > SEARCH_RADIUS) return;
+            CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
+            if (customModelData == null || customModelData.floats().isEmpty()) continue;
 
-                            // Save field in local variable to avoid surprises where it is overwritten by null
-                            List<Integer> collector = collectedIds;
-                            // If we're not collecting shields, do nothing.
-                            if (collector == null) return;
+            float modelId = customModelData.floats().getFirst();
+            Optional<String> group = Services.CustomModel.getGroup(modelId);
+            if (group.isEmpty()) continue;
 
-                            collector.add(shieldAS.getId());
-
-                            activeShieldType = shieldType;
-
-                            // 5 tick total delay to ensure all armor stands have spawned and have their inventory set
-                            Managers.TickScheduler.scheduleLater(this::registerShield, 2);
-                        },
-                        3);
-            }
+            if (group.get().equals(activeShieldGroup)) return false;
+            return group.get().equals(GuardianAngelsShield.GROUP) || group.get().equals(GuardianAngelsShield.ULT_GROUP);
         }
+
+        return false;
+    }
+
+    @SubscribeEvent
+    public void onEntitySpawn(AddEntityEvent e) {
+        // entities are added before onShieldCast is fired, so we have to do it like this.
+        if (!(e.getEntity() instanceof Display.ItemDisplay)) return;
+        if (e.getEntity().position().distanceTo(McUtils.player().position()) > SEARCH_RADIUS) return;
+
+        int id = e.getId();
+        spawnedDuringCastWindow.add(id);
+
+        // if this is longer than 5 ticks it can cause duplicates while spamming the spell, so there will be 2x as many
+        // shields.
+        Managers.TickScheduler.scheduleLater(() -> spawnedDuringCastWindow.remove(id), 5);
     }
 
     @SubscribeEvent
     public void onShieldDestroy(RemoveEntitiesEvent event) {
+        event.getEntityIds().forEach(collectedRootIds::remove);
+
         if (spawnedIds == null) return;
 
-        for (Integer destroyedEntityId : event.getEntityIds()) {
-            spawnedIds.stream()
-                    .filter(id -> Objects.equals(id, destroyedEntityId))
-                    .findFirst()
-                    .ifPresent(id -> spawnedIds.remove(id));
-        }
-
-        if (spawnedIds.isEmpty()) {
+        boolean changed = spawnedIds.removeAll(event.getEntityIds());
+        if (changed && spawnedIds.isEmpty() && collectedRootIds.isEmpty()) {
             removeShield();
         }
     }
@@ -130,22 +196,27 @@ public final class ShieldModel extends Model {
     }
 
     private void registerShield() {
-        if (collectedIds != null) {
-            spawnedIds = collectedIds;
-            collectedIds = null;
+        if (!collectedRootIds.isEmpty()) {
+            spawnedIds = new ArrayList<>(collectedRootIds);
+            collectedRootIds.clear();
+            activeShieldGroup = pendingShieldGroup;
+            pendingShieldGroup = null;
         }
     }
 
     private void removeShield() {
         spawnedIds = null;
         activeShieldType = null;
+        activeShieldGroup = null;
+        pendingShieldGroup = null;
+        collectedRootIds.clear();
     }
 
     /**
      * @return true if there was either a valid cast recently, or there is a possibility of an auto cast
      */
     private boolean isValidSpawn() {
-        return System.currentTimeMillis() - shieldCastTime < 200 || Models.Inventory.hasAutoCasterItem();
+        return System.currentTimeMillis() - shieldCastTime < CAST_MAX_DELAY_MS || Models.Inventory.hasAutoCasterItem();
     }
 
     private void registerShieldTypes() {
