@@ -357,7 +357,7 @@ public class InventoryFunctions {
     public static class HeldItemCooldownFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getItemCooldownTicks(InventoryUtils.getItemInHand());
+            return Models.CharacterStats.getItemCooldownTicks();
         }
 
         @Override
