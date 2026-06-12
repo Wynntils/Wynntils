@@ -815,6 +815,14 @@ public class TestRegex {
     }
 
     @Test
+    public void SkillPointAnnotator_MODIFIED_GEAR_PATTERN() {
+        PatternTester p = new PatternTester(SkillPointAnnotator.class, "MODIFIED_GEAR_PATTERN");
+        p.shouldMatch("\uDB00\uDC0D§b*§8 Modified by your gear (+4)");
+        p.shouldMatch("\uDB00\uDC10§b*§8 Modified by your gear (0)");
+        p.shouldMatch("\uDB00\uDC10§b*§8 Modified by your gear (-5)");
+    }
+
+    @Test
     public void SpellCastSegmentMatcher_SPELL_REGEX() {
         PatternTester p = new PatternTester(SpellCastSegmentMatcher.class, "SPELL_REGEX");
         p.shouldMatch("\uDAFF\uDFCEIce Snake Cast! -30 \uE531\uDAFF\uDFCE");
