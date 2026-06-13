@@ -82,6 +82,8 @@
   "core.wynntils.profile.new_player.shortDescription": "Recommended for players just starting their Wynncraft adventure.",
   "core.wynntils.profiles.toastMessage": "Run /wynntils config profile to see available config profiles.",
   "core.wynntils.profiles.toastTitle": "Wynntils Config Profiles",
+  "crowdSourcedDataType.wynntils.bossAltarLocations.description": "Collects the locations of boss altars. A boss altar location is collected when a boss altar nametag is loaded.",
+  "crowdSourcedDataType.wynntils.bossAltarLocations.name": "Boss Altar Locations",
   "crowdSourcedDataType.wynntils.fastTravelLocations.description": "Collects the locations of fast travels. A fast travel location is collected when a fast travel nametag is loaded.",
   "crowdSourcedDataType.wynntils.fastTravelLocations.name": "Fast Travel Locations",
   "crowdSourcedDataType.wynntils.lootrunTaskLocations.description": "Collects the location of lootrun tasks. Used for predicting lootrun locations. A lootrun location is collected when a player selects a task during a lootrun.",
