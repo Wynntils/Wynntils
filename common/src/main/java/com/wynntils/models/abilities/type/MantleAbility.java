@@ -7,22 +7,31 @@ package com.wynntils.models.abilities.type;
 import com.wynntils.core.components.Services;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
-import java.util.Optional;
 
-public class MantleShield extends ShieldType {
+import java.util.List;
+
+public class MantleAbility extends CastedAbilityType {
     private static final ClassType CLASS_TYPE = ClassType.WARRIOR;
     private static final SpellType SPELL_TYPE = SpellType.WAR_SCREAM;
     private static final String NAME = "Mantle";
     private static final String GROUP = "Mantle";
 
-    public MantleShield() {
+    public MantleAbility() {
         super(CLASS_TYPE, SPELL_TYPE, NAME);
     }
 
     @Override
-    protected boolean verifyCustomModelData(float customModelData) {
-        Optional<String> group = Services.CustomModel.getGroup(customModelData);
+    public boolean verifyCustomModelData(List<Float> customModelData) {
+        if (customModelData.isEmpty()) return false;
 
-        return group.isPresent() && group.get().equals(GROUP);
+        return customModelData.stream()
+                .allMatch(f -> Services.CustomModel.getGroup(f)
+                        .map(g -> g.equals(GROUP))
+                        .orElse(false));
+    }
+
+    @Override
+    public boolean isShieldType() {
+        return true;
     }
 }
