@@ -34,6 +34,7 @@ import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
 import com.wynntils.models.lootrun.LootrunModel;
 import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
+import com.wynntils.models.npc.label.BossAltarLabelParser;
 import com.wynntils.models.npc.label.FastTravelLabelParser;
 import com.wynntils.models.npc.label.NpcLabelParser;
 import com.wynntils.models.players.FriendsModel;
@@ -640,6 +641,18 @@ public class TestRegex {
         p.shouldMatch("§#ffd750ff§oShadowCat§r§#ffd750ff's§#a0c84bff Mob Totem\n§d\uE01F §74m 59s");
         p.shouldMatch("§#ffd750ff§oShadowCat§r§#ffd750ff's§#a0c84bff Mob Totem\n§d\uE01F §749s");
         p.shouldMatch("§#ffd750ffConventionality's§#a0c84bff Gathering Totem\n§d\uE01F §74m 40s");
+    }
+
+    @Test
+    public void BossAltarLabelParser_BOSS_ALTAR_LABEL_PATTERN() {
+        PatternTester p = new PatternTester(BossAltarLabelParser.class, "BOSS_ALTAR_LABEL_PATTERN");
+
+        p.shouldMatch(
+                "§#d9822bff\uE060\uDAFF\uDFFF\uE031\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE062\uDAFF\uDFC4§0\uE001\uE00E\uE012\uE012 \uE000\uE00B\uE013\uE000\uE011\uDB00\uDC02§#d9822bff\n§#f2d349ffBovine Barn§#d9822bff\n\n§7Recommended Level: §f20\n\n§7tribute [8]");
+        p.shouldMatch(
+                "§#d9822bff\uE060\uDAFF\uDFFF\uE031\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE062\uDAFF\uDFC4§0\uE001\uE00E\uE012\uE012 \uE000\uE00B\uE013\uE000\uE011\uDB00\uDC02§#d9822bff\n§#f2d349ffDeserter's Refuge§#d9822bff\n\n§7Recommended Level: §f119\n\n§7tribute [1]");
+        p.shouldMatch(
+                "§#d9822bff\uE060\uDAFF\uDFFF\uE031\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE062\uDAFF\uDFC4§0\uE001\uE00E\uE012\uE012 \uE000\uE00B\uE013\uE000\uE011\uDB00\uDC02§#d9822bff\n§#f2d349ff§kREDACTED§#d9822bff\n\n§7Recommended Level: §f70\n\n§7tribute [1]");
     }
 
     @Test
