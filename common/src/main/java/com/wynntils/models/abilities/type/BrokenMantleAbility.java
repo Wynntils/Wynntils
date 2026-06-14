@@ -21,10 +21,10 @@ public class BrokenMantleAbility extends CastedAbilityType {
     }
 
     @Override
-    public boolean verifyCustomModelData(List<Float> customModelData) {
-        if (customModelData.isEmpty()) return false;
+    public boolean verifyCustomModelData(List<Float> modelIds) {
+        if (modelIds.isEmpty()) return false;
 
-        return customModelData.stream()
+        return modelIds.stream()
                 .allMatch(f -> Services.CustomModel.getGroup(f)
                         .map(g -> g.equals(GROUP))
                         .orElse(false));
@@ -39,8 +39,7 @@ public class BrokenMantleAbility extends CastedAbilityType {
 
     @Override
     public void onMatched(int entityId, List<Float> modelIds) {
-        // No registration delay needed - broken mantles spawn as a single,
-        // immediate event triggered by taking damage, not a multi-piece cast.
+        // No registration delay needed
         entityIds.add(entityId);
     }
 

@@ -7,10 +7,8 @@ package com.wynntils.models.abilities.type;
 import com.wynntils.core.components.Services;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
-
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,10 +27,10 @@ public class GuardianAngelsAbility extends CastedAbilityType {
     }
 
     @Override
-    public boolean verifyCustomModelData(List<Float> customModelData) {
-        if (customModelData.isEmpty()) return false;
+    public boolean verifyCustomModelData(List<Float> modelIds) {
+        if (modelIds.isEmpty()) return false;
 
-        Set<String> groups = customModelData.stream()
+        Set<String> groups = modelIds.stream()
                 .map(f -> Services.CustomModel.getGroup(f).orElse(null))
                 .collect(Collectors.toSet());
 

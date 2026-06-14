@@ -10,11 +10,11 @@ import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.abilities.type.ArrowShieldAbility;
 import com.wynntils.models.abilities.type.BrokenMantleAbility;
+import com.wynntils.models.abilities.type.CastedAbilityType;
 import com.wynntils.models.abilities.type.GuardianAngelsAbility;
 import com.wynntils.models.abilities.type.JudrajimAbility;
 import com.wynntils.models.abilities.type.MantleAbility;
 import com.wynntils.models.abilities.type.ShamanTotem;
-import com.wynntils.models.abilities.type.CastedAbilityType;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
@@ -107,9 +107,7 @@ public class SpellFunctions {
     public static class JudrajimActiveFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.CastedAbility.getActiveAbility(JudrajimAbility.class)
-                    .map(JudrajimAbility::isActive)
-                    .orElse(false);
+            return Models.CastedAbility.getActiveAbility(JudrajimAbility.class).isPresent();
         }
 
         @Override

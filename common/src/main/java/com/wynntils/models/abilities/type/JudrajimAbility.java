@@ -8,7 +8,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -23,10 +22,10 @@ public class JudrajimAbility extends CastedAbilityType {
     }
 
     @Override
-    public boolean verifyCustomModelData(List<Float> customModelData) {
-        if (customModelData.isEmpty()) return false;
+    public boolean verifyCustomModelData(List<Float> modelIds) {
+        if (modelIds.isEmpty()) return false;
 
-        return customModelData.stream()
+        return modelIds.stream()
                 .allMatch(f -> Services.CustomModel.getGroup(f)
                         .map(g -> g.equals(GROUP))
                         .orElse(false));

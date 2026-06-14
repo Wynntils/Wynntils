@@ -32,6 +32,8 @@ public abstract class CastedAbilityType {
         this.name = name;
     }
 
+    public abstract boolean verifyCustomModelData(List<Float> modelIds);
+
     public String getName() {
         return name;
     }
@@ -51,8 +53,6 @@ public abstract class CastedAbilityType {
     public boolean allowsOutOfWindowSpawn(List<Float> modelIds) {
         return false;
     }
-
-    public abstract boolean verifyCustomModelData(List<Float> customModelData);
 
     public boolean isOutsideProximity(Entity entity) {
         return entity.position().distanceTo(McUtils.player().position()) > 4.5;
@@ -82,7 +82,9 @@ public abstract class CastedAbilityType {
         pendingEntityIds.removeAll(removedIds);
         entityIds.removeAll(removedIds);
 
-        if (entityIds.isEmpty() && pendingEntityIds.isEmpty()) onCleared();
+        if (entityIds.isEmpty() && pendingEntityIds.isEmpty()) {
+            onCleared();
+        }
     }
 
     public void onCleared() {

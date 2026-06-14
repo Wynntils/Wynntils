@@ -21,10 +21,10 @@ public class MantleAbility extends CastedAbilityType {
     }
 
     @Override
-    public boolean verifyCustomModelData(List<Float> customModelData) {
-        if (customModelData.isEmpty()) return false;
+    public boolean verifyCustomModelData(List<Float> modelIds) {
+        if (modelIds.isEmpty()) return false;
 
-        return customModelData.stream()
+        return modelIds.stream()
                 .allMatch(f -> Services.CustomModel.getGroup(f)
                         .map(g -> g.equals(GROUP))
                         .orElse(false));
