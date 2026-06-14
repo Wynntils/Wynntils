@@ -7,7 +7,6 @@ package com.wynntils.models.abilities.type;
 import com.wynntils.core.components.Services;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
-
 import java.util.List;
 import java.util.Set;
 

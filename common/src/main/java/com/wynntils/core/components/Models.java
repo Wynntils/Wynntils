@@ -6,10 +6,10 @@ package com.wynntils.core.components;
 
 import com.wynntils.models.abilities.AbilityModel;
 import com.wynntils.models.abilities.ArcherBeastModel;
+import com.wynntils.models.abilities.CastedAbilityModel;
 import com.wynntils.models.abilities.ShamanMaskModel;
 import com.wynntils.models.abilities.ShamanSummonModel;
 import com.wynntils.models.abilities.ShamanTotemModel;
-import com.wynntils.models.abilities.CastedAbilityModel;
 import com.wynntils.models.abilitytree.AbilityTreeModel;
 import com.wynntils.models.account.AccountModel;
 import com.wynntils.models.activities.ActivityModel;
