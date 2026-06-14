@@ -10,6 +10,9 @@ package com.wynntils.models.items.properties;
 public interface PagedItemProperty {
     int currentPage();
 
+    // This should only be updated from ItemHandler for now
+    void updatePage(int newPage);
+
     default boolean isStatPage() {
         return currentPage() == 0;
     }
