@@ -25,7 +25,7 @@ public class GuardianAngelsAbility extends CastedAbilityType {
     private String pendingGroup;
 
     public GuardianAngelsAbility() {
-        super(CLASS_TYPE, SPELL_TYPE, NAME);
+        super(CLASS_TYPE, SPELL_TYPE, null, NAME);
     }
 
     @Override

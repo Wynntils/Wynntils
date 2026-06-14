@@ -11,8 +11,10 @@ import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.models.abilities.type.ArrowShieldAbility;
+import com.wynntils.models.abilities.type.BrokenMantleAbility;
 import com.wynntils.models.abilities.type.CastedAbilityType;
 import com.wynntils.models.abilities.type.GuardianAngelsAbility;
+import com.wynntils.models.abilities.type.JudrajimAbility;
 import com.wynntils.models.abilities.type.MantleAbility;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.spells.event.SpellEvent;
@@ -50,9 +52,22 @@ public final class CastedAbilityModel extends Model {
     }
 
     @SubscribeEvent
-    public void onSpellCast(SpellEvent.Cast e) {
+    public void onSpellCast(SpellEvent.Cast event) {
         lastCastTime = System.currentTimeMillis();
-        lastCastSpell = e.getSpellType();
+        lastCastSpell = event.getSpellType();
+
+        for (int id : new HashSet<>(recentItemDisplayIds)) {
+            processEntity(id, true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onSpellPartial(SpellEvent.Partial event) {
+        lastCastSpell =
+                SpellType.fromSpellDirectionArray(Models.Character.getClassType(), event.getSpellDirectionArray());
+        if (lastCastSpell == null) return;
+
+        lastCastTime = System.currentTimeMillis();
 
         for (int id : new HashSet<>(recentItemDisplayIds)) {
             processEntity(id, true);
@@ -81,10 +96,10 @@ public final class CastedAbilityModel extends Model {
 
         for (CastedAbilityType type : abilityTypes) {
             if (!type.validClass()) continue;
-            if (type.isWithinProximity(entity)) continue;
+            if (type.isOutsideProximity(entity)) continue;
 
             if (withinCastWindow) {
-                if (!type.validSpell(lastCastSpell)) continue;
+                if (!type.validSpell(lastCastSpell) && !type.validPartialSpell(lastCastSpell)) continue;
             } else {
                 if (!type.allowsOutOfWindowSpawn(modelIds)) continue;
             }
@@ -99,10 +114,10 @@ public final class CastedAbilityModel extends Model {
     }
 
     @SubscribeEvent
-    public void onEntitySpawn(AddEntityEvent e) {
-        if (!(e.getEntity() instanceof Display.ItemDisplay)) return;
+    public void onEntitySpawn(AddEntityEvent event) {
+        if (!(event.getEntity() instanceof Display.ItemDisplay)) return;
 
-        int id = e.getId();
+        int id = event.getId();
         recentItemDisplayIds.add(id);
 
         Managers.TickScheduler.scheduleLater(() -> recentItemDisplayIds.remove(id), 5);
@@ -142,6 +157,9 @@ public final class CastedAbilityModel extends Model {
                 .findFirst();
     }
 
+    /**
+     * @return true if there was either a valid cast recently, or there is a possibility of an auto cast
+     */
     private boolean isWithinCastWindow() {
         return System.currentTimeMillis() - lastCastTime < CAST_MAX_DELAY_MS || Models.Inventory.hasAutoCasterItem();
     }
@@ -168,7 +186,7 @@ public final class CastedAbilityModel extends Model {
     }
 
     /**
-     * Extracts the custom model data float from all item display passengers, if present.
+     * Extracts the custom model data float from all item display passengers.
      */
     private static List<Float> extractModelIdsFromPassengers(Entity entity) {
         List<Float> modelIds = new ArrayList<>();
@@ -189,8 +207,12 @@ public final class CastedAbilityModel extends Model {
     }
 
     private void registerAbilityTypes() {
-        abilityTypes.add(new MantleAbility());
+        MantleAbility mantleAbility = new MantleAbility();
+
+        abilityTypes.add(mantleAbility);
+        abilityTypes.add(new BrokenMantleAbility(mantleAbility));
         abilityTypes.add(new GuardianAngelsAbility());
         abilityTypes.add(new ArrowShieldAbility());
+        abilityTypes.add(new JudrajimAbility());
     }
 }

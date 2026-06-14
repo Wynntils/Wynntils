@@ -9,7 +9,9 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.abilities.type.ArrowShieldAbility;
+import com.wynntils.models.abilities.type.BrokenMantleAbility;
 import com.wynntils.models.abilities.type.GuardianAngelsAbility;
+import com.wynntils.models.abilities.type.JudrajimAbility;
 import com.wynntils.models.abilities.type.MantleAbility;
 import com.wynntils.models.abilities.type.ShamanTotem;
 import com.wynntils.models.abilities.type.CastedAbilityType;
@@ -70,6 +72,22 @@ public class SpellFunctions {
         }
     }
 
+    public static class BrokenMantleShieldCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            if (Models.Character.getClassType() != ClassType.WARRIOR) return 0;
+
+            return Models.CastedAbility.getActiveAbility(BrokenMantleAbility.class)
+                    .map(BrokenMantleAbility::getCharge)
+                    .orElse(0);
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("broken_mantle_shield");
+        }
+    }
+
     public static class ShieldTypeNameFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
@@ -83,6 +101,20 @@ public class SpellFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("shield_type");
+        }
+    }
+
+    public static class JudrajimActiveFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.CastedAbility.getActiveAbility(JudrajimAbility.class)
+                    .map(JudrajimAbility::isActive)
+                    .orElse(false);
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("is_judrajim_active");
         }
     }
 

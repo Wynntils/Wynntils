@@ -17,7 +17,7 @@ public class MantleAbility extends CastedAbilityType {
     private static final String GROUP = "Mantle";
 
     public MantleAbility() {
-        super(CLASS_TYPE, SPELL_TYPE, NAME);
+        super(CLASS_TYPE, SPELL_TYPE, null, NAME);
     }
 
     @Override

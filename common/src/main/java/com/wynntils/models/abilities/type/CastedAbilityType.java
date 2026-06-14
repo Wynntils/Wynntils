@@ -18,15 +18,17 @@ import net.minecraft.world.entity.Entity;
 public abstract class CastedAbilityType {
     private final ClassType validClass;
     private final SpellType validSpell;
+    private final SpellType validPartialSpell;
     private final String name;
 
     protected Set<Integer> entityIds = new HashSet<>();
     protected final Set<Integer> pendingEntityIds = new HashSet<>();
     private boolean registrationScheduled = false;
 
-    protected CastedAbilityType(ClassType classType, SpellType spellType, String name) {
+    protected CastedAbilityType(ClassType classType, SpellType spellType, SpellType partialSpellType, String name) {
         this.validClass = classType;
         this.validSpell = spellType;
+        this.validPartialSpell = partialSpellType;
         this.name = name;
     }
 
@@ -38,6 +40,10 @@ public abstract class CastedAbilityType {
         return spellType == validSpell;
     }
 
+    public boolean validPartialSpell(SpellType spellType) {
+        return validPartialSpell != null && spellType == validPartialSpell;
+    }
+
     public boolean validClass() {
         return Models.Character.getClassType() == validClass;
     }
@@ -46,11 +52,11 @@ public abstract class CastedAbilityType {
         return false;
     }
 
-    public boolean isWithinProximity(Entity entity) {
+    public abstract boolean verifyCustomModelData(List<Float> customModelData);
+
+    public boolean isOutsideProximity(Entity entity) {
         return entity.position().distanceTo(McUtils.player().position()) > 4.5;
     }
-
-    public abstract boolean verifyCustomModelData(List<Float> customModelData);
 
     public void onMatched(int entityId, List<Float> modelIds) {
         pendingEntityIds.add(entityId);

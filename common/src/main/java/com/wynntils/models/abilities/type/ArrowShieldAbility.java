@@ -18,7 +18,7 @@ public class ArrowShieldAbility extends CastedAbilityType {
     private static final String GROUP = "Arrow Shield";
 
     public ArrowShieldAbility() {
-        super(CLASS_TYPE, SPELL_TYPE, NAME);
+        super(CLASS_TYPE, SPELL_TYPE, null, NAME);
     }
 
     @Override
