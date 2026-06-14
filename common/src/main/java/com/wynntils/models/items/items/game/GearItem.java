@@ -46,7 +46,7 @@ public class GearItem extends GameItem
                 PagedItemProperty {
     private final GearInfo gearInfo;
     private final GearInstance gearInstance;
-    private final int currentPage;
+    private int currentPage;
     private final Optional<ShinyStat> parsedShinyStat;
 
     public GearItem(
@@ -189,6 +189,11 @@ public class GearItem extends GameItem
     @Override
     public int currentPage() {
         return currentPage;
+    }
+
+    @Override
+    public void updatePage(int newPage) {
+        this.currentPage = newPage;
     }
 
     @Override

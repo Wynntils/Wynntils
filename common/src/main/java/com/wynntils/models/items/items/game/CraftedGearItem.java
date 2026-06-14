@@ -53,7 +53,7 @@ public class CraftedGearItem extends GameItem
     private final int powderSlots;
     private final boolean requirementsMet;
     private final CappedValue durability;
-    private final int currentPage;
+    private int currentPage;
 
     public CraftedGearItem(
             String name,
@@ -169,6 +169,11 @@ public class CraftedGearItem extends GameItem
     @Override
     public int currentPage() {
         return currentPage;
+    }
+
+    @Override
+    public void updatePage(int newPage) {
+        this.currentPage = newPage;
     }
 
     @Override
