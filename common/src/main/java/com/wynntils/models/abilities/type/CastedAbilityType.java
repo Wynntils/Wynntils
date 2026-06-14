@@ -37,7 +37,7 @@ public abstract class CastedAbilityType {
     }
 
     public boolean validSpell(SpellType spellType) {
-        return spellType == validSpell;
+        return validSpell != null && spellType == validSpell;
     }
 
     public boolean validPartialSpell(SpellType spellType) {
