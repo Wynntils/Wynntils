@@ -36,6 +36,6 @@ public class JudrajimAbility extends CastedAbilityType {
      */
     @Override
     public void onEntityRemoved(Collection<Integer> removedIds) {
-        Managers.TickScheduler.scheduleLater(() -> super.onEntityRemoved(removedIds), 10);
+        Managers.TickScheduler.scheduleLater(() -> super.onEntityRemoved(removedIds), 20);
     }
 }
