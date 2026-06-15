@@ -15,6 +15,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -90,7 +91,6 @@ public class WorldWaypointDistanceFeature extends Feature {
     @SubscribeEvent
     public void onRenderLevelPost(RenderLevelEvent.Post event) {
         this.renderedMarkers.clear();
-        removeReachedWaypoints();
 
         List<MarkerInfo> markers = Models.Marker.getAllMarkers().toList();
         if (markers.isEmpty()) return;
@@ -140,6 +140,11 @@ public class WorldWaypointDistanceFeature extends Feature {
                     worldToScreen(new Vector3f(dx, dy, dz), projection),
                     marker.additionalText()));
         }
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        removeReachedWaypoints();
     }
 
     private void removeReachedWaypoints() {
