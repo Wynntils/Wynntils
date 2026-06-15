@@ -98,7 +98,8 @@ public class WorldWaypointDistanceFeature extends Feature {
         List<MarkerInfo> markers = Models.Marker.getAllMarkers().toList();
         if (markers.isEmpty()) return;
 
-        Position playerPosition = McUtils.player() == null ? null : McUtils.player().position();
+        Position playerPosition =
+                McUtils.player() == null ? null : McUtils.player().position();
 
         for (MarkerInfo marker : markers) {
             Location location = marker.location();
@@ -362,11 +363,7 @@ public class WorldWaypointDistanceFeature extends Feature {
 
         float dynamicOpacity = MathUtils.clamp(
                 MathUtils.map(
-                        (float) renderedMarker.playerDistance,
-                        autoRemoveDistance,
-                        autoRemoveDistance * 2f,
-                        0f,
-                        1f),
+                        (float) renderedMarker.playerDistance, autoRemoveDistance, autoRemoveDistance * 2f, 0f, 1f),
                 0f,
                 1f);
         return baseOpacity * dynamicOpacity;
