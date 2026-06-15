@@ -1741,6 +1741,8 @@
   "feature.wynntils.worldWaypointDistance.description": "Adds the ability to see the distance to your waypoint in the world.",
   "feature.wynntils.worldWaypointDistance.distanceOpacity.description": "What level of opacity should the waypoint display have?",
   "feature.wynntils.worldWaypointDistance.distanceOpacity.name": "Distance Opacity",
+  "feature.wynntils.worldWaypointDistance.dynamicDistanceOpacity.description": "Should the waypoint display fade as you approach the auto remove distance?",
+  "feature.wynntils.worldWaypointDistance.dynamicDistanceOpacity.name": "Dynamic Distance Opacity",
   "feature.wynntils.worldWaypointDistance.horizontalBoundingDistance.description": "How far should off-screen indicator be from two sides of the screen?",
   "feature.wynntils.worldWaypointDistance.horizontalBoundingDistance.name": "Side Indicator Distance",
   "feature.wynntils.worldWaypointDistance.maxWaypointTextDistance.description": "At what distance should the waypoint text stop rendering?",
