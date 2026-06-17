@@ -36,6 +36,7 @@ public enum MissionType {
     CHRONOKINESIS("Chronokinesis", ChatFormatting.GREEN),
     THRILL_SEEKER("Thrill Seeker", ChatFormatting.RED),
     KNIFE_EDGE("Knife Edge", ChatFormatting.RED),
+    KINGS_COURT("King's Court", ChatFormatting.RED),
     HIGH_ROLLER("High Roller", ChatFormatting.WHITE, 0, 1),
     REDEMPTION("Redemption", ChatFormatting.WHITE, 1, 0),
     COMPLETE_CHAOS("Complete Chaos", ChatFormatting.WHITE);
