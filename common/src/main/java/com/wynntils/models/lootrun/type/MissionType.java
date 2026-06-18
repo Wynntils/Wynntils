@@ -30,7 +30,7 @@ public enum MissionType {
     INNER_PEACE("Inner Peace", ChatFormatting.DARK_PURPLE),
     HIGH_SPIRITS("High Spirits", ChatFormatting.GOLD),
     BACKUP_BEAT("Backup Beat", ChatFormatting.GOLD),
-    BOLEZA_PURA("Boleza Pura", ChatFormatting.GOLD),
+    BELEZA_PURA("Beleza Pura", ChatFormatting.GOLD),
     REQUIEM("Requiem", ChatFormatting.GREEN),
     STASIS("Stasis", ChatFormatting.GREEN),
     CHRONOKINESIS("Chronokinesis", ChatFormatting.GREEN),
