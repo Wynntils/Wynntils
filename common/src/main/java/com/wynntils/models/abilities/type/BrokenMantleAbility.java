@@ -10,7 +10,7 @@ import com.wynntils.models.spells.type.SpellType;
 import java.util.Collection;
 import java.util.List;
 
-public class BrokenMantleAbility extends CastedAbilityType {
+public class BrokenMantleAbility extends CastedAbilityType implements ShieldAbilityProperty {
     private static final ClassType CLASS_TYPE = ClassType.WARRIOR;
     private static final SpellType SPELL_TYPE = SpellType.WAR_SCREAM;
     private static final String NAME = "Broken Mantle";
@@ -19,18 +19,8 @@ public class BrokenMantleAbility extends CastedAbilityType {
     private final MantleAbility mantleAbility;
 
     public BrokenMantleAbility(MantleAbility mantleAbility) {
-        super(CLASS_TYPE, SPELL_TYPE, null, NAME);
+        super(CLASS_TYPE, SPELL_TYPE, null, NAME, GROUP);
         this.mantleAbility = mantleAbility;
-    }
-
-    @Override
-    public boolean verifyCustomModelData(List<Float> modelIds) {
-        if (modelIds.isEmpty()) return false;
-
-        return modelIds.stream()
-                .allMatch(f -> Services.CustomModel.getGroup(f)
-                        .map(g -> g.equals(GROUP))
-                        .orElse(false));
     }
 
     @Override
@@ -49,11 +39,8 @@ public class BrokenMantleAbility extends CastedAbilityType {
     @Override
     public void onEntityRemoved(Collection<Integer> removedIds) {
         entityIds.removeAll(removedIds);
-        if (entityIds.isEmpty()) onCleared();
-    }
-
-    @Override
-    public boolean isShieldType() {
-        return true;
+        if (entityIds.isEmpty()) {
+            onCleared();
+        }
     }
 }

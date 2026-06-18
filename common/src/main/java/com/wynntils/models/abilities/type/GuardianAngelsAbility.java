@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class GuardianAngelsAbility extends CastedAbilityType {
+public class GuardianAngelsAbility extends CastedAbilityType implements ShieldAbilityProperty {
     private static final ClassType CLASS_TYPE = ClassType.ARCHER;
     private static final SpellType SPELL_TYPE = SpellType.ARROW_SHIELD;
     private static final String NAME = "Guardian Angels";
@@ -23,7 +23,7 @@ public class GuardianAngelsAbility extends CastedAbilityType {
     private String pendingGroup;
 
     public GuardianAngelsAbility() {
-        super(CLASS_TYPE, SPELL_TYPE, null, NAME);
+        super(CLASS_TYPE, SPELL_TYPE, null, NAME, null);
     }
 
     @Override
@@ -82,10 +82,5 @@ public class GuardianAngelsAbility extends CastedAbilityType {
     @Override
     public Set<Class<? extends CastedAbilityType>> getConflictingTypes() {
         return Set.of(ArrowShieldAbility.class);
-    }
-
-    @Override
-    public boolean isShieldType() {
-        return true;
     }
 }

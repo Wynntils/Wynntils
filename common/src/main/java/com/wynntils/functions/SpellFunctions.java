@@ -15,6 +15,7 @@ import com.wynntils.models.abilities.type.GuardianAngelsAbility;
 import com.wynntils.models.abilities.type.JudrajimAbility;
 import com.wynntils.models.abilities.type.MantleAbility;
 import com.wynntils.models.abilities.type.ShamanTotem;
+import com.wynntils.models.abilities.type.ShieldAbilityProperty;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
@@ -92,7 +93,7 @@ public class SpellFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             return Models.CastedAbility.getActiveAbilities().stream()
-                    .filter(CastedAbilityType::isShieldType)
+                    .filter(a -> a instanceof ShieldAbilityProperty)
                     .findFirst()
                     .map(CastedAbilityType::getName)
                     .orElse("");

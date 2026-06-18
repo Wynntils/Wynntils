@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.abilities;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
@@ -45,6 +46,7 @@ public final class CastedAbilityModel extends Model {
 
     private long lastCastTime = 0;
     private SpellType lastCastSpell;
+    private SpellType lastPartialSpell;
 
     public CastedAbilityModel() {
         super(List.of());
@@ -56,6 +58,8 @@ public final class CastedAbilityModel extends Model {
         lastCastTime = System.currentTimeMillis();
         lastCastSpell = event.getSpellType();
 
+        WynntilsMod.info("cast: " + lastCastSpell);
+
         for (int id : new HashSet<>(recentItemDisplayIds)) {
             processEntity(id, true);
         }
@@ -63,9 +67,10 @@ public final class CastedAbilityModel extends Model {
 
     @SubscribeEvent
     public void onSpellPartial(SpellEvent.Partial event) {
-        lastCastSpell =
+        lastPartialSpell =
                 SpellType.fromSpellDirectionArray(Models.Character.getClassType(), event.getSpellDirectionArray());
-        if (lastCastSpell == null) return;
+        if (lastPartialSpell == null) return;
+        WynntilsMod.info("partial: " + lastPartialSpell);
 
         lastCastTime = System.currentTimeMillis();
 
@@ -99,7 +104,7 @@ public final class CastedAbilityModel extends Model {
             if (type.isOutsideProximity(entity)) continue;
 
             if (withinCastWindow) {
-                if (!type.validSpell(lastCastSpell) && !type.validPartialSpell(lastCastSpell)) continue;
+                if (!type.validSpell(lastCastSpell) && !type.validPartialSpell(lastPartialSpell)) continue;
             } else {
                 if (!type.allowsOutOfWindowSpawn(modelIds)) continue;
             }

@@ -18,17 +18,7 @@ public class JudrajimAbility extends CastedAbilityType {
     private static final String GROUP = "Judrajim";
 
     public JudrajimAbility() {
-        super(CLASS_TYPE, null, PARTIAL_SPELL_TYPE, NAME);
-    }
-
-    @Override
-    public boolean verifyCustomModelData(List<Float> modelIds) {
-        if (modelIds.isEmpty()) return false;
-
-        return modelIds.stream()
-                .allMatch(f -> Services.CustomModel.getGroup(f)
-                        .map(g -> g.equals(GROUP))
-                        .orElse(false));
+        super(CLASS_TYPE, null, PARTIAL_SPELL_TYPE, NAME, GROUP);
     }
 
     /**

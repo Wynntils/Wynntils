@@ -6,6 +6,7 @@ package com.wynntils.models.abilities.type;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.utils.mc.McUtils;
@@ -20,19 +21,28 @@ public abstract class CastedAbilityType {
     private final SpellType validSpell;
     private final SpellType validPartialSpell;
     private final String name;
+    private final String group;
 
     protected Set<Integer> entityIds = new HashSet<>();
     protected final Set<Integer> pendingEntityIds = new HashSet<>();
     private boolean registrationScheduled = false;
 
-    protected CastedAbilityType(ClassType classType, SpellType spellType, SpellType partialSpellType, String name) {
+    protected CastedAbilityType(ClassType classType, SpellType spellType, SpellType partialSpellType, String name, String group) {
         this.validClass = classType;
         this.validSpell = spellType;
         this.validPartialSpell = partialSpellType;
         this.name = name;
+        this.group = group;
     }
 
-    public abstract boolean verifyCustomModelData(List<Float> modelIds);
+    public boolean verifyCustomModelData(List<Float> modelIds) {
+        if (modelIds.isEmpty()) return false;
+
+        return modelIds.stream()
+                .allMatch(f -> Services.CustomModel.getGroup(f)
+                        .map(g -> g.equals(group))
+                        .orElse(false));
+    }
 
     public String getName() {
         return name;
@@ -103,9 +113,5 @@ public abstract class CastedAbilityType {
 
     public Set<Class<? extends CastedAbilityType>> getConflictingTypes() {
         return Set.of();
-    }
-
-    public boolean isShieldType() {
-        return false;
     }
 }
