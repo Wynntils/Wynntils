@@ -58,8 +58,6 @@ public final class CastedAbilityModel extends Model {
         lastCastTime = System.currentTimeMillis();
         lastCastSpell = event.getSpellType();
 
-        WynntilsMod.info("cast: " + lastCastSpell);
-
         for (int id : new HashSet<>(recentItemDisplayIds)) {
             processEntity(id, true);
         }
@@ -70,7 +68,6 @@ public final class CastedAbilityModel extends Model {
         lastPartialSpell =
                 SpellType.fromSpellDirectionArray(Models.Character.getClassType(), event.getSpellDirectionArray());
         if (lastPartialSpell == null) return;
-        WynntilsMod.info("partial: " + lastPartialSpell);
 
         lastCastTime = System.currentTimeMillis();
 
