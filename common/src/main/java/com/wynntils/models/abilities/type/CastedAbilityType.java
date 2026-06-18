@@ -27,7 +27,8 @@ public abstract class CastedAbilityType {
     protected final Set<Integer> pendingEntityIds = new HashSet<>();
     private boolean registrationScheduled = false;
 
-    protected CastedAbilityType(ClassType classType, SpellType spellType, SpellType partialSpellType, String name, String group) {
+    protected CastedAbilityType(
+            ClassType classType, SpellType spellType, SpellType partialSpellType, String name, String group) {
         this.validClass = classType;
         this.validSpell = spellType;
         this.validPartialSpell = partialSpellType;

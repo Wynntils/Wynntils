@@ -4,7 +4,6 @@
  */
 package com.wynntils.models.abilities;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;

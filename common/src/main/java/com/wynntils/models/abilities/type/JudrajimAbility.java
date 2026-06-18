@@ -5,11 +5,9 @@
 package com.wynntils.models.abilities.type;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Services;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
 import java.util.Collection;
-import java.util.List;
 
 public class JudrajimAbility extends CastedAbilityType {
     private static final ClassType CLASS_TYPE = ClassType.MAGE;
