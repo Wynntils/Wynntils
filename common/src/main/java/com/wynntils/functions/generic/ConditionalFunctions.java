@@ -1,16 +1,18 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
 
 import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.AnyArgument;
+import com.wynntils.core.consumers.functions.arguments.AnyArgumentList;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
+import java.util.Objects;
 
 public class ConditionalFunctions {
     // NOTE: This class' generic type is only used in the superclass's getFunctionType() method.
@@ -92,6 +94,34 @@ public class ConditionalFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("if_color", "if_customcolor");
+        }
+    }
+
+    public static class SwitchCaseFunction extends GenericFunction<Object> {
+        @Override
+        public Object getValue(FunctionArguments arguments) {
+            Object toTest = arguments.getArgument("switch").getValue();
+            Object defaultVal = arguments.getArgument("default").getValue();
+            List<Object> cases = arguments.getArgument("cases").getObjectList();
+
+            if (cases.size() % 2 != 0) return null; // error not enough arguments
+            for (int i = 0; i < cases.size(); i += 2) {
+                if (toTest.getClass() != cases.get(i).getClass()) return null; // error not comparing the same items
+                if (defaultVal.getClass() != cases.get(i + 1).getClass()) return null; // not same return type as deflt
+                if (Objects.equals(toTest, cases.get(i))) return cases.get(i + 1);
+            }
+            return defaultVal;
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new AnyArgument("switch"), new AnyArgument("default"), new AnyArgumentList("cases")));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("switch");
         }
     }
 }
