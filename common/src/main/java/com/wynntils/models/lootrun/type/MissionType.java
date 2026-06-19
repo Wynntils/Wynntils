@@ -24,13 +24,13 @@ public enum MissionType {
     ROUTE_INDIGO("Route Indigo", ChatFormatting.BLUE),
     OSTINATO("Ostinato", ChatFormatting.BLUE),
     PORPHYROPHOBIA("Porphyrophobia", ChatFormatting.DARK_PURPLE),
-    SACRIFICIAL_RITUAL("Sacrificial Ritual", ChatFormatting.DARK_PURPLE),
     RADIANT_HUNTER("Radiant Hunter", ChatFormatting.DARK_PURPLE),
     EQUILIBRIUM("Equilibrium", ChatFormatting.DARK_PURPLE),
     INNER_PEACE("Inner Peace", ChatFormatting.DARK_PURPLE),
+    OPTIMISM("Optimism", ChatFormatting.GOLD),
     HIGH_SPIRITS("High Spirits", ChatFormatting.GOLD),
-    BACKUP_BEAT("Backup Beat", ChatFormatting.GOLD),
     BELEZA_PURA("Beleza Pura", ChatFormatting.GOLD),
+    BACKUP_BEAT("Backup Beat", ChatFormatting.GOLD),
     REQUIEM("Requiem", ChatFormatting.GREEN),
     STASIS("Stasis", ChatFormatting.GREEN),
     CHRONOKINESIS("Chronokinesis", ChatFormatting.GREEN),
@@ -39,6 +39,7 @@ public enum MissionType {
     KINGS_COURT("King's Court", ChatFormatting.RED),
     HIGH_ROLLER("High Roller", ChatFormatting.WHITE, 0, 1),
     REDEMPTION("Redemption", ChatFormatting.WHITE, 1, 0),
+    SACRIFICIAL_RITUAL("Sacrificial Ritual", ChatFormatting.WHITE),
     COMPLETE_CHAOS("Complete Chaos", ChatFormatting.WHITE);
 
     private final String name;
