@@ -104,10 +104,9 @@ public class ConditionalFunctions {
             Object defaultVal = arguments.getArgument("default").getValue();
             List<Object> cases = arguments.getArgument("cases").getObjectList();
 
-            if (cases.size() % 2 != 0) return null; // error not enough arguments
+            if (cases.size() % 2 != 0) return defaultVal; // error not enough arguments
             for (int i = 0; i < cases.size(); i += 2) {
-                if (toTest.getClass() != cases.get(i).getClass()) return null; // error not comparing the same items
-                if (defaultVal.getClass() != cases.get(i + 1).getClass()) return null; // not same return type as deflt
+                if (toTest.getClass() != cases.get(i).getClass()) return defaultVal; // error not comparing the same items
                 if (Objects.equals(toTest, cases.get(i))) return cases.get(i + 1);
             }
             return defaultVal;

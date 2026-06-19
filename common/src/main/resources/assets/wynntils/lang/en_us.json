@@ -2387,7 +2387,7 @@
   "function.wynntils.generic.subtract.description": "Subtracts the second number from the first number",
   "function.wynntils.generic.subtract.name": "Subtract",
   "function.wynntils.generic.switchCase.argument.cases": "List of values to test followed by the value to return if match. The size must be even and the architechure is as follow [toTest1, ifTrue1, toTest2, ifTrue2, ..., toTestN, ifTrueN]]",
-  "function.wynntils.generic.switchCase.argument.default": "Default value to return if no match is found",
+  "function.wynntils.generic.switchCase.argument.default": "Default value to return if no match is found. If toTestN is of a different type than `switch` or if the size of `cases` is not even this value is returned",
   "function.wynntils.generic.switchCase.argument.switch": "Base value to compare with the other elements of the list",
   "function.wynntils.generic.switchCase.description": "Compares the given base value with a list of given test values and returns the value associated to that test. If no match is found the default value is returned",
   "function.wynntils.generic.switchCase.name": "Switch Case",
