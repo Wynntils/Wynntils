@@ -382,6 +382,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new ConditionalFunctions.IfFunction());
         registerFunction(new ConditionalFunctions.IfNumberFunction());
         registerFunction(new ConditionalFunctions.IfStringFunction());
+        registerFunction(new ConditionalFunctions.SwitchCaseFunction());
 
         registerFunction(new LocationFunctions.DistanceFunction());
         registerFunction(new LocationFunctions.LocationFunction());
