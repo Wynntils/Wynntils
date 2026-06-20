@@ -8,8 +8,14 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.models.abilities.type.ArrowShieldAbility;
+import com.wynntils.models.abilities.type.BrokenMantleAbility;
+import com.wynntils.models.abilities.type.CastedAbilityType;
+import com.wynntils.models.abilities.type.GuardianAngelsAbility;
+import com.wynntils.models.abilities.type.JudrajimAbility;
+import com.wynntils.models.abilities.type.MantleAbility;
 import com.wynntils.models.abilities.type.ShamanTotem;
-import com.wynntils.models.abilities.type.ShieldType;
+import com.wynntils.models.abilities.type.ShieldAbilityProperty;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
@@ -24,7 +30,9 @@ public class SpellFunctions {
         public Integer getValue(FunctionArguments arguments) {
             if (Models.Character.getClassType() != ClassType.ARCHER) return 0;
 
-            return Models.Shield.getShieldCharge();
+            return Models.CastedAbility.getActiveAbility(ArrowShieldAbility.class)
+                    .map(ArrowShieldAbility::getCharge)
+                    .orElse(0);
         }
 
         @Override
@@ -38,7 +46,9 @@ public class SpellFunctions {
         public Integer getValue(FunctionArguments arguments) {
             if (Models.Character.getClassType() != ClassType.ARCHER) return 0;
 
-            return Models.Shield.getShieldCharge();
+            return Models.CastedAbility.getActiveAbility(GuardianAngelsAbility.class)
+                    .map(GuardianAngelsAbility::getCharge)
+                    .orElse(0);
         }
 
         @Override
@@ -52,7 +62,9 @@ public class SpellFunctions {
         public Integer getValue(FunctionArguments arguments) {
             if (Models.Character.getClassType() != ClassType.WARRIOR) return 0;
 
-            return Models.Shield.getShieldCharge();
+            return Models.CastedAbility.getActiveAbility(MantleAbility.class)
+                    .map(MantleAbility::getCharge)
+                    .orElse(0);
         }
 
         @Override
@@ -61,19 +73,47 @@ public class SpellFunctions {
         }
     }
 
+    public static class BrokenMantleShieldCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            if (Models.Character.getClassType() != ClassType.WARRIOR) return 0;
+
+            return Models.CastedAbility.getActiveAbility(BrokenMantleAbility.class)
+                    .map(BrokenMantleAbility::getCharge)
+                    .orElse(0);
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("broken_mantle_shield");
+        }
+    }
+
     public static class ShieldTypeNameFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            ShieldType shieldType = Models.Shield.getActiveShieldType();
-
-            if (shieldType == null) return "";
-
-            return shieldType.getName();
+            return Models.CastedAbility.getActiveAbilities().stream()
+                    .filter(a -> a instanceof ShieldAbilityProperty)
+                    .findFirst()
+                    .map(CastedAbilityType::getName)
+                    .orElse("");
         }
 
         @Override
         protected List<String> getAliases() {
             return List.of("shield_type");
+        }
+    }
+
+    public static class JudrajimActiveFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.CastedAbility.getActiveAbility(JudrajimAbility.class).isPresent();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("is_judrajim_active");
         }
     }
 
