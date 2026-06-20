@@ -115,7 +115,7 @@
   },
   {
     "id": "dataStaticAspects",
-    "md5": "10826b4a7c9ef99c9c4a96a787b668cc",
+    "md5": "ce76c435321e7bf744f4296fb09a83c1",
     "path": "Reference/aspects.json",
     "url": "https://cdn.wynntils.com/static/Reference/aspects.json"
   },
@@ -133,7 +133,7 @@
   },
   {
     "id": "dataStaticCombatLocations",
-    "md5": "fd9cbfa568fb10084bc52f862b97b0f2",
+    "md5": "ba56eb8a6f7bdbea8d59b4c66f495b66",
     "path": "Data-Storage/combat_locations.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/combat_locations.json"
   },
@@ -157,7 +157,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "7290bf97dfdd26d938fb2673c6992afe",
+    "md5": "47b282da308644a0c08a55334e0d2ec0",
     "path": "Reference/gear.json",
     "url": "https://cdn.wynntils.com/static/Reference/gear.json"
   },
@@ -199,7 +199,7 @@
   },
   {
     "id": "dataStaticItemDisplayModelData",
-    "md5": "8422357382ce61015140507281cf538f",
+    "md5": "d4e877eba858b1cdef5f8e56a6a4215e",
     "path": "Data-Storage/item_display_model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/item_display_model_data.json"
   },
@@ -241,7 +241,7 @@
   },
   {
     "id": "dataStaticMaps",
-    "md5": "a4ef527f7aa0314ab679a8493f1a4e0a",
+    "md5": "a4d19770c162b9222d46fa7ef4d27e5e",
     "path": "Reference/maps.json",
     "url": "https://cdn.wynntils.com/static/Reference/maps.json"
   },
@@ -301,7 +301,7 @@
   },
   {
     "id": "dataStaticServicesCrowdsourced",
-    "md5": "e8750040331b747650f1ed85ae55626e",
+    "md5": "65033f8a69248311aaff8004222a0be0",
     "path": "Data-Storage/services_crowdsourced.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/services_crowdsourced.json"
   },
@@ -325,7 +325,7 @@
   },
   {
     "id": "dataStaticTextureAndFingerprintHashes",
-    "md5": "ef5709e7388f7711915f098e50f9dd8b",
+    "md5": "89875964b0d6c10fefd64f70b1ef444e",
     "path": "Data-Storage/texture_and_fingerprint_hashes.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/texture_and_fingerprint_hashes.json"
   },

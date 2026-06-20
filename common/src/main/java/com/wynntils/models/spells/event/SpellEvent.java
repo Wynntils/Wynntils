@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.spells.event;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.spells.type.SpellFailureReason;
 import com.wynntils.models.spells.type.SpellType;
@@ -37,6 +38,23 @@ public abstract class SpellEvent extends Event {
     public static final class Expired extends Casting {
         public Expired() {
             super(SpellDirection.NO_SPELL);
+        }
+    }
+
+    /**
+     * Fired when 3 spell inputs have been registered, no failure reason was detected in chat,
+     * and no spell cast actionbar message has appeared.
+     */
+    public static final class Unconfirmed extends Casting {
+        public Unconfirmed(SpellDirection[] spellDirectionArray) {
+            super(spellDirectionArray);
+        }
+
+        public SpellType getSpellType() {
+            SpellDirection[] spellDirectionArray = getSpellDirectionArray();
+            if (spellDirectionArray.length != 3) return null;
+
+            return SpellType.fromSpellDirectionArray(Models.Character.getClassType(), spellDirectionArray);
         }
     }
 

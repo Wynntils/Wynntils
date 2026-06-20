@@ -243,9 +243,10 @@ public final class SpellModel extends Model {
                 WynntilsMod.postEvent(new SpellEvent.Failed(failureReason));
                 failureReason = null;
             } else {
-                // This can happen in cases where even though the inputs were sent, something else is blocking
-                // the cast such as archer casting escape again before touching the ground
-                WynntilsMod.postEvent(new SpellEvent.Failed(SpellFailureReason.UNAVAILABLE));
+                // This can happen either because something blocked the cast, for example, archer casting escape
+                // again before touching the ground, or because the cast actually succeeded but the spell
+                // doesn't produce a cast message like Judrajim or Mana Bank.
+                WynntilsMod.postEvent(new SpellEvent.Unconfirmed(lastSpell));
             }
         }
     }

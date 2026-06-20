@@ -4,25 +4,22 @@
  */
 package com.wynntils.models.abilities.type;
 
-import com.wynntils.core.components.Services;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
-import java.util.Optional;
+import java.util.Set;
 
-public class ArrowShield extends ShieldType {
+public class ArrowShieldAbility extends CastedAbilityType implements ShieldAbilityProperty {
     private static final ClassType CLASS_TYPE = ClassType.ARCHER;
     private static final SpellType SPELL_TYPE = SpellType.ARROW_SHIELD;
     private static final String NAME = "Arrow";
     private static final String GROUP = "Arrow Shield";
 
-    public ArrowShield() {
-        super(CLASS_TYPE, SPELL_TYPE, NAME);
+    public ArrowShieldAbility() {
+        super(CLASS_TYPE, SPELL_TYPE, null, NAME, GROUP);
     }
 
     @Override
-    protected boolean verifyCustomModelData(float customModelData) {
-        Optional<String> group = Services.CustomModel.getGroup(customModelData);
-
-        return group.isPresent() && group.get().equals(GROUP);
+    public Set<Class<? extends CastedAbilityType>> getConflictingTypes() {
+        return Set.of(GuardianAngelsAbility.class);
     }
 }
