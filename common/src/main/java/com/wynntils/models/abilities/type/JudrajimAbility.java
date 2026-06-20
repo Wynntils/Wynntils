@@ -4,17 +4,10 @@
  */
 package com.wynntils.models.abilities.type;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
-import com.wynntils.utils.mc.McUtils;
-import net.minecraft.world.entity.Display;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
-
 import java.util.Collection;
-import java.util.List;
 
 public class JudrajimAbility extends CastedAbilityType {
     private static final ClassType CLASS_TYPE = ClassType.MAGE;
