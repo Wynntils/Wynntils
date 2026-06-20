@@ -761,6 +761,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new SpellFunctions.ArrowShieldCountFunction());
         registerFunction(new SpellFunctions.GuardianAngelsCountFunction());
         registerFunction(new SpellFunctions.MantleShieldCountFunction());
+        registerFunction(new SpellFunctions.BrokenMantleShieldCountFunction());
         registerFunction(new SpellFunctions.ShamanMaskFunction());
         registerFunction(new SpellFunctions.ShamanTotemDistanceFunction());
         registerFunction(new SpellFunctions.ShamanTotemLocationFunction());
@@ -769,6 +770,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new SpellFunctions.ShamanTotemTransfusedAmountFunction());
         registerFunction(new SpellFunctions.ShamanTotemPoisonAmountFunction());
         registerFunction(new SpellFunctions.ShieldTypeNameFunction());
+        registerFunction(new SpellFunctions.JudrajimActiveFunction());
 
         registerFunction(new StatisticFunctions.StatisticsAverageFunction());
         registerFunction(new StatisticFunctions.StatisticsCountFunction());
