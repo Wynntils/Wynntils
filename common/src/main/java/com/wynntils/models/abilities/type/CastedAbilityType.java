@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.abilities.type;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -14,12 +15,16 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class CastedAbilityType {
     private final ClassType validClass;
     private final SpellType validSpell;
-    private final SpellType validPartialSpell;
+    private final SpellType validUnconfirmedSpell;
     private final String name;
     private final String group;
 
@@ -28,10 +33,10 @@ public abstract class CastedAbilityType {
     private boolean registrationScheduled = false;
 
     protected CastedAbilityType(
-            ClassType classType, SpellType spellType, SpellType partialSpellType, String name, String group) {
+            ClassType classType, SpellType spellType, SpellType unconfirmedSpellType, String name, String group) {
         this.validClass = classType;
         this.validSpell = spellType;
-        this.validPartialSpell = partialSpellType;
+        this.validUnconfirmedSpell = unconfirmedSpellType;
         this.name = name;
         this.group = group;
     }
@@ -53,8 +58,8 @@ public abstract class CastedAbilityType {
         return validSpell != null && spellType == validSpell;
     }
 
-    public boolean validPartialSpell(SpellType spellType) {
-        return validPartialSpell != null && spellType == validPartialSpell;
+    public boolean validUnconfirmedSpell(SpellType spellType) {
+        return validUnconfirmedSpell != null && spellType == validUnconfirmedSpell;
     }
 
     public boolean validClass() {
@@ -66,7 +71,25 @@ public abstract class CastedAbilityType {
     }
 
     public boolean isOutsideProximity(Entity entity) {
-        return entity.position().distanceTo(McUtils.player().position()) > 4.5;
+        Player player = McUtils.player();
+        Vec3 playerPos = player.position();
+        Vec3 entityPos = entity.position();
+        Vec3 playerVel = player.getDeltaMovement();
+
+        double dx = entityPos.x - playerPos.x;
+        double dy = entityPos.y - playerPos.y;
+        double dz = entityPos.z - playerPos.z;
+
+        double horizontalDist = Math.hypot(dx, dz);
+        double verticalDist = Math.abs(dy);
+
+        double horizontalSpeed = Math.hypot(playerVel.x, playerVel.z);
+        double verticalSpeed = Math.abs(playerVel.y);
+
+        double horizontalThreshold = 3.0 + horizontalSpeed * 4.5;
+        double verticalThreshold = 4.5 + verticalSpeed * 4.5;
+
+        return horizontalDist > horizontalThreshold || verticalDist > verticalThreshold;
     }
 
     public void onMatched(int entityId, List<Float> modelIds) {

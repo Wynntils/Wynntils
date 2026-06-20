@@ -45,7 +45,7 @@ public final class CastedAbilityModel extends Model {
 
     private long lastCastTime = 0;
     private SpellType lastCastSpell;
-    private SpellType lastPartialSpell;
+    private SpellType lastUnconfirmedSpell;
 
     public CastedAbilityModel() {
         super(List.of());
@@ -63,11 +63,8 @@ public final class CastedAbilityModel extends Model {
     }
 
     @SubscribeEvent
-    public void onSpellPartial(SpellEvent.Partial event) {
-        lastPartialSpell =
-                SpellType.fromSpellDirectionArray(Models.Character.getClassType(), event.getSpellDirectionArray());
-        if (lastPartialSpell == null) return;
-
+    public void onSpellUnconfirmed(SpellEvent.Unconfirmed event) {
+        lastUnconfirmedSpell = event.getSpellType();
         lastCastTime = System.currentTimeMillis();
 
         for (int id : new HashSet<>(recentItemDisplayIds)) {
@@ -100,7 +97,7 @@ public final class CastedAbilityModel extends Model {
             if (type.isOutsideProximity(entity)) continue;
 
             if (withinCastWindow) {
-                if (!type.validSpell(lastCastSpell) && !type.validPartialSpell(lastPartialSpell)) continue;
+                if (!type.validSpell(lastCastSpell) && !type.validUnconfirmedSpell(lastUnconfirmedSpell)) continue;
             } else {
                 if (!type.allowsOutOfWindowSpawn(modelIds)) continue;
             }

@@ -55,13 +55,12 @@ public class GuardianAngelsAbility extends CastedAbilityType implements ShieldAb
 
     @Override
     public void onMatched(int entityId, List<Float> modelIds) {
-        pendingEntityIds.add(entityId);
         pendingGroup = modelIds.stream()
                 .map(f -> Services.CustomModel.getGroup(f).orElse(null))
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
-        scheduleRegistration();
+        super.onMatched(entityId, modelIds);
     }
 
     @Override

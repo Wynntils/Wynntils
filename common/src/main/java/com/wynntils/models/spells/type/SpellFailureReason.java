@@ -18,8 +18,10 @@ public enum SpellFailureReason {
             Pattern.compile(
                     "§4(?:\uE008\uE002|\uE001) You have not unlocked this spell! Unlock it using your compass."),
             "You have not unlocked this spell!"),
-    // Used for when 3 spell inputs were parsed, but no failure reason is given
-    UNAVAILABLE(null, "");
+    MANA_BANK_EMPTY(
+            Pattern.compile(
+                    "§4(?:\uE008\uE002|\uE001) Your mana bank is empty!"),
+            "Your mana bank is empty!");
 
     private final Pattern pattern;
     private final String displayMessage;
