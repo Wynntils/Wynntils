@@ -4,7 +4,9 @@
  */
 package com.wynntils.models.abilitytree.parser;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.abilitytree.type.AbilityTreeConnectionType;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeLocation;
@@ -35,6 +37,7 @@ public class UnprocessedAbilityTreeInfo {
         nodeMap.put(AbilityTreeLocation.fromSlot(slot, page), node);
     }
 
+    //TODO: fix fromdamage it's a potion now
     private void addConnectionFromItem(ItemStack itemStack, int page, int slot) {
         connectionMap.put(
                 AbilityTreeLocation.fromSlot(slot, page),
@@ -47,7 +50,7 @@ public class UnprocessedAbilityTreeInfo {
             return;
         }
 
-        if (processConnections && Models.AbilityTree.ABILITY_TREE_PARSER.isConnectionItem(itemStack)) {
+        if (processConnections && Models.AbilityTree.ABILITY_TREE_PARSER.isConnectionItem(itemStack, slot)) {
             addConnectionFromItem(itemStack, page, slot);
         }
     }

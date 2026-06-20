@@ -23,7 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class AbilityTreeParser {
-    private static final Pattern NODE_NAME_PATTERN = Pattern.compile("§.(Unlock )?§l(.+)(§r§. ability)?");
+    private static final Pattern NODE_NAME_PATTERN = Pattern.compile("§(?:#[0-9a-fA-F]{8}|.)(Unlock )?§l(.+)(§r§. ability)?");
     private static final Pattern NODE_POINT_COST_PATTERN = Pattern.compile("§.. §7Ability Points: §f(\\d+)");
     private static final Pattern NODE_BLOCKS_ABILITY_PATTERN = Pattern.compile("§c- §7(.+)");
     private static final Pattern NODE_REQUIRED_ABILITY_PATTERN = Pattern.compile("§.. §7Required Ability: §f(.+)");
@@ -35,7 +35,7 @@ public final class AbilityTreeParser {
     private static final Pattern NODE_REQUIREMENT_NOT_MET = Pattern.compile("§cYou do not meet the requirements");
     private static final Pattern NODE_UNLOCKED = Pattern.compile("§eYou already unlocked this ability");
 
-    private static final StyledText CONNECTION_NAME = StyledText.fromString(" ");
+    private static final StyledText CONNECTION_NAME = StyledText.fromString("§{fr:minecraft:space}\uDB3F\uDFFF");
 
     public Pair<AbilityTreeSkillNode, AbilityTreeNodeState> parseNodeFromItem(
             ItemStack itemStack, int page, int slot, int id) {
@@ -170,13 +170,14 @@ public final class AbilityTreeParser {
 
     public boolean isNodeItem(ItemStack itemStack, int slot) {
         StyledText nameStyledText = StyledText.fromComponent(itemStack.getHoverName());
-        return itemStack.getItem() == Items.STONE_AXE
+        return itemStack.getItem() == Items.POTION
                 && slot < 54
                 && nameStyledText.getMatcher(NODE_NAME_PATTERN).matches();
     }
 
-    public boolean isConnectionItem(ItemStack itemStack) {
-        return itemStack.getItem() == Items.STONE_AXE
+    public boolean isConnectionItem(ItemStack itemStack, int slot) {
+        return itemStack.getItem() == Items.POTION
+                && slot < 54
                 && StyledText.fromComponent(itemStack.getHoverName()).equals(CONNECTION_NAME);
     }
 }

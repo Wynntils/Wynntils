@@ -12,10 +12,12 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.utils.mc.KeyboardUtils;
+import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.util.Locale;
@@ -42,6 +44,14 @@ public class AbilityTreeDataDumpFeature extends Feature {
         if (!KeyboardUtils.isShiftDown()) return;
 
         Optional<AbilityTreeItem> abilityTreeItem = Models.Item.asWynnItem(event.getItemStack(), AbilityTreeItem.class);
+
+        WynntilsMod.info("item: " + event.getItemStack());
+        WynntilsMod.info("Components: " + event.getItemStack().getComponents());
+        WynntilsMod.info("lore: " + LoreUtils.getLore(event.getItemStack()));
+        WynntilsMod.info("styledname: " + StyledText.fromComponent(event.getItemStack().getHoverName()));
+        WynntilsMod.info("name: " + event.getItemStack().getHoverName());
+        WynntilsMod.info("damageValue: " + event.getItemStack().getDamageValue());
+        WynntilsMod.info("currentContainerName: " + Models.Container.getCurrentContainer().getContainerName());
 
         if (abilityTreeItem.isEmpty()) return;
 

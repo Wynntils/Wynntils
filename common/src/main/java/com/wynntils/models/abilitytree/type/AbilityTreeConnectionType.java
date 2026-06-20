@@ -245,7 +245,7 @@ public enum AbilityTreeConnectionType {
     }
 
     private ItemStack generateItemStack(int damage) {
-        ItemStack itemStack = new ItemStack(Items.STONE_AXE);
+        ItemStack itemStack = new ItemStack(Items.POTION);
 
         itemStack.setDamageValue(damage);
 

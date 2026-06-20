@@ -4,6 +4,7 @@
  */
 package com.wynntils.handlers.container.scriptedquery;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ContainerQueryException;
@@ -51,8 +52,11 @@ public class QueryStep {
 
     public static QueryStep clickOnSlot(int slotNum) {
         return new QueryStep(container -> {
+            WynntilsMod.info("[QueryStep] clickOnSlot startAction firing, slot=" + slotNum
+                    + " containerId=" + container.containerId());
             ContainerUtils.clickOnSlot(
                     slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
+            WynntilsMod.info("[QueryStep] clickOnSlot ContainerUtils.clickOnSlot() call completed");
             return true;
         });
     }

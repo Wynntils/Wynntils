@@ -12,6 +12,8 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.handlers.container.type.ContainerContentChangeType;
+import com.wynntils.handlers.container.type.ContainerContentVerification;
 import com.wynntils.models.abilitytree.parser.UnprocessedAbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
@@ -49,6 +51,9 @@ public class AbilityTreeContainerQueries {
                 new AbilityTreeContainerQueries.AbilityPageSoftProcessor(Models.AbilityTree::setCurrentAbilityTree)));
     }
 
+    private static final ContainerContentVerification PAGE_NAVIGATION_VERIFICATION = (container, changes, changeType) ->
+            changeType == ContainerContentChangeType.SET_CONTENT || changeType == ContainerContentChangeType.SET_SLOT;
+
     private void queryAbilityTree(AbilityTreeProcessor processor) {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Ability Tree Query")
                 .onError(msg -> {
@@ -67,12 +72,14 @@ public class AbilityTreeContainerQueries {
                 .execute(() -> this.pageCount = 0)
                 .repeat(
                         c -> ScriptedContainerQuery.containerHasSlot(
-                                c, PREVIOUS_PAGE_SLOT, Items.STONE_AXE, PREVIOUS_PAGE_ITEM_NAME),
-                        QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT).processIncomingContainer(c -> {
-                            // Count how many times this is done, and save this value.
-                            // If we did not even enter here, we were already on first page.
-                            this.pageCount++;
-                        }))
+                                c, PREVIOUS_PAGE_SLOT, Items.POTION, PREVIOUS_PAGE_ITEM_NAME),
+                        QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT)
+                                .verifyContentChange(PAGE_NAVIGATION_VERIFICATION)
+                                .processIncomingContainer(c -> {
+                                    // Count how many times this is done, and save this value.
+                                    // If we did not even enter here, we were already on first page.
+                                    this.pageCount++;
+                                }))
 
                 // Process first page
                 .reprocess(processor::processPage)
@@ -80,8 +87,10 @@ public class AbilityTreeContainerQueries {
                 // Repeatedly go to next page, if any, and process it
                 .repeat(
                         c -> ScriptedContainerQuery.containerHasSlot(
-                                c, NEXT_PAGE_SLOT, Items.STONE_AXE, NEXT_PAGE_ITEM_NAME),
-                        QueryStep.clickOnSlot(NEXT_PAGE_SLOT).processIncomingContainer(processor::processPage))
+                                c, NEXT_PAGE_SLOT, Items.POTION, NEXT_PAGE_ITEM_NAME),
+                        QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
+                                .verifyContentChange(PAGE_NAVIGATION_VERIFICATION)
+                                .processIncomingContainer(processor::processPage))
 
                 // Go back to initial page
                 .repeat(
@@ -125,7 +134,7 @@ public class AbilityTreeContainerQueries {
             for (int slot = 0; slot < items.size(); slot++) {
                 ItemStack itemStack = items.get(slot);
 
-                unprocessedTree.processItem(itemStack, page, slot, true);
+                unprocessedTree.processItem(itemStack, page, slot, false);
             }
 
             if (page == Models.AbilityTree.ABILITY_TREE_PAGES) {
