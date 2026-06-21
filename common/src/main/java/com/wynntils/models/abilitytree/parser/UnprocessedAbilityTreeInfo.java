@@ -22,17 +22,10 @@ import java.util.Set;
 import net.minecraft.world.item.ItemStack;
 
 public class UnprocessedAbilityTreeInfo {
-    // The 3 directions we ever walk outward in (we never walk back "up" toward the root).
-    // Index order here matches the {location.right(), location.down(), location.left()} array below.
-
-    // For a given adjacent[i], this is the direction (relative to the CURRENT location) that points at it.
-    // Used to check "can the current connection piece extend toward adjacent[i]?"
     private static final int[] ADJACENT_DIRECTIONS = {
             AbilityTreeConnectionType.RIGHT, AbilityTreeConnectionType.DOWN, AbilityTreeConnectionType.LEFT
     };
 
-    // For a given adjacent[i], this is the direction (relative to THAT NEIGHBOR) that points back at the current
-    // location. Used to check "does the neighbor's own connection piece extend back toward us?"
     private static final int[] OPPOSITE_ADJACENT_DIRECTIONS = {
             AbilityTreeConnectionType.LEFT, AbilityTreeConnectionType.UP, AbilityTreeConnectionType.RIGHT
     };
