@@ -4,7 +4,6 @@
  */
 package com.wynntils.handlers.container.scriptedquery;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ContainerQueryException;
@@ -38,7 +37,6 @@ public final class ScriptedContainerQuery implements ContainerQueryStep {
     public static boolean containerHasSlot(
             ContainerContent container, int slotNum, Item expectedItemType, StyledText expectedItemName) {
         ItemStack itemStack = container.items().get(slotNum);
-        WynntilsMod.info("hasSlot: num: " + slotNum + " itemType: " + expectedItemType + " expectedName: " + expectedItemName + " response: " + (itemStack.is(expectedItemType) && ItemUtils.getItemName(itemStack).equals(expectedItemName)));
         return itemStack.is(expectedItemType)
                 && ItemUtils.getItemName(itemStack).equals(expectedItemName);
     }
@@ -56,19 +54,13 @@ public final class ScriptedContainerQuery implements ContainerQueryStep {
 
     @Override
     public boolean verifyContainer(Class<? extends Container> containerType) {
-        boolean result = currentStep.getVerification().verify(containerType);
-        WynntilsMod.info("[ScriptedContainerQuery] verifyContainer containerType=" + containerType + " result=" + result);
-        return result;
+        return currentStep.getVerification().verify(containerType);
     }
 
     @Override
     public boolean verifyContentChange(
             ContainerContent container, Int2ObjectMap<ItemStack> changes, ContainerContentChangeType changeType) {
-        boolean result = currentStep.getContentVerification().verify(container, changes, changeType);
-        WynntilsMod.info("[ScriptedContainerQuery] verifyContentChange changeType=" + changeType
-                + " changedSlots=" + changes.keySet()
-                + " result=" + result);
-        return result;
+        return currentStep.getContentVerification().verify(container, changes, changeType);
     }
 
     @Override

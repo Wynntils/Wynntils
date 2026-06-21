@@ -9,6 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
@@ -35,6 +36,7 @@ public class AbilityTreeContainerQueries {
     private static final int ABILITY_TREE_SLOT = 9;
     private static final int PREVIOUS_PAGE_SLOT = 57;
     private static final int NEXT_PAGE_SLOT = 59;
+    private static final int BACK_BUTTON_SLOT = 63;
     private static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
     private static final StyledText PREVIOUS_PAGE_ITEM_NAME = StyledText.fromString("§7Previous Page");
     private int pageCount;
@@ -51,59 +53,57 @@ public class AbilityTreeContainerQueries {
                 new AbilityTreeContainerQueries.AbilityPageSoftProcessor(Models.AbilityTree::setCurrentAbilityTree)));
     }
 
-    private static final ContainerContentVerification PAGE_NAVIGATION_VERIFICATION = (container, changes, changeType) ->
-            changeType == ContainerContentChangeType.SET_CONTENT || changeType == ContainerContentChangeType.SET_SLOT;
-
-    private void queryAbilityTree(AbilityTreeProcessor processor) {
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Ability Tree Query")
-                .onError(msg -> {
-                    WynntilsMod.warn("Problem querying Ability Tree: " + msg);
-                    McUtils.sendErrorToClient("Dumping Ability Tree failed");
-                })
-
-                // Open character/compass menu
-                .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                        .expectContainer(CharacterInfoContainer.class))
-
-                // Open ability menu
-                .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT).expectContainer(AbilityTreeContainer.class))
-
-                // Go to first page, and save current page number
-                .execute(() -> this.pageCount = 0)
-                .repeat(
-                        c -> ScriptedContainerQuery.containerHasSlot(
-                                c, PREVIOUS_PAGE_SLOT, Items.POTION, PREVIOUS_PAGE_ITEM_NAME),
-                        QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT)
-                                .verifyContentChange(PAGE_NAVIGATION_VERIFICATION)
-                                .processIncomingContainer(c -> {
-                                    // Count how many times this is done, and save this value.
-                                    // If we did not even enter here, we were already on first page.
-                                    this.pageCount++;
-                                }))
-
-                // Process first page
-                .reprocess(processor::processPage)
-
-                // Repeatedly go to next page, if any, and process it
-                .repeat(
-                        c -> ScriptedContainerQuery.containerHasSlot(
-                                c, NEXT_PAGE_SLOT, Items.POTION, NEXT_PAGE_ITEM_NAME),
-                        QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
-                                .verifyContentChange(PAGE_NAVIGATION_VERIFICATION)
-                                .processIncomingContainer(processor::processPage))
-
-                // Go back to initial page
-                .repeat(
-                        c -> {
-                            // Go back as many pages as the original count was from the end
-                            this.pageCount++;
-                            return this.pageCount != Models.AbilityTree.ABILITY_TREE_PAGES;
-                        },
-                        QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT))
-                .build();
-
-        query.executeQuery();
+    private ContainerContentVerification getPageNavigationChangeVerification() {
+        return (container, changes, changeType) -> {
+            // Check if the next or previous page item changed
+            return changeType == ContainerContentChangeType.SET_SLOT
+                    && (changes.containsKey(PREVIOUS_PAGE_SLOT) || changes.containsKey(NEXT_PAGE_SLOT));
+        };
     }
+
+    private void queryAbilityTree(AbilityTreeProcessor processor) {        QueryBuilder builder = ScriptedContainerQuery.builder("Ability Tree Navigation Debug")
+            .onError(msg -> WynntilsMod.warn("[AbilityTreeDebug] Query failed: " + msg))
+
+            // Open character/compass menu
+            .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
+                    .expectContainer(CharacterInfoContainer.class))
+
+            // Open ability menu
+            .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT).expectContainer(AbilityTreeContainer.class))
+
+            .execute(() -> WynntilsMod.info("[AbilityTreeDebug] start"))
+            .execute(() -> this.pageCount = 0)
+            .repeat(
+                    c -> ScriptedContainerQuery.containerHasSlot(
+                            c, PREVIOUS_PAGE_SLOT, Items.POTION, PREVIOUS_PAGE_ITEM_NAME),
+                    QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT)
+                            .verifyContentChange(getPageNavigationChangeVerification())
+                            .expectContainer(AbilityTreeContainer.class)
+                            .processIncomingContainer(c -> {
+                                WynntilsMod.info("[AbilityTreeDebug] going backwards.");
+                            }));
+
+        //process first item
+        builder.then(QueryStep.clickOnSlot(BACK_BUTTON_SLOT).expectContainer(CharacterInfoContainer.class))
+                .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT).expectContainer(AbilityTreeContainer.class))
+                .reprocess(processor::processPage)
+                .execute(() -> this.pageCount++);
+
+        for (int page = 2; page <= Models.AbilityTree.ABILITY_TREE_PAGES; page++) {
+            builder.then(QueryStep.clickOnSlot(NEXT_PAGE_SLOT).verifyContentChange(getPageNavigationChangeVerification()).expectContainer(AbilityTreeContainer.class))
+                    .then(QueryStep.clickOnSlot(BACK_BUTTON_SLOT).expectContainer(CharacterInfoContainer.class))
+                    .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT).expectContainer(AbilityTreeContainer.class))
+                    .reprocess(processor::processPage)
+                    .execute(() -> this.pageCount++);
+        }
+
+        builder.execute(() -> WynntilsMod.info(
+                "[AbilityTreeDebug] Reached final page (" + this.pageCount + "), navigation complete"));
+        builder.build().executeQuery();
+    }
+
+
+
 
     private abstract static class AbilityTreeProcessor {
         private int page = 1;
