@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.abilitytree.parser;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.models.abilitytree.type.AbilityTreeLocation;

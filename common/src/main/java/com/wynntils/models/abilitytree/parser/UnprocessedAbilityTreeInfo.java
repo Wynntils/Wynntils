@@ -22,6 +22,21 @@ import java.util.Set;
 import net.minecraft.world.item.ItemStack;
 
 public class UnprocessedAbilityTreeInfo {
+    // The 3 directions we ever walk outward in (we never walk back "up" toward the root).
+    // Index order here matches the {location.right(), location.down(), location.left()} array below.
+
+    // For a given adjacent[i], this is the direction (relative to the CURRENT location) that points at it.
+    // Used to check "can the current connection piece extend toward adjacent[i]?"
+    private static final int[] ADJACENT_DIRECTIONS = {
+            AbilityTreeConnectionType.RIGHT, AbilityTreeConnectionType.DOWN, AbilityTreeConnectionType.LEFT
+    };
+
+    // For a given adjacent[i], this is the direction (relative to THAT NEIGHBOR) that points back at the current
+    // location. Used to check "does the neighbor's own connection piece extend back toward us?"
+    private static final int[] OPPOSITE_ADJACENT_DIRECTIONS = {
+            AbilityTreeConnectionType.LEFT, AbilityTreeConnectionType.UP, AbilityTreeConnectionType.RIGHT
+    };
+
     private final List<AbilityTreeSkillNode> nodes = new ArrayList<>();
 
     private final Map<AbilityTreeLocation, AbilityTreeConnectionType> connectionMap = new HashMap<>();
@@ -37,11 +52,15 @@ public class UnprocessedAbilityTreeInfo {
         nodeMap.put(AbilityTreeLocation.fromSlot(slot, page), node);
     }
 
-    //TODO: fix fromdamage it's a potion now
     private void addConnectionFromItem(ItemStack itemStack, int page, int slot) {
-        connectionMap.put(
-                AbilityTreeLocation.fromSlot(slot, page),
-                AbilityTreeConnectionType.fromDamage(itemStack.getDamageValue()));
+        AbilityTreeConnectionType connectionType = AbilityTreeConnectionType.fromItemStack(itemStack);
+
+        if (connectionType == null) {
+            WynntilsMod.warn("Could not resolve AbilityTreeConnectionType for item: " + itemStack);
+            return;
+        }
+
+        connectionMap.put(AbilityTreeLocation.fromSlot(slot, page), connectionType);
     }
 
     public void processItem(ItemStack itemStack, int page, int slot, boolean processConnections) {
@@ -106,7 +125,7 @@ public class UnprocessedAbilityTreeInfo {
                 adjacentConnections = adjacentConnections.stream()
                         .filter(location -> {
                             AbilityTreeConnectionType type = connectionMap.getOrDefault(location, null);
-                            return type.isCompatible(AbilityTreeConnectionType.VERTICAL);
+                            return type != null && type.isCompatible(AbilityTreeConnectionType.VERTICAL);
                         })
                         .toList();
 
@@ -160,7 +179,7 @@ public class UnprocessedAbilityTreeInfo {
                 AbilityTreeLocation adjacentLocation = adjacent[i];
                 if (connectionMap.containsKey(adjacentLocation)) {
                     AbilityTreeConnectionType connection = connectionMap.get(adjacentLocation);
-                    if (!connection.getPossibleDirections()[(i + 3) % 4]) continue;
+                    if (!connection.getPossibleDirections()[OPPOSITE_ADJACENT_DIRECTIONS[i]]) continue;
 
                     locations.add(adjacentLocation);
                 }
@@ -172,7 +191,7 @@ public class UnprocessedAbilityTreeInfo {
         boolean[] possibleDirections = connectionType.getPossibleDirections();
 
         for (int i = 0; i < adjacent.length; i++) {
-            if (!possibleDirections[i + 1]) continue;
+            if (!possibleDirections[ADJACENT_DIRECTIONS[i]]) continue;
 
             AbilityTreeLocation adjacentLocation = adjacent[i];
             if (connectionMap.containsKey(adjacentLocation)) {
@@ -192,7 +211,7 @@ public class UnprocessedAbilityTreeInfo {
         boolean[] possibleDirections = connectionType.getPossibleDirections();
 
         for (int i = 0; i < adjacent.length; i++) {
-            if (!possibleDirections[i + 1]) continue;
+            if (!possibleDirections[ADJACENT_DIRECTIONS[i]]) continue;
 
             AbilityTreeLocation adjacentLocation = adjacent[i];
             if (nodeMap.containsKey(adjacentLocation)) {

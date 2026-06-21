@@ -61,7 +61,8 @@ public class AbilityTreeContainerQueries {
         };
     }
 
-    private void queryAbilityTree(AbilityTreeProcessor processor) {        QueryBuilder builder = ScriptedContainerQuery.builder("Ability Tree Navigation Debug")
+    private void queryAbilityTree(AbilityTreeProcessor processor) {
+        QueryBuilder builder = ScriptedContainerQuery.builder("Ability Tree Navigation Debug")
             .onError(msg -> WynntilsMod.warn("[AbilityTreeDebug] Query failed: " + msg))
 
             // Open character/compass menu
@@ -134,7 +135,7 @@ public class AbilityTreeContainerQueries {
             for (int slot = 0; slot < items.size(); slot++) {
                 ItemStack itemStack = items.get(slot);
 
-                unprocessedTree.processItem(itemStack, page, slot, false);
+                unprocessedTree.processItem(itemStack, page, slot, true);
             }
 
             if (page == Models.AbilityTree.ABILITY_TREE_PAGES) {
