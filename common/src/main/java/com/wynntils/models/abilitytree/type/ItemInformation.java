@@ -4,20 +4,20 @@
  */
 package com.wynntils.models.abilitytree.type;
 
-public record ItemInformation(int itemId, int damage) {
-    public int getBlockedDamage() {
-        return damage + 3;
+public record ItemInformation(int itemId, float modelId) {
+    public float getLockedDamage() {
+        return modelId;
     }
 
-    public int getLockedDamage() {
-        return damage;
+    public float getUnlockableDamage() {
+        return modelId + 1;
     }
 
-    public int getUnlockableDamage() {
-        return damage + 1;
+    public float getBlockedDamage() {
+        return modelId + 2;
     }
 
-    public int getUnlockedDamage() {
-        return damage + 2;
+    public float getUnlockedDamage() {
+        return modelId + 3;
     }
 }

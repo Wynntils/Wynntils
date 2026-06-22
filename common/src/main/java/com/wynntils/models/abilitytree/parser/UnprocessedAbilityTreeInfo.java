@@ -4,9 +4,7 @@
  */
 package com.wynntils.models.abilitytree.parser;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.models.abilitytree.type.AbilityTreeConnectionType;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeLocation;
@@ -22,14 +20,6 @@ import java.util.Set;
 import net.minecraft.world.item.ItemStack;
 
 public class UnprocessedAbilityTreeInfo {
-    private static final int[] ADJACENT_DIRECTIONS = {
-            AbilityTreeConnectionType.RIGHT, AbilityTreeConnectionType.DOWN, AbilityTreeConnectionType.LEFT
-    };
-
-    private static final int[] OPPOSITE_ADJACENT_DIRECTIONS = {
-            AbilityTreeConnectionType.LEFT, AbilityTreeConnectionType.UP, AbilityTreeConnectionType.RIGHT
-    };
-
     private final List<AbilityTreeSkillNode> nodes = new ArrayList<>();
 
     private final Map<AbilityTreeLocation, AbilityTreeConnectionType> connectionMap = new HashMap<>();
@@ -46,14 +36,9 @@ public class UnprocessedAbilityTreeInfo {
     }
 
     private void addConnectionFromItem(ItemStack itemStack, int page, int slot) {
-        AbilityTreeConnectionType connectionType = AbilityTreeConnectionType.fromItemStack(itemStack);
-
-        if (connectionType == null) {
-            WynntilsMod.warn("Could not resolve AbilityTreeConnectionType for item: " + itemStack);
-            return;
-        }
-
-        connectionMap.put(AbilityTreeLocation.fromSlot(slot, page), connectionType);
+        connectionMap.put(
+                AbilityTreeLocation.fromSlot(slot, page),
+                AbilityTreeConnectionType.fromItemStack(itemStack));
     }
 
     public void processItem(ItemStack itemStack, int page, int slot, boolean processConnections) {
@@ -118,7 +103,7 @@ public class UnprocessedAbilityTreeInfo {
                 adjacentConnections = adjacentConnections.stream()
                         .filter(location -> {
                             AbilityTreeConnectionType type = connectionMap.getOrDefault(location, null);
-                            return type != null && type.isCompatible(AbilityTreeConnectionType.VERTICAL);
+                            return type.isCompatible(AbilityTreeConnectionType.VERTICAL);
                         })
                         .toList();
 
@@ -172,7 +157,7 @@ public class UnprocessedAbilityTreeInfo {
                 AbilityTreeLocation adjacentLocation = adjacent[i];
                 if (connectionMap.containsKey(adjacentLocation)) {
                     AbilityTreeConnectionType connection = connectionMap.get(adjacentLocation);
-                    if (!connection.getPossibleDirections()[OPPOSITE_ADJACENT_DIRECTIONS[i]]) continue;
+                    if (!connection.getPossibleDirections()[(i + 3) % 4]) continue;
 
                     locations.add(adjacentLocation);
                 }
@@ -184,7 +169,7 @@ public class UnprocessedAbilityTreeInfo {
         boolean[] possibleDirections = connectionType.getPossibleDirections();
 
         for (int i = 0; i < adjacent.length; i++) {
-            if (!possibleDirections[ADJACENT_DIRECTIONS[i]]) continue;
+            if (!possibleDirections[i + 1]) continue;
 
             AbilityTreeLocation adjacentLocation = adjacent[i];
             if (connectionMap.containsKey(adjacentLocation)) {
@@ -204,7 +189,7 @@ public class UnprocessedAbilityTreeInfo {
         boolean[] possibleDirections = connectionType.getPossibleDirections();
 
         for (int i = 0; i < adjacent.length; i++) {
-            if (!possibleDirections[ADJACENT_DIRECTIONS[i]]) continue;
+            if (!possibleDirections[i + 1]) continue;
 
             AbilityTreeLocation adjacentLocation = adjacent[i];
             if (nodeMap.containsKey(adjacentLocation)) {

@@ -19,18 +19,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class AbilityTreeParser {
-    private static final Pattern NODE_NAME_PATTERN = Pattern.compile("§(?:#[0-9a-fA-F]{8}|.)(Unlock )?§l(.+)(§r§. ability)?");
+    private static final Pattern NODE_NAME_PATTERN = Pattern.compile("§(?:#[0-9a-fA-F]{8}|.)(?:(Unlock )§(?:#[0-9a-fA-F]{8}|.))?§l(.+?)(?:§(?:#[0-9a-fA-F]{8}|.) ability)?$");
     private static final Pattern NODE_POINT_COST_PATTERN = Pattern.compile("§.. §7Ability Points: §f(\\d+)");
     private static final Pattern NODE_BLOCKS_ABILITY_PATTERN = Pattern.compile("§c- §7(.+)");
     private static final Pattern NODE_REQUIRED_ABILITY_PATTERN = Pattern.compile("§.. §7Required Ability: §f(.+)");
     private static final Pattern NODE_REQUIRED_ARCHETYPE_PATTERN =
             Pattern.compile("§.. §7Min (.+) Archetype: §.(\\d+)§7/(\\d+)");
-    private static final Pattern NODE_ARCHETYPE_PATTERN = Pattern.compile("§.§l(.+) Archetype");
+    private static final Pattern NODE_ARCHETYPE_PATTERN = Pattern.compile("§#[0-9a-fA-F]{8}§l(.+) Archetype");
     private static final Pattern NODE_BLOCKED_BY = Pattern.compile("§c§lBlocked by:");
     private static final Pattern NODE_BLOCKED = Pattern.compile("§cBlocked by another ability");
     private static final Pattern NODE_REQUIREMENT_NOT_MET = Pattern.compile("§cYou do not meet the requirements");
@@ -139,10 +141,10 @@ public final class AbilityTreeParser {
         ItemInformation itemInformation = new ItemInformation(
                 Item.getId(itemStack.getItem()),
                 switch (state) {
-                    case LOCKED -> itemStack.getDamageValue();
-                    case UNLOCKABLE -> itemStack.getDamageValue() - 1;
-                    case UNLOCKED -> itemStack.getDamageValue() - 2;
-                    case BLOCKED -> itemStack.getDamageValue() - 3;
+                    case LOCKED -> itemStack.get(DataComponents.CUSTOM_MODEL_DATA).floats().getFirst();
+                    case UNLOCKABLE -> itemStack.get(DataComponents.CUSTOM_MODEL_DATA).floats().getFirst() - 1;
+                    case BLOCKED -> itemStack.get(DataComponents.CUSTOM_MODEL_DATA).floats().getFirst() - 2;
+                    case UNLOCKED -> itemStack.get(DataComponents.CUSTOM_MODEL_DATA).floats().getFirst() - 3;
                 });
 
         // Remove empty lines from the end of the description

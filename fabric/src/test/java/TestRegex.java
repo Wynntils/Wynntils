@@ -132,6 +132,16 @@ public class TestRegex {
     }
 
     @Test
+    public void AbilityTreeAnnotator_NODE_NAME_PATTERN_PATTERN() {
+        PatternTester p = new PatternTester(AbilityTreeAnnotator.class, "NODE_NAME_PATTERN");
+        p.shouldMatch("§aUnlock §f§lCheaper Meteor§a ability");
+        p.shouldMatch("§#87dd47ff§lMeteor");
+        p.shouldMatch("§aUnlock §#f747c2ff§lManastorm§a ability");
+        p.shouldMatch("§#ff4545ff§lChaos Explosion");
+        p.shouldMatch("§#ffe14dff§lShooting Star");
+    }
+
+    @Test
     public void AbilityTreeContainer_TITLE_PATTERN() {
         PatternTester p = new PatternTester(AbilityTreeContainer.class, "TITLE_PATTERN");
         p.shouldMatch("\uDAFF\uDFEA\uE000");
