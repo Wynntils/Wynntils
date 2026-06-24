@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilitytree.parser;
@@ -9,9 +9,10 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.models.abilitytree.type.AbilityTreeLocation;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
+import com.wynntils.models.abilitytree.type.AbilityTreeNodeType;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.abilitytree.type.ArchetypeRequirement;
-import com.wynntils.models.abilitytree.type.ItemInformation;
+import com.wynntils.models.abilitytree.type.LoreParserState;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
@@ -19,32 +20,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class AbilityTreeParser {
-    private static final Pattern NODE_NAME_PATTERN = Pattern.compile("§(?:#[0-9a-fA-F]{8}|.)(?:(Unlock )§(?:#[0-9a-fA-F]{8}|.))?§l(.+?)(?:§(?:#[0-9a-fA-F]{8}|.) ability)?$");
+    private static final Pattern NODE_NAME_PATTERN = Pattern.compile(
+            "§(?:#[0-9a-fA-F]{8}|.)(?:(Unlock )§(?:#[0-9a-fA-F]{8}|.))?§l(.+?)(?:§(?:#[0-9a-fA-F]{8}|.) ability)?$");
     private static final Pattern NODE_POINT_COST_PATTERN = Pattern.compile("§.. §7Ability Points: §f(\\d+)");
-    private static final Pattern NODE_BLOCKS_ABILITY_PATTERN = Pattern.compile("§c- §7(.+)");
     private static final Pattern NODE_REQUIRED_ABILITY_PATTERN = Pattern.compile("§.. §7Required Ability: §f(.+)");
     private static final Pattern NODE_REQUIRED_ARCHETYPE_PATTERN =
             Pattern.compile("§.. §7Min (.+) Archetype: §.(\\d+)§7/(\\d+)");
     private static final Pattern NODE_ARCHETYPE_PATTERN = Pattern.compile("§#[0-9a-fA-F]{8}§l(.+) Archetype");
     private static final Pattern NODE_BLOCKED_BY = Pattern.compile("§c§lBlocked by:");
+    private static final Pattern NODE_BLOCKED_BY_ABILITY = Pattern.compile("§c- (.*)");
+    private static final Pattern NODE_UNLOCKING_WILL_BLOCK = Pattern.compile("§cUnlocking will block:");
+    private static final Pattern NODE_UNLOCKING_WILL_BLOCK_ABILITY = Pattern.compile("§c- §7(.*)");
     private static final Pattern NODE_BLOCKED = Pattern.compile("§cBlocked by another ability");
     private static final Pattern NODE_REQUIREMENT_NOT_MET = Pattern.compile("§cYou do not meet the requirements");
-    private static final Pattern NODE_UNLOCKED = Pattern.compile("§eYou already unlocked this ability");
+    private static final Pattern NODE_COMBAT_LEVEL = Pattern.compile("§.. §7Combat Lv. Min: §f(\\d{1,3})");
+    private static final Pattern NODE_CLICK_TO_UNLOCK = Pattern.compile("§f\uF000§a Click to unlock this ability");
 
     private static final StyledText CONNECTION_NAME = StyledText.fromString("§{fr:minecraft:space}\uDB3F\uDFFF");
+
+
 
     public Pair<AbilityTreeSkillNode, AbilityTreeNodeState> parseNodeFromItem(
             ItemStack itemStack, int page, int slot, int id) {
         StyledText nameStyledText = StyledText.fromComponent(itemStack.getHoverName());
 
-        AbilityTreeNodeState state = AbilityTreeNodeState.LOCKED;
+        AbilityTreeNodeType abilityTreeNodeType = AbilityTreeNodeType.fromItemStack(itemStack);
+        AbilityTreeNodeState state = abilityTreeNodeType.getState();
+
         StyledText actualName;
         if (nameStyledText.getPartCount() == 1) {
             actualName = nameStyledText;
@@ -57,30 +63,31 @@ public final class AbilityTreeParser {
 
                 return IterationDecision.CONTINUE;
             });
-            state = AbilityTreeNodeState.UNLOCKABLE;
         }
 
         List<StyledText> loreStyledText = LoreUtils.getLore(itemStack);
 
         int cost = 0;
-        List<String> blocks = new ArrayList<>();
+        List<String> blockedBy = new ArrayList<>();
+        List<String> willBlock = new ArrayList<>();
         String requiredAbility = null;
         ArchetypeRequirement requiredArchetype = null;
         String archetype = null;
+        int requiredLevel = 0;
 
         List<StyledText> includedLines = new ArrayList<>(loreStyledText);
 
+        LoreParserState currentSection = LoreParserState.NONE;
+
         for (StyledText text : loreStyledText) {
+            //if (actualName.getString(StyleType.NONE).equals("Ophanim")) WynntilsMod.info("text: " + text);
+
+
             Matcher matcher = text.getMatcher(NODE_POINT_COST_PATTERN);
             if (matcher.matches()) {
                 cost = Integer.parseInt(matcher.group(1));
                 includedLines.remove(text); // skip in description
-                continue;
-            }
-
-            matcher = text.getMatcher(NODE_BLOCKS_ABILITY_PATTERN);
-            if (matcher.matches()) {
-                blocks.add(matcher.group(1));
+                currentSection = LoreParserState.NONE;
                 continue;
             }
 
@@ -88,6 +95,7 @@ public final class AbilityTreeParser {
             if (matcher.matches()) {
                 requiredAbility = matcher.group(1);
                 includedLines.remove(text); // skip in description
+                currentSection = LoreParserState.NONE;
                 continue;
             }
 
@@ -95,57 +103,83 @@ public final class AbilityTreeParser {
             if (matcher.matches()) {
                 requiredArchetype = new ArchetypeRequirement(matcher.group(1), Integer.parseInt(matcher.group(3)));
                 includedLines.remove(text); // skip in description
+                currentSection = LoreParserState.NONE;
                 continue;
             }
 
             matcher = text.getMatcher(NODE_ARCHETYPE_PATTERN);
             if (matcher.matches()) {
                 archetype = matcher.group(1);
+                includedLines.remove(text); // skip in description
+                currentSection = LoreParserState.NONE;
                 continue;
             }
 
             matcher = text.getMatcher(NODE_BLOCKED);
             if (matcher.matches()) {
-                state = AbilityTreeNodeState.BLOCKED;
+                includedLines.remove(text); // skip in description
+                currentSection = LoreParserState.NONE;
                 continue;
             }
 
-            matcher = text.getMatcher(NODE_UNLOCKED);
+            matcher = text.getMatcher(NODE_COMBAT_LEVEL);
             if (matcher.matches()) {
-                state = AbilityTreeNodeState.UNLOCKED;
+                requiredLevel = Integer.parseInt(matcher.group(1));
+                includedLines.remove(text); // skip in description
+                currentSection = LoreParserState.NONE;
                 continue;
             }
-        }
 
-        if (state == AbilityTreeNodeState.UNLOCKABLE || state == AbilityTreeNodeState.UNLOCKED) {
-            // Skip empty line + "click here to unlock" / "unlocked already"
-            includedLines = includedLines.subList(0, includedLines.size() - 2);
-        } else if (state == AbilityTreeNodeState.BLOCKED) {
-            // Skip empty line + "blocked by another ability" + "blocked by list"
-            List<StyledText> tempList = new ArrayList<>();
-            for (StyledText text : includedLines) {
-                if (text.getMatcher(NODE_BLOCKED_BY).matches()) break;
-
-                tempList.add(text);
+            matcher = text.getMatcher(NODE_REQUIREMENT_NOT_MET);
+            if (matcher.matches()) {
+                includedLines.remove(text); // skip in description
+                currentSection = LoreParserState.NONE;
+                continue;
             }
 
-            // Skip final empty line
-            includedLines = tempList.subList(0, tempList.size() - 1);
-        } else if (state == AbilityTreeNodeState.LOCKED) {
-            // Skip empty line + "requirement not met"
-            if (includedLines.getLast().getMatcher(NODE_REQUIREMENT_NOT_MET).matches()) {
-                includedLines = includedLines.subList(0, includedLines.size() - 2);
+            matcher = text.getMatcher(NODE_CLICK_TO_UNLOCK);
+            if (matcher.matches()) {
+                includedLines.remove(text); // skip in description
+                currentSection = LoreParserState.NONE;
+                continue;
+            }
+
+            matcher = text.getMatcher(NODE_BLOCKED_BY);
+            if (matcher.matches()) {
+                currentSection = LoreParserState.BLOCKED_BY;
+                includedLines.remove(text); // skip in description
+                continue;
+            }
+
+            matcher = text.getMatcher(NODE_UNLOCKING_WILL_BLOCK);
+            if (matcher.matches()) {
+                currentSection = LoreParserState.UNLOCKING_WILL_BLOCK;
+                includedLines.remove(text); // skip in description
+                continue;
+            }
+
+            if (currentSection == LoreParserState.BLOCKED_BY) {
+                matcher = text.getMatcher(NODE_BLOCKED_BY_ABILITY);
+                if (matcher.matches()) {
+                    blockedBy.add(matcher.group(1));
+                    includedLines.remove(text); // skip in description
+                    continue;
+                } else {
+                    currentSection = LoreParserState.NONE;
+                }
+            }
+
+            if (currentSection == LoreParserState.UNLOCKING_WILL_BLOCK) {
+                matcher = text.getMatcher(NODE_UNLOCKING_WILL_BLOCK_ABILITY);
+                if (matcher.matches()) {
+                    willBlock.add(matcher.group(1));
+                    includedLines.remove(text); // skip in description
+                    continue;
+                } else {
+                    currentSection = LoreParserState.NONE;
+                }
             }
         }
-
-        ItemInformation itemInformation = new ItemInformation(
-                Item.getId(itemStack.getItem()),
-                switch (state) {
-                    case LOCKED -> itemStack.get(DataComponents.CUSTOM_MODEL_DATA).floats().getFirst();
-                    case UNLOCKABLE -> itemStack.get(DataComponents.CUSTOM_MODEL_DATA).floats().getFirst() - 1;
-                    case BLOCKED -> itemStack.get(DataComponents.CUSTOM_MODEL_DATA).floats().getFirst() - 2;
-                    case UNLOCKED -> itemStack.get(DataComponents.CUSTOM_MODEL_DATA).floats().getFirst() - 3;
-                });
 
         // Remove empty lines from the end of the description
         while (includedLines.getLast().getString(StyleType.NONE).isBlank()) {
@@ -156,14 +190,16 @@ public final class AbilityTreeParser {
                 id,
                 actualName.getString(StyleType.NONE),
                 actualName.getString(StyleType.DEFAULT),
+                abilityTreeNodeType,
                 includedLines.stream()
                         .map(styledText -> styledText.getString(StyleType.DEFAULT))
                         .toList(),
-                itemInformation,
                 cost,
-                blocks,
+                willBlock,
+                blockedBy,
                 requiredAbility,
                 requiredArchetype,
+                requiredLevel,
                 archetype,
                 AbilityTreeLocation.fromSlot(slot, page),
                 new ArrayList<>());
