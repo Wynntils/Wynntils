@@ -170,6 +170,8 @@ public enum Texture {
     EDIT_ICON("icons/generic/edit_icon.png", 6, 16),
     EDIT_NAME_ICON("icons/generic/edit_name_icon.png", 16, 16),
     FAVORITE_ICON("icons/generic/favorite_icon.png", 18, 18),
+    OPEN_EXTERNAL("icons/generic/open_external.png", 10, 10),
+    OPEN_EXTERNAL_HOVER("icons/generic/open_external_hover.png", 10, 10),
     HELP_ICON("icons/generic/help_icon.png", 10, 16),
     INFO("icons/generic/info.png", 25, 25),
     ITEM_LOCK("icons/generic/item_lock_icon.png", 16, 16),
@@ -361,6 +363,7 @@ public enum Texture {
     TERRITORY_ITEM_ALERT("territory_management/territory_alert.png", 16, 16),
     TERRITORY_SIDEBAR("territory_management/territory_sidebar.png", 20, 136),
     TERRITORY_LOADOUT("territory_management/territory_loadout.png", 16, 16),
+    // endregion
 
     // region UI Components
     BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1009),
