@@ -75,6 +75,16 @@ public enum AbilityCooldown {
         this.texture = texture;
     }
 
+    public static AbilityCooldown fromName(String name) {
+        for (AbilityCooldown cooldown : AbilityCooldown.values()) {
+            if (cooldown.getName().equalsIgnoreCase(name)) {
+                return cooldown;
+            }
+        }
+
+        return null;
+    }
+
     public static AbilityCooldown fromStatusEffect(StatusEffect statusEffect) {
         for (AbilityCooldown cooldown : AbilityCooldown.values()) {
             if (cooldown.getName().equalsIgnoreCase(statusEffect.getName().getStringWithoutFormatting())) {
