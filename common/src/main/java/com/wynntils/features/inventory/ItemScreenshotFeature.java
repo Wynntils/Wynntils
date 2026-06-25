@@ -54,8 +54,10 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositione
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.fog.FogRenderer;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -65,10 +67,11 @@ import org.joml.Vector2i;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemScreenshotFeature extends Feature {
-    // The 4, 4 offset is intentional, otherwise the tooltip will be rendered outside of the screen
+    // The 10, 10 offset is intentional, otherwise the tooltip will be rendered outside of the screen and won't
+    // include the background tooltip style
     private static final ClientTooltipPositioner NO_POSITIONER =
             (int screenWidth, int screenHeight, int mouseX, int mouseY, int tooltipWidth, int tooltipHeight) ->
-                    new Vector2i(4, 4);
+                    new Vector2i(10, 10);
 
     @RegisterKeyBind
     private final KeyBind itemScreenshotKeyBind = KeyBindDefinition.SCREENSHOT_ITEM.create(this::onInventoryPress);
@@ -95,11 +98,15 @@ public class ItemScreenshotFeature extends Feature {
         Screen screen = McUtils.screen();
         if (!(screen instanceof AbstractContainerScreen<?>)) return;
 
-        takeScreenshot(screen, screenshotSlot, e.getTooltips());
+        takeScreenshot(
+                screen,
+                screenshotSlot,
+                e.getTooltips(),
+                screenshotSlot.getItem().get(DataComponents.TOOLTIP_STYLE));
         screenshotSlot = null;
     }
 
-    private void takeScreenshot(Screen screen, Slot hoveredSlot, List<Component> itemTooltip) {
+    private void takeScreenshot(Screen screen, Slot hoveredSlot, List<Component> itemTooltip, Identifier tooltipStyle) {
         ItemStack itemStack = hoveredSlot.getItem();
         List<Component> tooltip = new ArrayList<>(itemTooltip);
         removeLoreTooltipLines(tooltip);
@@ -123,12 +130,16 @@ public class ItemScreenshotFeature extends Feature {
             height += 2 + (tooltip.size() - 1) * 10;
         }
 
+        // Extra padding for tooltip background style
+        width += 12;
+        height += 12;
+
         List<ClientTooltipComponent> tooltipToRender = tooltip.stream()
                 .map(Component::getVisualOrderText)
                 .map(ClientTooltipComponent::create)
                 .toList();
 
-        screenshotTooltip(screen, tooltipToRender, width, height).whenComplete((nativeImage, err) -> {
+        screenshotTooltip(screen, tooltipToRender, tooltipStyle, width, height).whenComplete((nativeImage, err) -> {
             if (err != null || nativeImage == null) {
                 WynntilsMod.error("Tooltip screenshot failed", err);
                 McUtils.sendErrorToClient(I18n.get("feature.wynntils.itemScreenshot.copy.error"));
@@ -144,7 +155,7 @@ public class ItemScreenshotFeature extends Feature {
      * Based on Isometric Renders <a href="https://github.com/gliscowo/isometric-renders"> code</a>.
      */
     private static CompletableFuture<NativeImage> screenshotTooltip(
-            Screen screen, List<ClientTooltipComponent> tooltip, int width, int height) {
+            Screen screen, List<ClientTooltipComponent> tooltip, Identifier tooltipStyle, int width, int height) {
         TextureTarget framebuffer = new TextureTarget("Wynntils Item Screenshot", width * 2, height * 2, true);
         RenderSystem.getDevice()
                 .createCommandEncoder()
@@ -174,7 +185,7 @@ public class ItemScreenshotFeature extends Feature {
 
         guiGraphics.pose().pushMatrix();
         guiGraphics.pose().scale(scalew, scaleh);
-        guiGraphics.renderTooltip(mc.font, tooltip, 0, 0, NO_POSITIONER, null);
+        guiGraphics.renderTooltip(mc.font, tooltip, 0, 0, NO_POSITIONER, tooltipStyle);
         guiGraphics.pose().popMatrix();
 
         bufferSource.endBatch();
