@@ -18,6 +18,10 @@ public interface ExternalConfigurationScreen {
         return Texture.OPEN_EXTERNAL_HOVER;
     }
 
+    default String getTranslationKey() {
+        return "externalConfigurationScreen";
+    }
+
     default Object[] getTranslationObjects() {
         return new Object[0];
     }
