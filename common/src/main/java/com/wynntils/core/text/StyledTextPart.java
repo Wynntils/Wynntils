@@ -428,13 +428,20 @@ public final class StyledTextPart {
         String textValue = this.text;
         String marginLeft = null;
 
-        // Reverse the margin-left encoding from fromJson()
-        if (textValue.startsWith("ÀÀÀÀ")) {
+        // Find margin characters, allowing for leading spaces
+        int marginStart = 0;
+        while (marginStart < textValue.length() && textValue.charAt(marginStart) == ' ') {
+            marginStart++;
+        }
+
+        String afterLeadingSpaces = textValue.substring(marginStart);
+
+        if (afterLeadingSpaces.startsWith("ÀÀÀÀ")) {
             marginLeft = "large";
-            textValue = textValue.substring(4);
-        } else if (textValue.startsWith("À")) {
+            textValue = textValue.substring(0, marginStart) + afterLeadingSpaces.substring(4);
+        } else if (afterLeadingSpaces.startsWith("À")) {
             marginLeft = "thin";
-            textValue = textValue.substring(1);
+            textValue = textValue.substring(0, marginStart) + afterLeadingSpaces.substring(1);
         }
 
         jsonObject.addProperty("text", textValue);
