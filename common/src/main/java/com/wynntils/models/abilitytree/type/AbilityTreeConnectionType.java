@@ -77,7 +77,7 @@ public enum AbilityTreeConnectionType {
             List.of(
                     Pair.of(VERTICAL, DOWN_RIGHT_TURN),
                     Pair.of(VERTICAL, UP_RIGHT_TURN),
-                    Pair.of(DOWN_LEFT_TURN, UP_LEFT_TURN))),
+                    Pair.of(DOWN_LEFT_TURN, UP_RIGHT_TURN))),
     THREE_WAY_DOWN(
             "abilityTree.branchThreeWayDown",
             Map.of(
@@ -101,7 +101,7 @@ public enum AbilityTreeConnectionType {
             List.of(
                     Pair.of(VERTICAL, DOWN_LEFT_TURN),
                     Pair.of(VERTICAL, UP_LEFT_TURN),
-                    Pair.of(DOWN_RIGHT_TURN, UP_RIGHT_TURN))),
+                    Pair.of(DOWN_RIGHT_TURN, UP_LEFT_TURN))),
 
     FOUR_WAY(
             "abilityTree.branchFourWay",
