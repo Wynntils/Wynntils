@@ -170,8 +170,6 @@ public enum Texture {
     EDIT_ICON("icons/generic/edit_icon.png", 6, 16),
     EDIT_NAME_ICON("icons/generic/edit_name_icon.png", 16, 16),
     FAVORITE_ICON("icons/generic/favorite_icon.png", 18, 18),
-    OPEN_EXTERNAL("icons/generic/open_external.png", 10, 10),
-    OPEN_EXTERNAL_HOVER("icons/generic/open_external_hover.png", 10, 10),
     HELP_ICON("icons/generic/help_icon.png", 10, 16),
     INFO("icons/generic/info.png", 25, 25),
     ITEM_LOCK("icons/generic/item_lock_icon.png", 16, 16),
@@ -193,12 +191,12 @@ public enum Texture {
 
     // Generic Offset
     ADD_ICON_OFFSET("icons/generic_offset/add_icon_offset.png", 14, 28),
-    BACK_ARROW_OFFSET("icons/generic_offset/back_arrow_icon_offset.png", 32, 9),
     BACKWARD_ARROW_OFFSET("icons/generic_offset/backward_arrow_icon_offset.png", 36, 10),
+    BACK_ARROW_OFFSET("icons/generic_offset/back_arrow_icon_offset.png", 32, 9),
     FORWARD_ARROW_OFFSET("icons/generic_offset/forward_arrow_icon_offset.png", 36, 10),
+    OPEN_EXTERNAL_OFFSET("icons/generic_offset/open_external_offset.png", 10, 20),
     RELOAD_ICON_OFFSET("icons/generic_offset/reload_icon_offset.png", 40, 20),
     REMOVE_ICON_OFFSET("icons/generic_offset/remove_icon_offset.png", 14, 28),
-    OPEN_EXTERNAL_OFFSET("icons/generic_offset/open_external_offset.png", 10, 20),
     SHARE_ICON_OFFSET("icons/generic_offset/share_icon_offset.png", 16, 28),
     SORT_ALPHABETICALLY_OFFSET("icons/generic_offset/sort_alphabetical_icon_offset.png", 23, 46),
     SORT_DISTANCE_OFFSET("icons/generic_offset/sort_distance_icon_offset.png", 23, 46),
