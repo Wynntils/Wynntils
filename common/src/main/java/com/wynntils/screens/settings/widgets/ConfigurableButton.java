@@ -87,7 +87,6 @@ public class ConfigurableButton extends WynntilsButton {
                     10,
                     10,
                     ecs.getButtonTexture(),
-                    ecs.getHoverTexture(),
                     (b) -> McUtils.mc().setScreen(ecs.getExternalConfigurationScreen(settingsScreen)),
                     List.of(Component.literal("Open ecs"))));
             ecsTooltip = ComponentUtils.wrapTooltips(

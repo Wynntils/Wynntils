@@ -11,11 +11,7 @@ public interface ExternalConfigurationScreen {
     Screen getExternalConfigurationScreen(Screen previousScreen);
 
     default Texture getButtonTexture() {
-        return Texture.OPEN_EXTERNAL;
-    }
-
-    default Texture getHoverTexture() {
-        return Texture.OPEN_EXTERNAL_HOVER;
+        return Texture.OPEN_EXTERNAL_OFFSET;
     }
 
     default String getTranslationKey() {
