@@ -86,13 +86,7 @@ public enum AbilityCooldown {
     }
 
     public static AbilityCooldown fromStatusEffect(StatusEffect statusEffect) {
-        for (AbilityCooldown cooldown : AbilityCooldown.values()) {
-            if (cooldown.getName().equalsIgnoreCase(statusEffect.getName().getStringWithoutFormatting())) {
-                return cooldown;
-            }
-        }
-
-        return null;
+        return fromName(statusEffect.getName().getStringWithoutFormatting());
     }
 
     public String getName() {
