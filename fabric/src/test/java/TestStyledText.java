@@ -4,6 +4,7 @@
  */
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
@@ -1123,5 +1124,96 @@ public class TestStyledText {
                 original,
                 result,
                 "StyledText.toJson() did not roundtrip hex color correctly.");
+    }
+
+    @Test
+    public void styledText_toJson_shouldRoundtripRealDescription() {
+        String descriptionJson = """
+        {
+          "description": [
+            [
+              {"text": "Click Combo: ", "color": "#FFAA00"},
+              {"text": "RIGHT", "bold": true, "color": "#FF55FF"},
+              {"text": "-", "color": "#AAAAAA"},
+              {"text": "LEFT", "bold": true, "color": "#FF55FF"},
+              {"text": "-", "color": "#AAAAAA"},
+              {"text": "LEFT", "bold": true, "color": "#FF55FF"}
+            ],
+            [
+              {"text": " ", "color": "#AAAAAA"}
+            ],
+            [
+              {"text": "Conjures a slow but powerful meteor", "color": "#AAAAAA"}
+            ],
+            [
+              {"text": "from the sky, dealing massive", "color": "#AAAAAA"}
+            ],
+            [
+              {"text": "damage over a large area.", "color": "#AAAAAA"}
+            ],
+            [
+              {"text": " ", "color": "#AAAAAA"}
+            ],
+            [
+              {"text": "\uE007", "font": "common", "color": "#66E6FF"},
+              {"text": " ", "color": "#66E6FF"},
+              {"text": "Mana Cost: ", "color": "#AAAAAA"},
+              {"text": "50", "color": "#FFFFFF"}
+            ],
+            [
+              {"text": "\uE01B", "font": "common", "color": "#FF5555"},
+              {"text": " ", "color": "#FF5555"},
+              {"text": "Total Damage: ", "color": "#AAAAAA"},
+              {"text": "400% ", "color": "#FFFFFF"},
+              {"text": "(of your DPS)", "color": "#555555"}
+            ],
+            [
+              {"text": "  ÀÀÀÀ", "color": "#AAAAAA"},
+              {"text": "(", "color": "#555555"},
+              {"text": "\uE005", "font": "common", "color": "#FFAA00"},
+              {"text": " ", "color": "#FFAA00"},
+              {"text": "Damage: ", "color": "#555555"},
+              {"text": "330%", "color": "#555555"},
+              {"text": ")", "color": "#555555"}
+            ],
+            [
+              {"text": "  ÀÀÀÀ", "color": "#AAAAAA"},
+              {"text": "(", "color": "#555555"},
+              {"text": "\uE001", "font": "common", "color": "#00AA00"},
+              {"text": " ", "color": "#00AA00"},
+              {"text": "Earth: ", "color": "#555555"},
+              {"text": "70%", "color": "#555555"},
+              {"text": ")", "color": "#555555"}
+            ],
+            [
+              {"text": "\uE01C", "font": "common", "color": "#00AA00"},
+              {"text": " ", "color": "#00AA00"},
+              {"text": "Range: ", "color": "#AAAAAA"},
+              {"text": "18 Blocks", "color": "#FFFFFF"}
+            ],
+            [
+              {"text": "\uE01D", "font": "common", "color": "#00AAAA"},
+              {"text": " ", "color": "#00AAAA"},
+              {"text": "Area of Effect: ", "color": "#AAAAAA"},
+              {"text": "5 Blocks ", "color": "#FFFFFF"},
+              {"text": "(Circle-Shaped)", "color": "#AAAAAA"}
+            ]
+          ]
+        }
+        """;
+
+        JsonObject root = JsonParser.parseString(descriptionJson).getAsJsonObject();
+        JsonArray description = root.getAsJsonArray("description");
+
+        for (int i = 0; i < description.size(); i++) {
+            JsonArray line = description.get(i).getAsJsonArray();
+            StyledText styledText = StyledText.fromJson(line);
+            JsonArray result = styledText.toJson();
+
+            Assertions.assertEquals(
+                    line,
+                    result,
+                    "StyledText.toJson() did not roundtrip description line " + i + " correctly.");
+        }
     }
 }
