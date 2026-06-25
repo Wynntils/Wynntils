@@ -15,8 +15,7 @@ import com.wynntils.core.notifications.type.RedirectAction;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.core.text.type.StyleType;
-import com.wynntils.handlers.chat.event.ChatMessageEvent;
+import com.wynntils.models.abilities.event.AbilityCooldownRefreshedEvent;
 import com.wynntils.models.abilities.event.AbilityCooldownsUpdatedEvent;
 import com.wynntils.models.abilities.type.AbilityCooldown;
 import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
@@ -28,11 +27,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
@@ -40,12 +35,6 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOverlay.AbilityCooldownOverlay> {
-    private static final Pattern REFRESH_PATTERN = Pattern.compile("\\[⬤\\] (.+) has been refreshed!");
-
-    // Stores interpolated cooldown times
-    private final Map<AbilityCooldown, Float> interpolatedCooldowns = new HashMap<>();
-    private final Map<AbilityCooldown, Long> lastTickNanosMap = new HashMap<>();
-
     @Persisted
     private final Config<Boolean> removeStatusEffect = new Config<>(true);
 
@@ -85,14 +74,8 @@ public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOv
     @SubscribeEvent
     public void onAbilityCooldownsUpdate(AbilityCooldownsUpdatedEvent event) {
         this.clearChildren();
-        Set<AbilityCooldown> newCooldowns = event.getCooldowns();
-        interpolatedCooldowns.keySet().removeIf(cooldown -> !newCooldowns.contains(cooldown));
-        lastTickNanosMap.keySet().removeIf(cooldown -> !newCooldowns.contains(cooldown));
-
-        for (AbilityCooldown cooldown : newCooldowns) {
+        for (AbilityCooldown cooldown : event.getCooldowns()) {
             this.addChild(new AbilityCooldownOverlay(cooldown));
-            interpolatedCooldowns.putIfAbsent(cooldown, cooldown.getServerRemainingSeconds());
-            lastTickNanosMap.putIfAbsent(cooldown, System.nanoTime());
         }
     }
 
@@ -108,20 +91,17 @@ public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOv
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onChat(ChatMessageEvent.Match event) {
+    public void onAbilityCooldownRefreshed(AbilityCooldownRefreshedEvent event) {
         if (redirectRefreshedMessages.get() == RedirectAction.KEEP) return;
 
-        if (event.getMessage().matches(REFRESH_PATTERN, StyleType.NONE)) {
-            event.cancelChat();
+        event.setCancelMessage(true);
 
-            if (redirectRefreshedMessages.get() == RedirectAction.REDIRECT) {
-                Managers.Notification.queueMessage(event.getMessage());
-            }
+        if (redirectRefreshedMessages.get() == RedirectAction.REDIRECT) {
+            Managers.Notification.queueMessage(event.getMessage());
         }
     }
 
     public final class AbilityCooldownOverlay extends Overlay {
-        private static final float COOLDOWN_EPSILON_SECONDS = 0.001f;
         private static final int COOLDOWN_TEXTURE_STAGES = 77;
         private static final int TEXTURES_PER_ROW = 11;
 
@@ -147,7 +127,7 @@ public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOv
             RenderUtils.drawTexturedRect(guiGraphics, Texture.COOLDOWN_BACKGROUND, renderX, renderY);
 
             float remainingSeconds = interpolateTime.get()
-                    ? interpolatedCooldowns.getOrDefault(cooldown, cooldown.getServerRemainingSeconds())
+                    ? Models.Ability.getInterpolatedCooldown(cooldown)
                     : cooldown.getServerRemainingSeconds();
 
             float maxSeconds = cooldown.getMaxSeconds();
@@ -198,43 +178,6 @@ public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOv
                             VerticalAlignment.BOTTOM,
                             textShadow.get(),
                             0.75f);
-        }
-
-        @Override
-        public void tick() {
-            if (!interpolateTime.get()) return;
-
-            long now = System.nanoTime();
-            long lastTickNanos = lastTickNanosMap.getOrDefault(cooldown, 0L);
-            if (lastTickNanos == 0L) {
-                interpolatedCooldowns.put(cooldown, cooldown.getServerRemainingSeconds());
-                lastTickNanosMap.put(cooldown, now);
-                return;
-            }
-
-            float dtSeconds = (now - lastTickNanos) / 1_000_000_000.0f;
-            lastTickNanosMap.put(cooldown, now);
-
-            dtSeconds = Mth.clamp(dtSeconds, 0.0f, 0.5f);
-
-            float server = cooldown.getServerRemainingSeconds();
-            float interpolated = interpolatedCooldowns.getOrDefault(cooldown, server);
-
-            // interpolate toward server value
-            interpolated -= dtSeconds;
-            interpolated = Math.max(0.0f, interpolated);
-
-            if (server > 0.0f) {
-                float floor = Math.max(0.0f, server - 1.0f + COOLDOWN_EPSILON_SECONDS);
-                if (interpolated < floor) {
-                    interpolated = floor;
-                }
-                if (interpolated > server) {
-                    interpolated = server;
-                }
-            }
-
-            interpolatedCooldowns.put(cooldown, interpolated);
         }
     }
 }
