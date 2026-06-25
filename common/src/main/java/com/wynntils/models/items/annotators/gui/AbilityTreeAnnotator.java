@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
@@ -16,7 +16,8 @@ import net.minecraft.world.item.ItemStack;
 public final class AbilityTreeAnnotator implements GuiItemAnnotator {
     // Deals with the ability tree button in the compass menu
     private static final StyledText COMPASS_ABILITY_POINTS_NAME = StyledText.fromString("§b§lAbility Tree");
-    private static final Pattern COMPASS_ABILITY_POINTS_PATTERN = Pattern.compile("^§b✦ Available Points: §f(\\d+)§7\\/(\\d+)$");
+    private static final Pattern COMPASS_ABILITY_POINTS_PATTERN =
+            Pattern.compile("^§b✦ Available Points: §f(\\d+)§7\\/(\\d+)$");
 
     // Deals with the reset button in the ability tree screen
     private static final StyledText TREE_ABILITY_POINTS_NAME = StyledText.fromString("§#82eff4ff§lAbility Points");

@@ -995,10 +995,7 @@ public class TestStyledText {
         StyledText styledText = StyledText.fromJson(original);
         JsonArray result = styledText.toJson();
 
-        Assertions.assertEquals(
-                original,
-                result,
-                "StyledText.toJson() did not roundtrip fromJson correctly.");
+        Assertions.assertEquals(original, result, "StyledText.toJson() did not roundtrip fromJson correctly.");
     }
 
     @Test
@@ -1014,9 +1011,7 @@ public class TestStyledText {
         JsonArray thinResult = thinText.toJson();
 
         Assertions.assertEquals(
-                thinJson,
-                thinResult,
-                "StyledText.toJson() did not roundtrip thin margin-left correctly.");
+                thinJson, thinResult, "StyledText.toJson() did not roundtrip thin margin-left correctly.");
 
         // Large margin
         JsonArray largeJson = new JsonArray();
@@ -1029,9 +1024,7 @@ public class TestStyledText {
         JsonArray largeResult = largeText.toJson();
 
         Assertions.assertEquals(
-                largeJson,
-                largeResult,
-                "StyledText.toJson() did not roundtrip large margin-left correctly.");
+                largeJson, largeResult, "StyledText.toJson() did not roundtrip large margin-left correctly.");
     }
 
     @Test
@@ -1046,13 +1039,9 @@ public class TestStyledText {
         JsonArray result = styledText.toJson();
 
         JsonObject resultObj = result.get(0).getAsJsonObject();
-        Assertions.assertFalse(
-                resultObj.has("font"),
-                "StyledText.toJson() should not include default font.");
+        Assertions.assertFalse(resultObj.has("font"), "StyledText.toJson() should not include default font.");
         Assertions.assertEquals(
-                "hello",
-                resultObj.get("text").getAsString(),
-                "Text should be preserved when default font is omitted.");
+                "hello", resultObj.get("text").getAsString(), "Text should be preserved when default font is omitted.");
     }
 
     @Test
@@ -1103,10 +1092,7 @@ public class TestStyledText {
         // Empty parts are filtered by the StyledText constructor
         JsonArray expected = new JsonArray();
 
-        Assertions.assertEquals(
-                expected,
-                result,
-                "StyledText.toJson() did not handle empty text correctly.");
+        Assertions.assertEquals(expected, result, "StyledText.toJson() did not handle empty text correctly.");
     }
 
     @Test
@@ -1120,10 +1106,7 @@ public class TestStyledText {
         StyledText styledText = StyledText.fromJson(original);
         JsonArray result = styledText.toJson();
 
-        Assertions.assertEquals(
-                original,
-                result,
-                "StyledText.toJson() did not roundtrip hex color correctly.");
+        Assertions.assertEquals(original, result, "StyledText.toJson() did not roundtrip hex color correctly.");
     }
 
     @Test
@@ -1351,9 +1334,7 @@ public class TestStyledText {
             JsonArray result = styledText.toJson();
 
             Assertions.assertEquals(
-                    line,
-                    result,
-                    "StyledText.toJson() did not roundtrip description line " + i + " correctly.");
+                    line, result, "StyledText.toJson() did not roundtrip description line " + i + " correctly.");
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilitytree.parser;
@@ -36,9 +36,7 @@ public class UnprocessedAbilityTreeInfo {
     }
 
     private void addConnectionFromItem(ItemStack itemStack, int page, int slot) {
-        connectionMap.put(
-                AbilityTreeLocation.fromSlot(slot, page),
-                AbilityTreeConnectionType.fromItemStack(itemStack));
+        connectionMap.put(AbilityTreeLocation.fromSlot(slot, page), AbilityTreeConnectionType.fromItemStack(itemStack));
     }
 
     public void processItem(ItemStack itemStack, int page, int slot, boolean processConnections) {

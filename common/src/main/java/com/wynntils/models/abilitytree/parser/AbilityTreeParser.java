@@ -5,7 +5,6 @@
 package com.wynntils.models.abilitytree.parser;
 
 import com.google.gson.JsonElement;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.models.abilitytree.type.AbilityTreeLocation;
@@ -42,8 +41,6 @@ public final class AbilityTreeParser {
     private static final Pattern NODE_CLICK_TO_UNLOCK = Pattern.compile("§f\uF000§a Click to unlock this ability");
 
     private static final StyledText CONNECTION_NAME = StyledText.fromString("§{fr:minecraft:space}\uDB3F\uDFFF");
-
-
 
     public Pair<AbilityTreeSkillNode, AbilityTreeNodeState> parseNodeFromItem(
             ItemStack itemStack, int page, int slot, int id) {
