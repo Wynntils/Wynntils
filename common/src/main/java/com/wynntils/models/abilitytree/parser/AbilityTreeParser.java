@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.abilitytree.parser;
 
+import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
@@ -190,6 +191,7 @@ public final class AbilityTreeParser {
                 abilityTreeNodeType,
                 includedLines.stream()
                         .map(StyledText::toJson)
+                        .map(JsonElement::toString)
                         .toList(),
                 cost,
                 willBlock,
