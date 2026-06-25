@@ -80,9 +80,6 @@ public final class AbilityTreeParser {
         LoreParserState currentSection = LoreParserState.NONE;
 
         for (StyledText text : loreStyledText) {
-            //if (actualName.getString(StyleType.NONE).equals("Ophanim")) WynntilsMod.info("text: " + text);
-
-
             Matcher matcher = text.getMatcher(NODE_POINT_COST_PATTERN);
             if (matcher.matches()) {
                 cost = Integer.parseInt(matcher.group(1));
@@ -192,7 +189,7 @@ public final class AbilityTreeParser {
                 actualName.getString(StyleType.DEFAULT),
                 abilityTreeNodeType,
                 includedLines.stream()
-                        .map(styledText -> styledText.getString(StyleType.DEFAULT))
+                        .map(StyledText::toJson)
                         .toList(),
                 cost,
                 willBlock,

@@ -2,6 +2,8 @@
  * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
@@ -969,5 +971,157 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 result, mappedText.getString(StyleType.DEFAULT), "StyledText.map() returned an unexpected value.");
+    }
+
+    @Test
+    public void styledText_toJson_shouldRoundtripFromJson() {
+        JsonArray original = new JsonArray();
+
+        JsonObject part1 = new JsonObject();
+        part1.addProperty("text", "Hello ");
+        part1.addProperty("bold", true);
+        part1.addProperty("color", "#FFAA00");
+        original.add(part1);
+
+        JsonObject part2 = new JsonObject();
+        part2.addProperty("text", "World");
+        part2.addProperty("italic", true);
+        part2.addProperty("underline", true);
+        part2.addProperty("strikethrough", true);
+        part2.addProperty("font", "common");
+        original.add(part2);
+
+        StyledText styledText = StyledText.fromJson(original);
+        JsonArray result = styledText.toJson();
+
+        Assertions.assertEquals(
+                original,
+                result,
+                "StyledText.toJson() did not roundtrip fromJson correctly.");
+    }
+
+    @Test
+    public void styledText_toJson_shouldRoundtripMarginLeft() {
+        // Thin margin
+        JsonArray thinJson = new JsonArray();
+        JsonObject thinObj = new JsonObject();
+        thinObj.addProperty("text", "indented");
+        thinObj.addProperty("margin-left", "thin");
+        thinJson.add(thinObj);
+
+        StyledText thinText = StyledText.fromJson(thinJson);
+        JsonArray thinResult = thinText.toJson();
+
+        Assertions.assertEquals(
+                thinJson,
+                thinResult,
+                "StyledText.toJson() did not roundtrip thin margin-left correctly.");
+
+        // Large margin
+        JsonArray largeJson = new JsonArray();
+        JsonObject largeObj = new JsonObject();
+        largeObj.addProperty("text", "indented");
+        largeObj.addProperty("margin-left", "large");
+        largeJson.add(largeObj);
+
+        StyledText largeText = StyledText.fromJson(largeJson);
+        JsonArray largeResult = largeText.toJson();
+
+        Assertions.assertEquals(
+                largeJson,
+                largeResult,
+                "StyledText.toJson() did not roundtrip large margin-left correctly.");
+    }
+
+    @Test
+    public void styledText_toJson_shouldOmitDefaultFont() {
+        JsonArray jsonArray = new JsonArray();
+        JsonObject obj = new JsonObject();
+        obj.addProperty("text", "hello");
+        obj.addProperty("font", "default");
+        jsonArray.add(obj);
+
+        StyledText styledText = StyledText.fromJson(jsonArray);
+        JsonArray result = styledText.toJson();
+
+        JsonObject resultObj = result.get(0).getAsJsonObject();
+        Assertions.assertFalse(
+                resultObj.has("font"),
+                "StyledText.toJson() should not include default font.");
+        Assertions.assertEquals(
+                "hello",
+                resultObj.get("text").getAsString(),
+                "Text should be preserved when default font is omitted.");
+    }
+
+    @Test
+    public void styledText_toJson_shouldRoundtripFromComponent() {
+        Component component = Component.literal("boldred")
+                .withStyle(ChatFormatting.BOLD)
+                .withStyle(ChatFormatting.RED)
+                .append(Component.literal("italic").withStyle(ChatFormatting.ITALIC))
+                .append(Component.literal("underline").withStyle(ChatFormatting.UNDERLINE));
+
+        StyledText original = StyledText.fromComponent(component);
+        JsonArray json = original.toJson();
+        StyledText roundtrip = StyledText.fromJson(json);
+
+        // Verify the JSON output is valid input for fromJson
+        Assertions.assertEquals(
+                original.getString(StyleType.DEFAULT),
+                roundtrip.getString(StyleType.DEFAULT),
+                "StyledText.toJson() output was not valid for fromJson roundtrip.");
+
+        // Verify the JSON structure explicitly
+        Assertions.assertEquals(3, json.size(), "Should have 3 parts.");
+
+        JsonObject first = json.get(0).getAsJsonObject();
+        Assertions.assertEquals("boldred", first.get("text").getAsString());
+        Assertions.assertTrue(first.get("bold").getAsBoolean());
+        Assertions.assertEquals("#FF5555", first.get("color").getAsString());
+
+        JsonObject second = json.get(1).getAsJsonObject();
+        Assertions.assertEquals("italic", second.get("text").getAsString());
+        Assertions.assertTrue(second.get("italic").getAsBoolean());
+
+        JsonObject third = json.get(2).getAsJsonObject();
+        Assertions.assertEquals("underline", third.get("text").getAsString());
+        Assertions.assertTrue(third.get("underline").getAsBoolean());
+    }
+
+    @Test
+    public void styledText_toJson_shouldHandleEmptyText() {
+        JsonArray original = new JsonArray();
+        JsonObject obj = new JsonObject();
+        obj.addProperty("text", "");
+        original.add(obj);
+
+        StyledText styledText = StyledText.fromJson(original);
+        JsonArray result = styledText.toJson();
+
+        // Empty parts are filtered by the StyledText constructor
+        JsonArray expected = new JsonArray();
+
+        Assertions.assertEquals(
+                expected,
+                result,
+                "StyledText.toJson() did not handle empty text correctly.");
+    }
+
+    @Test
+    public void styledText_toJson_shouldHandleHexColor() {
+        JsonArray original = new JsonArray();
+        JsonObject obj = new JsonObject();
+        obj.addProperty("text", "custom");
+        obj.addProperty("color", "#240C2A");
+        original.add(obj);
+
+        StyledText styledText = StyledText.fromJson(original);
+        JsonArray result = styledText.toJson();
+
+        Assertions.assertEquals(
+                original,
+                result,
+                "StyledText.toJson() did not roundtrip hex color correctly.");
     }
 }

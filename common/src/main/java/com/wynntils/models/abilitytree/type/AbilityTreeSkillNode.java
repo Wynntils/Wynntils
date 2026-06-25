@@ -12,7 +12,7 @@ public record AbilityTreeSkillNode(
         String name,
         String formattedName,
         AbilityTreeNodeType abilityTreeNodeType,
-        List<String> description,
+        List<com.google.gson.JsonArray> description,
         int cost,
         List<String> willBlock,
         List<String> blockedBy,
