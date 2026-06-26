@@ -22,11 +22,14 @@ import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -42,6 +45,7 @@ public final class CastedAbilityModel extends Model {
 
     private final Set<Integer> recentItemDisplayIds = new HashSet<>();
     private final Set<Integer> mainVehicleIds = new HashSet<>();
+    private final Map<Integer, List<Float>> itemDisplayModelIds = new HashMap<>();
 
     private long lastCastTime = 0;
     private SpellType lastCastSpell;
@@ -76,6 +80,8 @@ public final class CastedAbilityModel extends Model {
     public void onEntitySetData(SetEntityDataEvent event) {
         Entity entity = McUtils.mc().level.getEntity(event.getId());
         if (!(entity instanceof Display.ItemDisplay)) return;
+
+        updateItemDisplayModelIds(event);
 
         boolean withinCastWindow = isWithinCastWindow();
 
@@ -124,6 +130,7 @@ public final class CastedAbilityModel extends Model {
     @SubscribeEvent
     public void onEntityRemoved(RemoveEntitiesEvent event) {
         event.getEntityIds().forEach(mainVehicleIds::remove);
+        event.getEntityIds().forEach(itemDisplayModelIds::remove);
         abilityTypes.forEach(t -> t.onEntityRemoved(event.getEntityIds()));
     }
 
@@ -181,16 +188,23 @@ public final class CastedAbilityModel extends Model {
         abilityTypes.forEach(CastedAbilityType::onCleared);
         mainVehicleIds.clear();
         recentItemDisplayIds.clear();
+        itemDisplayModelIds.clear();
     }
 
     /**
      * Extracts the custom model data float from all item display passengers.
      */
-    private static List<Float> extractModelIdsFromPassengers(Entity entity) {
+    private List<Float> extractModelIdsFromPassengers(Entity entity) {
         List<Float> modelIds = new ArrayList<>();
 
         for (Entity passenger : entity.getPassengers()) {
             if (!(passenger instanceof Display.ItemDisplay passengerDisplay)) continue;
+
+            List<Float> cachedModelIds = itemDisplayModelIds.get(passenger.getId());
+            if (cachedModelIds != null) {
+                modelIds.addAll(cachedModelIds);
+                continue;
+            }
 
             ItemStack itemStack = passengerDisplay.getEntityData().get(Display.ItemDisplay.DATA_ITEM_STACK_ID);
             if (!itemStack.is(Items.OAK_BOAT)) continue;
@@ -202,6 +216,27 @@ public final class CastedAbilityModel extends Model {
         }
 
         return modelIds;
+    }
+
+    private void updateItemDisplayModelIds(SetEntityDataEvent event) {
+        for (SynchedEntityData.DataValue<?> packedItem : event.getPackedItems()) {
+            if (packedItem.id() != Display.ItemDisplay.DATA_ITEM_STACK_ID.id()) continue;
+
+            ItemStack itemStack = (ItemStack) packedItem.value();
+            if (!itemStack.is(Items.OAK_BOAT)) {
+                itemDisplayModelIds.remove(event.getId());
+                return;
+            }
+
+            CustomModelData customModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
+            if (customModelData == null || customModelData.floats().isEmpty()) {
+                itemDisplayModelIds.remove(event.getId());
+                return;
+            }
+
+            itemDisplayModelIds.put(event.getId(), List.copyOf(customModelData.floats()));
+            return;
+        }
     }
 
     private void registerAbilityTypes() {
