@@ -114,7 +114,7 @@ public class ChatTabsWidget extends AbstractWidget {
             return true;
         }
 
-        McUtils.setScreen(ChatTabEditingScreen.create(this.chatTab));
+        McUtils.setScreen(ChatTabEditingScreen.create(this.chatTab, parent.previousScreen));
         return true;
     }
 }
