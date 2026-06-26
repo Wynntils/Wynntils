@@ -13,8 +13,6 @@ import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
-import com.wynntils.handlers.container.type.ContainerContentChangeType;
-import com.wynntils.handlers.container.type.ContainerContentVerification;
 import com.wynntils.models.abilitytree.parser.UnprocessedAbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
