@@ -168,8 +168,8 @@ public final class ContainerQueryHandler extends Handler {
                     processContainer(currentContent);
                 } catch (Throwable t) {
                     McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
-                    raiseError(
-                            "Error while processing accumulated set slots for " + firstStepName + ": " + t.getMessage());
+                    raiseError("Error while processing accumulated set slots for " + firstStepName + ": "
+                            + t.getMessage());
                 } finally {
                     accumulatedChanges.clear();
                     setSlotAccumulationTicks = -1;

@@ -213,6 +213,8 @@ public final class AbilityTreeParser {
     public boolean isConnectionItem(ItemStack itemStack, int slot) {
         return itemStack.getItem() == Items.POTION
                 && slot < 54
-                && StyledText.fromComponent(itemStack.getHoverName()).getString().equals(CONNECTION_NAME.getString());
+                && StyledText.fromComponent(itemStack.getHoverName())
+                        .getString()
+                        .equals(CONNECTION_NAME.getString());
     }
 }

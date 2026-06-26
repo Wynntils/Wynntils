@@ -82,7 +82,6 @@ public class AbilityTreeContainerQueries {
                                 .processIncomingContainer(c -> {
                                     WynntilsMod.info("[AbilityTreeDebug] going backwards.");
                                 }))
-
                 .reprocess(processor::processPage)
                 .execute(() -> this.pageCount++);
 
