@@ -52,6 +52,8 @@ public final class ContainerQueryHandler extends Handler {
     private List<ItemStack> lastHandledItems = List.of();
     private int ticksRemaining;
     private int ticksUntilNextOperation = -1;
+    private int setSlotAccumulationTicks = -1;
+    private final Int2ObjectArrayMap<ItemStack> accumulatedChanges = new Int2ObjectArrayMap<>();
 
     public void runQuery(ContainerQueryStep firstStep) {
         if (currentStep != null) {
@@ -158,6 +160,25 @@ public final class ContainerQueryHandler extends Handler {
             return;
         }
 
+        if (setSlotAccumulationTicks >= 0) {
+            setSlotAccumulationTicks--;
+
+            if (setSlotAccumulationTicks == 0) {
+                try {
+                    processContainer(currentContent);
+                } catch (Throwable t) {
+                    McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
+                    raiseError(
+                            "Error while processing accumulated set slots for " + firstStepName + ": " + t.getMessage());
+                } finally {
+                    accumulatedChanges.clear();
+                    setSlotAccumulationTicks = -1;
+                }
+            }
+
+            return;
+        }
+
         ticksRemaining--;
 
         if (ticksRemaining <= 0) {
@@ -219,6 +240,12 @@ public final class ContainerQueryHandler extends Handler {
         // We already processed the current step and are waiting to execute it
         if (ticksUntilNextOperation >= 0) return;
 
+        // If we were accumulating set slot changes, a full content update overrides them
+        if (setSlotAccumulationTicks >= 0) {
+            accumulatedChanges.clear();
+            setSlotAccumulationTicks = -1;
+        }
+
         if (containerId == lastHandledContentId && ItemUtils.isItemListsEqual(e.getItems(), lastHandledItems)) {
             // After opening a new container, Wynncraft sometimes sends contents twice. Ignore this.
             e.setCanceled(true);
@@ -231,6 +258,16 @@ public final class ContainerQueryHandler extends Handler {
         currentContent =
                 new ContainerContent(ImmutableList.copyOf(e.getItems()), currentTitle, currentMenuType, containerId);
         resetTimer();
+
+        // If this step uses set slot accumulation, treat SET_CONTENT as the start of accumulation
+        // rather than processing immediately. The server often sends SET_CONTENT first with an
+        // incomplete snapshot, then patches it with a burst of SET_SLOT packets.
+        int accumulationTicks = currentStep.getSetSlotAccumulationTicks();
+        if (accumulationTicks > 0) {
+            setSlotAccumulationTicks = accumulationTicks;
+            e.setCanceled(true);
+            return;
+        }
 
         try {
             // Now actually process this container
@@ -281,12 +318,28 @@ public final class ContainerQueryHandler extends Handler {
         items.set(e.getSlot(), e.getItemStack());
         currentContent = new ContainerContent(ImmutableList.copyOf(items), currentTitle, currentMenuType, containerId);
 
+        // If we're already accumulating set slot changes, just add to the batch
+        if (setSlotAccumulationTicks >= 0) {
+            accumulatedChanges.put(e.getSlot(), e.getItemStack());
+            resetTimer();
+            e.setCanceled(true);
+            return;
+        }
+
+        // Check if this step wants delayed accumulation
+        int accumulationTicks = currentStep.getSetSlotAccumulationTicks();
+        if (accumulationTicks > 0) {
+            setSlotAccumulationTicks = accumulationTicks;
+            accumulatedChanges.put(e.getSlot(), e.getItemStack());
+            resetTimer();
+            e.setCanceled(true);
+            return;
+        }
+
         resetTimer();
 
         try {
-            // Now actually process this container
-
-            // Create a map of the changes
+            // Normal immediate processing (identical to old behavior)
             Int2ObjectArrayMap<ItemStack> changeMap = new Int2ObjectArrayMap<>();
             changeMap.put(e.getSlot(), e.getItemStack());
 
@@ -344,6 +397,8 @@ public final class ContainerQueryHandler extends Handler {
         currentStep = null;
         currentContent = null;
         ticksUntilNextOperation = -1;
+        setSlotAccumulationTicks = -1;
+        accumulatedChanges.clear();
     }
 
     private void resetTimer() {

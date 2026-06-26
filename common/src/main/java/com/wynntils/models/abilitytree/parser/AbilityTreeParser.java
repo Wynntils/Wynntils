@@ -40,7 +40,7 @@ public final class AbilityTreeParser {
     private static final Pattern NODE_COMBAT_LEVEL = Pattern.compile("§.. §7Combat Lv. Min: §f(\\d{1,3})");
     private static final Pattern NODE_CLICK_TO_UNLOCK = Pattern.compile("§f\uF000§a Click to unlock this ability");
 
-    private static final StyledText CONNECTION_NAME = StyledText.fromString("§{fr:minecraft:space}\uDB3F\uDFFF");
+    private static final StyledText CONNECTION_NAME = StyledText.fromString("\uDB3F\uDFFF");
 
     public Pair<AbilityTreeSkillNode, AbilityTreeNodeState> parseNodeFromItem(
             ItemStack itemStack, int page, int slot, int id) {
@@ -213,6 +213,6 @@ public final class AbilityTreeParser {
     public boolean isConnectionItem(ItemStack itemStack, int slot) {
         return itemStack.getItem() == Items.POTION
                 && slot < 54
-                && StyledText.fromComponent(itemStack.getHoverName()).equals(CONNECTION_NAME);
+                && StyledText.fromComponent(itemStack.getHoverName()).getString().equals(CONNECTION_NAME.getString());
     }
 }

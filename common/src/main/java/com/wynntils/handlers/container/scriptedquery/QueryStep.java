@@ -31,6 +31,7 @@ public class QueryStep {
     private ContainerVerification verification = EXPECT_SAME_MENU;
     private ContainerContentVerification contentVerification = WAIT_FOR_SET_CONTENT;
     private ContainerAction handleContent = IGNORE_INCOMING_CONTAINER;
+    private int setSlotAccumulationTicks = 0;
 
     protected QueryStep(ContainerPredicate startAction) {
         this.startAction = startAction;
@@ -41,6 +42,7 @@ public class QueryStep {
         this.verification = queryStep.verification;
         this.contentVerification = queryStep.contentVerification;
         this.handleContent = queryStep.handleContent;
+        this.setSlotAccumulationTicks = queryStep.setSlotAccumulationTicks;
     }
 
     // region Builder API actions
@@ -92,6 +94,11 @@ public class QueryStep {
         return this;
     }
 
+    public QueryStep accumulateSetSlotChanges(int ticks) {
+        this.setSlotAccumulationTicks = ticks;
+        return this;
+    }
+
     public QueryStep processIncomingContainer(ContainerAction action) {
         this.handleContent = action;
         return this;
@@ -107,6 +114,10 @@ public class QueryStep {
 
     ContainerContentVerification getContentVerification() {
         return contentVerification;
+    }
+
+    int getSetSlotAccumulationTicks() {
+        return setSlotAccumulationTicks;
     }
 
     ContainerAction getHandleContent() {
