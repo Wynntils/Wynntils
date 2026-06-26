@@ -260,8 +260,8 @@ public final class ContainerQueryHandler extends Handler {
         resetTimer();
 
         // If this step uses set slot accumulation, treat SET_CONTENT as the start of accumulation
-        // rather than processing immediately. The server often sends SET_CONTENT first with an
-        // incomplete snapshot, then patches it with a burst of SET_SLOT packets.
+        // rather than processing immediately. The server sometimes sends a SET_CONTENT packet
+        // from the previous page if the backround of the container changes.
         int accumulationTicks = currentStep.getSetSlotAccumulationTicks();
         if (accumulationTicks > 0) {
             setSlotAccumulationTicks = accumulationTicks;

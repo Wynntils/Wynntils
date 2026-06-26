@@ -53,14 +53,6 @@ public class AbilityTreeContainerQueries {
                 new AbilityTreeContainerQueries.AbilityPageSoftProcessor(Models.AbilityTree::setCurrentAbilityTree)));
     }
 
-    private ContainerContentVerification getPageNavigationChangeVerification() {
-        return (container, changes, changeType) -> {
-            // Check if the next or previous page item changed
-            return changeType == ContainerContentChangeType.SET_SLOT
-                    && (changes.containsKey(PREVIOUS_PAGE_SLOT) || changes.containsKey(NEXT_PAGE_SLOT));
-        };
-    }
-
     private void queryAbilityTree(AbilityTreeProcessor processor) {
         QueryBuilder builder = ScriptedContainerQuery.builder("Ability Tree Navigation Debug")
                 .onError(msg -> WynntilsMod.warn("[AbilityTreeDebug] Query failed: " + msg))
