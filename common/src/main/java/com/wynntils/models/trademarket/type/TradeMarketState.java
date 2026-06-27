@@ -15,7 +15,8 @@ public enum TradeMarketState {
     VIEWING_ORDER,
     SEARCH_CHAT_INPUT,
     AMOUNT_CHAT_INPUT,
-    PRICE_CHAT_INPUT;
+    PRICE_CHAT_INPUT,
+    REVEAL_ITEMS;
 
     public boolean isResults() {
         return this == DEFAULT_RESULTS || this == FILTERED_RESULTS;
