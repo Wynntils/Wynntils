@@ -176,7 +176,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         if (!isRenderThread()) return;
         if (!MixinHelper.onWynncraft()) return;
 
-        PlayerInfoUpdateEvent e = new PlayerInfoUpdateEvent(packet.entries(), packet.newEntries());
+        PlayerInfoUpdateEvent e = new PlayerInfoUpdateEvent(packet.actions(), packet.entries(), packet.newEntries());
         MixinHelper.post(e);
         if (e.getEntries() != packet.entries()) {
             ((ClientboundPlayerInfoUpdatePacketAccessor) packet).setEntries(e.getEntries());
