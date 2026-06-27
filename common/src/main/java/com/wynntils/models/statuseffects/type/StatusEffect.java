@@ -136,4 +136,17 @@ public class StatusEffect implements Comparable<StatusEffect> {
                 .compare(this.getModifier().getString(), effect.getModifier().getString())
                 .result();
     }
+
+    @Override
+    public String toString() {
+        return "StatusEffect{" + "fullName="
+                + fullName + ", name="
+                + name + ", modifier="
+                + modifier + ", modifierSuffix="
+                + modifierSuffix + ", modifierValue="
+                + modifierValue + ", duration="
+                + duration + ", displayedTime="
+                + displayedTime + ", prefix="
+                + prefix + '}';
+    }
 }
