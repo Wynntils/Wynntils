@@ -13,6 +13,7 @@ import com.wynntils.models.abilities.label.ArcherCrowParser;
 import com.wynntils.models.abilities.label.ArcherHoundParser;
 import com.wynntils.models.abilities.label.ArcherSnakeParser;
 import com.wynntils.models.abilities.label.ShamanTotemLabelParser;
+import com.wynntils.models.abilitytree.parser.AbilityTreeParser;
 import com.wynntils.models.account.AccountModel;
 import com.wynntils.models.activities.worldevents.WorldEventModel;
 import com.wynntils.models.bonustotems.label.BonusTotemLabelParser;
@@ -129,6 +130,16 @@ public class TestRegex {
         PatternTester p = new PatternTester(AbilityTreeAnnotator.class, "TREE_ABILITY_POINTS_PATTERN");
         p.shouldMatch("§b✦ Available Points: §f0§7/45");
         p.shouldMatch("§b✦ Available Points: §f15§7/45");
+    }
+
+    @Test
+    public void AbilityTreeAnnotator_NODE_NAME_PATTERN_PATTERN() {
+        PatternTester p = new PatternTester(AbilityTreeParser.class, "NODE_NAME_PATTERN");
+        p.shouldMatch("§aUnlock §f§lCheaper Meteor§a ability");
+        p.shouldMatch("§#87dd47ff§lMeteor");
+        p.shouldMatch("§aUnlock §#f747c2ff§lManastorm§a ability");
+        p.shouldMatch("§#ff4545ff§lChaos Explosion");
+        p.shouldMatch("§#ffe14dff§lShooting Star");
     }
 
     @Test

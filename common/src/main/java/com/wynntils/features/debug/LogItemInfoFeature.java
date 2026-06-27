@@ -20,10 +20,12 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.inventory.Slot;
@@ -71,11 +73,17 @@ public class LogItemInfoFeature extends Feature {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         String wynnItemDesc = wynnItemOpt.isPresent() ? wynnItemOpt.get().toString() : "<N/A>";
 
+        List<Float> cmd = List.of();
+        if (itemStack.has(DataComponents.CUSTOM_MODEL_DATA)) {
+            cmd = itemStack.get(DataComponents.CUSTOM_MODEL_DATA).floats();
+        }
+
         return "[Logging Item]\nName: "
                 + StyledText.fromComponent(itemStack.getHoverName()) + "\nLore:\n"
                 + StyledText.join("\n", LoreUtils.getLore(itemStack)) + "\nItem Type: "
                 + itemStack.getItem() + "\nDamage Value: "
-                + itemStack.getDamageValue() + "\nWynn Item: "
+                + itemStack.getDamageValue() + "\nCustom Model Data: "
+                + cmd + "\nWynn Item: "
                 + wynnItemDesc + "\nNBT: "
                 + itemStack.getComponentsPatch().toString().replace('§', '&') + "\nGlint: "
                 + itemStack.hasFoil();
