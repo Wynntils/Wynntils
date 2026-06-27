@@ -683,7 +683,7 @@
   "feature.wynntils.itemScreenshot.description": "Aggiunge la capacità di fare screenshot degli oggetti.",
   "feature.wynntils.itemScreenshot.name": "Screenshot Oggetti",
   "feature.wynntils.itemScreenshot.save.error": "Errore durante il salvataggio dello screenshot di %s in %s",
-  "feature.wynntils.itemScreenshot.save.message": "Screenshot di %s salvato in %s",
+  "feature.wynntils.itemScreenshot.save.message": "Screenshot di %s salvato: ",
   "feature.wynntils.itemScreenshot.saveToDisk.description": "Gli screenshot degli oggetti devono essere salvati su disco?",
   "feature.wynntils.itemScreenshot.saveToDisk.name": "Salva Screenshot degli Oggetti su Disco",
   "feature.wynntils.itemStatInfo.colorLerp.description": "La percentuale colorata per l'ID dell'oggetto deve variare in modo uniforme anziché tra livelli fissi?",

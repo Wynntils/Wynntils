@@ -683,7 +683,7 @@
   "feature.wynntils.itemScreenshot.description": "Adiciona a capacidade de tirar capturas de tela dos itens.",
   "feature.wynntils.itemScreenshot.name": "Captura de Tela de Itens",
   "feature.wynntils.itemScreenshot.save.error": "Erro ao salvar a captura de tela de %s em %s",
-  "feature.wynntils.itemScreenshot.save.message": "Captura de tela de %s salva em %s",
+  "feature.wynntils.itemScreenshot.save.message": "Captura de tela de %s salva: ",
   "feature.wynntils.itemScreenshot.saveToDisk.description": "As capturas de tela dos itens devem ser salvas no disco?",
   "feature.wynntils.itemScreenshot.saveToDisk.name": "Salvar Capturas de Tela de Itens no Disco",
   "feature.wynntils.itemStatInfo.colorLerp.description": "A porcentagem colorida para o ID do item deve variar suavemente em vez de entre níveis fixos?",

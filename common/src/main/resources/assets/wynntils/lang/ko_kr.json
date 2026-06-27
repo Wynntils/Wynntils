@@ -809,7 +809,7 @@
   "feature.wynntils.itemScreenshot.description": "아이템 정보를 스크린샷하는 기능을 제공합니다.",
   "feature.wynntils.itemScreenshot.name": "아이템 스크린샷",
   "feature.wynntils.itemScreenshot.save.error": "%s 의 스크린샷을 %s 로 저장하는 중 오류가 발생했습니다.",
-  "feature.wynntils.itemScreenshot.save.message": "%s 의 스크린샷을 %s 로 저장했습니다.",
+  "feature.wynntils.itemScreenshot.save.message": "%s의 스크린샷을 저장했습니다: ",
   "feature.wynntils.itemScreenshot.saveToDisk.description": "아이템 스크린샷을 디스크에 저장할까요?",
   "feature.wynntils.itemScreenshot.saveToDisk.name": "디스크에 아이템 스크린샷 저장",
   "feature.wynntils.itemStatInfo.colorLerp.description": "아이템 특성 만점도 백분율의 색을 부드럽게 변하도록 표시할까요?",

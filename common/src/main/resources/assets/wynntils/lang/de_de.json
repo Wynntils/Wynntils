@@ -686,7 +686,7 @@
   "feature.wynntils.itemScreenshot.description": "Fügt die Fähigkeit hinzu, Screenshots von Gegenständen zu machen.",
   "feature.wynntils.itemScreenshot.name": "Gegenstandsscreenshot",
   "feature.wynntils.itemScreenshot.save.error": "Fehler beim Speichern des Screenshots von %s in %s",
-  "feature.wynntils.itemScreenshot.save.message": "Screenshot von %s in %s gespeichert",
+  "feature.wynntils.itemScreenshot.save.message": "Screenshot von %s gespeichert: ",
   "feature.wynntils.itemScreenshot.saveToDisk.description": "Sollen Screenshots von Gegenständen auf der Festplatte gespeichert werden?",
   "feature.wynntils.itemScreenshot.saveToDisk.name": "Gegenstandsscreenshots auf der Festplatte Speichern",
   "feature.wynntils.itemStatInfo.colorLerp.description": "Soll der farbige Prozentsatz für die Gegenstands-ID sanft variieren, anstatt zwischen festen Stufen?",

@@ -683,7 +683,7 @@
   "feature.wynntils.itemScreenshot.description": "Ajoute la capacité de prendre des captures d'écran des objets.",
   "feature.wynntils.itemScreenshot.name": "Capture d'Écran d'Objets",
   "feature.wynntils.itemScreenshot.save.error": "Erreur lors de l'enregistrement de la capture d'écran de %s dans %s",
-  "feature.wynntils.itemScreenshot.save.message": "Capture d'écran de %s enregistrée dans %s",
+  "feature.wynntils.itemScreenshot.save.message": "Capture d'écran de %s enregistrée : ",
   "feature.wynntils.itemScreenshot.saveToDisk.description": "Les captures d'écran des objets doivent-elles être enregistrées sur le disque ?",
   "feature.wynntils.itemScreenshot.saveToDisk.name": "Enregistrer les Captures d'Écran des Objets sur le Disque",
   "feature.wynntils.itemStatInfo.colorLerp.description": "Le pourcentage coloré pour l'ID de l'objet doit-il varier en douceur au lieu de niveaux fixes ?",
