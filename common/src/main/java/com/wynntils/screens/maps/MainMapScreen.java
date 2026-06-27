@@ -49,7 +49,12 @@ public final class MainMapScreen extends AbstractMapScreen {
     private MapButton gatheringFilterButton;
 
     private MainMapScreen() {
-        super();
+        super(null);
+        centerMapAroundPlayer();
+    }
+
+    private MainMapScreen(Screen previousScreen) {
+        super(previousScreen);
         centerMapAroundPlayer();
     }
 
@@ -63,6 +68,10 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     public static Screen create() {
         return new MainMapScreen();
+    }
+
+    public static Screen create(Screen previousScreen) {
+        return new MainMapScreen(previousScreen);
     }
 
     public static Screen create(float mapCenterX, float mapCenterZ) {

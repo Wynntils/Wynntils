@@ -33,6 +33,13 @@ public interface ContainerQueryStep {
             ContainerContent container, Int2ObjectMap<ItemStack> changes, ContainerContentChangeType changeType);
 
     /**
+     * Return the number of ticks to wait after receiving a set slot packet before processing the container.
+     */
+    default int getSetSlotAccumulationTicks() {
+        return 0;
+    }
+
+    /**
      * Process the actual content of the container that this step has opened up.
      */
     void handleContent(ContainerContent container) throws ContainerQueryException;

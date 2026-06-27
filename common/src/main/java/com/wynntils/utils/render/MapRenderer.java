@@ -14,7 +14,9 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.pipelines.CustomRenderPipelines;
 import com.wynntils.utils.render.state.ColoredTrianglesRenderState;
+import com.wynntils.utils.render.state.TexturedPolygonRenderState;
 import com.wynntils.utils.render.type.PointerType;
+import com.wynntils.utils.render.type.Vertex;
 import com.wynntils.utils.type.BoundingBox;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,10 @@ import java.util.Set;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ChunkPos;
 import org.joml.Matrix3x2f;
 import org.joml.Vector2d;
@@ -50,6 +55,7 @@ public final class MapRenderer {
     private static final double MAX_ZOOM_LOG = Math.log(MAX_ZOOM);
 
     private static final float CHUNK_LINE_WIDTH = 1.0f;
+    public static final int CIRCLE_MASK_SEGMENTS = 64;
 
     // Zoom is calculated using exponential interpolation between MIN_ZOOM and MAX_ZOOM.
     // The result is that the zoom increases uniformly for all levels, no matter the current zoom.
@@ -116,6 +122,80 @@ public final class MapRenderer {
                 v2 - v1,
                 map.getTextureWidth(),
                 map.getTextureHeight());
+    }
+
+    public static void renderCircularBackground(
+            GuiGraphics guiGraphics, CustomColor color, float x, float y, float width, float height) {
+        Matrix3x2f pose = new Matrix3x2f(guiGraphics.pose());
+        CircleMask mask = CircleMask.fromBounds(x, y, width, height);
+        List<Vector2f> vertices = new ArrayList<>(CIRCLE_MASK_SEGMENTS * 3);
+        Vector2f center = new Vector2f(mask.centerX(), mask.centerY());
+
+        for (int i = 0; i < CIRCLE_MASK_SEGMENTS; i++) {
+            float startAngle = (float) (Math.PI * 2.0 * i / CIRCLE_MASK_SEGMENTS);
+            float endAngle = (float) (Math.PI * 2.0 * (i + 1) / CIRCLE_MASK_SEGMENTS);
+            vertices.add(center);
+            vertices.add(mask.point(startAngle));
+            vertices.add(mask.point(endAngle));
+        }
+
+        guiGraphics.guiRenderState.submitGuiElement(new ColoredTrianglesRenderState(
+                CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
+                TextureSetup.noTexture(),
+                pose,
+                vertices,
+                color,
+                guiGraphics.scissorStack.peek()));
+    }
+
+    public static void renderCircularMapTile(
+            GuiGraphics guiGraphics,
+            MapTexture map,
+            float mapCenterX,
+            float mapCenterZ,
+            float centerX,
+            float centerZ,
+            float zoomRenderScale,
+            BoundingBox view,
+            float maskX,
+            float maskY,
+            float maskWidth,
+            float maskHeight) {
+        float mapMinX = map.getX1();
+        float mapMinZ = map.getZ1();
+        float mapMaxX = map.getX2() + 1f;
+        float mapMaxZ = map.getZ2() + 1f;
+
+        float clippedMinX = Math.max(view.x1(), mapMinX);
+        float clippedMinZ = Math.max(view.z1(), mapMinZ);
+        float clippedMaxX = Math.min(view.x2(), mapMaxX);
+        float clippedMaxZ = Math.min(view.z2(), mapMaxZ);
+
+        if (clippedMinX >= clippedMaxX || clippedMinZ >= clippedMaxZ) return;
+
+        float screenMinX = centerX + (clippedMinX - mapCenterX) * zoomRenderScale;
+        float screenMinY = centerZ + (clippedMinZ - mapCenterZ) * zoomRenderScale;
+        float screenMaxX = centerX + (clippedMaxX - mapCenterX) * zoomRenderScale;
+        float screenMaxY = centerZ + (clippedMaxZ - mapCenterZ) * zoomRenderScale;
+
+        float u1 = (clippedMinX - mapMinX) / map.getTextureWidth();
+        float v1 = (clippedMinZ - mapMinZ) / map.getTextureHeight();
+        float u2 = (clippedMaxX - mapMinX) / map.getTextureWidth();
+        float v2 = (clippedMaxZ - mapMinZ) / map.getTextureHeight();
+
+        renderCircleMaskedTexturedRect(
+                guiGraphics,
+                map.identifier(),
+                CommonColors.WHITE,
+                screenMinX,
+                screenMinY,
+                screenMaxX,
+                screenMaxY,
+                u1,
+                u2,
+                v1,
+                v2,
+                CircleMask.fromBounds(maskX, maskY, maskWidth, maskHeight));
     }
 
     public static void renderCursor(
@@ -465,5 +545,133 @@ public final class MapRenderer {
     public static float getRenderZ(int worldZ, float mapCenterZ, float centerZ, float currentZoom) {
         double distanceZ = worldZ - mapCenterZ;
         return (float) (centerZ + distanceZ * currentZoom);
+    }
+
+    private static void renderCircleMaskedTexturedRect(
+            GuiGraphics guiGraphics,
+            Identifier identifier,
+            CustomColor color,
+            float x1,
+            float y1,
+            float x2,
+            float y2,
+            float u1,
+            float u2,
+            float v1,
+            float v2,
+            CircleMask mask) {
+        AbstractTexture texture = McUtils.mc().getTextureManager().getTexture(identifier);
+        Matrix3x2f pose = new Matrix3x2f(guiGraphics.pose());
+        List<Vertex> vertices = clipTexturedRectToCircle(pose, x1, y1, x2, y2, u1, u2, v1, v2, mask);
+        if (vertices.isEmpty()) return;
+
+        guiGraphics.guiRenderState.submitGuiElement(new TexturedPolygonRenderState(
+                RenderPipelines.GUI_TEXTURED,
+                TextureSetup.singleTexture(texture.getTextureView(), texture.getSampler()),
+                pose,
+                vertices,
+                color,
+                guiGraphics.scissorStack.peek()));
+    }
+
+    private static List<Vertex> clipTexturedRectToCircle(
+            Matrix3x2f pose,
+            float x1,
+            float y1,
+            float x2,
+            float y2,
+            float u1,
+            float u2,
+            float v1,
+            float v2,
+            CircleMask mask) {
+        Matrix3x2f inversePose = new Matrix3x2f(pose).invert();
+        List<Vertex> vertices = new ArrayList<>(List.of(
+                new Vertex(transform(pose, x1, y1), new Vector2f(u1, v1)),
+                new Vertex(transform(pose, x1, y2), new Vector2f(u1, v2)),
+                new Vertex(transform(pose, x2, y2), new Vector2f(u2, v2)),
+                new Vertex(transform(pose, x2, y1), new Vector2f(u2, v1))));
+
+        for (int i = 0; i < CIRCLE_MASK_SEGMENTS && !vertices.isEmpty(); i++) {
+            float startAngleRadians = (float) (Math.PI * 2.0 * i / CIRCLE_MASK_SEGMENTS);
+            float endAngleRadians = (float) (Math.PI * 2.0 * (i + 1) / CIRCLE_MASK_SEGMENTS);
+
+            vertices = clipAgainstEdge(vertices, mask.point(startAngleRadians), mask.point(endAngleRadians));
+        }
+
+        List<Vertex> localVertices = new ArrayList<>(vertices.size());
+        for (Vertex vertex : vertices) {
+            localVertices.add(new Vertex(
+                    transform(
+                            inversePose,
+                            vertex.position().x(),
+                            vertex.position().y()),
+                    vertex.uv()));
+        }
+
+        return localVertices;
+    }
+
+    private static List<Vertex> clipAgainstEdge(List<Vertex> vertices, Vector2f edgeStart, Vector2f edgeEnd) {
+        List<Vertex> result = new ArrayList<>();
+        Vertex previous = vertices.getLast();
+        boolean previousInside = isInside(previous.position(), edgeStart, edgeEnd);
+
+        for (Vertex current : vertices) {
+            boolean currentInside = isInside(current.position(), edgeStart, edgeEnd);
+            if (currentInside != previousInside) {
+                result.add(intersection(previous, current, edgeStart, edgeEnd));
+            }
+
+            if (currentInside) {
+                result.add(current);
+            }
+
+            previous = current;
+            previousInside = currentInside;
+        }
+
+        return result;
+    }
+
+    private static boolean isInside(Vector2f point, Vector2f edgeStart, Vector2f edgeEnd) {
+        float edgeX = edgeEnd.x() - edgeStart.x();
+        float edgeY = edgeEnd.y() - edgeStart.y();
+        float pointX = point.x() - edgeStart.x();
+        float pointY = point.y() - edgeStart.y();
+
+        return edgeX * pointY - edgeY * pointX >= 0f;
+    }
+
+    private static Vertex intersection(Vertex start, Vertex end, Vector2f edgeStart, Vector2f edgeEnd) {
+        Vector2f line = new Vector2f(end.position()).sub(start.position());
+        Vector2f edge = new Vector2f(edgeEnd).sub(edgeStart);
+        float denominator = cross(line, edge);
+
+        if (Math.abs(denominator) < 0.00001f) {
+            return start;
+        }
+
+        float t = cross(new Vector2f(edgeStart).sub(start.position()), edge) / denominator;
+        return new Vertex(new Vector2f(start.position()).fma(t, line), new Vector2f(start.uv()).lerp(end.uv(), t));
+    }
+
+    private static float cross(Vector2f a, Vector2f b) {
+        return a.x() * b.y() - a.y() * b.x();
+    }
+
+    private static Vector2f transform(Matrix3x2f matrix, float x, float y) {
+        return matrix.transformPosition(new Vector2f(x, y));
+    }
+
+    private record CircleMask(float centerX, float centerY, float radiusX, float radiusY) {
+        private static CircleMask fromBounds(float x, float y, float width, float height) {
+            return new CircleMask(x + width / 2f, y + height / 2f, width / 2f, height / 2f);
+        }
+
+        private Vector2f point(float angle) {
+            return new Vector2f(
+                    centerX + (float) Math.cos(angle) * radiusX, centerY + (float) Math.sin(angle) * radiusY);
+        }
     }
 }

@@ -165,6 +165,14 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return builder.toString();
     }
 
+    public JsonArray toJson() {
+        JsonArray jsonArray = new JsonArray();
+        for (StyledTextPart part : parts) {
+            jsonArray.add(part.toJson());
+        }
+        return jsonArray;
+    }
+
     /**
      * @return The string representation of this {@link StyledText} with default formatting codes.
      */
