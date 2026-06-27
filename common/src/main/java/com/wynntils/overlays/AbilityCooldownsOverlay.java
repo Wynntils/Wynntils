@@ -67,7 +67,7 @@ public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOv
     @Override
     protected List<AbilityCooldownOverlay> getPreviewChildren() {
         return List.of(
-                new AbilityCooldownOverlay(AbilityCooldown.COUNTER),
+                new AbilityCooldownOverlay(AbilityCooldown.MIRROR_IMAGE),
                 new AbilityCooldownOverlay(AbilityCooldown.VANISH));
     }
 

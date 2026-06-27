@@ -10,69 +10,66 @@ import com.wynntils.utils.render.Texture;
 public enum AbilityCooldown {
     ARCANE_SPEED("Arcane Speed", Texture.ARCANE_SPEED),
     ARMOUR_BREAKER("Armour Breaker", Texture.ARMOUR_BREAKER),
-    BAKALS_GRASP("Bak'al's Grasp", Texture.BAKALS_GRASP),
+    BAKALS_GRASP("Bak'al's Grasp", "Corrupted", Texture.BAKALS_GRASP),
     BAMBOOZLE("Bamboozle", Texture.BAMBOOZLE),
     BILLOWING_DEATH("Billowing Death", Texture.BILLOWING_DEATH),
     BOILING_BLOOD("Boiling Blood", Texture.BOILING_BLOOD),
     BURIED_LIGHT("Buried Light", Texture.BURIED_LIGHT),
     BURNING_SIGIL("Burning Sigil", Texture.BURNING_SIGIL),
-    CHARM_OF_TWILIGHT("Charm of Twilight", Texture.CHARM_OF_TWILIGHT),
+    CHANT_OF_THE_FANATIC("Chant of the Fanatic", Texture.CHANT_OF_THE_FANATIC),
+    CHANT_OF_THE_HERETIC("Chant of the Heretic", Texture.CHANT_OF_THE_HERETIC),
+    CHANT_OF_THE_LUNATIC("Chant of the Lunatic", Texture.CHANT_OF_THE_LUNATIC),
     CHILLING_SNARE("Chilling Snare", Texture.CHILLING_SNARE),
     CLEANSING_BREEZE("Cleansing Breeze", Texture.CLEANSING_BREEZE),
-    COUNTER("Counter", Texture.COUNTER),
+    COURSING_RESTRAINTS("Coursing Restraints", Texture.COURSING_RESTRAINTS),
     DEFLAGRATE("Deflagrate", Texture.DEFLAGRATE),
     DEVITALIZE("Devitalize", Texture.DEVITALIZE),
     DIMENSIONAL_TEAR("Dimensional Tear", Texture.DIMENSIONAL_TEAR),
     DISPLACEMENT("Displacement", Texture.DISPLACEMENT),
-    DUPLICITY("Duplicity", Texture.DUPLICITY),
     FIERCE_STOMP("Fierce Stomp", Texture.FIERCE_STOMP),
     FIRE_CREEP("Fire Creep", Texture.FIRE_CREEP),
-    FOCUS("Focus", Texture.FOCUS),
     FORTIFIED_FORMATION("Fortified Formation", Texture.FORTIFIED_FORMATION),
     FORTITUDE("Fortitude", Texture.FORTITUDE),
     FREEZING_SIGIL("Freezing Sigil", Texture.FREEZING_SIGIL),
     GHOSTLY_TRIGGER("Ghostly Trigger", Texture.GHOSTLY_TRIGGER),
     HEAVENLY_TRUMPET("Heavenly Trumpet", Texture.HEAVENLY_TRUMPET),
     HOP("Hop", Texture.HOP),
-    INTOXICATING_BLOOD("Intoxicating Blood", Texture.INTOXICATING_BLOOD),
     JUDRAJIM("Judrajim", Texture.JUDRAJIM),
     LEAP("Leap", Texture.LEAP),
     LUSTER_PURGE("Luster Purge", Texture.LUSTER_PURGE),
-    MANACHISM("Manachism", Texture.MANACHISM),
-    MANTLE_OF_THE_BOVEMISTS("Mantle of the Bovemists", Texture.MANTLE_OF_THE_BOVEMISTS),
-    MINSTRELS_TUNER("Minstrel's Tuner", Texture.MINSTRELS_TUNER),
+    MANTLE_OF_THE_BOVEMISTS("Mantle of the Bovemists", "Shield", Texture.MANTLE_OF_THE_BOVEMISTS),
     MIRAGE("Mirage", Texture.MIRAGE),
     MIRROR_IMAGE("Mirror Image", Texture.MIRROR_IMAGE),
-    MISDIRECTION("Misdirection", Texture.MISDIRECTION),
     PARTING_GIFT("Parting Gift", Texture.PARTING_GIFT),
     PROVOKE("Provoke", Texture.PROVOKE),
     PURIFICATION("Purification", Texture.PURIFICATION),
     RADIANCE("Radiance", Texture.RADIANCE),
     REPEL("Repel", Texture.REPEL),
-    RESTRAINTS("Restraints", Texture.RESTRAINTS),
     RIFT_RUPTURE("Rift Rupture", Texture.RIFT_RUPTURE),
     RIFTBOUND("Riftbound", Texture.RIFTBOUND),
     SANDBAGGING("Sandbagging", Texture.SANDBAGGING),
-    SATSUJIN("Satsujin", Texture.SATSUJIN),
     SECOND_CHANCE("Second Chance", Texture.SECOND_CHANCE),
     SHADOW_DANCE("Shadow Dance", Texture.SHADOW_DANCE),
     SHADOW_PROJECTION("Shadow Projection", Texture.SHADOW_PROJECTION),
-    SNIFFER_DOG("Sniffer Dog", Texture.SNIFFER_DOG),
-    SOUL_SIPHON("Soul Siphon", Texture.SOUL_SIPHON),
     SUNFLARE("Sunflare", Texture.SUNFLARE),
-    TRIBAL_CHANTS("Tribal Chants", Texture.TRIBAL_CHANTS),
     VANISH("Vanish", Texture.VANISH),
     VIOLENT_VORTEX("Violent Vortex", Texture.VIOLENT_VORTEX);
 
     private final String name;
+    private final String statusEffectName;
     private final Texture texture;
 
     private float serverRemainingSeconds = 0.0f;
     private float maxSeconds = 0.0f;
 
-    AbilityCooldown(String name, Texture texture) {
+    AbilityCooldown(String name, String statusEffectName, Texture texture) {
         this.name = name;
+        this.statusEffectName = statusEffectName;
         this.texture = texture;
+    }
+
+    AbilityCooldown(String name, Texture texture) {
+        this(name, name, texture);
     }
 
     public static AbilityCooldown fromName(String name) {
@@ -86,11 +83,22 @@ public enum AbilityCooldown {
     }
 
     public static AbilityCooldown fromStatusEffect(StatusEffect statusEffect) {
-        return fromName(statusEffect.getName().getStringWithoutFormatting());
+        for (AbilityCooldown cooldown : AbilityCooldown.values()) {
+            if (cooldown.getStatusEffectName()
+                    .equalsIgnoreCase(statusEffect.getName().getStringWithoutFormatting())) {
+                return cooldown;
+            }
+        }
+
+        return null;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getStatusEffectName() {
+        return statusEffectName;
     }
 
     public Texture getTexture() {
