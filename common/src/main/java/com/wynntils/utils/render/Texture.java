@@ -191,9 +191,10 @@ public enum Texture {
 
     // Generic Offset
     ADD_ICON_OFFSET("icons/generic_offset/add_icon_offset.png", 14, 28),
-    BACK_ARROW_OFFSET("icons/generic_offset/back_arrow_icon_offset.png", 32, 9),
     BACKWARD_ARROW_OFFSET("icons/generic_offset/backward_arrow_icon_offset.png", 36, 10),
+    BACK_ARROW_OFFSET("icons/generic_offset/back_arrow_icon_offset.png", 32, 9),
     FORWARD_ARROW_OFFSET("icons/generic_offset/forward_arrow_icon_offset.png", 36, 10),
+    OPEN_EXTERNAL_OFFSET("icons/generic_offset/open_external_offset.png", 10, 20),
     RELOAD_ICON_OFFSET("icons/generic_offset/reload_icon_offset.png", 40, 20),
     REMOVE_ICON_OFFSET("icons/generic_offset/remove_icon_offset.png", 14, 28),
     SHARE_ICON_OFFSET("icons/generic_offset/share_icon_offset.png", 16, 28),
@@ -361,6 +362,7 @@ public enum Texture {
     TERRITORY_ITEM_ALERT("territory_management/territory_alert.png", 16, 16),
     TERRITORY_SIDEBAR("territory_management/territory_sidebar.png", 20, 136),
     TERRITORY_LOADOUT("territory_management/territory_loadout.png", 16, 16),
+    // endregion
 
     // region UI Components
     BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1009),

@@ -52,7 +52,7 @@ public class ChatTabsWidget extends AbstractWidget {
                                 .withStyle(ChatFormatting.RED),
                         (button) -> {
                             Services.ChatTab.removeTab(chatTab);
-                            McUtils.setScreen(ChatTabEditingScreen.create());
+                            McUtils.setScreen(ChatTabEditingScreen.create(parent.previousScreen));
                         })
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 17)), this.getY() + (this.height / 2) - 10)
                 .size((int) (this.width / gridDivisions * 5) - 3, 20)
@@ -114,7 +114,7 @@ public class ChatTabsWidget extends AbstractWidget {
             return true;
         }
 
-        McUtils.setScreen(ChatTabEditingScreen.create(this.chatTab));
+        McUtils.setScreen(ChatTabEditingScreen.create(this.chatTab, parent.previousScreen));
         return true;
     }
 }
