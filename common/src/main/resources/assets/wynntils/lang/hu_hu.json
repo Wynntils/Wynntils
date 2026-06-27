@@ -683,7 +683,7 @@
   "feature.wynntils.itemScreenshot.description": "Lehetővé teszi a tárgyak képernyőképeinek készítését.",
   "feature.wynntils.itemScreenshot.name": "Tárgy Képernyőkép",
   "feature.wynntils.itemScreenshot.save.error": "Hiba történt a(z) %s képernyőképének %s mentése közben",
-  "feature.wynntils.itemScreenshot.save.message": "A(z) %s képernyőképe elmentve %s",
+  "feature.wynntils.itemScreenshot.save.message": "A(z) %s képernyőképe elmentve: ",
   "feature.wynntils.itemScreenshot.saveToDisk.description": "A tárgy képernyőképeket lemezre kell menteni?",
   "feature.wynntils.itemScreenshot.saveToDisk.name": "Tárgy Képernyőképek Mentése Lemezre",
   "feature.wynntils.itemStatInfo.colorLerp.description": "A színes százalékos érték az elem azonosítójához simán változzon a fix szintek helyett?",
