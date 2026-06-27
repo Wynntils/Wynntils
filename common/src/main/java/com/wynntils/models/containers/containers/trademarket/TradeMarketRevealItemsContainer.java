@@ -5,18 +5,12 @@
 package com.wynntils.models.containers.containers.trademarket;
 
 import com.wynntils.models.containers.Container;
-import java.util.function.Predicate;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
+import java.util.regex.Pattern;
 
 public class TradeMarketRevealItemsContainer extends Container {
+    private static final Pattern TITLE_PATTERN = Pattern.compile("What would you like to reveal\\?");
+
     public TradeMarketRevealItemsContainer() {
-        super((Predicate<Screen>) screen -> {
-            Component title = screen.getTitle();
-            if (title == null) return false;
-            String str = title.getString();
-            if (str == null) return false;
-            return str.trim().equals("What would you like to reveal?");
-        });
+        super(TITLE_PATTERN);
     }
 }
