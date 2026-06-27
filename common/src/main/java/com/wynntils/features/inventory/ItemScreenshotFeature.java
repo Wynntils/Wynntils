@@ -57,6 +57,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.world.inventory.Slot;
@@ -223,29 +224,30 @@ public class ItemScreenshotFeature extends Feature {
                 File outputfile = new File(screenshotDir, filename);
                 ImageIO.write(bi, "png", outputfile);
 
-                McUtils.sendWynntilsPrefixMessage(Component.translatable(
+                MutableComponent component = Component.translatable(
                                 "feature.wynntils.itemScreenshot.save.message",
-                                itemStack.getHoverName(),
-                                Component.literal(outputfile.getName())
-                                        .withStyle(ChatFormatting.UNDERLINE)
-                                        .withStyle(style -> style.withClickEvent(
-                                                new ClickEvent.OpenFile(outputfile.getAbsolutePath()))))
-                        .withStyle(ChatFormatting.GREEN));
+                                WynnUtils.stripItemNameMarkers(
+                                        itemStack.getHoverName().getString()))
+                        .withStyle(ChatFormatting.GREEN);
+                component.append(Component.literal(outputfile.getName())
+                        .withStyle(ChatFormatting.YELLOW)
+                        .withStyle(ChatFormatting.UNDERLINE)
+                        .withStyle(
+                                style -> style.withClickEvent(new ClickEvent.OpenFile(outputfile.getAbsolutePath()))));
+
+                McUtils.sendWynntilsPrefixMessage(component);
             } catch (IOException e) {
                 WynntilsMod.error("Failed to save image to disk", e);
                 McUtils.sendErrorToClient(
                         I18n.get("feature.wynntils.itemScreenshot.save.error", itemStack.getHoverName(), filename));
             }
 
-            if (SystemUtils.isMac() || SystemUtils.isWayland()) {
-                McUtils.sendWynntilsPrefixMessage(
-                        Component.translatable("feature.wynntils.itemScreenshot.copy.osWarning")
-                                .withStyle(ChatFormatting.GRAY));
-                return;
-            }
+            // Don't try to copy to clipboard
+            if (SystemUtils.isMac() || SystemUtils.isWayland()) return;
         } else if (SystemUtils.isMac() || SystemUtils.isWayland()) {
-            McUtils.sendWynntilsPrefixMessage(Component.translatable("feature.wynntils.itemScreenshot.copy.osWarning2")
+            McUtils.sendWynntilsPrefixMessage(Component.translatable("feature.wynntils.itemScreenshot.copy.osWarning")
                     .withStyle(ChatFormatting.GRAY)
+                    .append(Component.translatable("feature.wynntils.itemScreenshot.copy.osWarning2"))
                     .append(Component.translatable("feature.wynntils.itemScreenshot.copy.osWarning.clickHere")
                             .withStyle(ChatFormatting.GRAY)
                             .withStyle(ChatFormatting.UNDERLINE)
