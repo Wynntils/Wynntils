@@ -9,6 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
@@ -16,6 +17,7 @@ import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.abilitytree.parser.UnprocessedAbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
+import com.wynntils.models.abilitytree.type.AbilityTreeNodeType;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.containers.containers.AbilityTreeContainer;
@@ -41,6 +43,10 @@ public class AbilityTreeContainerQueries {
 
     public void dumpAbilityTree(Consumer<AbilityTreeInfo> supplier) {
         queryAbilityTree(new AbilityTreeContainerQueries.AbilityPageDumper(supplier));
+    }
+
+    public void getUnlockedAbilityTree(Consumer<AbilityTreeInfo> supplier) {
+        queryAbilityTree(new AbilityTreeContainerQueries.AbilityPageUnlockedProcessor(supplier));
     }
 
     public void updateParsedAbilityTree() {
@@ -158,5 +164,112 @@ public class AbilityTreeContainerQueries {
                 callback.accept(new ParsedAbilityTree(ImmutableMap.copyOf(collectedInfo)));
             }
         }
+    }
+
+    /**
+     * Parses the ability tree and returns only unlocked nodes with their connections processed.
+     * Description lines are stripped to save memory.
+     */
+    private static class AbilityPageUnlockedProcessor extends AbilityTreeProcessor {
+        private final Consumer<AbilityTreeInfo> supplier;
+        private final UnprocessedAbilityTreeInfo unprocessedTree = new UnprocessedAbilityTreeInfo();
+
+        protected AbilityPageUnlockedProcessor(Consumer<AbilityTreeInfo> supplier) {
+            this.supplier = supplier;
+        }
+
+        @Override
+        protected void processPage(ContainerContent content, int page) {
+            List<ItemStack> items = content.items();
+
+            for (int slot = 0; slot < items.size(); slot++) {
+                ItemStack itemStack = items.get(slot);
+                unprocessedTree.processItem(itemStack, page, slot, true);
+            }
+
+            if (page == Models.AbilityTree.ABILITY_TREE_PAGES) {
+                AbilityTreeInfo fullTree = unprocessedTree.getProcesssed();
+
+                List<AbilityTreeSkillNode> unlockedNodes = fullTree.nodes().stream()
+                        .filter(node -> node.abilityTreeNodeType().getState() == AbilityTreeNodeState.UNLOCKED)
+                        .map(AbilityTreeSkillNode::withoutDescriptions)
+                        .toList();
+
+                this.supplier.accept(new AbilityTreeInfo(unlockedNodes));
+            }
+        }
+    }
+
+    public void executeUnlocks(
+            List<AbilityTreeSkillNode> nodesToUnlock,
+            Consumer<String> onError,
+            Runnable onComplete) {
+
+        QueryBuilder builder = ScriptedContainerQuery.builder("Ability Tree Unlock")
+                .onError(msg -> onError.accept("Ability tree unlock failed: " + msg))
+                // Open character/compass menu
+                .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
+                        .expectContainer(CharacterInfoContainer.class))
+
+                .execute(() -> WynntilsMod.info("compass"))
+
+                // Open ability menu
+                .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT).expectContainer(AbilityTreeContainer.class))
+
+                .execute(() -> WynntilsMod.info("starting unlock"));
+
+        // Rewind to page 1
+        builder.repeat(
+                c -> ScriptedContainerQuery.containerHasSlot(
+                        c, PREVIOUS_PAGE_SLOT, Items.POTION, PREVIOUS_PAGE_ITEM_NAME),
+                QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT)
+                        .expectContainer(AbilityTreeContainer.class)
+                        .accumulateSetSlotChanges(2));
+
+        int currentPage = 1;
+
+        for (AbilityTreeSkillNode node : nodesToUnlock) {
+            int targetPage = node.location().page();
+            int targetSlot = node.location().row() * 9 + node.location().col();
+
+            // Navigate
+            while (currentPage < targetPage) {
+                builder.then(QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
+                        .expectContainer(AbilityTreeContainer.class)
+                        .accumulateSetSlotChanges(2));
+                currentPage++;
+            }
+            while (currentPage > targetPage) {
+                builder.then(QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT)
+                        .expectContainer(AbilityTreeContainer.class)
+                        .accumulateSetSlotChanges(2));
+                currentPage--;
+            }
+
+            final int verifySlot = targetSlot;
+
+            // Click the node
+            builder.then(QueryStep.clickOnSlot(targetSlot)
+                    .expectContainer(AbilityTreeContainer.class)
+                    .accumulateSetSlotChanges(2));
+
+            // Verify it actually became unlocked
+            builder.reprocess(container -> {
+                ItemStack item = container.items().get(verifySlot);
+                AbilityTreeNodeType type = AbilityTreeNodeType.fromItemStack(item);
+                if (type == null || type.getState() != AbilityTreeNodeState.UNLOCKED) {
+                    throw new ContainerQueryException(
+                            "Node unlock failed at slot " + verifySlot
+                                    + " (expected UNLOCKED, found " + type + ")");
+                }
+            });
+        }
+
+        builder.execute(() -> {
+            WynntilsMod.info("Ability tree loadout applied successfully");
+            onComplete.run();
+        });
+
+        builder.build().executeQuery();
     }
 }

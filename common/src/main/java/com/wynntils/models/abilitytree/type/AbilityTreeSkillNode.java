@@ -41,4 +41,11 @@ public record AbilityTreeSkillNode(
     public int hashCode() {
         return Objects.hash(id, formattedName, cost, requiredAbility, requiredArchetype, archetype, location);
     }
+
+    public AbilityTreeSkillNode withoutDescriptions() {
+        return new AbilityTreeSkillNode(
+                id, name, formattedName, abilityTreeNodeType, List.of(),
+                cost, willBlock, blockedBy, requiredAbility, requiredArchetype,
+                requiredLevel, archetype, location, connections);
+    }
 }

@@ -142,7 +142,10 @@ public final class SkillPointLoadoutsScreen extends WynntilsGridLayoutScreen {
                 BUTTON_SIZE,
                 Component.translatable("screens.wynntils.skillPointLoadouts.saveBuild"),
                 this,
-                Models.SkillPoint::saveCurrentBuild);
+                (String name) -> {
+                    Models.SkillPoint.saveCurrentBuild(name);
+                    Models.AbilityTree.saveCurrentAbilityTree(name);
+                });
         this.addRenderableWidget(saveBuildButton);
 
         loadButton = new LoadButton(

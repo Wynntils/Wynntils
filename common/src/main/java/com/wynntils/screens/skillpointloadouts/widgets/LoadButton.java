@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.skillpointloadouts.widgets;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
@@ -21,5 +22,19 @@ public class LoadButton extends WynntilsButton {
     @Override
     public void onPress(InputWithModifiers input) {
         Models.SkillPoint.loadLoadout(parent.selectedLoadout.key());
+        Models.AbilityTree.loadAbilityTree(
+                parent.selectedLoadout.key(),
+                errorMsg -> {
+                    // Called if the query fails or a node does not unlock
+                    WynntilsMod.error("Failed to load ability tree: " + errorMsg);
+                    // Optional: send a chat message or show a toast
+                    // McUtils.sendMessageToClient(Component.literal("§cFailed to apply loadout: " + errorMsg));
+                },
+                () -> {
+                    // Called when every node has been clicked and verified
+                    WynntilsMod.info("Ability tree loadout applied successfully");
+                    // Optional: refresh UI, play a sound, etc.
+                }
+        );
     }
 }
