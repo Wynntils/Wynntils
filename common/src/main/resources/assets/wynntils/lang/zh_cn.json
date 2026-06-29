@@ -79,8 +79,6 @@
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "职业节点位置",
   "feature.wynntils.abbreviateMobHealth.description": "将怪物的生命值缩短为更易读的格式。",
   "feature.wynntils.abbreviateMobHealth.name": "缩短怪物生命值",
-  "feature.wynntils.abilityRefreshRedirect.description": "增加将能力刷新消息重定向到游戏更新覆盖层的功能。",
-  "feature.wynntils.abilityRefreshRedirect.name": "能力刷新",
   "feature.wynntils.abilityTreeDataDump.description": "增加将能力树数据导出到文件的功能。",
   "feature.wynntils.abilityTreeDataDump.name": "能力树数据导出",
   "feature.wynntils.addCommandExpansion.description": "为大多数命令添加自动完成功能。",

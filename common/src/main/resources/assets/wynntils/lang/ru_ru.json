@@ -81,8 +81,6 @@
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "Местоположения Узлов Профессий",
   "feature.wynntils.abbreviateMobHealth.description": "Сокращает здоровье мобов до более читаемого формата.",
   "feature.wynntils.abbreviateMobHealth.name": "Сокращение Здоровья Мобов",
-  "feature.wynntils.abilityRefreshRedirect.description": "Добавляет возможность перенаправлять сообщения об обновлении способностей на игровой оверлей.",
-  "feature.wynntils.abilityRefreshRedirect.name": "Обновления Способностей",
   "feature.wynntils.abilityTreeDataDump.description": "Добавляет возможность выгружать данные дерева способностей в файл.",
   "feature.wynntils.abilityTreeDataDump.name": "Выгрузка Данных Дерева Способностей",
   "feature.wynntils.addCommandExpansion.description": "Добавляет автозаполнение для большинства команд.",

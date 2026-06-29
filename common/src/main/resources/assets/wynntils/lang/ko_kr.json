@@ -81,8 +81,6 @@
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "생활 콘텐츠 채집 노드 위치",
   "feature.wynntils.abbreviateMobHealth.description": "몹 체력을 읽기 쉬운 방식으로 변환합니다.",
   "feature.wynntils.abbreviateMobHealth.name": "몹 체력 간략화",
-  "feature.wynntils.abilityRefreshRedirect.description": "기술의 쿨다운 완료 알림을 리디렉션합니다.",
-  "feature.wynntils.abilityRefreshRedirect.name": "기술 쿨다운 알림",
   "feature.wynntils.abilityTreeDataDump.description": "기술 트리를 저장합니다.",
   "feature.wynntils.abilityTreeDataDump.name": "기술 트리 데이터 덤프",
   "feature.wynntils.addCommandExpansion.description": "대부분의 명령어의 자동 완성 기능을 지원합니다..",

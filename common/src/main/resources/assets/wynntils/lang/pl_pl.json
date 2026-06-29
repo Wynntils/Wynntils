@@ -79,8 +79,6 @@
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "Lokalizacje Węzłów Zawodowych",
   "feature.wynntils.abbreviateMobHealth.description": "Skraca zdrowie mobów do bardziej czytelnego formatu.",
   "feature.wynntils.abbreviateMobHealth.name": "Skróć Zdrowie Moba",
-  "feature.wynntils.abilityRefreshRedirect.description": "Dodaje możliwość przekierowania wiadomości o odświeżeniu umiejętności do nakładki aktualizacji gry.",
-  "feature.wynntils.abilityRefreshRedirect.name": "Odświeżenia Umiejętności",
   "feature.wynntils.abilityTreeDataDump.description": "Dodaje możliwość zrzutu danych drzewa umiejętności do pliku.",
   "feature.wynntils.abilityTreeDataDump.name": "Zrzut Danych Drzewa Umiejętności",
   "feature.wynntils.addCommandExpansion.description": "Dodaje automatyczne uzupełnianie dla większości komend.",
