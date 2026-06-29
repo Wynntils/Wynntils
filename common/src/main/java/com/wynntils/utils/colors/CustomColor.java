@@ -211,6 +211,21 @@ public record CustomColor(int r, int g, int b, int a) {
         return fromHSV(hsb[0], hsb[1], brightness, this.a);
     }
 
+    public CustomColor hueOverwrite(float degree) {
+        float[] hsb = this.asHSB();
+        return fromHSV(degree, hsb[1], hsb[2], this.a);
+    }
+
+    public CustomColor saturationOverwrite(float degree) {
+        float[] hsb = this.asHSB();
+        return fromHSV(hsb[0], degree, hsb[2], this.a);
+    }
+
+    public CustomColor brightnessOverwrite(float degree) {
+        float[] hsb = this.asHSB();
+        return fromHSV(hsb[0], hsb[1], degree, this.a);
+    }
+
     /** 0xAARRGGBB format */
     public int asInt() {
         int a = Math.min(this.a, 255);
