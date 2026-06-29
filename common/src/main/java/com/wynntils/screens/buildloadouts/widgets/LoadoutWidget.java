@@ -2,14 +2,14 @@
  * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.skillpointloadouts.widgets;
+package com.wynntils.screens.buildloadouts.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.elements.type.Skill;
-import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
+import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -32,7 +32,7 @@ public class LoadoutWidget extends AbstractWidget {
     private final float dividedWidth;
     private final String name;
     private final SavableSkillPointSet loadout;
-    private final SkillPointLoadoutsScreen parent;
+    private final BuildLoadoutsScreen parent;
     private final List<String> gearNames = new ArrayList<>();
 
     public LoadoutWidget(
@@ -43,7 +43,7 @@ public class LoadoutWidget extends AbstractWidget {
             float dividedWidth,
             String name,
             SavableSkillPointSet loadout,
-            SkillPointLoadoutsScreen parent) {
+            BuildLoadoutsScreen parent) {
         super(x, y, width, height, Component.literal(name));
         this.dividedWidth = dividedWidth;
         this.name = name;
@@ -104,7 +104,7 @@ public class LoadoutWidget extends AbstractWidget {
                                         ? ChatFormatting.RED
                                         : "")
                                 + I18n.get(
-                                        "screens.wynntils.skillPointLoadouts.widgetLevelText",
+                                        "screens.wynntils.buildLoadouts.widgetLevelText",
                                         loadout.getMinimumCombatLevel())
                                 + ChatFormatting.WHITE
                                 + ")"),

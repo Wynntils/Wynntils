@@ -2,23 +2,23 @@
  * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.skillpointloadouts.widgets;
+package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
+import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.type.Pair;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class ConvertButton extends WynntilsButton {
-    private final SkillPointLoadoutsScreen parent;
+    private final BuildLoadoutsScreen parent;
 
-    public ConvertButton(int x, int y, int width, int height, Component message, SkillPointLoadoutsScreen parent) {
+    public ConvertButton(int x, int y, int width, int height, Component message, BuildLoadoutsScreen parent) {
         super(x, y, width, height, message);
         this.parent = parent;
-        this.setTooltip(Tooltip.create(Component.translatable("screens.wynntils.skillPointLoadouts.convertTooltip")));
+        this.setTooltip(Tooltip.create(Component.translatable("screens.wynntils.buildLoadouts.convertTooltip")));
     }
 
     @Override

@@ -2,19 +2,19 @@
  * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.skillpointloadouts.widgets;
+package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
+import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class LoadButton extends WynntilsButton {
-    private final SkillPointLoadoutsScreen parent;
+    private final BuildLoadoutsScreen parent;
 
-    public LoadButton(int x, int y, int width, int height, Component message, SkillPointLoadoutsScreen parent) {
+    public LoadButton(int x, int y, int width, int height, Component message, BuildLoadoutsScreen parent) {
         super(x, y, width, height, message);
         this.parent = parent;
     }
