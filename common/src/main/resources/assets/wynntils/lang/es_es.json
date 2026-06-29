@@ -683,7 +683,7 @@
   "feature.wynntils.itemScreenshot.description": "Agrega la capacidad de tomar capturas de pantalla de los elementos.",
   "feature.wynntils.itemScreenshot.name": "Captura de Pantalla de Elementos",
   "feature.wynntils.itemScreenshot.save.error": "Error al guardar la captura de pantalla de %s en %s",
-  "feature.wynntils.itemScreenshot.save.message": "Captura de pantalla de %s guardada en %s",
+  "feature.wynntils.itemScreenshot.save.message": "Captura de pantalla de %s guardada: ",
   "feature.wynntils.itemScreenshot.saveToDisk.description": "¿Se deben guardar las capturas de pantalla de los elementos en el disco?",
   "feature.wynntils.itemScreenshot.saveToDisk.name": "Guardar Capturas de Pantalla de Elementos en el Disco",
   "feature.wynntils.itemStatInfo.colorLerp.description": "¿El porcentaje de color para el ID del elemento debe variar suavemente en lugar de entre niveles fijos?",

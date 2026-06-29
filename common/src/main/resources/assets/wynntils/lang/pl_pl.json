@@ -683,7 +683,7 @@
   "feature.wynntils.itemScreenshot.description": "Dodaje możliwość robienia zrzutów ekranu przedmiotów.",
   "feature.wynntils.itemScreenshot.name": "Zrzut Ekranu Przedmiotu",
   "feature.wynntils.itemScreenshot.save.error": "Błąd podczas zapisywania zrzutu ekranu %s do %s",
-  "feature.wynntils.itemScreenshot.save.message": "Zrzut ekranu %s zapisany do %s",
+  "feature.wynntils.itemScreenshot.save.message": "Zrzut ekranu %s zapisany: ",
   "feature.wynntils.itemScreenshot.saveToDisk.description": "Czy zrzuty ekranu przedmiotów powinny być zapisywane na dysku?",
   "feature.wynntils.itemScreenshot.saveToDisk.name": "Zapisz Zrzuty Ekranu Przedmiotów na Dysku",
   "feature.wynntils.itemStatInfo.colorLerp.description": "Czy kolorowy procent dla ID przedmiotu powinien zmieniać się płynnie zamiast między stałymi poziomami?",

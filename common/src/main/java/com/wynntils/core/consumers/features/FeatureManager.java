@@ -554,6 +554,12 @@ public final class FeatureManager extends Manager {
         assert !feature.getTranslatedDescription().startsWith("feature.wynntils.")
                 : "Fix i18n for " + feature.getTranslatedDescription();
 
+        // Assert that external configuration screen is properly translated
+        if (feature instanceof ExternalConfigurationScreen ecs) {
+            assert !feature.getTranslation(ecs.getTranslationKey()).startsWith("feature.wynntils.")
+                    : "Fix i18n for: " + feature.getTranslation(ecs.getTranslationKey());
+        }
+
         if (!feature.userEnabled.get()) return; // not enabled by user
 
         doEnableFeature(feature);

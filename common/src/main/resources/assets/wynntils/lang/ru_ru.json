@@ -855,7 +855,7 @@
   "feature.wynntils.itemScreenshot.description": "Добавляет возможность делать скриншоты предметов.",
   "feature.wynntils.itemScreenshot.name": "Скриншот Предметов",
   "feature.wynntils.itemScreenshot.save.error": "Ошибка при сохранении скриншота %s в %s",
-  "feature.wynntils.itemScreenshot.save.message": "Скриншот %s сохранен в %s",
+  "feature.wynntils.itemScreenshot.save.message": "Скриншот %s сохранен: ",
   "feature.wynntils.itemScreenshot.saveToDisk.description": "Следует ли сохранять скриншоты предметов на диск?",
   "feature.wynntils.itemScreenshot.saveToDisk.name": "Сохранять Скриншоты Предметов на Диск",
   "feature.wynntils.itemStatInfo.colorLerp.description": "Должен ли цветной процент для ID предмета плавно изменяться вместо фиксированных уровней?",

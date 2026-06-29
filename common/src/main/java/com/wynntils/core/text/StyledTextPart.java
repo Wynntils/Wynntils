@@ -422,6 +422,76 @@ public final class StyledTextPart {
         return parts;
     }
 
+    public JsonObject toJson() {
+        JsonObject jsonObject = new JsonObject();
+
+        String textValue = this.text;
+        String marginLeft = null;
+
+        // Find margin characters, allowing for leading spaces
+        int marginStart = 0;
+        while (marginStart < textValue.length() && textValue.charAt(marginStart) == ' ') {
+            marginStart++;
+        }
+
+        String afterLeadingSpaces = textValue.substring(marginStart);
+
+        if (afterLeadingSpaces.startsWith("ÀÀÀÀ")) {
+            marginLeft = "large";
+            textValue = textValue.substring(0, marginStart) + afterLeadingSpaces.substring(4);
+        } else if (afterLeadingSpaces.startsWith("À")) {
+            marginLeft = "thin";
+            textValue = textValue.substring(0, marginStart) + afterLeadingSpaces.substring(1);
+        }
+
+        jsonObject.addProperty("text", textValue);
+
+        Style mcStyle = style.getStyle();
+
+        if (mcStyle.isBold()) {
+            jsonObject.addProperty("bold", true);
+        }
+        if (mcStyle.isItalic()) {
+            jsonObject.addProperty("italic", true);
+        }
+        if (mcStyle.isUnderlined()) {
+            jsonObject.addProperty("underline", true);
+        }
+        if (mcStyle.isStrikethrough()) {
+            jsonObject.addProperty("strikethrough", true);
+        }
+
+        FontDescription font = mcStyle.getFont();
+        if (font != null) {
+            String fontString = fontToString(font);
+            if (fontString != null && !fontString.equals("default")) {
+                jsonObject.addProperty("font", fontString);
+            }
+        }
+
+        if (mcStyle.getColor() != null) {
+            int colorValue = mcStyle.getColor().getValue();
+            jsonObject.addProperty("color", String.format("#%06X", colorValue & 0xFFFFFF));
+        }
+
+        if (marginLeft != null) {
+            jsonObject.addProperty("margin-left", marginLeft);
+        }
+
+        return jsonObject;
+    }
+
+    private static String fontToString(FontDescription font) {
+        if (font instanceof FontDescription.Resource(Identifier id)) {
+            if ("minecraft".equals(id.getNamespace())) {
+                return id.getPath();
+            }
+            return id.toString();
+        }
+        // AtlasSprite / PlayerSprite are not represented in this JSON format
+        return null;
+    }
+
     public String getString(PartStyle previousStyle, StyleType type) {
         return style.asString(previousStyle, type) + text;
     }

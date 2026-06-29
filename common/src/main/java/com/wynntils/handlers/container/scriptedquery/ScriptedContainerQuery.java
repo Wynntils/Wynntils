@@ -64,6 +64,11 @@ public final class ScriptedContainerQuery implements ContainerQueryStep {
     }
 
     @Override
+    public int getSetSlotAccumulationTicks() {
+        return currentStep != null ? currentStep.getSetSlotAccumulationTicks() : 0;
+    }
+
+    @Override
     public void handleContent(ContainerContent container) throws ContainerQueryException {
         currentStep.getHandleContent().processContainer(container);
     }
