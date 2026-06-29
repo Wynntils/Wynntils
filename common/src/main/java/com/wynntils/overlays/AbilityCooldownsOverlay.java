@@ -85,7 +85,10 @@ public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOv
 
         for (StatusEffect statusEffect : event.getOriginalStatusEffects()) {
             if (statusEffect.getPrefix().getString().equals(Models.Ability.COOLDOWN_PREFIX)) {
-                event.removeStatusEffect(statusEffect);
+                // Make sure the overlay will be displaying a cooldown before we remove it from the list
+                if (AbilityCooldown.fromStatusEffect(statusEffect) != null) {
+                    event.removeStatusEffect(statusEffect);
+                }
             }
         }
     }
