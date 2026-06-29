@@ -77,6 +77,13 @@ public class QueryStep {
         });
     }
 
+    public static QueryStep shiftClickOnSlot(int slotNum) {
+        return new QueryStep(container -> {
+            ContainerUtils.shiftClickOnSlot(slotNum, container.containerId(), 0, container.items());
+            return true;
+        });
+    }
+
     public static QueryStep sendCommand(String command) {
         return new QueryStep(container -> {
             Handlers.Command.queueCommand(command);
@@ -86,6 +93,17 @@ public class QueryStep {
 
     public QueryStep expectContainer(Class<? extends Container> expectedContainerType) {
         this.verification = (type) -> type == expectedContainerType;
+        return this;
+    }
+
+    @SafeVarargs
+    public final QueryStep expectContainer(Class<? extends Container>... expectedContainerTypes) {
+        this.verification = (type) -> {
+            for (Class<? extends Container> expected : expectedContainerTypes) {
+                if (type == expected) return true;
+            }
+            return false;
+        };
         return this;
     }
 

@@ -14,6 +14,7 @@ import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.abilitytree.parser.UnprocessedAbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
@@ -21,13 +22,16 @@ import com.wynntils.models.abilitytree.type.AbilityTreeNodeType;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.containers.containers.AbilityTreeContainer;
+import com.wynntils.models.containers.containers.AbilityTreeResetContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -36,7 +40,12 @@ public class AbilityTreeContainerQueries {
     private static final int ABILITY_TREE_SLOT = 9;
     private static final int PREVIOUS_PAGE_SLOT = 57;
     private static final int NEXT_PAGE_SLOT = 59;
-    private static final int BACK_BUTTON_SLOT = 63;
+    private static final int ABILITY_TREE_SHIFT_CLICK_RESET_SLOT = 58;
+    private static final int RESET_ABILITY_TREE_SLOT = 85;
+    private static final int ABILITY_SHARD_ONE_SLOT = 11;
+    private static final int ABILITY_SHARD_TWO_SLOT = 15;
+    private static final int ABILITY_SHARD_THREE_SLOT = 40;
+    private static final int ABILITY_TREE_RESET_CONFIRM_SLOT = 22;
     private static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
     private static final StyledText PREVIOUS_PAGE_ITEM_NAME = StyledText.fromString("§7Previous Page");
     private int pageCount;
@@ -201,22 +210,67 @@ public class AbilityTreeContainerQueries {
     }
 
     public void executeUnlocks(
-            List<AbilityTreeSkillNode> nodesToUnlock,
-            Consumer<String> onError,
-            Runnable onComplete) {
-
+            List<AbilityTreeSkillNode> nodesToUnlock, Consumer<String> onError, Runnable onComplete) {
         QueryBuilder builder = ScriptedContainerQuery.builder("Ability Tree Unlock")
                 .onError(msg -> onError.accept("Ability tree unlock failed: " + msg))
                 // Open character/compass menu
                 .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                         .expectContainer(CharacterInfoContainer.class))
-
                 .execute(() -> WynntilsMod.info("compass"))
 
                 // Open ability menu
                 .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT).expectContainer(AbilityTreeContainer.class))
-
                 .execute(() -> WynntilsMod.info("starting unlock"));
+
+        StatusEffect statusEffect = Models.StatusEffect.searchStatusEffectByName("Tree Manipulation");
+
+        if (statusEffect != null) {
+            AtomicBoolean sawAnimationEnd = new AtomicBoolean(false);
+
+            builder.then(QueryStep.shiftClickOnSlot(ABILITY_TREE_SHIFT_CLICK_RESET_SLOT)
+                    .expectContainer(AbilityTreeContainer.class)
+                    .verifyContentChange((container, changes, changeType) -> {
+                        // animation is running, wait for slot 53 to become air
+                        if (!sawAnimationEnd.get()) {
+                            if (changeType == ContainerContentChangeType.SET_SLOT
+                                    && changes.containsKey(53)
+                                    && changes.get(53).getItem() == Items.AIR) {
+                                sawAnimationEnd.set(true);
+                                WynntilsMod.info("Animation ended, waiting for final SET_CONTENT");
+                            }
+                            return false;
+                        }
+
+                        // wait for SET_CONTENT
+                        return changeType == ContainerContentChangeType.SET_CONTENT;
+                    })
+                    .processIncomingContainer(container -> {
+                        WynntilsMod.info("Final container after shift-click: " + container.containerId());
+                    }));
+        }
+
+        if (statusEffect == null) {
+            // The server first opens an animated AbilityTreeContainer.
+            // Only proceed once the real AbilityTreeResetContainer opens.
+            builder.then(QueryStep.clickOnSlot(RESET_ABILITY_TREE_SLOT)
+                            .expectContainer(AbilityTreeContainer.class, AbilityTreeResetContainer.class)
+                            .verifyContentChange((container, changes, changeType) ->
+                                    Models.Container.getCurrentContainer() instanceof AbilityTreeResetContainer))
+                    .execute(() -> WynntilsMod.info("in reset menu"));
+
+            builder.then(QueryStep.clickOnSlot(ABILITY_SHARD_ONE_SLOT).accumulateSetSlotChanges(2));
+            builder.then(QueryStep.clickOnSlot(ABILITY_SHARD_TWO_SLOT).accumulateSetSlotChanges(2));
+            builder.then(QueryStep.clickOnSlot(ABILITY_SHARD_THREE_SLOT).accumulateSetSlotChanges(2));
+
+            // Click confirm reset.
+            // Server first opens an animated AbilityTreeResetContainer, then the real AbilityTreeContainer.
+            // Accept both, but only advance once the real ability tree container is active.
+            builder.then(QueryStep.clickOnSlot(ABILITY_TREE_RESET_CONFIRM_SLOT)
+                            .expectContainer(AbilityTreeResetContainer.class, AbilityTreeContainer.class)
+                            .verifyContentChange((container, changes, changeType) ->
+                                    Models.Container.getCurrentContainer() instanceof AbilityTreeContainer))
+                    .execute(() -> WynntilsMod.info("reset complete"));
+        }
 
         // Rewind to page 1
         builder.repeat(
@@ -249,9 +303,14 @@ public class AbilityTreeContainerQueries {
             final int verifySlot = targetSlot;
 
             // Click the node
+            // ABILITY_TREE_SHIFT_CLICK_RESET_SLOT is not the last slot if the ability has an archetype attached to it.
+            // then it will be the archetype slot, but this does not matter for confirming if it's unlocked.
             builder.then(QueryStep.clickOnSlot(targetSlot)
                     .expectContainer(AbilityTreeContainer.class)
-                    .accumulateSetSlotChanges(2));
+                    .verifyContentChange((container, changes, changeType) -> changeType
+                                    == ContainerContentChangeType.SET_SLOT
+                            && changes.containsKey(ABILITY_TREE_SHIFT_CLICK_RESET_SLOT)
+                            && changes.get(ABILITY_TREE_SHIFT_CLICK_RESET_SLOT).getItem() == Items.POTION));
 
             // Verify it actually became unlocked
             builder.reprocess(container -> {
@@ -259,8 +318,7 @@ public class AbilityTreeContainerQueries {
                 AbilityTreeNodeType type = AbilityTreeNodeType.fromItemStack(item);
                 if (type == null || type.getState() != AbilityTreeNodeState.UNLOCKED) {
                     throw new ContainerQueryException(
-                            "Node unlock failed at slot " + verifySlot
-                                    + " (expected UNLOCKED, found " + type + ")");
+                            "Node unlock failed at slot " + verifySlot + " (expected UNLOCKED, found " + type + ")");
                 }
             });
         }

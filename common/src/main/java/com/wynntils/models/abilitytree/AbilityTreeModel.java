@@ -90,6 +90,7 @@ public final class AbilityTreeModel extends Model {
         }
 
         List<AbilityTreeSkillNode> ordered = getIdealApplicationOrder(savedTree);
+        WynntilsMod.info("ordered: " +  ordered);
         if (ordered.isEmpty()) {
             WynntilsMod.info("Loadout " + name + " is empty, nothing to apply");
             onComplete.run();
