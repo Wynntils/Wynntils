@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.type.Dungeon;
 import com.wynntils.models.rewards.type.RuneType;
+import com.wynntils.models.rewards.type.WardType;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -47,6 +48,10 @@ public final class WynntilsMiscGuideScreen extends WynntilsListScreen<GuideItemS
         if (parsedItemCache.isEmpty()) {
             for (RuneType runeType : Models.Rewards.getAllRuneInfo()) {
                 parsedItemCache.add(new RuneItemStack(runeType));
+            }
+
+            for (WardType wardType : Models.Rewards.getAllWardInfo()) {
+                parsedItemCache.add(new WardItemStack(wardType));
             }
 
             for (Dungeon dungeon : Dungeon.values()) {
@@ -118,6 +123,8 @@ public final class WynntilsMiscGuideScreen extends WynntilsListScreen<GuideItemS
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof GuideRuneItemStackButton guideAugmentItemStack) {
             guideAugmentItemStack.getItemStack().queueGuideTooltip(guiGraphics, mouseX, mouseY);
+        } else if (hovered instanceof GuideWardItemStackButton guideWardItemStack) {
+            guideWardItemStack.getItemStack().queueGuideTooltip(guiGraphics, mouseX, mouseY);
         } else if (hovered instanceof GuideDungeonKeyItemStackButton guideDungeonKeyItemStack) {
             guideDungeonKeyItemStack.getItemStack().queueGuideTooltip(guiGraphics, mouseX, mouseY);
         }
@@ -160,6 +167,14 @@ public final class WynntilsMiscGuideScreen extends WynntilsListScreen<GuideItemS
                     18,
                     18,
                     runeItemStack,
+                    this);
+        } else if (element instanceof WardItemStack wardItemStack) {
+            return new GuideWardItemStackButton(
+                    (int) (xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 13 + offsetX),
+                    yOffset + 43 + offsetY,
+                    18,
+                    18,
+                    wardItemStack,
                     this);
         }
 
