@@ -24,4 +24,14 @@ public enum WardType {
     public CustomColor getColor() {
         return color;
     }
+
+    public static WardType fromName(String name) {
+        for (WardType type : values()) {
+            if (type.name().equalsIgnoreCase(name)) {
+                return type;
+            }
+        }
+
+        return null;
+    }
 }

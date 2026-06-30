@@ -9,7 +9,6 @@ import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.items.items.game.WardItem;
 import com.wynntils.models.rewards.type.WardType;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -23,6 +22,6 @@ public final class WardAnnotator implements GameItemAnnotator {
         Matcher m = name.getMatcher(WARD_PATTERN);
         if (!m.matches()) return null;
 
-        return new WardItem(WardType.valueOf(m.group(1).toUpperCase(Locale.ROOT)));
+        return new WardItem(WardType.fromName(m.group(1)));
     }
 }
