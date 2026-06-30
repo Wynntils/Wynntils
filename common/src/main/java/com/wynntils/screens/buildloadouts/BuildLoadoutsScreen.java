@@ -70,11 +70,11 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
     private ScrollBar scrollBar;
     private float scrollPercent = 0;
 
-    private String statusMessage = "abcdefghijklmnopqrstuvwxyz";
+    private String statusMessage = "";
     private CustomColor statusColor = CommonColors.WHITE;
 
     private BuildLoadoutsScreen() {
-        super(Component.literal("Skill Point Loadouts Screen"));
+        super(Component.literal("Build Loadouts Screen"));
     }
 
     public static Screen create() {
@@ -487,6 +487,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                             StyledText.fromString(statusMessage),
                             dividedWidth * 34,
                             dividedHeight * 58,
+                            dividedWidth * 26,
                             statusColor,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.BOTTOM,

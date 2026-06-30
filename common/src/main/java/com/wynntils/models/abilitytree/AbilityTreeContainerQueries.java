@@ -24,6 +24,8 @@ import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.containers.containers.AbilityTreeContainer;
 import com.wynntils.models.containers.containers.AbilityTreeResetContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
@@ -31,6 +33,7 @@ import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import net.minecraft.world.item.ItemStack;
@@ -82,8 +85,8 @@ public class AbilityTreeContainerQueries {
             AbilityTreeProcessor processor, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
         QueryBuilder builder = ScriptedContainerQuery.builder("Ability Tree Dumper")
                 .onError(msg -> {
-                    onError.accept("Failed dump: " + msg);
-                    WynntilsMod.error("Failed dump: " + msg);
+                    onError.accept(msg);
+                    WynntilsMod.error(msg);
                 })
 
                 // Open character/compass menu
@@ -126,10 +129,14 @@ public class AbilityTreeContainerQueries {
             Consumer<String> onStatus,
             Consumer<String> onError,
             Consumer<String> onComplete) {
+        AtomicBoolean needsReset = new AtomicBoolean(false);
+        AtomicBoolean hasAbilityShards = new AtomicBoolean(false);
+        StatusEffect statusEffect = Models.StatusEffect.searchStatusEffectByName("Tree Manipulation");
+
         QueryBuilder builder = ScriptedContainerQuery.builder("Ability Tree Unlock")
                 .onError(msg -> {
-                    onError.accept("Ability tree unlock failed: " + msg);
-                    WynntilsMod.error("Ability tree unlock failed: " + msg);
+                    onError.accept(msg);
+                    WynntilsMod.error(msg);
                 })
 
                 // Open character/compass menu
@@ -137,59 +144,81 @@ public class AbilityTreeContainerQueries {
                         .expectContainer(CharacterInfoContainer.class))
                 .execute(() -> onStatus.accept("Compass menu"))
 
+                // Check ability points and abiliy shards in compass menu
+                .reprocess(container -> {
+                    Optional<AbilityTreeItem> abilityTreeItem = Models.Item.asWynnItem(container.items().get(ABILITY_TREE_SLOT), AbilityTreeItem.class);
+                    if (abilityTreeItem.isEmpty()) needsReset.set(false);
+                    abilityTreeItem.ifPresent(treeItem -> needsReset.set(treeItem.getCount() != treeItem.getTotalPoints()));
+                    hasAbilityShards.set(Models.Inventory.getAmountInInventory("Ability Shard") >= 3);
+
+                    WynntilsMod.info("needReset: " + needsReset.get() + " hasAbilityShards: " + hasAbilityShards.get() + " status: " + (statusEffect != null));
+
+                    if (needsReset.get() && !hasAbilityShards.get() && statusEffect == null) {
+                        throw new ContainerQueryException(
+                                "insufficient ability shards (need 3)");
+                    }
+                })
+
                 // Open ability menu
                 .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT).expectContainer(AbilityTreeContainer.class))
                 .execute(() -> onStatus.accept("Ability tree menu"));
-
-        StatusEffect statusEffect = Models.StatusEffect.searchStatusEffectByName("Tree Manipulation");
 
         if (statusEffect != null) {
             AtomicBoolean sawAnimationEnd = new AtomicBoolean(false);
 
             builder.execute(() -> onStatus.accept("Has Tree Manipulation resetting tree via shift click"));
 
-            builder.then(QueryStep.shiftClickOnSlot(ABILITY_TREE_SHIFT_CLICK_RESET_SLOT)
-                    .expectContainer(AbilityTreeContainer.class)
-                    .verifyContentChange((container, changes, changeType) -> {
-                        // animation is running, wait for slot 53 to become air
-                        if (!sawAnimationEnd.get()) {
-                            if (changeType == ContainerContentChangeType.SET_SLOT
-                                    && changes.containsKey(53)
-                                    && changes.get(53).getItem() == Items.AIR) {
-                                sawAnimationEnd.set(true);
-                            }
-                            return false;
-                        }
-
-                        // wait for SET_CONTENT
-                        return changeType == ContainerContentChangeType.SET_CONTENT;
-                    })
-                    .processIncomingContainer(container -> onStatus.accept("Ability tree has been reset")));
+            // Conditional: Only shift-click reset if we need to
+            builder.conditionalThen(
+                    container -> needsReset.get(),
+                    QueryStep.shiftClickOnSlot(ABILITY_TREE_SHIFT_CLICK_RESET_SLOT)
+                            .expectContainer(AbilityTreeContainer.class)
+                            .verifyContentChange((container, changes, changeType) -> {
+                                if (!sawAnimationEnd.get()) {
+                                    if (changeType == ContainerContentChangeType.SET_SLOT
+                                            && changes.containsKey(53)
+                                            && changes.get(53).getItem() == Items.AIR) {
+                                        sawAnimationEnd.set(true);
+                                    }
+                                    return false;
+                                }
+                                return changeType == ContainerContentChangeType.SET_CONTENT;
+                            })
+                            .processIncomingContainer(container -> onStatus.accept("Ability tree has been reset")));
         }
 
         if (statusEffect == null) {
+            // Conditional reset steps: each only executes if needsReset is true
+            // If needsReset is false, each conditionalThen skips its wrapped step and continues
             builder.execute(() -> onStatus.accept("Opening ability tree reset menu"));
 
-            // The server first opens an animated AbilityTreeContainer.
-            // Only proceed once the real AbilityTreeResetContainer opens.
-            builder.then(QueryStep.clickOnSlot(RESET_ABILITY_TREE_SLOT)
+            builder.conditionalThen(
+                    container -> needsReset.get(),
+                    QueryStep.clickOnSlot(RESET_ABILITY_TREE_SLOT)
                             .expectContainer(AbilityTreeContainer.class, AbilityTreeResetContainer.class)
                             .verifyContentChange((container, changes, changeType) ->
-                                    Models.Container.getCurrentContainer() instanceof AbilityTreeResetContainer))
-                    .execute(() -> onStatus.accept("Ability tree reset menu opened"));
+                                    Models.Container.getCurrentContainer() instanceof AbilityTreeResetContainer)
+                            .processIncomingContainer(c -> onStatus.accept("Ability tree reset menu opened")));
 
-            builder.then(QueryStep.clickOnSlot(ABILITY_SHARD_ONE_SLOT).accumulateSetSlotChanges(2));
-            builder.then(QueryStep.clickOnSlot(ABILITY_SHARD_TWO_SLOT).accumulateSetSlotChanges(2));
-            builder.then(QueryStep.clickOnSlot(ABILITY_SHARD_THREE_SLOT).accumulateSetSlotChanges(2));
+            builder.conditionalThen(
+                    container -> needsReset.get(),
+                    QueryStep.clickOnSlot(ABILITY_SHARD_ONE_SLOT).accumulateSetSlotChanges(2));
 
-            // Click confirm reset.
-            // Server first opens an animated AbilityTreeResetContainer, then the real AbilityTreeContainer.
-            // Accept both, but only advance once the real ability tree container is active.
-            builder.then(QueryStep.clickOnSlot(ABILITY_TREE_RESET_CONFIRM_SLOT)
+            builder.conditionalThen(
+                    container -> needsReset.get(),
+                    QueryStep.clickOnSlot(ABILITY_SHARD_TWO_SLOT).accumulateSetSlotChanges(2));
+
+            builder.conditionalThen(
+                    container -> needsReset.get(),
+                    QueryStep.clickOnSlot(ABILITY_SHARD_THREE_SLOT).accumulateSetSlotChanges(2));
+
+            builder.conditionalThen(
+                    container -> needsReset.get(),
+                    QueryStep.clickOnSlot(ABILITY_TREE_RESET_CONFIRM_SLOT)
                             .expectContainer(AbilityTreeResetContainer.class, AbilityTreeContainer.class)
                             .verifyContentChange((container, changes, changeType) ->
-                                    Models.Container.getCurrentContainer() instanceof AbilityTreeContainer))
-                    .execute(() -> onStatus.accept("Ability tree has been reset"));
+                                    Models.Container.getCurrentContainer() instanceof AbilityTreeContainer)
+                            .processIncomingContainer(c -> onStatus.accept("Ability tree has been reset")));
         }
 
         // Rewind to page 1
