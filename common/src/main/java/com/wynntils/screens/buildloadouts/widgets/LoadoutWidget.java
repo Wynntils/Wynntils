@@ -7,9 +7,12 @@ package com.wynntils.screens.buildloadouts.widgets;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.character.type.SavableSkillPointSet;
+import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
+import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.screens.buildloadouts.type.Loadout;
+import com.wynntils.screens.buildloadouts.type.LoadoutType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -19,7 +22,9 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -30,33 +35,23 @@ import net.minecraft.network.chat.Component;
 
 public class LoadoutWidget extends AbstractWidget {
     private final float dividedWidth;
-    private final String name;
-    private final SavableSkillPointSet loadout;
     private final BuildLoadoutsScreen parent;
     private final List<String> gearNames = new ArrayList<>();
-    private final boolean abilityTreeOnly;
+    private final Loadout loadout;
 
     public LoadoutWidget(
-            int x,
-            int y,
-            int width,
-            int height,
-            float dividedWidth,
-            String name,
-            SavableSkillPointSet loadout,
-            BuildLoadoutsScreen parent,
-            boolean abilityTreeOnly) {
-        super(x, y, width, height, Component.literal(name));
+            int x, int y, int width, int height, float dividedWidth, Loadout loadout, BuildLoadoutsScreen parent) {
+        super(x, y, width, height, Component.literal(loadout.name()));
         this.dividedWidth = dividedWidth;
-        this.name = name;
         this.loadout = loadout;
         this.parent = parent;
-        this.abilityTreeOnly = abilityTreeOnly;
-        if (loadout.weapon() != null) {
-            gearNames.add(loadout.weapon());
+        if (loadout.hasSkillPoints() && loadout.skillPoints().weapon() != null) {
+            gearNames.add(loadout.skillPoints().weapon());
         }
-        gearNames.addAll(loadout.armourNames());
-        gearNames.addAll(loadout.accessoryNames());
+        if (loadout.hasSkillPoints()) {
+            gearNames.addAll(loadout.skillPoints().armourNames());
+            gearNames.addAll(loadout.skillPoints().accessoryNames());
+        }
     }
 
     @Override
@@ -66,7 +61,7 @@ public class LoadoutWidget extends AbstractWidget {
                     guiGraphics, CommonColors.GRAY.withAlpha(100), this.getX(), this.getY(), width, height);
         }
         if (parent.getSelectedLoadout() != null
-                && parent.getSelectedLoadout().key().equals(this.name)) {
+                && parent.getSelectedLoadout().name().equals(loadout.name())) {
             RenderUtils.drawRectBorders(
                     guiGraphics,
                     CommonColors.WHITE,
@@ -78,7 +73,7 @@ public class LoadoutWidget extends AbstractWidget {
         }
 
         int nameYOffset = 2;
-        if (loadout.isBuild()) { // Renders list of weapon, armour, and accessories under name for build loadouts
+        if (loadout.hasSkillPoints() && loadout.skillPoints().isBuild()) {
             nameYOffset = 3;
             String text = RenderedStringUtils.getMaxFittingText(
                     String.join(", ", gearNames),
@@ -96,42 +91,63 @@ public class LoadoutWidget extends AbstractWidget {
                             TextShadow.NORMAL,
                             0.8f);
         }
-        // Renders "name (skillPointsSum - Level minLevel)". Level is red if minLevel is higher than current level.
+
+        int displayLevel = loadout.type() == LoadoutType.ABILITY_TREE && loadout.hasAbilityTree()
+                ? loadout.abilityTree().getDisplayLevel()
+                : (loadout.hasSkillPoints() ? loadout.skillPoints().getMinimumCombatLevel() : 1);
+
+        String levelColor =
+                displayLevel > Models.CombatXp.getCombatLevel().current() ? ChatFormatting.RED.toString() : "";
+        String levelText = levelColor
+                + I18n.get("screens.wynntils.buildLoadouts.widgetLevelText", displayLevel)
+                + ChatFormatting.WHITE;
+
+        String displayText;
+        if (loadout.type() == LoadoutType.ABILITY_TREE) {
+            String archetypePart =
+                    loadout.hasAbilityTree() && loadout.abilityTree().getMainArchetype() != null
+                            ? " (" + loadout.abilityTree().getMainArchetype() + ")"
+                            : "";
+            displayText = loadout.name() + " " + ChatFormatting.AQUA + "[AT]" + ChatFormatting.WHITE + archetypePart
+                    + " (" + levelText + ")";
+        } else if (loadout.type() == LoadoutType.BUILD) {
+            String archetypePart =
+                    loadout.hasAbilityTree() && loadout.abilityTree().getMainArchetype() != null
+                            ? " (" + loadout.abilityTree().getMainArchetype() + ")"
+                            : "";
+            displayText = loadout.name() + archetypePart + " (" + levelText + ")";
+        } else if (loadout.type() == LoadoutType.SKILL_POINT) {
+            displayText = loadout.name() + " " + ChatFormatting.YELLOW + "[SP]" + ChatFormatting.WHITE + " ("
+                    + levelText + ")";
+        } else {
+            displayText = loadout.name() + " (" + levelText + ")";
+        }
+
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString((abilityTreeOnly
-                                        ? name + " " + ChatFormatting.AQUA + "[AT]" + ChatFormatting.WHITE
-                                        : name)
-                                + " (" + loadout.getSkillPointsSum() + " - "
-                                + (loadout.getMinimumCombatLevel()
-                                                > Models.CombatXp.getCombatLevel()
-                                                        .current()
-                                        ? ChatFormatting.RED
-                                        : "")
-                                + I18n.get(
-                                        "screens.wynntils.buildLoadouts.widgetLevelText",
-                                        loadout.getMinimumCombatLevel())
-                                + ChatFormatting.WHITE
-                                + ")"),
+                        StyledText.fromString(displayText),
                         dividedWidth * 4,
                         this.getY() + (float) this.getHeight() / nameYOffset,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
-        for (int i = 0; i < 5; i++) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            guiGraphics,
-                            StyledText.fromString(
-                                    Skill.values()[i].getColorCode() + "" + loadout.getSkillPointsAsArray()[i]),
-                            dividedWidth * (21 + i * 2),
-                            this.getY() + (float) this.getHeight() / 2,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
+
+        if (loadout.hasSkillPoints()) {
+            for (int i = 0; i < 5; i++) {
+                FontRenderer.getInstance()
+                        .renderText(
+                                guiGraphics,
+                                StyledText.fromString(Skill.values()[i].getColorCode() + ""
+                                        + loadout.skillPoints().getSkillPointsAsArray()[i]),
+                                dividedWidth * (21 + i * 2),
+                                this.getY() + (float) this.getHeight() / 2,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.CENTER,
+                                VerticalAlignment.MIDDLE,
+                                TextShadow.NORMAL);
+            }
         }
 
         if (this.isHovered) {
@@ -141,7 +157,7 @@ public class LoadoutWidget extends AbstractWidget {
 
     @Override
     public void onClick(MouseButtonEvent event, boolean isDoubleClick) {
-        parent.setSelectedLoadout(Pair.of(name, loadout));
+        parent.setSelectedLoadout(loadout);
     }
 
     @Override

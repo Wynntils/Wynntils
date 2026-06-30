@@ -8,6 +8,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.screens.buildloadouts.type.Loadout;
+import com.wynntils.screens.buildloadouts.type.LoadoutType;
 import com.wynntils.utils.colors.CommonColors;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
@@ -22,26 +24,25 @@ public class LoadButton extends WynntilsButton {
 
     @Override
     public void onPress(InputWithModifiers input) {
-        boolean hasAbilityTree = Models.AbilityTree.hasAbilityTreeLoadout(parent.selectedLoadout.key());
-        boolean isAbilityTreeOnly = parent.isAbilityTreeOnlyLoadout(parent.selectedLoadout.key());
+        Loadout loadout = parent.getSelectedLoadout();
 
-        if (isAbilityTreeOnly) {
+        if (loadout.type() == LoadoutType.ABILITY_TREE) {
             parent.setStatus("Applying ability tree...", CommonColors.YELLOW);
             Models.AbilityTree.loadAbilityTree(
-                    parent.selectedLoadout.key(),
+                    loadout.name(),
                     status -> parent.setStatus(status, CommonColors.YELLOW),
                     error -> parent.setStatus(error, CommonColors.RED),
                     completed -> parent.setStatus(completed, CommonColors.GREEN));
         } else {
             parent.setStatus("Loading skill points...", CommonColors.YELLOW);
             Models.SkillPoint.loadLoadout(
-                    parent.selectedLoadout.key(),
+                    loadout.name(),
                     error -> parent.setStatus("Skill point error: " + error, CommonColors.RED),
                     () -> {
-                        if (hasAbilityTree) {
+                        if (loadout.hasAbilityTree()) {
                             parent.setStatus("Skill points loaded. Applying ability tree...", CommonColors.YELLOW);
                             Models.AbilityTree.loadAbilityTree(
-                                    parent.selectedLoadout.key(),
+                                    loadout.name(),
                                     status -> parent.setStatus(status, CommonColors.YELLOW),
                                     error -> parent.setStatus(error, CommonColors.RED),
                                     completed -> parent.setStatus(completed, CommonColors.GREEN));

@@ -6,11 +6,14 @@ package com.wynntils.screens.buildloadouts;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.abilitytree.type.SavableAbilityTree;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.screens.base.WynntilsGridLayoutScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.buildloadouts.type.Loadout;
+import com.wynntils.screens.buildloadouts.type.LoadoutType;
 import com.wynntils.screens.buildloadouts.widgets.ConvertButton;
 import com.wynntils.screens.buildloadouts.widgets.DeleteButton;
 import com.wynntils.screens.buildloadouts.widgets.LoadButton;
@@ -33,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
@@ -51,7 +55,6 @@ import org.lwjgl.glfw.GLFW;
 public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
     private static final int MAX_LOADOUTS_PER_PAGE = 11;
     private List<LoadoutWidget> loadoutWidgets = new ArrayList<>();
-    private Set<String> abilityTreeOnlyLoadouts = new HashSet<>();
 
     private boolean firstInit = true;
     private final List<Pair<Supplier<String>, Function<Skill, Integer>>> summaryParts = new ArrayList<>();
@@ -62,7 +65,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
     public TextInputBoxWidget saveNameInput;
     public boolean hasSaveNameConflict = false;
 
-    public Pair<String, SavableSkillPointSet> selectedLoadout;
+    public Loadout selectedLoadout;
     private WynntilsButton loadButton;
     private WynntilsButton deleteButton;
     private WynntilsButton convertButton;
@@ -149,6 +152,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                             completed -> {
                                 this.setStatus(completed, CommonColors.GREEN);
                                 this.populateLoadouts();
+                                this.setSelectedLoadout(this.getLoadout(name));
                             });
                 });
         this.addRenderableWidget(saveBuildButton);
@@ -177,6 +181,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                         completed -> {
                             this.setStatus(completed, CommonColors.GREEN);
                             this.populateLoadouts();
+                            this.setSelectedLoadout(this.getLoadout(name));
                         }));
         this.addRenderableWidget(saveAbilityTreeButton);
 
@@ -341,78 +346,130 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                     dividedWidth * 60,
                     dividedHeight * 56,
                     1);
+
+            // Name
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
-                            StyledText.fromString(selectedLoadout.key()),
+                            StyledText.fromString(selectedLoadout.name()),
                             dividedWidth * 34,
                             dividedHeight * 34,
                             CommonColors.WHITE,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.BOTTOM,
                             TextShadow.NORMAL);
-            for (int i = 0; i < 5; i++) {
+
+            float currentY = 37;
+
+            // --- Skill Points section ---
+            if (selectedLoadout.hasSkillPoints()) {
+                // 5 skill icons
+                for (int i = 0; i < 5; i++) {
+                    FontRenderer.getInstance()
+                            .renderText(
+                                    guiGraphics,
+                                    StyledText.fromComponent(Component.literal(Skill.values()[i].getSymbol())
+                                            .withStyle(Style.EMPTY
+                                                    .withColor(Skill.values()[i].getColorCode())
+                                                    .withFont(new FontDescription.Resource(
+                                                            Identifier.withDefaultNamespace("common"))))),
+                                    dividedWidth * (51 + i * 2),
+                                    dividedHeight * 34,
+                                    CommonColors.WHITE,
+                                    HorizontalAlignment.CENTER,
+                                    VerticalAlignment.BOTTOM,
+                                    TextShadow.NORMAL);
+                }
+
+                // Assigned row
                 FontRenderer.getInstance()
                         .renderText(
                                 guiGraphics,
-                                StyledText.fromComponent(Component.literal(Skill.values()[i].getSymbol())
-                                        .withStyle(Style.EMPTY
-                                                .withColor(Skill.values()[i].getColorCode())
-                                                .withFont(new FontDescription.Resource(
-                                                        Identifier.withDefaultNamespace("common"))))),
-                                dividedWidth * (51 + i * 2),
-                                dividedHeight * 34,
+                                StyledText.fromString(I18n.get(
+                                        "screens.wynntils.buildLoadouts.assigned",
+                                        selectedLoadout.skillPoints().getSkillPointsSum())),
+                                dividedWidth * 35,
+                                dividedHeight * currentY,
                                 CommonColors.WHITE,
-                                HorizontalAlignment.CENTER,
+                                HorizontalAlignment.LEFT,
                                 VerticalAlignment.BOTTOM,
                                 TextShadow.NORMAL);
+                for (int i = 0; i < 5; i++) {
+                    FontRenderer.getInstance()
+                            .renderText(
+                                    guiGraphics,
+                                    StyledText.fromString(Skill.values()[i].getColorCode() + ""
+                                            + selectedLoadout.skillPoints().getSkillPointsAsArray()[i]),
+                                    dividedWidth * (51 + i * 2),
+                                    dividedHeight * currentY,
+                                    CommonColors.WHITE,
+                                    HorizontalAlignment.CENTER,
+                                    VerticalAlignment.BOTTOM,
+                                    TextShadow.NORMAL);
+                }
+                currentY += 4;
             }
-            FontRenderer.getInstance()
-                    .renderText(
-                            guiGraphics,
-                            StyledText.fromString(I18n.get(
-                                    "screens.wynntils.buildLoadouts.assigned",
-                                    selectedLoadout.value().getSkillPointsSum())),
-                            dividedWidth * 35,
-                            dividedHeight * 37,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL);
-            for (int i = 0; i < 5; i++) {
+
+            // --- Ability Tree section ---
+            if (selectedLoadout.hasAbilityTree()) {
                 FontRenderer.getInstance()
                         .renderText(
                                 guiGraphics,
-                                StyledText.fromString(Skill.values()[i].getColorCode() + ""
-                                        + selectedLoadout.value().getSkillPointsAsArray()[i]),
-                                dividedWidth * (51 + i * 2),
-                                dividedHeight * 37,
+                                StyledText.fromString(selectedLoadout.abilityTree().getMainArchetype()),
+                                dividedWidth * 52,
+                                dividedHeight * 41,
                                 CommonColors.WHITE,
-                                HorizontalAlignment.CENTER,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.BOTTOM,
+                                TextShadow.NORMAL);
+
+                FontRenderer.getInstance()
+                        .renderText(
+                                guiGraphics,
+                                StyledText.fromString(
+                                        selectedLoadout.abilityTree().getNodeCount() + " nodes"),
+                                dividedWidth * 52,
+                                dividedHeight * 43,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.BOTTOM,
+                                TextShadow.NORMAL);
+
+                int level = selectedLoadout.abilityTree().getDisplayLevel();
+                String levelColor =
+                        level > Models.CombatXp.getCombatLevel().current() ? ChatFormatting.RED.toString() : "";
+                FontRenderer.getInstance()
+                        .renderText(
+                                guiGraphics,
+                                StyledText.fromString("Level: " + levelColor + level),
+                                dividedWidth * 52,
+                                dividedHeight * 45,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.LEFT,
                                 VerticalAlignment.BOTTOM,
                                 TextShadow.NORMAL);
             }
-            if (selectedLoadout.value().isBuild()) {
-                int startingHeight = 41;
-                if (selectedLoadout.value().weapon() != null) {
+
+            // --- Gear section ---
+            if (selectedLoadout.hasSkillPoints()
+                    && selectedLoadout.skillPoints().isBuild()) {
+                if (selectedLoadout.skillPoints().weapon() != null) {
                     FontRenderer.getInstance()
                             .renderText(
                                     guiGraphics,
                                     StyledText.fromString(
-                                            selectedLoadout.value().weapon()),
+                                            selectedLoadout.skillPoints().weapon()),
                                     dividedWidth * 35,
-                                    dividedHeight * 40,
+                                    dividedHeight * currentY,
                                     CommonColors.WHITE,
                                     HorizontalAlignment.LEFT,
                                     VerticalAlignment.BOTTOM,
                                     TextShadow.NORMAL);
-                    startingHeight = 42;
+                    currentY += 2;
                 }
 
                 List<TextRenderTask> tasks = new ArrayList<>();
-                for (int i = 0; i < selectedLoadout.value().armourNames().size(); i++) {
-                    String armour = selectedLoadout.value().armourNames().get(i);
-
+                for (String armour : selectedLoadout.skillPoints().armourNames()) {
                     tasks.add(new TextRenderTask(
                             StyledText.fromString(armour),
                             new TextRenderSetting(
@@ -430,13 +487,10 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                                     VerticalAlignment.BOTTOM,
                                     TextShadow.NORMAL)));
                 }
-                FontRenderer.getInstance()
-                        .renderTexts(guiGraphics, dividedWidth * 35, dividedHeight * startingHeight, tasks);
+                FontRenderer.getInstance().renderTexts(guiGraphics, dividedWidth * 35, dividedHeight * currentY, tasks);
 
                 tasks = new ArrayList<>();
-                for (int i = 0; i < selectedLoadout.value().accessoryNames().size(); i++) {
-                    String accessory = selectedLoadout.value().accessoryNames().get(i);
-
+                for (String accessory : selectedLoadout.skillPoints().accessoryNames()) {
                     tasks.add(new TextRenderTask(
                             StyledText.fromString(accessory),
                             new TextRenderSetting(
@@ -454,23 +508,16 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                                     VerticalAlignment.BOTTOM,
                                     TextShadow.NORMAL)));
                 }
-
+                float accessoryX = selectedLoadout.skillPoints().armourNames().isEmpty() ? 35 : 44;
                 FontRenderer.getInstance()
-                        .renderTexts(
-                                guiGraphics,
-                                dividedWidth
-                                        * (selectedLoadout.value().armourNames().isEmpty()
-                                                ? 35
-                                                : 44), // left align accessories if no armour
-                                dividedHeight * startingHeight,
-                                tasks);
+                        .renderTexts(guiGraphics, dividedWidth * accessoryX, dividedHeight * currentY, tasks);
             } else {
                 FontRenderer.getInstance()
                         .renderText(
                                 guiGraphics,
                                 StyledText.fromString(I18n.get("screens.wynntils.buildLoadouts.notBuild")),
                                 dividedWidth * 35,
-                                dividedHeight * 42,
+                                dividedHeight * currentY,
                                 CommonColors.WHITE,
                                 HorizontalAlignment.LEFT,
                                 VerticalAlignment.BOTTOM,
@@ -581,7 +628,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
         return super.keyPressed(event);
     }
 
-    public void setSelectedLoadout(Pair<String, SavableSkillPointSet> loadout) {
+    public void setSelectedLoadout(Loadout loadout) {
         if (loadout == null) {
             selectedLoadout = null;
             loadButton.active = false;
@@ -599,19 +646,24 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
         deleteButton.active = true;
         deleteButton.visible = true;
 
-        boolean isAbilityTreeOnly = isAbilityTreeOnlyLoadout(loadout.key());
+        boolean isAbilityTreeOnly = loadout.type() == LoadoutType.ABILITY_TREE;
         convertButton.active = !isAbilityTreeOnly;
         convertButton.visible = !isAbilityTreeOnly;
 
-        if (selectedLoadout.value().getMinimumCombatLevel()
-                > Models.CombatXp.getCombatLevel().current()) {
+        int level = loadout.hasSkillPoints()
+                ? loadout.skillPoints().getMinimumCombatLevel()
+                : (loadout.hasAbilityTree() ? loadout.abilityTree().getDisplayLevel() : 1);
+
+        if (level > Models.CombatXp.getCombatLevel().current()) {
             loadButton.setTooltip(
                     Tooltip.create(Component.translatable("screens.wynntils.buildLoadouts.levelIncompatible")
                             .withStyle(ChatFormatting.RED)));
+        } else {
+            loadButton.setTooltip(null);
         }
     }
 
-    public Pair<String, SavableSkillPointSet> getSelectedLoadout() {
+    public Loadout getSelectedLoadout() {
         return selectedLoadout;
     }
 
@@ -623,44 +675,43 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
 
     public void populateLoadouts() {
         loadoutWidgets = new ArrayList<>();
-        abilityTreeOnlyLoadouts.clear();
 
-        Map<String, SavableSkillPointSet> loadouts = new TreeMap<>(Models.SkillPoint.getLoadouts());
+        Map<String, SavableSkillPointSet> spLoadouts = new TreeMap<>(Models.SkillPoint.getLoadouts());
+        Map<String, SavableAbilityTree> atLoadouts = Models.AbilityTree.getAbilityTreeLoadouts();
 
-        // If an ability-tree loadout has no skill-point entry, inject an empty one
-        // so it still appears in the list and can be selected/deleted.
-        for (String abilityTreeName :
-                Models.AbilityTree.getAbilityTreeLoadouts().keySet()) {
-            if (!loadouts.containsKey(abilityTreeName)) {
-                loadouts.put(abilityTreeName, new SavableSkillPointSet(new int[5]));
-                abilityTreeOnlyLoadouts.add(abilityTreeName);
-            }
-        }
+        Set<String> allNames = new HashSet<>();
+        allNames.addAll(spLoadouts.keySet());
+        allNames.addAll(atLoadouts.keySet());
 
-        for (Map.Entry<String, SavableSkillPointSet> entry : loadouts.entrySet()) {
+        for (String name : new TreeSet<>(allNames)) {
+            SavableSkillPointSet sp = spLoadouts.get(name);
+            SavableAbilityTree at = atLoadouts.get(name);
+            Loadout loadout = new Loadout(name, sp, at, determineLoadoutType(sp, at));
+
             loadoutWidgets.add(new LoadoutWidget(
                     (int) (dividedWidth * 4),
                     (int) (dividedHeight * (9 + loadoutWidgets.size() * 4)),
                     (int) (dividedWidth * 26),
                     (int) (dividedHeight * 4),
                     dividedWidth,
-                    entry.getKey(),
-                    entry.getValue(),
-                    this,
-                    abilityTreeOnlyLoadouts.contains(entry.getKey())));
+                    loadout,
+                    this));
         }
     }
 
-    public Pair<String, SavableSkillPointSet> getLoadoutPairForName(String name) {
-        SavableSkillPointSet set = Models.SkillPoint.getLoadouts().get(name);
-        if (set == null && Models.AbilityTree.hasAbilityTreeLoadout(name)) {
-            set = new SavableSkillPointSet(new int[5]);
-        }
-        return set != null ? Pair.of(name, set) : null;
+    private LoadoutType determineLoadoutType(SavableSkillPointSet sp, SavableAbilityTree at) {
+        boolean hasSp = sp != null;
+        boolean hasAt = at != null;
+        if (hasSp && sp.isBuild()) return LoadoutType.BUILD;
+        if (hasAt && !hasSp) return LoadoutType.ABILITY_TREE;
+        return LoadoutType.SKILL_POINT;
     }
 
-    public boolean isAbilityTreeOnlyLoadout(String name) {
-        return abilityTreeOnlyLoadouts.contains(name);
+    public Loadout getLoadout(String name) {
+        SavableSkillPointSet sp = Models.SkillPoint.getLoadouts().get(name);
+        SavableAbilityTree at = Models.AbilityTree.getAbilityTreeLoadout(name);
+        if (sp == null && at == null) return null;
+        return new Loadout(name, sp, at, determineLoadoutType(sp, at));
     }
 
     public void setStatus(String message, CustomColor color) {

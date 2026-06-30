@@ -45,7 +45,7 @@ public class SaveButton extends WynntilsButton {
         } else {
             saveFunction.accept(name);
             parent.populateLoadouts();
-            parent.setSelectedLoadout(parent.getLoadoutPairForName(name));
+            parent.setSelectedLoadout(parent.getLoadout(name));
             parent.saveNameInput.setTextBoxInput("");
             // in case user pressed on both buttons
             parent.resetSaveButtons();

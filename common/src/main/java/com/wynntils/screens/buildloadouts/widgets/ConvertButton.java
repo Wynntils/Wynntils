@@ -7,6 +7,8 @@ package com.wynntils.screens.buildloadouts.widgets;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.screens.buildloadouts.type.Loadout;
+import com.wynntils.screens.buildloadouts.type.LoadoutType;
 import com.wynntils.utils.type.Pair;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.InputWithModifiers;
@@ -23,15 +25,15 @@ public class ConvertButton extends WynntilsButton {
 
     @Override
     public void onPress(InputWithModifiers input) {
-        if (parent.selectedLoadout.value().isBuild()) {
+        Loadout loadout = parent.getSelectedLoadout();
+        if (loadout.type() == LoadoutType.BUILD) {
             Models.SkillPoint.saveSkillPoints(
-                    parent.selectedLoadout.key(), parent.selectedLoadout.value().getSkillPointsAsArray());
+                    loadout.name(), loadout.skillPoints().getSkillPointsAsArray());
         } else {
             Models.SkillPoint.saveBuild(
-                    parent.selectedLoadout.key(), parent.selectedLoadout.value().getSkillPointsAsArray());
+                    loadout.name(), loadout.skillPoints().getSkillPointsAsArray());
         }
         parent.populateLoadouts();
-        parent.setSelectedLoadout(new Pair<>(
-                parent.selectedLoadout.key(), Models.SkillPoint.getLoadouts().get(parent.selectedLoadout.key())));
+        parent.setSelectedLoadout(parent.getLoadout(loadout.name()));
     }
 }

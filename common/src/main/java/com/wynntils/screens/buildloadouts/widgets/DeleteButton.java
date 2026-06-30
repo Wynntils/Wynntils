@@ -7,6 +7,7 @@ package com.wynntils.screens.buildloadouts.widgets;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.screens.buildloadouts.type.Loadout;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
@@ -20,14 +21,15 @@ public class DeleteButton extends WynntilsButton {
 
     @Override
     public void onPress(InputWithModifiers input) {
-        Models.SkillPoint.deleteLoadout(parent.selectedLoadout.key());
-
-        if (Models.AbilityTree.hasAbilityTreeLoadout(parent.selectedLoadout.key())) {
-            Models.AbilityTree.deleteAbilityTreeLoadout(parent.selectedLoadout.key());
+        Loadout loadout = parent.getSelectedLoadout();
+        if (loadout.hasSkillPoints()) {
+            Models.SkillPoint.deleteLoadout(loadout.name());
         }
-
+        if (loadout.hasAbilityTree()) {
+            Models.AbilityTree.deleteAbilityTreeLoadout(loadout.name());
+        }
         parent.setSelectedLoadout(null);
         parent.populateLoadouts();
-        parent.doScroll(0); // force scrollPercent refresh
+        parent.doScroll(0);
     }
 }

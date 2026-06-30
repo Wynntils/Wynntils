@@ -18,6 +18,7 @@ import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
+import com.wynntils.models.abilitytree.type.SavableAbilityTree;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.wynn.ContainerUtils;
 
@@ -69,8 +70,15 @@ public final class AbilityTreeModel extends Model {
         this.currentAbilityTree = currentAbilityTree;
     }
 
-    public Map<String, AbilityTreeInfo> getAbilityTreeLoadouts() {
-        return abilityTreeLoadouts.get();
+    public Map<String, SavableAbilityTree> getAbilityTreeLoadouts() {
+        Map<String, SavableAbilityTree> result = new TreeMap<>();
+        abilityTreeLoadouts.get().forEach((k, v) -> result.put(k, new SavableAbilityTree(v)));
+        return result;
+    }
+
+    public SavableAbilityTree getAbilityTreeLoadout(String name) {
+        AbilityTreeInfo info = abilityTreeLoadouts.get().get(name);
+        return info == null ? null : new SavableAbilityTree(info);
     }
 
     public boolean hasAbilityTreeLoadout(String name) {
@@ -89,13 +97,13 @@ public final class AbilityTreeModel extends Model {
     }
 
     public void loadAbilityTree(String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
-        AbilityTreeInfo savedTree = abilityTreeLoadouts.get().get(name);
+        SavableAbilityTree savedTree = getAbilityTreeLoadout(name);
         if (savedTree == null) {
             onError.accept("No saved ability tree loadout: " + name);
             return;
         }
 
-        List<AbilityTreeSkillNode> ordered = getIdealApplicationOrder(savedTree);
+        List<AbilityTreeSkillNode> ordered = getIdealApplicationOrder(savedTree.info());
         WynntilsMod.info("ordered: " +  ordered);
         if (ordered.isEmpty()) {
             onComplete.accept(("Loadout " + name + " is empty, nothing to apply"));
