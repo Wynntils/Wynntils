@@ -5,7 +5,9 @@
 package com.wynntils.features.inventory;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
@@ -13,6 +15,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.ui.EmoteWheelFeature;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.activities.type.Dungeon;
@@ -29,6 +32,7 @@ import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.items.game.PotionItem;
 import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
+import com.wynntils.models.items.items.gui.EmoteItem;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.models.items.items.gui.TradeMarketIdentificationFilterItem;
@@ -91,6 +95,12 @@ public class ItemTextOverlayFeature extends Feature {
 
     @Persisted
     private final Config<TextShadow> emeraldPouchTierShadow = new Config<>(TextShadow.OUTLINE);
+
+    @Persisted
+    private final Config<Boolean> favoritedEmoteEnabled = new Config<>(true);
+
+    @Persisted
+    private final Config<TextShadow> favoritedEmoteShadow = new Config<>(TextShadow.OUTLINE);
 
     @Persisted
     private final Config<Boolean> gatheringToolTierEnabled = new Config<>(true);
@@ -210,6 +220,9 @@ public class ItemTextOverlayFeature extends Feature {
         }
         if (wynnItem instanceof EmeraldPouchItem emeraldPouchItem) {
             return new EmeraldPouchOverlay(emeraldPouchItem);
+        }
+        if (wynnItem instanceof EmoteItem emoteItem) {
+            return new FavoritedEmoteOverlay(emoteItem);
         }
         if (wynnItem instanceof GatheringToolItem gatheringToolItem) {
             return new GatheringToolOverlay(gatheringToolItem);
@@ -392,6 +405,40 @@ public class ItemTextOverlayFeature extends Feature {
                     .withTextShadow(emeraldPouchTierShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
+        }
+    }
+
+    private final class FavoritedEmoteOverlay implements TextOverlayInfo {
+        private static final CustomColor HIGHLIGHT_COLOR = CustomColor.fromChatFormatting(ChatFormatting.AQUA);
+
+        private final EmoteItem item;
+
+        private FavoritedEmoteOverlay(EmoteItem item) {
+            this.item = item;
+        }
+
+        @Override
+        public boolean isTextOverlayEnabled() {
+            EmoteWheelFeature emoteWheelFeature = Managers.Feature.getFeatureInstance(EmoteWheelFeature.class);
+            return favoritedEmoteEnabled.get() && emoteWheelFeature.isEnabled();
+        }
+
+        @Override
+        public TextOverlay getTextOverlay() {
+            TextRenderSetting style = TextRenderSetting.DEFAULT
+                    .withCustomColor(HIGHLIGHT_COLOR)
+                    .withTextShadow(favoritedEmoteShadow.get());
+
+            String emoteWheelNumber = getEmoteNumber();
+            return new TextOverlay(new TextRenderTask(emoteWheelNumber, style), -1, 1, 0.9f);
+        }
+
+        private String getEmoteNumber() {
+            if (!Services.FavoritedEmotes.isFavorited(item)) return "";
+
+            int num = Services.FavoritedEmotes.getEmoteIndex(item);
+            num = MathUtils.overflowInRange(num, 1, 0, 9);
+            return String.valueOf(num);
         }
     }
 
