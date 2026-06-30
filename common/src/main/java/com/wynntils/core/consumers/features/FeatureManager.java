@@ -98,6 +98,7 @@ import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.overlays.CustomPlayerListOverlayFeature;
 import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
+import com.wynntils.features.overlays.GatherMiniquestFeature;
 import com.wynntils.features.overlays.GuardianAngelsTrackerOverlayFeature;
 import com.wynntils.features.overlays.HeldItemCooldownOverlayFeature;
 import com.wynntils.features.overlays.HeldItemNameOverlayFeature;
@@ -335,6 +336,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomPlayerListOverlayFeature());
         registerFeature(new GameBarsOverlayFeature());
         registerFeature(new GameNotificationOverlayFeature());
+        registerFeature(new GatherMiniquestFeature());
         registerFeature(new GuardianAngelsTrackerOverlayFeature());
         registerFeature(new HeldItemCooldownOverlayFeature());
         registerFeature(new HeldItemNameOverlayFeature());
