@@ -21,6 +21,11 @@ public class DeleteButton extends WynntilsButton {
     @Override
     public void onPress(InputWithModifiers input) {
         Models.SkillPoint.deleteLoadout(parent.selectedLoadout.key());
+
+        if (Models.AbilityTree.hasAbilityTreeLoadout(parent.selectedLoadout.key())) {
+            Models.AbilityTree.deleteAbilityTreeLoadout(parent.selectedLoadout.key());
+        }
+
         parent.setSelectedLoadout(null);
         parent.populateLoadouts();
         parent.doScroll(0); // force scrollPercent refresh

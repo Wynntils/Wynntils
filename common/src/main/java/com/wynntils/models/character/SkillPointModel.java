@@ -37,6 +37,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.function.Consumer;
+
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
@@ -133,16 +135,22 @@ public final class SkillPointModel extends Model {
         skillPointLoadouts.get().remove(name);
     }
 
-    public void loadLoadout(String name) {
+    public void loadLoadout(String name, Consumer<String> onError, Runnable onComplete) {
         ContainerUtils.closeBackgroundContainer();
 
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Loading Skill Point Loadout Query")
-                .onError(msg -> WynntilsMod.warn("Failed to load skill point loadout: " + msg))
+                .onError(msg -> {
+                    WynntilsMod.warn("Failed to load skill point loadout: " + msg);
+                    if (onError != null) onError.accept(msg);
+                })
                 .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                         .expectContainer(CharacterInfoContainer.class)
                         .verifyContentChange((container, changes, changeType) ->
                                 verifyChange(container, changes, changeType, CONTENT_BOOK_SLOT))
                         .processIncomingContainer((container) -> loadSkillPointsOnServer(container, name)))
+                .execute(() -> {
+                    if (onComplete != null) onComplete.run();
+                })
                 .build();
         query.executeQuery();
     }

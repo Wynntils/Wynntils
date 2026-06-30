@@ -8,7 +8,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
@@ -20,9 +19,7 @@ import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.character.type.SavableSkillPointSet;
-import com.wynntils.models.elements.type.Skill;
-import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.wynn.ContainerUtils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayDeque;
@@ -30,14 +27,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public final class AbilityTreeModel extends Model {
@@ -75,14 +69,26 @@ public final class AbilityTreeModel extends Model {
         this.currentAbilityTree = currentAbilityTree;
     }
 
-    public void saveCurrentAbilityTree(String name) {
+    public Map<String, AbilityTreeInfo> getAbilityTreeLoadouts() {
+        return abilityTreeLoadouts.get();
+    }
+
+    public boolean hasAbilityTreeLoadout(String name) {
+        return abilityTreeLoadouts.get().containsKey(name);
+    }
+
+    public void deleteAbilityTreeLoadout(String name) {
+        abilityTreeLoadouts.get().remove(name);
+    }
+
+    public void saveCurrentAbilityTree(String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
         ABILITY_TREE_CONTAINER_QUERIES.getUnlockedAbilityTree(treeInfo -> {
             abilityTreeLoadouts.get().put(name, treeInfo);
             WynntilsMod.info("Saved ability tree loadout: " + name);
-        });
+        }, onStatus, onError, onComplete);
     }
 
-    public void loadAbilityTree(String name, Consumer<String> onError, Runnable onComplete) {
+    public void loadAbilityTree(String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
         AbilityTreeInfo savedTree = abilityTreeLoadouts.get().get(name);
         if (savedTree == null) {
             onError.accept("No saved ability tree loadout: " + name);
@@ -92,18 +98,15 @@ public final class AbilityTreeModel extends Model {
         List<AbilityTreeSkillNode> ordered = getIdealApplicationOrder(savedTree);
         WynntilsMod.info("ordered: " +  ordered);
         if (ordered.isEmpty()) {
-            WynntilsMod.info("Loadout " + name + " is empty, nothing to apply");
-            onComplete.run();
+            onComplete.accept(("Loadout " + name + " is empty, nothing to apply"));
             return;
         }
 
         WynntilsMod.info("order: " + ordered);
 
-        McUtils.player().closeContainer();
+        ContainerUtils.closeBackgroundContainer();
 
-        // Wait for the container to close
-        Managers.TickScheduler.scheduleLater(() ->
-        ABILITY_TREE_CONTAINER_QUERIES.executeUnlocks(ordered, onError, onComplete), 50);
+        ABILITY_TREE_CONTAINER_QUERIES.unlockAbilities(ordered, onStatus, onError, onComplete);
     }
 
     public AbilityTreeNodeState getNodeState(AbilityTreeSkillNode node) {

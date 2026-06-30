@@ -37,7 +37,7 @@ public class SaveButton extends WynntilsButton {
     @Override
     public void onPress(InputWithModifiers input) {
         String name = parent.saveNameInput.getTextBoxInput();
-        if (Models.SkillPoint.hasLoadout(name) && !buttonConfirm) {
+        if ((Models.SkillPoint.hasLoadout(name) || Models.AbilityTree.hasAbilityTreeLoadout(name)) && !buttonConfirm) {
             parent.hasSaveNameConflict = true;
             buttonConfirm = true;
             this.setMessage(Component.translatable("screens.wynntils.buildLoadouts.confirm")
@@ -45,8 +45,7 @@ public class SaveButton extends WynntilsButton {
         } else {
             saveFunction.accept(name);
             parent.populateLoadouts();
-            parent.setSelectedLoadout(
-                    new Pair<>(name, Models.SkillPoint.getLoadouts().get(name)));
+            parent.setSelectedLoadout(parent.getLoadoutPairForName(name));
             parent.saveNameInput.setTextBoxInput("");
             // in case user pressed on both buttons
             parent.resetSaveButtons();

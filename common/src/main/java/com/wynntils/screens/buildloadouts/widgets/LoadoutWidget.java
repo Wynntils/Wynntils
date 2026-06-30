@@ -34,6 +34,7 @@ public class LoadoutWidget extends AbstractWidget {
     private final SavableSkillPointSet loadout;
     private final BuildLoadoutsScreen parent;
     private final List<String> gearNames = new ArrayList<>();
+    private final boolean abilityTreeOnly;
 
     public LoadoutWidget(
             int x,
@@ -43,12 +44,14 @@ public class LoadoutWidget extends AbstractWidget {
             float dividedWidth,
             String name,
             SavableSkillPointSet loadout,
-            BuildLoadoutsScreen parent) {
+            BuildLoadoutsScreen parent,
+            boolean abilityTreeOnly) {
         super(x, y, width, height, Component.literal(name));
         this.dividedWidth = dividedWidth;
         this.name = name;
         this.loadout = loadout;
         this.parent = parent;
+        this.abilityTreeOnly = abilityTreeOnly;
         if (loadout.weapon() != null) {
             gearNames.add(loadout.weapon());
         }
@@ -97,7 +100,10 @@ public class LoadoutWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString(name + " (" + loadout.getSkillPointsSum() + " - "
+                        StyledText.fromString((abilityTreeOnly
+                                        ? name + " " + ChatFormatting.AQUA + "[AT]" + ChatFormatting.WHITE
+                                        : name)
+                                + " (" + loadout.getSkillPointsSum() + " - "
                                 + (loadout.getMinimumCombatLevel()
                                                 > Models.CombatXp.getCombatLevel()
                                                         .current()

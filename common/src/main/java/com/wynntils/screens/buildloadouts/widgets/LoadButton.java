@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.utils.colors.CommonColors;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
@@ -21,20 +22,33 @@ public class LoadButton extends WynntilsButton {
 
     @Override
     public void onPress(InputWithModifiers input) {
-        Models.SkillPoint.loadLoadout(parent.selectedLoadout.key());
-        Models.AbilityTree.loadAbilityTree(
-                parent.selectedLoadout.key(),
-                errorMsg -> {
-                    // Called if the query fails or a node does not unlock
-                    WynntilsMod.error("Failed to load ability tree: " + errorMsg);
-                    // Optional: send a chat message or show a toast
-                    // McUtils.sendMessageToClient(Component.literal("§cFailed to apply loadout: " + errorMsg));
-                },
-                () -> {
-                    // Called when every node has been clicked and verified
-                    WynntilsMod.info("Ability tree loadout applied successfully");
-                    // Optional: refresh UI, play a sound, etc.
-                }
-        );
+        boolean hasAbilityTree = Models.AbilityTree.hasAbilityTreeLoadout(parent.selectedLoadout.key());
+        boolean isAbilityTreeOnly = parent.isAbilityTreeOnlyLoadout(parent.selectedLoadout.key());
+
+        if (isAbilityTreeOnly) {
+            parent.setStatus("Applying ability tree...", CommonColors.YELLOW);
+            Models.AbilityTree.loadAbilityTree(
+                    parent.selectedLoadout.key(),
+                    status -> parent.setStatus(status, CommonColors.YELLOW),
+                    error -> parent.setStatus(error, CommonColors.RED),
+                    completed -> parent.setStatus(completed, CommonColors.GREEN));
+        } else {
+            parent.setStatus("Loading skill points...", CommonColors.YELLOW);
+            Models.SkillPoint.loadLoadout(
+                    parent.selectedLoadout.key(),
+                    error -> parent.setStatus("Skill point error: " + error, CommonColors.RED),
+                    () -> {
+                        if (hasAbilityTree) {
+                            parent.setStatus("Skill points loaded. Applying ability tree...", CommonColors.YELLOW);
+                            Models.AbilityTree.loadAbilityTree(
+                                    parent.selectedLoadout.key(),
+                                    status -> parent.setStatus(status, CommonColors.YELLOW),
+                                    error -> parent.setStatus(error, CommonColors.RED),
+                                    completed -> parent.setStatus(completed, CommonColors.GREEN));
+                        } else {
+                            parent.setStatus("Skill points loaded successfully!", CommonColors.YELLOW);
+                        }
+                    });
+        }
     }
 }

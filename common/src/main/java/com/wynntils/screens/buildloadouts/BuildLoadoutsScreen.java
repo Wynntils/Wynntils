@@ -18,6 +18,7 @@ import com.wynntils.screens.buildloadouts.widgets.LoadoutWidget;
 import com.wynntils.screens.buildloadouts.widgets.SaveButton;
 import com.wynntils.screens.buildloadouts.widgets.ScrollBar;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.TextRenderSetting;
@@ -27,8 +28,11 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
@@ -47,12 +51,14 @@ import org.lwjgl.glfw.GLFW;
 public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
     private static final int MAX_LOADOUTS_PER_PAGE = 11;
     private List<LoadoutWidget> loadoutWidgets = new ArrayList<>();
+    private Set<String> abilityTreeOnlyLoadouts = new HashSet<>();
 
     private boolean firstInit = true;
     private final List<Pair<Supplier<String>, Function<Skill, Integer>>> summaryParts = new ArrayList<>();
 
-    private SaveButton saveAssignedButton;
     private SaveButton saveBuildButton;
+    private SaveButton saveSkillPointsButton;
+    private SaveButton saveAbilityTreeButton;
     public TextInputBoxWidget saveNameInput;
     public boolean hasSaveNameConflict = false;
 
@@ -63,6 +69,9 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
 
     private ScrollBar scrollBar;
     private float scrollPercent = 0;
+
+    private String statusMessage = "abcdefghijklmnopqrstuvwxyz";
+    private CustomColor statusColor = CommonColors.WHITE;
 
     private BuildLoadoutsScreen() {
         super(Component.literal("Skill Point Loadouts Screen"));
@@ -80,8 +89,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
 
             summaryParts.add(Pair.of(
                     () -> (Models.SkillPoint.hasIllegalAssigned() ? ChatFormatting.RED : "")
-                            + I18n.get(
-                                    "screens.wynntils.buildLoadouts.assigned", Models.SkillPoint.getAssignedSum()),
+                            + I18n.get("screens.wynntils.buildLoadouts.assigned", Models.SkillPoint.getAssignedSum()),
                     Models.SkillPoint::getAssignedSkillPoints));
             summaryParts.add(Pair.of(
                     () -> I18n.get("screens.wynntils.buildLoadouts.gear", Models.SkillPoint.getGearSum()),
@@ -97,8 +105,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                     Models.SkillPoint::getCraftedSkillPoints));
             summaryParts.add(Pair.of(
                     () -> I18n.get(
-                            "screens.wynntils.buildLoadouts.statusEffects",
-                            Models.SkillPoint.getStatusEffectsSum()),
+                            "screens.wynntils.buildLoadouts.statusEffects", Models.SkillPoint.getStatusEffectsSum()),
                     Models.SkillPoint::getStatusEffectSkillPoints));
             summaryParts.add(Pair.of(
                     () -> I18n.get("screens.wynntils.buildLoadouts.total", Models.SkillPoint.getTotalSum()),
@@ -112,12 +119,13 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
         // region Widget initialization
         saveNameInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 35),
-                (int) (dividedHeight * 24),
+                (int) (dividedHeight * 23),
                 (int) ((dividedWidth * 48) - (dividedWidth * 35)),
                 BUTTON_SIZE,
                 (x) -> {
-                    saveAssignedButton.active = !x.isBlank();
                     saveBuildButton.active = !x.isBlank();
+                    saveSkillPointsButton.active = !x.isBlank();
+                    saveAbilityTreeButton.active = !x.isBlank();
                     hasSaveNameConflict = false;
                     resetSaveButtons();
                 },
@@ -125,28 +133,52 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                 saveNameInput);
         this.addRenderableWidget(saveNameInput);
 
-        saveAssignedButton = new SaveButton(
-                (int) (dividedWidth * 49),
-                (int) (dividedHeight * 24),
-                (int) ((dividedWidth * 53) - (dividedWidth * 49)),
-                BUTTON_SIZE,
-                Component.translatable("screens.wynntils.buildLoadouts.save"),
-                this,
-                Models.SkillPoint::saveCurrentSkillPoints);
-        this.addRenderableWidget(saveAssignedButton);
-
         saveBuildButton = new SaveButton(
-                (int) (dividedWidth * 54),
-                (int) (dividedHeight * 24),
-                (int) ((dividedWidth * 59) - (dividedWidth * 54)),
+                (int) (dividedWidth * 35),
+                (int) (dividedHeight * 27),
+                (int) ((dividedWidth * 43) - (dividedWidth * 35)),
                 BUTTON_SIZE,
                 Component.translatable("screens.wynntils.buildLoadouts.saveBuild"),
                 this,
                 (String name) -> {
                     Models.SkillPoint.saveCurrentBuild(name);
-                    Models.AbilityTree.saveCurrentAbilityTree(name);
+                    Models.AbilityTree.saveCurrentAbilityTree(
+                            name,
+                            status -> this.setStatus(status, CommonColors.YELLOW),
+                            error -> this.setStatus(error, CommonColors.RED),
+                            completed -> {
+                                this.setStatus(completed, CommonColors.GREEN);
+                                this.populateLoadouts();
+                            });
                 });
         this.addRenderableWidget(saveBuildButton);
+
+        saveSkillPointsButton = new SaveButton(
+                (int) (dividedWidth * 44),
+                (int) (dividedHeight * 27),
+                (int) ((dividedWidth * 51) - (dividedWidth * 44)),
+                BUTTON_SIZE,
+                Component.translatable("screens.wynntils.buildLoadouts.save"),
+                this,
+                Models.SkillPoint::saveCurrentSkillPoints);
+        this.addRenderableWidget(saveSkillPointsButton);
+
+        saveAbilityTreeButton = new SaveButton(
+                (int) (dividedWidth * 52),
+                (int) (dividedHeight * 27),
+                (int) ((dividedWidth * 59) - (dividedWidth * 52)),
+                BUTTON_SIZE,
+                Component.translatable("screens.wynntils.buildLoadouts.saveAbilityTree"),
+                this,
+                name -> Models.AbilityTree.saveCurrentAbilityTree(
+                        name,
+                        status -> this.setStatus(status, CommonColors.YELLOW),
+                        error -> this.setStatus(error, CommonColors.RED),
+                        completed -> {
+                            this.setStatus(completed, CommonColors.GREEN);
+                            this.populateLoadouts();
+                        }));
+        this.addRenderableWidget(saveAbilityTreeButton);
 
         loadButton = new LoadButton(
                 (int) (dividedWidth * 35),
@@ -162,8 +194,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                 (int) (dividedHeight * 52),
                 (int) ((dividedWidth * 51) - (dividedWidth * 45)),
                 BUTTON_SIZE,
-                Component.translatable("screens.wynntils.buildLoadouts.delete")
-                        .withStyle(ChatFormatting.RED),
+                Component.translatable("screens.wynntils.buildLoadouts.delete").withStyle(ChatFormatting.RED),
                 this);
         this.addRenderableWidget(deleteButton);
 
@@ -229,14 +260,14 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                 dividedWidth * 34,
                 dividedHeight * 8,
                 dividedWidth * 60,
-                dividedHeight * 28,
+                dividedHeight * 30,
                 1);
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.buildLoadouts.summary")),
                         dividedWidth * 34,
-                        dividedHeight * 8,
+                        dividedHeight * 8 - 1,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.BOTTOM,
@@ -292,8 +323,8 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                             guiGraphics,
                             StyledText.fromString(I18n.get("screens.wynntils.buildLoadouts.saveNameConflict")),
                             dividedWidth * 35,
-                            dividedHeight * 23,
-                            CommonColors.WHITE,
+                            dividedHeight * 31,
+                            CommonColors.RED,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
@@ -448,6 +479,21 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
         }
         // endregion
 
+        // region Status
+        if (!statusMessage.isEmpty()) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            guiGraphics,
+                            StyledText.fromString(statusMessage),
+                            dividedWidth * 34,
+                            dividedHeight * 58,
+                            statusColor,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
+        // endregion
+
         // region Scrollbar
         if (loadoutWidgets.size() > MAX_LOADOUTS_PER_PAGE) {
             scrollBar.visible = true;
@@ -551,8 +597,11 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
         loadButton.visible = true;
         deleteButton.active = true;
         deleteButton.visible = true;
-        convertButton.active = true;
-        convertButton.visible = true;
+
+        boolean isAbilityTreeOnly = isAbilityTreeOnlyLoadout(loadout.key());
+        convertButton.active = !isAbilityTreeOnly;
+        convertButton.visible = !isAbilityTreeOnly;
+
         if (selectedLoadout.value().getMinimumCombatLevel()
                 > Models.CombatXp.getCombatLevel().current()) {
             loadButton.setTooltip(
@@ -566,13 +615,27 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
     }
 
     public void resetSaveButtons() {
-        saveAssignedButton.reset();
         saveBuildButton.reset();
+        saveSkillPointsButton.reset();
+        saveAbilityTreeButton.reset();
     }
 
     public void populateLoadouts() {
         loadoutWidgets = new ArrayList<>();
-        Map<String, SavableSkillPointSet> loadouts = Models.SkillPoint.getLoadouts();
+        abilityTreeOnlyLoadouts.clear();
+
+        Map<String, SavableSkillPointSet> loadouts = new TreeMap<>(Models.SkillPoint.getLoadouts());
+
+        // If an ability-tree loadout has no skill-point entry, inject an empty one
+        // so it still appears in the list and can be selected/deleted.
+        for (String abilityTreeName :
+                Models.AbilityTree.getAbilityTreeLoadouts().keySet()) {
+            if (!loadouts.containsKey(abilityTreeName)) {
+                loadouts.put(abilityTreeName, new SavableSkillPointSet(new int[5]));
+                abilityTreeOnlyLoadouts.add(abilityTreeName);
+            }
+        }
+
         for (Map.Entry<String, SavableSkillPointSet> entry : loadouts.entrySet()) {
             loadoutWidgets.add(new LoadoutWidget(
                     (int) (dividedWidth * 4),
@@ -582,7 +645,30 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                     dividedWidth,
                     entry.getKey(),
                     entry.getValue(),
-                    this));
+                    this,
+                    abilityTreeOnlyLoadouts.contains(entry.getKey())));
         }
+    }
+
+    public Pair<String, SavableSkillPointSet> getLoadoutPairForName(String name) {
+        SavableSkillPointSet set = Models.SkillPoint.getLoadouts().get(name);
+        if (set == null && Models.AbilityTree.hasAbilityTreeLoadout(name)) {
+            set = new SavableSkillPointSet(new int[5]);
+        }
+        return set != null ? Pair.of(name, set) : null;
+    }
+
+    public boolean isAbilityTreeOnlyLoadout(String name) {
+        return abilityTreeOnlyLoadouts.contains(name);
+    }
+
+    public void setStatus(String message, CustomColor color) {
+        this.statusMessage = message;
+        this.statusColor = color;
+    }
+
+    public void clearStatus() {
+        this.statusMessage = "";
+        this.statusColor = CommonColors.WHITE;
     }
 }
