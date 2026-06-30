@@ -65,7 +65,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
     public TextInputBoxWidget saveNameInput;
     public boolean hasSaveNameConflict = false;
 
-    public Loadout selectedLoadout;
+    private Loadout selectedLoadout;
     private WynntilsButton loadButton;
     private WynntilsButton deleteButton;
     private WynntilsButton convertButton;
@@ -213,7 +213,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
         this.addRenderableWidget(convertButton);
         // endregion
 
-        scrollBar = new ScrollBar(dividedWidth * 30, dividedHeight * 8, dividedWidth * 0.5f, 0, this, dividedHeight);
+        scrollBar = new ScrollBar(dividedWidth * 30, dividedHeight * 4, dividedWidth * 0.5f, 0, this, dividedHeight);
         this.addRenderableWidget(scrollBar);
 
         setSelectedLoadout(null);
@@ -227,7 +227,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                 guiGraphics,
                 CommonColors.WHITE,
                 dividedWidth * 4,
-                dividedHeight * 8,
+                dividedHeight * 4,
                 dividedWidth * 30 - dividedWidth * 4,
                 1);
         FontRenderer.getInstance()
@@ -235,7 +235,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                         guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.buildLoadouts.loadoutName")),
                         dividedWidth * 4,
-                        dividedHeight * 8,
+                        dividedHeight * 4,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.BOTTOM,
@@ -250,7 +250,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                                             .withFont(new FontDescription.Resource(
                                                     Identifier.withDefaultNamespace("common"))))),
                             dividedWidth * (21 + i * 2),
-                            dividedHeight * 8,
+                            dividedHeight * 4,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.BOTTOM,
@@ -263,7 +263,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                 guiGraphics,
                 CommonColors.WHITE,
                 dividedWidth * 34,
-                dividedHeight * 8,
+                dividedHeight * 4,
                 dividedWidth * 60,
                 dividedHeight * 30,
                 1);
@@ -272,7 +272,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                         guiGraphics,
                         StyledText.fromString(I18n.get("screens.wynntils.buildLoadouts.summary")),
                         dividedWidth * 34,
-                        dividedHeight * 8 - 1,
+                        dividedHeight * 4 - 1,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.BOTTOM,
@@ -287,7 +287,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                                             .withFont(new FontDescription.Resource(
                                                     Identifier.withDefaultNamespace("common"))))),
                             dividedWidth * (51 + i * 2),
-                            dividedHeight * 8,
+                            dividedHeight * 4,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.BOTTOM,
@@ -302,7 +302,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                             guiGraphics,
                             StyledText.fromString(summaryParts.get(i).key().get()),
                             dividedWidth * 35,
-                            dividedHeight * (10 + i * 2),
+                            dividedHeight * (6 + i * 2),
                             CommonColors.WHITE,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.BOTTOM,
@@ -314,7 +314,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                                 StyledText.fromString(Skill.values()[j].getColorCode() + ""
                                         + summaryParts.get(i).value().apply(Skill.values()[j])),
                                 dividedWidth * (51 + j * 2),
-                                dividedHeight * (10 + i * 2),
+                                dividedHeight * (6 + i * 2),
                                 CommonColors.WHITE,
                                 HorizontalAlignment.CENTER,
                                 VerticalAlignment.BOTTOM,
@@ -548,18 +548,18 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
             scrollBar.active = true;
             float visibleRatio = Math.min(1, (float) MAX_LOADOUTS_PER_PAGE / loadoutWidgets.size());
             float scrollbarLength = dividedHeight * 48 * visibleRatio + 1;
-            scrollBar.setY((int) (dividedHeight * 8 + dividedHeight * 48 * scrollPercent));
+            scrollBar.setY((int) (dividedHeight * 4 + dividedHeight * 48 * scrollPercent));
             scrollBar.setHeight((int) scrollbarLength);
         } else {
             scrollBar.visible = false;
             scrollBar.active = false;
         }
-        // Only render from 8 to 56 for scrollable area
+        // Only render from 4 to 56 for scrollable area
         // -/+ 1 to not overlap/cut off content
         RenderUtils.enableScissor(
                 guiGraphics,
                 (int) (dividedWidth * 4) - 1,
-                (int) (dividedHeight * 8) + 1,
+                (int) (dividedHeight * 4) + 1,
                 (int) (dividedWidth * 26) + 1,
                 (int) (dividedHeight * 48) + 1);
         loadoutWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
@@ -589,7 +589,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         // In terms of grid divisions
-        // 11 loadouts are fully displayed from 9 to 56
+        // 11 loadouts are fully displayed from 5 to 56
         // 12th one is very slightly cut off (it needs 57)
         if (loadoutWidgets.size() <= MAX_LOADOUTS_PER_PAGE) {
             return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
@@ -606,11 +606,11 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
         scrollPercent = (float) Math.max(0, Math.min(scrollableRatio, scrollPercent - scrollAmount / 50));
 
         loadoutWidgets.forEach(widget -> {
-            float baseYPosition = dividedHeight * (9f + loadoutWidgets.indexOf(widget) * 4f);
+            float baseYPosition = dividedHeight * (5f + loadoutWidgets.indexOf(widget) * 4f);
 
             float scrollOffset = dividedHeight * maxScrollOffset * scrollPercent;
             widget.setY((int) (baseYPosition - scrollOffset));
-            widget.visible = !(widget.getY() <= dividedHeight * 4) && !(widget.getY() >= dividedHeight * 56);
+            widget.visible = !(widget.getY() <= dividedHeight * 1) && !(widget.getY() >= dividedHeight * 56);
         });
     }
 
@@ -690,7 +690,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
 
             loadoutWidgets.add(new LoadoutWidget(
                     (int) (dividedWidth * 4),
-                    (int) (dividedHeight * (9 + loadoutWidgets.size() * 4)),
+                    (int) (dividedHeight * (5 + loadoutWidgets.size() * 4)),
                     (int) (dividedWidth * 26),
                     (int) (dividedHeight * 4),
                     dividedWidth,
