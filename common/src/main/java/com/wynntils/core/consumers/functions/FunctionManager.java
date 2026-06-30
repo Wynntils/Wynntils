@@ -495,6 +495,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new BombFunctions.BombTypeFunction());
         registerFunction(new BombFunctions.BombWorldFunction());
 
+        registerFunction(new CharacterFunctions.AbilityCooldownFunction());
         registerFunction(new CharacterFunctions.AspectTierFunction());
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());

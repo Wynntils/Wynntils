@@ -79,8 +79,6 @@
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "職業ノードの位置",
   "feature.wynntils.abbreviateMobHealth.description": "モブの体力をより読みやすい形式に短縮します。",
   "feature.wynntils.abbreviateMobHealth.name": "モブの体力を短縮",
-  "feature.wynntils.abilityRefreshRedirect.description": "能力更新メッセージをゲーム更新オーバーレイにリダイレクトする機能を追加します。",
-  "feature.wynntils.abilityRefreshRedirect.name": "能力更新",
   "feature.wynntils.abilityTreeDataDump.description": "能力ツリーデータをファイルにダンプする機能を追加します。",
   "feature.wynntils.abilityTreeDataDump.name": "能力ツリーデータダンプ",
   "feature.wynntils.addCommandExpansion.description": "ほとんどのコマンドに自動補完を追加します。",

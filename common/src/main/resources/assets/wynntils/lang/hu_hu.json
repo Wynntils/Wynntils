@@ -79,8 +79,6 @@
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "Szakma Csomópontok Helyszínei",
   "feature.wynntils.abbreviateMobHealth.description": "Rövidíti a mobok életerejét egy olvashatóbb formátumra.",
   "feature.wynntils.abbreviateMobHealth.name": "Mob Életerő Rövidítése",
-  "feature.wynntils.abilityRefreshRedirect.description": "Hozzáadja a képességfrissítési üzenetek átirányításának lehetőségét a játékfrissítési felületre.",
-  "feature.wynntils.abilityRefreshRedirect.name": "Képesség Frissítések",
   "feature.wynntils.abilityTreeDataDump.description": "Hozzáadja a képességfa adatok fájlba mentésének lehetőségét.",
   "feature.wynntils.abilityTreeDataDump.name": "Képességfa Adatmentés",
   "feature.wynntils.addCommandExpansion.description": "Hozzáadja az automatikus kiegészítést a legtöbb parancshoz.",
