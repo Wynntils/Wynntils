@@ -7,6 +7,7 @@ package com.wynntils.screens.buildloadouts;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.abilitytree.type.SavableAbilityTree;
+import com.wynntils.models.aspects.type.AspectInfo;
 import com.wynntils.models.aspects.type.SavableAspectSet;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.character.type.SavableSkillPointSet;
@@ -494,40 +495,61 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
 
             // --- Aspects section ---
             if (selectedLoadout.hasAspects()) {
+                int aspectCount = selectedLoadout.aspectLoadout().getAspectCount();
+                String aspectCountText = aspectCount + (aspectCount == 1 ? " aspect" : " aspects");
+                float countX = dividedWidth * 52;
+                float countY = dividedHeight * 48;
+                float countWidth = FontRenderer.getInstance().getFont().width(aspectCountText);
+                float countHeight = FontRenderer.getInstance().getFont().lineHeight;
+
+                boolean countHovered = mouseX >= countX && mouseX <= countX + countWidth
+                        && mouseY >= countY - countHeight && mouseY <= countY;
+
+                if (countHovered) {
+                    RenderUtils.drawRect(
+                            guiGraphics,
+                            CommonColors.WHITE.withAlpha(40),
+                            countX - 2,
+                            countY - countHeight - 1,
+                            countWidth + 4,
+                            countHeight + 2);
+                }
+
+                StyledText displayText = StyledText.fromString("§#d73232ff" + aspectCountText + "§r");
                 FontRenderer.getInstance()
                         .renderText(
                                 guiGraphics,
-                                StyledText.fromString(selectedLoadout.aspectLoadout().getAspectCount() + " aspects"),
-                                dividedWidth * 52,
-                                dividedHeight * 48,
-                                CommonColors.WHITE,
+                                displayText,
+                                countX,
+                                countY,
+                                countHovered ? CommonColors.YELLOW : CommonColors.WHITE,
                                 HorizontalAlignment.LEFT,
                                 VerticalAlignment.BOTTOM,
                                 TextShadow.NORMAL);
 
-                /*
-                List<TextRenderTask> tasks = new ArrayList<>();
-                for (String aspectName : selectedLoadout.aspectLoadout().aspectNames()) {
-                    tasks.add(new TextRenderTask(
-                            StyledText.fromString(aspectName),
-                            new TextRenderSetting(
-                                    dividedWidth * 9,
-                                    CommonColors.WHITE,
-                                    HorizontalAlignment.LEFT,
-                                    VerticalAlignment.BOTTOM,
-                                    TextShadow.NORMAL)));
-                    tasks.add(new TextRenderTask(
-                            StyledText.EMPTY,
-                            new TextRenderSetting(
-                                    0,
-                                    CommonColors.WHITE,
-                                    HorizontalAlignment.LEFT,
-                                    VerticalAlignment.BOTTOM,
-                                    TextShadow.NORMAL)));
+                // Tooltip for "X aspect(s)" hover
+                if (countHovered) {
+                    List<Component> aspectTooltip = new ArrayList<>();
+                    String tooltipTitle = aspectCount == 1 ? "Aspect:" : "Aspects:";
+                    aspectTooltip.add(Component.literal(tooltipTitle)
+                            .withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD));
+                    for (String aspectName : selectedLoadout.aspectLoadout().aspectNames()) {
+                        AspectInfo aspectInfo = Models.Aspect.getAspectInfo(aspectName);
+                        ChatFormatting rarityColor = ChatFormatting.WHITE;
+                        if (aspectInfo != null) {
+                            rarityColor = switch (aspectInfo.gearTier()) {
+                                case LEGENDARY -> ChatFormatting.AQUA;
+                                case FABLED -> ChatFormatting.RED;
+                                case MYTHIC -> ChatFormatting.DARK_PURPLE;
+                                default -> ChatFormatting.WHITE;
+                            };
+                        }
+                        aspectTooltip.add(Component.literal("• " + aspectName).withStyle(rarityColor));
+                    }
+                    RenderUtils.renderTooltip(guiGraphics, aspectTooltip, mouseX, mouseY);
                 }
-                FontRenderer.getInstance().renderTexts(guiGraphics, dividedWidth * 35, dividedHeight * currentY, tasks);
-                 */
             }
+            // endregion
 
             // --- Gear section ---
             if (selectedLoadout.type() == LoadoutType.BUILD) {
