@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities.bossbars;
@@ -30,14 +30,7 @@ public final class BloodPoolBar extends TrackedBar {
     @Override
     public void onUpdateProgress(float progress) {
         if (progress != 0f) {
-            // Round to nearest 10
-            int unroundedMax = (int) (current / progress);
-            int remainder = unroundedMax % 10;
-
-            int max = unroundedMax - remainder;
-            if (remainder > 5) {
-                max += 10;
-            }
+            int max = (int) (current / progress);
             updateValue(current, max);
         }
     }
