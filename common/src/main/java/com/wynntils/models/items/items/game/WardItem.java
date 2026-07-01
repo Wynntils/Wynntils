@@ -4,9 +4,11 @@
  */
 package com.wynntils.models.items.items.game;
 
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.rewards.type.WardType;
+import com.wynntils.utils.EnumUtils;
 
-public class WardItem extends GameItem {
+public class WardItem extends GameItem implements NamedItemProperty {
     private final WardType type;
 
     public WardItem(WardType type) {
@@ -20,5 +22,10 @@ public class WardItem extends GameItem {
     @Override
     public String toString() {
         return "WardItem{" + "type=" + type + '}';
+    }
+
+    @Override
+    public String getName() {
+        return EnumUtils.toNiceString(type) + " Ward";
     }
 }
