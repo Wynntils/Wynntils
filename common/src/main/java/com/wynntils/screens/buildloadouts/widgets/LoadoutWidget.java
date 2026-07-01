@@ -7,8 +7,10 @@ package com.wynntils.screens.buildloadouts.widgets;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.screens.buildloadouts.type.Loadout;
@@ -21,6 +23,8 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
+
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +32,7 @@ import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
@@ -52,6 +57,47 @@ public class LoadoutWidget extends AbstractWidget {
             gearNames.addAll(loadout.skillPoints().armourNames());
             gearNames.addAll(loadout.skillPoints().accessoryNames());
         }
+
+        setTooltip(Tooltip.create(Component.literal(buildFullTooltipText())));
+        setTooltipDelay(Duration.ofMillis(500));
+    }
+
+    private String buildFullTooltipText() {
+        StringBuilder tooltip = new StringBuilder(loadout.name());
+
+        if (loadout.hasAbilityTree()) {
+            ClassType classType = loadout.abilityTree().getClassType();
+            if (classType != null && classType != ClassType.NONE) {
+                tooltip.append(" (").append(classType.getName()).append(")");
+            }
+            String archetype = loadout.abilityTree().getMainArchetype();
+            if (archetype != null) {
+                tooltip.append(" - ").append(archetype);
+            }
+        }
+
+        tooltip.append(" [Lv. ").append(loadout.getMaxLevel()).append("]");
+
+        if (loadout.type() == LoadoutType.ABILITY_TREE) {
+            tooltip.append(" [Ability Tree]");
+        } else if (loadout.type() == LoadoutType.BUILD) {
+            tooltip.append(" [Build]");
+        } else if (loadout.type() == LoadoutType.SKILL_POINT) {
+            tooltip.append(" [Skill Points]");
+        }
+
+        return tooltip.toString();
+    }
+
+    private StyledText truncateToVisibleLength(StyledText text, int maxVisibleChars) {
+        if (maxVisibleChars <= 3) return text;
+
+        int visibleLength = text.length(); // counts raw text, ignoring § codes
+        if (visibleLength <= maxVisibleChars) {
+            return text;
+        }
+
+        return text.substring(0, maxVisibleChars - 3, StyleType.NONE).append("...");
     }
 
     @Override
@@ -92,41 +138,54 @@ public class LoadoutWidget extends AbstractWidget {
                             0.8f);
         }
 
-        int displayLevel = loadout.type() == LoadoutType.ABILITY_TREE && loadout.hasAbilityTree()
-                ? loadout.abilityTree().getDisplayLevel()
-                : (loadout.hasSkillPoints() ? loadout.skillPoints().getMinimumCombatLevel() : 1);
+
+        int level = loadout.getMaxLevel();
 
         String levelColor =
-                displayLevel > Models.CombatXp.getCombatLevel().current() ? ChatFormatting.RED.toString() : "";
+                level > Models.CombatXp.getCombatLevel().current() ? ChatFormatting.RED.toString() : "";
         String levelText = levelColor
-                + I18n.get("screens.wynntils.buildLoadouts.widgetLevelText", displayLevel)
+                + I18n.get("screens.wynntils.buildLoadouts.widgetLevelText", level)
                 + ChatFormatting.WHITE;
 
-        String displayText;
+        String classPart = "";
+        if (loadout.hasAbilityTree()) {
+            ClassType classType = loadout.abilityTree().getClassType();
+            if (classType != null && classType != ClassType.NONE) {
+                classPart = ChatFormatting.GRAY + " [" + classType.getName() + "]" + ChatFormatting.WHITE;
+            }
+        }
+
+        StyledText displayText;
         if (loadout.type() == LoadoutType.ABILITY_TREE) {
             String archetypePart =
                     loadout.hasAbilityTree() && loadout.abilityTree().getMainArchetype() != null
-                            ? " (" + loadout.abilityTree().getMainArchetype() + ")"
+                            ? ChatFormatting.WHITE + " (" + loadout.abilityTree().getMainArchetype() + ")"
                             : "";
-            displayText = loadout.name() + " " + ChatFormatting.AQUA + "[AT]" + ChatFormatting.WHITE + archetypePart
-                    + " (" + levelText + ")";
+            displayText = StyledText.fromString(
+                    loadout.name() + " " + ChatFormatting.AQUA + "[AT]" + archetypePart + classPart
+                            + " (" + levelText + ")");
         } else if (loadout.type() == LoadoutType.BUILD) {
             String archetypePart =
                     loadout.hasAbilityTree() && loadout.abilityTree().getMainArchetype() != null
                             ? " (" + loadout.abilityTree().getMainArchetype() + ")"
                             : "";
-            displayText = loadout.name() + archetypePart + " (" + levelText + ")";
+            displayText = StyledText.fromString(
+                    loadout.name() + archetypePart + classPart + " (" + levelText + ")");
         } else if (loadout.type() == LoadoutType.SKILL_POINT) {
-            displayText = loadout.name() + " " + ChatFormatting.YELLOW + "[SP]" + ChatFormatting.WHITE + " ("
-                    + levelText + ")";
+            displayText = StyledText.fromString(
+                    loadout.name() + " " + ChatFormatting.YELLOW + "[SP]" + classPart + ChatFormatting.WHITE + " ("
+                            + levelText + ")");
         } else {
-            displayText = loadout.name() + " (" + levelText + ")";
+            displayText = StyledText.fromString(loadout.name() + classPart + " (" + levelText + ")");
         }
+
+        int maxChars = (loadout.type() == LoadoutType.ABILITY_TREE) ? 74 : 50;
+        displayText = truncateToVisibleLength(displayText, maxChars);
 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString(displayText),
+                        displayText,
                         dividedWidth * 4,
                         this.getY() + (float) this.getHeight() / nameYOffset,
                         CommonColors.WHITE,
@@ -141,7 +200,7 @@ public class LoadoutWidget extends AbstractWidget {
                                 guiGraphics,
                                 StyledText.fromString(Skill.values()[i].getColorCode() + ""
                                         + loadout.skillPoints().getSkillPointsAsArray()[i]),
-                                dividedWidth * (21 + i * 2),
+                                (int) (dividedWidth * (23 + i * 1.5)),
                                 this.getY() + (float) this.getHeight() / 2,
                                 CommonColors.WHITE,
                                 HorizontalAlignment.CENTER,

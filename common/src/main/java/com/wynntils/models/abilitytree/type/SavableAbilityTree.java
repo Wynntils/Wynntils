@@ -1,5 +1,7 @@
 package com.wynntils.models.abilitytree.type;
 
+import com.wynntils.models.character.type.ClassType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,13 +21,20 @@ public record SavableAbilityTree(AbilityTreeInfo info) {
 
     public int getDisplayLevel() {
         if (info == null || info.nodes().isEmpty()) return 1;
-        return info.nodes().stream()
-                .mapToInt(AbilityTreeSkillNode::requiredLevel)
-                .max()
-                .orElse(1);
+        int abilityPoints = AbilityPointProgression.getTotalPointsForTree(info);
+        return AbilityPointProgression.getLevelForPoints(abilityPoints);
     }
 
     public int getNodeCount() {
         return info == null ? 0 : info.nodes().size();
+    }
+
+    public ClassType getClassType() {
+        if (info == null || info.nodes() == null) return ClassType.NONE;
+        return info.nodes().stream()
+                .map(node -> node.abilityTreeNodeType().getClassType())
+                .filter(classType -> classType != null && classType != ClassType.NONE)
+                .findFirst()
+                .orElse(ClassType.NONE);
     }
 }

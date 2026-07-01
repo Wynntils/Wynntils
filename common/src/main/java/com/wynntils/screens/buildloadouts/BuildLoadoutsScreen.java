@@ -7,6 +7,7 @@ package com.wynntils.screens.buildloadouts;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.abilitytree.type.SavableAbilityTree;
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.screens.base.WynntilsGridLayoutScreen;
@@ -62,6 +63,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
     private SaveButton saveBuildButton;
     private SaveButton saveSkillPointsButton;
     private SaveButton saveAbilityTreeButton;
+    private SaveButton saveAspectsButton;
     public TextInputBoxWidget saveNameInput;
     public boolean hasSaveNameConflict = false;
 
@@ -122,13 +124,14 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
         // region Widget initialization
         saveNameInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 35),
-                (int) (dividedHeight * 23),
+                (int) (dividedHeight * 19),
                 (int) ((dividedWidth * 48) - (dividedWidth * 35)),
                 BUTTON_SIZE,
                 (x) -> {
                     saveBuildButton.active = !x.isBlank();
                     saveSkillPointsButton.active = !x.isBlank();
                     saveAbilityTreeButton.active = !x.isBlank();
+                    saveAspectsButton.active = !x.isBlank();
                     hasSaveNameConflict = false;
                     resetSaveButtons();
                 },
@@ -138,7 +141,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
 
         saveBuildButton = new SaveButton(
                 (int) (dividedWidth * 35),
-                (int) (dividedHeight * 27),
+                (int) (dividedHeight * 23),
                 (int) ((dividedWidth * 43) - (dividedWidth * 35)),
                 BUTTON_SIZE,
                 Component.translatable("screens.wynntils.buildLoadouts.saveBuild"),
@@ -159,8 +162,8 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
 
         saveSkillPointsButton = new SaveButton(
                 (int) (dividedWidth * 44),
-                (int) (dividedHeight * 27),
-                (int) ((dividedWidth * 51) - (dividedWidth * 44)),
+                (int) (dividedHeight * 23),
+                (int) ((dividedWidth * 52) - (dividedWidth * 44)),
                 BUTTON_SIZE,
                 Component.translatable("screens.wynntils.buildLoadouts.save"),
                 this,
@@ -168,9 +171,9 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
         this.addRenderableWidget(saveSkillPointsButton);
 
         saveAbilityTreeButton = new SaveButton(
-                (int) (dividedWidth * 52),
+                (int) (dividedWidth * 35),
                 (int) (dividedHeight * 27),
-                (int) ((dividedWidth * 59) - (dividedWidth * 52)),
+                (int) ((dividedWidth * 43) - (dividedWidth * 35)),
                 BUTTON_SIZE,
                 Component.translatable("screens.wynntils.buildLoadouts.saveAbilityTree"),
                 this,
@@ -184,6 +187,24 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                             this.setSelectedLoadout(this.getLoadout(name));
                         }));
         this.addRenderableWidget(saveAbilityTreeButton);
+
+        saveAspectsButton = new SaveButton(
+                (int) (dividedWidth * 44),
+                (int) (dividedHeight * 27),
+                (int) ((dividedWidth * 52) - (dividedWidth * 44)),
+                BUTTON_SIZE,
+                Component.translatable("screens.wynntils.buildLoadouts.saveAspects"),
+                this,
+                name -> Models.AbilityTree.saveCurrentAbilityTree(
+                        name,
+                        status -> this.setStatus(status, CommonColors.YELLOW),
+                        error -> this.setStatus(error, CommonColors.RED),
+                        completed -> {
+                            this.setStatus(completed, CommonColors.GREEN);
+                            this.populateLoadouts();
+                            this.setSelectedLoadout(this.getLoadout(name));
+                        }));
+        this.addRenderableWidget(saveAspectsButton);
 
         loadButton = new LoadButton(
                 (int) (dividedWidth * 35),
@@ -249,7 +270,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                                             .withColor(Skill.values()[i].getColorCode())
                                             .withFont(new FontDescription.Resource(
                                                     Identifier.withDefaultNamespace("common"))))),
-                            dividedWidth * (21 + i * 2),
+                            (int) (dividedWidth * (23 + i * 1.5)),
                             dividedHeight * 4,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
@@ -286,7 +307,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                                             .withColor(Skill.values()[i].getColorCode())
                                             .withFont(new FontDescription.Resource(
                                                     Identifier.withDefaultNamespace("common"))))),
-                            dividedWidth * (51 + i * 2),
+                            (int) (dividedWidth * (53 + i * 1.5)),
                             dividedHeight * 4,
                             CommonColors.WHITE,
                             HorizontalAlignment.CENTER,
@@ -313,7 +334,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                                 guiGraphics,
                                 StyledText.fromString(Skill.values()[j].getColorCode() + ""
                                         + summaryParts.get(i).value().apply(Skill.values()[j])),
-                                dividedWidth * (51 + j * 2),
+                                (int) (dividedWidth * (53 + j * 1.5)),////(int) (dividedWidth * (53 + j * 1.5))
                                 dividedHeight * (6 + i * 2),
                                 CommonColors.WHITE,
                                 HorizontalAlignment.CENTER,
@@ -373,7 +394,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                                                     .withColor(Skill.values()[i].getColorCode())
                                                     .withFont(new FontDescription.Resource(
                                                             Identifier.withDefaultNamespace("common"))))),
-                                    dividedWidth * (51 + i * 2),
+                                    (int) (dividedWidth * (53 + i * 1.5)),
                                     dividedHeight * 34,
                                     CommonColors.WHITE,
                                     HorizontalAlignment.CENTER,
@@ -400,7 +421,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                                     guiGraphics,
                                     StyledText.fromString(Skill.values()[i].getColorCode() + ""
                                             + selectedLoadout.skillPoints().getSkillPointsAsArray()[i]),
-                                    dividedWidth * (51 + i * 2),
+                                    (int) (dividedWidth * (53 + i * 1.5)),
                                     dividedHeight * currentY,
                                     CommonColors.WHITE,
                                     HorizontalAlignment.CENTER,
@@ -412,12 +433,28 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
 
             // --- Ability Tree section ---
             if (selectedLoadout.hasAbilityTree()) {
+                ClassType classType = selectedLoadout.abilityTree().getClassType();
+                String className = (classType != null && classType != ClassType.NONE)
+                        ? classType.getName()
+                        : I18n.get("screens.wynntils.buildLoadouts.unknownClass");
+
+                FontRenderer.getInstance()
+                        .renderText(
+                                guiGraphics,
+                                StyledText.fromString(className),
+                                dividedWidth * 52,
+                                dividedHeight * 41,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.BOTTOM,
+                                TextShadow.NORMAL);
+
                 FontRenderer.getInstance()
                         .renderText(
                                 guiGraphics,
                                 StyledText.fromString(selectedLoadout.abilityTree().getMainArchetype()),
                                 dividedWidth * 52,
-                                dividedHeight * 41,
+                                dividedHeight * 43,
                                 CommonColors.WHITE,
                                 HorizontalAlignment.LEFT,
                                 VerticalAlignment.BOTTOM,
@@ -429,7 +466,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                                 StyledText.fromString(
                                         selectedLoadout.abilityTree().getNodeCount() + " nodes"),
                                 dividedWidth * 52,
-                                dividedHeight * 43,
+                                dividedHeight * 45,
                                 CommonColors.WHITE,
                                 HorizontalAlignment.LEFT,
                                 VerticalAlignment.BOTTOM,
@@ -441,9 +478,9 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                 FontRenderer.getInstance()
                         .renderText(
                                 guiGraphics,
-                                StyledText.fromString("Level: " + levelColor + level),
+                                StyledText.fromString(levelColor + "Level: " + level),
                                 dividedWidth * 52,
-                                dividedHeight * 45,
+                                dividedHeight * 47,
                                 CommonColors.WHITE,
                                 HorizontalAlignment.LEFT,
                                 VerticalAlignment.BOTTOM,
@@ -610,7 +647,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
 
             float scrollOffset = dividedHeight * maxScrollOffset * scrollPercent;
             widget.setY((int) (baseYPosition - scrollOffset));
-            widget.visible = !(widget.getY() <= dividedHeight * 1) && !(widget.getY() >= dividedHeight * 56);
+            widget.visible = !(widget.getY() <= dividedHeight * 1) && !(widget.getY() >= dividedHeight * 52);
         });
     }
 
@@ -650,11 +687,9 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
         convertButton.active = !isAbilityTreeOnly;
         convertButton.visible = !isAbilityTreeOnly;
 
-        int level = loadout.hasSkillPoints()
-                ? loadout.skillPoints().getMinimumCombatLevel()
-                : (loadout.hasAbilityTree() ? loadout.abilityTree().getDisplayLevel() : 1);
 
-        if (level > Models.CombatXp.getCombatLevel().current()) {
+
+        if (loadout.getMaxLevel() > Models.CombatXp.getCombatLevel().current()) {
             loadButton.setTooltip(
                     Tooltip.create(Component.translatable("screens.wynntils.buildLoadouts.levelIncompatible")
                             .withStyle(ChatFormatting.RED)));
@@ -671,6 +706,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
         saveBuildButton.reset();
         saveSkillPointsButton.reset();
         saveAbilityTreeButton.reset();
+        saveAspectsButton.reset();
     }
 
     public void populateLoadouts() {
@@ -717,10 +753,5 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
     public void setStatus(String message, CustomColor color) {
         this.statusMessage = message;
         this.statusColor = color;
-    }
-
-    public void clearStatus() {
-        this.statusMessage = "";
-        this.statusColor = CommonColors.WHITE;
     }
 }

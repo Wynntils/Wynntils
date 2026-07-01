@@ -41,7 +41,7 @@ public final class AbilityTreeModel extends Model {
     public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
 
     @Persisted
-    private final Storage<Map<String, AbilityTreeInfo>> abilityTreeLoadouts = new Storage<>(new TreeMap<>());
+    private final Storage<Map<String, SavableAbilityTree>> abilityTreeLoadouts = new Storage<>(new TreeMap<>());
 
     private Map<ClassType, AbilityTreeInfo> abilityTreeMap = new HashMap<>();
     private ParsedAbilityTree currentAbilityTree;
@@ -71,14 +71,11 @@ public final class AbilityTreeModel extends Model {
     }
 
     public Map<String, SavableAbilityTree> getAbilityTreeLoadouts() {
-        Map<String, SavableAbilityTree> result = new TreeMap<>();
-        abilityTreeLoadouts.get().forEach((k, v) -> result.put(k, new SavableAbilityTree(v)));
-        return result;
+        return abilityTreeLoadouts.get();
     }
 
     public SavableAbilityTree getAbilityTreeLoadout(String name) {
-        AbilityTreeInfo info = abilityTreeLoadouts.get().get(name);
-        return info == null ? null : new SavableAbilityTree(info);
+        return abilityTreeLoadouts.get().get(name);
     }
 
     public boolean hasAbilityTreeLoadout(String name) {
@@ -91,7 +88,7 @@ public final class AbilityTreeModel extends Model {
 
     public void saveCurrentAbilityTree(String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
         ABILITY_TREE_CONTAINER_QUERIES.getUnlockedAbilityTree(treeInfo -> {
-            abilityTreeLoadouts.get().put(name, treeInfo);
+            abilityTreeLoadouts.get().put(name, new SavableAbilityTree(treeInfo));
             WynntilsMod.info("Saved ability tree loadout: " + name);
         }, onStatus, onError, onComplete);
     }

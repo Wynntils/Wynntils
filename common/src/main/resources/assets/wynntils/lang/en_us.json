@@ -3579,6 +3579,8 @@
   "screens.wynntils.buildLoadouts.notBuild": "Not a Build",
   "screens.wynntils.buildLoadouts.save": "Save Skill Points",
   "screens.wynntils.buildLoadouts.saveAbilityTree": "Save Ability Tree",
+  "screens.wynntils.buildLoadouts.saveAspects": "Save Aspects",
+  "screens.wynntils.buildLoadouts.unknownClass": "None",
   "screens.wynntils.buildLoadouts.saveBuild": "Save Build",
   "screens.wynntils.buildLoadouts.saveNameConflict": "A loadout with this name already exists. Click again to overwrite.",
   "screens.wynntils.buildLoadouts.setBonus": "From Set Bonus (%d)",
