@@ -6,6 +6,7 @@ package com.wynntils.screens.guides.misc;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.models.items.items.game.WardItem;
+import com.wynntils.models.rewards.type.ItemObtainTypes;
 import com.wynntils.models.rewards.type.WardType;
 import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.EnumUtils;
@@ -74,10 +75,7 @@ public class WardItemStack extends GuideItemStack {
                 .withStyle(ChatFormatting.GRAY)
                 .append(Component.translatable("screens.wynntils.wynntilsGuides.misc.wards.usage2")
                         .withStyle(ChatFormatting.WHITE));
-        MutableComponent obtainComponent = Component.translatable("screens.wynntils.wynntilsGuides.misc.wards.obtain1")
-                .withStyle(ChatFormatting.DARK_GRAY)
-                .append(Component.translatable(wardType.getObtainSourceTranslationKey())
-                        .withStyle(ChatFormatting.AQUA));
+        MutableComponent obtainComponent = ItemObtainTypes.component(wardType.getItemObtainTypes());
 
         return List.of(usageComponent, Component.empty(), obtainComponent);
     }
