@@ -1,5 +1,7 @@
 package com.wynntils.models.abilitytree.type;
 
+import com.wynntils.core.components.Models;
+
 public final class AbilityPointProgression {
     private static final int[] POINTS_AT_LEVEL = new int[121];
 
@@ -29,20 +31,18 @@ public final class AbilityPointProgression {
         }
     }
 
-    private AbilityPointProgression() {}
-
     public static int getPointsAtLevel(int combatLevel) {
         if (combatLevel <= 0) return 0;
-        if (combatLevel >= 120) return 50;
-        return POINTS_AT_LEVEL[combatLevel];
+        return Math.min(50, POINTS_AT_LEVEL[Math.min(combatLevel, 120)] + getLoanedPoints());
     }
 
     public static int getLevelForPoints(int abilityPoints) {
-        if (abilityPoints <= 0) return 1;
-        if (abilityPoints >= 50) return 120;
+        int earnedPoints = Math.min(abilityPoints, 50) - getLoanedPoints();
+        if (earnedPoints <= 0) return 1;
+        if (earnedPoints >= 50) return 120;
 
         for (int level = 1; level <= 120; level++) {
-            if (POINTS_AT_LEVEL[level] >= abilityPoints) {
+            if (POINTS_AT_LEVEL[level] >= earnedPoints) {
                 return level;
             }
         }
@@ -52,5 +52,13 @@ public final class AbilityPointProgression {
     public static int getTotalPointsForTree(AbilityTreeInfo info) {
         if (info == null || info.nodes() == null) return 0;
         return info.nodes().stream().mapToInt(AbilityTreeSkillNode::cost).sum();
+    }
+
+    private static int getLoanedPoints() {
+        return switch (Models.Character.getRank()) {
+            case VIP_PLUS -> 2;
+            case HERO, HERO_PLUS, CHAMPION -> 4;
+            default -> 0;
+        };
     }
 }

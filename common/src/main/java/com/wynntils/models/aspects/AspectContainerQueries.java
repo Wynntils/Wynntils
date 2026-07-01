@@ -10,7 +10,6 @@ import com.wynntils.models.aspects.type.AspectInfo;
 import com.wynntils.models.aspects.type.SavableAspectSet;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.containers.AbilityTreeContainer;
-import com.wynntils.models.containers.containers.AbilityTreeResetContainer;
 import com.wynntils.models.containers.containers.AspectsContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.items.items.game.AspectItem;
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public class AspectContainerQueries {
     private static final int ABILITY_TREE_SLOT = 9;
