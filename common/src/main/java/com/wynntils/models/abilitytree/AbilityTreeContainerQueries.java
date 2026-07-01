@@ -24,7 +24,6 @@ import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.containers.containers.AbilityTreeContainer;
 import com.wynntils.models.containers.containers.AbilityTreeResetContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
-import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.utils.mc.McUtils;
@@ -124,7 +123,7 @@ public class AbilityTreeContainerQueries {
         builder.build().executeQuery();
     }
 
-    public void unlockAbilities(
+    public void applyAbilityTreeLoadout(
             List<AbilityTreeSkillNode> nodesToUnlock,
             Consumer<String> onStatus,
             Consumer<String> onError,

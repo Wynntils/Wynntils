@@ -84,6 +84,8 @@ public class LoadoutWidget extends AbstractWidget {
             tooltip.append(" [Build]");
         } else if (loadout.type() == LoadoutType.SKILL_POINT) {
             tooltip.append(" [Skill Points]");
+        } else if (loadout.type() == LoadoutType.ASPECT) {
+            tooltip.append(" [Aspects]");
         }
 
         return tooltip.toString();
@@ -174,6 +176,17 @@ public class LoadoutWidget extends AbstractWidget {
         } else if (loadout.type() == LoadoutType.SKILL_POINT) {
             displayText = StyledText.fromString(
                     loadout.name() + " " + ChatFormatting.YELLOW + "[SP]" + classPart + ChatFormatting.WHITE + " ("
+                            + levelText + ")");
+        } else if (loadout.type() == LoadoutType.ASPECT) {
+            String aspectClassPart = "";
+            if (loadout.hasAspects()) {
+                ClassType classType = loadout.aspectLoadout().classType();
+                if (classType != null && classType != ClassType.NONE) {
+                    aspectClassPart = ChatFormatting.GRAY + " [" + classType.getName() + "]" + ChatFormatting.WHITE;
+                }
+            }
+            displayText = StyledText.fromString(
+                    loadout.name() + " " + ChatFormatting.GREEN + "[A]" + aspectClassPart + ChatFormatting.WHITE + " ("
                             + levelText + ")");
         } else {
             displayText = StyledText.fromString(loadout.name() + classPart + " (" + levelText + ")");

@@ -28,6 +28,9 @@ public class DeleteButton extends WynntilsButton {
         if (loadout.hasAbilityTree()) {
             Models.AbilityTree.deleteAbilityTreeLoadout(loadout.name());
         }
+        if (loadout.hasAspects()) {
+            Models.Aspect.deleteAspectLoadout(loadout.name());
+        }
         parent.setSelectedLoadout(null);
         parent.populateLoadouts();
         parent.doScroll(0);

@@ -1,16 +1,19 @@
 package com.wynntils.screens.buildloadouts.type;
 
 import com.wynntils.models.abilitytree.type.SavableAbilityTree;
+import com.wynntils.models.aspects.type.SavableAspectSet;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 
 public record Loadout(
         String name,
-        SavableSkillPointSet skillPoints,   // null if no SP component
-        SavableAbilityTree abilityTree,     // null if no AT component
+        SavableSkillPointSet skillPoints,
+        SavableAbilityTree abilityTree,
+        SavableAspectSet aspectLoadout,
         LoadoutType type
 ) {
     public boolean hasSkillPoints() { return skillPoints != null; }
     public boolean hasAbilityTree() { return abilityTree != null; }
+    public boolean hasAspects() { return aspectLoadout != null; }
 
     public int getMaxLevel() {
         int spLevel = hasSkillPoints() ? skillPoints().getMinimumCombatLevel() : 0;

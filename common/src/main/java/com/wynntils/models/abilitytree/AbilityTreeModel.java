@@ -111,7 +111,7 @@ public final class AbilityTreeModel extends Model {
 
         ContainerUtils.closeBackgroundContainer();
 
-        ABILITY_TREE_CONTAINER_QUERIES.unlockAbilities(ordered, onStatus, onError, onComplete);
+        ABILITY_TREE_CONTAINER_QUERIES.applyAbilityTreeLoadout(ordered, onStatus, onError, onComplete);
     }
 
     public AbilityTreeNodeState getNodeState(AbilityTreeSkillNode node) {
