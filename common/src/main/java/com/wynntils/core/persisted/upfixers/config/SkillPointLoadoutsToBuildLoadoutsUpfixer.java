@@ -10,7 +10,7 @@ import java.util.List;
 
 public class SkillPointLoadoutsToBuildLoadoutsUpfixer extends RenamedPrefixesUpfixer {
     private static final List<Pair<String, String>> RENAMED_PREFIXES =
-            List.of(Pair.of("skillPointLoadoutsFeature", "buildLoadoutsFeature"));
+            List.of(Pair.of("skillPointLoadoutsFeature.", "buildLoadoutsFeature."));
 
     @Override
     protected List<Pair<String, String>> getRenamedPrefixes() {
