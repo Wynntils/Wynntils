@@ -130,7 +130,7 @@ public final class ContainerQueryHandler extends Handler {
     }
 
     @SubscribeEvent
-    public void onTick(TickEvent event) {
+    public void onTick(TickEvent event) throws ContainerQueryException {
         if (currentStep == null) return;
 
         if (ticksUntilNextOperation >= 0) {
@@ -145,6 +145,14 @@ public final class ContainerQueryHandler extends Handler {
                 } catch (Throwable t) {
                     McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
                     raiseError("Error while processing content for " + firstStepName + ": " + t.getMessage());
+                    return;
+                }
+
+                // Step finished without opening a new container, advance if more steps exist
+                ContainerQueryStep nextStep = currentStep.getNextStep(currentContent);
+                if (nextStep != null) {
+                    currentStep = nextStep;
+                    ticksUntilNextOperation = currentStep.getNextOperationDelayTicks();
                     return;
                 }
 
@@ -363,7 +371,7 @@ public final class ContainerQueryHandler extends Handler {
         if (nextStep != null) {
             // Go on and query another container
             currentStep = nextStep;
-            ticksUntilNextOperation = NEXT_OPERATION_DELAY_TICKS;
+            ticksUntilNextOperation = currentStep.getNextOperationDelayTicks();
         } else {
             // We're done
             endQuery();

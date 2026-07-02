@@ -32,6 +32,7 @@ public class QueryStep {
     private ContainerContentVerification contentVerification = WAIT_FOR_SET_CONTENT;
     private ContainerAction handleContent = IGNORE_INCOMING_CONTAINER;
     private int setSlotAccumulationTicks = 0;
+    private int nextOperationDelayTicks = 5;
 
     protected QueryStep(ContainerPredicate startAction) {
         this.startAction = startAction;
@@ -90,6 +91,10 @@ public class QueryStep {
             ContainerUtils.shiftClickOnSlot(slotNum, container.containerId(), 0, container.items());
             return true;
         });
+    }
+
+    public static QueryStep runInSameContainer(ContainerPredicate action) {
+        return new QueryStep(action);
     }
 
     public static QueryStep sendCommand(String command) {
@@ -159,6 +164,15 @@ public class QueryStep {
         if (!query.popOneStep()) return null;
 
         return query;
+    }
+
+    public int getNextOperationDelayTicks() {
+        return nextOperationDelayTicks;
+    }
+
+    public QueryStep withNextOperationDelay(int ticks) {
+        this.nextOperationDelayTicks = ticks;
+        return this;
     }
 
     // endregion
