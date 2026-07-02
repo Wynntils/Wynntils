@@ -121,7 +121,7 @@ public class AspectContainerQueries {
                                 Models.Container.getCurrentContainer() instanceof AspectsContainer))
                 .execute(() -> onStatus.accept("Aspects menu"))
 
-                // ADDED: skip everything if the desired aspects are already equipped (any order)
+                // skip everything if the desired aspects are already equipped
                 .reprocess(container -> {
                     List<String> equipped = getEquippedAspectNames(container);
                     if (areAspectsMatching(equipped, aspectsToEquip)) {
