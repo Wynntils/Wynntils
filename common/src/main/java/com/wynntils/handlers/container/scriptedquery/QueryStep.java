@@ -59,6 +59,14 @@ public class QueryStep {
         });
     }
 
+    public static QueryStep clickOnSlot(Supplier<Integer> slotSupplier) {
+        return new QueryStep(container -> {
+            ContainerUtils.clickOnSlot(
+                    slotSupplier.get(), container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
+            return true;
+        });
+    }
+
     public static QueryStep clickOnSlot(int slotNum, Supplier<Integer> mouseButtonSupplier) {
         return new QueryStep(container -> {
             ContainerUtils.clickOnSlot(slotNum, container.containerId(), mouseButtonSupplier.get(), container.items());
