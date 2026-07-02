@@ -26,13 +26,12 @@ public class LoadButton extends WynntilsButton {
     public void onPress(InputWithModifiers input) {
         Loadout loadout = parent.getSelectedLoadout();
 
-        if (loadout.type() == LoadoutType.ASPECT) {
-            parent.setStatus("Applying aspects...", CommonColors.YELLOW);
-            Models.Aspect.loadAspectLoadout(
+        if (loadout.type() == LoadoutType.SKILL_POINT) {
+            parent.setStatus("Loading skill points...", CommonColors.YELLOW);
+            Models.SkillPoint.loadLoadout(
                     loadout.name(),
-                    status -> parent.setStatus(status, CommonColors.YELLOW),
                     error -> parent.setStatus(error, CommonColors.RED),
-                    completed -> parent.setStatus(completed, CommonColors.GREEN));
+                    () -> parent.setStatus("Skill points loaded successfully!", CommonColors.GREEN));
             return;
         }
 
@@ -46,12 +45,13 @@ public class LoadButton extends WynntilsButton {
             return;
         }
 
-        if (loadout.type() == LoadoutType.SKILL_POINT) {
-            parent.setStatus("Loading skill points...", CommonColors.YELLOW);
-            Models.SkillPoint.loadLoadout(
+        if (loadout.type() == LoadoutType.ASPECT) {
+            parent.setStatus("Applying aspects...", CommonColors.YELLOW);
+            Models.Aspect.loadAspectLoadout(
                     loadout.name(),
+                    status -> parent.setStatus(status, CommonColors.YELLOW),
                     error -> parent.setStatus(error, CommonColors.RED),
-                    () -> parent.setStatus("Skill points loaded successfully!", CommonColors.GREEN));
+                    completed -> parent.setStatus(completed, CommonColors.GREEN));
             return;
         }
 

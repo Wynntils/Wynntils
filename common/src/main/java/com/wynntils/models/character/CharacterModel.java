@@ -272,8 +272,6 @@ public final class CharacterModel extends Model {
         Matcher rankMatcher = hoverName.getMatcher(RANK_TAG_PATTERN);
         if (rankMatcher.find()) {
             rank = PlayerRank.fromString(rankMatcher.group("rank"));
-        } else {
-            rank = PlayerRank.NONE;
         }
 
         int foundLevel = 0;

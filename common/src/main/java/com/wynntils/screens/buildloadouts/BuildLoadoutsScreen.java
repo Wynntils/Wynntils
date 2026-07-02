@@ -435,120 +435,6 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                 }
             }
 
-            // --- Ability Tree section ---
-            if (selectedLoadout.hasAbilityTree()) {
-                ClassType classType = selectedLoadout.abilityTree().getClassType();
-                String className = (classType != null && classType != ClassType.NONE)
-                        ? classType.getName()
-                        : I18n.get("screens.wynntils.buildLoadouts.unknownClass");
-
-                FontRenderer.getInstance()
-                        .renderText(
-                                guiGraphics,
-                                StyledText.fromString(className),
-                                dividedWidth * 52,
-                                dividedHeight * 40,
-                                CommonColors.WHITE,
-                                HorizontalAlignment.LEFT,
-                                VerticalAlignment.BOTTOM,
-                                TextShadow.NORMAL);
-
-                FontRenderer.getInstance()
-                        .renderText(
-                                guiGraphics,
-                                StyledText.fromString(selectedLoadout.abilityTree().getMainArchetype()),
-                                dividedWidth * 52,
-                                dividedHeight * 42,
-                                CommonColors.WHITE,
-                                HorizontalAlignment.LEFT,
-                                VerticalAlignment.BOTTOM,
-                                TextShadow.NORMAL);
-
-                FontRenderer.getInstance()
-                        .renderText(
-                                guiGraphics,
-                                StyledText.fromString(
-                                        selectedLoadout.abilityTree().getNodeCount() + " nodes"),
-                                dividedWidth * 52,
-                                dividedHeight * 44,
-                                CommonColors.WHITE,
-                                HorizontalAlignment.LEFT,
-                                VerticalAlignment.BOTTOM,
-                                TextShadow.NORMAL);
-
-                int level = selectedLoadout.abilityTree().getLevel();
-                String levelColor =
-                        level > Models.CombatXp.getCombatLevel().current() ? ChatFormatting.RED.toString() : "";
-                FontRenderer.getInstance()
-                        .renderText(
-                                guiGraphics,
-                                StyledText.fromString(levelColor + "Level: " + level),
-                                dividedWidth * 52,
-                                dividedHeight * 46,
-                                CommonColors.WHITE,
-                                HorizontalAlignment.LEFT,
-                                VerticalAlignment.BOTTOM,
-                                TextShadow.NORMAL);
-            }
-
-            // --- Aspects section ---
-            if (selectedLoadout.hasAspects()) {
-                int aspectCount = selectedLoadout.aspect().getAspectCount();
-                String aspectCountText = aspectCount + (aspectCount == 1 ? " aspect" : " aspects");
-                float countX = dividedWidth * 52;
-                float countY = dividedHeight * 48;
-                float countWidth = FontRenderer.getInstance().getFont().width(aspectCountText);
-                float countHeight = FontRenderer.getInstance().getFont().lineHeight;
-
-                boolean countHovered = mouseX >= countX && mouseX <= countX + countWidth
-                        && mouseY >= countY - countHeight && mouseY <= countY;
-
-                if (countHovered) {
-                    RenderUtils.drawRect(
-                            guiGraphics,
-                            CommonColors.WHITE.withAlpha(40),
-                            countX - 2,
-                            countY - countHeight - 1,
-                            countWidth + 4,
-                            countHeight + 2);
-                }
-
-                StyledText displayText = StyledText.fromString("§#d73232ff" + aspectCountText + "§r");
-                FontRenderer.getInstance()
-                        .renderText(
-                                guiGraphics,
-                                displayText,
-                                countX,
-                                countY,
-                                countHovered ? CommonColors.YELLOW : CommonColors.WHITE,
-                                HorizontalAlignment.LEFT,
-                                VerticalAlignment.BOTTOM,
-                                TextShadow.NORMAL);
-
-                // Tooltip for "X aspect(s)" hover
-                if (countHovered) {
-                    List<Component> aspectTooltip = new ArrayList<>();
-                    String tooltipTitle = aspectCount == 1 ? "Aspect:" : "Aspects:";
-                    aspectTooltip.add(Component.literal(tooltipTitle)
-                            .withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD));
-                    for (String aspectName : selectedLoadout.aspect().aspectNames()) {
-                        AspectInfo aspectInfo = Models.Aspect.getAspectInfo(aspectName);
-                        ChatFormatting rarityColor = ChatFormatting.WHITE;
-                        if (aspectInfo != null) {
-                            rarityColor = switch (aspectInfo.gearTier()) {
-                                case LEGENDARY -> ChatFormatting.AQUA;
-                                case FABLED -> ChatFormatting.RED;
-                                case MYTHIC -> ChatFormatting.DARK_PURPLE;
-                                default -> ChatFormatting.WHITE;
-                            };
-                        }
-                        aspectTooltip.add(Component.literal("• " + aspectName).withStyle(rarityColor));
-                    }
-                    RenderUtils.renderTooltip(guiGraphics, aspectTooltip, mouseX, mouseY);
-                }
-            }
-            // endregion
-
             // --- Gear section ---
             if (selectedLoadout.type() == LoadoutType.BUILD) {
                 float gearY = 40;
@@ -608,6 +494,133 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                                 HorizontalAlignment.LEFT,
                                 VerticalAlignment.BOTTOM,
                                 TextShadow.NORMAL);
+            }
+        }
+        // endregion
+
+        // --- Right side info section ---
+        if (selectedLoadout != null) {
+            float rightInfoX = dividedWidth * 55;
+            float currentRightY = dividedHeight * 40;
+
+            if (selectedLoadout.hasClassType()) {
+                ClassType classType = selectedLoadout.getClassType();
+                String className = classType != ClassType.NONE
+                        ? classType.getName()
+                        : I18n.get("screens.wynntils.buildLoadouts.unknownClass");
+
+                FontRenderer.getInstance()
+                        .renderText(
+                                guiGraphics,
+                                StyledText.fromString(className),
+                                rightInfoX,
+                                currentRightY,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.BOTTOM,
+                                TextShadow.NORMAL);
+                currentRightY += dividedHeight * 2;
+            }
+
+            String archetype = selectedLoadout.getMainArchetype();
+            if (archetype != null) {
+                FontRenderer.getInstance()
+                        .renderText(
+                                guiGraphics,
+                                StyledText.fromString(archetype),
+                                rightInfoX,
+                                currentRightY,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.BOTTOM,
+                                TextShadow.NORMAL);
+                currentRightY += dividedHeight * 2;
+            }
+
+            int nodeCount = selectedLoadout.getNodeCount();
+            if (nodeCount > 0) {
+                FontRenderer.getInstance()
+                        .renderText(
+                                guiGraphics,
+                                StyledText.fromString(nodeCount + " nodes"),
+                                rightInfoX,
+                                currentRightY,
+                                CommonColors.WHITE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.BOTTOM,
+                                TextShadow.NORMAL);
+                currentRightY += dividedHeight * 2;
+            }
+
+            int level = selectedLoadout.getMaxLevel();
+            String levelColor =
+                    level > Models.CombatXp.getCombatLevel().current() ? ChatFormatting.RED.toString() : "";
+            FontRenderer.getInstance()
+                    .renderText(
+                            guiGraphics,
+                            StyledText.fromString(levelColor + "Level: " + level),
+                            rightInfoX,
+                            currentRightY,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+            currentRightY += dividedHeight * 2;
+
+            if (selectedLoadout.hasAspects()) {
+                int aspectCount = selectedLoadout.getAspectCount();
+                String aspectCountText = aspectCount + (aspectCount == 1 ? " aspect" : " aspects");
+                float countX = rightInfoX;
+                float countY = currentRightY;
+                float countWidth = FontRenderer.getInstance().getFont().width(aspectCountText);
+                float countHeight = FontRenderer.getInstance().getFont().lineHeight;
+
+                boolean countHovered = mouseX >= countX && mouseX <= countX + countWidth
+                        && mouseY >= countY - countHeight && mouseY <= countY;
+
+                if (countHovered) {
+                    RenderUtils.drawRect(
+                            guiGraphics,
+                            CommonColors.WHITE.withAlpha(40),
+                            countX - 2,
+                            countY - countHeight - 1,
+                            countWidth + 4,
+                            countHeight + 2);
+                }
+
+                StyledText displayText = StyledText.fromString("§#d73232ff" + aspectCountText + "§r");
+                FontRenderer.getInstance()
+                        .renderText(
+                                guiGraphics,
+                                displayText,
+                                countX,
+                                countY,
+                                countHovered ? CommonColors.YELLOW : CommonColors.WHITE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.BOTTOM,
+                                TextShadow.NORMAL);
+
+                // Tooltip for "X aspect(s)" hover
+                if (countHovered) {
+                    List<Component> aspectTooltip = new ArrayList<>();
+                    String tooltipTitle = aspectCount == 1 ? "Aspect:" : "Aspects:";
+                    aspectTooltip.add(Component.literal(tooltipTitle)
+                            .withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD));
+                    for (String aspectName : selectedLoadout.aspect().aspectNames()) {
+                        AspectInfo aspectInfo = Models.Aspect.getAspectInfo(aspectName);
+                        ChatFormatting rarityColor = ChatFormatting.WHITE;
+                        if (aspectInfo != null) {
+                            rarityColor = switch (aspectInfo.gearTier()) {
+                                case LEGENDARY -> ChatFormatting.AQUA;
+                                case FABLED -> ChatFormatting.RED;
+                                case MYTHIC -> ChatFormatting.DARK_PURPLE;
+                                default -> ChatFormatting.WHITE;
+                            };
+                        }
+                        aspectTooltip.add(Component.literal("• " + aspectName).withStyle(rarityColor));
+                    }
+                    RenderUtils.renderTooltip(guiGraphics, aspectTooltip, mouseX, mouseY);
+                }
             }
         }
         // endregion
