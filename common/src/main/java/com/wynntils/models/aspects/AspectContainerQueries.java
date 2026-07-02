@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
@@ -98,6 +99,7 @@ public class AspectContainerQueries {
         Map<Integer, Deque<Pair<String, Integer>>> aspectLocations = new HashMap<>();
         Deque<Integer> slotsToUnequip = new ArrayDeque<>();
         AtomicInteger checkAspectSlotIdx = new AtomicInteger(0);
+        AtomicBoolean alreadyEquipped = new AtomicBoolean(false);
 
         QueryBuilder builder = ScriptedContainerQuery.builder("Aspect Unlock")
                 .onError(msg -> {
@@ -121,9 +123,19 @@ public class AspectContainerQueries {
                                 Models.Container.getCurrentContainer() instanceof AspectsContainer))
                 .execute(() -> onStatus.accept("Aspects menu"))
 
+                // ADDED: skip everything if the desired aspects are already equipped (any order)
+                .reprocess(container -> {
+                    List<String> equipped = getEquippedAspectNames(container);
+                    if (areAspectsMatching(equipped, aspectsToEquip)) {
+                        alreadyEquipped.set(true);
+                        onStatus.accept("Aspects already equipped");
+                    }
+                })
+
                 // Unequip all currently equipped aspects
                 .repeat(
                         c -> {
+                            if (alreadyEquipped.get()) return false;
                             slotsToUnequip.clear();
                             for (int slot : EQUIPPED_SLOTS) {
                                 ItemStack itemStack = c.items().get(slot);
@@ -142,20 +154,29 @@ public class AspectContainerQueries {
 
                 // Rewind to page 1
                 .repeat(
-                        c -> ScriptedContainerQuery.containerHasSlot(
-                                c, PREVIOUS_PAGE_SLOT, Items.POTION, PREVIOUS_PAGE_ITEM_NAME),
+                        c -> {
+                            if (alreadyEquipped.get()) return false;
+                            return ScriptedContainerQuery.containerHasSlot(
+                                    c, PREVIOUS_PAGE_SLOT, Items.POTION, PREVIOUS_PAGE_ITEM_NAME);
+                        },
                         QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT)
                                 .expectContainer(AspectsContainer.class)
                                 .accumulateSetSlotChanges(2)
                                 .processIncomingContainer(c -> onStatus.accept("Moving to first page")))
-                .execute(() -> currentPage = 1)
+                .execute(() -> {
+                    if (!alreadyEquipped.get()) currentPage = 1;
+                })
 
                 // Scan page 1 for desired aspects
-                .reprocess(container -> scanPageForAspects(container, aspectsToEquip, aspectLocations, currentPage))
+                .reprocess(container -> {
+                    if (alreadyEquipped.get()) return;
+                    scanPageForAspects(container, aspectsToEquip, aspectLocations, currentPage);
+                })
 
                 // Equip aspects across all pages
                 .repeat(
                         c -> {
+                            if (alreadyEquipped.get()) return false;
                             // Stop early if all 5 aspect slots are already filled
                             if (checkAspectSlotIdx.get() >= EQUIPPED_SLOTS.size()) return false;
 
@@ -184,7 +205,6 @@ public class AspectContainerQueries {
 
                                     if (pageAspects != null && !pageAspects.isEmpty()) {
                                         // We just clicked an aspect slot
-                                        int clickedSlot = pageAspects.peekFirst().value();
                                         String aspectName = pageAspects.peekFirst().key();
 
                                         // Remove it before re-scanning
@@ -221,7 +241,17 @@ public class AspectContainerQueries {
                                         // Scan the new page for desired aspects
                                         scanPageForAspects(container, aspectsToEquip, aspectLocations, currentPage);
                                     }
-                                }));
+                                }))
+
+                // verify every aspect is actually equipped
+                .reprocess(container -> {
+                    if (alreadyEquipped.get()) return;
+                    List<String> equipped = getEquippedAspectNames(container);
+                    if (!areAspectsMatching(equipped, aspectsToEquip)) {
+                        throw new ContainerQueryException(
+                                "Failed to equip all aspects. Probably because an aspect name got changed");
+                    }
+                });
 
         builder.execute(() -> onComplete.accept("Finished loading aspects"));
         builder.build().executeQuery();
@@ -251,6 +281,22 @@ public class AspectContainerQueries {
                         .addLast(Pair.of(name, slot));
             }
         }
+    }
+
+    private static List<String> getEquippedAspectNames(ContainerContent container) {
+        List<String> names = new ArrayList<>();
+        for (int slot : EQUIPPED_SLOTS) {
+            if (slot >= container.items().size()) continue;
+            ItemStack stack = container.items().get(slot);
+            if (stack.isEmpty()) continue;
+            Models.Item.asWynnItem(stack, AspectItem.class).ifPresent(aspect -> names.add(aspect.getName()));
+        }
+        return names;
+    }
+
+    private static boolean areAspectsMatching(List<String> equipped, List<String> target) {
+        if (equipped.size() != target.size()) return false;
+        return new java.util.HashSet<>(equipped).equals(new java.util.HashSet<>(target));
     }
 
     private abstract static class AspectContainerProcessor {

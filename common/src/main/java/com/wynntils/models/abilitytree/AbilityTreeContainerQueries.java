@@ -9,6 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
@@ -27,6 +28,7 @@ import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.LinkedHashMap;
@@ -275,8 +277,28 @@ public class AbilityTreeContainerQueries {
                 AbilityTreeNodeType type = AbilityTreeNodeType.fromItemStack(item);
                 if (type == null || type.getState() != AbilityTreeNodeState.UNLOCKED) {
                     throw new ContainerQueryException(
-                            "Node unlock failed at slot " + verifySlot + " (expected UNLOCKED, found " + type + ")");
+                            "Node unlock failed at slot " + verifySlot + " (expected UNLOCKED, found " + type + "). Probably because the ability tree got updated.");
                 }
+
+                StyledText nameStyledText = StyledText.fromComponent(item.getHoverName());
+                StyledText actualName;
+                if (nameStyledText.getPartCount() == 1) {
+                    actualName = nameStyledText;
+                } else {
+                    actualName = nameStyledText.iterate((part, changes) -> {
+                        if (!part.getPartStyle().isBold()) {
+                            changes.clear();
+                        }
+                        return IterationDecision.CONTINUE;
+                    });
+                }
+
+                String foundName = actualName.getString(StyleType.NONE);
+                if (!foundName.equals(node.name())) {
+                    throw new ContainerQueryException(
+                            "Node unlock failed at slot " + verifySlot + " (expected name '" + node.name() + "', found '" + foundName + "'). Probably because the ability tree got updated.");
+                }
+
             });
         }
 

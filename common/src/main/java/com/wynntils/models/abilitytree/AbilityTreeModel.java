@@ -100,14 +100,12 @@ public final class AbilityTreeModel extends Model {
             return;
         }
 
-        List<AbilityTreeSkillNode> ordered = getIdealApplicationOrder(savedTree.info());
-        WynntilsMod.info("ordered: " +  ordered);
+        List<AbilityTreeSkillNode> ordered = getIdealApplicationOrder(savedTree.info(), onError);
+        if (ordered == null) return;
         if (ordered.isEmpty()) {
-            onComplete.accept(("Loadout " + name + " is empty, nothing to apply"));
+            onComplete.accept("Loadout " + name + " is empty, nothing to apply");
             return;
         }
-
-        WynntilsMod.info("order: " + ordered);
 
         ContainerUtils.closeBackgroundContainer();
 
@@ -130,7 +128,7 @@ public final class AbilityTreeModel extends Model {
         return abilityTreeMap.get(type);
     }
 
-    private List<AbilityTreeSkillNode> getIdealApplicationOrder(AbilityTreeInfo treeInfo) {
+    private List<AbilityTreeSkillNode> getIdealApplicationOrder(AbilityTreeInfo treeInfo, Consumer<String> onError) {
         List<AbilityTreeSkillNode> nodes = new ArrayList<>(treeInfo.nodes());
         if (nodes.isEmpty()) return List.of();
 
@@ -180,8 +178,9 @@ public final class AbilityTreeModel extends Model {
             }
 
             if (available.isEmpty()) {
-                throw new IllegalStateException(
-                        "Deadlock: no valid order for remaining nodes: " + remaining);
+                onError.accept("Failed to build ability application order. Probably because the ability tree updated.");
+                WynntilsMod.error("no valid order for remaining nodes: " + remaining);
+                return null;
             }
 
             Map<AbilityTreeSkillNode, Integer> distances =
