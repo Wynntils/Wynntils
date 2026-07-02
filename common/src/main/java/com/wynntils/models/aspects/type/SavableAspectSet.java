@@ -7,4 +7,9 @@ public record SavableAspectSet(List<String> aspectNames, ClassType classType) {
     public int getAspectCount() {
         return aspectNames == null ? 0 : aspectNames.size();
     }
+
+    public int getLevel() {
+        int count = getAspectCount();
+        return count <= 1 ? count : (count - 1) * 20;
+    }
 }

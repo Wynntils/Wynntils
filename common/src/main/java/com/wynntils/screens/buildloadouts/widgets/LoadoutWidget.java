@@ -8,8 +8,6 @@ import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
-import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
-import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
@@ -22,13 +20,11 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.Pair;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -180,7 +176,7 @@ public class LoadoutWidget extends AbstractWidget {
         } else if (loadout.type() == LoadoutType.ASPECT) {
             String aspectClassPart = "";
             if (loadout.hasAspects()) {
-                ClassType classType = loadout.aspectLoadout().classType();
+                ClassType classType = loadout.aspect().classType();
                 if (classType != null && classType != ClassType.NONE) {
                     aspectClassPart = ChatFormatting.GRAY + " [" + classType.getName() + "]" + ChatFormatting.WHITE;
                 }

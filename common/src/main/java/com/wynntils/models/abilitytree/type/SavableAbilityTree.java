@@ -19,7 +19,7 @@ public record SavableAbilityTree(AbilityTreeInfo info) {
                 .orElse(null);
     }
 
-    public int getDisplayLevel() {
+    public int getLevel() {
         if (info == null || info.nodes().isEmpty()) return 1;
         int abilityPoints = AbilityPointProgression.getTotalPointsForTree(info);
         return AbilityPointProgression.getLevelForPoints(abilityPoints);

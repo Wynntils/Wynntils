@@ -27,8 +27,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.render.TextRenderSetting;
-import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -478,7 +476,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                                 VerticalAlignment.BOTTOM,
                                 TextShadow.NORMAL);
 
-                int level = selectedLoadout.abilityTree().getDisplayLevel();
+                int level = selectedLoadout.abilityTree().getLevel();
                 String levelColor =
                         level > Models.CombatXp.getCombatLevel().current() ? ChatFormatting.RED.toString() : "";
                 FontRenderer.getInstance()
@@ -495,7 +493,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
 
             // --- Aspects section ---
             if (selectedLoadout.hasAspects()) {
-                int aspectCount = selectedLoadout.aspectLoadout().getAspectCount();
+                int aspectCount = selectedLoadout.aspect().getAspectCount();
                 String aspectCountText = aspectCount + (aspectCount == 1 ? " aspect" : " aspects");
                 float countX = dividedWidth * 52;
                 float countY = dividedHeight * 48;
@@ -533,7 +531,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                     String tooltipTitle = aspectCount == 1 ? "Aspect:" : "Aspects:";
                     aspectTooltip.add(Component.literal(tooltipTitle)
                             .withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD));
-                    for (String aspectName : selectedLoadout.aspectLoadout().aspectNames()) {
+                    for (String aspectName : selectedLoadout.aspect().aspectNames()) {
                         AspectInfo aspectInfo = Models.Aspect.getAspectInfo(aspectName);
                         ChatFormatting rarityColor = ChatFormatting.WHITE;
                         if (aspectInfo != null) {
