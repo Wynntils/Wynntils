@@ -40,13 +40,13 @@ import com.wynntils.core.persisted.upfixers.config.QuestBookToContentRenamedConf
 import com.wynntils.core.persisted.upfixers.config.QuickCastTimingsToMillisecondsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.SacredSurgeToHolyPowerUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ShowAdditonalTextAboveToShowAdditionalTextAboveUpfixer;
+import com.wynntils.core.persisted.upfixers.config.SkillPointLoadoutsToBuildLoadoutsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TelemetryFeatureToWynntilsTelemetryFeatureUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMovedToCommonFeature;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer;
 import com.wynntils.core.persisted.upfixers.config.UniversalBarOverlayColorToColorTemplateUpfixer;
 import com.wynntils.core.persisted.upfixers.config.WynntilsContentBookReplaceToShiftBehaviourUpfixer;
-import com.wynntils.core.persisted.upfixers.config.SkillPointLoadoutsToBuildLoadoutsUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankPageNameToBankPagePropertyUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankToAccountBankUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.DownloadSourceStringToEnumUpfixer;
