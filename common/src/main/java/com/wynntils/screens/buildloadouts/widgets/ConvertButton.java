@@ -9,7 +9,6 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.screens.buildloadouts.type.Loadout;
 import com.wynntils.screens.buildloadouts.type.LoadoutType;
-import com.wynntils.utils.type.Pair;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
@@ -30,8 +29,7 @@ public class ConvertButton extends WynntilsButton {
             Models.SkillPoint.saveSkillPoints(
                     loadout.name(), loadout.skillPoints().getSkillPointsAsArray());
         } else {
-            Models.SkillPoint.saveBuild(
-                    loadout.name(), loadout.skillPoints().getSkillPointsAsArray());
+            Models.SkillPoint.saveBuild(loadout.name(), loadout.skillPoints().getSkillPointsAsArray());
         }
         parent.populateLoadouts();
         parent.setSelectedLoadout(parent.getLoadout(loadout.name()));

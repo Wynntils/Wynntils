@@ -20,11 +20,9 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -136,14 +134,11 @@ public class LoadoutWidget extends AbstractWidget {
                             0.8f);
         }
 
-
         int level = loadout.getMaxLevel();
 
-        String levelColor =
-                level > Models.CombatXp.getCombatLevel().current() ? ChatFormatting.RED.toString() : "";
-        String levelText = levelColor
-                + I18n.get("screens.wynntils.buildLoadouts.widgetLevelText", level)
-                + ChatFormatting.WHITE;
+        String levelColor = level > Models.CombatXp.getCombatLevel().current() ? ChatFormatting.RED.toString() : "";
+        String levelText =
+                levelColor + I18n.get("screens.wynntils.buildLoadouts.widgetLevelText", level) + ChatFormatting.WHITE;
 
         String classPart = "";
         if (loadout.hasAbilityTree()) {
@@ -155,24 +150,21 @@ public class LoadoutWidget extends AbstractWidget {
 
         StyledText displayText;
         if (loadout.type() == LoadoutType.ABILITY_TREE) {
-            String archetypePart =
-                    loadout.hasAbilityTree() && loadout.abilityTree().getMainArchetype() != null
-                            ? ChatFormatting.WHITE + " (" + loadout.abilityTree().getMainArchetype() + ")"
-                            : "";
-            displayText = StyledText.fromString(
-                    loadout.name() + " " + ChatFormatting.AQUA + "[AT]" + archetypePart + classPart
-                            + " (" + levelText + ")");
+            String archetypePart = loadout.hasAbilityTree()
+                            && loadout.abilityTree().getMainArchetype() != null
+                    ? ChatFormatting.WHITE + " (" + loadout.abilityTree().getMainArchetype() + ")"
+                    : "";
+            displayText = StyledText.fromString(loadout.name() + " " + ChatFormatting.AQUA + "[AT]" + archetypePart
+                    + classPart + " (" + levelText + ")");
         } else if (loadout.type() == LoadoutType.BUILD) {
             String archetypePart =
                     loadout.hasAbilityTree() && loadout.abilityTree().getMainArchetype() != null
                             ? " (" + loadout.abilityTree().getMainArchetype() + ")"
                             : "";
-            displayText = StyledText.fromString(
-                    loadout.name() + archetypePart + classPart + " (" + levelText + ")");
+            displayText = StyledText.fromString(loadout.name() + archetypePart + classPart + " (" + levelText + ")");
         } else if (loadout.type() == LoadoutType.SKILL_POINT) {
-            displayText = StyledText.fromString(
-                    loadout.name() + " " + ChatFormatting.YELLOW + "[SP]" + classPart + ChatFormatting.WHITE + " ("
-                            + levelText + ")");
+            displayText = StyledText.fromString(loadout.name() + " " + ChatFormatting.YELLOW + "[SP]" + classPart
+                    + ChatFormatting.WHITE + " (" + levelText + ")");
         } else if (loadout.type() == LoadoutType.ASPECT) {
             String aspectClassPart = "";
             if (loadout.hasAspects()) {
@@ -181,9 +173,8 @@ public class LoadoutWidget extends AbstractWidget {
                     aspectClassPart = ChatFormatting.GRAY + " [" + classType.getName() + "]" + ChatFormatting.WHITE;
                 }
             }
-            displayText = StyledText.fromString(
-                    loadout.name() + " " + ChatFormatting.GREEN + "[A]" + aspectClassPart + ChatFormatting.WHITE + " ("
-                            + levelText + ")");
+            displayText = StyledText.fromString(loadout.name() + " " + ChatFormatting.GREEN + "[A]" + aspectClassPart
+                    + ChatFormatting.WHITE + " (" + levelText + ")");
         } else {
             displayText = StyledText.fromString(loadout.name() + classPart + " (" + levelText + ")");
         }

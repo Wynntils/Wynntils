@@ -341,7 +341,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                                 guiGraphics,
                                 StyledText.fromString(Skill.values()[j].getColorCode() + ""
                                         + summaryParts.get(i).value().apply(Skill.values()[j])),
-                                (int) (dividedWidth * (53 + j * 1.5)),////(int) (dividedWidth * (53 + j * 1.5))
+                                (int) (dividedWidth * (53 + j * 1.5)), // //(int) (dividedWidth * (53 + j * 1.5))
                                 dividedHeight * (6 + i * 2),
                                 CommonColors.WHITE,
                                 HorizontalAlignment.CENTER,
@@ -443,7 +443,8 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                     FontRenderer.getInstance()
                             .renderText(
                                     guiGraphics,
-                                    StyledText.fromString(selectedLoadout.skillPoints().weapon()),
+                                    StyledText.fromString(
+                                            selectedLoadout.skillPoints().weapon()),
                                     dividedWidth * 35,
                                     dividedHeight * gearY,
                                     CommonColors.WHITE,
@@ -553,8 +554,7 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
             }
 
             int level = selectedLoadout.getMaxLevel();
-            String levelColor =
-                    level > Models.CombatXp.getCombatLevel().current() ? ChatFormatting.RED.toString() : "";
+            String levelColor = level > Models.CombatXp.getCombatLevel().current() ? ChatFormatting.RED.toString() : "";
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
@@ -575,8 +575,10 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                 float countWidth = FontRenderer.getInstance().getFont().width(aspectCountText);
                 float countHeight = FontRenderer.getInstance().getFont().lineHeight;
 
-                boolean countHovered = mouseX >= countX && mouseX <= countX + countWidth
-                        && mouseY >= countY - countHeight && mouseY <= countY;
+                boolean countHovered = mouseX >= countX
+                        && mouseX <= countX + countWidth
+                        && mouseY >= countY - countHeight
+                        && mouseY <= countY;
 
                 if (countHovered) {
                     RenderUtils.drawRect(
@@ -604,8 +606,8 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                 if (countHovered) {
                     List<Component> aspectTooltip = new ArrayList<>();
                     String tooltipTitle = aspectCount == 1 ? "Aspect:" : "Aspects:";
-                    aspectTooltip.add(Component.literal(tooltipTitle)
-                            .withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD));
+                    aspectTooltip.add(
+                            Component.literal(tooltipTitle).withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD));
                     for (String aspectName : selectedLoadout.aspect().aspectNames()) {
                         AspectInfo aspectInfo = Models.Aspect.getAspectInfo(aspectName);
                         ChatFormatting rarityColor = ChatFormatting.WHITE;
@@ -748,8 +750,6 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
         boolean isConvertible = loadout.type() == LoadoutType.BUILD || loadout.type() == LoadoutType.SKILL_POINT;
         convertButton.active = isConvertible;
         convertButton.visible = isConvertible;
-
-
 
         if (loadout.getMaxLevel() > Models.CombatXp.getCombatLevel().current()) {
             loadButton.setTooltip(

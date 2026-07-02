@@ -1,7 +1,10 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.abilitytree.type;
 
 import com.wynntils.models.character.type.ClassType;
-
 import java.util.HashMap;
 import java.util.Map;
 

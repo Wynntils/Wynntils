@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.buildloadouts.widgets;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
@@ -57,39 +56,36 @@ public class LoadButton extends WynntilsButton {
 
         if (loadout.type() == LoadoutType.BUILD) {
             parent.setStatus("Loading skill points...", CommonColors.YELLOW);
-            Models.SkillPoint.loadLoadout(
-                    loadout.name(),
-                    error -> parent.setStatus(error, CommonColors.RED),
-                    () -> {
-                        if (loadout.hasAspects()) {
-                            parent.setStatus("Skill points loaded. Applying aspects...", CommonColors.YELLOW);
-                            Models.Aspect.loadAspectLoadout(
-                                    loadout.name(),
-                                    status -> parent.setStatus(status, CommonColors.YELLOW),
-                                    error -> parent.setStatus(error, CommonColors.RED),
-                                    completed -> {
-                                        if (loadout.hasAbilityTree()) {
-                                            parent.setStatus("Aspects applied. Applying ability tree...", CommonColors.YELLOW);
-                                            Models.AbilityTree.loadAbilityTree(
-                                                    loadout.name(),
-                                                    status -> parent.setStatus(status, CommonColors.YELLOW),
-                                                    error -> parent.setStatus(error, CommonColors.RED),
-                                                    done -> parent.setStatus(done, CommonColors.GREEN));
-                                        } else {
-                                            parent.setStatus(completed, CommonColors.GREEN);
-                                        }
-                                    });
-                        } else if (loadout.hasAbilityTree()) {
-                            parent.setStatus("Skill points loaded. Applying ability tree...", CommonColors.YELLOW);
-                            Models.AbilityTree.loadAbilityTree(
-                                    loadout.name(),
-                                    status -> parent.setStatus(status, CommonColors.YELLOW),
-                                    error -> parent.setStatus(error, CommonColors.RED),
-                                    completed -> parent.setStatus(completed, CommonColors.GREEN));
-                        } else {
-                            parent.setStatus("Skill points loaded successfully!", CommonColors.GREEN);
-                        }
-                    });
+            Models.SkillPoint.loadLoadout(loadout.name(), error -> parent.setStatus(error, CommonColors.RED), () -> {
+                if (loadout.hasAspects()) {
+                    parent.setStatus("Skill points loaded. Applying aspects...", CommonColors.YELLOW);
+                    Models.Aspect.loadAspectLoadout(
+                            loadout.name(),
+                            status -> parent.setStatus(status, CommonColors.YELLOW),
+                            error -> parent.setStatus(error, CommonColors.RED),
+                            completed -> {
+                                if (loadout.hasAbilityTree()) {
+                                    parent.setStatus("Aspects applied. Applying ability tree...", CommonColors.YELLOW);
+                                    Models.AbilityTree.loadAbilityTree(
+                                            loadout.name(),
+                                            status -> parent.setStatus(status, CommonColors.YELLOW),
+                                            error -> parent.setStatus(error, CommonColors.RED),
+                                            done -> parent.setStatus(done, CommonColors.GREEN));
+                                } else {
+                                    parent.setStatus(completed, CommonColors.GREEN);
+                                }
+                            });
+                } else if (loadout.hasAbilityTree()) {
+                    parent.setStatus("Skill points loaded. Applying ability tree...", CommonColors.YELLOW);
+                    Models.AbilityTree.loadAbilityTree(
+                            loadout.name(),
+                            status -> parent.setStatus(status, CommonColors.YELLOW),
+                            error -> parent.setStatus(error, CommonColors.RED),
+                            completed -> parent.setStatus(completed, CommonColors.GREEN));
+                } else {
+                    parent.setStatus("Skill points loaded successfully!", CommonColors.GREEN);
+                }
+            });
         }
     }
 }

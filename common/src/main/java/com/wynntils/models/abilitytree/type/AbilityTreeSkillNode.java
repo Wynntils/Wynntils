@@ -44,8 +44,19 @@ public record AbilityTreeSkillNode(
 
     public AbilityTreeSkillNode withoutDescriptions() {
         return new AbilityTreeSkillNode(
-                id, name, formattedName, abilityTreeNodeType, List.of(),
-                cost, willBlock, blockedBy, requiredAbility, requiredArchetype,
-                requiredLevel, archetype, location, connections);
+                id,
+                name,
+                formattedName,
+                abilityTreeNodeType,
+                List.of(),
+                cost,
+                willBlock,
+                blockedBy,
+                requiredAbility,
+                requiredArchetype,
+                requiredLevel,
+                archetype,
+                location,
+                connections);
     }
 }

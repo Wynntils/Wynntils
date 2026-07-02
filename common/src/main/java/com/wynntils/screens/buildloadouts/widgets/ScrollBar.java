@@ -24,8 +24,7 @@ public class ScrollBar extends AbstractWidget {
 
     private boolean scrolling = false;
 
-    public ScrollBar(
-            float x, float y, float width, float height, BuildLoadoutsScreen parent, float dividedHeight) {
+    public ScrollBar(float x, float y, float width, float height, BuildLoadoutsScreen parent, float dividedHeight) {
         super((int) x, (int) y, (int) width, (int) height, Component.empty());
         this.parent = parent;
         this.dividedHeight = dividedHeight;

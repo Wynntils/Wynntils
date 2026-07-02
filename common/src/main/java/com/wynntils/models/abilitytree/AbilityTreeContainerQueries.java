@@ -83,7 +83,10 @@ public class AbilityTreeContainerQueries {
     }
 
     private void queryAbilityTree(
-            AbilityTreeProcessor processor, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
+            AbilityTreeProcessor processor,
+            Consumer<String> onStatus,
+            Consumer<String> onError,
+            Consumer<String> onComplete) {
         QueryBuilder builder = ScriptedContainerQuery.builder("Ability Tree Dumper")
                 .onError(msg -> {
                     onError.accept(msg);
@@ -110,7 +113,8 @@ public class AbilityTreeContainerQueries {
                                 }))
                 .reprocess(processor::processPage)
                 .execute(() -> this.pageCount++)
-                .execute(() -> onStatus.accept("Read page: " + this.pageCount + "/" + Models.AbilityTree.ABILITY_TREE_PAGES));
+                .execute(() ->
+                        onStatus.accept("Read page: " + this.pageCount + "/" + Models.AbilityTree.ABILITY_TREE_PAGES));
 
         for (int page = 2; page <= Models.AbilityTree.ABILITY_TREE_PAGES; page++) {
             builder.then(QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
@@ -118,7 +122,8 @@ public class AbilityTreeContainerQueries {
                             .accumulateSetSlotChanges(2))
                     .reprocess(processor::processPage)
                     .execute(() -> this.pageCount++)
-                    .execute(() -> onStatus.accept("Read page: " + this.pageCount + "/" + Models.AbilityTree.ABILITY_TREE_PAGES));
+                    .execute(() -> onStatus.accept(
+                            "Read page: " + this.pageCount + "/" + Models.AbilityTree.ABILITY_TREE_PAGES));
         }
 
         builder.execute(() -> onComplete.accept("Finished dumping ability tree"));
@@ -147,16 +152,18 @@ public class AbilityTreeContainerQueries {
 
                 // Check ability points and abiliy shards in compass menu
                 .reprocess(container -> {
-                    Optional<AbilityTreeItem> abilityTreeItem = Models.Item.asWynnItem(container.items().get(ABILITY_TREE_SLOT), AbilityTreeItem.class);
+                    Optional<AbilityTreeItem> abilityTreeItem =
+                            Models.Item.asWynnItem(container.items().get(ABILITY_TREE_SLOT), AbilityTreeItem.class);
                     if (abilityTreeItem.isEmpty()) needsReset.set(false);
-                    abilityTreeItem.ifPresent(treeItem -> needsReset.set(treeItem.getCount() != treeItem.getTotalPoints()));
+                    abilityTreeItem.ifPresent(
+                            treeItem -> needsReset.set(treeItem.getCount() != treeItem.getTotalPoints()));
                     hasAbilityShards.set(Models.Inventory.getAmountInInventory("Ability Shard") >= 3);
 
-                    WynntilsMod.info("needReset: " + needsReset.get() + " hasAbilityShards: " + hasAbilityShards.get() + " status: " + (statusEffect != null));
+                    WynntilsMod.info("needReset: " + needsReset.get() + " hasAbilityShards: " + hasAbilityShards.get()
+                            + " status: " + (statusEffect != null));
 
                     if (needsReset.get() && !hasAbilityShards.get() && statusEffect == null) {
-                        throw new ContainerQueryException(
-                                "insufficient ability shards (need 3)");
+                        throw new ContainerQueryException("insufficient ability shards (need 3)");
                     }
                 })
 
@@ -277,7 +284,8 @@ public class AbilityTreeContainerQueries {
                 AbilityTreeNodeType type = AbilityTreeNodeType.fromItemStack(item);
                 if (type == null || type.getState() != AbilityTreeNodeState.UNLOCKED) {
                     throw new ContainerQueryException(
-                            "Node unlock failed at slot " + verifySlot + " (expected UNLOCKED, found " + type + "). Probably because the ability tree got updated.");
+                            "Node unlock failed at slot " + verifySlot + " (expected UNLOCKED, found " + type
+                                    + "). Probably because the ability tree got updated.");
                 }
 
                 StyledText nameStyledText = StyledText.fromComponent(item.getHoverName());
@@ -296,9 +304,9 @@ public class AbilityTreeContainerQueries {
                 String foundName = actualName.getString(StyleType.NONE);
                 if (!foundName.equals(node.name())) {
                     throw new ContainerQueryException(
-                            "Node unlock failed at slot " + verifySlot + " (expected name '" + node.name() + "', found '" + foundName + "'). Probably because the ability tree got updated.");
+                            "Node unlock failed at slot " + verifySlot + " (expected name '" + node.name()
+                                    + "', found '" + foundName + "'). Probably because the ability tree got updated.");
                 }
-
             });
         }
 

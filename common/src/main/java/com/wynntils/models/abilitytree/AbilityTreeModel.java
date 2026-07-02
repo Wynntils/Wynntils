@@ -21,7 +21,6 @@ import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.abilitytree.type.SavableAbilityTree;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.wynn.ContainerUtils;
-
 import java.lang.reflect.Type;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -86,14 +85,20 @@ public final class AbilityTreeModel extends Model {
         abilityTreeLoadouts.get().remove(name);
     }
 
-    public void saveCurrentAbilityTree(String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
-        ABILITY_TREE_CONTAINER_QUERIES.getUnlockedAbilityTree(treeInfo -> {
-            abilityTreeLoadouts.get().put(name, new SavableAbilityTree(treeInfo));
-            WynntilsMod.info("Saved ability tree loadout: " + name);
-        }, onStatus, onError, onComplete);
+    public void saveCurrentAbilityTree(
+            String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
+        ABILITY_TREE_CONTAINER_QUERIES.getUnlockedAbilityTree(
+                treeInfo -> {
+                    abilityTreeLoadouts.get().put(name, new SavableAbilityTree(treeInfo));
+                    WynntilsMod.info("Saved ability tree loadout: " + name);
+                },
+                onStatus,
+                onError,
+                onComplete);
     }
 
-    public void loadAbilityTree(String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
+    public void loadAbilityTree(
+            String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
         SavableAbilityTree savedTree = getAbilityTreeLoadout(name);
         if (savedTree == null) {
             onError.accept("No saved ability tree loadout: " + name);
@@ -132,18 +137,11 @@ public final class AbilityTreeModel extends Model {
         List<AbilityTreeSkillNode> nodes = new ArrayList<>(treeInfo.nodes());
         if (nodes.isEmpty()) return List.of();
 
-        Map<String, AbilityTreeSkillNode> byName = nodes.stream()
-                .collect(Collectors.toMap(
-                        AbilityTreeSkillNode::name,
-                        n -> n,
-                        (a, b) -> a
-                ));
+        Map<String, AbilityTreeSkillNode> byName =
+                nodes.stream().collect(Collectors.toMap(AbilityTreeSkillNode::name, n -> n, (a, b) -> a));
 
-        Map<Integer, AbilityTreeSkillNode> byId = nodes.stream()
-                .collect(Collectors.toMap(
-                        AbilityTreeSkillNode::id,
-                        n -> n
-                ));
+        Map<Integer, AbilityTreeSkillNode> byId =
+                nodes.stream().collect(Collectors.toMap(AbilityTreeSkillNode::id, n -> n));
 
         // Bidirectional adjacency from the directed connections list
         Map<Integer, List<Integer>> adjacency = new HashMap<>();
@@ -157,10 +155,7 @@ public final class AbilityTreeModel extends Model {
 
         Map<String, Long> dependents = nodes.stream()
                 .filter(n -> n.requiredAbility() != null)
-                .collect(Collectors.groupingBy(
-                        AbilityTreeSkillNode::requiredAbility,
-                        Collectors.counting()
-                ));
+                .collect(Collectors.groupingBy(AbilityTreeSkillNode::requiredAbility, Collectors.counting()));
 
         List<AbilityTreeSkillNode> order = new ArrayList<>();
         Set<AbilityTreeSkillNode> unlocked = new HashSet<>();
@@ -183,8 +178,7 @@ public final class AbilityTreeModel extends Model {
                 return null;
             }
 
-            Map<AbilityTreeSkillNode, Integer> distances =
-                    computeGraphDistances(unlocked, adjacency, byId);
+            Map<AbilityTreeSkillNode, Integer> distances = computeGraphDistances(unlocked, adjacency, byId);
 
             AbilityTreeSkillNode next = pickBest(available, currentPage, dependents, distances);
             order.add(next);
@@ -204,7 +198,6 @@ public final class AbilityTreeModel extends Model {
             Set<AbilityTreeSkillNode> unlocked,
             Map<Integer, List<Integer>> adjacency,
             Map<Integer, AbilityTreeSkillNode> byId) {
-
         Map<AbilityTreeSkillNode, Integer> distances = new HashMap<>();
         ArrayDeque<AbilityTreeSkillNode> queue = new ArrayDeque<>();
         Set<Integer> visited = new HashSet<>();
@@ -242,7 +235,6 @@ public final class AbilityTreeModel extends Model {
             Map<String, AbilityTreeSkillNode> byName,
             Set<AbilityTreeSkillNode> unlocked,
             Map<String, Integer> archetypePoints) {
-
         if (node.requiredAbility() != null) {
             AbilityTreeSkillNode required = byName.get(node.requiredAbility());
             if (required == null || !unlocked.contains(required)) {
@@ -263,21 +255,16 @@ public final class AbilityTreeModel extends Model {
             int currentPage,
             Map<String, Long> dependents,
             Map<AbilityTreeSkillNode, Integer> distances) {
-
         return available.stream()
                 .min(nodeComparator(currentPage, dependents, distances))
                 .orElseThrow();
     }
 
     private static Comparator<AbilityTreeSkillNode> nodeComparator(
-            int currentPage,
-            Map<String, Long> dependents,
-            Map<AbilityTreeSkillNode, Integer> distances) {
-
+            int currentPage, Map<String, Long> dependents, Map<AbilityTreeSkillNode, Integer> distances) {
         return Comparator
                 // 1. Prefer nodes closest in the connection graph
-                .comparingInt((AbilityTreeSkillNode n) ->
-                        distances.getOrDefault(n, Integer.MAX_VALUE))
+                .comparingInt((AbilityTreeSkillNode n) -> distances.getOrDefault(n, Integer.MAX_VALUE))
 
                 // 2. Minimise UI page navigation
                 .thenComparingInt((AbilityTreeSkillNode n) ->
@@ -285,8 +272,7 @@ public final class AbilityTreeModel extends Model {
 
                 // 3. Unlock prerequisites for the most downstream nodes first
                 .thenComparing(
-                        (AbilityTreeSkillNode n) -> dependents.getOrDefault(n.name(), 0L),
-                        Comparator.reverseOrder())
+                        (AbilityTreeSkillNode n) -> dependents.getOrDefault(n.name(), 0L), Comparator.reverseOrder())
 
                 // 4. Prefer archetype contributors to hit thresholds sooner
                 .thenComparing((AbilityTreeSkillNode n) -> n.archetype() != null, Comparator.reverseOrder())
@@ -296,8 +282,8 @@ public final class AbilityTreeModel extends Model {
     }
 
     private static int pageDistance(int from, int to) {
-        if (to == from) return 0;                           // Same page
-        if (to > from) return to - from;                    // Forward
-        return 1000 + (from - to);         // Backward
+        if (to == from) return 0; // Same page
+        if (to > from) return to - from; // Forward
+        return 1000 + (from - to); // Backward
     }
 }

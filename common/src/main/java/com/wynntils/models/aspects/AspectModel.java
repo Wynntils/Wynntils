@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.aspects;
@@ -23,6 +23,7 @@ import com.wynntils.models.containers.containers.RaidRewardChestContainer;
 import com.wynntils.models.containers.containers.RaidRewardPreviewContainer;
 import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -32,8 +33,6 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-
-import com.wynntils.utils.wynn.ContainerUtils;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -214,11 +213,7 @@ public final class AspectModel extends Model {
     }
 
     public void saveCurrentAspectLoadout(
-            String name,
-            Consumer<String> onStatus,
-            Consumer<String> onError,
-            Consumer<String> onComplete) {
-
+            String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
         ASPECT_CONTAINER_QUERIES.dumpAspectContainer(
                 loadout -> {
                     aspectLoadouts.get().put(name, loadout);
@@ -230,11 +225,7 @@ public final class AspectModel extends Model {
     }
 
     public void loadAspectLoadout(
-            String name,
-            Consumer<String> onStatus,
-            Consumer<String> onError,
-            Consumer<String> onComplete) {
-
+            String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
         SavableAspectSet loadout = getAspectLoadout(name);
         if (loadout == null) {
             onError.accept("No saved aspect loadout: " + name);
@@ -242,11 +233,9 @@ public final class AspectModel extends Model {
         }
 
         ClassType currentClass = Models.Character.getClassType();
-        if (loadout.classType() != null
-                && loadout.classType() != currentClass
-                && currentClass != ClassType.NONE) {
-            onError.accept("Loadout " + name + " is for " + loadout.classType().getName()
-                    + ", but you are " + currentClass.getName());
+        if (loadout.classType() != null && loadout.classType() != currentClass && currentClass != ClassType.NONE) {
+            onError.accept("Loadout " + name + " is for " + loadout.classType().getName() + ", but you are "
+                    + currentClass.getName());
             return;
         }
 
@@ -258,7 +247,6 @@ public final class AspectModel extends Model {
         // Close any open background container before starting the query
         ContainerUtils.closeBackgroundContainer();
 
-        ASPECT_CONTAINER_QUERIES.applyAspectLoadout(
-                loadout.aspectNames(), onStatus, onError, onComplete);
+        ASPECT_CONTAINER_QUERIES.applyAspectLoadout(loadout.aspectNames(), onStatus, onError, onComplete);
     }
 }

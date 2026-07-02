@@ -31,7 +31,7 @@ public final class AbilityTreeAnnotator implements GuiItemAnnotator {
             Matcher matcher = LoreUtils.matchLoreLine(itemStack, 3, COMPASS_ABILITY_POINTS_PATTERN);
             if (!matcher.matches()) return null;
 
-            int count = Integer.parseInt(matcher.group(1)); //available points
+            int count = Integer.parseInt(matcher.group(1)); // available points
             int totalPoints = Integer.parseInt(matcher.group(2));
             return new AbilityTreeItem(count, totalPoints);
         } else if (name.equals(TREE_ABILITY_POINTS_NAME)) {

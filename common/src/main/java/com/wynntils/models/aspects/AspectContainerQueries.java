@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.aspects;
 
 import com.wynntils.core.WynntilsMod;
@@ -12,26 +16,22 @@ import com.wynntils.models.aspects.type.AspectInfo;
 import com.wynntils.models.aspects.type.SavableAspectSet;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.containers.AbilityTreeContainer;
-import com.wynntils.models.containers.containers.AbilityTreeResetContainer;
 import com.wynntils.models.containers.containers.AspectsContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.InventoryUtils;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
-
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -47,16 +47,15 @@ public class AspectContainerQueries {
     // Ordered from first equippable to last equippable slot
     private static final List<Integer> EQUIPPED_SLOTS = List.of(18, 11, 4, 15, 26);
     // Inventory slots where owned/aspect items appear (35-53)
-    private static final List<Integer> ASPECT_INVENTORY_SLOTS = IntStream.rangeClosed(35, 53).boxed().toList();
+    private static final List<Integer> ASPECT_INVENTORY_SLOTS =
+            IntStream.rangeClosed(35, 53).boxed().toList();
 
     public void dumpAspectContainer(
             Consumer<SavableAspectSet> supplier,
             Consumer<String> onStatus,
             Consumer<String> onError,
             Consumer<String> onComplete) {
-        queryAspectContainer(
-                new AspectContainerQueries.AspectContainerDumper(supplier),
-                onStatus, onError, onComplete);
+        queryAspectContainer(new AspectContainerQueries.AspectContainerDumper(supplier), onStatus, onError, onComplete);
     }
 
     private void queryAspectContainer(
@@ -64,7 +63,6 @@ public class AspectContainerQueries {
             Consumer<String> onStatus,
             Consumer<String> onError,
             Consumer<String> onComplete) {
-
         QueryBuilder builder = ScriptedContainerQuery.builder("Aspect Container Dumper")
                 .onError(msg -> {
                     onError.accept(msg);
@@ -80,12 +78,12 @@ public class AspectContainerQueries {
                 .execute(() -> onStatus.accept("Ability tree menu"))
 
                 // Open aspects menu
-                .then(QueryStep.clickOnSlot(ASPECTS_BUTTON_SLOT).expectContainer(AbilityTreeContainer.class, AspectsContainer.class)
+                .then(QueryStep.clickOnSlot(ASPECTS_BUTTON_SLOT)
+                        .expectContainer(AbilityTreeContainer.class, AspectsContainer.class)
                         .verifyContentChange((container, changes, changeType) ->
                                 Models.Container.getCurrentContainer() instanceof AspectsContainer)
                         .processIncomingContainer(processor::processContainer))
                 .execute(() -> onStatus.accept("Aspects menu"));
-
 
         builder.execute(() -> onComplete.accept("Finished dumping aspects"));
         builder.build().executeQuery();
@@ -205,7 +203,8 @@ public class AspectContainerQueries {
 
                                     if (pageAspects != null && !pageAspects.isEmpty()) {
                                         // We just clicked an aspect slot
-                                        String aspectName = pageAspects.peekFirst().key();
+                                        String aspectName =
+                                                pageAspects.peekFirst().key();
 
                                         // Remove it before re-scanning
                                         pageAspects.removeFirst();
@@ -219,7 +218,8 @@ public class AspectContainerQueries {
                                         }
 
                                         AspectItem aspect = Models.Item.asWynnItem(stack, AspectItem.class)
-                                                .orElseThrow(() -> new ContainerQueryException("Failed to place aspect."));
+                                                .orElseThrow(
+                                                        () -> new ContainerQueryException("Failed to place aspect."));
 
                                         if (!aspect.getName().equals(aspectName)) {
                                             throw new ContainerQueryException("Failed to place aspect.");
@@ -257,14 +257,11 @@ public class AspectContainerQueries {
         builder.build().executeQuery();
     }
 
-
-
     private static void scanPageForAspects(
             ContainerContent container,
             List<String> aspectsToEquip,
             Map<Integer, Deque<Pair<String, Integer>>> aspectLocations,
-            int currentPage
-    ) {
+            int currentPage) {
         for (int slot : ASPECT_INVENTORY_SLOTS) {
             if (slot >= container.items().size()) continue;
 

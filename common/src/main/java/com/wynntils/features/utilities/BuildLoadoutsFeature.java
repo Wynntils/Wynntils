@@ -42,12 +42,7 @@ public class BuildLoadoutsFeature extends Feature {
         private static final int BUTTON_HEIGHT = 20;
 
         private LoadoutScreenButton(int x, int y) {
-            super(
-                    x,
-                    y,
-                    BUTTON_WIDTH,
-                    BUTTON_HEIGHT,
-                    Component.translatable("feature.wynntils.buildLoadouts.button"));
+            super(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, Component.translatable("feature.wynntils.buildLoadouts.button"));
         }
 
         @Override

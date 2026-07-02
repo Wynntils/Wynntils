@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.type;
 
 import com.wynntils.models.abilitytree.type.SavableAbilityTree;
@@ -10,11 +14,18 @@ public record Loadout(
         SavableSkillPointSet skillPoints,
         SavableAbilityTree abilityTree,
         SavableAspectSet aspect,
-        LoadoutType type
-) {
-    public boolean hasSkillPoints() { return skillPoints != null; }
-    public boolean hasAbilityTree() { return abilityTree != null; }
-    public boolean hasAspects() { return aspect != null; }
+        LoadoutType type) {
+    public boolean hasSkillPoints() {
+        return skillPoints != null;
+    }
+
+    public boolean hasAbilityTree() {
+        return abilityTree != null;
+    }
+
+    public boolean hasAspects() {
+        return aspect != null;
+    }
 
     public ClassType getClassType() {
         if (hasAbilityTree()) {
@@ -53,6 +64,6 @@ public record Loadout(
         int atLevel = hasAbilityTree() ? abilityTree().getLevel() : 0;
         int asLevel = hasAspects() ? aspect().getLevel() : 0;
 
-        return  Math.max(1, Math.max(spLevel, Math.max(atLevel, asLevel)));
+        return Math.max(1, Math.max(spLevel, Math.max(atLevel, asLevel)));
     }
 }

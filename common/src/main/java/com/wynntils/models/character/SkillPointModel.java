@@ -40,7 +40,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.function.Consumer;
-
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
@@ -163,17 +162,18 @@ public final class SkillPointModel extends Model {
         for (int i = 0; i < clickActions.size(); i += batchSize) {
             List<ClickAction> batch = clickActions.subList(i, Math.min(i + batchSize, clickActions.size()));
             builder.then(QueryStep.runInSameContainer(container -> {
-                for (ClickAction click : batch) {
-                    if (click.shift()) {
-                        ContainerUtils.shiftClickOnSlot(
-                                click.slot(), container.containerId(), click.button(), container.items());
-                    } else {
-                        ContainerUtils.clickOnSlot(
-                                click.slot(), container.containerId(), click.button(), container.items());
-                    }
-                }
-                return false;
-            }).withNextOperationDelay(1));
+                        for (ClickAction click : batch) {
+                            if (click.shift()) {
+                                ContainerUtils.shiftClickOnSlot(
+                                        click.slot(), container.containerId(), click.button(), container.items());
+                            } else {
+                                ContainerUtils.clickOnSlot(
+                                        click.slot(), container.containerId(), click.button(), container.items());
+                            }
+                        }
+                        return false;
+                    })
+                    .withNextOperationDelay(1));
         }
 
         builder.execute(() -> {

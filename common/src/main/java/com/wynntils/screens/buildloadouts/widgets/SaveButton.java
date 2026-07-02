@@ -7,7 +7,6 @@ package com.wynntils.screens.buildloadouts.widgets;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
-import com.wynntils.utils.type.Pair;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.input.InputWithModifiers;
@@ -37,7 +36,10 @@ public class SaveButton extends WynntilsButton {
     @Override
     public void onPress(InputWithModifiers input) {
         String name = parent.saveNameInput.getTextBoxInput();
-        if ((Models.SkillPoint.hasLoadout(name) || Models.AbilityTree.hasAbilityTreeLoadout(name) || Models.Aspect.hasAspectLoadout(name)) && !buttonConfirm) {
+        if ((Models.SkillPoint.hasLoadout(name)
+                        || Models.AbilityTree.hasAbilityTreeLoadout(name)
+                        || Models.Aspect.hasAspectLoadout(name))
+                && !buttonConfirm) {
             parent.hasSaveNameConflict = true;
             buttonConfirm = true;
             this.setMessage(Component.translatable("screens.wynntils.buildLoadouts.confirm")
