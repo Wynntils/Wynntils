@@ -61,16 +61,16 @@ public class LoadButton extends WynntilsButton {
                     loadout.name(),
                     error -> parent.setStatus(error, CommonColors.RED),
                     () -> {
-                        if (loadout.hasAbilityTree()) {
-                            parent.setStatus("Skill points loaded. Applying ability tree...", CommonColors.YELLOW);
-                            Models.AbilityTree.loadAbilityTree(
+                        if (loadout.hasAspects()) {
+                            parent.setStatus("Skill points loaded. Applying aspects...", CommonColors.YELLOW);
+                            Models.Aspect.loadAspectLoadout(
                                     loadout.name(),
                                     status -> parent.setStatus(status, CommonColors.YELLOW),
                                     error -> parent.setStatus(error, CommonColors.RED),
                                     completed -> {
-                                        if (loadout.hasAspects()) {
-                                            parent.setStatus("Ability tree applied. Applying aspects...", CommonColors.YELLOW);
-                                            Models.Aspect.loadAspectLoadout(
+                                        if (loadout.hasAbilityTree()) {
+                                            parent.setStatus("Aspects applied. Applying ability tree...", CommonColors.YELLOW);
+                                            Models.AbilityTree.loadAbilityTree(
                                                     loadout.name(),
                                                     status -> parent.setStatus(status, CommonColors.YELLOW),
                                                     error -> parent.setStatus(error, CommonColors.RED),
@@ -79,9 +79,9 @@ public class LoadButton extends WynntilsButton {
                                             parent.setStatus(completed, CommonColors.GREEN);
                                         }
                                     });
-                        } else if (loadout.hasAspects()) {
-                            parent.setStatus("Skill points loaded. Applying aspects...", CommonColors.YELLOW);
-                            Models.Aspect.loadAspectLoadout(
+                        } else if (loadout.hasAbilityTree()) {
+                            parent.setStatus("Skill points loaded. Applying ability tree...", CommonColors.YELLOW);
+                            Models.AbilityTree.loadAbilityTree(
                                     loadout.name(),
                                     status -> parent.setStatus(status, CommonColors.YELLOW),
                                     error -> parent.setStatus(error, CommonColors.RED),
