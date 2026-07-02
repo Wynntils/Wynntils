@@ -128,7 +128,7 @@ public class AspectContainerQueries {
                             for (int slot : EQUIPPED_SLOTS) {
                                 ItemStack itemStack = c.items().get(slot);
                                 Optional<AspectItem> item = Models.Item.asWynnItem(itemStack, AspectItem.class);
-                                if (item.isPresent()) slotsToUnequip.addLast(slot);
+                                if (item.isPresent()) slotsToUnequip.addFirst(slot);
                             }
                             return !slotsToUnequip.isEmpty();
                         },
@@ -136,8 +136,8 @@ public class AspectContainerQueries {
                                 .expectContainer(AspectsContainer.class)
                                 .accumulateSetSlotChanges(2)
                                 .processIncomingContainer(container -> {
+                                    onStatus.accept("Unequipped aspect from slot: " + slotsToUnequip.peekFirst());
                                     slotsToUnequip.removeFirst();
-                                    WynntilsMod.info("unequipped: " + container);
                                 }))
 
                 // Rewind to page 1
@@ -153,7 +153,7 @@ public class AspectContainerQueries {
                 // Scan page 1 for desired aspects
                 .reprocess(container -> scanPageForAspects(container, aspectsToEquip, aspectLocations, currentPage))
 
-                // Equip desired aspects across ALL pages
+                // Equip aspects across all pages
                 .repeat(
                         c -> {
                             // Stop early if all 5 aspect slots are already filled
@@ -161,17 +161,9 @@ public class AspectContainerQueries {
 
                             // Continue if there are still aspects to equip on this page
                             Deque<Pair<String, Integer>> pageAspects = aspectLocations.get(currentPage);
-
-                            WynntilsMod.info("page empty: " +(pageAspects != null && !pageAspects.isEmpty()));
-
                             if (pageAspects != null && !pageAspects.isEmpty()) return true;
 
                             // Otherwise continue only if there is another page
-                            WynntilsMod.info("next page: " + ScriptedContainerQuery.containerHasSlot(
-                                    c, NEXT_PAGE_SLOT, Items.POTION, NEXT_PAGE_ITEM_NAME));
-
-                            WynntilsMod.info("next page slot: " + c.items().get(NEXT_PAGE_SLOT));
-
                             return ScriptedContainerQuery.containerHasSlot(
                                     c, NEXT_PAGE_SLOT, Items.POTION, NEXT_PAGE_ITEM_NAME);
                         },
@@ -191,12 +183,11 @@ public class AspectContainerQueries {
                                     Deque<Pair<String, Integer>> pageAspects = aspectLocations.get(currentPage);
 
                                     if (pageAspects != null && !pageAspects.isEmpty()) {
-                                        // --- We just clicked an aspect slot ---
+                                        // We just clicked an aspect slot
                                         int clickedSlot = pageAspects.peekFirst().value();
                                         String aspectName = pageAspects.peekFirst().key();
-                                        WynntilsMod.info("clicked: " + clickedSlot);
 
-                                        // Remove it BEFORE re-scanning so a stale update doesn't re-queue it
+                                        // Remove it before re-scanning
                                         pageAspects.removeFirst();
 
                                         // Verify it actually landed in the next free equipped slot
@@ -206,8 +197,12 @@ public class AspectContainerQueries {
                                             Optional<AspectItem> aspectOpt = Models.Item.asWynnItem(stack, AspectItem.class);
                                             if (aspectOpt.isPresent() && Objects.equals(aspectOpt.get().getName(), aspectName)) {
                                                 checkAspectSlotIdx.set(checkAspectSlotIdx.get() + 1);
-                                                WynntilsMod.info("aspect placed: " + aspectOpt);
+                                                onStatus.accept("aspect placed: " + aspectOpt.get().getName());
+                                            } else {
+                                                throw new ContainerQueryException("Failed to place aspect.");
                                             }
+                                        } else {
+                                            throw new ContainerQueryException("Failed to place aspect.");
                                         }
 
                                         // Clear and re-scan the current page for any remaining desired aspects
@@ -216,9 +211,8 @@ public class AspectContainerQueries {
                                         }
                                         scanPageForAspects(container, aspectsToEquip, aspectLocations, currentPage);
                                     } else {
-                                        // --- We just turned the page ---
+                                        // We just turned the page
                                         currentPage++;
-                                        WynntilsMod.info("Moved to page " + currentPage);
                                         onStatus.accept("Scanning page " + currentPage);
 
                                         // Scan the new page for desired aspects
