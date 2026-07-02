@@ -105,7 +105,7 @@ public class AspectContainerQueries {
                     WynntilsMod.error(msg);
                 })
 
-                // Open character/compass menu
+                // Open compass menu
                 .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                         .expectContainer(CharacterInfoContainer.class))
                 .execute(() -> onStatus.accept("Compass menu"))
@@ -121,7 +121,7 @@ public class AspectContainerQueries {
                                 Models.Container.getCurrentContainer() instanceof AspectsContainer))
                 .execute(() -> onStatus.accept("Aspects menu"))
 
-                // Unequip ALL currently equipped aspects
+                // Unequip all currently equipped aspects
                 .repeat(
                         c -> {
                             slotsToUnequip.clear();
@@ -193,17 +193,20 @@ public class AspectContainerQueries {
                                         // Verify it actually landed in the next free equipped slot
                                         int checkSlot = EQUIPPED_SLOTS.get(checkAspectSlotIdx.get());
                                         ItemStack stack = container.items().get(checkSlot);
-                                        if (!stack.isEmpty()) {
-                                            Optional<AspectItem> aspectOpt = Models.Item.asWynnItem(stack, AspectItem.class);
-                                            if (aspectOpt.isPresent() && Objects.equals(aspectOpt.get().getName(), aspectName)) {
-                                                checkAspectSlotIdx.set(checkAspectSlotIdx.get() + 1);
-                                                onStatus.accept("aspect placed: " + aspectOpt.get().getName());
-                                            } else {
-                                                throw new ContainerQueryException("Failed to place aspect.");
-                                            }
-                                        } else {
+
+                                        if (stack.isEmpty()) {
                                             throw new ContainerQueryException("Failed to place aspect.");
                                         }
+
+                                        AspectItem aspect = Models.Item.asWynnItem(stack, AspectItem.class)
+                                                .orElseThrow(() -> new ContainerQueryException("Failed to place aspect."));
+
+                                        if (!aspect.getName().equals(aspectName)) {
+                                            throw new ContainerQueryException("Failed to place aspect.");
+                                        }
+
+                                        checkAspectSlotIdx.set(checkAspectSlotIdx.get() + 1);
+                                        onStatus.accept("aspect placed: " + aspect.getName());
 
                                         // Clear and re-scan the current page for any remaining desired aspects
                                         if (pageAspects != null) {
