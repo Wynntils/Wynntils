@@ -164,7 +164,8 @@ public class AbilityTreeContainerQueries {
                     abilityTreeItem.ifPresent(
                             treeItem -> needsAbilityTreeReset = treeItem.getCount() != treeItem.getTotalPoints());
 
-                    hasAbilityShards = Models.Inventory.getAmountInInventory("Ability Shard") >= REQUIRED_ABILITY_SHARDS;
+                    hasAbilityShards =
+                            Models.Inventory.getAmountInInventory("Ability Shard") >= REQUIRED_ABILITY_SHARDS;
 
                     if (needsAbilityTreeReset && !hasAbilityShards && statusEffect == null) {
                         throw new ContainerQueryException("insufficient ability shards (need 3)");
@@ -189,7 +190,9 @@ public class AbilityTreeContainerQueries {
                                 if (!sawAnimationEnd.get()) {
                                     if (changeType == ContainerContentChangeType.SET_SLOT
                                             && changes.containsKey(LAST_ABILITY_TREE_ANIMATION_SLOT)
-                                            && changes.get(LAST_ABILITY_TREE_ANIMATION_SLOT).getItem() == Items.AIR) {
+                                            && changes.get(LAST_ABILITY_TREE_ANIMATION_SLOT)
+                                                            .getItem()
+                                                    == Items.AIR) {
                                         sawAnimationEnd.set(true);
                                     }
                                     return false;

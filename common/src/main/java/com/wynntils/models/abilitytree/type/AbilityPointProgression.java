@@ -16,11 +16,11 @@ public final class AbilityPointProgression {
     private static int[] createPointsAtLevel() {
         int maxLevel = Models.CombatXp.MAX_LEVEL;
         int[] milestones = {
-                1, 2, 4, 6, 8, 10, 12, 13, 15, 17,
-                18, 20, 22, 23, 24, 26, 28, 30, 32, 34,
-                37, 39, 41, 44, 46, 48, 50, 52, 54, 56,
-                58, 60, 62, 64, 67, 70, 73, 76, 80, 84,
-                88, 92, 96, 100, 104, 107, 110, 113, 116, 120
+            1, 2, 4, 6, 8, 10, 12, 13, 15, 17,
+            18, 20, 22, 23, 24, 26, 28, 30, 32, 34,
+            37, 39, 41, 44, 46, 48, 50, 52, 54, 56,
+            58, 60, 62, 64, 67, 70, 73, 76, 80, 84,
+            88, 92, 96, 100, 104, 107, 110, 113, 116, 120
         };
         int[] result = new int[maxLevel];
         int milestoneIdx = 0;
@@ -37,7 +37,9 @@ public final class AbilityPointProgression {
 
     public static int getPointsAtLevel(int combatLevel) {
         if (combatLevel <= 0) return 0;
-        return Math.min(MAX_ABILITY_POINTS, POINTS_AT_LEVEL[Math.min(combatLevel, Models.CombatXp.MAX_LEVEL - 1)] + getLoanedPoints());
+        return Math.min(
+                MAX_ABILITY_POINTS,
+                POINTS_AT_LEVEL[Math.min(combatLevel, Models.CombatXp.MAX_LEVEL - 1)] + getLoanedPoints());
     }
 
     public static int getLevelForPoints(int abilityPoints) {
