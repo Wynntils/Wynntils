@@ -4,6 +4,7 @@
  */
 package com.wynntils.utils.soundtriggers;
 
+import com.google.common.collect.ComparisonChain;
 import com.wynntils.core.components.Managers;
 import com.wynntils.utils.type.ErrorOr;
 import java.time.Duration;
@@ -15,7 +16,8 @@ public class SoundTrigger {
     private String controllerFunction;
     private String identifierFunction;
     private String name;
-    private float volume;
+    private int volume;
+    private int pitch;
 
     private TriggerType type;
     private int interval;
@@ -28,8 +30,9 @@ public class SoundTrigger {
             String controllerFunction,
             String identifierFunction,
             String name,
-            float volume,
-            int interval) {
+            int volume,
+            int interval,
+            int pitch) {
         this.enabled = true;
         this.type = type;
         this.controllerFunction = controllerFunction;
@@ -37,14 +40,15 @@ public class SoundTrigger {
         this.name = name;
         this.volume = volume;
         this.interval = interval;
+        this.pitch = pitch;
     }
 
-    public SoundTrigger(String controllerFunction, String identifierFunction, String name, float volume, int interval) {
-        this(TriggerType.CONTINUOUS, controllerFunction, identifierFunction, name, volume, interval);
+    public SoundTrigger(String controllerFunction, String identifierFunction, String name, int volume, int interval) {
+        this(TriggerType.CONTINUOUS, controllerFunction, identifierFunction, name, volume, interval, 100);
     }
 
-    public SoundTrigger(String controllerFunction, String identifierFunction, String name, float volume) {
-        this(TriggerType.SINGULAR, controllerFunction, identifierFunction, name, volume, 5);
+    public SoundTrigger(String controllerFunction, String identifierFunction, String name, int volume) {
+        this(TriggerType.SINGULAR, controllerFunction, identifierFunction, name, volume, 5, 100);
     }
 
     public boolean shouldPlay() {
@@ -94,6 +98,7 @@ public class SoundTrigger {
     }
 
     public String getName() {
+        if (name.isBlank()) return "New Sound Trigger";
         return name;
     }
 
@@ -101,11 +106,11 @@ public class SoundTrigger {
         this.name = name;
     }
 
-    public float getVolume() {
+    public int getVolume() {
         return volume;
     }
 
-    public void setVolume(float volume) {
+    public void setVolume(int volume) {
         this.volume = volume;
     }
 
@@ -153,5 +158,26 @@ public class SoundTrigger {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public int compareTo(SoundTrigger trigger) {
+        return ComparisonChain.start()
+                .compareTrueFirst(this.isEnabled(), trigger.isEnabled())
+                .compareFalseFirst(
+                        this.getControllerFunctionResult().hasError(),
+                        trigger.getControllerFunctionResult().hasError())
+                .compareFalseFirst(
+                        this.getIdentifierFunctionResult().hasError(),
+                        trigger.getIdentifierFunctionResult().hasError())
+                .compare(this.getName(), trigger.getName())
+                .result();
+    }
+
+    public int getPitch() {
+        return pitch;
+    }
+
+    public void setPitch(int pitch) {
+        this.pitch = pitch;
     }
 }

@@ -27,7 +27,7 @@ public class SoundTriggersFeature extends Feature implements ExternalConfigurati
     private final Config<Float> globalVolumeModifier = new Config<>(100f);
 
     @Persisted
-    private final Storage<List<SoundTrigger>> triggers = new Storage<>(new ArrayList<>());
+    private final Storage<List<SoundTrigger>> registeredTriggers = new Storage<>(new ArrayList<>());
 
     public SoundTriggersFeature() {
         super(ProfileDefault.ENABLED);
@@ -35,16 +35,16 @@ public class SoundTriggersFeature extends Feature implements ExternalConfigurati
 
     @SubscribeEvent
     public void playTriggers(TickEvent event) {
-        for (SoundTrigger trigger : triggers.get()) {
-            if (trigger.shouldPlay()) {
+        for (SoundTrigger trigger : registeredTriggers.get()) {
+            if (trigger.isEnabled() && trigger.shouldPlay()) {
                 ErrorOr<Boolean> shouldPlay = trigger.getControllerFunctionResult();
                 ErrorOr<String> identifierRaw = trigger.getIdentifierFunctionResult();
                 if (!shouldPlay.hasError() && !identifierRaw.hasError()) {
                     Identifier sound = Identifier.parse(identifierRaw.getValue());
                     McUtils.playSoundMaster(
                             SoundEvent.createVariableRangeEvent(sound),
-                            trigger.getVolume() * Math.max(globalVolumeModifier.get(), 0f) / 100f,
-                            1);
+                            trigger.getVolume() / 100f * Math.max(globalVolumeModifier.get(), 0f) / 100f,
+                            trigger.getPitch() / 100f);
                 }
             }
         }
@@ -53,5 +53,9 @@ public class SoundTriggersFeature extends Feature implements ExternalConfigurati
     @Override
     public Screen getExternalConfigurationScreen(Screen previousScreen) {
         return SoundTriggerManagmentScreen.screen(previousScreen);
+    }
+
+    public Storage<List<SoundTrigger>> getRegisteredTriggers() {
+        return registeredTriggers;
     }
 }
