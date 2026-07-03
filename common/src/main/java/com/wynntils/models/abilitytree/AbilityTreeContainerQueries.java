@@ -38,8 +38,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-
-import com.wynntils.utils.wynn.WynnUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
