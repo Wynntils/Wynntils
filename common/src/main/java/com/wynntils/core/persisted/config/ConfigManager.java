@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.config;
@@ -67,6 +67,7 @@ public final class ConfigManager extends Manager {
 
     private final File userConfigFile;
     private JsonObject configObject;
+    private boolean loadingConfigOptions = false;
 
     public ConfigManager() {
         super(List.of());
@@ -154,6 +155,8 @@ public final class ConfigManager extends Manager {
     //       This means we need to save - load - save, which we should not do. initOverlayGroups is the solution to
     //       this, for now.
     private void loadConfigOptions(boolean resetIfNotFound, boolean initOverlayGroups) {
+        loadingConfigOptions = true;
+
         // We have to set up the overlay groups first, so that the overlays' configs can be loaded
         JsonObject overlayGroups = JsonUtils.getNullableJsonObject(configObject, OVERLAY_GROUPS_JSON_KEY);
 
@@ -196,6 +199,16 @@ public final class ConfigManager extends Manager {
         for (OverlayGroupHolder holder : Managers.Overlay.getOverlayGroups()) {
             Managers.Overlay.enableOverlays(holder.getParent());
         }
+
+        // Config reloads can recreate dynamic overlays and restore their render order after they are enabled.
+        // Rebuild the render map now that all overlay configs have been restored to use the persisted order
+        // immediately after any reload.
+        Managers.Overlay.initializeRenderOrders();
+        loadingConfigOptions = false;
+    }
+
+    public boolean isLoadingConfigOptions() {
+        return loadingConfigOptions;
     }
 
     @SubscribeEvent
