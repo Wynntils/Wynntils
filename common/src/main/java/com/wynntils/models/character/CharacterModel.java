@@ -51,9 +51,6 @@ public final class CharacterModel extends Model {
     private static final Pattern CHARACTER_ID_PATTERN = Pattern.compile("^[a-z0-9]{8}$");
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §f(.+)");
     private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §f(\\d+)");
-    private static final String RANK_STRING =
-            Arrays.stream(PlayerRank.values()).map(PlayerRank::getTag).collect(Collectors.joining());
-    private static final Pattern RANK_TAG_PATTERN = Pattern.compile("§f(?<rank>[" + RANK_STRING + "])");
 
     public static final int CHARACTER_INFO_SLOT = 7;
     private static final int PROFESSION_INFO_SLOT = 17;
@@ -74,7 +71,6 @@ public final class CharacterModel extends Model {
     private boolean scanCharacterInfoAlreadyScanned;
 
     private VehicleType vehicle = VehicleType.NONE;
-    private PlayerRank rank = PlayerRank.NONE;
 
     public CharacterModel() {
         super(List.of());
@@ -108,10 +104,6 @@ public final class CharacterModel extends Model {
         if (!hasCharacter) return "-";
 
         return id;
-    }
-
-    public PlayerRank getRank() {
-        return rank;
     }
 
     // FIXME: Remove if this is not needed, or fix it for 2.1
@@ -265,12 +257,6 @@ public final class CharacterModel extends Model {
 
     private void parseCharacterFromCharacterMenu(ItemStack characterInfoItem) {
         List<StyledText> lore = LoreUtils.getLore(characterInfoItem);
-        StyledText hoverName = StyledText.fromComponent(characterInfoItem.getHoverName());
-
-        Matcher rankMatcher = hoverName.getMatcher(RANK_TAG_PATTERN);
-        if (rankMatcher.find()) {
-            rank = PlayerRank.fromString(rankMatcher.group("rank"));
-        }
 
         int foundLevel = 0;
         String className = "";

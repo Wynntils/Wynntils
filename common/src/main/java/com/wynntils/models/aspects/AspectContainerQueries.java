@@ -43,6 +43,8 @@ public class AspectContainerQueries {
     private static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
     private static final StyledText PREVIOUS_PAGE_ITEM_NAME = StyledText.fromString("§7Previous Page");
     private int currentPage;
+    private int checkAspectSlotIdx;
+    private boolean hasAlreadyEquippedAspects;
 
     // Ordered from first equippable to last equippable slot
     private static final List<Integer> EQUIPPED_SLOTS = List.of(18, 11, 4, 15, 26);
@@ -96,8 +98,6 @@ public class AspectContainerQueries {
             Consumer<String> onComplete) {
         Map<Integer, Deque<Pair<String, Integer>>> aspectLocations = new HashMap<>();
         Deque<Integer> slotsToUnequip = new ArrayDeque<>();
-        AtomicInteger checkAspectSlotIdx = new AtomicInteger(0);
-        AtomicBoolean alreadyEquipped = new AtomicBoolean(false);
 
         QueryBuilder builder = ScriptedContainerQuery.builder("Aspect Unlock")
                 .onError(msg -> {
@@ -125,7 +125,7 @@ public class AspectContainerQueries {
                 .reprocess(container -> {
                     List<String> equipped = getEquippedAspectNames(container);
                     if (areAspectsMatching(equipped, aspectsToEquip)) {
-                        alreadyEquipped.set(true);
+                        hasAlreadyEquippedAspects = true;
                         onStatus.accept("Aspects already equipped");
                     }
                 })
@@ -133,7 +133,7 @@ public class AspectContainerQueries {
                 // Unequip all currently equipped aspects
                 .repeat(
                         c -> {
-                            if (alreadyEquipped.get()) return false;
+                            if (hasAlreadyEquippedAspects) return false;
                             slotsToUnequip.clear();
                             for (int slot : EQUIPPED_SLOTS) {
                                 ItemStack itemStack = c.items().get(slot);
@@ -153,7 +153,7 @@ public class AspectContainerQueries {
                 // Rewind to page 1
                 .repeat(
                         c -> {
-                            if (alreadyEquipped.get()) return false;
+                            if (hasAlreadyEquippedAspects) return false;
                             return ScriptedContainerQuery.containerHasSlot(
                                     c, PREVIOUS_PAGE_SLOT, Items.POTION, PREVIOUS_PAGE_ITEM_NAME);
                         },
@@ -162,21 +162,21 @@ public class AspectContainerQueries {
                                 .accumulateSetSlotChanges(2)
                                 .processIncomingContainer(c -> onStatus.accept("Moving to first page")))
                 .execute(() -> {
-                    if (!alreadyEquipped.get()) currentPage = 1;
+                    if (!hasAlreadyEquippedAspects) currentPage = 1;
                 })
 
                 // Scan page 1 for desired aspects
                 .reprocess(container -> {
-                    if (alreadyEquipped.get()) return;
+                    if (hasAlreadyEquippedAspects) return;
                     scanPageForAspects(container, aspectsToEquip, aspectLocations, currentPage);
                 })
 
                 // Equip aspects across all pages
                 .repeat(
                         c -> {
-                            if (alreadyEquipped.get()) return false;
+                            if (hasAlreadyEquippedAspects) return false;
                             // Stop early if all 5 aspect slots are already filled
-                            if (checkAspectSlotIdx.get() >= EQUIPPED_SLOTS.size()) return false;
+                            if (checkAspectSlotIdx >= EQUIPPED_SLOTS.size()) return false;
 
                             // Continue if there are still aspects to equip on this page
                             Deque<Pair<String, Integer>> pageAspects = aspectLocations.get(currentPage);
@@ -210,7 +210,7 @@ public class AspectContainerQueries {
                                         pageAspects.removeFirst();
 
                                         // Verify it actually landed in the next free equipped slot
-                                        int checkSlot = EQUIPPED_SLOTS.get(checkAspectSlotIdx.get());
+                                        int checkSlot = EQUIPPED_SLOTS.get(checkAspectSlotIdx);
                                         ItemStack stack = container.items().get(checkSlot);
 
                                         if (stack.isEmpty()) {
@@ -225,7 +225,7 @@ public class AspectContainerQueries {
                                             throw new ContainerQueryException("Failed to place aspect.");
                                         }
 
-                                        checkAspectSlotIdx.set(checkAspectSlotIdx.get() + 1);
+                                        checkAspectSlotIdx = checkAspectSlotIdx + 1;
                                         onStatus.accept("aspect placed: " + aspect.getName());
 
                                         // Clear and re-scan the current page for any remaining desired aspects
@@ -245,7 +245,7 @@ public class AspectContainerQueries {
 
                 // verify every aspect is actually equipped
                 .reprocess(container -> {
-                    if (alreadyEquipped.get()) return;
+                    if (hasAlreadyEquippedAspects) return;
                     List<String> equipped = getEquippedAspectNames(container);
                     if (!areAspectsMatching(equipped, aspectsToEquip)) {
                         throw new ContainerQueryException(

@@ -50,9 +50,13 @@ public class AbilityTreeContainerQueries {
     private static final int ABILITY_SHARD_TWO_SLOT = 15;
     private static final int ABILITY_SHARD_THREE_SLOT = 40;
     private static final int ABILITY_TREE_RESET_CONFIRM_SLOT = 22;
+    private static final int LAST_ABILITY_TREE_ANIMATION_SLOT = 53;
+    private static final int REQUIRED_ABILITY_SHARDS = 3;
     private static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
     private static final StyledText PREVIOUS_PAGE_ITEM_NAME = StyledText.fromString("§7Previous Page");
     private int pageCount;
+    private boolean needsAbilityTreeReset;
+    private boolean hasAbilityShards;
 
     public void dumpAbilityTree(
             Consumer<AbilityTreeInfo> supplier,
@@ -135,8 +139,8 @@ public class AbilityTreeContainerQueries {
             Consumer<String> onStatus,
             Consumer<String> onError,
             Consumer<String> onComplete) {
-        AtomicBoolean needsReset = new AtomicBoolean(false);
-        AtomicBoolean hasAbilityShards = new AtomicBoolean(false);
+        needsAbilityTreeReset = false;
+        hasAbilityShards = false;
         StatusEffect statusEffect = Models.StatusEffect.searchStatusEffectByName("Tree Manipulation");
 
         QueryBuilder builder = ScriptedContainerQuery.builder("Ability Tree Unlock")
@@ -154,15 +158,15 @@ public class AbilityTreeContainerQueries {
                 .reprocess(container -> {
                     Optional<AbilityTreeItem> abilityTreeItem =
                             Models.Item.asWynnItem(container.items().get(ABILITY_TREE_SLOT), AbilityTreeItem.class);
-                    if (abilityTreeItem.isEmpty()) needsReset.set(false);
+                    if (abilityTreeItem.isEmpty()) {
+                        needsAbilityTreeReset = false;
+                    }
                     abilityTreeItem.ifPresent(
-                            treeItem -> needsReset.set(treeItem.getCount() != treeItem.getTotalPoints()));
-                    hasAbilityShards.set(Models.Inventory.getAmountInInventory("Ability Shard") >= 3);
+                            treeItem -> needsAbilityTreeReset = treeItem.getCount() != treeItem.getTotalPoints());
 
-                    WynntilsMod.info("needReset: " + needsReset.get() + " hasAbilityShards: " + hasAbilityShards.get()
-                            + " status: " + (statusEffect != null));
+                    hasAbilityShards = Models.Inventory.getAmountInInventory("Ability Shard") >= REQUIRED_ABILITY_SHARDS;
 
-                    if (needsReset.get() && !hasAbilityShards.get() && statusEffect == null) {
+                    if (needsAbilityTreeReset && !hasAbilityShards && statusEffect == null) {
                         throw new ContainerQueryException("insufficient ability shards (need 3)");
                     }
                 })
@@ -178,14 +182,14 @@ public class AbilityTreeContainerQueries {
 
             // Conditional: Only shift-click reset if we need to
             builder.conditionalThen(
-                    container -> needsReset.get(),
+                    container -> needsAbilityTreeReset,
                     QueryStep.shiftClickOnSlot(ABILITY_TREE_SHIFT_CLICK_RESET_SLOT)
                             .expectContainer(AbilityTreeContainer.class)
                             .verifyContentChange((container, changes, changeType) -> {
                                 if (!sawAnimationEnd.get()) {
                                     if (changeType == ContainerContentChangeType.SET_SLOT
-                                            && changes.containsKey(53)
-                                            && changes.get(53).getItem() == Items.AIR) {
+                                            && changes.containsKey(LAST_ABILITY_TREE_ANIMATION_SLOT)
+                                            && changes.get(LAST_ABILITY_TREE_ANIMATION_SLOT).getItem() == Items.AIR) {
                                         sawAnimationEnd.set(true);
                                     }
                                     return false;
@@ -201,7 +205,7 @@ public class AbilityTreeContainerQueries {
             builder.execute(() -> onStatus.accept("Opening ability tree reset menu"));
 
             builder.conditionalThen(
-                    container -> needsReset.get(),
+                    container -> needsAbilityTreeReset,
                     QueryStep.clickOnSlot(RESET_ABILITY_TREE_SLOT)
                             .expectContainer(AbilityTreeContainer.class, AbilityTreeResetContainer.class)
                             .verifyContentChange((container, changes, changeType) ->
@@ -209,19 +213,19 @@ public class AbilityTreeContainerQueries {
                             .processIncomingContainer(c -> onStatus.accept("Ability tree reset menu opened")));
 
             builder.conditionalThen(
-                    container -> needsReset.get(),
+                    container -> needsAbilityTreeReset,
                     QueryStep.clickOnSlot(ABILITY_SHARD_ONE_SLOT).accumulateSetSlotChanges(2));
 
             builder.conditionalThen(
-                    container -> needsReset.get(),
+                    container -> needsAbilityTreeReset,
                     QueryStep.clickOnSlot(ABILITY_SHARD_TWO_SLOT).accumulateSetSlotChanges(2));
 
             builder.conditionalThen(
-                    container -> needsReset.get(),
+                    container -> needsAbilityTreeReset,
                     QueryStep.clickOnSlot(ABILITY_SHARD_THREE_SLOT).accumulateSetSlotChanges(2));
 
             builder.conditionalThen(
-                    container -> needsReset.get(),
+                    container -> needsAbilityTreeReset,
                     QueryStep.clickOnSlot(ABILITY_TREE_RESET_CONFIRM_SLOT)
                             .expectContainer(AbilityTreeResetContainer.class, AbilityTreeContainer.class)
                             .verifyContentChange((container, changes, changeType) ->

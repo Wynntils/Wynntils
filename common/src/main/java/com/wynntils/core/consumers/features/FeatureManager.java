@@ -413,6 +413,7 @@ public final class FeatureManager extends Manager {
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
         registerFeature(new AutoSkipCutscenesFeature());
+        registerFeature(new BuildLoadoutsFeature());
         registerFeature(new CharacterSelectionUtilitiesFeature());
         registerFeature(new EnhancedStreamerModeFeature());
         registerFeature(new FixCrosshairPositionFeature());
@@ -421,7 +422,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new HighlightGatheringNodesFeature());
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
-        registerFeature(new BuildLoadoutsFeature());
         registerFeature(new TranscribeMessagesFeature());
         registerFeature(new TranslationFeature());
         registerFeature(new ValuablesProtectionFeature());

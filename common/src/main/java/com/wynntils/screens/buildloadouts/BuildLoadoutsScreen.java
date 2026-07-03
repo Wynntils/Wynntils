@@ -499,6 +499,46 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
         }
         // endregion
 
+        // region Status
+        if (!statusMessage.isEmpty()) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            guiGraphics,
+                            StyledText.fromString(statusMessage),
+                            dividedWidth * 34,
+                            dividedHeight * 58,
+                            dividedWidth * 26,
+                            statusColor,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.NORMAL);
+        }
+        // endregion
+
+        // region Scrollbar
+        if (loadoutWidgets.size() > MAX_LOADOUTS_PER_PAGE) {
+            scrollBar.visible = true;
+            scrollBar.active = true;
+            float visibleRatio = Math.min(1, (float) MAX_LOADOUTS_PER_PAGE / loadoutWidgets.size());
+            float scrollbarLength = dividedHeight * 48 * visibleRatio + 1;
+            scrollBar.setY((int) (dividedHeight * 4 + dividedHeight * 48 * scrollPercent));
+            scrollBar.setHeight((int) scrollbarLength);
+        } else {
+            scrollBar.visible = false;
+            scrollBar.active = false;
+        }
+        // Only render from 4 to 56 for scrollable area
+        // -/+ 1 to not overlap/cut off content
+        RenderUtils.enableScissor(
+                guiGraphics,
+                (int) (dividedWidth * 4) - 1,
+                (int) (dividedHeight * 4) + 1,
+                (int) (dividedWidth * 26) + 1,
+                (int) (dividedHeight * 48) + 1);
+        loadoutWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        RenderUtils.disableScissor(guiGraphics);
+        // endregion
+
         // --- Right side info section ---
         if (selectedLoadout != null) {
             float rightInfoX = dividedWidth * 55;
@@ -625,46 +665,6 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                 }
             }
         }
-        // endregion
-
-        // region Status
-        if (!statusMessage.isEmpty()) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            guiGraphics,
-                            StyledText.fromString(statusMessage),
-                            dividedWidth * 34,
-                            dividedHeight * 58,
-                            dividedWidth * 26,
-                            statusColor,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.BOTTOM,
-                            TextShadow.NORMAL);
-        }
-        // endregion
-
-        // region Scrollbar
-        if (loadoutWidgets.size() > MAX_LOADOUTS_PER_PAGE) {
-            scrollBar.visible = true;
-            scrollBar.active = true;
-            float visibleRatio = Math.min(1, (float) MAX_LOADOUTS_PER_PAGE / loadoutWidgets.size());
-            float scrollbarLength = dividedHeight * 48 * visibleRatio + 1;
-            scrollBar.setY((int) (dividedHeight * 4 + dividedHeight * 48 * scrollPercent));
-            scrollBar.setHeight((int) scrollbarLength);
-        } else {
-            scrollBar.visible = false;
-            scrollBar.active = false;
-        }
-        // Only render from 4 to 56 for scrollable area
-        // -/+ 1 to not overlap/cut off content
-        RenderUtils.enableScissor(
-                guiGraphics,
-                (int) (dividedWidth * 4) - 1,
-                (int) (dividedHeight * 4) + 1,
-                (int) (dividedWidth * 26) + 1,
-                (int) (dividedHeight * 48) + 1);
-        loadoutWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
-        RenderUtils.disableScissor(guiGraphics);
         // endregion
     }
 

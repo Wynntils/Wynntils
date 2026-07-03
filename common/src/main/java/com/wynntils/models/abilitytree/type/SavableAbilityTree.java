@@ -14,7 +14,9 @@ public record SavableAbilityTree(AbilityTreeInfo info) {
         Map<String, Integer> counts = new HashMap<>();
         for (AbilityTreeSkillNode node : info.nodes()) {
             String a = node.archetype();
-            if (a != null && !a.isEmpty()) counts.merge(a, 1, Integer::sum);
+            if (a != null && !a.isEmpty()) {
+                counts.merge(a, 1, Integer::sum);
+            }
         }
         return counts.entrySet().stream()
                 .max(Map.Entry.comparingByValue())

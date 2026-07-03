@@ -6,51 +6,52 @@ package com.wynntils.models.abilitytree.type;
 
 import com.wynntils.core.components.Models;
 
+// If this needs update look at:
+// https://wynncraft.wiki.gg/wiki/Ability_Tree#Ability_Points
+
 public final class AbilityPointProgression {
-    private static final int[] POINTS_AT_LEVEL = new int[121];
+    private static final int MAX_ABILITY_POINTS = 50;
+    private static final int[] POINTS_AT_LEVEL = createPointsAtLevel();
 
-    static {
+    private static int[] createPointsAtLevel() {
+        int maxLevel = Models.CombatXp.MAX_LEVEL;
         int[] milestones = {
-            1, 2, 4, 6, 8, 10, 12, 13, 15, 17,
-            18, 20, 22, 23, 24, 26, 28, 30, 32, 34,
-            37, 39, 41, 44, 46, 48, 50, 52, 54, 56,
-            58, 60, 62, 64, 67, 70, 73, 76, 80, 84,
-            88, 92, 96, 100, 104, 107, 110, 113, 116, 120
+                1, 2, 4, 6, 8, 10, 12, 13, 15, 17,
+                18, 20, 22, 23, 24, 26, 28, 30, 32, 34,
+                37, 39, 41, 44, 46, 48, 50, 52, 54, 56,
+                58, 60, 62, 64, 67, 70, 73, 76, 80, 84,
+                88, 92, 96, 100, 104, 107, 110, 113, 116, 120
         };
-        int[] points = {
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-            11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-            21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-            31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-            41, 42, 43, 44, 45, 46, 47, 48, 49, 50
-        };
-
+        int[] result = new int[maxLevel];
         int milestoneIdx = 0;
-        for (int level = 1; level <= 120; level++) {
+        for (int level = 1; level < maxLevel; level++) {
             if (milestoneIdx < milestones.length && level == milestones[milestoneIdx]) {
-                POINTS_AT_LEVEL[level] = points[milestoneIdx++];
+                ++milestoneIdx;
+                result[level] = milestoneIdx;
             } else {
-                POINTS_AT_LEVEL[level] = POINTS_AT_LEVEL[level - 1];
+                result[level] = result[level - 1];
             }
         }
+        return result;
     }
 
     public static int getPointsAtLevel(int combatLevel) {
         if (combatLevel <= 0) return 0;
-        return Math.min(50, POINTS_AT_LEVEL[Math.min(combatLevel, 120)] + getLoanedPoints());
+        return Math.min(MAX_ABILITY_POINTS, POINTS_AT_LEVEL[Math.min(combatLevel, Models.CombatXp.MAX_LEVEL - 1)] + getLoanedPoints());
     }
 
     public static int getLevelForPoints(int abilityPoints) {
-        int earnedPoints = Math.min(abilityPoints, 50) - getLoanedPoints();
+        int maxLevel = Models.CombatXp.MAX_LEVEL;
+        int earnedPoints = Math.min(abilityPoints, MAX_ABILITY_POINTS) - getLoanedPoints();
         if (earnedPoints <= 0) return 1;
-        if (earnedPoints >= 50) return 120;
+        if (earnedPoints >= MAX_ABILITY_POINTS) return maxLevel - 1;
 
-        for (int level = 1; level <= 120; level++) {
+        for (int level = 1; level < maxLevel; level++) {
             if (POINTS_AT_LEVEL[level] >= earnedPoints) {
                 return level;
             }
         }
-        return 120;
+        return maxLevel - 1;
     }
 
     public static int getTotalPointsForTree(AbilityTreeInfo info) {
@@ -59,7 +60,7 @@ public final class AbilityPointProgression {
     }
 
     private static int getLoanedPoints() {
-        return switch (Models.Character.getRank()) {
+        return switch (Models.Account.getRank()) {
             case VIP_PLUS -> 2;
             case HERO, HERO_PLUS, CHAMPION -> 4;
             default -> 0;
