@@ -25,6 +25,7 @@ import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.containers.containers.AbilityTreeContainer;
 import com.wynntils.models.containers.containers.AbilityTreeResetContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.items.items.game.AbilityShardItem;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.utils.mc.McUtils;
@@ -37,6 +38,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+
+import com.wynntils.utils.wynn.WynnUtils;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -164,8 +167,23 @@ public class AbilityTreeContainerQueries {
                     abilityTreeItem.ifPresent(
                             treeItem -> needsAbilityTreeReset = treeItem.getCount() != treeItem.getTotalPoints());
 
-                    hasAbilityShards =
-                            Models.Inventory.getAmountInInventory("Ability Shard") >= REQUIRED_ABILITY_SHARDS;
+                    int amount = 0;
+
+                    for (ItemStack itemStack : container.items()) {
+                        Optional<AbilityShardItem> abilityShardItem =
+                                Models.Item.asWynnItem(itemStack, AbilityShardItem.class);
+                        if (abilityShardItem.isEmpty()) continue;
+
+                        if (!abilityShardItem.get().getQuestRequirement()) {
+                            throw new ContainerQueryException("You do not meet the quest requirement.");
+                        }
+
+                        amount += itemStack.getCount();
+                    }
+
+                    if (amount >= REQUIRED_ABILITY_SHARDS) {
+                        hasAbilityShards = true;
+                    }
 
                     if (needsAbilityTreeReset && !hasAbilityShards && statusEffect == null) {
                         throw new ContainerQueryException("insufficient ability shards (need 3)");
