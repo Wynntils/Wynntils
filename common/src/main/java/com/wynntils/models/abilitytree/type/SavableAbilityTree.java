@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 public record SavableAbilityTree(List<String> abilities, ClassType classType) {
-
     public String getMainArchetype() {
         if (abilities == null || abilities.isEmpty()) return null;
         Map<String, Integer> counts = new HashMap<>();

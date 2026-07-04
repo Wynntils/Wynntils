@@ -1,9 +1,17 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.abilitytree;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
@@ -17,11 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.wynntils.core.WynntilsMod;
 
 public class AbilityTreeInfoRegistry {
     private Map<ClassType, AbilityTreeInfo> abilityTreeMap = Map.of();
@@ -77,8 +80,8 @@ public class AbilityTreeInfoRegistry {
 
             List<AbilityTreeSkillNode> nodes = new ArrayList<>();
             for (JsonElement nodeElement : json.getAsJsonArray("nodes")) {
-                nodes.add(new AbilityTreeSkillNodeDeserializer().deserialize(
-                        nodeElement, AbilityTreeSkillNode.class, context));
+                nodes.add(new AbilityTreeSkillNodeDeserializer()
+                        .deserialize(nodeElement, AbilityTreeSkillNode.class, context));
             }
 
             return new AbilityTreeInfo(nodes);
@@ -95,7 +98,8 @@ public class AbilityTreeInfoRegistry {
             String name = json.get("name").getAsString();
             String formattedName = json.get("formattedName").getAsString();
 
-            String nodeTypeKey = "abilityTree." + json.get("abilityTreeNodeType").getAsString();
+            String nodeTypeKey =
+                    "abilityTree." + json.get("abilityTreeNodeType").getAsString();
             AbilityTreeNodeType abilityTreeNodeType = null;
             for (AbilityTreeNodeType t : AbilityTreeNodeType.values()) {
                 if (t.getKey().equals(nodeTypeKey)) {
@@ -121,9 +125,10 @@ public class AbilityTreeInfoRegistry {
                 blockedBy.add(element.getAsString());
             }
 
-            String requiredAbility = json.has("requiredAbility") && !json.get("requiredAbility").isJsonNull()
-                    ? json.get("requiredAbility").getAsString()
-                    : null;
+            String requiredAbility =
+                    json.has("requiredAbility") && !json.get("requiredAbility").isJsonNull()
+                            ? json.get("requiredAbility").getAsString()
+                            : null;
 
             ArchetypeRequirement requiredArchetype = null;
             if (json.has("requiredArchetype") && !json.get("requiredArchetype").isJsonNull()) {

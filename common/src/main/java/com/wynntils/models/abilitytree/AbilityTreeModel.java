@@ -4,14 +4,10 @@
  */
 package com.wynntils.models.abilitytree;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.DownloadRegistry;
-import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.abilitytree.parser.AbilityTreeParser;
@@ -20,10 +16,8 @@ import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.abilitytree.type.SavableAbilityTree;
-import com.wynntils.models.aspects.AspectInfoRegistry;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.wynn.ContainerUtils;
-import java.lang.reflect.Type;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -133,7 +127,8 @@ public final class AbilityTreeModel extends Model {
                 .orElse(AbilityTreeNodeState.LOCKED);
     }
 
-    private List<AbilityTreeSkillNode> getIdealApplicationOrder(SavableAbilityTree savedTree, Consumer<String> onError) {
+    private List<AbilityTreeSkillNode> getIdealApplicationOrder(
+            SavableAbilityTree savedTree, Consumer<String> onError) {
         List<AbilityTreeSkillNode> nodes = savedTree.abilities().stream()
                 .map(abilityName -> getNodeFromNameAndClass(abilityName, savedTree.classType()))
                 .filter(Objects::nonNull)
