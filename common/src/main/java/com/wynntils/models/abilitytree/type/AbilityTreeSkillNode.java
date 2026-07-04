@@ -46,9 +46,20 @@ public record AbilityTreeSkillNode(
         AbilityTreeNodeType defaultType = abilityTreeNodeType.getDefaultType();
         if (defaultType == abilityTreeNodeType) return this;
         return new AbilityTreeSkillNode(
-                id, name, formattedName, defaultType, description, cost,
-                willBlock, blockedBy, requiredAbility, requiredArchetype,
-                requiredLevel, archetype, location, connections);
+                id,
+                name,
+                formattedName,
+                defaultType,
+                description,
+                cost,
+                willBlock,
+                blockedBy,
+                requiredAbility,
+                requiredArchetype,
+                requiredLevel,
+                archetype,
+                location,
+                connections);
     }
 
     public AbilityTreeSkillNode withoutDescriptions() {

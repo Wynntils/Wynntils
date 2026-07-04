@@ -372,9 +372,6 @@ public class AbilityTreeContainerQueries {
             }
 
             if (page == Models.AbilityTree.ABILITY_TREE_PAGES) {
-
-
-
                 this.supplier.accept(unprocessedTree.getProcesssed());
             }
         }
