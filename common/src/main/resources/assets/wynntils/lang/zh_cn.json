@@ -683,7 +683,7 @@
   "feature.wynntils.itemScreenshot.description": "增加拍摄物品截图的能力。",
   "feature.wynntils.itemScreenshot.name": "物品截图",
   "feature.wynntils.itemScreenshot.save.error": "将%s的截图保存到%s时出错",
-  "feature.wynntils.itemScreenshot.save.message": "%s的截图已保存到%s",
+  "feature.wynntils.itemScreenshot.save.message": "%s的截图已保存：",
   "feature.wynntils.itemScreenshot.saveToDisk.description": "是否应将物品截图保存到磁盘？",
   "feature.wynntils.itemScreenshot.saveToDisk.name": "将物品截图保存到磁盘",
   "feature.wynntils.itemStatInfo.colorLerp.description": "物品ID的颜色百分比是否应平滑变化而不是在固定级别之间？",

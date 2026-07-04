@@ -22,6 +22,7 @@ import com.wynntils.models.containers.containers.trademarket.TradeMarketBuyConta
 import com.wynntils.models.containers.containers.trademarket.TradeMarketContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketFiltersContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketOrderContainer;
+import com.wynntils.models.containers.containers.trademarket.TradeMarketRevealItemsContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesContainer;
 import com.wynntils.models.containers.type.ContainerBounds;
@@ -405,6 +406,8 @@ public final class TradeMarketModel extends Model {
             newState = TradeMarketState.VIEWING_TRADES;
         } else if (currentContainer instanceof TradeMarketOrderContainer) {
             newState = TradeMarketState.VIEWING_ORDER;
+        } else if (currentContainer instanceof TradeMarketRevealItemsContainer) {
+            newState = TradeMarketState.REVEAL_ITEMS;
         } else {
             newState = null;
         }

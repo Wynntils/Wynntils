@@ -5,6 +5,7 @@
 package com.wynntils.features.debug;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -18,6 +19,8 @@ import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
+import java.io.FileReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -54,14 +57,27 @@ public class AbilityTreeDataDumpFeature extends Feature {
     }
 
     private void saveToDisk(AbilityTreeInfo abilityTreeInfo) {
-        // Save the dump to a file
-        JsonElement element = Managers.Json.GSON.toJsonTree(abilityTreeInfo);
+        File jsonFile = new File(SAVE_FOLDER, "abilities.json");
 
-        String fileName = Models.Character.getClassType().getName().toLowerCase(Locale.ROOT) + "_abilities.json";
-        File jsonFile = new File(SAVE_FOLDER, fileName);
-        Managers.Json.savePreciousJson(jsonFile, element.getAsJsonObject());
+        JsonObject root = new JsonObject();
+        if (jsonFile.exists()) {
+            try (FileReader reader = new FileReader(jsonFile, StandardCharsets.UTF_8)) {
+                JsonElement existing = Managers.Json.GSON.fromJson(reader, JsonElement.class);
+                if (existing != null && existing.isJsonObject()) {
+                    root = existing.getAsJsonObject();
+                }
+            } catch (Exception e) {
+                WynntilsMod.error("Failed to read existing abilities file", e);
+            }
+        }
+
+        String classKey = Models.Character.getClassType().getName().toLowerCase(Locale.ROOT);
+        JsonElement element = Managers.Json.GSON.toJsonTree(abilityTreeInfo);
+        root.add(classKey, element);
+
+        Managers.Json.savePreciousJson(jsonFile, root);
 
         McUtils.sendWynntilsPrefixMessage(
-                Component.literal("Saved ability tree dump to " + jsonFile.getAbsolutePath()));
+                Component.literal("Saved ability tree dump for " + classKey + " to " + jsonFile.getAbsolutePath()));
     }
 }

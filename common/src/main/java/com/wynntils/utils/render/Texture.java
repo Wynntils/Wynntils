@@ -347,7 +347,7 @@ public enum Texture {
     // endregion
 
     // region Players
-    LEADERBOARD_BADGES("players/leaderboard_badges.png", 760, 54),
+    LEADERBOARD_BADGES("players/leaderboard_badges.png", 855, 54),
     // endregion
 
     // region Seaskipper
