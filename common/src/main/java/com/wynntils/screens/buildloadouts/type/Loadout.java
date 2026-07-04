@@ -29,7 +29,7 @@ public record Loadout(
 
     public ClassType getClassType() {
         if (hasAbilityTree()) {
-            ClassType atClass = abilityTree().getClassType();
+            ClassType atClass = abilityTree().classType();
             if (atClass != null && atClass != ClassType.NONE) {
                 return atClass;
             }

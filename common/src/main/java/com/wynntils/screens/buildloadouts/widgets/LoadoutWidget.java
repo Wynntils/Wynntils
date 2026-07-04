@@ -60,7 +60,7 @@ public class LoadoutWidget extends AbstractWidget {
         StringBuilder tooltip = new StringBuilder(loadout.name());
 
         if (loadout.hasAbilityTree()) {
-            ClassType classType = loadout.abilityTree().getClassType();
+            ClassType classType = loadout.abilityTree().classType();
             if (classType != null && classType != ClassType.NONE) {
                 tooltip.append(" (").append(classType.getName()).append(")");
             }
@@ -142,7 +142,7 @@ public class LoadoutWidget extends AbstractWidget {
 
         String classPart = "";
         if (loadout.hasAbilityTree()) {
-            ClassType classType = loadout.abilityTree().getClassType();
+            ClassType classType = loadout.abilityTree().classType();
             if (classType != null && classType != ClassType.NONE) {
                 classPart = ChatFormatting.GRAY + " [" + classType.getName() + "]" + ChatFormatting.WHITE;
             }

@@ -4,15 +4,20 @@
  */
 package com.wynntils.models.abilitytree.type;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.models.character.type.ClassType;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public record SavableAbilityTree(AbilityTreeInfo info) {
+public record SavableAbilityTree(List<String> abilities, ClassType classType) {
+
     public String getMainArchetype() {
-        if (info == null || info.nodes() == null || info.nodes().isEmpty()) return null;
+        if (abilities == null || abilities.isEmpty()) return null;
         Map<String, Integer> counts = new HashMap<>();
-        for (AbilityTreeSkillNode node : info.nodes()) {
+        for (String abilityName : abilities) {
+            AbilityTreeSkillNode node = Models.AbilityTree.getNodeFromNameAndClass(abilityName, classType);
+            if (node == null) continue;
             String a = node.archetype();
             if (a != null && !a.isEmpty()) {
                 counts.merge(a, 1, Integer::sum);
@@ -25,21 +30,18 @@ public record SavableAbilityTree(AbilityTreeInfo info) {
     }
 
     public int getLevel() {
-        if (info == null || info.nodes().isEmpty()) return 1;
-        int abilityPoints = AbilityPointProgression.getTotalPointsForTree(info);
+        if (abilities == null || abilities.isEmpty()) return 1;
+        int abilityPoints = 0;
+        for (String abilityName : abilities) {
+            AbilityTreeSkillNode node = Models.AbilityTree.getNodeFromNameAndClass(abilityName, classType);
+            if (node != null) {
+                abilityPoints += node.cost();
+            }
+        }
         return AbilityPointProgression.getLevelForPoints(abilityPoints);
     }
 
     public int getNodeCount() {
-        return info == null ? 0 : info.nodes().size();
-    }
-
-    public ClassType getClassType() {
-        if (info == null || info.nodes() == null) return ClassType.NONE;
-        return info.nodes().stream()
-                .map(node -> node.abilityTreeNodeType().getClassType())
-                .filter(classType -> classType != null && classType != ClassType.NONE)
-                .findFirst()
-                .orElse(ClassType.NONE);
+        return abilities == null ? 0 : abilities.size();
     }
 }

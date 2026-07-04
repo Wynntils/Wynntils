@@ -62,6 +62,26 @@ public record AbilityTreeSkillNode(
                 connections);
     }
 
+    public AbilityTreeSkillNode withUnlockedType() {
+        AbilityTreeNodeType unlockedType = abilityTreeNodeType.getUnlockedType();
+        if (unlockedType == abilityTreeNodeType) return this;
+        return new AbilityTreeSkillNode(
+                id,
+                name,
+                formattedName,
+                unlockedType,
+                description,
+                cost,
+                willBlock,
+                blockedBy,
+                requiredAbility,
+                requiredArchetype,
+                requiredLevel,
+                archetype,
+                location,
+                connections);
+    }
+
     public AbilityTreeSkillNode withoutDescriptions() {
         return new AbilityTreeSkillNode(
                 id,

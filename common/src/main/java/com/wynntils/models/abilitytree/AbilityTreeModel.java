@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
@@ -19,6 +20,7 @@ import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.abilitytree.type.SavableAbilityTree;
+import com.wynntils.models.aspects.AspectInfoRegistry;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.lang.reflect.Type;
@@ -29,6 +31,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Consumer;
@@ -38,11 +41,11 @@ public final class AbilityTreeModel extends Model {
     public static final int ABILITY_TREE_PAGES = 9;
     public static final AbilityTreeParser ABILITY_TREE_PARSER = new AbilityTreeParser();
     public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
+    private final AbilityTreeInfoRegistry abilityTreeInfoRegistry = new AbilityTreeInfoRegistry();
 
     @Persisted
     private final Storage<Map<String, SavableAbilityTree>> abilityTreeLoadouts = new Storage<>(new TreeMap<>());
 
-    private Map<ClassType, AbilityTreeInfo> abilityTreeMap = new HashMap<>();
     private ParsedAbilityTree currentAbilityTree;
 
     public AbilityTreeModel() {
@@ -51,18 +54,15 @@ public final class AbilityTreeModel extends Model {
 
     @Override
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_STATIC_ABILITIES).handleReader(reader -> {
-            Type type = new TypeToken<HashMap<String, AbilityTreeInfo>>() {}.getType();
-            Gson gson = new GsonBuilder().create();
+        abilityTreeInfoRegistry.registerDownloads(registry);
+    }
 
-            Map<String, AbilityTreeInfo> abilityMap = gson.fromJson(reader, type);
+    public AbilityTreeInfo getAbilityTree(ClassType type) {
+        return abilityTreeInfoRegistry.getAbilityTree(type);
+    }
 
-            Map<ClassType, AbilityTreeInfo> tempMap = new HashMap<>();
-
-            abilityMap.forEach((key, value) -> tempMap.put(ClassType.fromName(key), value));
-
-            abilityTreeMap = tempMap;
-        });
+    public AbilityTreeSkillNode getNodeFromNameAndClass(String name, ClassType classType) {
+        return abilityTreeInfoRegistry.getNodeFromNameAndClass(name, classType);
     }
 
     public void setCurrentAbilityTree(ParsedAbilityTree currentAbilityTree) {
@@ -89,7 +89,11 @@ public final class AbilityTreeModel extends Model {
             String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
         ABILITY_TREE_CONTAINER_QUERIES.getUnlockedAbilityTree(
                 treeInfo -> {
-                    abilityTreeLoadouts.get().put(name, new SavableAbilityTree(treeInfo));
+                    List<String> abilityNames = treeInfo.nodes().stream()
+                            .map(AbilityTreeSkillNode::name)
+                            .toList();
+                    ClassType classType = Models.Character.getClassType();
+                    abilityTreeLoadouts.get().put(name, new SavableAbilityTree(abilityNames, classType));
                     WynntilsMod.info("Saved ability tree loadout: " + name);
                 },
                 onStatus,
@@ -105,7 +109,7 @@ public final class AbilityTreeModel extends Model {
             return;
         }
 
-        List<AbilityTreeSkillNode> ordered = getIdealApplicationOrder(savedTree.info(), onError);
+        List<AbilityTreeSkillNode> ordered = getIdealApplicationOrder(savedTree, onError);
         if (ordered == null) return;
         if (ordered.isEmpty()) {
             onComplete.accept("Loadout " + name + " is empty, nothing to apply");
@@ -129,12 +133,12 @@ public final class AbilityTreeModel extends Model {
                 .orElse(AbilityTreeNodeState.LOCKED);
     }
 
-    public AbilityTreeInfo getAbilityTree(ClassType type) {
-        return abilityTreeMap.get(type);
-    }
-
-    private List<AbilityTreeSkillNode> getIdealApplicationOrder(AbilityTreeInfo treeInfo, Consumer<String> onError) {
-        List<AbilityTreeSkillNode> nodes = new ArrayList<>(treeInfo.nodes());
+    private List<AbilityTreeSkillNode> getIdealApplicationOrder(SavableAbilityTree savedTree, Consumer<String> onError) {
+        List<AbilityTreeSkillNode> nodes = savedTree.abilities().stream()
+                .map(abilityName -> getNodeFromNameAndClass(abilityName, savedTree.classType()))
+                .filter(Objects::nonNull)
+                .map(AbilityTreeSkillNode::withUnlockedType)
+                .collect(Collectors.toCollection(ArrayList::new));
         if (nodes.isEmpty()) return List.of();
 
         Map<String, AbilityTreeSkillNode> byName =
