@@ -27,10 +27,10 @@ public class TriggerSideButton extends BasicHoverableButton {
             int height,
             Texture texture,
             Consumer<Integer> onClick,
-            List<Component> tooltip,
-            StyledText message) {
-        super(x, y, width, height, texture, onClick, tooltip);
-        this.message = message;
+            Component tooltip,
+            Component message) {
+        super(x, y, width, height, texture, onClick, List.of(tooltip));
+        this.message = StyledText.fromComponent(message);
     }
 
     @Override

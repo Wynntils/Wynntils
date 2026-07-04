@@ -36,23 +36,23 @@ public class TriggerSettingNumberInput extends AbstractButton {
             int j,
             int k,
             int l,
-            StyledText title,
+            Component title,
             List<Component> tooltip,
             Function<SoundTrigger, Integer> functionTemplate,
             BiConsumer<String, SoundTrigger> onUpdate,
             SoundTriggerManagmentScreen parentScreen,
             SoundTrigger trigger) {
         super(i, j, k, l, Component.empty());
-        this.visible = false;
-        this.title = title;
+        this.visible = trigger != null;
+        this.title = StyledText.fromComponent(title);
         this.tooltip = tooltip;
         this.functionTemplate = functionTemplate;
         this.parentScreen = parentScreen;
         this.textInputBoxWidget = new TextNumberInputBoxWidget(
                 i + 2,
-                j + l / 2 + 2,
+                j + l / 2,
                 k - 4,
-                l / 2 - 4,
+                l / 2 - 2,
                 (s -> {
                     if (this.trigger != null) {
                         onUpdate.accept(s, this.trigger);
@@ -60,6 +60,20 @@ public class TriggerSettingNumberInput extends AbstractButton {
                 }),
                 parentScreen);
         this.trigger = trigger;
+    }
+
+    public TriggerSettingNumberInput(
+            int i,
+            int j,
+            int k,
+            int l,
+            Component title,
+            Component tooltip,
+            Function<SoundTrigger, Integer> functionTemplate,
+            BiConsumer<String, SoundTrigger> onUpdate,
+            SoundTriggerManagmentScreen parentScreen,
+            SoundTrigger trigger) {
+        this(i, j, k, l, title, List.of(tooltip), functionTemplate, onUpdate, parentScreen, trigger);
     }
 
     @Override
@@ -83,7 +97,7 @@ public class TriggerSettingNumberInput extends AbstractButton {
                         getWidth(),
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NONE,
                         1f);
         textInputBoxWidget.renderWidget(guiGraphics, mouseX, mouseY, partialTick);

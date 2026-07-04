@@ -38,19 +38,32 @@ public class TriggerSettingButton extends WynntilsButton {
             int y,
             int width,
             int height,
-            StyledText title,
+            Component title,
             List<Component> tooltip,
             Function<SoundTrigger, StyledText> getDisplayValue,
             Consumer<SoundTrigger> onClick,
             SoundTrigger trigger) {
         super(x, y, width, height, Component.empty());
-        this.visible = false;
+        this.visible = trigger != null;
 
-        this.title = title;
+        this.title = StyledText.fromComponent(title);
         this.tooltip = tooltip;
         this.getDisplayValue = getDisplayValue;
         this.onClick = onClick;
         this.trigger = trigger;
+    }
+
+    public TriggerSettingButton(
+            int x,
+            int y,
+            int width,
+            int height,
+            Component title,
+            Component tooltip,
+            Function<SoundTrigger, StyledText> getDisplayValue,
+            Consumer<SoundTrigger> onClick,
+            SoundTrigger trigger) {
+        this(x, y, width, height, title, List.of(tooltip), getDisplayValue, onClick, trigger);
     }
 
     @Override
@@ -68,7 +81,7 @@ public class TriggerSettingButton extends WynntilsButton {
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NONE,
                         1f);
 

@@ -162,12 +162,10 @@ public class TriggerButton extends WynntilsButton {
         }
 
         static State getTriggerState(SoundTrigger trigger) {
+            if (!trigger.isEnabled()) return DISABLED;
             if (trigger.getControllerFunctionResult().hasError()
-                    || trigger.getIdentifierFunctionResult().hasError()) {
-                return ERROR;
-            } else {
-                return trigger.isEnabled() ? ENABLED : DISABLED;
-            }
+                    || trigger.getIdentifierFunctionResult().hasError()) return ERROR;
+            return ENABLED;
         }
     }
 }

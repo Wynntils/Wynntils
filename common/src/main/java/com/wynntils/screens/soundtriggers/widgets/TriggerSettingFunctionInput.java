@@ -5,7 +5,6 @@
 package com.wynntils.screens.soundtriggers.widgets;
 
 import com.google.common.collect.Lists;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.soundtriggers.SoundTriggerManagmentScreen;
@@ -54,7 +53,8 @@ public class TriggerSettingFunctionInput extends AbstractButton {
             SoundTriggerManagmentScreen parentScreen,
             SoundTrigger trigger) {
         super(i, j, k, l, Component.empty());
-        this.visible = false;
+
+        this.visible = trigger != null;
 
         this.title = title;
         this.tooltip = tooltip;
@@ -62,19 +62,43 @@ public class TriggerSettingFunctionInput extends AbstractButton {
         this.functionCheck = functionCheck;
         this.parentScreen = parentScreen;
         this.textInputBoxWidget = new TextInputBoxWidget(
-                i + 2,
-                j + l / 2 + 2,
-                k - 4,
-                l / 2 - 4,
+                i + 1,
+                j + l / 2,
+                k - 6,
+                l / 2 - 2,
                 (s -> {
                     if (this.trigger != null) {
                         onUpdate.accept(s, this.trigger);
-                        WynntilsMod.error("triggered");
                     }
-                    ;
                 }),
                 parentScreen);
         this.trigger = trigger;
+    }
+
+    public TriggerSettingFunctionInput(
+            int i,
+            int j,
+            int k,
+            int l,
+            Component title,
+            Component tooltip,
+            Function<SoundTrigger, String> functionTemplate,
+            BiConsumer<String, SoundTrigger> onUpdate,
+            Function<SoundTrigger, Boolean> functionCheck,
+            SoundTriggerManagmentScreen parentScreen,
+            SoundTrigger trigger) {
+        this(
+                i,
+                j,
+                k,
+                l,
+                StyledText.fromComponent(title),
+                List.of(tooltip),
+                functionTemplate,
+                onUpdate,
+                functionCheck,
+                parentScreen,
+                trigger);
     }
 
     @Override
@@ -93,11 +117,11 @@ public class TriggerSettingFunctionInput extends AbstractButton {
                         getX(),
                         getX() + getWidth(),
                         getY(),
-                        getY() + getHeight() / 2,
+                        getY() + getHeight() / 2f,
                         getWidth(),
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NONE,
                         1f);
         Texture tex = functionCheck.apply(trigger) ? ERRORS : NO_ERRORS;
@@ -107,7 +131,7 @@ public class TriggerSettingFunctionInput extends AbstractButton {
                 tex,
                 CommonColors.WHITE,
                 texX,
-                (float) getY(),
+                (float) getY() + getHeight() / 8f,
                 tex.width() / 2f,
                 tex.height() / 2f,
                 0,
@@ -123,14 +147,15 @@ public class TriggerSettingFunctionInput extends AbstractButton {
                 && MathUtils.isInside(
                         mouseX,
                         mouseY,
-                        (int) texX,
-                        (int) (texX) + tex.width() / 2,
-                        getY(),
-                        getY() + tex.height() / 2)) {
+                        (int) texX - 1,
+                        (int) (texX) + tex.width() / 2 + 1,
+                        getY() + getHeight() / 8 - 1,
+                        getY() + getHeight() / 8 + tex.height() / 2 + 1)) {
             guiGraphics.setTooltipForNextFrame(
                     Lists.transform(
                             List.of(
-                                    Component.literal("Found Error in this function:"),
+                                    Component.translatable(
+                                            "screens.wynntils.soundTriggerManagementScreen.functionError.message"),
                                     Component.empty(),
                                     Component.literal(trigger.getControllerFunctionResult()
                                             .getError())),

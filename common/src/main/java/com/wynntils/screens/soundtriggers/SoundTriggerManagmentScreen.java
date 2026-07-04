@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.soundtriggers;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
@@ -29,36 +30,95 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.soundtriggers.SoundTrigger;
 import com.wynntils.utils.soundtriggers.TriggerType;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public final class SoundTriggerManagmentScreen extends WynntilsScreen {
+    // region Render Details
     private static final Texture BACKGROUND_TEXTURE = Texture.OVERLAY_SELECTION_GUI;
     private static final Texture SIDE_BUTTON_TEXTURE = Texture.BUTTON_LEFT;
     private static final Texture SCROLL_TEXTURE = Texture.SCROLL_BUTTON;
     private static final int MAX_TRIGGERS_PER_PAGE = 8;
     private static final int CONFIG_MASK_TOP_Y = 25;
     private static final int CONFIG_MASK_BOTTOM_Y = 197;
+    // endregion
+
+    // region Translations
+    private static final StyledText[] NO_TRIGGER_SELECTED = {
+        StyledText.fromString(I18n.get("screens.wynntils.soundTriggerManagementScreen.noneSelected1")),
+        StyledText.EMPTY,
+        StyledText.fromString(I18n.get("screens.wynntils.soundTriggerManagementScreen.noneSelected2"))
+    };
+
+    private static final Component ADD_BUTTON_TEXT =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.addButton.text");
+    private static final Component ADD_BUTTON_TOOLTIP =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.addButton.tooltip");
+
+    private static final Component DELETE_BUTTON_TEXT =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.deleteButton.text");
+    private static final Component DELETE_BUTTON_TOOLTIP =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.deleteButton.tooltip");
+
+    private static final Component ENABLED_BUTTON_TITLE =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.enabledButton.title");
+    private static final Component ENABLED_BUTTON_TOOLTIP =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.enabledButton.tooltip");
+
+    private static final Component TYPE_BUTTON_TITLE =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.typeButton.title");
+    private static final List<Component> TYPE_BUTTON_TOOLTIP = List.of(
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.typeButton.tooltip1"),
+            Component.empty(),
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.typeButton.tooltip2")
+                    .withStyle(ChatFormatting.ITALIC),
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.typeButton.tooltip3")
+                    .withStyle(ChatFormatting.ITALIC));
+
+    private static final Component CONTROLLER_FIELD_TITLE =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.controllerField.title");
+    private static final Component CONTROLLER_FIELD_TOOLTIP =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.controllerField.tooltip");
+
+    private static final Component IDENTIFIER_FIELD_TITLE =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.identifierField.title");
+    private static final Component IDENTIFIER_FIELD_TOOLTIP =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.identifierField.tooltip");
+
+    private static final Component VOLUME_FIELD_TITLE =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.volumeField.title");
+    private static final Component VOLUME_FIELD_TOOLTIP =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.volumeField.tooltip");
+
+    private static final Component PITCH_FIELD_TITLE =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.pitchField.title");
+    private static final Component PITCH_FIELD_TOOLTIP =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.pitchField.tooltip");
+
+    private static final Component INTERVAL_FIELD_TITLE =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.intervalField.title");
+    private static final List<Component> INTERVAL_FIELD_TOOLTIP = List.of(
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.intervalField.tooltip1"),
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.intervalField.tooltip2")
+                    .withStyle(ChatFormatting.BOLD));
+
+    // endregion
 
     private final Screen previousScreen;
 
     public final Storage<List<SoundTrigger>> soundTriggers;
 
     private final SearchWidget searchWidget;
-
-    private StyledText[] text = {
-        StyledText.fromString("Select a Sound Trigger from the list on the left or add new one."),
-        StyledText.fromString(""),
-        StyledText.fromString("Clicking on selected trigger will let you rename it.")
-    };
 
     private final List<TriggerButton> triggerButtons = new ArrayList<>();
     private SoundTrigger selectedTrigger = null;
@@ -87,7 +147,7 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
     // endregion
 
     private SoundTriggerManagmentScreen(Screen previousScreen) {
-        super(Component.literal("Sound Triggers Managment Screen"));
+        super(Component.translatable("screens.wynntils.soundTriggerManagementScreen.name"));
         this.previousScreen = previousScreen;
         this.soundTriggers =
                 Managers.Feature.getFeatureInstance(SoundTriggersFeature.class).getRegisteredTriggers();
@@ -112,6 +172,16 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
     protected void doInit() {
         searchWidget.setX(7 + getTranslationXint());
         searchWidget.setY(6 + getTranslationYint());
+        this.addRenderableWidget(searchWidget);
+        populateTriggers();
+
+        setFocusedTextInput(searchWidget);
+
+        addRenderableWidget(
+                new Button.Builder(Component.literal("X").withStyle(ChatFormatting.RED), (button) -> onClose())
+                        .pos((int) (getTranslationX() - 25), (int) (getTranslationY() - 25))
+                        .size(20, 20)
+                        .build());
         this.addButton = new TriggerSideButton(
                 getTranslationXint() - SIDE_BUTTON_TEXTURE.width() + 4,
                 getTranslationYint() + 28,
@@ -125,8 +195,8 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
                     soundTriggers.touched();
                     setSelectedTrigger(newTrigger);
                 },
-                Collections.singletonList(Component.literal("Add trigger")),
-                StyledText.fromString("Add"));
+                ADD_BUTTON_TOOLTIP,
+                ADD_BUTTON_TEXT);
 
         this.deleteButton = new TriggerSideButton(
                 getTranslationXint() - SIDE_BUTTON_TEXTURE.width() + 4,
@@ -135,13 +205,8 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
                 SIDE_BUTTON_TEXTURE.height() / 2,
                 SIDE_BUTTON_TEXTURE,
                 i -> deleteTrigger(),
-                Collections.singletonList(Component.literal("Add trigger")),
-                StyledText.fromString("Delete"));
-
-        this.addRenderableWidget(searchWidget);
-        populateTriggers();
-
-        setFocusedTextInput(searchWidget);
+                DELETE_BUTTON_TOOLTIP,
+                DELETE_BUTTON_TEXT);
 
         // region Settings
         settingX = getTranslationXint() + 145;
@@ -154,8 +219,8 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
                 settingY + GAP_SIZE,
                 settingWidth / 2 - GAP_SIZE,
                 settingHeight - GAP_SIZE,
-                StyledText.fromString("Enabled"),
-                List.of(Component.literal("Toggle enabled")),
+                ENABLED_BUTTON_TITLE,
+                ENABLED_BUTTON_TOOLTIP,
                 trigger -> StyledText.fromComponent(Component.literal(String.valueOf(trigger.isEnabled()))
                         .withColor(trigger.isEnabled() ? CommonColors.GREEN.asInt() : CommonColors.RED.asInt())),
                 trigger -> trigger.setEnabled(!trigger.isEnabled()),
@@ -167,8 +232,8 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
                 settingY + GAP_SIZE,
                 settingWidth / 2 - GAP_SIZE * 2,
                 settingHeight - GAP_SIZE,
-                StyledText.fromString("Type"),
-                List.of(Component.literal("Change type")),
+                TYPE_BUTTON_TITLE,
+                TYPE_BUTTON_TOOLTIP,
                 trigger -> StyledText.fromString(EnumUtils.toNiceString(trigger.getType())),
                 trigger -> trigger.setType(
                         trigger.getType() == TriggerType.SINGULAR ? TriggerType.CONTINUOUS : TriggerType.SINGULAR),
@@ -180,8 +245,8 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
                 settingY + settingHeight + GAP_SIZE,
                 settingWidth - GAP_SIZE,
                 settingHeight - GAP_SIZE / 2,
-                StyledText.fromString("Controller Function"),
-                List.of(Component.literal("Controller")),
+                CONTROLLER_FIELD_TITLE,
+                CONTROLLER_FIELD_TOOLTIP,
                 SoundTrigger::getControllerFunction,
                 (string, trigger) -> trigger.setControllerFunction(string),
                 (trigger -> trigger.getControllerFunctionResult().hasError()),
@@ -194,8 +259,8 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
                 settingY + settingHeight * 2 + GAP_SIZE / 2,
                 settingWidth - GAP_SIZE,
                 settingHeight - GAP_SIZE / 2,
-                StyledText.fromString("Identifier Function"),
-                List.of(Component.literal("Identifier")),
+                IDENTIFIER_FIELD_TITLE,
+                IDENTIFIER_FIELD_TOOLTIP,
                 SoundTrigger::getIdentifierFunction,
                 (string, trigger) -> trigger.setIdentifierFunction(string),
                 (trigger -> trigger.getIdentifierFunctionResult().hasError()),
@@ -208,10 +273,10 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
                 settingY + settingHeight * 3 + GAP_SIZE / 2,
                 settingWidth / 3 - GAP_SIZE / 2,
                 settingHeight - GAP_SIZE,
-                StyledText.fromString("Volume"),
-                List.of(Component.literal("Set Volume")),
+                VOLUME_FIELD_TITLE,
+                VOLUME_FIELD_TOOLTIP,
                 SoundTrigger::getVolume,
-                (string, trigger) -> trigger.setVolume(Integer.parseInt(string)),
+                (string, trigger) -> trigger.setVolume(string.isBlank() ? 100 : Integer.parseInt(string)),
                 this,
                 selectedTrigger);
         this.addRenderableWidget(volumeField);
@@ -221,10 +286,10 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
                 settingY + settingHeight * 3 + GAP_SIZE / 2,
                 settingWidth / 3 - GAP_SIZE / 2,
                 settingHeight - GAP_SIZE,
-                StyledText.fromString("Pitch"),
-                List.of(Component.literal("Set Pitch")),
+                PITCH_FIELD_TITLE,
+                PITCH_FIELD_TOOLTIP,
                 SoundTrigger::getPitch,
-                (string, trigger) -> trigger.setPitch(Integer.parseInt(string)),
+                (string, trigger) -> trigger.setPitch(string.isBlank() ? 100 : Integer.parseInt(string)),
                 this,
                 selectedTrigger);
         this.addRenderableWidget(pitchField);
@@ -232,12 +297,12 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
         this.intervalField = new TriggerSettingNumberInput(
                 settingX + (settingWidth / 3) * 2 + GAP_SIZE / 2,
                 settingY + settingHeight * 3 + GAP_SIZE / 2,
-                settingWidth / 3 - GAP_SIZE,
+                settingWidth / 3 - GAP_SIZE / 2,
                 settingHeight - GAP_SIZE,
-                StyledText.fromString("Interval"),
-                List.of(Component.literal("Set Interval, only for Continuous type.")),
+                INTERVAL_FIELD_TITLE,
+                INTERVAL_FIELD_TOOLTIP,
                 SoundTrigger::getInterval,
-                (string, trigger) -> trigger.setInterval(Integer.parseInt(string)),
+                (string, trigger) -> trigger.setInterval(string.isBlank() ? 5 : Integer.parseInt(string)),
                 this,
                 selectedTrigger);
         this.addRenderableWidget(intervalField);
@@ -254,13 +319,11 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
 
         RenderUtils.drawTexturedRect(guiGraphics, BACKGROUND_TEXTURE, getTranslationX(), getTranslationY());
 
-        searchWidget.render(guiGraphics, mouseX, mouseY, partialTick);
-
         if (selectedTrigger == null) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             guiGraphics,
-                            text,
+                            NO_TRIGGER_SELECTED,
                             getTranslationXint() + 145,
                             getTranslationXint() + 145 + BACKGROUND_TEXTURE.width() / 2f + 15,
                             getTranslationYint() + 29,
@@ -272,13 +335,6 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
                             TextShadow.NORMAL,
                             1.1f);
         }
-        //        RenderUtils.drawRect(
-        //                guiGraphics,
-        //                CommonColors.WHITE.withAlpha(0.6f),
-        //                getTranslationXint() + 145,
-        //                getTranslationYint() + 29,
-        //                BACKGROUND_TEXTURE.width() / 2f + 15,
-        //                BACKGROUND_TEXTURE.height() / 2f + 66);
 
         RenderUtils.enableScissor(
                 guiGraphics, 6 + getTranslationXint(), 28 + getTranslationYint(), 122, MAX_TRIGGERS_PER_PAGE * 21 + 2);
@@ -291,7 +347,42 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
             renderScroll(guiGraphics);
         }
 
-        if (scrolling) {
+        if (selectedTrigger != null && selectedTrigger.getType() != TriggerType.CONTINUOUS) {
+            RenderUtils.drawRect(
+                    guiGraphics,
+                    CommonColors.GRAY.withAlpha(0.6f),
+                    intervalField.getX() - 1,
+                    intervalField.getY() + 1,
+                    intervalField.getWidth() + 2,
+                    intervalField.getHeight());
+        }
+
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromComponent(this.getTitle()),
+                        getTranslationX() + 243,
+                        getTranslationY() + 16,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
+
+        if (MathUtils.isInside(
+                mouseX,
+                mouseY,
+                getTranslationXint() + 133,
+                getTranslationXint() + 133 + Texture.SCROLL_BUTTON.width(),
+                (int) scrollY,
+                (int) (scrollY + Texture.SCROLL_BUTTON.height()))) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        } else if (addButton.isHovered()) {
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(addButton.getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
+        } else if (deleteButton.isHovered()) {
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(deleteButton.getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
+        } else if (scrolling) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         }
 
@@ -321,7 +412,6 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
         for (GuiEventListener listener : getAllWidgets()) {
             if (listener.isMouseOver(event.x(), event.y())) {
                 listener.mouseClicked(event, isDoubleClick);
-                System.out.println("Clicking " + listener.getClass().getSimpleName());
                 return true;
             }
         }
