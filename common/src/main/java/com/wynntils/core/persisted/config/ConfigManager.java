@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.config;
@@ -27,9 +27,11 @@ import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.models.character.actionbar.segments.CharacterCreationSegment;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.settings.ConfigProfileScreen;
+import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -51,6 +53,7 @@ public final class ConfigManager extends Manager {
     private static final File CONFIG_DIR = WynntilsMod.getModStorageDir("config");
     private static final String FILE_SUFFIX = ".conf.json";
     private static final File DEFAULT_CONFIG = new File(CONFIG_DIR, "default" + FILE_SUFFIX);
+    private static final File GLOBAL_CONFIG = new File(CONFIG_DIR, "global" + FILE_SUFFIX);
     private static final String OVERLAY_GROUPS_JSON_KEY = "overlayGroups";
     private static final Set<Config<?>> CONFIGS = new TreeSet<>();
 
@@ -65,18 +68,20 @@ public final class ConfigManager extends Manager {
     @Persisted
     public final Storage<Boolean> showWelcomeScreen = new Storage<>(true);
 
-    private final File userConfigFile;
     private JsonObject configObject;
+
+    private boolean shownMigrationToast = false;
+    private MigrationStatus migrationStatus = MigrationStatus.NOT_MIGRATED;
 
     public ConfigManager() {
         super(List.of());
 
-        userConfigFile = new File(CONFIG_DIR, UndashedUuid.toString(McUtils.getUserProfileUUID()) + FILE_SUFFIX);
+        tryMigrateUserConfig();
     }
 
     public void init() {
         // First, we load the config file
-        configObject = Managers.Json.loadPreciousJson(userConfigFile);
+        configObject = Managers.Json.loadPreciousJson(GLOBAL_CONFIG);
 
         // Register all features and overlays
         Managers.Feature.getFeatures().forEach(this::registerFeature);
@@ -85,7 +90,7 @@ public final class ConfigManager extends Manager {
         // FIXME: Solve generics type issue
         Set<PersistedValue<?>> workaround = new HashSet<>(CONFIGS);
         if (Managers.Upfixer.runUpfixers(configObject, workaround, UpfixerType.CONFIG)) {
-            Managers.Json.savePreciousJson(userConfigFile, configObject);
+            Managers.Json.savePreciousJson(GLOBAL_CONFIG, configObject);
         }
 
         // Finish off the config init process
@@ -98,6 +103,33 @@ public final class ConfigManager extends Manager {
 
         // Create default config file containing all configurables' options
         Managers.Config.saveDefaultConfig();
+    }
+
+    private void tryMigrateUserConfig() {
+        if (GLOBAL_CONFIG.exists()) return;
+
+        String userUuid = UndashedUuid.toString(McUtils.getUserProfileUUID());
+        File userConfigFile = new File(CONFIG_DIR, userUuid + FILE_SUFFIX);
+
+        if (!userConfigFile.exists()) {
+            WynntilsMod.info("User config does not exist, nothing to migrate");
+            return;
+        }
+
+        WynntilsMod.info("Global config does not exist, attempting to migrate config for UUID " + userUuid);
+
+        try {
+            FileUtils.copyFile(userConfigFile, GLOBAL_CONFIG);
+            migrationStatus = MigrationStatus.COMPLETED;
+            WynntilsMod.info("Successfully migrated config for UUID " + userUuid + " to global config");
+        } catch (IOException e) {
+            WynntilsMod.error(
+                    "Failed to migrate config for UUID " + userUuid + ". Copy the contents of "
+                            + userConfigFile.getAbsolutePath() + " to " + GLOBAL_CONFIG.getAbsolutePath()
+                            + " to restore config",
+                    e);
+            migrationStatus = MigrationStatus.FAILED;
+        }
     }
 
     private void registerFeature(Feature feature) {
@@ -135,7 +167,7 @@ public final class ConfigManager extends Manager {
     }
 
     public void reloadConfiguration(boolean initOverlayGroups) {
-        configObject = Managers.Json.loadPreciousJson(userConfigFile);
+        configObject = Managers.Json.loadPreciousJson(GLOBAL_CONFIG);
         loadConfigOptions(true, initOverlayGroups);
     }
 
@@ -205,6 +237,19 @@ public final class ConfigManager extends Manager {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
+        if (migrationStatus != MigrationStatus.NOT_MIGRATED && !shownMigrationToast) {
+            String i18nKey = migrationStatus == MigrationStatus.COMPLETED
+                    ? "core.wynntils.config.migrationSuccess"
+                    : "core.wynntils.config.migrationFailure";
+            McUtils.mc()
+                    .getToastManager()
+                    .addToast(new SystemToast(
+                            new SystemToast.SystemToastId(10000L),
+                            Component.translatable("core.wynntils.config.migrationToastTitle"),
+                            Component.translatable(i18nKey)));
+            shownMigrationToast = true;
+        }
+
         if (hasPromptedProfile.get()) return;
         if (!event.isFirstJoinWorld()) return;
 
@@ -263,11 +308,11 @@ public final class ConfigManager extends Manager {
 
         configJson.add(OVERLAY_GROUPS_JSON_KEY, overlayGroups);
 
-        Managers.Json.savePreciousJson(userConfigFile, configJson);
+        Managers.Json.savePreciousJson(GLOBAL_CONFIG, configJson);
     }
 
-    public File getUserConfigFile() {
-        return userConfigFile;
+    public File getGlobalConfigFile() {
+        return GLOBAL_CONFIG;
     }
 
     private void saveDefaultConfig() {
@@ -414,5 +459,11 @@ public final class ConfigManager extends Manager {
 
         hasPromptedProfile.store(true);
         McUtils.setScreen(ConfigProfileScreen.create(null, ConfigProfile.NEW_PLAYER));
+    }
+
+    private enum MigrationStatus {
+        NOT_MIGRATED,
+        COMPLETED,
+        FAILED
     }
 }
