@@ -42,6 +42,15 @@ public record AbilityTreeSkillNode(
         return Objects.hash(id, formattedName, cost, requiredAbility, requiredArchetype, archetype, location);
     }
 
+    public AbilityTreeSkillNode withDefaultType() {
+        AbilityTreeNodeType defaultType = abilityTreeNodeType.getDefaultType();
+        if (defaultType == abilityTreeNodeType) return this;
+        return new AbilityTreeSkillNode(
+                id, name, formattedName, defaultType, description, cost,
+                willBlock, blockedBy, requiredAbility, requiredArchetype,
+                requiredLevel, archetype, location, connections);
+    }
+
     public AbilityTreeSkillNode withoutDescriptions() {
         return new AbilityTreeSkillNode(
                 id,

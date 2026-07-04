@@ -233,6 +233,18 @@ public enum AbilityTreeNodeType {
         return Services.CustomModel.getFloat(key);
     }
 
+    public AbilityTreeNodeType getDefaultType() {
+        if (state == AbilityTreeNodeState.LOCKED) return this;
+        String base = name().substring(0, name().lastIndexOf('_'));
+        return AbilityTreeNodeType.valueOf(base + "_LOCKED");
+    }
+
+    public AbilityTreeNodeType getUnlockedType() {
+        if (state == AbilityTreeNodeState.LOCKED) return this;
+        String base = name().substring(0, name().lastIndexOf('_'));
+        return AbilityTreeNodeType.valueOf(base + "_UNLOCKED");
+    }
+
     public static AbilityTreeNodeType fromItemStack(ItemStack itemStack) {
         if (!itemStack.has(DataComponents.CUSTOM_MODEL_DATA)) return null;
 

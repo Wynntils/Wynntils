@@ -358,6 +358,7 @@ public class AbilityTreeContainerQueries {
 
         protected AbilityPageDumper(Consumer<AbilityTreeInfo> supplier) {
             this.supplier = supplier;
+            this.unprocessedTree.setNormalizeToDefaultType(true);
         }
 
         @Override
@@ -371,6 +372,9 @@ public class AbilityTreeContainerQueries {
             }
 
             if (page == Models.AbilityTree.ABILITY_TREE_PAGES) {
+
+
+
                 this.supplier.accept(unprocessedTree.getProcesssed());
             }
         }
