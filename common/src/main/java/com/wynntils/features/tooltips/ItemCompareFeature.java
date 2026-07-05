@@ -84,6 +84,7 @@ public class ItemCompareFeature extends Feature {
     private static final String HOVERED_KEY = "feature.wynntils.itemCompare.tag.hovered";
     private static final String SELECTED_KEY = "feature.wynntils.itemCompare.tag.selected";
     private static final String HOVERED_SELECTED_KEY = "feature.wynntils.itemCompare.tag.hovered_selected";
+    private static final int BACKGROUND_TEXTURE_PAD = 12;
 
     // First equippedCount items in itemsToCompare will have "Equipped" tag, others will have "Selected" tag
     private int equippedCount = 0;
@@ -222,8 +223,8 @@ public class ItemCompareFeature extends Feature {
 
         List<Component> hoveredLines = new ArrayList<>(event.getTooltips());
         List<ClientTooltipComponent> hoveredClientComponents = TooltipUtils.getClientTooltipComponent(hoveredLines);
-        int hoveredTooltipWidth = TooltipUtils.getTooltipWidth(hoveredClientComponents, font);
-        int hoveredTooltipHeight = TooltipUtils.getTooltipHeight(hoveredClientComponents);
+        int hoveredTooltipWidth = TooltipUtils.getTooltipWidth(hoveredClientComponents, font) + BACKGROUND_TEXTURE_PAD;
+        int hoveredTooltipHeight = TooltipUtils.getTooltipHeight(hoveredClientComponents) + BACKGROUND_TEXTURE_PAD;
 
         if (centerItemName.get()) {
             centerItemName(hoveredLines, hoveredTooltipWidth);
@@ -262,8 +263,8 @@ public class ItemCompareFeature extends Feature {
             List<Component> lines = getWynnOrVanillaLines(abstractContainerScreen, pair.key(), pair.value());
             List<ClientTooltipComponent> clientTooltipComponents = TooltipUtils.getClientTooltipComponent(lines);
 
-            int tooltipWidth = TooltipUtils.getTooltipWidth(clientTooltipComponents, font);
-            int tooltipHeight = TooltipUtils.getTooltipHeight(clientTooltipComponents);
+            int tooltipWidth = TooltipUtils.getTooltipWidth(clientTooltipComponents, font) + BACKGROUND_TEXTURE_PAD;
+            int tooltipHeight = TooltipUtils.getTooltipHeight(clientTooltipComponents) + BACKGROUND_TEXTURE_PAD;
 
             if (centerItemName.get()) {
                 centerItemName(lines, tooltipWidth);
