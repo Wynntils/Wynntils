@@ -557,9 +557,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatFunctions.KillsPerMinuteFunction());
         registerFunction(new CombatFunctions.LastDamageDealtFunction());
         registerFunction(new CombatFunctions.LastKillFunction());
-        registerFunction(new CombatFunctions.LastSpellNameFunction());
-        registerFunction(new CombatFunctions.LastSpellManaCostFunction());
         registerFunction(new CombatFunctions.LastSpellHealthCostFunction());
+        registerFunction(new CombatFunctions.LastSpellManaCostFunction());
+        registerFunction(new CombatFunctions.LastSpellNameFunction());
         registerFunction(new CombatFunctions.LastSpellRepeatCountFunction());
         registerFunction(new CombatFunctions.SpellNameFromDirectionFunction());
         registerFunction(new CombatFunctions.SpellNameFromNumberFunction());
