@@ -10,7 +10,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.fonts.WynnFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearTooltipAlignmentComponent;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -32,7 +31,6 @@ public abstract class GuideItemStack extends ItemStack {
 
     public void queueGuideTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         List<Component> tooltipLines = new ArrayList<>(LoreUtils.getTooltipLines(this));
-        GearTooltipAlignmentComponent.realignMarkedTooltipLines(tooltipLines);
 
         guiGraphics.setTooltipForNextFrame(
                 FontRenderer.getInstance().getFont(),
