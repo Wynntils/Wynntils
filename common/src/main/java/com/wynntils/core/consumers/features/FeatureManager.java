@@ -132,6 +132,7 @@ import com.wynntils.features.redirects.AbilityRefreshRedirectFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.redirects.InventoryRedirectFeature;
 import com.wynntils.features.redirects.TerritoryMessageRedirectFeature;
+import com.wynntils.features.tooltips.IngredientPouchTooltipCustomizationFeature;
 import com.wynntils.features.tooltips.ItemCompareFeature;
 import com.wynntils.features.tooltips.ItemGuessFeature;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
@@ -378,6 +379,7 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region tooltips
+        registerFeature(new IngredientPouchTooltipCustomizationFeature());
         registerFeature(new ItemCompareFeature());
         registerFeature(new ItemGuessFeature());
         registerFeature(new ItemStatInfoFeature());
