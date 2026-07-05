@@ -11,6 +11,8 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
+import com.wynntils.models.gear.type.ItemWeightSource;
+import com.wynntils.models.stats.type.StatListOrdering;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
@@ -19,6 +21,39 @@ import net.minecraft.network.chat.TextColor;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemStatInfoFeature extends Feature {
+    @Persisted
+    public final Config<Boolean> perfect = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> defective = new Config<>(true);
+
+    @Persisted
+    public final Config<StatListOrdering> identificationsOrdering = new Config<>(StatListOrdering.DEFAULT);
+
+    @Persisted
+    public final Config<Boolean> groupIdentifications = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> identificationDecorations = new Config<>(true);
+
+    @Persisted
+    public final Config<ItemWeightSource> itemWeights = new Config<>(ItemWeightSource.ALL);
+
+    @Persisted
+    public final Config<Boolean> overallPercentageInName = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> overallPercentageInPerfectDefectiveName = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> showBestValueLastAlways = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> rainbowInternalRoll = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> showRollWheel = new Config<>(true);
+
     @Persisted
     public final Config<Boolean> colorLerp = new Config<>(true);
 
