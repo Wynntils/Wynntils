@@ -76,6 +76,11 @@ public enum Texture {
     TAG_SEARCH("content_book/tag_search.png", 140, 30),
     // endregion
 
+    // region Build Loadouts
+    BUILD_LOADOUTS_BACKGROUND("build_loadouts/build_loadouts_tome.png", 576, 320),
+    BUILD_LOADOUTS_WIDGET_BACKGROUND("build_loadouts/scallable_widget_background.png", 34, 19),
+    // endregion
+
     // region Guild Log
     ECONOMY_LOG_ICON("guild_log/economy_log_icon.png", 16, 16),
     GENERAL_LOG_ICON("guild_log/general_log_icon.png", 16, 16),

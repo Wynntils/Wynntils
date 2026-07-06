@@ -580,6 +580,168 @@ public final class RenderUtils {
                 textureHeight);
     }
 
+    //nine slice scalling
+    public static void drawScalingTexturedRect(
+            GuiGraphics guiGraphics,
+            Texture texture,
+            float x,
+            float y,
+            float width,
+            float height,
+            int left,
+            int right,
+            int top,
+            int bottom) {
+
+        int texWidth = texture.width();
+        int texHeight = texture.height();
+
+        // Don't let the center become negative
+        width = Math.max(width, left + right);
+        height = Math.max(height, top + bottom);
+
+        float centerWidth = width - left - right;
+        float centerHeight = height - top - bottom;
+
+        int texCenterWidth = texWidth - left - right;
+        int texCenterHeight = texHeight - top - bottom;
+
+        // Top Left
+        drawTexturedRect(
+                guiGraphics,
+                texture,
+                x,
+                y,
+                left,
+                top,
+                0,
+                0,
+                left,
+                top,
+                texWidth,
+                texHeight);
+
+        // Top
+        drawTexturedRect(
+                guiGraphics,
+                texture,
+                x + left,
+                y,
+                centerWidth,
+                top,
+                left,
+                0,
+                texCenterWidth,
+                top,
+                texWidth,
+                texHeight);
+
+        // Top Right
+        drawTexturedRect(
+                guiGraphics,
+                texture,
+                x + left + centerWidth,
+                y,
+                right,
+                top,
+                texWidth - right,
+                0,
+                right,
+                top,
+                texWidth,
+                texHeight);
+
+        // Left
+        drawTexturedRect(
+                guiGraphics,
+                texture,
+                x,
+                y + top,
+                left,
+                centerHeight,
+                0,
+                top,
+                left,
+                texCenterHeight,
+                texWidth,
+                texHeight);
+
+        // Center
+        drawTexturedRect(
+                guiGraphics,
+                texture,
+                x + left,
+                y + top,
+                centerWidth,
+                centerHeight,
+                left,
+                top,
+                texCenterWidth,
+                texCenterHeight,
+                texWidth,
+                texHeight);
+
+        // Right
+        drawTexturedRect(
+                guiGraphics,
+                texture,
+                x + left + centerWidth,
+                y + top,
+                right,
+                centerHeight,
+                texWidth - right,
+                top,
+                right,
+                texCenterHeight,
+                texWidth,
+                texHeight);
+
+        // Bottom Left
+        drawTexturedRect(
+                guiGraphics,
+                texture,
+                x,
+                y + top + centerHeight,
+                left,
+                bottom,
+                0,
+                texHeight - bottom,
+                left,
+                bottom,
+                texWidth,
+                texHeight);
+
+        // Bottom
+        drawTexturedRect(
+                guiGraphics,
+                texture,
+                x + left,
+                y + top + centerHeight,
+                centerWidth,
+                bottom,
+                left,
+                texHeight - bottom,
+                texCenterWidth,
+                bottom,
+                texWidth,
+                texHeight);
+
+        // Bottom Right
+        drawTexturedRect(
+                guiGraphics,
+                texture,
+                x + left + centerWidth,
+                y + top + centerHeight,
+                right,
+                bottom,
+                texWidth - right,
+                texHeight - bottom,
+                right,
+                bottom,
+                texWidth,
+                texHeight);
+    }
+
     public static void drawHoverableTexturedRect(
             GuiGraphics guiGraphics, Texture texture, float x, float y, boolean hovered, RenderDirection dir) {
         int textureWidth = texture.width();
