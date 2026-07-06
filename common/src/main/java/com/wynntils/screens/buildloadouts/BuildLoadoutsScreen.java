@@ -49,6 +49,18 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                 6,
                 6,
                 6);
+
+        RenderUtils.drawScalingTexturedRect(
+                guiGraphics,
+                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
+                offsetX+30,
+                offsetY+30,
+                230,
+                130,
+                6,
+                6,
+                6,
+                6);
     }
 
 

@@ -79,6 +79,7 @@ public enum Texture {
     // region Build Loadouts
     BUILD_LOADOUTS_BACKGROUND("build_loadouts/build_loadouts_tome.png", 576, 320),
     BUILD_LOADOUTS_WIDGET_BACKGROUND("build_loadouts/scallable_widget_background.png", 34, 19),
+    BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT("build_loadouts/scallable_widget_background_light.png", 34, 19),
     // endregion
 
     // region Guild Log
