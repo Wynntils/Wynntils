@@ -23,17 +23,12 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
-public class LoadoutSelectionWidget extends AbstractButton implements TooltipProvider {
-    private final StyledText text;
+public class NewLoadoutButton extends AbstractButton implements TooltipProvider {
     private final int x;
     private final int y;
-    private final Texture icon;
-    private boolean clicked = false;
 
-    public LoadoutSelectionWidget(StyledText text, Texture icon, int x, int y) {
-        super(x, y, 133 - 10, 31, Component.literal("Loadout Selection Button"));
-        this.text = text;
-        this.icon = icon;
+    public NewLoadoutButton(int x, int y) {
+        super(x, y, 133 - 10, 20, Component.literal("Loadout Selection Button"));
         this.x = x;
         this.y = y;
     }
@@ -41,43 +36,29 @@ public class LoadoutSelectionWidget extends AbstractButton implements TooltipPro
     @Override
     protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         handleCursor(guiGraphics);
-        if (!clicked) {
-            RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics,
-                    Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
-                    x,
-                    y,
-                    this.width,
-                    this.height);
-        } else {
-            RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics,
-                    Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_BLUE,
-                    x,
-                    y,
-                    this.width,
-                    this.height);
 
-            RenderUtils.drawTexturedRect(
-                    guiGraphics,
-                    Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB,
-                    x + this.width - Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB.width() / 2f,
-                    (this.y + this.height / 2f) - Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB.height() / 2f);
-        }
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_GREEN,
+                x,
+                y,
+                this.width,
+                this.height);
 
         RenderUtils.drawTexturedRect(
                 guiGraphics,
-                icon,
-                this.x + 5,
-                (this.y + this.height / 2f) - icon.height() / 2f);
+                Texture.BUILD_LOADOUTS_PLUS_ICON,
+                this.x + 15,
+                (this.y + this.height / 2f) - Texture.BUILD_LOADOUTS_PLUS_ICON.height() / 2f);
+
+
 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        this.text,
-                        (this.x + this.width / 2f) + 22,
-                        (this.y + this.height / 2f) - 4,
-                        70,
+                        StyledText.fromString("New Loadout"),
+                        (this.x + this.width / 2f),
+                        (this.y + this.height / 2f),
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
@@ -90,7 +71,7 @@ public class LoadoutSelectionWidget extends AbstractButton implements TooltipPro
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
-        clicked = !clicked;
+
         return true;
     }
 
