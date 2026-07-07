@@ -79,8 +79,6 @@
   "crowdSourcedDataType.wynntils.professionNodeLocations.name": "Yrkesnodplatser",
   "feature.wynntils.abbreviateMobHealth.description": "Förkortar mobbens hälsa till ett mer läsbart format.",
   "feature.wynntils.abbreviateMobHealth.name": "Förkorta Mobbens Hälsa",
-  "feature.wynntils.abilityRefreshRedirect.description": "Lägger till möjligheten att omdirigera meddelanden om förmågeuppdateringar till speluppdateringsöverlägget.",
-  "feature.wynntils.abilityRefreshRedirect.name": "Förmågeuppdateringar",
   "feature.wynntils.abilityTreeDataDump.description": "Lägger till möjligheten att exportera förmågeträdets data till en fil.",
   "feature.wynntils.abilityTreeDataDump.name": "Exportera Förmågeträdets Data",
   "feature.wynntils.addCommandExpansion.description": "Lägger till automatisk komplettering för de flesta kommandon.",

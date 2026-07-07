@@ -69,7 +69,7 @@ public final class StatusEffectModel extends Model {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onWorldStateChanged(WorldStateEvent e) {
         statusEffects = List.of();
-        WynntilsMod.postEvent(new StatusEffectsChangedEvent());
+        WynntilsMod.postEvent(new StatusEffectsChangedEvent(statusEffects));
     }
 
     @SubscribeEvent
@@ -79,7 +79,7 @@ public final class StatusEffectModel extends Model {
         if (footer.isEmpty()) {
             if (!statusEffects.isEmpty()) {
                 statusEffects = List.of(); // No timers, get rid of them
-                WynntilsMod.postEvent(new StatusEffectsChangedEvent());
+                WynntilsMod.postEvent(new StatusEffectsChangedEvent(statusEffects));
             }
             return;
         }
@@ -87,7 +87,7 @@ public final class StatusEffectModel extends Model {
         if (!footer.startsWith(STATUS_EFFECTS_TITLE)) return;
 
         statusEffects = parseStatusEffects(footer);
-        WynntilsMod.postEvent(new StatusEffectsChangedEvent());
+        WynntilsMod.postEvent(new StatusEffectsChangedEvent(statusEffects));
     }
 
     public static List<StatusEffect> parseStatusEffects(StyledText footer) {
