@@ -76,7 +76,7 @@ public class WardItemStack extends GuideItemStack {
                         .withStyle(ChatFormatting.WHITE));
         MutableComponent obtainComponent = Component.translatable("screens.wynntils.wynntilsGuides.misc.wards.obtain1")
                 .withStyle(ChatFormatting.DARK_GRAY)
-                .append(Component.translatable(wardType.getObtainSourceTranslationKey())
+                .append(Component.literal(wardType.getItemObtainType().getDisplayName())
                         .withStyle(ChatFormatting.AQUA));
 
         return List.of(usageComponent, Component.empty(), obtainComponent);
