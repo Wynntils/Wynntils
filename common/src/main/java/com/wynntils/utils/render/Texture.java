@@ -80,7 +80,11 @@ public enum Texture {
     BUILD_LOADOUTS_BACKGROUND("build_loadouts/build_loadouts_tome.png", 576, 320),
     BUILD_LOADOUTS_WIDGET_BACKGROUND("build_loadouts/scallable_widget_background.png", 34, 19, 6, 6, 6, 6),
     BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT("build_loadouts/scallable_widget_background_light.png", 34, 19, 6, 6, 6, 6),
-    BUILD_LOADOUTS_GEM("build_loadouts/gem.png", 12, 12),
+    BUILD_LOADOUTS_WIDGET_BACKGROUND_RED("build_loadouts/scallable_widget_background_red.png", 34, 19, 6, 6, 6, 6),
+    BUILD_LOADOUTS_WIDGET_BACKGROUND_BLUE("build_loadouts/scallable_widget_background_blue.png", 34, 19, 6, 6, 6, 6),
+    BUILD_LOADOUTS_WIDGET_SELECT_TAB("build_loadouts/widget_select_tab.png", 6, 5),
+    BUILD_LOADOUTS_FLAG("build_loadouts/flag.png", 206, 45),
+    BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON("build_loadouts/skillpoint_loadouts_icon.png", 27, 27),
     // endregion
 
     // region Guild Log

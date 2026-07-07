@@ -20,7 +20,7 @@ public class TitleWidget extends AbstractWidget {
     private final int y;
 
     public TitleWidget(StyledText text, int x, int y) {
-        super(x, y, 133 - 10, 20, Component.literal("Title Widget"));
+        super(x, y, 133 - 10, 18, Component.literal("Title Widget"));
         this.text = text;
         this.x = x;
         this.y = y;
@@ -28,17 +28,13 @@ public class TitleWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_GEM,
-                this.x,
-                (this.y + this.height / 2f) - (Texture.BUILD_LOADOUTS_GEM.height() / 2f));
+
 
         RenderUtils.drawTexturedRect(
                 guiGraphics,
-                Texture.BUILD_LOADOUTS_GEM,
-                this.x + this.width - Texture.BUILD_LOADOUTS_GEM.width(),
-                (this.y + this.height / 2f) - (Texture.BUILD_LOADOUTS_GEM.height() / 2f));
+                Texture.BUILD_LOADOUTS_FLAG,
+                this.x + this.width / 2f - Texture.BUILD_LOADOUTS_FLAG.width() / 2f - 45,
+                (this.y + this.height / 2f) - (Texture.BUILD_LOADOUTS_FLAG.height() / 2f) + 14);
 
         FontRenderer.getInstance()
                 .renderText(

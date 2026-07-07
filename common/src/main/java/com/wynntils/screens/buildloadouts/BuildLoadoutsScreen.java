@@ -56,27 +56,31 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
         buildLoadouts = new LoadoutSelectionWidget(
                 StyledText.fromString("Build Loadouts"),
+                Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
                 offsetX + WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + selectionY);
         this.addRenderableWidget(buildLoadouts);
-        selectionY += 40 + 3;
+        selectionY += 39 + 3;
 
         abilityTreeLoadouts = new LoadoutSelectionWidget(
                 StyledText.fromString("Ability Tree Loadouts"),
+                Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
                 offsetX + WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + selectionY);
         this.addRenderableWidget(abilityTreeLoadouts);
-        selectionY += 40 + 3;
+        selectionY += 39 + 3;
 
         skillPointLoadouts = new LoadoutSelectionWidget(
                 StyledText.fromString("Skill Point Loadouts"),
+                Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
                 offsetX + WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + selectionY);
         this.addRenderableWidget(skillPointLoadouts);
-        selectionY += 40 + 3;
+        selectionY += 39 + 3;
 
         aspectLoadouts = new LoadoutSelectionWidget(
                 StyledText.fromString("Aspect Loadouts"),
+                Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
                 offsetX + WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + selectionY);
         this.addRenderableWidget(aspectLoadouts);
