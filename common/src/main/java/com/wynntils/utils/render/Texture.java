@@ -87,6 +87,7 @@ public enum Texture {
     BUILD_LOADOUTS_FLAG("build_loadouts/flag.png", 197, 45),
     BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON("build_loadouts/skillpoint_loadouts_icon.png", 35, 21),
     BUILD_LOADOUTS_PLUS_ICON("build_loadouts/plus_icon.png", 9, 9),
+    BUILD_LOADOUTS_SEARCH_ICON("build_loadouts/search_icon.png", 8, 8),
     // endregion
 
     // region Guild Log

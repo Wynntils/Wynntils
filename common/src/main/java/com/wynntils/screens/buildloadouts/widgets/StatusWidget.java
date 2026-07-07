@@ -3,6 +3,7 @@ package com.wynntils.screens.buildloadouts.widgets;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -20,6 +21,7 @@ import java.util.List;
 public class StatusWidget extends AbstractWidget {
     private final int x;
     private final int y;
+    private static final CustomColor errorColor = CustomColor.fromInt(0xe40000);
 
     public StatusWidget(int x, int y) {
         super(x, y, 133 - 10, 86, Component.literal("Status Widget"));
@@ -55,7 +57,7 @@ public class StatusWidget extends AbstractWidget {
                         this.x + this.width / 2f,
                         this.y + 25,
                         this.width - 10,
-                        CommonColors.RED,
+                        errorColor,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);

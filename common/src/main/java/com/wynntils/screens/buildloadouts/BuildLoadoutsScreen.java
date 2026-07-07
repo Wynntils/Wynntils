@@ -5,9 +5,13 @@
 package com.wynntils.screens.buildloadouts;
 
 import com.google.common.collect.Lists;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.activities.widgets.ContentBookSearchWidget;
 import com.wynntils.screens.base.TooltipProvider;
+import com.wynntils.screens.buildloadouts.type.LoadoutCategory;
+import com.wynntils.screens.buildloadouts.widgets.LoadoutSearchWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutSelectionWidget;
 import com.wynntils.screens.buildloadouts.widgets.NewLoadoutButton;
 import com.wynntils.screens.buildloadouts.widgets.StatusWidget;
@@ -33,6 +37,9 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
     private LoadoutSelectionWidget skillPointLoadouts;
     private LoadoutSelectionWidget aspectLoadouts;
     private StatusWidget statusWidget;
+    private LoadoutSearchWidget searchWidget;
+
+    public LoadoutCategory currentCategory = LoadoutCategory.BUILD_LOADOUT;
 
     private BuildLoadoutsScreen() {
         super(Component.literal("Build Loadouts Screen"));
@@ -48,9 +55,8 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
         offsetX = (int) ((this.width - Texture.BUILD_LOADOUTS_BACKGROUND.width()) / 2f);
         offsetY = (int) ((this.height - Texture.BUILD_LOADOUTS_BACKGROUND.height()) / 2f);
-
+        //region Widget Holder 1
         int selectionY = 0;
-
         this.addRenderableWidget(new TitleWidget(
                 StyledText.fromString("Loadouts"),
                 offsetX + WIDTH_OFFSET + 5,
@@ -60,32 +66,40 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         buildLoadouts = new LoadoutSelectionWidget(
                 StyledText.fromString("Build Loadouts"),
                 Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
+                LoadoutCategory.BUILD_LOADOUT,
                 offsetX + WIDTH_OFFSET + 5,
-                offsetY + HEIGHT_OFFSET + selectionY);
+                offsetY + HEIGHT_OFFSET + selectionY,
+                this);
         this.addRenderableWidget(buildLoadouts);
         selectionY += 31 + 3;
 
         abilityTreeLoadouts = new LoadoutSelectionWidget(
                 StyledText.fromString("Ability Tree Loadouts"),
                 Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
+                LoadoutCategory.ABILITY_TREE_LOADOUT,
                 offsetX + WIDTH_OFFSET + 5,
-                offsetY + HEIGHT_OFFSET + selectionY);
+                offsetY + HEIGHT_OFFSET + selectionY,
+                this);
         this.addRenderableWidget(abilityTreeLoadouts);
         selectionY += 31 + 3;
 
         skillPointLoadouts = new LoadoutSelectionWidget(
                 StyledText.fromString("Skill Point Loadouts"),
                 Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
+                LoadoutCategory.SKILL_POINT_LOADOUT,
                 offsetX + WIDTH_OFFSET + 5,
-                offsetY + HEIGHT_OFFSET + selectionY);
+                offsetY + HEIGHT_OFFSET + selectionY,
+                this);
         this.addRenderableWidget(skillPointLoadouts);
         selectionY += 31 + 3;
 
         aspectLoadouts = new LoadoutSelectionWidget(
                 StyledText.fromString("Aspect Loadouts"),
                 Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
+                LoadoutCategory.ASPECT_LOADOUT,
                 offsetX + WIDTH_OFFSET + 5,
-                offsetY + HEIGHT_OFFSET + selectionY);
+                offsetY + HEIGHT_OFFSET + selectionY,
+                this);
         this.addRenderableWidget(aspectLoadouts);
         selectionY += 31 + 3;
 
@@ -98,6 +112,19 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                 offsetX + WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + selectionY);
         this.addRenderableWidget(statusWidget);
+        // end region
+
+        // region Widget Holder 2
+        selectionY = 5;
+        searchWidget = new LoadoutSearchWidget(
+                offsetX + WIDTH_OFFSET + 133 + 3 + 5,
+                offsetY + HEIGHT_OFFSET + selectionY,
+                (s) -> {
+                    WynntilsMod.info("text: " + s);
+                }, this);
+        this.addRenderableWidget(searchWidget);
+
+        // end region
     }
 
     @Override
