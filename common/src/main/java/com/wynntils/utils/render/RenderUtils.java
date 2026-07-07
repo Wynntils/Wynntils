@@ -581,20 +581,21 @@ public final class RenderUtils {
     }
 
     //nine slice scalling
-    public static void drawScalingTexturedRect(
+    public static void drawNineSliceScalingTexturedRect(
             GuiGraphics guiGraphics,
             Texture texture,
             float x,
             float y,
             float width,
-            float height,
-            int left,
-            int right,
-            int top,
-            int bottom) {
+            float height) {
+        if (!texture.isNineSliced()) return;
 
         int texWidth = texture.width();
         int texHeight = texture.height();
+        int left = texture.left();
+        int right = texture.right();
+        int top = texture.top();
+        int bottom = texture.bottom();
 
         // Don't let the center become negative
         width = Math.max(width, left + right);
