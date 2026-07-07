@@ -50,8 +50,10 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -79,12 +81,11 @@ public class ItemCompareFeature extends Feature {
     private final KeyBind selectCompareKeyBind = KeyBindDefinition.SELECT_FOR_COMPARING.create(this::onSelectKeyPress);
 
     private final List<Pair<WynnItem, ItemStack>> selectedItems = new ArrayList<>();
-    private static final int COMPARE_ITEM_PAD = 6;
+    private static final int COMPARE_ITEM_PAD = 9;
     private static final String EQUIPPED_KEY = "feature.wynntils.itemCompare.tag.equipped";
     private static final String HOVERED_KEY = "feature.wynntils.itemCompare.tag.hovered";
     private static final String SELECTED_KEY = "feature.wynntils.itemCompare.tag.selected";
     private static final String HOVERED_SELECTED_KEY = "feature.wynntils.itemCompare.tag.hovered_selected";
-    private static final int BACKGROUND_TEXTURE_PAD = 12;
 
     // First equippedCount items in itemsToCompare will have "Equipped" tag, others will have "Selected" tag
     private int equippedCount = 0;
@@ -223,8 +224,8 @@ public class ItemCompareFeature extends Feature {
 
         List<Component> hoveredLines = new ArrayList<>(event.getTooltips());
         List<ClientTooltipComponent> hoveredClientComponents = TooltipUtils.getClientTooltipComponent(hoveredLines);
-        int hoveredTooltipWidth = TooltipUtils.getTooltipWidth(hoveredClientComponents, font) + BACKGROUND_TEXTURE_PAD;
-        int hoveredTooltipHeight = TooltipUtils.getTooltipHeight(hoveredClientComponents) + BACKGROUND_TEXTURE_PAD;
+        int hoveredTooltipWidth = TooltipUtils.getTooltipWidth(hoveredClientComponents, font);
+        int hoveredTooltipHeight = TooltipUtils.getTooltipHeight(hoveredClientComponents);
 
         if (centerItemName.get()) {
             centerItemName(hoveredLines, hoveredTooltipWidth);
@@ -260,11 +261,12 @@ public class ItemCompareFeature extends Feature {
         int prevX = hoveredX;
 
         for (Pair<WynnItem, ItemStack> pair : itemsToCompare) {
-            List<Component> lines = getWynnOrVanillaLines(abstractContainerScreen, pair.key(), pair.value());
+            ItemStack itemStack = pair.value();
+            List<Component> lines = getWynnOrVanillaLines(abstractContainerScreen, pair.key(), itemStack);
             List<ClientTooltipComponent> clientTooltipComponents = TooltipUtils.getClientTooltipComponent(lines);
 
-            int tooltipWidth = TooltipUtils.getTooltipWidth(clientTooltipComponents, font) + BACKGROUND_TEXTURE_PAD;
-            int tooltipHeight = TooltipUtils.getTooltipHeight(clientTooltipComponents) + BACKGROUND_TEXTURE_PAD;
+            int tooltipWidth = TooltipUtils.getTooltipWidth(clientTooltipComponents, font);
+            int tooltipHeight = TooltipUtils.getTooltipHeight(clientTooltipComponents);
 
             if (centerItemName.get()) {
                 centerItemName(lines, tooltipWidth);
@@ -305,7 +307,8 @@ public class ItemCompareFeature extends Feature {
                     tooltipWidth,
                     tooltipHeight,
                     tooltipScaleFactor,
-                    pair.value().getTooltipImage()));
+                    itemStack.getTooltipImage(),
+                    itemStack.get(DataComponents.TOOLTIP_STYLE)));
             prevX = x;
         }
 
@@ -332,7 +335,8 @@ public class ItemCompareFeature extends Feature {
                 hoveredLines,
                 hoveredItemStack.getTooltipImage(),
                 (int) (hoveredX / hoveredScaleFactor),
-                (int) (hoveredY / hoveredScaleFactor));
+                (int) (hoveredY / hoveredScaleFactor),
+                hoveredItemStack.get(DataComponents.TOOLTIP_STYLE));
         guiGraphics.pose().popMatrix();
 
         for (Tooltip tooltip : tooltips) {
@@ -345,7 +349,8 @@ public class ItemCompareFeature extends Feature {
                     tooltip.getLines(),
                     tooltip.getVisualTooltipComponent(),
                     (int) (tooltip.getX() / scaleFactor),
-                    (int) (tooltip.getY() / scaleFactor));
+                    (int) (tooltip.getY() / scaleFactor),
+                    tooltip.getTooltipStyle());
             guiGraphics.pose().popMatrix();
         }
         changePositioner = false;
@@ -537,6 +542,7 @@ public class ItemCompareFeature extends Feature {
         private final int height;
         private float scaleFactor;
         private final Optional<TooltipComponent> visualTooltipComponent;
+        private final Identifier tooltipStyle;
 
         private Tooltip(
                 List<Component> lines,
@@ -545,7 +551,8 @@ public class ItemCompareFeature extends Feature {
                 int width,
                 int height,
                 float scaleFactor,
-                Optional<TooltipComponent> visualTooltipComponent) {
+                Optional<TooltipComponent> visualTooltipComponent,
+                Identifier tooltipStyle) {
             this.lines = lines;
             this.x = x;
             this.y = y;
@@ -553,6 +560,7 @@ public class ItemCompareFeature extends Feature {
             this.height = height;
             this.scaleFactor = scaleFactor;
             this.visualTooltipComponent = visualTooltipComponent;
+            this.tooltipStyle = tooltipStyle;
         }
 
         public List<Component> getLines() {
@@ -597,6 +605,10 @@ public class ItemCompareFeature extends Feature {
 
         public void multScaleFactor(float k) {
             this.scaleFactor *= k;
+        }
+
+        public Identifier getTooltipStyle() {
+            return tooltipStyle;
         }
     }
 }
