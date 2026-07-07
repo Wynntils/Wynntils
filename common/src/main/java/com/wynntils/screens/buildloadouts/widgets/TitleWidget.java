@@ -33,7 +33,7 @@ public class TitleWidget extends AbstractWidget {
         RenderUtils.drawTexturedRect(
                 guiGraphics,
                 Texture.BUILD_LOADOUTS_FLAG,
-                this.x + this.width / 2f - Texture.BUILD_LOADOUTS_FLAG.width() / 2f - 45,
+                this.x + this.width / 2f - Texture.BUILD_LOADOUTS_FLAG.width() / 2f - 40,
                 (this.y + this.height / 2f) - (Texture.BUILD_LOADOUTS_FLAG.height() / 2f) + 14);
 
         FontRenderer.getInstance()
