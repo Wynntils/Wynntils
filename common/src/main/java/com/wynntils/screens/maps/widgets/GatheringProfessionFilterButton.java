@@ -6,7 +6,7 @@ package com.wynntils.screens.maps.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Services;
-import com.wynntils.models.profession.type.MaterialProfile;
+import com.wynntils.models.profession.type.MaterialType;
 import com.wynntils.screens.maps.GatheringNodeFilterScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -21,7 +21,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class GatheringProfessionFilterButton extends AbstractWidget {
     private final GatheringNodeFilterScreen filterScreen;
-    private final MaterialProfile.MaterialType materialType;
+    private final MaterialType materialType;
     private final Texture icon;
     private final float iconRenderX;
     private final float iconRenderY;
@@ -35,7 +35,7 @@ public class GatheringProfessionFilterButton extends AbstractWidget {
             int y,
             int width,
             GatheringNodeFilterScreen filterScreen,
-            MaterialProfile.MaterialType materialType,
+            MaterialType materialType,
             boolean selected) {
         super(
                 x,
