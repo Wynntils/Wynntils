@@ -39,6 +39,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class ItemHighlightFeature extends Feature {
     private static final List<String> DEFAULT_HIGHLIGHT_KEYS =
             List.of("item_tier", "profession_ingredient", "profession_material", "store_tier");
+    private static final String PROFESSION_STAR_KEY = "profession_tier";
 
     @Persisted
     private final Config<HighlightTexture> highlightTexture = new Config<>(HighlightTexture.WYNN);
@@ -128,6 +129,9 @@ public class ItemHighlightFeature extends Feature {
     private final Config<CustomColor> threeStarMaterialHighlightColor = new Config<>(new CustomColor(230, 77, 0));
 
     @Persisted
+    private final Config<Boolean> hideProfessionStar = new Config<>(false);
+
+    @Persisted
     private final Config<Boolean> storeHighlightEnabled = new Config<>(true);
 
     @Persisted
@@ -200,7 +204,10 @@ public class ItemHighlightFeature extends Feature {
 
         // The index of model data matters, so instead of removing the tier string, just replace it with an empty string
         List<String> newStrings = itemStackModelData.strings().stream()
-                .map(s -> DEFAULT_HIGHLIGHT_KEYS.stream().anyMatch(s::startsWith) ? "" : s)
+                .map(s -> DEFAULT_HIGHLIGHT_KEYS.stream().anyMatch(s::startsWith)
+                                || (hideProfessionStar.get() && s.startsWith(PROFESSION_STAR_KEY))
+                        ? ""
+                        : s)
                 .toList();
 
         if (!newStrings.equals(itemStackModelData.strings())) {
