@@ -7,7 +7,7 @@ package com.wynntils.screens.buildloadouts.widgets;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
-import com.wynntils.screens.buildloadouts.type.LoadoutCategory;
+import com.wynntils.screens.buildloadouts.type.MenuCategory;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -30,14 +30,14 @@ public class LoadoutSelectionWidget extends AbstractButton implements TooltipPro
     private final int x;
     private final int y;
     private final Texture icon;
-    private LoadoutCategory loadoutCategory;
-    private BuildLoadoutsScreen parent;
+    private final MenuCategory menuCategory;
+    private final BuildLoadoutsScreen parent;
 
-    public LoadoutSelectionWidget(StyledText text, Texture icon, LoadoutCategory loadoutCategory, int x, int y, BuildLoadoutsScreen parent) {
+    public LoadoutSelectionWidget(StyledText text, Texture icon, MenuCategory menuCategory, int x, int y, BuildLoadoutsScreen parent) {
         super(x, y, 133 - 10, 31, Component.literal("Loadout Selection Button"));
         this.text = text;
         this.icon = icon;
-        this.loadoutCategory = loadoutCategory;
+        this.menuCategory = menuCategory;
         this.x = x;
         this.y = y;
         this.parent = parent;
@@ -46,7 +46,7 @@ public class LoadoutSelectionWidget extends AbstractButton implements TooltipPro
     @Override
     protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         handleCursor(guiGraphics);
-        if (parent.currentCategory != loadoutCategory) {
+        if (parent.currentCategory != menuCategory) {
             RenderUtils.drawNineSliceScalingTexturedRect(
                     guiGraphics,
                     Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
@@ -95,7 +95,7 @@ public class LoadoutSelectionWidget extends AbstractButton implements TooltipPro
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
-        parent.currentCategory = loadoutCategory;
+        parent.currentCategory = menuCategory;
         return true;
     }
 

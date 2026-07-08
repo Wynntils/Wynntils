@@ -6,6 +6,8 @@ package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
+import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.screens.buildloadouts.type.MenuCategory;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -26,11 +28,13 @@ import java.util.List;
 public class NewLoadoutButton extends AbstractButton implements TooltipProvider {
     private final int x;
     private final int y;
+    private final BuildLoadoutsScreen parent;
 
-    public NewLoadoutButton(int x, int y) {
+    public NewLoadoutButton(int x, int y, BuildLoadoutsScreen parent) {
         super(x, y, 133 - 10, 20, Component.literal("Loadout Selection Button"));
         this.x = x;
         this.y = y;
+        this.parent = parent;
     }
 
     @Override
@@ -63,6 +67,14 @@ public class NewLoadoutButton extends AbstractButton implements TooltipProvider 
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
+
+        if (parent.currentCategory == MenuCategory.NEW_LOADOUT) {
+            RenderUtils.drawTexturedRect(
+                    guiGraphics,
+                    Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB,
+                    x + this.width - Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB.width() / 2f,
+                    (this.y + this.height / 2f) - Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB.height() / 2f);
+        }
     }
 
     @Override
@@ -71,7 +83,7 @@ public class NewLoadoutButton extends AbstractButton implements TooltipProvider 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
-
+        parent.currentCategory = MenuCategory.NEW_LOADOUT;
         return true;
     }
 
