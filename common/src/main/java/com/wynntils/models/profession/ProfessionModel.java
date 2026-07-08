@@ -22,10 +22,15 @@ import com.wynntils.models.profession.label.GatheringNodeLabelParser;
 import com.wynntils.models.profession.label.ProfessionGatheringNodeLabelInfo;
 import com.wynntils.models.profession.type.GatheringToolInfo;
 import com.wynntils.models.profession.type.HarvestInfo;
+import com.wynntils.models.profession.type.MaterialInfo;
+import com.wynntils.models.profession.type.MaterialType;
+import com.wynntils.models.profession.type.MiscGatheringType;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
+import com.wynntils.models.profession.type.SourceMaterial;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.TimedSet;
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,6 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -109,14 +115,14 @@ public final class ProfessionModel extends Model {
         if (event.getLabelInfo() instanceof GatheringNodeHarvestLabelInfo gatheringInfo) {
             if (harvestIds.stream()
                     .anyMatch(id -> id == event.getLabelInfo().getEntity().getId())) {
-                if (gatheringInfo.getMaterialProfile().isEmpty()) return;
+                if (gatheringInfo.getHarvestMaterial().isEmpty()) return;
 
                 if (lastGatherTime + MAX_HARVEST_LABEL_AGE >= System.currentTimeMillis()) {
                     lastHarvest = new HarvestInfo(
-                            lastGatherTime, gatheringInfo.getMaterialProfile().get(), gatheringInfo.getXpGain());
+                            lastGatherTime, gatheringInfo.getHarvestMaterial().get(), gatheringInfo.getXpGain());
                     lastGatherTime = 0L;
 
-                    if (lastHarvest.materialProfile().getTier() == 3) {
+                    if (lastHarvest.harvestMaterial().tier() == 3) {
                         professionDryStreak.store(0);
                     } else {
                         professionDryStreak.store(professionDryStreak.get() + 1);
@@ -220,6 +226,47 @@ public final class ProfessionModel extends Model {
         }
 
         return gatheringToolInfo;
+    }
+
+    public MaterialInfo getMaterialInfoFromName(String name) {
+        MaterialInfo materialInfo = materialInfoRegistry.getFromDisplayName(name);
+
+        if (materialInfo == null) {
+            WynntilsMod.warn("Could not find material info for " + name);
+            return null;
+        }
+
+        return materialInfo;
+    }
+
+    public Optional<MaterialInfo> findMaterialInfoFromSourceAndResource(
+            String sourceMaterialName, String resourceTypeName) {
+        return Optional.ofNullable(materialInfoRegistry.getFromSourceAndResource(sourceMaterialName, resourceTypeName));
+    }
+
+    public Optional<Pair<MaterialType, SourceMaterial>> findMaterialBySourceName(
+            String name, ChatFormatting labelColor) {
+        Optional<Pair<MaterialType, SourceMaterial>> material =
+                materialInfoRegistry.findBySourceMaterialName(name, labelColor);
+
+        return material.or(() ->
+                findMiscMaterialBySourceName(name).filter(pair -> pair.key().getLabelColor() == labelColor));
+    }
+
+    public Optional<Pair<MaterialType, SourceMaterial>> findMaterialBySourceName(String name) {
+        Optional<Pair<MaterialType, SourceMaterial>> material = materialInfoRegistry.findBySourceMaterialName(name);
+
+        return material.or(() -> findMiscMaterialBySourceName(name));
+    }
+
+    private Optional<Pair<MaterialType, SourceMaterial>> findMiscMaterialBySourceName(String name) {
+        MiscGatheringType miscGatheringType = MiscGatheringType.fromResourceName(name);
+        if (miscGatheringType == null) return Optional.empty();
+
+        MaterialType materialType = materialInfoRegistry.getMaterialType(miscGatheringType.getProfessionType());
+        if (materialType == null) return Optional.empty();
+
+        return Optional.of(new Pair<>(materialType, new SourceMaterial(name, miscGatheringType.getLevel())));
     }
 
     private void updateLevel(ProfessionType type, int newLevel) {
