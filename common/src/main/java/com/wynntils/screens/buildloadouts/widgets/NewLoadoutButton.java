@@ -68,7 +68,7 @@ public class NewLoadoutButton extends AbstractButton implements TooltipProvider 
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        if (parent.currentCategory == MenuCategory.NEW_LOADOUT) {
+        if (parent.getCurrentCategory() == MenuCategory.NEW_LOADOUT) {
             RenderUtils.drawTexturedRect(
                     guiGraphics,
                     Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB,
@@ -83,7 +83,7 @@ public class NewLoadoutButton extends AbstractButton implements TooltipProvider 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
-        parent.currentCategory = MenuCategory.NEW_LOADOUT;
+        parent.setCurrentCategory(MenuCategory.NEW_LOADOUT);
         return true;
     }
 

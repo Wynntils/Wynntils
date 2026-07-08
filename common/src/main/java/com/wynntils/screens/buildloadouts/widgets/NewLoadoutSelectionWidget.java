@@ -7,6 +7,7 @@ package com.wynntils.screens.buildloadouts.widgets;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.screens.buildloadouts.type.LoadoutType;
 import com.wynntils.screens.buildloadouts.type.MenuCategory;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -25,19 +26,22 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
-public class LoadoutSelectionWidget extends AbstractButton implements TooltipProvider {
+public class NewLoadoutSelectionWidget extends AbstractButton {
     private final StyledText text;
     private final int x;
     private final int y;
     private final Texture icon;
-    private MenuCategory menuCategory;
+    private final LoadoutType loadoutType;
     private final BuildLoadoutsScreen parent;
 
-    public LoadoutSelectionWidget(StyledText text, Texture icon, MenuCategory menuCategory, int x, int y, BuildLoadoutsScreen parent) {
-        super(x, y, 133 - 10, 31, Component.literal("Loadout Selection Button"));
+    private static final int LIGHT_HOLDER_WIDTH_OFFSET = 5;
+    private static final int LIGHT_HOLDER_HEIGHT_OFFSET = 5;
+
+    public NewLoadoutSelectionWidget(StyledText text, Texture icon, LoadoutType loadoutType, int x, int y, BuildLoadoutsScreen parent) {
+        super(x, y, 128, 41, Component.literal("New Loadout Selection Button"));
         this.text = text;
         this.icon = icon;
-        this.menuCategory = menuCategory;
+        this.loadoutType = loadoutType;
         this.x = x;
         this.y = y;
         this.parent = parent;
@@ -46,34 +50,42 @@ public class LoadoutSelectionWidget extends AbstractButton implements TooltipPro
     @Override
     protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         handleCursor(guiGraphics);
-        if (parent.getCurrentCategory() != menuCategory) {
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND,
+                x,
+                y,
+                this.width,
+                this.height);
+
+        if (parent.getNewLoadoutType() != loadoutType) {
             RenderUtils.drawNineSliceScalingTexturedRect(
                     guiGraphics,
                     Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
-                    x,
-                    y,
-                    this.width,
-                    this.height);
+                    x + LIGHT_HOLDER_WIDTH_OFFSET,
+                    y + LIGHT_HOLDER_HEIGHT_OFFSET,
+                    this.width - LIGHT_HOLDER_WIDTH_OFFSET * 2,
+                    this.height - LIGHT_HOLDER_HEIGHT_OFFSET * 2);
         } else {
             RenderUtils.drawNineSliceScalingTexturedRect(
                     guiGraphics,
                     Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_BLUE,
-                    x,
-                    y,
-                    this.width,
-                    this.height);
+                    x + LIGHT_HOLDER_WIDTH_OFFSET,
+                    y + LIGHT_HOLDER_HEIGHT_OFFSET,
+                    this.width - LIGHT_HOLDER_WIDTH_OFFSET * 2,
+                    this.height - LIGHT_HOLDER_HEIGHT_OFFSET * 2);
 
             RenderUtils.drawTexturedRect(
                     guiGraphics,
                     Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB,
-                    x + this.width - Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB.width() / 2f,
+                    x + this.width - LIGHT_HOLDER_WIDTH_OFFSET - Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB.width() / 2f,
                     (this.y + this.height / 2f) - Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB.height() / 2f);
         }
 
         RenderUtils.drawTexturedRect(
                 guiGraphics,
                 icon,
-                this.x + 5,
+                this.x + LIGHT_HOLDER_WIDTH_OFFSET * 2,
                 (this.y + this.height / 2f) - icon.height() / 2f);
 
         FontRenderer.getInstance()
@@ -95,15 +107,10 @@ public class LoadoutSelectionWidget extends AbstractButton implements TooltipPro
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
-        parent.setCurrentCategory(menuCategory);
+        parent.setNewLoadoutType(loadoutType);
         return true;
     }
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
-
-    @Override
-    public List<Component> getTooltipLines() {
-        return List.of();
-    }
 }

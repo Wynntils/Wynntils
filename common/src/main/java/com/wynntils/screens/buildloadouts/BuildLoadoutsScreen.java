@@ -9,12 +9,14 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
+import com.wynntils.screens.buildloadouts.type.LoadoutType;
 import com.wynntils.screens.buildloadouts.type.MenuCategory;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutScrollListWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutSearchWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutSelectionWidget;
 import com.wynntils.screens.buildloadouts.widgets.NewLoadoutButton;
 import com.wynntils.screens.buildloadouts.widgets.NewLoadoutInputWidget;
+import com.wynntils.screens.buildloadouts.widgets.NewLoadoutSelectionWidget;
 import com.wynntils.screens.buildloadouts.widgets.StatusWidget;
 import com.wynntils.screens.buildloadouts.widgets.TitleWidget;
 import com.wynntils.utils.colors.CommonColors;
@@ -46,17 +48,17 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
     public List<AbstractWidget> loadoutWidgets = new ArrayList<>();
 
-    private LoadoutSelectionWidget buildLoadoutsWidget;
-    private LoadoutSelectionWidget abilityTreeLoadoutsWidget;
-    private LoadoutSelectionWidget skillPointLoadoutsWidget;
-    private LoadoutSelectionWidget aspectLoadoutsWidget;
     private StatusWidget statusWidget;
-
     private LoadoutSearchWidget searchWidget;
     private LoadoutScrollListWidget loadoutScrollListWidget;
     private NewLoadoutInputWidget newLoadoutInputWidget;
+    private NewLoadoutSelectionWidget newBuildLoadoutWidget;
+    private NewLoadoutSelectionWidget newAbilityTreeLoadoutWidget;
+    private NewLoadoutSelectionWidget newSkillPointLoadoutWidget;
+    private NewLoadoutSelectionWidget newAspectLoadoutWidget;
 
-    public MenuCategory currentCategory = MenuCategory.BUILD_LOADOUT;
+    private MenuCategory currentCategory = MenuCategory.BUILD_LOADOUT;
+    private LoadoutType newLoadoutType;
 
     private BuildLoadoutsScreen() {
         super(Component.literal("Build Loadouts Screen"));
@@ -81,44 +83,40 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                 offsetY + HEIGHT_OFFSET + selectionY));
         selectionY += 20 + 10;
 
-        buildLoadoutsWidget = new LoadoutSelectionWidget(
+        this.addRenderableWidget(new LoadoutSelectionWidget(
                 StyledText.fromString("Build Loadouts"),
                 Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
                 MenuCategory.BUILD_LOADOUT,
                 offsetX + WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + selectionY,
-                this);
-        this.addRenderableWidget(buildLoadoutsWidget);
+                this));
         selectionY += 31 + 3;
 
-        abilityTreeLoadoutsWidget = new LoadoutSelectionWidget(
+        this.addRenderableWidget(new LoadoutSelectionWidget(
                 StyledText.fromString("Ability Tree Loadouts"),
                 Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
                 MenuCategory.ABILITY_TREE_LOADOUT,
                 offsetX + WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + selectionY,
-                this);
-        this.addRenderableWidget(abilityTreeLoadoutsWidget);
+                this));
         selectionY += 31 + 3;
 
-        skillPointLoadoutsWidget = new LoadoutSelectionWidget(
+        this.addRenderableWidget(new LoadoutSelectionWidget(
                 StyledText.fromString("Skill Point Loadouts"),
                 Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
                 MenuCategory.SKILL_POINT_LOADOUT,
                 offsetX + WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + selectionY,
-                this);
-        this.addRenderableWidget(skillPointLoadoutsWidget);
+                this));
         selectionY += 31 + 3;
 
-        aspectLoadoutsWidget = new LoadoutSelectionWidget(
+        this.addRenderableWidget(new LoadoutSelectionWidget(
                 StyledText.fromString("Aspect Loadouts"),
                 Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
                 MenuCategory.ASPECT_LOADOUT,
                 offsetX + WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + selectionY,
-                this);
-        this.addRenderableWidget(aspectLoadoutsWidget);
+                this));
         selectionY += 31 + 3;
 
         this.addRenderableWidget(new NewLoadoutButton(
@@ -154,20 +152,55 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
         //region New Loadout Menu
         newLoadoutInputWidget = new NewLoadoutInputWidget(
-                (int) (offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + (RIGHT_PAGE_WIDTH / 2f) - (140 / 2f)),
-                offsetY + HEIGHT_OFFSET + 60,
-                140,
+                (int) (offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + (RIGHT_PAGE_WIDTH / 2f) - (180 / 2f)),
+                offsetY + HEIGHT_OFFSET + 50,
+                180,
                 (s) -> {
                     WynntilsMod.info("text: " + s);
                 },
                 this);
         this.addRenderableWidget(newLoadoutInputWidget);
 
+        newBuildLoadoutWidget = new NewLoadoutSelectionWidget(
+                StyledText.fromString("Build Loadouts"),
+                Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
+                LoadoutType.BUILD,
+                offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5,
+                offsetY + HEIGHT_OFFSET + 102,
+                this);
+        this.addRenderableWidget(newBuildLoadoutWidget);
 
+        newAbilityTreeLoadoutWidget = new NewLoadoutSelectionWidget(
+                StyledText.fromString("Ability Tree Loadouts"),
+                Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
+                LoadoutType.ABILITY_TREE,
+                offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5 + 128 + 5,
+                offsetY + HEIGHT_OFFSET + 102,
+                this);
+        this.addRenderableWidget(newAbilityTreeLoadoutWidget);
+
+        newSkillPointLoadoutWidget = new NewLoadoutSelectionWidget(
+                StyledText.fromString("Skill Point Loadouts"),
+                Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
+                LoadoutType.SKILL_POINT,
+                offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5,
+                offsetY + HEIGHT_OFFSET + 102 + 40 + 5,
+                this);
+        this.addRenderableWidget(newSkillPointLoadoutWidget);
+
+        newAspectLoadoutWidget = new NewLoadoutSelectionWidget(
+                StyledText.fromString("Aspect Loadouts"),
+                Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
+                LoadoutType.ASPECT,
+                offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5 + 128 + 5,
+                offsetY + HEIGHT_OFFSET + 102 + 40 + 5,
+                this);
+        this.addRenderableWidget(newAspectLoadoutWidget);
 
         // end region
 
         loadoutScrollListWidget.populateLoadouts();
+        updateMenu();
     }
 
     @Override
@@ -192,7 +225,9 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                 133,
                 279);
         // end region
-        renderNewLoadoutMenu(guiGraphics, mouseX, mouseY, partialTick);
+        if (getCurrentCategory() == MenuCategory.NEW_LOADOUT) {
+            renderNewLoadoutMenu(guiGraphics, mouseX, mouseY, partialTick);
+        }
 
         renderables.forEach(renderable -> renderable.render(guiGraphics, mouseX, mouseY, partialTick));
         renderTooltips(guiGraphics, mouseX, mouseY);
@@ -225,6 +260,17 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NONE);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromString("§#9e7f47ffSelect a loadout type:"),
+                        offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + (RIGHT_PAGE_WIDTH / 2f),
+                        offsetY + HEIGHT_OFFSET + 95,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NONE);
     }
 
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
@@ -237,5 +283,38 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                 break;
             }
         }
+    }
+
+    private void updateMenu() {
+        newLoadoutInputWidget.visible = false;
+        newBuildLoadoutWidget.visible = false;
+        newAbilityTreeLoadoutWidget.visible = false;
+        newSkillPointLoadoutWidget.visible = false;
+        newAspectLoadoutWidget.visible = false;
+
+        if (getCurrentCategory() == MenuCategory.NEW_LOADOUT) {
+            newLoadoutInputWidget.visible = true;
+            newBuildLoadoutWidget.visible = true;
+            newAbilityTreeLoadoutWidget.visible = true;
+            newSkillPointLoadoutWidget.visible = true;
+            newAspectLoadoutWidget.visible = true;
+        }
+    }
+
+    public void setCurrentCategory(MenuCategory category) {
+        this.currentCategory = category;
+        updateMenu();
+    }
+
+    public MenuCategory getCurrentCategory() {
+        return this.currentCategory;
+    }
+
+    public void setNewLoadoutType(LoadoutType newLoadoutType) {
+        this.newLoadoutType = newLoadoutType;
+    }
+
+    public LoadoutType getNewLoadoutType() {
+        return this.newLoadoutType;
     }
 }
