@@ -11,6 +11,7 @@ public record GatheringToolInfo(
         String name,
         int level,
         String apiName,
+        int tier,
         ItemMaterial material,
         ProfessionType professionType,
         int gatheringSpeed,

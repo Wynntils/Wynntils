@@ -20,6 +20,7 @@ import com.wynntils.models.profession.label.GatheringNodeHarvestLabelInfo;
 import com.wynntils.models.profession.label.GatheringNodeHarvestLabelParser;
 import com.wynntils.models.profession.label.GatheringNodeLabelParser;
 import com.wynntils.models.profession.label.ProfessionGatheringNodeLabelInfo;
+import com.wynntils.models.profession.type.GatheringToolInfo;
 import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
@@ -208,6 +209,17 @@ public final class ProfessionModel extends Model {
         }
 
         professionProgressMap = levels;
+    }
+
+    public GatheringToolInfo getToolFromName(String name) {
+        GatheringToolInfo gatheringToolInfo = gatheringToolInfoRegistry.getFromDisplayName(name);
+
+        if (gatheringToolInfo == null) {
+            WynntilsMod.warn("Could not find gathering tool info for " + name);
+            return null;
+        }
+
+        return gatheringToolInfo;
     }
 
     private void updateLevel(ProfessionType type, int newLevel) {

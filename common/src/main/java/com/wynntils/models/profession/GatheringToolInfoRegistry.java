@@ -94,6 +94,7 @@ public class GatheringToolInfoRegistry {
 
             JsonObject requirements = JsonUtils.getNullableJsonObject(json, "requirements");
             int level = requirements.get("level").getAsInt();
+            int tier = level == 1 ? 1 : (level + 15) / 10;
 
             ItemMaterial material = parseMaterial(json, displayName);
 
@@ -110,6 +111,7 @@ public class GatheringToolInfoRegistry {
                     displayName,
                     level,
                     internalName,
+                    tier,
                     material,
                     professionType,
                     gatheringSpeed,
