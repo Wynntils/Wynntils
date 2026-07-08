@@ -38,7 +38,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.INVENTORY)
 public class ItemHighlightFeature extends Feature {
     private static final List<String> DEFAULT_HIGHLIGHT_KEYS =
-            List.of("item_tier", "ingredient_tier", "material_tier", "store_tier");
+            List.of("item_tier", "profession_ingredient", "profession_material", "store_tier");
 
     @Persisted
     private final Config<HighlightTexture> highlightTexture = new Config<>(HighlightTexture.WYNN);
