@@ -1,9 +1,9 @@
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.TooltipProvider;
+import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.screens.buildloadouts.type.Loadout;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -16,17 +16,20 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
-import java.util.List;
+public class LoadoutWidget extends AbstractWidget {
+    private final StyledText text;
+    private int x;
+    private int y;
+    private Loadout loadout;
+    private BuildLoadoutsScreen parent;
 
-public class StatusWidget extends AbstractWidget {
-    private final int x;
-    private final int y;
-    private static final CustomColor errorColor = CustomColor.fromInt(0xe40000);
-
-    public StatusWidget(int x, int y) {
-        super(x, y, 133 - 10, 85, Component.literal("Status Widget"));
+    public LoadoutWidget(StyledText text, int x, int y, int width, int height, Loadout loadout, BuildLoadoutsScreen parent) {
+        super(x, y, width, height, Component.literal("Loadout Widget"));
+        this.text = text;
         this.x = x;
         this.y = y;
+        this.loadout = loadout;
+        this.parent = parent;
     }
 
     @Override
@@ -42,26 +45,20 @@ public class StatusWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("Query Status"),
+                        this.text,
                         this.x + this.width / 2f,
-                        this.y + 10,
+                        this.y + this.height / 2f,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
-
-        FontRenderer.getInstance()
-                .renderText(
-                        guiGraphics,
-                        StyledText.fromString("Error while processing content for Ability Tree Unlock: insufficient ability shards (need 3)"),
-                        this.x + this.width / 2f,
-                        this.y + 25,
-                        this.width - 10,
-                        errorColor,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
     }
+
+    @Override
+    public void setY(int y) {
+        this.y = y;
+    }
+
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
