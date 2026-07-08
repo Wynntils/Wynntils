@@ -14,6 +14,7 @@ import com.wynntils.screens.buildloadouts.type.MenuCategory;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutScrollListWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutSearchWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutSelectionWidget;
+import com.wynntils.screens.buildloadouts.widgets.MakeNewLoadoutButton;
 import com.wynntils.screens.buildloadouts.widgets.NewLoadoutButton;
 import com.wynntils.screens.buildloadouts.widgets.NewLoadoutInfoWidget;
 import com.wynntils.screens.buildloadouts.widgets.NewLoadoutInputWidget;
@@ -58,6 +59,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
     private NewLoadoutSelectionWidget newSkillPointLoadoutWidget;
     private NewLoadoutSelectionWidget newAspectLoadoutWidget;
     public NewLoadoutInfoWidget newLoadoutInfoWidget;
+    private MakeNewLoadoutButton makeNewLoadoutButton;
 
     private MenuCategory currentCategory = MenuCategory.BUILD_LOADOUT;
     private LoadoutType newLoadoutType;
@@ -205,11 +207,18 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
         newLoadoutInfoWidget = new NewLoadoutInfoWidget(
                 (int) (offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + (RIGHT_PAGE_WIDTH / 2f) - (RIGHT_PAGE_WIDTH - 10) / 2f),
-                offsetY + HEIGHT_OFFSET + 192,
+                offsetY + HEIGHT_OFFSET + 192 + 8,
                 RIGHT_PAGE_WIDTH - 10,
-                36
+                34
                 );
         this.addRenderableWidget(newLoadoutInfoWidget);
+
+        makeNewLoadoutButton = new MakeNewLoadoutButton(
+                (int) (offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + (RIGHT_PAGE_WIDTH / 2f) - ((133 - 10) / 2f)),
+                offsetY + RIGHT_PAGE_HEIGHT - 15,
+                this
+        );
+        this.addRenderableWidget(makeNewLoadoutButton);
         // end region
 
         loadoutScrollListWidget.populateLoadouts();
@@ -305,6 +314,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         newSkillPointLoadoutWidget.visible = false;
         newAspectLoadoutWidget.visible = false;
         newLoadoutInfoWidget.visible = false;
+        makeNewLoadoutButton.visible = false;
 
         if (getCurrentCategory() == MenuCategory.NEW_LOADOUT) {
             newLoadoutInputWidget.visible = true;
@@ -313,6 +323,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
             newSkillPointLoadoutWidget.visible = true;
             newAspectLoadoutWidget.visible = true;
             newLoadoutInfoWidget.visible = true;
+            makeNewLoadoutButton.visible = true;
         }
     }
 

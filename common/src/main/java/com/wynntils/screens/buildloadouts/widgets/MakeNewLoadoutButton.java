@@ -25,13 +25,13 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
-public class NewLoadoutButton extends AbstractButton implements TooltipProvider {
+public class MakeNewLoadoutButton extends AbstractButton {
     private final int x;
     private final int y;
     private final BuildLoadoutsScreen parent;
 
-    public NewLoadoutButton(int x, int y, BuildLoadoutsScreen parent) {
-        super(x, y, 133 - 10, 20, Component.literal("New Loadout Button"));
+    public MakeNewLoadoutButton(int x, int y, BuildLoadoutsScreen parent) {
+        super(x, y, 133 - 10, 20, Component.literal("Make New Loadout Button"));
         this.x = x;
         this.y = y;
         this.parent = parent;
@@ -49,32 +49,16 @@ public class NewLoadoutButton extends AbstractButton implements TooltipProvider 
                 this.width,
                 this.height);
 
-        RenderUtils.drawTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_PLUS_ICON,
-                this.x + 15,
-                (this.y + this.height / 2f) - Texture.BUILD_LOADOUTS_PLUS_ICON.height() / 2f);
-
-
-
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("New Loadout"),
+                        StyledText.fromString("Create"),
                         (this.x + this.width / 2f),
                         (this.y + this.height / 2f),
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
-
-        if (parent.getCurrentCategory() == MenuCategory.NEW_LOADOUT) {
-            RenderUtils.drawTexturedRect(
-                    guiGraphics,
-                    Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB,
-                    x + this.width - Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB.width() / 2f,
-                    (this.y + this.height / 2f) - Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB.height() / 2f);
-        }
     }
 
     @Override
@@ -83,15 +67,10 @@ public class NewLoadoutButton extends AbstractButton implements TooltipProvider 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
-        parent.setCurrentCategory(MenuCategory.NEW_LOADOUT);
+
         return true;
     }
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
-
-    @Override
-    public List<Component> getTooltipLines() {
-        return List.of();
-    }
 }

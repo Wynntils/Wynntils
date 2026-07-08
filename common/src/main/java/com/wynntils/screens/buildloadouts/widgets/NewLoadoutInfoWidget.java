@@ -43,10 +43,10 @@ public class NewLoadoutInfoWidget extends AbstractWidget {
                         guiGraphics,
                         this.text,
                         this.x + 10 + Texture.BUILD_LOADOUTS_INFO_ICON.width() + 5,
-                        this.y + 8,
-                        this.y + this.height - 8,
+                        this.y + 10,
+                        this.y + this.height - 10,
                         this.width - Texture.BUILD_LOADOUTS_INFO_ICON.width() - 20,
-                        CustomColor.fromInt(0x191915),
+                        CustomColor.fromInt(0x242424),
                         VerticalAlignment.MIDDLE,
                         TextShadow.NONE);
 
