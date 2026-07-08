@@ -15,6 +15,7 @@ import com.wynntils.screens.buildloadouts.widgets.LoadoutScrollListWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutSearchWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutSelectionWidget;
 import com.wynntils.screens.buildloadouts.widgets.NewLoadoutButton;
+import com.wynntils.screens.buildloadouts.widgets.NewLoadoutInfoWidget;
 import com.wynntils.screens.buildloadouts.widgets.NewLoadoutInputWidget;
 import com.wynntils.screens.buildloadouts.widgets.NewLoadoutSelectionWidget;
 import com.wynntils.screens.buildloadouts.widgets.StatusWidget;
@@ -56,6 +57,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
     private NewLoadoutSelectionWidget newAbilityTreeLoadoutWidget;
     private NewLoadoutSelectionWidget newSkillPointLoadoutWidget;
     private NewLoadoutSelectionWidget newAspectLoadoutWidget;
+    public NewLoadoutInfoWidget newLoadoutInfoWidget;
 
     private MenuCategory currentCategory = MenuCategory.BUILD_LOADOUT;
     private LoadoutType newLoadoutType;
@@ -163,6 +165,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
         newBuildLoadoutWidget = new NewLoadoutSelectionWidget(
                 StyledText.fromString("Build Loadouts"),
+                StyledText.fromString("This will create a new build loadout from the current items, ability tree, skill points, and aspects."),
                 Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
                 LoadoutType.BUILD,
                 offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5,
@@ -172,6 +175,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
         newAbilityTreeLoadoutWidget = new NewLoadoutSelectionWidget(
                 StyledText.fromString("Ability Tree Loadouts"),
+                StyledText.fromString("This will create a new ability tree loadout from the current ability tree."),
                 Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
                 LoadoutType.ABILITY_TREE,
                 offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5 + 128 + 5,
@@ -181,6 +185,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
         newSkillPointLoadoutWidget = new NewLoadoutSelectionWidget(
                 StyledText.fromString("Skill Point Loadouts"),
+                StyledText.fromString("This will create a new skill point loadout from the current skill points."),
                 Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
                 LoadoutType.SKILL_POINT,
                 offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5,
@@ -190,6 +195,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
         newAspectLoadoutWidget = new NewLoadoutSelectionWidget(
                 StyledText.fromString("Aspect Loadouts"),
+                StyledText.fromString("This will create a new aspect loadout from the current aspects."),
                 Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
                 LoadoutType.ASPECT,
                 offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5 + 128 + 5,
@@ -197,6 +203,13 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                 this);
         this.addRenderableWidget(newAspectLoadoutWidget);
 
+        newLoadoutInfoWidget = new NewLoadoutInfoWidget(
+                (int) (offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + (RIGHT_PAGE_WIDTH / 2f) - (RIGHT_PAGE_WIDTH - 10) / 2f),
+                offsetY + HEIGHT_OFFSET + 192,
+                RIGHT_PAGE_WIDTH - 10,
+                36
+                );
+        this.addRenderableWidget(newLoadoutInfoWidget);
         // end region
 
         loadoutScrollListWidget.populateLoadouts();
@@ -291,6 +304,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         newAbilityTreeLoadoutWidget.visible = false;
         newSkillPointLoadoutWidget.visible = false;
         newAspectLoadoutWidget.visible = false;
+        newLoadoutInfoWidget.visible = false;
 
         if (getCurrentCategory() == MenuCategory.NEW_LOADOUT) {
             newLoadoutInputWidget.visible = true;
@@ -298,6 +312,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
             newAbilityTreeLoadoutWidget.visible = true;
             newSkillPointLoadoutWidget.visible = true;
             newAspectLoadoutWidget.visible = true;
+            newLoadoutInfoWidget.visible = true;
         }
     }
 

@@ -28,6 +28,7 @@ import java.util.List;
 
 public class NewLoadoutSelectionWidget extends AbstractButton {
     private final StyledText text;
+    private final StyledText infoText;
     private final int x;
     private final int y;
     private final Texture icon;
@@ -37,9 +38,10 @@ public class NewLoadoutSelectionWidget extends AbstractButton {
     private static final int LIGHT_HOLDER_WIDTH_OFFSET = 5;
     private static final int LIGHT_HOLDER_HEIGHT_OFFSET = 5;
 
-    public NewLoadoutSelectionWidget(StyledText text, Texture icon, LoadoutType loadoutType, int x, int y, BuildLoadoutsScreen parent) {
+    public NewLoadoutSelectionWidget(StyledText text, StyledText infoText, Texture icon, LoadoutType loadoutType, int x, int y, BuildLoadoutsScreen parent) {
         super(x, y, 128, 41, Component.literal("New Loadout Selection Button"));
         this.text = text;
+        this.infoText = infoText;
         this.icon = icon;
         this.loadoutType = loadoutType;
         this.x = x;
@@ -108,6 +110,7 @@ public class NewLoadoutSelectionWidget extends AbstractButton {
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
         parent.setNewLoadoutType(loadoutType);
+        parent.newLoadoutInfoWidget.setText(this.infoText);
         return true;
     }
 
