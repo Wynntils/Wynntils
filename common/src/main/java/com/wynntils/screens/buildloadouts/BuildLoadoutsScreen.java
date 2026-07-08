@@ -14,6 +14,7 @@ import com.wynntils.screens.buildloadouts.widgets.LoadoutScrollListWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutSearchWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutSelectionWidget;
 import com.wynntils.screens.buildloadouts.widgets.NewLoadoutButton;
+import com.wynntils.screens.buildloadouts.widgets.NewLoadoutInputWidget;
 import com.wynntils.screens.buildloadouts.widgets.StatusWidget;
 import com.wynntils.screens.buildloadouts.widgets.TitleWidget;
 import com.wynntils.utils.colors.CommonColors;
@@ -53,6 +54,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
     private LoadoutSearchWidget searchWidget;
     private LoadoutScrollListWidget loadoutScrollListWidget;
+    private NewLoadoutInputWidget newLoadoutInputWidget;
 
     public MenuCategory currentCategory = MenuCategory.BUILD_LOADOUT;
 
@@ -150,6 +152,21 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         this.addRenderableWidget(loadoutScrollListWidget);
         // end region
 
+        //region New Loadout Menu
+        newLoadoutInputWidget = new NewLoadoutInputWidget(
+                (int) (offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + (RIGHT_PAGE_WIDTH / 2f) - (140 / 2f)),
+                offsetY + HEIGHT_OFFSET + 60,
+                140,
+                (s) -> {
+                    WynntilsMod.info("text: " + s);
+                },
+                this);
+        this.addRenderableWidget(newLoadoutInputWidget);
+
+
+
+        // end region
+
         loadoutScrollListWidget.populateLoadouts();
     }
 
@@ -196,7 +213,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NONE,
-                        1.4f);
+                        1.5f);
 
         FontRenderer.getInstance()
                 .renderText(

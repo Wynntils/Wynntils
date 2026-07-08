@@ -83,6 +83,7 @@ public enum Texture {
     BUILD_LOADOUTS_WIDGET_BACKGROUND_RED("build_loadouts/scallable_widget_background_red.png", 34, 19, 6, 6, 6, 6),
     BUILD_LOADOUTS_WIDGET_BACKGROUND_GREEN("build_loadouts/scallable_widget_background_green.png", 34, 19, 6, 6, 6, 6),
     BUILD_LOADOUTS_WIDGET_BACKGROUND_BLUE("build_loadouts/scallable_widget_background_blue.png", 34, 19, 6, 6, 6, 6),
+    BUILD_LOADOUTS_TEXT_INPUT_BOX("build_loadouts/text_input_box.png", 50, 20, 6, 6, 6, 6),
     BUILD_LOADOUTS_WIDGET_SELECT_TAB("build_loadouts/widget_select_tab.png", 6, 5),
     BUILD_LOADOUTS_FLAG("build_loadouts/flag.png", 197, 45),
     BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON("build_loadouts/skillpoint_loadouts_icon.png", 35, 21),
