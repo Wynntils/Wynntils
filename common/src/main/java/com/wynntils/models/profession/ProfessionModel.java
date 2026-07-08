@@ -7,6 +7,7 @@ package com.wynntils.models.profession;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
@@ -41,6 +42,8 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ProfessionModel extends Model {
+    private final GatheringToolInfoRegistry gatheringToolInfoRegistry = new GatheringToolInfoRegistry();
+
     // §dx2.0 §7[+§d28 §fⒺ §7Scribing XP] §6[56%]
     private static final Pattern PROFESSION_CRAFT_PATTERN = Pattern.compile(
             "(§dx[\\d\\.]+ )?§7\\[\\+(§d)?(?<gain>\\d+) §f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] §7(?<name>.+) XP\\] §6\\[(?<current>[\\d.]+)%\\]");
@@ -91,6 +94,11 @@ public final class ProfessionModel extends Model {
         for (ProfessionType pt : ProfessionType.values()) {
             rawXpGainInLastMinute.put(pt, new TimedSet<>(1, TimeUnit.MINUTES, true));
         }
+    }
+
+    @Override
+    public void registerDownloads(DownloadRegistry registry) {
+        gatheringToolInfoRegistry.registerDownloads(registry);
     }
 
     @SubscribeEvent

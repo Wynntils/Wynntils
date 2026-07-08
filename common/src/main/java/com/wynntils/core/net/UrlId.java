@@ -60,6 +60,7 @@ public enum UrlId {
     DATA_STATIC_SPLASHES("dataStaticSplashes"),
     DATA_STATIC_TEXTURE_AND_FINGERPRINT_HASHES("dataStaticTextureAndFingerprintHashes"),
     DATA_STATIC_TOMES("dataStaticTomes"),
+    DATA_STATIC_TOOLS("dataStaticTools"),
     DATA_STATIC_URLS("dataStaticUrls"),
     DATA_WYNNCRAFT_GUILD("dataWynncraftGuild"),
     DATA_WYNNCRAFT_LEADERBOARD("dataWynncraftLeaderboard"),
