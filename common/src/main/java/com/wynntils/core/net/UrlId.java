@@ -48,6 +48,7 @@ public enum UrlId {
     DATA_STATIC_ITEM_SETS("dataStaticItemSets"),
     DATA_STATIC_LOOTRUN_TASKS_NAMED_V2("dataStaticLootrunTasksNamedV2"),
     DATA_STATIC_MAPS("dataStaticMaps"),
+    DATA_STATIC_MATERIALS("dataStaticMaterials"),
     DATA_STATIC_MATERIAL_CONVERSION("dataStaticMaterialConversion"),
     DATA_STATIC_MODEL_DATA("dataStaticModelData"),
     DATA_STATIC_PLACE_MAPFEATURES("dataStaticPlaceMapFeatures"),

@@ -43,6 +43,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ProfessionModel extends Model {
     private final GatheringToolInfoRegistry gatheringToolInfoRegistry = new GatheringToolInfoRegistry();
+    private final MaterialInfoRegistry materialInfoRegistry = new MaterialInfoRegistry();
 
     // §dx2.0 §7[+§d28 §fⒺ §7Scribing XP] §6[56%]
     private static final Pattern PROFESSION_CRAFT_PATTERN = Pattern.compile(
@@ -99,6 +100,7 @@ public final class ProfessionModel extends Model {
     @Override
     public void registerDownloads(DownloadRegistry registry) {
         gatheringToolInfoRegistry.registerDownloads(registry);
+        materialInfoRegistry.registerDownloads(registry);
     }
 
     @SubscribeEvent
