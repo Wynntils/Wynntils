@@ -132,6 +132,7 @@ public class ItemCompareFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onItemTooltipRenderEvent(ItemTooltipRenderEvent.Pre event) {
+        if (holdToCompareKeyBind.getKeyMapping().isUnbound()) return;
         if (!KeyboardUtils.isKeyDown(holdToCompareKeyBind.getKeyMapping().key.getValue())) return;
         if (McUtils.screen() == null
                 || !(McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
