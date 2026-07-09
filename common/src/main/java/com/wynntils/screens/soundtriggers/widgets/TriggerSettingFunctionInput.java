@@ -18,6 +18,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.soundtriggers.SoundTrigger;
+import com.wynntils.utils.type.ErrorOr;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -34,7 +35,7 @@ public class TriggerSettingFunctionInput extends AbstractButton {
     private final StyledText title;
     private final List<Component> tooltip;
     private final Function<SoundTrigger, String> functionTemplate;
-    private final Function<SoundTrigger, Boolean> functionCheck;
+    private final Function<SoundTrigger, ErrorOr<?>> functionCheck;
     private final SoundTriggerManagmentScreen parentScreen;
     private final TextInputBoxWidget textInputBoxWidget;
 
@@ -49,7 +50,7 @@ public class TriggerSettingFunctionInput extends AbstractButton {
             List<Component> tooltip,
             Function<SoundTrigger, String> functionTemplate,
             BiConsumer<String, SoundTrigger> onUpdate,
-            Function<SoundTrigger, Boolean> functionCheck,
+            Function<SoundTrigger, ErrorOr<?>> functionCheck,
             SoundTriggerManagmentScreen parentScreen,
             SoundTrigger trigger) {
         super(i, j, k, l, Component.empty());
@@ -84,7 +85,7 @@ public class TriggerSettingFunctionInput extends AbstractButton {
             Component tooltip,
             Function<SoundTrigger, String> functionTemplate,
             BiConsumer<String, SoundTrigger> onUpdate,
-            Function<SoundTrigger, Boolean> functionCheck,
+            Function<SoundTrigger, ErrorOr<?>> functionCheck,
             SoundTriggerManagmentScreen parentScreen,
             SoundTrigger trigger) {
         this(
@@ -110,6 +111,7 @@ public class TriggerSettingFunctionInput extends AbstractButton {
     @Override
     protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (trigger == null) return;
+        ErrorOr function = functionCheck.apply(trigger);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,
@@ -124,7 +126,7 @@ public class TriggerSettingFunctionInput extends AbstractButton {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NONE,
                         1f);
-        Texture tex = functionCheck.apply(trigger) ? ERRORS : NO_ERRORS;
+        Texture tex = function.hasError() ? ERRORS : NO_ERRORS;
         float texX = getX() + McUtils.mc().font.width(title.getComponent()) + 3;
         RenderUtils.drawTexturedRect(
                 guiGraphics,
@@ -143,7 +145,7 @@ public class TriggerSettingFunctionInput extends AbstractButton {
 
         textInputBoxWidget.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
-        if (functionCheck.apply(trigger)
+        if (function.hasError()
                 && MathUtils.isInside(
                         mouseX,
                         mouseY,
@@ -157,8 +159,7 @@ public class TriggerSettingFunctionInput extends AbstractButton {
                                     Component.translatable(
                                             "screens.wynntils.soundTriggerManagementScreen.functionError.message"),
                                     Component.empty(),
-                                    Component.literal(trigger.getControllerFunctionResult()
-                                            .getError())),
+                                    Component.literal(function.getError())),
                             Component::getVisualOrderText),
                     mouseX,
                     mouseY);

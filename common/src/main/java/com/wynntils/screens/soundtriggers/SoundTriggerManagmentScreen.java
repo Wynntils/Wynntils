@@ -249,7 +249,7 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
                 CONTROLLER_FIELD_TOOLTIP,
                 SoundTrigger::getControllerFunction,
                 (string, trigger) -> trigger.setControllerFunction(string),
-                (trigger -> trigger.getControllerFunctionResult().hasError()),
+                (SoundTrigger::getControllerFunctionResult),
                 this,
                 selectedTrigger);
         this.addRenderableWidget(controllerFunctionField);
@@ -263,7 +263,7 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
                 IDENTIFIER_FIELD_TOOLTIP,
                 SoundTrigger::getIdentifierFunction,
                 (string, trigger) -> trigger.setIdentifierFunction(string),
-                (trigger -> trigger.getIdentifierFunctionResult().hasError()),
+                (SoundTrigger::getIdentifierFunctionResult),
                 this,
                 selectedTrigger);
         this.addRenderableWidget(identifierFunctionField);
