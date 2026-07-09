@@ -20,6 +20,7 @@ import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.playerviewer.GearSharingSettingsScreen;
 import com.wynntils.screens.secrets.SecretsScreen;
+import com.wynntils.screens.soundtriggers.SoundTriggerManagmentScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.services.athena.type.UpdateResult;
 import com.wynntils.utils.FileUtils;
@@ -98,6 +99,7 @@ public class WynntilsCommand extends Command {
                 .then(Commands.literal("refetch").executes(this::refetch))
                 .then(Commands.literal("reloadcaches").executes(this::reloadCaches))
                 .then(Commands.literal("rescan").executes(this::rescan))
+                .then(Commands.literal("soundtriggers").executes(this::openSoundTriggersMenu))
                 .then(Commands.literal("secrets").executes(this::secrets))
                 .then(Commands.literal("status").executes(this::status))
                 .then(Commands.literal("token").executes(this::token))
@@ -422,6 +424,10 @@ public class WynntilsCommand extends Command {
 
     private int openMenu(CommandContext<CommandSourceStack> context) {
         return openScreen(WynntilsMenuScreen.create());
+    }
+
+    private int openSoundTriggersMenu(CommandContext<CommandSourceStack> context) {
+        return openScreen(SoundTriggerManagmentScreen.screen(null));
     }
 
     private int openScreen(Screen screenToOpen) {
