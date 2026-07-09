@@ -8,7 +8,7 @@ import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.profession.type.MaterialProfile;
+import com.wynntils.models.profession.type.MaterialType;
 import com.wynntils.screens.base.widgets.InfoButton;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.widgets.GatheringNodeFilterWidget;
@@ -45,8 +45,7 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
     private List<GatheringNodeFilterWidget> gatheringNodeFilterWidgets = new ArrayList<>();
     private List<GatheringProfessionFilterButton> professionFilterButtons = new ArrayList<>();
     private List<PoiService.GatheringNodeType> gatheringNodeTypes = new ArrayList<>();
-    private Map<MaterialProfile.MaterialType, Boolean> filteredMaterialTypes =
-            new EnumMap<>(MaterialProfile.MaterialType.class);
+    private Map<MaterialType, Boolean> filteredMaterialTypes = new EnumMap<>(MaterialType.class);
 
     private TextInputBoxWidget searchInput;
 
@@ -293,9 +292,9 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
                 gatheringNodeType, !Services.Poi.isGatheringNodeTypeVisible(gatheringNodeType));
     }
 
-    public void toggleMaterialType(MaterialProfile.MaterialType materialType, boolean selected, boolean excludeOthers) {
+    public void toggleMaterialType(MaterialType materialType, boolean selected, boolean excludeOthers) {
         if (excludeOthers) {
-            for (MaterialProfile.MaterialType filteredMaterialType : MaterialProfile.MaterialType.values()) {
+            for (MaterialType filteredMaterialType : MaterialType.values()) {
                 if (filteredMaterialType != materialType) {
                     filteredMaterialTypes.put(filteredMaterialType, !selected);
                 }
@@ -366,7 +365,7 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
         professionFilterButtons = new ArrayList<>();
         int renderX = (int) (getTranslationX() + 15 + Texture.WAYPOINT_MANAGER_BACKGROUND.width() / 2f);
 
-        for (MaterialProfile.MaterialType materialType : MaterialProfile.MaterialType.values()) {
+        for (MaterialType materialType : MaterialType.values()) {
             boolean selected = filteredMaterialTypes.getOrDefault(materialType, true);
             filteredMaterialTypes.put(materialType, selected);
             professionFilterButtons.add(new GatheringProfessionFilterButton(

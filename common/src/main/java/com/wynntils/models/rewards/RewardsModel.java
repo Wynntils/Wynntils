@@ -17,6 +17,7 @@ import com.wynntils.models.rewards.type.CharmInstance;
 import com.wynntils.models.rewards.type.RuneType;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
+import com.wynntils.models.rewards.type.WardType;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.util.List;
@@ -29,6 +30,7 @@ public final class RewardsModel extends Model {
 
     private List<AmplifierInfo> allAmplifierInfo;
     private List<RuneType> allRuneInfo;
+    private List<WardType> allWardInfo;
 
     public RewardsModel() {
         super(List.of());
@@ -41,6 +43,7 @@ public final class RewardsModel extends Model {
 
         allAmplifierInfo = buildAmplifierInfo();
         allRuneInfo = buildRuneInfo();
+        allWardInfo = buildWardInfo();
     }
 
     public CharmInfo getCharmInfoFromDisplayName(String name) {
@@ -65,6 +68,10 @@ public final class RewardsModel extends Model {
 
     public List<RuneType> getAllRuneInfo() {
         return allRuneInfo;
+    }
+
+    public List<WardType> getAllWardInfo() {
+        return allWardInfo;
     }
 
     public ItemAnnotation fromCharmItemStack(
@@ -117,5 +124,9 @@ public final class RewardsModel extends Model {
 
     private List<RuneType> buildRuneInfo() {
         return List.of(RuneType.values());
+    }
+
+    private List<WardType> buildWardInfo() {
+        return List.of(WardType.values());
     }
 }
