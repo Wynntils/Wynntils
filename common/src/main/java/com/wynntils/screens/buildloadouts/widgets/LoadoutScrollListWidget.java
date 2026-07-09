@@ -63,7 +63,7 @@ public class LoadoutScrollListWidget extends ScrollListWidget {
                     StyledText.fromString(loadout.name()),
                     this.x + 5,
                     this.y + 5 + parent.loadoutWidgets.size() * (WIDGET_HEIGHT + WIDGET_HEIGHT_PADDING),
-                    133 - 25,
+                    133 - 25 - 4,
                     WIDGET_HEIGHT,
                     loadout,
                     parent));

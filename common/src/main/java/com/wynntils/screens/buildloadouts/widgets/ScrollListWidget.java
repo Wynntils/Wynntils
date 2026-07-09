@@ -1,7 +1,6 @@
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -16,8 +15,10 @@ import java.util.List;
 public abstract class ScrollListWidget extends AbstractWidget {
     private static final float SCROLL_FACTOR = 10f;
     private static final int MAX_WIDGETS_PER_PAGE = 7;
-    private static final int SCROLL_BAR_HEIGHT_PADDING = 5;
-    private static final int SCROLL_BAR_WIDTH_PADDING = 2;
+    private static final int SCROLL_BAR_BUTTON_HEIGHT_PADDING = 11;
+    private static final int SCROLL_BAR_BUTTON_WIDTH_PADDING = 3;
+    private static final int SCROLL_BAR_HEIGHT_PADDING = 4;
+    private static final int SCROLL_BAR_WIDTH_PADDING = 4;
     private int scrollOffset = 0;
     private final int x;
     private final int y;
@@ -47,6 +48,14 @@ public abstract class ScrollListWidget extends AbstractWidget {
                 this.width,
                 this.height);
 
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.BUILD_LOADOUTS_SCROLL_SIDE_BAR,
+                this.x + this.width - Texture.BUILD_LOADOUTS_SCROLL_SIDE_BAR.width() - SCROLL_BAR_WIDTH_PADDING /2f,
+                y + SCROLL_BAR_HEIGHT_PADDING,
+                Texture.BUILD_LOADOUTS_SCROLL_SIDE_BAR.width(),
+                this.height - SCROLL_BAR_HEIGHT_PADDING * 2);
+
         RenderUtils.enableScissor(
                 guiGraphics, this.x, this.y + widgetHeightEdgePadding, this.width, this.height - widgetHeightEdgePadding * 2);
         getWidgets().forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
@@ -56,9 +65,9 @@ public abstract class ScrollListWidget extends AbstractWidget {
     }
 
     private void renderScroll(GuiGraphics guiGraphics) {
-        scrollY = MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), this.y + SCROLL_BAR_HEIGHT_PADDING, this.y + this.height - Texture.SCROLL_BUTTON.height() - SCROLL_BAR_HEIGHT_PADDING);
+        scrollY = MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), this.y + SCROLL_BAR_BUTTON_HEIGHT_PADDING, this.y + this.height - Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON.height() - SCROLL_BAR_BUTTON_HEIGHT_PADDING);
 
-        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, this.x + this.width - Texture.SCROLL_BUTTON.width() - SCROLL_BAR_WIDTH_PADDING, scrollY);
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON, this.x + this.width - Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON.width() - SCROLL_BAR_BUTTON_WIDTH_PADDING, scrollY);
     }
 
     @Override

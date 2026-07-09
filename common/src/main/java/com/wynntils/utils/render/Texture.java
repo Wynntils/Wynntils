@@ -86,6 +86,7 @@ public enum Texture {
     BUILD_LOADOUTS_TEXT_INPUT_BOX("build_loadouts/text_input_box.png", 50, 20, 6, 6, 6, 6),
     BUILD_LOADOUTS_INFO_WIDGET_BOX("build_loadouts/info_widget_box.png", 50, 20, 2, 2, 2, 2),
     BUILD_LOADOUTS_WARNING_WIDGET_BOX("build_loadouts/warning_widget_box.png", 50, 20, 2, 2, 2, 2),
+    BUILD_LOADOUTS_SCROLL_SIDE_BAR("build_loadouts/scroll_side_bar.png", 9, 61, 4, 5, 9, 9),
     BUILD_LOADOUTS_WIDGET_SELECT_TAB("build_loadouts/widget_select_tab.png", 6, 5),
     BUILD_LOADOUTS_FLAG("build_loadouts/flag.png", 197, 45),
     BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON("build_loadouts/skillpoint_loadouts_icon.png", 35, 21),
@@ -96,6 +97,7 @@ public enum Texture {
     BUILD_LOADOUTS_SEARCH_ICON("build_loadouts/search_icon.png", 8, 8),
     BUILD_LOADOUTS_INFO_ICON("build_loadouts/info_icon.png", 20, 20),
     BUILD_LOADOUTS_WARNING_ICON("build_loadouts/warning_icon.png", 20, 19),
+    BUILD_LOADOUTS_SCOLL_BAR_BUTTON("build_loadouts/scroll_bar_button.png", 7, 21),
     // endregion
 
     // region Guild Log
