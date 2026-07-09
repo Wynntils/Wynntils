@@ -9,6 +9,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -21,13 +22,14 @@ import java.util.function.Function;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 
 public class TriggerSettingButton extends WynntilsButton {
     private static final CustomColor BACKGROUND_COLOR = new CustomColor(98, 34, 8);
     private static final CustomColor HOVER_BACKGROUND_COLOR = new CustomColor(158, 52, 16);
 
     private final StyledText title;
-    private final List<Component> tooltip;
+    private final List<FormattedCharSequence> tooltip;
     private final Function<SoundTrigger, StyledText> getDisplayValue;
     private final Consumer<SoundTrigger> onClick;
 
@@ -47,7 +49,7 @@ public class TriggerSettingButton extends WynntilsButton {
         this.visible = trigger != null;
 
         this.title = StyledText.fromComponent(title);
-        this.tooltip = tooltip;
+        this.tooltip = Lists.transform(ComponentUtils.wrapTooltips(tooltip, 175), Component::getVisualOrderText);
         this.getDisplayValue = getDisplayValue;
         this.onClick = onClick;
         this.trigger = trigger;
@@ -112,7 +114,7 @@ public class TriggerSettingButton extends WynntilsButton {
                         TextShadow.OUTLINE);
 
         if (isHovered) {
-            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), i, j);
+            guiGraphics.setTooltipForNextFrame(tooltip, i, j);
         }
     }
 

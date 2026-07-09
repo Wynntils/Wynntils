@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.soundtriggers.SoundTriggerManagmentScreen;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -21,10 +22,11 @@ import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 
 public class TriggerSettingNumberInput extends AbstractButton {
     private final StyledText title;
-    private final List<Component> tooltip;
+    private final List<FormattedCharSequence> tooltip;
     private final Function<SoundTrigger, Integer> functionTemplate;
     private final SoundTriggerManagmentScreen parentScreen;
     private final TextNumberInputBoxWidget textInputBoxWidget;
@@ -45,7 +47,8 @@ public class TriggerSettingNumberInput extends AbstractButton {
         super(i, j, k, l, Component.empty());
         this.visible = trigger != null;
         this.title = StyledText.fromComponent(title);
-        this.tooltip = tooltip;
+        this.tooltip = Lists.transform(ComponentUtils.wrapTooltips(tooltip, 175), Component::getVisualOrderText);
+
         this.functionTemplate = functionTemplate;
         this.parentScreen = parentScreen;
         this.textInputBoxWidget = new TextNumberInputBoxWidget(
@@ -103,7 +106,7 @@ public class TriggerSettingNumberInput extends AbstractButton {
         textInputBoxWidget.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
         if (isHovered) {
-            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(tooltip, mouseX, mouseY);
         }
     }
 

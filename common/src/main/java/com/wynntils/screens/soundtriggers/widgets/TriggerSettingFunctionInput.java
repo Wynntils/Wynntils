@@ -10,6 +10,7 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.soundtriggers.SoundTriggerManagmentScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -27,13 +28,14 @@ import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 
 public class TriggerSettingFunctionInput extends AbstractButton {
     private static final Texture NO_ERRORS = Texture.CHECKMARK_GREEN;
     private static final Texture ERRORS = Texture.WARNING;
 
     private final StyledText title;
-    private final List<Component> tooltip;
+    private final List<FormattedCharSequence> tooltip;
     private final Function<SoundTrigger, String> functionTemplate;
     private final Function<SoundTrigger, ErrorOr<?>> functionCheck;
     private final SoundTriggerManagmentScreen parentScreen;
@@ -58,7 +60,7 @@ public class TriggerSettingFunctionInput extends AbstractButton {
         this.visible = trigger != null;
 
         this.title = title;
-        this.tooltip = tooltip;
+        this.tooltip = Lists.transform(ComponentUtils.wrapTooltips(tooltip, 175), Component::getVisualOrderText);
         this.functionTemplate = functionTemplate;
         this.functionCheck = functionCheck;
         this.parentScreen = parentScreen;
@@ -164,7 +166,7 @@ public class TriggerSettingFunctionInput extends AbstractButton {
                     mouseX,
                     mouseY);
         } else if (isHovered) {
-            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(tooltip, mouseX, mouseY);
         }
     }
 
