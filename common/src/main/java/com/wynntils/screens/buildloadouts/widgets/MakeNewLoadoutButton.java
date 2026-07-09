@@ -4,9 +4,12 @@
  */
 package com.wynntils.screens.buildloadouts.widgets;
 
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.screens.buildloadouts.type.LoadoutType;
 import com.wynntils.screens.buildloadouts.type.MenuCategory;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -15,6 +18,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -24,11 +28,13 @@ import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MakeNewLoadoutButton extends AbstractButton {
     private final int x;
     private final int y;
     private final BuildLoadoutsScreen parent;
+    private boolean buttonConfirm = false;
 
     public MakeNewLoadoutButton(int x, int y, BuildLoadoutsScreen parent) {
         super(x, y, 133 - 10, 20, Component.literal("Make New Loadout Button"));
@@ -43,22 +49,22 @@ public class MakeNewLoadoutButton extends AbstractButton {
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
-                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_GREEN,
+                !buttonConfirm ? Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_GREEN : Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_RED,
                 x,
                 y,
                 this.width,
                 this.height);
 
-        FontRenderer.getInstance()
-                .renderText(
-                        guiGraphics,
-                        StyledText.fromString("Create"),
-                        (this.x + this.width / 2f),
-                        (this.y + this.height / 2f),
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
+            FontRenderer.getInstance()
+                    .renderText(
+                            guiGraphics,
+                            !buttonConfirm ? StyledText.fromString("Create") : StyledText.fromString("Confirm"),
+                            (this.x + this.width / 2f),
+                            (this.y + this.height / 2f),
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
     }
 
     @Override
@@ -68,7 +74,94 @@ public class MakeNewLoadoutButton extends AbstractButton {
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
 
+        this.playDownSound(Minecraft.getInstance().getSoundManager());
+
+        String name = parent.newLoadoutInputWidget.getTextBoxInput();
+
+        if (name.isEmpty()) {
+            parent.newLoadoutInfoWidget.setText(StyledText.fromString("Please enter a name."), false);
+            buttonConfirm = false;
+            return true;
+        }
+
+        if (parent.getNewLoadoutType() == null) {
+            parent.newLoadoutInfoWidget.setText(StyledText.fromString("Please select a loadout type."), false);
+            buttonConfirm = false;
+            return true;
+        }
+
+        if (parent.hasExistingLoadout(name) && !buttonConfirm) {
+            parent.newLoadoutInfoWidget.setText(StyledText.fromString("This will overwrite an existing loadout by the same name."), false);
+            buttonConfirm = true;
+        } else {
+            buttonConfirm = false;
+            parent.newLoadoutInputWidget.setTextBoxInput("");
+
+            if (parent.getNewLoadoutType() == LoadoutType.BUILD) {
+                //save skillpoints
+                Models.SkillPoint.saveCurrentBuild(name);
+
+                //save ability tree
+                Models.AbilityTree.saveCurrentAbilityTree(
+                        name,
+                        status -> parent.statusWidget.setStatus(status, parent.busyColor),
+                        error -> parent.statusWidget.setStatus(error, parent.errorColor),
+                        completed -> {
+
+                            //save aspects
+                            Models.Aspect.saveCurrentAspectLoadout(
+                                    name,
+                                    status -> parent.statusWidget.setStatus(status, parent.busyColor),
+                                    error -> parent.statusWidget.setStatus(error, parent.errorColor),
+                                    done -> {
+                                        parent.statusWidget.setStatus(done, parent.completedColor);
+                                        parent.loadoutScrollListWidget.populateLoadouts();
+                                        //this.setSelectedLoadout(this.getLoadout(name));
+                                    });
+                        });
+
+                return true;
+            }
+
+            if (parent.getNewLoadoutType() == LoadoutType.ABILITY_TREE) {
+                Models.AbilityTree.saveCurrentAbilityTree(
+                    name,
+                    status -> parent.statusWidget.setStatus(status, parent.busyColor),
+                    error -> parent.statusWidget.setStatus(error, parent.errorColor),
+                    completed -> {
+                        parent.statusWidget.setStatus(completed, parent.completedColor);
+                        parent.loadoutScrollListWidget.populateLoadouts();
+                        //this.setSelectedLoadout(this.getLoadout(name));
+                    });
+                return true;
+            }
+
+            if (parent.getNewLoadoutType() == LoadoutType.SKILL_POINT) {
+                Models.SkillPoint.saveCurrentBuild(name);
+                return true;
+            }
+
+            if (parent.getNewLoadoutType() == LoadoutType.ASPECT) {
+                Models.Aspect.saveCurrentAspectLoadout(
+                    name,
+                    status -> parent.statusWidget.setStatus(status, parent.busyColor),
+                    error -> parent.statusWidget.setStatus(error, parent.errorColor),
+                    completed -> {
+                        parent.statusWidget.setStatus(completed, parent.completedColor);
+                        parent.loadoutScrollListWidget.populateLoadouts();
+                        //this.setSelectedLoadout(this.getLoadout(name));
+                    });
+                return true;
+            }
+
+
+
+        }
         return true;
+    }
+
+    public void setButtonConfirm(boolean confirm) {
+        this.buttonConfirm = confirm;
     }
 
     @Override

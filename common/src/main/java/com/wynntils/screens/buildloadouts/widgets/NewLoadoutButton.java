@@ -15,6 +15,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -83,6 +84,9 @@ public class NewLoadoutButton extends AbstractButton implements TooltipProvider 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
+
+        this.playDownSound(Minecraft.getInstance().getSoundManager());
+
         parent.setCurrentCategory(MenuCategory.NEW_LOADOUT);
         return true;
     }

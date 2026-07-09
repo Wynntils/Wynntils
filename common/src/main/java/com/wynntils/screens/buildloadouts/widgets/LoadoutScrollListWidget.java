@@ -59,16 +59,14 @@ public class LoadoutScrollListWidget extends ScrollListWidget {
             SavableAspectSet aspect = aspectLoadouts.get(name);
             Loadout loadout = new Loadout(name, sp, at, aspect, determineLoadoutType(sp, at, aspect));
 
-            for (int i = 0; i < 40; i++) {
-                parent.loadoutWidgets.add(new LoadoutWidget(
-                        StyledText.fromString("test"),
-                        this.x + 5,
-                        this.y + 5 + parent.loadoutWidgets.size() * (WIDGET_HEIGHT + WIDGET_HEIGHT_PADDING),
-                        133 - 25,
-                        WIDGET_HEIGHT,
-                        loadout,
-                        parent));
-            }
+            parent.loadoutWidgets.add(new LoadoutWidget(
+                    StyledText.fromString(loadout.name()),
+                    this.x + 5,
+                    this.y + 5 + parent.loadoutWidgets.size() * (WIDGET_HEIGHT + WIDGET_HEIGHT_PADDING),
+                    133 - 25,
+                    WIDGET_HEIGHT,
+                    loadout,
+                    parent));
         }
     }
 

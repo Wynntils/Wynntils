@@ -85,12 +85,17 @@ public enum Texture {
     BUILD_LOADOUTS_WIDGET_BACKGROUND_BLUE("build_loadouts/scallable_widget_background_blue.png", 34, 19, 6, 6, 6, 6),
     BUILD_LOADOUTS_TEXT_INPUT_BOX("build_loadouts/text_input_box.png", 50, 20, 6, 6, 6, 6),
     BUILD_LOADOUTS_INFO_WIDGET_BOX("build_loadouts/info_widget_box.png", 50, 20, 2, 2, 2, 2),
+    BUILD_LOADOUTS_WARNING_WIDGET_BOX("build_loadouts/warning_widget_box.png", 50, 20, 2, 2, 2, 2),
     BUILD_LOADOUTS_WIDGET_SELECT_TAB("build_loadouts/widget_select_tab.png", 6, 5),
     BUILD_LOADOUTS_FLAG("build_loadouts/flag.png", 197, 45),
     BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON("build_loadouts/skillpoint_loadouts_icon.png", 35, 21),
+    BUILD_LOADOUTS_ASPECT_LOADOUTS_ICON("build_loadouts/aspect_loadouts_icon.png", 45, 16),
+    BUILD_LOADOUTS_ABILITY_TREE_LOADOUTS_ICON("build_loadouts/ability_tree_loadouts_icon.png", 50, 24),
+    BUILD_LOADOUTS_BUILD_LOADOUTS_ICON("build_loadouts/build_loadouts_icon.png", 31, 28),
     BUILD_LOADOUTS_PLUS_ICON("build_loadouts/plus_icon.png", 9, 9),
     BUILD_LOADOUTS_SEARCH_ICON("build_loadouts/search_icon.png", 8, 8),
     BUILD_LOADOUTS_INFO_ICON("build_loadouts/info_icon.png", 20, 20),
+    BUILD_LOADOUTS_WARNING_ICON("build_loadouts/warning_icon.png", 20, 19),
     // endregion
 
     // region Guild Log

@@ -2,6 +2,7 @@ package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
+import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
@@ -19,14 +20,17 @@ import net.minecraft.network.chat.Component;
 import java.util.List;
 
 public class StatusWidget extends AbstractWidget {
+    private StyledText text;
+    private CustomColor color;
     private final int x;
     private final int y;
-    private static final CustomColor errorColor = CustomColor.fromInt(0xe40000);
+    private final BuildLoadoutsScreen parent;
 
-    public StatusWidget(int x, int y) {
+    public StatusWidget(int x, int y, BuildLoadoutsScreen parent) {
         super(x, y, 133 - 10, 85, Component.literal("Status Widget"));
         this.x = x;
         this.y = y;
+        this.parent = parent;
     }
 
     @Override
@@ -53,14 +57,19 @@ public class StatusWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("Error while processing content for Ability Tree Unlock: insufficient ability shards (need 3)"),
+                        text,
                         this.x + this.width / 2f,
                         this.y + 25,
                         this.width - 10,
-                        errorColor,
+                        color,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
+    }
+
+    public void setStatus(String text, CustomColor color) {
+        this.text = StyledText.fromString(text);
+        this.color = color;
     }
 
     @Override
