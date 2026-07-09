@@ -368,7 +368,9 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        if (MathUtils.isInside(
+        if (scrolling) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (MathUtils.isInside(
                 mouseX,
                 mouseY,
                 getTranslationXint() + 133,
@@ -376,14 +378,14 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
                 (int) scrollY,
                 (int) (scrollY + Texture.SCROLL_BUTTON.height()))) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
-        } else if (addButton.isHovered()) {
+        }
+
+        if (addButton.isHovered()) {
             guiGraphics.setTooltipForNextFrame(
                     Lists.transform(addButton.getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
-        } else if (deleteButton.isHovered()) {
+        } else if (deleteButton.isHovered() && selectedTrigger != null) {
             guiGraphics.setTooltipForNextFrame(
                     Lists.transform(deleteButton.getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
-        } else if (scrolling) {
-            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         }
 
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
