@@ -4,11 +4,12 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.items.items.game.MaterialItem;
-import com.wynntils.models.profession.type.MaterialProfile;
+import com.wynntils.models.profession.type.MaterialInfo;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,9 +27,9 @@ public final class MaterialAnnotator implements GameItemAnnotator {
         String resourceType = matcher.group(2);
         int tier = WynnItemParser.parseProfessionTier(itemStack);
 
-        MaterialProfile materialProfile = MaterialProfile.lookup(materialSource, resourceType, tier);
-        if (materialProfile == null) return null;
+        MaterialInfo materialInfo = Models.Profession.getMaterialInfoFromName(materialSource + " " + resourceType);
+        if (materialInfo == null) return null;
 
-        return new MaterialItem(materialProfile);
+        return new MaterialItem(materialInfo, tier);
     }
 }

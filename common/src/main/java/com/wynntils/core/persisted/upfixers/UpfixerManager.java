@@ -40,6 +40,7 @@ import com.wynntils.core.persisted.upfixers.config.QuestBookToContentRenamedConf
 import com.wynntils.core.persisted.upfixers.config.QuickCastTimingsToMillisecondsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.SacredSurgeToHolyPowerUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ShowAdditonalTextAboveToShowAdditionalTextAboveUpfixer;
+import com.wynntils.core.persisted.upfixers.config.SkillPointLoadoutsToBuildLoadoutsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TelemetryFeatureToWynntilsTelemetryFeatureUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMovedToCommonFeature;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
@@ -102,6 +103,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new ItemStatInfoConfigRenameUpfixer());
         registerConfigUpfixer(new TelemetryFeatureToWynntilsTelemetryFeatureUpfixer());
         registerConfigUpfixer(new CoordinateOverlayToCoordinatesOverlayUpfixer());
+        registerConfigUpfixer(new SkillPointLoadoutsToBuildLoadoutsUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());

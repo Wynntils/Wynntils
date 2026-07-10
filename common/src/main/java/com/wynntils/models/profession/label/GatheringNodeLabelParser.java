@@ -5,9 +5,11 @@
 package com.wynntils.models.profession.label;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.type.LabelParser;
-import com.wynntils.models.profession.type.MaterialProfile;
+import com.wynntils.models.profession.type.MaterialType;
+import com.wynntils.models.profession.type.SourceMaterial;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.Pair;
 import java.util.Optional;
@@ -32,18 +34,17 @@ public class GatheringNodeLabelParser implements LabelParser<ProfessionGathering
             String resourceName = matcher.group("resourceName");
             Integer lvlMin = Integer.parseInt(matcher.group("lvlMin"), 10);
 
-            Optional<Pair<MaterialProfile.MaterialType, MaterialProfile.SourceMaterial>> materialLookup =
-                    MaterialProfile.findByMaterialName(resourceName, ChatFormatting.getByCode(resourceColor.charAt(0)));
+            Optional<Pair<MaterialType, SourceMaterial>> materialLookup = Models.Profession.findMaterialBySourceName(
+                    resourceName, ChatFormatting.getByCode(resourceColor.charAt(0)));
 
             if (materialLookup.isEmpty()) {
                 WynntilsMod.warn("Failed to find material with name " + resourceName + " and color " + resourceColor);
                 return null;
             }
 
-            Pair<MaterialProfile.MaterialType, MaterialProfile.SourceMaterial> materialTypeSourceMaterialPair =
-                    materialLookup.get();
-            MaterialProfile.MaterialType materialType = materialTypeSourceMaterialPair.key();
-            MaterialProfile.SourceMaterial sourceMaterial = materialTypeSourceMaterialPair.value();
+            Pair<MaterialType, SourceMaterial> materialTypeSourceMaterialPair = materialLookup.get();
+            MaterialType materialType = materialTypeSourceMaterialPair.key();
+            SourceMaterial sourceMaterial = materialTypeSourceMaterialPair.value();
 
             if (sourceMaterial.level() != lvlMin) {
                 WynntilsMod.warn("Resource Node with material " + resourceName

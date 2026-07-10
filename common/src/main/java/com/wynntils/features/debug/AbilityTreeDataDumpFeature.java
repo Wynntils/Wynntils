@@ -52,8 +52,8 @@ public class AbilityTreeDataDumpFeature extends Feature {
         McUtils.player().closeContainer();
 
         // Wait for the container to close
-        Managers.TickScheduler.scheduleNextTick(
-                () -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.dumpAbilityTree(this::saveToDisk));
+        Managers.TickScheduler.scheduleNextTick(() -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.dumpAbilityTree(
+                this::saveToDisk, WynntilsMod::info, error -> {}, WynntilsMod::info));
     }
 
     private void saveToDisk(AbilityTreeInfo abilityTreeInfo) {

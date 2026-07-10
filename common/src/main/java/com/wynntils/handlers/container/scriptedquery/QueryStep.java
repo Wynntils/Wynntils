@@ -32,6 +32,7 @@ public class QueryStep {
     private ContainerContentVerification contentVerification = WAIT_FOR_SET_CONTENT;
     private ContainerAction handleContent = IGNORE_INCOMING_CONTAINER;
     private int setSlotAccumulationTicks = 0;
+    private int nextOperationDelayTicks = 5;
 
     protected QueryStep(ContainerPredicate startAction) {
         this.startAction = startAction;
@@ -59,6 +60,14 @@ public class QueryStep {
         });
     }
 
+    public static QueryStep clickOnSlot(Supplier<Integer> slotSupplier) {
+        return new QueryStep(container -> {
+            ContainerUtils.clickOnSlot(
+                    slotSupplier.get(), container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
+            return true;
+        });
+    }
+
     public static QueryStep clickOnSlot(int slotNum, Supplier<Integer> mouseButtonSupplier) {
         return new QueryStep(container -> {
             ContainerUtils.clickOnSlot(slotNum, container.containerId(), mouseButtonSupplier.get(), container.items());
@@ -77,6 +86,17 @@ public class QueryStep {
         });
     }
 
+    public static QueryStep shiftClickOnSlot(int slotNum) {
+        return new QueryStep(container -> {
+            ContainerUtils.shiftClickOnSlot(slotNum, container.containerId(), 0, container.items());
+            return true;
+        });
+    }
+
+    public static QueryStep runInSameContainer(ContainerPredicate action) {
+        return new QueryStep(action);
+    }
+
     public static QueryStep sendCommand(String command) {
         return new QueryStep(container -> {
             Handlers.Command.queueCommand(command);
@@ -86,6 +106,17 @@ public class QueryStep {
 
     public QueryStep expectContainer(Class<? extends Container> expectedContainerType) {
         this.verification = (type) -> type == expectedContainerType;
+        return this;
+    }
+
+    @SafeVarargs
+    public final QueryStep expectContainer(Class<? extends Container>... expectedContainerTypes) {
+        this.verification = (type) -> {
+            for (Class<? extends Container> expected : expectedContainerTypes) {
+                if (type == expected) return true;
+            }
+            return false;
+        };
         return this;
     }
 
@@ -133,6 +164,15 @@ public class QueryStep {
         if (!query.popOneStep()) return null;
 
         return query;
+    }
+
+    public int getNextOperationDelayTicks() {
+        return nextOperationDelayTicks;
+    }
+
+    public QueryStep withNextOperationDelay(int ticks) {
+        this.nextOperationDelayTicks = ticks;
+        return this;
     }
 
     // endregion

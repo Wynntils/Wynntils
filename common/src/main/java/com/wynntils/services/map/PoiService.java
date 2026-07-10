@@ -17,7 +17,8 @@ import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
-import com.wynntils.models.profession.type.MaterialProfile;
+import com.wynntils.models.profession.type.MaterialType;
+import com.wynntils.models.profession.type.SourceMaterial;
 import com.wynntils.services.map.pois.CombatPoi;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.GatheringNodePoi;
@@ -287,7 +288,7 @@ public class PoiService extends Service {
         filterGatheringNodes();
     }
 
-    public void setAllGatheringNodeTypesVisible(MaterialProfile.MaterialType materialType, boolean visible) {
+    public void setAllGatheringNodeTypesVisible(MaterialType materialType, boolean visible) {
         getGatheringNodeTypes().stream()
                 .filter(type -> type.materialType == materialType)
                 .map(GatheringNodeType::key)
@@ -329,8 +330,7 @@ public class PoiService extends Service {
 
     private record GatheringNodeProfile(int x, int y, int z, int angle, String resource, String type, int level) {}
 
-    public record GatheringNodeType(
-            MaterialProfile.MaterialType materialType, MaterialProfile.SourceMaterial sourceMaterial)
+    public record GatheringNodeType(MaterialType materialType, SourceMaterial sourceMaterial)
             implements Comparable<GatheringNodeType> {
         public String key() {
             return materialType.name() + ":" + sourceMaterial.name();

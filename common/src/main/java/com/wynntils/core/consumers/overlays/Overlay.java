@@ -175,10 +175,14 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
             } else {
                 // If new state is TRUE or null, try to enable overlay
                 // (worst case overlay.shouldBeEnabled() will return false)
-                Managers.Overlay.enableOverlay(this);
+                if (Managers.Config.isLoadingConfigOptions()) {
+                    Managers.Overlay.enableOverlay(this);
+                } else {
+                    Managers.Overlay.enableOverlayWithDefaultRenderOrder(this);
+                }
             }
-        } else if (config.getFieldName().equals("renderElement")) {
-            Managers.Overlay.rebuildRenderOrder();
+        } else if (config.getFieldName().equals("renderElement") && !Managers.Config.isLoadingConfigOptions()) {
+            Managers.Overlay.rebuildAndNormalizeRenderOrder();
         }
 
         callOnConfigUpdate(config);
@@ -340,7 +344,6 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
 
     public void setRenderOrder(int renderOrder) {
         this.renderOrder.store(renderOrder);
-        this.renderOrder.touched();
     }
 
     @Override
