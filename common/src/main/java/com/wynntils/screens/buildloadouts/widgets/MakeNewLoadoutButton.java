@@ -138,6 +138,7 @@ public class MakeNewLoadoutButton extends AbstractButton {
 
             if (parent.getNewLoadoutType() == LoadoutType.SKILL_POINT) {
                 Models.SkillPoint.saveCurrentBuild(name);
+                parent.loadoutScrollListWidget.populateLoadouts();
                 return true;
             }
 

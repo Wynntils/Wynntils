@@ -8,6 +8,7 @@ import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.screens.buildloadouts.type.Loadout;
 import com.wynntils.screens.buildloadouts.type.LoadoutType;
+import com.wynntils.utils.StringUtils;
 import net.minecraft.client.gui.components.AbstractWidget;
 
 import java.util.ArrayList;
@@ -17,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 public class LoadoutScrollListWidget extends ScrollListWidget {
     private static final int WIDTH = 133 - 10;
@@ -53,11 +53,18 @@ public class LoadoutScrollListWidget extends ScrollListWidget {
         allNames.addAll(atLoadouts.keySet());
         allNames.addAll(aspectLoadouts.keySet());
 
-        for (String name : new TreeSet<>(allNames)) {
+        List<String> filteredSorted = allNames.stream()
+                .filter(this::searchMatches)
+                .sorted()
+                .toList();
+
+        for (String name : filteredSorted) {
             SavableSkillPointSet sp = spLoadouts.get(name);
             SavableAbilityTree at = atLoadouts.get(name);
             SavableAspectSet aspect = aspectLoadouts.get(name);
             Loadout loadout = new Loadout(name, sp, at, aspect, determineLoadoutType(sp, at, aspect));
+
+            if (parent.getCurrentCategory() != loadout.getMenuCategory()) continue;
 
             parent.loadoutWidgets.add(new LoadoutWidget(
                     StyledText.fromString(loadout.name()),
@@ -70,12 +77,16 @@ public class LoadoutScrollListWidget extends ScrollListWidget {
         }
     }
 
+    private boolean searchMatches(String poiName) {
+        return StringUtils.partialMatch(poiName, parent.searchWidget.getTextBoxInput());
+    }
+
     private LoadoutType determineLoadoutType(SavableSkillPointSet sp, SavableAbilityTree at, SavableAspectSet aspect) {
         boolean hasSp = sp != null;
         boolean hasAt = at != null;
         boolean hasAspect = aspect != null;
-        if (hasSp && sp.isBuild()) return LoadoutType.BUILD;
-        if (hasAt && !hasSp) return LoadoutType.ABILITY_TREE;
+        if (hasSp && sp.isBuild() && hasAt && hasAspect) return LoadoutType.BUILD;
+        if (hasAt && !hasSp && !hasAspect) return LoadoutType.ABILITY_TREE;
         if (hasAspect && !hasSp && !hasAt) return LoadoutType.ASPECT;
         return LoadoutType.SKILL_POINT;
     }

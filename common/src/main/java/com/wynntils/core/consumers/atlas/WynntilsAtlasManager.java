@@ -14,7 +14,17 @@ public final class WynntilsAtlasManager extends Manager {
     public static final List<AtlasManager.AtlasConfig> ATLASES = List.of(new AtlasManager.AtlasConfig(
             Identifier.fromNamespaceAndPath(WynntilsMod.MOD_ID, "textures/atlas/ui_components.png"),
             Identifier.fromNamespaceAndPath(WynntilsMod.MOD_ID, "ui_components"),
-            false));
+            false),
+            new AtlasManager.AtlasConfig(
+                    Identifier.fromNamespaceAndPath(WynntilsMod.MOD_ID, "textures/atlas/archetype.png"),
+                    Identifier.fromNamespaceAndPath(WynntilsMod.MOD_ID, "archetype"),
+                    false
+            ),
+            new AtlasManager.AtlasConfig(
+                    Identifier.fromNamespaceAndPath(WynntilsMod.MOD_ID, "textures/atlas/aspect.png"),
+                    Identifier.fromNamespaceAndPath(WynntilsMod.MOD_ID, "aspect"),
+                    false
+            ));
 
     public WynntilsAtlasManager() {
         super(List.of());

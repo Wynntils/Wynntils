@@ -19,7 +19,7 @@ public abstract class ScrollListWidget extends AbstractWidget {
     private static final int SCROLL_BAR_BUTTON_WIDTH_PADDING = 3;
     private static final int SCROLL_BAR_HEIGHT_PADDING = 4;
     private static final int SCROLL_BAR_WIDTH_PADDING = 4;
-    private int scrollOffset = 0;
+    public int scrollOffset = 0;
     private final int x;
     private final int y;
     private final int widgetHeight;

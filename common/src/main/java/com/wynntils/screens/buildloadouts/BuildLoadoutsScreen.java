@@ -154,7 +154,8 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                 offsetX + WIDGET_HOLDER_TWO_WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + selectionY,
                 (s) -> {
-                    WynntilsMod.info("text: " + s);
+                    loadoutScrollListWidget.scrollOffset = 0;
+                    loadoutScrollListWidget.populateLoadouts();
                 }, this);
         this.addRenderableWidget(searchWidget);
         selectionY += 20 + 3;
@@ -172,9 +173,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                 (int) (offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + (RIGHT_PAGE_WIDTH / 2f) - (180 / 2f)),
                 offsetY + HEIGHT_OFFSET + 50,
                 180,
-                (s) -> {
-                    WynntilsMod.info("text: " + s);
-                },
+                (s) -> {},
                 this);
         this.addRenderableWidget(newLoadoutInputWidget);
 
@@ -343,6 +342,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
     public void setCurrentCategory(MenuCategory category) {
         this.currentCategory = category;
+        loadoutScrollListWidget.populateLoadouts();
         updateMenu();
     }
 

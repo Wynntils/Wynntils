@@ -24,7 +24,7 @@ public class NewLoadoutInfoWidget extends AbstractWidget {
     private boolean isInfo = true;
 
     public NewLoadoutInfoWidget(int x, int y, int width, int height, BuildLoadoutsScreen parent) {
-        super(x, y, width, height, Component.literal("Make New Loadout Widget"));
+        super(x, y, width, height, Component.literal("New Loadout Info Widget"));
         this.x = x;
         this.y = y;
         this.parent = parent;

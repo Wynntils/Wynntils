@@ -480,8 +480,39 @@ public enum Texture {
     VIGNETTE("ui_components/vignette.png", 512, 512),
     WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 358, 206),
     WIDGET_BACKGROUND_LONG("ui_components/widget_background_long.png", 198, 20),
-    WOOD_STRIP("ui_components/wood_strip.png", 198, 20);
+    WOOD_STRIP("ui_components/wood_strip.png", 198, 20),
     // endregion
+
+    // region Archetype
+    ARCHETYPE_BOLTSLINGER("archetype", "archer/boltslinger", 32, 32),
+    ARCHETYPE_SHARPSHOOTER("archetype", "archer/sharpshooter", 32, 32),
+    ARCHETYPE_TRAPPER("archetype", "archer/trapper", 32, 32),
+    ARCHETYPE_ACROBAT("archetype", "assassin/acrobat", 32, 32),
+    ARCHETYPE_SHADESTEPPER("archetype", "assassin/shadestepper", 32, 32),
+    ARCHETYPE_TRICKSTER("archetype", "assassin/trickster", 32, 32),
+    ARCHETYPE_ARCANIST("archetype", "mage/arcanist", 32, 32),
+    ARCHETYPE_LIGHTBENDER("archetype", "mage/lightbender", 32, 32),
+    ARCHETYPE_RIFTWALKER("archetype", "mage/riftwalker", 32, 32),
+    ARCHETYPE_ACOLYTE("archetype", "shaman/acolyte", 32, 32),
+    ARCHETYPE_RITUALIST("archetype", "shaman/ritualist", 32, 32),
+    ARCHETYPE_SUMMONER("archetype", "shaman/summoner", 32, 32),
+    ARCHETYPE_BATTLE_MONK("archetype", "warrior/battle_monk", 32, 32),
+    ARCHETYPE_FALLEN("archetype", "warrior/fallen", 32, 32),
+    ARCHETYPE_PALADIN("archetype", "warrior/paladin", 32, 32),
+    // endregion
+
+    // region Aspect
+    ASPECT_ARCHER("aspect", "archer",48, 48),
+    ASPECT_ARCHER_FLAME("aspect", "flame_pink",48, 48),
+    ASPECT_ASSASSIN("aspect", "assassin",48, 48),
+    ASPECT_ASSASSIN_FLAME("aspect", "flame_purple",48, 48),
+    ASPECT_MAGE("aspect", "mage",48, 48),
+    ASPECT_MAGE_FLAME("aspect", "flame_yellow",48, 48),
+    ASPECT_SHAMAN("aspect", "shaman",48, 48),
+    ASPECT_SHAMAN_FLAME("aspect", "flame_blue",48, 48),
+    ASPECT_WARRIOR("aspect", "warrior",48, 48),
+    ASPECT_WARRIOR_FLAME("aspect", "flame_orange",48, 48);
+    //endregion
 
     private final Identifier identifier;
     private final Identifier atlas;

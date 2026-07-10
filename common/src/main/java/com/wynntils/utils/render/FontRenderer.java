@@ -447,6 +447,32 @@ public final class FontRenderer {
                 1f);
     }
 
+    public void renderAlignedTextInBox(
+            GuiGraphics guiGraphics,
+            StyledText text,
+            float x,
+            float y1,
+            float y2,
+            float maxWidth,
+            CustomColor customColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            TextShadow textShadow) {
+        renderAlignedTextInBox(
+                guiGraphics,
+                new StyledText[] {text},
+                x,
+                x,
+                y1,
+                y2,
+                maxWidth,
+                customColor,
+                horizontalAlignment,
+                verticalAlignment,
+                textShadow,
+                1f);
+    }
+
     public void renderText(
             GuiGraphics guiGraphics,
             StyledText text,

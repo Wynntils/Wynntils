@@ -1,0 +1,10 @@
+
+{
+  "sources": [
+    {
+        "prefix": "",
+        "source": "build_loadouts/aspect",
+        "type": "minecraft:directory"
+    }
+  ]
+}
