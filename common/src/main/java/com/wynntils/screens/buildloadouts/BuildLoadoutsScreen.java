@@ -101,7 +101,6 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
         this.addRenderableWidget(new LoadoutSelectionButton(
                 StyledText.fromString("Build Loadouts"),
-                Texture.BUILD_LOADOUTS_BUILD_LOADOUTS_ICON,
                 MenuCategory.BUILD_LOADOUT,
                 offsetX + WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + selectionY,
@@ -110,7 +109,6 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
         this.addRenderableWidget(new LoadoutSelectionButton(
                 StyledText.fromString("Ability Tree Loadouts"),
-                Texture.BUILD_LOADOUTS_ABILITY_TREE_LOADOUTS_ICON,
                 MenuCategory.ABILITY_TREE_LOADOUT,
                 offsetX + WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + selectionY,
@@ -119,7 +117,6 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
         this.addRenderableWidget(new LoadoutSelectionButton(
                 StyledText.fromString("Skill Point Loadouts"),
-                Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
                 MenuCategory.SKILL_POINT_LOADOUT,
                 offsetX + WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + selectionY,
@@ -128,7 +125,6 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
         this.addRenderableWidget(new LoadoutSelectionButton(
                 StyledText.fromString("Aspect Loadouts"),
-                Texture.BUILD_LOADOUTS_ASPECT_LOADOUTS_ICON,
                 MenuCategory.ASPECT_LOADOUT,
                 offsetX + WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + selectionY,
@@ -180,7 +176,6 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         newBuildLoadoutButton = new NewLoadoutSelectionButton(
                 StyledText.fromString("Build Loadouts"),
                 StyledText.fromString("This will create a new build loadout from the current items, ability tree, skill points, and aspects."),
-                Texture.BUILD_LOADOUTS_BUILD_LOADOUTS_ICON,
                 LoadoutType.BUILD,
                 offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + 102,
@@ -190,7 +185,6 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         newAbilityTreeLoadoutButton = new NewLoadoutSelectionButton(
                 StyledText.fromString("Ability Tree Loadouts"),
                 StyledText.fromString("This will create a new ability tree loadout from the current ability tree."),
-                Texture.BUILD_LOADOUTS_ABILITY_TREE_LOADOUTS_ICON,
                 LoadoutType.ABILITY_TREE,
                 offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5 + 128 + 5,
                 offsetY + HEIGHT_OFFSET + 102,
@@ -200,7 +194,6 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         newSkillPointLoadoutButton = new NewLoadoutSelectionButton(
                 StyledText.fromString("Skill Point Loadouts"),
                 StyledText.fromString("This will create a new skill point loadout from the current skill points."),
-                Texture.BUILD_LOADOUTS_SKILL_POINT_LOADOUTS_ICON,
                 LoadoutType.SKILL_POINT,
                 offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + 102 + 40 + 5,
@@ -210,7 +203,6 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         newAspectLoadoutButton = new NewLoadoutSelectionButton(
                 StyledText.fromString("Aspect Loadouts"),
                 StyledText.fromString("This will create a new aspect loadout from the current aspects."),
-                Texture.BUILD_LOADOUTS_ASPECT_LOADOUTS_ICON,
                 LoadoutType.ASPECT,
                 offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5 + 128 + 5,
                 offsetY + HEIGHT_OFFSET + 102 + 40 + 5,

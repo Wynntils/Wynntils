@@ -20,7 +20,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
-public class LoadoutWidget extends AbstractWidget {
+import java.util.stream.IntStream;
+
+public class LoadoutWidget extends AbstractWidget implements IconRenderer {
     private static final int TEXT_WIDTH_PADDING = 4;
     private static final int TEXT_HEIGHT_PADDING = 4;
     private static final int MAX_VISIBLE_CHARACTERS = 38;
@@ -32,9 +34,6 @@ public class LoadoutWidget extends AbstractWidget {
     private final ItemStack archetypeItemStack;
     private final Texture aspectTexture;
     private final Texture aspectFlameTexture;
-
-    private static final Identifier BANNER_TEXTURE_IDENTIFIER =
-            Identifier.withDefaultNamespace("textures/font/tooltip/banner.png");
 
     public LoadoutWidget(StyledText text, int x, int y, int width, int height, Loadout loadout, BuildLoadoutsScreen parent) {
         super(x, y, width, height, Component.literal("Loadout Widget"));
@@ -81,21 +80,7 @@ public class LoadoutWidget extends AbstractWidget {
                     this.y + this.height / 2 - 8
             );
         } else if (aspectTexture != null && aspectFlameTexture != null) {
-            RenderUtils.drawSprite(
-                    guiGraphics,
-                    aspectFlameTexture,
-                    this.x - (12 * (3f / 4f)) + 5,
-                    this.y - 1 + 5,
-                    aspectFlameTexture.width() * (3f / 4f),
-                    aspectFlameTexture.height() * (3f / 4f)
-            );
-
-            RenderUtils.drawSprite(
-                    guiGraphics,
-                    aspectTexture,
-                    this.x - 16 + 6,
-                    this.y - 16 + 12
-            );
+            renderAspect(guiGraphics, aspectTexture, aspectFlameTexture, this.x, this.y);
         } else if (loadout.type() == LoadoutType.SKILL_POINT) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
@@ -110,60 +95,12 @@ public class LoadoutWidget extends AbstractWidget {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
 
+            int[] points = loadout.skillPoints().getSkillPointsAsArray();
+            int[] activeElements = IntStream.range(0, 5).filter(i -> points[i] > 0).toArray();
 
-            int displayCount = 0;
-            for (int i = 0; i < 5; i++) {
-                if (loadout.skillPoints().getSkillPointsAsArray()[i] > 0) {
-                    displayCount++;
-                }
-            }
+            float baseY = this.y + this.height / 2f - 6;
+            renderSkillIcons(guiGraphics, this.x, baseY, activeElements);
 
-            float centerOffset;
-            if (displayCount <= 3) {
-                centerOffset = 24 - 6 * displayCount - 8;
-            } else {
-                centerOffset = 24 - 6 * 3 - 8;
-            }
-
-            int displayIndex = 0;
-            for (int i = 0; i < 5; i++) {
-                if (loadout.skillPoints().getSkillPointsAsArray()[i] <= 0) {
-                    continue;
-                }
-
-                float x, y;
-
-                if (displayCount <= 3) {
-                    // Single centered row
-                    x = this.x + 2 + centerOffset + (displayIndex * 12);
-                    y = this.y + this.width / 2f - 6 - (3 * 12);
-                } else {
-                    // Two-row staggered layout
-                    if (displayIndex < 3) {
-                        x = this.x + 2 + centerOffset + (displayIndex * 12);
-                        y = this.y + this.width / 2f - 6 - (3 * 12) - 6;
-                    } else {
-                        x = this.x + 2 + centerOffset + ((displayIndex - 3) * 12) + 6;
-                        y = this.y + this.width / 2f - 6 - (3 * 12) + 6;
-                    }
-                }
-
-                RenderUtils.drawTexturedRect(
-                        guiGraphics,
-                        BANNER_TEXTURE_IDENTIFIER,
-                        x,
-                        y,
-                        24,
-                        12,
-                        24,
-                        ((6 + i) * 12),
-                        24,
-                        12,
-                        48,
-                        132);
-
-                displayIndex++;
-            }
         }
     }
 
