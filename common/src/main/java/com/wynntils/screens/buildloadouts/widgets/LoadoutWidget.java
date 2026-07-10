@@ -2,9 +2,9 @@ package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
-import com.wynntils.models.abilitytree.type.ArchetypeType;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.screens.buildloadouts.type.Loadout;
+import com.wynntils.screens.buildloadouts.type.LoadoutType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -17,6 +17,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public class LoadoutWidget extends AbstractWidget {
@@ -31,6 +32,9 @@ public class LoadoutWidget extends AbstractWidget {
     private final ItemStack archetypeItemStack;
     private final Texture aspectTexture;
     private final Texture aspectFlameTexture;
+
+    private static final Identifier BANNER_TEXTURE_IDENTIFIER =
+            Identifier.withDefaultNamespace("textures/font/tooltip/banner.png");
 
     public LoadoutWidget(StyledText text, int x, int y, int width, int height, Loadout loadout, BuildLoadoutsScreen parent) {
         super(x, y, width, height, Component.literal("Loadout Widget"));
@@ -54,18 +58,20 @@ public class LoadoutWidget extends AbstractWidget {
                 this.width,
                 this.height);
 
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        guiGraphics,
-                        getTruncatedText(this.text),
-                        this.x + TEXT_WIDTH_PADDING + 20 + ((this.width - TEXT_WIDTH_PADDING * 2 - 20) / 2f),
-                        this.y + TEXT_HEIGHT_PADDING,
-                        this.y + this.height - TEXT_HEIGHT_PADDING,
-                        this.width - TEXT_WIDTH_PADDING * 2 - 20,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
+        if (loadout.type() != LoadoutType.SKILL_POINT) {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            guiGraphics,
+                            getTruncatedText(this.text, MAX_VISIBLE_CHARACTERS),
+                            this.x + TEXT_WIDTH_PADDING + 20 + ((this.width - TEXT_WIDTH_PADDING * 2 - 20) / 2f),
+                            this.y + TEXT_HEIGHT_PADDING,
+                            this.y + this.height - TEXT_HEIGHT_PADDING,
+                            this.width - TEXT_WIDTH_PADDING * 2 - 20,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+        }
 
         if (archetypeItemStack != null) {
             RenderUtils.renderItem(
@@ -90,16 +96,84 @@ public class LoadoutWidget extends AbstractWidget {
                     this.x - 16 + 6,
                     this.y - 16 + 12
             );
+        } else if (loadout.type() == LoadoutType.SKILL_POINT) {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            guiGraphics,
+                            getTruncatedText(this.text, MAX_VISIBLE_CHARACTERS - 6),
+                            this.x + TEXT_WIDTH_PADDING + 36 + ((this.width - TEXT_WIDTH_PADDING * 2 - 36) / 2f),
+                            this.y + TEXT_HEIGHT_PADDING,
+                            this.y + this.height - TEXT_HEIGHT_PADDING,
+                            this.width - TEXT_WIDTH_PADDING * 2 - 36,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+
+
+            int displayCount = 0;
+            for (int i = 0; i < 5; i++) {
+                if (loadout.skillPoints().getSkillPointsAsArray()[i] > 0) {
+                    displayCount++;
+                }
+            }
+
+            float centerOffset;
+            if (displayCount <= 3) {
+                centerOffset = 24 - 6 * displayCount - 8;
+            } else {
+                centerOffset = 24 - 6 * 3 - 8;
+            }
+
+            int displayIndex = 0;
+            for (int i = 0; i < 5; i++) {
+                if (loadout.skillPoints().getSkillPointsAsArray()[i] <= 0) {
+                    continue;
+                }
+
+                float x, y;
+
+                if (displayCount <= 3) {
+                    // Single centered row
+                    x = this.x + 2 + centerOffset + (displayIndex * 12);
+                    y = this.y + this.width / 2f - 6 - (3 * 12);
+                } else {
+                    // Two-row staggered layout
+                    if (displayIndex < 3) {
+                        x = this.x + 2 + centerOffset + (displayIndex * 12);
+                        y = this.y + this.width / 2f - 6 - (3 * 12) - 6;
+                    } else {
+                        x = this.x + 2 + centerOffset + ((displayIndex - 3) * 12) + 6;
+                        y = this.y + this.width / 2f - 6 - (3 * 12) + 6;
+                    }
+                }
+
+                RenderUtils.drawTexturedRect(
+                        guiGraphics,
+                        BANNER_TEXTURE_IDENTIFIER,
+                        x,
+                        y,
+                        24,
+                        12,
+                        24,
+                        ((6 + i) * 12),
+                        24,
+                        12,
+                        48,
+                        132);
+
+                displayIndex++;
+            }
         }
     }
 
-    private StyledText getTruncatedText(StyledText text) {
+    private StyledText getTruncatedText(StyledText text, int maxVisibleChars) {
         int visibleLength = text.length();
-        if (visibleLength <= MAX_VISIBLE_CHARACTERS) {
+        if (visibleLength <= maxVisibleChars) {
             return text;
         }
 
-        return text.substring(0, MAX_VISIBLE_CHARACTERS - 3, StyleType.NONE).append("...");
+        return text.substring(0, maxVisibleChars - 3, StyleType.NONE).append("...");
     }
 
     @Override

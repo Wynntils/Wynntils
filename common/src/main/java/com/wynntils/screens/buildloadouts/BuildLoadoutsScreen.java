@@ -321,6 +321,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
     }
 
     private void updateMenu() {
+        loadoutScrollListWidget.scrollOffset = 0;
         newLoadoutInputWidget.visible = false;
         newBuildLoadoutButton.visible = false;
         newAbilityTreeLoadoutButton.visible = false;

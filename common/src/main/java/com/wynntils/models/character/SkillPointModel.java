@@ -146,7 +146,7 @@ public final class SkillPointModel extends Model {
         }
 
         List<ClickAction> clickActions = calculateClickActions(target.getSkillPointsAsArray());
-        int batchSize = 5; // tune this if needed (5 clicks ≈ 1 packet burst)
+        int batchSize = 5; // tune this if needed (5 clicks = 1 packet burst)
 
         QueryBuilder builder = ScriptedContainerQuery.builder("Loading Skill Point Loadout Query")
                 .onError(msg -> {
