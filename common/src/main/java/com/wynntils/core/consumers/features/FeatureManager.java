@@ -167,6 +167,7 @@ import com.wynntils.features.utilities.HighlightGatheringNodesFeature;
 import com.wynntils.features.utilities.PerCharacterGuildContributionFeature;
 import com.wynntils.features.utilities.SilencerFeature;
 import com.wynntils.features.utilities.SkillPointLoadoutsFeature;
+import com.wynntils.features.utilities.SoundTriggersFeature;
 import com.wynntils.features.utilities.TranscribeMessagesFeature;
 import com.wynntils.features.utilities.TranslationFeature;
 import com.wynntils.features.utilities.ValuablesProtectionFeature;
@@ -424,6 +425,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
         registerFeature(new SkillPointLoadoutsFeature());
+        registerFeature(new SoundTriggersFeature());
         registerFeature(new TranscribeMessagesFeature());
         registerFeature(new TranslationFeature());
         registerFeature(new ValuablesProtectionFeature());
