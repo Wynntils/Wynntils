@@ -43,7 +43,7 @@ public class WeeklyConfigBackupFeature extends Feature {
                     "backups/" + StringUtils.formatDateTime(currentTime).replace(":", ""));
             FileUtils.mkdir(newBackupDir);
 
-            File userConfigFile = Managers.Config.getUserConfigFile();
+            File userConfigFile = Managers.Config.getGlobalConfigFile();
 
             if (userConfigFile == null) {
                 WynntilsMod.warn("Failed to create backup of user config file: user config file is null");
