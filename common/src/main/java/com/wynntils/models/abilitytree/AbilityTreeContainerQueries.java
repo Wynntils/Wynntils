@@ -163,7 +163,7 @@ public class AbilityTreeContainerQueries {
                         needsAbilityTreeReset = false;
                     }
                     abilityTreeItem.ifPresent(
-                            treeItem -> needsAbilityTreeReset = treeItem.getCount() >= treeItem.getTotalPoints());
+                            treeItem -> needsAbilityTreeReset = treeItem.getCount() <= treeItem.getTotalPoints());
 
                     int amount = 0;
 
