@@ -3628,6 +3628,8 @@
   "screens.wynntils.skillPointLoadouts.widgetLevelText": "Level %d",
   "screens.wynntils.soundTriggerManagementScreen.addButton.text": "Add",
   "screens.wynntils.soundTriggerManagementScreen.addButton.tooltip": "Add a new Sound Trigger.",
+  "screens.wynntils.soundTriggerManagementScreen.closeButton.text": "Close",
+  "screens.wynntils.soundTriggerManagementScreen.closeButton.tooltip": "Close this menu.",
   "screens.wynntils.soundTriggerManagementScreen.controllerField.title": "Controller Template",
   "screens.wynntils.soundTriggerManagementScreen.controllerField.tooltip": "Function template that needs to return a Boolean. Controlls whether this trigger should play its sound.",
   "screens.wynntils.soundTriggerManagementScreen.deleteButton.text": "Delete",

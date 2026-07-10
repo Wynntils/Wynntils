@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
@@ -64,6 +63,11 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
             Component.translatable("screens.wynntils.soundTriggerManagementScreen.addButton.text");
     private static final Component ADD_BUTTON_TOOLTIP =
             Component.translatable("screens.wynntils.soundTriggerManagementScreen.addButton.tooltip");
+
+    private static final Component CLOSE_BUTTON_TEXT =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.closeButton.text");
+    private static final Component CLOSE_BUTTON_TOOLTIP =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.closeButton.tooltip");
 
     private static final Component DELETE_BUTTON_TEXT =
             Component.translatable("screens.wynntils.soundTriggerManagementScreen.deleteButton.text");
@@ -127,6 +131,7 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
     private float scrollY;
 
     private TriggerSideButton addButton;
+    private TriggerSideButton closeButton;
     private TriggerSideButton deleteButton;
 
     // region Setting Widgets
@@ -177,11 +182,6 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
 
         setFocusedTextInput(searchWidget);
 
-        addRenderableWidget(
-                new Button.Builder(Component.literal("X").withStyle(ChatFormatting.RED), (button) -> onClose())
-                        .pos((int) (getTranslationX() - 25), (int) (getTranslationY() - 25))
-                        .size(20, 20)
-                        .build());
         this.addButton = new TriggerSideButton(
                 getTranslationXint() - SIDE_BUTTON_TEXTURE.width() + 4,
                 getTranslationYint() + 28,
@@ -197,6 +197,16 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
                 },
                 ADD_BUTTON_TOOLTIP,
                 ADD_BUTTON_TEXT);
+
+        this.closeButton = new TriggerSideButton(
+                getTranslationXint() - SIDE_BUTTON_TEXTURE.width() + 4,
+                getTranslationYint() + 58,
+                SIDE_BUTTON_TEXTURE.width(),
+                SIDE_BUTTON_TEXTURE.height() / 2,
+                SIDE_BUTTON_TEXTURE,
+                i -> onClose(),
+                CLOSE_BUTTON_TOOLTIP,
+                CLOSE_BUTTON_TEXT);
 
         this.deleteButton = new TriggerSideButton(
                 getTranslationXint() - SIDE_BUTTON_TEXTURE.width() + 4,
@@ -313,6 +323,7 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         addButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        closeButton.render(guiGraphics, mouseX, mouseY, partialTick);
         if (selectedTrigger != null) {
             deleteButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }
@@ -550,6 +561,7 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
     private List<GuiEventListener> getAllWidgets() {
         List<GuiEventListener> list = new ArrayList<>(triggerButtons);
         list.add(addButton);
+        list.add(closeButton);
         list.add(deleteButton);
         if (selectedTrigger != null) {
             list.addAll(children());
