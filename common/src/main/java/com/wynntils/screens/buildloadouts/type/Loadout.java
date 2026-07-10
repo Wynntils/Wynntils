@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.buildloadouts.type;
 
+import com.wynntils.models.abilitytree.type.ArchetypeType;
 import com.wynntils.models.abilitytree.type.SavableAbilityTree;
 import com.wynntils.models.aspects.type.SavableAspectSet;
 import com.wynntils.models.character.type.ClassType;
@@ -77,43 +78,14 @@ public record Loadout(
         };
     }
 
-    // The names are from Static-storage/Reference/abilities.json
-    // It's the "archetype" field.
-    private Texture getArchetypeTexture() {
+    public ArchetypeType getArchetypeType() {
         String archetype = getMainArchetype();
         if (archetype.isEmpty()) return null;
 
-        return switch (archetype) {
-            // archer
-            case "Boltslinger" -> Texture.ARCHETYPE_BOLTSLINGER;
-            case "Sharpshooter" -> Texture.ARCHETYPE_SHARPSHOOTER;
-            case "Trapper" -> Texture.ARCHETYPE_TRAPPER;
-
-            // assassin
-            case "Acrobat" -> Texture.ARCHETYPE_ACROBAT;
-            case "Shadestepper" -> Texture.ARCHETYPE_SHADESTEPPER;
-            case "Trickster" -> Texture.ARCHETYPE_TRICKSTER;
-
-            // mage
-            case "Arcanist" -> Texture.ARCHETYPE_ARCANIST;
-            case "Light Bender" -> Texture.ARCHETYPE_LIGHTBENDER;
-            case "Riftwalker" -> Texture.ARCHETYPE_RIFTWALKER;
-
-            // shaman
-            case "Acolyte" -> Texture.ARCHETYPE_ACOLYTE;
-            case "Ritualist" -> Texture.ARCHETYPE_RITUALIST;
-            case "Summoner" -> Texture.ARCHETYPE_SUMMONER;
-
-            // warrior
-            case "Battle Monk" -> Texture.ARCHETYPE_BATTLE_MONK;
-            case "Fallen" -> Texture.ARCHETYPE_FALLEN;
-            case "Paladin" -> Texture.ARCHETYPE_PALADIN;
-
-            default -> null;
-        };
+        return ArchetypeType.fromName(archetype);
     }
 
-    private Texture getAspectTexture() {
+    public Texture getAspectTexture() {
         if (type != LoadoutType.ASPECT) return null;
 
         return switch (getClassType()) {
@@ -124,16 +96,6 @@ public record Loadout(
             case ClassType.WARRIOR -> Texture.ASPECT_WARRIOR;
             default -> null;
         };
-    }
-
-    public Texture getDisplayTexture() {
-        Texture archetypeTexture = getArchetypeTexture();
-        if (archetypeTexture != null) return archetypeTexture;
-
-        Texture aspectTexture = getAspectTexture();
-        if (aspectTexture != null) return aspectTexture;
-
-        return null;
     }
 
     public Texture getFlameTexture() {

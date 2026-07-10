@@ -16,11 +16,6 @@ public final class WynntilsAtlasManager extends Manager {
             Identifier.fromNamespaceAndPath(WynntilsMod.MOD_ID, "ui_components"),
             false),
             new AtlasManager.AtlasConfig(
-                    Identifier.fromNamespaceAndPath(WynntilsMod.MOD_ID, "textures/atlas/archetype.png"),
-                    Identifier.fromNamespaceAndPath(WynntilsMod.MOD_ID, "archetype"),
-                    false
-            ),
-            new AtlasManager.AtlasConfig(
                     Identifier.fromNamespaceAndPath(WynntilsMod.MOD_ID, "textures/atlas/aspect.png"),
                     Identifier.fromNamespaceAndPath(WynntilsMod.MOD_ID, "aspect"),
                     false

@@ -1,12 +1,11 @@
 package com.wynntils.screens.buildloadouts.widgets;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
+import com.wynntils.models.abilitytree.type.ArchetypeType;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.screens.buildloadouts.type.Loadout;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -18,6 +17,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
 public class LoadoutWidget extends AbstractWidget {
     private static final int TEXT_WIDTH_PADDING = 4;
@@ -28,8 +28,9 @@ public class LoadoutWidget extends AbstractWidget {
     private int y;
     private Loadout loadout;
     private BuildLoadoutsScreen parent;
-    private final Texture displayTexture;
-    private final Texture flameTexture;
+    private final ItemStack archetypeItemStack;
+    private final Texture aspectTexture;
+    private final Texture aspectFlameTexture;
 
     public LoadoutWidget(StyledText text, int x, int y, int width, int height, Loadout loadout, BuildLoadoutsScreen parent) {
         super(x, y, width, height, Component.literal("Loadout Widget"));
@@ -38,8 +39,9 @@ public class LoadoutWidget extends AbstractWidget {
         this.y = y;
         this.loadout = loadout;
         this.parent = parent;
-        this.displayTexture = loadout.getDisplayTexture();
-        this.flameTexture = loadout.getFlameTexture();
+        this.archetypeItemStack = loadout.getArchetypeType() != null ? loadout.getArchetypeType().generateItemStack() : null;
+        this.aspectTexture = loadout.getAspectTexture();
+        this.aspectFlameTexture = loadout.getFlameTexture();
     }
 
     @Override
@@ -65,28 +67,26 @@ public class LoadoutWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        if (displayTexture != null && flameTexture == null) {
-            RenderUtils.drawSprite(
+        if (archetypeItemStack != null) {
+            RenderUtils.renderItem(
                     guiGraphics,
-                    displayTexture,
-                    this.x - 4,
-                    this.y
+                    archetypeItemStack,
+                    this.x + 5,
+                    this.y + this.height / 2 - 8
             );
-        }
-
-        if (displayTexture != null && flameTexture != null) {
+        } else if (aspectTexture != null && aspectFlameTexture != null) {
             RenderUtils.drawSprite(
                     guiGraphics,
-                    flameTexture,
+                    aspectFlameTexture,
                     this.x - (12 * (3f / 4f)) + 5,
                     this.y - 1 + 5,
-                    flameTexture.width() * (3f / 4f),
-                    flameTexture.height() * (3f / 4f)
+                    aspectFlameTexture.width() * (3f / 4f),
+                    aspectFlameTexture.height() * (3f / 4f)
             );
 
             RenderUtils.drawSprite(
                     guiGraphics,
-                    displayTexture,
+                    aspectTexture,
                     this.x - 16 + 6,
                     this.y - 16 + 12
             );
