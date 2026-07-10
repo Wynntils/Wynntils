@@ -804,8 +804,8 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
         boolean hasSp = sp != null;
         boolean hasAt = at != null;
         boolean hasAspect = aspect != null;
-        if (hasSp && sp.isBuild()) return LoadoutType.BUILD;
-        if (hasAt && !hasSp) return LoadoutType.ABILITY_TREE;
+        if (hasSp && hasAt && hasAspect) return LoadoutType.BUILD;
+        if (hasAt && !hasSp && !hasAspect) return LoadoutType.ABILITY_TREE;
         if (hasAspect && !hasSp && !hasAt) return LoadoutType.ASPECT;
         return LoadoutType.SKILL_POINT;
     }

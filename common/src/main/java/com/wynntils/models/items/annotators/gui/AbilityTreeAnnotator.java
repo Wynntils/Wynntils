@@ -17,13 +17,13 @@ public final class AbilityTreeAnnotator implements GuiItemAnnotator {
     // Deals with the ability tree button in the compass menu
     private static final StyledText COMPASS_ABILITY_POINTS_NAME = StyledText.fromString("§b§lAbility Tree");
     private static final Pattern COMPASS_ABILITY_POINTS_PATTERN =
-            Pattern.compile("^§b✦ Available Points: §f(\\d+)§7\\/(\\d+)$");
+            Pattern.compile("^§b✦ Available Points: §(?:#a0c84bff|f)(\\d+)§7\\/(\\d+)$");
 
     // Deals with the reset button in the ability tree screen
     private static final StyledText TREE_ABILITY_POINTS_NAME = StyledText.fromString("§#82eff4ff§lAbility Points");
     // Test in AbilityTreeAnnotator_TREE_ABILITY_POINTS_PATTERN
     private static final Pattern TREE_ABILITY_POINTS_PATTERN =
-            Pattern.compile("^§b✦ Available Points: §f(\\d+)§7/\\d+$");
+            Pattern.compile("^§b✦ Available Points: §(?:#a0c84bff|f)(\\d+)§7/\\d+$");//§#a0c84bff
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
