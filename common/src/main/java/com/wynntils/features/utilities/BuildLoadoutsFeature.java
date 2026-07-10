@@ -13,7 +13,7 @@ import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
+import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.input.InputWithModifiers;
@@ -21,8 +21,8 @@ import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
-public class SkillPointLoadoutsFeature extends Feature {
-    public SkillPointLoadoutsFeature() {
+public class BuildLoadoutsFeature extends Feature {
+    public BuildLoadoutsFeature() {
         super(new ProfileDefault.Builder()
                 .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
                 .build());
@@ -42,17 +42,12 @@ public class SkillPointLoadoutsFeature extends Feature {
         private static final int BUTTON_HEIGHT = 20;
 
         private LoadoutScreenButton(int x, int y) {
-            super(
-                    x,
-                    y,
-                    BUTTON_WIDTH,
-                    BUTTON_HEIGHT,
-                    Component.translatable("feature.wynntils.skillPointLoadouts.button"));
+            super(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, Component.translatable("feature.wynntils.buildLoadouts.button"));
         }
 
         @Override
         public void onPress(InputWithModifiers input) {
-            McUtils.setScreen(SkillPointLoadoutsScreen.create());
+            McUtils.setScreen(BuildLoadoutsScreen.create());
         }
     }
 }

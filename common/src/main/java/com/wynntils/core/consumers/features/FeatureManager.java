@@ -159,6 +159,7 @@ import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
 import com.wynntils.features.utilities.AutoSkipCutscenesFeature;
+import com.wynntils.features.utilities.BuildLoadoutsFeature;
 import com.wynntils.features.utilities.CharacterSelectionUtilitiesFeature;
 import com.wynntils.features.utilities.EnhancedStreamerModeFeature;
 import com.wynntils.features.utilities.FixCrosshairPositionFeature;
@@ -166,7 +167,6 @@ import com.wynntils.features.utilities.GammabrightFeature;
 import com.wynntils.features.utilities.HighlightGatheringNodesFeature;
 import com.wynntils.features.utilities.PerCharacterGuildContributionFeature;
 import com.wynntils.features.utilities.SilencerFeature;
-import com.wynntils.features.utilities.SkillPointLoadoutsFeature;
 import com.wynntils.features.utilities.TranscribeMessagesFeature;
 import com.wynntils.features.utilities.TranslationFeature;
 import com.wynntils.features.utilities.ValuablesProtectionFeature;
@@ -415,6 +415,7 @@ public final class FeatureManager extends Manager {
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
         registerFeature(new AutoSkipCutscenesFeature());
+        registerFeature(new BuildLoadoutsFeature());
         registerFeature(new CharacterSelectionUtilitiesFeature());
         registerFeature(new EnhancedStreamerModeFeature());
         registerFeature(new FixCrosshairPositionFeature());
@@ -423,7 +424,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new HighlightGatheringNodesFeature());
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
-        registerFeature(new SkillPointLoadoutsFeature());
         registerFeature(new TranscribeMessagesFeature());
         registerFeature(new TranslationFeature());
         registerFeature(new ValuablesProtectionFeature());

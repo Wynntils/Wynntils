@@ -148,6 +148,21 @@ public final class ContainerQueryHandler extends Handler {
                     return;
                 }
 
+                // Step finished without opening a new container, advance if more steps exist
+                try {
+                    ContainerQueryStep nextStep = currentStep.getNextStep(currentContent);
+
+                    if (nextStep != null) {
+                        currentStep = nextStep;
+                        ticksUntilNextOperation = currentStep.getNextOperationDelayTicks();
+                        return;
+                    }
+                } catch (ContainerQueryException t) {
+                    McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
+                    raiseError("Error while processing content for " + firstStepName + ": " + t.getMessage());
+                    return;
+                }
+
                 // We're done
                 endQuery();
                 McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
@@ -363,7 +378,7 @@ public final class ContainerQueryHandler extends Handler {
         if (nextStep != null) {
             // Go on and query another container
             currentStep = nextStep;
-            ticksUntilNextOperation = NEXT_OPERATION_DELAY_TICKS;
+            ticksUntilNextOperation = currentStep.getNextOperationDelayTicks();
         } else {
             // We're done
             endQuery();

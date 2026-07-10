@@ -2,10 +2,10 @@
  * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.skillpointloadouts.widgets;
+package com.wynntils.screens.buildloadouts.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.screens.skillpointloadouts.SkillPointLoadoutsScreen;
+import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
@@ -19,13 +19,12 @@ public class ScrollBar extends AbstractWidget {
     // slightly darker than light gray but lighter than normal gray
     private static final CustomColor HOVERED = CustomColor.fromInt(0x8d8d8d).withAlpha(255);
 
-    private final SkillPointLoadoutsScreen parent;
+    private final BuildLoadoutsScreen parent;
     private final float dividedHeight;
 
     private boolean scrolling = false;
 
-    public ScrollBar(
-            float x, float y, float width, float height, SkillPointLoadoutsScreen parent, float dividedHeight) {
+    public ScrollBar(float x, float y, float width, float height, BuildLoadoutsScreen parent, float dividedHeight) {
         super((int) x, (int) y, (int) width, (int) height, Component.empty());
         this.parent = parent;
         this.dividedHeight = dividedHeight;

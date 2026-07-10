@@ -25,11 +25,20 @@ public class UnprocessedAbilityTreeInfo {
     private final Map<AbilityTreeLocation, AbilityTreeConnectionType> connectionMap = new HashMap<>();
     private final Map<AbilityTreeLocation, AbilityTreeSkillNode> nodeMap = new HashMap<>();
     private boolean processed = false;
+    private boolean normalizeToDefaultType = false;
+
+    public void setNormalizeToDefaultType(boolean normalizeToDefaultType) {
+        this.normalizeToDefaultType = normalizeToDefaultType;
+    }
 
     private void addNodeFromItem(ItemStack itemStack, int page, int slot) {
         AbilityTreeSkillNode node = Models.AbilityTree.ABILITY_TREE_PARSER
                 .parseNodeFromItem(itemStack, page, slot, nodes.size() + 1)
                 .key();
+
+        if (normalizeToDefaultType) {
+            node = node.withDefaultType();
+        }
 
         nodes.add(node);
         nodeMap.put(AbilityTreeLocation.fromSlot(slot, page), node);

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.aspects;
@@ -15,6 +15,7 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.models.aspects.type.AspectInfo;
+import com.wynntils.models.aspects.type.SavableAspectSet;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.containers.AspectsContainer;
@@ -22,12 +23,14 @@ import com.wynntils.models.containers.containers.RaidRewardChestContainer;
 import com.wynntils.models.containers.containers.RaidRewardPreviewContainer;
 import com.wynntils.models.items.items.game.AspectItem;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
@@ -36,12 +39,16 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class AspectModel extends Model {
     private static final Pattern NO_ASPECT_PATTERN = Pattern.compile("§8§l(?:Empty|Locked) Aspect Slot");
     private final AspectInfoRegistry aspectInfoRegistry = new AspectInfoRegistry();
+    public static final AspectContainerQueries ASPECT_CONTAINER_QUERIES = new AspectContainerQueries();
 
     @Persisted
     private final Storage<Map<String, List<String>>> equippedAspects = new Storage<>(new TreeMap<>());
 
     @Persisted
     private final Storage<Map<String, Integer>> ownedAspects = new Storage<>(new TreeMap<>());
+
+    @Persisted
+    private final Storage<Map<String, SavableAspectSet>> aspectLoadouts = new Storage<>(new TreeMap<>());
 
     public AspectModel() {
         super(List.of());
@@ -138,6 +145,10 @@ public final class AspectModel extends Model {
         return aspectInfoRegistry.getAllAspectInfos();
     }
 
+    public AspectInfo getAspectInfo(String aspectName) {
+        return aspectInfoRegistry.getFromDisplayName(aspectName);
+    }
+
     public Optional<String> getEquippedAspect(int index) {
         List<String> characterAspects = equippedAspects.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
 
@@ -183,5 +194,59 @@ public final class AspectModel extends Model {
         }
 
         return List.of();
+    }
+
+    public Map<String, SavableAspectSet> getAspectLoadouts() {
+        return aspectLoadouts.get();
+    }
+
+    public SavableAspectSet getAspectLoadout(String name) {
+        return aspectLoadouts.get().get(name);
+    }
+
+    public boolean hasAspectLoadout(String name) {
+        return aspectLoadouts.get().containsKey(name);
+    }
+
+    public void deleteAspectLoadout(String name) {
+        aspectLoadouts.get().remove(name);
+    }
+
+    public void saveCurrentAspectLoadout(
+            String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
+        ASPECT_CONTAINER_QUERIES.dumpAspectContainer(
+                loadout -> {
+                    aspectLoadouts.get().put(name, loadout);
+                    WynntilsMod.info("Saved aspect loadout: " + name);
+                },
+                onStatus,
+                onError,
+                onComplete);
+    }
+
+    public void loadAspectLoadout(
+            String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
+        SavableAspectSet loadout = getAspectLoadout(name);
+        if (loadout == null) {
+            onError.accept("No saved aspect loadout: " + name);
+            return;
+        }
+
+        ClassType currentClass = Models.Character.getClassType();
+        if (loadout.classType() != null && loadout.classType() != currentClass && currentClass != ClassType.NONE) {
+            onError.accept("Loadout " + name + " is for " + loadout.classType().getName() + ", but you are "
+                    + currentClass.getName());
+            return;
+        }
+
+        if (loadout.aspectNames().isEmpty()) {
+            onComplete.accept("Loadout " + name + " is empty, nothing to apply");
+            return;
+        }
+
+        // Close any open background container before starting the query
+        ContainerUtils.closeBackgroundContainer();
+
+        ASPECT_CONTAINER_QUERIES.applyAspectLoadout(loadout.aspectNames(), onStatus, onError, onComplete);
     }
 }
