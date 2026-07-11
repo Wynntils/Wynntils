@@ -50,7 +50,7 @@ public record Loadout(
     }
 
     public String getMainArchetype() {
-        return hasAbilityTree() ? abilityTree().getMainArchetype() : "";
+        return hasAbilityTree() ? abilityTree().getMainArchetype() : null;
     }
 
     public int getNodeCount() {
@@ -80,7 +80,7 @@ public record Loadout(
 
     public ArchetypeType getArchetypeType() {
         String archetype = getMainArchetype();
-        if (archetype.isEmpty()) return null;
+        if (archetype == null || archetype.isEmpty()) return null;
 
         return ArchetypeType.fromName(archetype);
     }

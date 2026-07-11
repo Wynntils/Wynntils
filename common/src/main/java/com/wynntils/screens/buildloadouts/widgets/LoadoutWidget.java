@@ -12,6 +12,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -19,6 +20,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.stream.IntStream;
 
@@ -49,13 +51,29 @@ public class LoadoutWidget extends AbstractWidget implements IconRenderer {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
-                this.x,
-                this.y,
-                this.width,
-                this.height);
+        if (parent.getSelectedLoadout() != loadout) {
+            RenderUtils.drawNineSliceScalingTexturedRect(
+                    guiGraphics,
+                    Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
+                    this.x,
+                    this.y,
+                    this.width,
+                    this.height);
+        } else {
+            RenderUtils.drawNineSliceScalingTexturedRect(
+                    guiGraphics,
+                    Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_BLUE,
+                    x,
+                    y,
+                    this.width,
+                    this.height);
+
+            RenderUtils.drawTexturedRect(
+                    guiGraphics,
+                    Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB,
+                    x + this.width - Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB.width() / 2f,
+                    (this.y + this.height / 2f) - Texture.BUILD_LOADOUTS_WIDGET_SELECT_TAB.height() / 2f);
+        }
 
         if (loadout.type() != LoadoutType.SKILL_POINT) {
             FontRenderer.getInstance()
@@ -121,7 +139,12 @@ public class LoadoutWidget extends AbstractWidget implements IconRenderer {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        return false;
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
+
+        this.playDownSound(Minecraft.getInstance().getSoundManager());
+
+        parent.setSelectedLoadout(loadout);
+        return true;
     }
 
     @Override

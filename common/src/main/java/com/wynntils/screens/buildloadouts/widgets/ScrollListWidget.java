@@ -1,5 +1,6 @@
 package com.wynntils.screens.buildloadouts.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -11,6 +12,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public abstract class ScrollListWidget extends AbstractWidget {
     private static final float SCROLL_FACTOR = 10f;
@@ -20,6 +22,7 @@ public abstract class ScrollListWidget extends AbstractWidget {
     private static final int SCROLL_BAR_HEIGHT_PADDING = 4;
     private static final int SCROLL_BAR_WIDTH_PADDING = 4;
     public int scrollOffset = 0;
+    private boolean draggingScroll = false;
     private final int x;
     private final int y;
     private final int widgetHeight;
@@ -62,6 +65,12 @@ public abstract class ScrollListWidget extends AbstractWidget {
         RenderUtils.disableScissor(guiGraphics);
 
         renderScroll(guiGraphics);
+
+        if (draggingScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (isOntopOfScrollDragButton(mouseX, mouseY)) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
     }
 
     private void renderScroll(GuiGraphics guiGraphics) {
@@ -72,14 +81,44 @@ public abstract class ScrollListWidget extends AbstractWidget {
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
-        WynntilsMod.info("dragged");
+        if (!draggingScroll) return false;
+
+        int scrollAreaStartY = this.y + SCROLL_BAR_BUTTON_HEIGHT_PADDING + 5;
+        int scrollAreaHeight = this.height - Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON.height() - SCROLL_BAR_BUTTON_HEIGHT_PADDING;
+
+        int newOffset = Math.round(MathUtils.map(
+                (float) event.y(), scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
+
+        newOffset = Math.max(0, Math.min(newOffset, getMaxScrollOffset()));
+
+        scroll(newOffset);
 
         return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        return false;
+        if (!draggingScroll) {
+            if (isOntopOfScrollDragButton(event.x(), event.y())) {
+                draggingScroll = true;
+
+                return true;
+            }
+        }
+
+        for (AbstractWidget widget : getWidgets()) {
+            if (widget.isMouseOver(event.x(), event.y())) {
+                return widget.mouseClicked(event, isDoubleClick);
+            }
+        }
+
+        return super.mouseClicked(event, isDoubleClick);
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        draggingScroll = false;
+        return super.mouseReleased(event);
     }
 
     @Override
@@ -105,6 +144,16 @@ public abstract class ScrollListWidget extends AbstractWidget {
 
     private int getMaxScrollOffset() {
         return (getWidgets().size() - MAX_WIDGETS_PER_PAGE) * (widgetHeight + widgetHeightPadding);
+    }
+
+    private boolean isOntopOfScrollDragButton(double mouseX, double mouseY) {
+        return MathUtils.isInside(
+                (int) mouseX,
+                (int) mouseY,
+                this.x + this.width - Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON.width() - SCROLL_BAR_BUTTON_WIDTH_PADDING,
+                this.x + this.width - SCROLL_BAR_BUTTON_WIDTH_PADDING,
+                (int) scrollY,
+                (int) (scrollY + Texture.SCROLL_BUTTON.height()));
     }
 
     @Override
