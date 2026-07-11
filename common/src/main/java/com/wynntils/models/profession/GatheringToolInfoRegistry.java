@@ -15,6 +15,7 @@ import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.profession.type.GatheringToolInfo;
+import com.wynntils.models.profession.type.GatheringToolType;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.wynnitem.AbstractItemInfoDeserializer;
 import com.wynntils.models.wynnitem.type.ItemMaterial;
@@ -98,7 +99,9 @@ public class GatheringToolInfoRegistry {
 
             ItemMaterial material = parseMaterial(json, displayName);
 
-            ProfessionType professionType = ProfessionType.fromString(JsonUtils.getNullableJsonString(json, "subType"));
+            GatheringToolType gatheringToolType =
+                    GatheringToolType.fromApiName(JsonUtils.getNullableJsonString(json, "subType"));
+            ProfessionType professionType = gatheringToolType.getProfessionType();
 
             int gatheringSpeed = JsonUtils.getNullableJsonInt(json, "gatheringSpeed");
             int durability = JsonUtils.getNullableJsonInt(json, "durability");
@@ -113,6 +116,7 @@ public class GatheringToolInfoRegistry {
                     internalName,
                     tier,
                     material,
+                    gatheringToolType,
                     professionType,
                     gatheringSpeed,
                     durability,
