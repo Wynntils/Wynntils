@@ -12,13 +12,13 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.handlers.item.ItemHandler;
+import com.wynntils.mc.event.ItemTooltipLinesEvent;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatPossibleValues;
-import com.wynntils.mc.event.ItemTooltipLinesEvent;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.WynncraftShaderColor;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -190,10 +190,7 @@ public class ItemStatInfoFeature extends Feature {
             MutableComponent name = createDecoratedName(sibling, perfectItem, defectiveItem);
             if (showPercentage) {
                 name.append(ColorScaleUtils.getPercentageTextComponent(
-                        getColorMap(),
-                        identifiableItem.getOverallPercentage(),
-                        colorLerp.get(),
-                        decimalPlaces.get()));
+                        getColorMap(), identifiableItem.getOverallPercentage(), colorLerp.get(), decimalPlaces.get()));
             }
             siblings.set(i, name);
             return true;
@@ -224,14 +221,14 @@ public class ItemStatInfoFeature extends Feature {
 
     private String getDisplayedValue(StatActualValue identification) {
         int value = identification.statType().calculateAsInverted() ? -identification.value() : identification.value();
-        return StringUtils.toSignedCommaString(value) + identification.statType().getUnit().getDisplayName();
+        return StringUtils.toSignedCommaString(value)
+                + identification.statType().getUnit().getDisplayName();
     }
 
     private boolean replaceIdentificationMeter(
-            MutableComponent line,
-            StatActualValue identification,
-            IdentifiableItemProperty<?, ?> identifiableItem) {
-        StatPossibleValues possibleValues = findPossibleValues(identification, identifiableItem).orElseThrow();
+            MutableComponent line, StatActualValue identification, IdentifiableItemProperty<?, ?> identifiableItem) {
+        StatPossibleValues possibleValues =
+                findPossibleValues(identification, identifiableItem).orElseThrow();
         MutableComponent percentage = ColorScaleUtils.getPercentageTextComponent(
                         getColorMap(),
                         StatCalculator.getPercentage(identification, possibleValues),
