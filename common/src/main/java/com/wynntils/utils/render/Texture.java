@@ -96,6 +96,9 @@ public enum Texture {
     BUILD_LOADOUTS_INFO_ICON("build_loadouts/info_icon.png", 20, 20),
     BUILD_LOADOUTS_WARNING_ICON("build_loadouts/warning_icon.png", 20, 19),
     BUILD_LOADOUTS_SCOLL_BAR_BUTTON("build_loadouts/scroll_bar_button.png", 7, 21),
+    BUILD_LOADOUTS_RENAME_ICON("build_loadouts/rename_icon.png", 23, 20),
+    BUILD_LOADOUTS_RENAME_ICON_WITH_INKWELL("build_loadouts/rename_icon_with_inkwell.png", 23, 20),
+    BUILD_LOADOUTS_FAVORITE_ICON("build_loadouts/favorite_icon.png", 16, 16),
     // endregion
 
     // region Guild Log

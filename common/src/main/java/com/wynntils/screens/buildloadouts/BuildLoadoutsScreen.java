@@ -5,7 +5,6 @@
 package com.wynntils.screens.buildloadouts;
 
 import com.google.common.collect.Lists;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;

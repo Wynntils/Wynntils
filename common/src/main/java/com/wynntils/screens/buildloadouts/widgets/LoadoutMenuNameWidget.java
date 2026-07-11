@@ -26,11 +26,8 @@ import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public class LoadoutMenuNameWidget extends TextInputBoxWidget {
-    private static final int EDIT_BUTTON_WIDTH = 20;
+    private static final int EDIT_BUTTON_WIDTH = 23;
     private static final int EDIT_BUTTON_HEIGHT = 20;
-    private static final int EDIT_BUTTON_PADDING = 0;
-    private static final Component EDIT_ICON = Component.literal("✎");
-    private static final Component SAVE_ICON = Component.literal("✓");
     private static final float VERTICAL_OFFSET = 6.5f;
 
     private final BuildLoadoutsScreen parent;
@@ -50,17 +47,15 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        // 1. Background (your custom nine‑slice)
         renderBackground(guiGraphics);
 
-        // 2. Text area – either static name or active input
         if (!editing) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             guiGraphics,
                             StyledText.fromString(parent.getSelectedLoadout().name()),
                             this.getX() + textPadding,
-                            this.getX() + this.width - EDIT_BUTTON_WIDTH - EDIT_BUTTON_PADDING,
+                            this.getX() + this.width - EDIT_BUTTON_WIDTH,
                             this.getY() + VERTICAL_OFFSET,
                             0,
                             CommonColors.WHITE,
@@ -72,8 +67,7 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
             super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        // 3. Edit button on top
-        renderEditButton(guiGraphics, mouseX, mouseY);
+        renderEditButton(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
@@ -95,7 +89,7 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
             guiGraphics.requestCursor(CursorTypes.IBEAM);
         }
 
-        int textRight = this.getX() + this.width - textPadding - EDIT_BUTTON_WIDTH - EDIT_BUTTON_PADDING;
+        int textRight = this.getX() + this.width - textPadding - EDIT_BUTTON_WIDTH;
 
         // First portion
         FontRenderer.getInstance()
@@ -152,36 +146,25 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
                 false);
     }
 
-    private void renderEditButton(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        int btnX = this.getX() + this.width - EDIT_BUTTON_WIDTH - EDIT_BUTTON_PADDING;
+    private void renderEditButton(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        int btnX = this.getX() + this.width - EDIT_BUTTON_WIDTH;
         int btnY = this.getY() + (this.height - EDIT_BUTTON_HEIGHT) / 2;
 
-        boolean hovered = mouseX >= btnX && mouseX <= btnX + EDIT_BUTTON_WIDTH
-                && mouseY >= btnY && mouseY <= btnY + EDIT_BUTTON_HEIGHT;
-
-        // Button bg + border
-        RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_BLUE,
-                btnX,
-                btnY,
-                EDIT_BUTTON_WIDTH,
-                EDIT_BUTTON_HEIGHT);
-
-        // Icon
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        guiGraphics,
-                        StyledText.fromString(editing ? SAVE_ICON.getString() : EDIT_ICON.getString()),
-                        btnX,
-                        btnX + EDIT_BUTTON_WIDTH,
-                        btnY,
-                        btnY + EDIT_BUTTON_HEIGHT,
-                        0,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.CENTER,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
+        if (!editing) {
+            RenderUtils.drawTexturedRect(
+                    guiGraphics,
+                    Texture.BUILD_LOADOUTS_RENAME_ICON,
+                    btnX,
+                    btnY
+            );
+        } else {
+            RenderUtils.drawTexturedRect(
+                    guiGraphics,
+                    Texture.BUILD_LOADOUTS_RENAME_ICON_WITH_INKWELL,
+                    btnX,
+                    btnY
+            );
+        }
     }
 
     protected void renderBackground(GuiGraphics guiGraphics) {
@@ -204,26 +187,22 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
 
     @Override
     protected int getMaxTextWidth() {
-        // Keep text from rendering underneath the button
-        return this.width - textPadding * 2 - EDIT_BUTTON_WIDTH - EDIT_BUTTON_PADDING * 2;
+        return this.width - textPadding * 2 - EDIT_BUTTON_WIDTH;
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        // Edit button always has priority
         if (isEditButtonHovered(event.x(), event.y())) {
             this.playDownSound(Minecraft.getInstance().getSoundManager());
             toggleEditing();
             return true;
         }
 
-        // Not editing → ignore clicks on the text area
         if (!editing) {
             return this.isHovered;
         }
 
-        // Editing → normal text field behaviour (restricted to the text area)
-        int textAreaRight = this.getX() + this.width - EDIT_BUTTON_WIDTH - EDIT_BUTTON_PADDING;
+        int textAreaRight = this.getX() + this.width - EDIT_BUTTON_WIDTH;
         if (event.x() >= this.getX()
                 && event.x() <= textAreaRight
                 && event.y() >= this.getY()
@@ -313,7 +292,7 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
     }
 
     private boolean isEditButtonHovered(double mouseX, double mouseY) {
-        int btnX = this.getX() + this.width - EDIT_BUTTON_WIDTH - EDIT_BUTTON_PADDING;
+        int btnX = this.getX() + this.width - EDIT_BUTTON_WIDTH;
         int btnY = this.getY() + (this.height - EDIT_BUTTON_HEIGHT) / 2;
         return mouseX >= btnX && mouseX <= btnX + EDIT_BUTTON_WIDTH
                 && mouseY >= btnY && mouseY <= btnY + EDIT_BUTTON_HEIGHT;
