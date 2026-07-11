@@ -12,7 +12,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.handlers.item.ItemHandler;
-import com.wynntils.mc.event.ItemTooltipLinesEvent;
+import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.stats.StatCalculator;
@@ -121,8 +121,8 @@ public class ItemStatInfoFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onTooltipLines(ItemTooltipLinesEvent event) {
-        if (event.getTooltipLines().isEmpty()) return;
+    public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
+        if (event.getTooltips().isEmpty()) return;
 
         ItemHandler.getItemStackAnnotation(event.getItemStack()).ifPresent(annotation -> {
             if (!(annotation instanceof IdentifiableItemProperty<?, ?> identifiableItem)
@@ -136,7 +136,7 @@ public class ItemStatInfoFeature extends Feature {
                     && (!perfectItem && !defectiveItem || overallPercentageInPerfectDefectiveName.get());
             boolean decorateTitle = perfectItem || defectiveItem || showPercentage;
 
-            List<Component> tooltips = new ArrayList<>(event.getTooltipLines());
+            List<Component> tooltips = new ArrayList<>(event.getTooltips());
             if (decorateTitle) {
                 for (int i = 1; i < tooltips.size(); i++) {
                     MutableComponent line = tooltips.get(i).copy();
@@ -148,7 +148,7 @@ public class ItemStatInfoFeature extends Feature {
             }
 
             if (!identificationDecorations.get()) {
-                event.setTooltipLines(tooltips);
+                event.setTooltips(tooltips);
                 return;
             }
 
@@ -171,7 +171,7 @@ public class ItemStatInfoFeature extends Feature {
                 }
             }
 
-            event.setTooltipLines(tooltips);
+            event.setTooltips(tooltips);
         });
     }
 
