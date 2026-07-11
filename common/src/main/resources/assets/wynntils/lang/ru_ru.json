@@ -3073,7 +3073,7 @@
   "screens.wynntils.buildLoadouts.levelIncompatible": "Ваш уровень боя слишком низок для использования этой загрузки. Некоторые части загрузки могут быть не полностью загружены.",
   "screens.wynntils.buildLoadouts.load": "Загрузить",
   "screens.wynntils.buildLoadouts.loadoutName": "Наборы сборок",
-  "screens.wynntils.buildLoadouts.notBuild": "Не Сборка",
+  "screens.wynntils.buildLoadouts.notBuild": "Снаряжение не сохранено",
   "screens.wynntils.buildLoadouts.save": "Сохранить",
   "screens.wynntils.buildLoadouts.saveBuild": "Сохранить Сборку",
   "screens.wynntils.buildLoadouts.saveNameConflict": "Загрузка с таким именем уже существует. Нажмите еще раз, чтобы перезаписать.",

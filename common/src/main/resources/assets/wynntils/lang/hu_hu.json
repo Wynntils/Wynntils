@@ -2308,7 +2308,7 @@
   "screens.wynntils.buildLoadouts.levelIncompatible": "A harci szinted túl alacsony ehhez a felszereléshez. A felszerelés egyes részei nem biztos, hogy teljesen betöltődnek.",
   "screens.wynntils.buildLoadouts.load": "Betöltés",
   "screens.wynntils.buildLoadouts.loadoutName": "Kiegészítő buildek",
-  "screens.wynntils.buildLoadouts.notBuild": "Nem egy Építmény",
+  "screens.wynntils.buildLoadouts.notBuild": "Nem mentett felszerelés",
   "screens.wynntils.buildLoadouts.save": "Mentés",
   "screens.wynntils.buildLoadouts.saveBuild": "Építmény Mentése",
   "screens.wynntils.buildLoadouts.saveNameConflict": "Már létezik egy ilyen nevű felszerelés. Kattintson újra a felülíráshoz.",

@@ -2308,7 +2308,7 @@
   "screens.wynntils.buildLoadouts.levelIncompatible": "Je gevechtsniveau is te laag om deze loadout te gebruiken. Delen van de loadout zijn mogelijk niet volledig geladen.",
   "screens.wynntils.buildLoadouts.load": "Laden",
   "screens.wynntils.buildLoadouts.loadoutName": "Build Loadouts",
-  "screens.wynntils.buildLoadouts.notBuild": "Geen Build",
+  "screens.wynntils.buildLoadouts.notBuild": "Geen uitrusting opgeslagen",
   "screens.wynntils.buildLoadouts.save": "Opslaan",
   "screens.wynntils.buildLoadouts.saveBuild": "Build Opslaan",
   "screens.wynntils.buildLoadouts.saveNameConflict": "Er bestaat al een loadout met deze naam. Klik opnieuw om te overschrijven.",

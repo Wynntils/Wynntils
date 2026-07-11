@@ -2308,7 +2308,7 @@
   "screens.wynntils.buildLoadouts.levelIncompatible": "Seu nível de combate é muito baixo para usar este loadout. Partes do loadout podem não estar totalmente carregadas.",
   "screens.wynntils.buildLoadouts.load": "Carregar",
   "screens.wynntils.buildLoadouts.loadoutName": "Configurações de Build",
-  "screens.wynntils.buildLoadouts.notBuild": "Não é uma Construção",
+  "screens.wynntils.buildLoadouts.notBuild": "Nenhum equipamento salvo",
   "screens.wynntils.buildLoadouts.save": "Salvar",
   "screens.wynntils.buildLoadouts.saveBuild": "Salvar Construção",
   "screens.wynntils.buildLoadouts.saveNameConflict": "Já existe um loadout com este nome. Clique novamente para sobrescrever.",
