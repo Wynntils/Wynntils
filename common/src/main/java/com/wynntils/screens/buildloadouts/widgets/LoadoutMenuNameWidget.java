@@ -2,11 +2,11 @@ package com.wynntils.screens.buildloadouts.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -22,10 +22,10 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public class LoadoutMenuNameWidget extends TextInputBoxWidget {
+    private static final int MAX_VISIBLE_CHARARCTERS = 27;
     private static final int EDIT_BUTTON_WIDTH = 23;
     private static final int EDIT_BUTTON_HEIGHT = 20;
     private static final float VERTICAL_OFFSET = 6.5f;
@@ -40,7 +40,7 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
             Consumer<String> onUpdateConsumer,
             TextboxScreen textboxScreen,
             BuildLoadoutsScreen parent) {
-        super(x, y, width, 20, Component.literal("Loadout Name"), onUpdateConsumer, textboxScreen);
+        super(x, y, width, 20, Component.literal("Loadout Menu Name Widget"), onUpdateConsumer, textboxScreen);
         this.parent = parent;
         this.textPadding = 5;
     }
@@ -53,7 +53,7 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             guiGraphics,
-                            StyledText.fromString(parent.getSelectedLoadout().name()),
+                            getTruncatedText(StyledText.fromString(parent.getSelectedLoadout().name()), MAX_VISIBLE_CHARARCTERS),
                             this.getX() + textPadding,
                             this.getX() + this.width - EDIT_BUTTON_WIDTH,
                             this.getY() + VERTICAL_OFFSET,
@@ -296,5 +296,14 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
         int btnY = this.getY() + (this.height - EDIT_BUTTON_HEIGHT) / 2;
         return mouseX >= btnX && mouseX <= btnX + EDIT_BUTTON_WIDTH
                 && mouseY >= btnY && mouseY <= btnY + EDIT_BUTTON_HEIGHT;
+    }
+
+    private StyledText getTruncatedText(StyledText text, int maxVisibleChars) {
+        int visibleLength = text.length();
+        if (visibleLength <= maxVisibleChars) {
+            return text;
+        }
+
+        return text.substring(0, maxVisibleChars - 3, StyleType.NONE).append("...");
     }
 }

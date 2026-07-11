@@ -107,7 +107,7 @@ public abstract class ScrollListWidget extends AbstractWidget {
         }
 
         for (AbstractWidget widget : getWidgets()) {
-            if (widget.isMouseOver(event.x(), event.y())) {
+            if (widget.isMouseOver(event.x(), event.y() + scrollOffset)) {
                 return widget.mouseClicked(event, isDoubleClick);
             }
         }

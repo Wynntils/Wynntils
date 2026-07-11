@@ -264,6 +264,17 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                 offsetY + HEIGHT_OFFSET,
                 133,
                 279);
+
+        // background for widgets 2
+        if (getCurrentCategory() == MenuCategory.BUILD_LOADOUT && getSelectedLoadout() != null) {
+            RenderUtils.drawNineSliceScalingTexturedRect(
+                    guiGraphics,
+                    Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND,
+                    offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET,
+                    offsetY + 51,
+                    RIGHT_PAGE_WIDTH,
+                    200);
+        }
         // end region
         if (getCurrentCategory() == MenuCategory.NEW_LOADOUT) {
             renderNewLoadoutMenu(guiGraphics, mouseX, mouseY, partialTick);
@@ -326,7 +337,6 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
     }
 
     private void updateMenu() {
-        loadoutScrollListWidget.scrollOffset = 0;
         // new loadout
         newLoadoutInputWidget.visible = false;
         newBuildLoadoutButton.visible = false;
@@ -358,6 +368,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         this.currentCategory = category;
         setSelectedLoadout(null);
         loadoutScrollListWidget.populateLoadouts();
+        loadoutScrollListWidget.scrollOffset = 0;
         updateMenu();
     }
 
