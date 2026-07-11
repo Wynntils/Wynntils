@@ -618,16 +618,19 @@ public class TestRegex {
     @Test
     public void LootrunModel_ORANGE_AMOUNT_PATTERN() {
         PatternTester p = new PatternTester(LootrunModel.class, "ORANGE_AMOUNT_PATTERN");
-        p.shouldMatch("§7\uDB00\uDC2DReward Pulls\uDB00\uDC50for 5 Challenges");
-        p.shouldMatch("§7\uDB00\uDC70for 5 Challenges");
-        p.shouldMatch("§7\uDB00\uDC4D\uDB00\uDC70for 5 Challenges");
+        p.shouldMatch("\uDB00\uDC20§7for §#00fff2ff15§7 Challenges§r\uDB00\uDC48§7this Lootrun");
+        p.shouldMatch("\uDB00\uDC21§7+1 Beacon Choice§r\uDB00\uDC3B§7+§#00fff2ff20§7 Challenges to");
+        p.shouldMatch("\uDB00\uDC28§7this Lootrun§r\uDB00\uDC48§7for 10 Challenges");
+        p.shouldMatch("\uDB00\uDC4D\uDB00\uDC6D§7for 10 Challenges");
+        p.shouldMatch("\uDB00\uDC2B§7100% Potency§r\uDB00\uDC4B§7for 10 Challenges");
+        p.shouldMatch("\uDB00\uDC6D§7for §#cf45ffff20§7 Challenges");
+        p.shouldMatch("\uDB00\uDC2B§#cf45ffff300§7% Potency§r\uDB00\uDC4B§7for §#00f000ff25§7 Challenges");
     }
 
     @Test
     public void LootrunModel_RAINBOW_AMOUNT_PATTERN() {
         PatternTester p = new PatternTester(LootrunModel.class, "RAINBOW_AMOUNT_PATTERN");
-        p.shouldMatch("§7\uDB00\uDC1Ethis Challenge only\uDB00\uDC3Bnext 10 Challenges");
-        p.shouldMatch("§7\uDB00\uDC6Anext 20 Challenges");
+        p.shouldMatch("\uDB00\uDC4D\uDB00\uDC6A§7next §#cf45ffff30§7 Challenges");
     }
 
     @Test
