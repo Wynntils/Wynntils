@@ -5,7 +5,6 @@
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
