@@ -206,13 +206,7 @@ public final class InventoryModel extends Model {
         Collections.reverse(returnable); // Reverse so that helmet is first
 
         for (int i : InventoryAccessory.getSlots()) {
-            int baseSize = 0;
-            if (McUtils.player().hasContainerOpen()) {
-                // Scale according to server chest size
-                // Eg. 3 row chest size = 27 (ends on i=26 since 0-index), we would get accessory slots {27, 28, 29, 30}
-                baseSize = McUtils.player().containerMenu.getItems().size();
-            }
-            ItemStack accessory = McUtils.inventory().getItem(i + baseSize);
+            ItemStack accessory = McUtils.inventory().getItem(i);
             if (ItemUtils.isEmptyAccessorySlot(accessory)) continue;
             returnable.add(accessory);
         }

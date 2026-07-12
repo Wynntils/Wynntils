@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilitytree.type;
@@ -11,12 +11,14 @@ public record AbilityTreeSkillNode(
         int id,
         String name,
         String formattedName,
+        AbilityTreeNodeType abilityTreeNodeType,
         List<String> description,
-        ItemInformation itemInformation,
         int cost,
-        List<String> blocks,
+        List<String> willBlock,
+        List<String> blockedBy,
         String requiredAbility,
         ArchetypeRequirement requiredArchetype,
+        int requiredLevel,
         String archetype,
         AbilityTreeLocation location,
         List<Integer> connections) {
@@ -38,5 +40,63 @@ public record AbilityTreeSkillNode(
     @Override
     public int hashCode() {
         return Objects.hash(id, formattedName, cost, requiredAbility, requiredArchetype, archetype, location);
+    }
+
+    public AbilityTreeSkillNode withDefaultType() {
+        AbilityTreeNodeType defaultType = abilityTreeNodeType.getDefaultType();
+        if (defaultType == abilityTreeNodeType) return this;
+        return new AbilityTreeSkillNode(
+                id,
+                name,
+                formattedName,
+                defaultType,
+                description,
+                cost,
+                willBlock,
+                blockedBy,
+                requiredAbility,
+                requiredArchetype,
+                requiredLevel,
+                archetype,
+                location,
+                connections);
+    }
+
+    public AbilityTreeSkillNode withUnlockedType() {
+        AbilityTreeNodeType unlockedType = abilityTreeNodeType.getUnlockedType();
+        if (unlockedType == abilityTreeNodeType) return this;
+        return new AbilityTreeSkillNode(
+                id,
+                name,
+                formattedName,
+                unlockedType,
+                description,
+                cost,
+                willBlock,
+                blockedBy,
+                requiredAbility,
+                requiredArchetype,
+                requiredLevel,
+                archetype,
+                location,
+                connections);
+    }
+
+    public AbilityTreeSkillNode withoutDescriptions() {
+        return new AbilityTreeSkillNode(
+                id,
+                name,
+                formattedName,
+                abilityTreeNodeType,
+                List.of(),
+                cost,
+                willBlock,
+                blockedBy,
+                requiredAbility,
+                requiredArchetype,
+                requiredLevel,
+                archetype,
+                location,
+                connections);
     }
 }

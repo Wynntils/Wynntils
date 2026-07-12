@@ -87,6 +87,7 @@ import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.features.map.WorldWaypointDistanceFeature;
+import com.wynntils.features.overlays.AbilityCooldownsOverlayFeature;
 import com.wynntils.features.overlays.AnnihilationSunOverlayFeature;
 import com.wynntils.features.overlays.ArcherBeastTrackerOverlayFeature;
 import com.wynntils.features.overlays.ArrowShieldTrackerOverlayFeature;
@@ -128,10 +129,10 @@ import com.wynntils.features.players.PartyManagementScreenFeature;
 import com.wynntils.features.players.PlayerArmorHidingFeature;
 import com.wynntils.features.players.PlayerGhostTransparencyFeature;
 import com.wynntils.features.players.PlayerViewerFeature;
-import com.wynntils.features.redirects.AbilityRefreshRedirectFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.redirects.InventoryRedirectFeature;
 import com.wynntils.features.redirects.TerritoryMessageRedirectFeature;
+import com.wynntils.features.tooltips.IngredientPouchTooltipCustomizationFeature;
 import com.wynntils.features.tooltips.ItemCompareFeature;
 import com.wynntils.features.tooltips.ItemGuessFeature;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
@@ -158,6 +159,7 @@ import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
 import com.wynntils.features.utilities.AutoSkipCutscenesFeature;
+import com.wynntils.features.utilities.BuildLoadoutsFeature;
 import com.wynntils.features.utilities.CharacterSelectionUtilitiesFeature;
 import com.wynntils.features.utilities.EnhancedStreamerModeFeature;
 import com.wynntils.features.utilities.FixCrosshairPositionFeature;
@@ -165,7 +167,6 @@ import com.wynntils.features.utilities.GammabrightFeature;
 import com.wynntils.features.utilities.HighlightGatheringNodesFeature;
 import com.wynntils.features.utilities.PerCharacterGuildContributionFeature;
 import com.wynntils.features.utilities.SilencerFeature;
-import com.wynntils.features.utilities.SkillPointLoadoutsFeature;
 import com.wynntils.features.utilities.TranscribeMessagesFeature;
 import com.wynntils.features.utilities.TranslationFeature;
 import com.wynntils.features.utilities.ValuablesProtectionFeature;
@@ -324,6 +325,7 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region overlays
+        registerFeature(new AbilityCooldownsOverlayFeature());
         registerFeature(new AnnihilationSunOverlayFeature());
         registerFeature(new ArcherBeastTrackerOverlayFeature());
         registerFeature(new ArrowShieldTrackerOverlayFeature());
@@ -371,13 +373,13 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region redirects
-        registerFeature(new AbilityRefreshRedirectFeature());
         registerFeature(new ChatRedirectFeature());
         registerFeature(new InventoryRedirectFeature());
         registerFeature(new TerritoryMessageRedirectFeature());
         // endregion
 
         // region tooltips
+        registerFeature(new IngredientPouchTooltipCustomizationFeature());
         registerFeature(new ItemCompareFeature());
         registerFeature(new ItemGuessFeature());
         registerFeature(new ItemStatInfoFeature());
@@ -413,6 +415,7 @@ public final class FeatureManager extends Manager {
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
         registerFeature(new AutoSkipCutscenesFeature());
+        registerFeature(new BuildLoadoutsFeature());
         registerFeature(new CharacterSelectionUtilitiesFeature());
         registerFeature(new EnhancedStreamerModeFeature());
         registerFeature(new FixCrosshairPositionFeature());
@@ -421,7 +424,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new HighlightGatheringNodesFeature());
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
-        registerFeature(new SkillPointLoadoutsFeature());
         registerFeature(new TranscribeMessagesFeature());
         registerFeature(new TranslationFeature());
         registerFeature(new ValuablesProtectionFeature());
@@ -553,6 +555,12 @@ public final class FeatureManager extends Manager {
         // Assert that the feature description is properly translated
         assert !feature.getTranslatedDescription().startsWith("feature.wynntils.")
                 : "Fix i18n for " + feature.getTranslatedDescription();
+
+        // Assert that external configuration screen is properly translated
+        if (feature instanceof ExternalConfigurationScreen ecs) {
+            assert !feature.getTranslation(ecs.getTranslationKey()).startsWith("feature.wynntils.")
+                    : "Fix i18n for: " + feature.getTranslation(ecs.getTranslationKey());
+        }
 
         if (!feature.userEnabled.get()) return; // not enabled by user
 

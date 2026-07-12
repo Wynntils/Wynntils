@@ -6,6 +6,7 @@ package com.wynntils.features.map;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.consumers.features.ExternalConfigurationScreen;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
@@ -36,6 +37,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -44,7 +46,7 @@ import net.minecraft.world.entity.EntityType;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.MAP)
-public class MainMapFeature extends Feature {
+public class MainMapFeature extends Feature implements ExternalConfigurationScreen {
     @Persisted
     public final HiddenConfig<List<CustomPoi>> customPois = new HiddenConfig<>(new ArrayList<>());
 
@@ -224,5 +226,10 @@ public class MainMapFeature extends Feature {
             // We don't actually know if this is a chest, but it's a good enough guess.
             lastChestPos = entity.blockPosition();
         }
+    }
+
+    @Override
+    public Screen getExternalConfigurationScreen(Screen previousScreen) {
+        return MainMapScreen.create(previousScreen);
     }
 }

@@ -65,6 +65,7 @@ import com.wynntils.models.containers.containers.trademarket.TradeMarketBuyConta
 import com.wynntils.models.containers.containers.trademarket.TradeMarketContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketFiltersContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketOrderContainer;
+import com.wynntils.models.containers.containers.trademarket.TradeMarketRevealItemsContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesContainer;
 import com.wynntils.models.guild.type.GuildLogType;
@@ -181,6 +182,7 @@ public final class ContainerModel extends Model {
         registerContainer(new TradeMarketContainer());
         registerContainer(new TradeMarketFiltersContainer());
         registerContainer(new TradeMarketOrderContainer());
+        registerContainer(new TradeMarketRevealItemsContainer());
         registerContainer(new TradeMarketSellContainer());
         registerContainer(new TradeMarketTradesContainer());
 

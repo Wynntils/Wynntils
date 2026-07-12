@@ -5,7 +5,9 @@
 package com.wynntils.services.map.pois;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.models.profession.type.MaterialProfile;
+import com.wynntils.core.components.Models;
+import com.wynntils.models.profession.type.MaterialType;
+import com.wynntils.models.profession.type.SourceMaterial;
 import com.wynntils.services.map.type.DisplayPriority;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.type.PoiLocation;
@@ -15,7 +17,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 public class GatheringNodePoi extends StaticIconPoi {
-    private final Optional<Pair<MaterialProfile.MaterialType, MaterialProfile.SourceMaterial>> resourceProfile;
+    private final Optional<Pair<MaterialType, SourceMaterial>> resourceProfile;
     private final ResourceType resourceType;
     private final String rawName;
     private final int angle;
@@ -25,7 +27,7 @@ public class GatheringNodePoi extends StaticIconPoi {
         super(new PoiLocation(x, y, z));
         String capitalizedName = StringUtils.capitalized(resourceName);
 
-        this.resourceProfile = MaterialProfile.findByMaterialName(capitalizedName);
+        this.resourceProfile = Models.Profession.findMaterialBySourceName(capitalizedName);
         this.resourceType = ResourceType.fromString(resourceType);
         this.rawName = capitalizedName;
         this.angle = angle;
@@ -56,11 +58,11 @@ public class GatheringNodePoi extends StaticIconPoi {
                 + " (" + getLevel() + ")";
     }
 
-    public MaterialProfile.MaterialType getMaterialType() {
+    public MaterialType getMaterialType() {
         return resourceProfile.map(Pair::a).orElse(null);
     }
 
-    public MaterialProfile.SourceMaterial getSourceMaterial() {
+    public SourceMaterial getSourceMaterial() {
         return resourceProfile.map(Pair::b).orElse(null);
     }
 

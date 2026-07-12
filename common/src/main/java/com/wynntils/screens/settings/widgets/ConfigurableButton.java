@@ -7,11 +7,13 @@ package com.wynntils.screens.settings.widgets;
 import com.google.common.collect.Lists;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
+import com.wynntils.core.consumers.features.ExternalConfigurationScreen;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.widgets.BasicHoverableButton;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
@@ -34,11 +36,13 @@ import net.minecraft.network.chat.Component;
 public class ConfigurableButton extends WynntilsButton {
     private final Configurable configurable;
     private final WynntilsCheckbox enabledCheckbox;
+    private final Optional<BasicHoverableButton> ecsButton;
     private final int maskTopY;
     private final int maskBottomY;
     private final int matchingConfigs;
     private final List<Component> descriptionTooltip;
     private final List<Component> toggleTooltip;
+    private final List<Component> ecsTooltip;
     private final WynntilsBookSettingsScreen settingsScreen;
 
     public ConfigurableButton(
@@ -76,6 +80,23 @@ public class ConfigurableButton extends WynntilsButton {
         }
 
         this.enabledCheckbox = new WynntilsCheckbox(x + width - 10, y, 10, Component.literal(""), enabled, 0);
+        if (configurable instanceof ExternalConfigurationScreen ecs) {
+            this.ecsButton = Optional.of(new BasicHoverableButton(
+                    x + width - 21,
+                    y,
+                    10,
+                    10,
+                    ecs.getButtonTexture(),
+                    (b) -> McUtils.mc().setScreen(ecs.getExternalConfigurationScreen(settingsScreen)),
+                    List.of(Component.literal("Open ecs"))));
+            ecsTooltip = ComponentUtils.wrapTooltips(
+                    List.of(Component.literal(
+                            configurable.getTranslation("externalConfigurationScreen", ecs.getTranslationObjects()))),
+                    150);
+        } else {
+            this.ecsButton = Optional.empty();
+            this.ecsTooltip = List.of();
+        }
 
         this.maskTopY = settingsScreen.getMaskTopY();
         this.maskBottomY = settingsScreen.getConfigurableMaskBottomY();
@@ -135,13 +156,17 @@ public class ConfigurableButton extends WynntilsButton {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL,
                         1f);
-
         enabledCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
+        ecsButton.ifPresent(
+                basicHoverableButton -> basicHoverableButton.render(guiGraphics, mouseX, mouseY, partialTick));
 
         if (isHovered) {
             if (enabledCheckbox.isHovered()) {
                 guiGraphics.setTooltipForNextFrame(
                         Lists.transform(toggleTooltip, Component::getVisualOrderText), mouseX, mouseY);
+            } else if (ecsButton.isPresent() && ecsButton.get().isHovered()) {
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(ecsTooltip, Component::getVisualOrderText), mouseX, mouseY);
             } else if (configurable instanceof Feature) {
                 guiGraphics.setTooltipForNextFrame(
                         Lists.transform(descriptionTooltip, Component::getVisualOrderText), mouseX, mouseY);
@@ -178,6 +203,11 @@ public class ConfigurableButton extends WynntilsButton {
             return enabledCheckbox.mouseClicked(event, isDoubleClick);
         }
 
+        if (ecsButton.isPresent() && ecsButton.get().isMouseOver(event.x(), event.y())) {
+            ecsButton.get().mouseClicked(event, isDoubleClick);
+            return true;
+        }
+
         return super.mouseClicked(event, isDoubleClick);
     }
 
@@ -193,6 +223,7 @@ public class ConfigurableButton extends WynntilsButton {
         super.setY(y);
 
         enabledCheckbox.setY(y);
+        ecsButton.ifPresent(basicTexturedButton -> basicTexturedButton.setY(y));
     }
 
     public Configurable getConfigurable() {

@@ -6,6 +6,7 @@ package com.wynntils.features.chat;
 
 import com.google.common.collect.Sets;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.features.ExternalConfigurationScreen;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
@@ -19,6 +20,7 @@ import com.wynntils.mc.event.ChatScreenCreateEvent;
 import com.wynntils.mc.event.ChatScreenSendEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.screens.chattabs.ChatTabEditingScreen;
 import com.wynntils.screens.chattabs.ChatTabsScreen;
 import com.wynntils.services.chat.type.ChatTab;
 import com.wynntils.utils.mc.McUtils;
@@ -30,7 +32,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
-public class ChatTabsFeature extends Feature {
+public class ChatTabsFeature extends Feature implements ExternalConfigurationScreen {
     // This is kept here only for config persistence, the "real" list is in ChatTabService
     // and it must be updated whenever this config is updated.
     @Persisted
@@ -96,5 +98,10 @@ public class ChatTabsFeature extends Feature {
     @Override
     protected void onConfigUpdate(Config<?> config) {
         Services.ChatTab.setChatTabs(chatTabs.get());
+    }
+
+    @Override
+    public Screen getExternalConfigurationScreen(Screen previousScreen) {
+        return ChatTabEditingScreen.create(previousScreen);
     }
 }

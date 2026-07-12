@@ -23,7 +23,7 @@ public class BasicTexturedButton extends WynntilsButton implements TooltipProvid
     private List<Component> tooltip;
 
     protected Texture texture;
-    private final boolean scaleTexture;
+    protected final boolean scaleTexture;
 
     public BasicTexturedButton(
             int x, int y, int width, int height, Texture texture, Consumer<Integer> onClick, List<Component> tooltip) {
