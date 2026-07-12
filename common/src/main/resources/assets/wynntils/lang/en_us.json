@@ -427,6 +427,8 @@
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.displayStyle.description": "Determines the style of how the Content Tracker displays its content.",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.displayStyle.name": "Display style",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.name": "Content Tracker",
+  "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.showGatherMiniquestProgress.description": "Whether an additional info about progress should be shown when tracking a gather Mini-Quest",
+  "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.showGatherMiniquestProgress.name": "Show Gather Mini-Quest Progress",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.testQuestName": "Test quest",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.description": "What should the text shadow look like?",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.name": "Text Shadow",
