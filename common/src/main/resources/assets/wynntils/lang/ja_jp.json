@@ -2308,7 +2308,7 @@
   "screens.wynntils.buildLoadouts.levelIncompatible": "このロードアウトを使用するには戦闘レベルが低すぎます。ロードアウトの一部が完全にロードされない可能性があります。",
   "screens.wynntils.buildLoadouts.load": "ロード",
   "screens.wynntils.buildLoadouts.loadoutName": "ビルド構成",
-  "screens.wynntils.buildLoadouts.notBuild": "ビルドではありません",
+  "screens.wynntils.buildLoadouts.notBuild": "保存された装備はありません",
   "screens.wynntils.buildLoadouts.save": "保存",
   "screens.wynntils.buildLoadouts.saveBuild": "ビルドを保存",
   "screens.wynntils.buildLoadouts.saveNameConflict": "この名前のロードアウトは既に存在します。上書きするにはもう一度クリックしてください。",

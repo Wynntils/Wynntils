@@ -3204,7 +3204,7 @@
   "screens.wynntils.buildLoadouts.levelIncompatible": "Your combat level is too low to use this loadout. Parts of the loadout may not be fully loaded.",
   "screens.wynntils.buildLoadouts.load": "Load",
   "screens.wynntils.buildLoadouts.loadoutName": "Build Loadouts",
-  "screens.wynntils.buildLoadouts.notBuild": "Not a Build",
+  "screens.wynntils.buildLoadouts.notBuild": "No gear saved",
   "screens.wynntils.buildLoadouts.save": "Save Skill Points",
   "screens.wynntils.buildLoadouts.saveAbilityTree": "Save Ability Tree",
   "screens.wynntils.buildLoadouts.saveAspects": "Save Aspects",

@@ -2308,7 +2308,7 @@
   "screens.wynntils.buildLoadouts.levelIncompatible": "Tu nivel de combate es demasiado bajo para usar esta carga. Partes de la carga pueden no estar completamente cargadas.",
   "screens.wynntils.buildLoadouts.load": "Cargar",
   "screens.wynntils.buildLoadouts.loadoutName": "Crear configuraciones de equipamiento",
-  "screens.wynntils.buildLoadouts.notBuild": "No es una Construcción",
+  "screens.wynntils.buildLoadouts.notBuild": "No se guardó ningún equipo",
   "screens.wynntils.buildLoadouts.save": "Guardar",
   "screens.wynntils.buildLoadouts.saveBuild": "Guardar Construcción",
   "screens.wynntils.buildLoadouts.saveNameConflict": "Ya existe una carga con este nombre. Haz clic de nuevo para sobrescribir.",

@@ -2308,7 +2308,7 @@
   "screens.wynntils.buildLoadouts.levelIncompatible": "Twój poziom walki jest zbyt niski, aby użyć tego wyposażenia. Niektóre części wyposażenia mogą nie być w pełni załadowane.",
   "screens.wynntils.buildLoadouts.load": "Załaduj",
   "screens.wynntils.buildLoadouts.loadoutName": "Zestawy konfiguracji",
-  "screens.wynntils.buildLoadouts.notBuild": "Nie jest Budową",
+  "screens.wynntils.buildLoadouts.notBuild": "Nie zapisano żadnego sprzętu",
   "screens.wynntils.buildLoadouts.save": "Zapisz",
   "screens.wynntils.buildLoadouts.saveBuild": "Zapisz Budowę",
   "screens.wynntils.buildLoadouts.saveNameConflict": "Wyposażenie o tej nazwie już istnieje. Kliknij ponownie, aby nadpisać.",
