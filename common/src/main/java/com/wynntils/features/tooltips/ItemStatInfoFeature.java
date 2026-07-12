@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.tooltips;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
@@ -12,6 +13,9 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.handlers.item.ItemHandler;
+import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
+import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
+import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
@@ -19,16 +23,11 @@ import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatPossibleValues;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.WynncraftShaderColor;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.wynn.ColorScaleUtils;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
-import java.util.Optional;
 import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -40,8 +39,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemStatInfoFeature extends Feature {
-    private static final FontDescription IDENTIFICATION_METER_FONT =
-            new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/identification/meter"));
     private static final FontDescription WYNNCRAFT_LANGUAGE_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("language/wynncraft"));
 
@@ -134,101 +131,24 @@ public class ItemStatInfoFeature extends Feature {
             boolean defectiveItem = defective.get() && identifiableItem.isDefective();
             boolean showPercentage = overallPercentageInName.get()
                     && (!perfectItem && !defectiveItem || overallPercentageInPerfectDefectiveName.get());
-            boolean decorateTitle = perfectItem || defectiveItem || showPercentage;
+            IdentifiableTooltipBuilder<?, ?> builder =
+                    IdentifiableTooltipBuilder.fromTooltipLines(event.getTooltips(), identifiableItem);
+            TooltipStyle style = new TooltipStyle(
+                    identificationsOrdering.get(),
+                    groupIdentifications.get(),
+                    showBestValueLastAlways.get(),
+                    rainbowInternalRoll.get(),
+                    showRollWheel.get());
+            TooltipIdentificationDecorator decorator =
+                    new ItemStatInfoDecorator(identifiableItem, perfectItem, defectiveItem, showPercentage);
 
-            List<Component> tooltips = new ArrayList<>(event.getTooltips());
-            if (decorateTitle) {
-                for (int i = 1; i < tooltips.size(); i++) {
-                    MutableComponent line = tooltips.get(i).copy();
-                    if (!decorateItemName(line, identifiableItem, perfectItem, defectiveItem, showPercentage)) continue;
-
-                    tooltips.set(i, line);
-                    break;
-                }
-            }
-
-            if (!identificationDecorations.get()) {
-                event.setTooltips(tooltips);
-                return;
-            }
-
-            List<StatActualValue> remainingIdentifications = identifiableItem.getIdentifications().stream()
-                    .filter(identification -> findPossibleValues(identification, identifiableItem)
-                            .filter(possibleValues -> !possibleValues.range().isFixed())
-                            .isPresent())
-                    .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-            for (int i = 0; i < tooltips.size(); i++) {
-                Component line = tooltips.get(i);
-                if (!TooltipUtils.containsFont(line, IDENTIFICATION_METER_FONT)) continue;
-
-                Optional<StatActualValue> identification = findIdentification(line, remainingIdentifications);
-                if (identification.isEmpty()) continue;
-
-                MutableComponent decoratedLine = line.copy();
-                if (replaceIdentificationMeter(decoratedLine, identification.get(), identifiableItem)) {
-                    tooltips.set(i, decoratedLine);
-                    remainingIdentifications.remove(identification.get());
-                }
-            }
-
-            event.setTooltips(tooltips);
+            event.setTooltips(builder.getTooltipLines(
+                    Models.Character.getClassType(), style, decorator, ItemWeightSource.NONE, null));
         });
     }
 
-    private boolean decorateItemName(
-            MutableComponent line,
-            IdentifiableItemProperty<?, ?> identifiableItem,
-            boolean perfectItem,
-            boolean defectiveItem,
-            boolean showPercentage) {
-        List<Component> siblings = line.getSiblings();
-        for (int i = siblings.size() - 1; i >= 0; i--) {
-            Component sibling = siblings.get(i);
-            String text = sibling.getString().trim();
-            if (!text.equals(identifiableItem.getName()) && !text.endsWith(identifiableItem.getName())) continue;
-
-            MutableComponent name = createDecoratedName(sibling, perfectItem, defectiveItem);
-            if (showPercentage) {
-                name.append(ColorScaleUtils.getPercentageTextComponent(
-                        getColorMap(), identifiableItem.getOverallPercentage(), colorLerp.get(), decimalPlaces.get()));
-            }
-            siblings.set(i, name);
-            return true;
-        }
-
-        return false;
-    }
-
-    private MutableComponent createDecoratedName(Component name, boolean perfectItem, boolean defectiveItem) {
-        if (perfectItem) {
-            return ComponentUtils.makeRainbowStyle("Perfect " + name.getString(), true);
-        }
-
-        if (defectiveItem) {
-            return ComponentUtils.makeCrimsonStyle("Defective " + name.getString(), true);
-        }
-
-        return name.copy();
-    }
-
-    private Optional<StatActualValue> findIdentification(
-            Component line, List<StatActualValue> remainingIdentifications) {
-        String lineText = line.getString();
-        return remainingIdentifications.stream()
-                .filter(identification -> lineText.contains(getDisplayedValue(identification)))
-                .findFirst();
-    }
-
-    private String getDisplayedValue(StatActualValue identification) {
-        int value = identification.statType().calculateAsInverted() ? -identification.value() : identification.value();
-        return StringUtils.toSignedCommaString(value)
-                + identification.statType().getUnit().getDisplayName();
-    }
-
-    private boolean replaceIdentificationMeter(
-            MutableComponent line, StatActualValue identification, IdentifiableItemProperty<?, ?> identifiableItem) {
-        StatPossibleValues possibleValues =
-                findPossibleValues(identification, identifiableItem).orElseThrow();
+    private MutableComponent createIdentificationPercentage(
+            StatActualValue identification, StatPossibleValues possibleValues) {
         MutableComponent percentage = ColorScaleUtils.getPercentageTextComponent(
                         getColorMap(),
                         StatCalculator.getPercentage(identification, possibleValues),
@@ -238,40 +158,60 @@ public class ItemStatInfoFeature extends Feature {
         if (rainbowInternalRoll.get() && identification.stars() == 3) {
             percentage.withColor(WynncraftShaderColor.RAINBOW.color.asInt());
         }
-
-        return replaceMeterComponent(line, percentage);
+        return percentage;
     }
 
-    private Optional<StatPossibleValues> findPossibleValues(
-            StatActualValue identification, IdentifiableItemProperty<?, ?> identifiableItem) {
-        return identifiableItem.getPossibleValues().stream()
-                .filter(possibleValues -> possibleValues.statType().equals(identification.statType()))
-                .findFirst();
-    }
+    private final class ItemStatInfoDecorator implements TooltipIdentificationDecorator {
+        private final IdentifiableItemProperty<?, ?> identifiableItem;
+        private final boolean perfectItem;
+        private final boolean defectiveItem;
+        private final boolean showPercentage;
 
-    private boolean replaceMeterComponent(MutableComponent component, Component replacement) {
-        List<Component> siblings = component.getSiblings();
-        for (int i = 0; i < siblings.size(); i++) {
-            Component sibling = siblings.get(i);
-            if (TooltipUtils.containsFont(sibling, IDENTIFICATION_METER_FONT)) {
-                if (i > 0 && siblings.get(i - 1).getString().equals(" ")) {
-                    siblings.set(i - 1, replacement);
-                    siblings.remove(i);
-                    return true;
-                }
-
-                siblings.set(i, replacement);
-                return true;
-            }
-
-            MutableComponent copiedSibling = sibling.copy();
-            if (!replaceMeterComponent(copiedSibling, replacement)) continue;
-
-            siblings.set(i, copiedSibling);
-            return true;
+        private ItemStatInfoDecorator(
+                IdentifiableItemProperty<?, ?> identifiableItem,
+                boolean perfectItem,
+                boolean defectiveItem,
+                boolean showPercentage) {
+            this.identifiableItem = identifiableItem;
+            this.perfectItem = perfectItem;
+            this.defectiveItem = defectiveItem;
+            this.showPercentage = showPercentage;
         }
 
-        return false;
+        @Override
+        public MutableComponent getTitle(Component title) {
+            return createDecoratedName(title, identifiableItem, perfectItem, defectiveItem, showPercentage);
+        }
+
+        @Override
+        public MutableComponent getSuffix(
+                StatActualValue actualValue, StatPossibleValues possibleValues, TooltipStyle style) {
+            return identificationDecorations.get()
+                    ? createIdentificationPercentage(actualValue, possibleValues)
+                    : Component.empty();
+        }
+    }
+
+    private MutableComponent createDecoratedName(
+            Component name,
+            IdentifiableItemProperty<?, ?> identifiableItem,
+            boolean perfectItem,
+            boolean defectiveItem,
+            boolean showPercentage) {
+        MutableComponent decoratedName;
+        if (perfectItem) {
+            decoratedName = ComponentUtils.makeRainbowStyle("Perfect " + name.getString(), true);
+        } else if (defectiveItem) {
+            decoratedName = ComponentUtils.makeCrimsonStyle("Defective " + name.getString(), true);
+        } else {
+            decoratedName = name.copy();
+        }
+
+        if (showPercentage) {
+            decoratedName.append(ColorScaleUtils.getPercentageTextComponent(
+                    getColorMap(), identifiableItem.getOverallPercentage(), colorLerp.get(), decimalPlaces.get()));
+        }
+        return decoratedName;
     }
 
     private NavigableMap<Float, TextColor> createFlatMap() {
