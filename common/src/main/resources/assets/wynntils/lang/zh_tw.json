@@ -2308,7 +2308,7 @@
   "screens.wynntils.buildLoadouts.levelIncompatible": "您的戰鬥等級太低，無法使用此負載。負載的某些部分可能未完全加載。",
   "screens.wynntils.buildLoadouts.load": "加載",
   "screens.wynntils.buildLoadouts.loadoutName": "建置配置",
-  "screens.wynntils.buildLoadouts.notBuild": "不是構建",
+  "screens.wynntils.buildLoadouts.notBuild": "未保存裝備",
   "screens.wynntils.buildLoadouts.save": "保存",
   "screens.wynntils.buildLoadouts.saveBuild": "保存構建",
   "screens.wynntils.buildLoadouts.saveNameConflict": "具有此名稱的負載已存在。再次點擊以覆蓋。",

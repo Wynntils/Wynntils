@@ -179,7 +179,7 @@ public class LoadoutWidget extends AbstractWidget {
             displayText = StyledText.fromString(loadout.name() + classPart + " (" + levelText + ")");
         }
 
-        int maxChars = (loadout.type() == LoadoutType.ABILITY_TREE) ? 74 : 50;
+        int maxChars = (loadout.type() == LoadoutType.ABILITY_TREE) ? 74 : 48;
         displayText = truncateToVisibleLength(displayText, maxChars);
 
         FontRenderer.getInstance()

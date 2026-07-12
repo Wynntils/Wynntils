@@ -17,7 +17,6 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.buildloadouts.type.Loadout;
 import com.wynntils.screens.buildloadouts.type.LoadoutType;
-import com.wynntils.screens.buildloadouts.widgets.ConvertButton;
 import com.wynntils.screens.buildloadouts.widgets.DeleteButton;
 import com.wynntils.screens.buildloadouts.widgets.LoadButton;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutWidget;
@@ -70,7 +69,6 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
     private Loadout selectedLoadout;
     private WynntilsButton loadButton;
     private WynntilsButton deleteButton;
-    private WynntilsButton convertButton;
 
     private ScrollBar scrollBar;
     private float scrollPercent = 0;
@@ -230,15 +228,6 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
                 Component.translatable("screens.wynntils.buildLoadouts.delete").withStyle(ChatFormatting.RED),
                 this);
         this.addRenderableWidget(deleteButton);
-
-        convertButton = new ConvertButton(
-                (int) (dividedWidth * 52),
-                (int) (dividedHeight * 52),
-                (int) ((dividedWidth * 59) - (dividedWidth * 52)),
-                BUTTON_SIZE,
-                Component.translatable("screens.wynntils.buildLoadouts.convert"),
-                this);
-        this.addRenderableWidget(convertButton);
         // endregion
 
         scrollBar = new ScrollBar(dividedWidth * 30, dividedHeight * 4, dividedWidth * 0.5f, 0, this, dividedHeight);
@@ -436,7 +425,8 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
             }
 
             // --- Gear section ---
-            if (selectedLoadout.type() == LoadoutType.BUILD) {
+            if (selectedLoadout.hasSkillPoints()
+                    && selectedLoadout.skillPoints().isBuild()) {
                 float gearY = 40;
 
                 if (selectedLoadout.skillPoints().weapon() != null) {
@@ -736,8 +726,6 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
             loadButton.visible = false;
             deleteButton.active = false;
             deleteButton.visible = false;
-            convertButton.active = false;
-            convertButton.visible = false;
             return;
         }
 
@@ -746,10 +734,6 @@ public final class BuildLoadoutsScreen extends WynntilsGridLayoutScreen {
         loadButton.visible = true;
         deleteButton.active = true;
         deleteButton.visible = true;
-
-        boolean isConvertible = loadout.type() == LoadoutType.BUILD || loadout.type() == LoadoutType.SKILL_POINT;
-        convertButton.active = isConvertible;
-        convertButton.visible = isConvertible;
 
         if (loadout.getMaxLevel() > Models.CombatXp.getCombatLevel().current()) {
             loadButton.setTooltip(

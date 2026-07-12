@@ -2311,7 +2311,7 @@
   "screens.wynntils.buildLoadouts.levelIncompatible": "Dein Kampflevel ist zu niedrig, um dieses Loadout zu verwenden. Teile des Loadouts sind möglicherweise nicht vollständig geladen.",
   "screens.wynntils.buildLoadouts.load": "Laden",
   "screens.wynntils.buildLoadouts.loadoutName": "Build-Loadouts",
-  "screens.wynntils.buildLoadouts.notBuild": "Kein Build",
+  "screens.wynntils.buildLoadouts.notBuild": "Keine Ausrüstung gespeichert",
   "screens.wynntils.buildLoadouts.save": "Speichern",
   "screens.wynntils.buildLoadouts.saveBuild": "Build speichern",
   "screens.wynntils.buildLoadouts.saveNameConflict": "Ein Loadout mit diesem Namen existiert bereits. Klicken Sie erneut, um zu überschreiben.",

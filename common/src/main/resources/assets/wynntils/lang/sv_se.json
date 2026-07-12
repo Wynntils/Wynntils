@@ -2338,7 +2338,7 @@
   "screens.wynntils.buildLoadouts.levelIncompatible": "Din stridsnivå är för låg för att använda denna utrustning. Delar av utrustningen kanske inte är helt laddade.",
   "screens.wynntils.buildLoadouts.load": "Ladda",
   "screens.wynntils.buildLoadouts.loadoutName": "Bygginlämningar",
-  "screens.wynntils.buildLoadouts.notBuild": "Inte en Byggnad",
+  "screens.wynntils.buildLoadouts.notBuild": "Ingen utrustning sparad",
   "screens.wynntils.buildLoadouts.save": "Spara",
   "screens.wynntils.buildLoadouts.saveBuild": "Spara Byggnad",
   "screens.wynntils.buildLoadouts.saveNameConflict": "En utrustning med detta namn finns redan. Klicka igen för att skriva över.",
