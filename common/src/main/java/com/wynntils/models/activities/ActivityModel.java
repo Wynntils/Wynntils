@@ -15,6 +15,7 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
+import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.extension.EntityExtension;
@@ -218,10 +219,14 @@ public final class ActivityModel extends Model {
         if (e.getContainer() != McUtils.inventory()) return;
         if (gatherMiniquestRequiredAmount == -1) return;
 
-        int item1 = Models.Inventory.getAmountInInventory(gatherMiniquestRequiredItemNames.a());
-        int item2 = Models.Inventory.getAmountInInventory(gatherMiniquestRequiredItemNames.b());
+        updateGatherMiniQuestProgress();
+    }
 
-        gatherMiniquestProgress = new CappedValue(item1 + item2, gatherMiniquestRequiredAmount);
+    @SubscribeEvent
+    public void onContainerClick(ContainerClickEvent e) {
+        if (e.getContainerMenu() != McUtils.inventoryMenu()) return;
+
+        updateGatherMiniQuestProgress();
     }
 
     public ActivityInfo parseItem(String name, ActivityType type, ItemStack itemStack) {
@@ -605,9 +610,7 @@ public final class ActivityModel extends Model {
                 gatherMiniquestRequiredAmount = amount;
                 gatherMiniquestRequiredItemNames = Pair.of(item1, item2);
 
-                gatherMiniquestProgress = new CappedValue(
-                        Models.Inventory.getAmountInInventory(item1) + Models.Inventory.getAmountInInventory(item2),
-                        amount);
+                updateGatherMiniQuestProgress();
 
             } catch (NumberFormatException e) {
                 return;
@@ -705,6 +708,13 @@ public final class ActivityModel extends Model {
         gatherMiniquestRequiredAmount = -1;
         gatherMiniquestRequiredItemNames = Pair.of("", "");
         gatherMiniquestProgress = CappedValue.EMPTY;
+    }
+
+    private void updateGatherMiniQuestProgress() {
+        int item1 = Models.Inventory.getAmountInInventory(gatherMiniquestRequiredItemNames.a());
+        int item2 = Models.Inventory.getAmountInInventory(gatherMiniquestRequiredItemNames.b());
+
+        gatherMiniquestProgress = new CappedValue(item1 + item2, gatherMiniquestRequiredAmount);
     }
 
     public enum ActivityOpenAction {
