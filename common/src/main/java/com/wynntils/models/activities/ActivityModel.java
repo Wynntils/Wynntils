@@ -40,6 +40,7 @@ import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.containers.containers.ContentBookContainer;
+import com.wynntils.models.inventory.InventoryModel;
 import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -111,8 +112,8 @@ public final class ActivityModel extends Model {
     private int gatherMiniquestRequiredAmount = -1;
     private Pair<String, String> gatherMiniquestRequiredItemNames = Pair.of("", "");
 
-    public ActivityModel(MarkerModel markerModel) {
-        super(List.of(markerModel));
+    public ActivityModel(MarkerModel markerModel, InventoryModel inventoryModel) {
+        super(List.of(markerModel, inventoryModel));
 
         Handlers.Scoreboard.addPart(TRACKER_SCOREBOARD_PART);
         Models.Marker.registerMarkerProvider(ACTIVITY_MARKER_PROVIDER);
@@ -576,7 +577,7 @@ public final class ActivityModel extends Model {
         WynntilsMod.postEvent(new ActivityTrackerUpdatedEvent(
                 trackedActivity.trackedType(), trackedActivity.trackedName(), trackedActivity.trackedTask()));
 
-        if (trackedType == ActivityType.MINI_QUEST && name.startsWith("Gather ")) {
+        if (trackedType == ActivityType.MINI_QUEST || name.startsWith("Gather ")) {
             Matcher descriptionMatcher = nextTask.getMatcher(GATHER_MINIQUEST_PATTERN);
             if (!descriptionMatcher.matches()) {
                 resetGatherMiniQuestInfo();
@@ -631,10 +632,16 @@ public final class ActivityModel extends Model {
     }
 
     public CappedValue getGatherMiniquestProgress() {
+        if (gatherMiniquestRequiredAmount == -1 || gatherMiniquestRequiredItemNames.equals(Pair.of("", "")))
+            return CappedValue.EMPTY;
         int item1 = Models.Inventory.getAmountInInventory(gatherMiniquestRequiredItemNames.a());
         int item2 = Models.Inventory.getAmountInInventory(gatherMiniquestRequiredItemNames.b());
 
         return new CappedValue(item1 + item2, gatherMiniquestRequiredAmount);
+    }
+
+    public Pair<String, String> getGatherMiniquestRequiredItemNames() {
+        return gatherMiniquestRequiredItemNames;
     }
 
     private void scanOverallProgress() {

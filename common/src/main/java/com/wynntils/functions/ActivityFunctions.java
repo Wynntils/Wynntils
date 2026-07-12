@@ -12,6 +12,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
 public class ActivityFunctions {
@@ -64,6 +65,30 @@ public class ActivityFunctions {
         public StyledText getValue(FunctionArguments arguments) {
             ActivityType type = Models.Activity.getTrackedType();
             return type != null ? StyledText.fromPart(type.getIcon()) : StyledText.EMPTY;
+        }
+    }
+
+    public static class GatherMiniquestRequiredItemFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int itemNumber = Math.clamp(arguments.getArgument("number").getIntegerValue(), 1, 2);
+            if (itemNumber == 1) {
+                return Models.Activity.getGatherMiniquestRequiredItemNames().a();
+            } else {
+                return Models.Activity.getGatherMiniquestRequiredItemNames().b();
+            }
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("number", Integer.class, 1)));
+        }
+    }
+
+    public static class GatherMiniquestProgressFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Activity.getGatherMiniquestProgress();
         }
     }
 }

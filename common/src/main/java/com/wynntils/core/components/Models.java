@@ -145,7 +145,7 @@ public final class Models {
     public static final WynnItemModel WynnItem = new WynnItemModel();
 
     // Models with constructor dependencies, ordered alphabetically as far as possible
-    public static final ActivityModel Activity = new ActivityModel(Marker);
+    public static final ActivityModel Activity = new ActivityModel(Marker, Inventory);
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel(Marker);
     public static final LootrunModel Lootrun = new LootrunModel(Marker);
 }
