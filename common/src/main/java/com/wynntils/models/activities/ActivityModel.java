@@ -16,6 +16,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.activities.beacons.ActivityBeaconKind;
 import com.wynntils.models.activities.beacons.ActivityBeaconMarkerKind;
@@ -111,6 +112,7 @@ public final class ActivityModel extends Model {
 
     private int gatherMiniquestRequiredAmount = -1;
     private Pair<String, String> gatherMiniquestRequiredItemNames = Pair.of("", "");
+    private CappedValue gatherMiniquestProgress = CappedValue.EMPTY;
 
     public ActivityModel(MarkerModel markerModel, InventoryModel inventoryModel) {
         super(List.of(markerModel, inventoryModel));
@@ -209,6 +211,17 @@ public final class ActivityModel extends Model {
         }
         // First thing to do when we just loaded a class
         scanOverallProgress();
+    }
+
+    @SubscribeEvent
+    public void onSetSlot(SetSlotEvent.Post e) {
+        if (e.getContainer() != McUtils.inventory()) return;
+        if (gatherMiniquestRequiredAmount == -1) return;
+
+        int item1 = Models.Inventory.getAmountInInventory(gatherMiniquestRequiredItemNames.a());
+        int item2 = Models.Inventory.getAmountInInventory(gatherMiniquestRequiredItemNames.b());
+
+        gatherMiniquestProgress = new CappedValue(item1 + item2, gatherMiniquestRequiredAmount);
     }
 
     public ActivityInfo parseItem(String name, ActivityType type, ItemStack itemStack) {
@@ -592,6 +605,10 @@ public final class ActivityModel extends Model {
                 gatherMiniquestRequiredAmount = amount;
                 gatherMiniquestRequiredItemNames = Pair.of(item1, item2);
 
+                gatherMiniquestProgress = new CappedValue(
+                        Models.Inventory.getAmountInInventory(item1) + Models.Inventory.getAmountInInventory(item2),
+                        amount);
+
             } catch (NumberFormatException e) {
                 return;
             }
@@ -632,12 +649,11 @@ public final class ActivityModel extends Model {
     }
 
     public CappedValue getGatherMiniquestProgress() {
-        if (gatherMiniquestRequiredAmount == -1 || gatherMiniquestRequiredItemNames.equals(Pair.of("", "")))
+        if (gatherMiniquestRequiredAmount == -1 || gatherMiniquestRequiredItemNames.equals(Pair.of("", ""))) {
             return CappedValue.EMPTY;
-        int item1 = Models.Inventory.getAmountInInventory(gatherMiniquestRequiredItemNames.a());
-        int item2 = Models.Inventory.getAmountInInventory(gatherMiniquestRequiredItemNames.b());
-
-        return new CappedValue(item1 + item2, gatherMiniquestRequiredAmount);
+        } else {
+            return gatherMiniquestProgress;
+        }
     }
 
     public Pair<String, String> getGatherMiniquestRequiredItemNames() {
@@ -688,6 +704,7 @@ public final class ActivityModel extends Model {
     private void resetGatherMiniQuestInfo() {
         gatherMiniquestRequiredAmount = -1;
         gatherMiniquestRequiredItemNames = Pair.of("", "");
+        gatherMiniquestProgress = CappedValue.EMPTY;
     }
 
     public enum ActivityOpenAction {
