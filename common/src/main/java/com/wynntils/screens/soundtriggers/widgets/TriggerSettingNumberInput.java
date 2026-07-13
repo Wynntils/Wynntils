@@ -21,6 +21,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 
@@ -62,6 +63,7 @@ public class TriggerSettingNumberInput extends AbstractButton {
                     }
                 }),
                 parentScreen);
+        this.textInputBoxWidget.visible = trigger != null;
         this.trigger = trigger;
     }
 
@@ -103,7 +105,7 @@ public class TriggerSettingNumberInput extends AbstractButton {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NONE,
                         1f);
-        textInputBoxWidget.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+        textInputBoxWidget.render(guiGraphics, mouseX, mouseY, partialTick);
 
         if (isHovered) {
             guiGraphics.setTooltipForNextFrame(tooltip, mouseX, mouseY);
@@ -113,9 +115,34 @@ public class TriggerSettingNumberInput extends AbstractButton {
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
+    @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (textInputBoxWidget.isHovered()) {
+            return textInputBoxWidget.mouseClicked(event, isDoubleClick);
+        }
+        return super.mouseClicked(event, isDoubleClick);
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if (textInputBoxWidget.isHovered()) {
+            return textInputBoxWidget.mouseReleased(event);
+        }
+        return super.mouseReleased(event);
+    }
+
+    @Override
+    public boolean mouseDragged(MouseButtonEvent event, double mouseX, double mouseY) {
+        if (textInputBoxWidget.isHovered()) {
+            return textInputBoxWidget.mouseDragged(event, mouseX, mouseY);
+        }
+        return super.mouseDragged(event, mouseX, mouseY);
+    }
+
     public void setTrigger(SoundTrigger trigger) {
         this.trigger = trigger;
         this.visible = trigger != null;
+        textInputBoxWidget.visible = trigger != null;
         if (trigger != null) {
             this.textInputBoxWidget.setTextBoxInput(String.valueOf(functionTemplate.apply(trigger)));
         }
