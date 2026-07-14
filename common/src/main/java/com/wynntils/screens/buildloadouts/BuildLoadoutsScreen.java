@@ -12,7 +12,11 @@ import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.buildloadouts.type.Loadout;
 import com.wynntils.screens.buildloadouts.type.LoadoutType;
 import com.wynntils.screens.buildloadouts.type.MenuCategory;
+import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuDeleteButton;
+import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuItemWidget;
+import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuLoadButton;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuNameWidget;
+import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuUpdateButton;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutScrollListWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutSearchWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutSelectionButton;
@@ -69,6 +73,10 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
     public NewLoadoutInfoWidget newLoadoutInfoWidget;
     public MakeNewLoadoutButton makeNewLoadoutButton;
     public LoadoutMenuNameWidget loadoutMenuNameWidget;
+    public LoadoutMenuLoadButton loadoutMenuLoadButton;
+    public LoadoutMenuUpdateButton loadoutMenuUpdateButton;
+    public LoadoutMenuDeleteButton loadoutMenuDeleteButton;
+    public LoadoutMenuItemWidget loadoutMenuItemWidget;
 
     private MenuCategory currentCategory = MenuCategory.BUILD_LOADOUT;
     private LoadoutType newLoadoutType;
@@ -239,6 +247,36 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                 this);
         this.addRenderableWidget(loadoutMenuNameWidget);
 
+        loadoutMenuLoadButton = new LoadoutMenuLoadButton(
+                offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET,
+                offsetY + HEIGHT_OFFSET + RIGHT_PAGE_HEIGHT - 20,
+                this
+        );
+        this.addRenderableWidget(loadoutMenuLoadButton);
+
+        loadoutMenuUpdateButton = new LoadoutMenuUpdateButton(
+                offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 79 + 17,
+                offsetY + HEIGHT_OFFSET + RIGHT_PAGE_HEIGHT - 20,
+                this
+        );
+        this.addRenderableWidget(loadoutMenuUpdateButton);
+
+        loadoutMenuDeleteButton = new LoadoutMenuDeleteButton(
+                offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 79 * 2 + 17 * 2,
+                offsetY + HEIGHT_OFFSET + RIGHT_PAGE_HEIGHT - 20,
+                this
+        );
+        this.addRenderableWidget(loadoutMenuDeleteButton);
+
+        loadoutMenuItemWidget = new LoadoutMenuItemWidget(
+                offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + RIGHT_PAGE_WIDTH - 98 - 5,
+                offsetY + HEIGHT_OFFSET + RIGHT_PAGE_HEIGHT - 20 - 66 - 6 - 5,
+                this
+        );
+        this.addRenderableWidget(loadoutMenuItemWidget);
+
+        // end region
+
         loadoutScrollListWidget.populateLoadouts();
         updateMenu();
     }
@@ -264,20 +302,12 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                 offsetY + HEIGHT_OFFSET,
                 133,
                 279);
-
-        // background for widgets 2
-        if (getCurrentCategory() == MenuCategory.BUILD_LOADOUT && getSelectedLoadout() != null) {
-            RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics,
-                    Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND,
-                    offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET,
-                    offsetY + 51,
-                    RIGHT_PAGE_WIDTH,
-                    200);
-        }
         // end region
+
         if (getCurrentCategory() == MenuCategory.NEW_LOADOUT) {
             renderNewLoadoutMenu(guiGraphics, mouseX, mouseY, partialTick);
+        } else if (getCurrentCategory() == MenuCategory.BUILD_LOADOUT && getSelectedLoadout() != null) {
+            renderBuildLoadoutMenu(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         renderables.forEach(renderable -> renderable.render(guiGraphics, mouseX, mouseY, partialTick));
@@ -324,6 +354,27 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                         TextShadow.NONE);
     }
 
+    private void renderBuildLoadoutMenu(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        /*
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND,
+                offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET,
+                offsetY + 51,
+                RIGHT_PAGE_WIDTH,
+                200);
+
+         */
+
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND,
+                offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET,
+                offsetY + HEIGHT_OFFSET + RIGHT_PAGE_HEIGHT - 20 - 66 - 6 - 10,
+                RIGHT_PAGE_WIDTH,
+                78);
+    }
+
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : children()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
@@ -348,6 +399,10 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
         // build loadout
         loadoutMenuNameWidget.visible = false;
+        loadoutMenuLoadButton.visible = false;
+        loadoutMenuUpdateButton.visible = false;
+        loadoutMenuDeleteButton.visible = false;
+        loadoutMenuItemWidget.visible = false;
 
         if (getCurrentCategory() == MenuCategory.NEW_LOADOUT) {
             newLoadoutInputWidget.visible = true;
@@ -361,6 +416,10 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
         if (getCurrentCategory() == MenuCategory.BUILD_LOADOUT && getSelectedLoadout() != null) {
             loadoutMenuNameWidget.visible = true;
+            loadoutMenuLoadButton.visible = true;
+            loadoutMenuUpdateButton.visible = true;
+            loadoutMenuDeleteButton.visible = true;
+            loadoutMenuItemWidget.visible = true;
         }
     }
 
