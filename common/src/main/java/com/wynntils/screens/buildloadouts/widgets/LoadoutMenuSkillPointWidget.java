@@ -48,13 +48,13 @@ public class LoadoutMenuSkillPointWidget extends AbstractWidget implements IconR
 
             for (int i = 0; i < 5; i++) {
                 int points = selectedLoadout.skillPoints().getSkillPointsAsArray()[i];
-                renderSkillIcon(guiGraphics, this.x + 5, this.y - 6 + startY, i);
+                renderSkillIcon(guiGraphics, this.x + 10, this.y - 6 + startY, i);
 
                 FontRenderer.getInstance()
                         .renderText(
                                 guiGraphics,
                                 StyledText.fromString(String.valueOf(points)),
-                                this.x + 25,
+                                this.x + 30,
                                 this.y + startY,
                                 CustomColor.fromInt(Skill.values()[i].getColorCode().getColor()),
                                 HorizontalAlignment.LEFT,
