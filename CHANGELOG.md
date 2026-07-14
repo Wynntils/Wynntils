@@ -1,6 +1,5 @@
-Build Loadouts Screen
-- Removed Convert Types button
-- Changed the Not a Build text to No gear saved
+Translation
+- Removed feature. The state of the translation feature has degraded in recent years with no work put in to improve that so we have made the decision to instead drop the feature instead of leaving it in its broken low quality state 
 
 Fixes
-- More fixes for orange & rainbow beacon counts not always being tracked
+- Fixed boss room tracking for The Wartorn Palace
