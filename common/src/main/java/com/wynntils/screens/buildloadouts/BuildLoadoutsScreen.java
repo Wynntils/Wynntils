@@ -16,6 +16,8 @@ import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuDeleteButton;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuItemWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuLoadButton;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuNameWidget;
+import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuOverviewWidget;
+import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuSkillPointWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuUpdateButton;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutScrollListWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutSearchWidget;
@@ -76,6 +78,8 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
     public LoadoutMenuLoadButton loadoutMenuLoadButton;
     public LoadoutMenuUpdateButton loadoutMenuUpdateButton;
     public LoadoutMenuDeleteButton loadoutMenuDeleteButton;
+    public LoadoutMenuSkillPointWidget loadoutMenuSkillPointWidget;
+    public LoadoutMenuOverviewWidget loadoutMenuOverviewWidget;
     public LoadoutMenuItemWidget loadoutMenuItemWidget;
 
     private MenuCategory currentCategory = MenuCategory.BUILD_LOADOUT;
@@ -268,6 +272,20 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         );
         this.addRenderableWidget(loadoutMenuDeleteButton);
 
+        loadoutMenuSkillPointWidget = new LoadoutMenuSkillPointWidget(
+                offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5,
+                offsetY + HEIGHT_OFFSET + RIGHT_PAGE_HEIGHT - 20 - 66 - 6 - 5,
+                this
+        );
+        this.addRenderableWidget(loadoutMenuSkillPointWidget);
+
+        loadoutMenuOverviewWidget = new LoadoutMenuOverviewWidget(
+                offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 68,
+                offsetY + HEIGHT_OFFSET + RIGHT_PAGE_HEIGHT - 20 - 66 - 6 - 5,
+                this
+        );
+        this.addRenderableWidget(loadoutMenuOverviewWidget);
+
         loadoutMenuItemWidget = new LoadoutMenuItemWidget(
                 offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + RIGHT_PAGE_WIDTH - 98 - 5,
                 offsetY + HEIGHT_OFFSET + RIGHT_PAGE_HEIGHT - 20 - 66 - 6 - 5,
@@ -402,6 +420,8 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         loadoutMenuLoadButton.visible = false;
         loadoutMenuUpdateButton.visible = false;
         loadoutMenuDeleteButton.visible = false;
+        loadoutMenuSkillPointWidget.visible = false;
+        loadoutMenuOverviewWidget.visible = false;
         loadoutMenuItemWidget.visible = false;
 
         if (getCurrentCategory() == MenuCategory.NEW_LOADOUT) {
@@ -419,6 +439,8 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
             loadoutMenuLoadButton.visible = true;
             loadoutMenuUpdateButton.visible = true;
             loadoutMenuDeleteButton.visible = true;
+            loadoutMenuSkillPointWidget.visible = true;
+            loadoutMenuOverviewWidget.visible = true;
             loadoutMenuItemWidget.visible = true;
         }
     }

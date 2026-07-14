@@ -1,17 +1,24 @@
 package com.wynntils.screens.buildloadouts.widgets;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import org.lwjgl.glfw.GLFW;
 
 public class LoadoutMenuItemWidget extends AbstractWidget {
-    private static final int HOLDER_PADDING = 5;
     private final int x;
     private final int y;
     private final BuildLoadoutsScreen parent;
@@ -81,6 +88,30 @@ public class LoadoutMenuItemWidget extends AbstractWidget {
                     bx + 16, by + 16,
                     1);
         }
+
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.BUILD_LOADOUTS_MENU_RIBBON,
+                x + 5,
+                y + 2,
+                this.width - 10,
+                20);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromString("Items"),
+                        this.x + 5 + (this.width - 10) / 2f,
+                        this.y + 11,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
+    }
+
+    @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        return false;
     }
 
     @Override
