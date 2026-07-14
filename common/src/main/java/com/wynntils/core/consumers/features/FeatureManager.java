@@ -168,7 +168,6 @@ import com.wynntils.features.utilities.HighlightGatheringNodesFeature;
 import com.wynntils.features.utilities.PerCharacterGuildContributionFeature;
 import com.wynntils.features.utilities.SilencerFeature;
 import com.wynntils.features.utilities.TranscribeMessagesFeature;
-import com.wynntils.features.utilities.TranslationFeature;
 import com.wynntils.features.utilities.ValuablesProtectionFeature;
 import com.wynntils.features.utilities.XpGainMessageFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
@@ -425,7 +424,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
         registerFeature(new TranscribeMessagesFeature());
-        registerFeature(new TranslationFeature());
         registerFeature(new ValuablesProtectionFeature());
         registerFeature(new XpGainMessageFeature());
         // endregion
