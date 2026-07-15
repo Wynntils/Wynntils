@@ -99,7 +99,7 @@ public class LoadoutWidget extends AbstractWidget implements IconRenderer {
                     this.x + 5,
                     this.y + this.height / 2 - 8
             );
-        } else if (aspectTexture != null && aspectFlameTexture != null) {
+        } else if (aspectTexture != null && aspectFlameTexture != null && loadout.type() == LoadoutType.ASPECT) {
             renderAspect(guiGraphics, aspectTexture, aspectFlameTexture, this.x, this.y);
         } else if (loadout.type() == LoadoutType.SKILL_POINT) {
             FontRenderer.getInstance()

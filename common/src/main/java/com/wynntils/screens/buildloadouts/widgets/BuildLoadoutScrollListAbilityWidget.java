@@ -23,10 +23,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
-public class BuildLoadoutScrollListAbilityWidget extends AbstractWidget implements IconRenderer {
-    private static final int TEXT_WIDTH_PADDING = 4;
-    private static final int TEXT_HEIGHT_PADDING = 4;
-    private static final int MAX_VISIBLE_CHARACTERS = 38;
+public class BuildLoadoutScrollListAbilityWidget extends AbstractWidget {
     private final StyledText text;
     private int x;
     private int y;
@@ -48,8 +45,6 @@ public class BuildLoadoutScrollListAbilityWidget extends AbstractWidget implemen
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        handleCursor(guiGraphics);
-
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
                 Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
@@ -74,14 +69,14 @@ public class BuildLoadoutScrollListAbilityWidget extends AbstractWidget implemen
                 RenderUtils.renderItem(
                         guiGraphics,
                         abilityItemStack,
-                        this.x + 5,
+                        this.x + 10,
                         this.y + this.height / 2 - 8
                 );
             } else {
                 RenderUtils.renderScalingItem(
                         guiGraphics,
                         abilityItemStack,
-                        this.x + 10,
+                        this.x + 13,
                         this.y + this.height / 2 - 6,
                         32,
                         32
@@ -89,15 +84,6 @@ public class BuildLoadoutScrollListAbilityWidget extends AbstractWidget implemen
             }
         }
 
-    }
-
-    private StyledText getTruncatedText(StyledText text, int maxVisibleChars) {
-        int visibleLength = text.length();
-        if (visibleLength <= maxVisibleChars) {
-            return text;
-        }
-
-        return text.substring(0, maxVisibleChars - 3, StyleType.NONE).append("...");
     }
 
     @Override
@@ -108,11 +94,7 @@ public class BuildLoadoutScrollListAbilityWidget extends AbstractWidget implemen
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
-
-        this.playDownSound(Minecraft.getInstance().getSoundManager());
-
-        return true;
+        return false;
     }
 
     @Override

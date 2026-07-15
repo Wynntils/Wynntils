@@ -86,8 +86,6 @@ public record Loadout(
     }
 
     public Texture getAspectTexture() {
-        if (type != LoadoutType.ASPECT) return null;
-
         return switch (getClassType()) {
             case ClassType.ARCHER-> Texture.ASPECT_ARCHER;
             case ClassType.ASSASSIN -> Texture.ASPECT_ASSASSIN;
@@ -99,8 +97,6 @@ public record Loadout(
     }
 
     public Texture getFlameTexture() {
-        if (type != LoadoutType.ASPECT) return null;
-
         return switch (getClassType()) {
             case ClassType.ARCHER-> Texture.ASPECT_ARCHER_FLAME;
             case ClassType.ASSASSIN -> Texture.ASPECT_ASSASSIN_FLAME;
