@@ -9,7 +9,10 @@ import com.wynntils.models.character.type.ClassType;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomModelData;
 
 public enum AbilityTreeNodeType {
     // === Base class abilities ===
@@ -240,7 +243,7 @@ public enum AbilityTreeNodeType {
     }
 
     public AbilityTreeNodeType getUnlockedType() {
-        if (state == AbilityTreeNodeState.LOCKED) return this;
+        if (state == AbilityTreeNodeState.UNLOCKED) return this;
         String base = name().substring(0, name().lastIndexOf('_'));
         return AbilityTreeNodeType.valueOf(base + "_UNLOCKED");
     }
@@ -267,5 +270,19 @@ public enum AbilityTreeNodeType {
         return Services.CustomModel.getFloat(key)
                 .map(value -> value == customModelData)
                 .orElse(false);
+    }
+
+    public ItemStack generateItemStack() {
+        ItemStack itemStack = new ItemStack(Items.POTION);
+
+        float customModelData = getCustomModelData().orElse(-1f);
+
+        itemStack.set(
+                DataComponents.CUSTOM_MODEL_DATA,
+                new CustomModelData(List.of(customModelData), List.of(), List.of(), List.of()));
+
+        itemStack.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
+
+        return itemStack;
     }
 }

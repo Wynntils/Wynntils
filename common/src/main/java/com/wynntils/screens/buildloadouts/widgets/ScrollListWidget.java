@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 
 public abstract class ScrollListWidget extends AbstractWidget {
     private static final float SCROLL_FACTOR = 10f;
-    private static final int MAX_WIDGETS_PER_PAGE = 7;
     private static final int SCROLL_BAR_BUTTON_HEIGHT_PADDING = 11;
     private static final int SCROLL_BAR_BUTTON_WIDTH_PADDING = 3;
     private static final int SCROLL_BAR_HEIGHT_PADDING = 4;
@@ -28,15 +27,17 @@ public abstract class ScrollListWidget extends AbstractWidget {
     private final int widgetHeight;
     private final int widgetHeightPadding;
     private final int widgetHeightEdgePadding;
+    private final int maxWidgetsPerPage;
     private float scrollY;
 
-    public ScrollListWidget(int x, int y, int width, int height, int widgetHeight, int widgetHeightPadding, int widgetHeightEdgePadding) {
+    public ScrollListWidget(int x, int y, int width, int height, int widgetHeight, int widgetHeightPadding, int widgetHeightEdgePadding, int maxWidgetsPerPage) {
         super(x, y, width, height, Component.literal("Scroll List Widget"));
         this.x = x;
         this.y = y;
         this.widgetHeight = widgetHeight;
         this.widgetHeightPadding = widgetHeightPadding;
         this.widgetHeightEdgePadding = widgetHeightEdgePadding;
+        this.maxWidgetsPerPage = maxWidgetsPerPage;
     }
 
     protected abstract List<AbstractWidget> getWidgets();
@@ -112,7 +113,7 @@ public abstract class ScrollListWidget extends AbstractWidget {
             }
         }
 
-        return super.mouseClicked(event, isDoubleClick);
+        return true;
     }
 
     @Override
@@ -143,7 +144,7 @@ public abstract class ScrollListWidget extends AbstractWidget {
     }
 
     private int getMaxScrollOffset() {
-        return (getWidgets().size() - MAX_WIDGETS_PER_PAGE) * (widgetHeight + widgetHeightPadding);
+        return (getWidgets().size() - maxWidgetsPerPage) * (widgetHeight + widgetHeightPadding);
     }
 
     private boolean isOntopOfScrollDragButton(double mouseX, double mouseY) {

@@ -30,12 +30,14 @@ import java.util.Optional;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.render.TextureSetup;
+import net.minecraft.client.gui.render.state.GuiItemRenderState;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.item.TrackingItemStackRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -47,7 +49,9 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Util;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3x2f;
 import org.joml.Matrix3x2fStack;
@@ -1190,6 +1194,32 @@ public final class RenderUtils {
 
     public static void renderItem(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y) {
         guiGraphics.renderItem(itemStack, x, y);
+    }
+
+    public static void renderScalingItem(
+            GuiGraphics guiGraphics, ItemStack itemStack, int x, int y, int width, int height) {
+        if (itemStack.isEmpty()) return;
+
+        TrackingItemStackRenderState renderState = new TrackingItemStackRenderState();
+        McUtils.mc()
+                .getItemModelResolver()
+                .updateForTopItem(renderState, itemStack, ItemDisplayContext.GUI, McUtils.mc().level, McUtils.player(), 0);
+
+        AABB bounds = renderState.getModelBoundingBox();
+        float itemWidth = (float) bounds.getXsize() * 16f;
+        float itemHeight = (float) bounds.getYsize() * 16f;
+        if (itemWidth <= 0f || itemHeight <= 0f) return;
+
+        float scaleX = width / itemWidth;
+        float scaleY = height / itemHeight;
+
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(x, y);
+        guiGraphics.pose().scale(scaleX, scaleY);
+
+        guiGraphics.guiRenderState.submitItem(new GuiItemRenderState(itemStack.getItem().getName().toString(), new Matrix3x2f(guiGraphics.pose()), renderState , 0, 0, guiGraphics.scissorStack.peek()));
+
+        guiGraphics.pose().popMatrix();
     }
 
     public static void renderTooltip(GuiGraphics guiGraphics, List<Component> tooltipLines, int mouseX, int mouseY) {

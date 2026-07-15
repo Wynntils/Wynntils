@@ -3,6 +3,8 @@ package com.wynntils.models.abilitytree.type;
 import com.wynntils.core.components.Services;
 import com.wynntils.models.character.type.ClassType;
 import java.util.List;
+import java.util.Optional;
+
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
@@ -54,6 +56,10 @@ public enum ArchetypeType {
         return classType;
     }
 
+    public Optional<Float> getCustomModelData() {
+        return Services.CustomModel.getFloat(key);
+    }
+
     public static ArchetypeType fromName(String name) {
         for (ArchetypeType type : values()) {
             if (type.name.equals(name)) {
@@ -66,8 +72,7 @@ public enum ArchetypeType {
     public ItemStack generateItemStack() {
         ItemStack itemStack = new ItemStack(Items.POTION);
 
-        float customModelData =
-                Services.CustomModel.getFloat(key).orElse(-1f);
+        float customModelData = getCustomModelData().orElse(-1f);
 
         itemStack.set(
                 DataComponents.CUSTOM_MODEL_DATA,

@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class LoadoutScrollListWidget extends ScrollListWidget {
+    private static final int MAX_WIDGETS_PER_PAGE = 7;
     private static final int WIDTH = 133 - 10;
     private static final int HEIGHT = 251 - 5;
     private static final int WIDGET_HEIGHT = 32;
@@ -30,7 +31,7 @@ public class LoadoutScrollListWidget extends ScrollListWidget {
     private final BuildLoadoutsScreen parent;
 
     public LoadoutScrollListWidget(int x, int y, BuildLoadoutsScreen parent) {
-        super(x, y, WIDTH, HEIGHT, WIDGET_HEIGHT, WIDGET_HEIGHT_PADDING, WIDGET_HEIGHT_EDGE_PADDING);
+        super(x, y, WIDTH, HEIGHT, WIDGET_HEIGHT, WIDGET_HEIGHT_PADDING, WIDGET_HEIGHT_EDGE_PADDING, MAX_WIDGETS_PER_PAGE);
         this.x = x;
         this.y = y;
         this.parent = parent;

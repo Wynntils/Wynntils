@@ -51,6 +51,8 @@ public class LoadoutWidget extends AbstractWidget implements IconRenderer {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        handleCursor(guiGraphics);
+
         if (parent.getSelectedLoadout() != loadout) {
             RenderUtils.drawNineSliceScalingTexturedRect(
                     guiGraphics,

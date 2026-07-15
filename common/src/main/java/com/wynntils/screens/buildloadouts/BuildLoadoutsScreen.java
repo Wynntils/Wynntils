@@ -17,7 +17,7 @@ import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuItemWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuLoadButton;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuNameWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuOverviewWidget;
-import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuScrollListWidget;
+import com.wynntils.screens.buildloadouts.widgets.BuildLoadoutScrollListWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuSkillPointWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuUpdateButton;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutScrollListWidget;
@@ -82,7 +82,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
     public LoadoutMenuSkillPointWidget loadoutMenuSkillPointWidget;
     public LoadoutMenuOverviewWidget loadoutMenuOverviewWidget;
     public LoadoutMenuItemWidget loadoutMenuItemWidget;
-    public LoadoutMenuScrollListWidget loadoutMenuScrollListWidget;
+    public BuildLoadoutScrollListWidget buildLoadoutScrollListWidget;
 
     private MenuCategory currentCategory = MenuCategory.BUILD_LOADOUT;
     private LoadoutType newLoadoutType;
@@ -295,12 +295,12 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         );
         this.addRenderableWidget(loadoutMenuItemWidget);
 
-        loadoutMenuScrollListWidget = new LoadoutMenuScrollListWidget(
+        buildLoadoutScrollListWidget = new BuildLoadoutScrollListWidget(
                 offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5,
-                offsetY + HEIGHT_OFFSET + 38,
+                offsetY + HEIGHT_OFFSET + 38 + 15,
                 this
         );
-        this.addRenderableWidget(loadoutMenuScrollListWidget);
+        this.addRenderableWidget(buildLoadoutScrollListWidget);
 
         // end region
 
@@ -432,7 +432,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         loadoutMenuSkillPointWidget.visible = false;
         loadoutMenuOverviewWidget.visible = false;
         loadoutMenuItemWidget.visible = false;
-        loadoutMenuScrollListWidget.visible = false;
+        buildLoadoutScrollListWidget.visible = false;
 
         if (getCurrentCategory() == MenuCategory.NEW_LOADOUT) {
             newLoadoutInputWidget.visible = true;
@@ -452,7 +452,8 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
             loadoutMenuSkillPointWidget.visible = true;
             loadoutMenuOverviewWidget.visible = true;
             loadoutMenuItemWidget.visible = true;
-            loadoutMenuScrollListWidget.visible = true;
+            buildLoadoutScrollListWidget.visible = true;
+            buildLoadoutScrollListWidget.populateItemWidgets();
         }
     }
 
