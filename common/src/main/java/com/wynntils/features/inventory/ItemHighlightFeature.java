@@ -38,7 +38,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.INVENTORY)
 public class ItemHighlightFeature extends Feature {
     private static final List<String> DEFAULT_HIGHLIGHT_KEYS =
-            List.of("item_tier", "ingredient_tier", "material_tier", "store_tier");
+            List.of("item_tier", "profession_ingredient", "profession_material", "store_tier");
+    private static final String PROFESSION_STAR_KEY = "profession_tier";
 
     @Persisted
     private final Config<HighlightTexture> highlightTexture = new Config<>(HighlightTexture.WYNN);
@@ -128,6 +129,9 @@ public class ItemHighlightFeature extends Feature {
     private final Config<CustomColor> threeStarMaterialHighlightColor = new Config<>(new CustomColor(230, 77, 0));
 
     @Persisted
+    private final Config<Boolean> hideProfessionStar = new Config<>(false);
+
+    @Persisted
     private final Config<Boolean> storeHighlightEnabled = new Config<>(true);
 
     @Persisted
@@ -164,27 +168,16 @@ public class ItemHighlightFeature extends Feature {
         CustomColor color = getHighlightColor(e.getSlot().getItem(), false);
         if (color == CustomColor.NONE) return;
 
+        int x = e.getSlot().x - 8;
+        int y = e.getSlot().y - 8;
+
         if (selectedItemHighlight.get()
                 && McUtils.inventory().getSelectedItem().equals(e.getSlot().getItem())) {
-            RenderUtils.drawTexturedRect(
-                    e.getGuiGraphics(), Texture.HOTBAR_SELECTED_HIGHLIGHT, color, e.getSlot().x, e.getSlot().y);
+            RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HOTBAR_SELECTED_HIGHLIGHT, color, x, y);
             return;
         }
 
-        RenderUtils.drawTexturedRect(
-                e.getGuiGraphics(),
-                Texture.HIGHLIGHT.identifier(),
-                color,
-                e.getSlot().x - 1,
-                e.getSlot().y - 1,
-                18,
-                18,
-                highlightTexture.get().ordinal() * 18,
-                0,
-                18,
-                18,
-                Texture.HIGHLIGHT.width(),
-                Texture.HIGHLIGHT.height());
+        RenderUtils.drawSprite(e.getGuiGraphics(), highlightTexture.get().texture(), color, x, y);
     }
 
     @SubscribeEvent
@@ -194,26 +187,15 @@ public class ItemHighlightFeature extends Feature {
         CustomColor color = getHighlightColor(e.getItemStack(), true);
         if (color == CustomColor.NONE) return;
 
+        int x = e.getX() - 8;
+        int y = e.getY() - 8;
+
         if (selectedItemHighlight.get() && McUtils.inventory().getSelectedItem().equals(e.getItemStack())) {
-            RenderUtils.drawTexturedRect(
-                    e.getGuiGraphics(), Texture.HOTBAR_SELECTED_HIGHLIGHT, color, e.getX(), e.getY());
+            RenderUtils.drawSprite(e.getGuiGraphics(), Texture.HOTBAR_SELECTED_HIGHLIGHT, color, x, y);
             return;
         }
 
-        RenderUtils.drawTexturedRect(
-                e.getGuiGraphics(),
-                Texture.HIGHLIGHT.identifier(),
-                color,
-                e.getX() - 1,
-                e.getY() - 1,
-                18,
-                18,
-                highlightTexture.get().ordinal() * 18,
-                0,
-                18,
-                18,
-                Texture.HIGHLIGHT.width(),
-                Texture.HIGHLIGHT.height());
+        RenderUtils.drawSprite(e.getGuiGraphics(), highlightTexture.get().texture(), color, x, y);
     }
 
     @SubscribeEvent
@@ -222,7 +204,10 @@ public class ItemHighlightFeature extends Feature {
 
         // The index of model data matters, so instead of removing the tier string, just replace it with an empty string
         List<String> newStrings = itemStackModelData.strings().stream()
-                .map(s -> DEFAULT_HIGHLIGHT_KEYS.stream().anyMatch(s::startsWith) ? "" : s)
+                .map(s -> DEFAULT_HIGHLIGHT_KEYS.stream().anyMatch(s::startsWith)
+                                || (hideProfessionStar.get() && s.startsWith(PROFESSION_STAR_KEY))
+                        ? ""
+                        : s)
                 .toList();
 
         if (!newStrings.equals(itemStackModelData.strings())) {
@@ -422,15 +407,25 @@ public class ItemHighlightFeature extends Feature {
     }
 
     public enum HighlightTexture {
-        WYNN,
-        TAG,
-        CIRCLE_TRANSPARENT,
-        CIRCLE_OPAQUE,
-        CIRCLE_OUTLINE_LARGE,
-        CIRCLE_OUTLINE_SMALL,
-        BOX_TRANSPARENT,
-        BOX_OPAQUE,
-        BOX_GRADIENT_1,
-        BOX_GRADIENT_2
+        WYNN(Texture.HIGHLIGHT_WYNN),
+        TAG(Texture.HIGHLIGHT_TAG),
+        CIRCLE_TRANSPARENT(Texture.HIGHLIGHT_CIRCLE_TRANSPARENT),
+        CIRCLE_OPAQUE(Texture.HIGHLIGHT_CIRCLE_OPAQUE),
+        CIRCLE_OUTLINE_LARGE(Texture.HIGHLIGHT_CIRCLE_OUTLINE_LARGE),
+        CIRCLE_OUTLINE_SMALL(Texture.HIGHLIGHT_CIRCLE_OUTLINE_SMALL),
+        BOX_TRANSPARENT(Texture.HIGHLIGHT_BOX_TRANSPARENT),
+        BOX_OPAQUE(Texture.HIGHLIGHT_BOX_OPAQUE),
+        BOX_GRADIENT_1(Texture.HIGHLIGHT_BOX_GRADIENT_1),
+        BOX_GRADIENT_2(Texture.HIGHLIGHT_BOX_GRADIENT_2);
+
+        private final Texture texture;
+
+        HighlightTexture(Texture texture) {
+            this.texture = texture;
+        }
+
+        public Texture texture() {
+            return this.texture;
+        }
     }
 }

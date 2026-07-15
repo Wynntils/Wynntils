@@ -10,6 +10,7 @@ import com.wynntils.services.athena.WynntilsAccountService;
 import com.wynntils.services.chat.ChatTabService;
 import com.wynntils.services.cosmetics.CosmeticsService;
 import com.wynntils.services.custommodel.CustomModelService;
+import com.wynntils.services.custommodeldataencoder.CustomModelDataEncoderService;
 import com.wynntils.services.destination.DestinationService;
 import com.wynntils.services.discord.DiscordService;
 import com.wynntils.services.favorites.FavoritesService;
@@ -29,13 +30,13 @@ import com.wynntils.services.secrets.SecretsService;
 import com.wynntils.services.splashes.SplashService;
 import com.wynntils.services.statistics.StatisticsService;
 import com.wynntils.services.stopwatch.StopwatchService;
-import com.wynntils.services.translation.TranslationService;
 
 public final class Services {
     public static final ChatTabService ChatTab = new ChatTabService();
     public static final CompatibilityService Compatibility = new CompatibilityService();
     public static final CosmeticsService Cosmetics = new CosmeticsService();
     public static final CustomModelService CustomModel = new CustomModelService();
+    public static final CustomModelDataEncoderService CustomModelDataEncoder = new CustomModelDataEncoderService();
     public static final DestinationService Destination = new DestinationService();
     public static final DiscordService Discord = new DiscordService();
     public static final FavoritesService Favorites = new FavoritesService();
@@ -55,7 +56,6 @@ public final class Services {
     public static final SplashService Splash = new SplashService();
     public static final StatisticsService Statistics = new StatisticsService();
     public static final StopwatchService Stopwatch = new StopwatchService();
-    public static final TranslationService Translation = new TranslationService();
     public static final UpdateService Update = new UpdateService();
     public static final WynntilsAccountService WynntilsAccount = new WynntilsAccountService();
 }

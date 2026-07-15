@@ -6,56 +6,109 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.services.hades.HadesUser;
-import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Comparator;
 import java.util.List;
+import net.minecraft.client.resources.language.I18n;
 
-@SuppressWarnings("unused") // Functions are accessed via reflection
 public class HadesPartyFunctions {
-    private static HadesUser hadesPartyFunctionBase(int index) {
-        List<HadesUser> members = Models.War.getHadesUsers();
+    private abstract static class HadesPartyFunctionBase<T> extends Function<T> {
+        @Override
+        public T getValue(FunctionArguments arguments) {
+            // Get War members first
+            List<HadesUser> members = Models.War.getHadesUsers();
+            int index = arguments.getArgument("index").getIntegerValue();
 
-        // If there are no War members get regular party members and order them
-        if (members.isEmpty()) {
-            List<String> partyMembers = Models.Party.getPartyMembers();
-            members = Services.Hades.getHadesUsers()
-                    .filter(hadesUser -> partyMembers.contains(hadesUser.getName()))
-                    .sorted(Comparator.comparing(hadesUser -> partyMembers.indexOf(hadesUser.getName())))
-                    .toList();
+            // If there are no War members get regular party members and order them
+            if (members.isEmpty()) {
+                List<String> partyMembers = Models.Party.getPartyMembers();
+                members = Services.Hades.getHadesUsers()
+                        .filter(hadesUser -> partyMembers.contains(hadesUser.getName()))
+                        .sorted(Comparator.comparing(hadesUser -> partyMembers.indexOf(hadesUser.getName())))
+                        .toList();
+            }
+            return !members.isEmpty() && index >= 0 && index < members.size()
+                    ? processMember(members.get(index))
+                    : whenAbsent();
         }
-        return !members.isEmpty() && index >= 0 && index < members.size() ? members.get(index) : null;
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
+        }
+
+        @Override
+        public String getArgumentDescription(String argumentName) {
+            return I18n.get("function.wynntils.hadesPartyFunctionBase.argument." + argumentName);
+        }
+
+        public abstract T processMember(HadesUser member);
+
+        public abstract T whenAbsent();
     }
 
-    @TemplateFunction(name = "hades_party_member_health")
-    public static CappedValue hadesPartyMemberHealthFunction(int index) {
-        HadesUser user = hadesPartyFunctionBase(index);
-        return user != null ? user.getHealth() : CappedValue.EMPTY;
+    public static class HadesPartyMemberHealthFunction extends HadesPartyFunctionBase<CappedValue> {
+        @Override
+        public CappedValue processMember(HadesUser member) {
+            return member.getHealth();
+        }
+
+        @Override
+        public CappedValue whenAbsent() {
+            return CappedValue.EMPTY;
+        }
     }
 
-    @TemplateFunction(name = "hades_party_member_mana")
-    public static CappedValue hadesPartyMemberManaFunction(int index) {
-        HadesUser user = hadesPartyFunctionBase(index);
-        return user != null ? user.getMana() : CappedValue.EMPTY;
+    public static class HadesPartyMemberManaFunction extends HadesPartyFunctionBase<CappedValue> {
+        @Override
+        public CappedValue processMember(HadesUser member) {
+            return member.getMana();
+        }
+
+        @Override
+        public CappedValue whenAbsent() {
+            return CappedValue.EMPTY;
+        }
     }
 
-    @TemplateFunction(name = "hades_party_member_location")
-    public static Location hadesPartyMemberLocationFunction(int index) {
-        HadesUser user = hadesPartyFunctionBase(index);
-        return user != null ? user.getMapLocation().asLocation() : new Location(0, 0, 0);
+    public static class HadesPartyMemberLocationFunction extends HadesPartyFunctionBase<Location> {
+        @Override
+        public Location processMember(HadesUser member) {
+            return member.getMapLocation().asLocation();
+        }
+
+        @Override
+        public Location whenAbsent() {
+            return Location.ZERO;
+        }
     }
 
-    @TemplateFunction(name = "hades_party_member_name")
-    public static String hadesPartyMemberNameFunction(int index) {
-        HadesUser user = hadesPartyFunctionBase(index);
-        return user != null ? user.getName() : "";
+    public static class HadesPartyMemberNameFunction extends HadesPartyFunctionBase<String> {
+        @Override
+        public String processMember(HadesUser member) {
+            return member.getName();
+        }
+
+        @Override
+        public String whenAbsent() {
+            return "";
+        }
     }
 
-    @TemplateFunction(name = "hades_party_member_uuid")
-    public static String hadesPartyMemberUuidFunction(int index) {
-        HadesUser user = hadesPartyFunctionBase(index);
-        return user != null ? user.getUuid().toString() : "";
+    public static class HadesPartyMemberUuidFunction extends HadesPartyFunctionBase<String> {
+        @Override
+        public String processMember(HadesUser member) {
+            return member.getUuid().toString();
+        }
+
+        @Override
+        public String whenAbsent() {
+            return "";
+        }
     }
 }

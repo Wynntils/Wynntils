@@ -6,6 +6,9 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.bonustotems.BonusTotem;
 import com.wynntils.models.bonustotems.type.BonusTotemType;
 import com.wynntils.models.territories.profile.TerritoryProfile;
@@ -16,200 +19,427 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Locale;
-import com.wynntils.templates.annotations.TemplateFunction;
 
-//Functions are accessed via reflection
-@SuppressWarnings("unused")
 public class WorldFunctions {
+    public static class CurrentWorldFunction extends Function<String> {
+        private static final String NO_DATA = "<unknown>";
+        private static final String NO_WORLD = "<not on world>";
 
-    private static final String NO_WORLD = "<not on world>";
-
-    private static final String NO_DATA = "<unknown>";
-
-    @TemplateFunction(name = "current_world", aliases = { "world" })
-    public String currentWorldFunction() {
-        if (!Models.WorldState.onWorld()) {
-            return NO_WORLD;
-        }
-        String currentWorldName = Models.WorldState.getCurrentWorldName();
-        return currentWorldName.isEmpty() ? NO_DATA : currentWorldName;
-    }
-
-    @TemplateFunction(name = "world_uptime", aliases = { "uptime", "current_world_uptime" })
-    public String worldUptimeFunction(String worldName) {
-        // Replace world name with the current server, if not provided
-        // This is done for backwards compatibility with the old function
-        if (worldName.isEmpty()) {
+        @Override
+        public String getValue(FunctionArguments arguments) {
             if (!Models.WorldState.onWorld()) {
                 return NO_WORLD;
             }
-            worldName = Models.WorldState.getCurrentWorldName();
+
+            String currentWorldName = Models.WorldState.getCurrentWorldName();
+            return currentWorldName.isEmpty() ? NO_DATA : currentWorldName;
         }
-        ServerProfile server = Models.ServerList.getServer(worldName);
-        if (server == null) {
-            return NO_DATA;
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("world");
         }
-        return server.getUptime();
     }
 
-    @TemplateFunction(name = "newest_world")
-    public String newestWorldFunction() {
-        String server = Models.ServerList.getNewestServer();
-        if (server == null) {
-            return NO_DATA;
+    public static class WorldUptimeFunction extends Function<String> {
+        private static final String NO_DATA = "<unknown>";
+        private static final String NO_WORLD = "<not on world>";
+
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            String worldName = arguments.getArgument("worldName").getStringValue();
+
+            // Replace world name with the current server, if not provided
+            // This is done for backwards compatibility with the old function
+            if (worldName.isEmpty()) {
+                if (!Models.WorldState.onWorld()) {
+                    return NO_WORLD;
+                }
+
+                worldName = Models.WorldState.getCurrentWorldName();
+            }
+
+            ServerProfile server = Models.ServerList.getServer(worldName);
+
+            if (server == null) {
+                return NO_DATA;
+            }
+
+            return server.getUptime();
         }
-        return server;
-    }
 
-    @TemplateFunction(name = "world_state")
-    public String worldStateFunction() {
-        return Models.WorldState.getCurrentState().toString().toUpperCase(Locale.ROOT);
-    }
-
-    @TemplateFunction(name = "in_stream", aliases = { "streamer" })
-    public boolean inStreamFunction() {
-        return Models.StreamerMode.isInStream();
-    }
-
-    @TemplateFunction(name = "gathering_totem_count")
-    public int gatheringTotemCountFunction() {
-        return Models.BonusTotem.getBonusTotemsByType(BonusTotemType.GATHERING).size();
-    }
-
-    @TemplateFunction(name = "gathering_totem_owner")
-    public String gatheringTotemOwnerFunction(int totemNumber) {
-        BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(BonusTotemType.GATHERING, totemNumber - 1);
-        if (bonusTotem == null) {
-            return "";
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new Argument<>("worldName", String.class, "")));
         }
-        return bonusTotem.getOwner();
-    }
 
-    @TemplateFunction(name = "gathering_totem_distance")
-    public double gatheringTotemDistanceFunction(int totemNumber) {
-        BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(BonusTotemType.GATHERING, totemNumber - 1);
-        if (bonusTotem == null) {
-            return 0.0d;
+        @Override
+        protected List<String> getAliases() {
+            return List.of("uptime", "current_world_uptime");
         }
-        return bonusTotem.getDistanceToPlayer();
     }
 
-    @TemplateFunction(name = "gathering_totem")
-    public Location gatheringTotemFunction(int totemNumber) {
-        BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(BonusTotemType.GATHERING, totemNumber - 1);
-        if (bonusTotem == null) {
-            return new Location(0, 0, 0);
+    public static class NewestWorldFunction extends Function<String> {
+        private static final String NO_DATA = "<unknown>";
+
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            String server = Models.ServerList.getNewestServer();
+
+            if (server == null) {
+                return NO_DATA;
+            }
+
+            return server;
         }
-        return Location.containing(bonusTotem.getPosition());
     }
 
-    @TemplateFunction(name = "gathering_totem_time_left")
-    public String gatheringTotemTimeLeftFunction(int totemNumber) {
-        BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(BonusTotemType.GATHERING, totemNumber - 1);
-        if (bonusTotem == null) {
-            return "";
+    public static class WorldStateFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return Models.WorldState.getCurrentState().toString().toUpperCase(Locale.ROOT);
         }
-        return bonusTotem.getTimerString();
     }
 
-    @TemplateFunction(name = "token_gatekeeper_count", aliases = { "token_count" })
-    public int tokenGatekeeperCountFunction() {
-        return Models.Token.getGatekeepers().size();
-    }
-
-    @TemplateFunction(name = "token_gatekeeper_deposited", aliases = { "token_dep" })
-    public CappedValue tokenGatekeeperDepositedFunction(int gatekeeperNumber) {
-        int index = gatekeeperNumber - 1;
-        List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
-        if (index >= gatekeeperList.size() || index < 0)
-            return CappedValue.EMPTY;
-        return gatekeeperList.get(index).getDeposited();
-    }
-
-    @TemplateFunction(name = "token_gatekeeper", aliases = { "token" })
-    public CappedValue tokenGatekeeperFunction(int gatekeeperNumber) {
-        int index = gatekeeperNumber - 1;
-        List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
-        if (index >= gatekeeperList.size() || index < 0)
-            return CappedValue.EMPTY;
-        return Models.Token.getCollected(gatekeeperList.get(index));
-    }
-
-    @TemplateFunction(name = "token_gatekeeper_type", aliases = { "token_type" })
-    public String tokenGatekeeperTypeFunction(int gatekeeperNumber) {
-        int index = gatekeeperNumber - 1;
-        List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
-        if (index >= gatekeeperList.size() || index < 0)
-            return "";
-        return gatekeeperList.get(index).getGatekeeperTokenName().getString();
-    }
-
-    @TemplateFunction(name = "mob_totem_count")
-    public int mobTotemCountFunction() {
-        return Models.BonusTotem.getBonusTotemsByType(BonusTotemType.MOB).size();
-    }
-
-    @TemplateFunction(name = "mob_totem_owner")
-    public String mobTotemOwnerFunction(int totemNumber) {
-        BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(BonusTotemType.MOB, totemNumber - 1);
-        if (bonusTotem == null) {
-            return "";
+    public static class InStreamFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.StreamerMode.isInStream();
         }
-        return bonusTotem.getOwner();
-    }
 
-    @TemplateFunction(name = "mob_totem_distance")
-    public double mobTotemDistanceFunction(int totemNumber) {
-        BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(BonusTotemType.MOB, totemNumber - 1);
-        if (bonusTotem == null) {
-            return 0.0d;
+        @Override
+        protected List<String> getAliases() {
+            return List.of("streamer");
         }
-        return bonusTotem.getDistanceToPlayer();
     }
 
-    @TemplateFunction(name = "mob_totem")
-    public Location mobTotemFunction(int totemNumber) {
-        BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(BonusTotemType.MOB, totemNumber - 1);
-        if (bonusTotem == null) {
-            return new Location(0, 0, 0);
+    public static class GatheringTotemCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.BonusTotem.getBonusTotemsByType(BonusTotemType.GATHERING)
+                    .size();
         }
-        return Location.containing(bonusTotem.getPosition());
     }
 
-    @TemplateFunction(name = "mob_totem_time_left")
-    public String mobTotemTimeLeftFunction(int totemNumber) {
-        BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(BonusTotemType.MOB, totemNumber - 1);
-        if (bonusTotem == null) {
-            return "";
+    public static class GatheringTotemOwnerFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(
+                    BonusTotemType.GATHERING,
+                    arguments.getArgument("totemNumber").getIntegerValue() - 1);
+
+            if (bonusTotem == null) {
+                return "";
+            }
+
+            return bonusTotem.getOwner();
         }
-        return bonusTotem.getTimerString();
-    }
 
-    @TemplateFunction(name = "ping")
-    public int pingFunction() {
-        return Services.Ping.getPing();
-    }
-
-    @TemplateFunction(name = "current_territory", aliases = { "territory" })
-    public String currentTerritoryFunction() {
-        TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(McUtils.player().position());
-        if (territoryProfile == null) {
-            return "";
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
         }
-        return territoryProfile.getName();
     }
 
-    @TemplateFunction(name = "current_territory_owner", aliases = { "territory_owner" })
-    public String currentTerritoryOwnerFunction(boolean prefixOnly) {
-        TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(McUtils.player().position());
-        if (territoryProfile == null) {
-            return "";
+    public static class GatheringTotemDistanceFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(
+                    BonusTotemType.GATHERING,
+                    arguments.getArgument("totemNumber").getIntegerValue() - 1);
+
+            if (bonusTotem == null) {
+                return 0.0d;
+            }
+
+            return bonusTotem.getDistanceToPlayer();
         }
-        return prefixOnly ? territoryProfile.getGuildPrefix() : territoryProfile.getGuild();
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
+        }
     }
 
-    @TemplateFunction(name = "in_mapped_area")
-    public boolean inMappedAreaFunction(Number width, Number scale, Number height) {
-        return Services.Map.isPlayerInMappedArea(width.floatValue(), height.floatValue(), scale.floatValue());
+    public static class GatheringTotemFunction extends Function<Location> {
+        @Override
+        public Location getValue(FunctionArguments arguments) {
+            BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(
+                    BonusTotemType.GATHERING,
+                    arguments.getArgument("totemNumber").getIntegerValue() - 1);
+
+            if (bonusTotem == null) {
+                return Location.ZERO;
+            }
+
+            return Location.containing(bonusTotem.getPosition());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
+
+    public static class GatheringTotemTimeLeftFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(
+                    BonusTotemType.GATHERING,
+                    arguments.getArgument("totemNumber").getIntegerValue() - 1);
+
+            if (bonusTotem == null) {
+                return "";
+            }
+
+            return bonusTotem.getTimerString();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
+
+    public static class TokenGatekeeperCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Token.getGatekeepers().size();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("token_count");
+        }
+    }
+
+    public static class TokenGatekeeperDepositedFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
+            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
+            if (index >= gatekeeperList.size() || index < 0) return CappedValue.EMPTY;
+
+            return gatekeeperList.get(index).getDeposited();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new Argument<>("gatekeeperNumber", Integer.class, 0)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("token_dep");
+        }
+    }
+
+    public static class TokenGatekeeperFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
+            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
+            if (index >= gatekeeperList.size() || index < 0) return CappedValue.EMPTY;
+
+            return Models.Token.getCollected(gatekeeperList.get(index));
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new Argument<>("gatekeeperNumber", Integer.class, 0)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("token");
+        }
+    }
+
+    public static class TokenGatekeeperTypeFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
+            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
+            if (index >= gatekeeperList.size() || index < 0) return "";
+
+            return gatekeeperList.get(index).getGatekeeperTokenName().getString();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new Argument<>("gatekeeperNumber", Integer.class, 0)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("token_type");
+        }
+    }
+
+    public static class MobTotemCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.BonusTotem.getBonusTotemsByType(BonusTotemType.MOB).size();
+        }
+    }
+
+    public static class MobTotemOwnerFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(
+                    BonusTotemType.MOB, arguments.getArgument("totemNumber").getIntegerValue() - 1);
+
+            if (bonusTotem == null) {
+                return "";
+            }
+
+            return bonusTotem.getOwner();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
+
+    public static class MobTotemDistanceFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(
+                    BonusTotemType.MOB, arguments.getArgument("totemNumber").getIntegerValue() - 1);
+
+            if (bonusTotem == null) {
+                return 0.0d;
+            }
+
+            return bonusTotem.getDistanceToPlayer();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
+
+    public static class MobTotemFunction extends Function<Location> {
+        @Override
+        public Location getValue(FunctionArguments arguments) {
+            BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(
+                    BonusTotemType.MOB, arguments.getArgument("totemNumber").getIntegerValue() - 1);
+
+            if (bonusTotem == null) {
+                return Location.ZERO;
+            }
+
+            return Location.containing(bonusTotem.getPosition());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
+
+    public static class MobTotemTimeLeftFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(
+                    BonusTotemType.MOB, arguments.getArgument("totemNumber").getIntegerValue() - 1);
+
+            if (bonusTotem == null) {
+                return "";
+            }
+
+            return bonusTotem.getTimerString();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
+
+    public static class PingFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Services.Ping.getPing();
+        }
+    }
+
+    public static class CurrentTerritoryFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(
+                    McUtils.player().position());
+
+            if (territoryProfile == null) {
+                return "";
+            }
+
+            return territoryProfile.getName();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("territory");
+        }
+    }
+
+    public static class CurrentTerritoryOwnerFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(
+                    McUtils.player().position());
+
+            if (territoryProfile == null) {
+                return "";
+            }
+
+            return arguments.getArgument("prefixOnly").getBooleanValue()
+                    ? territoryProfile.getGuildPrefix()
+                    : territoryProfile.getGuild();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("territory_owner");
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new Argument<>("prefixOnly", Boolean.class, false)));
+        }
+    }
+
+    public static class InMappedAreaFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            float width = arguments.getArgument("width").getDoubleValue().floatValue();
+            float height = arguments.getArgument("height").getDoubleValue().floatValue();
+            float scale = arguments.getArgument("scale").getDoubleValue().floatValue();
+
+            return Services.Map.isPlayerInMappedArea(width, height, scale);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(
+                    new Argument<>("width", Number.class, 130),
+                    new Argument<>("height", Number.class, 130),
+                    new Argument<>("scale", Number.class, 1)));
+        }
     }
 }

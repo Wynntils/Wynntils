@@ -12,6 +12,7 @@ public class StatusEffect implements Comparable<StatusEffect> {
     private final StyledText name; // The name of the consumable (also used to identify it)
     private final StyledText modifier; // The modifier of the consumable (+100, 23 etc.)
     private final StyledText modifierSuffix; // The suffix of the modifier (/3s, %)
+    private final StyledText nameIcon; // Additional icon glyphs rendered before the name.
     private final Double modifierValue;
     private final int duration;
     private StyledText displayedTime; // The displayed time remaining. Allows for xx:xx for infinite time effects.
@@ -24,11 +25,23 @@ public class StatusEffect implements Comparable<StatusEffect> {
             StyledText displayedTime,
             StyledText prefix,
             int duration) {
+        this(name, modifier, modifierSuffix, StyledText.EMPTY, displayedTime, prefix, duration);
+    }
+
+    public StatusEffect(
+            StyledText name,
+            StyledText modifier,
+            StyledText modifierSuffix,
+            StyledText nameIcon,
+            StyledText displayedTime,
+            StyledText prefix,
+            int duration) {
         this.name = name;
         this.displayedTime = displayedTime;
         this.prefix = prefix;
         this.modifier = modifier;
         this.modifierSuffix = modifierSuffix;
+        this.nameIcon = nameIcon;
 
         this.fullName = StyledText.concat(
                 prefix,
@@ -36,6 +49,7 @@ public class StatusEffect implements Comparable<StatusEffect> {
                 modifier,
                 modifierSuffix,
                 StyledText.fromString(" "),
+                nameIcon,
                 name,
                 StyledText.fromString(" "),
                 displayedTime);
@@ -95,6 +109,10 @@ public class StatusEffect implements Comparable<StatusEffect> {
         return this.modifierSuffix;
     }
 
+    public StyledText getNameIcon() {
+        return this.nameIcon;
+    }
+
     public boolean hasModifierValue() {
         return this.modifierValue != null;
     }
@@ -117,5 +135,19 @@ public class StatusEffect implements Comparable<StatusEffect> {
                 .compare(this.getName().getString(), effect.getName().getString())
                 .compare(this.getModifier().getString(), effect.getModifier().getString())
                 .result();
+    }
+
+    @Override
+    public String toString() {
+        return "StatusEffect{" + "fullName="
+                + fullName + ", name="
+                + name + ", modifier="
+                + modifier + ", modifierSuffix="
+                + modifierSuffix + ", nameIcon="
+                + nameIcon + ", modifierValue="
+                + modifierValue + ", duration="
+                + duration + ", displayedTime="
+                + displayedTime + ", prefix="
+                + prefix + '}';
     }
 }

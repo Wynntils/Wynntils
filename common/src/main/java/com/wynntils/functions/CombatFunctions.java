@@ -5,132 +5,359 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.combat.label.DebuffType;
 import com.wynntils.models.spells.type.SpellType;
-import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Time;
+import java.util.List;
 
-@SuppressWarnings("unused") // Functions are accessed via reflection
 public class CombatFunctions {
-    @TemplateFunction(name = "area_damage_per_second", aliases = "adps")
-    public static long areaDamagePerSecondFunction() {
-        return Models.Combat.getAreaDamagePerSecond();
+    public static class AreaDamagePerSecondFunction extends Function<Long> {
+        @Override
+        public Long getValue(FunctionArguments arguments) {
+            return Models.Combat.getAreaDamagePerSecond();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("adps");
+        }
     }
 
-    @TemplateFunction(name = "area_damage_average", aliases = "adavg")
-    public static double areaDamageAverageFunction(int seconds) {
-        return Models.Combat.getAverageAreaDamagePerSecond(seconds);
+    public static class AreaDamageAverageFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            return Models.Combat.getAverageAreaDamagePerSecond(
+                    arguments.getArgument("seconds").getIntegerValue());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("seconds", Integer.class, 10)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("adavg");
+        }
     }
 
-    @TemplateFunction(
-            name = "total_area_damage",
-            aliases = {"total_dmg", "tdmg"})
-    public static double totalAreaDamageFunction(int seconds) {
-        return Models.Combat.getTotalAreaDamageOverSeconds(seconds);
+    public static class TotalAreaDamageFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            return Models.Combat.getTotalAreaDamageOverSeconds(
+                    arguments.getArgument("seconds").getIntegerValue());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("seconds", Integer.class, 10)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("total_dmg", "tdmg");
+        }
     }
 
-    @TemplateFunction(
-            name = "blocks_above_ground",
-            aliases = {"agl", "above_ground_level"})
-    public static double blocksAboveGroundFunction() {
-        return Models.CharacterStats.getBlocksAboveGround();
+    public static class BlocksAboveGroundFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            return Models.CharacterStats.getBlocksAboveGround();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("agl", "above_ground_level");
+        }
     }
 
-    @TemplateFunction(name = "kills_per_minute", aliases = "kpm")
-    public static int killsPerMinuteFunction(boolean includeShared) {
-        return Models.Combat.getKillsPerMinute(includeShared);
+    public static class KillsPerMinuteFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Combat.getKillsPerMinute(
+                    arguments.getArgument("includeShared").getBooleanValue());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new Argument<>("includeShared", Boolean.class, true)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("kpm");
+        }
     }
 
-    @TemplateFunction(
-            name = "last_spell_name",
-            aliases = {"recast_name"})
-    public static String lastSpellNameFunction(boolean burst) {
-        return burst ? Models.Spell.getLastBurstSpellName() : Models.Spell.getLastSpellName();
+    public static class LastSpellNameFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return arguments.getArgument("burst").getBooleanValue()
+                    ? Models.Spell.getLastBurstSpellName()
+                    : Models.Spell.getLastSpellName();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new Argument<>("burst", Boolean.class, false)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("recast_name");
+        }
     }
 
-    @TemplateFunction(
-            name = "last_spell_repeat_count",
-            aliases = {"recast_count"})
-    public static int lastSpellRepeatCountFunction(boolean burst) {
-        return burst ? Models.Spell.getRepeatedBurstSpellCount() : Models.Spell.getRepeatedSpellCount();
+    public static class LastSpellManaCostFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Spell.getLastSpellManaCost();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("mana_cost");
+        }
     }
 
-    @TemplateFunction(
-            name = "ticks_since_last_spell",
-            aliases = {"recast_ticks"})
-    public static int ticksSinceLastSpellFunction(boolean burst) {
-        return burst ? Models.Spell.getTicksSinceCastBurst() : Models.Spell.getTicksSinceCast();
+    public static class LastSpellHealthCostFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Spell.getLastSpellHealthCost();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("health_cost", "hp_cost");
+        }
     }
 
-    @TemplateFunction(name = "focused_mob_name", aliases = "foc_mob")
-    public static String focusedMobNameFunction() {
-        return Models.Combat.getFocusedMobName();
+    public static class LastSpellRepeatCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return arguments.getArgument("burst").getBooleanValue()
+                    ? Models.Spell.getRepeatedBurstSpellCount()
+                    : Models.Spell.getRepeatedSpellCount();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new Argument<>("burst", Boolean.class, false)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("recast_count");
+        }
     }
 
-    @TemplateFunction(name = "focused_mob_health", aliases = "foc_mob_hp")
-    public static long focusedMobHealthFunction() {
-        return Models.Combat.getFocusedMobHealth();
+    public static class TicksSinceLastSpellFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return arguments.getArgument("burst").getBooleanValue()
+                    ? Models.Spell.getTicksSinceCastBurst()
+                    : Models.Spell.getTicksSinceCast();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new Argument<>("burst", Boolean.class, false)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("recast_ticks");
+        }
     }
 
-    @TemplateFunction(name = "focused_mob_health_percent", aliases = "foc_mob_hp_pct")
-    public static CappedValue focusedMobHealthPercentFunction() {
-        return Models.Combat.getFocusedMobHealthPercent();
+    public static class FocusedMobNameFunction extends Function<String> {
+        @Override
+        public String getValue(final FunctionArguments arguments) {
+            return Models.Combat.getFocusedMobName();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("foc_mob_name");
+        }
     }
 
-    @TemplateFunction(name = "last_damage_dealt", aliases = "last_dam")
-    public static Time lastDamageDealtFunction() {
-        return Time.of(Models.Combat.getLastDamageDealtTimestamp());
+    public static class FocusedMobHealthFunction extends Function<Long> {
+        @Override
+        public Long getValue(final FunctionArguments arguments) {
+            return Models.Combat.getFocusedMobHealth();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("foc_mob_hp");
+        }
     }
 
-    @TemplateFunction(name = "time_since_last_damage_dealt", aliases = "last_dam_ms")
-    public static long timeSinceLastDamageDealthFunction() {
-        return System.currentTimeMillis() - Models.Combat.getLastDamageDealtTimestamp();
+    public static class FocusedMobHealthPercentFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Combat.getFocusedMobHealthPercent();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("foc_mob_hp_pct");
+        }
     }
 
-    @TemplateFunction(name = "last_kill")
-    public static Time lastKillFunction(boolean includeShared) {
-        return Time.of(Models.Combat.getLastKillTimestamp(includeShared));
+    public static class LastDamageDealtFunction extends Function<Time> {
+        @Override
+        public Time getValue(FunctionArguments arguments) {
+            return Time.of(Models.Combat.getLastDamageDealtTimestamp());
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("last_dam");
+        }
     }
 
-    @TemplateFunction(name = "time_since_last_kill", aliases = "last_kill_ms")
-    public static long timeSinceLastKillFunction(boolean includeShared) {
-        return System.currentTimeMillis() - Models.Combat.getLastKillTimestamp(includeShared);
+    public static class TimeSinceLastDamageDealtFunction extends Function<Long> {
+        @Override
+        public Long getValue(FunctionArguments arguments) {
+            return System.currentTimeMillis() - Models.Combat.getLastDamageDealtTimestamp();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("last_dam_ms");
+        }
     }
 
-    @TemplateFunction(name = "targeted_mob_debuff_count")
-    public static int targetedMobDebuffValueFunction(
-            String debuffName, double range, double horizontalFovDegrees, double verticalFovDegrees) {
-        DebuffType debuffType = DebuffType.fromName(debuffName);
-        if (debuffType == null) return 0;
+    public static class LastKillFunction extends Function<Time> {
+        @Override
+        public Time getValue(FunctionArguments arguments) {
+            return Time.of(Models.Combat.getLastKillTimestamp(
+                    arguments.getArgument("includeShared").getBooleanValue()));
+        }
 
-        return Models.Combat.getTargetedDebuffCount(range, horizontalFovDegrees, verticalFovDegrees, debuffType);
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new Argument<>("includeShared", Boolean.class, false)));
+        }
     }
 
-    @TemplateFunction(name = "debuffs_in_radius")
-    public static int debuffsInRadiusValueFunction(String debuffName, double radius) {
-        DebuffType debuffType = DebuffType.fromName(debuffName);
-        if (debuffType == null) return 0;
+    public static class TimeSinceLastKillFunction extends Function<Long> {
+        @Override
+        public Long getValue(FunctionArguments arguments) {
+            return System.currentTimeMillis()
+                    - Models.Combat.getLastKillTimestamp(
+                            arguments.getArgument("includeShared").getBooleanValue());
+        }
 
-        return Models.Combat.getDebuffCountInRadius(radius, debuffType);
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new Argument<>("includeShared", Boolean.class, false)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("last_kill_ms");
+        }
     }
 
-    @TemplateFunction(name = "ticks_since_specific_spell")
-    public static int ticksSinceSpecificSpellFunction(String spellName) {
-        return Models.Spell.getTicksSinceCast(spellName);
+    public static class TargetedMobDebuffValueFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            DebuffType debuffType =
+                    DebuffType.fromName(arguments.getArgument("debuffName").getStringValue());
+            if (debuffType == null) return 0;
+            double range = arguments.getArgument("range").getDoubleValue();
+            double horizontalFovDegrees =
+                    arguments.getArgument("horizontalDegrees").getDoubleValue();
+            double verticalFovDegrees = arguments.getArgument("verticalDegrees").getDoubleValue();
+
+            return Models.Combat.getTargetedDebuffCount(range, horizontalFovDegrees, verticalFovDegrees, debuffType);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("range", Double.class, null),
+                    new Argument<>("horizontalDegrees", Double.class, null),
+                    new Argument<>("verticalDegrees", Double.class, null),
+                    new Argument<>("debuffName", String.class, null)));
+        }
     }
 
-    @TemplateFunction(name = "spell_name_from_direction")
-    public static String spellNameFromDirectionFunction(String spellDirection, String className) {
-        ClassType classType = ClassType.fromName(className);
-        SpellType spellType = SpellType.fromSpellString(classType, spellDirection);
-        return spellType == null ? "" : spellType.getName();
+    public static class DebuffsInRadiusValueFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            DebuffType debuffType =
+                    DebuffType.fromName(arguments.getArgument("debuffName").getStringValue());
+            if (debuffType == null) return 0;
+            double radius = arguments.getArgument("radius").getDoubleValue();
+
+            return Models.Combat.getDebuffCountInRadius(radius, debuffType);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("radius", Double.class, null), new Argument<>("debuffName", String.class, null)));
+        }
     }
 
-    @TemplateFunction(name = "spell_name_from_number")
-    public static String spellNameFromNumberFunction(int spellNumber, String className) {
-        SpellType spellType = SpellType.forClass(ClassType.fromName(className), spellNumber);
-        return spellType == null ? "" : spellType.getName();
+    public static class TicksSinceSpecificSpellFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            String spellName = arguments.getArgument("spellName").getStringValue();
+            return Models.Spell.getTicksSinceCast(spellName);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("spellName", String.class, null)));
+        }
+    }
+
+    public static class SpellNameFromDirectionFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            String spellDirection = arguments.getArgument("spellDirection").getStringValue();
+            ClassType classType =
+                    ClassType.fromName(arguments.getArgument("class").getStringValue());
+            SpellType spellType = SpellType.fromSpellString(classType, spellDirection);
+
+            return spellType == null ? "" : spellType.getName();
+        }
+
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("spellDirection", String.class, null), new Argument<>("class", String.class, null)));
+        }
+    }
+
+    public static class SpellNameFromNumberFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int spellNumber = arguments.getArgument("spellNumber").getIntegerValue();
+            String className = arguments.getArgument("class").getStringValue();
+            SpellType spellType = SpellType.forClass(ClassType.fromName(className), spellNumber);
+            return spellType == null ? "" : spellType.getName();
+        }
+
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("spellNumber", Integer.class, null), new Argument<>("class", String.class, null)));
+        }
     }
 }

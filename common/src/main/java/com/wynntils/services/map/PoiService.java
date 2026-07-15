@@ -11,14 +11,19 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.json.JsonManager;
+import com.wynntils.core.net.Dependency;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.models.profession.type.MaterialType;
+import com.wynntils.models.profession.type.SourceMaterial;
 import com.wynntils.services.map.pois.CombatPoi;
 import com.wynntils.services.map.pois.CustomPoi;
+import com.wynntils.services.map.pois.GatheringNodePoi;
 import com.wynntils.services.map.pois.LabelPoi;
 import com.wynntils.services.map.pois.ServicePoi;
 import com.wynntils.services.map.type.CombatKind;
@@ -65,10 +70,15 @@ public class PoiService extends Service {
     private final Set<ServicePoi> servicePois = new HashSet<>();
     private final Set<CombatPoi> combatPois = new HashSet<>();
     private final Set<CombatPoi> cavePois = new HashSet<>();
+    private final Set<GatheringNodePoi> gatheringNodePois = new HashSet<>();
+    private List<GatheringNodePoi> filteredGatheringNodePois = new ArrayList<>();
     private final Map<CustomPoiProvider, List<CustomPoi>> providedCustomPois = new ConcurrentHashMap<>();
 
     @Persisted
     private final Storage<List<CustomPoiProvider>> customPoiProviders = new Storage<>(new ArrayList<>());
+
+    @Persisted
+    private final Storage<Map<String, Boolean>> visibleGatheringNodeTypes = new Storage<>(new ConcurrentHashMap<>());
 
     public PoiService() {
         super(List.of());
@@ -80,6 +90,10 @@ public class PoiService extends Service {
         registry.registerDownload(UrlId.DATA_STATIC_SERVICES_CROWDSOURCED).handleReader(this::handleServices);
         registry.registerDownload(UrlId.DATA_STATIC_COMBAT_LOCATIONS).handleReader(this::handleCombat);
         registry.registerDownload(UrlId.DATA_STATIC_CAVE_INFO).handleReader(this::handleCaves);
+        registry.registerDownload(
+                        UrlId.DATA_STATIC_GATHERING_NODES,
+                        Dependency.simple(Models.Profession, UrlId.DATA_STATIC_MATERIALS))
+                .handleReader(this::handleGatheringNodes);
     }
 
     @Override
@@ -97,6 +111,20 @@ public class PoiService extends Service {
 
     public Stream<CombatPoi> getCombatPois() {
         return Stream.concat(combatPois.stream(), cavePois.stream());
+    }
+
+    public Stream<GatheringNodePoi> getGatheringNodePois() {
+        return gatheringNodePois.stream();
+    }
+
+    private void filterGatheringNodes() {
+        filteredGatheringNodePois = gatheringNodePois.stream()
+                .filter(this::isGatheringNodeTypeVisible)
+                .toList();
+    }
+
+    public Stream<GatheringNodePoi> getFilteredGatheringNodePois() {
+        return filteredGatheringNodePois.stream();
     }
 
     public List<CustomPoi> getProvidedCustomPois() {
@@ -186,6 +214,25 @@ public class PoiService extends Service {
                 .collect(Collectors.toUnmodifiableSet()));
     }
 
+    private void handleGatheringNodes(Reader reader) {
+        Type type = new TypeToken<List<GatheringNodeProfile>>() {}.getType();
+
+        List<GatheringNodeProfile> profiles = GSON.fromJson(reader, type);
+
+        gatheringNodePois.addAll(profiles.stream()
+                .map(profile -> new GatheringNodePoi(
+                        profile.x(),
+                        profile.y(),
+                        profile.z(),
+                        profile.resource(),
+                        profile.type(),
+                        profile.angle(),
+                        profile.level()))
+                .collect(Collectors.toUnmodifiableSet()));
+
+        filterGatheringNodes();
+    }
+
     public void loadCustomPoiProviders() {
         for (CustomPoiProvider poiProvider : customPoiProviders.get()) {
             try {
@@ -205,6 +252,54 @@ public class PoiService extends Service {
                         "Failed to load custom POIs from " + poiProvider.getUrl() + ": " + exception.getMessage());
             }
         }
+    }
+
+    public List<GatheringNodeType> getGatheringNodeTypes() {
+        return gatheringNodePois.stream()
+                .filter(gatheringNodePoi -> gatheringNodePoi.getMaterialType() != null)
+                .filter(gatheringNodePoi -> gatheringNodePoi.getSourceMaterial() != null)
+                .map(gatheringNodePoi ->
+                        new GatheringNodeType(gatheringNodePoi.getMaterialType(), gatheringNodePoi.getSourceMaterial()))
+                .distinct()
+                .sorted()
+                .toList();
+    }
+
+    public boolean isGatheringNodeTypeVisible(GatheringNodePoi gatheringNodePoi) {
+        if (gatheringNodePoi.getMaterialType() == null || gatheringNodePoi.getSourceMaterial() == null) return true;
+
+        return isGatheringNodeTypeVisible(
+                new GatheringNodeType(gatheringNodePoi.getMaterialType(), gatheringNodePoi.getSourceMaterial()));
+    }
+
+    public boolean isGatheringNodeTypeVisible(GatheringNodeType gatheringNodeType) {
+        return visibleGatheringNodeTypes.get().getOrDefault(gatheringNodeType.key(), false);
+    }
+
+    public void setGatheringNodeTypeVisible(GatheringNodeType gatheringNodeType, boolean visible) {
+        visibleGatheringNodeTypes.get().put(gatheringNodeType.key(), visible);
+        visibleGatheringNodeTypes.touched();
+
+        filterGatheringNodes();
+    }
+
+    public void setAllGatheringNodeTypesVisible(boolean visible) {
+        getGatheringNodeTypes().stream()
+                .map(GatheringNodeType::key)
+                .forEach(key -> visibleGatheringNodeTypes.get().put(key, visible));
+
+        visibleGatheringNodeTypes.touched();
+
+        filterGatheringNodes();
+    }
+
+    public void setAllGatheringNodeTypesVisible(MaterialType materialType, boolean visible) {
+        getGatheringNodeTypes().stream()
+                .filter(type -> type.materialType == materialType)
+                .map(GatheringNodeType::key)
+                .forEach(key -> visibleGatheringNodeTypes.get().put(key, visible));
+
+        filterGatheringNodes();
     }
 
     private static class PlacesProfile {
@@ -237,4 +332,24 @@ public class PoiService extends Service {
             int requirements,
             List<String> rewards,
             Location location) {}
+
+    private record GatheringNodeProfile(int x, int y, int z, int angle, String resource, String type, int level) {}
+
+    public record GatheringNodeType(MaterialType materialType, SourceMaterial sourceMaterial)
+            implements Comparable<GatheringNodeType> {
+        public String key() {
+            return materialType.name() + ":" + sourceMaterial.name();
+        }
+
+        @Override
+        public int compareTo(GatheringNodeType other) {
+            int materialTypeCompare = Integer.compare(materialType.ordinal(), other.materialType.ordinal());
+            if (materialTypeCompare != 0) return materialTypeCompare;
+
+            int levelCompare = Integer.compare(sourceMaterial.level(), other.sourceMaterial.level());
+            if (levelCompare != 0) return levelCompare;
+
+            return sourceMaterial.name().compareToIgnoreCase(other.sourceMaterial.name());
+        }
+    }
 }

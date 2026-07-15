@@ -6,7 +6,11 @@ dependencies {
     // This dependency is provided by forge naturally and by fabric in its build.gradle
     compileOnly "net.neoforged:bus:${neoforge_eventbus_version}"
 
-    implementation("com.github.wynntils:hades:v${hades_version}")
+    if (file("${rootDir}/../Hades/build/libs/HadesProtocol-${hades_version}.jar").exists()) {
+        implementation(files("${rootDir}/../Hades/build/libs/HadesProtocol-${hades_version}.jar"))
+    } else {
+        implementation("com.github.wynntils:hades:v${hades_version}")
+    }
     implementation("com.github.wynntils:antiope:v${antiope_version}")
 
     implementation project(":template-engine")

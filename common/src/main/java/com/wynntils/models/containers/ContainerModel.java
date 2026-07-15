@@ -11,7 +11,8 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.AbilityTreeContainer;
 import com.wynntils.models.containers.containers.AbilityTreeResetContainer;
 import com.wynntils.models.containers.containers.AspectsContainer;
-import com.wynntils.models.containers.containers.BlacksmithContainer;
+import com.wynntils.models.containers.containers.BlacksmithRepairContainer;
+import com.wynntils.models.containers.containers.BlacksmithSellContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.CharacterSelectionContainer;
 import com.wynntils.models.containers.containers.ContentBookContainer;
@@ -36,6 +37,7 @@ import com.wynntils.models.containers.containers.LeaderboardRewardsContainer;
 import com.wynntils.models.containers.containers.LobbyContainer;
 import com.wynntils.models.containers.containers.LootrunRewardChestContainer;
 import com.wynntils.models.containers.containers.MasteryTomesContainer;
+import com.wynntils.models.containers.containers.MountFeederContainer;
 import com.wynntils.models.containers.containers.PartyFinderMatchFoundContainer;
 import com.wynntils.models.containers.containers.RaidRewardChestContainer;
 import com.wynntils.models.containers.containers.RaidRewardPreviewContainer;
@@ -63,6 +65,7 @@ import com.wynntils.models.containers.containers.trademarket.TradeMarketBuyConta
 import com.wynntils.models.containers.containers.trademarket.TradeMarketContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketFiltersContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketOrderContainer;
+import com.wynntils.models.containers.containers.trademarket.TradeMarketRevealItemsContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesContainer;
 import com.wynntils.models.guild.type.GuildLogType;
@@ -129,7 +132,8 @@ public final class ContainerModel extends Model {
         registerContainer(new AbilityTreeResetContainer());
         registerContainer(new AccountBankContainer());
         registerContainer(new AspectsContainer());
-        registerContainer(new BlacksmithContainer());
+        registerContainer(new BlacksmithRepairContainer());
+        registerContainer(new BlacksmithSellContainer());
         registerContainer(new BookshelfContainer());
         registerContainer(new ChallengeRewardContainer());
         registerContainer(new CharacterBankContainer());
@@ -163,6 +167,7 @@ public final class ContainerModel extends Model {
         registerContainer(new LootrunRewardChestContainer());
         registerContainer(new MasteryTomesContainer());
         registerContainer(new MiscBucketContainer());
+        registerContainer(new MountFeederContainer());
         registerContainer(new ObjectiveRewardContainer());
         registerContainer(new PartyFinderMatchFoundContainer());
         registerContainer(new PersonalBlockBankContainer());
@@ -177,6 +182,7 @@ public final class ContainerModel extends Model {
         registerContainer(new TradeMarketContainer());
         registerContainer(new TradeMarketFiltersContainer());
         registerContainer(new TradeMarketOrderContainer());
+        registerContainer(new TradeMarketRevealItemsContainer());
         registerContainer(new TradeMarketSellContainer());
         registerContainer(new TradeMarketTradesContainer());
 

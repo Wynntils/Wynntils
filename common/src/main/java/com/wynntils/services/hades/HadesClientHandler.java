@@ -53,7 +53,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
         }
 
         hadesConnection.sendPacketAndFlush(
-                new HCPacketAuthenticate(Services.WynntilsAccount.getToken(), HadesVersion.VERSION_0_6_1));
+                new HCPacketAuthenticate(Services.WynntilsAccount.getToken(), HadesVersion.VERSION_0_6_3));
     }
 
     @Override

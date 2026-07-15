@@ -5,127 +5,220 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.Argument;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.ProfessionType;
-import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.CappedValue;
+import java.util.List;
 import java.util.Optional;
 
-@SuppressWarnings("unused") // Functions are accessed via reflection
 public class ProfessionFunctions {
-    @TemplateFunction(name = "profession_xp", aliases = "prof_xp")
-    public static CappedValue professionXpFunction(String profession) {
-        ProfessionType professionType = ProfessionType.fromString(profession);
-        if (professionType == null) return CappedValue.EMPTY;
-        return Models.Profession.getXP(professionType);
+    public static class ProfessionXpFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            ProfessionType professionType = ProfessionType.fromString(
+                    arguments.getArgument("profession").getStringValue());
+            if (professionType == null) return CappedValue.EMPTY;
+            return Models.Profession.getXP(professionType);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("profession", String.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("prof_xp");
+        }
     }
 
-    @TemplateFunction(name = "profession_level", aliases = "prof_lvl")
-    public static int professionLevelFunction(String profession) {
-        ProfessionType professionType = ProfessionType.fromString(profession);
-        if (professionType == null) return -1;
+    public static class ProfessionLevelFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            ProfessionType professionType = ProfessionType.fromString(
+                    arguments.getArgument("profession").getStringValue());
+            if (professionType == null) return -1;
 
-        return Models.Profession.getLevel(professionType);
+            return Models.Profession.getLevel(professionType);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("profession", String.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("prof_lvl");
+        }
     }
 
-    @TemplateFunction(name = "profession_percentage", aliases = "prof_pct")
-    public static double professionPercentageFunction(String profession) {
-        ProfessionType professionType = ProfessionType.fromString(profession);
-        if (professionType == null) return -1.0;
+    public static class ProfessionPercentageFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            ProfessionType professionType = ProfessionType.fromString(
+                    arguments.getArgument("profession").getStringValue());
+            if (professionType == null) return -1.0;
 
-        return Models.Profession.getProgress(professionType);
+            return Models.Profession.getProgress(professionType);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("profession", String.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("prof_pct");
+        }
     }
 
-    @TemplateFunction(name = "profession_xp_per_minute_raw", aliases = "prof_xpm_raw")
-    public static int professionXpPerMinuteRawFunction(String profession) {
-        ProfessionType professionType = ProfessionType.fromString(profession);
-        if (professionType == null) return -1;
+    public static class ProfessionXpPerMinuteRawFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            ProfessionType professionType = ProfessionType.fromString(
+                    arguments.getArgument("profession").getStringValue());
+            if (professionType == null) return -1;
 
-        return (int) Models.Profession.getRawXpGainInLastMinute().get(professionType).stream()
-                .mapToDouble(Float::doubleValue)
-                .sum();
+            return (int) Models.Profession.getRawXpGainInLastMinute().get(professionType).stream()
+                    .mapToDouble(Float::doubleValue)
+                    .sum();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("profession", String.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("prof_xpm_raw");
+        }
     }
 
-    @TemplateFunction(name = "profession_xp_per_minute", aliases = "prof_xpm")
-    public static String professionXpPerMinuteFunction(String profession) {
-        ProfessionType professionType = ProfessionType.fromString(profession);
-        if (professionType == null) return "Invalid profession";
+    public static class ProfessionXpPerMinuteFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            ProfessionType professionType = ProfessionType.fromString(
+                    arguments.getArgument("profession").getStringValue());
+            if (professionType == null) return "Invalid profession";
 
-        return StringUtils.integerToShortString(
-                (int) Models.Profession.getRawXpGainInLastMinute().get(professionType).stream()
-                        .mapToDouble(Float::doubleValue)
-                        .sum());
+            return StringUtils.integerToShortString(
+                    (int) Models.Profession.getRawXpGainInLastMinute().get(professionType).stream()
+                            .mapToDouble(Float::doubleValue)
+                            .sum());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("profession", String.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("prof_xpm");
+        }
     }
 
-    @TemplateFunction(name = "last_harvest_resource")
-    public static String lastHarvestResourceFunction() {
-        Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+    public static class LastHarvestResourceTypeFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
 
-        if (lastHarvest.isEmpty()) return "";
+            if (lastHarvest.isEmpty()) return "";
 
-        return lastHarvest.get().materialProfile().getResourceType().name();
+            return lastHarvest.get().harvestMaterial().resourceType().name();
+        }
     }
 
-    @TemplateFunction(name = "last_harvest_material_type")
-    public static String lastHarvestMaterialTypeFunction() {
-        Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+    public static class LastHarvestMaterialTypeFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
 
-        if (lastHarvest.isEmpty()) return "";
+            if (lastHarvest.isEmpty()) return "";
 
-        return lastHarvest
-                .get()
-                .materialProfile()
-                .getResourceType()
-                .getMaterialType()
-                .name();
+            return lastHarvest
+                    .get()
+                    .harvestMaterial()
+                    .resourceType()
+                    .getMaterialType()
+                    .name();
+        }
     }
 
-    @TemplateFunction(name = "last_harvest_material_name")
-    public static String lastHarvestMaterialNameFunction() {
-        Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+    public static class LastHarvestMaterialNameFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
 
-        if (lastHarvest.isEmpty()) return "";
+            if (lastHarvest.isEmpty()) return "";
 
-        return lastHarvest.get().materialProfile().getSourceMaterial().name();
+            return lastHarvest.get().harvestMaterial().sourceMaterial().name();
+        }
     }
 
-    @TemplateFunction(name = "last_harvest_material_level")
-    public static int lastHarvestMaterialLevelFunction() {
-        Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+    public static class LastHarvestMaterialLevelFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
 
-        if (lastHarvest.isEmpty()) return -1;
+            if (lastHarvest.isEmpty()) return -1;
 
-        return lastHarvest.get().materialProfile().getSourceMaterial().level();
+            return lastHarvest.get().harvestMaterial().sourceMaterial().level();
+        }
     }
 
-    @TemplateFunction(name = "last_harvest_material_tier")
-    public static int lastHarvestMaterialTierFunction() {
-        Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+    public static class LastHarvestMaterialTierFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
 
-        if (lastHarvest.isEmpty()) return -1;
+            if (lastHarvest.isEmpty()) return -1;
 
-        return lastHarvest.get().materialProfile().getTier();
+            return lastHarvest.get().harvestMaterial().tier();
+        }
     }
 
-    @TemplateFunction(name = "last_harvest_xp_gain")
-    public static float lastHarvestXpGainFunction() {
-        Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+    public static class LastHarvestXpGainFunction extends Function<Float> {
+        @Override
+        public Float getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
 
-        if (lastHarvest.isEmpty()) return -1f;
+            if (lastHarvest.isEmpty()) return -1f;
 
-        return lastHarvest.get().xpGain();
+            return lastHarvest.get().xpGain();
+        }
     }
 
-    @TemplateFunction(name = "material_dry_streak", aliases = "mat_dry")
-    public static int materialDryStreakFunction() {
-        return Models.Profession.getProfessionDryStreak();
+    public static class MaterialDryStreak extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Profession.getProfessionDryStreak();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("mat_dry");
+        }
     }
 
-    @TemplateFunction(name = "last_profession_xp_gain")
-    public static String lastProfessionXpGainFunction() {
-        Optional<ProfessionType> profession = Models.Profession.getLastProfessionXpGain();
-        if (profession.isEmpty()) return "";
-        return profession.get().getDisplayName();
+    public static class LastProfessionXpGainFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            Optional<ProfessionType> profession = Models.Profession.getLastProfessionXpGain();
+            if (profession.isEmpty()) return "";
+            return profession.get().getDisplayName();
+        }
     }
 }

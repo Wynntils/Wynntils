@@ -4,26 +4,128 @@
  */
 package com.wynntils.functions.generic;
 
-import com.wynntils.templates.annotations.TemplateFunction;
+import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.AnyArgument;
+import com.wynntils.core.consumers.functions.arguments.AnyArgumentList;
+import com.wynntils.core.consumers.functions.arguments.Argument;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.type.CappedValue;
+import java.util.List;
+import java.util.Objects;
 
-@SuppressWarnings("unused") // Functions are accessed via reflection
 public class ConditionalFunctions {
-    @TemplateFunction(
-            name = "if",
-            aliases = {
-                "if_string",
-                "if_str",
-                "if_number",
-                "if_num",
-                "if_capped_value",
-                "if_capped",
-                "if_cap",
-                "if_custom_color",
-                "if_color",
-                "if_customcolor"
-            },
-            isPure = true)
-    public static Object ifFunction(boolean condition, Object left, Object right) {
-        return condition ? left : right;
+    // NOTE: This class' generic type is only used in the superclass's getFunctionType() method.
+    private abstract static class IfFunctionBase<T> extends GenericFunction<Object> {
+        @Override
+        public Object getValue(FunctionArguments arguments) {
+            if (arguments.getArgument("condition").getBooleanValue()) {
+                return arguments.getArgument("ifTrue").getValue();
+            } else {
+                return arguments.getArgument("ifFalse").getValue();
+            }
+        }
+    }
+
+    public static class IfFunction extends IfFunctionBase<Object> {
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("condition", Boolean.class, null),
+                    new AnyArgument("ifTrue"),
+                    new AnyArgument("ifFalse")));
+        }
+    }
+
+    public static class IfStringFunction extends IfFunctionBase<String> {
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("condition", Boolean.class, null),
+                    new Argument<>("ifTrue", String.class, null),
+                    new Argument<>("ifFalse", String.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("if_str");
+        }
+    }
+
+    public static class IfNumberFunction extends IfFunctionBase<Number> {
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("condition", Boolean.class, null),
+                    new Argument<>("ifTrue", Number.class, null),
+                    new Argument<>("ifFalse", Number.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("if_num");
+        }
+    }
+
+    public static class IfCappedValueFunction extends IfFunctionBase<CappedValue> {
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("condition", Boolean.class, null),
+                    new Argument<>("ifTrue", CappedValue.class, null),
+                    new Argument<>("ifFalse", CappedValue.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("if_capped", "if_cap");
+        }
+    }
+
+    public static class IfCustomColorFunction extends IfFunctionBase<CustomColor> {
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("condition", Boolean.class, null),
+                    new Argument<>("ifTrue", CustomColor.class, null),
+                    new Argument<>("ifFalse", CustomColor.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("if_color", "if_customcolor");
+        }
+    }
+
+    public static class SwitchCaseFunction extends GenericFunction<Object> {
+        @Override
+        public Object getValue(FunctionArguments arguments) {
+            Object toTest = arguments.getArgument("switch").getValue();
+            Object defaultVal = arguments.getArgument("default").getValue();
+            List<Object> cases = arguments.getArgument("cases").getObjectList();
+
+            if (cases.size() % 2 != 0) {
+                return defaultVal; // error not enough arguments
+            }
+            for (int i = 0; i < cases.size(); i += 2) {
+                if (toTest.getClass() != cases.get(i).getClass()) {
+                    return defaultVal; // error not comparing the same items
+                } else if (Objects.equals(toTest, cases.get(i))) {
+                    return cases.get(i + 1);
+                }
+            }
+            return defaultVal;
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new AnyArgument("switch"), new AnyArgument("default"), new AnyArgumentList("cases")));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("switch");
+        }
     }
 }

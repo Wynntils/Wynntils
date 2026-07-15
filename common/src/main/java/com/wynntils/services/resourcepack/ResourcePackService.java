@@ -37,6 +37,7 @@ public final class ResourcePackService extends Service {
     }
 
     public void setRequestedPreloadHash(UUID id, String hash) {
+        WynntilsMod.postEvent(new ServerResourcePackEvent.Change());
         resourcePackIdHash.store(Pair.of(id, hash));
     }
 

@@ -11,10 +11,12 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
+import com.wynntils.models.character.type.ClickAction;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.MasteryTomesContainer;
@@ -29,6 +31,7 @@ import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -36,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
@@ -100,13 +104,14 @@ public final class SkillPointModel extends Model {
 
             if (wynnItem instanceof GearTypeItemProperty gear) {
                 if (gear.getGearType().isArmor()) {
-                    armourNames.add(
-                            StyledText.fromComponent(itemStack.getHoverName()).getString());
+                    armourNames.add(WynnUtils.stripItemNameMarkers(
+                            StyledText.fromComponent(itemStack.getHoverName()).getString()));
                 } else if (gear.getGearType().isAccessory()) {
-                    accessoryNames.add(
-                            StyledText.fromComponent(itemStack.getHoverName()).getString());
+                    accessoryNames.add(WynnUtils.stripItemNameMarkers(
+                            StyledText.fromComponent(itemStack.getHoverName()).getString()));
                 } else if (gear.getGearType().isWeapon()) {
-                    weapon = StyledText.fromComponent(itemStack.getHoverName()).getString();
+                    weapon = WynnUtils.stripItemNameMarkers(
+                            StyledText.fromComponent(itemStack.getHoverName()).getString());
                 }
             }
         }
@@ -131,18 +136,57 @@ public final class SkillPointModel extends Model {
         skillPointLoadouts.get().remove(name);
     }
 
-    public void loadLoadout(String name) {
+    public void loadLoadout(String name, Consumer<String> onError, Runnable onComplete) {
         ContainerUtils.closeBackgroundContainer();
 
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Loading Skill Point Loadout Query")
-                .onError(msg -> WynntilsMod.warn("Failed to load skill point loadout: " + msg))
+        SavableSkillPointSet target = skillPointLoadouts.get().get(name);
+        if (target == null) {
+            if (onError != null) onError.accept("Loadout not found: " + name);
+            return;
+        }
+
+        List<ClickAction> clickActions = calculateClickActions(target.getSkillPointsAsArray());
+        int batchSize = 5; // tune this if needed (5 clicks ≈ 1 packet burst)
+
+        QueryBuilder builder = ScriptedContainerQuery.builder("Loading Skill Point Loadout Query")
+                .onError(msg -> {
+                    WynntilsMod.warn("Failed to load skill point loadout: " + msg);
+                    if (onError != null) onError.accept(msg);
+                })
                 .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                         .expectContainer(CharacterInfoContainer.class)
                         .verifyContentChange((container, changes, changeType) ->
                                 verifyChange(container, changes, changeType, CONTENT_BOOK_SLOT))
-                        .processIncomingContainer((container) -> loadSkillPointsOnServer(container, name)))
-                .build();
-        query.executeQuery();
+                        .processIncomingContainer(c -> {}));
+
+        for (int i = 0; i < clickActions.size(); i += batchSize) {
+            List<ClickAction> batch = clickActions.subList(i, Math.min(i + batchSize, clickActions.size()));
+            builder.then(QueryStep.runInSameContainer(container -> {
+                        for (ClickAction click : batch) {
+                            if (click.shift()) {
+                                ContainerUtils.shiftClickOnSlot(
+                                        click.slot(), container.containerId(), click.button(), container.items());
+                            } else {
+                                ContainerUtils.clickOnSlot(
+                                        click.slot(), container.containerId(), click.button(), container.items());
+                            }
+                        }
+                        return false;
+                    })
+                    .withNextOperationDelay(1));
+        }
+
+        builder.execute(() -> {
+            // Update local cache directly instead of running a conflicting container query
+            for (int i = 0; i < Skill.values().length; i++) {
+                assignedSkillPoints.put(Skill.values()[i], target.getSkillPointsAsArray()[i]);
+            }
+            calculateTotalSkillPoints();
+
+            if (onComplete != null) onComplete.run();
+        });
+
+        builder.build().executeQuery();
     }
 
     /**
@@ -156,7 +200,7 @@ public final class SkillPointModel extends Model {
             assignedSkillPoints = new EnumMap<>(Skill.class);
             calculateGearSkillPoints();
             calculateStatusEffectSkillPoints();
-            queryTotalAndTomeSkillPoints();
+            queryAssignedAndTomeSkillPoints();
         });
     }
 
@@ -232,77 +276,6 @@ public final class SkillPointModel extends Model {
         return false;
     }
 
-    private void loadSkillPointsOnServer(ContainerContent containerContent, String name) {
-        // we need to figure out which points we can subtract from first to actually allow assigning for positive points
-        Map<Skill, Integer> negatives = new EnumMap<>(Skill.class);
-        Map<Skill, Integer> positives = new EnumMap<>(Skill.class);
-        for (int i = 0; i < Skill.values().length; i++) {
-            int buildTarget = skillPointLoadouts.get().get(name).getSkillPointsAsArray()[i];
-            int difference = buildTarget - getAssignedSkillPoints(Skill.values()[i]);
-
-            // no difference automatically dropped here
-            if (difference > 0) {
-                positives.put(Skill.values()[i], difference);
-            } else if (difference < 0) {
-                negatives.put(Skill.values()[i], difference);
-            }
-        }
-
-        boolean confirmationCompleted = false;
-        for (Map.Entry<Skill, Integer> entry : negatives.entrySet()) {
-            int difference5s = Math.abs(entry.getValue()) / 5;
-            int difference1s = Math.abs(entry.getValue()) % 5;
-
-            for (int i = 0; i < difference5s; i++) {
-                ContainerUtils.shiftClickOnSlot(
-                        SKILL_POINT_TOTAL_SLOTS[entry.getKey().ordinal()],
-                        containerContent.containerId(),
-                        GLFW.GLFW_MOUSE_BUTTON_RIGHT,
-                        containerContent.items());
-                if (!confirmationCompleted) {
-                    // confirmation required, force loop to repeat this iteration
-                    i--;
-                    confirmationCompleted = true;
-                }
-            }
-            for (int i = 0; i < difference1s; i++) {
-                ContainerUtils.clickOnSlot(
-                        SKILL_POINT_TOTAL_SLOTS[entry.getKey().ordinal()],
-                        containerContent.containerId(),
-                        GLFW.GLFW_MOUSE_BUTTON_RIGHT,
-                        containerContent.items());
-                if (!confirmationCompleted) {
-                    // needs to exist in both loops in case of 1s only
-                    i--;
-                    confirmationCompleted = true;
-                }
-            }
-        }
-
-        for (Map.Entry<Skill, Integer> entry : positives.entrySet()) {
-            int difference5s = Math.abs(entry.getValue()) / 5;
-            int difference1s = Math.abs(entry.getValue()) % 5;
-
-            for (int i = 0; i < difference5s; i++) {
-                ContainerUtils.shiftClickOnSlot(
-                        SKILL_POINT_TOTAL_SLOTS[entry.getKey().ordinal()],
-                        containerContent.containerId(),
-                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                        containerContent.items());
-            }
-            for (int i = 0; i < difference1s; i++) {
-                ContainerUtils.clickOnSlot(
-                        SKILL_POINT_TOTAL_SLOTS[entry.getKey().ordinal()],
-                        containerContent.containerId(),
-                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                        containerContent.items());
-            }
-        }
-
-        // Server needs 2 ticks, give a couple extra to be safe
-        Managers.TickScheduler.scheduleLater(this::populateSkillPoints, 4);
-    }
-
     private void calculateGearSkillPoints() {
         gearSkillPoints = new EnumMap<>(Skill.class);
         craftedSkillPoints = new EnumMap<>(Skill.class);
@@ -347,8 +320,8 @@ public final class SkillPointModel extends Model {
     /**
      * Queries the compass (and tome) menu for skill point data.
      */
-    private void queryTotalAndTomeSkillPoints() {
-        totalSkillPoints = new EnumMap<>(Skill.class);
+    private void queryAssignedAndTomeSkillPoints() {
+        assignedSkillPoints = new EnumMap<>(Skill.class);
         tomeSkillPoints = new EnumMap<>(Skill.class);
 
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Total and Tome Skill Point Query")
@@ -357,7 +330,7 @@ public final class SkillPointModel extends Model {
                         .expectContainer(CharacterInfoContainer.class)
                         .verifyContentChange((container, changes, changeType) ->
                                 verifyChange(container, changes, changeType, CONTENT_BOOK_SLOT))
-                        .processIncomingContainer(this::processTotalSkillPoints))
+                        .processIncomingContainer(this::processAssignedSkillPoints))
                 .conditionalThen(
                         this::checkTomesUnlocked,
                         QueryStep.clickOnSlot(TOME_SLOT)
@@ -365,7 +338,7 @@ public final class SkillPointModel extends Model {
                                 .verifyContentChange((container, changes, changeType) ->
                                         verifyChange(container, changes, changeType, TOME_MENU_CONTENT_BOOK_SLOT))
                                 .processIncomingContainer(this::processTomeSkillPoints))
-                .execute(this::calculateAssignedSkillPoints)
+                .execute(this::calculateTotalSkillPoints)
                 .build();
 
         query.executeQuery();
@@ -386,12 +359,12 @@ public final class SkillPointModel extends Model {
                 && (content.items().get(contentBookSlot).getItem() == Items.POTION);
     }
 
-    private void processTotalSkillPoints(ContainerContent content) {
+    private void processAssignedSkillPoints(ContainerContent content) {
         for (Integer slot : SKILL_POINT_TOTAL_SLOTS) {
             Optional<WynnItem> wynnItemOptional =
                     Models.Item.getWynnItem(content.items().get(slot));
             if (wynnItemOptional.isPresent() && wynnItemOptional.get() instanceof SkillPointItem skillPoint) {
-                totalSkillPoints.merge(skillPoint.getSkill(), skillPoint.getSkillPoints(), Integer::sum);
+                assignedSkillPoints.merge(skillPoint.getSkill(), skillPoint.getAssignedAmount(), Integer::sum);
             } else {
                 WynntilsMod.warn("Skill Point Model failed to parse skill point item: "
                         + LoreUtils.getStringLore(content.items().get(slot)));
@@ -430,16 +403,70 @@ public final class SkillPointModel extends Model {
         });
     }
 
-    private void calculateAssignedSkillPoints() {
+    private void calculateTotalSkillPoints() {
         for (Skill skill : Skill.values()) {
-            assignedSkillPoints.put(
+            totalSkillPoints.put(
                     skill,
-                    getTotalSkillPoints(skill)
-                            - getGearSkillPoints(skill)
-                            - getSetBonusSkillPoints(skill)
-                            - getTomeSkillPoints(skill)
-                            - getCraftedSkillPoints(skill)
-                            - getStatusEffectSkillPoints(skill));
+                    getAssignedSkillPoints(skill)
+                            + getGearSkillPoints(skill)
+                            + getSetBonusSkillPoints(skill)
+                            + getTomeSkillPoints(skill)
+                            + getCraftedSkillPoints(skill)
+                            + getStatusEffectSkillPoints(skill));
         }
+    }
+
+    private List<ClickAction> calculateClickActions(int[] targetSkillPoints) {
+        List<ClickAction> actions = new ArrayList<>();
+        Map<Skill, Integer> negatives = new EnumMap<>(Skill.class);
+        Map<Skill, Integer> positives = new EnumMap<>(Skill.class);
+
+        for (int i = 0; i < Skill.values().length; i++) {
+            int difference = targetSkillPoints[i] - getAssignedSkillPoints(Skill.values()[i]);
+            if (difference > 0) {
+                positives.put(Skill.values()[i], difference);
+            } else if (difference < 0) {
+                negatives.put(Skill.values()[i], difference);
+            }
+        }
+
+        boolean confirmationCompleted = false;
+        for (Map.Entry<Skill, Integer> entry : negatives.entrySet()) {
+            int slot = SKILL_POINT_TOTAL_SLOTS[entry.getKey().ordinal()];
+            int diff = Math.abs(entry.getValue());
+            int fives = diff / 5;
+            int ones = diff % 5;
+
+            for (int i = 0; i < fives; i++) {
+                actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_RIGHT, true));
+                if (!confirmationCompleted) {
+                    actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_RIGHT, true));
+                    confirmationCompleted = true;
+                }
+            }
+            for (int i = 0; i < ones; i++) {
+                actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_RIGHT, false));
+                if (!confirmationCompleted) {
+                    actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_RIGHT, false));
+                    confirmationCompleted = true;
+                }
+            }
+        }
+
+        for (Map.Entry<Skill, Integer> entry : positives.entrySet()) {
+            int slot = SKILL_POINT_TOTAL_SLOTS[entry.getKey().ordinal()];
+            int diff = Math.abs(entry.getValue());
+            int fives = diff / 5;
+            int ones = diff % 5;
+
+            for (int i = 0; i < fives; i++) {
+                actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_LEFT, true));
+            }
+            for (int i = 0; i < ones; i++) {
+                actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_LEFT, false));
+            }
+        }
+
+        return actions;
     }
 }

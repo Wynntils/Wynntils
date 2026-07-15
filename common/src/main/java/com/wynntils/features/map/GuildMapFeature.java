@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.map;
 
+import com.wynntils.core.consumers.features.ExternalConfigurationScreen;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
@@ -19,9 +20,10 @@ import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.PointerType;
+import net.minecraft.client.gui.screens.Screen;
 
 @ConfigCategory(Category.MAP)
-public class GuildMapFeature extends Feature {
+public class GuildMapFeature extends Feature implements ExternalConfigurationScreen {
     @Persisted
     public final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
 
@@ -49,5 +51,10 @@ public class GuildMapFeature extends Feature {
         }
 
         McUtils.setScreen(GuildMapScreen.create());
+    }
+
+    @Override
+    public Screen getExternalConfigurationScreen(Screen previousScreen) {
+        return GuildMapScreen.create(previousScreen);
     }
 }

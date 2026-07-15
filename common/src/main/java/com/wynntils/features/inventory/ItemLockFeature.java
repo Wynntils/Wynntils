@@ -18,6 +18,7 @@ import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;
+import com.wynntils.models.containers.containers.MountFeederContainer;
 import com.wynntils.models.containers.type.FullscreenContainerProperty;
 import com.wynntils.models.items.items.game.MultiHealthPotionItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
@@ -90,6 +91,7 @@ public class ItemLockFeature extends Feature {
         // Don't lock fullscreen container slots
         if (!(McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen)
                 || Models.Container.getCurrentContainer() instanceof FullscreenContainerProperty) return;
+        if (Models.Container.getCurrentContainer() instanceof MountFeederContainer) return;
         if (!blockAllActionsOnLockedItems.get() && event.getClickType() != ClickType.THROW) return;
         if (Models.Housing.isInEditMode()) return;
 

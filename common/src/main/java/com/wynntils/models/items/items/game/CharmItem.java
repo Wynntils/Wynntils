@@ -32,7 +32,7 @@ public class CharmItem extends GameItem
                 PagedItemProperty {
     private final CharmInfo charmInfo;
     private final CharmInstance charmInstance;
-    private final int currentPage;
+    private int currentPage;
 
     public CharmItem(CharmInfo charmInfo, CharmInstance charmInstance, int currentPage) {
         this.charmInfo = charmInfo;
@@ -130,6 +130,11 @@ public class CharmItem extends GameItem
     @Override
     public int currentPage() {
         return currentPage;
+    }
+
+    @Override
+    public void updatePage(int newPage) {
+        this.currentPage = newPage;
     }
 
     @Override

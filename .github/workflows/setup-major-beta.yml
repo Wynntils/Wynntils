@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: Checkout main to create development
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.PRIVATE_TOKEN }}
@@ -21,7 +21,7 @@ jobs:
           git push -f origin development
 
       - name: Checkout release
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.PRIVATE_TOKEN }}
@@ -39,7 +39,7 @@ jobs:
           echo "next=$NEXT" >> $GITHUB_OUTPUT
 
       - name: Checkout main again to rewrite beta
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.PRIVATE_TOKEN }}

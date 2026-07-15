@@ -12,6 +12,7 @@ import net.minecraft.world.entity.Entity;
 public class ShamanTotemLabelInfo extends LabelInfo {
     private final String playerName;
     private final int regenPerSecond;
+    private final int transfusedAmount;
     private final String poisonAmount;
     private final int invigorateTime;
     private final int timeLeft;
@@ -22,6 +23,7 @@ public class ShamanTotemLabelInfo extends LabelInfo {
             Entity entity,
             String playerName,
             int regenPerSecond,
+            int transfusedAmount,
             String poisonAmount,
             int invigorateTime,
             int timeLeft) {
@@ -29,6 +31,7 @@ public class ShamanTotemLabelInfo extends LabelInfo {
 
         this.playerName = playerName;
         this.regenPerSecond = regenPerSecond;
+        this.transfusedAmount = transfusedAmount;
         this.poisonAmount = poisonAmount;
         this.invigorateTime = invigorateTime;
         this.timeLeft = timeLeft;
@@ -40,6 +43,10 @@ public class ShamanTotemLabelInfo extends LabelInfo {
 
     public int getRegenPerSecond() {
         return regenPerSecond;
+    }
+
+    public int getTransfusedAmount() {
+        return transfusedAmount;
     }
 
     public String getPoisonAmount() {

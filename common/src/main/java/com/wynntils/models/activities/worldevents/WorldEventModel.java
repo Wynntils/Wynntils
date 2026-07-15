@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.worldevents;
@@ -188,6 +188,7 @@ public final class WorldEventModel extends Model {
             }
 
             currentWorldEvent = null;
+            nearestWorldEventStartTime = Time.NONE;
 
             return;
         } else if (styledText.matches(WORLD_EVENT_FAIL_PATTERN)) {
@@ -196,6 +197,8 @@ public final class WorldEventModel extends Model {
             if (currentWorldEvent.getName().equals(ANNIHILATION_WORLD_EVENT_NAME)) {
                 WynntilsMod.postEvent(new AnnihilationEvent.Failed());
             }
+
+            nearestWorldEventStartTime = Time.NONE;
             return;
         }
 

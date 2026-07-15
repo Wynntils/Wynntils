@@ -9,6 +9,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
+import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,20 @@ public final class ItemUtils {
         if (gearItemOpt.isEmpty()) return false;
 
         return gearItemOpt.get().getGearType().isWeapon();
+    }
+
+    public static boolean isUsableWeapon(ItemStack itemStack) {
+        Optional<GearTypeItemProperty> gearItemOpt =
+                Models.Item.asWynnItemProperty(itemStack, GearTypeItemProperty.class);
+        if (gearItemOpt.isEmpty()) return false;
+        if (!gearItemOpt.get().getGearType().isValidWeapon(Models.Character.getClassType())) return false;
+
+        Optional<RequirementItemProperty> reqItemOpt =
+                Models.Item.asWynnItemProperty(itemStack, RequirementItemProperty.class);
+        if (reqItemOpt.isEmpty()) return false;
+        if (!reqItemOpt.get().meetsActualRequirements()) return false;
+
+        return true;
     }
 
     public static boolean isGatheringTool(ItemStack itemStack) {

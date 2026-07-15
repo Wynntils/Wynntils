@@ -22,6 +22,7 @@ import com.wynntils.models.containers.containers.trademarket.TradeMarketBuyConta
 import com.wynntils.models.containers.containers.trademarket.TradeMarketContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketFiltersContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketOrderContainer;
+import com.wynntils.models.containers.containers.trademarket.TradeMarketRevealItemsContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesContainer;
 import com.wynntils.models.containers.type.ContainerBounds;
@@ -98,7 +99,7 @@ public final class TradeMarketModel extends Model {
     private static final Pattern PRICE_PATTERN = Pattern.compile(
             "§[67] - (?:§f(?<amount>[\\d,]+) §7x )?§(?:(?:(?:c✖|a✔) §f)|f§m|f)(?<price>[\\d,]+)§7(?:§m)?²(?:§b ✮ (?<silverbullPrice>[\\d,]+)§3²)?(?: .+)?");
 
-    private static final Pattern SELL_ITEM_NAME_PATTERN = Pattern.compile("(.+)À");
+    private static final Pattern SELL_ITEM_NAME_PATTERN = Pattern.compile("\uDAFC\uDC00§.(.+)\uDAFC\uDC00");
     private static final String EMPTY_ITEM_SLOT = "Empty Item Slot";
 
     public static final int SORT_ORDER_SLOT = 52;
@@ -405,6 +406,8 @@ public final class TradeMarketModel extends Model {
             newState = TradeMarketState.VIEWING_TRADES;
         } else if (currentContainer instanceof TradeMarketOrderContainer) {
             newState = TradeMarketState.VIEWING_ORDER;
+        } else if (currentContainer instanceof TradeMarketRevealItemsContainer) {
+            newState = TradeMarketState.REVEAL_ITEMS;
         } else {
             newState = null;
         }

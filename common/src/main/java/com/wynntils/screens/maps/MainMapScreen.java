@@ -46,9 +46,15 @@ import org.lwjgl.glfw.GLFW;
 
 public final class MainMapScreen extends AbstractMapScreen {
     private MarkerInfo focusedMarker;
+    private MapButton gatheringFilterButton;
 
     private MainMapScreen() {
-        super();
+        super(null);
+        centerMapAroundPlayer();
+    }
+
+    private MainMapScreen(Screen previousScreen) {
+        super(previousScreen);
         centerMapAroundPlayer();
     }
 
@@ -62,6 +68,10 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     public static Screen create() {
         return new MainMapScreen();
+    }
+
+    public static Screen create(Screen previousScreen) {
+        return new MainMapScreen(previousScreen);
     }
 
     public static Screen create(float mapCenterX, float mapCenterZ) {
@@ -148,6 +158,21 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.map.manager.name")),
                         Component.translatable("screens.wynntils.map.manager.description")
                                 .withStyle(ChatFormatting.GRAY))));
+
+        gatheringFilterButton = new MapButton(
+                Texture.TOOL,
+                (b) -> McUtils.mc().setScreen(GatheringNodeFilterScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .append(Component.translatable("screens.wynntils.map.gatheringFilter.name"))
+                                .withStyle(ChatFormatting.DARK_PURPLE),
+                        Component.translatable("screens.wynntils.map.gatheringFilter.description1")
+                                .withStyle(ChatFormatting.GRAY),
+                        Component.empty(),
+                        Component.translatable("screens.wynntils.map.gatheringFilter.description2")
+                                .withStyle(ChatFormatting.GRAY)));
+
+        addMapButton(gatheringFilterButton);
 
         addMapButton(new MapButton(
                 Texture.DEFENSE_FILTER_ICON,
@@ -301,6 +326,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         pois = Stream.concat(pois, Services.Poi.getCombatPois());
         pois = Stream.concat(pois, Services.Poi.getLabelPois());
+        pois = Stream.concat(pois, Services.Poi.getFilteredGatheringNodePois());
         pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
         pois = Stream.concat(pois, Services.Poi.getProvidedCustomPois().stream());
         pois = Stream.concat(pois, Models.Marker.getAllPois());

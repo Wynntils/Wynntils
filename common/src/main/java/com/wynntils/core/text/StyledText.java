@@ -165,6 +165,14 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return builder.toString();
     }
 
+    public JsonArray toJson() {
+        JsonArray jsonArray = new JsonArray();
+        for (StyledTextPart part : parts) {
+            jsonArray.add(part.toJson());
+        }
+        return jsonArray;
+    }
+
     /**
      * @return The string representation of this {@link StyledText} with default formatting codes.
      */
@@ -582,6 +590,15 @@ public final class StyledText implements Iterable<StyledTextPart> {
         splitTexts.add(substring(currentIndex, styleType));
 
         return splitTexts.toArray(StyledText[]::new);
+    }
+
+    public StyledText repeat(Integer times) {
+        StyledText text = StyledText.EMPTY;
+
+        for (int i = 0; i < Math.max(0, times); i++) {
+            text = text.append(this);
+        }
+        return text;
     }
 
     /**

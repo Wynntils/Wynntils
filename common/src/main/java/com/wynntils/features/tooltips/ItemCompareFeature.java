@@ -17,7 +17,6 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
@@ -30,7 +29,6 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -46,16 +44,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextColor;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
@@ -71,12 +69,6 @@ public class ItemCompareFeature extends Feature {
     private final Config<Integer> maxCompareSelectedCount = new Config<>(4);
 
     @Persisted
-    private final Config<Boolean> removeFlavourText = new Config<>(true);
-
-    @Persisted
-    private final Config<Boolean> removeSetInfoText = new Config<>(true);
-
-    @Persisted
     private final Config<Boolean> displayTag = new Config<>(true);
 
     @Persisted
@@ -89,7 +81,7 @@ public class ItemCompareFeature extends Feature {
     private final KeyBind selectCompareKeyBind = KeyBindDefinition.SELECT_FOR_COMPARING.create(this::onSelectKeyPress);
 
     private final List<Pair<WynnItem, ItemStack>> selectedItems = new ArrayList<>();
-    private static final int COMPARE_ITEM_PAD = 6;
+    private static final int COMPARE_ITEM_PAD = 9;
     private static final String EQUIPPED_KEY = "feature.wynntils.itemCompare.tag.equipped";
     private static final String HOVERED_KEY = "feature.wynntils.itemCompare.tag.hovered";
     private static final String SELECTED_KEY = "feature.wynntils.itemCompare.tag.selected";
@@ -140,6 +132,7 @@ public class ItemCompareFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onItemTooltipRenderEvent(ItemTooltipRenderEvent.Pre event) {
+        if (holdToCompareKeyBind.getKeyMapping().isUnbound()) return;
         if (!KeyboardUtils.isKeyDown(holdToCompareKeyBind.getKeyMapping().key.getValue())) return;
         if (McUtils.screen() == null
                 || !(McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
@@ -231,12 +224,6 @@ public class ItemCompareFeature extends Feature {
         int twoPad = COMPARE_ITEM_PAD * 2;
 
         List<Component> hoveredLines = new ArrayList<>(event.getTooltips());
-        if (removeFlavourText.get()) {
-            removeFlavourText(hoveredLines);
-        }
-        if (removeSetInfoText.get()) {
-            removeSetInfoText(hoveredLines);
-        }
         List<ClientTooltipComponent> hoveredClientComponents = TooltipUtils.getClientTooltipComponent(hoveredLines);
         int hoveredTooltipWidth = TooltipUtils.getTooltipWidth(hoveredClientComponents, font);
         int hoveredTooltipHeight = TooltipUtils.getTooltipHeight(hoveredClientComponents);
@@ -275,13 +262,8 @@ public class ItemCompareFeature extends Feature {
         int prevX = hoveredX;
 
         for (Pair<WynnItem, ItemStack> pair : itemsToCompare) {
-            List<Component> lines = getWynnOrVanillaLines(abstractContainerScreen, pair.key(), pair.value());
-            if (removeFlavourText.get()) {
-                removeFlavourText(lines);
-            }
-            if (removeSetInfoText.get()) {
-                removeSetInfoText(lines);
-            }
+            ItemStack itemStack = pair.value();
+            List<Component> lines = getWynnOrVanillaLines(abstractContainerScreen, pair.key(), itemStack);
             List<ClientTooltipComponent> clientTooltipComponents = TooltipUtils.getClientTooltipComponent(lines);
 
             int tooltipWidth = TooltipUtils.getTooltipWidth(clientTooltipComponents, font);
@@ -326,7 +308,8 @@ public class ItemCompareFeature extends Feature {
                     tooltipWidth,
                     tooltipHeight,
                     tooltipScaleFactor,
-                    pair.value().getTooltipImage()));
+                    itemStack.getTooltipImage(),
+                    itemStack.get(DataComponents.TOOLTIP_STYLE)));
             prevX = x;
         }
 
@@ -353,7 +336,8 @@ public class ItemCompareFeature extends Feature {
                 hoveredLines,
                 hoveredItemStack.getTooltipImage(),
                 (int) (hoveredX / hoveredScaleFactor),
-                (int) (hoveredY / hoveredScaleFactor));
+                (int) (hoveredY / hoveredScaleFactor),
+                hoveredItemStack.get(DataComponents.TOOLTIP_STYLE));
         guiGraphics.pose().popMatrix();
 
         for (Tooltip tooltip : tooltips) {
@@ -366,7 +350,8 @@ public class ItemCompareFeature extends Feature {
                     tooltip.getLines(),
                     tooltip.getVisualTooltipComponent(),
                     (int) (tooltip.getX() / scaleFactor),
-                    (int) (tooltip.getY() / scaleFactor));
+                    (int) (tooltip.getY() / scaleFactor),
+                    tooltip.getTooltipStyle());
             guiGraphics.pose().popMatrix();
         }
         changePositioner = false;
@@ -442,7 +427,9 @@ public class ItemCompareFeature extends Feature {
     private List<Component> getWynnOrVanillaLines(
             AbstractContainerScreen<?> screen, WynnItem wynnItem, ItemStack itemStack) {
         List<Component> wynnTooltip = TooltipUtils.getWynnItemTooltip(itemStack, wynnItem);
-        return wynnTooltip.isEmpty() ? screen.getTooltipFromItem(McUtils.mc(), itemStack) : wynnTooltip;
+        return wynnTooltip.isEmpty()
+                ? screen.getTooltipFromItem(McUtils.mc(), itemStack)
+                : new ArrayList<>(wynnTooltip);
     }
 
     private MutableComponent getPaddedComponent(String string, int tooltipWidth) {
@@ -450,43 +437,6 @@ public class ItemCompareFeature extends Feature {
         // This is not the exact center, but good enough
         int count = Math.round((tooltipWidth - font.width(string)) / 2.0f / font.width(" "));
         return Component.literal(" ".repeat(count) + string);
-    }
-
-    private void removeFlavourText(List<Component> lines) {
-        TextColor loreColor = TextColor.fromLegacyFormat(ChatFormatting.DARK_GRAY);
-        for (int i = lines.size() - 1; i >= 0; --i) {
-            Component line = lines.get(i);
-
-            StyledText styledText = StyledText.fromComponent(line);
-            if (styledText.getPartCount() > 0) {
-                if (styledText
-                        .getFirstPart()
-                        .getComponent()
-                        .getStyle()
-                        .getColor()
-                        .equals(loreColor)) {
-                    lines.remove(i);
-                } else if (ItemUtils.ITEM_RARITY_PATTERN
-                        .matcher(line.getString())
-                        .find()) {
-                    // Must stop when we hit item rarity line, otherwise `Average DPS` line will get removed, if present
-                    return;
-                }
-            }
-        }
-    }
-
-    private void removeSetInfoText(List<Component> lines) {
-        for (int i = lines.size() - 1; i >= 0; --i) {
-            StyledText line = StyledText.fromComponent(lines.get(i)).getNormalized();
-            if (line.getMatcher(WynnItemParser.SET_ITEM_PATTERN).matches()) {
-                lines.remove(i);
-            } else if (line.getMatcher(WynnItemParser.SET_PATTERN).matches()) {
-                lines.remove(i);
-                lines.remove(i - 1);
-                return;
-            }
-        }
     }
 
     private void centerItemName(List<Component> lines, int tooltipWidth) {
@@ -593,6 +543,7 @@ public class ItemCompareFeature extends Feature {
         private final int height;
         private float scaleFactor;
         private final Optional<TooltipComponent> visualTooltipComponent;
+        private final Identifier tooltipStyle;
 
         private Tooltip(
                 List<Component> lines,
@@ -601,7 +552,8 @@ public class ItemCompareFeature extends Feature {
                 int width,
                 int height,
                 float scaleFactor,
-                Optional<TooltipComponent> visualTooltipComponent) {
+                Optional<TooltipComponent> visualTooltipComponent,
+                Identifier tooltipStyle) {
             this.lines = lines;
             this.x = x;
             this.y = y;
@@ -609,6 +561,7 @@ public class ItemCompareFeature extends Feature {
             this.height = height;
             this.scaleFactor = scaleFactor;
             this.visualTooltipComponent = visualTooltipComponent;
+            this.tooltipStyle = tooltipStyle;
         }
 
         public List<Component> getLines() {
@@ -653,6 +606,10 @@ public class ItemCompareFeature extends Feature {
 
         public void multScaleFactor(float k) {
             this.scaleFactor *= k;
+        }
+
+        public Identifier getTooltipStyle() {
+            return tooltipStyle;
         }
     }
 }
