@@ -152,3 +152,8 @@ allprojects {
         }
     }
 }
+
+tasks.register("upgradeFunctions", FunctionMigrationTask) {
+    group = "migration"
+    description = "Migrates Function#getValue to annotation-based system"
+}
