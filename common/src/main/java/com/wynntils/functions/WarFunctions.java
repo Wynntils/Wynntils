@@ -16,9 +16,6 @@ import com.wynntils.templates.annotations.TemplateFunction;
 @SuppressWarnings("unused")
 public class WarFunctions {
 
-    // These are static, and only change per war
-    // Initial tower state functions
-    // Current tower state functions
     @TemplateFunction(name = "aura_timer")
     public double auraTimerFunction() {
         return Models.GuildWarTower.getRemainingTimeUntilAura() / 1000d;

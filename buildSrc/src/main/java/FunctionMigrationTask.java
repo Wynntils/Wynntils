@@ -33,6 +33,9 @@ import java.io.File;
 import java.lang.annotation.Annotation;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,8 +108,12 @@ public class FunctionMigrationTask extends DefaultTask {
                     replaceArgumentGets(body);
                     removeDuplicateParameterDeclarations(body, arguments);
 
-                    for (Map.Entry<String, com.github.javaparser.ast.type.Type> entry : arguments.entrySet()) {
-                        outputMethodDeclaration.addParameter(unboxType(entry.getValue()), entry.getKey());
+                    List<Map.Entry<String, com.github.javaparser.ast.type.Type>> entries = new ArrayList<>(arguments.entrySet());
+
+                    Collections.reverse(entries);
+
+                    for (Map.Entry<String, com.github.javaparser.ast.type.Type> entry : entries) {
+                        outputMethodDeclaration.addParameter(unboxType(entry.getValue()), removeInvalidName(entry.getKey()));
                     }
 
                     outputMethodDeclaration.setBody(body);
@@ -126,6 +133,13 @@ public class FunctionMigrationTask extends DefaultTask {
 
             if (changed) {
                 cu.addImport("com.wynntils.templates.annotations.TemplateFunction");
+
+                cu.getImports().removeIf(importDecl -> {
+                    String name = importDecl.getNameAsString();
+                    return name.equals("com.wynntils.core.consumers.functions.Function")
+                            || name.equals("com.wynntils.core.consumers.functions.arguments.Argument")
+                            || name.equals("com.wynntils.core.consumers.functions.arguments.FunctionArguments");
+                });
 
                 String result = StaticJavaParser.parse(new DefaultPrettyPrinter(new DefaultPrinterConfiguration()).print(cu)).toString();
                 Files.writeString(Path.of("F:/output/" + file.getName()), result);
@@ -156,7 +170,7 @@ public class FunctionMigrationTask extends DefaultTask {
 
     private void replaceArgumentGets(BlockStmt body) {
         for (MethodCallExpr call : body.findAll(MethodCallExpr.class)) {
-            if (!call.getNameAsString().endsWith("Value")) {
+            if (!call.getNameAsString().startsWith("get")) {
                 continue;
             }
 
@@ -181,7 +195,7 @@ public class FunctionMigrationTask extends DefaultTask {
 
             String name = getArgument.getArgument(0).asStringLiteralExpr().getValue();
 
-            call.replace(new NameExpr(name));
+            call.replace(new NameExpr(removeInvalidName(name)));
         }
     }
 
@@ -222,7 +236,7 @@ public class FunctionMigrationTask extends DefaultTask {
                 continue;
             }
 
-            AssignExpr assignment = new AssignExpr(new NameExpr(name), initializer, AssignExpr.Operator.ASSIGN);
+            AssignExpr assignment = new AssignExpr(new NameExpr(removeInvalidName(name)), initializer, AssignExpr.Operator.ASSIGN);
 
             stmt.replace(new ExpressionStmt(assignment));
         }
@@ -241,7 +255,10 @@ public class FunctionMigrationTask extends DefaultTask {
     private HashMap<String, com.github.javaparser.ast.type.Type> getArguments(ClassOrInterfaceDeclaration clazz) {
         HashMap<String, com.github.javaparser.ast.type.Type> arguments = new HashMap<>();
 
-        clazz.getMethodsByName("getArgumentsBuilder").stream().findFirst().ifPresent(method -> {
+        Optional<MethodDeclaration> md = clazz.getMethodsByName("getArgumentsBuilder").stream().findFirst();
+        if(md.isEmpty()) md = clazz.getMethodsByName("getRequiredArgumentsBuilder").stream().findFirst();
+
+        md.ifPresent(method -> {
             BlockStmt body = method.getBody().orElseThrow();
 
             MethodCallExpr listOfCall = body.getChildNodes().getFirst().stream().filter(MethodCallExpr.class::isInstance).map(MethodCallExpr.class::cast).findFirst().orElseThrow();
@@ -249,13 +266,25 @@ public class FunctionMigrationTask extends DefaultTask {
             for (Expression expr : listOfCall.getArguments()) {
                 if (expr.isObjectCreationExpr()) {
                     String name = expr.asObjectCreationExpr().getArgument(0).asStringLiteralExpr().getValue();
+                    String fnName = expr.asObjectCreationExpr().getType().getNameAsString();
 
-                    com.github.javaparser.ast.type.Type type = expr.asObjectCreationExpr().getArgument(1).asClassExpr().getType();
-                    arguments.put(name, type);
+                    if(!fnName.equals("AnyArgumentList") && !fnName.equals("AnyArgument")) {
+                        com.github.javaparser.ast.type.Type type = expr.asObjectCreationExpr().getArgument(1).asClassExpr().getType();
+
+
+                        arguments.put(name, type);
+                    }
                 }
             }
         });
 
         return arguments;
+    }
+
+    private String removeInvalidName(String name) {
+        if(name.equals("class")) return "clazz";
+        if(name.equals("default")) return "defaultVal";
+        if(name.equals("switch")) return "switchVal";
+        return name;
     }
 }

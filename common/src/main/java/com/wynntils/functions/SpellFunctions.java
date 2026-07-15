@@ -5,9 +5,6 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.consumers.functions.Function;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.abilities.type.ArrowShieldAbility;
 import com.wynntils.models.abilities.type.BrokenMantleAbility;
 import com.wynntils.models.abilities.type.CastedAbilityType;
@@ -23,258 +20,119 @@ import com.wynntils.utils.mc.type.Location;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
+import com.wynntils.templates.annotations.TemplateFunction;
 
+//Functions are accessed via reflection
+@SuppressWarnings("unused")
 public class SpellFunctions {
-    public static class ArrowShieldCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            if (Models.Character.getClassType() != ClassType.ARCHER) return 0;
 
-            return Models.CastedAbility.getActiveAbility(ArrowShieldAbility.class)
-                    .map(ArrowShieldAbility::getCharge)
-                    .orElse(0);
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("arrow_shield");
-        }
+    @TemplateFunction(name = "arrow_shield_count", aliases = { "arrow_shield" })
+    public int arrowShieldCountFunction() {
+        if (Models.Character.getClassType() != ClassType.ARCHER)
+            return 0;
+        return Models.CastedAbility.getActiveAbility(ArrowShieldAbility.class).map(ArrowShieldAbility::getCharge).orElse(0);
     }
 
-    public static class GuardianAngelsCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            if (Models.Character.getClassType() != ClassType.ARCHER) return 0;
-
-            return Models.CastedAbility.getActiveAbility(GuardianAngelsAbility.class)
-                    .map(GuardianAngelsAbility::getCharge)
-                    .orElse(0);
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("guardian_angels");
-        }
+    @TemplateFunction(name = "guardian_angels_count", aliases = { "guardian_angels" })
+    public int guardianAngelsCountFunction() {
+        if (Models.Character.getClassType() != ClassType.ARCHER)
+            return 0;
+        return Models.CastedAbility.getActiveAbility(GuardianAngelsAbility.class).map(GuardianAngelsAbility::getCharge).orElse(0);
     }
 
-    public static class MantleShieldCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            if (Models.Character.getClassType() != ClassType.WARRIOR) return 0;
-
-            return Models.CastedAbility.getActiveAbility(MantleAbility.class)
-                    .map(MantleAbility::getCharge)
-                    .orElse(0);
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("mantle_shield");
-        }
+    @TemplateFunction(name = "mantle_shield_count", aliases = { "mantle_shield" })
+    public int mantleShieldCountFunction() {
+        if (Models.Character.getClassType() != ClassType.WARRIOR)
+            return 0;
+        return Models.CastedAbility.getActiveAbility(MantleAbility.class).map(MantleAbility::getCharge).orElse(0);
     }
 
-    public static class BrokenMantleShieldCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            if (Models.Character.getClassType() != ClassType.WARRIOR) return 0;
-
-            return Models.CastedAbility.getActiveAbility(BrokenMantleAbility.class)
-                    .map(BrokenMantleAbility::getCharge)
-                    .orElse(0);
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("broken_mantle_shield");
-        }
+    @TemplateFunction(name = "broken_mantle_shield_count", aliases = { "broken_mantle_shield" })
+    public int brokenMantleShieldCountFunction() {
+        if (Models.Character.getClassType() != ClassType.WARRIOR)
+            return 0;
+        return Models.CastedAbility.getActiveAbility(BrokenMantleAbility.class).map(BrokenMantleAbility::getCharge).orElse(0);
     }
 
-    public static class ShieldTypeNameFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            return Models.CastedAbility.getActiveAbilities().stream()
-                    .filter(a -> a instanceof ShieldAbilityProperty)
-                    .findFirst()
-                    .map(CastedAbilityType::getName)
-                    .orElse("");
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("shield_type");
-        }
+    @TemplateFunction(name = "shield_type_name", aliases = { "shield_type" })
+    public String shieldTypeNameFunction() {
+        return Models.CastedAbility.getActiveAbilities().stream().filter(a -> a instanceof ShieldAbilityProperty).findFirst().map(CastedAbilityType::getName).orElse("");
     }
 
-    public static class JudrajimActiveFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return Models.CastedAbility.getActiveAbility(JudrajimAbility.class).isPresent();
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("is_judrajim_active");
-        }
+    @TemplateFunction(name = "judrajim_active", aliases = { "is_judrajim_active" })
+    public boolean judrajimActiveFunction() {
+        return Models.CastedAbility.getActiveAbility(JudrajimAbility.class).isPresent();
     }
 
-    public static class ShamanMaskFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            ChatFormatting color = arguments.getArgument("isColored").getBooleanValue()
-                    ? Models.ShamanMask.getCurrentMaskType().getColor()
-                    : ChatFormatting.WHITE;
-
-            Boolean useShortName = arguments.getArgument("useShortName").getBooleanValue();
-            String name = useShortName
-                    ? Models.ShamanMask.getCurrentMaskType().getAlias()
-                    : Models.ShamanMask.getCurrentMaskType().getName();
-
-            return color + name;
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(List.of(
-                    new Argument<>("isColored", Boolean.class, true),
-                    new Argument<>("useShortName", Boolean.class, false)));
-        }
+    @TemplateFunction(name = "shaman_mask")
+    public String shamanMaskFunction(boolean useShortName, boolean isColored) {
+        ChatFormatting color = isColored ? Models.ShamanMask.getCurrentMaskType().getColor() : ChatFormatting.WHITE;
+        String name = useShortName ? Models.ShamanMask.getCurrentMaskType().getAlias() : Models.ShamanMask.getCurrentMaskType().getName();
+        return color + name;
     }
 
-    public static class ShamanTotemStateFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            int totemNumber = arguments.getArgument("totemNumber").getIntegerValue();
-
-            ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
-
-            if (shamanTotem == null) {
-                return "";
-            }
-
-            return shamanTotem.getState().toString().toUpperCase(Locale.ROOT);
+    @TemplateFunction(name = "shaman_totem_state")
+    public String shamanTotemStateFunction(int totemNumber) {
+        ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
+        if (shamanTotem == null) {
+            return "";
         }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("totemNumber", Integer.class, null)));
-        }
+        return shamanTotem.getState().toString().toUpperCase(Locale.ROOT);
     }
 
-    public static class ShamanTotemLocationFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            int totemNumber = arguments.getArgument("totemNumber").getIntegerValue();
-
-            ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
-
-            if (shamanTotem == null) {
-                return "";
-            }
-
-            if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) {
-                return "";
-            }
-
-            return Location.containing(shamanTotem.getPosition()).toString();
+    @TemplateFunction(name = "shaman_totem_location")
+    public String shamanTotemLocationFunction(int totemNumber) {
+        ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
+        if (shamanTotem == null) {
+            return "";
         }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("totemNumber", Integer.class, null)));
+        if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) {
+            return "";
         }
+        return Location.containing(shamanTotem.getPosition()).toString();
     }
 
-    public static class ShamanTotemTimeLeftFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            int totemNumber = arguments.getArgument("totemNumber").getIntegerValue();
-
-            ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
-
-            if (shamanTotem == null) {
-                return 0;
-            }
-
-            if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) {
-                return 0;
-            }
-
-            return shamanTotem.getTime();
+    @TemplateFunction(name = "shaman_totem_time_left")
+    public int shamanTotemTimeLeftFunction(int totemNumber) {
+        ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
+        if (shamanTotem == null) {
+            return 0;
         }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("totemNumber", Integer.class, null)));
+        if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) {
+            return 0;
         }
+        return shamanTotem.getTime();
     }
 
-    public static class ShamanTotemDistanceFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            int totemNumber = arguments.getArgument("totemNumber").getIntegerValue();
-
-            ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
-
-            if (shamanTotem == null) {
-                return 0d;
-            }
-
-            if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) {
-                return 0d;
-            }
-
-            return McUtils.player().position().distanceTo(PosUtils.toVec3(shamanTotem.getPosition()));
+    @TemplateFunction(name = "shaman_totem_distance")
+    public double shamanTotemDistanceFunction(int totemNumber) {
+        ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
+        if (shamanTotem == null) {
+            return 0d;
         }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("totemNumber", Integer.class, null)));
+        if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) {
+            return 0d;
         }
+        return McUtils.player().position().distanceTo(PosUtils.toVec3(shamanTotem.getPosition()));
     }
 
-    public static class ShamanTotemTransfusedAmountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            int totemNumber = arguments.getArgument("totemNumber").getIntegerValue();
-
-            ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
-
-            if (shamanTotem == null) return 0;
-
-            if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) return 0;
-
-            return shamanTotem.getTransfusedAmount();
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("totemNumber", Integer.class, null)));
-        }
+    @TemplateFunction(name = "shaman_totem_transfused_amount")
+    public int shamanTotemTransfusedAmountFunction(int totemNumber) {
+        ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
+        if (shamanTotem == null)
+            return 0;
+        if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE)
+            return 0;
+        return shamanTotem.getTransfusedAmount();
     }
 
-    public static class ShamanTotemPoisonAmountFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            int totemNumber = arguments.getArgument("totemNumber").getIntegerValue();
-
-            ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
-
-            if (shamanTotem == null) return "";
-
-            if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE) return "";
-
-            return shamanTotem.getPoisonAmount().toString();
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("totemNumber", Integer.class, null)));
-        }
+    @TemplateFunction(name = "shaman_totem_poison_amount")
+    public String shamanTotemPoisonAmountFunction(int totemNumber) {
+        ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
+        if (shamanTotem == null)
+            return "";
+        if (shamanTotem.getState() != ShamanTotem.TotemState.ACTIVE)
+            return "";
+        return shamanTotem.getPoisonAmount().toString();
     }
 }

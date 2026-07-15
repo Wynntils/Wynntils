@@ -7,13 +7,17 @@ package com.wynntils.functions.generic;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.colors.CustomColor;
+
 import java.util.UUID;
+
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.component.ResolvableProfile;
 
-@SuppressWarnings("unused") // Functions are accessed via reflection
+// Functions are accessed via reflection
+@SuppressWarnings("unused")
 public class StyledTextFunctions {
+
     @TemplateFunction(name = "concat_styled_text", aliases = "concat_st")
     public static StyledText concatStyledTextFunction(StyledText a, StyledText b) {
         return StyledText.join("", a, b);
@@ -35,7 +39,6 @@ public class StyledTextFunctions {
             if (part.getPartStyle().getColor() != CustomColor.NONE) {
                 return part;
             }
-
             return part.withStyle(style -> style.withColor(customColor));
         });
     }
@@ -84,16 +87,13 @@ public class StyledTextFunctions {
     public static StyledText withAtlasSpriteFontFunction(StyledText styledText, String atlas, String sprite) {
         Identifier atlasLocation = Identifier.tryParse(atlas);
         Identifier spriteLocation = Identifier.tryParse(sprite);
-
-        if (atlasLocation == null || spriteLocation == null) return styledText;
-
+        if (atlasLocation == null || spriteLocation == null)
+            return styledText;
         FontDescription fontDescription = new FontDescription.AtlasSprite(atlasLocation, spriteLocation);
-
         return styledText.map(part -> {
             if (part.getPartStyle().getFont() != FontDescription.DEFAULT) {
                 return part;
             }
-
             return part.withStyle(style -> style.withFont(fontDescription));
         });
     }
@@ -106,15 +106,11 @@ public class StyledTextFunctions {
         } catch (IllegalArgumentException e) {
             return styledText;
         }
-
-        FontDescription fontDescription =
-                new FontDescription.PlayerSprite(ResolvableProfile.createUnresolved(uuidObject), hat);
-
+        FontDescription fontDescription = new FontDescription.PlayerSprite(ResolvableProfile.createUnresolved(uuidObject), hat);
         return styledText.map(part -> {
             if (part.getPartStyle().getFont() != FontDescription.DEFAULT) {
                 return part;
             }
-
             return part.withStyle(style -> style.withFont(fontDescription));
         });
     }
@@ -122,15 +118,13 @@ public class StyledTextFunctions {
     @TemplateFunction(name = "with_resource_font", aliases = "with_font")
     public static StyledText withResourceFontFunction(StyledText styledText, String font) {
         Identifier fontLocation = Identifier.tryParse(font);
-
-        if (fontLocation == null) return styledText;
-
+        if (fontLocation == null)
+            return styledText;
         FontDescription fontDescription = new FontDescription.Resource(fontLocation);
         return styledText.map(part -> {
             if (part.getPartStyle().getFont() != FontDescription.DEFAULT) {
                 return part;
             }
-
             return part.withStyle(style -> style.withFont(fontDescription));
         });
     }
@@ -141,7 +135,6 @@ public class StyledTextFunctions {
             if (part.getPartStyle().getShadowColor() != CustomColor.NONE) {
                 return part;
             }
-
             return part.withStyle(style -> style.withShadowColor(customColor));
         });
     }
@@ -156,24 +149,10 @@ public class StyledTextFunctions {
         return withUnderlinedFunction(styledText, true);
     }
 
-    public static class RepeatStyledTextFunction extends GenericFunction<StyledText> {
-        @Override
-        public StyledText getValue(FunctionArguments arguments) {
-            StyledText styledText = arguments.getArgument("value").getStyledText();
-            Integer times = arguments.getArgument("count").getIntegerValue();
-
-            return styledText.repeat(times);
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", StyledText.class, null), new Argument<>("count", Integer.class, null)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("repeat_st");
-        }
+    @TemplateFunction(name = "repeat_styled_text", aliases = {"repeat_st"})
+    public StyledText repeatStyledTextFunction(StyledText value, int count) {
+        StyledText styledText = value;
+        Integer times = count;
+        return styledText.repeat(times);
     }
 }
