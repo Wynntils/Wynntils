@@ -203,7 +203,6 @@ public final class StatCalculator {
     public static double getPerfectChance(StatPossibleValues possibleValues) {
         StatCalculationInfo statCalculationInfo =
                 possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
-        boolean treatAsNegative = possibleValues.statType().treatAsInverted() ^ possibleValues.baseValue() < 0;
 
         int allCases =
                 statCalculationInfo.range().high() - statCalculationInfo.range().low() + 1;
@@ -212,9 +211,7 @@ public final class StatCalculator {
         // Do not confuse this with a "3 star" roll, aka perfect internal roll
         RangedValue perfectInternalRollRange = calculateInternalRollRange(
                 possibleValues,
-                treatAsNegative
-                        ? possibleValues.range().low()
-                        : possibleValues.range().high(),
+                possibleValues.range().high(),
                 -1);
         int perfectCases = perfectInternalRollRange.high() - perfectInternalRollRange.low() + 1;
 
