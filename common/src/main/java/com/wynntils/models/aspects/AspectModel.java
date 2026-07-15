@@ -7,6 +7,7 @@ package com.wynntils.models.aspects;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
@@ -46,9 +47,6 @@ public final class AspectModel extends Model {
 
     @Persisted
     private final Storage<Map<String, Integer>> ownedAspects = new Storage<>(new TreeMap<>());
-
-    @Persisted
-    private final Storage<Map<String, SavableAspectSet>> aspectLoadouts = new Storage<>(new TreeMap<>());
 
     public AspectModel() {
         super(List.of());
@@ -196,27 +194,11 @@ public final class AspectModel extends Model {
         return List.of();
     }
 
-    public Map<String, SavableAspectSet> getAspectLoadouts() {
-        return aspectLoadouts.get();
-    }
-
-    public SavableAspectSet getAspectLoadout(String name) {
-        return aspectLoadouts.get().get(name);
-    }
-
-    public boolean hasAspectLoadout(String name) {
-        return aspectLoadouts.get().containsKey(name);
-    }
-
-    public void deleteAspectLoadout(String name) {
-        aspectLoadouts.get().remove(name);
-    }
-
     public void saveCurrentAspectLoadout(
             String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
         ASPECT_CONTAINER_QUERIES.dumpAspectContainer(
                 loadout -> {
-                    aspectLoadouts.get().put(name, loadout);
+                    Services.loadout.saveAspectLoadout(name, loadout);
                     WynntilsMod.info("Saved aspect loadout: " + name);
                 },
                 onStatus,
@@ -226,7 +208,7 @@ public final class AspectModel extends Model {
 
     public void loadAspectLoadout(
             String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
-        SavableAspectSet loadout = getAspectLoadout(name);
+        SavableAspectSet loadout = Services.loadout.getAspectLoadout(name);
         if (loadout == null) {
             onError.accept("No saved aspect loadout: " + name);
             return;

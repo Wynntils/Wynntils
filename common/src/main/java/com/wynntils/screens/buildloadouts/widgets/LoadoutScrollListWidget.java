@@ -1,13 +1,15 @@
 package com.wynntils.screens.buildloadouts.widgets;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.abilitytree.type.SavableAbilityTree;
 import com.wynntils.models.aspects.type.SavableAspectSet;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
-import com.wynntils.screens.buildloadouts.type.Loadout;
-import com.wynntils.screens.buildloadouts.type.LoadoutType;
+import com.wynntils.services.loadout.type.Loadout;
+import com.wynntils.services.loadout.type.LoadoutType;
 import com.wynntils.utils.StringUtils;
 import net.minecraft.client.gui.components.AbstractWidget;
 
@@ -45,25 +47,15 @@ public class LoadoutScrollListWidget extends ScrollListWidget {
     public void populateLoadouts() {
         parent.loadoutWidgets = new ArrayList<>();
 
-        Map<String, SavableSkillPointSet> spLoadouts = new TreeMap<>(Models.SkillPoint.getLoadouts());
-        Map<String, SavableAbilityTree> atLoadouts = Models.AbilityTree.getAbilityTreeLoadouts();
-        Map<String, SavableAspectSet> aspectLoadouts = Models.Aspect.getAspectLoadouts();
+        Map<String, Loadout> savedLoadouts = new TreeMap<>(Services.loadout.getLoadouts());
 
-        Set<String> allNames = new HashSet<>();
-        allNames.addAll(spLoadouts.keySet());
-        allNames.addAll(atLoadouts.keySet());
-        allNames.addAll(aspectLoadouts.keySet());
-
-        List<String> filteredSorted = allNames.stream()
+        List<String> filteredSorted = savedLoadouts.keySet().stream()
                 .filter(this::searchMatches)
                 .sorted()
                 .toList();
 
         for (String name : filteredSorted) {
-            SavableSkillPointSet sp = spLoadouts.get(name);
-            SavableAbilityTree at = atLoadouts.get(name);
-            SavableAspectSet aspect = aspectLoadouts.get(name);
-            Loadout loadout = new Loadout(name, sp, at, aspect, determineLoadoutType(sp, at, aspect));
+            Loadout loadout = savedLoadouts.get(name);
 
             if (parent.getCurrentCategory() != loadout.getMenuCategory()) continue;
 
@@ -80,15 +72,5 @@ public class LoadoutScrollListWidget extends ScrollListWidget {
 
     private boolean searchMatches(String poiName) {
         return StringUtils.partialMatch(poiName, parent.searchWidget.getTextBoxInput());
-    }
-
-    private LoadoutType determineLoadoutType(SavableSkillPointSet sp, SavableAbilityTree at, SavableAspectSet aspect) {
-        boolean hasSp = sp != null;
-        boolean hasAt = at != null;
-        boolean hasAspect = aspect != null;
-        if (hasSp && sp.isBuild() && hasAt && hasAspect) return LoadoutType.BUILD;
-        if (hasAt && !hasSp && !hasAspect) return LoadoutType.ABILITY_TREE;
-        if (hasAspect && !hasSp && !hasAt) return LoadoutType.ASPECT;
-        return LoadoutType.SKILL_POINT;
     }
 }

@@ -2,8 +2,8 @@ package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
-import com.wynntils.screens.buildloadouts.type.Loadout;
 import com.wynntils.screens.buildloadouts.type.ScrollListCategory;
+import com.wynntils.services.loadout.type.Loadout;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import net.minecraft.client.gui.GuiGraphics;
@@ -144,7 +144,7 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget {
         }
 
         if (selectedScrollListCategory == ScrollListCategory.ASPECTS) {
-            for (String abilityName : selectedLoadout.aspect().aspectNames()) {
+            for (String abilityName : selectedLoadout.aspects().aspectNames()) {
                 itemWidgets.add(new BuildLoadoutScrollListAspectWidget(
                         StyledText.fromString(abilityName),
                         this.x + WIDGET_HEIGHT_EDGE_PADDING,

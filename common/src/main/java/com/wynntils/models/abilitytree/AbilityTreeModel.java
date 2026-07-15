@@ -7,6 +7,7 @@ package com.wynntils.models.abilitytree;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
@@ -37,9 +38,6 @@ public final class AbilityTreeModel extends Model {
     public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
     private final AbilityTreeInfoRegistry abilityTreeInfoRegistry = new AbilityTreeInfoRegistry();
 
-    @Persisted
-    private final Storage<Map<String, SavableAbilityTree>> abilityTreeLoadouts = new Storage<>(new TreeMap<>());
-
     private ParsedAbilityTree currentAbilityTree;
 
     public AbilityTreeModel() {
@@ -63,22 +61,6 @@ public final class AbilityTreeModel extends Model {
         this.currentAbilityTree = currentAbilityTree;
     }
 
-    public Map<String, SavableAbilityTree> getAbilityTreeLoadouts() {
-        return abilityTreeLoadouts.get();
-    }
-
-    public SavableAbilityTree getAbilityTreeLoadout(String name) {
-        return abilityTreeLoadouts.get().get(name);
-    }
-
-    public boolean hasAbilityTreeLoadout(String name) {
-        return abilityTreeLoadouts.get().containsKey(name);
-    }
-
-    public void deleteAbilityTreeLoadout(String name) {
-        abilityTreeLoadouts.get().remove(name);
-    }
-
     public void saveCurrentAbilityTree(
             String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
         ABILITY_TREE_CONTAINER_QUERIES.getUnlockedAbilityTree(
@@ -87,7 +69,7 @@ public final class AbilityTreeModel extends Model {
                             .map(AbilityTreeSkillNode::name)
                             .toList();
                     ClassType classType = Models.Character.getClassType();
-                    abilityTreeLoadouts.get().put(name, new SavableAbilityTree(abilityNames, classType));
+                    Services.loadout.saveAbilityTreeLoadout(name, new SavableAbilityTree(abilityNames, classType));
                     WynntilsMod.info("Saved ability tree loadout: " + name);
                 },
                 onStatus,
@@ -97,7 +79,7 @@ public final class AbilityTreeModel extends Model {
 
     public void loadAbilityTree(
             String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
-        SavableAbilityTree savedTree = getAbilityTreeLoadout(name);
+        SavableAbilityTree savedTree =  Services.loadout.getAbilityTreeLoadout(name);
         if (savedTree == null) {
             onError.accept("No saved ability tree loadout: " + name);
             return;

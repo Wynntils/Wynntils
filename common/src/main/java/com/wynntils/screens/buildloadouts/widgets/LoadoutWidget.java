@@ -3,8 +3,8 @@ package com.wynntils.screens.buildloadouts.widgets;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
-import com.wynntils.screens.buildloadouts.type.Loadout;
-import com.wynntils.screens.buildloadouts.type.LoadoutType;
+import com.wynntils.services.loadout.type.Loadout;
+import com.wynntils.services.loadout.type.LoadoutType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -18,7 +18,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 

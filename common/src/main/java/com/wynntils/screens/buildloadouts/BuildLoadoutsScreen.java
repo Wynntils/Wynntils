@@ -9,8 +9,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
-import com.wynntils.screens.buildloadouts.type.Loadout;
-import com.wynntils.screens.buildloadouts.type.LoadoutType;
 import com.wynntils.screens.buildloadouts.type.MenuCategory;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuDeleteButton;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuItemWidget;
@@ -30,6 +28,8 @@ import com.wynntils.screens.buildloadouts.widgets.NewLoadoutInputWidget;
 import com.wynntils.screens.buildloadouts.widgets.NewLoadoutSelectionButton;
 import com.wynntils.screens.buildloadouts.widgets.StatusWidget;
 import com.wynntils.screens.buildloadouts.widgets.TitleWidget;
+import com.wynntils.services.loadout.type.Loadout;
+import com.wynntils.services.loadout.type.LoadoutType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
@@ -382,17 +382,6 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
     }
 
     private void renderBuildLoadoutMenu(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        /*
-        RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND,
-                offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET,
-                offsetY + 51,
-                RIGHT_PAGE_WIDTH,
-                200);
-
-         */
-
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
                 Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND,
@@ -484,9 +473,5 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
     public Loadout getSelectedLoadout() {
         return this.selectedLoadout;
-    }
-
-    public boolean hasExistingLoadout(String name) {
-        return (Models.SkillPoint.hasLoadout(name) || Models.AbilityTree.hasAbilityTreeLoadout(name) || Models.Aspect.hasAspectLoadout(name));
     }
 }

@@ -4,13 +4,11 @@
  */
 package com.wynntils.screens.buildloadouts.widgets;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
-import com.wynntils.screens.buildloadouts.type.LoadoutType;
-import com.wynntils.screens.buildloadouts.type.MenuCategory;
+import com.wynntils.services.loadout.type.LoadoutType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -26,9 +24,6 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.List;
-import java.util.Objects;
 
 public class MakeNewLoadoutButton extends AbstractButton {
     private final int x;
@@ -90,7 +85,7 @@ public class MakeNewLoadoutButton extends AbstractButton {
             return true;
         }
 
-        if (parent.hasExistingLoadout(name) && !buttonConfirm) {
+        if (Services.loadout.hasLoadout(name) && !buttonConfirm) {
             parent.newLoadoutInfoWidget.setText(StyledText.fromString("This will overwrite an existing loadout by the same name."), false);
             buttonConfirm = true;
         } else {

@@ -4,10 +4,8 @@
  */
 package com.wynntils.screens.buildloadouts.widgets;
 
-import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
-import com.wynntils.screens.buildloadouts.type.LoadoutType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;

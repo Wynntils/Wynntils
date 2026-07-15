@@ -1,22 +1,21 @@
-/*
- * Copyright © Wynntils 2026.
- * This file is released under LGPLv3. See LICENSE for full license details.
- */
-package com.wynntils.screens.buildloadouts.type;
+package com.wynntils.services.loadout.type;
 
 import com.wynntils.models.abilitytree.type.ArchetypeType;
 import com.wynntils.models.abilitytree.type.SavableAbilityTree;
 import com.wynntils.models.aspects.type.SavableAspectSet;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.character.type.SavableSkillPointSet;
+import com.wynntils.screens.buildloadouts.type.MenuCategory;
 import com.wynntils.utils.render.Texture;
 
 public record Loadout(
         String name,
+        LoadoutType type,
         SavableSkillPointSet skillPoints,
         SavableAbilityTree abilityTree,
-        SavableAspectSet aspect,
-        LoadoutType type) {
+        SavableAspectSet aspects,
+        boolean favourited) {
+
     public boolean hasSkillPoints() {
         return skillPoints != null;
     }
@@ -26,18 +25,18 @@ public record Loadout(
     }
 
     public boolean hasAspects() {
-        return aspect != null;
+        return aspects != null;
     }
 
     public ClassType getClassType() {
         if (hasAbilityTree()) {
-            ClassType atClass = abilityTree().classType();
+            ClassType atClass = abilityTree.classType();
             if (atClass != null && atClass != ClassType.NONE) {
                 return atClass;
             }
         }
         if (hasAspects()) {
-            ClassType aspectClass = aspect().classType();
+            ClassType aspectClass = aspects.classType();
             if (aspectClass != null && aspectClass != ClassType.NONE) {
                 return aspectClass;
             }
@@ -50,25 +49,30 @@ public record Loadout(
     }
 
     public String getMainArchetype() {
-        return hasAbilityTree() ? abilityTree().getMainArchetype() : null;
+        return hasAbilityTree() ? abilityTree.getMainArchetype() : null;
     }
 
     public int getNodeCount() {
-        return hasAbilityTree() ? abilityTree().getNodeCount() : 0;
+        return hasAbilityTree() ? abilityTree.getNodeCount() : 0;
     }
 
     public int getAspectCount() {
-        return hasAspects() ? aspect().getAspectCount() : 0;
+        return hasAspects() ? aspects.getAspectCount() : 0;
     }
 
     public int getMaxLevel() {
-        int spLevel = hasSkillPoints() ? skillPoints().getMinimumCombatLevel() : 0;
-        int atLevel = hasAbilityTree() ? abilityTree().getLevel() : 0;
-        int asLevel = hasAspects() ? aspect().getLevel() : 0;
+        int spLevel = hasSkillPoints() ? skillPoints.getMinimumCombatLevel() : 0;
+        int atLevel = hasAbilityTree() ? abilityTree.getLevel() : 0;
+        int asLevel = hasAspects() ? aspects.getLevel() : 0;
 
         return Math.max(1, Math.max(spLevel, Math.max(atLevel, asLevel)));
     }
 
+    public int getSkillPointsSum() {
+        return hasSkillPoints() ? skillPoints.getSkillPointsSum() : 0;
+    }
+
+    //move this somewhere else
     public MenuCategory getMenuCategory() {
         return switch (type) {
             case LoadoutType.BUILD -> MenuCategory.BUILD_LOADOUT;

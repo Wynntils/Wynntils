@@ -8,8 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.persisted.Persisted;
-import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
@@ -38,16 +37,12 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.function.Consumer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
 
 public final class SkillPointModel extends Model {
-    @Persisted
-    private final Storage<Map<String, SavableSkillPointSet>> skillPointLoadouts = new Storage<>(new TreeMap<>());
-
     private static final int TOME_SLOT = 8;
     private static final int[] SKILL_POINT_TOTAL_SLOTS = {11, 12, 13, 14, 15};
     private static final int SKILL_POINT_TOME_SLOT = 4;
@@ -66,13 +61,9 @@ public final class SkillPointModel extends Model {
         super(List.of());
     }
 
-    public boolean hasLoadout(String name) {
-        return skillPointLoadouts.get().containsKey(name);
-    }
-
     public void saveSkillPoints(String name, int[] skillPoints) {
         SavableSkillPointSet assignedSkillPointSet = new SavableSkillPointSet(skillPoints);
-        skillPointLoadouts.get().put(name, assignedSkillPointSet);
+        Services.loadout.saveSkillPointLoadout(name, assignedSkillPointSet);
         WynntilsMod.info("Saved skill point loadout: " + name + " " + assignedSkillPointSet);
     }
 
@@ -92,7 +83,7 @@ public final class SkillPointModel extends Model {
     /**
      * Saves the current equipped gear and provided skill points.
      */
-    public void saveBuild(String name, int[] skillPoints) {
+    public void saveSkillPointsAndItems(String name, int[] skillPoints) {
         String weapon = null;
         List<String> armourNames = new ArrayList<>();
         List<String> accessoryNames = new ArrayList<>();
@@ -118,12 +109,12 @@ public final class SkillPointModel extends Model {
 
         SavableSkillPointSet assignedSkillPointSet =
                 new SavableSkillPointSet(skillPoints, weapon, armourNames, accessoryNames);
-        skillPointLoadouts.get().put(name, assignedSkillPointSet);
+        Services.loadout.saveSkillPointLoadout(name, assignedSkillPointSet);
         WynntilsMod.info("Saved skill point build: " + name + " " + assignedSkillPointSet);
     }
 
     public void saveCurrentBuild(String name) {
-        saveBuild(name, new int[] {
+        saveSkillPointsAndItems(name, new int[] {
             getAssignedSkillPoints(Skill.STRENGTH),
             getAssignedSkillPoints(Skill.DEXTERITY),
             getAssignedSkillPoints(Skill.INTELLIGENCE),
@@ -132,14 +123,11 @@ public final class SkillPointModel extends Model {
         });
     }
 
-    public void deleteLoadout(String name) {
-        skillPointLoadouts.get().remove(name);
-    }
 
     public void loadLoadout(String name, Consumer<String> onError, Runnable onComplete) {
         ContainerUtils.closeBackgroundContainer();
 
-        SavableSkillPointSet target = skillPointLoadouts.get().get(name);
+        SavableSkillPointSet target = Services.loadout.getSkillPointLoadout(name);
         if (target == null) {
             if (onError != null) onError.accept("Loadout not found: " + name);
             return;
@@ -258,10 +246,6 @@ public final class SkillPointModel extends Model {
 
     public int getAssignedSum() {
         return assignedSkillPoints.values().stream().reduce(0, Integer::sum);
-    }
-
-    public Map<String, SavableSkillPointSet> getLoadouts() {
-        return skillPointLoadouts.get();
     }
 
     /**
