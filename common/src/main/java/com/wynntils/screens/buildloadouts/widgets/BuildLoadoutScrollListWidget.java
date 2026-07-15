@@ -143,6 +143,18 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget {
             }
         }
 
+        if (selectedScrollListCategory == ScrollListCategory.ASPECTS) {
+            for (String abilityName : selectedLoadout.aspect().aspectNames()) {
+                itemWidgets.add(new BuildLoadoutScrollListAspectWidget(
+                        StyledText.fromString(abilityName),
+                        this.x + WIDGET_HEIGHT_EDGE_PADDING,
+                        this.y + WIDGET_HEIGHT_EDGE_PADDING + itemWidgets.size() * (WIDGET_HEIGHT + WIDGET_HEIGHT_PADDING),
+                        this.width - 20,
+                        WIDGET_HEIGHT,
+                        parent));
+            }
+        }
+
     }
 
 }

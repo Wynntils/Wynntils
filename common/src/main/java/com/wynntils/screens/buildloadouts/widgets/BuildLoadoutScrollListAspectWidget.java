@@ -5,6 +5,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeType;
+import com.wynntils.models.aspects.type.AnimatedAspectType;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -23,7 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
-public class BuildLoadoutScrollListAbilityWidget extends AbstractWidget implements IconRenderer {
+public class BuildLoadoutScrollListAspectWidget extends AbstractWidget implements IconRenderer {
     private static final int TEXT_WIDTH_PADDING = 4;
     private static final int TEXT_HEIGHT_PADDING = 4;
     private static final int MAX_VISIBLE_CHARACTERS = 38;
@@ -31,19 +32,15 @@ public class BuildLoadoutScrollListAbilityWidget extends AbstractWidget implemen
     private int x;
     private int y;
     private final BuildLoadoutsScreen parent;
-    private final ItemStack abilityItemStack;
-    private final boolean ultimateAbility;
+    private final ItemStack aspectItemStack;
 
-    public BuildLoadoutScrollListAbilityWidget(StyledText text, int x, int y, int width, int height, BuildLoadoutsScreen parent) {
-        super(x, y, width, height, Component.literal("Build Loadout Scroll List Ability Widget"));
+    public BuildLoadoutScrollListAspectWidget(StyledText text, int x, int y, int width, int height, BuildLoadoutsScreen parent) {
+        super(x, y, width, height, Component.literal("Build Loadout Scroll List Aspect Widget"));
         this.text = text;
         this.x = x;
         this.y = y;
         this.parent = parent;
-
-        AbilityTreeNodeType abilityTreeNodeType = Models.AbilityTree.getNodeFromNameAndClass(this.text.getString(), parent.getSelectedLoadout().getClassType()).abilityTreeNodeType().getUnlockedType();
-        abilityItemStack = abilityTreeNodeType.generateItemStack();
-        ultimateAbility = abilityTreeNodeType.isUltimate();
+        this.aspectItemStack = AnimatedAspectType.fromClassType(parent.getSelectedLoadout().getClassType()).generateItemStack();
     }
 
     @Override
@@ -69,24 +66,15 @@ public class BuildLoadoutScrollListAbilityWidget extends AbstractWidget implemen
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        if (abilityItemStack != null) {
-            if (!ultimateAbility) {
-                RenderUtils.renderItem(
-                        guiGraphics,
-                        abilityItemStack,
-                        this.x + 5,
-                        this.y + this.height / 2 - 8
-                );
-            } else {
-                RenderUtils.renderScalingItem(
-                        guiGraphics,
-                        abilityItemStack,
-                        this.x + 10,
-                        this.y + this.height / 2 - 6,
-                        32,
-                        32
-                );
-            }
+        if (aspectItemStack != null) {
+            RenderUtils.renderScalingItem(
+                    guiGraphics,
+                    aspectItemStack,
+                    this.x + 10,
+                    this.y + this.height / 2 ,
+                    44,
+                    44
+            );
         }
 
     }
