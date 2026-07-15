@@ -72,7 +72,6 @@ public record Loadout(
         return hasSkillPoints() ? skillPoints.getSkillPointsSum() : 0;
     }
 
-    //move this somewhere else
     public MenuCategory getMenuCategory() {
         return switch (type) {
             case LoadoutType.BUILD -> MenuCategory.BUILD_LOADOUT;
