@@ -21,13 +21,16 @@ import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.MasteryTomesContainer;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.stats.type.SkillStatType;
+import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import com.wynntils.utils.wynn.WynnUtils;
@@ -84,31 +87,36 @@ public final class SkillPointModel extends Model {
      * Saves the current equipped gear and provided skill points.
      */
     public void saveSkillPointsAndItems(String name, int[] skillPoints) {
-        String weapon = null;
-        List<String> armourNames = new ArrayList<>();
-        List<String> accessoryNames = new ArrayList<>();
+        EncodingSettings encodingSettings = new EncodingSettings(true, true);
+
+        String weaponEncodedString = null;
+        List<String> armourEncodedStrings = new ArrayList<>();
+        List<String> accessoryEncodedStrings = new ArrayList<>();
 
         for (ItemStack itemStack : Models.Inventory.getEquippedItems()) {
             Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(itemStack);
             if (wynnItemOptional.isEmpty()) continue;
             WynnItem wynnItem = wynnItemOptional.get();
+            ErrorOr<EncodedByteBuffer> errorOrEncoded =
+                    Models.ItemEncoding.encodeItem(wynnItem, encodingSettings);
+            if (errorOrEncoded.hasError()) {
+                WynntilsMod.warn("Failed to encode " + itemStack.getHoverName().getString() + ": " + errorOrEncoded.getError());
+                continue;
+            }
 
             if (wynnItem instanceof GearTypeItemProperty gear) {
                 if (gear.getGearType().isArmor()) {
-                    armourNames.add(WynnUtils.stripItemNameMarkers(
-                            StyledText.fromComponent(itemStack.getHoverName()).getString()));
+                    armourEncodedStrings.add(Models.ItemEncoding.makeItemString(wynnItem, errorOrEncoded.getValue()));
                 } else if (gear.getGearType().isAccessory()) {
-                    accessoryNames.add(WynnUtils.stripItemNameMarkers(
-                            StyledText.fromComponent(itemStack.getHoverName()).getString()));
+                    accessoryEncodedStrings.add(Models.ItemEncoding.makeItemString(wynnItem, errorOrEncoded.getValue()));
                 } else if (gear.getGearType().isWeapon()) {
-                    weapon = WynnUtils.stripItemNameMarkers(
-                            StyledText.fromComponent(itemStack.getHoverName()).getString());
+                    weaponEncodedString = Models.ItemEncoding.makeItemString(wynnItem, errorOrEncoded.getValue());
                 }
             }
         }
 
         SavableSkillPointSet assignedSkillPointSet =
-                new SavableSkillPointSet(skillPoints, weapon, armourNames, accessoryNames);
+                new SavableSkillPointSet(skillPoints, weaponEncodedString, armourEncodedStrings, accessoryEncodedStrings);
         Services.loadout.saveSkillPointLoadout(name, assignedSkillPointSet);
         WynntilsMod.info("Saved skill point build: " + name + " " + assignedSkillPointSet);
     }

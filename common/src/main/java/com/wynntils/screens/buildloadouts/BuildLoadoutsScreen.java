@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.buildloadouts.type.MenuCategory;
+import com.wynntils.screens.buildloadouts.widgets.ItemTooltipProvider;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuDeleteButton;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuItemWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuLoadButton;
@@ -399,6 +400,9 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                         mouseX,
                         mouseY);
                 break;
+            }
+            if (child instanceof ItemTooltipProvider itemTooltipProvider && child.isMouseOver(mouseX, mouseY)) {
+                itemTooltipProvider.renderHoveredItemTooltip(guiGraphics, mouseX, mouseY);
             }
         }
     }

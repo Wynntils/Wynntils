@@ -75,7 +75,10 @@ public abstract class ScrollListWidget extends AbstractWidget {
     }
 
     private void renderScroll(GuiGraphics guiGraphics) {
-        scrollY = MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), this.y + SCROLL_BAR_BUTTON_HEIGHT_PADDING, this.y + this.height - Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON.height() - SCROLL_BAR_BUTTON_HEIGHT_PADDING);
+        int maxScrollOffset = getMaxScrollOffset();
+        scrollY = maxScrollOffset <= 0
+                ? this.y + SCROLL_BAR_BUTTON_HEIGHT_PADDING
+                : MathUtils.map(scrollOffset, 0, maxScrollOffset, this.y + SCROLL_BAR_BUTTON_HEIGHT_PADDING, this.y + this.height - Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON.height() - SCROLL_BAR_BUTTON_HEIGHT_PADDING);
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON, this.x + this.width - Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON.width() - SCROLL_BAR_BUTTON_WIDTH_PADDING, scrollY);
     }
@@ -100,7 +103,7 @@ public abstract class ScrollListWidget extends AbstractWidget {
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!draggingScroll) {
-            if (isOntopOfScrollDragButton(event.x(), event.y())) {
+            if (getMaxScrollOffset() > 0 && isOntopOfScrollDragButton(event.x(), event.y())) {
                 draggingScroll = true;
 
                 return true;

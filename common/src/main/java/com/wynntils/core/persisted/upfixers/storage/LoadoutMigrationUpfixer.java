@@ -8,11 +8,20 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.upfixers.Upfixer;
 import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.stats.StatCalculator;
+import com.wynntils.models.stats.type.StatActualValue;
+import com.wynntils.models.stats.type.StatPossibleValues;
+import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.type.ErrorOr;
+import com.wynntils.utils.type.RangedValue;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -143,11 +152,18 @@ public class LoadoutMigrationUpfixer implements Upfixer {
             return Optional.empty();
         }
 
-        // Unidentified GearItem: passing null GearInstance is exactly what
-        // GearItem#isUnidentified() checks for, and every getter on GearItem
-        // (getIdentifications, getPowders, getRerollCount, getShinyStat,
-        // getItemInstance) is null-safe against it.
-        GearItem defaultGearItem = new GearItem(gearInfo, null);
+        List<StatActualValue> stats = new ArrayList<>();
+
+        //make some stats so that items have some kind of stats.
+        for (Map.Entry<StatType, StatPossibleValues> entry : gearInfo.getVariableStatsMap().entrySet()) {
+            StatType statType = entry.getKey();
+            StatPossibleValues val = entry.getValue();
+            RangedValue internalRoll = StatCalculator.calculateInternalRollRange(val, val.baseValue(), 0);
+            stats.add(new StatActualValue(statType, val.baseValue(), 0, internalRoll, false));
+        }
+
+        GearInstance gearInstance = new GearInstance(stats, List.of(), 0, Optional.empty(), Optional.empty(), true, Optional.empty());
+        GearItem defaultGearItem = new GearItem(gearInfo, gearInstance);
 
         EncodingSettings encodingSettings = new EncodingSettings(true, true);
         ErrorOr<EncodedByteBuffer> errorOrEncoded =

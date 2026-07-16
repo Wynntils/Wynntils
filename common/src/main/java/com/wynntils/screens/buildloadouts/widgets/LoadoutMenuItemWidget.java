@@ -4,10 +4,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.SavableSkillPointSet;
-import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.services.loadout.type.Loadout;
@@ -21,21 +19,19 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 
-public class LoadoutMenuItemWidget extends AbstractWidget {
+public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltipProvider {
     private final int x;
     private final int y;
     private final BuildLoadoutsScreen parent;
@@ -95,10 +91,10 @@ public class LoadoutMenuItemWidget extends AbstractWidget {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
                 Texture.BUILD_LOADOUTS_MENU_RIBBON,
-                x + 5,
+                x + 6,
                 y + 2,
-                this.width - 10,
-                20);
+                this.width - 12,
+                17);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -110,9 +106,6 @@ public class LoadoutMenuItemWidget extends AbstractWidget {
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
-
-        // Tooltip must render last so it draws on top of everything else
-        renderHoveredTooltip(guiGraphics, boxItemStacks, mouseX, mouseY);
     }
 
     @Override
@@ -126,11 +119,13 @@ public class LoadoutMenuItemWidget extends AbstractWidget {
         ItemStack itemStack = boxItemStacks.get(index);
         if (itemStack.isEmpty()) return;
 
-        guiGraphics.renderItem(itemStack, bx, by);
-        guiGraphics.renderItemDecorations(Minecraft.getInstance().font, itemStack, bx, by);
+        RenderUtils.renderItem(guiGraphics, itemStack, bx, by);
     }
 
-    private void renderHoveredTooltip(GuiGraphics guiGraphics, List<ItemStack> boxItemStacks, int mouseX, int mouseY) {
+    @Override
+    public void renderHoveredItemTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        List<ItemStack> boxItemStacks = getBoxItemStacks();
+
         int hoveredIndex = getHoveredBoxIndex(mouseX, mouseY);
         if (hoveredIndex == -1 || hoveredIndex >= boxItemStacks.size()) return;
 
@@ -170,24 +165,17 @@ public class LoadoutMenuItemWidget extends AbstractWidget {
 
             ErrorOr<WynnItem> errorOrItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, itemName);
             if (errorOrItem.hasError()) {
-                WynntilsMod.warn("Failed to decode loadout gear item: " + errorOrItem.getError());
                 return Optional.empty();
             }
 
             if (errorOrItem.getValue() instanceof GearItem gearItem) {
                 return Optional.of(new FakeItemStack(gearItem, "From loadout"));
             }
-            return Optional.empty();
         }
 
-        // Legacy pre-upfix data: a raw display name instead of an encoded item
-        GearInfo gearInfo = Models.Gear.getGearInfoFromDisplayName(stored.replaceFirst("§.", ""));
-        if (gearInfo == null) return Optional.empty();
-
-        // Same "default unidentified" construction as the upfixer, wrapped for rendering
-        GearItem defaultGearItem = new GearItem(gearInfo, null);
-        return Optional.of(new FakeItemStack(defaultGearItem, "From loadout"));
+        return Optional.empty();
     }
+
     private List<ItemStack> computeBoxItemStacks(Loadout selectedLoadout) {
         if (selectedLoadout == null || !selectedLoadout.hasSkillPoints()) return List.of();
 
@@ -195,8 +183,8 @@ public class LoadoutMenuItemWidget extends AbstractWidget {
 
         List<String> orderedSlots = new ArrayList<>();
         orderedSlots.add(skillPoints.weapon());
-        orderedSlots.addAll(skillPoints.accessoryNames());
         orderedSlots.addAll(skillPoints.armourNames());
+        orderedSlots.addAll(skillPoints.accessoryNames());
 
         return orderedSlots.stream()
                 .map(this::decodeGearItemStack)

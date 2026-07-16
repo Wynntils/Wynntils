@@ -43,10 +43,10 @@ public class LoadoutMenuOverviewWidget extends AbstractWidget {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
                 Texture.BUILD_LOADOUTS_MENU_RIBBON,
-                x + 5,
+                x + 6,
                 y + 2,
-                this.width - 10,
-                20);
+                this.width - 12,
+                17);
 
         FontRenderer.getInstance()
                 .renderText(
