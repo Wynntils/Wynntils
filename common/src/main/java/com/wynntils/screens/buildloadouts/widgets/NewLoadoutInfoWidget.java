@@ -2,12 +2,10 @@ package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
@@ -51,7 +49,7 @@ public class NewLoadoutInfoWidget extends AbstractWidget {
                         this.y + 10,
                         this.y + this.height - 10,
                         this.width - Texture.BUILD_LOADOUTS_INFO_ICON.width() - 20,
-                        isInfo ? CustomColor.fromInt(0x242424) : parent.errorColor,
+                        isInfo ? CustomColor.fromInt(0x242424) : parent.ERROR_COLOR,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NONE);
         if (isInfo) {

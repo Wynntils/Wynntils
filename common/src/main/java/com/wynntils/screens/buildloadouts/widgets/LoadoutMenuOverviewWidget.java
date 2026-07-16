@@ -114,7 +114,7 @@ public class LoadoutMenuOverviewWidget extends AbstractWidget {
                         StyledText.fromString("Level: " + level),
                         this.x + this.width / 2f,
                         this.y + startY,
-                        level > Models.CombatXp.getCombatLevel().current() ? parent.errorColor : CommonColors.WHITE,
+                        level > Models.CombatXp.getCombatLevel().current() ? parent.ERROR_COLOR : CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);

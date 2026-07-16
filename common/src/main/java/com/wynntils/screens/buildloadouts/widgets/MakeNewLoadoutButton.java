@@ -99,17 +99,17 @@ public class MakeNewLoadoutButton extends AbstractButton {
                 //save ability tree
                 Models.AbilityTree.saveCurrentAbilityTree(
                         name,
-                        status -> parent.statusWidget.setStatus(status, parent.busyColor),
-                        error -> parent.statusWidget.setStatus(error, parent.errorColor),
+                        status -> parent.statusWidget.setStatus(status, parent.BUSY_COLOR),
+                        error -> parent.statusWidget.setStatus(error, parent.ERROR_COLOR),
                         completed -> {
 
                             //save aspects
                             Models.Aspect.saveCurrentAspectLoadout(
                                     name,
-                                    status -> parent.statusWidget.setStatus(status, parent.busyColor),
-                                    error -> parent.statusWidget.setStatus(error, parent.errorColor),
+                                    status -> parent.statusWidget.setStatus(status, parent.BUSY_COLOR),
+                                    error -> parent.statusWidget.setStatus(error, parent.ERROR_COLOR),
                                     done -> {
-                                        parent.statusWidget.setStatus(done, parent.completedColor);
+                                        parent.statusWidget.setStatus(done, parent.COMPLETED_COLOR);
                                         parent.loadoutScrollListWidget.populateLoadouts();
                                         //this.setSelectedLoadout(this.getLoadout(name));
                                     });
@@ -121,10 +121,10 @@ public class MakeNewLoadoutButton extends AbstractButton {
             if (parent.getNewLoadoutType() == LoadoutType.ABILITY_TREE) {
                 Models.AbilityTree.saveCurrentAbilityTree(
                     name,
-                    status -> parent.statusWidget.setStatus(status, parent.busyColor),
-                    error -> parent.statusWidget.setStatus(error, parent.errorColor),
+                    status -> parent.statusWidget.setStatus(status, parent.BUSY_COLOR),
+                    error -> parent.statusWidget.setStatus(error, parent.ERROR_COLOR),
                     completed -> {
-                        parent.statusWidget.setStatus(completed, parent.completedColor);
+                        parent.statusWidget.setStatus(completed, parent.COMPLETED_COLOR);
                         parent.loadoutScrollListWidget.populateLoadouts();
                         //this.setSelectedLoadout(this.getLoadout(name));
                     });
@@ -140,10 +140,10 @@ public class MakeNewLoadoutButton extends AbstractButton {
             if (parent.getNewLoadoutType() == LoadoutType.ASPECT) {
                 Models.Aspect.saveCurrentAspectLoadout(
                     name,
-                    status -> parent.statusWidget.setStatus(status, parent.busyColor),
-                    error -> parent.statusWidget.setStatus(error, parent.errorColor),
+                    status -> parent.statusWidget.setStatus(status, parent.BUSY_COLOR),
+                    error -> parent.statusWidget.setStatus(error, parent.ERROR_COLOR),
                     completed -> {
-                        parent.statusWidget.setStatus(completed, parent.completedColor);
+                        parent.statusWidget.setStatus(completed, parent.COMPLETED_COLOR);
                         parent.loadoutScrollListWidget.populateLoadouts();
                         //this.setSelectedLoadout(this.getLoadout(name));
                     });
