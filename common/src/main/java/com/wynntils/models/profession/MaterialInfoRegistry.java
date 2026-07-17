@@ -11,6 +11,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.net.Dependency;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.profession.type.MaterialInfo;
@@ -41,7 +43,10 @@ public class MaterialInfoRegistry {
     private Map<String, MaterialInfo> materialInfoLookupApiName = Map.of();
 
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_STATIC_MATERIALS).handleJsonObject(this::handleMaterials);
+        registry.registerDownload(
+                        UrlId.DATA_STATIC_MATERIALS,
+                        Dependency.simple(Services.CustomModel, UrlId.DATA_STATIC_MODEL_DATA))
+                .handleJsonObject(this::handleMaterials);
     }
 
     public MaterialInfo getFromDisplayName(String materialName) {

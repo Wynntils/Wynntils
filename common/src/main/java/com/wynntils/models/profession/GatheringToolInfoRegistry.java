@@ -11,6 +11,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.net.Dependency;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.type.GearTier;
@@ -38,7 +40,9 @@ public class GatheringToolInfoRegistry {
     private Map<String, GatheringToolInfo> gatheringToolInfoLookupApiName = Map.of();
 
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_STATIC_TOOLS).handleJsonObject(this::handleGatheringTools);
+        registry.registerDownload(
+                        UrlId.DATA_STATIC_TOOLS, Dependency.simple(Services.CustomModel, UrlId.DATA_STATIC_MODEL_DATA))
+                .handleJsonObject(this::handleGatheringTools);
     }
 
     public GatheringToolInfo getFromDisplayName(String toolName) {
