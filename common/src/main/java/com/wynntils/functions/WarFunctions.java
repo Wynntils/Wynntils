@@ -139,6 +139,11 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "team_dps")
+    public long teamDpsFunction() {
+        return teamDpsFunction(Long.MAX_VALUE);
+    }
+
+    @TemplateFunction(name = "team_dps")
     public long teamDpsFunction(long seconds) {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
@@ -166,6 +171,11 @@ public class WarFunctions {
     @TemplateFunction(name = "is_territory_queued", aliases = { "is_queued" })
     public boolean isTerritoryQueuedFunction(String territoryName) {
         return Models.GuildAttackTimer.getAttackTimerForTerritory(territoryName).isPresent();
+    }
+
+    @TemplateFunction(name = "wars_since")
+    public long warsSinceFunction() {
+        return warsSinceFunction(7);
     }
 
     @TemplateFunction(name = "wars_since")

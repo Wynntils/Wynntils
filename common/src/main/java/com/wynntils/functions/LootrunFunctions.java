@@ -214,7 +214,12 @@ public class LootrunFunctions {
     }
 
     @TemplateFunction(name = "chests_opened_this_session", aliases = { "session_chests" })
-    public int chestsOpenedThisSessionFunction(boolean exact, int tier) {
+    public int chestsOpenedThisSessionFunction() {
+        return chestsOpenedThisSessionFunction(1, false);
+    }
+
+    @TemplateFunction(name = "chests_opened_this_session", aliases = { "session_chests" })
+    public int chestsOpenedThisSessionFunction(int tier, boolean exact) {
         return Models.LootChest.getLootChestOpenedThisSession(tier, exact);
     }
 }

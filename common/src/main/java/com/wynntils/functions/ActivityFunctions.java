@@ -19,6 +19,11 @@ public class ActivityFunctions {
     }
 
     @TemplateFunction(name = "activity_task")
+    public static String activityTaskFunction() {
+        return activityTaskFunction(true);
+    }
+
+    @TemplateFunction(name = "activity_task")
     public static String activityTaskFunction(boolean formatted) {
         return Models.Activity.getTrackedTask().getString(formatted ? StyleType.DEFAULT : StyleType.NONE);
     }

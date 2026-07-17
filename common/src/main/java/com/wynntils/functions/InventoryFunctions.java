@@ -100,6 +100,11 @@ public class InventoryFunctions {
     }
 
     @TemplateFunction(name = "emerald_string", aliases = { "estr" })
+    public String emeraldStringFunction() {
+        return emeraldStringFunction(false);
+    }
+
+    @TemplateFunction(name = "emerald_string", aliases = { "estr" })
     public String emeraldStringFunction(boolean zeros) {
         return Models.Emerald.getFormattedString(Models.Emerald.getAmountInInventory(), zeros);
     }
@@ -188,6 +193,11 @@ public class InventoryFunctions {
     }
 
     @TemplateFunction(name = "held_item_name", aliases = { "held_item", "held_name" })
+    public String heldItemNameFunction() {
+        return heldItemNameFunction(false);
+    }
+
+    @TemplateFunction(name = "held_item_name", aliases = { "held_item", "held_name" })
     public String heldItemNameFunction(boolean formatted) {
         ItemStack itemStack = InventoryUtils.getItemInHand();
         StyledText hoverName = StyledText.fromComponent(itemStack.getHoverName());
@@ -208,6 +218,11 @@ public class InventoryFunctions {
     @TemplateFunction(name = "teleport_scroll_recharge_timer", aliases = { "tp_scroll_timer" })
     public int teleportScrollRechargeTimerFunction() {
         return Models.TeleportScroll.getTeleportScrollRechargeTimerSeconds();
+    }
+
+    @TemplateFunction(name = "item_count", aliases = { "item_amount" })
+    public int itemCountFunction() {
+        return itemCountFunction("");
     }
 
     @TemplateFunction(name = "item_count", aliases = { "item_amount" })

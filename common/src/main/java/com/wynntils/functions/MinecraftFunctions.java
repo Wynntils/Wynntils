@@ -31,6 +31,11 @@ public class MinecraftFunctions {
     }
 
     @TemplateFunction(name = "dir", aliases = { "yaw" })
+    public double dirFunction() {
+        return dirFunction(false);
+    }
+
+    @TemplateFunction(name = "dir", aliases = { "yaw" })
     public double dirFunction(boolean wrap) {
         double dir = McUtils.player().getYRot();
         return wrap ? Mth.wrapDegrees(dir) : dir;

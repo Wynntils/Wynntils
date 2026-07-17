@@ -66,6 +66,11 @@ public class CharacterFunctions {
     }
 
     @TemplateFunction(name = "class")
+    public String classFunction() {
+        return classFunction(false, true);
+    }
+
+    @TemplateFunction(name = "class")
     public String classFunction(boolean showReskinnedName, boolean uppercase) {
         String name = showReskinnedName ? Models.Character.getActualName() : Models.Character.getClassType().getActualName(false);
         if (uppercase) {
@@ -219,15 +224,30 @@ public class CharacterFunctions {
     }
 
     @TemplateFunction(name = "personal_objective_score")
+    public CappedValue personalObjectiveScoreFunction() {
+        return personalObjectiveScoreFunction(0);
+    }
+
+    @TemplateFunction(name = "personal_objective_score")
     public CappedValue personalObjectiveScoreFunction(int index) {
         List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
         return !daily.isEmpty() && index >= 0 && daily.size() > index ? daily.get(index).getScore() : CappedValue.EMPTY;
     }
 
     @TemplateFunction(name = "personal_objective_goal")
+    public String personalObjectiveGoalFunction() {
+        return personalObjectiveGoalFunction(0);
+    }
+
+    @TemplateFunction(name = "personal_objective_goal")
     public String personalObjectiveGoalFunction(int index) {
         List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
         return !daily.isEmpty() && index >= 0 && daily.size() > index ? daily.get(index).getGoal() : "";
+    }
+
+    @TemplateFunction(name = "personal_objective_event_bonus")
+    public boolean personalObjectiveEventBonusFunction() {
+        return personalObjectiveEventBonusFunction(0);
     }
 
     @TemplateFunction(name = "personal_objective_event_bonus")

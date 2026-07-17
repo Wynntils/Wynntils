@@ -188,6 +188,11 @@ public class RaidFunctions {
     }
 
     @TemplateFunction(name = "raids_runs_since")
+    public int raidsRunsSinceFunction() {
+        return raidsRunsSinceFunction(7);
+    }
+
+    @TemplateFunction(name = "raids_runs_since")
     public int raidsRunsSinceFunction(int sinceDays) {
         return Math.toIntExact(Models.Raid.historicRaids.get().stream().filter(historicRaidInfo -> historicRaidInfo.endedTimestamp() >= System.currentTimeMillis() - TimeUnit.DAYS.toMillis(sinceDays)).count());
     }

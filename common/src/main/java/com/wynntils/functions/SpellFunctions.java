@@ -65,6 +65,11 @@ public class SpellFunctions {
     }
 
     @TemplateFunction(name = "shaman_mask")
+    public String shamanMaskFunction() {
+        return shamanMaskFunction(true, false);
+    }
+
+    @TemplateFunction(name = "shaman_mask")
     public String shamanMaskFunction(boolean useShortName, boolean isColored) {
         ChatFormatting color = isColored ? Models.ShamanMask.getCurrentMaskType().getColor() : ChatFormatting.WHITE;
         String name = useShortName ? Models.ShamanMask.getCurrentMaskType().getAlias() : Models.ShamanMask.getCurrentMaskType().getName();

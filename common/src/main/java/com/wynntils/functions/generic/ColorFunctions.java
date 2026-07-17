@@ -46,6 +46,11 @@ public final class ColorFunctions {
     }
 
     @TemplateFunction(name = "gradient_shader", isPure = true)
+    public static CustomColor gradientShaderFunction() {
+        return gradientShaderFunction(1);
+    }
+
+    @TemplateFunction(name = "gradient_shader", isPure = true)
     public static CustomColor gradientShaderFunction(int style) {
         return switch (style) {
             case 2 -> WynncraftShaderColor.GRADIENT_2.color;

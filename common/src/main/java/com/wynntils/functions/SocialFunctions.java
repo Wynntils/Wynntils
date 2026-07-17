@@ -21,6 +21,12 @@ public class SocialFunctions {
         return Models.Friends.getFriends().size();
     }
 
+
+    @TemplateFunction(name = "party_members")
+    public int partyMembersFunction() {
+        return partyMembersFunction(false);
+    }
+
     @TemplateFunction(name = "party_members")
     public int partyMembersFunction(boolean includeOffline) {
         if (includeOffline) {

@@ -23,8 +23,18 @@ public class CombatFunctions {
     }
 
     @TemplateFunction(name = "area_damage_average", aliases = { "adavg" })
+    public double areaDamageAverageFunction() {
+        return areaDamageAverageFunction(10);
+    }
+
+    @TemplateFunction(name = "area_damage_average", aliases = { "adavg" })
     public double areaDamageAverageFunction(int seconds) {
         return Models.Combat.getAverageAreaDamagePerSecond(seconds);
+    }
+
+    @TemplateFunction(name = "total_area_damage", aliases = { "total_dmg", "tdmg" })
+    public double totalAreaDamageFunction() {
+        return totalAreaDamageFunction(10);
     }
 
     @TemplateFunction(name = "total_area_damage", aliases = { "total_dmg", "tdmg" })
@@ -38,8 +48,18 @@ public class CombatFunctions {
     }
 
     @TemplateFunction(name = "kills_per_minute", aliases = { "kpm" })
+    public int killsPerMinuteFunction() {
+        return killsPerMinuteFunction(true);
+    }
+
+    @TemplateFunction(name = "kills_per_minute", aliases = { "kpm" })
     public int killsPerMinuteFunction(boolean includeShared) {
         return Models.Combat.getKillsPerMinute(includeShared);
+    }
+
+    @TemplateFunction(name = "last_spell_name", aliases = { "recast_name" })
+    public String lastSpellNameFunction() {
+        return lastSpellNameFunction(false);
     }
 
     @TemplateFunction(name = "last_spell_name", aliases = { "recast_name" })
@@ -60,6 +80,11 @@ public class CombatFunctions {
     @TemplateFunction(name = "last_spell_repeat_count", aliases = { "recast_count" })
     public int lastSpellRepeatCountFunction(boolean burst) {
         return burst ? Models.Spell.getRepeatedBurstSpellCount() : Models.Spell.getRepeatedSpellCount();
+    }
+
+    @TemplateFunction(name = "ticks_since_last_spell", aliases = { "recast_ticks" })
+    public int ticksSinceLastSpellFunction() {
+        return ticksSinceLastSpellFunction(false);
     }
 
     @TemplateFunction(name = "ticks_since_last_spell", aliases = { "recast_ticks" })
@@ -93,8 +118,18 @@ public class CombatFunctions {
     }
 
     @TemplateFunction(name = "last_kill")
+    public Time lastKillFunction() {
+        return lastKillFunction(false);
+    }
+
+    @TemplateFunction(name = "last_kill")
     public Time lastKillFunction(boolean includeShared) {
         return Time.of(Models.Combat.getLastKillTimestamp(includeShared));
+    }
+
+    @TemplateFunction(name = "time_since_last_kill", aliases = { "last_kill_ms" })
+    public long timeSinceLastKillFunction() {
+        return timeSinceLastKillFunction(false);
     }
 
     @TemplateFunction(name = "time_since_last_kill", aliases = { "last_kill_ms" })
