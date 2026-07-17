@@ -12,6 +12,7 @@ import com.wynntils.templates.language.TemplateLanguage;
 import com.wynntils.templates.language.exception.LanguageException;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -37,12 +38,22 @@ public class TemplateEngine {
             TemplateFunction annotation = method.getAnnotation(TemplateFunction.class);
 
             if (annotation != null) {
-                FunctionDefinition functionDef = new FunctionDefinition(annotation.name(), annotation.aliases(), method, method.getReturnType(), method.getParameterTypes(), Arrays.stream(method.getParameters()).map(p -> p.getName()).toArray(String[]::new), annotation.isPure());
+                try {
+                    // TODO: Warn for invalid usage and i18 missing
+                    if (!Modifier.isStatic(method.getModifiers()))
+                        throw new Exception("Function method needs to be static");
+                    if (!Modifier.isPublic(method.getModifiers()))
+                        throw new Exception("Function method needs to be public");
 
-                functions.put(new FunctionKey(functionDef.name(), method.getParameterCount()), functionDef);
+                    FunctionDefinition functionDef = new FunctionDefinition(annotation.name(), annotation.aliases(), method, method.getReturnType(), method.getParameterTypes(), Arrays.stream(method.getParameters()).map(p -> p.getName()).toArray(String[]::new), annotation.isPure());
 
-                for (String alias : annotation.aliases()) {
-                    functions.put(new FunctionKey(alias, method.getParameterCount()), functionDef);
+                    functions.put(new FunctionKey(functionDef.name(), method.getParameterCount()), functionDef);
+
+                    for (String alias : annotation.aliases()) {
+                        functions.put(new FunctionKey(alias, method.getParameterCount()), functionDef);
+                    }
+                } catch(Exception e) {
+                    System.out.println(e);
                 }
             }
         }
