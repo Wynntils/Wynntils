@@ -152,7 +152,7 @@ public final class GuideIngredientItemStack extends GuideItemStack {
             itemLore.add(
                     Component.literal(colorCode + value + "%" + ChatFormatting.GRAY + " Ingredient Effectiveness"));
             itemLore.add(Component.literal(
-                    ChatFormatting.GRAY + "(To ingredients " + modifier.getKey().getDisplayName() + " this one)"));
+                    ChatFormatting.GRAY + "(To ingredients " + modifier.getKey().getDescription() + " this one)"));
         }
 
         if (!itemLore.isEmpty()) {
