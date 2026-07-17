@@ -28,7 +28,7 @@ public final class TooltipHandler extends Handler {
             return IdentifiableTooltipBuilder.fromTooltipLines(originalLines, identifiableItem)
                     .getTooltipLines(Models.Character.getClassType(), options);
         }
-        if (!gearItem.isStatPage() || gearItem.getData().get(WynnItemData.TOOLTIP_KEY) != null) {
+        if (gearItem.getData().get(WynnItemData.TOOLTIP_KEY) != null) {
             return originalLines;
         }
 
@@ -37,8 +37,11 @@ public final class TooltipHandler extends Handler {
         UpdateKey key = new UpdateKey(List.copyOf(originalLines), options);
         return cache.computeIfAbsent(
                 key,
-                ignored -> IdentifiableTooltipBuilder.buildNewItem(gearItem, "")
-                        .update(originalLines, Models.Character.getClassType(), options));
+                ignored -> gearItem.isStatPage()
+                        ? IdentifiableTooltipBuilder.buildNewItem(gearItem, "")
+                                .update(originalLines, Models.Character.getClassType(), options)
+                        : IdentifiableTooltipBuilder.fromTooltipLines(originalLines, gearItem)
+                                .getTooltipLines(Models.Character.getClassType(), options));
     }
 
     public IdentifiableTooltipBuilder buildNew(
