@@ -8,6 +8,7 @@ import net.minecraft.network.chat.FontDescription;
 import net.minecraft.resources.Identifier;
 
 public final class CommonFonts {
+    public static final FontDescription LANGUAGE_WYNNCRAFT_FONT = font("language/wynncraft");
     public static final FontDescription PROFESSION_FONT = font("profession");
 
     private static FontDescription.Resource font(String path) {

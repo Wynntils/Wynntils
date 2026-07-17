@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.profession.type;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.wynnitem.type.ItemMaterial;
 import java.util.Map;
 
@@ -14,4 +15,5 @@ public record MaterialInfo(
         Map<Integer, Integer> chances,
         ItemMaterial material,
         ProfessionType professionType,
+        StyledText lore,
         String emblem) {}
