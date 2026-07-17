@@ -150,7 +150,7 @@ public class StyledTextFunctions {
     }
 
     @TemplateFunction(name = "repeat_styled_text", aliases = {"repeat_st"})
-    public StyledText repeatStyledTextFunction(StyledText value, int count) {
+    public static StyledText repeatStyledTextFunction(StyledText value, int count) {
         StyledText styledText = value;
         Integer times = count;
         return styledText.repeat(times);

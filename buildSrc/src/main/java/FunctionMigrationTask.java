@@ -108,6 +108,7 @@ public class FunctionMigrationTask extends DefaultTask {
 
                     outputMethodDeclaration.setBody(body);
                     outputMethodDeclaration.setModifier(Modifier.Keyword.PUBLIC, true);
+                    outputMethodDeclaration.setModifier(Modifier.Keyword.STATIC, true);
                     outputMethodDeclaration.setType(unboxType(getValueMethod.getType()));
 
                     moveFieldsUp(clazz, root);

@@ -15,17 +15,17 @@ import com.wynntils.templates.annotations.TemplateFunction;
 public class WorldEventFunctions {
 
     @TemplateFunction(name = "annihilation_dry_count", aliases = { "dry_annis", "dry_anni_count" })
-    public int annihilationDryCount() {
+    public static int annihilationDryCount() {
         return Models.WorldEvent.dryAnnihilations.get();
     }
 
     @TemplateFunction(name = "annihilation_sun_progress", aliases = { "sun_progress" })
-    public CappedValue annihilationSunProgressFunction() {
+    public static CappedValue annihilationSunProgressFunction() {
         return Models.WorldEvent.annihilationSunBar.isActive() ? Models.WorldEvent.annihilationSunBar.getBarProgress().value() : CappedValue.EMPTY;
     }
 
     @TemplateFunction(name = "current_world_event")
-    public String currentWorldEventFunction() {
+    public static String currentWorldEventFunction() {
         WorldEvent currentWorldEvent = Models.WorldEvent.getCurrentWorldEvent();
         if (currentWorldEvent == null)
             return "";
@@ -33,7 +33,7 @@ public class WorldEventFunctions {
     }
 
     @TemplateFunction(name = "current_world_event_start_time")
-    public Time currentWorldEventStartTimeFunction() {
+    public static Time currentWorldEventStartTimeFunction() {
         WorldEvent currentWorldEvent = Models.WorldEvent.getCurrentWorldEvent();
         if (currentWorldEvent == null)
             return Time.NONE;
@@ -41,7 +41,7 @@ public class WorldEventFunctions {
     }
 
     @TemplateFunction(name = "world_event_start_time")
-    public Time worldEventStartTimeFunction(String worldEventName) {
+    public static Time worldEventStartTimeFunction(String worldEventName) {
         WorldEvent worldEvent = Models.WorldEvent.getWorldEvent(worldEventName);
         if (worldEvent == null)
             return Time.NONE;

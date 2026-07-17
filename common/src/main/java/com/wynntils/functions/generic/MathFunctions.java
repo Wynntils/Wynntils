@@ -8,7 +8,7 @@ import com.wynntils.templates.annotations.TemplateFunction;
 import java.util.Arrays;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
-public final class MathFunctions {
+public class MathFunctions {
     @TemplateFunction(
             name = "add",
             aliases = {"sum", "plus"},
@@ -137,7 +137,7 @@ public final class MathFunctions {
         return Math.max(min, Math.min(max, value));
     }
 
-    // TODO: MORE
+    // TODO: Implement these other math functions
     //
     //
     //    public static class SafeDivideFunction extends GenericFunction<Double> {

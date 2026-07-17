@@ -8,7 +8,7 @@ import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.type.CappedValue;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
-public final class CappedFunctions {
+public class CappedFunctions {
     @TemplateFunction(name = "current", aliases = "curr")
     public static int currentFunction(CappedValue cappedValue) {
         return cappedValue.current();

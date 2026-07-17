@@ -9,6 +9,7 @@ import com.wynntils.templates.annotations.TemplateFunction;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("unused") // Functions are accessed via reflection
 public class ConditionalFunctions {
     @TemplateFunction(
             name = "if",

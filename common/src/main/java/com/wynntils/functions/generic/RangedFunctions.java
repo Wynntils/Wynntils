@@ -9,20 +9,20 @@ import com.wynntils.templates.annotations.TemplateFunction;
 
 //Functions are accessed via reflection
 @SuppressWarnings("unused")
-public final class RangedFunctions {
+public class RangedFunctions {
 
     @TemplateFunction(name = "ranged")
-    public RangedValue rangedFunction(int low, int high) {
+    public static RangedValue rangedFunction(int low, int high) {
         return new RangedValue(low, high);
     }
 
     @TemplateFunction(name = "range_low", aliases = { "low" })
-    public int rangeLowFunction(RangedValue range) {
+    public static int rangeLowFunction(RangedValue range) {
         return range.low();
     }
 
     @TemplateFunction(name = "range_high", aliases = { "high" })
-    public int rangeHighFunction(RangedValue range) {
+    public static int rangeHighFunction(RangedValue range) {
         return range.high();
     }
 }

@@ -8,7 +8,7 @@ import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.mc.type.Location;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
-public final class LocationFunctions {
+public class LocationFunctions {
     @TemplateFunction(name = "x", isPure = true)
     public static int xFunction(Location location) {
         return location.x();

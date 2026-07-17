@@ -27,57 +27,57 @@ import com.wynntils.templates.annotations.TemplateFunction;
 public class SpellFunctions {
 
     @TemplateFunction(name = "arrow_shield_count", aliases = { "arrow_shield" })
-    public int arrowShieldCountFunction() {
+    public static int arrowShieldCountFunction() {
         if (Models.Character.getClassType() != ClassType.ARCHER)
             return 0;
         return Models.CastedAbility.getActiveAbility(ArrowShieldAbility.class).map(ArrowShieldAbility::getCharge).orElse(0);
     }
 
     @TemplateFunction(name = "guardian_angels_count", aliases = { "guardian_angels" })
-    public int guardianAngelsCountFunction() {
+    public static int guardianAngelsCountFunction() {
         if (Models.Character.getClassType() != ClassType.ARCHER)
             return 0;
         return Models.CastedAbility.getActiveAbility(GuardianAngelsAbility.class).map(GuardianAngelsAbility::getCharge).orElse(0);
     }
 
     @TemplateFunction(name = "mantle_shield_count", aliases = { "mantle_shield" })
-    public int mantleShieldCountFunction() {
+    public static int mantleShieldCountFunction() {
         if (Models.Character.getClassType() != ClassType.WARRIOR)
             return 0;
         return Models.CastedAbility.getActiveAbility(MantleAbility.class).map(MantleAbility::getCharge).orElse(0);
     }
 
     @TemplateFunction(name = "broken_mantle_shield_count", aliases = { "broken_mantle_shield" })
-    public int brokenMantleShieldCountFunction() {
+    public static int brokenMantleShieldCountFunction() {
         if (Models.Character.getClassType() != ClassType.WARRIOR)
             return 0;
         return Models.CastedAbility.getActiveAbility(BrokenMantleAbility.class).map(BrokenMantleAbility::getCharge).orElse(0);
     }
 
     @TemplateFunction(name = "shield_type_name", aliases = { "shield_type" })
-    public String shieldTypeNameFunction() {
+    public static String shieldTypeNameFunction() {
         return Models.CastedAbility.getActiveAbilities().stream().filter(a -> a instanceof ShieldAbilityProperty).findFirst().map(CastedAbilityType::getName).orElse("");
     }
 
     @TemplateFunction(name = "judrajim_active", aliases = { "is_judrajim_active" })
-    public boolean judrajimActiveFunction() {
+    public static boolean judrajimActiveFunction() {
         return Models.CastedAbility.getActiveAbility(JudrajimAbility.class).isPresent();
     }
 
     @TemplateFunction(name = "shaman_mask")
-    public String shamanMaskFunction() {
+    public static String shamanMaskFunction() {
         return shamanMaskFunction(true, false);
     }
 
     @TemplateFunction(name = "shaman_mask")
-    public String shamanMaskFunction(boolean useShortName, boolean isColored) {
+    public static String shamanMaskFunction(boolean useShortName, boolean isColored) {
         ChatFormatting color = isColored ? Models.ShamanMask.getCurrentMaskType().getColor() : ChatFormatting.WHITE;
         String name = useShortName ? Models.ShamanMask.getCurrentMaskType().getAlias() : Models.ShamanMask.getCurrentMaskType().getName();
         return color + name;
     }
 
     @TemplateFunction(name = "shaman_totem_state")
-    public String shamanTotemStateFunction(int totemNumber) {
+    public static String shamanTotemStateFunction(int totemNumber) {
         ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
         if (shamanTotem == null) {
             return "";
@@ -86,7 +86,7 @@ public class SpellFunctions {
     }
 
     @TemplateFunction(name = "shaman_totem_location")
-    public String shamanTotemLocationFunction(int totemNumber) {
+    public static String shamanTotemLocationFunction(int totemNumber) {
         ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
         if (shamanTotem == null) {
             return "";
@@ -98,7 +98,7 @@ public class SpellFunctions {
     }
 
     @TemplateFunction(name = "shaman_totem_time_left")
-    public int shamanTotemTimeLeftFunction(int totemNumber) {
+    public static int shamanTotemTimeLeftFunction(int totemNumber) {
         ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
         if (shamanTotem == null) {
             return 0;
@@ -110,7 +110,7 @@ public class SpellFunctions {
     }
 
     @TemplateFunction(name = "shaman_totem_distance")
-    public double shamanTotemDistanceFunction(int totemNumber) {
+    public static double shamanTotemDistanceFunction(int totemNumber) {
         ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
         if (shamanTotem == null) {
             return 0d;
@@ -122,7 +122,7 @@ public class SpellFunctions {
     }
 
     @TemplateFunction(name = "shaman_totem_transfused_amount")
-    public int shamanTotemTransfusedAmountFunction(int totemNumber) {
+    public static int shamanTotemTransfusedAmountFunction(int totemNumber) {
         ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
         if (shamanTotem == null)
             return 0;
@@ -132,7 +132,7 @@ public class SpellFunctions {
     }
 
     @TemplateFunction(name = "shaman_totem_poison_amount")
-    public String shamanTotemPoisonAmountFunction(int totemNumber) {
+    public static String shamanTotemPoisonAmountFunction(int totemNumber) {
         ShamanTotem shamanTotem = Models.ShamanTotem.getTotem(totemNumber);
         if (shamanTotem == null)
             return "";

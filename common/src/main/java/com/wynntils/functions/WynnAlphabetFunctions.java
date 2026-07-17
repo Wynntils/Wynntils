@@ -14,7 +14,7 @@ import com.wynntils.templates.annotations.TemplateFunction;
 public class WynnAlphabetFunctions {
 
     @TemplateFunction(name = "transcribe_gavellian", aliases = { "gavellian" })
-    public String transcribeGavellianFunction(String gavellian) {
+    public static String transcribeGavellianFunction(String gavellian) {
         String input = gavellian.toLowerCase(Locale.ROOT);
         if (input == null)
             return "";
@@ -22,7 +22,7 @@ public class WynnAlphabetFunctions {
     }
 
     @TemplateFunction(name = "transcribe_wynnic", aliases = { "wynnic" })
-    public String transcribeWynnicFunction(String wynnic) {
+    public static String transcribeWynnicFunction(String wynnic) {
         String input = wynnic.toLowerCase(Locale.ROOT);
         if (input == null)
             return "";

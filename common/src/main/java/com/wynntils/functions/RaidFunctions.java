@@ -20,7 +20,7 @@ import com.wynntils.templates.annotations.TemplateFunction;
 public class RaidFunctions {
 
     @TemplateFunction(name = "current_raid", aliases = { "raid" })
-    public String currentRaidFunction() {
+    public static String currentRaidFunction() {
         RaidInfo raidInfo = Models.Raid.getCurrentRaid();
         if (raidInfo == null)
             return "";
@@ -28,12 +28,12 @@ public class RaidFunctions {
     }
 
     @TemplateFunction(name = "current_raid_room_name")
-    public String currentRaidRoomNameFunction() {
+    public static String currentRaidRoomNameFunction() {
         return Models.Raid.getCurrentRoomName();
     }
 
     @TemplateFunction(name = "current_raid_start", aliases = { "raid_start" })
-    public Time currentRaidStartFunction() {
+    public static Time currentRaidStartFunction() {
         RaidInfo currentRaid = Models.Raid.getCurrentRaid();
         if (currentRaid == null)
             return Time.NONE;
@@ -41,21 +41,21 @@ public class RaidFunctions {
     }
 
     @TemplateFunction(name = "current_raid_time", aliases = { "raid_time" })
-    public long currentRaidTimeFunction() {
+    public static long currentRaidTimeFunction() {
         if (Models.Raid.getCurrentRaid() == null)
             return -1L;
         return Models.Raid.currentRaidTime();
     }
 
     @TemplateFunction(name = "current_raid_damage", aliases = { "raid_damage" })
-    public long currentRaidDamageFunction() {
+    public static long currentRaidDamageFunction() {
         if (Models.Raid.getCurrentRaid() == null)
             return -1L;
         return Models.Raid.getRaidDamage();
     }
 
     @TemplateFunction(name = "current_raid_room_start")
-    public Time currentRaidRoomStartFunction() {
+    public static Time currentRaidRoomStartFunction() {
         RaidInfo currentRaid = Models.Raid.getCurrentRaid();
         if (currentRaid == null)
             return Time.NONE;
@@ -66,47 +66,47 @@ public class RaidFunctions {
     }
 
     @TemplateFunction(name = "current_raid_room_time")
-    public long currentRaidRoomTimeFunction() {
+    public static long currentRaidRoomTimeFunction() {
         if (Models.Raid.getCurrentRaid() == null)
             return -1L;
         return Models.Raid.currentRoomTime();
     }
 
     @TemplateFunction(name = "current_raid_room_damage")
-    public long currentRaidRoomDamageFunction() {
+    public static long currentRaidRoomDamageFunction() {
         if (Models.Raid.getCurrentRaid() == null)
             return -1L;
         return Models.Raid.getCurrentRoomDamage();
     }
 
     @TemplateFunction(name = "current_raid_challenge_count")
-    public int currentRaidChallengeCountFunction() {
+    public static int currentRaidChallengeCountFunction() {
         if (Models.Raid.getCurrentRaid() == null)
             return -1;
         return Models.Raid.getRaidChallengeCount();
     }
 
     @TemplateFunction(name = "current_raid_boss_count")
-    public int currentRaidBossCountFunction() {
+    public static int currentRaidBossCountFunction() {
         if (Models.Raid.getCurrentRaid() == null)
             return -1;
         return Models.Raid.getRaidBossCount();
     }
 
     @TemplateFunction(name = "raid_challenges")
-    public CappedValue raidChallengesFunction() {
+    public static CappedValue raidChallengesFunction() {
         return Models.Raid.getChallenges();
     }
 
     @TemplateFunction(name = "raid_intermission_time")
-    public long raidIntermissionTimeFunction() {
+    public static long raidIntermissionTimeFunction() {
         if (Models.Raid.getCurrentRaid() == null)
             return -1L;
         return Models.Raid.getIntermissionTime();
     }
 
     @TemplateFunction(name = "raid_room_name")
-    public String raidRoomNameFunction(int roomNumber) {
+    public static String raidRoomNameFunction(int roomNumber) {
         if (Models.Raid.getCurrentRaid() == null)
             return "";
         int roomNum = roomNumber;
@@ -114,7 +114,7 @@ public class RaidFunctions {
     }
 
     @TemplateFunction(name = "raid_room_start")
-    public Time raidRoomStartFunction(int roomNumber) {
+    public static Time raidRoomStartFunction(int roomNumber) {
         RaidInfo currentRaid = Models.Raid.getCurrentRaid();
         if (currentRaid == null)
             return Time.NONE;
@@ -126,7 +126,7 @@ public class RaidFunctions {
     }
 
     @TemplateFunction(name = "raid_room_time")
-    public long raidRoomTimeFunction(int roomNumber) {
+    public static long raidRoomTimeFunction(int roomNumber) {
         if (Models.Raid.getCurrentRaid() == null)
             return -1L;
         int roomNum = roomNumber;
@@ -134,7 +134,7 @@ public class RaidFunctions {
     }
 
     @TemplateFunction(name = "raid_room_damage")
-    public long raidRoomDamageFunction(int roomNumber) {
+    public static long raidRoomDamageFunction(int roomNumber) {
         if (Models.Raid.getCurrentRaid() == null)
             return -1L;
         int roomNum = roomNumber;
@@ -142,7 +142,7 @@ public class RaidFunctions {
     }
 
     @TemplateFunction(name = "raid_has_room")
-    public boolean raidHasRoomFunction(int roomNumber) {
+    public static boolean raidHasRoomFunction(int roomNumber) {
         if (Models.Raid.getCurrentRaid() == null)
             return false;
         int roomNum = roomNumber;
@@ -150,7 +150,7 @@ public class RaidFunctions {
     }
 
     @TemplateFunction(name = "raid_is_boss_room")
-    public boolean raidIsBossRoomFunction(int roomNumber) {
+    public static boolean raidIsBossRoomFunction(int roomNumber) {
         if (Models.Raid.getCurrentRaid() == null)
             return false;
         int roomNum = roomNumber;
@@ -158,59 +158,59 @@ public class RaidFunctions {
     }
 
     @TemplateFunction(name = "raid_personal_best_time", aliases = { "raid_pb" })
-    public long raidPersonalBestTimeFunction(String raidName) {
+    public static long raidPersonalBestTimeFunction(String raidName) {
         return Models.Raid.getRaidBestTime(raidName);
     }
 
     @TemplateFunction(name = "raid_time_remaining")
-    public int raidTimeRemainingFunction() {
+    public static int raidTimeRemainingFunction() {
         return Models.Raid.getTimeLeft();
     }
 
     @TemplateFunction(name = "dry_aspects")
-    public int dryAspectsFunction() {
+    public static int dryAspectsFunction() {
         return Models.Raid.getAspectPullsWithoutMythicAspect();
     }
 
     @TemplateFunction(name = "dry_raids_aspects")
-    public int dryRaidsAspectsFunction() {
+    public static int dryRaidsAspectsFunction() {
         return Models.Raid.getRaidsWithoutMythicAspect();
     }
 
     @TemplateFunction(name = "dry_raid_reward_pulls")
-    public int dryRaidRewardPullsFunction() {
+    public static int dryRaidRewardPullsFunction() {
         return Models.Raid.getRewardPullsWithoutMythicTome();
     }
 
     @TemplateFunction(name = "dry_raids_tomes")
-    public int dryRaidsTomesFunction() {
+    public static int dryRaidsTomesFunction() {
         return Models.Raid.getRaidsWithoutMythicTome();
     }
 
     @TemplateFunction(name = "raids_runs_since")
-    public int raidsRunsSinceFunction() {
+    public static int raidsRunsSinceFunction() {
         return raidsRunsSinceFunction(7);
     }
 
     @TemplateFunction(name = "raids_runs_since")
-    public int raidsRunsSinceFunction(int sinceDays) {
+    public static int raidsRunsSinceFunction(int sinceDays) {
         return Math.toIntExact(Models.Raid.historicRaids.get().stream().filter(historicRaidInfo -> historicRaidInfo.endedTimestamp() >= System.currentTimeMillis() - TimeUnit.DAYS.toMillis(sinceDays)).count());
     }
 
     @TemplateFunction(name = "specific_raid_runs_since")
-    public int specificRaidRunsSinceFunction(String raidName, int sinceDays) {
+    public static int specificRaidRunsSinceFunction(String raidName, int sinceDays) {
         return Math.toIntExact(Models.Raid.historicRaids.get().stream().filter(historicRaidInfo -> (historicRaidInfo.name().equalsIgnoreCase(raidName) || historicRaidInfo.abbreviation().equalsIgnoreCase(raidName)) && historicRaidInfo.endedTimestamp() >= System.currentTimeMillis() - TimeUnit.DAYS.toMillis(sinceDays)).count());
     }
 
     @TemplateFunction(name = "chosen_gambits")
-    public int chosenGambitsFunction() {
+    public static int chosenGambitsFunction() {
         if (Models.Raid.getCurrentRaid() == null)
             return 0;
         return Models.Gambit.getActiveGambits().size();
     }
 
     @TemplateFunction(name = "chosen_gambit")
-    public String chosenGambitFunction(int index) {
+    public static String chosenGambitFunction(int index) {
         if (Models.Raid.getCurrentRaid() == null)
             return "";
         List<Gambit> gambits = Models.Gambit.getActiveGambits();
@@ -220,14 +220,14 @@ public class RaidFunctions {
     }
 
     @TemplateFunction(name = "chosen_buffs")
-    public int chosenBuffsFunction() {
+    public static int chosenBuffsFunction() {
         if (Models.Raid.getCurrentRaid() == null)
             return 0;
         return Models.Raid.getChosenBuffs(McUtils.playerName()).size();
     }
 
     @TemplateFunction(name = "chosen_buff")
-    public String chosenBuffFunction(int index) {
+    public static String chosenBuffFunction(int index) {
         if (Models.Raid.getCurrentRaid() == null)
             return "";
         List<String> buffs = Models.Raid.getChosenBuffs(McUtils.playerName());

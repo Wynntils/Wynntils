@@ -18,7 +18,7 @@ import com.wynntils.templates.annotations.TemplateFunction;
 public class ProfessionFunctions {
 
     @TemplateFunction(name = "profession_xp", aliases = { "prof_xp" })
-    public CappedValue professionXpFunction(String profession) {
+    public static CappedValue professionXpFunction(String profession) {
         ProfessionType professionType = ProfessionType.fromString(profession);
         if (professionType == null)
             return CappedValue.EMPTY;
@@ -26,7 +26,7 @@ public class ProfessionFunctions {
     }
 
     @TemplateFunction(name = "profession_level", aliases = { "prof_lvl" })
-    public int professionLevelFunction(String profession) {
+    public static int professionLevelFunction(String profession) {
         ProfessionType professionType = ProfessionType.fromString(profession);
         if (professionType == null)
             return -1;
@@ -34,7 +34,7 @@ public class ProfessionFunctions {
     }
 
     @TemplateFunction(name = "profession_percentage", aliases = { "prof_pct" })
-    public double professionPercentageFunction(String profession) {
+    public static double professionPercentageFunction(String profession) {
         ProfessionType professionType = ProfessionType.fromString(profession);
         if (professionType == null)
             return -1.0;
@@ -42,7 +42,7 @@ public class ProfessionFunctions {
     }
 
     @TemplateFunction(name = "profession_xp_per_minute_raw", aliases = { "prof_xpm_raw" })
-    public int professionXpPerMinuteRawFunction(String profession) {
+    public static int professionXpPerMinuteRawFunction(String profession) {
         ProfessionType professionType = ProfessionType.fromString(profession);
         if (professionType == null)
             return -1;
@@ -50,7 +50,7 @@ public class ProfessionFunctions {
     }
 
     @TemplateFunction(name = "profession_xp_per_minute", aliases = { "prof_xpm" })
-    public String professionXpPerMinuteFunction(String profession) {
+    public static String professionXpPerMinuteFunction(String profession) {
         ProfessionType professionType = ProfessionType.fromString(profession);
         if (professionType == null)
             return "Invalid profession";
@@ -58,7 +58,7 @@ public class ProfessionFunctions {
     }
 
     @TemplateFunction(name = "last_harvest_resource_type")
-    public String lastHarvestResourceTypeFunction() {
+    public static String lastHarvestResourceTypeFunction() {
         Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
         if (lastHarvest.isEmpty())
             return "";
@@ -66,7 +66,7 @@ public class ProfessionFunctions {
     }
 
     @TemplateFunction(name = "last_harvest_material_type")
-    public String lastHarvestMaterialTypeFunction() {
+    public static String lastHarvestMaterialTypeFunction() {
         Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
         if (lastHarvest.isEmpty())
             return "";
@@ -74,7 +74,7 @@ public class ProfessionFunctions {
     }
 
     @TemplateFunction(name = "last_harvest_material_name")
-    public String lastHarvestMaterialNameFunction() {
+    public static String lastHarvestMaterialNameFunction() {
         Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
         if (lastHarvest.isEmpty())
             return "";
@@ -82,7 +82,7 @@ public class ProfessionFunctions {
     }
 
     @TemplateFunction(name = "last_harvest_material_level")
-    public int lastHarvestMaterialLevelFunction() {
+    public static int lastHarvestMaterialLevelFunction() {
         Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
         if (lastHarvest.isEmpty())
             return -1;
@@ -90,7 +90,7 @@ public class ProfessionFunctions {
     }
 
     @TemplateFunction(name = "last_harvest_material_tier")
-    public int lastHarvestMaterialTierFunction() {
+    public static int lastHarvestMaterialTierFunction() {
         Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
         if (lastHarvest.isEmpty())
             return -1;
@@ -98,7 +98,7 @@ public class ProfessionFunctions {
     }
 
     @TemplateFunction(name = "last_harvest_xp_gain")
-    public float lastHarvestXpGainFunction() {
+    public static float lastHarvestXpGainFunction() {
         Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
         if (lastHarvest.isEmpty())
             return -1f;
@@ -106,12 +106,12 @@ public class ProfessionFunctions {
     }
 
     @TemplateFunction(name = "material_dry_streak", aliases = { "mat_dry" })
-    public int materialDryStreak() {
+    public static int materialDryStreak() {
         return Models.Profession.getProfessionDryStreak();
     }
 
     @TemplateFunction(name = "last_profession_xp_gain")
-    public String lastProfessionXpGainFunction() {
+    public static String lastProfessionXpGainFunction() {
         Optional<ProfessionType> profession = Models.Profession.getLastProfessionXpGain();
         if (profession.isEmpty())
             return "";

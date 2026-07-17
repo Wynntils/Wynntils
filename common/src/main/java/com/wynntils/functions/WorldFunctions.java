@@ -27,7 +27,7 @@ public class WorldFunctions {
     private static final String NO_DATA = "<unknown>";
 
     @TemplateFunction(name = "current_world", aliases = { "world" })
-    public String currentWorldFunction() {
+    public static String currentWorldFunction() {
         if (!Models.WorldState.onWorld()) {
             return NO_WORLD;
         }
@@ -36,7 +36,7 @@ public class WorldFunctions {
     }
 
     @TemplateFunction(name = "world_uptime", aliases = { "uptime", "current_world_uptime" })
-    public String worldUptimeFunction(String worldName) {
+    public static String worldUptimeFunction(String worldName) {
         // Replace world name with the current server, if not provided
         // This is done for backwards compatibility with the old function
         if (worldName.isEmpty()) {
@@ -53,7 +53,7 @@ public class WorldFunctions {
     }
 
     @TemplateFunction(name = "newest_world")
-    public String newestWorldFunction() {
+    public static String newestWorldFunction() {
         String server = Models.ServerList.getNewestServer();
         if (server == null) {
             return NO_DATA;
@@ -62,22 +62,22 @@ public class WorldFunctions {
     }
 
     @TemplateFunction(name = "world_state")
-    public String worldStateFunction() {
+    public static String worldStateFunction() {
         return Models.WorldState.getCurrentState().toString().toUpperCase(Locale.ROOT);
     }
 
     @TemplateFunction(name = "in_stream", aliases = { "streamer" })
-    public boolean inStreamFunction() {
+    public static boolean inStreamFunction() {
         return Models.StreamerMode.isInStream();
     }
 
     @TemplateFunction(name = "gathering_totem_count")
-    public int gatheringTotemCountFunction() {
+    public static int gatheringTotemCountFunction() {
         return Models.BonusTotem.getBonusTotemsByType(BonusTotemType.GATHERING).size();
     }
 
     @TemplateFunction(name = "gathering_totem_owner")
-    public String gatheringTotemOwnerFunction(int totemNumber) {
+    public static String gatheringTotemOwnerFunction(int totemNumber) {
         BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(BonusTotemType.GATHERING, totemNumber - 1);
         if (bonusTotem == null) {
             return "";
@@ -86,7 +86,7 @@ public class WorldFunctions {
     }
 
     @TemplateFunction(name = "gathering_totem_distance")
-    public double gatheringTotemDistanceFunction(int totemNumber) {
+    public static double gatheringTotemDistanceFunction(int totemNumber) {
         BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(BonusTotemType.GATHERING, totemNumber - 1);
         if (bonusTotem == null) {
             return 0.0d;
@@ -95,7 +95,7 @@ public class WorldFunctions {
     }
 
     @TemplateFunction(name = "gathering_totem")
-    public Location gatheringTotemFunction(int totemNumber) {
+    public static Location gatheringTotemFunction(int totemNumber) {
         BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(BonusTotemType.GATHERING, totemNumber - 1);
         if (bonusTotem == null) {
             return Location.ZERO;
@@ -104,7 +104,7 @@ public class WorldFunctions {
     }
 
     @TemplateFunction(name = "gathering_totem_time_left")
-    public String gatheringTotemTimeLeftFunction(int totemNumber) {
+    public static String gatheringTotemTimeLeftFunction(int totemNumber) {
         BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(BonusTotemType.GATHERING, totemNumber - 1);
         if (bonusTotem == null) {
             return "";
@@ -113,12 +113,12 @@ public class WorldFunctions {
     }
 
     @TemplateFunction(name = "token_gatekeeper_count", aliases = { "token_count" })
-    public int tokenGatekeeperCountFunction() {
+    public static int tokenGatekeeperCountFunction() {
         return Models.Token.getGatekeepers().size();
     }
 
     @TemplateFunction(name = "token_gatekeeper_deposited", aliases = { "token_dep" })
-    public CappedValue tokenGatekeeperDepositedFunction(int gatekeeperNumber) {
+    public static CappedValue tokenGatekeeperDepositedFunction(int gatekeeperNumber) {
         int index = gatekeeperNumber - 1;
         List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
         if (index >= gatekeeperList.size() || index < 0)
@@ -127,7 +127,7 @@ public class WorldFunctions {
     }
 
     @TemplateFunction(name = "token_gatekeeper", aliases = { "token" })
-    public CappedValue tokenGatekeeperFunction(int gatekeeperNumber) {
+    public static CappedValue tokenGatekeeperFunction(int gatekeeperNumber) {
         int index = gatekeeperNumber - 1;
         List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
         if (index >= gatekeeperList.size() || index < 0)
@@ -136,7 +136,7 @@ public class WorldFunctions {
     }
 
     @TemplateFunction(name = "token_gatekeeper_type", aliases = { "token_type" })
-    public String tokenGatekeeperTypeFunction(int gatekeeperNumber) {
+    public static String tokenGatekeeperTypeFunction(int gatekeeperNumber) {
         int index = gatekeeperNumber - 1;
         List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
         if (index >= gatekeeperList.size() || index < 0)
@@ -145,12 +145,12 @@ public class WorldFunctions {
     }
 
     @TemplateFunction(name = "mob_totem_count")
-    public int mobTotemCountFunction() {
+    public static int mobTotemCountFunction() {
         return Models.BonusTotem.getBonusTotemsByType(BonusTotemType.MOB).size();
     }
 
     @TemplateFunction(name = "mob_totem_owner")
-    public String mobTotemOwnerFunction(int totemNumber) {
+    public static String mobTotemOwnerFunction(int totemNumber) {
         BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(BonusTotemType.MOB, totemNumber - 1);
         if (bonusTotem == null) {
             return "";
@@ -159,7 +159,7 @@ public class WorldFunctions {
     }
 
     @TemplateFunction(name = "mob_totem_distance")
-    public double mobTotemDistanceFunction(int totemNumber) {
+    public static double mobTotemDistanceFunction(int totemNumber) {
         BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(BonusTotemType.MOB, totemNumber - 1);
         if (bonusTotem == null) {
             return 0.0d;
@@ -168,7 +168,7 @@ public class WorldFunctions {
     }
 
     @TemplateFunction(name = "mob_totem")
-    public Location mobTotemFunction(int totemNumber) {
+    public static Location mobTotemFunction(int totemNumber) {
         BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(BonusTotemType.MOB, totemNumber - 1);
         if (bonusTotem == null) {
             return Location.ZERO;
@@ -177,7 +177,7 @@ public class WorldFunctions {
     }
 
     @TemplateFunction(name = "mob_totem_time_left")
-    public String mobTotemTimeLeftFunction(int totemNumber) {
+    public static String mobTotemTimeLeftFunction(int totemNumber) {
         BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(BonusTotemType.MOB, totemNumber - 1);
         if (bonusTotem == null) {
             return "";
@@ -186,12 +186,12 @@ public class WorldFunctions {
     }
 
     @TemplateFunction(name = "ping")
-    public int pingFunction() {
+    public static int pingFunction() {
         return Services.Ping.getPing();
     }
 
     @TemplateFunction(name = "current_territory", aliases = { "territory" })
-    public String currentTerritoryFunction() {
+    public static String currentTerritoryFunction() {
         TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(McUtils.player().position());
         if (territoryProfile == null) {
             return "";
@@ -200,7 +200,7 @@ public class WorldFunctions {
     }
 
     @TemplateFunction(name = "current_territory_owner", aliases = { "territory_owner" })
-    public String currentTerritoryOwnerFunction(boolean prefixOnly) {
+    public static String currentTerritoryOwnerFunction(boolean prefixOnly) {
         TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(McUtils.player().position());
         if (territoryProfile == null) {
             return "";
@@ -209,7 +209,7 @@ public class WorldFunctions {
     }
 
     @TemplateFunction(name = "in_mapped_area")
-    public boolean inMappedAreaFunction(Number height, Number scale, Number width) {
+    public static boolean inMappedAreaFunction(Number height, Number scale, Number width) {
         return Services.Map.isPlayerInMappedArea(width.floatValue(), height.floatValue(), scale.floatValue());
     }
 }

@@ -9,7 +9,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.colors.WynncraftShaderColor;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
-public final class ColorFunctions {
+public class ColorFunctions {
     @TemplateFunction(name = "from_rgb", isPure = true)
     public static CustomColor fromRgbFunction(int r, int g, int b) {
         return new CustomColor(r, g, b);
@@ -26,7 +26,7 @@ public final class ColorFunctions {
     }
 
     @TemplateFunction(name = "hue_shift")
-    public CustomColor hueShiftFunction(CustomColor color, double degree) {
+    public static CustomColor hueShiftFunction(CustomColor color, double degree) {
         return color.hueShift((float) degree);
     }
 

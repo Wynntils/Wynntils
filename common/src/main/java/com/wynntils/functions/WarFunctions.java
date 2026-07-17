@@ -17,17 +17,17 @@ import com.wynntils.templates.annotations.TemplateFunction;
 public class WarFunctions {
 
     @TemplateFunction(name = "aura_timer")
-    public double auraTimerFunction() {
+    public static double auraTimerFunction() {
         return Models.GuildWarTower.getRemainingTimeUntilAura() / 1000d;
     }
 
     @TemplateFunction(name = "volley_timer")
-    public double volleyTimerFunction() {
+    public static double volleyTimerFunction() {
         return Models.GuildWarTower.getRemainingTimeUntilVolley() / 1000d;
     }
 
     @TemplateFunction(name = "tower_owner")
-    public String towerOwnerFunction() {
+    public static String towerOwnerFunction() {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return "-";
@@ -35,7 +35,7 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "tower_territory")
-    public String towerTerritoryFunction() {
+    public static String towerTerritoryFunction() {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return "-";
@@ -43,7 +43,7 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "initial_tower_health")
-    public long initialTowerHealthFunction() {
+    public static long initialTowerHealthFunction() {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return -1L;
@@ -51,7 +51,7 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "initial_tower_defense")
-    public double initialTowerDefenseFunction() {
+    public static double initialTowerDefenseFunction() {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return -1d;
@@ -59,7 +59,7 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "initial_tower_damage")
-    public RangedValue initialTowerDamageFunction() {
+    public static RangedValue initialTowerDamageFunction() {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return RangedValue.NONE;
@@ -67,7 +67,7 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "initial_tower_attack_speed")
-    public double initialTowerAttackSpeedFunction() {
+    public static double initialTowerAttackSpeedFunction() {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return -1d;
@@ -75,7 +75,7 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "current_tower_health")
-    public long currentTowerHealthFunction() {
+    public static long currentTowerHealthFunction() {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return -1L;
@@ -83,7 +83,7 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "current_tower_defense")
-    public double currentTowerDefenseFunction() {
+    public static double currentTowerDefenseFunction() {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return -1d;
@@ -91,7 +91,7 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "current_tower_damage")
-    public RangedValue currentTowerDamageFunction() {
+    public static RangedValue currentTowerDamageFunction() {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return RangedValue.NONE;
@@ -99,7 +99,7 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "current_tower_attack_speed")
-    public double currentTowerAttackSpeedFunction() {
+    public static double currentTowerAttackSpeedFunction() {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return -1d;
@@ -107,7 +107,7 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "war_start")
-    public Time warStartFunction() {
+    public static Time warStartFunction() {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return Time.NONE;
@@ -115,7 +115,7 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "time_in_war")
-    public long timeInWarFunction() {
+    public static long timeInWarFunction() {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return -1L;
@@ -123,7 +123,7 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "tower_effective_hp")
-    public long towerEffectiveHpFunction() {
+    public static long towerEffectiveHpFunction() {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return -1L;
@@ -131,7 +131,7 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "tower_dps")
-    public RangedValue towerDpsFunction() {
+    public static RangedValue towerDpsFunction() {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return RangedValue.NONE;
@@ -139,12 +139,12 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "team_dps")
-    public long teamDpsFunction() {
+    public static long teamDpsFunction() {
         return teamDpsFunction(Long.MAX_VALUE);
     }
 
     @TemplateFunction(name = "team_dps")
-    public long teamDpsFunction(long seconds) {
+    public static long teamDpsFunction(long seconds) {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return -1L;
@@ -152,7 +152,7 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "estimated_war_end")
-    public Time estimatedWarEndFunction() {
+    public static Time estimatedWarEndFunction() {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return Time.NONE;
@@ -161,7 +161,7 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "estimated_time_to_finish_war")
-    public long estimatedTimeToFinishWarFunction() {
+    public static long estimatedTimeToFinishWarFunction() {
         Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
         if (warBattleInfoOpt.isEmpty())
             return -1L;
@@ -169,17 +169,17 @@ public class WarFunctions {
     }
 
     @TemplateFunction(name = "is_territory_queued", aliases = { "is_queued" })
-    public boolean isTerritoryQueuedFunction(String territoryName) {
+    public static boolean isTerritoryQueuedFunction(String territoryName) {
         return Models.GuildAttackTimer.getAttackTimerForTerritory(territoryName).isPresent();
     }
 
     @TemplateFunction(name = "wars_since")
-    public long warsSinceFunction() {
+    public static long warsSinceFunction() {
         return warsSinceFunction(7);
     }
 
     @TemplateFunction(name = "wars_since")
-    public long warsSinceFunction(int sinceDays) {
+    public static long warsSinceFunction(int sinceDays) {
         return Models.War.historicWars.get().stream().filter(historicWarInfo -> historicWarInfo.endedTimestamp() >= System.currentTimeMillis() - TimeUnit.DAYS.toMillis(sinceDays)).count();
     }
 }

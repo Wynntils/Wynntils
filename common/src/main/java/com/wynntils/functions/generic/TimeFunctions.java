@@ -10,49 +10,49 @@ import com.wynntils.templates.annotations.TemplateFunction;
 
 //Functions are accessed via reflection
 @SuppressWarnings("unused")
-public final class TimeFunctions {
+public class TimeFunctions {
 
     @TemplateFunction(name = "timestamp")
-    public long timestampFunction(Time time) {
+    public static long timestampFunction(Time time) {
         return time.timestamp();
     }
 
     @TemplateFunction(name = "time")
-    public Time timeFunction(Number timestamp) {
+    public static Time timeFunction(Number timestamp) {
         return Time.of(timestamp.longValue());
     }
 
     @TemplateFunction(name = "time_string", aliases = { "time_str" })
-    public String timeStringFunction(Time time) {
+    public static String timeStringFunction(Time time) {
         return time.toString();
     }
 
     @TemplateFunction(name = "absolute_time")
-    public String absoluteTimeFunction(Time time) {
+    public static String absoluteTimeFunction(Time time) {
         return time.toAbsoluteString();
     }
 
     @TemplateFunction(name = "seconds_between")
-    public long secondsBetweenFunction(Time second, Time first) {
+    public static long secondsBetweenFunction(Time second, Time first) {
         Time firstTime = first;
         Time secondTime = second;
         return firstTime.getOffset(secondTime);
     }
 
     @TemplateFunction(name = "seconds_since")
-    public long secondsSinceFunction(Time time) {
+    public static long secondsSinceFunction(Time time) {
         return time.getOffset(Time.now());
     }
 
     @TemplateFunction(name = "time_offset", aliases = { "offset" })
-    public Time timeOffsetFunction(Time time, Number offset) {
+    public static Time timeOffsetFunction(Time time, Number offset) {
         Time baseTime = time;
         int offsetInSeconds = offset.intValue();
         return baseTime.offset(offsetInSeconds);
     }
 
     @TemplateFunction(name = "format_time_advanced", aliases = { "format_date_advanced" })
-    public String formatTimeAdvancedFunction(Time time, String format) {
+    public static String formatTimeAdvancedFunction(Time time, String format) {
         Time timestamp = time;
         try {
             return new SimpleDateFormat(format).format(timestamp.timestamp());

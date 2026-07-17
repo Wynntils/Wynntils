@@ -8,7 +8,7 @@ import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.type.NamedValue;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
-public final class NamedFunctions {
+public class NamedFunctions {
     @TemplateFunction(name = "name")
     public static String nameFunction(NamedValue namedValue) {
         return namedValue.name();

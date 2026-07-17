@@ -77,6 +77,7 @@ public class TemplateEngine {
             return "Error evaluating template";
         } catch (RuntimeException e) {
             error = Optional.of(new Error(-1, -1, e.getClass().getSimpleName(), "Unexpected error, check console for more details:\n" + e.getMessage()));
+            e.printStackTrace();
             return "Unexpected error evaluating template";
         }
     }

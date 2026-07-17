@@ -16,7 +16,7 @@ import java.util.Optional;
 import net.minecraft.client.resources.language.I18n;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
-public final class StatisticFunctions {
+public class StatisticFunctions {
 
 
     private static Optional<StatisticEntry> getStatisticEntry(String statisticKey, boolean overall) {

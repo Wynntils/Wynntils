@@ -29,7 +29,7 @@ import com.wynntils.templates.annotations.TemplateFunction;
 public class InventoryFunctions {
 
     @TemplateFunction(name = "accessory_durability")
-    public CappedValue accessoryDurabilityFunction(String accessory) {
+    public static CappedValue accessoryDurabilityFunction(String accessory) {
         InventoryAccessory inventoryAccessory = InventoryAccessory.fromString(accessory);
         if (inventoryAccessory == null)
             return CappedValue.EMPTY;
@@ -40,13 +40,13 @@ public class InventoryFunctions {
     }
 
     @TemplateFunction(name = "all_shiny_stats")
-    public String allShinyStatsFunction() {
+    public static String allShinyStatsFunction() {
         List<ShinyStat> allShinyStats = Models.Shiny.getAllShinyStats();
         return allShinyStats.stream().map(s -> s.statType().displayName() + ": " + s.value()).collect(Collectors.joining("\n"));
     }
 
     @TemplateFunction(name = "armor_durability")
-    public CappedValue armorDurabilityFunction(String armor) {
+    public static CappedValue armorDurabilityFunction(String armor) {
         InventoryArmor inventoryArmor = InventoryArmor.fromString(armor);
         if (inventoryArmor == null)
             return CappedValue.EMPTY;
@@ -57,7 +57,7 @@ public class InventoryFunctions {
     }
 
     @TemplateFunction(name = "equipped_accessory_name")
-    public String equippedAccessoryNameFunction(String accessory) {
+    public static String equippedAccessoryNameFunction(String accessory) {
         InventoryAccessory inventoryAccessory = InventoryAccessory.fromString(accessory);
         if (inventoryAccessory == null)
             return "NONE";
@@ -69,7 +69,7 @@ public class InventoryFunctions {
     }
 
     @TemplateFunction(name = "equipped_armor_name")
-    public String equippedArmorNameFunction(String armor) {
+    public static String equippedArmorNameFunction(String armor) {
         InventoryArmor inventoryArmor = InventoryArmor.fromString(armor);
         if (inventoryArmor == null)
             return "NONE";
@@ -81,17 +81,17 @@ public class InventoryFunctions {
     }
 
     @TemplateFunction(name = "capped_inventory_slots")
-    public CappedValue cappedInventorySlotsFunction() {
+    public static CappedValue cappedInventorySlotsFunction() {
         return Models.Inventory.getInventorySlots();
     }
 
     @TemplateFunction(name = "capped_ingredient_pouch_slots")
-    public CappedValue cappedIngredientPouchSlotsFunction() {
+    public static CappedValue cappedIngredientPouchSlotsFunction() {
         return Models.IngredientPouch.getIngredientPouchSlots();
     }
 
     @TemplateFunction(name = "capped_held_item_durability")
-    public CappedValue cappedHeldItemDurabilityFunction() {
+    public static CappedValue cappedHeldItemDurabilityFunction() {
         ItemStack itemStack = InventoryUtils.getItemInHand();
         Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemOpt.isEmpty())
@@ -100,59 +100,59 @@ public class InventoryFunctions {
     }
 
     @TemplateFunction(name = "emerald_string", aliases = { "estr" })
-    public String emeraldStringFunction() {
+    public static String emeraldStringFunction() {
         return emeraldStringFunction(false);
     }
 
     @TemplateFunction(name = "emerald_string", aliases = { "estr" })
-    public String emeraldStringFunction(boolean zeros) {
+    public static String emeraldStringFunction(boolean zeros) {
         return Models.Emerald.getFormattedString(Models.Emerald.getAmountInInventory(), zeros);
     }
 
     @TemplateFunction(name = "liquid_emerald", aliases = { "le" })
-    public int liquidEmeraldFunction() {
+    public static int liquidEmeraldFunction() {
         int ems = Models.Emerald.getAmountInInventory();
         return ems / 4096;
     }
 
     @TemplateFunction(name = "emerald_block", aliases = { "eb" })
-    public int emeraldBlockFunction() {
+    public static int emeraldBlockFunction() {
         int ems = Models.Emerald.getAmountInInventory();
         return (ems % 4096) / 64;
     }
 
     @TemplateFunction(name = "emeralds", aliases = { "em" })
-    public int emeraldsFunction() {
+    public static int emeraldsFunction() {
         return Models.Emerald.getAmountInInventory() % 64;
     }
 
     @TemplateFunction(name = "money")
-    public int moneyFunction() {
+    public static int moneyFunction() {
         return Models.Emerald.getAmountInInventory();
     }
 
     @TemplateFunction(name = "inventory_free", aliases = { "inv_free" })
-    public int inventoryFreeFunction() {
+    public static int inventoryFreeFunction() {
         return Models.Inventory.getInventorySlots().getRemaining();
     }
 
     @TemplateFunction(name = "inventory_used", aliases = { "inv_used" })
-    public int inventoryUsedFunction() {
+    public static int inventoryUsedFunction() {
         return Models.Inventory.getInventorySlots().current();
     }
 
     @TemplateFunction(name = "ingredient_pouch_open_slots", aliases = { "pouch_open", "pouch_free" })
-    public int ingredientPouchOpenSlotsFunction() {
+    public static int ingredientPouchOpenSlotsFunction() {
         return Models.IngredientPouch.getIngredientPouchSlots().getRemaining();
     }
 
     @TemplateFunction(name = "ingredient_pouch_used_slots", aliases = { "pouch_used" })
-    public int ingredientPouchUsedSlotsFunction() {
+    public static int ingredientPouchUsedSlotsFunction() {
         return Models.IngredientPouch.getIngredientPouchSlots().current();
     }
 
     @TemplateFunction(name = "held_item_current_durability", aliases = { "current_held_durability" })
-    public int heldItemCurrentDurabilityFunction() {
+    public static int heldItemCurrentDurabilityFunction() {
         ItemStack itemStack = InventoryUtils.getItemInHand();
         Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemOpt.isEmpty())
@@ -161,7 +161,7 @@ public class InventoryFunctions {
     }
 
     @TemplateFunction(name = "held_item_max_durability", aliases = { "max_held_durability" })
-    public int heldItemMaxDurabilityFunction() {
+    public static int heldItemMaxDurabilityFunction() {
         ItemStack itemStack = InventoryUtils.getItemInHand();
         Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemOpt.isEmpty())
@@ -170,7 +170,7 @@ public class InventoryFunctions {
     }
 
     @TemplateFunction(name = "held_item_shiny_stat")
-    public NamedValue heldItemShinyStatFunction() {
+    public static NamedValue heldItemShinyStatFunction() {
         ItemStack itemStack = InventoryUtils.getItemInHand();
         Optional<ShinyStat> shinyStatOpt = Models.Shiny.getShinyStat(itemStack);
         if (shinyStatOpt.isEmpty())
@@ -180,7 +180,7 @@ public class InventoryFunctions {
     }
 
     @TemplateFunction(name = "held_item_type", aliases = { "held_type" })
-    public String heldItemTypeFunction() {
+    public static String heldItemTypeFunction() {
         ItemStack itemInHand = InventoryUtils.getItemInHand();
         if (itemInHand.isEmpty()) {
             return "NONE";
@@ -193,12 +193,12 @@ public class InventoryFunctions {
     }
 
     @TemplateFunction(name = "held_item_name", aliases = { "held_item", "held_name" })
-    public String heldItemNameFunction() {
+    public static String heldItemNameFunction() {
         return heldItemNameFunction(false);
     }
 
     @TemplateFunction(name = "held_item_name", aliases = { "held_item", "held_name" })
-    public String heldItemNameFunction(boolean formatted) {
+    public static String heldItemNameFunction(boolean formatted) {
         ItemStack itemStack = InventoryUtils.getItemInHand();
         StyledText hoverName = StyledText.fromComponent(itemStack.getHoverName());
         String itemName = formatted ? hoverName.getString() : hoverName.getString(StyleType.NONE);
@@ -206,42 +206,42 @@ public class InventoryFunctions {
     }
 
     @TemplateFunction(name = "held_item_cooldown", aliases = { "held_cooldown", "held_cd" })
-    public CappedValue heldItemCooldownFunction() {
+    public static CappedValue heldItemCooldownFunction() {
         return Models.CharacterStats.getItemCooldownTicks();
     }
 
     @TemplateFunction(name = "teleport_scroll_charges", aliases = { "tp_scroll_charges" })
-    public int teleportScrollChargesFunction() {
+    public static int teleportScrollChargesFunction() {
         return Models.TeleportScroll.getTeleportScrollCharges();
     }
 
     @TemplateFunction(name = "teleport_scroll_recharge_timer", aliases = { "tp_scroll_timer" })
-    public int teleportScrollRechargeTimerFunction() {
+    public static int teleportScrollRechargeTimerFunction() {
         return Models.TeleportScroll.getTeleportScrollRechargeTimerSeconds();
     }
 
     @TemplateFunction(name = "item_count", aliases = { "item_amount" })
-    public int itemCountFunction() {
+    public static int itemCountFunction() {
         return itemCountFunction("");
     }
 
     @TemplateFunction(name = "item_count", aliases = { "item_amount" })
-    public int itemCountFunction(String name) {
+    public static int itemCountFunction(String name) {
         return Models.Inventory.getAmountInInventory(name);
     }
 
     @TemplateFunction(name = "inventory_ingredients")
-    public int inventoryIngredientsFunction(String name) {
+    public static int inventoryIngredientsFunction(String name) {
         return Models.Inventory.getIngredientAmountInInventory(name);
     }
 
     @TemplateFunction(name = "ingredient_pouch_ingredients")
-    public int ingredientPouchIngredientsFunction(String name) {
+    public static int ingredientPouchIngredientsFunction(String name) {
         return Models.IngredientPouch.getIngredientAmountInPouch(name);
     }
 
     @TemplateFunction(name = "material_count")
-    public int materialCountFunction(boolean exact, String name, int tier) {
+    public static int materialCountFunction(boolean exact, String name, int tier) {
         return Models.Inventory.getMaterialsAmountInInventory(name, tier, exact);
     }
 }

@@ -26,38 +26,38 @@ import com.wynntils.templates.annotations.TemplateFunction;
 public class MinecraftFunctions {
 
     @TemplateFunction(name = "my_location", aliases = { "my_loc" })
-    public Location myLocationFunction() {
+    public static Location myLocationFunction() {
         return new Location(McUtils.player().blockPosition());
     }
 
     @TemplateFunction(name = "dir", aliases = { "yaw" })
-    public double dirFunction() {
+    public static double dirFunction() {
         return dirFunction(false);
     }
 
     @TemplateFunction(name = "dir", aliases = { "yaw" })
-    public double dirFunction(boolean wrap) {
+    public static double dirFunction(boolean wrap) {
         double dir = McUtils.player().getYRot();
         return wrap ? Mth.wrapDegrees(dir) : dir;
     }
 
     @TemplateFunction(name = "fps")
-    public int fpsFunction() {
+    public static int fpsFunction() {
         return MinecraftAccessor.getFps();
     }
 
     @TemplateFunction(name = "ticks")
-    public long ticksFunction() {
+    public static long ticksFunction() {
         return McUtils.mc().level.getGameTime();
     }
 
     @TemplateFunction(name = "key_pressed")
-    public boolean keyPressedFunction(int keyCode) {
+    public static boolean keyPressedFunction(int keyCode) {
         return KeyboardUtils.isKeyDown(keyCode);
     }
 
     @TemplateFunction(name = "minecraft_effect_duration")
-    public int minecraftEffectDurationFunction(String effectName) {
+    public static int minecraftEffectDurationFunction(String effectName) {
         Identifier effectLocation;
         try {
             effectLocation = Identifier.withDefaultNamespace(effectName);
@@ -81,7 +81,7 @@ public class MinecraftFunctions {
     }
 
     @TemplateFunction(name = "location_at_crosshair", aliases = { "crosshair_loc" })
-    public Location locationAtCrosshairFunction(boolean colliderOnly, double distance) {
+    public static Location locationAtCrosshairFunction(boolean colliderOnly, double distance) {
         Optional<BlockPos> hitBlock = RaycastUtils.getTargetedBlockPosition(distance, colliderOnly);
         if (hitBlock.isEmpty())
             return Location.ZERO;
@@ -89,7 +89,7 @@ public class MinecraftFunctions {
     }
 
     @TemplateFunction(name = "pitch")
-    public double pitchFunction() {
+    public static double pitchFunction() {
         return McUtils.player().getXRot();
     }
 }
