@@ -45,7 +45,7 @@ public class GearInfoRegistry {
                         UrlId.DATA_STATIC_GEAR,
                         Dependency.complex(Set.of(
                                 Dependency.simple(Services.CustomModel, UrlId.DATA_STATIC_MODEL_DATA),
-                                Dependency.simple(Models.Set, UrlId.DATA_STATIC_ITEM_SETS),
+                                Dependency.simple(Models.Set, UrlId.DATA_STATIC_SETS),
                                 Dependency.simple(Models.WynnItem, UrlId.DATA_STATIC_ITEM_OBTAIN_V2))))
                 .handleJsonObject(this::handleGearInfo);
     }
