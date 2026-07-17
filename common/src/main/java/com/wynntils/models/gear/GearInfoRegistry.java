@@ -15,6 +15,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.net.Dependency;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.models.gear.type.GearEmblem;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRequirements;
@@ -123,6 +124,8 @@ public class GearInfoRegistry {
                 throw new RuntimeException("Invalid Wynncraft data: item has no gear tier");
             }
 
+            GearEmblem emblem = GearEmblem.fromString(json.get("emblem").getAsString());
+
             int powderSlots = JsonUtils.getNullableJsonInt(json, "powderSlots");
 
             GearMetaInfo metaInfo = parseMetaInfo(json, internalName, type);
@@ -134,6 +137,7 @@ public class GearInfoRegistry {
                     displayName,
                     type,
                     tier,
+                    emblem,
                     powderSlots,
                     metaInfo,
                     requirements,

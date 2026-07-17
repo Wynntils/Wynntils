@@ -4,8 +4,11 @@
  */
 package com.wynntils.utils.mc;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
+import com.wynntils.handlers.tooltip.type.TooltipOptions;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.utils.render.FontRenderer;
@@ -43,7 +46,10 @@ public final class TooltipUtils {
     public static List<Component> getWynnItemTooltip(ItemStack itemStack, WynnItem wynnItem) {
         TooltipBuilder tooltipBuilder = wynnItem.getData().get(WynnItemData.TOOLTIP_KEY);
         if (tooltipBuilder != null) {
-            return tooltipBuilder.getTooltipLines(Models.Character.getClassType());
+            ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
+            return tooltipBuilder.getTooltipLines(
+                    Models.Character.getClassType(),
+                    feature.isEnabled() ? feature.getTooltipOptions() : TooltipOptions.DEFAULT);
         }
 
         return LoreUtils.getTooltipLines(itemStack);

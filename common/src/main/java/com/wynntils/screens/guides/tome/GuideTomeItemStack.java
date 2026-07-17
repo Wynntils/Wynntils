@@ -6,7 +6,7 @@ package com.wynntils.screens.guides.tome;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
+import com.wynntils.handlers.tooltip.TooltipBuilder;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.rewards.type.TomeInfo;
@@ -54,8 +54,7 @@ public class GuideTomeItemStack extends GuideItemStack {
     }
 
     public void buildTooltip() {
-        IdentifiableTooltipBuilder tooltipBuilder =
-                Handlers.Tooltip.buildNew(new TomeItem(tomeInfo, null), true, false);
+        TooltipBuilder tooltipBuilder = Handlers.Tooltip.buildNew(new TomeItem(tomeInfo, null), true, false);
         this.generatedTooltip = tooltipBuilder.getTooltipLines(Models.Character.getClassType());
 
         // Force ItemStatInfoFeature to recreate its cache

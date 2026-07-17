@@ -15,6 +15,7 @@ import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.utils.mc.TooltipUtils;
 import java.util.List;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -38,6 +39,12 @@ public class FakeItemStack extends ItemStack {
 
         if (wynnItem instanceof NamedItemProperty namedItemProperty) {
             Handlers.Item.updateItem(this, wynnItem, StyledText.fromString(namedItemProperty.getName()));
+        }
+        if (!useBackingTooltip && wynnItem instanceof GearItem gearItem) {
+            this.set(
+                    DataComponents.TOOLTIP_STYLE,
+                    gearItem.getGearTier()
+                            .getTooltipStyle(gearItem.getShinyStat().isPresent()));
         }
 
         this.wynnItem = wynnItem;

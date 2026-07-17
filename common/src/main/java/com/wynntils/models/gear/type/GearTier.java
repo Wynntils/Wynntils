@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 public enum GearTier {
     NORMAL(ChatFormatting.WHITE, 0, 0.0f),
@@ -84,6 +85,10 @@ public enum GearTier {
 
     public String getName() {
         return StringUtils.capitalizeFirst(name().toLowerCase(Locale.ROOT));
+    }
+
+    public Identifier getTooltipStyle(boolean shiny) {
+        return Identifier.withDefaultNamespace(apiName + (shiny ? "_shiny" : ""));
     }
 
     // This should be used instead of values() in almost all places as to not include the SET tier
