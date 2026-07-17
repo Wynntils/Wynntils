@@ -53,13 +53,23 @@ public class LoadoutWidget extends AbstractWidget implements IconRenderer {
         handleCursor(guiGraphics);
 
         if (parent.getSelectedLoadout() != loadout) {
-            RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics,
-                    Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
-                    this.x,
-                    this.y,
-                    this.width,
-                    this.height);
+            if (!loadout.favourited()) {
+                RenderUtils.drawNineSliceScalingTexturedRect(
+                        guiGraphics,
+                        Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
+                        this.x,
+                        this.y,
+                        this.width,
+                        this.height);
+            } else {
+                RenderUtils.drawNineSliceScalingTexturedRect(
+                        guiGraphics,
+                        Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_GOLD,
+                        this.x,
+                        this.y,
+                        this.width,
+                        this.height);
+            }
         } else {
             RenderUtils.drawNineSliceScalingTexturedRect(
                     guiGraphics,

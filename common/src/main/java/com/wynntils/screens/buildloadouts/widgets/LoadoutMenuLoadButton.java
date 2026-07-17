@@ -31,14 +31,15 @@ public class LoadoutMenuLoadButton extends AbstractButton implements TooltipProv
     private final int x;
     private final int y;
     private final BuildLoadoutsScreen parent;
-    private List<Component> generatedTooltip;
-    private LoadType loadType;
+    private List<Component> generatedTooltip = new ArrayList<>();
+    private LoadType loadType = LoadType.BUILD;
 
     public LoadoutMenuLoadButton(int x, int y, BuildLoadoutsScreen parent) {
         super(x, y, 79, 20, Component.literal("Loadout Menu Load Button"));
         this.x = x;
         this.y = y;
         this.parent = parent;
+        buildTooltip();
     }
 
     @Override
@@ -127,9 +128,9 @@ public class LoadoutMenuLoadButton extends AbstractButton implements TooltipProv
     }
 
     public void updateLoadType() {
-        if (parent.getSelectedLoadout() == null) return;
+        if (parent.getCurrentCategory().getLoadoutType() == null) return;
 
-        switch (parent.getSelectedLoadout().type()) {
+        switch (parent.getCurrentCategory().getLoadoutType()) {
             case LoadoutType.BUILD -> loadType = LoadType.BUILD;
             case LoadoutType.ABILITY_TREE -> loadType = LoadType.ABILITY_TREE;
             case LoadoutType.ASPECT -> loadType = LoadType.ASPECTS;

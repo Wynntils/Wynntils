@@ -466,6 +466,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         setSelectedLoadout(null);
         loadoutScrollListWidget.populateLoadouts();
         loadoutScrollListWidget.scrollOffset = 0;
+        loadoutMenuLoadButton.updateLoadType();
         updateMenu();
     }
 
@@ -483,8 +484,6 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
     public void setSelectedLoadout(Loadout loadout) {
         this.selectedLoadout = loadout;
-        loadoutScrollListWidget.populateLoadouts();
-        loadoutMenuLoadButton.updateLoadType();
         updateMenu();
     }
 

@@ -592,7 +592,10 @@ public final class RenderUtils {
             float y,
             float width,
             float height) {
-        if (!texture.isNineSliced()) return;
+        if (!texture.isNineSliced()) {
+            WynntilsMod.warn("Tried to render non Nine Sliced Texture via drawNineSliceScalingTexturedRect.");
+            return;
+        }
 
         int texWidth = texture.width();
         int texHeight = texture.height();

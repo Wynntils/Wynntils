@@ -15,6 +15,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,9 @@ public class LoadoutScrollListWidget extends ScrollListWidget {
 
         List<String> filteredSorted = savedLoadouts.keySet().stream()
                 .filter(this::searchMatches)
-                .sorted()
+                .sorted(Comparator
+                        .comparing((String name) -> !savedLoadouts.get(name).favourited())
+                        .thenComparing(Comparator.naturalOrder()))
                 .toList();
 
         for (String name : filteredSorted) {
@@ -70,7 +73,7 @@ public class LoadoutScrollListWidget extends ScrollListWidget {
         }
     }
 
-    private boolean searchMatches(String poiName) {
-        return StringUtils.partialMatch(poiName, parent.searchWidget.getTextBoxInput());
+    private boolean searchMatches(String name) {
+        return StringUtils.partialMatch(name, parent.searchWidget.getTextBoxInput());
     }
 }

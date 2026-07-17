@@ -4,8 +4,10 @@
  */
 package com.wynntils.screens.buildloadouts.widgets;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.services.loadout.type.Loadout;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -64,8 +66,14 @@ public class LoadoutMenuDeleteButton extends AbstractButton {
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) return false;
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
+
+        Loadout selected = parent.getSelectedLoadout();
+        Services.loadout.deleteLoadout(selected.name());
+        parent.setSelectedLoadout(null);
+        parent.loadoutScrollListWidget.populateLoadouts();
 
         return true;
     }
