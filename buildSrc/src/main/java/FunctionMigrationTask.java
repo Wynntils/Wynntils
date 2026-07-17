@@ -6,42 +6,32 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.ArrayInitializerExpr;
 import com.github.javaparser.ast.expr.AssignExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
-import com.github.javaparser.ast.expr.Name;
 import com.github.javaparser.ast.expr.NameExpr;
 import com.github.javaparser.ast.expr.NormalAnnotationExpr;
-import com.github.javaparser.ast.expr.SimpleName;
-import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
-import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.printer.DefaultPrettyPrinter;
 import com.github.javaparser.printer.configuration.DefaultPrinterConfiguration;
 import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
-import org.gradle.internal.impldep.com.fasterxml.jackson.core.PrettyPrinter;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class FunctionMigrationTask extends DefaultTask {
 
@@ -142,7 +132,8 @@ public class FunctionMigrationTask extends DefaultTask {
                 });
 
                 String result = StaticJavaParser.parse(new DefaultPrettyPrinter(new DefaultPrinterConfiguration()).print(cu)).toString();
-                Files.writeString(Path.of("F:/output/" + file.getName()), result);
+                Path outpath = Path.of(file.getParent(), file.getName().replace(".java",".converted.java"));
+                Files.writeString(outpath, result);
             }
 
         } catch (Exception e) {
@@ -256,7 +247,7 @@ public class FunctionMigrationTask extends DefaultTask {
         HashMap<String, com.github.javaparser.ast.type.Type> arguments = new HashMap<>();
 
         Optional<MethodDeclaration> md = clazz.getMethodsByName("getArgumentsBuilder").stream().findFirst();
-        if(md.isEmpty()) md = clazz.getMethodsByName("getRequiredArgumentsBuilder").stream().findFirst();
+        if (md.isEmpty()) md = clazz.getMethodsByName("getRequiredArgumentsBuilder").stream().findFirst();
 
         md.ifPresent(method -> {
             BlockStmt body = method.getBody().orElseThrow();
@@ -268,7 +259,7 @@ public class FunctionMigrationTask extends DefaultTask {
                     String name = expr.asObjectCreationExpr().getArgument(0).asStringLiteralExpr().getValue();
                     String fnName = expr.asObjectCreationExpr().getType().getNameAsString();
 
-                    if(!fnName.equals("AnyArgumentList") && !fnName.equals("AnyArgument")) {
+                    if (!fnName.equals("AnyArgumentList") && !fnName.equals("AnyArgument")) {
                         com.github.javaparser.ast.type.Type type = expr.asObjectCreationExpr().getArgument(1).asClassExpr().getType();
 
 
@@ -282,9 +273,9 @@ public class FunctionMigrationTask extends DefaultTask {
     }
 
     private String removeInvalidName(String name) {
-        if(name.equals("class")) return "clazz";
-        if(name.equals("default")) return "defaultVal";
-        if(name.equals("switch")) return "switchVal";
+        if (name.equals("class")) return "clazz";
+        if (name.equals("default")) return "defaultVal";
+        if (name.equals("switch")) return "switchVal";
         return name;
     }
 }

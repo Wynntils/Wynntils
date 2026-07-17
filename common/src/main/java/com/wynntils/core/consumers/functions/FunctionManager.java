@@ -20,7 +20,15 @@ import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
 import com.wynntils.functions.MountFunctions;
 import com.wynntils.functions.ProfessionFunctions;
+import com.wynntils.functions.RaidFunctions;
 import com.wynntils.functions.SocialFunctions;
+import com.wynntils.functions.SpellFunctions;
+import com.wynntils.functions.StatisticFunctions;
+import com.wynntils.functions.StatusEffectFunctions;
+import com.wynntils.functions.WarFunctions;
+import com.wynntils.functions.WorldEventFunctions;
+import com.wynntils.functions.WorldFunctions;
+import com.wynntils.functions.WynnAlphabetFunctions;
 import com.wynntils.functions.WynnFontFunctions;
 import com.wynntils.functions.generic.CappedFunctions;
 import com.wynntils.functions.generic.ColorFunctions;
@@ -29,20 +37,20 @@ import com.wynntils.functions.generic.LocationFunctions;
 import com.wynntils.functions.generic.LogicFunctions;
 import com.wynntils.functions.generic.MathFunctions;
 import com.wynntils.functions.generic.NamedFunctions;
+import com.wynntils.functions.generic.RangedFunctions;
 import com.wynntils.functions.generic.StringFunctions;
 import com.wynntils.functions.generic.StyledTextFunctions;
+import com.wynntils.functions.generic.TimeFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.templates.TemplateEngine;
 import com.wynntils.templates.backends.compiler.CompilerBackend;
 import com.wynntils.templates.functions.FunctionDefinition;
 import com.wynntils.templates.language.Error;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 public final class FunctionManager extends Manager {
     private final TemplateEngine templateEngine;
@@ -220,9 +228,10 @@ public final class FunctionManager extends Manager {
         templateEngine.registerFunctions(LogicFunctions.class);
         templateEngine.registerFunctions(MathFunctions.class);
         templateEngine.registerFunctions(NamedFunctions.class);
+        templateEngine.registerFunctions(RangedFunctions.class);
         templateEngine.registerFunctions(StringFunctions.class);
         templateEngine.registerFunctions(StyledTextFunctions.class);
-        templateEngine.registerFunctions(WynnFontFunctions.class);
+        templateEngine.registerFunctions(TimeFunctions.class);
 
         templateEngine.registerFunctions(ActivityFunctions.class);
         templateEngine.registerFunctions(BombFunctions.class);
@@ -237,7 +246,15 @@ public final class FunctionManager extends Manager {
         templateEngine.registerFunctions(MinecraftFunctions.class);
         templateEngine.registerFunctions(MountFunctions.class);
         templateEngine.registerFunctions(ProfessionFunctions.class);
-
+        templateEngine.registerFunctions(RaidFunctions.class);
         templateEngine.registerFunctions(SocialFunctions.class);
+        templateEngine.registerFunctions(SpellFunctions.class);
+        templateEngine.registerFunctions(StatisticFunctions.class);
+        templateEngine.registerFunctions(StatusEffectFunctions.class);
+        templateEngine.registerFunctions(WarFunctions.class);
+        templateEngine.registerFunctions(WorldEventFunctions.class);
+        templateEngine.registerFunctions(WorldFunctions.class);
+        templateEngine.registerFunctions(WynnAlphabetFunctions.class);
+        templateEngine.registerFunctions(WynnFontFunctions.class);
     }
 }
