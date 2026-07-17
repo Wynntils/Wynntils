@@ -16,9 +16,9 @@ import java.util.List;
 public class BuildLoadoutScrollListWidget extends ScrollListWidget {
     private static final int  MAX_WIDGETS_PER_PAGE = 3;
     private static final int WIDTH = 271 - 10;
-    private static final int HEIGHT = 131 - 17;
-    private static final int WIDGET_HEIGHT = 34;
-    private static final int WIDGET_HEIGHT_PADDING = 1;
+    private static final int HEIGHT = 131 - 16;
+    private static final int WIDGET_HEIGHT = 33;
+    private static final int WIDGET_HEIGHT_PADDING = 2;
     private static final int WIDGET_HEIGHT_EDGE_PADDING = 5;
     private final int x;
     private final int y;
@@ -112,7 +112,7 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget {
 
     public void setSelectedScrollListCategory(ScrollListCategory category) {
         selectedScrollListCategory = category;
-        populateItemWidgets();
+        populateWidgets();
     }
 
     public ScrollListCategory getSelectedScrollListCategory() {
@@ -124,7 +124,7 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget {
         return itemWidgets;
     }
 
-    public void populateItemWidgets() {
+    public void populateWidgets() {
         itemWidgets = new ArrayList<>();
         scrollOffset = 0;
 

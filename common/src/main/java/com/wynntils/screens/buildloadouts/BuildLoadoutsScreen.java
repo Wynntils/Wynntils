@@ -18,6 +18,7 @@ import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuLoadButton;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuNameWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuOverviewWidget;
 import com.wynntils.screens.buildloadouts.widgets.BuildLoadoutScrollListWidget;
+import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuScrollListWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuSkillPointWidget;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuUpdateButton;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutScrollListWidget;
@@ -86,6 +87,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
     public LoadoutMenuItemWidget loadoutMenuItemWidget;
     public BuildLoadoutScrollListWidget buildLoadoutScrollListWidget;
     public LoadoutMenuFavouriteButton loadoutMenuFavouriteButton;
+    public LoadoutMenuScrollListWidget loadoutMenuScrollListWidget;
 
     private MenuCategory currentCategory = MenuCategory.BUILD_LOADOUT;
     private LoadoutType newLoadoutType;
@@ -246,7 +248,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         this.addRenderableWidget(makeNewLoadoutButton);
         // end region
 
-        //region Build Loadout Menu
+        //region Loadout Menu
         loadoutMenuNameWidget = new LoadoutMenuNameWidget(
                 offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + 5,
@@ -305,14 +307,22 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         );
         this.addRenderableWidget(loadoutMenuItemWidget);
 
+        loadoutMenuScrollListWidget = new LoadoutMenuScrollListWidget(
+                offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5,
+                offsetY + HEIGHT_OFFSET + 38,
+                this
+        );
+        this.addRenderableWidget(loadoutMenuScrollListWidget);
+        // end region
+
+        //region Build Loadout Menu
         buildLoadoutScrollListWidget = new BuildLoadoutScrollListWidget(
                 offsetX + WIDGET_HOLDER_THREE_WIDTH_OFFSET + 5,
                 offsetY + HEIGHT_OFFSET + 38 + 15,
                 this
         );
         this.addRenderableWidget(buildLoadoutScrollListWidget);
-
-        // end region
+        //end region
 
         loadoutScrollListWidget.populateLoadouts();
         updateMenu();
@@ -426,7 +436,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         newLoadoutInfoWidget.visible = false;
         makeNewLoadoutButton.visible = false;
 
-        // build loadout
+        // loadouts
         loadoutMenuNameWidget.visible = false;
         loadoutMenuFavouriteButton.visible = false;
         loadoutMenuLoadButton.visible = false;
@@ -435,6 +445,9 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         loadoutMenuSkillPointWidget.visible = false;
         loadoutMenuOverviewWidget.visible = false;
         loadoutMenuItemWidget.visible = false;
+        loadoutMenuScrollListWidget.visible = false;
+
+        // build loadouts
         buildLoadoutScrollListWidget.visible = false;
 
         if (getCurrentCategory() == MenuCategory.NEW_LOADOUT) {
@@ -447,7 +460,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
             makeNewLoadoutButton.visible = true;
         }
 
-        if (getCurrentCategory() == MenuCategory.BUILD_LOADOUT && getSelectedLoadout() != null) {
+        if (getCurrentCategory() != MenuCategory.NEW_LOADOUT && getSelectedLoadout() != null) {
             loadoutMenuNameWidget.visible = true;
             loadoutMenuFavouriteButton.visible = true;
             loadoutMenuLoadButton.visible = true;
@@ -456,8 +469,16 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
             loadoutMenuSkillPointWidget.visible = true;
             loadoutMenuOverviewWidget.visible = true;
             loadoutMenuItemWidget.visible = true;
+        }
+
+        if (getCurrentCategory() != MenuCategory.BUILD_LOADOUT && getCurrentCategory() != MenuCategory.NEW_LOADOUT  && getSelectedLoadout() != null) {
+            loadoutMenuScrollListWidget.visible = true;
+            loadoutMenuScrollListWidget.populateWidgets();
+        }
+
+        if (getCurrentCategory() == MenuCategory.BUILD_LOADOUT && getSelectedLoadout() != null) {
             buildLoadoutScrollListWidget.visible = true;
-            buildLoadoutScrollListWidget.populateItemWidgets();
+            buildLoadoutScrollListWidget.populateWidgets();
         }
     }
 
