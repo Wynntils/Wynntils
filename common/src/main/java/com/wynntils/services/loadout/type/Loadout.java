@@ -5,6 +5,7 @@ import com.wynntils.models.abilitytree.type.SavableAbilityTree;
 import com.wynntils.models.aspects.type.SavableAspectSet;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.character.type.SavableSkillPointSet;
+import com.wynntils.models.character.type.SavableTomeSet;
 import com.wynntils.screens.buildloadouts.type.MenuCategory;
 import com.wynntils.utils.render.Texture;
 
@@ -12,6 +13,7 @@ public record Loadout(
         String name,
         LoadoutType type,
         SavableSkillPointSet skillPoints,
+        SavableTomeSet tomes,
         SavableAbilityTree abilityTree,
         SavableAspectSet aspects,
         boolean favourited) {

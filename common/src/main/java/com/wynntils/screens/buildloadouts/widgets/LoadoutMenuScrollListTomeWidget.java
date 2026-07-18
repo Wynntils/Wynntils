@@ -1,5 +1,6 @@
 package com.wynntils.screens.buildloadouts.widgets;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -14,23 +15,24 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
-public class BuildLoadoutScrollListAspectWidget extends AbstractWidget implements IconRenderer {
+import java.util.List;
+
+public class LoadoutMenuScrollListTomeWidget extends AbstractWidget implements ItemTooltipProvider {
     private final StyledText text;
+    private final ItemStack tomeStack;
     private int x;
     private int y;
     private final BuildLoadoutsScreen parent;
-    private final Texture aspectTexture;
-    private final Texture aspectFlameTexture;
 
-    public BuildLoadoutScrollListAspectWidget(StyledText text, int x, int y, int width, int height, BuildLoadoutsScreen parent) {
-        super(x, y, width, height, Component.literal("Build Loadout Scroll List Aspect Widget"));
+    public LoadoutMenuScrollListTomeWidget(StyledText text, ItemStack tomeStack, int x, int y, int width, int height, BuildLoadoutsScreen parent) {
+        super(x, y, width, height, Component.literal("Build Loadout Scroll List Tome Widget"));
         this.text = text;
+        this.tomeStack = tomeStack;
         this.x = x;
         this.y = y;
         this.parent = parent;
-        this.aspectTexture = parent.getSelectedLoadout().getAspectTexture();
-        this.aspectFlameTexture = parent.getSelectedLoadout().getFlameTexture();
     }
 
     @Override
@@ -54,9 +56,17 @@ public class BuildLoadoutScrollListAspectWidget extends AbstractWidget implement
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        if (aspectTexture != null && aspectFlameTexture != null) {
-            renderAspect(guiGraphics, aspectTexture, aspectFlameTexture, this.x + 4, this.y);
-        }
+        RenderUtils.renderItem(
+                guiGraphics,
+                tomeStack,
+                this.x + 10,
+                this.y + this.height / 2 - 8
+        );
+    }
+
+    @Override
+    public void renderHoveredItemTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        RenderUtils.renderTooltip(guiGraphics, tomeStack, mouseX, mouseY);
     }
 
     @Override

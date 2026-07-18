@@ -6,6 +6,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.services.loadout.type.Loadout;
@@ -170,6 +171,9 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
 
             if (errorOrItem.getValue() instanceof GearItem gearItem) {
                 return Optional.of(new FakeItemStack(gearItem, "From loadout"));
+            }
+            if (errorOrItem.getValue() instanceof CraftedGearItem craftedGearItem) {
+                return Optional.of(new FakeItemStack(craftedGearItem, "From loadout"));
             }
         }
 

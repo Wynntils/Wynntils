@@ -9,7 +9,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
@@ -18,7 +17,6 @@ import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.character.type.ClickAction;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
-import com.wynntils.models.containers.containers.MasteryTomesContainer;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
@@ -33,7 +31,6 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
-import com.wynntils.utils.wynn.WynnUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -46,11 +43,9 @@ import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
 
 public final class SkillPointModel extends Model {
-    private static final int TOME_SLOT = 8;
     private static final int[] SKILL_POINT_TOTAL_SLOTS = {11, 12, 13, 14, 15};
     private static final int SKILL_POINT_TOME_SLOT = 4;
     private static final int CONTENT_BOOK_SLOT = 62;
-    private static final int TOME_MENU_CONTENT_BOOK_SLOT = 89;
 
     private Map<Skill, Integer> totalSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> gearSkillPoints = new EnumMap<>(Skill.class);
@@ -66,7 +61,7 @@ public final class SkillPointModel extends Model {
 
     public void saveSkillPoints(String name, int[] skillPoints) {
         SavableSkillPointSet assignedSkillPointSet = new SavableSkillPointSet(skillPoints);
-        Services.loadout.saveSkillPointLoadout(name, assignedSkillPointSet);
+        Services.loadout.saveSkillPointLoadoutAndTomes(name, assignedSkillPointSet, Models.Character.getCurrentTomeSet());
         WynntilsMod.info("Saved skill point loadout: " + name + " " + assignedSkillPointSet);
     }
 
@@ -117,7 +112,7 @@ public final class SkillPointModel extends Model {
 
         SavableSkillPointSet assignedSkillPointSet =
                 new SavableSkillPointSet(skillPoints, weaponEncodedString, armourEncodedStrings, accessoryEncodedStrings);
-        Services.loadout.saveSkillPointLoadout(name, assignedSkillPointSet);
+        Services.loadout.saveSkillPointLoadoutAndTomes(name, assignedSkillPointSet, Models.Character.getCurrentTomeSet());
         WynntilsMod.info("Saved skill point build: " + name + " " + assignedSkillPointSet);
     }
 
@@ -196,7 +191,7 @@ public final class SkillPointModel extends Model {
             assignedSkillPoints = new EnumMap<>(Skill.class);
             calculateGearSkillPoints();
             calculateStatusEffectSkillPoints();
-            queryAssignedAndTomeSkillPoints();
+            Models.Character.queryAssignedAndTomeSkillPoints();
         });
     }
 
@@ -309,36 +304,6 @@ public final class SkillPointModel extends Model {
         }
     }
 
-    /**
-     * Queries the compass (and tome) menu for skill point data.
-     */
-    private void queryAssignedAndTomeSkillPoints() {
-        assignedSkillPoints = new EnumMap<>(Skill.class);
-        tomeSkillPoints = new EnumMap<>(Skill.class);
-
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Total and Tome Skill Point Query")
-                .onError(msg -> WynntilsMod.warn("Failed to query skill points: " + msg))
-                .then(QueryStep.useItemInHotbar(CharacterModel.CHARACTER_INFO_SLOT)
-                        .expectContainer(CharacterInfoContainer.class)
-                        .verifyContentChange((container, changes, changeType) ->
-                                verifyChange(container, changes, changeType, CONTENT_BOOK_SLOT))
-                        .processIncomingContainer(this::processAssignedSkillPoints))
-                .conditionalThen(
-                        this::checkTomesUnlocked,
-                        QueryStep.clickOnSlot(TOME_SLOT)
-                                .expectContainer(MasteryTomesContainer.class)
-                                .verifyContentChange((container, changes, changeType) ->
-                                        verifyChange(container, changes, changeType, TOME_MENU_CONTENT_BOOK_SLOT))
-                                .processIncomingContainer(this::processTomeSkillPoints))
-                .execute(this::calculateTotalSkillPoints)
-                .build();
-
-        query.executeQuery();
-    }
-
-    private boolean checkTomesUnlocked(ContainerContent content) {
-        return LoreUtils.getStringLore(content.items().get(TOME_SLOT)).contains("✔");
-    }
 
     private boolean verifyChange(
             ContainerContent content,
@@ -351,7 +316,7 @@ public final class SkillPointModel extends Model {
                 && (content.items().get(contentBookSlot).getItem() == Items.POTION);
     }
 
-    private void processAssignedSkillPoints(ContainerContent content) {
+    public void processAssignedSkillPoints(ContainerContent content) {
         for (Integer slot : SKILL_POINT_TOTAL_SLOTS) {
             Optional<WynnItem> wynnItemOptional =
                     Models.Item.getWynnItem(content.items().get(slot));
@@ -364,7 +329,7 @@ public final class SkillPointModel extends Model {
         }
     }
 
-    private void processTomeSkillPoints(ContainerContent content) {
+    public void processTomeSkillPoints(ContainerContent content) {
         ItemStack itemStack = content.items().get(SKILL_POINT_TOME_SLOT);
         Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(itemStack);
         if (wynnItemOptional.isPresent() && wynnItemOptional.get() instanceof TomeItem tome) {
@@ -395,7 +360,7 @@ public final class SkillPointModel extends Model {
         });
     }
 
-    private void calculateTotalSkillPoints() {
+    public void calculateTotalSkillPoints() {
         for (Skill skill : Skill.values()) {
             totalSkillPoints.put(
                     skill,
@@ -406,6 +371,11 @@ public final class SkillPointModel extends Model {
                             + getCraftedSkillPoints(skill)
                             + getStatusEffectSkillPoints(skill));
         }
+    }
+
+    public void resetAssignedAndTomeSkillPoints() {
+        assignedSkillPoints = new EnumMap<>(Skill.class);
+        tomeSkillPoints = new EnumMap<>(Skill.class);
     }
 
     private List<ClickAction> calculateClickActions(int[] targetSkillPoints) {

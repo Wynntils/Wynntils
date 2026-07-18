@@ -133,7 +133,7 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget {
 
         if (selectedScrollListCategory == ScrollListCategory.ABILITY_TREE) {
             for (String abilityName : selectedLoadout.abilityTree().abilities()) {
-                itemWidgets.add(new BuildLoadoutScrollListAbilityWidget(
+                itemWidgets.add(new LoadoutMenuScrollListAbilityWidget(
                         StyledText.fromString(abilityName),
                         this.x + WIDGET_HEIGHT_EDGE_PADDING,
                         this.y + WIDGET_HEIGHT_EDGE_PADDING + itemWidgets.size() * (WIDGET_HEIGHT + WIDGET_HEIGHT_PADDING),
@@ -145,7 +145,7 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget {
 
         if (selectedScrollListCategory == ScrollListCategory.ASPECTS) {
             for (String abilityName : selectedLoadout.aspects().aspectNames()) {
-                itemWidgets.add(new BuildLoadoutScrollListAspectWidget(
+                itemWidgets.add(new LoadoutMenuScrollListAspectWidget(
                         StyledText.fromString(abilityName),
                         this.x + WIDGET_HEIGHT_EDGE_PADDING,
                         this.y + WIDGET_HEIGHT_EDGE_PADDING + itemWidgets.size() * (WIDGET_HEIGHT + WIDGET_HEIGHT_PADDING),

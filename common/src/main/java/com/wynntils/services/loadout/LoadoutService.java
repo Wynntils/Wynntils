@@ -6,6 +6,7 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.abilitytree.type.SavableAbilityTree;
 import com.wynntils.models.aspects.type.SavableAspectSet;
 import com.wynntils.models.character.type.SavableSkillPointSet;
+import com.wynntils.models.character.type.SavableTomeSet;
 import com.wynntils.services.loadout.type.LoadoutType;
 import com.wynntils.services.loadout.type.Loadout;
 
@@ -59,12 +60,18 @@ public class LoadoutService extends Service {
         return loadout != null ? loadout.skillPoints() : null;
     }
 
+    public SavableTomeSet getTomeLoadout(String name) {
+        Loadout loadout = getLoadout(name);
+        return loadout != null ? loadout.tomes() : null;
+    }
+
     public void saveAbilityTreeLoadout(String name, SavableAbilityTree abilityTree) {
         Loadout existing = getLoadout(name);
         Loadout updated = new Loadout(
                 name,
                 determineType(existing, LoadoutType.ABILITY_TREE),
                 existing != null ? existing.skillPoints() : null,
+                existing != null ? existing.tomes() : null,
                 abilityTree,
                 existing != null ? existing.aspects() : null,
                 existing != null && existing.favourited());
@@ -77,31 +84,34 @@ public class LoadoutService extends Service {
                 name,
                 determineType(existing, LoadoutType.ASPECT),
                 existing != null ? existing.skillPoints() : null,
+                existing != null ? existing.tomes() : null,
                 existing != null ? existing.abilityTree() : null,
                 aspects,
                 existing != null && existing.favourited());
         saveLoadout(name, updated);
     }
 
-    public void saveSkillPointLoadout(String name, SavableSkillPointSet skillPoints) {
+    public void saveSkillPointLoadoutAndTomes(String name, SavableSkillPointSet skillPoints, SavableTomeSet tomes) {
         Loadout existing = getLoadout(name);
         Loadout updated = new Loadout(
                 name,
                 determineType(existing, LoadoutType.SKILL_POINT),
                 skillPoints,
+                tomes,
                 existing != null ? existing.abilityTree() : null,
                 existing != null ? existing.aspects() : null,
                 existing != null && existing.favourited());
         saveLoadout(name, updated);
     }
 
-    public void saveBuildLoadout(String name, SavableSkillPointSet skillPoints, SavableAbilityTree abilityTree,
-                                 SavableAspectSet aspects) {
+    public void saveBuildLoadout(String name, SavableSkillPointSet skillPoints, SavableTomeSet tomes,
+                                 SavableAbilityTree abilityTree, SavableAspectSet aspects) {
         Loadout existing = getLoadout(name);
         Loadout updated = new Loadout(
                 name,
                 LoadoutType.BUILD,
                 skillPoints,
+                tomes,
                 abilityTree,
                 aspects,
                 existing != null && existing.favourited());
@@ -115,6 +125,7 @@ public class LoadoutService extends Service {
                 name,
                 existing.type(),
                 existing.skillPoints(),
+                existing.tomes(),
                 existing.abilityTree(),
                 existing.aspects(),
                 favourited);

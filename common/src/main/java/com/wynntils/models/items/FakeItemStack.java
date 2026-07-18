@@ -9,7 +9,9 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
+import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
@@ -48,6 +50,10 @@ public class FakeItemStack extends ItemStack {
 
     public FakeItemStack(GearItem gearItem, String source) {
         this(gearItem, gearItem.getItemInfo().metaInfo().material().itemStack(), source);
+    }
+
+    public FakeItemStack(TomeItem tomeItem, String source) {
+        this(tomeItem, tomeItem.getItemInfo().metaInfo().material().itemStack(), source);
     }
 
     // This should be only used by chat items, so the item does not matter

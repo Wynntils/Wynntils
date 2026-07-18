@@ -1,10 +1,6 @@
 package com.wynntils.screens.buildloadouts.widgets;
 
-import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.core.text.type.StyleType;
-import com.wynntils.models.abilitytree.type.AbilityTreeNodeType;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -13,34 +9,28 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
 
-public class BuildLoadoutScrollListAbilityWidget extends AbstractWidget {
+public class LoadoutMenuScrollListAspectWidget extends AbstractWidget implements IconRenderer {
     private final StyledText text;
     private int x;
     private int y;
     private final BuildLoadoutsScreen parent;
-    private final ItemStack abilityItemStack;
-    private final boolean ultimateAbility;
+    private final Texture aspectTexture;
+    private final Texture aspectFlameTexture;
 
-    public BuildLoadoutScrollListAbilityWidget(StyledText text, int x, int y, int width, int height, BuildLoadoutsScreen parent) {
-        super(x, y, width, height, Component.literal("Build Loadout Scroll List Ability Widget"));
+    public LoadoutMenuScrollListAspectWidget(StyledText text, int x, int y, int width, int height, BuildLoadoutsScreen parent) {
+        super(x, y, width, height, Component.literal("Build Loadout Scroll List Aspect Widget"));
         this.text = text;
         this.x = x;
         this.y = y;
         this.parent = parent;
-
-        AbilityTreeNodeType abilityTreeNodeType = Models.AbilityTree.getNodeFromNameAndClass(this.text.getString(), parent.getSelectedLoadout().getClassType()).abilityTreeNodeType().getUnlockedType();
-        abilityItemStack = abilityTreeNodeType.generateItemStack();
-        ultimateAbility = abilityTreeNodeType.isUltimate();
+        this.aspectTexture = parent.getSelectedLoadout().getAspectTexture();
+        this.aspectFlameTexture = parent.getSelectedLoadout().getFlameTexture();
     }
 
     @Override
@@ -64,26 +54,9 @@ public class BuildLoadoutScrollListAbilityWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        if (abilityItemStack != null) {
-            if (!ultimateAbility) {
-                RenderUtils.renderItem(
-                        guiGraphics,
-                        abilityItemStack,
-                        this.x + 10,
-                        this.y + this.height / 2 - 8
-                );
-            } else {
-                RenderUtils.renderScalingItem(
-                        guiGraphics,
-                        abilityItemStack,
-                        this.x + 13,
-                        this.y + this.height / 2 - 6,
-                        32,
-                        32
-                );
-            }
+        if (aspectTexture != null && aspectFlameTexture != null) {
+            renderAspect(guiGraphics, aspectTexture, aspectFlameTexture, this.x + 4, this.y);
         }
-
     }
 
     @Override

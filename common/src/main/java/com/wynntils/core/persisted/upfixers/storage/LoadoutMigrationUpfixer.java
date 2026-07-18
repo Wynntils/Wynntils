@@ -90,8 +90,8 @@ public class LoadoutMigrationUpfixer implements Upfixer {
                 savedLoadout.add("aspects", aspect);
             }
 
+            savedLoadout.add("tomes", null);
             savedLoadout.addProperty("favourited", false);
-            savedLoadout.addProperty("createdAt", System.currentTimeMillis());
 
             newLoadouts.add(name, savedLoadout);
         }

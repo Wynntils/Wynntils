@@ -422,6 +422,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
             }
             if (child instanceof ItemTooltipProvider itemTooltipProvider && child.isMouseOver(mouseX, mouseY)) {
                 itemTooltipProvider.renderHoveredItemTooltip(guiGraphics, mouseX, mouseY);
+                break;
             }
         }
     }
