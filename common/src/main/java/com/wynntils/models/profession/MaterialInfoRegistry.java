@@ -11,8 +11,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.net.Dependency;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.models.profession.type.MaterialInfo;
 import com.wynntils.models.profession.type.MaterialType;
 import com.wynntils.models.profession.type.ProfessionType;
@@ -21,6 +25,7 @@ import com.wynntils.models.profession.type.SourceMaterial;
 import com.wynntils.models.wynnitem.AbstractItemInfoDeserializer;
 import com.wynntils.models.wynnitem.type.ItemMaterial;
 import com.wynntils.utils.JsonUtils;
+import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -30,6 +35,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.resources.Identifier;
 
 public class MaterialInfoRegistry {
     private static final Gson GSON = new GsonBuilder()
@@ -41,7 +48,10 @@ public class MaterialInfoRegistry {
     private Map<String, MaterialInfo> materialInfoLookupApiName = Map.of();
 
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_STATIC_MATERIALS).handleJsonObject(this::handleMaterials);
+        registry.registerDownload(
+                        UrlId.DATA_STATIC_MATERIALS,
+                        Dependency.simple(Services.CustomModel, UrlId.DATA_STATIC_MODEL_DATA))
+                .handleJsonObject(this::handleMaterials);
     }
 
     public MaterialInfo getFromDisplayName(String materialName) {
@@ -174,7 +184,22 @@ public class MaterialInfoRegistry {
 
             String emblem = JsonUtils.getNullableJsonString(json, "emblem");
 
-            return new MaterialInfo(displayName, level, internalName, chances, material, professionType, emblem);
+            // API does not return the text with the correct font, so we have to manually apply it
+            StyledText lore = StyledText.fromJson(json.get("jsonLore").getAsJsonArray())
+                    .iterate((part, changes) -> {
+                        if (part.getPartStyle().getFont() == null
+                                || part.getPartStyle().getFont() instanceof FontDescription.Resource(Identifier id)
+                                        && id.getPath().equals("default")) {
+                            changes.remove(part);
+                            changes.add(
+                                    part.withStyle(part.getPartStyle().withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)));
+                            return IterationDecision.CONTINUE;
+                        }
+
+                        return IterationDecision.CONTINUE;
+                    });
+
+            return new MaterialInfo(displayName, level, internalName, chances, material, professionType, lore, emblem);
         }
 
         private ItemMaterial parseMaterial(JsonObject json, String name) {
