@@ -4,14 +4,13 @@
  */
 package com.wynntils.models.gear.type;
 
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 
 public enum ItemWeightSource {
-    NONE(CommonColors.WHITE),
+    NONE(CustomColor.NONE),
     WYNNPOOL(CustomColor.fromInt(0xffc457)),
     NORI(CustomColor.fromInt(0x67ccf5)),
-    ALL(CommonColors.WHITE);
+    ALL(CustomColor.NONE);
 
     private final CustomColor color;
 

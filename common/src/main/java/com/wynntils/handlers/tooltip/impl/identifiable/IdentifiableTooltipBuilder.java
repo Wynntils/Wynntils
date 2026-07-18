@@ -466,12 +466,11 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
     private Component buildNameLine(IdentifiableItemProperty<?, ?> item, TooltipOptions options) {
         GearType type = getGearType(item);
-        String emblemFrame = item instanceof GearItem gearItem
-                ? gearItem.getItemInfo().getEmblemFrameCode()
-                : rewardEmblemFrame(type);
+        String emblemFrame =
+                item instanceof GearItem gearItem ? gearItem.getItemInfo().getEmblemFrameCode() : type.getFrameCode();
         String emblemSprite = item instanceof GearItem gearItem
                 ? gearItem.getItemInfo().getEmblemSpriteCode()
-                : rewardEmblemSprite(type);
+                : type.getFrameSpriteCode();
         return buildNameLine(emblemFrame, emblemSprite, buildDecoratedName(item, getGearTier(item), options));
     }
 
@@ -499,7 +498,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
     private Component buildTypeLine(IdentifiableItemProperty<?, ?> item) {
         GearType type = getGearType(item);
-        String typeName = type.isReward() ? rewardTypeName(type) : type.name();
+        String typeName = type.isReward() ? StringUtils.capitalizeFirst(type.getModelKey()) : type.name();
         return buildTypeLine(getGearTier(item), typeName, getRestrictions(item));
     }
 
@@ -555,30 +554,6 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
         throw new IllegalArgumentException(
                 "Identifiable item has no gear type: " + item.getClass().getName());
-    }
-
-    private String rewardTypeName(GearType type) {
-        return switch (type) {
-            case CHARM -> "Charm";
-            case MASTERY_TOME -> "Tome";
-            default -> type.name();
-        };
-    }
-
-    private String rewardEmblemFrame(GearType type) {
-        return switch (type) {
-            case CHARM -> "\uE035";
-            case MASTERY_TOME -> "\uE041";
-            default -> type.getFrameCode();
-        };
-    }
-
-    private String rewardEmblemSprite(GearType type) {
-        return switch (type) {
-            case CHARM -> "\uE031";
-            case MASTERY_TOME -> "\uE028";
-            default -> type.getFrameSpriteCode();
-        };
     }
 
     private Component buildTagsLine(GearInfo info) {
