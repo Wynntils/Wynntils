@@ -5,21 +5,16 @@
 package com.wynntils.handlers.tooltip;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.text.fonts.CommonFonts;
+import com.wynntils.core.text.CommonStyles;
 import com.wynntils.handlers.tooltip.type.TooltipLine;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 
 public final class TooltipLayout {
-    private static final Style SPACING_STYLE =
-            Style.EMPTY.withFont(CommonFonts.SPACE_FONT).withoutShadow();
     private static final Component DEFAULT_SPACING = Component.literal(" ");
-
-    private TooltipLayout() {}
 
     public static List<Component> align(List<TooltipLine> lines) {
         return align(lines, 0);
@@ -67,7 +62,7 @@ public final class TooltipLayout {
 
                 aligned.add(Component.empty()
                         .append(pair.left().copy())
-                        .append(Component.literal(spacing).withStyle(SPACING_STYLE))
+                        .append(Component.literal(spacing).withStyle(CommonStyles.SPACE))
                         .append(pair.right().copy()));
             }
         }
@@ -80,7 +75,7 @@ public final class TooltipLayout {
         int target = currentWidth + ((widestLine - currentWidth) / 2);
         String spacing = Managers.Font.calculateOffset(currentWidth, target);
         return Component.empty()
-                .append(Component.literal(spacing).withStyle(SPACING_STYLE))
+                .append(Component.literal(spacing).withStyle(CommonStyles.SPACE))
                 .append(line.copy());
     }
 

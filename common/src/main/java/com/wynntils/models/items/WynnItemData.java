@@ -13,7 +13,6 @@ public class WynnItemData {
     public static final String HIGHLIGHT_KEY = "highlight";
     public static final String OVERLAY_KEY = "overlay";
     public static final String TOOLTIP_KEY = "tooltip";
-    public static final String UPDATED_TOOLTIP_KEY = "updatedTooltip";
     public static final String SEARCHED_KEY = "searched";
     public static final String FAVORITE_KEY = "favorite";
     public static final String EMERALD_PRICE_KEY = "price";

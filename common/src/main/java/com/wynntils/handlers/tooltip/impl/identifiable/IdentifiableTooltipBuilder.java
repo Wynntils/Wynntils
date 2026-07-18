@@ -6,6 +6,7 @@ package com.wynntils.handlers.tooltip.impl.identifiable;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.text.CommonStyles;
 import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
@@ -19,12 +20,20 @@ import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
+import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
+import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.models.items.properties.PagedItemProperty;
+import com.wynntils.models.items.properties.RerollableItemProperty;
+import com.wynntils.models.items.properties.ShinyItemProperty;
+import com.wynntils.models.rewards.type.CharmInfo;
+import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.services.itemweight.type.ItemWeighting;
@@ -56,11 +65,7 @@ import net.minecraft.world.item.ItemStack;
  * @param <U> the type of the item instance
  */
 public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
-    private static final int MAJOR_ID_WRAP_WIDTH = 140;
-    private static final Style LANGUAGE_STYLE =
-            Style.EMPTY.withFont(CommonFonts.LANGUAGE_FONT).withColor(ChatFormatting.WHITE);
-    private static final Style SPACE_STYLE =
-            Style.EMPTY.withFont(CommonFonts.SPACE_FONT).withoutShadow();
+    private static final int TOOLTIP_MIN_WIDTH = 140;
     private final IdentifiableItemProperty<T, U> itemInfo;
     private final boolean synthetic;
     private final Map<TooltipOptions, List<Component>> cache = new HashMap<>();
@@ -104,11 +109,8 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
     @Override
     public List<Component> getTooltipLines(ClassType currentClass, TooltipOptions options) {
-        if (synthetic && itemInfo instanceof GearItem gearItem) {
-            return cache.computeIfAbsent(
-                    options,
-                    ignored -> prependSource(assemble(
-                            gearItem, currentClass, options, buildHeader(gearItem, options), buildMajorId(gearItem))));
+        if (synthetic) {
+            return cache.computeIfAbsent(options, ignored -> buildSyntheticTooltip(currentClass, options));
         }
 
         return getTooltipLines(
@@ -117,6 +119,11 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                 new TooltipOptionDecorator(itemInfo, options),
                 ItemWeightSource.NONE,
                 null);
+    }
+
+    private List<Component> buildSyntheticTooltip(ClassType currentClass, TooltipOptions options) {
+        return prependSource(
+                assemble(itemInfo, currentClass, options, buildHeader(itemInfo, options), buildMajorId(itemInfo)));
     }
 
     @Override
@@ -169,37 +176,40 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
     }
 
     private List<Component> assemble(
-            GearItem item,
+            IdentifiableItemProperty<?, ?> item,
             ClassType currentClass,
             TooltipOptions options,
             List<TooltipLine> header,
             List<TooltipLine> majorId) {
+        GearTier tier = getGearTier(item);
         Sections sections = new Sections(
                 header,
                 buildWeights(item, options),
                 buildRequirements(item),
-                buildShiny(item),
-                buildReroll(item),
+                buildShiny(item, tier),
+                buildReroll(item, tier),
                 TooltipIdentifications.buildLines(
                         item, currentClass, new TooltipOptionDecorator(item, options), options.style()),
                 majorId,
-                buildPaginator(item.currentPage()));
+                buildPaginator(item));
 
-        return TooltipLayout.align(sections.lines(item.getItemInfo().tier()));
+        return TooltipLayout.align(sections.lines(tier), TOOLTIP_MIN_WIDTH);
     }
 
-    private List<TooltipLine> buildHeader(GearItem item, TooltipOptions options) {
-        GearInfo info = item.getItemInfo();
+    private List<TooltipLine> buildHeader(IdentifiableItemProperty<?, ?> item, TooltipOptions options) {
         List<TooltipLine> header = new ArrayList<>();
         header.add(new TooltipLine.Fixed(Component.empty()));
         header.add(new TooltipLine.Fixed(buildNameLine(item, options)));
-        header.add(new TooltipLine.Fixed(buildTypeLine(info)));
+        header.add(new TooltipLine.Fixed(buildTypeLine(item)));
 
-        Component tags = buildTagsLine(info);
-        if (!tags.getString().isBlank()) header.add(new TooltipLine.Fixed(tags));
+        if (item instanceof GearItem gearItem) {
+            GearInfo info = gearItem.getItemInfo();
+            Component tags = buildTagsLine(info);
+            if (!tags.getString().isBlank()) header.add(new TooltipLine.Fixed(tags));
 
-        header.add(new TooltipLine.Fixed(Component.empty()));
-        buildOverview(info).stream().map(TooltipLine.Fixed::new).forEach(header::add);
+            header.add(new TooltipLine.Fixed(Component.empty()));
+            buildOverview(info).stream().map(TooltipLine.Fixed::new).forEach(header::add);
+        }
         return header;
     }
 
@@ -212,7 +222,9 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             if (i == 1) {
                 Component updatedTitle = line.copy();
                 if (!TooltipUtils.replaceTrailingTitleComponent(
-                        (MutableComponent) updatedTitle, item.getName(), buildDecoratedName(item, options))) {
+                        (MutableComponent) updatedTitle,
+                        item.getName(),
+                        buildDecoratedName(item, item.getGearTier(), options))) {
                     updatedTitle = buildNameLine(item, options);
                 }
                 line = updatedTitle;
@@ -237,26 +249,27 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         return tail;
     }
 
-    private List<TooltipLine> buildWeights(GearItem item, TooltipOptions options) {
+    private List<TooltipLine> buildWeights(IdentifiableItemProperty<?, ?> identifiableItem, TooltipOptions options) {
+        if (!(identifiableItem instanceof GearItem item)) return List.of();
         if (item.getItemInstance().isEmpty() || options.itemWeightSource() == ItemWeightSource.NONE) {
             return List.of();
         }
 
         List<TooltipLine> lines = new ArrayList<>();
-        appendWeightSource(lines, item, options, ItemWeightSource.NORI, 0x67ccf5);
-        appendWeightSource(lines, item, options, ItemWeightSource.WYNNPOOL, 0xffc457);
+        appendWeightSource(lines, item, options, ItemWeightSource.NORI);
+        appendWeightSource(lines, item, options, ItemWeightSource.WYNNPOOL);
         return lines;
     }
 
     private void appendWeightSource(
-            List<TooltipLine> lines, GearItem item, TooltipOptions options, ItemWeightSource source, int color) {
+            List<TooltipLine> lines, GearItem item, TooltipOptions options, ItemWeightSource source) {
         if (options.itemWeightSource() != ItemWeightSource.ALL && options.itemWeightSource() != source) return;
 
         List<ItemWeighting> weightings = Services.ItemWeight.getItemWeighting(item.getName(), source);
         if (weightings.isEmpty()) return;
 
-        lines.add(new TooltipLine.Fixed(BannerBoxFont.buildMessage(
-                source.name().toLowerCase(), CustomColor.fromInt(color), CommonColors.BLACK, "")));
+        lines.add(new TooltipLine.Fixed(
+                BannerBoxFont.buildMessage(source.name().toLowerCase(), source.getColor(), CommonColors.BLACK, "")));
         for (ItemWeighting weighting : weightings) {
             float percentage = Services.ItemWeight.calculateWeighting(weighting, item);
             Component percentageComponent = ColorScaleUtils.getPercentageTextComponent(
@@ -264,12 +277,22 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                     .withStyle(style -> style.withFont(CommonFonts.LANGUAGE_FONT));
 
             lines.add(new TooltipLine.Aligned(
-                    Component.literal(weighting.weightName() + " Scale").withStyle(LANGUAGE_STYLE),
+                    Component.literal(weighting.weightName() + " Scale").withStyle(CommonStyles.LANGUAGE),
                     percentageComponent));
         }
     }
 
-    private List<TooltipLine> buildRequirements(GearItem item) {
+    private List<TooltipLine> buildRequirements(IdentifiableItemProperty<?, ?> item) {
+        if (item instanceof GearItem gearItem) return buildGearRequirements(gearItem);
+        if (!(item instanceof LeveledItemProperty leveledItem) || leveledItem.getLevel() <= 0) return List.of();
+
+        return List.of(requirementLine(
+                " Combat Level",
+                String.valueOf(leveledItem.getLevel()),
+                Models.CharacterStats.getLevel() >= leveledItem.getLevel()));
+    }
+
+    private List<TooltipLine> buildGearRequirements(GearItem item) {
         GearInfo info = item.getItemInfo();
         List<TooltipLine> requirements = new ArrayList<>();
 
@@ -301,7 +324,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
     private TooltipLine requirementLine(String label, String value, boolean fulfilled) {
         MutableComponent left =
-                requirementIcon(fulfilled).append(Component.literal(label).withStyle(LANGUAGE_STYLE));
+                requirementIcon(fulfilled).append(Component.literal(label).withStyle(CommonStyles.LANGUAGE));
         Component right = Component.literal(value)
                 .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_FONT).withColor(ChatFormatting.GRAY));
         return new TooltipLine.Aligned(left, right);
@@ -318,7 +341,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                     .append(Component.literal("\uDAFF\uDFE7"))
                     .append(Component.literal(sprite)
                             .withStyle(Style.EMPTY.withFont(CommonFonts.REQUIREMENT_SPRITE_FONT)))));
-            line.append(Component.literal("\uDB00\uDC02").withStyle(SPACE_STYLE));
+            line.append(Component.literal("\uDB00\uDC02").withStyle(CommonStyles.SPACE));
         }
         return line;
     }
@@ -333,18 +356,21 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             String icon = count == 0 ? "\uE005" : fulfilled ? "\uE006" : "\uE007";
             line.append(withWhiteShadow(Component.literal(icon + "\uDAFF\uDFFF")
                     .withStyle(Style.EMPTY.withFont(CommonFonts.REQUIREMENT_SPRITE_FONT))));
-            line.append(Component.literal("\uDB00\uDC03").withStyle(SPACE_STYLE));
+            line.append(Component.literal("\uDB00\uDC03").withStyle(CommonStyles.SPACE));
             line.append(Component.literal(String.valueOf(count))
                     .withStyle(Style.EMPTY
                             .withFont(CommonFonts.LANGUAGE_FONT)
                             .withColor(count == 0 ? 0x555555 : fulfilled ? 0xacfac6 : 0xfaacac)));
-            line.append(Component.literal("\uDB00\uDC04").withStyle(SPACE_STYLE));
+            line.append(Component.literal("\uDB00\uDC04").withStyle(CommonStyles.SPACE));
         }
         return line;
     }
 
-    private List<TooltipLine> buildShiny(GearItem item) {
-        return item.getShinyStat()
+    private List<TooltipLine> buildShiny(IdentifiableItemProperty<?, ?> item, GearTier tier) {
+        if (!(item instanceof ShinyItemProperty shinyItem)) return List.of();
+
+        return shinyItem
+                .getShinyStat()
                 .<List<TooltipLine>>map(shiny -> List.of(new TooltipLine.Aligned(
                         Component.empty()
                                 .append(withWhiteShadow(Component.literal("\uE04F")
@@ -352,20 +378,22 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                                 .append(Component.literal(" " + shiny.statType().displayName())
                                         .withStyle(Style.EMPTY
                                                 .withFont(CommonFonts.LANGUAGE_FONT)
-                                                .withColor(dividerColor(item.getGearTier())))),
-                        buildShinyValue(shiny, item.getGearTier()))))
+                                                .withColor(dividerColor(tier)))),
+                        buildShinyValue(shiny, tier))))
                 .orElseGet(List::of);
     }
 
-    private List<TooltipLine> buildReroll(GearItem item) {
-        int rerolls = item.getRerollCount();
+    private List<TooltipLine> buildReroll(IdentifiableItemProperty<?, ?> item, GearTier tier) {
+        if (!(item instanceof RerollableItemProperty rerollableItem)) return List.of();
+
+        int rerolls = rerollableItem.getRerollCount();
         if (rerolls <= 0) return List.of();
 
-        int color = dividerColor(item.getGearTier());
+        int color = dividerColor(tier);
         MutableComponent line = Component.empty()
                 .append(BannerBoxFont.buildMessage(
                         String.valueOf(rerolls), CustomColor.fromInt(color), CommonColors.BLACK, "\uDB00\uDC02"))
-                .append(Component.literal("\uDAFF\uDFFF").withStyle(SPACE_STYLE))
+                .append(Component.literal("\uDAFF\uDFFF").withStyle(CommonStyles.SPACE))
                 .append(Component.literal("\uE005")
                         .withStyle(Style.EMPTY
                                 .withFont(CommonFonts.TOOLTIP_BANNER_FONT)
@@ -378,7 +406,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
     private Component buildShinyValue(ShinyStat shiny, GearTier tier) {
         MutableComponent value =
-                Component.literal(String.valueOf(shiny.value())).withStyle(LANGUAGE_STYLE);
+                Component.literal(String.valueOf(shiny.value())).withStyle(CommonStyles.LANGUAGE);
         if (shiny.shinyRerolls() > 0) {
             value.append(" ")
                     .append(BannerBoxFont.buildMessage(
@@ -390,7 +418,9 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         return value;
     }
 
-    private List<TooltipLine> buildMajorId(GearItem item) {
+    private List<TooltipLine> buildMajorId(IdentifiableItemProperty<?, ?> identifiableItem) {
+        if (!(identifiableItem instanceof GearItem item)) return List.of();
+
         return item.getItemInfo()
                 .fixedStats()
                 .majorIds()
@@ -408,7 +438,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                             .append(major.lore()
                                     .map(part -> part.withStyle(style -> style.withFont(CommonFonts.LANGUAGE_FONT)))
                                     .getComponent());
-                    ComponentUtils.splitComponent(text, MAJOR_ID_WRAP_WIDTH).stream()
+                    ComponentUtils.splitComponent(text, TOOLTIP_MIN_WIDTH).stream()
                             .map(TooltipLine.Fixed::new)
                             .forEach(lines::add);
                     return lines;
@@ -416,61 +446,80 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                 .orElseGet(List::of);
     }
 
-    private List<TooltipLine> buildPaginator(int currentPage) {
+    private List<TooltipLine> buildPaginator(IdentifiableItemProperty<?, ?> item) {
+        if (!(item instanceof GearItem gearItem)) return List.of();
+
+        int currentPage = gearItem.currentPage();
         MutableComponent paginator = Component.literal("\uF002")
                 .withStyle(Style.EMPTY.withFont(CommonFonts.CHAT_TILE_FONT))
-                .append(Component.literal("\uDAFF\uDF98\uDB00\uDC3F").withStyle(LANGUAGE_STYLE));
+                .append(Component.literal("\uDAFF\uDF98\uDB00\uDC3F").withStyle(CommonStyles.LANGUAGE));
         for (int page = 0; page < 3; page++) {
             paginator.append(Component.literal("\uE000")
                     .withStyle(Style.EMPTY
                             .withFont(CommonFonts.PAGE_FONT)
                             .withColor(page == currentPage ? 0xffea80 : 0x455449)
                             .withShadowColor(0xffffff)));
-            if (page < 2) paginator.append(Component.literal("\uDB00\uDC04").withStyle(LANGUAGE_STYLE));
+            if (page < 2) paginator.append(Component.literal("\uDB00\uDC04").withStyle(CommonStyles.LANGUAGE));
         }
         return List.of(new TooltipLine.Centered(paginator), new TooltipLine.Fixed(Component.empty()));
     }
 
-    private Component buildNameLine(GearItem item, TooltipOptions options) {
-        GearInfo info = item.getItemInfo();
+    private Component buildNameLine(IdentifiableItemProperty<?, ?> item, TooltipOptions options) {
+        GearType type = getGearType(item);
+        String emblemFrame = item instanceof GearItem gearItem
+                ? gearItem.getItemInfo().getEmblemFrameCode()
+                : rewardEmblemFrame(type);
+        String emblemSprite = item instanceof GearItem gearItem
+                ? gearItem.getItemInfo().getEmblemSpriteCode()
+                : rewardEmblemSprite(type);
+        return buildNameLine(emblemFrame, emblemSprite, buildDecoratedName(item, getGearTier(item), options));
+    }
+
+    private Component buildNameLine(String emblemFrame, String emblemSprite, Component title) {
         MutableComponent line = Component.literal("\uDAFF\uDFF0")
                 .withStyle(style -> style.withFont(CommonFonts.LANGUAGE_FONT).withShadowColor(0xffffff));
-        line.append(Component.literal(info.getEmblemFrameCode())
-                .withStyle(Style.EMPTY.withFont(CommonFonts.EMBLEM_FRAME_FONT)));
+        line.append(Component.literal(emblemFrame).withStyle(Style.EMPTY.withFont(CommonFonts.EMBLEM_FRAME_FONT)));
         line.append("\uDAFF\uDFCF");
-        line.append(Component.literal(info.getEmblemSpriteCode())
+        line.append(Component.literal(emblemSprite)
                 .withStyle(Style.EMPTY.withFont(CommonFonts.EMBLEM_SPRITE_FONT).withColor(0x00eb1c)));
-        line.append(Component.literal("\uDB00\uDC05").withStyle(SPACE_STYLE));
-        line.append(buildDecoratedName(item, options));
+        line.append(Component.literal("\uDB00\uDC05").withStyle(CommonStyles.SPACE));
+        line.append(title);
         return line;
     }
 
-    private MutableComponent buildDecoratedName(GearItem item, TooltipOptions options) {
-        String name = item.getShinyStat().isPresent() ? "Shiny " + item.getName() : item.getName();
+    private MutableComponent buildDecoratedName(
+            IdentifiableItemProperty<?, ?> item, GearTier tier, TooltipOptions options) {
+        boolean shiny = item instanceof ShinyItemProperty shinyItem
+                && shinyItem.getShinyStat().isPresent();
+        String name = shiny ? "Shiny " + item.getName() : item.getName();
         Component title = Component.literal(name)
-                .withStyle(Style.EMPTY
-                        .withFont(CommonFonts.LANGUAGE_FONT)
-                        .withColor(item.getGearTier().getChatFormatting()));
+                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_FONT).withColor(tier.getChatFormatting()));
         return new TooltipOptionDecorator(item, options).getTitle(title);
     }
 
-    private Component buildTypeLine(GearInfo info) {
+    private Component buildTypeLine(IdentifiableItemProperty<?, ?> item) {
+        GearType type = getGearType(item);
+        String typeName = type.isReward() ? rewardTypeName(type) : type.name();
+        return buildTypeLine(getGearTier(item), typeName, getRestrictions(item));
+    }
+
+    private Component buildTypeLine(GearTier tier, String typeName, GearRestrictions restrictions) {
         Pair<String, String> restrictionIcon =
-                switch (info.metaInfo().restrictions()) {
+                switch (restrictions) {
                     case UNTRADABLE -> Pair.of("\uE002", "\uF002");
                     case QUEST_ITEM -> Pair.of("\uE003", "\uF003");
                     default -> null;
                 };
-        MutableComponent line = Component.literal("\uDB00\uDC26").withStyle(SPACE_STYLE);
+        MutableComponent line = Component.literal("\uDB00\uDC26").withStyle(CommonStyles.SPACE);
         line.append(BannerBoxFont.buildMessage(
-                info.tier().getName(),
-                CustomColor.fromChatFormatting(info.tier().getChatFormatting()),
+                tier.getName(),
+                CustomColor.fromChatFormatting(tier.getChatFormatting()),
                 CommonColors.BLACK,
                 "\uDB00\uDC02"));
-        line.append(Component.literal("\uDB00\uDC01").withStyle(SPACE_STYLE));
+        line.append(Component.literal("\uDB00\uDC01").withStyle(CommonStyles.SPACE));
         line.append(BannerBoxFont.buildMessage(
-                info.type().name(),
-                CustomColor.fromInt(dividerColor(info.tier())),
+                typeName,
+                CustomColor.fromInt(dividerColor(tier)),
                 CommonColors.BLACK,
                 restrictionIcon != null ? "\uDB00\uDC02" : ""));
         if (restrictionIcon != null) {
@@ -483,6 +532,53 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                     .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_BANNER_FONT))));
         }
         return line;
+    }
+
+    private GearRestrictions getRestrictions(IdentifiableItemProperty<?, ?> item) {
+        return switch (item.getItemInfo()) {
+            case GearInfo info -> info.metaInfo().restrictions();
+            case CharmInfo info -> info.metaInfo().restrictions();
+            case TomeInfo info -> info.metaInfo().restrictions();
+            default -> GearRestrictions.NONE;
+        };
+    }
+
+    private GearTier getGearTier(IdentifiableItemProperty<?, ?> item) {
+        if (item instanceof GearTierItemProperty tierItem) return tierItem.getGearTier();
+
+        throw new IllegalArgumentException(
+                "Identifiable item has no gear tier: " + item.getClass().getName());
+    }
+
+    private GearType getGearType(IdentifiableItemProperty<?, ?> item) {
+        if (item instanceof GearTypeItemProperty typeItem) return typeItem.getGearType();
+
+        throw new IllegalArgumentException(
+                "Identifiable item has no gear type: " + item.getClass().getName());
+    }
+
+    private String rewardTypeName(GearType type) {
+        return switch (type) {
+            case CHARM -> "Charm";
+            case MASTERY_TOME -> "Tome";
+            default -> type.name();
+        };
+    }
+
+    private String rewardEmblemFrame(GearType type) {
+        return switch (type) {
+            case CHARM -> "\uE035";
+            case MASTERY_TOME -> "\uE041";
+            default -> type.getFrameCode();
+        };
+    }
+
+    private String rewardEmblemSprite(GearType type) {
+        return switch (type) {
+            case CHARM -> "\uE031";
+            case MASTERY_TOME -> "\uE028";
+            default -> type.getFrameSpriteCode();
+        };
     }
 
     private Component buildTagsLine(GearInfo info) {
@@ -559,12 +655,12 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             overview.add(
                     Component.literal(String.format("%,d", info.fixedStats().averageDps()))
                             .withStyle(Style.EMPTY.withFont(CommonFonts.QUAD_12).withColor(dividerColor(info.tier())))
-                            .append(Component.literal(" DPS").withStyle(LANGUAGE_STYLE)));
+                            .append(Component.literal(" DPS").withStyle(CommonStyles.LANGUAGE)));
         } else if (info.type().isArmor() || info.type().isAccessory()) {
             overview.add(Component.literal(
                             StringUtils.toSignedCommaString(info.fixedStats().healthBuff()))
                     .withStyle(Style.EMPTY.withFont(CommonFonts.QUAD_12).withColor(dividerColor(info.tier())))
-                    .append(Component.literal(" Health").withStyle(LANGUAGE_STYLE)));
+                    .append(Component.literal(" Health").withStyle(CommonStyles.LANGUAGE)));
         }
 
         info.fixedStats()

@@ -29,8 +29,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
 public final class TooltipIdentifications {
-    private TooltipIdentifications() {}
-
     public static List<Component> buildTooltip(
             IdentifiableItemProperty<?, ?> itemInfo,
             ClassType currentClass,
