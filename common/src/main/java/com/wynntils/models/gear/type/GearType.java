@@ -84,8 +84,8 @@ public enum GearType {
                     Items.DIAMOND_BOOTS,
                     Items.NETHERITE_BOOTS),
             11),
-    MASTERY_TOME(null, "\uE028", "tome", -1),
-    CHARM(null, "\uE029", "charm", -1);
+    MASTERY_TOME(null, "\uE028", "tome", -1, "\uE041"),
+    CHARM(null, "\uE031", "charm", -1, "\uE035");
 
     private final ClassType classReq;
     private final Item defaultItem;
@@ -94,6 +94,7 @@ public enum GearType {
     private final String skinModelKey;
     private final List<Item> otherItems;
     private final int encodingId;
+    private final String frameCode;
 
     private List<Float> modelList = new ArrayList<>();
 
@@ -104,7 +105,8 @@ public enum GearType {
             String modelKey,
             String skinModelKey,
             List<Item> otherItems,
-            int encodingId) {
+            int encodingId,
+            String frameCode) {
         this.classReq = classReq;
         this.defaultItem = defaultItem;
         this.frameSpriteCode = frameSpriteCode;
@@ -112,6 +114,18 @@ public enum GearType {
         this.skinModelKey = skinModelKey;
         this.otherItems = otherItems;
         this.encodingId = encodingId;
+        this.frameCode = frameCode;
+    }
+
+    GearType(
+            ClassType classReq,
+            Item defaultItem,
+            String frameSpriteCode,
+            String modelKey,
+            String skinModelKey,
+            List<Item> otherItems,
+            int encodingId) {
+        this(classReq, defaultItem, frameSpriteCode, modelKey, skinModelKey, otherItems, encodingId, null);
     }
 
     GearType(
@@ -121,7 +135,7 @@ public enum GearType {
             String modelKey,
             List<Item> otherItems,
             int encodingId) {
-        this(classReq, defaultItem, frameSpriteCode, modelKey, null, otherItems, encodingId);
+        this(classReq, defaultItem, frameSpriteCode, modelKey, null, otherItems, encodingId, null);
     }
 
     GearType(ClassType classReq, String frameSpriteCode, String modelKey, Item craftedItem, int encodingId) {
@@ -130,6 +144,10 @@ public enum GearType {
 
     GearType(ClassType classReq, String frameSpriteCode, String modelKey, int encodingId) {
         this(classReq, Items.POTION, frameSpriteCode, modelKey, List.of(), encodingId);
+    }
+
+    GearType(ClassType classReq, String frameSpriteCode, String modelKey, int encodingId, String frameCode) {
+        this(classReq, Items.POTION, frameSpriteCode, modelKey, null, List.of(), encodingId, frameCode);
     }
 
     public static GearType fromString(String typeStr) {
@@ -207,13 +225,17 @@ public enum GearType {
         return frameSpriteCode;
     }
 
+    public String getModelKey() {
+        return modelKey;
+    }
+
     public String getFrameCode() {
+        if (frameCode != null) return frameCode;
+
         if (this.isArmor()) {
             return "\uE003";
-        } else if (this.isAccessory() || this == CHARM) {
+        } else if (this.isAccessory()) {
             return "\uE005";
-        } else if (this == MASTERY_TOME) {
-            return "\uE001";
         }
 
         // Weapon

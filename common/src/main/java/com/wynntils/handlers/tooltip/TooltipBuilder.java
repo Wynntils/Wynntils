@@ -5,8 +5,9 @@
 package com.wynntils.handlers.tooltip;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
+import com.wynntils.handlers.tooltip.type.TooltipOptions;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.models.character.type.ClassType;
@@ -14,13 +15,14 @@ import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
-import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 
 public abstract class TooltipBuilder {
     private static final TooltipStyle DEFAULT_TOOLTIP_STYLE =
@@ -41,6 +43,10 @@ public abstract class TooltipBuilder {
         return getTooltipLines(currentClass, DEFAULT_TOOLTIP_STYLE, null, ItemWeightSource.NONE, null);
     }
 
+    public List<Component> getTooltipLines(ClassType currentClass, TooltipOptions options) {
+        return getTooltipLines(currentClass, options.style(), null, options.itemWeightSource(), null);
+    }
+
     public List<Component> getTooltipLines(
             ClassType currentClass,
             TooltipStyle style,
@@ -48,28 +54,56 @@ public abstract class TooltipBuilder {
             ItemWeightSource weightSource,
             TooltipWeightDecorator weightDecorator) {
         if (tooltipLinesCache == null) {
-            List<Component> tooltip = new ArrayList<>();
-            if (!source.isEmpty()) {
-                tooltip.add(buildSourceLine());
-                tooltip.add(Component.empty());
+            List<Component> decoratedHeader = decorateHeader(header, identificationDecorator);
+            int targetWidth = 0;
+            for (Component line : decoratedHeader) {
+                targetWidth = Math.max(targetWidth, McUtils.mc().font.width(line));
+            }
+            for (Component line : footer) {
+                targetWidth = Math.max(targetWidth, McUtils.mc().font.width(line));
             }
 
-            tooltip.addAll(header);
-            tooltip.addAll(getIdentificationLines(currentClass, style, identificationDecorator, 0));
+            List<Component> tooltip = new ArrayList<>();
+            tooltip.addAll(decoratedHeader);
+            tooltip.addAll(getIdentificationLines(currentClass, style, identificationDecorator, targetWidth));
             tooltip.addAll(footer);
-            tooltipLinesCache = List.copyOf(tooltip);
+            tooltipLinesCache = prependSource(tooltip);
         }
 
         return tooltipLinesCache;
     }
 
     private Component buildSourceLine() {
-        return BannerBoxFont.buildMessage(source.toLowerCase(Locale.ROOT), CommonColors.WHITE, CommonColors.BLACK, "");
+        return Component.empty()
+                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_FONT).applyFormat(getSourceColor()))
+                .append(Component.literal("\uE000").withStyle(Style.EMPTY.withFont(CommonFonts.MAJOR_ID_FONT)))
+                .append(Component.literal("\uDB00\uDC02"))
+                .append(Component.literal(source)
+                        .withStyle(style ->
+                                style.withFont(CommonFonts.LANGUAGE_FONT).applyFormat(ChatFormatting.WHITE)));
+    }
+
+    protected ChatFormatting getSourceColor() {
+        return ChatFormatting.WHITE;
+    }
+
+    protected List<Component> prependSource(List<Component> lines) {
+        if (source.isEmpty()) return List.copyOf(lines);
+
+        List<Component> tooltip = new ArrayList<>(lines.size() + 1);
+        tooltip.add(buildSourceLine());
+        tooltip.addAll(lines);
+        return List.copyOf(tooltip);
     }
 
     protected List<Component> getIdentificationLines(
             ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator, int targetWidth) {
         return List.of();
+    }
+
+    protected List<Component> decorateHeader(
+            List<Component> header, TooltipIdentificationDecorator identificationDecorator) {
+        return header;
     }
 
     protected static Pair<List<Component>, List<Component>> extractHeaderAndFooter(List<Component> lore) {

@@ -11,10 +11,13 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
+import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
+import com.wynntils.models.items.properties.ShinyItemProperty;
 import com.wynntils.utils.mc.TooltipUtils;
 import java.util.List;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -38,6 +41,11 @@ public class FakeItemStack extends ItemStack {
 
         if (wynnItem instanceof NamedItemProperty namedItemProperty) {
             Handlers.Item.updateItem(this, wynnItem, StyledText.fromString(namedItemProperty.getName()));
+        }
+        if (!useBackingTooltip && wynnItem instanceof GearTierItemProperty tierItem) {
+            boolean shiny = wynnItem instanceof ShinyItemProperty shinyItem
+                    && shinyItem.getShinyStat().isPresent();
+            this.set(DataComponents.TOOLTIP_STYLE, tierItem.getGearTier().getTooltipStyle(shiny));
         }
 
         this.wynnItem = wynnItem;

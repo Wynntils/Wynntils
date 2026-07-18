@@ -6,14 +6,15 @@ package com.wynntils.screens.guides.charm;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.rewards.type.CharmInfo;
 import com.wynntils.screens.guides.GuideItemStack;
+import com.wynntils.utils.mc.TooltipUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
@@ -32,6 +33,7 @@ public class GuideCharmItemStack extends GuideItemStack {
         this.name =
                 Component.literal(charmInfo.name()).withStyle(charmInfo.tier().getChatFormatting());
         this.generatedTooltip = List.of();
+        this.set(DataComponents.TOOLTIP_STYLE, charmInfo.tier().getTooltipStyle(false));
     }
 
     @Override
@@ -55,13 +57,12 @@ public class GuideCharmItemStack extends GuideItemStack {
     }
 
     public void buildTooltip() {
-        IdentifiableTooltipBuilder tooltipBuilder =
-                Handlers.Tooltip.buildNew(new CharmItem(charmInfo, null), true, false);
-        this.generatedTooltip = tooltipBuilder.getTooltipLines(Models.Character.getClassType());
-
-        // Force ItemStatInfoFeature to recreate its cache
         Optional<CharmItem> charmItemOpt = Models.Item.asWynnItem(this, CharmItem.class);
         if (charmItemOpt.isEmpty()) return;
-        charmItemOpt.get().getData().clear(WynnItemData.TOOLTIP_KEY);
+        CharmItem charmItem = charmItemOpt.get();
+        charmItem
+                .getData()
+                .getOrCalculate(WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(charmItem, true, false));
+        this.generatedTooltip = TooltipUtils.getWynnItemTooltip(this, charmItem);
     }
 }

@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.tooltips;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
@@ -11,13 +12,18 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
+import com.wynntils.handlers.tooltip.type.TooltipOptions;
+import com.wynntils.handlers.tooltip.type.TooltipStyle;
+import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gear.type.ItemWeightSource;
+import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.stats.type.StatListOrdering;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextColor;
+import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemStatInfoFeature extends Feature {
@@ -94,6 +100,37 @@ public class ItemStatInfoFeature extends Feature {
 
     public NavigableMap<Float, TextColor> getColorMap() {
         return colorLerp.get() ? LERP_MAP : flatMap;
+    }
+
+    @SubscribeEvent
+    public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
+        if (event.getTooltips().isEmpty()) return;
+
+        Handlers.Item.getItemStackAnnotation(event.getItemStack()).ifPresent(annotation -> {
+            if (!(annotation instanceof IdentifiableItemProperty<?, ?> identifiableItem)) return;
+
+            event.setTooltips(
+                    Handlers.Tooltip.updateTooltip(event.getTooltips(), identifiableItem, getTooltipOptions()));
+        });
+    }
+
+    public TooltipOptions getTooltipOptions() {
+        return new TooltipOptions(
+                new TooltipStyle(
+                        identificationsOrdering.get(),
+                        groupIdentifications.get(),
+                        showBestValueLastAlways.get(),
+                        rainbowInternalRoll.get(),
+                        showRollWheel.get()),
+                perfect.get(),
+                defective.get(),
+                identificationDecorations.get(),
+                itemWeights.get(),
+                overallPercentageInName.get(),
+                overallPercentageInPerfectDefectiveName.get(),
+                getColorMap(),
+                colorLerp.get(),
+                decimalPlaces.get());
     }
 
     private NavigableMap<Float, TextColor> createFlatMap() {

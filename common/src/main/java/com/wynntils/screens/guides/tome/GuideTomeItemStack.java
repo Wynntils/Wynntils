@@ -6,14 +6,15 @@ package com.wynntils.screens.guides.tome;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.screens.guides.GuideItemStack;
+import com.wynntils.utils.mc.TooltipUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
@@ -31,6 +32,7 @@ public class GuideTomeItemStack extends GuideItemStack {
         this.tomeInfo = tomeInfo;
         this.name = Component.literal(tomeInfo.name()).withStyle(tomeInfo.tier().getChatFormatting());
         this.generatedTooltip = List.of();
+        this.set(DataComponents.TOOLTIP_STYLE, tomeInfo.tier().getTooltipStyle(false));
     }
 
     @Override
@@ -54,13 +56,11 @@ public class GuideTomeItemStack extends GuideItemStack {
     }
 
     public void buildTooltip() {
-        IdentifiableTooltipBuilder tooltipBuilder =
-                Handlers.Tooltip.buildNew(new TomeItem(tomeInfo, null), true, false);
-        this.generatedTooltip = tooltipBuilder.getTooltipLines(Models.Character.getClassType());
-
-        // Force ItemStatInfoFeature to recreate its cache
         Optional<TomeItem> tomeItemOpt = Models.Item.asWynnItem(this, TomeItem.class);
         if (tomeItemOpt.isEmpty()) return;
-        tomeItemOpt.get().getData().clear(WynnItemData.TOOLTIP_KEY);
+        TomeItem tomeItem = tomeItemOpt.get();
+        tomeItem.getData()
+                .getOrCalculate(WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(tomeItem, true, false));
+        this.generatedTooltip = TooltipUtils.getWynnItemTooltip(this, tomeItem);
     }
 }
