@@ -85,7 +85,10 @@ public final class GuideIngredientItemStack extends GuideItemStack {
                 Component.literal("Crafting Lv. Min: " + ingredientInfo.level()).withStyle(ChatFormatting.GRAY));
 
         for (ProfessionType profession : ingredientInfo.professions()) {
-            itemLore.add(Component.literal("  " + profession.getProfessionIconChar() + " ")
+            itemLore.add(Component.empty()
+                    .append(Component.literal(" "))
+                    .append(profession.getProfessionIcon())
+                    .append(Component.literal(" "))
                     .append(Component.literal(profession.getDisplayName()).withStyle(ChatFormatting.GRAY)));
         }
 
@@ -152,7 +155,7 @@ public final class GuideIngredientItemStack extends GuideItemStack {
             itemLore.add(
                     Component.literal(colorCode + value + "%" + ChatFormatting.GRAY + " Ingredient Effectiveness"));
             itemLore.add(Component.literal(
-                    ChatFormatting.GRAY + "(To ingredients " + modifier.getKey().getDisplayName() + " this one)"));
+                    ChatFormatting.GRAY + "(To ingredients " + modifier.getKey().getDescription() + " this one)"));
         }
 
         if (!itemLore.isEmpty()) {

@@ -20,6 +20,7 @@ import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.EnumMap;
 import java.util.Map;
+import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
@@ -115,8 +116,10 @@ public class XpGainMessageFeature extends Feature {
 
     private static StyledText getProfessionXpGainMessage(
             ProfessionType profession, float rawXpGain, float currentXpPercentage) {
-        return StyledText.fromString(String.format(
-                "§2+%.0f %s XP (§6%.2f%%§2)", rawXpGain, profession.getProfessionIconChar(), currentXpPercentage));
+        return StyledText.fromComponent(Component.empty()
+                .append(Component.literal(String.format("§2+%.0f ", rawXpGain)))
+                .append(profession.getProfessionIcon())
+                .append(Component.literal(String.format("§2 XP (§6%.2f%%§2)", currentXpPercentage))));
     }
 
     private static StyledText getCombatXpGainMessage(float rawXpGain, float currentXpPercentage) {
