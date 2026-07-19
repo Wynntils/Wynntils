@@ -1,19 +1,29 @@
 package com.wynntils.screens.buildloadouts.widgets;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.character.type.SavableTome;
+import com.wynntils.models.items.FakeItemStack;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.screens.buildloadouts.type.ScrollListCategory;
 import com.wynntils.services.loadout.type.Loadout;
+import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.type.ErrorOr;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
 
-public class BuildLoadoutScrollListWidget extends ScrollListWidget {
+public class BuildLoadoutScrollListWidget extends ScrollListWidget implements ItemTooltipProvider {
     private static final int  MAX_WIDGETS_PER_PAGE = 3;
     private static final int WIDTH = 271 - 10;
     private static final int HEIGHT = 131 - 16;
@@ -110,6 +120,16 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget {
                 || tomesButton.isMouseOver(mouseX, mouseY);
     }
 
+    @Override
+    public void renderHoveredItemTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        for (AbstractWidget widget : getWidgets()) {
+            if (widget instanceof ItemTooltipProvider itemTooltipProvider && widget.isMouseOver(mouseX, mouseY)) {
+                itemTooltipProvider.renderHoveredItemTooltip(guiGraphics, mouseX, mouseY);
+                return;
+            }
+        }
+    }
+
     public void setSelectedScrollListCategory(ScrollListCategory category) {
         selectedScrollListCategory = category;
         populateWidgets();
@@ -155,6 +175,41 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget {
             }
         }
 
+        if (selectedScrollListCategory == ScrollListCategory.TOMES) {
+            for (SavableTome tome : selectedLoadout.tomes().getAllTomes()) {
+                ItemStack tomeStack = decodeTomeItemStack(tome).orElse(ItemStack.EMPTY);
+                itemWidgets.add(new LoadoutMenuScrollListTomeWidget(
+                        StyledText.fromString(tome.name()),
+                        tomeStack,
+                        this.x + WIDGET_HEIGHT_EDGE_PADDING,
+                        this.y + WIDGET_HEIGHT_EDGE_PADDING + itemWidgets.size() * (WIDGET_HEIGHT + WIDGET_HEIGHT_PADDING),
+                        this.width - 20,
+                        WIDGET_HEIGHT,
+                        parent));
+            }
+        }
+    }
+
+
+    private Optional<ItemStack> decodeTomeItemStack(SavableTome tome) {
+        if (tome == null || tome.encoded() == null || tome.encoded().isEmpty()) return Optional.empty();
+
+        Matcher matcher = Models.ItemEncoding.getEncodedDataPattern().matcher(tome.encoded());
+        if (matcher.matches()) {
+            EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromUtf16String(matcher.group("data"));
+            String itemName = matcher.group("name");
+
+            ErrorOr<WynnItem> errorOrItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, itemName);
+            if (errorOrItem.hasError()) {
+                return Optional.empty();
+            }
+
+            if (errorOrItem.getValue() instanceof TomeItem tomeItem) {
+                return Optional.of(new FakeItemStack(tomeItem, "From loadout"));
+            }
+        }
+
+        return Optional.empty();
     }
 
 }

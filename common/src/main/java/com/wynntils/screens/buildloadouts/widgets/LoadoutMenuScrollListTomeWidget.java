@@ -46,11 +46,13 @@ public class LoadoutMenuScrollListTomeWidget extends AbstractWidget implements I
                 this.height);
 
         FontRenderer.getInstance()
-                .renderText(
+                .renderAlignedTextInBox(
                         guiGraphics,
                         this.text,
-                        (this.x + this.width / 2f),
-                        (this.y + this.height / 2f),
+                        this.x + this.width / 2f + 13,
+                        this.y + 5,
+                        this.y + this.height - 10,
+                        this.width - 40,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,

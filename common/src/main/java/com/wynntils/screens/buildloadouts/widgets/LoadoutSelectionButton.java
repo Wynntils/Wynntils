@@ -86,7 +86,7 @@ public class LoadoutSelectionButton extends AbstractWidget implements TooltipPro
             RenderUtils.drawTexturedRect(
                     guiGraphics,
                     Texture.BUILD_LOADOUTS_BUILD_LOADOUTS_ICON,
-                    this.x + 28 - (Texture.BUILD_LOADOUTS_BUILD_LOADOUTS_ICON.width() / 2f),
+                    this.x + 30 - (Texture.BUILD_LOADOUTS_BUILD_LOADOUTS_ICON.width() / 2f),
                     (this.y + this.height / 2f) - Texture.BUILD_LOADOUTS_BUILD_LOADOUTS_ICON.height() / 2f);
         } else if (menuCategory == MenuCategory.ABILITY_TREE_LOADOUT) {
             RenderUtils.drawTexturedRect(
@@ -96,7 +96,7 @@ public class LoadoutSelectionButton extends AbstractWidget implements TooltipPro
                     (this.y + this.height / 2f) - Texture.BUILD_LOADOUTS_ABILITY_TREE_LOADOUTS_ICON.height() / 2f);
         } else if (menuCategory == MenuCategory.SKILL_POINT_LOADOUT) {
             float baseY = this.y + this.height / 2f - 6;
-            renderSkillIcons(guiGraphics, this.x, baseY, new int[]{0, 1, 2, 3, 4});
+            renderSkillIcons(guiGraphics, this.x + 10, baseY, new int[]{0, 1, 2, 3, 4});
         } else if (menuCategory == MenuCategory.ASPECT_LOADOUT) {
             renderAspect(
                     guiGraphics,

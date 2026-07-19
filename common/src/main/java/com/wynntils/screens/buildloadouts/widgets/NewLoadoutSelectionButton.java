@@ -6,6 +6,7 @@ package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.screens.buildloadouts.type.MenuCategory;
 import com.wynntils.services.loadout.type.LoadoutType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -86,7 +87,7 @@ public class NewLoadoutSelectionButton extends AbstractWidget implements IconRen
             RenderUtils.drawTexturedRect(
                     guiGraphics,
                     Texture.BUILD_LOADOUTS_BUILD_LOADOUTS_ICON,
-                    this.x + 28 - (Texture.BUILD_LOADOUTS_BUILD_LOADOUTS_ICON.width() / 2f),
+                    this.x + 32 - (Texture.BUILD_LOADOUTS_BUILD_LOADOUTS_ICON.width() / 2f),
                     (this.y + this.height / 2f) - Texture.BUILD_LOADOUTS_BUILD_LOADOUTS_ICON.height() / 2f);
         } else if (loadoutType == LoadoutType.ABILITY_TREE) {
             RenderUtils.drawTexturedRect(
@@ -96,28 +97,28 @@ public class NewLoadoutSelectionButton extends AbstractWidget implements IconRen
                     (this.y + this.height / 2f) - Texture.BUILD_LOADOUTS_ABILITY_TREE_LOADOUTS_ICON.height() / 2f);
         } else if (loadoutType == LoadoutType.SKILL_POINT) {
             float baseY = this.y + this.height / 2f - 6;
-            renderSkillIcons(guiGraphics, this.x + 5, baseY, new int[]{0, 1, 2, 3, 4});
+            renderSkillIcons(guiGraphics, this.x + 12, baseY, new int[]{0, 1, 2, 3, 4});
         } else if (loadoutType == LoadoutType.ASPECT) {
             renderAspect(
                     guiGraphics,
                     Texture.ASPECT_ARCHER,
                     Texture.ASPECT_ARCHER_FLAME,
                     this.x,
-                    this.y);
+                    this.y + 5);
 
             renderAspect(
                     guiGraphics,
                     Texture.ASPECT_ASSASSIN,
                     Texture.ASPECT_ASSASSIN_FLAME,
                     this.x + 18,
-                    this.y);
+                    this.y + 5);
 
             renderAspect(
                     guiGraphics,
                     Texture.ASPECT_SHAMAN,
                     Texture.ASPECT_SHAMAN_FLAME,
                     this.x + 36,
-                    this.y);
+                    this.y + 5);
         }
     }
 
