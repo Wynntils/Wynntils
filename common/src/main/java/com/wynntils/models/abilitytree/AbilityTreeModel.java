@@ -9,8 +9,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.net.DownloadRegistry;
-import com.wynntils.core.persisted.Persisted;
-import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.abilitytree.parser.AbilityTreeParser;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
@@ -28,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -167,8 +164,8 @@ public final class AbilityTreeModel extends Model {
             remaining.remove(next);
             currentPage = next.location().page();
 
-            if (next.archetype() != null) {
-                archetypePoints.merge(next.archetype(), 1, Integer::sum);
+            if (next.archetypeInfo().archetype() != null) {
+                archetypePoints.merge(next.archetypeInfo().archetype(), 1, Integer::sum);
             }
         }
 
@@ -255,8 +252,8 @@ public final class AbilityTreeModel extends Model {
                 .thenComparing(
                         (AbilityTreeSkillNode n) -> dependents.getOrDefault(n.name(), 0L), Comparator.reverseOrder())
 
-                // 4. Prefer archetype contributors to hit thresholds sooner
-                .thenComparing((AbilityTreeSkillNode n) -> n.archetype() != null, Comparator.reverseOrder())
+                // 4. Prefer archetypeInfo.archetype() contributors to hit thresholds sooner
+                .thenComparing((AbilityTreeSkillNode n) -> n.archetypeInfo().archetype() != null, Comparator.reverseOrder())
 
                 // 5. Stable, deterministic tie-breaker
                 .thenComparingInt(AbilityTreeSkillNode::id);

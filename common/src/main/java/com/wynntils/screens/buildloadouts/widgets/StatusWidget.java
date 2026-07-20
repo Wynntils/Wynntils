@@ -67,7 +67,7 @@ public class StatusWidget extends AbstractWidget {
                         TextShadow.NORMAL);
     }
 
-    public void setStatus(String text, CustomColor color) {
+    private void setStatus(String text, CustomColor color) {
         this.text = StyledText.fromString(text);
         this.color = color;
     }

@@ -12,7 +12,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomModelData;
 
 // The names are from Static-storage/Reference/abilities.json
-// It's the "archetype" field in the nodes.
+// It's the "archetypeInfo" field in the nodes.
 public enum ArchetypeType {
     ARCHETYPE_BOLTSLINGER("abilityTree.archetypeBoltslinger", "Boltslinger", ClassType.ARCHER),
     ARCHETYPE_SHARPSHOOTER("abilityTree.archetypeSharpshooter", "Sharpshooter", ClassType.ARCHER),
