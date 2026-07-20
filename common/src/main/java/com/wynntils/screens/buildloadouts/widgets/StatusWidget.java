@@ -72,6 +72,20 @@ public class StatusWidget extends AbstractWidget {
         this.color = color;
     }
 
+    public void completed(String text) {
+        setStatus(text, parent.COMPLETED_COLOR);
+    }
+
+    public void busy(String text) {
+        setStatus(text, parent.BUSY_COLOR);
+    }
+
+    public void error(String text) {
+        setStatus(text, parent.ERROR_COLOR);
+    }
+
+
+
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         return false;

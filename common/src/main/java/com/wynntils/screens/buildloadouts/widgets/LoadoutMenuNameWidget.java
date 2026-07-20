@@ -1,11 +1,13 @@
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.services.loadout.type.Loadout;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -289,6 +291,18 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
         editing = false;
         textboxScreen.setFocusedTextInput(null);
         this.setFocused(false);
+
+        Loadout selected = parent.getSelectedLoadout();
+        if (selected == null) return;
+
+        String oldName = selected.name();
+        String newName = getTextBoxInput();
+
+        if (newName.isEmpty() || newName.equals(oldName)) return;
+
+        Services.loadout.setName(oldName, newName);
+        parent.setSelectedLoadout(Services.loadout.getLoadout(newName));
+        parent.loadoutScrollListWidget.populateLoadouts();
     }
 
     private boolean isEditButtonHovered(double mouseX, double mouseY) {
@@ -305,5 +319,23 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
         }
 
         return text.substring(0, maxVisibleChars - 3, StyleType.NONE).append("...");
+    }
+
+    public boolean isEditing() {
+        return editing;
+    }
+
+    public void cancelEditing() {
+        if (!editing) return;
+
+        editing = false;
+        textboxScreen.setFocusedTextInput(null);
+        this.setFocused(false);
+
+        Loadout selected = parent.getSelectedLoadout();
+        if (selected != null) {
+            this.textBoxInput = selected.name();
+            setCursorAndHighlightPositions(this.textBoxInput.length());
+        }
     }
 }

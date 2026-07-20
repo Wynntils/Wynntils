@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
+import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.buildloadouts.type.MenuCategory;
 import com.wynntils.screens.buildloadouts.widgets.ItemTooltipProvider;
 import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuDeleteButton;
@@ -45,6 +46,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -427,6 +429,18 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         }
     }
 
+    @Override
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        TextInputBoxWidget focused = getFocusedTextInput();
+        boolean handled = super.doMouseClicked(event, isDoubleClick);
+
+        if (focused != null && !focused.isMouseOver(event.x(), event.y())) {
+            setFocusedTextInput(null);
+        }
+
+        return handled;
+    }
+
     private void updateMenu() {
         // new loadout
         newLoadoutInputWidget.visible = false;
@@ -486,9 +500,11 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
     public void setCurrentCategory(MenuCategory category) {
         this.currentCategory = category;
         setSelectedLoadout(null);
+        searchWidget.setTextBoxInput("");
         loadoutScrollListWidget.populateLoadouts();
         loadoutScrollListWidget.scrollOffset = 0;
-        loadoutMenuLoadButton.updateLoadType();
+        loadoutMenuLoadButton.syncLoadType();
+        loadoutMenuUpdateButton.syncUpdateType();
         updateMenu();
     }
 
@@ -505,6 +521,9 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
     }
 
     public void setSelectedLoadout(Loadout loadout) {
+        if (loadoutMenuNameWidget.isEditing()) {
+            loadoutMenuNameWidget.cancelEditing();
+        }
         this.selectedLoadout = loadout;
         updateMenu();
     }

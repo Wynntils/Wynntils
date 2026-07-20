@@ -60,11 +60,6 @@ public class LoadoutService extends Service {
         return loadout != null ? loadout.skillPoints() : null;
     }
 
-    public SavableTomeSet getTomeLoadout(String name) {
-        Loadout loadout = getLoadout(name);
-        return loadout != null ? loadout.tomes() : null;
-    }
-
     public void saveAbilityTreeLoadout(String name, SavableAbilityTree abilityTree) {
         Loadout existing = getLoadout(name);
         Loadout updated = new Loadout(
@@ -104,18 +99,21 @@ public class LoadoutService extends Service {
         saveLoadout(name, updated);
     }
 
-    public void saveBuildLoadout(String name, SavableSkillPointSet skillPoints, SavableTomeSet tomes,
-                                 SavableAbilityTree abilityTree, SavableAspectSet aspects) {
-        Loadout existing = getLoadout(name);
+    public void setName(String oldName, String newName) {
+        Loadout existing = getLoadout(oldName);
+        if (existing == null) return;
+
         Loadout updated = new Loadout(
-                name,
-                LoadoutType.BUILD,
-                skillPoints,
-                tomes,
-                abilityTree,
-                aspects,
-                existing != null && existing.favourited());
-        saveLoadout(name, updated);
+                newName,
+                existing.type(),
+                existing.skillPoints(),
+                existing.tomes(),
+                existing.abilityTree(),
+                existing.aspects(),
+                existing.favourited());
+
+        loadouts.get().remove(oldName);
+        saveLoadout(newName, updated);
     }
 
     public void setFavourited(String name, boolean favourited) {

@@ -1,13 +1,10 @@
-/*
- * Copyright © Wynntils 2025-2026.
- * This file is released under LGPLv3. See LICENSE for full license details.
- */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.services.loadout.type.LoadoutSaveStep;
 import com.wynntils.services.loadout.type.LoadoutType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -16,6 +13,8 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -50,16 +49,16 @@ public class MakeNewLoadoutButton extends AbstractButton {
                 this.width,
                 this.height);
 
-            FontRenderer.getInstance()
-                    .renderText(
-                            guiGraphics,
-                            !buttonConfirm ? StyledText.fromString("Create") : StyledText.fromString("Confirm"),
-                            (this.x + this.width / 2f),
-                            (this.y + this.height / 2f),
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        !buttonConfirm ? StyledText.fromString("Create") : StyledText.fromString("Confirm"),
+                        (this.x + this.width / 2f),
+                        (this.y + this.height / 2f),
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
     }
 
     @Override
@@ -79,81 +78,86 @@ public class MakeNewLoadoutButton extends AbstractButton {
             return true;
         }
 
-        if (parent.getNewLoadoutType() == null) {
+        LoadoutType type = parent.getNewLoadoutType();
+        if (type == null) {
             parent.newLoadoutInfoWidget.setText(StyledText.fromString("Please select a loadout type."), false);
             buttonConfirm = false;
             return true;
         }
 
         if (Services.loadout.hasLoadout(name) && !buttonConfirm) {
-            parent.newLoadoutInfoWidget.setText(StyledText.fromString("This will overwrite an existing loadout by the same name."), false);
+            parent.newLoadoutInfoWidget.setText(
+                    StyledText.fromString("This will overwrite an existing loadout by the same name."), false);
             buttonConfirm = true;
-        } else {
-            buttonConfirm = false;
-            parent.newLoadoutInputWidget.setTextBoxInput("");
-
-            if (parent.getNewLoadoutType() == LoadoutType.BUILD) {
-                //save skillpoints
-                Models.SkillPoint.saveCurrentBuild(name);
-
-                //save ability tree
-                Models.AbilityTree.saveCurrentAbilityTree(
-                        name,
-                        status -> parent.statusWidget.setStatus(status, parent.BUSY_COLOR),
-                        error -> parent.statusWidget.setStatus(error, parent.ERROR_COLOR),
-                        completed -> {
-
-                            //save aspects
-                            Models.Aspect.saveCurrentAspectLoadout(
-                                    name,
-                                    status -> parent.statusWidget.setStatus(status, parent.BUSY_COLOR),
-                                    error -> parent.statusWidget.setStatus(error, parent.ERROR_COLOR),
-                                    done -> {
-                                        parent.statusWidget.setStatus(done, parent.COMPLETED_COLOR);
-                                        parent.loadoutScrollListWidget.populateLoadouts();
-                                        //this.setSelectedLoadout(this.getLoadout(name));
-                                    });
-                        });
-
-                return true;
-            }
-
-            if (parent.getNewLoadoutType() == LoadoutType.ABILITY_TREE) {
-                Models.AbilityTree.saveCurrentAbilityTree(
-                    name,
-                    status -> parent.statusWidget.setStatus(status, parent.BUSY_COLOR),
-                    error -> parent.statusWidget.setStatus(error, parent.ERROR_COLOR),
-                    completed -> {
-                        parent.statusWidget.setStatus(completed, parent.COMPLETED_COLOR);
-                        parent.loadoutScrollListWidget.populateLoadouts();
-                        //this.setSelectedLoadout(this.getLoadout(name));
-                    });
-                return true;
-            }
-
-            if (parent.getNewLoadoutType() == LoadoutType.SKILL_POINT) {
-                Models.SkillPoint.saveCurrentBuild(name);
-                parent.loadoutScrollListWidget.populateLoadouts();
-                return true;
-            }
-
-            if (parent.getNewLoadoutType() == LoadoutType.ASPECT) {
-                Models.Aspect.saveCurrentAspectLoadout(
-                    name,
-                    status -> parent.statusWidget.setStatus(status, parent.BUSY_COLOR),
-                    error -> parent.statusWidget.setStatus(error, parent.ERROR_COLOR),
-                    completed -> {
-                        parent.statusWidget.setStatus(completed, parent.COMPLETED_COLOR);
-                        parent.loadoutScrollListWidget.populateLoadouts();
-                        //this.setSelectedLoadout(this.getLoadout(name));
-                    });
-                return true;
-            }
-
-
-
+            return true;
         }
+
+        buttonConfirm = false;
+        parent.newLoadoutInputWidget.setTextBoxInput("");
+
+        saveLoadout(name, type);
+
         return true;
+    }
+
+    private void saveLoadout(String name, LoadoutType type) {
+        List<LoadoutSaveStep> steps = new ArrayList<>();
+
+        switch (type) {
+            case BUILD -> {
+                steps.add(skillPointsSaveStep(name));
+                steps.add(abilityTreeSaveStep(name));
+                steps.add(aspectsSaveStep(name));
+            }
+            case ABILITY_TREE -> steps.add(abilityTreeSaveStep(name));
+            case SKILL_POINT -> steps.add(skillPointsSaveStep(name));
+            case ASPECT -> steps.add(aspectsSaveStep(name));
+        }
+
+        runSaveSteps(steps, 0);
+    }
+
+    private void runSaveSteps(List<LoadoutSaveStep> steps, int index) {
+        boolean isLast = index == steps.size() - 1;
+
+        steps.get(index)
+                .run(
+                        status -> parent.statusWidget.busy(status),
+                        error -> parent.statusWidget.error(error),
+                        message -> {
+                            if (isLast) {
+                                parent.statusWidget.completed(message);
+                                parent.loadoutScrollListWidget.populateLoadouts();
+                            } else {
+                                runSaveSteps(steps, index + 1);
+                            }
+                        });
+    }
+
+    private LoadoutSaveStep skillPointsSaveStep(String name) {
+        return (onStatus, onError, onComplete) -> {
+            onStatus.accept("Saving skill points...");
+            try {
+                Models.SkillPoint.saveCurrentBuild(name);
+                onComplete.accept("Skill points saved successfully!");
+            } catch (Exception e) {
+                onError.accept("Failed to save skill points: " + e.getMessage());
+            }
+        };
+    }
+
+    private LoadoutSaveStep abilityTreeSaveStep(String name) {
+        return (onStatus, onError, onComplete) -> {
+            onStatus.accept("Saving ability tree...");
+            Models.AbilityTree.saveCurrentAbilityTree(name, onStatus, onError, onComplete);
+        };
+    }
+
+    private LoadoutSaveStep aspectsSaveStep(String name) {
+        return (onStatus, onError, onComplete) -> {
+            onStatus.accept("Saving aspects...");
+            Models.Aspect.saveCurrentAspectLoadout(name, onStatus, onError, onComplete);
+        };
     }
 
     public void setButtonConfirm(boolean confirm) {
