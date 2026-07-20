@@ -54,6 +54,10 @@ public record Loadout(
         return hasAbilityTree() ? abilityTree.getMainArchetype() : null;
     }
 
+    public String getMainArchetypeColor() {
+        return hasAbilityTree() ? abilityTree.getMainArchetypeColor() : null;
+    }
+
     public int getNodeCount() {
         return hasAbilityTree() ? abilityTree.getNodeCount() : 0;
     }

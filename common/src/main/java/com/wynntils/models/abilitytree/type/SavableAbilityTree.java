@@ -28,6 +28,19 @@ public record SavableAbilityTree(List<String> abilities, ClassType classType) {
                 .orElse(null);
     }
 
+    public String getMainArchetypeColor() {
+        String mainArchetype = getMainArchetype();
+        if (mainArchetype == null) return null;
+        for (String abilityName : abilities) {
+            AbilityTreeSkillNode node = Models.AbilityTree.getNodeFromNameAndClass(abilityName, classType);
+            if (node == null || node.archetypeInfo() == null) continue;
+            if (mainArchetype.equals(node.archetypeInfo().archetype())) {
+                return node.archetypeInfo().color();
+            }
+        }
+        return null;
+    }
+
     public int getLevel() {
         if (abilities == null || abilities.isEmpty()) return 1;
         int abilityPoints = 0;

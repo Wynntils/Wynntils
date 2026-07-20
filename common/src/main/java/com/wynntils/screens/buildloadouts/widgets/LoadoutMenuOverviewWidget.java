@@ -79,10 +79,14 @@ public class LoadoutMenuOverviewWidget extends AbstractWidget {
 
         String archetype = selectedLoadout.getMainArchetype();
         if (archetype != null) {
+            String text = archetype;
+            if (selectedLoadout.getMainArchetypeColor() != null) {
+                text = "§" + selectedLoadout.getMainArchetypeColor() + archetype;
+            }
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
-                            StyledText.fromString(archetype),
+                            StyledText.fromString(text),
                             this.x + this.width / 2f,
                             this.y + startY,
                             CommonColors.WHITE,
