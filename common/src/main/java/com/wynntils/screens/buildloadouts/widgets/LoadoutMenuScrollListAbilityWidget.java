@@ -3,6 +3,7 @@ package com.wynntils.screens.buildloadouts.widgets;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeType;
+import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -18,7 +19,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public class LoadoutMenuScrollListAbilityWidget extends AbstractWidget {
+public class LoadoutMenuScrollListAbilityWidget extends AbstractWidget implements ItemTooltipProvider {
     private final StyledText text;
     private int x;
     private int y;
@@ -33,9 +34,9 @@ public class LoadoutMenuScrollListAbilityWidget extends AbstractWidget {
         this.y = y;
         this.parent = parent;
 
-        AbilityTreeNodeType abilityTreeNodeType = Models.AbilityTree.getNodeFromNameAndClass(this.text.getString(), parent.getSelectedLoadout().getClassType()).abilityTreeNodeType().getUnlockedType();
-        abilityItemStack = abilityTreeNodeType.generateItemStack();
-        ultimateAbility = abilityTreeNodeType.isUltimate();
+        AbilityTreeSkillNode abilityTreeSkillNode = Models.AbilityTree.getNodeFromNameAndClass(this.text.getString(), parent.getSelectedLoadout().getClassType());
+        abilityItemStack = abilityTreeSkillNode.generateItemStack();
+        ultimateAbility = abilityTreeSkillNode.abilityTreeNodeType().isUltimate();
     }
 
     @Override
@@ -78,14 +79,17 @@ public class LoadoutMenuScrollListAbilityWidget extends AbstractWidget {
                 );
             }
         }
+    }
 
+    @Override
+    public void renderHoveredItemTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        RenderUtils.renderTooltip(guiGraphics, abilityItemStack, mouseX, mouseY);
     }
 
     @Override
     public void setY(int y) {
         this.y = y;
     }
-
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {

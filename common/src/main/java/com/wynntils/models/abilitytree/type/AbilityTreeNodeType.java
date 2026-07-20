@@ -271,18 +271,4 @@ public enum AbilityTreeNodeType {
                 .map(value -> value == customModelData)
                 .orElse(false);
     }
-
-    public ItemStack generateItemStack() {
-        ItemStack itemStack = new ItemStack(Items.POTION);
-
-        float customModelData = getCustomModelData().orElse(-1f);
-
-        itemStack.set(
-                DataComponents.CUSTOM_MODEL_DATA,
-                new CustomModelData(List.of(customModelData), List.of(), List.of(), List.of()));
-
-        itemStack.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
-
-        return itemStack;
-    }
 }

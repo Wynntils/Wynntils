@@ -73,7 +73,7 @@ public class LoadoutMenuScrollListWidget extends ScrollListWidget implements Ite
     @Override
     public void renderHoveredItemTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (AbstractWidget widget : getWidgets()) {
-            if (widget instanceof ItemTooltipProvider itemTooltipProvider && widget.isMouseOver(mouseX, mouseY)) {
+            if (widget instanceof ItemTooltipProvider itemTooltipProvider && widget.isMouseOver(mouseX, mouseY + scrollOffset)) {
                 itemTooltipProvider.renderHoveredItemTooltip(guiGraphics, mouseX, mouseY);
                 return;
             }
