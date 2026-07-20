@@ -16,7 +16,7 @@ public record SavableAbilityTree(List<String> abilities, ClassType classType) {
         Map<String, Integer> counts = new HashMap<>();
         for (String abilityName : abilities) {
             AbilityTreeSkillNode node = Models.AbilityTree.getNodeFromNameAndClass(abilityName, classType);
-            if (node == null) continue;
+            if (node == null || node.archetypeInfo() == null) continue;
             String a = node.archetypeInfo().archetype();
             if (a != null && !a.isEmpty()) {
                 counts.merge(a, 1, Integer::sum);

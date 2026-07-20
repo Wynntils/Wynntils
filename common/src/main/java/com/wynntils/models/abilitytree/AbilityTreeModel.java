@@ -164,7 +164,7 @@ public final class AbilityTreeModel extends Model {
             remaining.remove(next);
             currentPage = next.location().page();
 
-            if (next.archetypeInfo().archetype() != null) {
+            if (next.archetypeInfo() != null) {
                 archetypePoints.merge(next.archetypeInfo().archetype(), 1, Integer::sum);
             }
         }
@@ -253,7 +253,7 @@ public final class AbilityTreeModel extends Model {
                         (AbilityTreeSkillNode n) -> dependents.getOrDefault(n.name(), 0L), Comparator.reverseOrder())
 
                 // 4. Prefer archetypeInfo.archetype() contributors to hit thresholds sooner
-                .thenComparing((AbilityTreeSkillNode n) -> n.archetypeInfo().archetype() != null, Comparator.reverseOrder())
+                .thenComparing((AbilityTreeSkillNode n) -> n.archetypeInfo() != null && n.archetypeInfo().archetype() != null, Comparator.reverseOrder())
 
                 // 5. Stable, deterministic tie-breaker
                 .thenComparingInt(AbilityTreeSkillNode::id);
