@@ -386,7 +386,7 @@ public final class WynnItemParser {
                 if (shinyStatMatcher.matches() && shinyStat.isEmpty()) {
                     String shinyName = shinyStatMatcher.group(1);
                     int shinyValue = Integer.parseInt(shinyStatMatcher.group(2).replace(",", ""));
-                    int shinyRerolls = parseRerolls(shinyStatMatcher.group(3));
+                    int shinyRerolls = Math.max(0, parseBannerNumber(shinyStatMatcher.group(3)));
                     shinyStat =
                             Optional.of(new ShinyStat(Models.Shiny.getShinyStat(shinyName), shinyValue, shinyRerolls));
                     segment++;
@@ -503,7 +503,15 @@ public final class WynnItemParser {
     private static int parseRerolls(String rerollsString) {
         if (!rerollsString.endsWith("\uF005")) return 0;
 
-        Matcher matcher = REROLL_EXTRACT_PATTERN.matcher(rerollsString);
+        int rerolls = parseBannerNumber(rerollsString);
+        if (rerolls < 0) {
+            WynntilsMod.warn("Could not find reroll segment");
+        }
+        return rerolls;
+    }
+
+    private static int parseBannerNumber(String text) {
+        Matcher matcher = REROLL_EXTRACT_PATTERN.matcher(text);
         String rawNumberSegment = null;
 
         while (matcher.find()) {
@@ -511,7 +519,6 @@ public final class WynnItemParser {
         }
 
         if (rawNumberSegment == null) {
-            WynntilsMod.warn("Could not find reroll segment");
             return -1;
         }
 

@@ -63,6 +63,7 @@ public class GuideCharmItemStack extends GuideItemStack {
         charmItem
                 .getData()
                 .getOrCalculate(WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(charmItem, true, false));
-        this.generatedTooltip = TooltipUtils.getWynnItemTooltip(this, charmItem);
+        this.generatedTooltip = TooltipUtils.getWynnItemTooltip(
+                this, charmItem, getGuideFooterWidth(charmInfo.metaInfo().obtainInfo()));
     }
 }

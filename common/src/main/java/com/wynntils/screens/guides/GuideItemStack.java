@@ -12,6 +12,7 @@ import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,5 +98,16 @@ public abstract class GuideItemStack extends ItemStack {
                         .withStyle(ChatFormatting.RED));
 
         tooltipLines.add(keybind);
+    }
+
+    protected int getGuideFooterWidth(List<ItemObtainInfo> itemObtainInfos) {
+        List<Component> footer = new ArrayList<>();
+        appendObtainInfo(footer, itemObtainInfos);
+        appendFavoriteInfo(footer);
+        appendWebGuideInfo(footer);
+        return footer.stream()
+                .mapToInt(line -> McUtils.mc().font.width(line))
+                .max()
+                .orElse(0);
     }
 }

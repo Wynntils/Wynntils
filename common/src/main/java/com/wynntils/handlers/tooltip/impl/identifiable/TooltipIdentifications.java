@@ -20,6 +20,7 @@ import com.wynntils.models.stats.type.StatListDelimiter;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
@@ -138,7 +139,7 @@ public final class TooltipIdentifications {
                         StringUtils.toSignedString(value) + statType.getUnit().getDisplayName())
                 .withStyle(Style.EMPTY
                         .withFont(CommonFonts.LANGUAGE_FONT)
-                        .withColor(positive ? ChatFormatting.GREEN : ChatFormatting.RED));
+                        .withColor((positive ? CommonColors.WYNNCRAFT_GREEN : CommonColors.WYNNCRAFT_RED).asInt()));
         if (suffix != null) right.append(suffix);
         return Pair.of(left, right);
     }
@@ -148,8 +149,8 @@ public final class TooltipIdentifications {
         StatType statType = possibleValues.statType();
         Pair<Integer, Integer> range = StatCalculator.getDisplayRange(possibleValues, style.showBestValueLastAlways());
         boolean positive = range.a() > 0 ^ statType.displayAsInverted();
-        ChatFormatting color = positive ? ChatFormatting.GREEN : ChatFormatting.RED;
-        ChatFormatting darkColor = positive ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED;
+        int color = (positive ? CommonColors.WYNNCRAFT_GREEN : CommonColors.WYNNCRAFT_RED).asInt();
+        int darkColor = (positive ? CommonColors.WYNNCRAFT_DARK_GREEN : CommonColors.WYNNCRAFT_DARK_RED).asInt();
         String displayName = Models.Stat.getDisplayName(
                 statType,
                 itemInfo.getRequiredClass(),

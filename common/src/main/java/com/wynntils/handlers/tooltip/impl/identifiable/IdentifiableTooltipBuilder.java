@@ -4,6 +4,7 @@
  */
 package com.wynntils.handlers.tooltip.impl.identifiable;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.CommonStyles;
@@ -42,6 +43,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
@@ -68,7 +70,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
     private static final int TOOLTIP_MIN_WIDTH = 140;
     private final IdentifiableItemProperty<T, U> itemInfo;
     private final boolean synthetic;
-    private final Map<TooltipOptions, List<Component>> cache = new HashMap<>();
+    private final Map<SyntheticTooltipKey, List<Component>> cache = new HashMap<>();
 
     private IdentifiableTooltipBuilder(
             IdentifiableItemProperty<T, U> itemInfo,
@@ -110,7 +112,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
     @Override
     public List<Component> getTooltipLines(ClassType currentClass, TooltipOptions options) {
         if (synthetic) {
-            return cache.computeIfAbsent(options, ignored -> buildSyntheticTooltip(currentClass, options));
+            return getTooltipLines(currentClass, options, TOOLTIP_MIN_WIDTH);
         }
 
         return getTooltipLines(
@@ -121,9 +123,16 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                 null);
     }
 
-    private List<Component> buildSyntheticTooltip(ClassType currentClass, TooltipOptions options) {
-        return prependSource(
-                assemble(itemInfo, currentClass, options, buildHeader(itemInfo, options), buildMajorId(itemInfo)));
+    public List<Component> getTooltipLines(ClassType currentClass, TooltipOptions options, int minimumWidth) {
+        if (!synthetic) return getTooltipLines(currentClass, options);
+
+        SyntheticTooltipKey key = new SyntheticTooltipKey(options, Math.max(TOOLTIP_MIN_WIDTH, minimumWidth));
+        return cache.computeIfAbsent(key, ignored -> buildSyntheticTooltip(currentClass, options, key.minimumWidth()));
+    }
+
+    private List<Component> buildSyntheticTooltip(ClassType currentClass, TooltipOptions options, int minimumWidth) {
+        return prependSource(assemble(
+                itemInfo, currentClass, options, buildHeader(itemInfo, options), buildMajorId(itemInfo), minimumWidth));
     }
 
     @Override
@@ -138,7 +147,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
         List<TooltipLine> header = extractHeader(originalLines, gearItem, options);
         List<TooltipLine> majorId = extractMajorId(originalLines);
-        return assemble(gearItem, currentClass, options, header, majorId);
+        return assemble(gearItem, currentClass, options, header, majorId, TOOLTIP_MIN_WIDTH);
     }
 
     @Override
@@ -180,7 +189,8 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             ClassType currentClass,
             TooltipOptions options,
             List<TooltipLine> header,
-            List<TooltipLine> majorId) {
+            List<TooltipLine> majorId,
+            int minimumWidth) {
         GearTier tier = getGearTier(item);
         Sections sections = new Sections(
                 header,
@@ -193,7 +203,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                 majorId,
                 buildPaginator(item));
 
-        return TooltipLayout.align(sections.lines(tier), TOOLTIP_MIN_WIDTH);
+        return TooltipLayout.align(sections.lines(tier), minimumWidth);
     }
 
     private List<TooltipLine> buildHeader(IdentifiableItemProperty<?, ?> item, TooltipOptions options) {
@@ -427,6 +437,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                 .<List<TooltipLine>>map(major -> {
                     List<TooltipLine> lines = new ArrayList<>();
                     lines.add(new TooltipLine.Fixed(Component.empty()));
+
                     MutableComponent text = Component.empty()
                             .withStyle(Style.EMPTY
                                     .withFont(CommonFonts.LANGUAGE_FONT)
@@ -435,9 +446,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                                     .withStyle(Style.EMPTY.withFont(CommonFonts.MAJOR_ID_FONT)))
                             .append(Component.literal("\uDB00\uDC02"))
                             .append(Component.literal(major.name() + ": "))
-                            .append(major.lore()
-                                    .map(part -> part.withStyle(style -> style.withFont(CommonFonts.LANGUAGE_FONT)))
-                                    .getComponent());
+                            .append(major.lore().getComponent());
                     ComponentUtils.splitComponent(text, TOOLTIP_MIN_WIDTH).stream()
                             .map(TooltipLine.Fixed::new)
                             .forEach(lines::add);
@@ -450,9 +459,11 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         if (!(item instanceof GearItem gearItem)) return List.of();
 
         int currentPage = gearItem.currentPage();
-        MutableComponent paginator = Component.literal("\uF002")
+        MutableComponent keyPrompt = Component.literal("\uF002")
                 .withStyle(Style.EMPTY.withFont(CommonFonts.CHAT_TILE_FONT))
                 .append(Component.literal("\uDAFF\uDF98\uDB00\uDC3F").withStyle(CommonStyles.LANGUAGE));
+        int keyPromptAdvance = McUtils.mc().font.width(keyPrompt);
+        MutableComponent paginator = Component.empty().append(keyPrompt);
         for (int page = 0; page < 3; page++) {
             paginator.append(Component.literal("\uE000")
                     .withStyle(Style.EMPTY
@@ -461,6 +472,8 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                             .withShadowColor(0xffffff)));
             if (page < 2) paginator.append(Component.literal("\uDB00\uDC04").withStyle(CommonStyles.LANGUAGE));
         }
+        paginator.append(Component.literal(Managers.Font.calculateOffset(0, keyPromptAdvance))
+                .withStyle(CommonStyles.SPACE));
         return List.of(new TooltipLine.Centered(paginator), new TooltipLine.Fixed(Component.empty()));
     }
 
@@ -475,8 +488,8 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
     }
 
     private Component buildNameLine(String emblemFrame, String emblemSprite, Component title) {
-        MutableComponent line = Component.literal("\uDAFF\uDFF0")
-                .withStyle(style -> style.withFont(CommonFonts.LANGUAGE_FONT).withShadowColor(0xffffff));
+        MutableComponent line =
+                Component.literal("\uDAFF\uDFF0").withStyle(style -> style.withFont(CommonFonts.LANGUAGE_FONT));
         line.append(Component.literal(emblemFrame).withStyle(Style.EMPTY.withFont(CommonFonts.EMBLEM_FRAME_FONT)));
         line.append("\uDAFF\uDFCF");
         line.append(Component.literal(emblemSprite)
@@ -640,7 +653,8 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
         info.fixedStats()
                 .attackSpeed()
-                .ifPresent(speed -> overview.add(withWhiteShadow(Component.literal("\uE007")
+                .ifPresent(speed -> overview.add(Component.empty()
+                        .append(Component.literal("\uE007")
                                 .withStyle(Style.EMPTY.withFont(CommonFonts.ATTRIBUTE_SPRITE_FONT)))
                         .append(Component.literal(" " + speed.getName() + " ")
                                 .withStyle(Style.EMPTY
@@ -767,4 +781,6 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             return lines;
         }
     }
+
+    private record SyntheticTooltipKey(TooltipOptions options, int minimumWidth) {}
 }

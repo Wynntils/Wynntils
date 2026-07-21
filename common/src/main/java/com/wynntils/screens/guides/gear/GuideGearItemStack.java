@@ -62,6 +62,7 @@ public final class GuideGearItemStack extends GuideItemStack {
         GearItem gearItem = gearItemOpt.get();
         gearItem.getData()
                 .getOrCalculate(WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(gearItem, true, false));
-        this.generatedTooltip = TooltipUtils.getWynnItemTooltip(this, gearItem);
+        this.generatedTooltip = TooltipUtils.getWynnItemTooltip(
+                this, gearItem, getGuideFooterWidth(Models.Gear.getObtainInfo(gearInfo)));
     }
 }
