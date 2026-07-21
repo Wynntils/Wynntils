@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
@@ -20,6 +20,9 @@ public final class SkillPointAnnotator implements GuiItemAnnotator {
             "^[\uDB00\uDC00-\uDB00\uDC0F]§dUpgrade your §[2ebcf][\uE001\uE003\uE004\uE002\uE000] (.*)§d skill$");
     // Test in SkillPointAnnotator_LORE_PATTERN
     private static final Pattern LORE_PATTERN = Pattern.compile("^.*§7(-?\\d+) points§r.*§6-?\\d+ points$");
+    // Test in SkillPointAnnotator_MODIFIED_GEAR_PATTERN
+    private static final Pattern MODIFIED_GEAR_PATTERN =
+            Pattern.compile("^.*§b\\*§8 Modified by your gear \\(([-+]?\\d+)\\)$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
@@ -34,6 +37,13 @@ public final class SkillPointAnnotator implements GuiItemAnnotator {
 
         int skillPoints = Integer.parseInt(m.group(1));
 
-        return new SkillPointItem(skill, skillPoints);
+        int gearModifiedAmount = 0;
+
+        m = LoreUtils.matchLoreLine(itemStack, 4, MODIFIED_GEAR_PATTERN);
+        if (m.matches()) {
+            gearModifiedAmount = Integer.parseInt(m.group(1));
+        }
+
+        return new SkillPointItem(skill, skillPoints, skillPoints - gearModifiedAmount);
     }
 }

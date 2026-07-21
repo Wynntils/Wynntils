@@ -11,6 +11,7 @@ import com.wynntils.core.crowdsource.type.CrowdSourcedDataGameVersion;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.crowdsource.BossAltarLocationDataCollector;
 import com.wynntils.crowdsource.FastTravelLocationDataCollector;
 import com.wynntils.crowdsource.LootrunLocationDataCollector;
 import com.wynntils.crowdsource.NpcLocationDataCollector;
@@ -76,6 +77,7 @@ public class CrowdSourcedDataManager extends Manager {
                 CrowdSourcedDataType.PROFESSION_CRAFTING_STATION_LOCATIONS,
                 new ProfessionStationLocationDataCollector());
         registerCollector(CrowdSourcedDataType.FAST_TRAVEL_LOCATIONS, new FastTravelLocationDataCollector());
+        registerCollector(CrowdSourcedDataType.BOSS_ALTAR_LOCATIONS, new BossAltarLocationDataCollector());
     }
 
     private void registerCollector(CrowdSourcedDataType crowdSourcedDataType, CrowdSourcedDataCollector<?> collector) {

@@ -167,7 +167,7 @@ public class ProfessionHighlightFeature extends Feature {
             if (profession == null) {
                 return Component.literal("-");
             } else {
-                return Component.literal(profession.getProfessionIconChar());
+                return profession.getProfessionIcon();
             }
         }
 

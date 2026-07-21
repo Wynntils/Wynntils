@@ -4,7 +4,9 @@
  */
 package com.wynntils.models.items;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
+import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
 import com.wynntils.models.items.items.game.GearItem;
@@ -72,25 +74,38 @@ public class FakeItemStack extends ItemStack {
 
     @Override
     public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag isAdvanced) {
-        // 1. Firstly, cache a tooltip builder with the item's data
-        //    This will be used by TooltipUtils to generate the tooltip
-        TooltipBuilder tooltipBuilder = null;
+        try {
+            // 1. Firstly, cache a tooltip builder with the item's data
+            //    This will be used by TooltipUtils to generate the tooltip
+            TooltipBuilder tooltipBuilder = null;
 
-        if (wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItem) {
-            tooltipBuilder = wynnItem.getData()
-                    .getOrCalculate(
-                            WynnItemData.TOOLTIP_KEY,
-                            () -> Handlers.Tooltip.buildNew(identifiableItem, false, true, source));
+            if (wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItem) {
+                tooltipBuilder = wynnItem.getData()
+                        .getOrCalculate(
+                                WynnItemData.TOOLTIP_KEY,
+                                () -> Handlers.Tooltip.buildNew(identifiableItem, false, true, source));
 
-        } else if (wynnItem instanceof CraftedItemProperty craftedItemProperty) {
-            tooltipBuilder = wynnItem.getData()
-                    .getOrCalculate(
-                            WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(craftedItemProperty, source));
+            } else if (wynnItem instanceof CraftedItemProperty craftedItemProperty) {
+                tooltipBuilder = wynnItem.getData()
+                        .getOrCalculate(
+                                WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(craftedItemProperty, source));
+            }
+
+            if (tooltipBuilder == null) return List.of();
+
+            // 2. Now that the tooltip builder is cached, generate the tooltip
+            return TooltipUtils.getWynnItemTooltip(this, wynnItem);
+        } catch (Throwable t) {
+            WynntilsMod.reportCrash(
+                    CrashType.TOOLTIP,
+                    this.getClass().getSimpleName(),
+                    wynnItem.getClass().getName(),
+                    "calculation",
+                    false,
+                    false,
+                    t);
+
+            return super.getTooltipLines(context, player, isAdvanced);
         }
-
-        if (tooltipBuilder == null) return List.of();
-
-        // 2. Now that the tooltip builder is cached, generate the tooltip
-        return TooltipUtils.getWynnItemTooltip(this, wynnItem);
     }
 }

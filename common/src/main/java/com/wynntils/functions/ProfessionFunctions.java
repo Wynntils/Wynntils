@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -137,7 +137,7 @@ public class ProfessionFunctions {
 
             if (lastHarvest.isEmpty()) return "";
 
-            return lastHarvest.get().materialProfile().getResourceType().name();
+            return lastHarvest.get().harvestMaterial().resourceType().name();
         }
     }
 
@@ -150,8 +150,8 @@ public class ProfessionFunctions {
 
             return lastHarvest
                     .get()
-                    .materialProfile()
-                    .getResourceType()
+                    .harvestMaterial()
+                    .resourceType()
                     .getMaterialType()
                     .name();
         }
@@ -164,7 +164,7 @@ public class ProfessionFunctions {
 
             if (lastHarvest.isEmpty()) return "";
 
-            return lastHarvest.get().materialProfile().getSourceMaterial().name();
+            return lastHarvest.get().harvestMaterial().sourceMaterial().name();
         }
     }
 
@@ -175,7 +175,7 @@ public class ProfessionFunctions {
 
             if (lastHarvest.isEmpty()) return -1;
 
-            return lastHarvest.get().materialProfile().getSourceMaterial().level();
+            return lastHarvest.get().harvestMaterial().sourceMaterial().level();
         }
     }
 
@@ -186,7 +186,7 @@ public class ProfessionFunctions {
 
             if (lastHarvest.isEmpty()) return -1;
 
-            return lastHarvest.get().materialProfile().getTier();
+            return lastHarvest.get().harvestMaterial().tier();
         }
     }
 

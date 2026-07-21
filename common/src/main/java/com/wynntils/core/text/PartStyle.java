@@ -521,7 +521,7 @@ public final class PartStyle {
         if (oldStyle.italic && !this.italic) return null;
         if (!oldStyle.italic && this.italic) add.append(ChatFormatting.ITALIC);
 
-        if (type.includeFonts()) {
+        if (type.includeFonts() && !Objects.equals(oldStyle.font, this.font)) {
             if (oldStyle.font != null && this.font == null) return null;
             if (this.font != null) {
                 if (this.font instanceof FontDescription.Resource resource) {

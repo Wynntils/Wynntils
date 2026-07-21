@@ -6,10 +6,10 @@ package com.wynntils.core.components;
 
 import com.wynntils.models.abilities.AbilityModel;
 import com.wynntils.models.abilities.ArcherBeastModel;
+import com.wynntils.models.abilities.CastedAbilityModel;
 import com.wynntils.models.abilities.ShamanMaskModel;
 import com.wynntils.models.abilities.ShamanSummonModel;
 import com.wynntils.models.abilities.ShamanTotemModel;
-import com.wynntils.models.abilities.ShieldModel;
 import com.wynntils.models.abilitytree.AbilityTreeModel;
 import com.wynntils.models.account.AccountModel;
 import com.wynntils.models.activities.ActivityModel;
@@ -30,6 +30,7 @@ import com.wynntils.models.combat.CombatModel;
 import com.wynntils.models.containers.BankModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
+import com.wynntils.models.cutscene.CutsceneModel;
 import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.gambits.GambitModel;
@@ -90,6 +91,7 @@ public final class Models {
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final CharacterStatsModel CharacterStats = new CharacterStatsModel();
     public static final CombatModel Combat = new CombatModel();
+    public static final CutsceneModel Cutscene = new CutsceneModel();
     public static final CombatXpModel CombatXp = new CombatXpModel();
     public static final ContainerModel Container = new ContainerModel();
     public static final DiscoveryModel Discovery = new DiscoveryModel();
@@ -123,7 +125,7 @@ public final class Models {
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();
     public static final ShamanSummonModel ShamanSummon = new ShamanSummonModel();
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel();
-    public static final ShieldModel Shield = new ShieldModel();
+    public static final CastedAbilityModel CastedAbility = new CastedAbilityModel();
     public static final ShinyModel Shiny = new ShinyModel();
     public static final SkillPointModel SkillPoint = new SkillPointModel();
     public static final SpellModel Spell = new SpellModel();

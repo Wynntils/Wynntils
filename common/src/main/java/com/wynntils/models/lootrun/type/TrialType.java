@@ -23,7 +23,8 @@ public enum TrialType {
     SIDE_HUSTLE("Side Hustle"),
     TREASURY_BILL("Treasury Bill"),
     ULTIMATE_SACRIFICE("Ultimate Sacrifice"),
-    WARMTH_DEVOURER("Warmth Devourer");
+    WARMTH_DEVOURER("Warmth Devourer"),
+    IMPERITIA("Imperitia");
 
     private final String name;
 

@@ -15,6 +15,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -52,6 +53,9 @@ public class WorldWaypointDistanceFeature extends Feature {
     private final Config<Float> distanceOpacity = new Config<>(1.0f);
 
     @Persisted
+    private final Config<Boolean> dynamicDistanceOpacity = new Config<>(false);
+
+    @Persisted
     private final Config<Float> scale = new Config<>(1.0f);
 
     @Persisted
@@ -68,6 +72,12 @@ public class WorldWaypointDistanceFeature extends Feature {
 
     @Persisted
     private final Config<Integer> maxWaypointTextDistance = new Config<>(5000);
+
+    @Persisted
+    private final Config<Boolean> autoRemoveReachedWaypoints = new Config<>(false);
+
+    @Persisted
+    private final Config<Integer> autoRemoveReachedWaypointDistance = new Config<>(20);
 
     @Persisted
     public final Config<Boolean> showAdditionalTextInWorld = new Config<>(true);
@@ -87,6 +97,9 @@ public class WorldWaypointDistanceFeature extends Feature {
 
         List<MarkerInfo> markers = Models.Marker.getAllMarkers().toList();
         if (markers.isEmpty()) return;
+
+        Position playerPosition =
+                McUtils.player() == null ? null : McUtils.player().position();
 
         for (MarkerInfo marker : markers) {
             Location location = marker.location();
@@ -114,6 +127,9 @@ public class WorldWaypointDistanceFeature extends Feature {
             double squaredDistance = dx * dx + dy * dy + dz * dz;
 
             double distance = Math.sqrt(squaredDistance);
+            double playerDistance = playerPosition == null
+                    ? Double.POSITIVE_INFINITY
+                    : Math.sqrt(getSquaredPlayerDistance(location, playerPosition));
             int maxDistance = McUtils.options().renderDistance().get() * 16;
 
             String distanceText = Math.round((float) distance) + "m";
@@ -128,6 +144,7 @@ public class WorldWaypointDistanceFeature extends Feature {
 
             this.renderedMarkers.add(new RenderedMarkerInfo(
                     distance,
+                    playerDistance,
                     distanceText,
                     marker,
                     worldToScreen(new Vector3f(dx, dy, dz), projection),
@@ -136,14 +153,57 @@ public class WorldWaypointDistanceFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onRenderGuiPost(RenderEvent.Pre event) {
-        if (event.getType() != RenderElementType.HOTBAR) return;
+    public void onTick(TickEvent event) {
+        removeReachedWaypoints();
+    }
 
-        float renderOpacity = MathUtils.clamp(distanceOpacity.get(), 0f, 1f);
-        float backgroundRenderOpacity = MathUtils.clamp(backgroundOpacity.get(), 0f, 1f) * renderOpacity;
+    private void removeReachedWaypoints() {
+        if (!autoRemoveReachedWaypoints.get()) return;
+        if (McUtils.player() == null) return;
+
+        Position playerPosition = McUtils.player().position();
+        int autoRemoveDistance = getAutoRemoveDistance();
+        double maxDistanceSqr = (double) autoRemoveDistance * autoRemoveDistance;
+
+        Models.Marker.USER_WAYPOINTS_PROVIDER
+                .getMarkerInfos()
+                .map(MarkerInfo::location)
+                .filter(location -> isWithinAutoRemoveDistance(location, playerPosition, maxDistanceSqr))
+                .toList()
+                .forEach(Models.Marker.USER_WAYPOINTS_PROVIDER::removeLocation);
+    }
+
+    private int getAutoRemoveDistance() {
+        return Math.max(0, autoRemoveReachedWaypointDistance.get());
+    }
+
+    private boolean isWithinAutoRemoveDistance(Location location, Position playerPosition, double maxDistanceSqr) {
+        return getSquaredPlayerDistance(location, playerPosition) <= maxDistanceSqr;
+    }
+
+    private double getSquaredPlayerDistance(Location location, Position playerPosition) {
+        double xDiff = location.x + 0.5 - playerPosition.x();
+        double zDiff = location.z + 0.5 - playerPosition.z();
+        double squaredDistance = xDiff * xDiff + zDiff * zDiff;
+
+        if (location.y > 0 && location.y <= 255) {
+            double yDiff = location.y + 0.5 - playerPosition.y();
+            squaredDistance += yDiff * yDiff;
+        }
+
+        return squaredDistance;
+    }
+
+    @SubscribeEvent
+    public void onRenderGuiPost(RenderEvent.Pre event) {
+        if (Models.Cutscene.isCutsceneActive()) return;
+        if (event.getType() != RenderElementType.HOTBAR) return;
 
         for (RenderedMarkerInfo renderedMarker : renderedMarkers) {
             if (maxWaypointTextDistance.get() != 0 && maxWaypointTextDistance.get() < renderedMarker.distance) continue;
+
+            float renderOpacity = getRenderOpacity(renderedMarker);
+            float backgroundRenderOpacity = MathUtils.clamp(backgroundOpacity.get(), 0f, 1f) * renderOpacity;
 
             float backgroundWidth;
             float backgroundHeight = FontRenderer.getInstance().getFont().lineHeight;
@@ -294,6 +354,21 @@ public class WorldWaypointDistanceFeature extends Feature {
         }
     }
 
+    private float getRenderOpacity(RenderedMarkerInfo renderedMarker) {
+        float baseOpacity = MathUtils.clamp(distanceOpacity.get(), 0f, 1f);
+        if (!dynamicDistanceOpacity.get()) return baseOpacity;
+
+        int autoRemoveDistance = getAutoRemoveDistance();
+        if (autoRemoveDistance <= 0) return baseOpacity;
+
+        float dynamicOpacity = MathUtils.clamp(
+                MathUtils.map(
+                        (float) renderedMarker.playerDistance, autoRemoveDistance, autoRemoveDistance * 2f, 0f, 1f),
+                0f,
+                1f);
+        return baseOpacity * dynamicOpacity;
+    }
+
     private CustomColor applyOpacity(CustomColor color, float opacity) {
         return color == CustomColor.NONE ? color : color.withAlpha(opacity);
     }
@@ -397,6 +472,7 @@ public class WorldWaypointDistanceFeature extends Feature {
 
     private record RenderedMarkerInfo(
             double distance,
+            double playerDistance,
             String distanceText,
             MarkerInfo markerInfo,
             Vec3 screenCoordinates,

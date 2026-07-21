@@ -19,6 +19,7 @@ import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.StoreContainer;
+import com.wynntils.models.players.type.PlayerRank;
 import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -26,6 +27,7 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.OptionalBoolean;
 import com.wynntils.utils.wynn.InventoryUtils;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ScheduledExecutorService;
@@ -34,6 +36,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -49,6 +52,9 @@ public final class AccountModel extends Model {
     private static final Pattern SILVERBULL_DURATION_PATTERN = Pattern.compile(
             "§#00a2e8ff- §7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)? ?(?:(?<minutes>\\d+) minutes?)? ?(?:(?<seconds>\\d+) seconds?)?");
     public static final Component SILVERBULL_STAR = Component.literal(" ✮").withStyle(ChatFormatting.AQUA);
+    private static final String RANK_STRING =
+            Arrays.stream(PlayerRank.values()).map(PlayerRank::getTag).collect(Collectors.joining());
+    private static final Pattern RANK_TAG_PATTERN = Pattern.compile("§f(?<rank>[" + RANK_STRING + "])");
     private static final int COSMETICS_SLOT = 25;
     private static final int SILVERBULL_SLOT = 36;
 
@@ -57,6 +63,9 @@ public final class AccountModel extends Model {
 
     @Persisted
     private final Storage<OptionalBoolean> silverbullSubscriber = new Storage<>(OptionalBoolean.NULL);
+
+    @Persisted
+    private Storage<PlayerRank> rank = new Storage<>(PlayerRank.NONE);
 
     private static final int PLAYER_INFO_UPDATE_MS = 60000;
     private ScheduledFuture<?> scheduledFuture;
@@ -115,6 +124,10 @@ public final class AccountModel extends Model {
         return playerInfo;
     }
 
+    public PlayerRank getRank() {
+        return rank.get();
+    }
+
     public void scanRankInfo(boolean forceParseUnexpired) {
         scanRankInfoForceParseUnexpired = forceParseUnexpired;
 
@@ -124,7 +137,8 @@ public final class AccountModel extends Model {
 
         // Open compass/character menu
         queryBuilder.then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                .expectContainer(CharacterInfoContainer.class));
+                .expectContainer(CharacterInfoContainer.class)
+                .processIncomingContainer(this::parseCharacterMenuContainer));
 
         if (forceParseUnexpired
                 || silverbullSubscriber.get() == OptionalBoolean.NULL
@@ -154,6 +168,16 @@ public final class AccountModel extends Model {
         if (event.getSlot() != InventoryUtils.COMPASS_SLOT_NUM) return;
 
         scanRankInfo(scanRankInfoForceParseUnexpired);
+    }
+
+    private void parseCharacterMenuContainer(ContainerContent container) {
+        ItemStack characterInfoItem = container.items().get(Models.Character.CHARACTER_INFO_SLOT);
+        StyledText hoverName = StyledText.fromComponent(characterInfoItem.getHoverName());
+
+        Matcher rankMatcher = hoverName.getMatcher(RANK_TAG_PATTERN);
+        if (rankMatcher.find()) {
+            rank.store(PlayerRank.fromString(rankMatcher.group("rank")));
+        }
     }
 
     private void parseStoreContainer(ContainerContent container) {

@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.abilities.label.ShamanPuppetInfo;
+import com.wynntils.models.abilities.type.AbilityCooldown;
 import com.wynntils.models.abilities.type.PuppetType;
 import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.models.characterstats.type.PowderSpecialInfo;
@@ -23,6 +24,28 @@ import java.util.Optional;
 import net.minecraft.client.player.LocalPlayer;
 
 public class CharacterFunctions {
+    public static class AbilityCooldownFunction extends Function<Float> {
+        @Override
+        public Float getValue(FunctionArguments arguments) {
+            String name = arguments.getArgument("name").getStringValue();
+            boolean interpolated = arguments.getArgument("interpolated").getBooleanValue();
+
+            AbilityCooldown cooldown = AbilityCooldown.fromName(name);
+
+            if (cooldown == null || !Models.Ability.getActiveCooldowns().contains(cooldown)) return -1.0f;
+
+            return interpolated
+                    ? Models.Ability.getInterpolatedCooldown(cooldown)
+                    : cooldown.getServerRemainingSeconds();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("name", String.class, null), new Argument<>("interpolated", Boolean.class, null)));
+        }
+    }
+
     public static class CappedManaFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
@@ -277,7 +300,7 @@ public class CharacterFunctions {
     public static class HasNoGuiFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Character.getVehicle() == VehicleType.DISPLAY;
+            return Models.Cutscene.isCutsceneActive();
         }
     }
 

@@ -209,6 +209,14 @@ public record KeyBindDefinition(
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             true);
+
+    public static final KeyBindDefinition TEXTURE_RECORDER = register(
+            "textureRecorder",
+            "Texture Recorder",
+            Managers.KeyBind.DEBUG_CATEGORY,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_UNKNOWN,
+            true);
     // endregion
 
     // region Inventory

@@ -382,6 +382,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new ConditionalFunctions.IfFunction());
         registerFunction(new ConditionalFunctions.IfNumberFunction());
         registerFunction(new ConditionalFunctions.IfStringFunction());
+        registerFunction(new ConditionalFunctions.SwitchCaseFunction());
 
         registerFunction(new LocationFunctions.DistanceFunction());
         registerFunction(new LocationFunctions.LocationFunction());
@@ -494,6 +495,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new BombFunctions.BombTypeFunction());
         registerFunction(new BombFunctions.BombWorldFunction());
 
+        registerFunction(new CharacterFunctions.AbilityCooldownFunction());
         registerFunction(new CharacterFunctions.AspectTierFunction());
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
@@ -556,6 +558,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatFunctions.KillsPerMinuteFunction());
         registerFunction(new CombatFunctions.LastDamageDealtFunction());
         registerFunction(new CombatFunctions.LastKillFunction());
+        registerFunction(new CombatFunctions.LastSpellHealthCostFunction());
+        registerFunction(new CombatFunctions.LastSpellManaCostFunction());
         registerFunction(new CombatFunctions.LastSpellNameFunction());
         registerFunction(new CombatFunctions.LastSpellRepeatCountFunction());
         registerFunction(new CombatFunctions.SpellNameFromDirectionFunction());
@@ -760,6 +764,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new SpellFunctions.ArrowShieldCountFunction());
         registerFunction(new SpellFunctions.GuardianAngelsCountFunction());
         registerFunction(new SpellFunctions.MantleShieldCountFunction());
+        registerFunction(new SpellFunctions.BrokenMantleShieldCountFunction());
         registerFunction(new SpellFunctions.ShamanMaskFunction());
         registerFunction(new SpellFunctions.ShamanTotemDistanceFunction());
         registerFunction(new SpellFunctions.ShamanTotemLocationFunction());
@@ -768,6 +773,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new SpellFunctions.ShamanTotemTransfusedAmountFunction());
         registerFunction(new SpellFunctions.ShamanTotemPoisonAmountFunction());
         registerFunction(new SpellFunctions.ShieldTypeNameFunction());
+        registerFunction(new SpellFunctions.JudrajimActiveFunction());
 
         registerFunction(new StatisticFunctions.StatisticsAverageFunction());
         registerFunction(new StatisticFunctions.StatisticsCountFunction());

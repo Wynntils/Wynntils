@@ -36,6 +36,7 @@ import com.wynntils.utils.type.BoundingBox;
 import com.wynntils.utils.type.BoundingShape;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.GuiGraphics;
@@ -43,6 +44,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -91,22 +93,33 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected float zoomLevel = MapRenderer.DEFAULT_ZOOM_LEVEL;
     protected float zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(zoomLevel);
 
+    protected final Optional<Screen> previousScreen;
+
     protected Poi hovered = null;
 
     protected AbstractMapScreen() {
         super(Component.literal("Map"));
         centerMapAroundPlayer();
+        this.previousScreen = Optional.empty();
+    }
+
+    protected AbstractMapScreen(Screen previousScreen) {
+        super(Component.literal("Map"));
+        centerMapAroundPlayer();
+        this.previousScreen = Optional.ofNullable(previousScreen);
     }
 
     protected AbstractMapScreen(float mapCenterX, float mapCenterZ) {
         super(Component.literal("Map"));
         updateMapCenter(mapCenterX, mapCenterZ);
+        this.previousScreen = Optional.empty();
     }
 
     protected AbstractMapScreen(float mapCenterX, float mapCenterZ, float zoomLevel) {
         super(Component.literal("Map"));
         updateMapCenter(mapCenterX, mapCenterZ);
         setZoomLevel(zoomLevel);
+        this.previousScreen = Optional.empty();
 
         // Overwrite so map is not centered
         shouldCenterMap = false;
@@ -344,6 +357,15 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         KeyMapping.set(key, false);
 
         return false;
+    }
+
+    @Override
+    public void onClose() {
+        if (previousScreen.isEmpty()) {
+            super.onClose();
+        } else {
+            McUtils.mc().setScreen(previousScreen.get());
+        }
     }
 
     protected boolean keyPressedParent(KeyEvent event) {
