@@ -2,9 +2,11 @@ package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.character.type.SavableTome;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
@@ -27,8 +29,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,8 +193,33 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
         if (item instanceof GearItem gearItem) {
             return Optional.of(new FakeItemStack(gearItem, "From loadout"));
         }
+        //todo: fix this once crafted item encoding works.
         if (item instanceof CraftedGearItem craftedGearItem) {
-            return Optional.of(new FakeItemStack(craftedGearItem, "From loadout"));
+            GearType gearType = craftedGearItem.getGearType();
+            ItemStack itemStack = new ItemStack(gearType.getDefaultItem());
+
+            float customModelData = gearType.getDefaultModel();
+            if (gearType == GearType.RING) {
+                customModelData = Services.CustomModel.getFloat("ring.basicPearl").orElse(gearType.getDefaultModel());
+            } else if (gearType == GearType.BRACELET) {
+                customModelData = Services.CustomModel.getFloat("bracelet.multi2").orElse(gearType.getDefaultModel());
+            } else if (gearType == GearType.NECKLACE) {
+                customModelData = Services.CustomModel.getFloat("necklace.basicCross").orElse(gearType.getDefaultModel());
+            } else if (gearType == GearType.HELMET) {
+                customModelData = Services.CustomModel.getFloat("helmet.diamond").orElse(gearType.getDefaultModel());
+            } else if (gearType == GearType.CHESTPLATE) {
+                customModelData = Services.CustomModel.getFloat("chestplate.diamond").orElse(gearType.getDefaultModel());
+            } else if (gearType == GearType.LEGGINGS) {
+                customModelData = Services.CustomModel.getFloat("leggings.diamond").orElse(gearType.getDefaultModel());
+            } else if (gearType == GearType.BOOTS) {
+                customModelData = Services.CustomModel.getFloat("boots.diamond").orElse(gearType.getDefaultModel());
+            }
+
+            itemStack.set(
+                    DataComponents.CUSTOM_MODEL_DATA,
+                    new CustomModelData(List.of(customModelData), List.of(), List.of(), List.of()));
+
+            return Optional.of(new FakeItemStack(craftedGearItem, itemStack, "From loadout"));
         }
         if (item instanceof TomeItem tomeItem) {
             return Optional.of(new FakeItemStack(tomeItem, "From loadout"));
