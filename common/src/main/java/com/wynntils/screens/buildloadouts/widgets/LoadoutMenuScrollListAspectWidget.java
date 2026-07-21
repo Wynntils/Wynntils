@@ -1,7 +1,9 @@
 package com.wynntils.screens.buildloadouts.widgets;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.screens.buildloadouts.type.AspectItemStack;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -14,14 +16,17 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
-public class LoadoutMenuScrollListAspectWidget extends AbstractWidget implements IconRenderer {
+public class LoadoutMenuScrollListAspectWidget extends AbstractWidget implements IconRenderer, ItemTooltipProvider {
     private final StyledText text;
     private int x;
     private int y;
     private final BuildLoadoutsScreen parent;
     private final Texture aspectTexture;
     private final Texture aspectFlameTexture;
+    private final ItemStack tooltipItem;
 
     public LoadoutMenuScrollListAspectWidget(StyledText text, int x, int y, int width, int height, BuildLoadoutsScreen parent) {
         super(x, y, width, height, Component.literal("Build Loadout Scroll List Aspect Widget"));
@@ -31,6 +36,7 @@ public class LoadoutMenuScrollListAspectWidget extends AbstractWidget implements
         this.parent = parent;
         this.aspectTexture = parent.getSelectedLoadout().getAspectTexture();
         this.aspectFlameTexture = parent.getSelectedLoadout().getFlameTexture();
+        this.tooltipItem = new AspectItemStack(Models.Aspect.getAspectInfo(this.text.getString()), Models.Aspect.getAspectTierByName(this.text.getString()).orElse(1));
     }
 
     @Override
@@ -57,6 +63,11 @@ public class LoadoutMenuScrollListAspectWidget extends AbstractWidget implements
         if (aspectTexture != null && aspectFlameTexture != null) {
             renderAspect(guiGraphics, aspectTexture, aspectFlameTexture, this.x + 4, this.y);
         }
+    }
+
+    @Override
+    public void renderHoveredItemTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        RenderUtils.renderTooltip(guiGraphics, tooltipItem, mouseX, mouseY);
     }
 
     @Override

@@ -92,8 +92,6 @@ public final class AspectModel extends Model {
 
             if (aspectItemOpt.isEmpty()) continue;
 
-            WynntilsMod.info("item: " + aspectItemOpt.get());
-
             newOwnedAspects.put(
                     aspectItemOpt.get().getName(), aspectItemOpt.get().getTier());
 
@@ -136,8 +134,6 @@ public final class AspectModel extends Model {
             Optional<AspectItem> aspectItemOpt = Models.Item.asWynnItem(changedItemStack, AspectItem.class);
 
             if (aspectItemOpt.isPresent()) {
-                WynntilsMod.info("item: " + aspectItemOpt.get());
-
                 Map<String, Integer> newOwnedAspects = ownedAspects.get();
                 newOwnedAspects.put(
                         aspectItemOpt.get().getName(), aspectItemOpt.get().getTier());
