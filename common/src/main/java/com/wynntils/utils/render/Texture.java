@@ -26,6 +26,8 @@ public enum Texture {
     // endregion
 
     // region Emote Wheel
+    EMOTE_CONFIG_GUI("emote_wheel/config_gui.png", 149, 215),
+    EMOTE_CONFIG_BUTTON("emote_wheel/config_button.png", 58, 58),
     EMOTE_WHEEL_STYLE_TOOLTIP("emote_wheel/tooltip.png", 64, 64),
     EMOTE_WHEEL_STYLE_TOOLTIP_HOVERED("emote_wheel/tooltip_hovered.png", 64, 64),
     EMOTE_WHEEL_STYLE_BUTTON("emote_wheel/button.png", 32, 32),

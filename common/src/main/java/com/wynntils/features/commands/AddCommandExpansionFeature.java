@@ -10,7 +10,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.CommandSuggestionEvent;
+import com.wynntils.mc.event.CommandSuggestionFillEvent;
 import java.util.HashSet;
 import java.util.Set;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -37,7 +37,7 @@ public class AddCommandExpansionFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onCommandSuggestions(CommandSuggestionEvent.Add event) {
+    public void onCommandSuggestions(CommandSuggestionFillEvent.Add event) {
         suggestions.stream().filter(s -> s.startsWith(event.getInput())).forEach(event::addSuggestion);
     }
 

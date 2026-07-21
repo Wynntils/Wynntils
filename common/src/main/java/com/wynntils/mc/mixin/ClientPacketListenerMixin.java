@@ -15,6 +15,7 @@ import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ChunkReceivedEvent;
 import com.wynntils.mc.event.CommandSentEvent;
+import com.wynntils.mc.event.CommandSuggestionsEvent;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
@@ -56,6 +57,7 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.protocol.game.ClientboundCommandSuggestionsPacket;
 import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
@@ -624,6 +626,15 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
             at = @At("RETURN"))
     private void handlePongResponsePost(ClientboundPongResponsePacket packet, CallbackInfo ci) {
         PongReceivedEvent event = new PongReceivedEvent(packet.time());
+        MixinHelper.post(event);
+    }
+
+    @Inject(
+            method =
+                    "handleCommandSuggestions(Lnet/minecraft/network/protocol/game/ClientboundCommandSuggestionsPacket;)V",
+            at = @At("HEAD"))
+    private void handleCommandSuggestionsPre(ClientboundCommandSuggestionsPacket packet, CallbackInfo ci) {
+        CommandSuggestionsEvent event = new CommandSuggestionsEvent(packet.id(), packet.toSuggestions());
         MixinHelper.post(event);
     }
 }

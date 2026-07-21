@@ -68,7 +68,12 @@ public class HoverableTexturedButton extends BasicTexturedButton {
 
         // When selected or hovered it should use the alternate texture
         RenderUtils.drawHoverableTexturedRect(
-                guiGraphics, buttonTexture, getX(), getY(), this.isHovered || this.isSelected, RenderDirection.VERTICAL);
+                guiGraphics,
+                buttonTexture,
+                getX(),
+                getY(),
+                this.isHovered || this.isSelected,
+                RenderDirection.VERTICAL);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(

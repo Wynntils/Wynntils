@@ -12,7 +12,6 @@ import com.wynntils.services.cosmetics.CosmeticsService;
 import com.wynntils.services.custommodel.CustomModelService;
 import com.wynntils.services.destination.DestinationService;
 import com.wynntils.services.discord.DiscordService;
-import com.wynntils.services.emotes.favorites.EmotesService;
 import com.wynntils.services.favorites.FavoritesService;
 import com.wynntils.services.hades.HadesService;
 import com.wynntils.services.hint.HintService;
@@ -40,7 +39,6 @@ public final class Services {
     public static final DestinationService Destination = new DestinationService();
     public static final DiscordService Discord = new DiscordService();
     public static final FavoritesService Favorites = new FavoritesService();
-    public static final EmotesService FavoritedEmotes = new EmotesService();
     public static final HadesService Hades = new HadesService();
     public static final HintService Hint = new HintService();
     public static final ItemFilterService ItemFilter = new ItemFilterService();

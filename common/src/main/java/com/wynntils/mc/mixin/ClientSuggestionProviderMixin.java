@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -8,7 +8,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.wynntils.core.events.MixinHelper;
-import com.wynntils.mc.event.CommandSuggestionEvent;
+import com.wynntils.mc.event.CommandSuggestionFillEvent;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.client.multiplayer.ClientSuggestionProvider;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,7 +31,7 @@ public class ClientSuggestionProviderMixin {
         if (input.startsWith("/") && !input.contains(" ")) {
             SuggestionsBuilder builder = new SuggestionsBuilder(input, 1);
 
-            CommandSuggestionEvent event = new CommandSuggestionEvent.Add(input.substring(1));
+            CommandSuggestionFillEvent event = new CommandSuggestionFillEvent.Add(input.substring(1));
             MixinHelper.post(event);
 
             for (String root : event.getSuggestions()) {

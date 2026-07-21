@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
@@ -9,11 +9,11 @@ import java.util.Collections;
 import java.util.List;
 import net.neoforged.bus.api.Event;
 
-public abstract class CommandSuggestionEvent extends Event {
+public abstract class CommandSuggestionFillEvent extends Event {
     private final String input;
     private final List<String> suggestions;
 
-    protected CommandSuggestionEvent(String input, List<String> suggestions) {
+    protected CommandSuggestionFillEvent(String input, List<String> suggestions) {
         this.input = input;
         this.suggestions = suggestions;
     }
@@ -34,13 +34,13 @@ public abstract class CommandSuggestionEvent extends Event {
         return Collections.unmodifiableList(suggestions);
     }
 
-    public static class Add extends CommandSuggestionEvent {
+    public static class Add extends CommandSuggestionFillEvent {
         public Add(String input) {
             super(input, new ArrayList<>());
         }
     }
 
-    public static class Modify extends CommandSuggestionEvent {
+    public static class Modify extends CommandSuggestionFillEvent {
         public Modify(String input, List<String> suggestions) {
             super(input, suggestions);
         }

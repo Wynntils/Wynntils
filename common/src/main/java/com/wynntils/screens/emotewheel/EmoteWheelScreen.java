@@ -11,7 +11,6 @@ import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.features.ui.EmoteWheelFeature;
-import com.wynntils.models.items.items.gui.EmoteItem;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -34,56 +33,58 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import org.lwjgl.glfw.GLFW;
 
-public final class EmoteWheelScreen extends WynntilsScreen {
-    private static final List<Pair<Integer, Integer>> buttonPositions = new ArrayList<>();
-    private static final int squareSize = 50;
-    private static final int distanceFromCenter = 110;
+public class EmoteWheelScreen extends WynntilsScreen {
+    private static final List<Pair<Integer, Integer>> BUTTON_POSITIONS = new ArrayList<>();
+    public static final int BUTTON_SIZE = 50;
+    public static final int DIST_FROM_CENTER = 110;
 
     private final int numOfEmotes;
     private final EmoteWheelFeature emoteWheelFeature;
-    private final List<EmoteItem> emotes;
+    private final List<String> emotes;
     private final double scale;
     private final float buttonSize;
     private final EmoteWheelButton buttonStyle;
     private final int buttonRadius;
+    private final boolean canInteract;
 
-    private int centerX = 0;
-    private int centerY = 0;
+    protected int centerX = 0;
+    protected int centerY = 0;
     private int hoveredEmoji = -1;
 
-    private EmoteWheelScreen(int numOfEmotes) {
+    EmoteWheelScreen(boolean canInteract) {
         super(Component.literal("Emote Wheel"));
 
-        this.numOfEmotes = MathUtils.clamp(numOfEmotes, 1, 10);
+        this.canInteract = canInteract;
+
         emoteWheelFeature = Managers.Feature.getFeatureInstance(EmoteWheelFeature.class);
-        emotes = emoteWheelFeature.favoritedEmotes.get().stream()
-                .map(EmoteItem::fromString)
-                .toList();
+        numOfEmotes = MathUtils.clamp(emoteWheelFeature.numberOfButtons.get(), 1, 10);
+        emotes = emoteWheelFeature.configureEmotes.get().getFavoritedEmotes();
         scale = emoteWheelFeature.scale.get();
-        buttonSize = (float) (squareSize * scale);
+        buttonSize = (float) (BUTTON_SIZE * scale);
         buttonStyle = emoteWheelFeature.buttonStyle.get();
         buttonRadius = emoteWheelFeature.buttonRadius.get();
     }
 
-    public static Screen create(int numOfEmotes) {
-        return new EmoteWheelScreen(numOfEmotes);
+    public static Screen create() {
+        return new EmoteWheelScreen(true);
     }
 
     @Override
     public void doInit() {
-        KeyMapping keyMapping = emoteWheelFeature.openEmoteWheelKeybind.getKeyMapping();
-        KeyMapping.set(keyMapping.key, KeyboardUtils.isKeyDown(keyMapping.key.getValue()));
-        rememberKeyHolds();
+        if (canInteract) {
+            KeyMapping keyMapping = emoteWheelFeature.openEmoteWheelKeybind.getKeyMapping();
+            KeyMapping.set(keyMapping.key, KeyboardUtils.isKeyDown(keyMapping.key.getValue()));
+            rememberKeyHolds();
+        }
 
         getButtonPositions();
     }
 
     private void getButtonPositions() {
-        buttonPositions.clear();
-        centerX = width / 2;
-        centerY = height / 2;
+        BUTTON_POSITIONS.clear();
+        getCenterOfWheel();
         double buttonAngle = (360.0 / numOfEmotes);
-        int distFromCenter = distanceFromCenter;
+        int distFromCenter = DIST_FROM_CENTER;
 
         if (buttonStyle == EmoteWheelButton.WHEEL) {
             distFromCenter += buttonRadius;
@@ -94,21 +95,26 @@ public final class EmoteWheelScreen extends WynntilsScreen {
             double angle = Math.toRadians((buttonAngle * i) - 90);
             int x = (int) (centerX + (distFromCenter * scale * Math.cos(angle)));
             int y = (int) (centerY + (distFromCenter * scale * Math.sin(angle)));
-            buttonPositions.add(new Pair<>(x, y));
+            BUTTON_POSITIONS.add(new Pair<>(x, y));
         }
+    }
+
+    protected void getCenterOfWheel() {
+        centerX = width / 2;
+        centerY = height / 2;
     }
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (!emoteWheelFeature.openEmoteWheelKeybind.getKeyMapping().isDown()) {
+        if (!emoteWheelFeature.openEmoteWheelKeybind.getKeyMapping().isDown() && canInteract) {
             onClose();
             return;
         }
 
         hoveredEmoji = (getHoveredEmoji(mouseX, mouseY));
 
-        for (int i = 0; i < buttonPositions.size(); i++) {
-            Pair<Integer, Integer> centerPos = buttonPositions.get(i);
+        for (int i = 0; i < BUTTON_POSITIONS.size(); i++) {
+            Pair<Integer, Integer> centerPos = BUTTON_POSITIONS.get(i);
             float buttonX = centerPos.key() - buttonSize / 2;
             float buttonY = centerPos.value() - buttonSize / 2;
             Texture buttonTexture = getButtonTexture(i, buttonStyle);
@@ -133,7 +139,7 @@ public final class EmoteWheelScreen extends WynntilsScreen {
             TextShadow textShadow = emoteWheelFeature.textShadow.get();
 
             // Render button name
-            String emoteName = !doesEmoteExistInWheel(i) ? "" : emotes.get(i).getEmoteName();
+            String emoteName = !doesEmoteExistInWheel(i) ? "" : emotes.get(i);
             float textMargin = 3;
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
@@ -170,6 +176,9 @@ public final class EmoteWheelScreen extends WynntilsScreen {
     }
 
     private int getHoveredEmoji(int mouseX, int mouseY) {
+        if (!canInteract) {
+            return -1;
+        }
         // Subtracting 90 degress so it starts at the top
         double angle = Math.atan2(centerY - mouseY, centerX - mouseX) % (2 * Math.PI) + (Math.PI / 2);
         float position = (float) ((angle + Math.PI) / (Math.PI / ((double) numOfEmotes / 2)));
@@ -213,8 +222,8 @@ public final class EmoteWheelScreen extends WynntilsScreen {
     private void renderWheelStyle(GuiGraphics guiGraphics, CustomColor color, int buttonNum) {
         float segmentFillPercent = ((float) 1 / numOfEmotes);
         double segmentAngleDegrees = (360.0 / numOfEmotes);
-        int innerRadius = (int) ((distanceFromCenter - 5 - (double) squareSize / 2) * scale);
-        int outerRadius = (int) ((distanceFromCenter + 5 + (double) squareSize / 2) * scale);
+        int innerRadius = (int) ((DIST_FROM_CENTER - 5 - (double) BUTTON_SIZE / 2) * scale);
+        int outerRadius = (int) ((DIST_FROM_CENTER + 5 + (double) BUTTON_SIZE / 2) * scale);
 
         float angleOffset = (float) Math.toRadians((segmentAngleDegrees * buttonNum) - segmentAngleDegrees / 2);
         double buttonAngle = Math.toRadians((segmentAngleDegrees * buttonNum) - 90);
@@ -260,6 +269,10 @@ public final class EmoteWheelScreen extends WynntilsScreen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
+        if (!canInteract) {
+            return super.keyPressed(event);
+        }
+
         int emoteNum = -1;
 
         if (event.key() >= GLFW.GLFW_KEY_1 && event.key() <= GLFW.GLFW_KEY_9) {
@@ -280,9 +293,10 @@ public final class EmoteWheelScreen extends WynntilsScreen {
     }
 
     private void executeEmote(int emoteNum) {
+        if (!canInteract) return;
+
         if (doesEmoteExistInWheel(emoteNum)) {
-            Handlers.Command.sendCommandImmediately(
-                    "emote " + emotes.get(emoteNum).getEmoteCommand());
+            Handlers.Command.sendCommandImmediately("emote " + emotes.get(emoteNum));
 
             emoteWheelFeature.setlastEmoteNum(emoteNum);
         }
@@ -296,6 +310,10 @@ public final class EmoteWheelScreen extends WynntilsScreen {
 
     @Override
     public boolean keyReleased(KeyEvent event) {
+        if (!canInteract) {
+            return super.keyPressed(event);
+        }
+
         if (event.key()
                 == emoteWheelFeature.openEmoteWheelKeybind.getKeyMapping().key.getValue()) {
             onClose();
@@ -309,8 +327,16 @@ public final class EmoteWheelScreen extends WynntilsScreen {
     }
 
     @Override
-    protected void renderBlurredBackground(GuiGraphics guiGraphics) {}
+    protected void renderBlurredBackground(GuiGraphics guiGraphics) {
+        if (!canInteract) {
+            super.renderBlurredBackground(guiGraphics);
+        }
+    }
 
     @Override
-    protected void renderMenuBackground(GuiGraphics partialTick) {}
+    protected void renderMenuBackground(GuiGraphics partialTick) {
+        if (!canInteract) {
+            super.renderMenuBackground(partialTick);
+        }
+    }
 }

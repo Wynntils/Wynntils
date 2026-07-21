@@ -181,6 +181,9 @@ public class ConfigTile extends WynntilsButton {
                     (TextboxScreen) screen,
                     maskTopY,
                     maskBottomY);
+        } else if (configOption.get() instanceof CustomConfigScreen customConfigScreen) {
+            return customConfigScreen.customScreenWidget(
+                    getRenderX(), getRenderY(), configOption, screen, maskTopY, maskBottomY);
         }
 
         return new TextInputBoxSettingsWidget<>(
