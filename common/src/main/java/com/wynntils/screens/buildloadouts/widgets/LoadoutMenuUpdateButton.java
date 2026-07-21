@@ -135,6 +135,7 @@ public class LoadoutMenuUpdateButton extends AbstractButton implements TooltipPr
                             if (isLast) {
                                 parent.statusWidget.completed(message);
                                 parent.setSelectedLoadout(Services.loadout.getLoadout(loadout.name()));
+                                parent.loadoutScrollListWidget.scrollOffset = 0;
                                 parent.loadoutScrollListWidget.populateLoadouts();
                             } else {
                                 runSteps(loadout, steps, index + 1);

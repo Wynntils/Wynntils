@@ -73,6 +73,7 @@ public class LoadoutMenuDeleteButton extends AbstractButton {
         Loadout selected = parent.getSelectedLoadout();
         Services.loadout.deleteLoadout(selected.name());
         parent.setSelectedLoadout(null);
+        parent.loadoutScrollListWidget.scrollOffset = 0;
         parent.loadoutScrollListWidget.populateLoadouts();
 
         return true;

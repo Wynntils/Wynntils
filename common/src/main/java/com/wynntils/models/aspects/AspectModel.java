@@ -35,6 +35,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class AspectModel extends Model {
@@ -57,7 +58,7 @@ public final class AspectModel extends Model {
         aspectInfoRegistry.registerDownloads(registry);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onContentSet(ContainerSetContentEvent.Pre event) {
         Container currentContainer = Models.Container.getCurrentContainer();
 
@@ -89,7 +90,9 @@ public final class AspectModel extends Model {
 
             Optional<AspectItem> aspectItemOpt = Models.Item.asWynnItem(itemStack, AspectItem.class);
 
-            if (aspectItemOpt.isEmpty()) break;
+            if (aspectItemOpt.isEmpty()) continue;
+
+            WynntilsMod.info("item: " + aspectItemOpt.get());
 
             newOwnedAspects.put(
                     aspectItemOpt.get().getName(), aspectItemOpt.get().getTier());
@@ -110,16 +113,46 @@ public final class AspectModel extends Model {
         ownedAspects.touched();
     }
 
-    // Handles right clicking adding/removing aspects
-    @SubscribeEvent
+    // Handles right clicking adding/removing aspects, and paging through owned aspects
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
-        if (!(Models.Container.getCurrentContainer() instanceof AspectsContainer aspectsContainer)) return;
+        Container currentContainer = Models.Container.getCurrentContainer();
 
-        List<String> characterAspects = new ArrayList<>();
+        List<Integer> equippedSlots = currentContainer instanceof AspectsContainer aspectsContainer
+                ? new ArrayList<>(aspectsContainer.getEquippedSlots())
+                : new ArrayList<>();
 
-        McUtils.mc().player.containerMenu.slots.forEach(slot -> {
-            if (aspectsContainer.getEquippedSlots().contains(slot.index)) {
-                ItemStack itemStack = slot.getItem();
+        List<Integer> ownedSlots = getOwnedSlotsFromContainer(currentContainer);
+
+        int changedSlot = event.getSlot();
+        boolean changedSlotIsOwned = ownedSlots.contains(changedSlot);
+        boolean changedSlotIsEquipped = equippedSlots.contains(changedSlot);
+
+        if (!changedSlotIsOwned && !changedSlotIsEquipped) return;
+
+        ItemStack changedItemStack = event.getItemStack();
+
+        if (changedSlotIsOwned && !changedItemStack.isEmpty()) {
+            Optional<AspectItem> aspectItemOpt = Models.Item.asWynnItem(changedItemStack, AspectItem.class);
+
+            if (aspectItemOpt.isPresent()) {
+                WynntilsMod.info("item: " + aspectItemOpt.get());
+
+                Map<String, Integer> newOwnedAspects = ownedAspects.get();
+                newOwnedAspects.put(
+                        aspectItemOpt.get().getName(), aspectItemOpt.get().getTier());
+                ownedAspects.store(newOwnedAspects);
+                ownedAspects.touched();
+            }
+        }
+
+        if (changedSlotIsEquipped) {
+            List<String> characterAspects = new ArrayList<>();
+
+            McUtils.mc().player.containerMenu.slots.forEach(slot -> {
+                if (!equippedSlots.contains(slot.index)) return;
+
+                ItemStack itemStack = slot.index == changedSlot ? changedItemStack : slot.getItem();
                 if (itemStack.isEmpty()) return;
 
                 StyledText itemName = StyledText.fromComponent(itemStack.getHoverName());
@@ -130,13 +163,13 @@ public final class AspectModel extends Model {
                 if (aspectItemOpt.isEmpty()) return;
 
                 characterAspects.add(aspectItemOpt.get().getName());
-            }
-        });
+            });
 
-        Map<String, List<String>> currentEquippedAspects = equippedAspects.get();
-        currentEquippedAspects.put(Models.Character.getId(), characterAspects);
-        equippedAspects.store(currentEquippedAspects);
-        equippedAspects.touched();
+            Map<String, List<String>> currentEquippedAspects = equippedAspects.get();
+            currentEquippedAspects.put(Models.Character.getId(), characterAspects);
+            equippedAspects.store(currentEquippedAspects);
+            equippedAspects.touched();
+        }
     }
 
     public Stream<AspectInfo> getAllAspectInfos() {

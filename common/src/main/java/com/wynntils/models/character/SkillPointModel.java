@@ -83,30 +83,33 @@ public final class SkillPointModel extends Model {
      */
     public void saveSkillPointsAndItems(String name, int[] skillPoints) {
         EncodingSettings encodingSettings = new EncodingSettings(true, true);
+        List<ItemStack> equippedItems = Models.Inventory.getEquippedItems();
 
         String weaponEncodedString = null;
-        List<String> armourEncodedStrings = new ArrayList<>();
-        List<String> accessoryEncodedStrings = new ArrayList<>();
+        List<String> armourEncodedStrings = new ArrayList<>(List.of("", "", "", ""));
+        List<String> accessoryEncodedStrings = new ArrayList<>(List.of("", "", "", ""));
 
-        for (ItemStack itemStack : Models.Inventory.getEquippedItems()) {
+        for (int i = 0; i < equippedItems.size(); i++) {
+            ItemStack itemStack = equippedItems.get(i);
+
             Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(itemStack);
             if (wynnItemOptional.isEmpty()) continue;
+
             WynnItem wynnItem = wynnItemOptional.get();
-            ErrorOr<EncodedByteBuffer> errorOrEncoded =
-                    Models.ItemEncoding.encodeItem(wynnItem, encodingSettings);
+            ErrorOr<EncodedByteBuffer> errorOrEncoded = Models.ItemEncoding.encodeItem(wynnItem, encodingSettings);
             if (errorOrEncoded.hasError()) {
                 WynntilsMod.warn("Failed to encode " + itemStack.getHoverName().getString() + ": " + errorOrEncoded.getError());
                 continue;
             }
 
-            if (wynnItem instanceof GearTypeItemProperty gear) {
-                if (gear.getGearType().isArmor()) {
-                    armourEncodedStrings.add(Models.ItemEncoding.makeItemString(wynnItem, errorOrEncoded.getValue()));
-                } else if (gear.getGearType().isAccessory()) {
-                    accessoryEncodedStrings.add(Models.ItemEncoding.makeItemString(wynnItem, errorOrEncoded.getValue()));
-                } else if (gear.getGearType().isWeapon()) {
-                    weaponEncodedString = Models.ItemEncoding.makeItemString(wynnItem, errorOrEncoded.getValue());
-                }
+            String encoded = Models.ItemEncoding.makeItemString(wynnItem, errorOrEncoded.getValue());
+
+            if (i < 4) {
+                armourEncodedStrings.set(i, encoded);
+            } else if (i < 8) {
+                accessoryEncodedStrings.set(i - 4, encoded);
+            } else {
+                weaponEncodedString = encoded;
             }
         }
 

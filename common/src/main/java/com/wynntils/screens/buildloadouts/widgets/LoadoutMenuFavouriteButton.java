@@ -75,6 +75,7 @@ public class LoadoutMenuFavouriteButton extends AbstractWidget {
         Loadout selected = parent.getSelectedLoadout();
         Services.loadout.setFavourited(selected.name(), !selected.favourited());
         parent.setSelectedLoadout(Services.loadout.getLoadout(selected.name()));
+        parent.loadoutScrollListWidget.scrollOffset = 0;
         parent.loadoutScrollListWidget.populateLoadouts();
 
         return true;

@@ -7,19 +7,27 @@ package com.wynntils.models.abilitytree.type;
 import com.google.gson.JsonArray;
 import com.wynntils.core.text.StyledText;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Unit;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.item.component.TooltipDisplay;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.SequencedSet;
+import java.util.Set;
 
 public record AbilityTreeSkillNode(
         int id,
@@ -57,7 +65,22 @@ public record AbilityTreeSkillNode(
     }
 
     public ItemStack generateItemStack() {
-        ItemStack itemStack = new ItemStack(Items.POTION);
+        //not pretty but it's needed to remove the empty component at the bottom.
+        ItemStack itemStack = new ItemStack(Items.POTION) {
+            @Override
+            public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag isAdvanced) {
+                List<Component> tooltip = new ArrayList<>();
+                tooltip.add(this.getHoverName());
+
+                ItemLore lore = this.get(DataComponents.LORE);
+                if (lore != null) {
+                    tooltip.addAll(lore.lines());
+                }
+
+                return tooltip;
+            }
+        };
+
 
         float customModelData = abilityTreeNodeType.getUnlockedType().getCustomModelData().orElse(-1f);
 
@@ -136,6 +159,7 @@ public record AbilityTreeSkillNode(
         }
 
         itemStack.set(DataComponents.LORE, new ItemLore(loreLines));
+        itemStack.set(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT);
 
         return itemStack;
     }
