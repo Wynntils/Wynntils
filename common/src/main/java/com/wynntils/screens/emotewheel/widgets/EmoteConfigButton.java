@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.emotewheel.widgets;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.emotewheel.EmoteWheelConfigScreen;
@@ -60,8 +61,8 @@ public class EmoteConfigButton extends WynntilsButton {
                         TextShadow.NORMAL,
                         1.0f);
 
-        if (selectionScreen.isFavorited(emote)) {
-            int index = selectionScreen.getEmoteIndex(emote);
+        if (Models.Emote.isFavorited(emote)) {
+            int index = Models.Emote.getEmoteIndex(emote);
             String emoteNumber = index == 9 ? "0" : Integer.toString(index + 1);
             FontRenderer.getInstance()
                     .renderText(
@@ -86,7 +87,7 @@ public class EmoteConfigButton extends WynntilsButton {
         }
 
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            selectionScreen.toggleFavorite(emote);
+            Models.Emote.toggleFavorite(emote);
         }
 
         return super.mouseClicked(event, isDoubleClick);
@@ -123,6 +124,6 @@ public class EmoteConfigButton extends WynntilsButton {
     }
 
     private boolean isSelected() {
-        return selectionScreen.isFavorited(emote);
+        return Models.Emote.isFavorited(emote);
     }
 }

@@ -4,13 +4,10 @@
  */
 package com.wynntils.screens.emotewheel;
 
-import static com.wynntils.features.ui.EmoteWheelFeature.MAX_EMOTES;
-
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.ui.EmoteWheelFeature;
 import com.wynntils.screens.base.widgets.HoverableTexturedButton;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.emotewheel.widgets.EmoteConfigButton;
@@ -41,7 +38,6 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
     private static final int EMOTE_BUTTON_SIZE = 21;
 
     private final Screen previousScreen;
-    private final EmoteWheelFeature emoteWheelFeature;
 
     // Collections
     private List<String> emoteList = new ArrayList<>();
@@ -77,7 +73,6 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
                 this);
 
         setFocusedTextInput(searchWidget);
-        emoteWheelFeature = Managers.Feature.getFeatureInstance(EmoteWheelFeature.class);
     }
 
     public static Screen create(Screen returnScreen) {
@@ -131,10 +126,10 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
     }
 
     private void checkForRecentRefresh() {
-        if (emoteWheelFeature.isRefreshedRecently()) {
+        if (Models.Emote.isRefreshedRecently()) {
             scrollOffset = 0;
             populateEmotesList();
-            emoteWheelFeature.setRefreshedRecently(false);
+            Models.Emote.setRefreshedRecently(false);
         }
     }
 
@@ -301,20 +296,22 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
     }
 
     private void createEmoteList() {
-        if (emoteWheelFeature.availableEmotes != null) {
-            Set<String> selectedEmotes = getFavoritedEmotes().stream()
+        List<String> emotes = Models.Emote.getAvailableEmotes();
+
+        if (emotes != null) {
+            Set<String> selectedEmotes = Models.Emote.getFavoritedEmotes().stream()
                     .filter(Objects::nonNull)
-                    .filter(s -> !emoteWheelFeature.availableEmotes.contains(s))
+                    .filter(s -> !emotes.contains(s))
                     .collect(Collectors.toSet());
 
-            emoteList = new ArrayList<>(emoteWheelFeature.availableEmotes);
+            emoteList = new ArrayList<>(emotes);
             emoteList.addAll(selectedEmotes);
             emoteList = emoteList.stream()
                     .sorted(String::compareTo)
                     .filter(this::searchMatches)
                     .toList();
         } else {
-            emoteList = getFavoritedEmotes().stream()
+            emoteList = Models.Emote.getFavoritedEmotes().stream()
                     .filter(Objects::nonNull)
                     .sorted(String::compareTo)
                     .filter(this::searchMatches)
@@ -351,7 +348,7 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
                 Texture.EMOTE_CONFIG_BUTTON.width(),
                 Texture.EMOTE_CONFIG_BUTTON.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.emoteWheelConfig.refresh")),
-                (button) -> emoteWheelFeature.refreshAvailableEmotes(),
+                (button) -> Models.Emote.refreshAvailableEmotes(),
                 List.of(
                         Component.translatable("screens.wynntils.emoteWheelConfig.refreshTooltip"),
                         Component.translatable("screens.wynntils.emoteWheelConfig.refreshTooltip2")),
@@ -403,40 +400,6 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
                 break;
             }
         }
-    }
-
-    public boolean isFavorited(String emote) {
-        return emote != null && getFavoritedEmotes().contains(emote);
-    }
-
-    private void addFavorite(String emote) {
-        int firstNull = getFavoritedEmotes().indexOf(null);
-        if (firstNull == -1 || firstNull > MAX_EMOTES - 1) return;
-
-        getFavoritedEmotes().set(firstNull, emote);
-        emoteWheelFeature.configureEmotes.touched();
-    }
-
-    private void removeFavorite(String emote) {
-        int index = getFavoritedEmotes().indexOf(emote);
-        getFavoritedEmotes().set(index, null);
-        emoteWheelFeature.configureEmotes.touched();
-    }
-
-    public void toggleFavorite(String emote) {
-        if (isFavorited(emote)) {
-            removeFavorite(emote);
-        } else {
-            addFavorite(emote);
-        }
-    }
-
-    public int getEmoteIndex(String emote) {
-        return getFavoritedEmotes().indexOf(emote);
-    }
-
-    private List<String> getFavoritedEmotes() {
-        return emoteWheelFeature.configureEmotes.get().getFavoritedEmotes();
     }
 
     public int getScissorTopY() {

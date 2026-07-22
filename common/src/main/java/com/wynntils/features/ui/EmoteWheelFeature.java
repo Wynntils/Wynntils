@@ -4,7 +4,7 @@
  */
 package com.wynntils.features.ui;
 
-import com.wynntils.core.components.Models;
+import com.wynntils.core.consumers.features.ExternalConfigurationScreen;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
@@ -14,30 +14,25 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.CommandSuggestionsEvent;
-import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.core.persisted.config.HiddenConfig;
+import com.wynntils.screens.emotewheel.EmoteWheelConfigScreen;
 import com.wynntils.screens.emotewheel.EmoteWheelScreen;
-import com.wynntils.screens.settings.widgets.EmoteConfigScreen;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.EmoteWheelButton;
 import com.wynntils.utils.render.type.TextShadow;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import net.minecraft.network.protocol.game.ServerboundCommandSuggestionPacket;
-import net.neoforged.bus.api.SubscribeEvent;
+import net.minecraft.client.gui.screens.Screen;
 
 @ConfigCategory(Category.UI)
-public class EmoteWheelFeature extends Feature {
+public class EmoteWheelFeature extends Feature implements ExternalConfigurationScreen {
     public static final int MAX_EMOTES = 10;
-    private static final int EMOTE_COMMAND_PACKET_ID = 227;
 
     @RegisterKeyBind
     public final KeyBind openEmoteWheelKeybind = KeyBindDefinition.OPEN_EMOTE_WHEEL.create(this::openEmoteWheel);
-
-    @Persisted
-    public final Config<EmoteConfigScreen> configureEmotes = new Config<>(new EmoteConfigScreen());
 
     @Persisted
     public final Config<Integer> numberOfButtons = new Config<>(8);
@@ -69,12 +64,15 @@ public class EmoteWheelFeature extends Feature {
     @Persisted
     public final Config<Integer> buttonRadius = new Config<>(0);
 
-    public List<String> availableEmotes;
+    @Persisted
+    private final HiddenConfig<List<String>> availableEmotes = new HiddenConfig<>(new ArrayList<>());
 
-    private boolean refreshedRecently = false;
+    @Persisted
+    private final HiddenConfig<List<String>> favoritedEmotes;
 
     public EmoteWheelFeature() {
         super(ProfileDefault.onlyDefault());
+        this.favoritedEmotes = new HiddenConfig<>(Arrays.asList(new String[MAX_EMOTES]));
     }
 
     private void openEmoteWheel() {
@@ -84,35 +82,24 @@ public class EmoteWheelFeature extends Feature {
         McUtils.setScreen(EmoteWheelScreen.create());
     }
 
-    public void refreshAvailableEmotes() {
-        // The command does not exist outside of the world
-        if (Models.WorldState.onWorld())
-            McUtils.sendPacket(new ServerboundCommandSuggestionPacket(EMOTE_COMMAND_PACKET_ID, "/emote "));
+    @Override
+    public Screen getExternalConfigurationScreen(Screen previousScreen) {
+        return EmoteWheelConfigScreen.create(previousScreen);
     }
 
-    @SubscribeEvent
-    public void onConnect(WorldStateEvent e) {
-        if (!e.isFirstJoinWorld()) {
-            return;
-        }
-        refreshAvailableEmotes();
+    public List<String> getAvailableEmotes() {
+        return this.availableEmotes.get();
     }
 
-    @SubscribeEvent
-    public void onRecieve(CommandSuggestionsEvent e) {
-        if (e.getId() == EMOTE_COMMAND_PACKET_ID) {
-            availableEmotes = e.getSuggestions().getList().stream()
-                    .map(suggestion -> StringUtils.capitalizeFirst(suggestion.getText()))
-                    .toList();
-            refreshedRecently = true;
-        }
+    public List<String> getFavoritedEmotes() {
+        return this.favoritedEmotes.get();
     }
 
-    public boolean isRefreshedRecently() {
-        return refreshedRecently;
+    public void updateAvailableEmotes() {
+        this.availableEmotes.touched();
     }
 
-    public void setRefreshedRecently(boolean refreshedRecently) {
-        this.refreshedRecently = refreshedRecently;
+    public void updateFavoritedEmotes() {
+        this.favoritedEmotes.touched();
     }
 }

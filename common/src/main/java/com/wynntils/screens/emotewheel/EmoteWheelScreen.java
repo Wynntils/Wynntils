@@ -7,6 +7,7 @@ package com.wynntils.screens.emotewheel;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
@@ -58,7 +59,7 @@ public class EmoteWheelScreen extends WynntilsScreen {
 
         emoteWheelFeature = Managers.Feature.getFeatureInstance(EmoteWheelFeature.class);
         numOfEmotes = MathUtils.clamp(emoteWheelFeature.numberOfButtons.get(), 1, 10);
-        emotes = emoteWheelFeature.configureEmotes.get().getFavoritedEmotes();
+        emotes = Models.Emote.getFavoritedEmotes();
         scale = emoteWheelFeature.scale.get();
         buttonSize = (float) (BUTTON_SIZE * scale);
         buttonStyle = emoteWheelFeature.buttonStyle.get();
