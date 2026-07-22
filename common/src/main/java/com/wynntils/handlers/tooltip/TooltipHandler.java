@@ -11,7 +11,6 @@ import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilde
 import com.wynntils.handlers.tooltip.type.TooltipOptions;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
-import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import java.util.HashMap;
@@ -22,6 +21,8 @@ import net.minecraft.world.item.ItemStack;
 public final class TooltipHandler extends Handler {
     public List<Component> updateTooltip(
             List<Component> originalLines, IdentifiableItemProperty<?, ?> identifiableItem, TooltipOptions options) {
+        if (identifiableItem.getIdentifications().isEmpty()) return originalLines;
+
         if (!(identifiableItem instanceof WynnItem wynnItem)) {
             return calculateUpdatedTooltip(originalLines, identifiableItem, options);
         }
@@ -45,11 +46,6 @@ public final class TooltipHandler extends Handler {
 
     private List<Component> calculateUpdatedTooltip(
             List<Component> originalLines, IdentifiableItemProperty<?, ?> identifiableItem, TooltipOptions options) {
-        if (identifiableItem instanceof GearItem gearItem && gearItem.isStatPage()) {
-            return IdentifiableTooltipBuilder.buildNewItem(gearItem, "")
-                    .update(originalLines, Models.Character.getClassType(), options);
-        }
-
         return IdentifiableTooltipBuilder.fromTooltipLines(originalLines, identifiableItem)
                 .getTooltipLines(Models.Character.getClassType(), options);
     }

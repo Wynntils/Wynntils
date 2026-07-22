@@ -21,8 +21,10 @@ public final class CommonColors {
     public static final CustomColor TITLE_GRAY = CustomColor.fromInt(0x404040);
     public static final CustomColor PINK = CustomColor.fromInt(0xffb7b7);
     public static final CustomColor LIGHT_GREEN = CustomColor.fromInt(0x49ff59);
+    public static final CustomColor WYNNCRAFT_AQUA = CustomColor.fromInt(0xacfafa);
     public static final CustomColor WYNNCRAFT_GREEN = CustomColor.fromInt(0xacfac6);
     public static final CustomColor WYNNCRAFT_DARK_GREEN = CustomColor.fromInt(0x6d9e7e);
+    public static final CustomColor WYNNCRAFT_ORANGE = CustomColor.fromInt(0xfac6ac);
     public static final CustomColor WYNNCRAFT_RED = CustomColor.fromInt(0xfaacac);
     public static final CustomColor WYNNCRAFT_DARK_RED = CustomColor.fromInt(0xa87474);
     public static final CustomColor LIGHT_BLUE = CustomColor.fromInt(0x00e9ff);

@@ -13,17 +13,21 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.handlers.tooltip.type.TooltipOptions;
+import com.wynntils.handlers.tooltip.type.TooltipOptions.IdentificationDisplay;
+import com.wynntils.handlers.tooltip.type.TooltipOptions.WeightDisplay;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.stats.type.StatListOrdering;
+import com.wynntils.utils.mc.KeyboardUtils;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextColor;
 import net.neoforged.bus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemStatInfoFeature extends Feature {
@@ -125,12 +129,34 @@ public class ItemStatInfoFeature extends Feature {
                 perfect.get(),
                 defective.get(),
                 identificationDecorations.get(),
+                getIdentificationDisplay(),
                 itemWeights.get(),
+                getWeightDisplay(),
                 overallPercentageInName.get(),
                 overallPercentageInPerfectDefectiveName.get(),
                 getColorMap(),
                 colorLerp.get(),
                 decimalPlaces.get());
+    }
+
+    private IdentificationDisplay getIdentificationDisplay() {
+        if (!identificationDecorations.get()) return IdentificationDisplay.PERCENTAGE;
+
+        boolean shiftDown = KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT);
+        boolean controlDown = KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL);
+
+        if (shiftDown && controlDown) return IdentificationDisplay.INTERNAL_ROLL;
+        if (controlDown) return IdentificationDisplay.REROLL;
+        if (shiftDown) return IdentificationDisplay.RANGE;
+        return IdentificationDisplay.PERCENTAGE;
+    }
+
+    private WeightDisplay getWeightDisplay() {
+        if (!KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) return WeightDisplay.OVERALL;
+
+        return KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)
+                ? WeightDisplay.CONTRIBUTION
+                : WeightDisplay.DISTRIBUTION;
     }
 
     private NavigableMap<Float, TextColor> createFlatMap() {
