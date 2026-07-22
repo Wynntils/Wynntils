@@ -30,6 +30,10 @@ public record Loadout(
         return aspects != null;
     }
 
+    public boolean hasTomes() {
+        return tomes != null;
+    }
+
     public ClassType getClassType() {
         if (hasAbilityTree()) {
             ClassType atClass = abilityTree.classType();

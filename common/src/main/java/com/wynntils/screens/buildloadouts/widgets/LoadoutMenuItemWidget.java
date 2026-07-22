@@ -156,6 +156,8 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
         ItemStack hoveredStack = boxItemStacks.get(hoveredIndex);
         if (hoveredStack.isEmpty()) return;
 
+        handleCursor(guiGraphics);
+
         RenderUtils.renderTooltip(guiGraphics, hoveredStack, mouseX, mouseY);
     }
 

@@ -6,6 +6,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.abilitytree.type.SavableAbilityTree;
 import com.wynntils.models.aspects.type.SavableAspectSet;
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.services.loadout.type.Loadout;
@@ -50,10 +51,12 @@ public class LoadoutScrollListWidget extends ScrollListWidget {
 
         Map<String, Loadout> savedLoadouts = new TreeMap<>(Services.loadout.getLoadouts());
 
+        ClassType currentClass = Models.Character.getClassType();
+
         List<String> filteredSorted = savedLoadouts.keySet().stream()
                 .filter(this::searchMatches)
                 .sorted(Comparator
-                        .comparing((String name) -> !savedLoadouts.get(name).favourited())
+                        .comparingInt((String name) -> getSortRank(savedLoadouts.get(name), currentClass))
                         .thenComparing(Comparator.naturalOrder()))
                 .toList();
 
@@ -70,6 +73,31 @@ public class LoadoutScrollListWidget extends ScrollListWidget {
                     WIDGET_HEIGHT,
                     loadout,
                     parent));
+        }
+    }
+
+    /**
+     * Lower rank sorts first:
+     * 0 - current class, favourited
+     * 1 - current class, not favourited
+     * 2 - other class, favourited
+     * 3 - other class, not favourited
+     * 4 - no class (e.g. skill point loadouts), favourited
+     * 5 - no class, not favourited
+     */
+    private int getSortRank(Loadout loadout, ClassType currentClass) {
+        boolean favourited = loadout.favourited();
+
+        if (!loadout.hasClassType()) {
+            return favourited ? 4 : 5;
+        }
+
+        boolean isCurrentClass = loadout.getClassType() == currentClass;
+
+        if (isCurrentClass) {
+            return favourited ? 0 : 1;
+        } else {
+            return favourited ? 2 : 3;
         }
     }
 

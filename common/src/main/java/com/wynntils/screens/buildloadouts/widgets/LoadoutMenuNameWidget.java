@@ -51,6 +51,10 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(guiGraphics);
 
+        if (isEditButtonHovered(mouseX, mouseY)) {
+            handleCursor(guiGraphics);
+        }
+
         if (!editing) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
@@ -87,7 +91,7 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
             int mouseX,
             int mouseY) {
 
-        if (this.isHovered) {
+        if (this.isHovered && !isEditButtonHovered(mouseX, mouseY)) {
             guiGraphics.requestCursor(CursorTypes.IBEAM);
         }
 
@@ -194,6 +198,8 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
+
         if (isEditButtonHovered(event.x(), event.y())) {
             this.playDownSound(Minecraft.getInstance().getSoundManager());
             toggleEditing();

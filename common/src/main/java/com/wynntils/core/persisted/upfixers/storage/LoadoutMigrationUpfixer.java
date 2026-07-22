@@ -117,44 +117,99 @@ public class LoadoutMigrationUpfixer implements Upfixer {
                             () -> WynntilsMod.warn("Upfixer: could not encode weapon " + weaponName));
         }
 
-        migrateGearNameArray(skillPointObject, "armourNames");
-        migrateGearNameArray(skillPointObject, "accessoryNames");
+        migrateArmourNameArray(skillPointObject, "armourNames");
+        migrateAccessoryNameArray(skillPointObject, "accessoryNames");
 
         return skillPointObject;
     }
 
-    private void migrateGearNameArray(JsonObject skillPointObject, String key) {
+    private void migrateArmourNameArray(JsonObject skillPointObject, String key) {
         if (!skillPointObject.has(key) || !skillPointObject.get(key).isJsonArray()) return;
 
         JsonArray oldNames = skillPointObject.getAsJsonArray(key);
-        JsonArray newNames = new JsonArray();
+        String[] slots = new String[4]; // 0=helmet, 1=chestplate, 2=leggings, 3=boots
 
         for (JsonElement nameElement : oldNames) {
-            if (nameElement.isJsonNull()) {
-                newNames.add(nameElement);
-                continue;
-            }
+            if (nameElement.isJsonNull()) continue;
 
             String rawName = nameElement.getAsString();
-            // Fall back to the raw name if lookup/encoding fails, rather than
-            // silently dropping the item from the loadout
-            newNames.add(encodeDefaultGearItem(rawName).orElse(rawName));
+            resolveGearInfo(rawName).ifPresent(gearInfo -> {
+                int slotIndex = switch (gearInfo.type()) {
+                    case HELMET -> 0;
+                    case CHESTPLATE -> 1;
+                    case LEGGINGS -> 2;
+                    case BOOTS -> 3;
+                    default -> -1;
+                };
+
+                if (slotIndex == -1) {
+                    WynntilsMod.warn("Upfixer: unexpected gear type for armour " + rawName + ": " + gearInfo.type());
+                    return;
+                }
+
+                encodeGearItem(gearInfo)
+                        .ifPresentOrElse(
+                                encoded -> slots[slotIndex] = encoded,
+                                () -> WynntilsMod.warn("Upfixer: could not encode armour " + rawName));
+            });
         }
 
+        JsonArray newNames = new JsonArray();
+        for (String slot : slots) {
+            newNames.add(slot);
+        }
         skillPointObject.add(key, newNames);
     }
 
-    private static Optional<String> encodeDefaultGearItem(String rawName) {
+    private void migrateAccessoryNameArray(JsonObject skillPointObject, String key) {
+        if (!skillPointObject.has(key) || !skillPointObject.get(key).isJsonArray()) return;
+
+        JsonArray oldNames = skillPointObject.getAsJsonArray(key);
+        String[] slots = new String[4]; // 0=ring1, 1=ring2, 2=bracelet, 3=necklace
+
+        for (JsonElement nameElement : oldNames) {
+            if (nameElement.isJsonNull()) continue;
+
+            String rawName = nameElement.getAsString();
+            resolveGearInfo(rawName).ifPresent(gearInfo -> {
+                Integer slotIndex = switch (gearInfo.type()) {
+                    case RING -> slots[0] == null ? 0 : (slots[1] == null ? 1 : null);
+                    case BRACELET -> slots[2] == null ? 2 : null;
+                    case NECKLACE -> slots[3] == null ? 3 : null;
+                    default -> null;
+                };
+
+                if (slotIndex == null) {
+                    WynntilsMod.warn("Upfixer: no available accessory slot for " + rawName + " (" + gearInfo.type() + ")");
+                    return;
+                }
+
+                encodeGearItem(gearInfo)
+                        .ifPresentOrElse(
+                                encoded -> slots[slotIndex] = encoded,
+                                () -> WynntilsMod.warn("Upfixer: could not encode accessory " + rawName));
+            });
+        }
+
+        JsonArray newNames = new JsonArray();
+        for (String slot : slots) {
+            newNames.add(slot);
+        }
+        skillPointObject.add(key, newNames);
+    }
+
+    private static Optional<GearInfo> resolveGearInfo(String rawName) {
         String cleanName = rawName.replaceFirst("§.", "");
         GearInfo gearInfo = Models.Gear.getGearInfoFromDisplayName(cleanName);
         if (gearInfo == null) {
             WynntilsMod.warn("Upfixer: no gear info found for " + cleanName);
-            return Optional.empty();
         }
+        return Optional.ofNullable(gearInfo);
+    }
 
+    private static Optional<String> encodeGearItem(GearInfo gearInfo) {
         List<StatActualValue> stats = new ArrayList<>();
 
-        //make some stats so that items have some kind of stats.
         for (Map.Entry<StatType, StatPossibleValues> entry : gearInfo.getVariableStatsMap().entrySet()) {
             StatType statType = entry.getKey();
             StatPossibleValues val = entry.getValue();
@@ -169,10 +224,14 @@ public class LoadoutMigrationUpfixer implements Upfixer {
         ErrorOr<EncodedByteBuffer> errorOrEncoded =
                 Models.ItemEncoding.encodeItem(defaultGearItem, encodingSettings);
         if (errorOrEncoded.hasError()) {
-            WynntilsMod.warn("Upfixer: failed to encode " + cleanName + ": " + errorOrEncoded.getError());
+            WynntilsMod.warn("Upfixer: failed to encode " + gearInfo.name() + ": " + errorOrEncoded.getError());
             return Optional.empty();
         }
 
         return Optional.of(Models.ItemEncoding.makeItemString(defaultGearItem, errorOrEncoded.getValue()));
+    }
+
+    private static Optional<String> encodeDefaultGearItem(String rawName) {
+        return resolveGearInfo(rawName).flatMap(LoadoutMigrationUpfixer::encodeGearItem);
     }
 }

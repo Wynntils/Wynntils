@@ -35,7 +35,7 @@ public class AbilityTreeInfoRegistry {
             .create();
 
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_STATIC_ABILITIES).handleJsonObject(this::handleAbilities);
+        registry.registerDownload(UrlId.DATA_STATIC_ABILITIES_V2).handleJsonObject(this::handleAbilities);
     }
 
     private void handleAbilities(JsonObject json) {

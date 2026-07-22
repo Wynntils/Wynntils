@@ -355,8 +355,8 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
         if (getCurrentCategory() == MenuCategory.NEW_LOADOUT) {
             renderNewLoadoutMenu(guiGraphics, mouseX, mouseY, partialTick);
-        } else if (getCurrentCategory() == MenuCategory.BUILD_LOADOUT && getSelectedLoadout() != null) {
-            renderBuildLoadoutMenu(guiGraphics, mouseX, mouseY, partialTick);
+        } else if (getCurrentCategory() != MenuCategory.NEW_LOADOUT && getSelectedLoadout() != null) {
+            renderLoadoutMenu(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         renderables.forEach(renderable -> renderable.render(guiGraphics, mouseX, mouseY, partialTick));
@@ -403,7 +403,8 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                         TextShadow.NONE);
     }
 
-    private void renderBuildLoadoutMenu(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderLoadoutMenu(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        //background for skillpoint, overview, and item widgets
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
                 Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND,

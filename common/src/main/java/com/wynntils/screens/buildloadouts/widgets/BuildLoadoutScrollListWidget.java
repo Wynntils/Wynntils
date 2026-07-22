@@ -151,7 +151,7 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
         Loadout selectedLoadout = parent.getSelectedLoadout();
         if (selectedLoadout == null) return;
 
-        if (selectedScrollListCategory == ScrollListCategory.ABILITY_TREE) {
+        if (selectedScrollListCategory == ScrollListCategory.ABILITY_TREE && selectedLoadout.hasAbilityTree()) {
             for (String abilityName : selectedLoadout.abilityTree().abilities()) {
                 itemWidgets.add(new LoadoutMenuScrollListAbilityWidget(
                         StyledText.fromString(abilityName),
@@ -163,7 +163,7 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
             }
         }
 
-        if (selectedScrollListCategory == ScrollListCategory.ASPECTS) {
+        if (selectedScrollListCategory == ScrollListCategory.ASPECTS && selectedLoadout.hasAspects()) {
             for (String abilityName : selectedLoadout.aspects().aspectNames()) {
                 itemWidgets.add(new LoadoutMenuScrollListAspectWidget(
                         StyledText.fromString(abilityName),
@@ -175,7 +175,7 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
             }
         }
 
-        if (selectedScrollListCategory == ScrollListCategory.TOMES) {
+        if (selectedScrollListCategory == ScrollListCategory.TOMES && selectedLoadout.hasTomes()) {
             for (SavableTome tome : selectedLoadout.tomes().getAllTomes()) {
                 ItemStack tomeStack = decodeTomeItemStack(tome).orElse(ItemStack.EMPTY);
                 itemWidgets.add(new LoadoutMenuScrollListTomeWidget(

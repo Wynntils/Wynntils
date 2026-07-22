@@ -114,6 +114,12 @@
     "url": "https://cdn.wynntils.com/static/Reference/abilities.json"
   },
   {
+    "id": "dataStaticAbilitiesV2",
+    "md5": "",
+    "path": "Reference/abilities_v2.json",
+    "url": "https://cdn.wynntils.com/static/Reference/abilities_v2.json"
+  },
+  {
     "id": "dataStaticAspects",
     "md5": "851a3249f739ce5252a1494d60a206cd",
     "path": "Reference/aspects.json",

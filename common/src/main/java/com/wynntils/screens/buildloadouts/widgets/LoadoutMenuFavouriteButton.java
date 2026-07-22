@@ -67,8 +67,7 @@ public class LoadoutMenuFavouriteButton extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) return false;
+        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
 

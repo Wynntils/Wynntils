@@ -124,12 +124,13 @@ public class LoadoutWidget extends AbstractWidget implements IconRenderer {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
 
-            int[] points = loadout.skillPoints().getSkillPointsAsArray();
-            int[] activeElements = IntStream.range(0, 5).filter(i -> points[i] > 0).toArray();
+            if (loadout.hasSkillPoints()) {
+                int[] points = loadout.skillPoints().getSkillPointsAsArray();
+                int[] activeElements = IntStream.range(0, 5).filter(i -> points[i] > 0).toArray();
 
-            float baseY = this.y + this.height / 2f - 6;
-            renderSkillIcons(guiGraphics, this.x, baseY, activeElements);
-
+                float baseY = this.y + this.height / 2f - 6;
+                renderSkillIcons(guiGraphics, this.x, baseY, activeElements);
+            }
         }
     }
 
@@ -150,7 +151,7 @@ public class LoadoutWidget extends AbstractWidget implements IconRenderer {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
+        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
 

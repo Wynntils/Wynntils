@@ -66,7 +66,7 @@ public class MakeNewLoadoutButton extends AbstractButton {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
+        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
 
@@ -138,7 +138,7 @@ public class MakeNewLoadoutButton extends AbstractButton {
         return (onStatus, onError, onComplete) -> {
             onStatus.accept("Saving skill points...");
             try {
-                Models.SkillPoint.saveCurrentBuild(name);
+                Models.SkillPoint.saveCurrentSkillPointsAndItems(name);
                 onComplete.accept("Skill points saved successfully!");
             } catch (Exception e) {
                 onError.accept("Failed to save skill points: " + e.getMessage());

@@ -1,9 +1,11 @@
 package com.wynntils.screens.buildloadouts.widgets;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.services.loadout.type.Loadout;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -60,8 +62,23 @@ public class LoadoutMenuSkillPointWidget extends AbstractWidget implements IconR
                                 TextShadow.NORMAL);
                 startY += 12;
             }
-
         }
+
+        if (selectedLoadout != null && !selectedLoadout.hasSkillPoints()) {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            guiGraphics,
+                            StyledText.fromString("None"),
+                            this.x + this.width / 2f,
+                            this.y + 5,
+                            this.y + this.height - 10,
+                            this.width - 10,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+        }
+
     }
 
     @Override

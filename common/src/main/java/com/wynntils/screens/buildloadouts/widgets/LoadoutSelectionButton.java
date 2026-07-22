@@ -1,7 +1,3 @@
-/*
- * Copyright © Wynntils 2025-2026.
- * This file is released under LGPLv3. See LICENSE for full license details.
- */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.text.StyledText;
@@ -123,7 +119,7 @@ public class LoadoutSelectionButton extends AbstractWidget implements TooltipPro
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
+        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
 

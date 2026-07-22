@@ -147,7 +147,7 @@ public class LoadoutMenuUpdateButton extends AbstractButton implements TooltipPr
         return (onStatus, onError, onComplete) -> {
             onStatus.accept("Saving skill points...");
             try {
-                Models.SkillPoint.saveCurrentBuild(name);
+                Models.SkillPoint.saveCurrentSkillPointsAndItems(name);
                 onComplete.accept("Skill points saved successfully!");
             } catch (Exception e) {
                 onError.accept("Failed to save skill points: " + e.getMessage());

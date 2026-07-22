@@ -54,8 +54,8 @@ public class LoadoutMenuScrollListAbilityWidget extends AbstractWidget implement
                         guiGraphics,
                         this.text,
                         this.x + this.width / 2f + 13,
-                        this.y + 5,
-                        this.y + this.height - 10,
+                        this.y,
+                        this.y + this.height,
                         this.width - 40,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
@@ -85,6 +85,7 @@ public class LoadoutMenuScrollListAbilityWidget extends AbstractWidget implement
 
     @Override
     public void renderHoveredItemTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        handleCursor(guiGraphics);
         RenderUtils.renderTooltip(guiGraphics, abilityItemStack, mouseX, mouseY);
     }
 

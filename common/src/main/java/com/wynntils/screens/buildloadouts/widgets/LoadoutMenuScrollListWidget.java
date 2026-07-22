@@ -87,7 +87,7 @@ public class LoadoutMenuScrollListWidget extends ScrollListWidget implements Ite
         Loadout selectedLoadout = parent.getSelectedLoadout();
         if (selectedLoadout == null) return;
 
-        if (selectedLoadout.type() == LoadoutType.ABILITY_TREE) {
+        if (selectedLoadout.type() == LoadoutType.ABILITY_TREE && selectedLoadout.hasAbilityTree()) {
             for (String abilityName : selectedLoadout.abilityTree().abilities()) {
                 itemWidgets.add(new LoadoutMenuScrollListAbilityWidget(
                         StyledText.fromString(abilityName),
@@ -99,7 +99,7 @@ public class LoadoutMenuScrollListWidget extends ScrollListWidget implements Ite
             }
         }
 
-        if (selectedLoadout.type() == LoadoutType.ASPECT) {
+        if (selectedLoadout.type() == LoadoutType.ASPECT && selectedLoadout.hasAspects()) {
             for (String abilityName : selectedLoadout.aspects().aspectNames()) {
                 itemWidgets.add(new LoadoutMenuScrollListAspectWidget(
                         StyledText.fromString(abilityName),
@@ -111,7 +111,7 @@ public class LoadoutMenuScrollListWidget extends ScrollListWidget implements Ite
             }
         }
 
-        if (selectedLoadout.tomes() != null && !selectedLoadout.tomes().isEmpty()) {
+        if (selectedLoadout.type() == LoadoutType.SKILL_POINT && selectedLoadout.hasTomes()) {
             for (SavableTome tome : selectedLoadout.tomes().getAllTomes()) {
                 ItemStack tomeStack = decodeTomeItemStack(tome).orElse(ItemStack.EMPTY);
                 itemWidgets.add(new LoadoutMenuScrollListTomeWidget(

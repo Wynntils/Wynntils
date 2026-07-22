@@ -24,7 +24,6 @@ import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
-import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.mc.LoreUtils;
@@ -119,7 +118,7 @@ public final class SkillPointModel extends Model {
         WynntilsMod.info("Saved skill point build: " + name + " " + assignedSkillPointSet);
     }
 
-    public void saveCurrentBuild(String name) {
+    public void saveCurrentSkillPointsAndItems(String name) {
         saveSkillPointsAndItems(name, new int[] {
             getAssignedSkillPoints(Skill.STRENGTH),
             getAssignedSkillPoints(Skill.DEXTERITY),
