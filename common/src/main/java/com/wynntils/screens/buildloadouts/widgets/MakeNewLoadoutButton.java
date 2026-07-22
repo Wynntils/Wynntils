@@ -4,6 +4,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.services.loadout.type.Loadout;
 import com.wynntils.services.loadout.type.LoadoutSaveStep;
 import com.wynntils.services.loadout.type.LoadoutType;
 import com.wynntils.utils.colors.CommonColors;
@@ -114,10 +115,10 @@ public class MakeNewLoadoutButton extends AbstractButton {
             case ASPECT -> steps.add(aspectsSaveStep(name));
         }
 
-        runSaveSteps(steps, 0);
+        runSaveSteps(steps, 0, name);
     }
 
-    private void runSaveSteps(List<LoadoutSaveStep> steps, int index) {
+    private void runSaveSteps(List<LoadoutSaveStep> steps, int index, String name) {
         boolean isLast = index == steps.size() - 1;
 
         steps.get(index)
@@ -126,10 +127,14 @@ public class MakeNewLoadoutButton extends AbstractButton {
                         error -> parent.statusWidget.error(error),
                         message -> {
                             if (isLast) {
-                                parent.statusWidget.completed(message);
+                                Loadout loadout = Services.loadout.getLoadout(name);
+                                parent.setCurrentCategory(loadout.getMenuCategory());
+                                parent.setSelectedLoadout(loadout);
+                                parent.loadoutScrollListWidget.scrollOffset = 0;
                                 parent.loadoutScrollListWidget.populateLoadouts();
+                                parent.statusWidget.completed(message);
                             } else {
-                                runSaveSteps(steps, index + 1);
+                                runSaveSteps(steps, index + 1, name);
                             }
                         });
     }
