@@ -58,6 +58,8 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
     private int scrollOffset = 0;
     private int offsetX;
     private int offsetY;
+    private int scissorTopY;
+    private int scissorBottomY;
 
     private EmoteWheelConfigScreen(Screen previousScreen) {
         super(false);
@@ -141,8 +143,11 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
             optionsButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
+        scissorTopY = 37 + offsetY;
+        int scissorHeight = MAX_EMOTES_PER_PAGE * EMOTE_BUTTON_SIZE + 2;
+        scissorBottomY = scissorTopY + scissorHeight;
         RenderUtils.enableScissor(
-                guiGraphics, 9 + offsetX, 37 + offsetY, 122, MAX_EMOTES_PER_PAGE * EMOTE_BUTTON_SIZE + 2);
+                guiGraphics, 9 + offsetX, scissorTopY, 122, scissorHeight);
 
         for (AbstractWidget widget : emoteButtons) {
             widget.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -433,5 +438,13 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
 
     private List<String> getFavoritedEmotes() {
         return emoteWheelFeature.configureEmotes.get().getFavoritedEmotes();
+    }
+
+    public int getScissorTopY() {
+        return scissorTopY;
+    }
+
+    public int getScissorBottomY() {
+        return scissorBottomY;
     }
 }

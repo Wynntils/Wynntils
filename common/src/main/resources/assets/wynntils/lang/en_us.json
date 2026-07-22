@@ -634,7 +634,7 @@
   "feature.wynntils.emoteWheel.buttonStyle.name": "Button Style",
   "feature.wynntils.emoteWheel.configureEmotes.description": "What emotes should be in the wheel?",
   "feature.wynntils.emoteWheel.configureEmotes.name": "Change Favorited Emotes",
-  "feature.wynntils.emoteWheel.description": "Use emotes easily by opening a shortcut wheel with a keybind. Favorite emotes by using the same keybind in the Wynncraft emotes menu.",
+  "feature.wynntils.emoteWheel.description": "Use emotes easily by opening a shortcut wheel with a keybind.",
   "feature.wynntils.emoteWheel.name": "Emote Wheel",
   "feature.wynntils.emoteWheel.numberOfButtons.description": "How many emote buttons should be in the wheel? (Clamped between 1 and 10)",
   "feature.wynntils.emoteWheel.numberOfButtons.name": "Number of Buttons",

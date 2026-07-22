@@ -297,8 +297,6 @@ public class EmoteWheelScreen extends WynntilsScreen {
 
         if (doesEmoteExistInWheel(emoteNum)) {
             Handlers.Command.sendCommandImmediately("emote " + emotes.get(emoteNum));
-
-            emoteWheelFeature.setlastEmoteNum(emoteNum);
         }
 
         onClose();

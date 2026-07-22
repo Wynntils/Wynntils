@@ -80,11 +80,26 @@ public class EmoteConfigButton extends WynntilsButton {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        // Prevent interaction when the button is outside of the the scissor area its in
+        if ((event.y() <= selectionScreen.getScissorTopY() || event.y() >= selectionScreen.getScissorBottomY())) {
+            return false;
+        }
+
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             selectionScreen.toggleFavorite(emote);
         }
 
         return super.mouseClicked(event, isDoubleClick);
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        // Prevent interaction when the button is outside of the the scissor area its in
+        if ((event.y() <= selectionScreen.getScissorTopY() || event.y() >= selectionScreen.getScissorBottomY())) {
+            return false;
+        }
+
+        return super.mouseReleased(event);
     }
 
     @Override

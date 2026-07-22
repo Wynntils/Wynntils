@@ -37,10 +37,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class EmoteWheelFeature extends Feature {
     public static final int MAX_EMOTES = 10;
     private static final int EMOTE_COMMAND_PACKET_ID = 227;
-    private static final Pattern INACCESSIBLE_EMOTE_PATTERN =
-            Pattern.compile("§4(?:\uE008\uE002|\uE001) You do not have access to this emote\\.");
-    private static final Pattern NONEXISTENT_EMOTE_PATTERN =
-            Pattern.compile("§4(?:\uE008\uE002|\uE001) No emotes were found by the given name\\.");
 
     @RegisterKeyBind
     public final KeyBind openEmoteWheelKeybind = KeyBindDefinition.OPEN_EMOTE_WHEEL.create(this::openEmoteWheel);
@@ -80,7 +76,6 @@ public class EmoteWheelFeature extends Feature {
 
     public List<String> availableEmotes;
 
-    private int lastEmoteNum = -1;
     private boolean refreshedRecently = false;
 
     public EmoteWheelFeature() {
@@ -92,25 +87,6 @@ public class EmoteWheelFeature extends Feature {
         if (McUtils.screen() != null && !(McUtils.screen() instanceof EmoteWheelScreen)) return;
 
         McUtils.setScreen(EmoteWheelScreen.create());
-    }
-
-    @SubscribeEvent
-    public void onChatMessage(ChatMessageEvent.Match event) {
-        if (lastEmoteNum == -1) return;
-
-        StyledText message = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
-        Matcher matcher = message.getMatcher(INACCESSIBLE_EMOTE_PATTERN);
-        Matcher matcher2 = message.getMatcher(NONEXISTENT_EMOTE_PATTERN);
-        if (matcher.matches() || matcher2.matches()) {
-            configureEmotes.get().getFavoritedEmotes().set(lastEmoteNum, null);
-            configureEmotes.touched();
-        }
-
-        lastEmoteNum = -1;
-    }
-
-    public void setlastEmoteNum(int lastEmoteNum) {
-        this.lastEmoteNum = lastEmoteNum;
     }
 
     public void refreshAvailableEmotes() {
