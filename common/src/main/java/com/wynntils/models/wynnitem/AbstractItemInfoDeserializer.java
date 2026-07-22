@@ -12,6 +12,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Skill;
@@ -33,6 +34,7 @@ import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainType;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.JsonUtils;
+import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import com.wynntils.utils.wynn.WynnUtils;
@@ -41,6 +43,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.resources.Identifier;
 
 public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserializer<T> {
     protected Pair<String, String> parseNames(JsonObject json) {
@@ -378,7 +382,17 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         Map.Entry<String, JsonElement> majorIdElement =
                 majorIdMap.entrySet().iterator().next();
 
-        StyledText description = StyledText.fromJson(majorIdElement.getValue().getAsJsonArray());
+        StyledText description = StyledText.fromJson(majorIdElement.getValue().getAsJsonArray())
+                .iterate((part, changes) -> {
+                    if (part.getPartStyle().getFont() == null
+                            || part.getPartStyle().getFont() instanceof FontDescription.Resource(Identifier id)
+                                    && id.getPath().equals("default")) {
+                        changes.remove(part);
+                        changes.add(part.withStyle(part.getPartStyle().withFont(CommonFonts.LANGUAGE_FONT)));
+                    }
+
+                    return IterationDecision.CONTINUE;
+                });
 
         return Optional.of(new GearMajorId(majorIdElement.getKey(), description));
     }

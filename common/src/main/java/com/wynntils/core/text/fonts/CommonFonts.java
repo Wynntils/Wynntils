@@ -8,6 +8,7 @@ import net.minecraft.network.chat.FontDescription;
 import net.minecraft.resources.Identifier;
 
 public final class CommonFonts {
+    public static final FontDescription DEFAULT_FONT = font("default");
     public static final FontDescription LANGUAGE_FONT = font("language/wynncraft");
     public static final FontDescription SPACE_FONT = font("space");
     public static final FontDescription EMBLEM_FRAME_FONT = font("tooltip/emblem/frame");
@@ -22,6 +23,8 @@ public final class CommonFonts {
     public static final FontDescription CHAT_TILE_FONT = font("chat/tile");
     public static final FontDescription COMMON_FONT = font("common");
     public static final FontDescription QUAD_12 = font("offset/wynncraft_quad/12");
+    public static final FontDescription IDENTIFICATION_DIVIDER_FONT =
+            new FontDescription.Resource(Identifier.fromNamespaceAndPath("wynntils", "tooltip_identification_divider"));
 
     private static FontDescription font(String path) {
         return new FontDescription.Resource(Identifier.withDefaultNamespace(path));
