@@ -146,8 +146,7 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
         scissorTopY = 37 + offsetY;
         int scissorHeight = MAX_EMOTES_PER_PAGE * EMOTE_BUTTON_SIZE + 2;
         scissorBottomY = scissorTopY + scissorHeight;
-        RenderUtils.enableScissor(
-                guiGraphics, 9 + offsetX, scissorTopY, 122, scissorHeight);
+        RenderUtils.enableScissor(guiGraphics, 9 + offsetX, scissorTopY, 122, scissorHeight);
 
         for (AbstractWidget widget : emoteButtons) {
             widget.render(guiGraphics, mouseX, mouseY, partialTick);
