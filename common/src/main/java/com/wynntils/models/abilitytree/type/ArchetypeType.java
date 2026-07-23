@@ -1,10 +1,13 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.abilitytree.type;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.models.character.type.ClassType;
 import java.util.List;
 import java.util.Optional;
-
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;

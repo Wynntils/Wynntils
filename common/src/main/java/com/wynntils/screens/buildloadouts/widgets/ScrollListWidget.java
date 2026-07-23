@@ -1,18 +1,19 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-
-import java.util.List;
-import java.util.stream.Stream;
 
 public abstract class ScrollListWidget extends AbstractWidget {
     private static final float SCROLL_FACTOR = 10f;
@@ -30,7 +31,15 @@ public abstract class ScrollListWidget extends AbstractWidget {
     private final int maxWidgetsPerPage;
     private float scrollY;
 
-    public ScrollListWidget(int x, int y, int width, int height, int widgetHeight, int widgetHeightPadding, int widgetHeightEdgePadding, int maxWidgetsPerPage) {
+    public ScrollListWidget(
+            int x,
+            int y,
+            int width,
+            int height,
+            int widgetHeight,
+            int widgetHeightPadding,
+            int widgetHeightEdgePadding,
+            int maxWidgetsPerPage) {
         super(x, y, width, height, Component.literal("Scroll List Widget"));
         this.x = x;
         this.y = y;
@@ -45,23 +54,22 @@ public abstract class ScrollListWidget extends AbstractWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
-                x,
-                y,
-                this.width,
-                this.height);
+                guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, x, y, this.width, this.height);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
                 Texture.BUILD_LOADOUTS_SCROLL_SIDE_BAR,
-                this.x + this.width - Texture.BUILD_LOADOUTS_SCROLL_SIDE_BAR.width() - SCROLL_BAR_WIDTH_PADDING /2f,
+                this.x + this.width - Texture.BUILD_LOADOUTS_SCROLL_SIDE_BAR.width() - SCROLL_BAR_WIDTH_PADDING / 2f,
                 y + SCROLL_BAR_HEIGHT_PADDING,
                 Texture.BUILD_LOADOUTS_SCROLL_SIDE_BAR.width(),
                 this.height - SCROLL_BAR_HEIGHT_PADDING * 2);
 
         RenderUtils.enableScissor(
-                guiGraphics, this.x, this.y + widgetHeightEdgePadding, this.width, this.height - widgetHeightEdgePadding * 2);
+                guiGraphics,
+                this.x,
+                this.y + widgetHeightEdgePadding,
+                this.width,
+                this.height - widgetHeightEdgePadding * 2);
         getWidgets().forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
         RenderUtils.disableScissor(guiGraphics);
 
@@ -78,9 +86,21 @@ public abstract class ScrollListWidget extends AbstractWidget {
         int maxScrollOffset = getMaxScrollOffset();
         scrollY = maxScrollOffset <= 0
                 ? this.y + SCROLL_BAR_BUTTON_HEIGHT_PADDING
-                : MathUtils.map(scrollOffset, 0, maxScrollOffset, this.y + SCROLL_BAR_BUTTON_HEIGHT_PADDING, this.y + this.height - Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON.height() - SCROLL_BAR_BUTTON_HEIGHT_PADDING);
+                : MathUtils.map(
+                        scrollOffset,
+                        0,
+                        maxScrollOffset,
+                        this.y + SCROLL_BAR_BUTTON_HEIGHT_PADDING,
+                        this.y
+                                + this.height
+                                - Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON.height()
+                                - SCROLL_BAR_BUTTON_HEIGHT_PADDING);
 
-        RenderUtils.drawTexturedRect(guiGraphics, Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON, this.x + this.width - Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON.width() - SCROLL_BAR_BUTTON_WIDTH_PADDING, scrollY);
+        RenderUtils.drawTexturedRect(
+                guiGraphics,
+                Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON,
+                this.x + this.width - Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON.width() - SCROLL_BAR_BUTTON_WIDTH_PADDING,
+                scrollY);
     }
 
     @Override
@@ -88,7 +108,8 @@ public abstract class ScrollListWidget extends AbstractWidget {
         if (!draggingScroll) return false;
 
         int scrollAreaStartY = this.y + SCROLL_BAR_BUTTON_HEIGHT_PADDING + 5;
-        int scrollAreaHeight = this.height - Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON.height() - SCROLL_BAR_BUTTON_HEIGHT_PADDING;
+        int scrollAreaHeight =
+                this.height - Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON.height() - SCROLL_BAR_BUTTON_HEIGHT_PADDING;
 
         int newOffset = Math.round(MathUtils.map(
                 (float) event.y(), scrollAreaStartY, scrollAreaStartY + scrollAreaHeight, 0, getMaxScrollOffset()));
@@ -141,7 +162,8 @@ public abstract class ScrollListWidget extends AbstractWidget {
         for (AbstractWidget widget : getWidgets()) {
             int newY = currentY - scrollOffset;
             widget.setY(newY);
-            widget.visible = (newY <= this.y + this.height + widgetHeight + widgetHeightPadding) && (newY >= this.y - widgetHeight - widgetHeightPadding);
+            widget.visible = (newY <= this.y + this.height + widgetHeight + widgetHeightPadding)
+                    && (newY >= this.y - widgetHeight - widgetHeightPadding);
             currentY += widgetHeight + widgetHeightPadding;
         }
     }

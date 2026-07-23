@@ -6,12 +6,13 @@ package com.wynntils.models.abilitytree.type;
 
 import com.google.gson.JsonArray;
 import com.wynntils.core.text.StyledText;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.util.CommonColors;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -21,13 +22,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.component.TooltipDisplay;
-
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.SequencedSet;
-import java.util.Set;
 
 public record AbilityTreeSkillNode(
         int id,
@@ -65,7 +59,7 @@ public record AbilityTreeSkillNode(
     }
 
     public ItemStack generateItemStack() {
-        //not pretty but it's needed to remove the empty component at the bottom.
+        // not pretty but it's needed to remove the empty component at the bottom.
         ItemStack itemStack = new ItemStack(Items.POTION) {
             @Override
             public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag isAdvanced) {
@@ -81,8 +75,8 @@ public record AbilityTreeSkillNode(
             }
         };
 
-
-        float customModelData = abilityTreeNodeType.getUnlockedType().getCustomModelData().orElse(-1f);
+        float customModelData =
+                abilityTreeNodeType.getUnlockedType().getCustomModelData().orElse(-1f);
 
         itemStack.set(
                 DataComponents.CUSTOM_MODEL_DATA,
@@ -90,7 +84,8 @@ public record AbilityTreeSkillNode(
 
         itemStack.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
 
-        itemStack.set(DataComponents.CUSTOM_NAME, StyledText.fromString(formattedName).getComponent());
+        itemStack.set(
+                DataComponents.CUSTOM_NAME, StyledText.fromString(formattedName).getComponent());
 
         List<Component> loreLines = new ArrayList<>();
 
@@ -116,46 +111,58 @@ public record AbilityTreeSkillNode(
                 color = Integer.parseInt(colorStr, 16);
             }
 
-            loreLines.add(Component.literal(archetypeInfo.archetype() + " Archetype").withStyle(Style.EMPTY.withColor(color).withBold(true).withItalic(false)));
+            loreLines.add(Component.literal(archetypeInfo.archetype() + " Archetype")
+                    .withStyle(Style.EMPTY.withColor(color).withBold(true).withItalic(false)));
         }
 
         // Cost
         loreLines.add(Component.empty());
-        loreLines.add(
-                Component.literal("✔ ").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withItalic(false))
-                        .append(Component.literal("Ability Points: ").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))
-                                .append(Component.literal(String.valueOf(cost)).withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE).withItalic(false)))
-                        )
-        );
+        loreLines.add(Component.literal("✔ ")
+                .withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withItalic(false))
+                .append(Component.literal("Ability Points: ")
+                        .withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))
+                        .append(Component.literal(String.valueOf(cost))
+                                .withStyle(Style.EMPTY
+                                        .withColor(ChatFormatting.WHITE)
+                                        .withItalic(false)))));
 
         // Required ability
         if (requiredAbility != null && !requiredAbility.isEmpty()) {
-            loreLines.add(
-                    Component.literal("✔ ").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withItalic(false))
-                            .append(Component.literal("Required Ability: ").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))
-                                    .append(Component.literal(requiredAbility).withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE).withItalic(false)))
-                            )
-            );
+            loreLines.add(Component.literal("✔ ")
+                    .withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withItalic(false))
+                    .append(Component.literal("Required Ability: ")
+                            .withStyle(
+                                    Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))
+                            .append(Component.literal(requiredAbility)
+                                    .withStyle(Style.EMPTY
+                                            .withColor(ChatFormatting.WHITE)
+                                            .withItalic(false)))));
         }
 
         // required archetype
         if (requiredArchetype != null) {
-            loreLines.add(
-                    Component.literal("✔ ").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withItalic(false))
-                            .append(Component.literal("Min " + requiredArchetype.name() + " Archetype: ").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))
-                                    .append(Component.literal(String.valueOf(requiredArchetype.required())).withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE).withItalic(false)))
-                            )
-            );
+            loreLines.add(Component.literal("✔ ")
+                    .withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withItalic(false))
+                    .append(Component.literal("Min " + requiredArchetype.name() + " Archetype: ")
+                            .withStyle(
+                                    Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))
+                            .append(Component.literal(String.valueOf(requiredArchetype.required()))
+                                    .withStyle(Style.EMPTY
+                                            .withColor(ChatFormatting.WHITE)
+                                            .withItalic(false)))));
         }
 
         // required combat level
         if (requiredLevel > 0) {
-            loreLines.add(
-                    Component.literal("✔ ").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withItalic(false))
-                            .append(Component.literal("Combat Lv. min: ").withStyle(Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))
-                                    .append(Component.literal(String.valueOf(requiredLevel)).withStyle(Style.EMPTY.withColor(ChatFormatting.WHITE).withItalic(false)))
-                            )
-            );
+            loreLines.add(Component.literal("✔ ")
+                    .withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).withItalic(false))
+                    .append(Component.literal("Combat Lv. min: ")
+                            .withStyle(
+                                    Style.EMPTY.withColor(ChatFormatting.GRAY).withItalic(false))
+                            .append(Component.literal(String.valueOf(requiredLevel))
+                                    .withStyle(Style.EMPTY
+                                            .withColor(ChatFormatting.WHITE)
+                                            .withItalic(false)))));
         }
 
         itemStack.set(DataComponents.LORE, new ItemLore(loreLines));

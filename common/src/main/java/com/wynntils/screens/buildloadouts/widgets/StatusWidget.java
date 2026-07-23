@@ -1,7 +1,10 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -16,8 +19,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-
-import java.util.List;
 
 public class StatusWidget extends AbstractWidget {
     private StyledText text;
@@ -36,17 +37,13 @@ public class StatusWidget extends AbstractWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
-                this.x,
-                this.y,
-                this.width,
-                this.height);
+                guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, this.x, this.y, this.width, this.height);
 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.statusWidget.text")),
+                        StyledText.fromComponent(
+                                Component.translatable("screens.wynntils.buildLoadouts.statusWidget.text")),
                         this.x + this.width / 2f,
                         this.y + 10,
                         CommonColors.WHITE,
@@ -83,8 +80,6 @@ public class StatusWidget extends AbstractWidget {
     public void error(String text) {
         setStatus(text, parent.ERROR_COLOR);
     }
-
-
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {

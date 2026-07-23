@@ -584,14 +584,9 @@ public final class RenderUtils {
                 textureHeight);
     }
 
-    //nine slice scalling
+    // nine slice scalling
     public static void drawNineSliceScalingTexturedRect(
-            GuiGraphics guiGraphics,
-            Texture texture,
-            float x,
-            float y,
-            float width,
-            float height) {
+            GuiGraphics guiGraphics, Texture texture, float x, float y, float width, float height) {
         if (!texture.isNineSliced()) {
             WynntilsMod.warn("Tried to render non Nine Sliced Texture via drawNineSliceScalingTexturedRect.");
             return;
@@ -615,34 +610,11 @@ public final class RenderUtils {
         int texCenterHeight = texHeight - top - bottom;
 
         // Top Left
-        drawTexturedRect(
-                guiGraphics,
-                texture,
-                x,
-                y,
-                left,
-                top,
-                0,
-                0,
-                left,
-                top,
-                texWidth,
-                texHeight);
+        drawTexturedRect(guiGraphics, texture, x, y, left, top, 0, 0, left, top, texWidth, texHeight);
 
         // Top
         drawTexturedRect(
-                guiGraphics,
-                texture,
-                x + left,
-                y,
-                centerWidth,
-                top,
-                left,
-                0,
-                texCenterWidth,
-                top,
-                texWidth,
-                texHeight);
+                guiGraphics, texture, x + left, y, centerWidth, top, left, 0, texCenterWidth, top, texWidth, texHeight);
 
         // Top Right
         drawTexturedRect(
@@ -1206,7 +1178,8 @@ public final class RenderUtils {
         TrackingItemStackRenderState renderState = new TrackingItemStackRenderState();
         McUtils.mc()
                 .getItemModelResolver()
-                .updateForTopItem(renderState, itemStack, ItemDisplayContext.GUI, McUtils.mc().level, McUtils.player(), 0);
+                .updateForTopItem(
+                        renderState, itemStack, ItemDisplayContext.GUI, McUtils.mc().level, McUtils.player(), 0);
 
         AABB bounds = renderState.getModelBoundingBox();
         float itemWidth = (float) bounds.getXsize() * 16f;
@@ -1220,7 +1193,13 @@ public final class RenderUtils {
         guiGraphics.pose().translate(x, y);
         guiGraphics.pose().scale(scaleX, scaleY);
 
-        guiGraphics.guiRenderState.submitItem(new GuiItemRenderState(itemStack.getItem().getName().toString(), new Matrix3x2f(guiGraphics.pose()), renderState , 0, 0, guiGraphics.scissorStack.peek()));
+        guiGraphics.guiRenderState.submitItem(new GuiItemRenderState(
+                itemStack.getItem().getName().toString(),
+                new Matrix3x2f(guiGraphics.pose()),
+                renderState,
+                0,
+                0,
+                guiGraphics.scissorStack.peek()));
 
         guiGraphics.pose().popMatrix();
     }

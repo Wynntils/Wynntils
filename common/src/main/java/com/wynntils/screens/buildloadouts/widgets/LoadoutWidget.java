@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.text.StyledText;
@@ -12,6 +16,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.stream.IntStream;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -20,8 +25,6 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.stream.IntStream;
 
 public class LoadoutWidget extends AbstractWidget implements IconRenderer {
     private static final int TEXT_WIDTH_PADDING = 4;
@@ -36,14 +39,16 @@ public class LoadoutWidget extends AbstractWidget implements IconRenderer {
     private final Texture aspectTexture;
     private final Texture aspectFlameTexture;
 
-    public LoadoutWidget(StyledText text, int x, int y, int width, int height, Loadout loadout, BuildLoadoutsScreen parent) {
+    public LoadoutWidget(
+            StyledText text, int x, int y, int width, int height, Loadout loadout, BuildLoadoutsScreen parent) {
         super(x, y, width, height, Component.literal("Loadout Widget"));
         this.text = text;
         this.x = x;
         this.y = y;
         this.loadout = loadout;
         this.parent = parent;
-        this.archetypeItemStack = loadout.getArchetypeType() != null ? loadout.getArchetypeType().generateItemStack() : null;
+        this.archetypeItemStack =
+                loadout.getArchetypeType() != null ? loadout.getArchetypeType().generateItemStack() : null;
         this.aspectTexture = loadout.getAspectTexture();
         this.aspectFlameTexture = loadout.getFlameTexture();
     }
@@ -72,12 +77,7 @@ public class LoadoutWidget extends AbstractWidget implements IconRenderer {
             }
         } else {
             RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics,
-                    Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_BLUE,
-                    x,
-                    y,
-                    this.width,
-                    this.height);
+                    guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_BLUE, x, y, this.width, this.height);
 
             RenderUtils.drawTexturedRect(
                     guiGraphics,
@@ -102,12 +102,7 @@ public class LoadoutWidget extends AbstractWidget implements IconRenderer {
         }
 
         if (archetypeItemStack != null) {
-            RenderUtils.renderItem(
-                    guiGraphics,
-                    archetypeItemStack,
-                    this.x + 5,
-                    this.y + this.height / 2 - 8
-            );
+            RenderUtils.renderItem(guiGraphics, archetypeItemStack, this.x + 5, this.y + this.height / 2 - 8);
         } else if (aspectTexture != null && aspectFlameTexture != null && loadout.type() == LoadoutType.ASPECT) {
             renderAspect(guiGraphics, aspectTexture, aspectFlameTexture, this.x, this.y);
         } else if (loadout.type() == LoadoutType.SKILL_POINT) {
@@ -126,7 +121,8 @@ public class LoadoutWidget extends AbstractWidget implements IconRenderer {
 
             if (loadout.hasSkillPoints()) {
                 int[] points = loadout.skillPoints().getSkillPointsAsArray();
-                int[] activeElements = IntStream.range(0, 5).filter(i -> points[i] > 0).toArray();
+                int[] activeElements =
+                        IntStream.range(0, 5).filter(i -> points[i] > 0).toArray();
 
                 float baseY = this.y + this.height / 2f - 6;
                 renderSkillIcons(guiGraphics, this.x, baseY, activeElements);
@@ -147,7 +143,6 @@ public class LoadoutWidget extends AbstractWidget implements IconRenderer {
     public void setY(int y) {
         this.y = y;
     }
-
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {

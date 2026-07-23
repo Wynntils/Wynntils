@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.components.Models;
@@ -17,6 +21,9 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -26,10 +33,6 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class LoadoutMenuLoadButton extends AbstractButton implements TooltipProvider {
     private final int x;
@@ -51,23 +54,19 @@ public class LoadoutMenuLoadButton extends AbstractButton implements TooltipProv
         handleCursor(guiGraphics);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_GREEN,
-                x,
-                y,
-                this.width,
-                this.height);
+                guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_GREEN, x, y, this.width, this.height);
 
-            FontRenderer.getInstance()
-                    .renderText(
-                            guiGraphics,
-                            StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.loadoutMenu.loadButton.text")),
-                            (this.x + this.width / 2f),
-                            (this.y + this.height / 2f),
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromComponent(
+                                Component.translatable("screens.wynntils.buildLoadouts.loadoutMenu.loadButton.text")),
+                        (this.x + this.width / 2f),
+                        (this.y + this.height / 2f),
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
     }
 
     @Override
@@ -132,16 +131,13 @@ public class LoadoutMenuLoadButton extends AbstractButton implements TooltipProv
         boolean isLast = index == steps.size() - 1;
 
         steps.get(index)
-                .run(
-                        status -> parent.statusWidget.busy(status),
-                        error -> parent.statusWidget.error(error),
-                        message -> {
-                            if (isLast) {
-                                parent.statusWidget.completed(message);
-                            } else {
-                                runSteps(steps, index + 1);
-                            }
-                        });
+                .run(status -> parent.statusWidget.busy(status), error -> parent.statusWidget.error(error), message -> {
+                    if (isLast) {
+                        parent.statusWidget.completed(message);
+                    } else {
+                        runSteps(steps, index + 1);
+                    }
+                });
     }
 
     private LoadoutLoadStep skillPointsStep(Loadout loadout) {
@@ -178,11 +174,9 @@ public class LoadoutMenuLoadButton extends AbstractButton implements TooltipProv
         this.generatedTooltip = new ArrayList<>();
 
         if (parent.getCurrentCategory() == MenuCategory.BUILD_LOADOUT) {
-            this.generatedTooltip.add(Component.literal("Load Category")
-                    .withStyle(ChatFormatting.GOLD));
+            this.generatedTooltip.add(Component.literal("Load Category").withStyle(ChatFormatting.GOLD));
 
-            this.generatedTooltip.add(Component.literal("Choose what to load")
-                    .withStyle(ChatFormatting.DARK_GRAY));
+            this.generatedTooltip.add(Component.literal("Choose what to load").withStyle(ChatFormatting.DARK_GRAY));
 
             this.generatedTooltip.add(Component.empty());
 
@@ -192,9 +186,8 @@ public class LoadoutMenuLoadButton extends AbstractButton implements TooltipProv
 
                 Component label = Component.literal(type.getDisplayName()).withStyle(color);
 
-                this.generatedTooltip.add(Component.literal("- ")
-                        .withStyle(ChatFormatting.GOLD)
-                        .append(label));
+                this.generatedTooltip.add(
+                        Component.literal("- ").withStyle(ChatFormatting.GOLD).append(label));
             }
 
             this.generatedTooltip.add(Component.empty());
@@ -209,8 +202,8 @@ public class LoadoutMenuLoadButton extends AbstractButton implements TooltipProv
                     .append(" ")
                     .append(Component.literal("Right-Click to change category").withStyle(ChatFormatting.GREEN)));
         } else {
-            this.generatedTooltip.add(Component.literal("Load " + loadType.getDisplayName())
-                    .withStyle(ChatFormatting.GOLD));
+            this.generatedTooltip.add(
+                    Component.literal("Load " + loadType.getDisplayName()).withStyle(ChatFormatting.GOLD));
 
             this.generatedTooltip.add(Component.empty());
 

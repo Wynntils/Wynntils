@@ -60,7 +60,8 @@ public final class SkillPointModel extends Model {
 
     public void saveSkillPoints(String name, int[] skillPoints) {
         SavableSkillPointSet assignedSkillPointSet = new SavableSkillPointSet(skillPoints);
-        Services.loadout.saveSkillPointLoadoutAndTomes(name, assignedSkillPointSet, Models.Character.getCurrentTomeSet());
+        Services.loadout.saveSkillPointLoadoutAndTomes(
+                name, assignedSkillPointSet, Models.Character.getCurrentTomeSet());
         WynntilsMod.info("Saved skill point loadout: " + name + " " + assignedSkillPointSet);
     }
 
@@ -97,7 +98,8 @@ public final class SkillPointModel extends Model {
             WynnItem wynnItem = wynnItemOptional.get();
             ErrorOr<EncodedByteBuffer> errorOrEncoded = Models.ItemEncoding.encodeItem(wynnItem, encodingSettings);
             if (errorOrEncoded.hasError()) {
-                WynntilsMod.warn("Failed to encode " + itemStack.getHoverName().getString() + ": " + errorOrEncoded.getError());
+                WynntilsMod.warn(
+                        "Failed to encode " + itemStack.getHoverName().getString() + ": " + errorOrEncoded.getError());
                 continue;
             }
 
@@ -112,9 +114,10 @@ public final class SkillPointModel extends Model {
             }
         }
 
-        SavableSkillPointSet assignedSkillPointSet =
-                new SavableSkillPointSet(skillPoints, weaponEncodedString, armourEncodedStrings, accessoryEncodedStrings);
-        Services.loadout.saveSkillPointLoadoutAndTomes(name, assignedSkillPointSet, Models.Character.getCurrentTomeSet());
+        SavableSkillPointSet assignedSkillPointSet = new SavableSkillPointSet(
+                skillPoints, weaponEncodedString, armourEncodedStrings, accessoryEncodedStrings);
+        Services.loadout.saveSkillPointLoadoutAndTomes(
+                name, assignedSkillPointSet, Models.Character.getCurrentTomeSet());
         WynntilsMod.info("Saved skill point build: " + name + " " + assignedSkillPointSet);
     }
 
@@ -127,7 +130,6 @@ public final class SkillPointModel extends Model {
             getAssignedSkillPoints(Skill.AGILITY)
         });
     }
-
 
     public void loadLoadout(String name, Consumer<String> onError, Runnable onComplete) {
         ContainerUtils.closeBackgroundContainer();
@@ -305,7 +307,6 @@ public final class SkillPointModel extends Model {
             WynntilsMod.warn("Skill Point Model failed to parse gear: " + LoreUtils.getStringLore(itemStack));
         }
     }
-
 
     private boolean verifyChange(
             ContainerContent content,

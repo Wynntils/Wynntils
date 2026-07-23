@@ -1,8 +1,11 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
-import com.wynntils.screens.buildloadouts.type.MenuCategory;
 import com.wynntils.services.loadout.type.LoadoutType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -30,7 +33,8 @@ public class NewLoadoutSelectionButton extends AbstractWidget implements IconRen
     private static final int LIGHT_HOLDER_WIDTH_OFFSET = 5;
     private static final int LIGHT_HOLDER_HEIGHT_OFFSET = 5;
 
-    public NewLoadoutSelectionButton(StyledText text, StyledText infoText, LoadoutType loadoutType, int x, int y, BuildLoadoutsScreen parent) {
+    public NewLoadoutSelectionButton(
+            StyledText text, StyledText infoText, LoadoutType loadoutType, int x, int y, BuildLoadoutsScreen parent) {
         super(x, y, 128, 41, Component.literal("New Loadout Selection Button"));
         this.text = text;
         this.infoText = infoText;
@@ -45,20 +49,10 @@ public class NewLoadoutSelectionButton extends AbstractWidget implements IconRen
         handleCursor(guiGraphics);
         if (parent.getNewLoadoutType() != loadoutType) {
             RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics,
-                    Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
-                    x,
-                    y,
-                    this.width,
-                    this.height);
+                    guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, x, y, this.width, this.height);
         } else {
             RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics,
-                    Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_BLUE,
-                    x,
-                    y,
-                    this.width,
-                    this.height);
+                    guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_BLUE, x, y, this.width, this.height);
 
             RenderUtils.drawTexturedRect(
                     guiGraphics,
@@ -93,21 +87,11 @@ public class NewLoadoutSelectionButton extends AbstractWidget implements IconRen
                     (this.y + this.height / 2f) - Texture.BUILD_LOADOUTS_ABILITY_TREE_LOADOUTS_ICON.height() / 2f);
         } else if (loadoutType == LoadoutType.SKILL_POINT) {
             float baseY = this.y + this.height / 2f - 6;
-            renderSkillIcons(guiGraphics, this.x + 12, baseY, new int[]{0, 1, 2, 3, 4});
+            renderSkillIcons(guiGraphics, this.x + 12, baseY, new int[] {0, 1, 2, 3, 4});
         } else if (loadoutType == LoadoutType.ASPECT) {
-            renderAspect(
-                    guiGraphics,
-                    Texture.ASPECT_ARCHER,
-                    Texture.ASPECT_ARCHER_FLAME,
-                    this.x + 5,
-                    this.y + 5);
+            renderAspect(guiGraphics, Texture.ASPECT_ARCHER, Texture.ASPECT_ARCHER_FLAME, this.x + 5, this.y + 5);
 
-            renderAspect(
-                    guiGraphics,
-                    Texture.ASPECT_ASSASSIN,
-                    Texture.ASPECT_ASSASSIN_FLAME,
-                    this.x + 25,
-                    this.y + 5);
+            renderAspect(guiGraphics, Texture.ASPECT_ASSASSIN, Texture.ASPECT_ASSASSIN_FLAME, this.x + 25, this.y + 5);
         }
     }
 

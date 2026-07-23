@@ -1,6 +1,9 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
@@ -24,7 +27,6 @@ public class LoadoutMenuSkillPointWidget extends AbstractWidget implements IconR
     private final int y;
     private final BuildLoadoutsScreen parent;
 
-
     public LoadoutMenuSkillPointWidget(int x, int y, BuildLoadoutsScreen parent) {
         super(x, y, 61, 68, Component.literal("Loadout Menu Skill Point Widget"));
         this.x = x;
@@ -35,12 +37,7 @@ public class LoadoutMenuSkillPointWidget extends AbstractWidget implements IconR
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
-                x,
-                y,
-                this.width,
-                this.height);
+                guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, x, y, this.width, this.height);
 
         Loadout selectedLoadout = parent.getSelectedLoadout();
         if (selectedLoadout != null && selectedLoadout.hasSkillPoints()) {
@@ -56,7 +53,8 @@ public class LoadoutMenuSkillPointWidget extends AbstractWidget implements IconR
                                 StyledText.fromString(String.valueOf(points)),
                                 this.x + 30,
                                 this.y + startY,
-                                CustomColor.fromInt(Skill.values()[i].getColorCode().getColor()),
+                                CustomColor.fromInt(
+                                        Skill.values()[i].getColorCode().getColor()),
                                 HorizontalAlignment.LEFT,
                                 VerticalAlignment.MIDDLE,
                                 TextShadow.NORMAL);
@@ -68,7 +66,8 @@ public class LoadoutMenuSkillPointWidget extends AbstractWidget implements IconR
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             guiGraphics,
-                            StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.loadoutMenu.skillPointWidget.emptyText")),
+                            StyledText.fromComponent(Component.translatable(
+                                    "screens.wynntils.buildLoadouts.loadoutMenu.skillPointWidget.emptyText")),
                             this.x + this.width / 2f,
                             this.y + 5,
                             this.y + this.height - 10,
@@ -78,7 +77,6 @@ public class LoadoutMenuSkillPointWidget extends AbstractWidget implements IconR
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         }
-
     }
 
     @Override

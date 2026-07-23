@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.core.persisted.upfixers.storage;
 
 import com.google.gson.JsonArray;
@@ -18,7 +22,6 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.RangedValue;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,14 +37,13 @@ public class LoadoutMigrationUpfixer implements Upfixer {
 
     @Override
     public boolean apply(JsonObject configObject, Set<PersistedValue<?>> persisteds) {
-        JsonObject abilityTrees = configObject.has(OLD_ABILITY_TREE_KEY)
-                ? configObject.getAsJsonObject(OLD_ABILITY_TREE_KEY) : null;
+        JsonObject abilityTrees =
+                configObject.has(OLD_ABILITY_TREE_KEY) ? configObject.getAsJsonObject(OLD_ABILITY_TREE_KEY) : null;
 
-        JsonObject aspects = configObject.has(OLD_ASPECT_KEY)
-                ? configObject.getAsJsonObject(OLD_ASPECT_KEY) : null;
+        JsonObject aspects = configObject.has(OLD_ASPECT_KEY) ? configObject.getAsJsonObject(OLD_ASPECT_KEY) : null;
 
-        JsonObject skillPoints = configObject.has(OLD_SKILL_POINT_KEY)
-                ? configObject.getAsJsonObject(OLD_SKILL_POINT_KEY) : null;
+        JsonObject skillPoints =
+                configObject.has(OLD_SKILL_POINT_KEY) ? configObject.getAsJsonObject(OLD_SKILL_POINT_KEY) : null;
 
         if (abilityTrees == null && aspects == null && skillPoints == null) {
             return false;
@@ -134,13 +136,14 @@ public class LoadoutMigrationUpfixer implements Upfixer {
 
             String rawName = nameElement.getAsString();
             resolveGearInfo(rawName).ifPresent(gearInfo -> {
-                int slotIndex = switch (gearInfo.type()) {
-                    case HELMET -> 0;
-                    case CHESTPLATE -> 1;
-                    case LEGGINGS -> 2;
-                    case BOOTS -> 3;
-                    default -> -1;
-                };
+                int slotIndex =
+                        switch (gearInfo.type()) {
+                            case HELMET -> 0;
+                            case CHESTPLATE -> 1;
+                            case LEGGINGS -> 2;
+                            case BOOTS -> 3;
+                            default -> -1;
+                        };
 
                 if (slotIndex == -1) {
                     WynntilsMod.warn("Upfixer: unexpected gear type for armour " + rawName + ": " + gearInfo.type());
@@ -172,15 +175,17 @@ public class LoadoutMigrationUpfixer implements Upfixer {
 
             String rawName = nameElement.getAsString();
             resolveGearInfo(rawName).ifPresent(gearInfo -> {
-                Integer slotIndex = switch (gearInfo.type()) {
-                    case RING -> slots[0] == null ? 0 : (slots[1] == null ? 1 : null);
-                    case BRACELET -> slots[2] == null ? 2 : null;
-                    case NECKLACE -> slots[3] == null ? 3 : null;
-                    default -> null;
-                };
+                Integer slotIndex =
+                        switch (gearInfo.type()) {
+                            case RING -> slots[0] == null ? 0 : (slots[1] == null ? 1 : null);
+                            case BRACELET -> slots[2] == null ? 2 : null;
+                            case NECKLACE -> slots[3] == null ? 3 : null;
+                            default -> null;
+                        };
 
                 if (slotIndex == null) {
-                    WynntilsMod.warn("Upfixer: no available accessory slot for " + rawName + " (" + gearInfo.type() + ")");
+                    WynntilsMod.warn(
+                            "Upfixer: no available accessory slot for " + rawName + " (" + gearInfo.type() + ")");
                     return;
                 }
 
@@ -210,19 +215,20 @@ public class LoadoutMigrationUpfixer implements Upfixer {
     private static Optional<String> encodeGearItem(GearInfo gearInfo) {
         List<StatActualValue> stats = new ArrayList<>();
 
-        for (Map.Entry<StatType, StatPossibleValues> entry : gearInfo.getVariableStatsMap().entrySet()) {
+        for (Map.Entry<StatType, StatPossibleValues> entry :
+                gearInfo.getVariableStatsMap().entrySet()) {
             StatType statType = entry.getKey();
             StatPossibleValues val = entry.getValue();
             RangedValue internalRoll = StatCalculator.calculateInternalRollRange(val, val.baseValue(), 0);
             stats.add(new StatActualValue(statType, val.baseValue(), 0, internalRoll, false));
         }
 
-        GearInstance gearInstance = new GearInstance(stats, List.of(), 0, Optional.empty(), Optional.empty(), true, Optional.empty());
+        GearInstance gearInstance =
+                new GearInstance(stats, List.of(), 0, Optional.empty(), Optional.empty(), true, Optional.empty());
         GearItem defaultGearItem = new GearItem(gearInfo, gearInstance);
 
         EncodingSettings encodingSettings = new EncodingSettings(true, true);
-        ErrorOr<EncodedByteBuffer> errorOrEncoded =
-                Models.ItemEncoding.encodeItem(defaultGearItem, encodingSettings);
+        ErrorOr<EncodedByteBuffer> errorOrEncoded = Models.ItemEncoding.encodeItem(defaultGearItem, encodingSettings);
         if (errorOrEncoded.hasError()) {
             WynntilsMod.warn("Upfixer: failed to encode " + gearInfo.name() + ": " + errorOrEncoded.getError());
             return Optional.empty();

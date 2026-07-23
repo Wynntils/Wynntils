@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.components.Services;
@@ -37,23 +41,19 @@ public class LoadoutMenuDeleteButton extends AbstractButton {
         handleCursor(guiGraphics);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_RED,
-                x,
-                y,
-                this.width,
-                this.height);
+                guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_RED, x, y, this.width, this.height);
 
-            FontRenderer.getInstance()
-                    .renderText(
-                            guiGraphics,
-                            StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.loadoutMenu.deleteButton.text")),
-                            (this.x + this.width / 2f),
-                            (this.y + this.height / 2f),
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromComponent(
+                                Component.translatable("screens.wynntils.buildLoadouts.loadoutMenu.deleteButton.text")),
+                        (this.x + this.width / 2f),
+                        (this.y + this.height / 2f),
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
     }
 
     @Override

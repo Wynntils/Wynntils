@@ -1,6 +1,9 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -25,6 +28,10 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -33,11 +40,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
 
 public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltipProvider {
     private static final CustomColor BOX_BORDER_COLOR = CustomColor.fromInt(0x654f3c);
@@ -60,12 +62,7 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
-                x,
-                y,
-                this.width,
-                this.height);
+                guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, x, y, this.width, this.height);
 
         List<ItemStack> boxItemStacks = getBoxItemStacks();
 
@@ -75,12 +72,7 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
             int bx = pos[0];
             int by = pos[1];
 
-            RenderUtils.drawRectBorders(
-                    guiGraphics,
-                    BOX_BORDER_COLOR,
-                    bx, by,
-                    bx + BOX_SIZE, by + BOX_SIZE,
-                    1);
+            RenderUtils.drawRectBorders(guiGraphics, BOX_BORDER_COLOR, bx, by, bx + BOX_SIZE, by + BOX_SIZE, 1);
 
             renderBoxItem(guiGraphics, boxItemStacks, BOXES_PER_ROW + i, bx, by);
         }
@@ -91,28 +83,19 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
             int bx = pos[0];
             int by = pos[1];
 
-            RenderUtils.drawRectBorders(
-                    guiGraphics,
-                    BOX_BORDER_COLOR,
-                    bx, by,
-                    bx + BOX_SIZE, by + BOX_SIZE,
-                    1);
+            RenderUtils.drawRectBorders(guiGraphics, BOX_BORDER_COLOR, bx, by, bx + BOX_SIZE, by + BOX_SIZE, 1);
 
             renderBoxItem(guiGraphics, boxItemStacks, i, bx, by);
         }
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_MENU_RIBBON,
-                x + 6,
-                y + 2,
-                this.width - 12,
-                17);
+                guiGraphics, Texture.BUILD_LOADOUTS_MENU_RIBBON, x + 6, y + 2, this.width - 12, 17);
 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.loadoutMenu.itemWidget.text")),
+                        StyledText.fromComponent(
+                                Component.translatable("screens.wynntils.buildLoadouts.loadoutMenu.itemWidget.text")),
                         this.x + 5 + (this.width - 10) / 2f,
                         this.y + 11,
                         CommonColors.WHITE,
@@ -128,9 +111,7 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
 
     private int[] getBoxPosition(int row, int column) {
         int bx = x + 3 + 19 * column;
-        int by = row == 0
-                ? y + this.height - BOX_SIZE * 2 - 10
-                : y + this.height - BOX_SIZE - 7;
+        int by = row == 0 ? y + this.height - BOX_SIZE * 2 - 10 : y + this.height - BOX_SIZE - 7;
         return new int[] {bx, by};
     }
 
@@ -195,24 +176,30 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
         if (item instanceof GearItem gearItem) {
             return Optional.of(new FakeItemStack(gearItem, "From loadout"));
         }
-        //todo: fix this once crafted item encoding works.
+        // todo: fix this once crafted item encoding works.
         if (item instanceof CraftedGearItem craftedGearItem) {
             GearType gearType = craftedGearItem.getGearType();
             ItemStack itemStack = new ItemStack(gearType.getDefaultItem());
 
             float customModelData = gearType.getDefaultModel();
             if (gearType == GearType.RING) {
-                customModelData = Services.CustomModel.getFloat("ring.basicPearl").orElse(gearType.getDefaultModel());
+                customModelData =
+                        Services.CustomModel.getFloat("ring.basicPearl").orElse(gearType.getDefaultModel());
             } else if (gearType == GearType.BRACELET) {
-                customModelData = Services.CustomModel.getFloat("bracelet.multi2").orElse(gearType.getDefaultModel());
+                customModelData =
+                        Services.CustomModel.getFloat("bracelet.multi2").orElse(gearType.getDefaultModel());
             } else if (gearType == GearType.NECKLACE) {
-                customModelData = Services.CustomModel.getFloat("necklace.basicCross").orElse(gearType.getDefaultModel());
+                customModelData =
+                        Services.CustomModel.getFloat("necklace.basicCross").orElse(gearType.getDefaultModel());
             } else if (gearType == GearType.HELMET) {
-                customModelData = Services.CustomModel.getFloat("helmet.diamond").orElse(gearType.getDefaultModel());
+                customModelData =
+                        Services.CustomModel.getFloat("helmet.diamond").orElse(gearType.getDefaultModel());
             } else if (gearType == GearType.CHESTPLATE) {
-                customModelData = Services.CustomModel.getFloat("chestplate.diamond").orElse(gearType.getDefaultModel());
+                customModelData =
+                        Services.CustomModel.getFloat("chestplate.diamond").orElse(gearType.getDefaultModel());
             } else if (gearType == GearType.LEGGINGS) {
-                customModelData = Services.CustomModel.getFloat("leggings.diamond").orElse(gearType.getDefaultModel());
+                customModelData =
+                        Services.CustomModel.getFloat("leggings.diamond").orElse(gearType.getDefaultModel());
             } else if (gearType == GearType.BOOTS) {
                 customModelData = Services.CustomModel.getFloat("boots.diamond").orElse(gearType.getDefaultModel());
             }

@@ -76,7 +76,7 @@ public final class AbilityTreeModel extends Model {
 
     public void loadAbilityTree(
             String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
-        SavableAbilityTree savedTree =  Services.loadout.getAbilityTreeLoadout(name);
+        SavableAbilityTree savedTree = Services.loadout.getAbilityTreeLoadout(name);
         if (savedTree == null) {
             onError.accept("No saved ability tree loadout: " + name);
             return;
@@ -253,7 +253,10 @@ public final class AbilityTreeModel extends Model {
                         (AbilityTreeSkillNode n) -> dependents.getOrDefault(n.name(), 0L), Comparator.reverseOrder())
 
                 // 4. Prefer archetypeInfo.archetype() contributors to hit thresholds sooner
-                .thenComparing((AbilityTreeSkillNode n) -> n.archetypeInfo() != null && n.archetypeInfo().archetype() != null, Comparator.reverseOrder())
+                .thenComparing(
+                        (AbilityTreeSkillNode n) ->
+                                n.archetypeInfo() != null && n.archetypeInfo().archetype() != null,
+                        Comparator.reverseOrder())
 
                 // 5. Stable, deterministic tie-breaker
                 .thenComparingInt(AbilityTreeSkillNode::id);

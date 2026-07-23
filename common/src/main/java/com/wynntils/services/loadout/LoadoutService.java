@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.services.loadout;
 
 import com.wynntils.core.components.Service;
@@ -7,15 +11,13 @@ import com.wynntils.models.abilitytree.type.SavableAbilityTree;
 import com.wynntils.models.aspects.type.SavableAspectSet;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.character.type.SavableTomeSet;
-import com.wynntils.services.loadout.type.LoadoutType;
 import com.wynntils.services.loadout.type.Loadout;
-
+import com.wynntils.services.loadout.type.LoadoutType;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class LoadoutService extends Service {
-
     @Persisted
     public final Storage<Map<String, Loadout>> loadouts = new Storage<>(new TreeMap<>());
 

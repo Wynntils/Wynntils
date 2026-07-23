@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.components.Models;
@@ -22,7 +26,6 @@ public class LoadoutMenuOverviewWidget extends AbstractWidget {
     private final int y;
     private final BuildLoadoutsScreen parent;
 
-
     public LoadoutMenuOverviewWidget(int x, int y, BuildLoadoutsScreen parent) {
         super(x, y, 98, 68, Component.literal("Loadout Menu Overview Widget"));
         this.x = x;
@@ -33,25 +36,16 @@ public class LoadoutMenuOverviewWidget extends AbstractWidget {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
-                x,
-                y,
-                this.width,
-                this.height);
+                guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, x, y, this.width, this.height);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_MENU_RIBBON,
-                x + 6,
-                y + 2,
-                this.width - 12,
-                17);
+                guiGraphics, Texture.BUILD_LOADOUTS_MENU_RIBBON, x + 6, y + 2, this.width - 12, 17);
 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.loadoutMenu.overviewWidget.text")),
+                        StyledText.fromComponent(Component.translatable(
+                                "screens.wynntils.buildLoadouts.loadoutMenu.overviewWidget.text")),
                         this.x + 5 + (this.width - 10) / 2f,
                         this.y + 11,
                         CommonColors.WHITE,

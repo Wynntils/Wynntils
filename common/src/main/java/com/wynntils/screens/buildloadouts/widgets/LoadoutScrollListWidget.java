@@ -1,27 +1,23 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.abilitytree.type.SavableAbilityTree;
-import com.wynntils.models.aspects.type.SavableAspectSet;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.services.loadout.type.Loadout;
-import com.wynntils.services.loadout.type.LoadoutType;
 import com.wynntils.utils.StringUtils;
-import net.minecraft.client.gui.components.AbstractWidget;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
+import net.minecraft.client.gui.components.AbstractWidget;
 
 public class LoadoutScrollListWidget extends ScrollListWidget {
     private static final int MAX_WIDGETS_PER_PAGE = 7;
@@ -35,7 +31,15 @@ public class LoadoutScrollListWidget extends ScrollListWidget {
     private final BuildLoadoutsScreen parent;
 
     public LoadoutScrollListWidget(int x, int y, BuildLoadoutsScreen parent) {
-        super(x, y, WIDTH, HEIGHT, WIDGET_HEIGHT, WIDGET_HEIGHT_PADDING, WIDGET_HEIGHT_EDGE_PADDING, MAX_WIDGETS_PER_PAGE);
+        super(
+                x,
+                y,
+                WIDTH,
+                HEIGHT,
+                WIDGET_HEIGHT,
+                WIDGET_HEIGHT_PADDING,
+                WIDGET_HEIGHT_EDGE_PADDING,
+                MAX_WIDGETS_PER_PAGE);
         this.x = x;
         this.y = y;
         this.parent = parent;
@@ -55,8 +59,7 @@ public class LoadoutScrollListWidget extends ScrollListWidget {
 
         List<String> filteredSorted = savedLoadouts.keySet().stream()
                 .filter(this::searchMatches)
-                .sorted(Comparator
-                        .comparingInt((String name) -> getSortRank(savedLoadouts.get(name), currentClass))
+                .sorted(Comparator.comparingInt((String name) -> getSortRank(savedLoadouts.get(name), currentClass))
                         .thenComparing(Comparator.naturalOrder()))
                 .toList();
 

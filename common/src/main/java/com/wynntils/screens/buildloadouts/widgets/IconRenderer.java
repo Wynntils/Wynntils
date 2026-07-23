@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.utils.render.RenderUtils;
@@ -43,7 +47,8 @@ public interface IconRenderer {
                 ATLAS_HEIGHT);
     }
 
-    default void renderAspect(GuiGraphics guiGraphics, Texture aspectTexture, Texture aspectFlameTexture, float x, float y) {
+    default void renderAspect(
+            GuiGraphics guiGraphics, Texture aspectTexture, Texture aspectFlameTexture, float x, float y) {
         RenderUtils.drawSprite(
                 guiGraphics,
                 aspectFlameTexture,
@@ -52,10 +57,6 @@ public interface IconRenderer {
                 aspectFlameTexture.width() * (3f / 4f),
                 aspectFlameTexture.height() * (3f / 4f));
 
-        RenderUtils.drawSprite(
-                guiGraphics,
-                aspectTexture,
-                x - 16 + 6,
-                y - 16 + 12);
+        RenderUtils.drawSprite(guiGraphics, aspectTexture, x - 16 + 6, y - 16 + 12);
     }
 }

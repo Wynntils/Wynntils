@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
@@ -16,7 +20,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.function.Consumer;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -59,7 +62,10 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             guiGraphics,
-                            getTruncatedText(StyledText.fromString(parent.getSelectedLoadout().name()), MAX_VISIBLE_CHARARCTERS),
+                            getTruncatedText(
+                                    StyledText.fromString(
+                                            parent.getSelectedLoadout().name()),
+                                    MAX_VISIBLE_CHARARCTERS),
                             this.getX() + textPadding,
                             this.getX() + this.width - EDIT_BUTTON_WIDTH,
                             this.getY() + VERTICAL_OFFSET,
@@ -90,7 +96,6 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
             int lastWidth,
             int mouseX,
             int mouseY) {
-
         if (this.isHovered && !isEditButtonHovered(mouseX, mouseY)) {
             guiGraphics.requestCursor(CursorTypes.IBEAM);
         }
@@ -157,19 +162,9 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
         int btnY = this.getY() + (this.height - EDIT_BUTTON_HEIGHT) / 2;
 
         if (!editing) {
-            RenderUtils.drawTexturedRect(
-                    guiGraphics,
-                    Texture.BUILD_LOADOUTS_RENAME_ICON,
-                    btnX,
-                    btnY
-            );
+            RenderUtils.drawTexturedRect(guiGraphics, Texture.BUILD_LOADOUTS_RENAME_ICON, btnX, btnY);
         } else {
-            RenderUtils.drawTexturedRect(
-                    guiGraphics,
-                    Texture.BUILD_LOADOUTS_RENAME_ICON_WITH_INKWELL,
-                    btnX,
-                    btnY
-            );
+            RenderUtils.drawTexturedRect(guiGraphics, Texture.BUILD_LOADOUTS_RENAME_ICON_WITH_INKWELL, btnX, btnY);
         }
     }
 
@@ -183,12 +178,7 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
                 this.height + 10);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
-                getX(),
-                getY(),
-                this.width,
-                this.height);
+                guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, getX(), getY(), this.width, this.height);
     }
 
     @Override
@@ -215,7 +205,6 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
                 && event.x() <= textAreaRight
                 && event.y() >= this.getY()
                 && event.y() <= this.getY() + this.height) {
-
             this.playDownSound(Minecraft.getInstance().getSoundManager());
             if (event.button() == GLFW.GLFW_MOUSE_BUTTON_2) {
                 setTextBoxInput("");
@@ -314,8 +303,10 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget {
     private boolean isEditButtonHovered(double mouseX, double mouseY) {
         int btnX = this.getX() + this.width - EDIT_BUTTON_WIDTH;
         int btnY = this.getY() + (this.height - EDIT_BUTTON_HEIGHT) / 2;
-        return mouseX >= btnX && mouseX <= btnX + EDIT_BUTTON_WIDTH
-                && mouseY >= btnY && mouseY <= btnY + EDIT_BUTTON_HEIGHT;
+        return mouseX >= btnX
+                && mouseX <= btnX + EDIT_BUTTON_WIDTH
+                && mouseY >= btnY
+                && mouseY <= btnY + EDIT_BUTTON_HEIGHT;
     }
 
     private StyledText getTruncatedText(StyledText text, int maxVisibleChars) {

@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.text.StyledText;
@@ -10,29 +14,24 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-
-import java.util.function.Consumer;
 
 public class NewLoadoutInputWidget extends SearchWidget {
     private static final Component DEFAULT_TEXT =
             Component.translatable("screens.wynntils.textInputWidget.defaultText");
 
-    public NewLoadoutInputWidget(int x, int y, int width, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
+    public NewLoadoutInputWidget(
+            int x, int y, int width, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
         super(x, y, width, 20, onUpdateConsumer, textboxScreen);
     }
 
     @Override
     protected void renderBackground(GuiGraphics guiGraphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_TEXT_INPUT_BOX,
-                getX(),
-                getY(),
-                this.width,
-                this.height);
+                guiGraphics, Texture.BUILD_LOADOUTS_TEXT_INPUT_BOX, getX(), getY(), this.width, this.height);
     }
 
     @Override

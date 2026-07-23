@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.components.Services;
@@ -30,37 +34,17 @@ public class LoadoutMenuFavouriteButton extends AbstractWidget {
         handleCursor(guiGraphics);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND,
-                x - 5,
-                y - 5,
-                this.width + 10,
-                this.height + 10);
+                guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND, x - 5, y - 5, this.width + 10, this.height + 10);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
-                x,
-                y,
-                this.width,
-                this.height);
+                guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, x, y, this.width, this.height);
 
         Loadout loadout = parent.getSelectedLoadout();
         if (loadout != null) {
             if (loadout.favourited()) {
-                RenderUtils.drawTexturedRect(
-                        guiGraphics,
-                        Texture.BUILD_LOADOUTS_STAR_ICON,
-                        x + 4,
-                        y + 4
-                );
+                RenderUtils.drawTexturedRect(guiGraphics, Texture.BUILD_LOADOUTS_STAR_ICON, x + 4, y + 4);
             } else {
-                RenderUtils.drawTexturedRect(
-                        guiGraphics,
-                        Texture.BUILD_LOADOUTS_STAR_ICON_OUTLINE,
-                        x + 4,
-                        y + 4
-                );
+                RenderUtils.drawTexturedRect(guiGraphics, Texture.BUILD_LOADOUTS_STAR_ICON_OUTLINE, x + 4, y + 4);
             }
         }
     }
@@ -81,6 +65,5 @@ public class LoadoutMenuFavouriteButton extends AbstractWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-    }
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

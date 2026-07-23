@@ -35,17 +35,13 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.wynn.InventoryUtils;
-
+import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.equine.AbstractHorse;

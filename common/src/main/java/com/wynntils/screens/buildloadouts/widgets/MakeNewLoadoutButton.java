@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.components.Models;
@@ -44,7 +48,9 @@ public class MakeNewLoadoutButton extends AbstractButton {
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
-                !buttonConfirm ? Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_GREEN : Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_RED,
+                !buttonConfirm
+                        ? Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_GREEN
+                        : Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_RED,
                 x,
                 y,
                 this.width,
@@ -53,9 +59,11 @@ public class MakeNewLoadoutButton extends AbstractButton {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        !buttonConfirm ?
-                                StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.newLoadoutMenu.makeNewLoadout.create"))
-                                : StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.newLoadoutMenu.makeNewLoadout.confirm")),
+                        !buttonConfirm
+                                ? StyledText.fromComponent(Component.translatable(
+                                        "screens.wynntils.buildLoadouts.newLoadoutMenu.makeNewLoadout.create"))
+                                : StyledText.fromComponent(Component.translatable(
+                                        "screens.wynntils.buildLoadouts.newLoadoutMenu.makeNewLoadout.confirm")),
                         (this.x + this.width / 2f),
                         (this.y + this.height / 2f),
                         CommonColors.WHITE,
@@ -76,21 +84,29 @@ public class MakeNewLoadoutButton extends AbstractButton {
         String name = parent.newLoadoutInputWidget.getTextBoxInput();
 
         if (name.isEmpty()) {
-            parent.newLoadoutInfoWidget.setText(StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.newLoadoutMenu.makeNewLoadout.noNameError")), false);
+            parent.newLoadoutInfoWidget.setText(
+                    StyledText.fromComponent(Component.translatable(
+                            "screens.wynntils.buildLoadouts.newLoadoutMenu.makeNewLoadout.noNameError")),
+                    false);
             buttonConfirm = false;
             return true;
         }
 
         LoadoutType type = parent.getNewLoadoutType();
         if (type == null) {
-            parent.newLoadoutInfoWidget.setText(StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.newLoadoutMenu.makeNewLoadout.noLoadoutTypeError")), false);
+            parent.newLoadoutInfoWidget.setText(
+                    StyledText.fromComponent(Component.translatable(
+                            "screens.wynntils.buildLoadouts.newLoadoutMenu.makeNewLoadout.noLoadoutTypeError")),
+                    false);
             buttonConfirm = false;
             return true;
         }
 
         if (Services.loadout.hasLoadout(name) && !buttonConfirm) {
             parent.newLoadoutInfoWidget.setText(
-                    StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.newLoadoutMenu.makeNewLoadout.overwriteError")), false);
+                    StyledText.fromComponent(Component.translatable(
+                            "screens.wynntils.buildLoadouts.newLoadoutMenu.makeNewLoadout.overwriteError")),
+                    false);
             buttonConfirm = true;
             return true;
         }
@@ -124,21 +140,18 @@ public class MakeNewLoadoutButton extends AbstractButton {
         boolean isLast = index == steps.size() - 1;
 
         steps.get(index)
-                .run(
-                        status -> parent.statusWidget.busy(status),
-                        error -> parent.statusWidget.error(error),
-                        message -> {
-                            if (isLast) {
-                                Loadout loadout = Services.loadout.getLoadout(name);
-                                parent.setCurrentCategory(loadout.getMenuCategory());
-                                parent.setSelectedLoadout(loadout);
-                                parent.loadoutScrollListWidget.scrollOffset = 0;
-                                parent.loadoutScrollListWidget.populateLoadouts();
-                                parent.statusWidget.completed(message);
-                            } else {
-                                runSaveSteps(steps, index + 1, name);
-                            }
-                        });
+                .run(status -> parent.statusWidget.busy(status), error -> parent.statusWidget.error(error), message -> {
+                    if (isLast) {
+                        Loadout loadout = Services.loadout.getLoadout(name);
+                        parent.setCurrentCategory(loadout.getMenuCategory());
+                        parent.setSelectedLoadout(loadout);
+                        parent.loadoutScrollListWidget.scrollOffset = 0;
+                        parent.loadoutScrollListWidget.populateLoadouts();
+                        parent.statusWidget.completed(message);
+                    } else {
+                        runSaveSteps(steps, index + 1, name);
+                    }
+                });
     }
 
     private LoadoutSaveStep skillPointsSaveStep(String name) {

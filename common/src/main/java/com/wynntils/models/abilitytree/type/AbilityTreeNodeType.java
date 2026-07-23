@@ -9,10 +9,7 @@ import com.wynntils.models.character.type.ClassType;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.CustomModelData;
 
 public enum AbilityTreeNodeType {
     // === Base class abilities ===

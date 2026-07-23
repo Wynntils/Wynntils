@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.components.Models;
@@ -13,19 +17,18 @@ import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.ErrorOr;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.regex.Matcher;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-
 public class BuildLoadoutScrollListWidget extends ScrollListWidget implements ItemTooltipProvider {
-    private static final int  MAX_WIDGETS_PER_PAGE = 3;
+    private static final int MAX_WIDGETS_PER_PAGE = 3;
     private static final int WIDTH = 271 - 10;
     private static final int HEIGHT = 131 - 16;
     private static final int WIDGET_HEIGHT = 33;
@@ -41,43 +44,50 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
     private List<AbstractWidget> itemWidgets = new ArrayList<>();
 
     public BuildLoadoutScrollListWidget(int x, int y, BuildLoadoutsScreen parent) {
-        super(x, y, WIDTH, HEIGHT, WIDGET_HEIGHT, WIDGET_HEIGHT_PADDING, WIDGET_HEIGHT_EDGE_PADDING,  MAX_WIDGETS_PER_PAGE);
+        super(
+                x,
+                y,
+                WIDTH,
+                HEIGHT,
+                WIDGET_HEIGHT,
+                WIDGET_HEIGHT_PADDING,
+                WIDGET_HEIGHT_EDGE_PADDING,
+                MAX_WIDGETS_PER_PAGE);
         this.x = x;
         this.y = y;
         this.parent = parent;
 
         int buttonWidth = (this.width - 8) / 3;
         abilityTreeButton = new BuildLoadoutScrollListSelectorWidget(
-                StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.buildLoadoutScrollList.selectButton.abilityTree")),
+                StyledText.fromComponent(Component.translatable(
+                        "screens.wynntils.buildLoadouts.buildLoadoutScrollList.selectButton.abilityTree")),
                 ScrollListCategory.ABILITY_TREE,
                 x + 4,
                 y - 2 - 15,
                 buttonWidth + 1,
                 18,
-                parent
-        );
+                parent);
 
         aspectsButton = new BuildLoadoutScrollListSelectorWidget(
-                StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.buildLoadoutScrollList.selectButton.aspects")),
+                StyledText.fromComponent(Component.translatable(
+                        "screens.wynntils.buildLoadouts.buildLoadoutScrollList.selectButton.aspects")),
                 ScrollListCategory.ASPECTS,
                 x + 4 + buttonWidth,
                 y - 2 - 15,
                 buttonWidth + 1,
                 18,
-                parent
-        );
+                parent);
 
         tomesButton = new BuildLoadoutScrollListSelectorWidget(
-                StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.buildLoadoutScrollList.selectButton.tomes")),
+                StyledText.fromComponent(Component.translatable(
+                        "screens.wynntils.buildLoadouts.buildLoadoutScrollList.selectButton.tomes")),
                 ScrollListCategory.TOMES,
                 x + 4 + buttonWidth * 2,
                 y - 2 - 15,
                 buttonWidth + 1,
                 18,
-                parent
-        );
+                parent);
     }
-
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
@@ -92,8 +102,6 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
         abilityTreeButton.render(guiGraphics, mouseX, mouseY, partialTick);
         aspectsButton.render(guiGraphics, mouseX, mouseY, partialTick);
         tomesButton.render(guiGraphics, mouseX, mouseY, partialTick);
-
-
 
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
     }
@@ -124,7 +132,8 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
     @Override
     public void renderHoveredItemTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (AbstractWidget widget : getWidgets()) {
-            if (widget instanceof ItemTooltipProvider itemTooltipProvider && widget.isMouseOver(mouseX, mouseY + scrollOffset)) {
+            if (widget instanceof ItemTooltipProvider itemTooltipProvider
+                    && widget.isMouseOver(mouseX, mouseY + scrollOffset)) {
                 itemTooltipProvider.renderHoveredItemTooltip(guiGraphics, mouseX, mouseY);
                 return;
             }
@@ -157,7 +166,9 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
                 itemWidgets.add(new LoadoutMenuScrollListAbilityWidget(
                         StyledText.fromString(abilityName),
                         this.x + WIDGET_HEIGHT_EDGE_PADDING,
-                        this.y + WIDGET_HEIGHT_EDGE_PADDING + itemWidgets.size() * (WIDGET_HEIGHT + WIDGET_HEIGHT_PADDING),
+                        this.y
+                                + WIDGET_HEIGHT_EDGE_PADDING
+                                + itemWidgets.size() * (WIDGET_HEIGHT + WIDGET_HEIGHT_PADDING),
                         this.width - 20,
                         WIDGET_HEIGHT,
                         parent));
@@ -169,7 +180,9 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
                 itemWidgets.add(new LoadoutMenuScrollListAspectWidget(
                         StyledText.fromString(abilityName),
                         this.x + WIDGET_HEIGHT_EDGE_PADDING,
-                        this.y + WIDGET_HEIGHT_EDGE_PADDING + itemWidgets.size() * (WIDGET_HEIGHT + WIDGET_HEIGHT_PADDING),
+                        this.y
+                                + WIDGET_HEIGHT_EDGE_PADDING
+                                + itemWidgets.size() * (WIDGET_HEIGHT + WIDGET_HEIGHT_PADDING),
                         this.width - 20,
                         WIDGET_HEIGHT,
                         parent));
@@ -183,14 +196,15 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
                         StyledText.fromString(tome.name()),
                         tomeStack,
                         this.x + WIDGET_HEIGHT_EDGE_PADDING,
-                        this.y + WIDGET_HEIGHT_EDGE_PADDING + itemWidgets.size() * (WIDGET_HEIGHT + WIDGET_HEIGHT_PADDING),
+                        this.y
+                                + WIDGET_HEIGHT_EDGE_PADDING
+                                + itemWidgets.size() * (WIDGET_HEIGHT + WIDGET_HEIGHT_PADDING),
                         this.width - 20,
                         WIDGET_HEIGHT,
                         parent));
             }
         }
     }
-
 
     private Optional<ItemStack> decodeTomeItemStack(SavableTome tome) {
         if (tome == null || tome.encoded() == null || tome.encoded().isEmpty()) return Optional.empty();
@@ -212,5 +226,4 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
 
         return Optional.empty();
     }
-
 }

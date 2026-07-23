@@ -1,10 +1,13 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.type;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import com.wynntils.models.aspects.type.AspectInfo;
 import com.wynntils.screens.guides.aspect.GuideAspectItemStack;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;

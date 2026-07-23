@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.components.Models;
@@ -16,7 +20,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class LoadoutMenuScrollListAspectWidget extends AbstractWidget implements IconRenderer, ItemTooltipProvider {
@@ -28,7 +31,8 @@ public class LoadoutMenuScrollListAspectWidget extends AbstractWidget implements
     private final Texture aspectFlameTexture;
     private final ItemStack tooltipItem;
 
-    public LoadoutMenuScrollListAspectWidget(StyledText text, int x, int y, int width, int height, BuildLoadoutsScreen parent) {
+    public LoadoutMenuScrollListAspectWidget(
+            StyledText text, int x, int y, int width, int height, BuildLoadoutsScreen parent) {
         super(x, y, width, height, Component.literal("Build Loadout Scroll List Aspect Widget"));
         this.text = text;
         this.x = x;
@@ -36,18 +40,15 @@ public class LoadoutMenuScrollListAspectWidget extends AbstractWidget implements
         this.parent = parent;
         this.aspectTexture = parent.getSelectedLoadout().getAspectTexture();
         this.aspectFlameTexture = parent.getSelectedLoadout().getFlameTexture();
-        this.tooltipItem = new AspectItemStack(Models.Aspect.getAspectInfo(this.text.getString()), Models.Aspect.getAspectTierByName(this.text.getString()).orElse(1));
+        this.tooltipItem = new AspectItemStack(
+                Models.Aspect.getAspectInfo(this.text.getString()),
+                Models.Aspect.getAspectTierByName(this.text.getString()).orElse(1));
     }
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
-                this.x,
-                this.y,
-                this.width,
-                this.height);
+                guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, this.x, this.y, this.width, this.height);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -77,7 +78,6 @@ public class LoadoutMenuScrollListAspectWidget extends AbstractWidget implements
     public void setY(int y) {
         this.y = y;
     }
-
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {

@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.services.loadout.type;
 
 import com.wynntils.models.abilitytree.type.ArchetypeType;
@@ -17,7 +21,6 @@ public record Loadout(
         SavableAbilityTree abilityTree,
         SavableAspectSet aspects,
         boolean favourited) {
-
     public boolean hasSkillPoints() {
         return skillPoints != null;
     }
@@ -100,7 +103,7 @@ public record Loadout(
 
     public Texture getAspectTexture() {
         return switch (getClassType()) {
-            case ClassType.ARCHER-> Texture.ASPECT_ARCHER;
+            case ClassType.ARCHER -> Texture.ASPECT_ARCHER;
             case ClassType.ASSASSIN -> Texture.ASPECT_ASSASSIN;
             case ClassType.MAGE -> Texture.ASPECT_MAGE;
             case ClassType.SHAMAN -> Texture.ASPECT_SHAMAN;
@@ -111,7 +114,7 @@ public record Loadout(
 
     public Texture getFlameTexture() {
         return switch (getClassType()) {
-            case ClassType.ARCHER-> Texture.ASPECT_ARCHER_FLAME;
+            case ClassType.ARCHER -> Texture.ASPECT_ARCHER_FLAME;
             case ClassType.ASSASSIN -> Texture.ASPECT_ASSASSIN_FLAME;
             case ClassType.MAGE -> Texture.ASPECT_MAGE_FLAME;
             case ClassType.SHAMAN -> Texture.ASPECT_SHAMAN_FLAME;

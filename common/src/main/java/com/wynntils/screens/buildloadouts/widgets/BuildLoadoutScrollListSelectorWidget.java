@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.text.StyledText;
@@ -25,7 +29,14 @@ public class BuildLoadoutScrollListSelectorWidget extends AbstractWidget {
     private final int y;
     private final BuildLoadoutsScreen parent;
 
-    public BuildLoadoutScrollListSelectorWidget(StyledText text, ScrollListCategory scrollListCategory, int x, int y, int width, int height, BuildLoadoutsScreen parent) {
+    public BuildLoadoutScrollListSelectorWidget(
+            StyledText text,
+            ScrollListCategory scrollListCategory,
+            int x,
+            int y,
+            int width,
+            int height,
+            BuildLoadoutsScreen parent) {
         super(x, y, width, height, Component.literal("Build Loadout Scroll List Selection Button"));
         this.text = text;
         this.scrollListCategory = scrollListCategory;
@@ -39,20 +50,10 @@ public class BuildLoadoutScrollListSelectorWidget extends AbstractWidget {
         handleCursor(guiGraphics);
         if (parent.buildLoadoutScrollListWidget.getSelectedScrollListCategory() == scrollListCategory) {
             RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics,
-                    Texture.BUILD_LOADOUTS_SCROLL_LIST_TOP_BUTTON_BLUE,
-                    x,
-                    y,
-                    this.width,
-                    this.height);
+                    guiGraphics, Texture.BUILD_LOADOUTS_SCROLL_LIST_TOP_BUTTON_BLUE, x, y, this.width, this.height);
         } else {
             RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics,
-                    Texture.BUILD_LOADOUTS_SCROLL_LIST_TOP_BUTTON,
-                    x,
-                    y,
-                    this.width,
-                    this.height);
+                    guiGraphics, Texture.BUILD_LOADOUTS_SCROLL_LIST_TOP_BUTTON, x, y, this.width, this.height);
         }
 
         FontRenderer.getInstance()
@@ -65,7 +66,6 @@ public class BuildLoadoutScrollListSelectorWidget extends AbstractWidget {
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
-
     }
 
     @Override

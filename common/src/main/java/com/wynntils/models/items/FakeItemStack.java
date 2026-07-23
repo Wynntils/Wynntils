@@ -9,7 +9,6 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
-import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;

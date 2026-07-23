@@ -490,17 +490,17 @@ public enum Texture {
     // endregion
 
     // region Aspect
-    ASPECT_ARCHER("aspect", "archer",48, 48),
-    ASPECT_ARCHER_FLAME("aspect", "flame_pink",48, 48),
-    ASPECT_ASSASSIN("aspect", "assassin",48, 48),
-    ASPECT_ASSASSIN_FLAME("aspect", "flame_purple",48, 48),
-    ASPECT_MAGE("aspect", "mage",48, 48),
-    ASPECT_MAGE_FLAME("aspect", "flame_yellow",48, 48),
-    ASPECT_SHAMAN("aspect", "shaman",48, 48),
-    ASPECT_SHAMAN_FLAME("aspect", "flame_blue",48, 48),
-    ASPECT_WARRIOR("aspect", "warrior",48, 48),
-    ASPECT_WARRIOR_FLAME("aspect", "flame_orange",48, 48);
-    //endregion
+    ASPECT_ARCHER("aspect", "archer", 48, 48),
+    ASPECT_ARCHER_FLAME("aspect", "flame_pink", 48, 48),
+    ASPECT_ASSASSIN("aspect", "assassin", 48, 48),
+    ASPECT_ASSASSIN_FLAME("aspect", "flame_purple", 48, 48),
+    ASPECT_MAGE("aspect", "mage", 48, 48),
+    ASPECT_MAGE_FLAME("aspect", "flame_yellow", 48, 48),
+    ASPECT_SHAMAN("aspect", "shaman", 48, 48),
+    ASPECT_SHAMAN_FLAME("aspect", "flame_blue", 48, 48),
+    ASPECT_WARRIOR("aspect", "warrior", 48, 48),
+    ASPECT_WARRIOR_FLAME("aspect", "flame_orange", 48, 48);
+    // endregion
 
     private final Identifier identifier;
     private final Identifier atlas;

@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.text.StyledText;
@@ -10,14 +14,14 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 
-import java.util.function.Consumer;
-
 public class LoadoutSearchWidget extends SearchWidget {
     public LoadoutSearchWidget(int x, int y, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
-        super(x + 5 + Texture.BUILD_LOADOUTS_SEARCH_ICON.width(),
+        super(
+                x + 5 + Texture.BUILD_LOADOUTS_SEARCH_ICON.width(),
                 y,
                 133 - 10 - 5 - Texture.BUILD_LOADOUTS_SEARCH_ICON.width(),
                 20,
@@ -35,11 +39,11 @@ public class LoadoutSearchWidget extends SearchWidget {
                 this.width + 5 + Texture.BUILD_LOADOUTS_SEARCH_ICON.width(),
                 this.height);
 
-        RenderUtils.drawTexturedRect(guiGraphics,
+        RenderUtils.drawTexturedRect(
+                guiGraphics,
                 Texture.BUILD_LOADOUTS_SEARCH_ICON,
                 this.getX() - Texture.BUILD_LOADOUTS_SEARCH_ICON.width(),
-                this.getY() + VERTICAL_OFFSET
-        );
+                this.getY() + VERTICAL_OFFSET);
     }
 
     @Override
