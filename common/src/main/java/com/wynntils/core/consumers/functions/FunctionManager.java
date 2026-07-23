@@ -547,6 +547,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.PuppetsInTimeRangeFunction());
         registerFunction(new CharacterFunctions.SnakeCountFunction());
         registerFunction(new CharacterFunctions.SprintFunction());
+        registerFunction(new CharacterFunctions.PlayerStatFunction());
+        registerFunction(new CharacterFunctions.PlayerStatRawFunction());
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());

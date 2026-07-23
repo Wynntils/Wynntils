@@ -12,6 +12,7 @@ import com.wynntils.models.abilities.label.ShamanPuppetInfo;
 import com.wynntils.models.abilities.type.AbilityCooldown;
 import com.wynntils.models.abilities.type.PuppetType;
 import com.wynntils.models.character.type.VehicleType;
+import com.wynntils.models.characterstats.type.PlayerStat;
 import com.wynntils.models.characterstats.type.PowderSpecialInfo;
 import com.wynntils.models.objectives.WynnObjective;
 import com.wynntils.services.leaderboard.type.LeaderboardType;
@@ -567,6 +568,36 @@ public class CharacterFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             return Models.ArcherBeast.getActiveSnakeCount();
+        }
+    }
+
+    public static class PlayerStatFunction extends Function<String> {
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("name", String.class, null)));
+        }
+
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return Models.CharacterStats.getStatByApiName(
+                            arguments.getArgument("name").getStringValue())
+                    .orElse(PlayerStat.NONE)
+                    .toDisplay();
+        }
+    }
+
+    public static class PlayerStatRawFunction extends Function<Integer> {
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("name", String.class, null)));
+        }
+
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.CharacterStats.getStatByApiName(
+                            arguments.getArgument("name").getStringValue())
+                    .orElse(PlayerStat.NONE)
+                    .value();
         }
     }
 }
