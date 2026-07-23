@@ -126,7 +126,7 @@ class TemplateLexer {
             return;
         }
 
-        if (Character.isDigit(c)) {
+        if (Character.isDigit(c) || ((c == '-' || c == '+') && Character.isDigit(peekNext()))) {
             lexNumber();
             return;
         }
@@ -139,7 +139,7 @@ class TemplateLexer {
             case ':' ->
                 throw new LexException(
                         pos, "Unexpected character: ':' (using colons as formatters is no longer supported)");
-            default -> throw new LexException(pos, "Unexpected character: " + c);
+            default -> throw new LexException(pos, "Unexpected character: \"" + c + "\"");
         }
     }
 
@@ -149,6 +149,10 @@ class TemplateLexer {
 
     private void lexNumber() {
         StringBuilder sb = new StringBuilder();
+
+        if(peek() == '-' || peek() == '+') {
+            sb.append(advance());
+        }
 
         while (Character.isDigit(peek())) {
             sb.append(advance());

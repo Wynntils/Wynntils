@@ -33,10 +33,8 @@ public class TimeFunctions {
     }
 
     @TemplateFunction(name = "seconds_between")
-    public static long secondsBetweenFunction(Time second, Time first) {
-        Time firstTime = first;
-        Time secondTime = second;
-        return firstTime.getOffset(secondTime);
+    public static long secondsBetweenFunction(Time first, Time second) {
+        return first.getOffset(second);
     }
 
     @TemplateFunction(name = "seconds_since")

@@ -85,11 +85,11 @@ public class TemplateEngine {
             return backend.evaluate(language.parse(input));
         } catch (LanguageException lexException) {
             error = Optional.of(language.formatError(input, lexException));
-            return "Error evaluating template";
+            return "Error evaluating template: " + lexException.getMessage();
         } catch (RuntimeException e) {
             error = Optional.of(new Error(-1, -1, e.getClass().getSimpleName(), "Unexpected error, check console for more details:\n" + e.getMessage()));
-            e.printStackTrace();
-            return "Unexpected error evaluating template";
+            System.out.println(error.get());
+            return "Unexpected error evaluating template: " + e.getMessage();
         }
     }
 }

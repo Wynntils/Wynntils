@@ -94,7 +94,7 @@ public class MathFunctions {
     }
 
     @TemplateFunction(name = "round", isPure = true)
-    public static double roundFunction(int decimals, double value) {
+    public static double roundFunction(double value, int decimals) {
         double roundingValue = Math.pow(10, decimals);
         return Math.round(value * roundingValue) / roundingValue;
     }
