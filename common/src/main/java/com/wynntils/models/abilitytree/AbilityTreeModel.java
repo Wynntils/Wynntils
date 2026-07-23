@@ -7,9 +7,8 @@ package com.wynntils.models.abilitytree;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.DownloadRegistry;
-import com.wynntils.core.persisted.Persisted;
-import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.abilitytree.parser.AbilityTreeParser;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
@@ -27,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -36,9 +34,6 @@ public final class AbilityTreeModel extends Model {
     public static final AbilityTreeParser ABILITY_TREE_PARSER = new AbilityTreeParser();
     public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
     private final AbilityTreeInfoRegistry abilityTreeInfoRegistry = new AbilityTreeInfoRegistry();
-
-    @Persisted
-    private final Storage<Map<String, SavableAbilityTree>> abilityTreeLoadouts = new Storage<>(new TreeMap<>());
 
     private ParsedAbilityTree currentAbilityTree;
 
@@ -63,22 +58,6 @@ public final class AbilityTreeModel extends Model {
         this.currentAbilityTree = currentAbilityTree;
     }
 
-    public Map<String, SavableAbilityTree> getAbilityTreeLoadouts() {
-        return abilityTreeLoadouts.get();
-    }
-
-    public SavableAbilityTree getAbilityTreeLoadout(String name) {
-        return abilityTreeLoadouts.get().get(name);
-    }
-
-    public boolean hasAbilityTreeLoadout(String name) {
-        return abilityTreeLoadouts.get().containsKey(name);
-    }
-
-    public void deleteAbilityTreeLoadout(String name) {
-        abilityTreeLoadouts.get().remove(name);
-    }
-
     public void saveCurrentAbilityTree(
             String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
         ABILITY_TREE_CONTAINER_QUERIES.getUnlockedAbilityTree(
@@ -87,7 +66,7 @@ public final class AbilityTreeModel extends Model {
                             .map(AbilityTreeSkillNode::name)
                             .toList();
                     ClassType classType = Models.Character.getClassType();
-                    abilityTreeLoadouts.get().put(name, new SavableAbilityTree(abilityNames, classType));
+                    Services.loadout.saveAbilityTreeLoadout(name, new SavableAbilityTree(abilityNames, classType));
                     WynntilsMod.info("Saved ability tree loadout: " + name);
                 },
                 onStatus,
@@ -97,7 +76,7 @@ public final class AbilityTreeModel extends Model {
 
     public void loadAbilityTree(
             String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
-        SavableAbilityTree savedTree = getAbilityTreeLoadout(name);
+        SavableAbilityTree savedTree = Services.loadout.getAbilityTreeLoadout(name);
         if (savedTree == null) {
             onError.accept("No saved ability tree loadout: " + name);
             return;
@@ -185,8 +164,8 @@ public final class AbilityTreeModel extends Model {
             remaining.remove(next);
             currentPage = next.location().page();
 
-            if (next.archetype() != null) {
-                archetypePoints.merge(next.archetype(), 1, Integer::sum);
+            if (next.archetypeInfo() != null) {
+                archetypePoints.merge(next.archetypeInfo().archetype(), 1, Integer::sum);
             }
         }
 
@@ -273,8 +252,11 @@ public final class AbilityTreeModel extends Model {
                 .thenComparing(
                         (AbilityTreeSkillNode n) -> dependents.getOrDefault(n.name(), 0L), Comparator.reverseOrder())
 
-                // 4. Prefer archetype contributors to hit thresholds sooner
-                .thenComparing((AbilityTreeSkillNode n) -> n.archetype() != null, Comparator.reverseOrder())
+                // 4. Prefer archetypeInfo.archetype() contributors to hit thresholds sooner
+                .thenComparing(
+                        (AbilityTreeSkillNode n) ->
+                                n.archetypeInfo() != null && n.archetypeInfo().archetype() != null,
+                        Comparator.reverseOrder())
 
                 // 5. Stable, deterministic tie-breaker
                 .thenComparingInt(AbilityTreeSkillNode::id);

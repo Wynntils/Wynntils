@@ -30,12 +30,14 @@ import java.util.Optional;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.render.TextureSetup;
+import net.minecraft.client.gui.render.state.GuiItemRenderState;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.item.TrackingItemStackRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -47,7 +49,9 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Util;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3x2f;
 import org.joml.Matrix3x2fStack;
@@ -580,6 +584,144 @@ public final class RenderUtils {
                 textureHeight);
     }
 
+    // nine slice scalling
+    public static void drawNineSliceScalingTexturedRect(
+            GuiGraphics guiGraphics, Texture texture, float x, float y, float width, float height) {
+        if (!texture.isNineSliced()) {
+            WynntilsMod.warn("Tried to render non Nine Sliced Texture via drawNineSliceScalingTexturedRect.");
+            return;
+        }
+
+        int texWidth = texture.width();
+        int texHeight = texture.height();
+        int left = texture.left();
+        int right = texture.right();
+        int top = texture.top();
+        int bottom = texture.bottom();
+
+        // Don't let the center become negative
+        width = Math.max(width, left + right);
+        height = Math.max(height, top + bottom);
+
+        float centerWidth = width - left - right;
+        float centerHeight = height - top - bottom;
+
+        int texCenterWidth = texWidth - left - right;
+        int texCenterHeight = texHeight - top - bottom;
+
+        // Top Left
+        drawTexturedRect(guiGraphics, texture, x, y, left, top, 0, 0, left, top, texWidth, texHeight);
+
+        // Top
+        drawTexturedRect(
+                guiGraphics, texture, x + left, y, centerWidth, top, left, 0, texCenterWidth, top, texWidth, texHeight);
+
+        // Top Right
+        drawTexturedRect(
+                guiGraphics,
+                texture,
+                x + left + centerWidth,
+                y,
+                right,
+                top,
+                texWidth - right,
+                0,
+                right,
+                top,
+                texWidth,
+                texHeight);
+
+        // Left
+        drawTexturedRect(
+                guiGraphics,
+                texture,
+                x,
+                y + top,
+                left,
+                centerHeight,
+                0,
+                top,
+                left,
+                texCenterHeight,
+                texWidth,
+                texHeight);
+
+        // Center
+        drawTexturedRect(
+                guiGraphics,
+                texture,
+                x + left,
+                y + top,
+                centerWidth,
+                centerHeight,
+                left,
+                top,
+                texCenterWidth,
+                texCenterHeight,
+                texWidth,
+                texHeight);
+
+        // Right
+        drawTexturedRect(
+                guiGraphics,
+                texture,
+                x + left + centerWidth,
+                y + top,
+                right,
+                centerHeight,
+                texWidth - right,
+                top,
+                right,
+                texCenterHeight,
+                texWidth,
+                texHeight);
+
+        // Bottom Left
+        drawTexturedRect(
+                guiGraphics,
+                texture,
+                x,
+                y + top + centerHeight,
+                left,
+                bottom,
+                0,
+                texHeight - bottom,
+                left,
+                bottom,
+                texWidth,
+                texHeight);
+
+        // Bottom
+        drawTexturedRect(
+                guiGraphics,
+                texture,
+                x + left,
+                y + top + centerHeight,
+                centerWidth,
+                bottom,
+                left,
+                texHeight - bottom,
+                texCenterWidth,
+                bottom,
+                texWidth,
+                texHeight);
+
+        // Bottom Right
+        drawTexturedRect(
+                guiGraphics,
+                texture,
+                x + left + centerWidth,
+                y + top + centerHeight,
+                right,
+                bottom,
+                texWidth - right,
+                texHeight - bottom,
+                right,
+                bottom,
+                texWidth,
+                texHeight);
+    }
+
     public static void drawHoverableTexturedRect(
             GuiGraphics guiGraphics, Texture texture, float x, float y, boolean hovered, RenderDirection dir) {
         int textureWidth = texture.width();
@@ -1027,6 +1169,39 @@ public final class RenderUtils {
 
     public static void renderItem(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y) {
         guiGraphics.renderItem(itemStack, x, y);
+    }
+
+    public static void renderScalingItem(
+            GuiGraphics guiGraphics, ItemStack itemStack, int x, int y, int width, int height) {
+        if (itemStack.isEmpty()) return;
+
+        TrackingItemStackRenderState renderState = new TrackingItemStackRenderState();
+        McUtils.mc()
+                .getItemModelResolver()
+                .updateForTopItem(
+                        renderState, itemStack, ItemDisplayContext.GUI, McUtils.mc().level, McUtils.player(), 0);
+
+        AABB bounds = renderState.getModelBoundingBox();
+        float itemWidth = (float) bounds.getXsize() * 16f;
+        float itemHeight = (float) bounds.getYsize() * 16f;
+        if (itemWidth <= 0f || itemHeight <= 0f) return;
+
+        float scaleX = width / itemWidth;
+        float scaleY = height / itemHeight;
+
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(x, y);
+        guiGraphics.pose().scale(scaleX, scaleY);
+
+        guiGraphics.guiRenderState.submitItem(new GuiItemRenderState(
+                itemStack.getItem().getName().toString(),
+                new Matrix3x2f(guiGraphics.pose()),
+                renderState,
+                0,
+                0,
+                guiGraphics.scissorStack.peek()));
+
+        guiGraphics.pose().popMatrix();
     }
 
     public static void renderTooltip(GuiGraphics guiGraphics, List<Component> tooltipLines, int mouseX, int mouseY) {

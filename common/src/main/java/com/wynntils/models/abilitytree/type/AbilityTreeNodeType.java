@@ -240,7 +240,7 @@ public enum AbilityTreeNodeType {
     }
 
     public AbilityTreeNodeType getUnlockedType() {
-        if (state == AbilityTreeNodeState.LOCKED) return this;
+        if (state == AbilityTreeNodeState.UNLOCKED) return this;
         String base = name().substring(0, name().lastIndexOf('_'));
         return AbilityTreeNodeType.valueOf(base + "_UNLOCKED");
     }

@@ -4,13 +4,13 @@
  */
 package com.wynntils.models.abilitytree.parser;
 
-import com.google.gson.JsonElement;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.models.abilitytree.type.AbilityTreeLocation;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeType;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
+import com.wynntils.models.abilitytree.type.ArchetypeInfo;
 import com.wynntils.models.abilitytree.type.ArchetypeRequirement;
 import com.wynntils.models.abilitytree.type.LoreParserState;
 import com.wynntils.utils.mc.LoreUtils;
@@ -30,7 +30,7 @@ public final class AbilityTreeParser {
     private static final Pattern NODE_REQUIRED_ABILITY_PATTERN = Pattern.compile("§.. §7Required Ability: §f(.+)");
     private static final Pattern NODE_REQUIRED_ARCHETYPE_PATTERN =
             Pattern.compile("§.. §7Min (.+) Archetype: §.(\\d+)§7/(\\d+)");
-    private static final Pattern NODE_ARCHETYPE_PATTERN = Pattern.compile("§#[0-9a-fA-F]{8}§l(.+) Archetype");
+    private static final Pattern NODE_ARCHETYPE_PATTERN = Pattern.compile("§(#[0-9a-fA-F]{8})§l(.+) Archetype");
     private static final Pattern NODE_BLOCKED_BY = Pattern.compile("§c§lBlocked by:");
     private static final Pattern NODE_BLOCKED_BY_ABILITY = Pattern.compile("§c- (.*)");
     private static final Pattern NODE_UNLOCKING_WILL_BLOCK = Pattern.compile("§cUnlocking will block:");
@@ -70,7 +70,7 @@ public final class AbilityTreeParser {
         List<String> willBlock = new ArrayList<>();
         String requiredAbility = null;
         ArchetypeRequirement requiredArchetype = null;
-        String archetype = null;
+        ArchetypeInfo archetypeInfo = null;
         int requiredLevel = 0;
 
         List<StyledText> includedLines = new ArrayList<>(loreStyledText);
@@ -104,7 +104,7 @@ public final class AbilityTreeParser {
 
             matcher = text.getMatcher(NODE_ARCHETYPE_PATTERN);
             if (matcher.matches()) {
-                archetype = matcher.group(1);
+                archetypeInfo = new ArchetypeInfo(matcher.group(2), matcher.group(1));
                 includedLines.remove(text); // skip in description
                 currentSection = LoreParserState.NONE;
                 continue;
@@ -186,17 +186,14 @@ public final class AbilityTreeParser {
                 actualName.getString(StyleType.NONE),
                 actualName.getString(StyleType.DEFAULT),
                 abilityTreeNodeType,
-                includedLines.stream()
-                        .map(StyledText::toJson)
-                        .map(JsonElement::toString)
-                        .toList(),
+                includedLines.stream().map(StyledText::toJson).toList(),
                 cost,
                 willBlock,
                 blockedBy,
                 requiredAbility,
                 requiredArchetype,
                 requiredLevel,
-                archetype,
+                archetypeInfo,
                 AbilityTreeLocation.fromSlot(slot, page),
                 new ArrayList<>());
 

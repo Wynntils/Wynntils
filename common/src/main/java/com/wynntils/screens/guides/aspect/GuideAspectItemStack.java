@@ -34,7 +34,7 @@ public class GuideAspectItemStack extends GuideItemStack {
     private final AspectInfo aspectInfo;
     private final MutableComponent name;
     private final int tier;
-    private List<Component> generatedTooltip;
+    protected List<Component> generatedTooltip;
 
     public GuideAspectItemStack(AspectInfo aspectInfo, int tier) {
         super(aspectInfo.itemMaterial().itemStack(), new AspectItem(aspectInfo, tier), aspectInfo.name());

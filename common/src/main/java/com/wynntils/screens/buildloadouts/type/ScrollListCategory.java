@@ -4,9 +4,8 @@
  */
 package com.wynntils.screens.buildloadouts.type;
 
-public enum LoadoutType {
-    SKILL_POINT,
+public enum ScrollListCategory {
     ABILITY_TREE,
-    ASPECT,
-    BUILD,
+    ASPECTS,
+    TOMES
 }

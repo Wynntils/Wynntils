@@ -12,19 +12,31 @@ import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.SetLocalPlayerVehicleEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.character.type.SavableTome;
+import com.wynntils.models.character.type.SavableTomeSet;
 import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.containers.containers.MasteryTomesContainer;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.encoding.type.EncodingSettings;
+import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.items.gui.CharacterItem;
+import com.wynntils.models.rewards.type.TomeType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.wynn.InventoryUtils;
+import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -34,6 +46,7 @@ import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.equine.AbstractHorse;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -52,6 +65,11 @@ public final class CharacterModel extends Model {
     public static final int CHARACTER_INFO_SLOT = 7;
     private static final int PROFESSION_INFO_SLOT = 17;
     public static final int GUILD_MENU_SLOT = 26;
+    private static final int TOME_SLOT = 8;
+    private static final int CONTENT_BOOK_SLOT = 62;
+    private static final int TOME_MENU_CONTENT_BOOK_SLOT = 89;
+
+    private List<TomeItem> equippedTomes = new ArrayList<>();
 
     private boolean hasCharacter;
 
@@ -290,5 +308,83 @@ public final class CharacterModel extends Model {
         this.classType = classType;
         this.reskinned = reskinned;
         this.level = level;
+    }
+
+    /**
+     * Queries the compass menu for assigned skill points, then (if tomes are unlocked)
+     * queries the mastery tome menu for the skill point tome and every other equipped tome.
+     */
+    public void queryAssignedAndTomeSkillPoints() {
+        Models.SkillPoint.resetAssignedAndTomeSkillPoints();
+        equippedTomes = new ArrayList<>();
+
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Total and Tome Skill Point Query")
+                .onError(msg -> WynntilsMod.warn("Failed to query skill points: " + msg))
+                .then(QueryStep.useItemInHotbar(CHARACTER_INFO_SLOT)
+                        .expectContainer(CharacterInfoContainer.class)
+                        .verifyContentChange((container, changes, changeType) ->
+                                verifyChange(container, changes, changeType, CONTENT_BOOK_SLOT))
+                        .processIncomingContainer(Models.SkillPoint::processAssignedSkillPoints))
+                .conditionalThen(
+                        this::checkTomesUnlocked,
+                        QueryStep.clickOnSlot(TOME_SLOT)
+                                .expectContainer(MasteryTomesContainer.class)
+                                .verifyContentChange((container, changes, changeType) ->
+                                        verifyChange(container, changes, changeType, TOME_MENU_CONTENT_BOOK_SLOT))
+                                .processIncomingContainer(this::processTomeMenu))
+                .execute(Models.SkillPoint::calculateTotalSkillPoints)
+                .build();
+
+        query.executeQuery();
+    }
+
+    private void processTomeMenu(ContainerContent content) {
+        Models.SkillPoint.processTomeSkillPoints(content);
+        processOtherTomes(content);
+    }
+
+    private void processOtherTomes(ContainerContent content) {
+        for (ItemStack itemStack : content.items()) {
+            Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(itemStack);
+            if (wynnItemOptional.isEmpty() || !(wynnItemOptional.get() instanceof TomeItem tome)) continue;
+            if (tome.getItemInfo().type() == null) continue;
+
+            equippedTomes.add(tome);
+        }
+    }
+
+    private boolean checkTomesUnlocked(ContainerContent content) {
+        return LoreUtils.getStringLore(content.items().get(TOME_SLOT)).contains("✔");
+    }
+
+    private boolean verifyChange(
+            ContainerContent content,
+            Int2ObjectFunction<ItemStack> changes,
+            ContainerContentChangeType changeType,
+            int contentBookSlot) {
+        return changeType == ContainerContentChangeType.SET_CONTENT
+                && changes.containsKey(contentBookSlot)
+                && (content.items().get(contentBookSlot).getItem() == Items.POTION);
+    }
+
+    public SavableTomeSet getCurrentTomeSet() {
+        EncodingSettings encodingSettings = new EncodingSettings(true, true);
+        List<SavableTome> tomes = new ArrayList<>();
+
+        for (TomeItem tome : equippedTomes) {
+            TomeType type = tome.getItemInfo().type();
+            if (type == null) continue;
+
+            ErrorOr<EncodedByteBuffer> errorOrEncoded = Models.ItemEncoding.encodeItem(tome, encodingSettings);
+            if (errorOrEncoded.hasError()) {
+                WynntilsMod.warn("Failed to encode tome " + tome.getName() + ": " + errorOrEncoded.getError());
+                continue;
+            }
+
+            String encoded = Models.ItemEncoding.makeItemString(tome, errorOrEncoded.getValue());
+            tomes.add(new SavableTome(type, tome.getName(), encoded));
+        }
+
+        return new SavableTomeSet(tomes);
     }
 }

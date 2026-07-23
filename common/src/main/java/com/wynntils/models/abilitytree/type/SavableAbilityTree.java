@@ -16,8 +16,8 @@ public record SavableAbilityTree(List<String> abilities, ClassType classType) {
         Map<String, Integer> counts = new HashMap<>();
         for (String abilityName : abilities) {
             AbilityTreeSkillNode node = Models.AbilityTree.getNodeFromNameAndClass(abilityName, classType);
-            if (node == null) continue;
-            String a = node.archetype();
+            if (node == null || node.archetypeInfo() == null) continue;
+            String a = node.archetypeInfo().archetype();
             if (a != null && !a.isEmpty()) {
                 counts.merge(a, 1, Integer::sum);
             }
@@ -26,6 +26,19 @@ public record SavableAbilityTree(List<String> abilities, ClassType classType) {
                 .max(Map.Entry.comparingByValue())
                 .map(Map.Entry::getKey)
                 .orElse(null);
+    }
+
+    public String getMainArchetypeColor() {
+        String mainArchetype = getMainArchetype();
+        if (mainArchetype == null) return null;
+        for (String abilityName : abilities) {
+            AbilityTreeSkillNode node = Models.AbilityTree.getNodeFromNameAndClass(abilityName, classType);
+            if (node == null || node.archetypeInfo() == null) continue;
+            if (mainArchetype.equals(node.archetypeInfo().archetype())) {
+                return node.archetypeInfo().color();
+            }
+        }
+        return null;
     }
 
     public int getLevel() {
