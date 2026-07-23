@@ -5,7 +5,10 @@
 package com.wynntils.functions.generic;
 
 import com.wynntils.templates.annotations.TemplateFunction;
+
+import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Locale;
 
 @SuppressWarnings("unused") // Functions are accessed via reflection
 public class MathFunctions {
@@ -137,242 +140,112 @@ public class MathFunctions {
         return Math.max(min, Math.min(max, value));
     }
 
-    // TODO: Implement these other math functions
-    //
-    //
-    //    public static class SafeDivideFunction extends GenericFunction<Double> {
-    //        @Override
-    //        public Double getValue(FunctionArguments arguments) {
-    //            double dividend = arguments.getArgument("dividend").getDoubleValue();
-    //            double divisor = arguments.getArgument("divisor").getDoubleValue();
-    //            double fallback = arguments.getArgument("fallback").getDoubleValue();
-    //            if (divisor == 0d) return fallback;
-    //
-    //            return dividend / divisor;
-    //        }
-    //
-    //        @Override
-    //        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-    //            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-    //                    new Argument<>("dividend", Number.class, null),
-    //                    new Argument<>("divisor", Number.class, null),
-    //                    new Argument<>("fallback", Number.class, null)));
-    //        }
-    //
-    //        @Override
-    //        protected List<String> getAliases() {
-    //            return List.of("safe_div");
-    //        }
-    //    }
-    //
-    //    public static class NaturalLogFunction extends GenericFunction<Double> {
-    //        @Override
-    //        public Double getValue(FunctionArguments arguments) {
-    //            return Math.log(arguments.getArgument("value").getDoubleValue());
-    //        }
-    //
-    //        @Override
-    //        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-    //            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class,
-    // null)));
-    //        }
-    //
-    //        @Override
-    //        protected List<String> getAliases() {
-    //            return List.of("ln");
-    //        }
-    //    }
-    //
-    //    public static class LogFunction extends GenericFunction<Double> {
-    //        @Override
-    //        public Double getValue(FunctionArguments arguments) {
-    //            double value = arguments.getArgument("value").getDoubleValue();
-    //            double base = arguments.getArgument("base").getDoubleValue();
-    //
-    //            return Math.log(value) / Math.log(base);
-    //        }
-    //
-    //        @Override
-    //        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-    //            return new FunctionArguments.RequiredArgumentBuilder(
-    //                    List.of(new Argument<>("value", Number.class, null), new Argument<>("base", Number.class,
-    // null)));
-    //        }
-    //    }
-    //
-    //    public static class MapFunction extends GenericFunction<Double> {
-    //        @Override
-    //        public Double getValue(FunctionArguments arguments) {
-    //            double value = arguments.getArgument("value").getDoubleValue();
-    //            double inMin = arguments.getArgument("inMin").getDoubleValue();
-    //            double inMax = arguments.getArgument("inMax").getDoubleValue();
-    //            double outMin = arguments.getArgument("outMin").getDoubleValue();
-    //            double outMax = arguments.getArgument("outMax").getDoubleValue();
-    //            double inWidth = inMax - inMin;
-    //            if (inWidth == 0d) return outMin;
-    //
-    //            return outMin + ((value - inMin) * (outMax - outMin) / inWidth);
-    //        }
-    //
-    //        @Override
-    //        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-    //            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-    //                    new Argument<>("value", Number.class, null),
-    //                    new Argument<>("inMin", Number.class, null),
-    //                    new Argument<>("inMax", Number.class, null),
-    //                    new Argument<>("outMin", Number.class, null),
-    //                    new Argument<>("outMax", Number.class, null)));
-    //        }
-    //    }
-    //
-    //    public static class WrapFunction extends GenericFunction<Double> {
-    //        @Override
-    //        public Double getValue(FunctionArguments arguments) {
-    //            double value = arguments.getArgument("value").getDoubleValue();
-    //            double min = arguments.getArgument("min").getDoubleValue();
-    //            double max = arguments.getArgument("max").getDoubleValue();
-    //            double width = max - min;
-    //            if (width == 0d) return min;
-    //
-    //            double wrapped = (value - min) % width;
-    //            if (wrapped < 0d) wrapped += width;
-    //            return wrapped + min;
-    //        }
-    //
-    //        @Override
-    //        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-    //            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-    //                    new Argument<>("value", Number.class, null),
-    //                    new Argument<>("min", Number.class, null),
-    //                    new Argument<>("max", Number.class, null)));
-    //        }
-    //    }
-    //
-    //    public static class PiFunction extends GenericFunction<Double> {
-    //        @Override
-    //        public Double getValue(FunctionArguments arguments) {
-    //            return Math.PI;
-    //        }
-    //
-    //        @Override
-    //        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-    //            return new FunctionArguments.RequiredArgumentBuilder(List.of());
-    //        }
-    //    }
-    //
-    //    public static class EulerFunction extends GenericFunction<Double> {
-    //        @Override
-    //        public Double getValue(FunctionArguments arguments) {
-    //            return Math.E;
-    //        }
-    //
-    //        @Override
-    //        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-    //            return new FunctionArguments.RequiredArgumentBuilder(List.of());
-    //        }
-    //
-    //        @Override
-    //        protected List<String> getAliases() {
-    //            return List.of("e");
-    //        }
-    //    }
-    //
-    //    public static class DecToHexFunction extends GenericFunction<String> {
-    //        private static final String LONG_MIN_HEX = "-8000000000000000";
-    //
-    //        @Override
-    //        public String getValue(FunctionArguments arguments) {
-    //            long value = arguments.getArgument("value").getLongValue();
-    //            if (value < 0) {
-    //                if (value == Long.MIN_VALUE) return LONG_MIN_HEX;
-    //                return "-" + Long.toHexString(-value).toUpperCase(Locale.ROOT);
-    //            }
-    //
-    //            return Long.toHexString(value).toUpperCase(Locale.ROOT);
-    //        }
-    //
-    //        @Override
-    //        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-    //            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class,
-    // null)));
-    //        }
-    //    }
-    //
-    //    public static class HexToDecFunction extends GenericFunction<Long> {
-    //        @Override
-    //        public Long getValue(FunctionArguments arguments) {
-    //            String rawValue = arguments.getArgument("hex").getStringValue().trim();
-    //            boolean isNegative = rawValue.startsWith("-");
-    //            String normalized = isNegative ? rawValue.substring(1) : rawValue;
-    //
-    //            if (normalized.startsWith("0x") || normalized.startsWith("0X")) {
-    //                normalized = normalized.substring(2);
-    //            } else if (normalized.startsWith("#")) {
-    //                normalized = normalized.substring(1);
-    //            }
-    //
-    //            if (normalized.isEmpty()) return 0L;
-    //
-    //            try {
-    //                BigInteger parsed = new BigInteger(normalized, 16);
-    //                if (isNegative) {
-    //                    parsed = parsed.negate();
-    //                }
-    //
-    //                if (parsed.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) > 0
-    //                        || parsed.compareTo(BigInteger.valueOf(Long.MIN_VALUE)) < 0) {
-    //                    return 0L;
-    //                }
-    //
-    //                return parsed.longValue();
-    //            } catch (NumberFormatException ignored) {
-    //                return 0L;
-    //            }
-    //        }
-    //
-    //        @Override
-    //        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-    //            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("hex", String.class,
-    // null)));
-    //        }
-    //    }
-    //
-    //    public static class IsFiniteFunction extends GenericFunction<Boolean> {
-    //        @Override
-    //        public Boolean getValue(FunctionArguments arguments) {
-    //            return Double.isFinite(arguments.getArgument("value").getDoubleValue());
-    //        }
-    //
-    //        @Override
-    //        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-    //            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class,
-    // null)));
-    //        }
-    //    }
-    //
-    //    public static class IsNanFunction extends GenericFunction<Boolean> {
-    //        @Override
-    //        public Boolean getValue(FunctionArguments arguments) {
-    //            return Double.isNaN(arguments.getArgument("value").getDoubleValue());
-    //        }
-    //
-    //        @Override
-    //        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-    //            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class,
-    // null)));
-    //        }
-    //    }
-    //
-    //    public static class IsInfiniteFunction extends GenericFunction<Boolean> {
-    //        @Override
-    //        public Boolean getValue(FunctionArguments arguments) {
-    //            return Double.isInfinite(arguments.getArgument("value").getDoubleValue());
-    //        }
-    //
-    //        @Override
-    //        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-    //            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Number.class,
-    // null)));
-    //        }
-    //    }
+    @TemplateFunction(name = "safe_divide", aliases = "safe_div", isPure = true)
+    public static double safeDivideFunction(double dividend, double divisor, double fallback) {
+        if (divisor == 0d) return fallback;
+
+        return dividend / divisor;
+    }
+
+
+    @TemplateFunction(name = "natural_log", aliases = "ln", isPure = true)
+    public static double naturalLogFunction(double value) {
+        return Math.log(value);
+    }
+
+    @TemplateFunction(name = "log", isPure = true)
+    public static double logFunction(double value, double base) {
+        return Math.log(value) / Math.log(base);
+    }
+
+
+    @TemplateFunction(name = "map", isPure = true)
+    public static double mapFunction(double value, double inMin, double inMax, double outMin, double outMax) {
+        double inWidth = inMax - inMin;
+        if (inWidth == 0d) return outMin;
+
+        return outMin + ((value - inMin) * (outMax - outMin) / inWidth);
+    }
+
+    @TemplateFunction(name = "wrap", isPure = true)
+    public static double wrapFunction(double value, double min, double max) {
+        double width = max - min;
+        if (width == 0d) return min;
+
+        double wrapped = (value - min) % width;
+        if (wrapped < 0d) wrapped += width;
+        return wrapped + min;
+    }
+
+    @TemplateFunction(name = "pi", isPure = true)
+    public static double piFunction() {
+        return Math.PI;
+    }
+
+
+    @TemplateFunction(name = "euler", aliases = "e", isPure = true)
+    public static double eulerFunction() {
+        return Math.E;
+
+    }
+
+    private static final String LONG_MIN_HEX = "-8000000000000000";
+
+
+    @TemplateFunction(name = "dec_to_hex", isPure = true)
+    public static String decToHexFunction(long value) {
+        if (value < 0) {
+            if (value == Long.MIN_VALUE) return LONG_MIN_HEX;
+            return "-" + Long.toHexString(-value).toUpperCase(Locale.ROOT);
+        }
+
+        return Long.toHexString(value).toUpperCase(Locale.ROOT);
+    }
+
+
+    @TemplateFunction(name = "hex_to_dec", isPure = true)
+    public static long hexToDecFunction(String rawValue) {
+        boolean isNegative = rawValue.startsWith("-");
+        String normalized = isNegative ? rawValue.substring(1) : rawValue;
+
+        if (normalized.startsWith("0x") || normalized.startsWith("0X")) {
+            normalized = normalized.substring(2);
+        } else if (normalized.startsWith("#")) {
+            normalized = normalized.substring(1);
+        }
+
+        if (normalized.isEmpty()) return 0L;
+
+        try {
+            BigInteger parsed = new BigInteger(normalized, 16);
+            if (isNegative) {
+                parsed = parsed.negate();
+            }
+
+            if (parsed.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) > 0
+                    || parsed.compareTo(BigInteger.valueOf(Long.MIN_VALUE)) < 0) {
+                return 0L;
+            }
+
+            return parsed.longValue();
+        } catch (NumberFormatException ignored) {
+            return 0L;
+        }
+    }
+
+    @TemplateFunction(name = "is_finite", isPure = true)
+    public static boolean isFiniteFunction(double value) {
+        return Double.isFinite(value);
+    }
+
+    @TemplateFunction(name = "is_nan", isPure = true)
+    public static boolean isNanFunction(double value) {
+        return Double.isNaN(value);
+
+    }
+
+    @TemplateFunction(name = "is_infinite", isPure = true)
+    public static boolean isInfiniteFunction(double value){
+        return Double.isInfinite(value);
+    }
 }
