@@ -47,7 +47,7 @@ public class LoadoutMenuDeleteButton extends AbstractButton {
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
-                            StyledText.fromString("Delete"),
+                            StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.loadoutMenu.deleteButton.text")),
                             (this.x + this.width / 2f),
                             (this.y + this.height / 2f),
                             CommonColors.WHITE,

@@ -57,7 +57,7 @@ public class NewLoadoutButton extends AbstractButton implements TooltipProvider 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("New Loadout"),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.loadoutSelectionWidget.newLoadout")),
                         (this.x + this.width / 2f),
                         (this.y + this.height / 2f),
                         CommonColors.WHITE,

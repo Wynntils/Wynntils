@@ -16,6 +16,7 @@ import com.wynntils.utils.type.ErrorOr;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
 
         int buttonWidth = (this.width - 8) / 3;
         abilityTreeButton = new BuildLoadoutScrollListSelectorWidget(
-                StyledText.fromString("Ability Tree"),
+                StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.buildLoadoutScrollList.selectButton.abilityTree")),
                 ScrollListCategory.ABILITY_TREE,
                 x + 4,
                 y - 2 - 15,
@@ -57,7 +58,7 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
         );
 
         aspectsButton = new BuildLoadoutScrollListSelectorWidget(
-                StyledText.fromString("Aspects"),
+                StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.buildLoadoutScrollList.selectButton.aspects")),
                 ScrollListCategory.ASPECTS,
                 x + 4 + buttonWidth,
                 y - 2 - 15,
@@ -67,7 +68,7 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
         );
 
         tomesButton = new BuildLoadoutScrollListSelectorWidget(
-                StyledText.fromString("Tomes"),
+                StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.buildLoadoutScrollList.selectButton.tomes")),
                 ScrollListCategory.TOMES,
                 x + 4 + buttonWidth * 2,
                 y - 2 - 15,

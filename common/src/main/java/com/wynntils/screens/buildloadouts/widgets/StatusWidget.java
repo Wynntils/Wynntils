@@ -46,7 +46,7 @@ public class StatusWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("Query Status"),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.statusWidget.text")),
                         this.x + this.width / 2f,
                         this.y + 10,
                         CommonColors.WHITE,

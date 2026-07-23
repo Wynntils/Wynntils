@@ -68,7 +68,7 @@ public class LoadoutMenuSkillPointWidget extends AbstractWidget implements IconR
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             guiGraphics,
-                            StyledText.fromString("None"),
+                            StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.loadoutMenu.skillPointWidget.emptyText")),
                             this.x + this.width / 2f,
                             this.y + 5,
                             this.y + this.height - 10,

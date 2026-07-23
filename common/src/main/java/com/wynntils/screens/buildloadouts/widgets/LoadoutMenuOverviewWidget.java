@@ -51,7 +51,7 @@ public class LoadoutMenuOverviewWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("Overview"),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.loadoutMenu.overviewWidget.text")),
                         this.x + 5 + (this.width - 10) / 2f,
                         this.y + 11,
                         CommonColors.WHITE,

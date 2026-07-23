@@ -98,21 +98,14 @@ public class LoadoutSelectionButton extends AbstractWidget implements TooltipPro
                     guiGraphics,
                     Texture.ASPECT_ARCHER,
                     Texture.ASPECT_ARCHER_FLAME,
-                    this.x,
+                    this.x + 5,
                     this.y);
 
             renderAspect(
                     guiGraphics,
                     Texture.ASPECT_ASSASSIN,
                     Texture.ASPECT_ASSASSIN_FLAME,
-                    this.x + 18,
-                    this.y);
-
-            renderAspect(
-                    guiGraphics,
-                    Texture.ASPECT_SHAMAN,
-                    Texture.ASPECT_SHAMAN_FLAME,
-                    this.x + 36,
+                    this.x + 25,
                     this.y);
         }
     }

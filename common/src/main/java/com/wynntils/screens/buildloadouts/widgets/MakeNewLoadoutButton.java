@@ -53,7 +53,9 @@ public class MakeNewLoadoutButton extends AbstractButton {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        !buttonConfirm ? StyledText.fromString("Create") : StyledText.fromString("Confirm"),
+                        !buttonConfirm ?
+                                StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.newLoadoutMenu.makeNewLoadout.create"))
+                                : StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.newLoadoutMenu.makeNewLoadout.confirm")),
                         (this.x + this.width / 2f),
                         (this.y + this.height / 2f),
                         CommonColors.WHITE,
@@ -74,21 +76,21 @@ public class MakeNewLoadoutButton extends AbstractButton {
         String name = parent.newLoadoutInputWidget.getTextBoxInput();
 
         if (name.isEmpty()) {
-            parent.newLoadoutInfoWidget.setText(StyledText.fromString("Please enter a name."), false);
+            parent.newLoadoutInfoWidget.setText(StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.newLoadoutMenu.makeNewLoadout.noNameError")), false);
             buttonConfirm = false;
             return true;
         }
 
         LoadoutType type = parent.getNewLoadoutType();
         if (type == null) {
-            parent.newLoadoutInfoWidget.setText(StyledText.fromString("Please select a loadout type."), false);
+            parent.newLoadoutInfoWidget.setText(StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.newLoadoutMenu.makeNewLoadout.noLoadoutTypeError")), false);
             buttonConfirm = false;
             return true;
         }
 
         if (Services.loadout.hasLoadout(name) && !buttonConfirm) {
             parent.newLoadoutInfoWidget.setText(
-                    StyledText.fromString("This will overwrite an existing loadout by the same name."), false);
+                    StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.newLoadoutMenu.makeNewLoadout.overwriteError")), false);
             buttonConfirm = true;
             return true;
         }

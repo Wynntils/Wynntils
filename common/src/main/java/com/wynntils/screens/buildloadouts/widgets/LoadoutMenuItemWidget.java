@@ -112,7 +112,7 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("Items"),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.loadoutMenu.itemWidget.text")),
                         this.x + 5 + (this.width - 10) / 2f,
                         this.y + 11,
                         CommonColors.WHITE,

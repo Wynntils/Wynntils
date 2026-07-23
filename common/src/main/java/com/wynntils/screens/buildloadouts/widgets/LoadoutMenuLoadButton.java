@@ -61,7 +61,7 @@ public class LoadoutMenuLoadButton extends AbstractButton implements TooltipProv
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
-                            StyledText.fromString("Load"),
+                            StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.loadoutMenu.loadButton.text")),
                             (this.x + this.width / 2f),
                             (this.y + this.height / 2f),
                             CommonColors.WHITE,

@@ -62,7 +62,7 @@ public class LoadoutMenuUpdateButton extends AbstractButton implements TooltipPr
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("Update"),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.buildLoadouts.loadoutMenu.updateButton.text")),
                         (this.x + this.width / 2f),
                         (this.y + this.height / 2f),
                         CommonColors.WHITE,
