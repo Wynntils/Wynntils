@@ -58,12 +58,12 @@ public class AbilityTreeDataDumpFeature extends Feature {
     }
 
     private void saveToDisk(AbilityTreeInfo abilityTreeInfo) {
-        File extendedJsonFile = new File(SAVE_FOLDER, "abilities_v2_extended.json");
+        File expandedJsonFile = new File(SAVE_FOLDER, "abilities_v2_expanded.json");
         File minifiedJsonFile = new File(SAVE_FOLDER, "abilities_v2.json");
 
         JsonObject root = new JsonObject();
-        if (extendedJsonFile.exists()) {
-            try (FileReader reader = new FileReader(extendedJsonFile, StandardCharsets.UTF_8)) {
+        if (expandedJsonFile.exists()) {
+            try (FileReader reader = new FileReader(expandedJsonFile, StandardCharsets.UTF_8)) {
                 JsonElement existing = Managers.Json.GSON.fromJson(reader, JsonElement.class);
                 if (existing != null && existing.isJsonObject()) {
                     root = existing.getAsJsonObject();
@@ -77,7 +77,7 @@ public class AbilityTreeDataDumpFeature extends Feature {
         JsonElement element = Managers.Json.GSON.toJsonTree(abilityTreeInfo);
         root.add(classKey, element);
 
-        Managers.Json.savePreciousJson(extendedJsonFile, root);
+        Managers.Json.savePreciousJson(expandedJsonFile, root);
 
         try (FileWriter writer = new FileWriter(minifiedJsonFile, StandardCharsets.UTF_8)) {
             writer.write(root.toString());
@@ -86,6 +86,6 @@ public class AbilityTreeDataDumpFeature extends Feature {
         }
 
         McUtils.sendWynntilsPrefixMessage(Component.literal(
-                "Saved ability tree dump for " + classKey + " to " + extendedJsonFile.getAbsolutePath()));
+                "Saved ability tree dump for " + classKey + " to " + expandedJsonFile.getAbsolutePath()));
     }
 }
