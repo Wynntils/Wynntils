@@ -114,6 +114,12 @@
     "url": "https://cdn.wynntils.com/static/Reference/abilities.json"
   },
   {
+    "id": "dataStaticAbilitiesV2",
+    "md5": "22aa3213b0cacb7af22fc6e9a1fc795d",
+    "path": "Reference/abilities_v2.json",
+    "url": "https://cdn.wynntils.com/static/Reference/abilities_v2.json"
+  },
+  {
     "id": "dataStaticAspects",
     "md5": "851a3249f739ce5252a1494d60a206cd",
     "path": "Reference/aspects.json",
@@ -259,7 +265,7 @@
   },
   {
     "id": "dataStaticModelData",
-    "md5": "190080b55fd674a95ab06dfa4043fbef",
+    "md5": "9450a1bb0803595ae77546f262b433a6",
     "path": "Data-Storage/model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/model_data.json"
   },
