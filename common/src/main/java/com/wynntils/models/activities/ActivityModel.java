@@ -15,7 +15,9 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
+import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.activities.beacons.ActivityBeaconKind;
 import com.wynntils.models.activities.beacons.ActivityBeaconMarkerKind;
@@ -40,6 +42,7 @@ import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconMarker;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.containers.containers.ContentBookContainer;
+import com.wynntils.models.inventory.InventoryModel;
 import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -74,6 +77,9 @@ import net.neoforged.bus.api.SubscribeEvent;
  * discoveries.
  */
 public final class ActivityModel extends Model {
+    private static final Pattern GATHER_MINIQUEST_PATTERN = Pattern.compile(
+            ".*Bring §3\\[(\\d+) ([\\w\\s]+)\\]§r or §3\\[(\\d+) ([\\w\\s]+)\\]§r to the Gathering Post at §b.*");
+
     public static final String CONTENT_BOOK_TITLE = "\uDAFF\uDFEE\uE004";
     private static final String WIKI_APOSTROPHE = "&#039;";
     private static final String PLAYER_PROGRESS_ITEM_NAME = "All Player Progress";
@@ -105,8 +111,12 @@ public final class ActivityModel extends Model {
     private boolean overallProgressOutdated = true;
     private String currentProgressCharacter = "";
 
-    public ActivityModel(MarkerModel markerModel) {
-        super(List.of(markerModel));
+    private int gatherMiniquestRequiredAmount = -1;
+    private Pair<String, String> gatherMiniquestRequiredItemNames = Pair.of("", "");
+    private CappedValue gatherMiniquestProgress = CappedValue.EMPTY;
+
+    public ActivityModel(MarkerModel markerModel, InventoryModel inventoryModel) {
+        super(List.of(markerModel, inventoryModel));
 
         Handlers.Scoreboard.addPart(TRACKER_SCOREBOARD_PART);
         Models.Marker.registerMarkerProvider(ACTIVITY_MARKER_PROVIDER);
@@ -202,6 +212,21 @@ public final class ActivityModel extends Model {
         }
         // First thing to do when we just loaded a class
         scanOverallProgress();
+    }
+
+    @SubscribeEvent
+    public void onSetSlot(SetSlotEvent.Post e) {
+        if (e.getContainer() != McUtils.inventory()) return;
+        if (gatherMiniquestRequiredAmount == -1) return;
+
+        updateGatherMiniQuestProgress();
+    }
+
+    @SubscribeEvent
+    public void onContainerClick(ContainerClickEvent e) {
+        if (e.getContainerMenu() != McUtils.inventoryMenu()) return;
+
+        updateGatherMiniQuestProgress();
     }
 
     public ActivityInfo parseItem(String name, ActivityType type, ItemStack itemStack) {
@@ -569,11 +594,36 @@ public final class ActivityModel extends Model {
 
         WynntilsMod.postEvent(new ActivityTrackerUpdatedEvent(
                 trackedActivity.trackedType(), trackedActivity.trackedName(), trackedActivity.trackedTask()));
+
+        if (trackedType == ActivityType.MINI_QUEST || name.startsWith("Gather ")) {
+            Matcher descriptionMatcher = nextTask.getMatcher(GATHER_MINIQUEST_PATTERN);
+            if (!descriptionMatcher.matches()) {
+                resetGatherMiniQuestInfo();
+                return;
+            }
+
+            try {
+                int amount = Integer.parseInt(descriptionMatcher.group(1));
+                String item1 = descriptionMatcher.group(2);
+                String item2 = descriptionMatcher.group(4);
+
+                gatherMiniquestRequiredAmount = amount;
+                gatherMiniquestRequiredItemNames = Pair.of(item1, item2);
+
+                updateGatherMiniQuestProgress();
+
+            } catch (NumberFormatException e) {
+                return;
+            }
+        } else {
+            resetGatherMiniQuestInfo();
+        }
     }
 
     void resetTracker() {
         trackedActivity = null;
         ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(null, null);
+        resetGatherMiniQuestInfo();
     }
 
     public void scanContentBook(
@@ -599,6 +649,18 @@ public final class ActivityModel extends Model {
 
     public void rescanDialogueHistory() {
         DIALOGUE_HISTORY_QUERIES.scanDialogueHistory();
+    }
+
+    public CappedValue getGatherMiniquestProgress() {
+        if (gatherMiniquestRequiredAmount == -1 || gatherMiniquestRequiredItemNames.equals(Pair.of("", ""))) {
+            return CappedValue.EMPTY;
+        } else {
+            return gatherMiniquestProgress;
+        }
+    }
+
+    public Pair<String, String> getGatherMiniquestRequiredItemNames() {
+        return gatherMiniquestRequiredItemNames;
     }
 
     private void scanOverallProgress() {
@@ -641,6 +703,19 @@ public final class ActivityModel extends Model {
     }
 
     private record TrackedActivity(String trackedName, ActivityType trackedType, StyledText trackedTask) {}
+
+    private void resetGatherMiniQuestInfo() {
+        gatherMiniquestRequiredAmount = -1;
+        gatherMiniquestRequiredItemNames = Pair.of("", "");
+        gatherMiniquestProgress = CappedValue.EMPTY;
+    }
+
+    private void updateGatherMiniQuestProgress() {
+        int item1 = Models.Inventory.getAmountInInventory(gatherMiniquestRequiredItemNames.a());
+        int item2 = Models.Inventory.getAmountInInventory(gatherMiniquestRequiredItemNames.b());
+
+        gatherMiniquestProgress = new CappedValue(item1 + item2, gatherMiniquestRequiredAmount);
+    }
 
     public enum ActivityOpenAction {
         MAP,
