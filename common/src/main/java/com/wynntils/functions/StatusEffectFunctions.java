@@ -5,104 +5,55 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.consumers.functions.Function;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.statuseffects.type.StatusEffect;
+import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.type.NamedValue;
 import java.util.List;
-import net.minecraft.client.resources.language.I18n;
+import java.util.Optional;
 
+@SuppressWarnings("unused") // Functions are accessed via reflection
 public class StatusEffectFunctions {
-    private abstract static class StatusEffectFunctionBase<T> extends Function<T> {
-        @Override
-        public T getValue(FunctionArguments arguments) {
-            String query = arguments.getArgument("query").getStringValue();
-            StatusEffect effect = Models.StatusEffect.searchStatusEffectByName(query);
-            if (effect == null) return whenNotFound();
-            return processEffect(effect);
-        }
 
-        @Override
-        public String getArgumentDescription(String argumentName) {
-            return I18n.get("function.wynntils.statusEffectFunctionBase.argument." + argumentName);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("query", String.class, null)));
-        }
-
-        public abstract T processEffect(StatusEffect effect);
-
-        public abstract T whenNotFound();
+    private static Optional<StatusEffect> statusEffectFunctionBase(String query) {
+        return Optional.ofNullable(Models.StatusEffect.searchStatusEffectByName(query));
     }
 
-    public static class StatusEffectsFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            List<String> statusEffectsList = Models.StatusEffect.getStatusEffects().stream()
-                    .map(statusEffect -> statusEffect.asString().getString())
-                    .toList();
+    @TemplateFunction(name = "status_effects")
+    public static String statusEffectsFunction() {
+        List<String> statusEffectsList = Models.StatusEffect.getStatusEffects().stream()
+                .map(statusEffect -> statusEffect.asString().getString())
+                .toList();
 
-            return String.join("\n", statusEffectsList);
-        }
+        return String.join("\n", statusEffectsList);
     }
 
-    public static class StatusEffectActiveFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            String query = arguments.getArgument("query").getStringValue();
-            return Models.StatusEffect.getStatusEffects().stream()
-                    .anyMatch(statusEffect ->
-                            statusEffect.getName().getStringWithoutFormatting().equals(query));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("contains_effect");
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("query", String.class, null)));
-        }
+    @TemplateFunction(name = "status_effect_active", aliases = {"contains_effect"})
+    public static boolean statusEffectActiveFunction(String query) {
+        return Models.StatusEffect.getStatusEffects().stream()
+                .anyMatch(statusEffect ->
+                        statusEffect.getName().getStringWithoutFormatting().equals(query));
     }
 
-    public static class StatusEffectDurationFunction extends StatusEffectFunctionBase<NamedValue> {
-        @Override
-        public NamedValue processEffect(StatusEffect effect) {
-            return new NamedValue(effect.getName().getString(), effect.getDuration());
-        }
-
-        @Override
-        public NamedValue whenNotFound() {
-            return NamedValue.EMPTY;
-        }
+    @TemplateFunction(name = "status_effect_duration")
+    public static NamedValue statusEffectDurationFunction(String query) {
+        return statusEffectFunctionBase(query)
+                .map(effect -> new NamedValue(effect.getName().getString(), effect.getDuration()))
+                .orElse(NamedValue.EMPTY);
     }
 
-    public static class StatusEffectModifierFunction extends StatusEffectFunctionBase<NamedValue> {
-        @Override
-        public NamedValue processEffect(StatusEffect effect) {
-            if (!effect.hasModifierValue()) return whenNotFound();
-            return new NamedValue(effect.getModifierSuffix().getString(), effect.getModifierValue());
-        }
-
-        @Override
-        public NamedValue whenNotFound() {
-            return NamedValue.EMPTY;
-        }
+    @TemplateFunction(name = "status_effect_modifier")
+    public static NamedValue statusEffectModiferFunction(String query) {
+        return statusEffectFunctionBase(query)
+                .map(effect -> effect.hasModifierValue()
+                        ? new NamedValue(effect.getModifierSuffix().getString(), effect.getModifierValue())
+                        : NamedValue.EMPTY)
+                .orElse(NamedValue.EMPTY);
     }
 
-    public static class StatusEffectPrefixFunction extends StatusEffectFunctionBase<String> {
-        @Override
-        public String processEffect(StatusEffect effect) {
-            return effect.getPrefix().getString();
-        }
-
-        @Override
-        public String whenNotFound() {
-            return "";
-        }
+    @TemplateFunction(name = "status_effect_prefix")
+    public static String statusEffectPrefixFunction(String query) {
+        return statusEffectFunctionBase(query)
+                .map(effect -> effect.getPrefix().getString())
+                .orElse("");
     }
 }

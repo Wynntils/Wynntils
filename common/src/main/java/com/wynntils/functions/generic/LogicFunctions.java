@@ -1,170 +1,81 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions.generic;
 
-import com.wynntils.core.consumers.functions.GenericFunction;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.core.consumers.functions.arguments.ListArgument;
-import java.util.List;
+import com.wynntils.templates.annotations.TemplateFunction;
 import java.util.Objects;
 
+@SuppressWarnings("unused") // Functions are accessed via reflection
 public class LogicFunctions {
-    public static class EqualsFunction extends GenericFunction<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return Objects.equals(
-                    arguments.getArgument("first").getDoubleValue(),
-                    arguments.getArgument("second").getDoubleValue());
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("first", Number.class, null), new Argument<>("second", Number.class, null)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("eq");
-        }
+    @TemplateFunction(name = "equals", aliases = "eq", isPure = true)
+    public static boolean equalsFunction(double a, double b) {
+        return Objects.equals(a, b);
     }
 
-    public static class NotEqualsFunction extends GenericFunction<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return !Objects.equals(
-                    arguments.getArgument("first").getDoubleValue(),
-                    arguments.getArgument("second").getDoubleValue());
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("first", Number.class, null), new Argument<>("second", Number.class, null)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("neq");
-        }
+    @TemplateFunction(name = "not_equals", aliases = "neq", isPure = true)
+    public static boolean notEqualsFunction(double a, double b) {
+        return !Objects.equals(a, b);
     }
 
-    public static class NotFunction extends GenericFunction<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return !arguments.getArgument("value").getBooleanValue();
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", Boolean.class, null)));
-        }
+    @TemplateFunction(name = "not", isPure = true)
+    public static boolean notFunction(boolean value) {
+        return !value;
     }
 
-    public static class AndFunction extends GenericFunction<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            List<Boolean> values = arguments.getArgument("values").getBooleanList();
-
-            return values.stream().allMatch(Boolean::booleanValue);
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new ListArgument<>("values", Boolean.class)));
-        }
+    @TemplateFunction(name = "and", isPure = true)
+    public static boolean andFunction(boolean a, boolean b) {
+        return a && b;
     }
 
-    public static class OrFunction extends GenericFunction<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            List<Boolean> values = arguments.getArgument("values").getBooleanList();
-
-            return values.stream().anyMatch(Boolean::booleanValue);
+    @TemplateFunction(name = "and", isPure = true)
+    public static boolean andFunction(boolean... values) {
+        for (boolean value : values) {
+            if (!value) return false;
         }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new ListArgument<>("values", Boolean.class)));
-        }
+        return true;
     }
 
-    public static class LessThanFunction extends GenericFunction<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return arguments.getArgument("first").getDoubleValue()
-                    < arguments.getArgument("second").getDoubleValue();
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("first", Number.class, null), new Argument<>("second", Number.class, null)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("lt");
-        }
+    @TemplateFunction(name = "or", isPure = true)
+    public static boolean orFunction(boolean a, boolean b) {
+        return a || b;
     }
 
-    public static class LessThanOrEqualsFunction extends GenericFunction<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return arguments.getArgument("first").getDoubleValue()
-                    <= arguments.getArgument("second").getDoubleValue();
+    @TemplateFunction(name = "or", isPure = true)
+    public static boolean orFunction(boolean... values) {
+        for (boolean value : values) {
+            if (value) return true;
         }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("first", Number.class, null), new Argument<>("second", Number.class, null)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("lte", "less_than_equals", "leq");
-        }
+        return false;
     }
 
-    public static class GreaterThanFunction extends GenericFunction<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return arguments.getArgument("first").getDoubleValue()
-                    > arguments.getArgument("second").getDoubleValue();
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("first", Number.class, null), new Argument<>("second", Number.class, null)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("mt", "more_than", "gt");
-        }
+    @TemplateFunction(name = "less_than", aliases = "lt", isPure = true)
+    public static boolean lessThanFunction(Number a, Number b) {
+        return a.doubleValue() < b.doubleValue();
     }
 
-    public static class GreaterThanOrEqualsFunction extends GenericFunction<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return arguments.getArgument("first").getDoubleValue()
-                    >= arguments.getArgument("second").getDoubleValue();
-        }
+    @TemplateFunction(
+            name = "less_than_or_equals",
+            aliases = {"lte", "less_than_equals", "leq"},
+            isPure = true)
+    public static boolean lessThanOrEqualsFunction(Number a, Number b) {
+        return a.doubleValue() <= b.doubleValue();
+    }
 
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("first", Number.class, null), new Argument<>("second", Number.class, null)));
-        }
+    @TemplateFunction(
+            name = "greater_than",
+            aliases = {"mt", "more_than", "gt"},
+            isPure = true)
+    public static boolean greaterThanFunction(Number a, Number b) {
+        return a.doubleValue() > b.doubleValue();
+    }
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("mte", "more_than_equals", "greater_than_equals", "gte", "geq");
-        }
+    @TemplateFunction(
+            name = "greater_than_or_equals",
+            aliases = {"mte", "more_than_equals", "greater_than_equals", "gte", "geq"},
+            isPure = true)
+    public static boolean greaterThanOrEqualsFunction(Number a, Number b) {
+        return a.doubleValue() >= b.doubleValue();
     }
 }

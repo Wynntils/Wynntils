@@ -4,297 +4,155 @@
  */
 package com.wynntils.functions.generic;
 
-import com.wynntils.core.consumers.functions.GenericFunction;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.core.consumers.functions.arguments.ListArgument;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.colors.CustomColor;
-import java.util.List;
+
 import java.util.UUID;
+
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.component.ResolvableProfile;
 
+// Functions are accessed via reflection
+@SuppressWarnings("unused")
 public class StyledTextFunctions {
-    public static class StyledTextFunction extends GenericFunction<StyledText> {
-        @Override
-        public StyledText getValue(FunctionArguments arguments) {
-            return StyledText.fromString(arguments.getArgument("value").getStringValue());
-        }
 
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("value", String.class, null)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("st");
-        }
+    @TemplateFunction(name = "concat_styled_text", aliases = "concat_st")
+    public static StyledText concatStyledTextFunction(StyledText a, StyledText b) {
+        return StyledText.join("", a, b);
     }
 
-    public static class ConcatStyledTextFunction extends GenericFunction<StyledText> {
-        @Override
-        public StyledText getValue(FunctionArguments arguments) {
-            List<StyledText> values = arguments.getArgument("values").getStyledTextList();
-            return StyledText.join("", values);
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new ListArgument<>("values", StyledText.class)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("concat_st");
-        }
+    @TemplateFunction(name = "concat_styled_text", aliases = "concat_st")
+    public static StyledText concatStyledTextFunction(StyledText... values) {
+        return StyledText.join("", values);
     }
 
-    public static class WithColorFunction extends GenericFunction<StyledText> {
-        @Override
-        public StyledText getValue(FunctionArguments arguments) {
-            StyledText styledText = arguments.getArgument("value").getStyledText();
-            CustomColor customColor = arguments.getArgument("color").getColorValue();
-
-            return styledText.map(part -> {
-                if (part.getPartStyle().getColor() != CustomColor.NONE) {
-                    return part;
-                }
-
-                return part.withStyle(style -> style.withColor(customColor));
-            });
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", StyledText.class, null), new Argument<>("color", CustomColor.class, null)));
-        }
+    @TemplateFunction(name = "styled_text", aliases = "st", isPure = true)
+    public static StyledText styledTextFunction(String value) {
+        return StyledText.fromString(value);
     }
 
-    public static class WithBoldFunction extends GenericFunction<StyledText> {
-        @Override
-        public StyledText getValue(FunctionArguments arguments) {
-            StyledText styledText = arguments.getArgument("value").getStyledText();
-            Boolean isBold = arguments.getArgument("isBold").getBooleanValue();
-
-            return styledText.map(part -> part.withStyle(style -> style.withBold(isBold)));
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", StyledText.class, null), new Argument<>("isBold", Boolean.class, null)));
-        }
-    }
-
-    public static class WithItalicFunction extends GenericFunction<StyledText> {
-        @Override
-        public StyledText getValue(FunctionArguments arguments) {
-            StyledText styledText = arguments.getArgument("value").getStyledText();
-            Boolean isItalic = arguments.getArgument("isItalic").getBooleanValue();
-
-            return styledText.map(part -> part.withStyle(style -> style.withItalic(isItalic)));
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", StyledText.class, null), new Argument<>("isItalic", Boolean.class, null)));
-        }
-    }
-
-    public static class WithStrikethroughFunction extends GenericFunction<StyledText> {
-        @Override
-        public StyledText getValue(FunctionArguments arguments) {
-            StyledText styledText = arguments.getArgument("value").getStyledText();
-            Boolean isStrikethrough = arguments.getArgument("isStrikethrough").getBooleanValue();
-
-            return styledText.map(part -> part.withStyle(style -> style.withStrikethrough(isStrikethrough)));
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", StyledText.class, null),
-                    new Argument<>("isStrikethrough", Boolean.class, null)));
-        }
-    }
-
-    public static class WithObfuscatedFunction extends GenericFunction<StyledText> {
-        @Override
-        public StyledText getValue(FunctionArguments arguments) {
-            StyledText styledText = arguments.getArgument("value").getStyledText();
-            Boolean isObfuscated = arguments.getArgument("isObfuscated").getBooleanValue();
-
-            return styledText.map(part -> part.withStyle(style -> style.withObfuscated(isObfuscated)));
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", StyledText.class, null),
-                    new Argument<>("isObfuscated", Boolean.class, null)));
-        }
-    }
-
-    public static class WithAtlasSpriteFontFunction extends GenericFunction<StyledText> {
-        @Override
-        public StyledText getValue(FunctionArguments arguments) {
-            StyledText styledText = arguments.getArgument("value").getStyledText();
-            String atlas = arguments.getArgument("atlas").getStringValue();
-            String sprite = arguments.getArgument("sprite").getStringValue();
-            Identifier atlasLocation = Identifier.tryParse(atlas);
-            Identifier spriteLocation = Identifier.tryParse(sprite);
-
-            if (atlasLocation == null || spriteLocation == null) return styledText;
-
-            FontDescription fontDescription = new FontDescription.AtlasSprite(atlasLocation, spriteLocation);
-
-            return styledText.map(part -> {
-                if (part.getPartStyle().getFont() != FontDescription.DEFAULT) {
-                    return part;
-                }
-
-                return part.withStyle(style -> style.withFont(fontDescription));
-            });
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", StyledText.class, null),
-                    new Argument<>("atlas", String.class, null),
-                    new Argument<>("sprite", String.class, null)));
-        }
-    }
-
-    public static class WithPlayerSpriteFontFunction extends GenericFunction<StyledText> {
-        @Override
-        public StyledText getValue(FunctionArguments arguments) {
-            StyledText styledText = arguments.getArgument("value").getStyledText();
-            String uuid = arguments.getArgument("uuid").getStringValue();
-            boolean hat = arguments.getArgument("hat").getBooleanValue();
-
-            UUID uuidObject;
-            try {
-                uuidObject = UUID.fromString(uuid);
-            } catch (IllegalArgumentException e) {
-                return styledText;
+    @TemplateFunction(name = "with_color")
+    public static StyledText withColorFunction(StyledText styledText, CustomColor customColor) {
+        return styledText.map(part -> {
+            if (part.getPartStyle().getColor() != CustomColor.NONE) {
+                return part;
             }
-
-            FontDescription fontDescription =
-                    new FontDescription.PlayerSprite(ResolvableProfile.createUnresolved(uuidObject), hat);
-
-            return styledText.map(part -> {
-                if (part.getPartStyle().getFont() != FontDescription.DEFAULT) {
-                    return part;
-                }
-
-                return part.withStyle(style -> style.withFont(fontDescription));
-            });
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", StyledText.class, null),
-                    new Argument<>("uuid", String.class, null),
-                    new Argument<>("hat", Boolean.class, null)));
-        }
+            return part.withStyle(style -> style.withColor(customColor));
+        });
     }
 
-    public static class WithResourceFontFunction extends GenericFunction<StyledText> {
-        @Override
-        public StyledText getValue(FunctionArguments arguments) {
-            StyledText styledText = arguments.getArgument("value").getStyledText();
-            String font = arguments.getArgument("font").getStringValue();
-            Identifier fontLocation = Identifier.tryParse(font);
-
-            if (fontLocation == null) return styledText;
-
-            FontDescription fontDescription = new FontDescription.Resource(fontLocation);
-            return styledText.map(part -> {
-                if (part.getPartStyle().getFont() != FontDescription.DEFAULT) {
-                    return part;
-                }
-
-                return part.withStyle(style -> style.withFont(fontDescription));
-            });
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", StyledText.class, null), new Argument<>("font", String.class, null)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("with_font");
-        }
+    @TemplateFunction(name = "with_bold")
+    public static StyledText withBoldFunction(StyledText styledText, boolean isBold) {
+        return styledText.map(part -> part.withStyle(style -> style.withBold(isBold)));
     }
 
-    public static class WithShadowColorFunction extends GenericFunction<StyledText> {
-        @Override
-        public StyledText getValue(FunctionArguments arguments) {
-            StyledText styledText = arguments.getArgument("value").getStyledText();
-            CustomColor customColor = arguments.getArgument("color").getColorValue();
-
-            return styledText.map(part -> {
-                if (part.getPartStyle().getShadowColor() != CustomColor.NONE) {
-                    return part;
-                }
-
-                return part.withStyle(style -> style.withShadowColor(customColor));
-            });
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", StyledText.class, null), new Argument<>("color", CustomColor.class, null)));
-        }
+    @TemplateFunction(name = "with_bold")
+    public static StyledText withBoldFunction(StyledText styledText) {
+        return withBoldFunction(styledText, true);
     }
 
-    public static class WithUnderlinedFunction extends GenericFunction<StyledText> {
-        @Override
-        public StyledText getValue(FunctionArguments arguments) {
-            StyledText styledText = arguments.getArgument("value").getStyledText();
-            Boolean isUnderlined = arguments.getArgument("isUnderlined").getBooleanValue();
-
-            return styledText.map(part -> part.withStyle(style -> style.withUnderlined(isUnderlined)));
-        }
-
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", StyledText.class, null),
-                    new Argument<>("isUnderlined", Boolean.class, null)));
-        }
+    @TemplateFunction(name = "with_italic")
+    public static StyledText withItalicFunction(StyledText styledText, boolean isItalic) {
+        return styledText.map(part -> part.withStyle(style -> style.withItalic(isItalic)));
     }
 
-    public static class RepeatStyledTextFunction extends GenericFunction<StyledText> {
-        @Override
-        public StyledText getValue(FunctionArguments arguments) {
-            StyledText styledText = arguments.getArgument("value").getStyledText();
-            Integer times = arguments.getArgument("count").getIntegerValue();
+    @TemplateFunction(name = "with_italic")
+    public static StyledText withItalicFunction(StyledText styledText) {
+        return withItalicFunction(styledText, true);
+    }
 
-            return styledText.repeat(times);
-        }
+    @TemplateFunction(name = "with_strikethrough")
+    public static StyledText withStrikeThroughFunction(StyledText styledText, boolean isStrikeThrough) {
+        return styledText.map(part -> part.withStyle(style -> style.withStrikethrough(isStrikeThrough)));
+    }
 
-        @Override
-        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("value", StyledText.class, null), new Argument<>("count", Integer.class, null)));
-        }
+    @TemplateFunction(name = "with_strikethrough")
+    public static StyledText withStrikeThroughFunction(StyledText styledText) {
+        return withStrikeThroughFunction(styledText, true);
+    }
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("repeat_st");
+    @TemplateFunction(name = "with_obfuscated")
+    public static StyledText withObfuscatedFunction(StyledText styledText, boolean isObfuscated) {
+        return styledText.map(part -> part.withStyle(style -> style.withObfuscated(isObfuscated)));
+    }
+
+    @TemplateFunction(name = "with_obfuscated")
+    public static StyledText withObfuscatedFunction(StyledText styledText) {
+        return withObfuscatedFunction(styledText, true);
+    }
+
+    @TemplateFunction(name = "with_atlas_sprite_font")
+    public static StyledText withAtlasSpriteFontFunction(StyledText styledText, String atlas, String sprite) {
+        Identifier atlasLocation = Identifier.tryParse(atlas);
+        Identifier spriteLocation = Identifier.tryParse(sprite);
+        if (atlasLocation == null || spriteLocation == null)
+            return styledText;
+        FontDescription fontDescription = new FontDescription.AtlasSprite(atlasLocation, spriteLocation);
+        return styledText.map(part -> {
+            if (part.getPartStyle().getFont() != FontDescription.DEFAULT) {
+                return part;
+            }
+            return part.withStyle(style -> style.withFont(fontDescription));
+        });
+    }
+
+    @TemplateFunction(name = "with_player_sprite_font")
+    public static StyledText withPlayerSpriteFontFunction(StyledText styledText, String uuid, boolean hat) {
+        UUID uuidObject;
+        try {
+            uuidObject = UUID.fromString(uuid);
+        } catch (IllegalArgumentException e) {
+            return styledText;
         }
+        FontDescription fontDescription = new FontDescription.PlayerSprite(ResolvableProfile.createUnresolved(uuidObject), hat);
+        return styledText.map(part -> {
+            if (part.getPartStyle().getFont() != FontDescription.DEFAULT) {
+                return part;
+            }
+            return part.withStyle(style -> style.withFont(fontDescription));
+        });
+    }
+
+    @TemplateFunction(name = "with_resource_font", aliases = "with_font")
+    public static StyledText withResourceFontFunction(StyledText styledText, String font) {
+        Identifier fontLocation = Identifier.tryParse(font);
+        if (fontLocation == null)
+            return styledText;
+        FontDescription fontDescription = new FontDescription.Resource(fontLocation);
+        return styledText.map(part -> {
+            if (part.getPartStyle().getFont() != FontDescription.DEFAULT) {
+                return part;
+            }
+            return part.withStyle(style -> style.withFont(fontDescription));
+        });
+    }
+
+    @TemplateFunction(name = "with_shadow_color")
+    public static StyledText withShadowColorFunction(StyledText styledText, CustomColor customColor) {
+        return styledText.map(part -> {
+            if (part.getPartStyle().getShadowColor() != CustomColor.NONE) {
+                return part;
+            }
+            return part.withStyle(style -> style.withShadowColor(customColor));
+        });
+    }
+
+    @TemplateFunction(name = "with_underlined")
+    public static StyledText withUnderlinedFunction(StyledText styledText, boolean isUnderlined) {
+        return styledText.map(part -> part.withStyle(style -> style.withUnderlined(isUnderlined)));
+    }
+
+    @TemplateFunction(name = "with_underlined")
+    public static StyledText withUnderlinedFunction(StyledText styledText) {
+        return withUnderlinedFunction(styledText, true);
+    }
+
+    @TemplateFunction(name = "repeat_styled_text", aliases = {"repeat_st"})
+    public static StyledText repeatStyledTextFunction(StyledText value, int count) {
+        StyledText styledText = value;
+        Integer times = count;
+        return styledText.repeat(times);
     }
 }

@@ -5,159 +5,97 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Services;
-import com.wynntils.core.consumers.functions.Function;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.services.statistics.type.StatisticEntry;
 import com.wynntils.services.statistics.type.StatisticKind;
+import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.type.Time;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+
 import net.minecraft.client.resources.language.I18n;
 
-public final class StatisticFunctions {
-    public static class StatisticsTotalFunction extends StatisticFunction<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            StatisticEntry statistic = getStatisticEntry(arguments);
-            if (statistic == null) return DEFAULT_VALUE;
+@SuppressWarnings("unused") // Functions are accessed via reflection
+public class StatisticFunctions {
 
-            return statistic.total();
-        }
+
+    private static Optional<StatisticEntry> getStatisticEntry(String statisticKey, boolean overall) {
+        StatisticKind statisticKind = StatisticKind.from(statisticKey);
+        if (statisticKind == null) return Optional.empty();
+
+        StatisticEntry statistic = overall
+                ? Services.Statistics.getOverallStatistic(statisticKind)
+                : Services.Statistics.getStatistic(statisticKind);
+        return Optional.of(statistic);
     }
 
-    public static class StatisticsCountFunction extends StatisticFunction<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            StatisticEntry statistic = getStatisticEntry(arguments);
-            if (statistic == null) return DEFAULT_VALUE;
-
-            return statistic.count();
-        }
+    @TemplateFunction(name = "statistics_total")
+    public static long statisticsTotalFunction(String statisticKey, boolean overall) {
+        return getStatisticEntry(statisticKey, overall)
+                .map(StatisticEntry::total)
+                .orElse(0L);
     }
 
-    public static class StatisticsMinFunction extends StatisticFunction<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            StatisticEntry statistic = getStatisticEntry(arguments);
-            if (statistic == null) return DEFAULT_VALUE;
-
-            return statistic.min();
-        }
+    @TemplateFunction(name = "statistics_count")
+    public static long statisticsCountFunction(String statisticKey, boolean overall) {
+        return getStatisticEntry(statisticKey, overall)
+                .map(StatisticEntry::count)
+                .orElse(0L);
     }
 
-    public static class StatisticsMaxFunction extends StatisticFunction<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            StatisticEntry statistic = getStatisticEntry(arguments);
-            if (statistic == null) return DEFAULT_VALUE;
-
-            return statistic.max();
-        }
+    @TemplateFunction(name = "statistics_min")
+    public static long statisticsMinFunction(String statisticKey, boolean overall) {
+        return getStatisticEntry(statisticKey, overall)
+                .map(StatisticEntry::min)
+                .orElse(0L);
+    }
+    @TemplateFunction(name = "statistics_max")
+    public static long statisticsMaxFunction(String statisticKey, boolean overall) {
+        return getStatisticEntry(statisticKey, overall)
+                .map(StatisticEntry::max)
+                .orElse(0L);
     }
 
-    public static class StatisticsAverageFunction extends StatisticFunction<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            StatisticEntry statistic = getStatisticEntry(arguments);
-            if (statistic == null) return DEFAULT_VALUE;
-
-            return statistic.average();
-        }
+    @TemplateFunction(name = "statistics_average")
+    public static long statisticsAverageFunction(String statisticKey, boolean overall) {
+        return getStatisticEntry(statisticKey, overall)
+                .map(StatisticEntry::average)
+                .orElse(0L);
     }
 
-    public static class StatisticsFirstModifiedTimeFunction extends StatisticFunction<Time> {
-        @Override
-        public Time getValue(FunctionArguments arguments) {
-            StatisticEntry statistic = getStatisticEntry(arguments);
-            if (statistic == null) return Time.NONE;
-
-            return Time.of(statistic.firstModified());
-        }
+    @TemplateFunction(name = "statistics_first_modified_time")
+    public static Time statisticsFirstModifiedTimeFunction(String statisticKey, boolean overall) {
+        return getStatisticEntry(statisticKey, overall)
+                .map(statistic -> Time.of(statistic.firstModified()))
+                .orElse(Time.NONE);
     }
 
-    public static class StatisticsFirstModifiedFunction extends StatisticFunction<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            StatisticEntry statistic = getStatisticEntry(arguments);
-            if (statistic == null) return 0L;
-
-            return statistic.firstModified();
-        }
+    @TemplateFunction(name = "statistics_first_modified")
+    public static long statisticsFirstModifiedFunction(String statisticKey, boolean overall) {
+        return getStatisticEntry(statisticKey, overall)
+                .map(statistic -> statistic.firstModified())
+                .orElse(0L);
     }
 
-    public static class StatisticsLastModifiedTimeFunction extends StatisticFunction<Time> {
-        @Override
-        public Time getValue(FunctionArguments arguments) {
-            StatisticEntry statistic = getStatisticEntry(arguments);
-            if (statistic == null) return Time.NONE;
-
-            return Time.of(statistic.lastModified());
-        }
+    @TemplateFunction(name = "statistics_last_modified_time")
+    public static Time statisticsLastModifiedTimeFunction(String statisticKey, boolean overall) {
+        return getStatisticEntry(statisticKey, overall)
+                .map(statistic -> Time.of(statistic.lastModified()))
+                .orElse(Time.NONE);
     }
 
-    public static class StatisticsLastModifiedFunction extends StatisticFunction<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            StatisticEntry statistic = getStatisticEntry(arguments);
-            if (statistic == null) return 0L;
-
-            return statistic.lastModified();
-        }
+    @TemplateFunction(name = "statistics_last_modified")
+    public static long statisticsLastModifiedFunction(String statisticKey, boolean overall) {
+        return getStatisticEntry(statisticKey, overall)
+                .map(statistic -> statistic.lastModified())
+                .orElse(0L);
     }
 
-    public static class StatisticsFormattedFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            String statisticKey = arguments.getArgument("statisticKey").getStringValue();
-            int value = arguments.getArgument("value").getIntegerValue();
+    @TemplateFunction(name = "statistics_formatted")
+    public static String statisticsFormattedFunction(String statisticKey, Number value) {
+        StatisticKind statisticKind = StatisticKind.from(statisticKey);
+        if (statisticKind == null) return "-";
 
-            StatisticKind statisticKind = StatisticKind.from(statisticKey);
-            if (statisticKind == null) return "-";
-
-            return statisticKind.getFormattedValue(value);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("statisticKey", String.class, null), new Argument<>("value", Number.class, null)));
-        }
-    }
-
-    private abstract static class StatisticFunction<T> extends Function<T> {
-        protected static final long DEFAULT_VALUE = -1;
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("statisticKey", String.class, null),
-                    new Argument<>("overall", Boolean.class, null)));
-        }
-
-        @Override
-        public String getArgumentDescription(String argumentName) {
-            if (Objects.equals(argumentName, "statisticKey")) {
-                return I18n.get("function.wynntils.statistics.argument.statisticKey");
-            }
-            if (Objects.equals(argumentName, "overall")) {
-                return I18n.get("function.wynntils.statistics.argument.overall");
-            }
-
-            return super.getArgumentDescription(argumentName);
-        }
-
-        protected static StatisticEntry getStatisticEntry(FunctionArguments arguments) {
-            String statisticKey = arguments.getArgument("statisticKey").getStringValue();
-            boolean overall = arguments.getArgument("overall").getBooleanValue();
-
-            StatisticKind statisticKind = StatisticKind.from(statisticKey);
-            if (statisticKind == null) return null;
-
-            StatisticEntry statistic = overall
-                    ? Services.Statistics.getOverallStatistic(statisticKind)
-                    : Services.Statistics.getStatistic(statisticKind);
-            return statistic;
-        }
+        return statisticKind.getFormattedValue(value.intValue());
     }
 }

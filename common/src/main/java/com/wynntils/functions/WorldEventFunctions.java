@@ -5,78 +5,46 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.consumers.functions.Function;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.activities.type.WorldEvent;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Time;
-import java.util.List;
+import com.wynntils.templates.annotations.TemplateFunction;
 
+//Functions are accessed via reflection
+@SuppressWarnings("unused")
 public class WorldEventFunctions {
-    public static class AnnihilationDryCount extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.WorldEvent.dryAnnihilations.get();
-        }
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("dry_annis", "dry_anni_count");
-        }
+    @TemplateFunction(name = "annihilation_dry_count", aliases = { "dry_annis", "dry_anni_count" })
+    public static int annihilationDryCount() {
+        return Models.WorldEvent.dryAnnihilations.get();
     }
 
-    public static class AnnihilationSunProgressFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.WorldEvent.annihilationSunBar.isActive()
-                    ? Models.WorldEvent.annihilationSunBar.getBarProgress().value()
-                    : CappedValue.EMPTY;
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("sun_progress");
-        }
+    @TemplateFunction(name = "annihilation_sun_progress", aliases = { "sun_progress" })
+    public static CappedValue annihilationSunProgressFunction() {
+        return Models.WorldEvent.annihilationSunBar.isActive() ? Models.WorldEvent.annihilationSunBar.getBarProgress().value() : CappedValue.EMPTY;
     }
 
-    public static class CurrentWorldEventFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            WorldEvent currentWorldEvent = Models.WorldEvent.getCurrentWorldEvent();
-
-            if (currentWorldEvent == null) return "";
-
-            return currentWorldEvent.getName();
-        }
+    @TemplateFunction(name = "current_world_event")
+    public static String currentWorldEventFunction() {
+        WorldEvent currentWorldEvent = Models.WorldEvent.getCurrentWorldEvent();
+        if (currentWorldEvent == null)
+            return "";
+        return currentWorldEvent.getName();
     }
 
-    public static class CurrentWorldEventStartTimeFunction extends Function<Time> {
-        @Override
-        public Time getValue(FunctionArguments arguments) {
-            WorldEvent currentWorldEvent = Models.WorldEvent.getCurrentWorldEvent();
-
-            if (currentWorldEvent == null) return Time.NONE;
-
-            return currentWorldEvent.getStartTime();
-        }
+    @TemplateFunction(name = "current_world_event_start_time")
+    public static Time currentWorldEventStartTimeFunction() {
+        WorldEvent currentWorldEvent = Models.WorldEvent.getCurrentWorldEvent();
+        if (currentWorldEvent == null)
+            return Time.NONE;
+        return currentWorldEvent.getStartTime();
     }
 
-    public static class WorldEventStartTimeFunction extends Function<Time> {
-        @Override
-        public Time getValue(FunctionArguments arguments) {
-            String worldEventName = arguments.getArgument("worldEventName").getStringValue();
-            WorldEvent worldEvent = Models.WorldEvent.getWorldEvent(worldEventName);
-
-            if (worldEvent == null) return Time.NONE;
-
-            return worldEvent.getStartTime();
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("worldEventName", String.class, null)));
-        }
+    @TemplateFunction(name = "world_event_start_time")
+    public static Time worldEventStartTimeFunction(String worldEventName) {
+        WorldEvent worldEvent = Models.WorldEvent.getWorldEvent(worldEventName);
+        if (worldEvent == null)
+            return Time.NONE;
+        return worldEvent.getStartTime();
     }
 }

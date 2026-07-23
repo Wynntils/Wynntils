@@ -5,9 +5,6 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.consumers.functions.Function;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.gambits.type.Gambit;
 import com.wynntils.models.raid.type.RaidInfo;
 import com.wynntils.models.raid.type.RaidRoomInfo;
@@ -16,383 +13,226 @@ import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Time;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import com.wynntils.templates.annotations.TemplateFunction;
 
+//Functions are accessed via reflection
+@SuppressWarnings("unused")
 public class RaidFunctions {
-    public static class CurrentRaidFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            RaidInfo raidInfo = Models.Raid.getCurrentRaid();
 
-            if (raidInfo == null) return "";
-
-            return raidInfo.getRaidKind().getRaidName();
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("raid");
-        }
+    @TemplateFunction(name = "current_raid", aliases = { "raid" })
+    public static String currentRaidFunction() {
+        RaidInfo raidInfo = Models.Raid.getCurrentRaid();
+        if (raidInfo == null)
+            return "";
+        return raidInfo.getRaidKind().getRaidName();
     }
 
-    public static class CurrentRaidRoomNameFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            return Models.Raid.getCurrentRoomName();
-        }
+    @TemplateFunction(name = "current_raid_room_name")
+    public static String currentRaidRoomNameFunction() {
+        return Models.Raid.getCurrentRoomName();
     }
 
-    public static class CurrentRaidStartFunction extends Function<Time> {
-        @Override
-        public Time getValue(FunctionArguments arguments) {
-            RaidInfo currentRaid = Models.Raid.getCurrentRaid();
-            if (currentRaid == null) return Time.NONE;
-            return Time.of(currentRaid.getRaidStartTime());
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("raid_start");
-        }
+    @TemplateFunction(name = "current_raid_start", aliases = { "raid_start" })
+    public static Time currentRaidStartFunction() {
+        RaidInfo currentRaid = Models.Raid.getCurrentRaid();
+        if (currentRaid == null)
+            return Time.NONE;
+        return Time.of(currentRaid.getRaidStartTime());
     }
 
-    public static class CurrentRaidTimeFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return -1L;
-
-            return Models.Raid.currentRaidTime();
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("raid_time");
-        }
+    @TemplateFunction(name = "current_raid_time", aliases = { "raid_time" })
+    public static long currentRaidTimeFunction() {
+        if (Models.Raid.getCurrentRaid() == null)
+            return -1L;
+        return Models.Raid.currentRaidTime();
     }
 
-    public static class CurrentRaidDamageFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return -1L;
-
-            return Models.Raid.getRaidDamage();
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("raid_damage");
-        }
+    @TemplateFunction(name = "current_raid_damage", aliases = { "raid_damage" })
+    public static long currentRaidDamageFunction() {
+        if (Models.Raid.getCurrentRaid() == null)
+            return -1L;
+        return Models.Raid.getRaidDamage();
     }
 
-    public static class CurrentRaidRoomStartFunction extends Function<Time> {
-        @Override
-        public Time getValue(FunctionArguments arguments) {
-            RaidInfo currentRaid = Models.Raid.getCurrentRaid();
-            if (currentRaid == null) return Time.NONE;
-            RaidRoomInfo currentRoom = currentRaid.getCurrentRoom();
-            if (currentRoom == null) return Time.NONE;
-
-            return Time.of(currentRoom.getRoomStartTime());
-        }
+    @TemplateFunction(name = "current_raid_room_start")
+    public static Time currentRaidRoomStartFunction() {
+        RaidInfo currentRaid = Models.Raid.getCurrentRaid();
+        if (currentRaid == null)
+            return Time.NONE;
+        RaidRoomInfo currentRoom = currentRaid.getCurrentRoom();
+        if (currentRoom == null)
+            return Time.NONE;
+        return Time.of(currentRoom.getRoomStartTime());
     }
 
-    public static class CurrentRaidRoomTimeFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return -1L;
-
-            return Models.Raid.currentRoomTime();
-        }
+    @TemplateFunction(name = "current_raid_room_time")
+    public static long currentRaidRoomTimeFunction() {
+        if (Models.Raid.getCurrentRaid() == null)
+            return -1L;
+        return Models.Raid.currentRoomTime();
     }
 
-    public static class CurrentRaidRoomDamageFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return -1L;
-
-            return Models.Raid.getCurrentRoomDamage();
-        }
+    @TemplateFunction(name = "current_raid_room_damage")
+    public static long currentRaidRoomDamageFunction() {
+        if (Models.Raid.getCurrentRaid() == null)
+            return -1L;
+        return Models.Raid.getCurrentRoomDamage();
     }
 
-    public static class CurrentRaidChallengeCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return -1;
-
-            return Models.Raid.getRaidChallengeCount();
-        }
+    @TemplateFunction(name = "current_raid_challenge_count")
+    public static int currentRaidChallengeCountFunction() {
+        if (Models.Raid.getCurrentRaid() == null)
+            return -1;
+        return Models.Raid.getRaidChallengeCount();
     }
 
-    public static class CurrentRaidBossCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return -1;
-
-            return Models.Raid.getRaidBossCount();
-        }
+    @TemplateFunction(name = "current_raid_boss_count")
+    public static int currentRaidBossCountFunction() {
+        if (Models.Raid.getCurrentRaid() == null)
+            return -1;
+        return Models.Raid.getRaidBossCount();
     }
 
-    public static class RaidChallengesFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Raid.getChallenges();
-        }
+    @TemplateFunction(name = "raid_challenges")
+    public static CappedValue raidChallengesFunction() {
+        return Models.Raid.getChallenges();
     }
 
-    public static class RaidIntermissionTimeFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return -1L;
-
-            return Models.Raid.getIntermissionTime();
-        }
+    @TemplateFunction(name = "raid_intermission_time")
+    public static long raidIntermissionTimeFunction() {
+        if (Models.Raid.getCurrentRaid() == null)
+            return -1L;
+        return Models.Raid.getIntermissionTime();
     }
 
-    public static class RaidRoomNameFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return "";
-
-            int roomNum = arguments.getArgument("roomNumber").getIntegerValue();
-
-            return Models.Raid.getRoomName(roomNum);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("roomNumber", Integer.class, null)));
-        }
+    @TemplateFunction(name = "raid_room_name")
+    public static String raidRoomNameFunction(int roomNumber) {
+        if (Models.Raid.getCurrentRaid() == null)
+            return "";
+        int roomNum = roomNumber;
+        return Models.Raid.getRoomName(roomNum);
     }
 
-    public static class RaidRoomStartFunction extends Function<Time> {
-        @Override
-        public Time getValue(FunctionArguments arguments) {
-            RaidInfo currentRaid = Models.Raid.getCurrentRaid();
-            if (currentRaid == null) return Time.NONE;
-
-            int roomNum = arguments.getArgument("roomNumber").getIntegerValue();
-            RaidRoomInfo room = currentRaid.getRoomByNumber(roomNum);
-            if (room == null) return Time.NONE;
-
-            return Time.of(room.getRoomStartTime());
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("roomNumber", Integer.class, null)));
-        }
+    @TemplateFunction(name = "raid_room_start")
+    public static Time raidRoomStartFunction(int roomNumber) {
+        RaidInfo currentRaid = Models.Raid.getCurrentRaid();
+        if (currentRaid == null)
+            return Time.NONE;
+        int roomNum = roomNumber;
+        RaidRoomInfo room = currentRaid.getRoomByNumber(roomNum);
+        if (room == null)
+            return Time.NONE;
+        return Time.of(room.getRoomStartTime());
     }
 
-    public static class RaidRoomTimeFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return -1L;
-
-            int roomNum = arguments.getArgument("roomNumber").getIntegerValue();
-
-            return Models.Raid.getRoomTime(roomNum);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("roomNumber", Integer.class, null)));
-        }
+    @TemplateFunction(name = "raid_room_time")
+    public static long raidRoomTimeFunction(int roomNumber) {
+        if (Models.Raid.getCurrentRaid() == null)
+            return -1L;
+        int roomNum = roomNumber;
+        return Models.Raid.getRoomTime(roomNum);
     }
 
-    public static class RaidRoomDamageFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return -1L;
-
-            int roomNum = arguments.getArgument("roomNumber").getIntegerValue();
-
-            return Models.Raid.getRoomDamage(roomNum);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("roomNumber", Integer.class, null)));
-        }
+    @TemplateFunction(name = "raid_room_damage")
+    public static long raidRoomDamageFunction(int roomNumber) {
+        if (Models.Raid.getCurrentRaid() == null)
+            return -1L;
+        int roomNum = roomNumber;
+        return Models.Raid.getRoomDamage(roomNum);
     }
 
-    public static class RaidHasRoomFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return false;
-
-            int roomNum = arguments.getArgument("roomNumber").getIntegerValue();
-
-            return Models.Raid.raidHasRoom(roomNum);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("roomNumber", Integer.class, null)));
-        }
+    @TemplateFunction(name = "raid_has_room")
+    public static boolean raidHasRoomFunction(int roomNumber) {
+        if (Models.Raid.getCurrentRaid() == null)
+            return false;
+        int roomNum = roomNumber;
+        return Models.Raid.raidHasRoom(roomNum);
     }
 
-    public static class RaidIsBossRoomFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return false;
-
-            int roomNum = arguments.getArgument("roomNumber").getIntegerValue();
-
-            return Models.Raid.isBossRoom(roomNum);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("roomNumber", Integer.class, null)));
-        }
+    @TemplateFunction(name = "raid_is_boss_room")
+    public static boolean raidIsBossRoomFunction(int roomNumber) {
+        if (Models.Raid.getCurrentRaid() == null)
+            return false;
+        int roomNum = roomNumber;
+        return Models.Raid.isBossRoom(roomNum);
     }
 
-    public static class RaidPersonalBestTimeFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            return Models.Raid.getRaidBestTime(arguments.getArgument("raidName").getStringValue());
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("raidName", String.class, null)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("raid_pb");
-        }
+    @TemplateFunction(name = "raid_personal_best_time", aliases = { "raid_pb" })
+    public static long raidPersonalBestTimeFunction(String raidName) {
+        return Models.Raid.getRaidBestTime(raidName);
     }
 
-    public static class RaidTimeRemainingFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Raid.getTimeLeft();
-        }
+    @TemplateFunction(name = "raid_time_remaining")
+    public static int raidTimeRemainingFunction() {
+        return Models.Raid.getTimeLeft();
     }
 
-    public static class DryAspectsFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Raid.getAspectPullsWithoutMythicAspect();
-        }
+    @TemplateFunction(name = "dry_aspects")
+    public static int dryAspectsFunction() {
+        return Models.Raid.getAspectPullsWithoutMythicAspect();
     }
 
-    public static class DryRaidsAspectsFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Raid.getRaidsWithoutMythicAspect();
-        }
+    @TemplateFunction(name = "dry_raids_aspects")
+    public static int dryRaidsAspectsFunction() {
+        return Models.Raid.getRaidsWithoutMythicAspect();
     }
 
-    public static class DryRaidRewardPullsFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Raid.getRewardPullsWithoutMythicTome();
-        }
+    @TemplateFunction(name = "dry_raid_reward_pulls")
+    public static int dryRaidRewardPullsFunction() {
+        return Models.Raid.getRewardPullsWithoutMythicTome();
     }
 
-    public static class DryRaidsTomesFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Raid.getRaidsWithoutMythicTome();
-        }
+    @TemplateFunction(name = "dry_raids_tomes")
+    public static int dryRaidsTomesFunction() {
+        return Models.Raid.getRaidsWithoutMythicTome();
     }
 
-    public static class RaidsRunsSinceFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            int sinceDays = arguments.getArgument("sinceDays").getIntegerValue();
-            return Math.toIntExact(Models.Raid.historicRaids.get().stream()
-                    .filter(historicRaidInfo -> historicRaidInfo.endedTimestamp()
-                            >= System.currentTimeMillis() - TimeUnit.DAYS.toMillis(sinceDays))
-                    .count());
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new Argument<>("sinceDays", Integer.class, 7)));
-        }
+    @TemplateFunction(name = "raids_runs_since")
+    public static int raidsRunsSinceFunction() {
+        return raidsRunsSinceFunction(7);
     }
 
-    public static class SpecificRaidRunsSinceFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            String raidName = arguments.getArgument("raidName").getStringValue();
-            int sinceDays = arguments.getArgument("sinceDays").getIntegerValue();
-            return Math.toIntExact(Models.Raid.historicRaids.get().stream()
-                    .filter(historicRaidInfo -> (historicRaidInfo.name().equalsIgnoreCase(raidName)
-                                    || historicRaidInfo.abbreviation().equalsIgnoreCase(raidName))
-                            && historicRaidInfo.endedTimestamp()
-                                    >= System.currentTimeMillis() - TimeUnit.DAYS.toMillis(sinceDays))
-                    .count());
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("raidName", String.class, null), new Argument<>("sinceDays", Integer.class, null)));
-        }
+    @TemplateFunction(name = "raids_runs_since")
+    public static int raidsRunsSinceFunction(int sinceDays) {
+        return Math.toIntExact(Models.Raid.historicRaids.get().stream().filter(historicRaidInfo -> historicRaidInfo.endedTimestamp() >= System.currentTimeMillis() - TimeUnit.DAYS.toMillis(sinceDays)).count());
     }
 
-    public static class ChosenGambitsFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return 0;
-
-            return Models.Gambit.getActiveGambits().size();
-        }
+    @TemplateFunction(name = "specific_raid_runs_since")
+    public static int specificRaidRunsSinceFunction(String raidName, int sinceDays) {
+        return Math.toIntExact(Models.Raid.historicRaids.get().stream().filter(historicRaidInfo -> (historicRaidInfo.name().equalsIgnoreCase(raidName) || historicRaidInfo.abbreviation().equalsIgnoreCase(raidName)) && historicRaidInfo.endedTimestamp() >= System.currentTimeMillis() - TimeUnit.DAYS.toMillis(sinceDays)).count());
     }
 
-    public static class ChosenGambitFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return "";
-
-            List<Gambit> gambits = Models.Gambit.getActiveGambits();
-            int index = arguments.getArgument("index").getIntegerValue();
-            if (index < 0 || index >= gambits.size()) return "";
-
-            return gambits.get(index).getName();
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
-        }
+    @TemplateFunction(name = "chosen_gambits")
+    public static int chosenGambitsFunction() {
+        if (Models.Raid.getCurrentRaid() == null)
+            return 0;
+        return Models.Gambit.getActiveGambits().size();
     }
 
-    public static class ChosenBuffsFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return 0;
-
-            return Models.Raid.getChosenBuffs(McUtils.playerName()).size();
-        }
+    @TemplateFunction(name = "chosen_gambit")
+    public static String chosenGambitFunction(int index) {
+        if (Models.Raid.getCurrentRaid() == null)
+            return "";
+        List<Gambit> gambits = Models.Gambit.getActiveGambits();
+        if (index < 0 || index >= gambits.size())
+            return "";
+        return gambits.get(index).getName();
     }
 
-    public static class ChosenBuffFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            if (Models.Raid.getCurrentRaid() == null) return "";
+    @TemplateFunction(name = "chosen_buffs")
+    public static int chosenBuffsFunction() {
+        if (Models.Raid.getCurrentRaid() == null)
+            return 0;
+        return Models.Raid.getChosenBuffs(McUtils.playerName()).size();
+    }
 
-            List<String> buffs = Models.Raid.getChosenBuffs(McUtils.playerName());
-            int index = arguments.getArgument("index").getIntegerValue();
-            if (index < 0 || index >= buffs.size()) return "";
-
-            return buffs.get(index);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
-        }
+    @TemplateFunction(name = "chosen_buff")
+    public static String chosenBuffFunction(int index) {
+        if (Models.Raid.getCurrentRaid() == null)
+            return "";
+        List<String> buffs = Models.Raid.getChosenBuffs(McUtils.playerName());
+        if (index < 0 || index >= buffs.size())
+            return "";
+        return buffs.get(index);
     }
 }

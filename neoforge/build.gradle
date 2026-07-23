@@ -35,6 +35,8 @@ dependencies {
     include(forgeRuntimeLibrary("com.github.wynntils:hades:v${hades_version}"))
     include(forgeRuntimeLibrary("com.github.wynntils:antiope:v${antiope_version}"))
 
+    implementation project(":template-engine")
+
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixinextras_version}"))
     implementation(include("io.github.llamalad7:mixinextras-neoforge:${mixinextras_version}"))
 }

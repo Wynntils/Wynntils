@@ -5,267 +5,181 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.consumers.functions.Function;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.war.type.WarBattleInfo;
 import com.wynntils.utils.type.RangedValue;
 import com.wynntils.utils.type.Time;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import com.wynntils.templates.annotations.TemplateFunction;
 
+//Functions are accessed via reflection
+@SuppressWarnings("unused")
 public class WarFunctions {
-    public static class AuraTimerFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.GuildWarTower.getRemainingTimeUntilAura() / 1000d;
-        }
+
+    @TemplateFunction(name = "aura_timer")
+    public static double auraTimerFunction() {
+        return Models.GuildWarTower.getRemainingTimeUntilAura() / 1000d;
     }
 
-    public static class VolleyTimerFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.GuildWarTower.getRemainingTimeUntilVolley() / 1000d;
-        }
+    @TemplateFunction(name = "volley_timer")
+    public static double volleyTimerFunction() {
+        return Models.GuildWarTower.getRemainingTimeUntilVolley() / 1000d;
     }
 
-    // These are static, and only change per war
-
-    public static class TowerOwnerFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-
-            if (warBattleInfoOpt.isEmpty()) return "-";
-
-            return warBattleInfoOpt.get().getOwnerGuild();
-        }
+    @TemplateFunction(name = "tower_owner")
+    public static String towerOwnerFunction() {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return "-";
+        return warBattleInfoOpt.get().getOwnerGuild();
     }
 
-    public static class TowerTerritoryFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-
-            if (warBattleInfoOpt.isEmpty()) return "-";
-
-            return warBattleInfoOpt.get().getTerritory();
-        }
+    @TemplateFunction(name = "tower_territory")
+    public static String towerTerritoryFunction() {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return "-";
+        return warBattleInfoOpt.get().getTerritory();
     }
 
-    // Initial tower state functions
-
-    public static class InitialTowerHealthFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-
-            if (warBattleInfoOpt.isEmpty()) return -1L;
-
-            return warBattleInfoOpt.get().getInitialState().health();
-        }
+    @TemplateFunction(name = "initial_tower_health")
+    public static long initialTowerHealthFunction() {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return -1L;
+        return warBattleInfoOpt.get().getInitialState().health();
     }
 
-    public static class InitialTowerDefenseFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-
-            if (warBattleInfoOpt.isEmpty()) return -1d;
-
-            return warBattleInfoOpt.get().getInitialState().defense();
-        }
+    @TemplateFunction(name = "initial_tower_defense")
+    public static double initialTowerDefenseFunction() {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return -1d;
+        return warBattleInfoOpt.get().getInitialState().defense();
     }
 
-    public static class InitialTowerDamageFunction extends Function<RangedValue> {
-        @Override
-        public RangedValue getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-
-            if (warBattleInfoOpt.isEmpty()) return RangedValue.NONE;
-
-            return warBattleInfoOpt.get().getInitialState().damage();
-        }
+    @TemplateFunction(name = "initial_tower_damage")
+    public static RangedValue initialTowerDamageFunction() {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return RangedValue.NONE;
+        return warBattleInfoOpt.get().getInitialState().damage();
     }
 
-    public static class InitialTowerAttackSpeedFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-
-            if (warBattleInfoOpt.isEmpty()) return -1d;
-
-            return warBattleInfoOpt.get().getInitialState().attackSpeed();
-        }
+    @TemplateFunction(name = "initial_tower_attack_speed")
+    public static double initialTowerAttackSpeedFunction() {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return -1d;
+        return warBattleInfoOpt.get().getInitialState().attackSpeed();
     }
 
-    // Current tower state functions
-
-    public static class CurrentTowerHealthFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-
-            if (warBattleInfoOpt.isEmpty()) return -1L;
-
-            return warBattleInfoOpt.get().getCurrentState().health();
-        }
+    @TemplateFunction(name = "current_tower_health")
+    public static long currentTowerHealthFunction() {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return -1L;
+        return warBattleInfoOpt.get().getCurrentState().health();
     }
 
-    public static class CurrentTowerDefenseFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-
-            if (warBattleInfoOpt.isEmpty()) return -1d;
-
-            return warBattleInfoOpt.get().getCurrentState().defense();
-        }
+    @TemplateFunction(name = "current_tower_defense")
+    public static double currentTowerDefenseFunction() {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return -1d;
+        return warBattleInfoOpt.get().getCurrentState().defense();
     }
 
-    public static class CurrentTowerDamageFunction extends Function<RangedValue> {
-        @Override
-        public RangedValue getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-
-            if (warBattleInfoOpt.isEmpty()) return RangedValue.NONE;
-
-            return warBattleInfoOpt.get().getCurrentState().damage();
-        }
+    @TemplateFunction(name = "current_tower_damage")
+    public static RangedValue currentTowerDamageFunction() {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return RangedValue.NONE;
+        return warBattleInfoOpt.get().getCurrentState().damage();
     }
 
-    public static class CurrentTowerAttackSpeedFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-
-            if (warBattleInfoOpt.isEmpty()) return -1d;
-
-            return warBattleInfoOpt.get().getCurrentState().attackSpeed();
-        }
+    @TemplateFunction(name = "current_tower_attack_speed")
+    public static double currentTowerAttackSpeedFunction() {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return -1d;
+        return warBattleInfoOpt.get().getCurrentState().attackSpeed();
     }
 
-    public static class WarStartFunction extends Function<Time> {
-        @Override
-        public Time getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-            if (warBattleInfoOpt.isEmpty()) return Time.NONE;
-
-            return Time.of(warBattleInfoOpt.get().getInitialState().timestamp());
-        }
+    @TemplateFunction(name = "war_start")
+    public static Time warStartFunction() {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return Time.NONE;
+        return Time.of(warBattleInfoOpt.get().getInitialState().timestamp());
     }
 
-    public static class TimeInWarFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-
-            if (warBattleInfoOpt.isEmpty()) return -1L;
-
-            return warBattleInfoOpt.get().getTotalLengthSeconds();
-        }
+    @TemplateFunction(name = "time_in_war")
+    public static long timeInWarFunction() {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return -1L;
+        return warBattleInfoOpt.get().getTotalLengthSeconds();
     }
 
-    public static class TowerEffectiveHpFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-
-            if (warBattleInfoOpt.isEmpty()) return -1L;
-
-            return warBattleInfoOpt.get().getTowerEffectiveHp();
-        }
+    @TemplateFunction(name = "tower_effective_hp")
+    public static long towerEffectiveHpFunction() {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return -1L;
+        return warBattleInfoOpt.get().getTowerEffectiveHp();
     }
 
-    public static class TowerDpsFunction extends Function<RangedValue> {
-        @Override
-        public RangedValue getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-
-            if (warBattleInfoOpt.isEmpty()) return RangedValue.NONE;
-
-            return warBattleInfoOpt.get().getTowerDps();
-        }
+    @TemplateFunction(name = "tower_dps")
+    public static RangedValue towerDpsFunction() {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return RangedValue.NONE;
+        return warBattleInfoOpt.get().getTowerDps();
     }
 
-    public static class TeamDpsFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-
-            if (warBattleInfoOpt.isEmpty()) return -1L;
-
-            return warBattleInfoOpt
-                    .get()
-                    .getDps(arguments.getArgument("seconds").getLongValue());
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new Argument<>("seconds", Long.class, Long.MAX_VALUE)));
-        }
+    @TemplateFunction(name = "team_dps")
+    public static long teamDpsFunction() {
+        return teamDpsFunction(Long.MAX_VALUE);
     }
 
-    public static class EstimatedWarEndFunction extends Function<Time> {
-        @Override
-        public Time getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-            if (warBattleInfoOpt.isEmpty()) return Time.NONE;
-
-            int timeRemaining = (int) warBattleInfoOpt.get().getEstimatedTimeRemaining();
-            return Time.now().offset(timeRemaining);
-        }
+    @TemplateFunction(name = "team_dps")
+    public static long teamDpsFunction(long seconds) {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return -1L;
+        return warBattleInfoOpt.get().getDps(seconds);
     }
 
-    public static class EstimatedTimeToFinishWarFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
-
-            if (warBattleInfoOpt.isEmpty()) return -1L;
-
-            return warBattleInfoOpt.get().getEstimatedTimeRemaining();
-        }
+    @TemplateFunction(name = "estimated_war_end")
+    public static Time estimatedWarEndFunction() {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return Time.NONE;
+        int timeRemaining = (int) warBattleInfoOpt.get().getEstimatedTimeRemaining();
+        return Time.now().offset(timeRemaining);
     }
 
-    public static class IsTerritoryQueuedFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            String territoryName = arguments.getArgument("territoryName").getStringValue();
-
-            return Models.GuildAttackTimer.getAttackTimerForTerritory(territoryName)
-                    .isPresent();
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("is_queued");
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("territoryName", String.class, null)));
-        }
+    @TemplateFunction(name = "estimated_time_to_finish_war")
+    public static long estimatedTimeToFinishWarFunction() {
+        Optional<WarBattleInfo> warBattleInfoOpt = Models.GuildWarTower.getWarBattleInfo();
+        if (warBattleInfoOpt.isEmpty())
+            return -1L;
+        return warBattleInfoOpt.get().getEstimatedTimeRemaining();
     }
 
-    public static class WarsSinceFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            int sinceDays = arguments.getArgument("sinceDays").getIntegerValue();
+    @TemplateFunction(name = "is_territory_queued", aliases = { "is_queued" })
+    public static boolean isTerritoryQueuedFunction(String territoryName) {
+        return Models.GuildAttackTimer.getAttackTimerForTerritory(territoryName).isPresent();
+    }
 
-            return Models.War.historicWars.get().stream()
-                    .filter(historicWarInfo -> historicWarInfo.endedTimestamp()
-                            >= System.currentTimeMillis() - TimeUnit.DAYS.toMillis(sinceDays))
-                    .count();
-        }
+    @TemplateFunction(name = "wars_since")
+    public static long warsSinceFunction() {
+        return warsSinceFunction(7);
+    }
 
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new Argument<>("sinceDays", Integer.class, 7)));
-        }
+    @TemplateFunction(name = "wars_since")
+    public static long warsSinceFunction(int sinceDays) {
+        return Models.War.historicWars.get().stream().filter(historicWarInfo -> historicWarInfo.endedTimestamp() >= System.currentTimeMillis() - TimeUnit.DAYS.toMillis(sinceDays)).count();
     }
 }
