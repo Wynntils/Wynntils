@@ -79,12 +79,12 @@ public class EmoteWheelFeature extends Feature implements ExternalConfigurationS
         if (openEmoteWheelKeybind.isPressed()) return;
         if (McUtils.screen() != null && !(McUtils.screen() instanceof EmoteWheelScreen)) return;
 
-        McUtils.setScreen(EmoteWheelScreen.create());
+        McUtils.setScreen(EmoteWheelScreen.create(this));
     }
 
     @Override
     public Screen getExternalConfigurationScreen(Screen previousScreen) {
-        return EmoteWheelConfigScreen.create(previousScreen);
+        return EmoteWheelConfigScreen.create(previousScreen, this);
     }
 
     public List<String> getAvailableEmotes() {

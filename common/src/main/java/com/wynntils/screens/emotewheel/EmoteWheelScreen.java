@@ -52,12 +52,12 @@ public class EmoteWheelScreen extends WynntilsScreen {
     protected int centerY = 0;
     private int hoveredEmoji = -1;
 
-    EmoteWheelScreen(boolean canInteract) {
+    EmoteWheelScreen(boolean canInteract, EmoteWheelFeature emoteWheelFeature) {
         super(Component.literal("Emote Wheel"));
 
         this.canInteract = canInteract;
 
-        emoteWheelFeature = Managers.Feature.getFeatureInstance(EmoteWheelFeature.class);
+        this.emoteWheelFeature = emoteWheelFeature;
         numOfEmotes = MathUtils.clamp(emoteWheelFeature.numberOfButtons.get(), 1, 10);
         emotes = Models.Emote.getFavoritedEmotes();
         scale = emoteWheelFeature.scale.get();
@@ -66,8 +66,8 @@ public class EmoteWheelScreen extends WynntilsScreen {
         buttonRadius = emoteWheelFeature.buttonRadius.get();
     }
 
-    public static Screen create() {
-        return new EmoteWheelScreen(true);
+    public static Screen create(EmoteWheelFeature emoteWheelFeature) {
+        return new EmoteWheelScreen(true, emoteWheelFeature);
     }
 
     @Override

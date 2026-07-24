@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.ui.EmoteWheelFeature;
 import com.wynntils.screens.base.widgets.HoverableTexturedButton;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.emotewheel.widgets.EmoteConfigButton;
@@ -57,8 +58,8 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
     private int scissorTopY;
     private int scissorBottomY;
 
-    private EmoteWheelConfigScreen(Screen previousScreen) {
-        super(false);
+    private EmoteWheelConfigScreen(Screen previousScreen, EmoteWheelFeature emoteWheelFeature) {
+        super(false, emoteWheelFeature);
         this.previousScreen = previousScreen;
 
         searchWidget = new EmoteSearchWidget(
@@ -75,8 +76,8 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
         setFocusedTextInput(searchWidget);
     }
 
-    public static Screen create(Screen returnScreen) {
-        return new EmoteWheelConfigScreen(returnScreen);
+    public static Screen create(Screen returnScreen, EmoteWheelFeature emoteWheelFeature) {
+        return new EmoteWheelConfigScreen(returnScreen, emoteWheelFeature);
     }
 
     @Override
