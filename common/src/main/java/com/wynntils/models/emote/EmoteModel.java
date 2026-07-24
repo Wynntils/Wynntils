@@ -37,15 +37,17 @@ public class EmoteModel extends Model {
 
     public void refreshAvailableEmotes() {
         // The command does not exist outside of the world
-        if (Models.WorldState.onWorld())
-            McUtils.sendPacket(new ServerboundCommandSuggestionPacket(EMOTE_COMMAND_PACKET_ID, "/emote "));
+        if (!Models.WorldState.onWorld())
+            return;
+
+        McUtils.sendPacket(new ServerboundCommandSuggestionPacket(EMOTE_COMMAND_PACKET_ID, "/emote "));
     }
 
     @SubscribeEvent
     public void onConnect(WorldStateEvent e) {
-        if (!e.isFirstJoinWorld()) {
+        if (!e.isFirstJoinWorld())
             return;
-        }
+
         refreshAvailableEmotes();
     }
 
