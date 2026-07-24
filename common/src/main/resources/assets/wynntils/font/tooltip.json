@@ -2,30 +2,11 @@
   "providers": [
     {
       "type": "bitmap",
-      "file": "wynntils:font/tooltip/weights.png",
+      "file": "wynntils:font/tooltip.png",
       "ascent": 8,
       "height": 9,
       "chars": [
-        "\uE000"
-      ]
-    },
-    {
-      "type": "bitmap",
-      "file": "wynntils:font/tooltip/gem.png",
-      "ascent": 8,
-      "height": 9,
-      "chars": [
-        "\uE001"
-      ]
-    },
-    {
-      "type": "bitmap",
-      "file": "wynntils:font/tooltip_identification_divider.png",
-      "ascent": 6,
-      "height": 8,
-      "chars": [
-        "\uE002",
-        "\uE003"
+        "\uE001\uE000"
       ]
     }
   ]
