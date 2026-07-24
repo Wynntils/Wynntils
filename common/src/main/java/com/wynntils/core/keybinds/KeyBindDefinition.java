@@ -475,7 +475,7 @@ public record KeyBindDefinition(
     public static final KeyBindDefinition OPEN_EMOTE_WHEEL = register(
             "emoteWheel",
             "Emote Wheel",
-            Managers.KeyBind.UTILITIES_CATEGORY,
+            Managers.KeyBind.UI_CATEGORY,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             true);
