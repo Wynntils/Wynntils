@@ -202,14 +202,27 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             List<TooltipLine> majorId,
             int minimumWidth) {
         GearTier tier = getGearTier(item);
+        TooltipOptionDecorator identificationDecorator = new TooltipOptionDecorator(item, options);
+        List<TooltipLine> stats = new ArrayList<>(
+                TooltipIdentifications.buildLines(item, currentClass, identificationDecorator, options.style()));
+        List<TooltipLine> reroll = new ArrayList<>(buildReroll(item, tier));
+        if (identificationDecorator.hasEstimatedPercentages()) {
+            reroll.add(
+                    0,
+                    new TooltipLine.Centered(Component.literal("Percentages marked by ~ are estimated")
+                            .withStyle(Style.EMPTY
+                                    .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
+                                    .withColor(dividerColor(tier)))));
+            reroll.add(1, new TooltipLine.Fixed(Component.empty()));
+        }
+
         Sections sections = new Sections(
                 header,
                 buildWeights(item, options),
                 buildRequirements(item),
                 buildShiny(item, tier),
-                buildReroll(item, tier),
-                TooltipIdentifications.buildLines(
-                        item, currentClass, new TooltipOptionDecorator(item, options), options.style()),
+                reroll,
+                stats,
                 majorId,
                 buildPaginator(item));
 

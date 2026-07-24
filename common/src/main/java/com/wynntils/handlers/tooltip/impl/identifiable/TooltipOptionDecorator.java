@@ -27,10 +27,15 @@ import net.minecraft.network.chat.Style;
 public final class TooltipOptionDecorator implements TooltipIdentificationDecorator {
     private final IdentifiableItemProperty<?, ?> item;
     private final TooltipOptions options;
+    private boolean hasEstimatedPercentages;
 
     public TooltipOptionDecorator(IdentifiableItemProperty<?, ?> item, TooltipOptions options) {
         this.item = item;
         this.options = options;
+    }
+
+    public boolean hasEstimatedPercentages() {
+        return hasEstimatedPercentages;
     }
 
     @Override
@@ -117,6 +122,7 @@ public final class TooltipOptionDecorator implements TooltipIdentificationDecora
 
     private MutableComponent buildPercentage(
             StatActualValue actualValue, PercentageCalculation calculation, TooltipStyle style) {
+        hasEstimatedPercentages |= calculation.estimated();
         MutableComponent percentage = ColorScaleUtils.getPercentageTextComponent(
                         options.colorMap(),
                         calculation.value(),
