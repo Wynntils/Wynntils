@@ -23,13 +23,11 @@ public record ArcRenderState(
         int innerRadius,
         int outerRadius,
         float angleOffset,
+        float maxSteps,
         CustomColor color,
         ScreenRectangle scissorArea,
         ScreenRectangle bounds)
         implements GuiElementRenderState {
-    // number of possible segments for arc drawing
-    private static final float MAX_STEPS = 16f;
-
     public ArcRenderState(
             RenderPipeline pipeline,
             TextureSetup textureSetup,
@@ -40,6 +38,7 @@ public record ArcRenderState(
             int innerRadius,
             int outerRadius,
             float angleOffset,
+            float maxSteps,
             CustomColor color,
             ScreenRectangle scissorArea) {
         this(
@@ -52,6 +51,7 @@ public record ArcRenderState(
                 innerRadius,
                 outerRadius,
                 angleOffset,
+                maxSteps,
                 color,
                 scissorArea,
                 computeBounds(x, y, outerRadius * 2, pose, scissorArea));
@@ -59,7 +59,7 @@ public record ArcRenderState(
 
     @Override
     public void buildVertices(VertexConsumer consumer) {
-        int segments = (int) Math.min(fill * MAX_STEPS, MAX_STEPS - 1);
+        int segments = (int) Math.min(fill * maxSteps, maxSteps);
 
         float midX = x + outerRadius;
         float midY = y + outerRadius;
@@ -71,7 +71,7 @@ public record ArcRenderState(
         float sinAngle;
         float cosAngle;
         for (int i = 0; i <= segments; i++) {
-            angle = (Mth.TWO_PI * i / (MAX_STEPS - 1f)) + angleOffset;
+            angle = (Mth.TWO_PI * i / maxSteps) + angleOffset;
             sinAngle = Mth.sin(angle);
             cosAngle = Mth.cos(angle);
 
