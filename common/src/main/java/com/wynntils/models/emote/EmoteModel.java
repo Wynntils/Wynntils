@@ -6,14 +6,17 @@ package com.wynntils.models.emote;
 
 import static com.wynntils.features.ui.EmoteWheelFeature.MAX_EMOTES;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.ui.EmoteWheelFeature;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.mc.event.CommandSuggestionsEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import net.minecraft.network.protocol.game.ServerboundCommandSuggestionPacket;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -23,16 +26,23 @@ public class EmoteModel extends Model {
 
     private boolean refreshedRecently = false;
 
+    @Persisted
+    private final Storage<List<String>> availableEmotes = new Storage<>(new ArrayList<>());
+
+    @Persisted
+    private final Storage<List<String>> favoritedEmotes;
+
     public EmoteModel() {
         super(List.of());
+        this.favoritedEmotes = new Storage<>(Arrays.asList(new String[MAX_EMOTES]));
     }
 
     public List<String> getAvailableEmotes() {
-        return Managers.Feature.getFeatureInstance(EmoteWheelFeature.class).getAvailableEmotes();
+        return this.availableEmotes.get();
     }
 
     public List<String> getFavoritedEmotes() {
-        return Managers.Feature.getFeatureInstance(EmoteWheelFeature.class).getFavoritedEmotes();
+        return this.favoritedEmotes.get();
     }
 
     public void refreshAvailableEmotes() {
@@ -60,7 +70,7 @@ public class EmoteModel extends Model {
             getAvailableEmotes().clear();
             getAvailableEmotes().addAll(emotes);
 
-            Managers.Feature.getFeatureInstance(EmoteWheelFeature.class).updateAvailableEmotes();
+            this.availableEmotes.touched();
             refreshedRecently = true;
         }
     }
@@ -82,13 +92,13 @@ public class EmoteModel extends Model {
         if (firstNull == -1 || firstNull > MAX_EMOTES - 1) return;
 
         getFavoritedEmotes().set(firstNull, emote);
-        Managers.Feature.getFeatureInstance(EmoteWheelFeature.class).updateFavoritedEmotes();
+        this.favoritedEmotes.touched();
     }
 
     private void removeFavorite(String emote) {
         int index = getFavoritedEmotes().indexOf(emote);
         getFavoritedEmotes().set(index, null);
-        Managers.Feature.getFeatureInstance(EmoteWheelFeature.class).updateFavoritedEmotes();
+        this.favoritedEmotes.touched();
     }
 
     public void toggleFavorite(String emote) {

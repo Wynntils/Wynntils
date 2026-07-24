@@ -64,42 +64,17 @@ public class EmoteWheelFeature extends Feature implements ExternalConfigurationS
     @Persisted
     public final Config<Integer> buttonRadius = new Config<>(0);
 
-    @Persisted
-    private final HiddenConfig<List<String>> availableEmotes = new HiddenConfig<>(new ArrayList<>());
-
-    @Persisted
-    private final HiddenConfig<List<String>> favoritedEmotes;
-
     public EmoteWheelFeature() {
         super(ProfileDefault.onlyDefault());
-        this.favoritedEmotes = new HiddenConfig<>(Arrays.asList(new String[MAX_EMOTES]));
     }
 
     private void openEmoteWheel() {
-        if (openEmoteWheelKeybind.isPressed()) return;
-        if (McUtils.screen() != null && !(McUtils.screen() instanceof EmoteWheelScreen)) return;
-
-        McUtils.setScreen(EmoteWheelScreen.create(this));
+        if (McUtils.screen() == null)
+            McUtils.setScreen(EmoteWheelScreen.create(this));
     }
 
     @Override
     public Screen getExternalConfigurationScreen(Screen previousScreen) {
         return EmoteWheelConfigScreen.create(previousScreen, this);
-    }
-
-    public List<String> getAvailableEmotes() {
-        return this.availableEmotes.get();
-    }
-
-    public List<String> getFavoritedEmotes() {
-        return this.favoritedEmotes.get();
-    }
-
-    public void updateAvailableEmotes() {
-        this.availableEmotes.touched();
-    }
-
-    public void updateFavoritedEmotes() {
-        this.favoritedEmotes.touched();
     }
 }
