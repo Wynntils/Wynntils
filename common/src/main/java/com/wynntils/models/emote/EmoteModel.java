@@ -4,8 +4,6 @@
  */
 package com.wynntils.models.emote;
 
-import static com.wynntils.features.ui.EmoteWheelFeature.MAX_EMOTES;
-
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
@@ -22,6 +20,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public class EmoteModel extends Model {
     private static final int EMOTE_COMMAND_PACKET_ID = 227;
+    private static final int MAX_EMOTES = 10;
 
     @Persisted
     private final Storage<List<String>> availableEmotes = new Storage<>(new ArrayList<>());

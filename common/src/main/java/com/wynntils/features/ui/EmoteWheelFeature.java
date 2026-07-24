@@ -25,8 +25,6 @@ import net.minecraft.client.gui.screens.Screen;
 
 @ConfigCategory(Category.UI)
 public class EmoteWheelFeature extends Feature implements ExternalConfigurationScreen {
-    public static final int MAX_EMOTES = 10;
-
     @RegisterKeyBind
     public final KeyBind openEmoteWheelKeybind = KeyBindDefinition.OPEN_EMOTE_WHEEL.create(this::openEmoteWheel);
 
@@ -65,7 +63,9 @@ public class EmoteWheelFeature extends Feature implements ExternalConfigurationS
     }
 
     private void openEmoteWheel() {
-        if (McUtils.screen() == null) McUtils.setScreen(EmoteWheelScreen.create(this));
+        if (McUtils.screen() == null) {
+            McUtils.setScreen(EmoteWheelScreen.create(this));
+        }
     }
 
     @Override
