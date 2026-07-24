@@ -812,18 +812,15 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                     case PERCENTAGE -> throw new IllegalStateException();
                 };
         int color = dividerColor(tier);
-        return withWhiteShadow(Component.literal("\uE000")
-                .withStyle(Style.EMPTY
-                        .withFont(CommonFonts.IDENTIFICATION_DIVIDER_FONT)
-                        .withColor(color))
+        return withWhiteShadow(Component.literal("\uE002")
+                .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_FONT).withColor(color))
                 .append(Component.literal(" " + label + " ")
                         .withStyle(Style.EMPTY
                                 .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
                                 .withColor(color)))
-                .append(Component.literal("\uE001")
-                        .withStyle(Style.EMPTY
-                                .withFont(CommonFonts.IDENTIFICATION_DIVIDER_FONT)
-                                .withColor(color))));
+                .append(Component.literal("\uE003")
+                        .withStyle(
+                                Style.EMPTY.withFont(CommonFonts.TOOLTIP_FONT).withColor(color))));
     }
 
     private static int dividerColor(GearTier tier) {

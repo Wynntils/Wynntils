@@ -17,6 +17,16 @@
       "chars": [
         "\uE001"
       ]
+    },
+    {
+      "type": "bitmap",
+      "file": "wynntils:font/tooltip_identification_divider.png",
+      "ascent": 6,
+      "height": 8,
+      "chars": [
+        "\uE002",
+        "\uE003"
+      ]
     }
   ]
 }

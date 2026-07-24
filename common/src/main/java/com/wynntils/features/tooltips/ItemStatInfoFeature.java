@@ -172,7 +172,8 @@ public class ItemStatInfoFeature extends Feature {
     }
 
     private static boolean isKeyDown(KeyBind keyBind) {
-        return KeyboardUtils.isKeyDown(keyBind.getKeyMapping().key.getValue());
+        return !keyBind.getKeyMapping().isUnbound()
+                && KeyboardUtils.isKeyDown(keyBind.getKeyMapping().key.getValue());
     }
 
     private NavigableMap<Float, TextColor> createFlatMap() {
