@@ -14,7 +14,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.screens.emotewheel.EmoteWheelConfigScreen;
 import com.wynntils.screens.emotewheel.EmoteWheelScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -22,9 +21,6 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.EmoteWheelButton;
 import com.wynntils.utils.render.type.TextShadow;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 
 @ConfigCategory(Category.UI)
@@ -69,8 +65,7 @@ public class EmoteWheelFeature extends Feature implements ExternalConfigurationS
     }
 
     private void openEmoteWheel() {
-        if (McUtils.screen() == null)
-            McUtils.setScreen(EmoteWheelScreen.create(this));
+        if (McUtils.screen() == null) McUtils.setScreen(EmoteWheelScreen.create(this));
     }
 
     @Override

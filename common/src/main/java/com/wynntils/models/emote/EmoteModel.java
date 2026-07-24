@@ -14,7 +14,6 @@ import com.wynntils.mc.event.CommandSuggestionsEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,13 +23,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class EmoteModel extends Model {
     private static final int EMOTE_COMMAND_PACKET_ID = 227;
 
-    private boolean refreshedRecently = false;
-
     @Persisted
     private final Storage<List<String>> availableEmotes = new Storage<>(new ArrayList<>());
 
     @Persisted
     private final Storage<List<String>> favoritedEmotes;
+
+    private boolean refreshedRecently = false;
 
     public EmoteModel() {
         super(List.of());
@@ -47,16 +46,14 @@ public class EmoteModel extends Model {
 
     public void refreshAvailableEmotes() {
         // The command does not exist outside of the world
-        if (!Models.WorldState.onWorld())
-            return;
+        if (!Models.WorldState.onWorld()) return;
 
         McUtils.sendPacket(new ServerboundCommandSuggestionPacket(EMOTE_COMMAND_PACKET_ID, "/emote "));
     }
 
     @SubscribeEvent
     public void onConnect(WorldStateEvent e) {
-        if (!e.isFirstJoinWorld())
-            return;
+        if (!e.isFirstJoinWorld()) return;
 
         refreshAvailableEmotes();
     }

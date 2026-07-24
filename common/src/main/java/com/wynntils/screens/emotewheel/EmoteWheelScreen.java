@@ -6,7 +6,6 @@ package com.wynntils.screens.emotewheel;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Handlers;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
@@ -30,6 +29,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import org.lwjgl.glfw.GLFW;
@@ -180,8 +180,18 @@ public class EmoteWheelScreen extends WynntilsScreen {
         if (!canInteract) {
             return -1;
         }
-        // Subtracting 90 degress so it starts at the top
-        double angle = Math.atan2(centerY - mouseY, centerX - mouseX) % (2 * Math.PI) + (Math.PI / 2);
+
+        int mouseDistanceX = centerX - mouseX;
+        int mouseDistanceY = centerY - mouseY;
+        int deadZone = 20;
+
+        // Deadzone incase you accidently hit keybind when you don't want to emote
+        if (new Vec3i(mouseX, 0, mouseY).distManhattan(new Vec3i(centerX, 0, centerY)) < deadZone) {
+            return -1;
+        }
+
+        // Adding 90 degress so it starts at the top
+        double angle = Math.atan2(mouseDistanceY, mouseDistanceX) % (2 * Math.PI) + (Math.PI / 2);
         float position = (float) ((angle + Math.PI) / (Math.PI / ((double) numOfEmotes / 2)));
         return Math.round(position) % numOfEmotes;
     }
@@ -304,6 +314,8 @@ public class EmoteWheelScreen extends WynntilsScreen {
     }
 
     private boolean doesEmoteExistInWheel(int emoteNum) {
+        if (emoteNum < 0) return false;
+
         return emotes.size() > emoteNum && emotes.get(emoteNum) != null;
     }
 
@@ -315,6 +327,7 @@ public class EmoteWheelScreen extends WynntilsScreen {
 
         if (event.key()
                 == emoteWheelFeature.openEmoteWheelKeybind.getKeyMapping().key.getValue()) {
+            executeEmote(hoveredEmoji);
             onClose();
         }
 
