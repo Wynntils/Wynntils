@@ -106,6 +106,8 @@ public enum Texture {
     BUILD_LOADOUTS_RENAME_ICON_WITH_INKWELL("build_loadouts/rename_icon_with_inkwell.png", 23, 20),
     BUILD_LOADOUTS_STAR_ICON("build_loadouts/star_icon.png", 12, 12),
     BUILD_LOADOUTS_STAR_ICON_OUTLINE("build_loadouts/star_icon_outline.png", 12, 12),
+    // endregion
+
     // region Emote Wheel
     EMOTE_CONFIG_GUI("emote_wheel/config_gui.png", 149, 215),
     EMOTE_CONFIG_BUTTON("emote_wheel/config_button.png", 58, 58),
