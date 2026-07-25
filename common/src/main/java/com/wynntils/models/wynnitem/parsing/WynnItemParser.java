@@ -85,7 +85,7 @@ public final class WynnItemParser {
 
     // Test in WynnItemParser_IDENTIFICATION_STAT_PATTERN
     public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
-            "§f(?<iconPrefix>(?:\uDAFF\uDFFF\uE010\uDB00\uDC02|\uE011\uDB00\uDC02|\uDAFF\uDFFF\uE012\uDB00\uDC02|\uDAFF\uDFFF\uE013\uDB00\uDC01\uDB00\uDC02|\uE014\uDB00\uDC02))?(?<statName>[\\w\\.\\- ]+).+?§#(acfac6ff|faacacff)(?<value>[-+][\\d,]+)(?<unit>%| tier|\\/[35]s)?(?:§f §8.+?(?:§(?<indicatorColor>#[a-zA-Z0-9]{8})(.)?)?)?");
+            "§f(?<iconPrefix>(?:\uDAFF\uDFFF\uE010\uDB00\uDC02|\uE011\uDB00\uDC02|\uDAFF\uDFFF\uE012\uDB00\uDC02|\uDAFF\uDFFF\uE013\uDB00\uDC01\uDB00\uDC02|\uE014\uDB00\uDC02))?(?<statName>[\\w\\.\\- ]+).+?§#(acfac6ff|faacacff)(?<value>[-+][\\d,]+)(?<unit>%| tier|\\/[35]s)?(?:§f §8.+?(?:§(?<indicatorColor>#[a-zA-Z0-9]{8})(?<vanillaMeter>[\uE000-\uE023])?)?)?");
 
     // Test in WynnItemParser_TIER_PATTERN
     private static final Pattern TIER_PATTERN = Pattern.compile("^(?:§.)*\\uDB00\\uDC26(?:§([5bcdef]))?.+");
@@ -386,7 +386,7 @@ public final class WynnItemParser {
                 if (shinyStatMatcher.matches() && shinyStat.isEmpty()) {
                     String shinyName = shinyStatMatcher.group(1);
                     int shinyValue = Integer.parseInt(shinyStatMatcher.group(2).replace(",", ""));
-                    int shinyRerolls = parseRerolls(shinyStatMatcher.group(3));
+                    int shinyRerolls = Math.max(0, parseBannerNumber(shinyStatMatcher.group(3)));
                     shinyStat =
                             Optional.of(new ShinyStat(Models.Shiny.getShinyStat(shinyName), shinyValue, shinyRerolls));
                     segment++;
@@ -421,13 +421,16 @@ public final class WynnItemParser {
                                     .group("indicatorColor")
                                     .equals(WynncraftShaderColor.RAINBOW.color.toHexString());
                     int stars = perfectInternalRoll ? 3 : 0;
+                    String vanillaMeterGroup = statMatcher.group("vanillaMeter");
+                    Optional<Character> vanillaMeter =
+                            vanillaMeterGroup == null ? Optional.empty() : Optional.of(vanillaMeterGroup.charAt(0));
 
                     // Load the possible values for this stat
                     StatPossibleValues possibleValues =
                             possibleValuesMap != null ? possibleValuesMap.get(statType) : null;
 
-                    StatActualValue actualValue =
-                            Models.Stat.buildActualValue(statType, value, stars, possibleValues, hasIconPrefix);
+                    StatActualValue actualValue = Models.Stat.buildActualValue(
+                            statType, value, stars, possibleValues, hasIconPrefix, vanillaMeter);
                     identifications.add(actualValue);
                 }
             }
@@ -503,7 +506,15 @@ public final class WynnItemParser {
     private static int parseRerolls(String rerollsString) {
         if (!rerollsString.endsWith("\uF005")) return 0;
 
-        Matcher matcher = REROLL_EXTRACT_PATTERN.matcher(rerollsString);
+        int rerolls = parseBannerNumber(rerollsString);
+        if (rerolls < 0) {
+            WynntilsMod.warn("Could not find reroll segment");
+        }
+        return rerolls;
+    }
+
+    private static int parseBannerNumber(String text) {
+        Matcher matcher = REROLL_EXTRACT_PATTERN.matcher(text);
         String rawNumberSegment = null;
 
         while (matcher.find()) {
@@ -511,7 +522,6 @@ public final class WynnItemParser {
         }
 
         if (rawNumberSegment == null) {
-            WynntilsMod.warn("Could not find reroll segment");
             return -1;
         }
 

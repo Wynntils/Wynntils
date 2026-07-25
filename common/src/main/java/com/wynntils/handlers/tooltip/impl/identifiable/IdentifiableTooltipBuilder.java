@@ -4,6 +4,7 @@
  */
 package com.wynntils.handlers.tooltip.impl.identifiable;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.CommonStyles;
@@ -14,6 +15,8 @@ import com.wynntils.handlers.tooltip.TooltipLayout;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipLine;
 import com.wynntils.handlers.tooltip.type.TooltipOptions;
+import com.wynntils.handlers.tooltip.type.TooltipOptions.IdentificationDisplay;
+import com.wynntils.handlers.tooltip.type.TooltipOptions.WeightDisplay;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
@@ -36,16 +39,20 @@ import com.wynntils.models.rewards.type.CharmInfo;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.ShinyStat;
+import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.stats.type.StatUnit;
 import com.wynntils.services.itemweight.type.ItemWeighting;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import com.wynntils.utils.wynn.ColorScaleUtils;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -68,7 +75,8 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
     private static final int TOOLTIP_MIN_WIDTH = 140;
     private final IdentifiableItemProperty<T, U> itemInfo;
     private final boolean synthetic;
-    private final Map<TooltipOptions, List<Component>> cache = new HashMap<>();
+    private final List<Component> layoutSourceLines;
+    private final Map<TooltipKey, List<Component>> cache = new HashMap<>();
 
     private IdentifiableTooltipBuilder(
             IdentifiableItemProperty<T, U> itemInfo,
@@ -79,6 +87,10 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         super(header, footer, source);
         this.itemInfo = itemInfo;
         this.synthetic = synthetic;
+        List<Component> sourceLines = new ArrayList<>(header.size() + footer.size());
+        sourceLines.addAll(header);
+        sourceLines.addAll(footer);
+        this.layoutSourceLines = List.copyOf(sourceLines);
     }
 
     public static <T, U> IdentifiableTooltipBuilder<T, U> buildNewItem(
@@ -109,21 +121,30 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
     @Override
     public List<Component> getTooltipLines(ClassType currentClass, TooltipOptions options) {
-        if (synthetic) {
-            return cache.computeIfAbsent(options, ignored -> buildSyntheticTooltip(currentClass, options));
-        }
-
-        return getTooltipLines(
-                currentClass,
-                options.style(),
-                new TooltipOptionDecorator(itemInfo, options),
-                ItemWeightSource.NONE,
-                null);
+        return getTooltipLines(currentClass, options, TOOLTIP_MIN_WIDTH);
     }
 
-    private List<Component> buildSyntheticTooltip(ClassType currentClass, TooltipOptions options) {
-        return prependSource(
-                assemble(itemInfo, currentClass, options, buildHeader(itemInfo, options), buildMajorId(itemInfo)));
+    public List<Component> getTooltipLines(ClassType currentClass, TooltipOptions options, int minimumWidth) {
+        if (!synthetic && itemInfo instanceof PagedItemProperty pagedItem && !pagedItem.isStatPage()) {
+            return super.getTooltipLines(
+                    currentClass,
+                    options.style(),
+                    new TooltipOptionDecorator(itemInfo, options),
+                    ItemWeightSource.NONE,
+                    null);
+        }
+
+        TooltipKey key = new TooltipKey(currentClass, options, Math.max(TOOLTIP_MIN_WIDTH, minimumWidth));
+        return cache.computeIfAbsent(
+                key,
+                ignored -> synthetic
+                        ? buildSyntheticTooltip(currentClass, options, key.minimumWidth())
+                        : buildUpdatedTooltip(currentClass, options, key.minimumWidth()));
+    }
+
+    private List<Component> buildSyntheticTooltip(ClassType currentClass, TooltipOptions options, int minimumWidth) {
+        return prependSource(assemble(
+                itemInfo, currentClass, options, buildHeader(itemInfo, options), buildMajorId(itemInfo), minimumWidth));
     }
 
     @Override
@@ -133,12 +154,10 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                 : ChatFormatting.WHITE;
     }
 
-    public List<Component> update(List<Component> originalLines, ClassType currentClass, TooltipOptions options) {
-        if (!(itemInfo instanceof GearItem gearItem)) return originalLines;
-
-        List<TooltipLine> header = extractHeader(originalLines, gearItem, options);
-        List<TooltipLine> majorId = extractMajorId(originalLines);
-        return assemble(gearItem, currentClass, options, header, majorId);
+    private List<Component> buildUpdatedTooltip(ClassType currentClass, TooltipOptions options, int minimumWidth) {
+        List<TooltipLine> header = extractHeader(layoutSourceLines, itemInfo, options);
+        List<TooltipLine> majorId = extractMajorId(layoutSourceLines);
+        return prependSource(assemble(itemInfo, currentClass, options, header, majorId, minimumWidth));
     }
 
     @Override
@@ -180,20 +199,34 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             ClassType currentClass,
             TooltipOptions options,
             List<TooltipLine> header,
-            List<TooltipLine> majorId) {
+            List<TooltipLine> majorId,
+            int minimumWidth) {
         GearTier tier = getGearTier(item);
+        TooltipOptionDecorator identificationDecorator = new TooltipOptionDecorator(item, options);
+        List<TooltipLine> stats = new ArrayList<>(
+                TooltipIdentifications.buildLines(item, currentClass, identificationDecorator, options.style()));
+        List<TooltipLine> reroll = new ArrayList<>(buildReroll(item, tier));
+        if (identificationDecorator.hasEstimatedPercentages()) {
+            reroll.add(
+                    0,
+                    new TooltipLine.Centered(Component.literal("Percentages marked by ~ are estimated")
+                            .withStyle(Style.EMPTY
+                                    .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
+                                    .withColor(dividerColor(tier)))));
+            reroll.add(1, new TooltipLine.Fixed(Component.empty()));
+        }
+
         Sections sections = new Sections(
                 header,
                 buildWeights(item, options),
                 buildRequirements(item),
                 buildShiny(item, tier),
-                buildReroll(item, tier),
-                TooltipIdentifications.buildLines(
-                        item, currentClass, new TooltipOptionDecorator(item, options), options.style()),
+                reroll,
+                stats,
                 majorId,
                 buildPaginator(item));
 
-        return TooltipLayout.align(sections.lines(tier), TOOLTIP_MIN_WIDTH);
+        return TooltipLayout.align(sections.lines(tier, options.identificationDisplay()), minimumWidth);
     }
 
     private List<TooltipLine> buildHeader(IdentifiableItemProperty<?, ?> item, TooltipOptions options) {
@@ -213,7 +246,8 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         return header;
     }
 
-    private List<TooltipLine> extractHeader(List<Component> original, GearItem item, TooltipOptions options) {
+    private List<TooltipLine> extractHeader(
+            List<Component> original, IdentifiableItemProperty<?, ?> item, TooltipOptions options) {
         int firstDivider = findFirstLineWithFont(original, CommonFonts.DIVIDER_FONT);
         int end = firstDivider < 0 ? original.size() : firstDivider;
         List<TooltipLine> header = new ArrayList<>(end);
@@ -224,7 +258,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                 if (!TooltipUtils.replaceTrailingTitleComponent(
                         (MutableComponent) updatedTitle,
                         item.getName(),
-                        buildDecoratedName(item, item.getGearTier(), options))) {
+                        buildDecoratedName(item, getGearTier(item), options))) {
                     updatedTitle = buildNameLine(item, options);
                 }
                 line = updatedTitle;
@@ -268,8 +302,17 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         List<ItemWeighting> weightings = Services.ItemWeight.getItemWeighting(item.getName(), source);
         if (weightings.isEmpty()) return;
 
-        lines.add(new TooltipLine.Fixed(
-                BannerBoxFont.buildMessage(source.name().toLowerCase(), source.getColor(), CommonColors.BLACK, "")));
+        if (!lines.isEmpty()) {
+            lines.add(new TooltipLine.Fixed(Component.empty()));
+        }
+
+        Component sourceName = Component.literal("\uE000")
+                .withStyle(Style.EMPTY
+                        .withFont(CommonFonts.TOOLTIP_FONT)
+                        .withColor(source.getColor().asInt()))
+                .append(Component.literal(" " + StringUtils.capitalized(source.name()))
+                        .withStyle(CommonStyles.LANGUAGE));
+        lines.add(new TooltipLine.Fixed(sourceName));
         for (ItemWeighting weighting : weightings) {
             float percentage = Services.ItemWeight.calculateWeighting(weighting, item);
             Component percentageComponent = ColorScaleUtils.getPercentageTextComponent(
@@ -279,7 +322,36 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             lines.add(new TooltipLine.Aligned(
                     Component.literal(weighting.weightName() + " Scale").withStyle(CommonStyles.LANGUAGE),
                     percentageComponent));
+
+            if (options.weightDisplay() != WeightDisplay.OVERALL) {
+                appendDetailedWeightLines(lines, weighting, item, options);
+            }
         }
+    }
+
+    private void appendDetailedWeightLines(
+            List<TooltipLine> lines, ItemWeighting weighting, GearItem item, TooltipOptions options) {
+        Map<StatType, Pair<Float, Float>> statWeights = Services.ItemWeight.getStatWeights(weighting, item);
+        statWeights.forEach((statType, weight) -> {
+            String displayName = statType.getDisplayName() + " ";
+            if (statType.getUnit() == StatUnit.RAW) displayName += "Raw ";
+
+            float percentage = options.weightDisplay() == WeightDisplay.DISTRIBUTION
+                    ? weight.b()
+                    : (weight.a() / 100f) * weight.b();
+            Component left = Component.literal(new DecimalFormat("#.#").format(weight.a()) + "%")
+                    .withStyle(Style.EMPTY
+                            .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
+                            .withColor(ChatFormatting.DARK_GRAY))
+                    .append(Component.literal(" " + displayName)
+                            .withStyle(Style.EMPTY
+                                    .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
+                                    .withColor(ChatFormatting.GRAY)));
+            Component right = ColorScaleUtils.getPercentageTextComponent(
+                            options.colorMap(), percentage, options.colorLerp(), options.decimalPlaces())
+                    .withStyle(style -> style.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT));
+            lines.add(new TooltipLine.Aligned(left, right));
+        });
     }
 
     private List<TooltipLine> buildRequirements(IdentifiableItemProperty<?, ?> item) {
@@ -429,6 +501,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                 .<List<TooltipLine>>map(major -> {
                     List<TooltipLine> lines = new ArrayList<>();
                     lines.add(new TooltipLine.Fixed(Component.empty()));
+
                     MutableComponent text = Component.empty()
                             .withStyle(Style.EMPTY
                                     .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
@@ -450,12 +523,14 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
     }
 
     private List<TooltipLine> buildPaginator(IdentifiableItemProperty<?, ?> item) {
-        if (!(item instanceof GearItem gearItem)) return List.of();
+        if (!(item instanceof PagedItemProperty pagedItem)) return List.of();
 
-        int currentPage = gearItem.currentPage();
-        MutableComponent paginator = Component.literal("\uF002")
+        int currentPage = pagedItem.currentPage();
+        MutableComponent keyPrompt = Component.literal("\uF002")
                 .withStyle(Style.EMPTY.withFont(CommonFonts.CHAT_TILE_FONT))
                 .append(Component.literal("\uDAFF\uDF98\uDB00\uDC3F").withStyle(CommonStyles.LANGUAGE));
+        int keyPromptAdvance = McUtils.mc().font.width(keyPrompt);
+        MutableComponent paginator = Component.empty().append(keyPrompt);
         for (int page = 0; page < 3; page++) {
             paginator.append(Component.literal("\uE000")
                     .withStyle(Style.EMPTY
@@ -464,6 +539,8 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                             .withShadowColor(0xffffff)));
             if (page < 2) paginator.append(Component.literal("\uDB00\uDC04").withStyle(CommonStyles.LANGUAGE));
         }
+        paginator.append(Component.literal(Managers.Font.calculateOffset(0, keyPromptAdvance))
+                .withStyle(CommonStyles.SPACE));
         return List.of(new TooltipLine.Centered(paginator), new TooltipLine.Fixed(Component.empty()));
     }
 
@@ -646,7 +723,8 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
         info.fixedStats()
                 .attackSpeed()
-                .ifPresent(speed -> overview.add(withWhiteShadow(Component.literal("\uE007")
+                .ifPresent(speed -> overview.add(Component.empty()
+                        .append(Component.literal("\uE007")
                                 .withStyle(Style.EMPTY.withFont(CommonFonts.ATTRIBUTE_SPRITE_FONT)))
                         .append(Component.literal(" " + speed.getName() + " ")
                                 .withStyle(Style.EMPTY
@@ -723,6 +801,31 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                 .withStyle(Style.EMPTY.withFont(CommonFonts.DIVIDER_FONT).withColor(dividerColor(tier))));
     }
 
+    private static Component identificationDivider(GearTier tier, IdentificationDisplay display) {
+        if (display == IdentificationDisplay.PERCENTAGE) return divider(tier);
+
+        String label =
+                switch (display) {
+                    case INTERNAL_ROLL -> "Internal Roll";
+                    case RANGE -> "Stat ranges";
+                    case REROLL -> "Reroll chance";
+                    case PERCENTAGE -> throw new IllegalStateException();
+                };
+        int color = dividerColor(tier);
+        return withWhiteShadow(Component.literal("\uE000")
+                .withStyle(Style.EMPTY
+                        .withFont(CommonFonts.IDENTIFICATION_DIVIDER_FONT)
+                        .withColor(color))
+                .append(Component.literal(" " + label + " ")
+                        .withStyle(Style.EMPTY
+                                .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
+                                .withColor(color)))
+                .append(Component.literal("\uE001")
+                        .withStyle(Style.EMPTY
+                                .withFont(CommonFonts.IDENTIFICATION_DIVIDER_FONT)
+                                .withColor(color))));
+    }
+
     private static int dividerColor(GearTier tier) {
         return switch (tier) {
             case NORMAL -> 0xe0e0e0;
@@ -751,7 +854,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             List<TooltipLine> stats,
             List<TooltipLine> majorId,
             List<TooltipLine> paginator) {
-        private List<TooltipLine> lines(GearTier tier) {
+        private List<TooltipLine> lines(GearTier tier, IdentificationDisplay identificationDisplay) {
             List<TooltipLine> lines = new ArrayList<>();
             lines.addAll(header);
             if (!weights.isEmpty()) {
@@ -765,11 +868,11 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                 lines.addAll(shiny);
             }
             if (!reroll.isEmpty()) {
-                lines.add(new TooltipLine.Centered(divider(tier)));
+                lines.add(new TooltipLine.Centered(identificationDivider(tier, identificationDisplay)));
                 lines.addAll(reroll);
             }
             if (reroll.isEmpty()) {
-                lines.add(new TooltipLine.Centered(divider(tier)));
+                lines.add(new TooltipLine.Centered(identificationDivider(tier, identificationDisplay)));
             }
             lines.addAll(stats);
             lines.addAll(majorId);
@@ -777,4 +880,6 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             return lines;
         }
     }
+
+    private record TooltipKey(ClassType currentClass, TooltipOptions options, int minimumWidth) {}
 }

@@ -15,7 +15,9 @@ public record TooltipOptions(
         boolean perfectTitle,
         boolean defectiveTitle,
         boolean identificationDecorations,
+        IdentificationDisplay identificationDisplay,
         ItemWeightSource itemWeightSource,
+        WeightDisplay weightDisplay,
         boolean overallPercentageInName,
         boolean overallPercentageInSpecialName,
         NavigableMap<Float, TextColor> colorMap,
@@ -26,10 +28,25 @@ public record TooltipOptions(
             false,
             false,
             false,
+            IdentificationDisplay.PERCENTAGE,
             ItemWeightSource.NONE,
+            WeightDisplay.OVERALL,
             false,
             false,
             Collections.emptyNavigableMap(),
             false,
             0);
+
+    public enum IdentificationDisplay {
+        PERCENTAGE,
+        RANGE,
+        REROLL,
+        INTERNAL_ROLL
+    }
+
+    public enum WeightDisplay {
+        OVERALL,
+        DISTRIBUTION,
+        CONTRIBUTION
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.wynn;
@@ -28,6 +28,15 @@ public final class ColorScaleUtils {
      */
     public static MutableComponent getPercentageTextComponent(
             NavigableMap<Float, TextColor> colorMap, float percentage, boolean colorLerp, int decimalPlaces) {
+        return getPercentageTextComponent(colorMap, percentage, colorLerp, decimalPlaces, false);
+    }
+
+    public static MutableComponent getPercentageTextComponent(
+            NavigableMap<Float, TextColor> colorMap,
+            float percentage,
+            boolean colorLerp,
+            int decimalPlaces,
+            boolean estimated) {
         Style color = Style.EMPTY
                 .withColor(
                         colorLerp
@@ -37,7 +46,8 @@ public final class ColorScaleUtils {
         String percentString = new BigDecimal(percentage)
                 .setScale(decimalPlaces, RoundingMode.DOWN)
                 .toPlainString();
-        return Component.literal(" [" + percentString + "%]").withStyle(color);
+        return Component.literal(" [" + (estimated ? "~" : "") + percentString + "%]")
+                .withStyle(color);
     }
 
     private static TextColor getPercentageColor(NavigableMap<Float, TextColor> colorMap, float percentage) {

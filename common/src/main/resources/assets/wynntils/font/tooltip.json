@@ -1,0 +1,13 @@
+{
+  "providers": [
+    {
+      "type": "bitmap",
+      "file": "wynntils:font/tooltip.png",
+      "ascent": 8,
+      "height": 9,
+      "chars": [
+        "\uE001\uE000"
+      ]
+    }
+  ]
+}

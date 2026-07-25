@@ -15,6 +15,7 @@ import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.items.properties.ShinyItemProperty;
+import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import java.util.List;
 import net.minecraft.core.component.DataComponents;
@@ -88,6 +89,10 @@ public class FakeItemStack extends ItemStack {
             TooltipBuilder tooltipBuilder = null;
 
             if (wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItem) {
+                if (useBackingTooltip && identifiableItem.getIdentifications().isEmpty()) {
+                    return LoreUtils.getTooltipLines(itemStack);
+                }
+
                 tooltipBuilder = wynnItem.getData()
                         .getOrCalculate(
                                 WynnItemData.TOOLTIP_KEY,

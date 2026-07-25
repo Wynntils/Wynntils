@@ -22,6 +22,8 @@ public final class StatCalculator {
     // This constant is used to verify the calculated internal rolls
     // Enable this in development environments to check if the calculated internal rolls are correct
     private static final boolean VERIFY_CALCULATED_ROLLS = false;
+    private static final char EMPTY_VANILLA_METER = '\uE000';
+    private static final char FULL_VANILLA_METER = '\uE023';
 
     public static RangedValue calculatePossibleValuesRange(int baseValue, boolean preIdentified, StatType statType) {
         if (preIdentified) {
@@ -188,16 +190,35 @@ public final class StatCalculator {
     }
 
     public static float getPercentage(StatActualValue actualValue, StatPossibleValues possibleValues) {
+        return calculatePercentage(actualValue, possibleValues).value();
+    }
+
+    public static PercentageCalculation calculatePercentage(
+            StatActualValue actualValue, StatPossibleValues possibleValues) {
+        if (!possibleValues.range().inRange(actualValue.value())
+                && actualValue.vanillaMeter().isPresent()) {
+            return new PercentageCalculation(
+                    getPercentageFromVanillaMeter(actualValue.vanillaMeter().get()), true);
+        }
+
         int min = possibleValues.range().low();
         int max = possibleValues.range().high();
 
         if (actualValue.statType().treatAsInverted()) {
             // Inverted stats have the highest internal rolls when they have the worst effects
             // This is the opposite of normal stats, so we calculate the percentage by subtracting from the base range
-            return 100 - MathUtils.inverseLerp(min, max, actualValue.value()) * 100;
+            return new PercentageCalculation(100 - MathUtils.inverseLerp(min, max, actualValue.value()) * 100, false);
         }
 
-        return MathUtils.inverseLerp(min, max, actualValue.value()) * 100;
+        return new PercentageCalculation(MathUtils.inverseLerp(min, max, actualValue.value()) * 100, false);
+    }
+
+    public static float getPercentageFromVanillaMeter(char vanillaMeter) {
+        if (vanillaMeter < EMPTY_VANILLA_METER || vanillaMeter > FULL_VANILLA_METER) {
+            throw new IllegalArgumentException("Invalid vanilla identification meter: " + vanillaMeter);
+        }
+
+        return MathUtils.inverseLerp(EMPTY_VANILLA_METER, FULL_VANILLA_METER, vanillaMeter) * 100;
     }
 
     public static double getPerfectChance(StatPossibleValues possibleValues) {
@@ -327,4 +348,6 @@ public final class StatCalculator {
                 .longValue();
         assert higherRollBound == starMax || higherValue != oneAboveHigherValue;
     }
+
+    public record PercentageCalculation(float value, boolean estimated) {}
 }

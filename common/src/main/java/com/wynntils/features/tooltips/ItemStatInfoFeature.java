@@ -7,17 +7,23 @@ package com.wynntils.features.tooltips;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
+import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
+import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.handlers.tooltip.type.TooltipOptions;
+import com.wynntils.handlers.tooltip.type.TooltipOptions.IdentificationDisplay;
+import com.wynntils.handlers.tooltip.type.TooltipOptions.WeightDisplay;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.stats.type.StatListOrdering;
+import com.wynntils.utils.mc.KeyboardUtils;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
@@ -72,6 +78,18 @@ public class ItemStatInfoFeature extends Feature {
     @Persisted
     public final Config<Integer> decimalPlaces = new Config<>(1);
 
+    @RegisterKeyBind
+    private final KeyBind identificationRangeKeyBind = KeyBindDefinition.SHOW_IDENTIFICATION_RANGE.create(null, null);
+
+    @RegisterKeyBind
+    private final KeyBind identificationRerollKeyBind = KeyBindDefinition.SHOW_IDENTIFICATION_REROLL.create(null, null);
+
+    @RegisterKeyBind
+    private final KeyBind weightDistributionKeyBind = KeyBindDefinition.SHOW_WEIGHT_DISTRIBUTION.create(null, null);
+
+    @RegisterKeyBind
+    private final KeyBind weightContributionKeyBind = KeyBindDefinition.SHOW_WEIGHT_CONTRIBUTION.create(null, null);
+
     private static final NavigableMap<Float, TextColor> LERP_MAP = new TreeMap<>(Map.of(
             0f,
             TextColor.fromLegacyFormat(ChatFormatting.RED),
@@ -125,12 +143,37 @@ public class ItemStatInfoFeature extends Feature {
                 perfect.get(),
                 defective.get(),
                 identificationDecorations.get(),
+                getIdentificationDisplay(),
                 itemWeights.get(),
+                getWeightDisplay(),
                 overallPercentageInName.get(),
                 overallPercentageInPerfectDefectiveName.get(),
                 getColorMap(),
                 colorLerp.get(),
                 decimalPlaces.get());
+    }
+
+    private IdentificationDisplay getIdentificationDisplay() {
+        if (!identificationDecorations.get()) return IdentificationDisplay.PERCENTAGE;
+
+        boolean rangeDown = isKeyDown(identificationRangeKeyBind);
+        boolean rerollDown = isKeyDown(identificationRerollKeyBind);
+
+        if (rangeDown && rerollDown) return IdentificationDisplay.INTERNAL_ROLL;
+        if (rerollDown) return IdentificationDisplay.REROLL;
+        if (rangeDown) return IdentificationDisplay.RANGE;
+        return IdentificationDisplay.PERCENTAGE;
+    }
+
+    private WeightDisplay getWeightDisplay() {
+        if (!isKeyDown(weightDistributionKeyBind)) return WeightDisplay.OVERALL;
+
+        return isKeyDown(weightContributionKeyBind) ? WeightDisplay.CONTRIBUTION : WeightDisplay.DISTRIBUTION;
+    }
+
+    private static boolean isKeyDown(KeyBind keyBind) {
+        return !keyBind.getKeyMapping().isUnbound()
+                && KeyboardUtils.isKeyDown(keyBind.getKeyMapping().key.getValue());
     }
 
     private NavigableMap<Float, TextColor> createFlatMap() {
