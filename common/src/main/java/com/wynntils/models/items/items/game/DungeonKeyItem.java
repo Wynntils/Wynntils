@@ -5,9 +5,10 @@
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.activities.type.Dungeon;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.items.properties.TargetedItemProperty;
 
-public class DungeonKeyItem extends GameItem implements TargetedItemProperty {
+public class DungeonKeyItem extends GameItem implements NamedItemProperty, TargetedItemProperty {
     private final Dungeon dungeon;
     private final boolean broken;
     private final boolean corrupted;
@@ -28,6 +29,11 @@ public class DungeonKeyItem extends GameItem implements TargetedItemProperty {
 
     public boolean isCorrupted() {
         return corrupted;
+    }
+
+    @Override
+    public String getName() {
+        return (broken ? "Broken " : "") + (corrupted ? "Corrupted " : "") + dungeon.getName() + " Key";
     }
 
     @Override
