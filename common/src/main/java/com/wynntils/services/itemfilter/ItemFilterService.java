@@ -12,6 +12,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.ingredients.type.IngredientPosition;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.mount.type.MountStat;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.stats.type.StatType;
@@ -293,11 +294,12 @@ public class ItemFilterService extends Service {
 
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return false;
+        String itemName = Models.Item.asWynnItemProperty(itemStack, NamedItemProperty.class)
+                .map(NamedItemProperty::getName)
+                .orElseGet(
+                        () -> StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting());
 
-        return filterMatches(searchQuery, wynnItemOpt.get())
-                && itemNameMatches(
-                        searchQuery,
-                        StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting());
+        return filterMatches(searchQuery, wynnItemOpt.get()) && itemNameMatches(searchQuery, itemName);
     }
 
     /**
