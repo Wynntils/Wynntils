@@ -28,7 +28,10 @@ public class GuideDungeonKeyItemStack extends GuideItemStack {
     private List<Component> generatedTooltip;
 
     public GuideDungeonKeyItemStack(Dungeon dungeon, boolean corrupted, boolean broken) {
-        super(getItemStack(broken), new DungeonKeyItem(dungeon, corrupted), getName(dungeon, corrupted, broken));
+        super(
+                getItemStack(broken),
+                new DungeonKeyItem(dungeon, broken, corrupted),
+                getName(dungeon, corrupted, broken));
         this.dungeon = dungeon;
         this.corrupted = corrupted;
         this.broken = broken;
