@@ -253,6 +253,32 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
                         return ItemMaterial.fromItemId(
                                 value.get("id").getAsString(),
                                 modelDataOpt.get().intValue());
+                    } else {
+                        // Some items use the custom model data format but are just vanilla blocks/items
+                        switch (value.get("name").getAsString()) {
+                            case "helmet.creeper" -> {
+                                return ItemMaterial.fromItemId("minecraft:creeper_head", 0);
+                            }
+                            case "helmet.zombie" -> {
+                                return ItemMaterial.fromItemId("minecraft:zombie_head", 0);
+                            }
+                            case "helmet.pumpkin" -> {
+                                return ItemMaterial.fromItemId("minecraft:carved_pumpkin", 0);
+                            }
+                            case "helmet.jackOLantern" -> {
+                                return ItemMaterial.fromItemId("minecraft:jack_o_lantern", 0);
+                            }
+                            // These are not currently used so they are just guesses at the moment
+                            case "helmet.skeleton" -> {
+                                return ItemMaterial.fromItemId("minecraft:skeleton_skull", 0);
+                            }
+                            case "helmet.witherSkeleton" -> {
+                                return ItemMaterial.fromItemId("minecraft:wither_skeleton_skull", 0);
+                            }
+                            case "helmet.piglin" -> {
+                                return ItemMaterial.fromItemId("minecraft:piglin_head", 0);
+                            }
+                        }
                     }
                 }
 
