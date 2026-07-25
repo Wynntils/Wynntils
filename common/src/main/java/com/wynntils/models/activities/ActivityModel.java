@@ -390,11 +390,12 @@ public final class ActivityModel extends Model {
     }
 
     private void openMiniQuestOnWiki(ActivityInfo activityInfo) {
-        String type = activityInfo.name().split(" ")[0];
+        String type = activityInfo.name().split(" ")[0] + "ing";
+        if (!type.equals("Slaying") && !type.equals("Gathering")) {
+            type = "Slaying";
+        }
 
-        String wikiName = "Quests#" + type + "ing_Posts";
-
-        Services.Wiki.openPage(wikiName);
+        Services.Wiki.openPage("Quests#" + type + "_Posts");
     }
 
     public void openMapOnActivity(ActivityInfo activityInfo) {
