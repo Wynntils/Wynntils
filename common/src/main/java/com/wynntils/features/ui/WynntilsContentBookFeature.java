@@ -22,7 +22,7 @@ import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.screens.activities.WynntilsContentBookScreen;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
-import com.wynntils.screens.guides.WynntilsGuidesListScreen;
+import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
@@ -57,7 +57,7 @@ public class WynntilsContentBookFeature extends Feature {
 
     @RegisterKeyBind
     private final KeyBind openGuidesList = KeyBindDefinition.OPEN_GUIDES_LIST.create(
-            () -> WynntilsMenuScreenBase.openBook(WynntilsGuidesListScreen.create()));
+            () -> WynntilsMenuScreenBase.openBook(WynntilsGuideScreen.create(null)));
 
     @Persisted
     private final Config<ShiftBehavior> shiftBehaviorConfig = new Config<>(ShiftBehavior.DISABLED_IF_SHIFT_HELD);

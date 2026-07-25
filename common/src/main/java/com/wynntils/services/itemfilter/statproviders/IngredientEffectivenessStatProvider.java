@@ -22,6 +22,10 @@ public class IngredientEffectivenessStatProvider extends ItemStatProvider<Intege
         this.ingredientPosition = ingredientPosition;
     }
 
+    public IngredientPosition getIngredientPosition() {
+        return ingredientPosition;
+    }
+
     @Override
     public String getName() {
         return "ingredientEffectiveness" + StringUtils.capitalizeFirst(ingredientPosition.getApiName());

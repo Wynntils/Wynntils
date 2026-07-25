@@ -1,42 +1,59 @@
 /*
- * Copyright © Wynntils 2025-2026.
+ * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides.widgets.filters;
 
 import com.wynntils.core.components.Services;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.screens.guides.WynntilsGuideScreen;
+import com.wynntils.screens.guides.widgets.GuideContainerWidget;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
 import com.wynntils.services.itemfilter.statproviders.ClassStatProvider;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
+import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
-import com.wynntils.utils.EnumUtils;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 
 public class ClassTypeFilterWidget extends GuideFilterWidget {
     private final List<ClassTypeButton> classTypeButtons = new ArrayList<>();
     private ClassStatProvider provider;
 
-    public ClassTypeFilterWidget(int x, int y, WynntilsGuideScreen guideScreen, ItemSearchQuery searchQuery) {
-        super(x, y, 96, 16, guideScreen);
+    public ClassTypeFilterWidget(GuideContainerWidget<?> containerWidget, ItemSearchQuery searchQuery) {
+        super(70, containerWidget);
 
-        classTypeButtons.add(new ClassTypeButton(x, y, ClassType.WARRIOR, Texture.SPEAR_FILTER_ICON, searchQuery));
-        classTypeButtons.add(new ClassTypeButton(x + 20, y, ClassType.MAGE, Texture.WAND_FILTER_ICON, searchQuery));
-        classTypeButtons.add(
-                new ClassTypeButton(x + 40, y, ClassType.ASSASSIN, Texture.DAGGER_FILTER_ICON, searchQuery));
-        classTypeButtons.add(new ClassTypeButton(x + 60, y, ClassType.ARCHER, Texture.BOW_FILTER_ICON, searchQuery));
-        classTypeButtons.add(new ClassTypeButton(x + 80, y, ClassType.SHAMAN, Texture.RELIK_FILTER_ICON, searchQuery));
+        getProvider();
+        rebuildWidgets(searchQuery);
     }
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromComponent(Component.literal("Class")
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                        getX(),
+                        getY(),
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        TextShadow.NORMAL);
+
         classTypeButtons.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
     }
 
@@ -51,9 +68,40 @@ public class ClassTypeFilterWidget extends GuideFilterWidget {
             }
         }
 
-        guideScreen.updateSearchFromQuickFilters();
+        containerWidget.updateSearchFromQuickFilters();
 
         return clicked;
+    }
+
+    @Override
+    protected void rebuildWidgets(ItemSearchQuery searchQuery) {
+        classTypeButtons.clear();
+
+        classTypeButtons.add(new ClassTypeButton(ClassType.WARRIOR, Texture.SPEAR_FILTER_ICON, searchQuery));
+        classTypeButtons.add(new ClassTypeButton(ClassType.MAGE, Texture.WAND_FILTER_ICON, searchQuery));
+        classTypeButtons.add(new ClassTypeButton(ClassType.ASSASSIN, Texture.DAGGER_FILTER_ICON, searchQuery));
+        classTypeButtons.add(new ClassTypeButton(ClassType.ARCHER, Texture.BOW_FILTER_ICON, searchQuery));
+        classTypeButtons.add(new ClassTypeButton(ClassType.SHAMAN, Texture.RELIK_FILTER_ICON, searchQuery));
+
+        updateWidgetPositions();
+    }
+
+    @Override
+    protected void updateWidgetPositions() {
+        if (classTypeButtons == null) return;
+
+        int renderX = getX();
+        int renderY = getY() + 10;
+        for (int i = 0; i < classTypeButtons.size(); i++) {
+            classTypeButtons.get(i).setPosition(renderX, renderY);
+
+            if (i % 2 == 0) {
+                renderX = getX() + 65;
+            } else {
+                renderX = getX();
+                renderY += 20;
+            }
+        }
     }
 
     @Override
@@ -72,14 +120,16 @@ public class ClassTypeFilterWidget extends GuideFilterWidget {
     }
 
     @Override
-    public void getProvider() {
+    public ItemStatProvider<?> getProvider() {
         provider = Services.ItemFilter.getItemStatProviders().stream()
                 .filter(statProvider -> statProvider instanceof ClassStatProvider)
                 .map(statProvider -> (ClassStatProvider) statProvider)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Could not get class stat provider"));
+        return provider;
     }
 
+    @Override
     public void updateFromQuery(ItemSearchQuery searchQuery) {
         classTypeButtons.forEach(classTypeButton -> classTypeButton.updateStateFromQuery(searchQuery));
     }
@@ -87,18 +137,48 @@ public class ClassTypeFilterWidget extends GuideFilterWidget {
     private static class ClassTypeButton extends GuideFilterButton<ClassStatProvider> {
         private final ClassType classType;
 
-        protected ClassTypeButton(int x, int y, ClassType classType, Texture texture, ItemSearchQuery searchQuery) {
-            super(x, y, texture);
+        protected ClassTypeButton(ClassType classType, Texture texture, ItemSearchQuery searchQuery) {
+            super(0, 0, 64, 16, texture);
 
             this.classType = classType;
             updateStateFromQuery(searchQuery);
         }
 
         @Override
+        protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+            RenderUtils.drawTexturedRect(guiGraphics, texture, getX(), getY());
+
+            FontRenderer.getInstance()
+                    .renderScrollingText(
+                            guiGraphics,
+                            StyledText.fromComponent(Component.literal(classType.getName())
+                                    .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                            getX() + 18,
+                            getY() + 8,
+                            getWidth() - 20,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+
+            if (!isHovered && !state) return;
+
+            RenderUtils.drawRect(
+                    guiGraphics,
+                    (state && !isHovered ? CommonColors.ORANGE : CommonColors.WHITE).withAlpha(isHovered ? 0.7f : 0.5f),
+                    getX(),
+                    getY(),
+                    state && !isHovered ? 16 : getWidth(),
+                    16);
+
+            handleCursor(guiGraphics);
+        }
+
+        @Override
         protected void updateStateFromQuery(ItemSearchQuery searchQuery) {
             state = searchQuery.filters().values().stream()
                     .filter(filterPair -> filterPair.statProvider() instanceof ClassStatProvider)
-                    .anyMatch(filterPair -> filterPair.statFilter().matches(EnumUtils.toNiceString(classType)));
+                    .anyMatch(filterPair -> filterPair.statFilter().matches(classType.getName()));
         }
 
         @Override
@@ -111,11 +191,6 @@ public class ClassTypeFilterWidget extends GuideFilterWidget {
             return statFilterOpt
                     .map(stringStatFilter -> new StatProviderAndFilterPair(provider, stringStatFilter))
                     .orElse(null);
-        }
-
-        @Override
-        protected String getFilterName() {
-            return I18n.get("service.wynntils.itemFilter.stat.class.name") + " " + classType.getName();
         }
     }
 }

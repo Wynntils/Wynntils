@@ -11,6 +11,8 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.SetBonus;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.items.items.game.GearItem;
@@ -53,6 +55,22 @@ public final class SetModel extends Model {
 
     public SetInfo getSetInfoForItem(String itemName) {
         return getSetInfo(getSetName(itemName));
+    }
+
+    public GearTier getSetGearTier(SetInfo setInfo) {
+        // Some sets have no items listed, in that case default to rare
+        GearTier gearTier = GearTier.RARE;
+
+        for (String itemName : setInfo.items()) {
+            GearInfo gearInfo = Models.Gear.getGearInfoFromDisplayName(itemName);
+
+            if (gearInfo != null && gearInfo.tier().ordinal() > gearTier.ordinal()) {
+                gearTier = gearInfo.tier();
+                break;
+            }
+        }
+
+        return gearTier;
     }
 
     /**

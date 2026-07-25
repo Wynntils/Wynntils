@@ -16,11 +16,12 @@ import java.util.Optional;
 public class HealthStatProvider extends ItemStatProvider<Integer> {
     @Override
     public Optional<Integer> getValue(WynnItem wynnItem) {
-        if (wynnItem instanceof GearItem gearItem) {
+        if (wynnItem instanceof GearItem gearItem && gearItem.getGearType().isArmor()) {
             return Optional.of(gearItem.getItemInfo().fixedStats().healthBuff());
         }
 
-        if (wynnItem instanceof CraftedGearItem craftedGearItem) {
+        if (wynnItem instanceof CraftedGearItem craftedGearItem
+                && craftedGearItem.getGearType().isArmor()) {
             return Optional.of(craftedGearItem.getHealth());
         }
 

@@ -16,7 +16,7 @@ import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.screens.downloads.DownloadScreen;
-import com.wynntils.screens.guides.WynntilsGuidesListScreen;
+import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.screens.itemsharing.SavedItemsScreen;
 import com.wynntils.screens.lootrunpaths.WynntilsLootrunPathsScreen;
 import com.wynntils.screens.maps.MainMapScreen;
@@ -176,7 +176,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         y,
                         Texture.GUIDES_ICON,
                         true,
-                        WynntilsGuidesListScreen.create(),
+                        WynntilsGuideScreen.create(this),
                         List.of(
                                 Component.literal("[>] ")
                                         .withStyle(ChatFormatting.GOLD)
