@@ -114,7 +114,6 @@ public class AbilityTreeNodeItemStack extends ItemStack {
         }
 
         // Required archetype
-        // §a✔ §7Min Arcanist Archetype: §f19§7/12'}
         ArchetypeRequirement requiredArchetype = abilityTreeSkillNode.requiredArchetype();
         if (requiredArchetype != null) {
             loreLines.add(Component.literal("✔ ")

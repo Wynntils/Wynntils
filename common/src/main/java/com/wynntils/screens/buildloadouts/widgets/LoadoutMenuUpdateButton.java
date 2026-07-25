@@ -177,9 +177,13 @@ public class LoadoutMenuUpdateButton extends AbstractButton implements TooltipPr
         this.generatedTooltip = new ArrayList<>();
 
         if (parent.getCurrentCategory() == MenuCategory.BUILD_LOADOUT) {
-            this.generatedTooltip.add(Component.literal("Update Category").withStyle(ChatFormatting.GOLD));
+            this.generatedTooltip.add(
+                    Component.translatable("screens.wynntils.buildLoadouts.loadoutMenu.updateButton.tooltip.title")
+                            .withStyle(ChatFormatting.GOLD));
 
-            this.generatedTooltip.add(Component.literal("Choose what to update").withStyle(ChatFormatting.DARK_GRAY));
+            this.generatedTooltip.add(Component.translatable(
+                            "screens.wynntils.buildLoadouts.loadoutMenu.updateButton.tooltip.description")
+                    .withStyle(ChatFormatting.DARK_GRAY));
 
             this.generatedTooltip.add(Component.empty());
 
@@ -187,7 +191,7 @@ public class LoadoutMenuUpdateButton extends AbstractButton implements TooltipPr
                 boolean selected = type == updateType;
                 ChatFormatting color = selected ? ChatFormatting.WHITE : ChatFormatting.GRAY;
 
-                Component label = Component.literal(type.getDisplayName()).withStyle(color);
+                Component label = type.getDisplayName().copy().withStyle(color);
 
                 this.generatedTooltip.add(
                         Component.literal("- ").withStyle(ChatFormatting.GOLD).append(label));
@@ -198,22 +202,30 @@ public class LoadoutMenuUpdateButton extends AbstractButton implements TooltipPr
             this.generatedTooltip.add(Component.empty()
                     .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class))
                     .append(" ")
-                    .append(Component.literal("Left-Click to update").withStyle(ChatFormatting.GREEN)));
+                    .append(Component.translatable(
+                                    "screens.wynntils.buildLoadouts.loadoutMenu.updateButton.tooltip.leftClick")
+                            .withStyle(ChatFormatting.GREEN)));
 
             this.generatedTooltip.add(Component.empty()
                     .append(WynnFont.asFont("right_click", WynncraftKeybindsFont.class))
                     .append(" ")
-                    .append(Component.literal("Right-Click to change category").withStyle(ChatFormatting.GREEN)));
+                    .append(Component.translatable(
+                                    "screens.wynntils.buildLoadouts.loadoutMenu.updateButton.tooltip.rightClick")
+                            .withStyle(ChatFormatting.GREEN)));
         } else {
-            this.generatedTooltip.add(
-                    Component.literal("Update " + updateType.getDisplayName()).withStyle(ChatFormatting.GOLD));
+            this.generatedTooltip.add(Component.translatable(
+                            "screens.wynntils.buildLoadouts.loadoutMenu.updateButton.tooltip.update",
+                            updateType.getDisplayName())
+                    .withStyle(ChatFormatting.GOLD));
 
             this.generatedTooltip.add(Component.empty());
 
             this.generatedTooltip.add(Component.empty()
                     .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class))
                     .append(" ")
-                    .append(Component.literal("Left-Click to update").withStyle(ChatFormatting.GREEN)));
+                    .append(Component.translatable(
+                                    "screens.wynntils.buildLoadouts.loadoutMenu.updateButton.tooltip.leftClick")
+                            .withStyle(ChatFormatting.GREEN)));
         }
     }
 
@@ -230,25 +242,25 @@ public class LoadoutMenuUpdateButton extends AbstractButton implements TooltipPr
     }
 
     private enum UpdateType {
-        BUILD("Build"),
-        ABILITY_TREE("Ability Tree"),
-        ASPECTS("Aspects"),
-        SKILL_POINTS("Skill Points & Items");
+        BUILD("screens.wynntils.buildLoadouts.loadoutMenu.updateButton.updateType.build"),
+        ABILITY_TREE("screens.wynntils.buildLoadouts.loadoutMenu.updateButton.updateType.abilityTree"),
+        ASPECTS("screens.wynntils.buildLoadouts.loadoutMenu.updateButton.updateType.aspects"),
+        SKILL_POINTS("screens.wynntils.buildLoadouts.loadoutMenu.updateButton.updateType.skillPoints");
 
         private static final UpdateType[] VALUES = values();
 
-        private final String displayName;
+        private final String translationKey;
 
-        UpdateType(String displayName) {
-            this.displayName = displayName;
+        UpdateType(String translationKey) {
+            this.translationKey = translationKey;
         }
 
         public UpdateType next() {
             return VALUES[(ordinal() + 1) % VALUES.length];
         }
 
-        public String getDisplayName() {
-            return displayName;
+        public Component getDisplayName() {
+            return Component.translatable(translationKey);
         }
     }
 }
