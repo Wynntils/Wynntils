@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
@@ -9,6 +9,7 @@ import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
+import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,11 @@ public class HealthStatProvider extends ItemStatProvider<Integer> {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<RangedValue> getExpectedRange() {
+        return Optional.of(RangedValue.of(-10000, 10000));
     }
 
     @Override

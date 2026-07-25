@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
@@ -66,6 +66,28 @@ public class ActualStatProvider extends ItemStatProvider<StatValue> {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<RangedValue> getExpectedRange() {
+        if (statType.getKey().equals("MISC_POISON")) {
+            return Optional.of(RangedValue.of(-30000, 100000));
+        } else if (statType.getKey().equals("MISC_LIFE_STEAL")) {
+            return Optional.of(RangedValue.of(-5000, 5000));
+        } else if (statType.getKey().equals("MISC_ATTACK_SPEED")) {
+            return Optional.of(RangedValue.of(-100, 100));
+        } else if (statType.getKey().equals("DAMAGE_MAIN_ATTACK_ALL_RAW")
+                || statType.getKey().equals("DAMAGE_MAIN_ATTACK_EARTH_RAW")
+                || statType.getKey().equals("DAMAGE_MAIN_ATTACK_THUNDER_RAW")
+                || statType.getKey().equals("DAMAGE_MAIN_ATTACK_WATER_RAW")
+                || statType.getKey().equals("DAMAGE_MAIN_ATTACK_FIRE_RAW")
+                || statType.getKey().equals("DAMAGE_MAIN_ATTACK_AIR_RAW")) {
+            return Optional.of(RangedValue.of(-100000, 100000));
+        } else if (statType.getKey().equals("MISC_HEALTH")) {
+            return Optional.of(RangedValue.of(-10000, 10000));
+        }
+
+        return Optional.of(RangedValue.of(-1000, 1000));
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.type;
@@ -7,6 +7,7 @@ package com.wynntils.services.itemfilter.type;
 import com.google.common.base.CaseFormat;
 import com.wynntils.core.persisted.Translatable;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.utils.type.RangedValue;
 import java.lang.reflect.ParameterizedType;
 import java.util.Comparator;
 import java.util.List;
@@ -45,6 +46,10 @@ public abstract class ItemStatProvider<T extends Comparable<T>> implements Trans
 
     public List<String> getAliases() {
         return List.of();
+    }
+
+    public Optional<RangedValue> getExpectedRange() {
+        return Optional.empty();
     }
 
     public String getName() {
