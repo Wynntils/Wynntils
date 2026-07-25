@@ -24,7 +24,6 @@ public enum UrlId {
     API_ATHENA_UPDATE_CHECK("apiAthenaUpdateCheck"),
     API_ATHENA_USER_INFO("apiAthenaUserInfo"),
     API_WIKI_DISCOVERY_QUERY("apiWikiDiscoveryQuery"),
-    API_WIKI_QUEST_PAGE_QUERY("apiWikiQuestPageQuery"),
     DATA_ATHENA_GUILD_LIST("dataAthenaGuildList"),
     DATA_ATHENA_ITEM_WEIGHTS("dataAthenaItemWeights"),
     DATA_ATHENA_LEADERBOARD("dataAthenaLeaderboard"),

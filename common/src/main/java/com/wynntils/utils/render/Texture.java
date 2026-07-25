@@ -106,6 +106,13 @@ public enum Texture {
     BUILD_LOADOUTS_RENAME_ICON_WITH_INKWELL("build_loadouts/rename_icon_with_inkwell.png", 23, 20),
     BUILD_LOADOUTS_STAR_ICON("build_loadouts/star_icon.png", 12, 12),
     BUILD_LOADOUTS_STAR_ICON_OUTLINE("build_loadouts/star_icon_outline.png", 12, 12),
+    // region Emote Wheel
+    EMOTE_CONFIG_GUI("emote_wheel/config_gui.png", 149, 215),
+    EMOTE_CONFIG_BUTTON("emote_wheel/config_button.png", 58, 58),
+    EMOTE_WHEEL_STYLE_TOOLTIP("emote_wheel/tooltip.png", 64, 64),
+    EMOTE_WHEEL_STYLE_TOOLTIP_HOVERED("emote_wheel/tooltip_hovered.png", 64, 64),
+    EMOTE_WHEEL_STYLE_BUTTON("emote_wheel/button.png", 32, 32),
+    EMOTE_WHEEL_STYLE_BUTTON_HOVERED("emote_wheel/button_hovered.png", 32, 32),
     // endregion
 
     // region Guild Log

@@ -31,6 +31,7 @@ import com.wynntils.services.secrets.SecretsService;
 import com.wynntils.services.splashes.SplashService;
 import com.wynntils.services.statistics.StatisticsService;
 import com.wynntils.services.stopwatch.StopwatchService;
+import com.wynntils.services.wiki.WikiService;
 
 public final class Services {
     public static final ChatTabService ChatTab = new ChatTabService();
@@ -59,5 +60,6 @@ public final class Services {
     public static final StatisticsService Statistics = new StatisticsService();
     public static final StopwatchService Stopwatch = new StopwatchService();
     public static final UpdateService Update = new UpdateService();
+    public static final WikiService Wiki = new WikiService();
     public static final WynntilsAccountService WynntilsAccount = new WynntilsAccountService();
 }
