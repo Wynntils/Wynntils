@@ -56,6 +56,79 @@ public class ActualStatProvider extends ItemStatProvider<StatValue> {
     }
 
     @Override
+    public Optional<String> getGuideCategory() {
+        String key = statType.getKey();
+
+        if (key.startsWith("SKILL_")) {
+            return Optional.of("Fixed Stats");
+        }
+
+        if (key.equals("MISC_HEALTH")
+                || key.startsWith("MISC_HEALTH_REGEN")
+                || key.equals("MISC_HEALING_EFFICIENCY")
+                || key.equals("MISC_LIFE_STEAL")
+                || key.equals("MISC_MANA_REGEN")
+                || key.equals("MISC_MANA_STEAL")
+                || key.equals("MISC_MAX_MANA_RAW")) {
+            return Optional.of("Health & Mana");
+        }
+
+        if (key.equals("MISC_WALK_SPEED")
+                || key.equals("MISC_SPRINT")
+                || key.equals("MISC_SPRINT_REGEN")
+                || key.equals("MISC_JUMP_HEIGHT")) {
+            return Optional.of("Movement");
+        }
+
+        if (key.equals("MISC_ATTACK_SPEED")
+                || key.equals("MISC_MAIN_ATTACK_RANGE")
+                || key.equals("MISC_REFLECTION")
+                || key.equals("MISC_THORNS")
+                || key.equals("MISC_EXPLODING")
+                || key.equals("MISC_POISON")
+                || key.equals("MISC_KNOCKBACK")
+                || key.equals("MISC_SLOW_ENEMY")
+                || key.equals("MISC_WEAKEN_ENEMY")) {
+            return Optional.of("Combat");
+        }
+
+        if (key.equals("MISC_STEALING")
+                || key.equals("MISC_COMBAT_EXPERIENCE")
+                || key.equals("MISC_LOOT")
+                || key.equals("MISC_LOOT_QUALITY")
+                || key.equals("MISC_GATHERING_EXPERIENCE")
+                || key.equals("MISC_GATHERING_SPEED")
+                || key.equals("MISC_SLAYING_XP")
+                || key.equals("MISC_GATHERING_XP")
+                || key.equals("MISC_DUNGEON_XP")
+                || key.equals("MISC_LEVELED_XP_BONUS")
+                || key.equals("MISC_LEVELED_LOOT_BONUS")) {
+            return Optional.of("Bonuses");
+        }
+
+        if (key.equals("DEFENCE_EARTH")
+                || key.equals("DEFENCE_THUNDER")
+                || key.equals("DEFENCE_WATER")
+                || key.equals("DEFENCE_FIRE")
+                || key.equals("DEFENCE_AIR")
+                || key.equals("DEFENCE_ELEMENTAL")) {
+            return Optional.of("Defence");
+        }
+
+        if (key.startsWith("SPELL_")) {
+            return Optional.of("Spell Costs");
+        }
+
+        if ((key.startsWith("DAMAGE_") && !key.equals("DAMAGE_FROM_MOBS"))
+                || key.equals("CRITICAL_DAMAGE_BONUS")
+                || key.equals("DAMAGE_TO_MOBS")) {
+            return Optional.of("Damage");
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<StatValue> getValue(WynnItem wynnItem) {
         if (wynnItem instanceof GearItem gearItem) {
             return handleGearItem(gearItem);

@@ -42,6 +42,11 @@ public class IngredientEffectivenessStatProvider extends ItemStatProvider<Intege
     }
 
     @Override
+    public Optional<String> getGuideCategory() {
+        return Optional.of("Crafting Modifier");
+    }
+
+    @Override
     public Optional<Integer> getValue(WynnItem wynnItem) {
         if (wynnItem instanceof IngredientItem ingredientItem) {
             return ingredientItem.getIngredientInfo().positionModifiers().entrySet().stream()

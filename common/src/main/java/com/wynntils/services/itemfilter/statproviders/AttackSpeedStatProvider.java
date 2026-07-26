@@ -30,6 +30,11 @@ public class AttackSpeedStatProvider extends ItemStatProvider<String> {
     }
 
     @Override
+    public Optional<String> getGuideCategory() {
+        return Optional.of("Fixed Stats");
+    }
+
+    @Override
     public List<String> getValidInputs() {
         // Requires the underscore to be valid
         return Arrays.stream(GearAttackSpeed.values())

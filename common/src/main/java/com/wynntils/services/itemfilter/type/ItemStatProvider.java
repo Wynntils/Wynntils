@@ -52,6 +52,10 @@ public abstract class ItemStatProvider<T extends Comparable<T>> implements Trans
         return Optional.empty();
     }
 
+    public Optional<String> getGuideCategory() {
+        return Optional.empty();
+    }
+
     public String getName() {
         return name;
     }

@@ -244,6 +244,8 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
         guideButtons.forEach(guideButton -> guideButton.render(guiGraphics, mouseX, mouseY, partialTick));
         RenderUtils.disableScissor(guiGraphics);
 
+        renderScroll(guiGraphics, mouseX, mouseY);
+
         if (searchWidget != null) {
             searchWidget.render(guiGraphics, mouseX, mouseY, partialTick);
         }
@@ -261,8 +263,6 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
         }
 
         favoriteActionButtons.forEach(button -> button.render(guiGraphics, mouseX, mouseY, partialTick));
-
-        renderScroll(guiGraphics, mouseX, mouseY);
     }
 
     public void updateSearchFromQuickFilters() {

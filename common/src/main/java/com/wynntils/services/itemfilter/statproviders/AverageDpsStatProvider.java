@@ -22,6 +22,11 @@ public class AverageDpsStatProvider extends ItemStatProvider<Integer> {
     }
 
     @Override
+    public Optional<String> getGuideCategory() {
+        return Optional.of("Fixed Stats");
+    }
+
+    @Override
     public Optional<RangedValue> getExpectedRange() {
         return Optional.of(RangedValue.of(1, 2000));
     }

@@ -37,6 +37,11 @@ public class SkillReqStatProvider extends ItemStatProvider<Integer> {
     }
 
     @Override
+    public Optional<String> getGuideCategory() {
+        return Optional.of("Fixed Stats");
+    }
+
+    @Override
     public Optional<Integer> getValue(WynnItem wynnItem) {
         if (!(wynnItem instanceof GearItem gearItem)) return Optional.empty();
 

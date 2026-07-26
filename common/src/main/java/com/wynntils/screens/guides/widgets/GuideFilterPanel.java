@@ -5,10 +5,18 @@
 package com.wynntils.screens.guides.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
+import com.wynntils.screens.guides.widgets.filters.GuideFilterWidget;
+import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -24,6 +32,7 @@ public class GuideFilterPanel extends AbstractWidget {
     private static final float SCROLL_FACTOR = 10f;
 
     private List<? extends AbstractWidget> filterWidgets;
+    private List<GuideFilterCategoryShortcut> categoryShortcuts = new ArrayList<>();
 
     private boolean draggingScroll = false;
     private int scrollOffset = 0;
@@ -48,6 +57,7 @@ public class GuideFilterPanel extends AbstractWidget {
         }
         RenderUtils.disableScissor(guiGraphics);
 
+        renderCategoryShortcuts(guiGraphics, mouseX, mouseY);
         renderScroll(guiGraphics, mouseX, mouseY);
     }
 
@@ -59,15 +69,37 @@ public class GuideFilterPanel extends AbstractWidget {
         int scrollAreaStartY = getScrollAreaStartY();
         int scrollAreaEndY = scrollAreaStartY + getScrollAreaHeight();
 
+        Map<String, List<String>> shortcutProviders = new LinkedHashMap<>();
+        Map<String, Integer> shortcutOffsets = new LinkedHashMap<>();
+
+        int contentOffset = 0;
+
         for (AbstractWidget filterWidget : filterWidgets) {
             filterWidget.setPosition(widgetX, currentY);
             filterWidget.visible = currentY + filterWidget.getHeight() >= scrollAreaStartY && currentY < scrollAreaEndY;
 
+            Optional<String> category = getWidgetCategory(filterWidget);
+            if (category.isPresent()) {
+                shortcutOffsets.putIfAbsent(category.get(), contentOffset);
+
+                shortcutProviders
+                        .computeIfAbsent(category.get(), ignored -> new ArrayList<>())
+                        .addAll(getWidgetProviders(filterWidget).stream()
+                                .map(ItemStatProvider::getDisplayName)
+                                .toList());
+            }
+
             currentY += filterWidget.getHeight() + WIDGET_SPACING;
+            contentOffset += filterWidget.getHeight() + WIDGET_SPACING;
         }
+
+        categoryShortcuts = shortcutProviders.entrySet().stream()
+                .map(entry -> new GuideFilterCategoryShortcut(
+                        entry.getKey(), shortcutOffsets.get(entry.getKey()), entry.getValue()))
+                .toList();
     }
 
-    private void renderScroll(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void updateScrollY() {
         if (getMaxScrollOffset() <= 0) return;
 
         scrollY = getScrollAreaStartY()
@@ -77,6 +109,12 @@ public class GuideFilterPanel extends AbstractWidget {
                         getMaxScrollOffset(),
                         0,
                         getScrollAreaHeight() - Texture.SCROLL_BUTTON.height());
+    }
+
+    private void renderScroll(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        if (getMaxScrollOffset() <= 0) return;
+
+        updateScrollY();
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, getScrollBarX(), scrollY);
 
@@ -87,11 +125,46 @@ public class GuideFilterPanel extends AbstractWidget {
         }
     }
 
+    private void renderCategoryShortcuts(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        if (getMaxScrollOffset() <= 0) return;
+
+        boolean overScrollBar = isOverScrollBar(mouseX, mouseY);
+
+        for (GuideFilterCategoryShortcut shortcut : categoryShortcuts) {
+            int shortcutY = getShortcutY(shortcut.getContentOffset());
+            RenderUtils.drawRect(
+                    guiGraphics,
+                    CommonColors.WHITE.withAlpha(
+                            !overScrollBar && isOverShortcut(shortcut, mouseX, mouseY) ? 0.9f : 0.55f),
+                    getScrollBarX(),
+                    shortcutY,
+                    Texture.SCROLL_BUTTON.width(),
+                    2);
+
+            if (!overScrollBar && isOverShortcut(shortcut, mouseX, mouseY)) {
+                guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+                RenderUtils.renderTooltip(guiGraphics, shortcut.getTooltip(), mouseX, mouseY);
+            }
+        }
+    }
+
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (getMaxScrollOffset() > 0 && isOverScrollBar((int) event.x(), (int) event.y())) {
-            draggingScroll = true;
-            return true;
+        updateScrollY();
+
+        if (getMaxScrollOffset() > 0) {
+            if (isOverScrollBar((int) event.x(), (int) event.y())) {
+                draggingScroll = true;
+                return true;
+            }
+
+            for (GuideFilterCategoryShortcut shortcut : categoryShortcuts) {
+                if (isOverShortcut(shortcut, (int) event.x(), (int) event.y())) {
+                    scroll(Math.min(shortcut.getContentOffset(), getMaxScrollOffset()));
+                    this.playDownSound(Minecraft.getInstance().getSoundManager());
+                    return true;
+                }
+            }
         }
 
         for (AbstractWidget filterWidget : filterWidgets) {
@@ -215,6 +288,44 @@ public class GuideFilterPanel extends AbstractWidget {
 
     private int getScrollAreaHeight() {
         return getHeight() - SCROLL_AREA_TOP_PADDING - SCROLL_AREA_BOTTOM_PADDING;
+    }
+
+    private int getShortcutY(int contentOffset) {
+        int clampedOffset = MathUtils.clamp(contentOffset, 0, getMaxScrollOffset());
+
+        return getScrollAreaStartY()
+                + Math.round(MathUtils.map(clampedOffset, 0, getMaxScrollOffset(), 0, getScrollAreaHeight() - 3));
+    }
+
+    private boolean isOverShortcut(GuideFilterCategoryShortcut shortcut, int mouseX, int mouseY) {
+        int shortcutY = getShortcutY(shortcut.getContentOffset());
+
+        return MathUtils.isInside(
+                mouseX,
+                mouseY,
+                getScrollBarX(),
+                getScrollBarX() + Texture.SCROLL_BUTTON.width(),
+                shortcutY - 1,
+                shortcutY + 3);
+    }
+
+    private Optional<String> getWidgetCategory(AbstractWidget widget) {
+        return getWidgetProviders(widget).stream()
+                .map(ItemStatProvider::getGuideCategory)
+                .flatMap(Optional::stream)
+                .findFirst();
+    }
+
+    private List<ItemStatProvider<?>> getWidgetProviders(AbstractWidget widget) {
+        if (widget instanceof GuideFilterWidget guideFilterWidget) {
+            return guideFilterWidget.getProviders();
+        }
+
+        if (widget instanceof GuideSortWidget guideSortWidget) {
+            return List.of(guideSortWidget.getProvider());
+        }
+
+        return List.of();
     }
 
     @Override

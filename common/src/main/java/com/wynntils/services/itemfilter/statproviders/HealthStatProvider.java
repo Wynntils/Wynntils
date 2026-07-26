@@ -29,6 +29,11 @@ public class HealthStatProvider extends ItemStatProvider<Integer> {
     }
 
     @Override
+    public Optional<String> getGuideCategory() {
+        return Optional.of("Fixed Stats");
+    }
+
+    @Override
     public Optional<RangedValue> getExpectedRange() {
         return Optional.of(RangedValue.of(-10000, 10000));
     }

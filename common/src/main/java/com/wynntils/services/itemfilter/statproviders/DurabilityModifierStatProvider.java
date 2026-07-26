@@ -22,6 +22,11 @@ public class DurabilityModifierStatProvider extends ItemStatProvider<Integer> {
     }
 
     @Override
+    public Optional<String> getGuideCategory() {
+        return Optional.of("Crafting Modifier");
+    }
+
+    @Override
     public List<ItemProviderType> getFilterTypes() {
         return List.of(ItemProviderType.INGREDIENT);
     }

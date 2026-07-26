@@ -95,6 +95,10 @@ public class GuideSortWidget extends AbstractWidget {
         return sortDirection == null ? Optional.empty() : Optional.of(new SortInfo(sortDirection, provider));
     }
 
+    public ItemStatProvider<?> getProvider() {
+        return provider;
+    }
+
     public void updateFromQuery(ItemSearchQuery query) {
         sortDirection = query.sorts().stream()
                 .filter(sort -> sort.provider().getName().equals(provider.getName()))
