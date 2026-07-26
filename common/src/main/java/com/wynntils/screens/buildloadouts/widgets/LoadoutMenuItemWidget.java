@@ -163,13 +163,8 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
     private Optional<ItemStack> decodeItemStack(String stored) {
         if (stored == null || stored.isEmpty()) return Optional.empty();
 
-        Matcher matcher = Models.ItemEncoding.getEncodedDataPattern().matcher(stored);
-        if (!matcher.matches()) return Optional.empty();
-
-        EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromUtf16String(matcher.group("data"));
-        String itemName = matcher.group("name");
-
-        ErrorOr<WynnItem> errorOrItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, itemName);
+        EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromBase64String(stored);
+        ErrorOr<WynnItem> errorOrItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, null);
         if (errorOrItem.hasError()) return Optional.empty();
 
         WynnItem item = errorOrItem.getValue();

@@ -238,7 +238,7 @@ public class LoadoutMigrationUpfixer implements Upfixer {
             return Optional.empty();
         }
 
-        return Optional.of(Models.ItemEncoding.makeItemString(defaultGearItem, errorOrEncoded.getValue()));
+        return Optional.of(errorOrEncoded.getValue().toBase64String());
     }
 
     private static Optional<String> encodeDefaultGearItem(String rawName) {

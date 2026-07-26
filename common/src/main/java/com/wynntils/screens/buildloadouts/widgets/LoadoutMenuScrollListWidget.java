@@ -120,7 +120,7 @@ public class LoadoutMenuScrollListWidget extends ScrollListWidget implements Ite
             for (SavableTome tome : selectedLoadout.tomes().getAllTomes()) {
                 ItemStack tomeStack = decodeTomeItemStack(tome).orElse(ItemStack.EMPTY);
                 itemWidgets.add(new LoadoutMenuScrollListTomeWidget(
-                        StyledText.fromString(tome.name()),
+                        StyledText.fromString(tome.itemName()),
                         tomeStack,
                         this.x + WIDGET_HEIGHT_EDGE_PADDING,
                         this.y
@@ -136,19 +136,14 @@ public class LoadoutMenuScrollListWidget extends ScrollListWidget implements Ite
     private Optional<ItemStack> decodeTomeItemStack(SavableTome tome) {
         if (tome == null || tome.encoded() == null || tome.encoded().isEmpty()) return Optional.empty();
 
-        Matcher matcher = Models.ItemEncoding.getEncodedDataPattern().matcher(tome.encoded());
-        if (matcher.matches()) {
-            EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromUtf16String(matcher.group("data"));
-            String itemName = matcher.group("name");
+        EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromBase64String(tome.encoded());
+        ErrorOr<WynnItem> errorOrItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, null);
+        if (errorOrItem.hasError()) return Optional.empty();
 
-            ErrorOr<WynnItem> errorOrItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, itemName);
-            if (errorOrItem.hasError()) {
-                return Optional.empty();
-            }
+        WynnItem item = errorOrItem.getValue();
 
-            if (errorOrItem.getValue() instanceof TomeItem tomeItem) {
-                return Optional.of(new FakeItemStack(tomeItem, "From loadout"));
-            }
+        if (item instanceof TomeItem tomeItem) {
+            return Optional.of(new FakeItemStack(tomeItem, "From loadout"));
         }
 
         return Optional.empty();

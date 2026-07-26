@@ -381,7 +381,7 @@ public final class CharacterModel extends Model {
                 continue;
             }
 
-            String encoded = Models.ItemEncoding.makeItemString(tome, errorOrEncoded.getValue());
+            String encoded = errorOrEncoded.getValue().toBase64String();
             tomes.add(new SavableTome(type, tome.getName(), encoded));
         }
 

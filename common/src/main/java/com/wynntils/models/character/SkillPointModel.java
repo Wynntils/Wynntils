@@ -103,7 +103,7 @@ public final class SkillPointModel extends Model {
                 continue;
             }
 
-            String encoded = Models.ItemEncoding.makeItemString(wynnItem, errorOrEncoded.getValue());
+            String encoded = errorOrEncoded.getValue().toBase64String();
 
             if (i < 4) {
                 armourEncodedStrings.set(i, encoded);
