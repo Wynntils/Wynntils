@@ -159,7 +159,7 @@ public class WynntilsGuideScreen extends WynntilsScreen {
     private void createTypeButtons() {
         guideTypeButtons = new ArrayList<>();
 
-        int buttonArea = this.height - 40;
+        int buttonArea = this.height - 20;
         int maxButtons = (buttonArea / BUTTON_SPACING) - 1;
         boolean scrollNeeded = GuideType.values().length > maxButtons;
 
@@ -169,7 +169,7 @@ public class WynntilsGuideScreen extends WynntilsScreen {
         if (scrollNeeded) {
             guideTypes = new ArrayList<>();
 
-            for (int i = 0; i < maxButtons; i++) {
+            for (int i = 0; i < maxButtons - 2; i++) {
                 guideTypes.add(values[(guideTypeScrollOffset + i) % values.length]);
             }
         } else {
@@ -177,7 +177,7 @@ public class WynntilsGuideScreen extends WynntilsScreen {
         }
 
         int visibleButtons = guideTypes.size() + (scrollNeeded ? 2 : 0);
-        int renderY = (this.height - (visibleButtons * BUTTON_SPACING)) / 2;
+        int renderY = (this.height + 20 - (visibleButtons * BUTTON_SPACING)) / 2;
 
         if (scrollNeeded) {
             ItemStack upItem = new ItemStack(Items.POTION);
