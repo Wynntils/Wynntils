@@ -51,6 +51,8 @@ public class LoadoutMenuScrollListAbilityWidget extends AbstractWidget implement
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        handleCursor(guiGraphics);
+
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, this.x, this.y, this.width, this.height);
 
@@ -79,7 +81,6 @@ public class LoadoutMenuScrollListAbilityWidget extends AbstractWidget implement
 
     @Override
     public void renderHoveredItemTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        handleCursor(guiGraphics);
         RenderUtils.renderTooltip(guiGraphics, abilityItemStack, mouseX, mouseY);
     }
 
