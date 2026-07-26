@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -117,7 +118,7 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
                         favoriteFilterButton.setMessage(getFavoriteFilterMessage());
                         updateSearchFromQuickFilters();
                     },
-                    List.of(tooltip));
+                    tooltip);
         }
 
         if (!filterWidgets.isEmpty()) {
@@ -139,7 +140,7 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
                         toggleFiltersButton.setMessage(Component.literal(this.displayingSorts ? "Filter" : "Sort"));
                         updateSearchFromQuickFilters();
                     },
-                    List.of(tooltip));
+                    tooltip);
 
             filterPanel =
                     new GuideFilterPanel(getX() + getWidth() - 146, getY() + 28, 146, getHeight() - 28, filterWidgets);
@@ -174,7 +175,7 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
                 20,
                 Component.literal("Import").withStyle(ChatFormatting.GREEN),
                 (button) -> importFavorites(),
-                List.of(importTooltip)));
+                importTooltip));
 
         MutableComponent exportTooltip = Component.empty()
                 .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class))
@@ -188,7 +189,7 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
                 20,
                 Component.literal("Export").withStyle(ChatFormatting.BLUE),
                 (button) -> exportFavorites(),
-                List.of(exportTooltip)));
+                exportTooltip));
 
         clearFavoritesButton = new GuideActionButton(
                 getX() + 90,
@@ -599,7 +600,7 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
                         .withStyle(ChatFormatting.GREEN));
 
         clearCount = 3;
-        clearFavoritesButton.setTooltip(getClearFavoritesTooltip());
+        clearFavoritesButton.setTooltip(Tooltip.create(getClearFavoritesTooltip()));
         updateSearchFromQuickFilters();
     }
 
@@ -616,22 +617,22 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
     private void tryClearFavorites() {
         if (clearCount > 1) {
             clearCount--;
-            clearFavoritesButton.setTooltip(getClearFavoritesTooltip());
+            clearFavoritesButton.setTooltip(Tooltip.create(getClearFavoritesTooltip()));
             return;
         }
 
         Services.Favorites.clearFavorites();
         updateSearchFromQuickFilters();
         clearCount = 3;
-        clearFavoritesButton.setTooltip(getClearFavoritesTooltip());
+        clearFavoritesButton.setTooltip(Tooltip.create(getClearFavoritesTooltip()));
     }
 
-    private List<Component> getClearFavoritesTooltip() {
-        return List.of(Component.empty()
+    private Component getClearFavoritesTooltip() {
+        return Component.empty()
                 .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class))
                 .append(" ")
                 .append(Component.translatable("screens.wynntils.wynntilsGuides.clear.tooltip", clearCount)
-                        .withStyle(ChatFormatting.RED)));
+                        .withStyle(ChatFormatting.RED));
     }
 
     protected abstract GuideButton createGuideButton(int x, int y, T item);

@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.guides.widgets;
 
-import com.google.common.collect.Lists;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
@@ -18,23 +17,18 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
 public class GuideActionButton extends BasicTexturedButton {
     public GuideActionButton(
-            int x,
-            int y,
-            int width,
-            int height,
-            Component message,
-            Consumer<Integer> onClick,
-            List<Component> tooltip) {
-        super(x, y, width, height, Texture.GUIDE_WIDGET_BACKGROUND, onClick, tooltip);
+            int x, int y, int width, int height, Component message, Consumer<Integer> onClick, Component tooltip) {
+        super(x, y, width, height, Texture.GUIDE_WIDGET_BACKGROUND, onClick, List.of());
 
         setMessage(message);
-        setTooltip(tooltip);
+        setTooltip(Tooltip.create(tooltip));
     }
 
     @Override
@@ -60,11 +54,6 @@ public class GuideActionButton extends BasicTexturedButton {
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
-
-        if (isHovered) {
-            guiGraphics.setTooltipForNextFrame(
-                    Lists.transform(getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
-        }
     }
 
     @Override
