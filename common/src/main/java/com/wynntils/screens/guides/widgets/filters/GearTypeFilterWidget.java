@@ -173,10 +173,10 @@ public class GearTypeFilterWidget extends GuideFilterWidget {
 
             RenderUtils.drawRect(
                     guiGraphics,
-                    (state && !isHovered ? CommonColors.ORANGE : CommonColors.WHITE).withAlpha(isHovered ? 0.7f : 0.5f),
+                    (state ? CommonColors.LIGHT_GREEN : CommonColors.WHITE).withAlpha(isHovered ? 0.7f : 0.5f),
                     getX(),
                     getY(),
-                    state && !isHovered ? 16 : getWidth(),
+                    getWidth(),
                     16);
 
             handleCursor(guiGraphics);
