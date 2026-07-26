@@ -5,11 +5,11 @@
 package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.core.text.type.StyleType;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.services.loadout.type.Loadout;
 import com.wynntils.services.loadout.type.LoadoutType;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -90,7 +90,10 @@ public class LoadoutWidget extends AbstractWidget implements IconRenderer {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             guiGraphics,
-                            getTruncatedText(this.text, MAX_VISIBLE_CHARACTERS),
+                            StyledText.fromString(RenderedStringUtils.getMaxFittingText(
+                                    this.text.getStringWithoutFormatting(),
+                                    (this.width - TEXT_WIDTH_PADDING * 3 - 20) * 3,
+                                    FontRenderer.getInstance().getFont())),
                             this.x + TEXT_WIDTH_PADDING + 20 + ((this.width - TEXT_WIDTH_PADDING * 2 - 20) / 2f),
                             this.y + TEXT_HEIGHT_PADDING,
                             this.y + this.height - TEXT_HEIGHT_PADDING,
@@ -109,7 +112,10 @@ public class LoadoutWidget extends AbstractWidget implements IconRenderer {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             guiGraphics,
-                            getTruncatedText(this.text, MAX_VISIBLE_CHARACTERS - 6),
+                            StyledText.fromString(RenderedStringUtils.getMaxFittingText(
+                                    this.text.getStringWithoutFormatting(),
+                                    (this.width - TEXT_WIDTH_PADDING * 2 - 36) * 3,
+                                    FontRenderer.getInstance().getFont())),
                             this.x + TEXT_WIDTH_PADDING + 36 + ((this.width - TEXT_WIDTH_PADDING * 2 - 36) / 2f),
                             this.y + TEXT_HEIGHT_PADDING,
                             this.y + this.height - TEXT_HEIGHT_PADDING,
@@ -128,15 +134,6 @@ public class LoadoutWidget extends AbstractWidget implements IconRenderer {
                 renderSkillIcons(guiGraphics, this.x, baseY, activeElements);
             }
         }
-    }
-
-    private StyledText getTruncatedText(StyledText text, int maxVisibleChars) {
-        int visibleLength = text.length();
-        if (visibleLength <= maxVisibleChars) {
-            return text;
-        }
-
-        return text.substring(0, maxVisibleChars - 3, StyleType.NONE).append("...");
     }
 
     @Override

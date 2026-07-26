@@ -7,13 +7,13 @@ package com.wynntils.screens.buildloadouts.widgets;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.core.text.type.StyleType;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.services.loadout.type.Loadout;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -71,10 +71,12 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             guiGraphics,
-                            getTruncatedText(
+                            StyledText.fromString(RenderedStringUtils.getMaxFittingText(
                                     StyledText.fromString(
-                                            parent.getSelectedLoadout().name()),
-                                    MAX_VISIBLE_CHARARCTERS),
+                                                    parent.getSelectedLoadout().name())
+                                            .getStringWithoutFormatting(),
+                                    this.width - textPadding * 2 - EDIT_BUTTON_WIDTH,
+                                    FontRenderer.getInstance().getFont())),
                             this.getX() + textPadding,
                             this.getX() + this.width - EDIT_BUTTON_WIDTH,
                             this.getY() + VERTICAL_OFFSET,
@@ -318,15 +320,6 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
                 && mouseX <= btnX + EDIT_BUTTON_WIDTH
                 && mouseY >= btnY
                 && mouseY <= btnY + EDIT_BUTTON_HEIGHT;
-    }
-
-    private StyledText getTruncatedText(StyledText text, int maxVisibleChars) {
-        int visibleLength = text.length();
-        if (visibleLength <= maxVisibleChars) {
-            return text;
-        }
-
-        return text.substring(0, maxVisibleChars - 3, StyleType.NONE).append("...");
     }
 
     public boolean isEditing() {

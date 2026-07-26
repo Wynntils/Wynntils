@@ -46,7 +46,7 @@ public class LoadoutMigrationUpfixer implements Upfixer {
                 configObject.has(OLD_SKILL_POINT_KEY) ? configObject.getAsJsonObject(OLD_SKILL_POINT_KEY) : null;
 
         if (abilityTrees == null && aspects == null && skillPoints == null) {
-            return false;
+            return true;
         }
 
         JsonObject newLoadouts = new JsonObject();

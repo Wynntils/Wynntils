@@ -23,7 +23,6 @@ import com.wynntils.models.character.type.SavableTomeSet;
 import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.MasteryTomesContainer;
-import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.items.gui.CharacterItem;
@@ -345,11 +344,12 @@ public final class CharacterModel extends Model {
 
     private void processOtherTomes(ContainerContent content) {
         for (ItemStack itemStack : content.items()) {
-            Optional<WynnItem> wynnItemOptional = Models.Item.getWynnItem(itemStack);
-            if (wynnItemOptional.isEmpty() || !(wynnItemOptional.get() instanceof TomeItem tome)) continue;
-            if (tome.getItemInfo().type() == null) continue;
+            Optional<TomeItem> tomeItemOptional = Models.Item.asWynnItem(itemStack, TomeItem.class);
+            if (tomeItemOptional.isEmpty()) continue;
+            TomeItem tomeItem = tomeItemOptional.get();
+            if (tomeItem.getItemInfo().type() == null) continue;
 
-            equippedTomes.add(tome);
+            equippedTomes.add(tomeItem);
         }
     }
 

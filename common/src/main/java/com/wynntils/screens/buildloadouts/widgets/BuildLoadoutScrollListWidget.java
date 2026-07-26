@@ -110,11 +110,9 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (abilityTreeButton.isMouseOver(event.x(), event.y())) {
             return abilityTreeButton.mouseClicked(event, isDoubleClick);
-        }
-        if (aspectsButton.isMouseOver(event.x(), event.y())) {
+        } else if (aspectsButton.isMouseOver(event.x(), event.y())) {
             return aspectsButton.mouseClicked(event, isDoubleClick);
-        }
-        if (tomesButton.isMouseOver(event.x(), event.y())) {
+        } else if (tomesButton.isMouseOver(event.x(), event.y())) {
             return tomesButton.mouseClicked(event, isDoubleClick);
         }
 
