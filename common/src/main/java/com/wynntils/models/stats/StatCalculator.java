@@ -307,6 +307,16 @@ public final class StatCalculator {
         return Optional.of((float) percents.getAverage());
     }
 
+    public static Optional<Float> calculateOverallQualityFromVanillaMeters(List<StatActualValue> identifications) {
+        DoubleSummaryStatistics percents = identifications.stream()
+                .flatMap(actualValue -> actualValue.vanillaMeter().stream())
+                .mapToDouble(StatCalculator::getPercentageFromVanillaMeter)
+                .summaryStatistics();
+        if (percents.getCount() == 0) return Optional.empty();
+
+        return Optional.of((float) percents.getAverage());
+    }
+
     private static void verifyCalculatedInternalRoll(
             int baseValue,
             StatCalculationInfo statCalculationInfo,

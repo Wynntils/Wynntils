@@ -8,6 +8,7 @@ import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import org.jspecify.annotations.Nullable;
 
 @FunctionalInterface
 public interface TooltipIdentificationDecorator {
@@ -15,5 +16,9 @@ public interface TooltipIdentificationDecorator {
         return title.copy();
     }
 
-    MutableComponent getSuffix(StatActualValue actualValue, StatPossibleValues possibleValues, TooltipStyle style);
+    /**
+     * @param possibleValues the known roll range, or {@code null} when the server only provides an estimated meter
+     */
+    MutableComponent getSuffix(
+            StatActualValue actualValue, @Nullable StatPossibleValues possibleValues, TooltipStyle style);
 }

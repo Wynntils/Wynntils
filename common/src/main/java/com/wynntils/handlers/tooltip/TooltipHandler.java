@@ -15,6 +15,7 @@ import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Supplier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -23,9 +24,28 @@ public final class TooltipHandler extends Handler {
             List<Component> originalLines, IdentifiableItemProperty<?, ?> identifiableItem, TooltipOptions options) {
         if (identifiableItem.getIdentifications().isEmpty()) return originalLines;
 
-        if (!(identifiableItem instanceof WynnItem wynnItem)) {
-            return calculateUpdatedTooltip(originalLines, identifiableItem, options);
-        }
+        return updateTooltip(
+                originalLines,
+                identifiableItem,
+                options,
+                () -> calculateUpdatedTooltip(originalLines, identifiableItem, options));
+    }
+
+    public List<Component> updateTooltip(
+            List<Component> originalLines, CraftedItemProperty craftedItem, TooltipOptions options) {
+        if (craftedItem.getIdentifications().isEmpty()) return originalLines;
+
+        return updateTooltip(
+                originalLines,
+                craftedItem,
+                options,
+                () -> CraftedTooltipBuilder.fromTooltipLines(originalLines, craftedItem)
+                        .getTooltipLines(Models.Character.getClassType(), options));
+    }
+
+    private List<Component> updateTooltip(
+            List<Component> originalLines, Object item, TooltipOptions options, Supplier<List<Component>> calculator) {
+        if (!(item instanceof WynnItem wynnItem)) return calculator.get();
 
         Object cachedTooltip = wynnItem.getData().get(WynnItemData.TOOLTIP_KEY);
         if (cachedTooltip instanceof TooltipBuilder) {
@@ -41,7 +61,7 @@ public final class TooltipHandler extends Handler {
         }
 
         UpdateKey key = new UpdateKey(List.copyOf(originalLines), options);
-        return cache.computeIfAbsent(key, ignored -> calculateUpdatedTooltip(originalLines, identifiableItem, options));
+        return cache.computeIfAbsent(key, ignored -> calculator.get());
     }
 
     private List<Component> calculateUpdatedTooltip(
