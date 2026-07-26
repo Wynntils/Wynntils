@@ -549,7 +549,7 @@ public class ItemFilterService extends Service {
 
         // Dynamic Item Stats
         registerStatProvider(new OverallStatProvider());
-        for (Skill skill : Models.Element.getGearSkillOrder()) {
+        for (Skill skill : Skill.values()) {
             registerStatProvider(new SkillStatProvider(skill));
             registerStatProvider(new SkillReqStatProvider(skill));
         }
