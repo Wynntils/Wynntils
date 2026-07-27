@@ -4,6 +4,12 @@
  */
 package com.wynntils.models.character.type;
 
+import com.wynntils.models.items.encoding.type.ItemType;
 import com.wynntils.models.rewards.type.TomeType;
 
-public record SavableTome(TomeType type, String itemName, String encoded) implements SavableBasicItem {}
+public record SavableTome(TomeType type, String itemName, String encoded, ItemType itemType)
+        implements SavableBasicItem {
+    public SavableTome(TomeType type, String itemName, String encoded) {
+        this(type, itemName, encoded, ItemType.TOME);
+    }
+}

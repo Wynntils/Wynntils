@@ -7,11 +7,13 @@ package com.wynntils.screens.buildloadouts.widgets;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.character.type.SavableBasicItem;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.character.type.SavableTome;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.encoding.type.ItemType;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
@@ -31,7 +33,6 @@ import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -160,11 +161,17 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
         return mouseX >= boxX && mouseX < boxX + BOX_SIZE && mouseY >= boxY && mouseY < boxY + BOX_SIZE;
     }
 
-    private Optional<ItemStack> decodeItemStack(String stored) {
-        if (stored == null || stored.isEmpty()) return Optional.empty();
+    private Optional<ItemStack> decodeItemStack(SavableBasicItem stored) {
+        if (stored == null || stored.encoded() == null || stored.encoded().isEmpty()) return Optional.empty();
 
-        EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromBase64String(stored);
-        ErrorOr<WynnItem> errorOrItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, null);
+        EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromBase64String(stored.encoded());
+
+        String itemName = null;
+        if (stored.itemType() == ItemType.CRAFTED_GEAR) {
+            itemName = stored.itemName();
+        }
+
+        ErrorOr<WynnItem> errorOrItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, itemName);
         if (errorOrItem.hasError()) return Optional.empty();
 
         WynnItem item = errorOrItem.getValue();
@@ -217,7 +224,7 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
 
         SavableSkillPointSet skillPoints = selectedLoadout.skillPoints();
 
-        List<String> orderedSlots = new ArrayList<>();
+        List<SavableBasicItem> orderedSlots = new ArrayList<>();
         orderedSlots.add(skillPoints.weapon());
         orderedSlots.addAll(skillPoints.armourNames());
         orderedSlots.add(getSkillPointTomeEncoded(selectedLoadout));
@@ -229,12 +236,11 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
                 .toList();
     }
 
-    private String getSkillPointTomeEncoded(Loadout selectedLoadout) {
+    private SavableTome getSkillPointTomeEncoded(Loadout selectedLoadout) {
         if (selectedLoadout.tomes() == null) return null;
 
         return selectedLoadout.tomes().getTomes(TomeType.GUILD_TOME).stream()
                 .findFirst()
-                .map(SavableTome::encoded)
                 .orElse(null);
     }
 

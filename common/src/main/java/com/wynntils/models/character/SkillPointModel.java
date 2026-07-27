@@ -15,11 +15,13 @@ import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.character.type.ClickAction;
+import com.wynntils.models.character.type.SavableItem;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
+import com.wynntils.models.items.encoding.type.ItemType;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
@@ -37,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
@@ -45,6 +48,7 @@ public final class SkillPointModel extends Model {
     private static final int[] SKILL_POINT_TOTAL_SLOTS = {11, 12, 13, 14, 15};
     private static final int SKILL_POINT_TOME_SLOT = 4;
     private static final int CONTENT_BOOK_SLOT = 62;
+    private static final Pattern SANITIZE_PATTERN = Pattern.compile("[^a-zA-Z0-9'\\-.,!?\\s]");
 
     private Map<Skill, Integer> totalSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> gearSkillPoints = new EnumMap<>(Skill.class);
@@ -85,9 +89,11 @@ public final class SkillPointModel extends Model {
         EncodingSettings encodingSettings = new EncodingSettings(true, true);
         List<ItemStack> equippedItems = Models.Inventory.getEquippedItems();
 
-        String weaponEncodedString = null;
-        List<String> armourEncodedStrings = new ArrayList<>(List.of("", "", "", ""));
-        List<String> accessoryEncodedStrings = new ArrayList<>(List.of("", "", "", ""));
+        SavableItem weaponSavableItem = null;
+        List<SavableItem> armourSavableItems =
+                new ArrayList<>(List.of(new SavableItem(), new SavableItem(), new SavableItem(), new SavableItem()));
+        List<SavableItem> accessorySavableItems =
+                new ArrayList<>(List.of(new SavableItem(), new SavableItem(), new SavableItem(), new SavableItem()));
 
         for (int i = 0; i < equippedItems.size(); i++) {
             ItemStack itemStack = equippedItems.get(i);
@@ -103,19 +109,28 @@ public final class SkillPointModel extends Model {
                 continue;
             }
 
-            String encoded = errorOrEncoded.getValue().toBase64String();
-
-            if (i < 4) {
-                armourEncodedStrings.set(i, encoded);
-            } else if (i < 8) {
-                accessoryEncodedStrings.set(i - 4, encoded);
+            ItemType itemType;
+            if (wynnItem instanceof CraftedGearItem craftedGearItem) {
+                itemType = ItemType.CRAFTED_GEAR;
             } else {
-                weaponEncodedString = encoded;
+                itemType = ItemType.GEAR;
+            }
+
+            String itemName = SANITIZE_PATTERN
+                    .matcher(itemStack.getHoverName().getString())
+                    .replaceAll("");
+            String encoded = errorOrEncoded.getValue().toBase64String();
+            if (i < 4) {
+                armourSavableItems.set(i, new SavableItem(encoded, itemName, itemType));
+            } else if (i < 8) {
+                accessorySavableItems.set(i - 4, new SavableItem(encoded, itemName, itemType));
+            } else {
+                weaponSavableItem = new SavableItem(encoded, itemName, itemType);
             }
         }
 
-        SavableSkillPointSet assignedSkillPointSet = new SavableSkillPointSet(
-                skillPoints, weaponEncodedString, armourEncodedStrings, accessoryEncodedStrings);
+        SavableSkillPointSet assignedSkillPointSet =
+                new SavableSkillPointSet(skillPoints, weaponSavableItem, armourSavableItems, accessorySavableItems);
         Services.loadout.saveSkillPointLoadoutAndTomes(
                 name, assignedSkillPointSet, Models.Character.getCurrentTomeSet());
         WynntilsMod.info("Saved skill point build: " + name + " " + assignedSkillPointSet);

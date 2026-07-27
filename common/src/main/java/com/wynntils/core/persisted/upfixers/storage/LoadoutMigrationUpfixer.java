@@ -11,9 +11,11 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.upfixers.Upfixer;
+import com.wynntils.models.character.type.SavableItem;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
+import com.wynntils.models.items.encoding.type.ItemType;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
@@ -119,7 +121,7 @@ public class LoadoutMigrationUpfixer implements Upfixer {
             String weaponName = skillPointObject.get("weapon").getAsString();
             encodeDefaultGearItem(weaponName)
                     .ifPresentOrElse(
-                            encoded -> skillPointObject.addProperty("weapon", encoded),
+                            savableItem -> skillPointObject.add("weapon", savableItemToJson(savableItem)),
                             () -> WynntilsMod.warn("Upfixer: could not encode weapon " + weaponName));
         }
 
@@ -133,7 +135,8 @@ public class LoadoutMigrationUpfixer implements Upfixer {
         if (!skillPointObject.has(key) || !skillPointObject.get(key).isJsonArray()) return;
 
         JsonArray oldNames = skillPointObject.getAsJsonArray(key);
-        String[] slots = new String[4]; // 0=helmet, 1=chestplate, 2=leggings, 3=boots
+        // 0=helmet, 1=chestplate, 2=leggings, 3=boots
+        SavableItem[] slots = {new SavableItem(), new SavableItem(), new SavableItem(), new SavableItem()};
 
         for (JsonElement nameElement : oldNames) {
             if (nameElement.isJsonNull()) continue;
@@ -156,14 +159,14 @@ public class LoadoutMigrationUpfixer implements Upfixer {
 
                 encodeGearItem(gearInfo)
                         .ifPresentOrElse(
-                                encoded -> slots[slotIndex] = encoded,
+                                savableItem -> slots[slotIndex] = savableItem,
                                 () -> WynntilsMod.warn("Upfixer: could not encode armour " + rawName));
             });
         }
 
         JsonArray newNames = new JsonArray();
-        for (String slot : slots) {
-            newNames.add(slot);
+        for (SavableItem slot : slots) {
+            newNames.add(savableItemToJson(slot));
         }
         skillPointObject.add(key, newNames);
     }
@@ -172,7 +175,8 @@ public class LoadoutMigrationUpfixer implements Upfixer {
         if (!skillPointObject.has(key) || !skillPointObject.get(key).isJsonArray()) return;
 
         JsonArray oldNames = skillPointObject.getAsJsonArray(key);
-        String[] slots = new String[4]; // 0=ring1, 1=ring2, 2=bracelet, 3=necklace
+        // 0=ring1, 1=ring2, 2=bracelet, 3=necklace
+        SavableItem[] slots = {new SavableItem(), new SavableItem(), new SavableItem(), new SavableItem()};
 
         for (JsonElement nameElement : oldNames) {
             if (nameElement.isJsonNull()) continue;
@@ -181,9 +185,12 @@ public class LoadoutMigrationUpfixer implements Upfixer {
             resolveGearInfo(rawName).ifPresent(gearInfo -> {
                 Integer slotIndex =
                         switch (gearInfo.type()) {
-                            case RING -> slots[0] == null ? 0 : (slots[1] == null ? 1 : null);
-                            case BRACELET -> slots[2] == null ? 2 : null;
-                            case NECKLACE -> slots[3] == null ? 3 : null;
+                            case RING ->
+                                slots[0].encoded().isEmpty()
+                                        ? 0
+                                        : (slots[1].encoded().isEmpty() ? 1 : null);
+                            case BRACELET -> slots[2].encoded().isEmpty() ? 2 : null;
+                            case NECKLACE -> slots[3].encoded().isEmpty() ? 3 : null;
                             default -> null;
                         };
 
@@ -195,14 +202,14 @@ public class LoadoutMigrationUpfixer implements Upfixer {
 
                 encodeGearItem(gearInfo)
                         .ifPresentOrElse(
-                                encoded -> slots[slotIndex] = encoded,
+                                savableItem -> slots[slotIndex] = savableItem,
                                 () -> WynntilsMod.warn("Upfixer: could not encode accessory " + rawName));
             });
         }
 
         JsonArray newNames = new JsonArray();
-        for (String slot : slots) {
-            newNames.add(slot);
+        for (SavableItem slot : slots) {
+            newNames.add(savableItemToJson(slot));
         }
         skillPointObject.add(key, newNames);
     }
@@ -216,7 +223,7 @@ public class LoadoutMigrationUpfixer implements Upfixer {
         return Optional.ofNullable(gearInfo);
     }
 
-    private static Optional<String> encodeGearItem(GearInfo gearInfo) {
+    private static Optional<SavableItem> encodeGearItem(GearInfo gearInfo) {
         List<StatActualValue> stats = new ArrayList<>();
 
         for (Map.Entry<StatType, StatPossibleValues> entry :
@@ -238,10 +245,24 @@ public class LoadoutMigrationUpfixer implements Upfixer {
             return Optional.empty();
         }
 
-        return Optional.of(errorOrEncoded.getValue().toBase64String());
+        return Optional.of(new SavableItem(errorOrEncoded.getValue().toBase64String(), gearInfo.name()));
     }
 
-    private static Optional<String> encodeDefaultGearItem(String rawName) {
+    private static Optional<SavableItem> encodeDefaultGearItem(String rawName) {
         return resolveGearInfo(rawName).flatMap(LoadoutMigrationUpfixer::encodeGearItem);
+    }
+
+    private static JsonObject savableItemToJson(SavableItem savableItem) {
+        JsonObject json = new JsonObject();
+        json.addProperty("encoded", savableItem.encoded());
+        json.addProperty("itemName", savableItem.itemName());
+
+        String itemType = "gear";
+        if (savableItem.itemType() == ItemType.CRAFTED_GEAR) {
+            itemType = "craftedGear";
+        }
+
+        json.addProperty("itemType", itemType);
+        return json;
     }
 }
