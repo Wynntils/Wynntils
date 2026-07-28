@@ -10,26 +10,28 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
-import com.wynntils.core.consumers.overlays.Overlay;
-import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.mod.TickSchedulerManager;
+import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.dialogue.event.NpcDialogueEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.overlays.AutoProgressDialogueOverlay;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.RenderElementType;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundPlayerInputPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Input;
 import net.neoforged.bus.api.SubscribeEvent;
+
+import java.util.Locale;
 
 /**
  * Automatically sends short shift pulses for Wynncraft NPC dialogue.
@@ -47,15 +49,14 @@ public class AutoProgressDialogueFeature extends Feature {
     private final KeyBind toggleAutoProgress =
             KeyBindDefinition.TOGGLE_DIALOGUE_AUTO_PROGRESS.create(this::toggleAutoProgress);
 
-    @RegisterOverlay(renderType = RenderElementType.CHAT)
-    private final Overlay autoProgressDialogueOverlay =
-            new AutoProgressDialogueOverlay(this::shouldShowAutoProgressOverlay);
-
     @Persisted
     private final Config<Boolean> autoProgressToggle = new Config<>(true);
 
     @Persisted
     private final Config<Boolean> skipDirectly = new Config<>(false);
+
+    @Persisted
+    private final Config<Boolean> showSkipTime = new Config<>(true);
 
     @Persisted
     private final Config<Integer> baseDelayMs = new Config<>(500);
@@ -79,6 +80,8 @@ public class AutoProgressDialogueFeature extends Feature {
     private boolean skipAttempted = false;
 
     private TickSchedulerManager.ScheduledTask scheduledSkipTask = null;
+    private MessageContainer autoProgressMessage = null;
+    private String autoProgressMessageState = null;
 
     public AutoProgressDialogueFeature() {
         super(ProfileDefault.DISABLED);
@@ -88,6 +91,7 @@ public class AutoProgressDialogueFeature extends Feature {
     public void onNpcDialogueStarted(NpcDialogueEvent.Started event) {
         if (!autoProgressToggle.get() || event.hasChoices()) {
             clearProgressState();
+            clearAutoProgressNotification();
             return;
         }
 
@@ -104,6 +108,7 @@ public class AutoProgressDialogueFeature extends Feature {
     public void onNpcDialogueUpdate(NpcDialogueEvent.Updated event) {
         if (!autoProgressToggle.get() || event.hasChoices()) {
             clearProgressState();
+            clearAutoProgressNotification();
             return;
         }
 
@@ -114,6 +119,7 @@ public class AutoProgressDialogueFeature extends Feature {
     public void onNpcDialogueFinished(NpcDialogueEvent.Finished event) {
         if (!autoProgressToggle.get() || event.hasChoices()) {
             clearProgressState();
+            clearAutoProgressNotification();
             return;
         }
 
@@ -138,6 +144,7 @@ public class AutoProgressDialogueFeature extends Feature {
             Managers.TickScheduler.scheduleNextTick(() -> {
                 if (isDirectHoldActive() && !Models.Dialogue.isDialoguePresent()) {
                     clearProgressState();
+                    clearAutoProgressNotification();
                 }
             });
             return;
@@ -150,6 +157,7 @@ public class AutoProgressDialogueFeature extends Feature {
     public void onTick(TickEvent event) {
         if (!Models.WorldState.onWorld() || !autoProgressToggle.get()) {
             clearProgressState();
+            clearAutoProgressNotification();
             return;
         }
 
@@ -182,16 +190,20 @@ public class AutoProgressDialogueFeature extends Feature {
                 scheduleProgress(delayMs);
             }
         }
+
+        updateAutoProgressNotification(now);
     }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         clearProgressState();
+        clearAutoProgressNotification();
     }
 
     @Override
     public void onDisable() {
         clearProgressState();
+        clearAutoProgressNotification();
     }
 
     private long getProgressDelayMs(String dialogueText) {
@@ -355,6 +367,7 @@ public class AutoProgressDialogueFeature extends Feature {
 
         if (!autoProgressToggle.get()) {
             clearProgressState();
+            clearAutoProgressNotification();
         } else {
             resumeAutoProgress();
         }
@@ -370,7 +383,51 @@ public class AutoProgressDialogueFeature extends Feature {
         });
     }
 
-    private boolean shouldShowAutoProgressOverlay() {
-        return autoProgressToggle.get() && Models.Dialogue.isDialoguePresent();
+    private void updateAutoProgressNotification(long now) {
+        boolean shouldShow = Models.Dialogue.getCurrentDialogueSegment()
+                .filter(dialogueSegment -> !dialogueSegment.hasChoices())
+                .isPresent();
+        if (!shouldShow) {
+            clearAutoProgressNotification();
+            return;
+        }
+
+        if (showSkipTime.get() && progressAtMs > 0L) {
+            long remainingTenths = Math.max(0L, (progressAtMs - now + 99L) / 100L);
+            String messageState = "countdown:" + remainingTenths;
+            String remainingSeconds = String.format(Locale.ROOT, "%.1f", remainingTenths / 10.0);
+            updateAutoProgressNotification(
+                    messageState,
+                    StyledText.fromComponent(Component.translatable(
+                                    "feature.wynntils.autoProgressDialogue.notification.skipping", remainingSeconds)
+                            .withStyle(ChatFormatting.GREEN)));
+            return;
+        }
+
+        updateAutoProgressNotification(
+                "active",
+                StyledText.fromComponent(
+                        Component.translatable("feature.wynntils.autoProgressDialogue.notification.active")
+                                .withStyle(ChatFormatting.GREEN)));
+    }
+
+    private void updateAutoProgressNotification(String messageState, StyledText message) {
+        if (autoProgressMessage != null && messageState.equals(autoProgressMessageState)) return;
+
+        MessageContainer updatedMessage = autoProgressMessage == null
+                ? Managers.Notification.queueMessage(message)
+                : Managers.Notification.editMessage(autoProgressMessage, message);
+
+        autoProgressMessage = updatedMessage;
+        autoProgressMessageState = updatedMessage == null ? null : messageState;
+    }
+
+    private void clearAutoProgressNotification() {
+        if (autoProgressMessage != null) {
+            Managers.Notification.removeMessage(autoProgressMessage);
+        }
+
+        autoProgressMessage = null;
+        autoProgressMessageState = null;
     }
 }
