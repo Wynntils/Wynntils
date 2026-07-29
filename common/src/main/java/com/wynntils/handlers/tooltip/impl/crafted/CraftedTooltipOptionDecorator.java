@@ -12,6 +12,7 @@ import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
+import com.wynntils.utils.colors.WynncraftShaderColor;
 import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
@@ -46,8 +47,12 @@ final class CraftedTooltipOptionDecorator implements TooltipIdentificationDecora
 
         float percentage = StatCalculator.getPercentageFromVanillaMeter(
                 actualValue.vanillaMeter().get());
-        return ColorScaleUtils.getPercentageTextComponent(
+        MutableComponent suffix = ColorScaleUtils.getPercentageTextComponent(
                         options.colorMap(), percentage, options.colorLerp(), options.decimalPlaces(), true)
                 .withStyle(componentStyle -> componentStyle.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT));
+        if (style.rainbowInternalRoll() && actualValue.perfectInternalRoll()) {
+            suffix.withColor(WynncraftShaderColor.RAINBOW.color.asInt());
+        }
+        return suffix;
     }
 }

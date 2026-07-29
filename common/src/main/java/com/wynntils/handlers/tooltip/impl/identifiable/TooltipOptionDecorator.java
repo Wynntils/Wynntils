@@ -131,7 +131,7 @@ public final class TooltipOptionDecorator implements TooltipIdentificationDecora
                         options.decimalPlaces(),
                         calculation.estimated())
                 .withStyle(componentStyle -> componentStyle.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT));
-        if (style.rainbowInternalRoll() && actualValue.stars() == 3) {
+        if (style.rainbowInternalRoll() && actualValue.perfectInternalRoll()) {
             percentage.withColor(WynncraftShaderColor.RAINBOW.color.asInt());
         }
         return percentage;

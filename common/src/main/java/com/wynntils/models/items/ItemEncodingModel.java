@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items;
@@ -9,7 +9,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.items.encoding.ItemTransformerRegistry;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
-import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.type.ErrorOr;
@@ -57,10 +56,8 @@ public final class ItemEncodingModel extends Model {
     public String makeItemString(WynnItem wynnItem, EncodedByteBuffer encodedItem) {
         String itemName = "";
 
-        // Gear items are named, but their names are encoded in the data
-        if (shareItemName.get()
-                && !(wynnItem instanceof GearItem)
-                && wynnItem instanceof CraftedItemProperty craftedItemProperty) {
+        // Crafted names stay as ordinary quoted chat text after the encoded item.
+        if (shareItemName.get() && wynnItem instanceof CraftedItemProperty craftedItemProperty) {
             itemName = " \"" + craftedItemProperty.getName() + "\"";
         }
 

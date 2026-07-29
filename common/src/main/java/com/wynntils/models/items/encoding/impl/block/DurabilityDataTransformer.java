@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -21,6 +21,7 @@ public class DurabilityDataTransformer extends DataTransformer<DurabilityData> {
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, DurabilityData data) {
         return switch (version) {
             case VERSION_1, VERSION_2 -> encodeDurabilityData(data);
+            case VERSION_3 -> encodeDurabilityDataV3(data);
         };
     }
 
@@ -28,6 +29,7 @@ public class DurabilityDataTransformer extends DataTransformer<DurabilityData> {
     public ErrorOr<DurabilityData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
             case VERSION_1, VERSION_2 -> decodeDurabilityData(byteReader);
+            case VERSION_3 -> decodeDurabilityDataV3(byteReader);
         };
     }
 
@@ -71,5 +73,20 @@ public class DurabilityDataTransformer extends DataTransformer<DurabilityData> {
         int current = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
         return ErrorOr.of(new DurabilityData(effectStrength, new CappedValue(current, max)));
+    }
+
+    private ErrorOr<UnsignedByte[]> encodeDurabilityDataV3(DurabilityData data) {
+        List<UnsignedByte> bytes = new ArrayList<>();
+        bytes.addAll(List.of(
+                UnsignedByteUtils.encodeVariableSizedInteger(data.durability().max())));
+        bytes.addAll(List.of(
+                UnsignedByteUtils.encodeVariableSizedInteger(data.durability().current())));
+        return ErrorOr.of(bytes.toArray(new UnsignedByte[0]));
+    }
+
+    private ErrorOr<DurabilityData> decodeDurabilityDataV3(ArrayReader<UnsignedByte> byteReader) {
+        int max = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
+        int current = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
+        return ErrorOr.of(new DurabilityData(100, new CappedValue(current, max)));
     }
 }

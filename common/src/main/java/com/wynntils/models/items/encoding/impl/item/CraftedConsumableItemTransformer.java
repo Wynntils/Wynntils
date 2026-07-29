@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.item;
@@ -9,7 +9,6 @@ import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.items.encoding.data.CustomConsumableTypeData;
 import com.wynntils.models.items.encoding.data.CustomIdentificationsData;
 import com.wynntils.models.items.encoding.data.EffectsData;
-import com.wynntils.models.items.encoding.data.NameData;
 import com.wynntils.models.items.encoding.data.RequirementsData;
 import com.wynntils.models.items.encoding.data.UsesData;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
@@ -32,7 +31,6 @@ import java.util.Optional;
 public class CraftedConsumableItemTransformer extends ItemTransformer<CraftedConsumableItem> {
     @Override
     public ErrorOr<CraftedConsumableItem> decodeItem(ItemDataMap itemDataMap) {
-        String name;
         ConsumableType consumableType;
         int level;
         CappedValue uses;
@@ -59,17 +57,9 @@ public class CraftedConsumableItemTransformer extends ItemTransformer<CraftedCon
 
         level = requirementsData.requirements().level();
 
-        // Optional blocks
-        // Warning: The name data from Crafted items is deliberately removed from the item data map to prevent
-        //           input sanitization issues.
-        //           The name data present here is from plain-text string shared after the encoded item.
-        NameData nameData = itemDataMap.get(NameData.class);
-        if (nameData != null && nameData.name().isPresent()) {
-            name = nameData.name().get();
-        } else {
-            name = "Crafted "
-                    + StringUtils.capitalizeFirst(consumableType.name().toLowerCase(Locale.ROOT));
-        }
+        // Crafted names remain ordinary chat text and never become part of the decoded item.
+        String name =
+                "Crafted " + StringUtils.capitalizeFirst(consumableType.name().toLowerCase(Locale.ROOT));
 
         EffectsData effectsData = itemDataMap.get(EffectsData.class);
         if (effectsData != null) {
@@ -78,13 +68,15 @@ public class CraftedConsumableItemTransformer extends ItemTransformer<CraftedCon
 
         CustomIdentificationsData customIdentificationsData = itemDataMap.get(CustomIdentificationsData.class);
         if (customIdentificationsData != null) {
-            identifications = customIdentificationsData.possibleValues().stream()
-                    .map(statPossibleValues -> new StatActualValue(
-                            statPossibleValues.statType(),
-                            statPossibleValues.range().high(),
-                            0,
-                            RangedValue.NONE))
-                    .toList();
+            identifications = !customIdentificationsData.identifications().isEmpty()
+                    ? customIdentificationsData.identifications()
+                    : customIdentificationsData.possibleValues().stream()
+                            .map(statPossibleValues -> new StatActualValue(
+                                    statPossibleValues.statType(),
+                                    statPossibleValues.range().high(),
+                                    false,
+                                    RangedValue.NONE))
+                            .toList();
         }
 
         return ErrorOr.of(
@@ -100,12 +92,10 @@ public class CraftedConsumableItemTransformer extends ItemTransformer<CraftedCon
         dataList.add(new RequirementsData(
                 new GearRequirements(item.getLevel(), Optional.empty(), List.of(), Optional.empty())));
 
-        if (encodingSettings.shareItemName()) {
-            dataList.add(NameData.sanitized(item.getName()));
-        }
-
+        // Crafted names deliberately remain outside the encoded payload. They are appended as normal
+        // chat text by ItemEncodingModel so Wynncraft's chat moderation can inspect them.
         dataList.add(new EffectsData(item.getNamedEffects()));
-        dataList.add(new CustomIdentificationsData(item.getPossibleValues()));
+        dataList.add(new CustomIdentificationsData(item.getPossibleValues(), item.getIdentifications()));
 
         return dataList;
     }

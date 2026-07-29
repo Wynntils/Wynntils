@@ -40,7 +40,7 @@ final class CraftedTooltipIdentifications {
         return TooltipLayout.align(buildLines(item, currentClass, decorator, style), targetWidth);
     }
 
-    private static List<TooltipLine> buildLines(
+    static List<TooltipLine> buildLines(
             CraftedItemProperty item,
             ClassType currentClass,
             TooltipIdentificationDecorator decorator,
