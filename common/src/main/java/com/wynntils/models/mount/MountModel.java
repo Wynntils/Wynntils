@@ -12,6 +12,7 @@ import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.mount.actionbar.matchers.MountEnergySegmentMatcher;
 import com.wynntils.models.mount.actionbar.segments.MountEnergySegment;
+import com.wynntils.models.mount.type.MountChoice;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
@@ -59,6 +60,23 @@ public final class MountModel extends Model {
                 return slotNum;
             }
         }
+        return -1;
+    }
+
+    public int findMountSlotNum(MountChoice mountChoice) {
+        Inventory inventory = McUtils.inventory();
+        for (int slotNum = 0; slotNum < Inventory.INVENTORY_SIZE; slotNum++) {
+            ItemStack itemStack = inventory.getItem(slotNum);
+            Optional<MountItem> mountItemOpt = Models.Item.asWynnItem(itemStack, MountItem.class);
+
+            if (mountItemOpt.isPresent()) {
+                if (mountChoice == MountChoice.FIRST
+                        || mountChoice.getMountType() == mountItemOpt.get().getMountType()) {
+                    return slotNum;
+                }
+            }
+        }
+
         return -1;
     }
 
