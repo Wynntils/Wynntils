@@ -9,7 +9,7 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.items.items.game.MountItem;
-import com.wynntils.models.mount.type.MountStat;
+import com.wynntils.models.mount.type.ConfigMountStat;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +54,7 @@ public class MountFunctions {
     public static class MountNameFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return getMount().flatMap(MountItem::getName).orElse("");
+            return getMount().map(MountItem::getName).orElse("");
         }
 
         @Override
@@ -80,8 +80,8 @@ public class MountFunctions {
             Optional<MountItem> mount = getMount();
             if (mount.isEmpty()) return Optional.empty();
 
-            Optional<MountStat> stat = getRequestedStat(arguments);
-            if (stat.isEmpty() || !stat.get().isCapped()) return Optional.empty();
+            Optional<ConfigMountStat> stat = getRequestedStat(arguments);
+            if (stat.isEmpty() || stat.get() != ConfigMountStat.POTENTIAL) return Optional.empty();
 
             return Optional.of(getCappedStatValue(mount.get(), stat.get()));
         }
@@ -97,15 +97,15 @@ public class MountFunctions {
             Optional<MountItem> mount = getMount();
             if (mount.isEmpty()) return Optional.empty();
 
-            Optional<MountStat> stat = getRequestedStat(arguments);
-            if (stat.isEmpty() || !stat.get().isCapped()) return Optional.empty();
+            Optional<ConfigMountStat> stat = getRequestedStat(arguments);
+            if (stat.isEmpty() || stat.get() != ConfigMountStat.POTENTIAL) return Optional.empty();
 
             return Optional.of(getCappedStatValue(mount.get(), stat.get()).max());
         }
 
-        private Optional<MountStat> getRequestedStat(FunctionArguments arguments) {
+        private Optional<ConfigMountStat> getRequestedStat(FunctionArguments arguments) {
             String statArg = arguments.getArgument("stat").getStringValue();
-            return MountStat.fromKey(statArg);
+            return ConfigMountStat.fromKey(statArg);
         }
     }
 
@@ -113,33 +113,15 @@ public class MountFunctions {
         return Models.Mount.getMount();
     }
 
-    private static int getStatCurrentValue(MountItem mount, MountStat stat) {
-        return switch (stat) {
-            case ACCELERATION -> mount.getAcceleration().current();
-            case ALTITUDE -> mount.getAltitude().current();
-            case JUMP_HEIGHT -> mount.getJumpHeight().current();
-            case ENERGY -> mount.getEnergy().current();
-            case HANDLING -> mount.getHandling().current();
-            case POTENTIAL -> mount.getPotential();
-            case BOOST -> mount.getBoost().current();
-            case SPEED -> mount.getSpeed().current();
-            case TOUGHNESS -> mount.getToughness().current();
-            case TRAINING -> mount.getTraining().current();
-        };
+    private static int getStatCurrentValue(MountItem mount, ConfigMountStat stat) {
+        if (stat == ConfigMountStat.POTENTIAL) {
+            return mount.getMountInfo().potential();
+        } else {
+            return mount.getMountInfo().stats().get(stat.getMountStat()).current();
+        }
     }
 
-    private static CappedValue getCappedStatValue(MountItem mount, MountStat stat) {
-        return switch (stat) {
-            case ACCELERATION -> mount.getAcceleration();
-            case ALTITUDE -> mount.getAltitude();
-            case JUMP_HEIGHT -> mount.getJumpHeight();
-            case ENERGY -> mount.getEnergy();
-            case HANDLING -> mount.getHandling();
-            case BOOST -> mount.getBoost();
-            case SPEED -> mount.getSpeed();
-            case TOUGHNESS -> mount.getToughness();
-            case TRAINING -> mount.getTraining();
-            case POTENTIAL -> CappedValue.EMPTY;
-        };
+    private static CappedValue getCappedStatValue(MountItem mount, ConfigMountStat stat) {
+        return mount.getMountInfo().stats().get(stat.getMountStat());
     }
 }
