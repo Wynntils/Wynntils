@@ -45,22 +45,11 @@ public final class MountModel extends Model {
         event.runIfPresentOrElse(MountEnergySegment.class, this::updateMountEnergy, this::clearMountEnergy);
     }
 
-    public Optional<MountItem> getMount() {
-        int mountSlot = findMountSlotNum();
+    public Optional<MountItem> getMount(MountChoice mountChoice) {
+        int mountSlot = findMountSlotNum(mountChoice);
         if (mountSlot == -1) return Optional.empty();
 
         return Models.Item.asWynnItem(McUtils.inventory().getItem(mountSlot), MountItem.class);
-    }
-
-    public int findMountSlotNum() {
-        Inventory inventory = McUtils.inventory();
-        for (int slotNum = 0; slotNum < Inventory.INVENTORY_SIZE; slotNum++) {
-            ItemStack itemStack = inventory.getItem(slotNum);
-            if (Models.Item.asWynnItem(itemStack, MountItem.class).isPresent()) {
-                return slotNum;
-            }
-        }
-        return -1;
     }
 
     public int findMountSlotNum(MountChoice mountChoice) {

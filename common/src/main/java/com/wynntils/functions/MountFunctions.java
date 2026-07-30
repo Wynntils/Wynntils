@@ -9,16 +9,34 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.items.items.game.MountItem;
-import com.wynntils.models.mount.type.ConfigMountStat;
+import com.wynntils.models.mount.type.MountChoice;
+import com.wynntils.models.mount.type.MountStat;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Optional;
 
 public class MountFunctions {
-    public static class CappedMountStatFunction extends MountStatFunctionBase<CappedValue> {
+    public static class CappedMountStatFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return getRequestedCappedStat(arguments).orElse(CappedValue.EMPTY);
+            Optional<MountItem> mountItemOpt = getMount(arguments);
+            if (mountItemOpt.isEmpty()) return CappedValue.EMPTY;
+
+            Optional<MountStat> mountStatOpt =
+                    MountStat.fromKey(arguments.getArgument("stat").getStringValue());
+            if (mountStatOpt.isEmpty()) return CappedValue.EMPTY;
+
+            if (mountItemOpt.get().getMountInfo().stats().containsKey(mountStatOpt.get())) {
+                return mountItemOpt.get().getMountInfo().stats().get(mountStatOpt.get());
+            }
+
+            return CappedValue.EMPTY;
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("mountType", String.class, null), new Argument<>("stat", String.class, null)));
         }
 
         @Override
@@ -27,39 +45,45 @@ public class MountFunctions {
         }
     }
 
-    public static class MountStatFunction extends MountStatFunctionBase<Integer> {
+    public static class MountPotentialFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return getRequestedStatCurrent(arguments).orElse(-1);
+            Optional<MountItem> mountItemOpt = getMount(arguments);
+
+            return mountItemOpt
+                    .map(mountItem -> mountItem.getMountInfo().potential())
+                    .orElse(-1);
         }
 
         @Override
         protected List<String> getAliases() {
-            return List.of("mnt_stat");
-        }
-    }
-
-    public static class MountStatMaxFunction extends MountStatFunctionBase<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return getRequestedStatMax(arguments).orElse(-1);
+            return List.of("mnt_potential");
         }
 
         @Override
-        protected List<String> getAliases() {
-            return List.of("mnt_stat_max");
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("mountType", String.class, null)));
         }
     }
 
     public static class MountNameFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return getMount().map(MountItem::getName).orElse("");
+            Optional<MountItem> mountItemOpt = getMount(arguments);
+
+            return mountItemOpt.map(MountItem::getName).orElse("");
         }
 
         @Override
         protected List<String> getAliases() {
             return List.of("mnt_name");
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("mountType", String.class, null)));
         }
     }
 
@@ -70,58 +94,12 @@ public class MountFunctions {
         }
     }
 
-    private abstract static class MountStatFunctionBase<T> extends Function<T> {
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("stat", String.class, null)));
-        }
+    private static Optional<MountItem> getMount(FunctionArguments arguments) {
+        String mountChoiceArg = arguments.getArgument("mountType").getStringValue();
+        MountChoice mountChoice = MountChoice.fromName(mountChoiceArg);
 
-        protected Optional<CappedValue> getRequestedCappedStat(FunctionArguments arguments) {
-            Optional<MountItem> mount = getMount();
-            if (mount.isEmpty()) return Optional.empty();
+        if (mountChoice == null) return Optional.empty();
 
-            Optional<ConfigMountStat> stat = getRequestedStat(arguments);
-            if (stat.isEmpty() || stat.get() != ConfigMountStat.POTENTIAL) return Optional.empty();
-
-            return Optional.of(getCappedStatValue(mount.get(), stat.get()));
-        }
-
-        protected Optional<Integer> getRequestedStatCurrent(FunctionArguments arguments) {
-            Optional<MountItem> mount = getMount();
-            if (mount.isEmpty()) return Optional.empty();
-
-            return getRequestedStat(arguments).map(stat -> getStatCurrentValue(mount.get(), stat));
-        }
-
-        protected Optional<Integer> getRequestedStatMax(FunctionArguments arguments) {
-            Optional<MountItem> mount = getMount();
-            if (mount.isEmpty()) return Optional.empty();
-
-            Optional<ConfigMountStat> stat = getRequestedStat(arguments);
-            if (stat.isEmpty() || stat.get() != ConfigMountStat.POTENTIAL) return Optional.empty();
-
-            return Optional.of(getCappedStatValue(mount.get(), stat.get()).max());
-        }
-
-        private Optional<ConfigMountStat> getRequestedStat(FunctionArguments arguments) {
-            String statArg = arguments.getArgument("stat").getStringValue();
-            return ConfigMountStat.fromKey(statArg);
-        }
-    }
-
-    private static Optional<MountItem> getMount() {
-        return Models.Mount.getMount();
-    }
-
-    private static int getStatCurrentValue(MountItem mount, ConfigMountStat stat) {
-        if (stat == ConfigMountStat.POTENTIAL) {
-            return mount.getMountInfo().potential();
-        } else {
-            return mount.getMountInfo().stats().get(stat.getMountStat()).current();
-        }
-    }
-
-    private static CappedValue getCappedStatValue(MountItem mount, ConfigMountStat stat) {
-        return mount.getMountInfo().stats().get(stat.getMountStat());
+        return Models.Mount.getMount(mountChoice);
     }
 }

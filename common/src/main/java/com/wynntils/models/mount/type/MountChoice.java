@@ -16,6 +16,15 @@ public enum MountChoice {
         this.mountType = mountType;
     }
 
+    public static MountChoice fromName(String typeName) {
+        for (MountChoice mountChoice : values()) {
+            if (mountChoice.name().equalsIgnoreCase(typeName)) {
+                return mountChoice;
+            }
+        }
+        return null;
+    }
+
     public MountType getMountType() {
         return mountType;
     }
