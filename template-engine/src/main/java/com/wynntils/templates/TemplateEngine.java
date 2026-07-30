@@ -45,12 +45,14 @@ public class TemplateEngine {
                     if (!Modifier.isPublic(method.getModifiers()))
                         throw new Exception("Function method needs to be public");
 
-                    FunctionDefinition functionDef = new FunctionDefinition(annotation.name(), annotation.aliases(), method, method.getReturnType(), method.getParameterTypes(), Arrays.stream(method.getParameters()).map(p -> p.getName()).toArray(String[]::new), annotation.isPure());
+                    String[] parameterNames = Arrays.stream(method.getParameters()).map(p -> p.getName()).toArray(String[]::new);
+
+                    FunctionDefinition functionDef = new FunctionDefinition(annotation.name(), annotation.aliases(), method, method.getReturnType(), method.getParameterTypes(), parameterNames, annotation.isPure(), false);
 
                     functions.put(new FunctionKey(functionDef.name(), method.getParameterCount()), functionDef);
 
                     for (String alias : annotation.aliases()) {
-                        functions.put(new FunctionKey(alias, method.getParameterCount()), functionDef);
+                        functions.put(new FunctionKey(alias, method.getParameterCount()), new FunctionDefinition(annotation.name(), annotation.aliases(), method, method.getReturnType(), method.getParameterTypes(), parameterNames, annotation.isPure(), true));
                     }
                 } catch(Exception e) {
                     System.out.println(e);

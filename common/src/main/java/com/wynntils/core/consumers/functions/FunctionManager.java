@@ -46,7 +46,9 @@ import com.wynntils.templates.TemplateEngine;
 import com.wynntils.templates.backends.compiler.CompilerBackend;
 import com.wynntils.templates.functions.FunctionDefinition;
 import com.wynntils.templates.language.Error;
+import net.minecraft.client.resources.language.I18n;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -67,7 +69,7 @@ public final class FunctionManager extends Manager {
 
     public Optional<FunctionDefinition> forName(String functionName) {
         for (FunctionDefinition function : getFunctions()) {
-            if (Objects.equals(function.name(), functionName)) {
+            if (Objects.equals(function.name(), functionName) || Arrays.stream(function.aliases()).anyMatch(functionName::equals)) {
                 return Optional.of(function);
             }
         }
@@ -206,7 +208,6 @@ public final class FunctionManager extends Manager {
             default -> '\\' + String.valueOf(escaped);
         };
     }
-
     // endregion
 
     public void init() {
@@ -256,5 +257,13 @@ public final class FunctionManager extends Manager {
         templateEngine.registerFunctions(WorldFunctions.class);
         templateEngine.registerFunctions(WynnAlphabetFunctions.class);
         templateEngine.registerFunctions(WynnFontFunctions.class);
+    }
+
+    public String getFunctionDescription(FunctionDefinition functionDefinition) {
+        return I18n.get("function.wynntils." + functionDefinition.name() + ".description");
+    }
+
+    public String getFunctionParameterDescription(FunctionDefinition functionDefinition, String name) {
+        return I18n.get("function.wynntils." + functionDefinition.name() + "." + name + ".description");
     }
 }
