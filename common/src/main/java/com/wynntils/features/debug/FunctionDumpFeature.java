@@ -6,13 +6,9 @@ package com.wynntils.features.debug;
 
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterCommand;
-import com.wynntils.core.consumers.functions.Function;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.utils.mc.McUtils;
@@ -24,7 +20,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -79,17 +74,17 @@ public class FunctionDumpFeature extends Feature {
         List<String[]> dataLines = new ArrayList<>();
         dataLines.add(FUNCTION_MAP.keySet().toArray(new String[0]));
 
-        for (Function<?> function : Managers.Function.getFunctions()) {
-            String aliases = "{" + String.join(",", function.getAliasList()) + "}";
-            String[] dataLine = {
-                String.valueOf(dataLines.size()),
-                function.getName(),
-                function.getDescription(),
-                aliases,
-                function.getReturnTypeName()
-            };
-            dataLines.add(dataLine);
-        }
+        //        for (FunctionDefinition function : Managers.Function.getFunctions()) {
+        //            String aliases = "{" + String.join(",", function.aliases()) + "}";
+        //            String[] dataLine = {
+        //                String.valueOf(dataLines.size()),
+        //                function.name(),
+        //                function.getDescription(),
+        //                aliases,
+        //                function.getReturnTypeName()
+        //            };
+        //            dataLines.add(dataLine);
+        //        }
 
         writeToCSV(dataLines, FUNCTION_NAME);
     }
@@ -97,22 +92,6 @@ public class FunctionDumpFeature extends Feature {
     private void dumpArgumentsToCSV() {
         List<String[]> dataLines = new ArrayList<>();
         dataLines.add(ARGUMENT_MAP.keySet().toArray(new String[0]));
-
-        for (int i = 0; i < Managers.Function.getFunctions().size(); i++) {
-            Function<?> function = Managers.Function.getFunctions().get(i);
-            for (Argument<?> argument : function.getArgumentsBuilder().getArguments()) {
-                String[] dataLine = {
-                    String.valueOf(dataLines.size()),
-                    argument.getName(),
-                    function.getArgumentDescription(argument.getName()),
-                    String.valueOf(function.getArgumentsBuilder() instanceof FunctionArguments.RequiredArgumentBuilder),
-                    String.valueOf(i + 1),
-                    argument.getType().getSimpleName(),
-                    String.valueOf(argument.getDefaultValue())
-                };
-                dataLines.add(dataLine);
-            }
-        }
 
         writeToCSV(dataLines, ARGUMENT_NAME);
     }
@@ -153,53 +132,57 @@ public class FunctionDumpFeature extends Feature {
     }
 
     private void copyPreparationStatement() {
-        String clearDatabase = "DROP SCHEMA public CASCADE; CREATE SCHEMA public;";
-
-        // add all return types to possible types
-        Set<String> typeNames = Managers.Function.getFunctions().stream()
-                .map(Function::getReturnTypeName)
-                .collect(Collectors.toSet());
-
-        // and additionally all argument types, which catches things like List not being a return type
-        Managers.Function.getFunctions().stream()
-                .map(Function::getArgumentsBuilder)
-                .map(FunctionArguments.Builder::getArguments)
-                .forEach(arguments -> arguments.forEach(
-                        argument -> typeNames.add(argument.getType().getSimpleName())));
-
-        String makeTypeEnum = "CREATE TYPE type AS ENUM ("
-                + typeNames.stream().map(name -> "'" + name + "'").collect(Collectors.joining(",")) + ");";
-
-        // order-preserving
-        String makeFunctionTable = "CREATE TABLE " + FUNCTION_NAME + " ("
-                + FUNCTION_MAP.entrySet().stream()
-                        .map(entry -> entry.getKey() + " " + entry.getValue())
-                        .collect(Collectors.joining(","))
-                + ");";
-
-        String makeArgumentTable = "CREATE TABLE " + ARGUMENT_NAME + " ("
-                + ARGUMENT_MAP.entrySet().stream()
-                        .map(entry -> entry.getKey() + " " + entry.getValue())
-                        .collect(Collectors.joining(","))
-                + ");";
-
-        String makeDataVersionTable = "CREATE TABLE " + DATA_VERSION_NAME + " ("
-                + DATA_VERSION_MAP.entrySet().stream()
-                        .map(entry -> entry.getKey() + " " + entry.getValue())
-                        .collect(Collectors.joining(","))
-                + ");";
-
-        McUtils.mc()
-                .keyboardHandler
-                .setClipboard(
-                        clearDatabase + makeTypeEnum + makeFunctionTable + makeArgumentTable + makeDataVersionTable);
-        McUtils.sendWynntilsPrefixMessage(Component.literal("\n")
-                .append(Component.literal(
-                        ChatFormatting.GREEN + "Copied database preparation statement to clipboard.\n"))
-                .append(Component.literal(ChatFormatting.GRAY + "Run this statement before importing new CSVs.\n"))
-                .append(Component.literal(ChatFormatting.GRAY
-                        + "Import CSVs using pgAdmin 4 ensuring Header option is checked and encoding is UTF-8.\n"))
-                .append(Component.literal(ChatFormatting.GRAY + "Import functions before arguments.\n"))
-                .append(Component.literal(ChatFormatting.GRAY + "Import data version CSV after function data.")));
+        //        String clearDatabase = "DROP SCHEMA public CASCADE; CREATE SCHEMA public;";
+        //
+        //        // add all return types to possible types
+        //        Set<String> typeNames = Managers.Function.getFunctions().stream()
+        //                .map(Function::getReturnTypeName)
+        //                .collect(Collectors.toSet());
+        //
+        //        // and additionally all argument types, which catches things like List not being a return type
+        //        Managers.Function.getFunctions().stream()
+        //                .map(Function::getArgumentsBuilder)
+        //                .map(FunctionArguments.Builder::getArguments)
+        //                .forEach(arguments -> arguments.forEach(
+        //                        argument -> typeNames.add(argument.getType().getSimpleName())));
+        //
+        //        String makeTypeEnum = "CREATE TYPE type AS ENUM ("
+        //                + typeNames.stream().map(name -> "'" + name + "'").collect(Collectors.joining(",")) + ");";
+        //
+        //        // order-preserving
+        //        String makeFunctionTable = "CREATE TABLE " + FUNCTION_NAME + " ("
+        //                + FUNCTION_MAP.entrySet().stream()
+        //                        .map(entry -> entry.getKey() + " " + entry.getValue())
+        //                        .collect(Collectors.joining(","))
+        //                + ");";
+        //
+        //        String makeArgumentTable = "CREATE TABLE " + ARGUMENT_NAME + " ("
+        //                + ARGUMENT_MAP.entrySet().stream()
+        //                        .map(entry -> entry.getKey() + " " + entry.getValue())
+        //                        .collect(Collectors.joining(","))
+        //                + ");";
+        //
+        //        String makeDataVersionTable = "CREATE TABLE " + DATA_VERSION_NAME + " ("
+        //                + DATA_VERSION_MAP.entrySet().stream()
+        //                        .map(entry -> entry.getKey() + " " + entry.getValue())
+        //                        .collect(Collectors.joining(","))
+        //                + ");";
+        //
+        //        McUtils.mc()
+        //                .keyboardHandler
+        //                .setClipboard(
+        //                        clearDatabase + makeTypeEnum + makeFunctionTable + makeArgumentTable +
+        // makeDataVersionTable);
+        //        McUtils.sendWynntilsPrefixMessage(Component.literal("\n")
+        //                .append(Component.literal(
+        //                        ChatFormatting.GREEN + "Copied database preparation statement to clipboard.\n"))
+        //                .append(Component.literal(ChatFormatting.GRAY + "Run this statement before importing new
+        // CSVs.\n"))
+        //                .append(Component.literal(ChatFormatting.GRAY
+        //                        + "Import CSVs using pgAdmin 4 ensuring Header option is checked and encoding is
+        // UTF-8.\n"))
+        //                .append(Component.literal(ChatFormatting.GRAY + "Import functions before arguments.\n"))
+        //                .append(Component.literal(ChatFormatting.GRAY + "Import data version CSV after function
+        // data.")));
     }
 }

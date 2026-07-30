@@ -5,9 +5,6 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.consumers.functions.Function;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.abilities.label.ShamanPuppetInfo;
 import com.wynntils.models.abilities.type.AbilityCooldown;
 import com.wynntils.models.abilities.type.PuppetType;
@@ -22,551 +19,333 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.client.player.LocalPlayer;
+import com.wynntils.templates.annotations.TemplateFunction;
 
+//Functions are accessed via reflection
+@SuppressWarnings("unused")
 public class CharacterFunctions {
-    public static class AbilityCooldownFunction extends Function<Float> {
-        @Override
-        public Float getValue(FunctionArguments arguments) {
-            String name = arguments.getArgument("name").getStringValue();
-            boolean interpolated = arguments.getArgument("interpolated").getBooleanValue();
 
-            AbilityCooldown cooldown = AbilityCooldown.fromName(name);
-
-            if (cooldown == null || !Models.Ability.getActiveCooldowns().contains(cooldown)) return -1.0f;
-
-            return interpolated
-                    ? Models.Ability.getInterpolatedCooldown(cooldown)
-                    : cooldown.getServerRemainingSeconds();
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("name", String.class, null), new Argument<>("interpolated", Boolean.class, null)));
-        }
+    @TemplateFunction(name = "ability_cooldown")
+    public static float abilityCooldownFunction(String name, boolean interpolated) {
+        AbilityCooldown cooldown = AbilityCooldown.fromName(name);
+        if (cooldown == null || !Models.Ability.getActiveCooldowns().contains(cooldown))
+            return -1.0f;
+        return interpolated ? Models.Ability.getInterpolatedCooldown(cooldown) : cooldown.getServerRemainingSeconds();
     }
 
-    public static class CappedManaFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getMana().orElse(CappedValue.EMPTY);
-        }
+    @TemplateFunction(name = "capped_mana")
+    public static CappedValue cappedManaFunction() {
+        return Models.CharacterStats.getMana().orElse(CappedValue.EMPTY);
     }
 
-    public static class CappedHealthFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY);
-        }
+    @TemplateFunction(name = "capped_health")
+    public static CappedValue cappedHealthFunction() {
+        return Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY);
     }
 
-    public static class SprintFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getSprint().orElse(CappedValue.EMPTY);
-        }
+    @TemplateFunction(name = "sprint")
+    public static CappedValue sprintFunction() {
+        return Models.CharacterStats.getSprint().orElse(CappedValue.EMPTY);
     }
 
-    public static class BpsFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            LocalPlayer player = McUtils.player();
-            double dX = player.getX() - player.xOld;
-            double dZ = player.getZ() - player.zOld;
-            double dY = player.getY() - player.yOld;
-            return Math.sqrt((dX * dX) + (dZ * dZ) + (dY * dY)) * 20;
-        }
+    @TemplateFunction(name = "bps")
+    public static double bpsFunction() {
+        LocalPlayer player = McUtils.player();
+        double dX = player.getX() - player.xOld;
+        double dZ = player.getZ() - player.zOld;
+        double dY = player.getY() - player.yOld;
+        return Math.sqrt((dX * dX) + (dZ * dZ) + (dY * dY)) * 20;
     }
 
-    public static class BpsXzFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            LocalPlayer player = McUtils.player();
-            double dX = player.getX() - player.xOld;
-            double dZ = player.getZ() - player.zOld;
-            return Math.sqrt((dX * dX) + (dZ * dZ)) * 20;
-        }
+    @TemplateFunction(name = "bps_xz")
+    public static double bpsXzFunction() {
+        LocalPlayer player = McUtils.player();
+        double dX = player.getX() - player.xOld;
+        double dZ = player.getZ() - player.zOld;
+        return Math.sqrt((dX * dX) + (dZ * dZ)) * 20;
     }
 
-    public static class ClassFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            Boolean showReskinnedName =
-                    arguments.getArgument("showReskinnedName").getBooleanValue();
-
-            String name = showReskinnedName
-                    ? Models.Character.getActualName()
-                    : Models.Character.getClassType().getActualName(false);
-
-            if (arguments.getArgument("uppercase").getBooleanValue()) {
-                return name.toUpperCase(Locale.ROOT);
-            }
-
-            return name;
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(List.of(
-                    new Argument<>("uppercase", Boolean.class, false),
-                    new Argument<>("showReskinnedName", Boolean.class, true)));
-        }
+    @TemplateFunction(name = "class")
+    public static String classFunction() {
+        return classFunction(false, true);
     }
 
-    public static class ManaFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getMana().orElse(CappedValue.EMPTY).current();
+    @TemplateFunction(name = "class")
+    public static String classFunction(boolean showReskinnedName, boolean uppercase) {
+        String name = showReskinnedName ? Models.Character.getActualName() : Models.Character.getClassType().getActualName(false);
+        if (uppercase) {
+            return name.toUpperCase(Locale.ROOT);
         }
+        return name;
     }
 
-    public static class ManaMaxFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getMana().orElse(CappedValue.EMPTY).max();
-        }
+    @TemplateFunction(name = "mana")
+    public static int manaFunction() {
+        return Models.CharacterStats.getMana().orElse(CappedValue.EMPTY).current();
     }
 
-    public static class HealthFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY).current();
-        }
+    @TemplateFunction(name = "mana_max")
+    public static int manaMaxFunction() {
+        return Models.CharacterStats.getMana().orElse(CappedValue.EMPTY).max();
     }
 
-    public static class HealthMaxFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY).max();
-        }
+    @TemplateFunction(name = "health")
+    public static int healthFunction() {
+        return Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY).current();
     }
 
-    public static class HealthPctFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY).getPercentage();
-        }
+    @TemplateFunction(name = "health_max")
+    public static int healthMaxFunction() {
+        return Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY).max();
     }
 
-    public static class ManaPctFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.CharacterStats.getMana().orElse(CappedValue.EMPTY).getPercentage();
-        }
+    @TemplateFunction(name = "health_pct")
+    public static double healthPctFunction() {
+        return Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY).getPercentage();
     }
 
-    public static class IdFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            return Models.Character.getId();
-        }
+    @TemplateFunction(name = "mana_pct")
+    public static double manaPctFunction() {
+        return Models.CharacterStats.getMana().orElse(CappedValue.EMPTY).getPercentage();
     }
 
-    public static class CappedAwakenedProgressFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Ability.awakenedBar.isActive()
-                    ? Models.Ability.awakenedBar.getBarProgress().value()
-                    : CappedValue.EMPTY;
-        }
+    @TemplateFunction(name = "id")
+    public static String idFunction() {
+        return Models.Character.getId();
     }
 
-    public static class CappedBloodPoolFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Ability.bloodPoolBar.isActive()
-                    ? Models.Ability.bloodPoolBar.getBarProgress().value()
-                    : CappedValue.EMPTY;
-        }
+    @TemplateFunction(name = "capped_awakened_progress")
+    public static CappedValue cappedAwakenedProgressFunction() {
+        return Models.Ability.awakenedBar.isActive() ? Models.Ability.awakenedBar.getBarProgress().value() : CappedValue.EMPTY;
     }
 
-    public static class CappedCorruptedFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Ability.corruptedBar.isActive()
-                    ? Models.Ability.corruptedBar.getBarProgress().value()
-                    : CappedValue.EMPTY;
-        }
+    @TemplateFunction(name = "capped_blood_pool")
+    public static CappedValue cappedBloodPoolFunction() {
+        return Models.Ability.bloodPoolBar.isActive() ? Models.Ability.bloodPoolBar.getBarProgress().value() : CappedValue.EMPTY;
     }
 
-    public static class CappedFocusFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Ability.focusBar.isActive()
-                    ? Models.Ability.focusBar.getBarProgress().value()
-                    : CappedValue.EMPTY;
-        }
+    @TemplateFunction(name = "capped_corrupted")
+    public static CappedValue cappedCorruptedFunction() {
+        return Models.Ability.corruptedBar.isActive() ? Models.Ability.corruptedBar.getBarProgress().value() : CappedValue.EMPTY;
     }
 
-    public static class CappedManaBankFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Ability.manaBankBar.isActive()
-                    ? Models.Ability.manaBankBar.getBarProgress().value()
-                    : CappedValue.EMPTY;
-        }
+    @TemplateFunction(name = "capped_focus")
+    public static CappedValue cappedFocusFunction() {
+        return Models.Ability.focusBar.isActive() ? Models.Ability.focusBar.getBarProgress().value() : CappedValue.EMPTY;
     }
 
-    public static class CappedOphanimFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Ability.ophanimBar.isActive()
-                    ? Models.Ability.ophanimBar.getBarProgress().value()
-                    : CappedValue.EMPTY;
-        }
+    @TemplateFunction(name = "capped_mana_bank")
+    public static CappedValue cappedManaBankFunction() {
+        return Models.Ability.manaBankBar.isActive() ? Models.Ability.manaBankBar.getBarProgress().value() : CappedValue.EMPTY;
     }
 
-    public static class OphanimOrb extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            int orbNumber = arguments.getArgument("orbNumber").getIntegerValue();
-            return orbNumber < Models.Ability.ophanimBar.getOrbs().size() && orbNumber >= 0
-                    ? Models.Ability.ophanimBar.getOrbs().get(orbNumber).getHealthState()
-                    : -1;
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("orbNumber", Integer.class, null)));
-        }
+    @TemplateFunction(name = "capped_ophanim")
+    public static CappedValue cappedOphanimFunction() {
+        return Models.Ability.ophanimBar.isActive() ? Models.Ability.ophanimBar.getBarProgress().value() : CappedValue.EMPTY;
     }
 
-    public static class OphanimActive extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return Models.Ability.ophanimBar.isActive();
-        }
+    @TemplateFunction(name = "ophanim_orb")
+    public static int ophanimOrb(int orbNumber) {
+        return orbNumber < Models.Ability.ophanimBar.getOrbs().size() && orbNumber >= 0 ? Models.Ability.ophanimBar.getOrbs().get(orbNumber).getHealthState() : -1;
     }
 
-    public static class CappedHolyPowerFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Ability.holyPowerBar.isActive()
-                    ? Models.Ability.holyPowerBar.getBarProgress().value()
-                    : CappedValue.EMPTY;
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            // Old function name before ability rename, keep to not break old functions
-            return List.of("capped_sacred_surge");
-        }
+    @TemplateFunction(name = "ophanim_active")
+    public static boolean ophanimActive() {
+        return Models.Ability.ophanimBar.isActive();
     }
 
-    public static class CommanderDurationFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Ability.commanderBar.isActive() ? Models.Ability.commanderBar.getDuration() : 0;
-        }
+    @TemplateFunction(name = "capped_holy_power", aliases = { "capped_sacred_surge" })
+    public static CappedValue cappedHolyPowerFunction() {
+        return Models.Ability.holyPowerBar.isActive() ? Models.Ability.holyPowerBar.getBarProgress().value() : CappedValue.EMPTY;
     }
 
-    public static class CommanderActivatedFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return Models.Ability.commanderBar.isActive() && Models.Ability.commanderBar.isActivated();
-        }
+    @TemplateFunction(name = "commander_duration")
+    public static int commanderDurationFunction() {
+        return Models.Ability.commanderBar.isActive() ? Models.Ability.commanderBar.getDuration() : 0;
     }
 
-    public static class MomentumPercentFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Ability.momentumBar.isActive()
-                    ? Models.Ability.momentumBar.getBarProgress().value()
-                    : CappedValue.EMPTY;
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("momentum_pct");
-        }
+    @TemplateFunction(name = "commander_activated")
+    public static boolean commanderActivatedFunction() {
+        return Models.Ability.commanderBar.isActive() && Models.Ability.commanderBar.isActivated();
     }
 
-    public static class MomentumFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Ability.momentumBar.getMomentum();
-        }
+    @TemplateFunction(name = "momentum_percent", aliases = { "momentum_pct" })
+    public static CappedValue momentumPercentFunction() {
+        return Models.Ability.momentumBar.isActive() ? Models.Ability.momentumBar.getBarProgress().value() : CappedValue.EMPTY;
     }
 
-    // TODO: Change this to IsRidingMountFunction after parsing energy action bar segment.
-    public static class IsRidingHorseFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return Models.Character.getVehicle() == VehicleType.HORSE;
-        }
+    @TemplateFunction(name = "momentum")
+    public static int momentumFunction() {
+        return Models.Ability.momentumBar.getMomentum();
     }
 
-    public static class HasNoGuiFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return Models.Cutscene.isCutsceneActive();
-        }
+    @TemplateFunction(name = "is_riding_horse")
+    public static boolean isRidingHorseFunction() {
+        return Models.Character.getVehicle() == VehicleType.HORSE;
     }
 
-    public static class HummingbirdsStateFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            return Models.ShamanSummon.hummingBirdsState;
-        }
+    @TemplateFunction(name = "has_no_gui")
+    public static boolean hasNoGuiFunction() {
+        return Models.Cutscene.isCutsceneActive();
     }
 
-    public static class OphanimHealingPercentFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Ability.ophanimBar.isActive() ? Models.Ability.ophanimBar.getHealed() : -1;
-        }
+    @TemplateFunction(name = "hummingbirds_state")
+    public static boolean hummingbirdsStateFunction() {
+        return Models.ShamanSummon.hummingBirdsState;
     }
 
-    public static class GuildObjectiveScoreFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            WynnObjective weekly = Models.Objectives.getGuildObjective();
-            if (weekly == null) return CappedValue.EMPTY;
-            return weekly.getScore();
-        }
+    @TemplateFunction(name = "ophanim_healing_percent")
+    public static int ophanimHealingPercentFunction() {
+        return Models.Ability.ophanimBar.isActive() ? Models.Ability.ophanimBar.getHealed() : -1;
     }
 
-    public static class GuildObjectiveGoalFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            WynnObjective weekly = Models.Objectives.getGuildObjective();
-            if (weekly == null) return "";
-            return weekly.getGoal();
-        }
+    @TemplateFunction(name = "guild_objective_score")
+    public static CappedValue guildObjectiveScoreFunction() {
+        WynnObjective weekly = Models.Objectives.getGuildObjective();
+        if (weekly == null)
+            return CappedValue.EMPTY;
+        return weekly.getScore();
     }
 
-    public static class GuildObjectiveEventBonusFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            WynnObjective weekly = Models.Objectives.getGuildObjective();
-            if (weekly == null) return false;
-            return weekly.hasEventBonus();
-        }
+    @TemplateFunction(name = "guild_objective_goal")
+    public static String guildObjectiveGoalFunction() {
+        WynnObjective weekly = Models.Objectives.getGuildObjective();
+        if (weekly == null)
+            return "";
+        return weekly.getGoal();
     }
 
-    public static class PersonalObjectiveScoreFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            int index = arguments.getArgument("index").getIntegerValue();
-            List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
-            return !daily.isEmpty() && index >= 0 && daily.size() > index
-                    ? daily.get(index).getScore()
-                    : CappedValue.EMPTY;
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("index", Integer.class, 0)));
-        }
+    @TemplateFunction(name = "guild_objective_event_bonus")
+    public static boolean guildObjectiveEventBonusFunction() {
+        WynnObjective weekly = Models.Objectives.getGuildObjective();
+        if (weekly == null)
+            return false;
+        return weekly.hasEventBonus();
     }
 
-    public static class PersonalObjectiveGoalFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            int index = arguments.getArgument("index").getIntegerValue();
-            List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
-            return !daily.isEmpty() && index >= 0 && daily.size() > index
-                    ? daily.get(index).getGoal()
-                    : "";
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("index", Integer.class, 0)));
-        }
+    @TemplateFunction(name = "personal_objective_score")
+    public static CappedValue personalObjectiveScoreFunction() {
+        return personalObjectiveScoreFunction(0);
     }
 
-    public static class PersonalObjectiveEventBonusFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            int index = arguments.getArgument("index").getIntegerValue();
-            List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
-            return !daily.isEmpty()
-                    && index >= 0
-                    && daily.size() > index
-                    && daily.get(index).hasEventBonus();
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("index", Integer.class, 0)));
-        }
+    @TemplateFunction(name = "personal_objective_score")
+    public static CappedValue personalObjectiveScoreFunction(int index) {
+        List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
+        return !daily.isEmpty() && index >= 0 && daily.size() > index ? daily.get(index).getScore() : CappedValue.EMPTY;
     }
 
-    public static class EquippedAspectFunction extends Function<NamedValue> {
-        @Override
-        public NamedValue getValue(FunctionArguments arguments) {
-            int aspectIndex = arguments.getArgument("index").getIntegerValue();
-            Optional<String> equippedAspectOpt = Models.Aspect.getEquippedAspect(aspectIndex);
-            if (equippedAspectOpt.isEmpty()) return NamedValue.EMPTY;
-
-            Optional<Integer> aspectTierOpt = Models.Aspect.getAspectTierByName(equippedAspectOpt.get());
-            return aspectTierOpt
-                    .map(s -> new NamedValue(equippedAspectOpt.get(), aspectTierOpt.get()))
-                    .orElse(NamedValue.EMPTY);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("index", Integer.class, null)));
-        }
+    @TemplateFunction(name = "personal_objective_goal")
+    public static String personalObjectiveGoalFunction() {
+        return personalObjectiveGoalFunction(0);
     }
 
-    public static class IsAspectEquippedFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            String aspectName = arguments.getArgument("aspectName").getStringValue();
-            return Models.Aspect.getEquippedAspectByName(aspectName).isPresent();
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("aspectName", String.class, null)));
-        }
+    @TemplateFunction(name = "personal_objective_goal")
+    public static String personalObjectiveGoalFunction(int index) {
+        List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
+        return !daily.isEmpty() && index >= 0 && daily.size() > index ? daily.get(index).getGoal() : "";
     }
 
-    public static class AspectTierFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            String aspectName = arguments.getArgument("aspectName").getStringValue();
-            return Models.Aspect.getAspectTierByName(aspectName).orElse(0);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("aspectName", String.class, null)));
-        }
+    @TemplateFunction(name = "personal_objective_event_bonus")
+    public static boolean personalObjectiveEventBonusFunction() {
+        return personalObjectiveEventBonusFunction(0);
     }
 
-    public static class LeaderboardPositionFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            String leaderboardKey = arguments.getArgument("leaderboardKey").getStringValue();
-            LeaderboardType leaderboardType = LeaderboardType.fromKey(leaderboardKey);
-
-            if (leaderboardType == null) return 0;
-
-            return Models.Account.getPlayerInfo().leaderboardPlacements().getOrDefault(leaderboardType, 0);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("leaderboardKey", String.class, null)));
-        }
+    @TemplateFunction(name = "personal_objective_event_bonus")
+    public static boolean personalObjectiveEventBonusFunction(int index) {
+        List<WynnObjective> daily = Models.Objectives.getPersonalObjectives();
+        return !daily.isEmpty() && index >= 0 && daily.size() > index && daily.get(index).hasEventBonus();
     }
 
-    public static class PowderSpecialChargeFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            Optional<PowderSpecialInfo> powderSpecialInfoOpt = Models.CharacterStats.getPowderSpecialInfo();
-            if (powderSpecialInfoOpt.isEmpty()) return CappedValue.EMPTY;
-            return CappedValue.fromProgress(powderSpecialInfoOpt.get().charge(), 100);
-        }
+    @TemplateFunction(name = "equipped_aspect")
+    public static NamedValue equippedAspectFunction(int index) {
+        int aspectIndex = index;
+        Optional<String> equippedAspectOpt = Models.Aspect.getEquippedAspect(aspectIndex);
+        if (equippedAspectOpt.isEmpty())
+            return NamedValue.EMPTY;
+        Optional<Integer> aspectTierOpt = Models.Aspect.getAspectTierByName(equippedAspectOpt.get());
+        return aspectTierOpt.map(s -> new NamedValue(equippedAspectOpt.get(), aspectTierOpt.get())).orElse(NamedValue.EMPTY);
     }
 
-    public static class CurrentDistortionFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Ability.distortionBar.getCurrent();
-        }
+    @TemplateFunction(name = "is_aspect_equipped")
+    public static boolean isAspectEquippedFunction(String aspectName) {
+        return Models.Aspect.getEquippedAspectByName(aspectName).isPresent();
     }
 
-    public static class MirrorImageCloneFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            int cloneNumber = arguments.getArgument("cloneNumber").getIntegerValue();
-            return cloneNumber < Models.Ability.mirrorImageBar.getClones().size() && cloneNumber >= 0
-                    ? Models.Ability.mirrorImageBar.getClones().get(cloneNumber).getActiveState()
-                    : -1;
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("cloneNumber", Integer.class, null)));
-        }
+    @TemplateFunction(name = "aspect_tier")
+    public static int aspectTierFunction(String aspectName) {
+        return Models.Aspect.getAspectTierByName(aspectName).orElse(0);
     }
 
-    public static class MirrorImageDurationFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Ability.mirrorImageBar.isActive() ? Models.Ability.mirrorImageBar.getDuration() : 0;
-        }
+    @TemplateFunction(name = "leaderboard_position")
+    public static int leaderboardPositionFunction(String leaderboardKey) {
+        LeaderboardType leaderboardType = LeaderboardType.fromKey(leaderboardKey);
+        if (leaderboardType == null)
+            return 0;
+        return Models.Account.getPlayerInfo().leaderboardPlacements().getOrDefault(leaderboardType, 0);
     }
 
-    public static class PuppetCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsByType(PuppetType.PUPPET)
-                    .count());
-        }
+    @TemplateFunction(name = "powder_special_charge")
+    public static CappedValue powderSpecialChargeFunction() {
+        Optional<PowderSpecialInfo> powderSpecialInfoOpt = Models.CharacterStats.getPowderSpecialInfo();
+        if (powderSpecialInfoOpt.isEmpty())
+            return CappedValue.EMPTY;
+        return CappedValue.fromProgress(powderSpecialInfoOpt.get().charge(), 100);
     }
 
-    public static class RemnantCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsByType(PuppetType.REMNANT)
-                    .count());
-        }
+    @TemplateFunction(name = "current_distortion")
+    public static int currentDistortionFunction() {
+        return Models.Ability.distortionBar.getCurrent();
     }
 
-    public static class PatchworkAbominationDurationFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.ShamanSummon.getActivePuppetsByType(PuppetType.PATCHWORK_ABOMINATION)
-                    .findFirst()
-                    .map(ShamanPuppetInfo::getSecondsLeft)
-                    .orElse(-1);
-        }
+    @TemplateFunction(name = "mirror_image_clone")
+    public static int mirrorImageCloneFunction(int cloneNumber) {
+        return cloneNumber < Models.Ability.mirrorImageBar.getClones().size() && cloneNumber >= 0 ? Models.Ability.mirrorImageBar.getClones().get(cloneNumber).getActiveState() : -1;
     }
 
-    public static class PuppetsInTimeRangeFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            int min = arguments.getArgument("min").getIntegerValue();
-            int max = arguments.getArgument("max").getIntegerValue();
-            if (min > max) {
-                int tempMax = max;
-                max = min;
-                min = tempMax;
-            }
-            int finalMin = min;
-            int finalMax = max;
-            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsLabels()
-                    .map(ShamanPuppetInfo::getSecondsLeft)
-                    .filter(s -> s >= finalMin && finalMax >= s)
-                    .count());
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("min", Integer.class, null), new Argument<>("max", Integer.class, null)));
-        }
+    @TemplateFunction(name = "mirror_image_duration")
+    public static int mirrorImageDurationFunction() {
+        return Models.Ability.mirrorImageBar.isActive() ? Models.Ability.mirrorImageBar.getDuration() : 0;
     }
 
-    public static class CrowCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.ArcherBeast.getActiveCrowCount();
-        }
+    @TemplateFunction(name = "puppet_count")
+    public static int puppetCountFunction() {
+        return Math.toIntExact(Models.ShamanSummon.getActivePuppetsByType(PuppetType.PUPPET).count());
     }
 
-    public static class HoundsTimeLeftFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.ArcherBeast.getHoundsTimeLeft();
-        }
+    @TemplateFunction(name = "remnant_count")
+    public static int remnantCountFunction() {
+        return Math.toIntExact(Models.ShamanSummon.getActivePuppetsByType(PuppetType.REMNANT).count());
     }
 
-    public static class SnakeCountFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.ArcherBeast.getActiveSnakeCount();
+    @TemplateFunction(name = "patchwork_abomination_duration")
+    public static int patchworkAbominationDurationFunction() {
+        return Models.ShamanSummon.getActivePuppetsByType(PuppetType.PATCHWORK_ABOMINATION).findFirst().map(ShamanPuppetInfo::getSecondsLeft).orElse(-1);
+    }
+
+    @TemplateFunction(name = "puppets_in_time_range")
+    public static int puppetsInTimeRangeFunction(int max, int min) {
+        if (min > max) {
+            int tempMax = max;
+            max = min;
+            min = tempMax;
         }
+        int finalMin = min;
+        int finalMax = max;
+        return Math.toIntExact(Models.ShamanSummon.getActivePuppetsLabels().map(ShamanPuppetInfo::getSecondsLeft).filter(s -> s >= finalMin && finalMax >= s).count());
+    }
+
+    @TemplateFunction(name = "crow_count")
+    public static int crowCountFunction() {
+        return Models.ArcherBeast.getActiveCrowCount();
+    }
+
+    @TemplateFunction(name = "hounds_time_left")
+    public static int houndsTimeLeftFunction() {
+        return Models.ArcherBeast.getHoundsTimeLeft();
+    }
+
+    @TemplateFunction(name = "snake_count")
+    public static int snakeCountFunction() {
+        return Models.ArcherBeast.getActiveSnakeCount();
     }
 }

@@ -4,9 +4,6 @@
  */
 package com.wynntils.functions;
 
-import com.wynntils.core.consumers.functions.Function;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -22,133 +19,77 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import com.wynntils.templates.annotations.TemplateFunction;
 
+//Functions are accessed via reflection
+@SuppressWarnings("unused")
 public class MinecraftFunctions {
-    public static class MyLocationFunction extends Function<Location> {
-        @Override
-        public Location getValue(FunctionArguments arguments) {
-            return new Location(McUtils.player().blockPosition());
-        }
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("my_loc");
-        }
+    @TemplateFunction(name = "my_location", aliases = { "my_loc" })
+    public static Location myLocationFunction() {
+        return new Location(McUtils.player().blockPosition());
     }
 
-    public static class DirFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            boolean wrap = arguments.getArgument("wrap").getBooleanValue();
-            double dir = (double) McUtils.player().getYRot();
-
-            return wrap ? Mth.wrapDegrees(dir) : dir;
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("wrap", Boolean.class, false)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("yaw");
-        }
+    @TemplateFunction(name = "dir", aliases = { "yaw" })
+    public static double dirFunction() {
+        return dirFunction(false);
     }
 
-    public static class FpsFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return MinecraftAccessor.getFps();
-        }
+    @TemplateFunction(name = "dir", aliases = { "yaw" })
+    public static double dirFunction(boolean wrap) {
+        double dir = McUtils.player().getYRot();
+        return wrap ? Mth.wrapDegrees(dir) : dir;
     }
 
-    public static class TicksFunction extends Function<Long> {
-        @Override
-        public Long getValue(FunctionArguments arguments) {
-            return McUtils.mc().level.getGameTime();
-        }
+    @TemplateFunction(name = "fps")
+    public static int fpsFunction() {
+        return MinecraftAccessor.getFps();
     }
 
-    public static class KeyPressedFunction extends Function<Boolean> {
-        @Override
-        public Boolean getValue(FunctionArguments arguments) {
-            int keyCode = arguments.getArgument("keyCode").getIntegerValue();
-            return KeyboardUtils.isKeyDown(keyCode);
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("keyCode", Integer.class, null)));
-        }
+    @TemplateFunction(name = "ticks")
+    public static long ticksFunction() {
+        return McUtils.mc().level.getGameTime();
     }
 
-    public static class MinecraftEffectDurationFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            String effectName = arguments.getArgument("effectName").getStringValue();
-            Identifier effectLocation;
-            try {
-                effectLocation = Identifier.withDefaultNamespace(effectName);
-            } catch (IdentifierException e) {
-                return -1; // Effect name contains invalid characters
+    @TemplateFunction(name = "key_pressed")
+    public static boolean keyPressedFunction(int keyCode) {
+        return KeyboardUtils.isKeyDown(keyCode);
+    }
+
+    @TemplateFunction(name = "minecraft_effect_duration")
+    public static int minecraftEffectDurationFunction(String effectName) {
+        Identifier effectLocation;
+        try {
+            effectLocation = Identifier.withDefaultNamespace(effectName);
+        } catch (IdentifierException e) {
+            // Effect name contains invalid characters
+            return -1;
+        }
+        Holder<MobEffect> effectHolder = BuiltInRegistries.MOB_EFFECT.get(effectLocation).orElse(null);
+        // Effect holder not found
+        if (effectHolder == null)
+            return -1;
+        // Check if the player has the effect
+        if (McUtils.player().hasEffect(effectHolder)) {
+            MobEffectInstance effectInstance = McUtils.player().getEffect(effectHolder);
+            if (effectInstance != null && effectInstance.getDuration() >= 0) {
+                return effectInstance.getDuration();
             }
-
-            Holder<MobEffect> effectHolder =
-                    BuiltInRegistries.MOB_EFFECT.get(effectLocation).orElse(null);
-
-            if (effectHolder == null) return -1; // Effect holder not found
-
-            // Check if the player has the effect
-            if (McUtils.player().hasEffect(effectHolder)) {
-                MobEffectInstance effectInstance = McUtils.player().getEffect(effectHolder);
-
-                if (effectInstance != null && effectInstance.getDuration() >= 0) {
-                    return effectInstance.getDuration();
-                }
-            }
-
-            return -1; // Effect not active
         }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new Argument<>("effectName", String.class, null)));
-        }
+        // Effect not active
+        return -1;
     }
 
-    public static class LocationAtCrosshairFunction extends Function<Location> {
-        @Override
-        public Location getValue(FunctionArguments arguments) {
-            double distance = arguments.getArgument("distance").getDoubleValue();
-            boolean colliderOnly = arguments.getArgument("colliderOnly").getBooleanValue();
-
-            Optional<BlockPos> hitBlock = RaycastUtils.getTargetedBlockPosition(distance, colliderOnly);
-
-            if (hitBlock.isEmpty()) return Location.ZERO;
-
-            return new Location(hitBlock.get());
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new Argument<>("distance", Double.class, null),
-                    new Argument<>("colliderOnly", Boolean.class, null)));
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("crosshair_loc");
-        }
+    @TemplateFunction(name = "location_at_crosshair", aliases = { "crosshair_loc" })
+    public static Location locationAtCrosshairFunction(boolean colliderOnly, double distance) {
+        Optional<BlockPos> hitBlock = RaycastUtils.getTargetedBlockPosition(distance, colliderOnly);
+        if (hitBlock.isEmpty())
+            return Location.ZERO;
+        return new Location(hitBlock.get());
     }
 
-    public static class PitchFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return (double) McUtils.player().getXRot();
-        }
+    @TemplateFunction(name = "pitch")
+    public static double pitchFunction() {
+        return McUtils.player().getXRot();
     }
 }

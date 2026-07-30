@@ -5,108 +5,66 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.consumers.functions.Function;
-import com.wynntils.core.consumers.functions.arguments.Argument;
-import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.mount.type.MountStat;
+import com.wynntils.templates.annotations.TemplateFunction;
 import com.wynntils.utils.type.CappedValue;
-import java.util.List;
+
 import java.util.Optional;
 
+@SuppressWarnings("unused") // Functions are accessed via reflection
 public class MountFunctions {
-    public static class CappedMountStatFunction extends MountStatFunctionBase<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return getRequestedCappedStat(arguments).orElse(CappedValue.EMPTY);
-        }
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("cap_mnt_stat");
-        }
+    private static Optional<CappedValue> getCappedStat(String statArg) {
+        Optional<MountItem> mount = getMount();
+        if (mount.isEmpty()) return Optional.empty();
+
+        Optional<MountStat> stat = MountStat.fromKey(statArg);
+        if (stat.isEmpty() || !stat.get().isCapped()) return Optional.empty();
+
+        return Optional.of(getCappedStatValue(mount.get(), stat.get()));
     }
 
-    public static class MountStatFunction extends MountStatFunctionBase<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return getRequestedStatCurrent(arguments).orElse(-1);
-        }
+    private static Optional<Integer> getStatCurrent(String statArg) {
+        Optional<MountItem> mount = getMount();
+        if (mount.isEmpty()) return Optional.empty();
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("mnt_stat");
-        }
+        return MountStat.fromKey(statArg).map(stat -> getStatCurrentValue(mount.get(), stat));
     }
 
-    public static class MountStatMaxFunction extends MountStatFunctionBase<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return getRequestedStatMax(arguments).orElse(-1);
-        }
+    private static Optional<Integer> getStatMax(String statArg) {
+        Optional<MountItem> mount = getMount();
+        if (mount.isEmpty()) return Optional.empty();
 
-        @Override
-        protected List<String> getAliases() {
-            return List.of("mnt_stat_max");
-        }
+        Optional<MountStat> stat = MountStat.fromKey(statArg);
+        if (stat.isEmpty() || !stat.get().isCapped()) return Optional.empty();
+
+        return Optional.of(getCappedStatValue(mount.get(), stat.get()).max());
     }
 
-    public static class MountNameFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
-            return getMount().flatMap(MountItem::getName).orElse("");
-        }
-
-        @Override
-        protected List<String> getAliases() {
-            return List.of("mnt_name");
-        }
+    @TemplateFunction(name = "capped_mount_stat", aliases = {"cap_mnt_stat"})
+    public static CappedValue cappedMountStatFunction(String stat) {
+        return getCappedStat(stat).orElse(CappedValue.EMPTY);
     }
 
-    public static class CurrentMountEnergyFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Mount.getCurrentMountEnergy().orElse(CappedValue.EMPTY);
-        }
+    @TemplateFunction(name = "mount_stat", aliases = {"mnt_stat"})
+    public static int mountStatFunction(String stat) {
+        return getStatCurrent(stat).orElse(-1);
     }
 
-    private abstract static class MountStatFunctionBase<T> extends Function<T> {
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(new Argument<>("stat", String.class, null)));
-        }
+    @TemplateFunction(name = "mount_stat_max", aliases = {"mnt_stat_max"})
+    public static int mountStatMaxFunction(String stat) {
+        return getStatMax(stat).orElse(-1);
+    }
 
-        protected Optional<CappedValue> getRequestedCappedStat(FunctionArguments arguments) {
-            Optional<MountItem> mount = getMount();
-            if (mount.isEmpty()) return Optional.empty();
+    @TemplateFunction(name = "mount_name", aliases = {"mnt_name"})
+    public static String mountNameFunction() {
+        return getMount().flatMap(MountItem::getName).orElse("");
+    }
 
-            Optional<MountStat> stat = getRequestedStat(arguments);
-            if (stat.isEmpty() || !stat.get().isCapped()) return Optional.empty();
-
-            return Optional.of(getCappedStatValue(mount.get(), stat.get()));
-        }
-
-        protected Optional<Integer> getRequestedStatCurrent(FunctionArguments arguments) {
-            Optional<MountItem> mount = getMount();
-            if (mount.isEmpty()) return Optional.empty();
-
-            return getRequestedStat(arguments).map(stat -> getStatCurrentValue(mount.get(), stat));
-        }
-
-        protected Optional<Integer> getRequestedStatMax(FunctionArguments arguments) {
-            Optional<MountItem> mount = getMount();
-            if (mount.isEmpty()) return Optional.empty();
-
-            Optional<MountStat> stat = getRequestedStat(arguments);
-            if (stat.isEmpty() || !stat.get().isCapped()) return Optional.empty();
-
-            return Optional.of(getCappedStatValue(mount.get(), stat.get()).max());
-        }
-
-        private Optional<MountStat> getRequestedStat(FunctionArguments arguments) {
-            String statArg = arguments.getArgument("stat").getStringValue();
-            return MountStat.fromKey(statArg);
-        }
+    @TemplateFunction(name = "current_mount_energy", aliases = {"mnt_energy"})
+    public static CappedValue currentMountEnergyFunction(String stat) {
+        return Models.Mount.getCurrentMountEnergy().orElse(CappedValue.EMPTY);
     }
 
     private static Optional<MountItem> getMount() {

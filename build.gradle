@@ -17,7 +17,7 @@ def usingHotswapAgent = project.hasProperty("wynntils.hotswap") ? project.getPro
 // Do not change this in the main branch!
 version = "4.0.0-SNAPSHOT"
 
-subprojects {
+configure([project(":common"), project(":fabric"), project(":neoforge")]) {
     apply plugin: "dev.architectury.loom"
 
     repositories {
@@ -155,4 +155,9 @@ allprojects {
             endWithNewline()
         }
     }
+}
+
+tasks.register("upgradeFunctions", FunctionMigrationTask) {
+    group = "migration"
+    description = "Migrates Function#getValue to annotation-based system"
 }

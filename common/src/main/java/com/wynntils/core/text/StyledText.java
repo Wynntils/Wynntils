@@ -837,7 +837,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     @Override
     public String toString() {
-        return "StyledText{'" + getString(StyleType.COMPLETE) + "'}";
+        return getString(StyleType.COMPLETE);
     }
 
     @Override

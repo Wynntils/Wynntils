@@ -140,9 +140,10 @@ public abstract class BarOverlay extends DynamicOverlay {
     }
 
     private Pair<StyledText, ErrorOr<CappedValue>> calculateTemplate(BarOverlayTemplatePair template) {
+        // TODO: fix
         return Pair.of(
                 StyledText.join(" ", Managers.Function.doFormatLines(template.textTemplate)),
-                Managers.Function.tryGetRawValueOfType(template.valueTemplate, CappedValue.class));
+                ErrorOr.of(new CappedValue(0, 1)));
     }
 
     protected abstract float getTextureHeight();
