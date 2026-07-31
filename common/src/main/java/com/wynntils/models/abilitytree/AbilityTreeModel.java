@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import net.minecraft.world.item.ItemStack;
@@ -53,9 +54,6 @@ public final class AbilityTreeModel extends Model {
     public static final AbilityTreeParser ABILITY_TREE_PARSER = new AbilityTreeParser();
     public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
     private final AbilityTreeInfoRegistry abilityTreeInfoRegistry = new AbilityTreeInfoRegistry();
-
-    @Persisted
-    private final Storage<Map<String, SavableAbilityTree>> abilityTreeLoadouts = new Storage<>(new TreeMap<>());
 
     @Persisted
     private final Storage<Map<String, List<String>>> equippedAbilities = new Storage<>(new TreeMap<>());
@@ -516,8 +514,8 @@ public final class AbilityTreeModel extends Model {
                     // Count archetype points from the *remaining* set, excluding the node itself
                     Map<String, Integer> archetypeCounts = new HashMap<>();
                     for (AbilityTreeSkillNode n : remaining) {
-                        if (n != node && n.archetype() != null) {
-                            archetypeCounts.merge(n.archetype(), 1, Integer::sum);
+                        if (n != node && n.archetypeInfo() != null && n.archetypeInfo().archetype() != null) {
+                            archetypeCounts.merge(n.archetypeInfo().archetype(), 1, Integer::sum);
                         }
                     }
                     String reqArch = node.requiredArchetype().name();
