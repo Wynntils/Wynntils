@@ -159,6 +159,7 @@ import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
+import com.wynntils.features.utilities.AutoProgressDialogueFeature;
 import com.wynntils.features.utilities.AutoSkipCutscenesFeature;
 import com.wynntils.features.utilities.BuildLoadoutsFeature;
 import com.wynntils.features.utilities.CharacterSelectionUtilitiesFeature;
@@ -415,6 +416,7 @@ public final class FeatureManager extends Manager {
 
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
+        registerFeature(new AutoProgressDialogueFeature());
         registerFeature(new AutoSkipCutscenesFeature());
         registerFeature(new BuildLoadoutsFeature());
         registerFeature(new CharacterSelectionUtilitiesFeature());
