@@ -7,6 +7,7 @@ package com.wynntils.models.aspects;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
@@ -34,6 +35,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class AspectModel extends Model {
@@ -47,9 +49,6 @@ public final class AspectModel extends Model {
     @Persisted
     private final Storage<Map<String, Integer>> ownedAspects = new Storage<>(new TreeMap<>());
 
-    @Persisted
-    private final Storage<Map<String, SavableAspectSet>> aspectLoadouts = new Storage<>(new TreeMap<>());
-
     public AspectModel() {
         super(List.of());
     }
@@ -59,7 +58,7 @@ public final class AspectModel extends Model {
         aspectInfoRegistry.registerDownloads(registry);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onContentSet(ContainerSetContentEvent.Pre event) {
         Container currentContainer = Models.Container.getCurrentContainer();
 
@@ -91,7 +90,7 @@ public final class AspectModel extends Model {
 
             Optional<AspectItem> aspectItemOpt = Models.Item.asWynnItem(itemStack, AspectItem.class);
 
-            if (aspectItemOpt.isEmpty()) break;
+            if (aspectItemOpt.isEmpty()) continue;
 
             newOwnedAspects.put(
                     aspectItemOpt.get().getName(), aspectItemOpt.get().getTier());
@@ -112,16 +111,44 @@ public final class AspectModel extends Model {
         ownedAspects.touched();
     }
 
-    // Handles right clicking adding/removing aspects
-    @SubscribeEvent
+    // Handles right clicking adding/removing aspects, and paging through owned aspects
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
-        if (!(Models.Container.getCurrentContainer() instanceof AspectsContainer aspectsContainer)) return;
+        Container currentContainer = Models.Container.getCurrentContainer();
 
-        List<String> characterAspects = new ArrayList<>();
+        List<Integer> equippedSlots = currentContainer instanceof AspectsContainer aspectsContainer
+                ? new ArrayList<>(aspectsContainer.getEquippedSlots())
+                : new ArrayList<>();
 
-        McUtils.mc().player.containerMenu.slots.forEach(slot -> {
-            if (aspectsContainer.getEquippedSlots().contains(slot.index)) {
-                ItemStack itemStack = slot.getItem();
+        List<Integer> ownedSlots = getOwnedSlotsFromContainer(currentContainer);
+
+        int changedSlot = event.getSlot();
+        boolean changedSlotIsOwned = ownedSlots.contains(changedSlot);
+        boolean changedSlotIsEquipped = equippedSlots.contains(changedSlot);
+
+        if (!changedSlotIsOwned && !changedSlotIsEquipped) return;
+
+        ItemStack changedItemStack = event.getItemStack();
+
+        if (changedSlotIsOwned && !changedItemStack.isEmpty()) {
+            Optional<AspectItem> aspectItemOpt = Models.Item.asWynnItem(changedItemStack, AspectItem.class);
+
+            if (aspectItemOpt.isPresent()) {
+                Map<String, Integer> newOwnedAspects = ownedAspects.get();
+                newOwnedAspects.put(
+                        aspectItemOpt.get().getName(), aspectItemOpt.get().getTier());
+                ownedAspects.store(newOwnedAspects);
+                ownedAspects.touched();
+            }
+        }
+
+        if (changedSlotIsEquipped) {
+            List<String> characterAspects = new ArrayList<>();
+
+            McUtils.mc().player.containerMenu.slots.forEach(slot -> {
+                if (!equippedSlots.contains(slot.index)) return;
+
+                ItemStack itemStack = slot.index == changedSlot ? changedItemStack : slot.getItem();
                 if (itemStack.isEmpty()) return;
 
                 StyledText itemName = StyledText.fromComponent(itemStack.getHoverName());
@@ -132,13 +159,13 @@ public final class AspectModel extends Model {
                 if (aspectItemOpt.isEmpty()) return;
 
                 characterAspects.add(aspectItemOpt.get().getName());
-            }
-        });
+            });
 
-        Map<String, List<String>> currentEquippedAspects = equippedAspects.get();
-        currentEquippedAspects.put(Models.Character.getId(), characterAspects);
-        equippedAspects.store(currentEquippedAspects);
-        equippedAspects.touched();
+            Map<String, List<String>> currentEquippedAspects = equippedAspects.get();
+            currentEquippedAspects.put(Models.Character.getId(), characterAspects);
+            equippedAspects.store(currentEquippedAspects);
+            equippedAspects.touched();
+        }
     }
 
     public Stream<AspectInfo> getAllAspectInfos() {
@@ -196,27 +223,11 @@ public final class AspectModel extends Model {
         return List.of();
     }
 
-    public Map<String, SavableAspectSet> getAspectLoadouts() {
-        return aspectLoadouts.get();
-    }
-
-    public SavableAspectSet getAspectLoadout(String name) {
-        return aspectLoadouts.get().get(name);
-    }
-
-    public boolean hasAspectLoadout(String name) {
-        return aspectLoadouts.get().containsKey(name);
-    }
-
-    public void deleteAspectLoadout(String name) {
-        aspectLoadouts.get().remove(name);
-    }
-
     public void saveCurrentAspectLoadout(
             String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
         ASPECT_CONTAINER_QUERIES.dumpAspectContainer(
                 loadout -> {
-                    aspectLoadouts.get().put(name, loadout);
+                    Services.loadout.saveAspectLoadout(name, loadout);
                     WynntilsMod.info("Saved aspect loadout: " + name);
                 },
                 onStatus,
@@ -226,7 +237,7 @@ public final class AspectModel extends Model {
 
     public void loadAspectLoadout(
             String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
-        SavableAspectSet loadout = getAspectLoadout(name);
+        SavableAspectSet loadout = Services.loadout.getAspectLoadout(name);
         if (loadout == null) {
             onError.accept("No saved aspect loadout: " + name);
             return;

@@ -20,6 +20,7 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Optional;
@@ -57,11 +58,12 @@ public class AbilityTreeDataDumpFeature extends Feature {
     }
 
     private void saveToDisk(AbilityTreeInfo abilityTreeInfo) {
-        File jsonFile = new File(SAVE_FOLDER, "abilities.json");
+        File expandedJsonFile = new File(SAVE_FOLDER, "abilities_v2_expanded.json");
+        File minifiedJsonFile = new File(SAVE_FOLDER, "abilities_v2.json");
 
         JsonObject root = new JsonObject();
-        if (jsonFile.exists()) {
-            try (FileReader reader = new FileReader(jsonFile, StandardCharsets.UTF_8)) {
+        if (expandedJsonFile.exists()) {
+            try (FileReader reader = new FileReader(expandedJsonFile, StandardCharsets.UTF_8)) {
                 JsonElement existing = Managers.Json.GSON.fromJson(reader, JsonElement.class);
                 if (existing != null && existing.isJsonObject()) {
                     root = existing.getAsJsonObject();
@@ -75,9 +77,15 @@ public class AbilityTreeDataDumpFeature extends Feature {
         JsonElement element = Managers.Json.GSON.toJsonTree(abilityTreeInfo);
         root.add(classKey, element);
 
-        Managers.Json.savePreciousJson(jsonFile, root);
+        Managers.Json.savePreciousJson(expandedJsonFile, root);
 
-        McUtils.sendWynntilsPrefixMessage(
-                Component.literal("Saved ability tree dump for " + classKey + " to " + jsonFile.getAbsolutePath()));
+        try (FileWriter writer = new FileWriter(minifiedJsonFile, StandardCharsets.UTF_8)) {
+            writer.write(root.toString());
+        } catch (Exception e) {
+            WynntilsMod.error("Failed to save minified abilities file", e);
+        }
+
+        McUtils.sendWynntilsPrefixMessage(Component.literal(
+                "Saved ability tree dump for " + classKey + " to " + expandedJsonFile.getAbsolutePath()));
     }
 }

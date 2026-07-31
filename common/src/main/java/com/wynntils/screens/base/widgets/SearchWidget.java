@@ -24,7 +24,7 @@ import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public class SearchWidget extends TextInputBoxWidget {
-    private static final Component DEFAULT_TEXT =
+    protected static final Component DEFAULT_TEXT =
             Component.translatable("screens.wynntils.searchWidget.defaultSearchText");
 
     protected static final float VERTICAL_OFFSET = 6.5f;
