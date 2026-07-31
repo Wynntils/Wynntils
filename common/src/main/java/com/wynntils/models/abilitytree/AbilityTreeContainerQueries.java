@@ -6,7 +6,6 @@ package com.wynntils.models.abilitytree;
 
 import com.google.common.collect.ImmutableMap;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
@@ -28,7 +27,6 @@ import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.items.items.game.AbilityShardItem;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.models.statuseffects.type.StatusEffect;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.InventoryUtils;

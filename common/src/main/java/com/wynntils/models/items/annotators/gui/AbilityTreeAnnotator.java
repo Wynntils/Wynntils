@@ -20,11 +20,12 @@ public final class AbilityTreeAnnotator implements GuiItemAnnotator {
     // Deals with the reset button in the ability tree screen
     private static final StyledText TREE_ABILITY_POINTS_NAME = StyledText.fromString("§#82eff4ff§lAbility Points");
     private static final StyledText TREE_ABILITY_POINTS_NAME_ALT = StyledText.fromString("§e§lAbility Points");
-    private static final Pattern TREE_ABILITY_POINTS_RESET_PATTERN = Pattern.compile("§eShift Click to reset your tree");
+    private static final Pattern TREE_ABILITY_POINTS_RESET_PATTERN =
+            Pattern.compile("§eShift Click to reset your tree");
 
     // Test in AbilityTreeAnnotator_TREE_ABILITY_POINTS_PATTERN
-    private static final Pattern ABILITY_POINTS_PATTERN = Pattern.compile("§b✦ Available Points: §(?:#a0c84bff|f)(\\d+)§7\\/(\\d+)");
-
+    private static final Pattern ABILITY_POINTS_PATTERN =
+            Pattern.compile("§b✦ Available Points: §(?:#a0c84bff|f)(\\d+)§7\\/(\\d+)");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {

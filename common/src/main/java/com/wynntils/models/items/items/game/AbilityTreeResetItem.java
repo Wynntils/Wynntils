@@ -1,7 +1,8 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.items.items.game;
-
-import com.wynntils.core.text.StyledText;
-import com.wynntils.models.abilitytree.type.AbilityTreeNodeType;
 
 public class AbilityTreeResetItem extends GameItem {
     private final boolean canReset;
@@ -18,5 +19,4 @@ public class AbilityTreeResetItem extends GameItem {
     public String toString() {
         return "AbilityTreeResetItem{" + "canReset=" + canReset + '}';
     }
-
 }

@@ -19,7 +19,6 @@ import com.wynntils.models.abilitytree.parser.AbilityTreeParser;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
-import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.abilitytree.type.SavableAbilityTree;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.Container;
@@ -30,11 +29,6 @@ import com.wynntils.models.items.items.game.AbilityTreeResetItem;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.utils.wynn.ContainerUtils;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -42,12 +36,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 public final class AbilityTreeModel extends Model {
     public static final int ABILITY_TREE_PAGES = 9;
@@ -76,7 +75,8 @@ public final class AbilityTreeModel extends Model {
 
         List<Integer> abilitySlots = new ArrayList<>();
         if (currentContainer instanceof AbilityTreeContainer abilityTreeContainer) {
-            abilitySlots = new ArrayList<>(abilityTreeContainer.getAbilityBounds().getSlots());
+            abilitySlots =
+                    new ArrayList<>(abilityTreeContainer.getAbilityBounds().getSlots());
         }
 
         if (abilitySlots.isEmpty()) return;
@@ -127,7 +127,8 @@ public final class AbilityTreeModel extends Model {
 
         List<Integer> abilitySlots = new ArrayList<>();
         if (currentContainer instanceof AbilityTreeContainer abilityTreeContainer) {
-            abilitySlots = new ArrayList<>(abilityTreeContainer.getAbilityBounds().getSlots());
+            abilitySlots =
+                    new ArrayList<>(abilityTreeContainer.getAbilityBounds().getSlots());
         }
 
         if (abilitySlots.isEmpty()) return;
@@ -140,7 +141,8 @@ public final class AbilityTreeModel extends Model {
         ItemStack changedItemStack = event.getItemStack();
         if (changedItemStack.isEmpty()) return;
 
-        Optional<AbilityTreeNodeItem> abilityItemOpt = Models.Item.asWynnItem(changedItemStack, AbilityTreeNodeItem.class);
+        Optional<AbilityTreeNodeItem> abilityItemOpt =
+                Models.Item.asWynnItem(changedItemStack, AbilityTreeNodeItem.class);
         if (abilityItemOpt.isEmpty()) return;
 
         AbilityTreeNodeItem abilityItem = abilityItemOpt.get();
@@ -175,7 +177,7 @@ public final class AbilityTreeModel extends Model {
     public void handleAbilityTreeResetClick(ContainerClickEvent event) {
         Container currentContainer = Models.Container.getCurrentContainer();
 
-         if (currentContainer instanceof AbilityTreeContainer) {
+        if (currentContainer instanceof AbilityTreeContainer) {
             ItemStack itemStack = event.getItemStack();
             if (itemStack.isEmpty()) return;
 
@@ -188,22 +190,23 @@ public final class AbilityTreeModel extends Model {
             equippedAbilities.store(allEquippedAbilities);
             equippedAbilities.touched();
         } else if (currentContainer instanceof AbilityTreeResetContainer) {
-             ItemStack itemStack = event.getItemStack();
-             if (itemStack.isEmpty()) return;
+            ItemStack itemStack = event.getItemStack();
+            if (itemStack.isEmpty()) return;
 
-             Optional<AbilityTreeResetItem> abilityResetItemOpt = Models.Item.asWynnItem(itemStack, AbilityTreeResetItem.class);
-             if (abilityResetItemOpt.isEmpty()) return;
-             if (!abilityResetItemOpt.get().getCanReset()) return;
+            Optional<AbilityTreeResetItem> abilityResetItemOpt =
+                    Models.Item.asWynnItem(itemStack, AbilityTreeResetItem.class);
+            if (abilityResetItemOpt.isEmpty()) return;
+            if (!abilityResetItemOpt.get().getCanReset()) return;
 
-             if (event.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                 Map<String, List<String>> allEquippedAbilities = equippedAbilities.get();
-                 allEquippedAbilities.put(Models.Character.getId(), new ArrayList<>());
-                 equippedAbilities.store(allEquippedAbilities);
-                 equippedAbilities.touched();
-             }
-         }
+            if (event.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                Map<String, List<String>> allEquippedAbilities = equippedAbilities.get();
+                allEquippedAbilities.put(Models.Character.getId(), new ArrayList<>());
+                equippedAbilities.store(allEquippedAbilities);
+                equippedAbilities.touched();
+            }
+        }
 
-         return;
+        return;
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -224,11 +227,13 @@ public final class AbilityTreeModel extends Model {
 
         AbilityTreeNodeItem abilityItem = abilityItemOpt.get();
         String abilityName = abilityItem.getName().getString(StyleType.NONE);
-        AbilityTreeSkillNode abilityTreeSkillNode = getNodeFromNameAndClass(abilityName, Models.Character.getClassType());
+        AbilityTreeSkillNode abilityTreeSkillNode =
+                getNodeFromNameAndClass(abilityName, Models.Character.getClassType());
 
         if (abilityTreeSkillNode == null) return;
 
-        Set<AbilityTreeSkillNode> toRemove = computeCascadeRemoval(abilityTreeSkillNode, Models.Character.getClassType());
+        Set<AbilityTreeSkillNode> toRemove =
+                computeCascadeRemoval(abilityTreeSkillNode, Models.Character.getClassType());
 
         Map<String, List<String>> allEquippedAbilities = equippedAbilities.get();
         String characterId = Models.Character.getId();
@@ -241,6 +246,15 @@ public final class AbilityTreeModel extends Model {
         allEquippedAbilities.put(characterId, equipped);
         equippedAbilities.store(allEquippedAbilities);
         equippedAbilities.touched();
+    }
+
+    public Optional<String> getEquippedAbilityByName(String abilityName) {
+        List<String> characterAbilities =
+                equippedAbilities.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
+
+        return characterAbilities.stream()
+                .filter(aspect -> aspect.toLowerCase(Locale.ROOT).endsWith(abilityName.toLowerCase(Locale.ROOT)))
+                .findFirst();
     }
 
     public AbilityTreeInfo getAbilityTree(ClassType type) {
@@ -449,13 +463,12 @@ public final class AbilityTreeModel extends Model {
         return 1000 + (from - to); // Backward
     }
 
-
     private Set<AbilityTreeSkillNode> computeCascadeRemoval(AbilityTreeSkillNode clickedNode, ClassType classType) {
         AbilityTreeInfo treeInfo = getAbilityTree(classType);
         List<AbilityTreeSkillNode> allNodes = treeInfo.nodes();
 
-        Map<String, AbilityTreeSkillNode> byName = allNodes.stream()
-                .collect(Collectors.toMap(AbilityTreeSkillNode::name, n -> n, (a, b) -> a));
+        Map<String, AbilityTreeSkillNode> byName =
+                allNodes.stream().collect(Collectors.toMap(AbilityTreeSkillNode::name, n -> n, (a, b) -> a));
 
         String characterId = Models.Character.getId();
         List<String> equippedNames = equippedAbilities.get().getOrDefault(characterId, List.of());
@@ -490,7 +503,8 @@ public final class AbilityTreeModel extends Model {
                 AbilityTreeSkillNode node = it.next();
 
                 // 1. Explicit ability requirement no longer satisfied
-                if (node.requiredAbility() != null && removed.stream().anyMatch(r -> r.name().equals(node.requiredAbility()))) {
+                if (node.requiredAbility() != null
+                        && removed.stream().anyMatch(r -> r.name().equals(node.requiredAbility()))) {
                     it.remove();
                     removed.add(node);
                     changed = true;
