@@ -20,6 +20,10 @@ public class AbilityTreeNodeItem extends GameItem {
         return name;
     }
 
+    public AbilityTreeNodeType getAbilityTreeNodeType() {
+        return abilityTreeNodeType;
+    }
+
     @Override
     public String toString() {
         return "AbilityTreeNodeItem{" + "abilityTreeNodeType=" + abilityTreeNodeType + '}';

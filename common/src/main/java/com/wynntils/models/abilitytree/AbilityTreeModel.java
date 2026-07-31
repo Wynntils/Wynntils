@@ -9,6 +9,11 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.net.DownloadRegistry;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.core.text.type.StyleType;
+import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.models.abilitytree.parser.AbilityTreeParser;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
@@ -16,7 +21,14 @@ import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.abilitytree.type.SavableAbilityTree;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.containers.Container;
+import com.wynntils.models.containers.containers.AbilityTreeContainer;
+import com.wynntils.models.items.items.game.AbilityTreeNodeItem;
 import com.wynntils.utils.wynn.ContainerUtils;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,6 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -35,7 +48,11 @@ public final class AbilityTreeModel extends Model {
     public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
     private final AbilityTreeInfoRegistry abilityTreeInfoRegistry = new AbilityTreeInfoRegistry();
 
-    private ParsedAbilityTree currentAbilityTree;
+    @Persisted
+    private final Storage<Map<String, SavableAbilityTree>> abilityTreeLoadouts = new Storage<>(new TreeMap<>());
+
+    @Persisted
+    private final Storage<Map<String, List<String>>> equippedAbilities = new Storage<>(new TreeMap<>());
 
     public AbilityTreeModel() {
         super(List.of());
@@ -46,16 +63,113 @@ public final class AbilityTreeModel extends Model {
         abilityTreeInfoRegistry.registerDownloads(registry);
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onContentSet(ContainerSetContentEvent.Pre event) {
+        Container currentContainer = Models.Container.getCurrentContainer();
+
+        List<Integer> abilitySlots = new ArrayList<>();
+        if (currentContainer instanceof AbilityTreeContainer abilityTreeContainer) {
+            abilitySlots = new ArrayList<>(abilityTreeContainer.getAbilityBounds().getSlots());
+        }
+
+        if (abilitySlots.isEmpty()) return;
+
+        Map<String, List<String>> allEquippedAbilities = equippedAbilities.get();
+        String characterId = Models.Character.getId();
+        List<String> equipped = allEquippedAbilities.computeIfAbsent(characterId, id -> new ArrayList<>());
+
+        boolean changed = false;
+
+        for (int i = 0; i < event.getItems().size(); i++) {
+            boolean slotInsidePossibleSlots = abilitySlots.contains(i);
+
+            if (!slotInsidePossibleSlots) continue;
+
+            ItemStack itemStack = event.getItems().get(i);
+            if (itemStack.isEmpty()) continue;
+
+            Optional<AbilityTreeNodeItem> abilityItemOpt = Models.Item.asWynnItem(itemStack, AbilityTreeNodeItem.class);
+            if (abilityItemOpt.isEmpty()) continue;
+
+            AbilityTreeNodeItem abilityItem = abilityItemOpt.get();
+            String abilityName = abilityItem.getName().getString(StyleType.NONE);
+            boolean unlocked = abilityItem.getAbilityTreeNodeType().getState() == AbilityTreeNodeState.UNLOCKED;
+
+            if (unlocked) {
+                if (!equipped.contains(abilityName)) {
+                    equipped.add(abilityName);
+                    changed = true;
+                }
+            } else {
+                if (equipped.remove(abilityName)) {
+                    changed = true;
+                }
+            }
+        }
+
+        if (changed) {
+            allEquippedAbilities.put(characterId, equipped);
+            equippedAbilities.store(allEquippedAbilities);
+            equippedAbilities.touched();
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
+        Container currentContainer = Models.Container.getCurrentContainer();
+
+        List<Integer> abilitySlots = new ArrayList<>();
+        if (currentContainer instanceof AbilityTreeContainer abilityTreeContainer) {
+            abilitySlots = new ArrayList<>(abilityTreeContainer.getAbilityBounds().getSlots());
+        }
+
+        if (abilitySlots.isEmpty()) return;
+
+        int changedSlot = event.getSlot();
+        boolean slotInsidePossibleSlots = abilitySlots.contains(changedSlot);
+
+        if (!slotInsidePossibleSlots) return;
+
+        ItemStack changedItemStack = event.getItemStack();
+        if (changedItemStack.isEmpty()) return;
+
+        Optional<AbilityTreeNodeItem> abilityItemOpt = Models.Item.asWynnItem(changedItemStack, AbilityTreeNodeItem.class);
+        if (abilityItemOpt.isEmpty()) return;
+
+        AbilityTreeNodeItem abilityItem = abilityItemOpt.get();
+        String abilityName = abilityItem.getName().getString(StyleType.NONE);
+        boolean unlocked = abilityItem.getAbilityTreeNodeType().getState() == AbilityTreeNodeState.UNLOCKED;
+
+        Map<String, List<String>> allEquippedAbilities = equippedAbilities.get();
+        String characterId = Models.Character.getId();
+        List<String> equipped = allEquippedAbilities.computeIfAbsent(characterId, id -> new ArrayList<>());
+
+        boolean changed = false;
+
+        if (unlocked) {
+            if (!equipped.contains(abilityName)) {
+                equipped.add(abilityName);
+                changed = true;
+            }
+        } else {
+            if (equipped.remove(abilityName)) {
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            allEquippedAbilities.put(characterId, equipped);
+            equippedAbilities.store(allEquippedAbilities);
+            equippedAbilities.touched();
+        }
+    }
+
     public AbilityTreeInfo getAbilityTree(ClassType type) {
         return abilityTreeInfoRegistry.getAbilityTree(type);
     }
 
     public AbilityTreeSkillNode getNodeFromNameAndClass(String name, ClassType classType) {
         return abilityTreeInfoRegistry.getNodeFromNameAndClass(name, classType);
-    }
-
-    public void setCurrentAbilityTree(ParsedAbilityTree currentAbilityTree) {
-        this.currentAbilityTree = currentAbilityTree;
     }
 
     public void saveCurrentAbilityTree(
@@ -92,18 +206,6 @@ public final class AbilityTreeModel extends Model {
         ContainerUtils.closeBackgroundContainer();
 
         ABILITY_TREE_CONTAINER_QUERIES.applyAbilityTreeLoadout(ordered, onStatus, onError, onComplete);
-    }
-
-    public AbilityTreeNodeState getNodeState(AbilityTreeSkillNode node) {
-        if (currentAbilityTree == null) {
-            return AbilityTreeNodeState.LOCKED;
-        }
-
-        return currentAbilityTree.nodes().keySet().stream()
-                .filter(n -> n.equals(node))
-                .map(currentAbilityTree.nodes()::get)
-                .findFirst()
-                .orElse(AbilityTreeNodeState.LOCKED);
     }
 
     private List<AbilityTreeSkillNode> getIdealApplicationOrder(

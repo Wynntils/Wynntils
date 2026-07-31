@@ -76,17 +76,6 @@ public class AbilityTreeContainerQueries {
                 new AbilityTreeContainerQueries.AbilityPageUnlockedProcessor(supplier), onStatus, onError, onComplete);
     }
 
-    public void updateParsedAbilityTree() {
-        McUtils.player().closeContainer();
-
-        // Wait for the container to close
-        Managers.TickScheduler.scheduleNextTick(() -> queryAbilityTree(
-                new AbilityTreeContainerQueries.AbilityPageSoftProcessor(Models.AbilityTree::setCurrentAbilityTree),
-                status -> {},
-                error -> {},
-                completed -> {}));
-    }
-
     private void queryAbilityTree(
             AbilityTreeProcessor processor,
             Consumer<String> onStatus,
