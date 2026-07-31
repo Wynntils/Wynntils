@@ -12,10 +12,9 @@ import com.wynntils.models.dialogue.actionbar.matchers.DialogueSegmentMatcher;
 import com.wynntils.models.dialogue.actionbar.segments.DialogueSegment;
 import com.wynntils.models.dialogue.event.NpcDialogueEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import net.neoforged.bus.api.SubscribeEvent;
-
 import java.util.List;
 import java.util.Optional;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class DialogueModel extends Model {
     private DialogueSegment currentDialogueSegment;

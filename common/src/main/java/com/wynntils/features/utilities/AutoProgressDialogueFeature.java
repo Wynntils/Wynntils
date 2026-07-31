@@ -23,6 +23,7 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.dialogue.event.NpcDialogueEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
+import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -30,8 +31,6 @@ import net.minecraft.network.protocol.game.ServerboundPlayerInputPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Input;
 import net.neoforged.bus.api.SubscribeEvent;
-
-import java.util.Locale;
 
 /**
  * Automatically sends short shift pulses for Wynncraft NPC dialogue.
