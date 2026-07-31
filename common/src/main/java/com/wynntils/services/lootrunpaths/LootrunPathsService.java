@@ -14,7 +14,7 @@ import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.mc.event.PlayerInteractEvent;
-import com.wynntils.mc.event.RenderLevelEvent;
+import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
@@ -185,7 +185,7 @@ public final class LootrunPathsService extends Service {
             Position startingPoint = Services.LootrunPaths.getStartingPoint();
 
             BlockPos start = PosUtils.newBlockPos(startingPoint);
-            McUtils.sendMessageToClient(Component.translatable(
+            McUtils.sendWynntilsPrefixMessage(Component.translatable(
                             "service.wynntils.lootrunPaths.lootrunStart", start.getX(), start.getY(), start.getZ())
                     .withStyle(ChatFormatting.GREEN));
         } else {
@@ -279,11 +279,12 @@ public final class LootrunPathsService extends Service {
     }
 
     @SubscribeEvent
-    public void onRenderLastLevel(RenderLevelEvent.Post event) {
-        PoseStack poseStack = new PoseStack();
+    public void onRenderLastLevel(RenderTileLevelLastEvent event) {
+        PoseStack poseStack = event.getPoseStack();
 
         LootrunRenderer.renderLootrun(
                 poseStack,
+                event.getSubmitNodeStorage(),
                 lootrun,
                 Managers.Feature.getFeatureInstance(LootrunFeature.class)
                         .activePathColor
@@ -291,6 +292,7 @@ public final class LootrunPathsService extends Service {
                         .asInt());
         LootrunRenderer.renderLootrun(
                 poseStack,
+                event.getSubmitNodeStorage(),
                 recordingCompiled,
                 Managers.Feature.getFeatureInstance(LootrunFeature.class)
                         .recordingPathColor

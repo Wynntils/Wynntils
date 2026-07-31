@@ -161,7 +161,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
         WynnItem renderedItem = errorOrDecodedByteBuffer.getValue();
 
-        previewItemStack = new FakeItemStack(renderedItem, "From chat");
+        previewItemStack = new FakeItemStack(renderedItem, itemStack, "From chat", true);
 
         // Find the width of the tooltip
         int tooltipWidth = LoreUtils.getTooltipLines(previewItemStack).stream()
@@ -191,11 +191,9 @@ public final class ItemSharingScreen extends WynntilsScreen {
     private void shareItem(String target) {
         switch (target) {
             case "guild" ->
-                Handlers.Command.sendCommandImmediately(
-                        "g " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
+                Handlers.Chat.queueChatCommand("g " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
             case "party" ->
-                Handlers.Command.sendCommandImmediately(
-                        "p " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
+                Handlers.Chat.queueChatCommand("p " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
             case "save" -> {
                 ItemStack itemStackToSave = itemStack;
 
@@ -216,7 +214,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
             default -> {
                 McUtils.mc().keyboardHandler.setClipboard(Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
 
-                McUtils.sendMessageToClient(Component.translatable("screens.wynntils.itemSharing.copied")
+                McUtils.sendWynntilsPrefixMessage(Component.translatable("screens.wynntils.itemSharing.copied")
                         .withStyle(ChatFormatting.GREEN));
             }
         }

@@ -22,6 +22,7 @@ import com.wynntils.models.containers.containers.trademarket.TradeMarketBuyConta
 import com.wynntils.models.containers.containers.trademarket.TradeMarketContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketFiltersContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketOrderContainer;
+import com.wynntils.models.containers.containers.trademarket.TradeMarketRevealItemsContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesContainer;
 import com.wynntils.models.containers.type.ContainerBounds;
@@ -30,6 +31,7 @@ import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent
 import com.wynntils.models.trademarket.event.TradeMarketStateEvent;
 import com.wynntils.models.trademarket.type.TradeMarketPriceCheckInfo;
 import com.wynntils.models.trademarket.type.TradeMarketPriceInfo;
+import com.wynntils.models.trademarket.type.TradeMarketSortOrder;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.trademarket.TradeMarketSearchResultHolder;
@@ -38,6 +40,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -96,8 +99,11 @@ public final class TradeMarketModel extends Model {
     private static final Pattern PRICE_PATTERN = Pattern.compile(
             "§[67] - (?:§f(?<amount>[\\d,]+) §7x )?§(?:(?:(?:c✖|a✔) §f)|f§m|f)(?<price>[\\d,]+)§7(?:§m)?²(?:§b ✮ (?<silverbullPrice>[\\d,]+)§3²)?(?: .+)?");
 
-    private static final Pattern SELL_ITEM_NAME_PATTERN = Pattern.compile("(.+)À");
+    private static final Pattern SELL_ITEM_NAME_PATTERN = Pattern.compile("\uDAFC\uDC00§.(.+)\uDAFC\uDC00");
     private static final String EMPTY_ITEM_SLOT = "Empty Item Slot";
+
+    public static final int SORT_ORDER_SLOT = 52;
+    private static final Pattern SORT_ORDER_PATTERN = Pattern.compile("§6- §f(.*)");
 
     private static final int SELLABLE_ITEM_SLOT = 22;
 
@@ -245,6 +251,21 @@ public final class TradeMarketModel extends Model {
         presetFilters.touched();
     }
 
+    public TradeMarketSortOrder getSortOrder(ItemStack itemStack) {
+        List<Component> tooltip = LoreUtils.getTooltipLines(itemStack);
+        for (Component component : tooltip) {
+            Matcher matcher =
+                    StyledText.fromComponent(component).getNormalized().getMatcher(SORT_ORDER_PATTERN);
+            if (matcher.matches()) {
+                return TradeMarketSortOrder.valueOf(
+                        matcher.group(1).trim().replace(" ", "_").toUpperCase(Locale.ROOT));
+            }
+        }
+
+        WynntilsMod.error("Could not parse TM sort order button!");
+        return TradeMarketSortOrder.MOST_RECENT;
+    }
+
     public TradeMarketPriceInfo calculateItemPriceInfo(ItemStack itemStack) {
         List<StyledText> loreLines = LoreUtils.getLore(itemStack);
 
@@ -385,6 +406,8 @@ public final class TradeMarketModel extends Model {
             newState = TradeMarketState.VIEWING_TRADES;
         } else if (currentContainer instanceof TradeMarketOrderContainer) {
             newState = TradeMarketState.VIEWING_ORDER;
+        } else if (currentContainer instanceof TradeMarketRevealItemsContainer) {
+            newState = TradeMarketState.REVEAL_ITEMS;
         } else {
             newState = null;
         }

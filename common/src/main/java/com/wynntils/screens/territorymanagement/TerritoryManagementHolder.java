@@ -11,6 +11,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.wrappedscreen.WrappedScreenHolder;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.items.items.gui.TerritoryItem;
@@ -109,62 +110,19 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
     }
 
     @SubscribeEvent
+    public void onContainerSetContent(ContainerSetContentEvent.Post event) {
+        if (event.getContainerId() != wrappedScreen.getWrappedScreenInfo().containerId()) return;
+
+        for (int i = 0; i < event.getItems().size(); i++) {
+            handleSlot(i, event.getItems().get(i));
+        }
+    }
+
+    @SubscribeEvent
     public void onContainerSetSlot(ContainerSetSlotEvent.Post event) {
         if (event.getContainerId() != wrappedScreen.getWrappedScreenInfo().containerId()) return;
 
-        int slot = event.getSlot();
-
-        if (slot % 9 < 2) return;
-        if (slot >= ITEMS_PER_CONTAINER_PAGE) return;
-
-        loadedItems++;
-
-        ItemStack itemStack = event.getItemStack();
-        int absSlot = getAbsoluteSlot(slot);
-
-        // If there is a click in progress,
-        // check if it is the response to the current click
-        if (absSlot == currentClick) {
-            currentClick = -1;
-            lastClickTicks = Integer.MAX_VALUE;
-        }
-
-        Optional<TerritoryItem> territoryItemOpt = Models.Item.asWynnItem(itemStack, TerritoryItem.class);
-        if (territoryItemOpt.isEmpty()) {
-            territories.remove(absSlot);
-        } else {
-            TerritoryItem territoryItem = territoryItemOpt.get();
-            territories.put(absSlot, Pair.of(itemStack, territoryItem));
-            if (!territoryItem.isSelected() && selectedTerritories.contains(territoryItem.getName())) {
-                territoryItem.markPending();
-            } else if (territoryItem.isSelected() && !selectedTerritories.contains(territoryItem.getName())) {
-                territoryItem.markPending();
-            }
-
-            if (!isSinglePage()) {
-                // There is cases where we need to do clicking:
-                // Normal mode:
-                // 1. The territory item is marked to be clicked
-
-                if (Objects.equals(territoryToBeClicked, territoryItem.getName())) {
-                    clickOnTerritory(absSlot);
-                }
-            }
-        }
-
-        lastItemLoadedTicks = McUtils.player().tickCount;
-
-        updateRenderedItems();
-
-        // Reset the requested page, after loading the page
-        if (loadedItems >= ITEMS_PER_PAGE) {
-            requestedPage = -1;
-            loadedItems = 0;
-
-            // Wait before the next request, while the page is being loaded
-            nextRequestTicks =
-                    McUtils.player().tickCount + (selectionMode ? SELECTION_MODE_LOAD_DELAY : REQUEST_LOAD_DELAY);
-        }
+        handleSlot(event.getSlot(), event.getItemStack());
     }
 
     @SubscribeEvent
@@ -585,6 +543,59 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         }
 
         return -1;
+    }
+
+    private void handleSlot(int slot, ItemStack itemStack) {
+        if (slot % 9 < 2) return;
+        if (slot >= ITEMS_PER_CONTAINER_PAGE) return;
+
+        loadedItems++;
+
+        int absSlot = getAbsoluteSlot(slot);
+
+        // If there is a click in progress,
+        // check if it is the response to the current click
+        if (absSlot == currentClick) {
+            currentClick = -1;
+            lastClickTicks = Integer.MAX_VALUE;
+        }
+
+        Optional<TerritoryItem> territoryItemOpt = Models.Item.asWynnItem(itemStack, TerritoryItem.class);
+        if (territoryItemOpt.isEmpty()) {
+            territories.remove(absSlot);
+        } else {
+            TerritoryItem territoryItem = territoryItemOpt.get();
+            territories.put(absSlot, Pair.of(itemStack, territoryItem));
+            if (!territoryItem.isSelected() && selectedTerritories.contains(territoryItem.getName())) {
+                territoryItem.markPending();
+            } else if (territoryItem.isSelected() && !selectedTerritories.contains(territoryItem.getName())) {
+                territoryItem.markPending();
+            }
+
+            if (!isSinglePage()) {
+                // There is cases where we need to do clicking:
+                // Normal mode:
+                // 1. The territory item is marked to be clicked
+
+                if (Objects.equals(territoryToBeClicked, territoryItem.getName())) {
+                    clickOnTerritory(absSlot);
+                }
+            }
+        }
+
+        lastItemLoadedTicks = McUtils.player().tickCount;
+
+        updateRenderedItems();
+
+        // Reset the requested page, after loading the page
+        if (loadedItems >= ITEMS_PER_PAGE) {
+            requestedPage = -1;
+            loadedItems = 0;
+
+            // Wait before the next request, while the page is being loaded
+            nextRequestTicks =
+                    McUtils.player().tickCount + (selectionMode ? SELECTION_MODE_LOAD_DELAY : REQUEST_LOAD_DELAY);
+        }
     }
 
     // Returns the actual slot of the territory items, starting from one

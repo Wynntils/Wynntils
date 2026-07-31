@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.activities;
@@ -59,25 +59,29 @@ public class ContentBookHolder extends WrappedScreenHolder<WynntilsContentBookSc
     @SubscribeEvent
     public void onSetSlot(ContainerSetSlotEvent.Post event) {
         if (!(McUtils.screen() instanceof WynntilsContentBookScreen contentBookScreen)) return;
+        if (wrappedScreen == null) return;
 
-        if (event.getContainerId() == McUtils.inventoryMenu().containerId) {
-            for (Pair<Integer, Integer> slotPair : ACTION_SLOTS) {
-                if (slotPair.a() == event.getSlot()) {
-                    handleActionSlot(event.getItemStack(), slotPair.b());
-                    return;
-                }
-            }
-        } else if (event.getContainerId()
-                == wrappedScreen.getWrappedScreenInfo().containerId()) {
-            if (event.getItemStack().isEmpty()) {
-                activities.remove(event.getSlot());
-                contentBookScreen.reloadContentBookWidgets(true);
-                return;
-            }
+        int inventoryContainerId = McUtils.inventoryMenu().containerId;
+        int wrappedContainerId = wrappedScreen.getWrappedScreenInfo().containerId();
+        int eventContainerId = event.getContainerId();
+        if (eventContainerId != inventoryContainerId && eventContainerId != wrappedContainerId) return;
 
-            boolean resetPage = handleActivityItem(event.getItemStack(), event.getSlot());
-            contentBookScreen.reloadContentBookWidgets(resetPage);
+        Optional<Integer> actionSlot =
+                getActionSlotForSetSlot(event.getSlot(), eventContainerId, inventoryContainerId, wrappedContainerId);
+        if (actionSlot.isPresent()) {
+            handleActionSlot(event.getItemStack(), actionSlot.get());
+            return;
         }
+
+        if (eventContainerId != wrappedContainerId) return;
+        if (event.getItemStack().isEmpty()) {
+            activities.remove(event.getSlot());
+            contentBookScreen.reloadContentBookWidgets(true);
+            return;
+        }
+
+        boolean resetPage = handleActivityItem(event.getItemStack(), event.getSlot());
+        contentBookScreen.reloadContentBookWidgets(resetPage);
     }
 
     @SubscribeEvent
@@ -180,6 +184,21 @@ public class ContentBookHolder extends WrappedScreenHolder<WynntilsContentBookSc
             activities.remove(slot);
             return true;
         }
+    }
+
+    private Optional<Integer> getActionSlotForSetSlot(
+            int slot, int eventContainerId, int inventoryContainerId, int wrappedContainerId) {
+        for (Pair<Integer, Integer> slotPair : ACTION_SLOTS) {
+            if (eventContainerId == inventoryContainerId && slotPair.a() == slot) {
+                return Optional.of(slotPair.b());
+            }
+
+            if (eventContainerId == wrappedContainerId && slotPair.b() == slot) {
+                return Optional.of(slotPair.b());
+            }
+        }
+
+        return Optional.empty();
     }
 
     private void handleActionSlot(ItemStack itemStack, int slot) {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
@@ -39,9 +39,7 @@ public abstract class DynamicOverlay extends Overlay {
                         VerticalAlignment.MIDDLE,
                         HorizontalAlignment.CENTER,
                         OverlayPosition.AnchorSection.MIDDLE),
-                new OverlaySize(100f, 20f),
-                HorizontalAlignment.CENTER,
-                VerticalAlignment.MIDDLE);
+                new OverlaySize(100f, 20f));
         this.id = id;
     }
 

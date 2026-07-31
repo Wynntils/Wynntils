@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
@@ -8,21 +8,15 @@ import com.wynntils.models.items.properties.TargetedItemProperty;
 
 public class TeleportScrollItem extends GameItem implements TargetedItemProperty {
     private final String destination;
-    private final boolean dungeon;
     private final int remainingCharges;
 
-    public TeleportScrollItem(String destination, boolean dungeon, int remainingCharges) {
+    public TeleportScrollItem(String destination, int remainingCharges) {
         this.destination = destination;
-        this.dungeon = dungeon;
         this.remainingCharges = remainingCharges;
     }
 
     public String getDestination() {
         return destination;
-    }
-
-    public boolean isDungeon() {
-        return dungeon;
     }
 
     public int getRemainingCharges() {
@@ -37,8 +31,7 @@ public class TeleportScrollItem extends GameItem implements TargetedItemProperty
     @Override
     public String toString() {
         return "TeleportScrollItem{" + "destination='"
-                + destination + '\'' + ", dungeon="
-                + dungeon + ", remainingCharges="
+                + destination + '\'' + ", remainingCharges="
                 + remainingCharges + '}';
     }
 }

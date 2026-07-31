@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilities.event;
 
 import com.wynntils.models.abilities.type.ShamanTotem;
 import net.minecraft.core.Position;
-import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.Display;
 import net.neoforged.bus.api.Event;
 
 public abstract class TotemEvent extends Event {
@@ -21,7 +21,7 @@ public abstract class TotemEvent extends Event {
     }
 
     /**
-     * Fired when the totem's timer ArmorStand is bound to the visible totem
+     * Fired when a pending totem gets its timer text display bound.
      */
     public static class Activated extends TotemEvent {
         private final Position position;
@@ -37,16 +37,20 @@ public abstract class TotemEvent extends Event {
     }
 
     /**
-     * Fired when the totem's timer is updated (when it decreases by 1 sec)
+     * Fired when the totem's timer is updated (when it decreases by 1 sec).
      */
     public static class Updated extends TotemEvent {
         private final int time;
         private final Position position;
+        private final int transfusedAmount;
+        private final String poisonAmount;
 
-        public Updated(int totemNumber, int time, Position position) {
+        public Updated(int totemNumber, int time, Position position, int transfusedAmount, String poisonAmount) {
             super(totemNumber);
             this.time = time;
             this.position = position;
+            this.transfusedAmount = transfusedAmount;
+            this.poisonAmount = poisonAmount;
         }
 
         public int getTime() {
@@ -55,6 +59,14 @@ public abstract class TotemEvent extends Event {
 
         public Position getPosition() {
             return position;
+        }
+
+        public int getTransfusedAmount() {
+            return transfusedAmount;
+        }
+
+        public String getPoisonAmount() {
+            return poisonAmount;
         }
     }
 
@@ -75,18 +87,18 @@ public abstract class TotemEvent extends Event {
     }
 
     /**
-     * Fired when totem is initially summoned by spell cast
+     * Fired when the timer label first identifies a totem.
      */
     public static class Summoned extends TotemEvent {
-        private final ArmorStand totemEntity;
+        private final Display.TextDisplay totemTimerDisplay;
 
-        public Summoned(int totemNumber, ArmorStand totemEntity) {
+        public Summoned(int totemNumber, Display.TextDisplay totemTimerDisplay) {
             super(totemNumber);
-            this.totemEntity = totemEntity;
+            this.totemTimerDisplay = totemTimerDisplay;
         }
 
-        public ArmorStand getTotemEntity() {
-            return totemEntity;
+        public Display.TextDisplay getTotemTimerDisplay() {
+            return totemTimerDisplay;
         }
     }
 }

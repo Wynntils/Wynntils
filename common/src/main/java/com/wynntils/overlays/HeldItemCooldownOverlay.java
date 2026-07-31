@@ -5,19 +5,17 @@
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
 
 public class HeldItemCooldownOverlay extends Overlay {
     public HeldItemCooldownOverlay() {
@@ -33,11 +31,7 @@ public class HeldItemCooldownOverlay extends Overlay {
 
     @Override
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
-        Player player = McUtils.player();
-        float cooldownPercent = player.getCooldowns()
-                .getCooldownPercent(
-                        player.getItemInHand(InteractionHand.MAIN_HAND),
-                        deltaTracker.getGameTimeDeltaPartialTick(true));
+        float cooldownPercent = Models.CharacterStats.getItemCooldown(deltaTracker);
         if (cooldownPercent <= 0f) return;
         renderOverlay(guiGraphics, cooldownPercent);
     }

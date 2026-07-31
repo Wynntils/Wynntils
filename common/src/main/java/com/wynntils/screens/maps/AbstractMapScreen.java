@@ -38,15 +38,16 @@ import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -98,22 +99,33 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected float zoomRenderScale = MapRenderer.getZoomRenderScaleFromLevel(zoomLevel);
     protected BoundingBox mapBoundingBox = BoundingBox.EMPTY;
 
+    protected final Optional<Screen> previousScreen;
+
     protected MapFeature hoveredFeature = null;
 
     protected AbstractMapScreen() {
         super(Component.literal("Map"));
         centerMapAroundPlayer();
+        this.previousScreen = Optional.empty();
+    }
+
+    protected AbstractMapScreen(Screen previousScreen) {
+        super(Component.literal("Map"));
+        centerMapAroundPlayer();
+        this.previousScreen = Optional.ofNullable(previousScreen);
     }
 
     protected AbstractMapScreen(float mapCenterX, float mapCenterZ) {
         super(Component.literal("Map"));
         updateMapCenter(mapCenterX, mapCenterZ);
+        this.previousScreen = Optional.empty();
     }
 
     protected AbstractMapScreen(float mapCenterX, float mapCenterZ, float zoomLevel) {
         super(Component.literal("Map"));
         updateMapCenter(mapCenterX, mapCenterZ);
         setZoomLevel(zoomLevel);
+        this.previousScreen = Optional.empty();
 
         // Overwrite so map is not centered
         shouldCenterMap = false;
@@ -121,15 +133,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
-        // FIXME: Figure out a way to not need this.
-        //        At the moment, this is needed for Minecraft not to forget we hold keys when we open the GUI...
-        Options options = McUtils.options();
-        KeyMapping.set(options.keyUp.key, KeyboardUtils.isKeyDown(options.keyUp.key.getValue()));
-        KeyMapping.set(options.keyDown.key, KeyboardUtils.isKeyDown(options.keyDown.key.getValue()));
-        KeyMapping.set(options.keyLeft.key, KeyboardUtils.isKeyDown(options.keyLeft.key.getValue()));
-        KeyMapping.set(options.keyRight.key, KeyboardUtils.isKeyDown(options.keyRight.key.getValue()));
-        KeyMapping.set(options.keyJump.key, KeyboardUtils.isKeyDown(options.keyJump.key.getValue()));
-        KeyMapping.set(options.keyShift.key, KeyboardUtils.isKeyDown(options.keyShift.key.getValue()));
+        rememberKeyHolds();
 
         renderWidth = this.width - SCREEN_SIDE_OFFSET * 2f;
         renderHeight = this.height - SCREEN_SIDE_OFFSET * 2f;
@@ -361,6 +365,19 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         KeyMapping.set(key, false);
 
         return false;
+    }
+
+    @Override
+    public void onClose() {
+        if (previousScreen.isEmpty()) {
+            super.onClose();
+        } else {
+            McUtils.mc().setScreen(previousScreen.get());
+        }
+    }
+
+    protected boolean keyPressedParent(KeyEvent event) {
+        return super.keyPressed(event);
     }
 
     protected void renderCoordinates(GuiGraphics guiGraphics, int mouseX, int mouseY) {

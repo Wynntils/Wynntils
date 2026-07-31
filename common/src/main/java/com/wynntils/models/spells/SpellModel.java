@@ -46,6 +46,8 @@ public final class SpellModel extends Model {
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
     private String lastBurstSpellName = "";
     private String lastSpellName = "";
+    private int lastSpellManaCost = -1;
+    private int lastSpellHealthCost = -1;
     private int repeatedBurstSpellCount = 0;
     private int repeatedSpellCount = 0;
     private int ticksSinceCastBurst = 0;
@@ -104,6 +106,8 @@ public final class SpellModel extends Model {
 
         lastBurstSpellName = e.getSpellType().getName();
         lastSpellName = e.getSpellType().getName();
+        lastSpellManaCost = e.getManaCost();
+        lastSpellHealthCost = e.getHealthCost();
         ticksSinceSpecificSpellMap.put(e.getSpellType(), 0);
     }
 
@@ -135,6 +139,8 @@ public final class SpellModel extends Model {
         lastSpell = SpellDirection.NO_SPELL;
         lastBurstSpellName = "";
         lastSpellName = "";
+        lastSpellManaCost = -1;
+        lastSpellHealthCost = -1;
         repeatedBurstSpellCount = 0;
         repeatedSpellCount = 0;
         ticksSinceCastBurst = 0;
@@ -181,6 +187,14 @@ public final class SpellModel extends Model {
 
     public String getLastSpellName() {
         return lastSpellName;
+    }
+
+    public int getLastSpellManaCost() {
+        return lastSpellManaCost;
+    }
+
+    public int getLastSpellHealthCost() {
+        return lastSpellHealthCost;
     }
 
     public SpellDirection[] getLastSpell() {
@@ -237,13 +251,16 @@ public final class SpellModel extends Model {
 
         WynntilsMod.postEvent(new SpellEvent.Partial(lastSpell));
 
+        // As inputs are now removed when a spell is cast, if we ever get 3 inputs we know it is a failed cast.
         if (lastSpell.length == 3) {
             if (failureReason != null) {
                 WynntilsMod.postEvent(new SpellEvent.Failed(failureReason));
                 failureReason = null;
             } else {
-                WynntilsMod.postEvent(
-                        new SpellEvent.Completed(lastSpell, SpellType.fromSpellDirectionArray(lastSpell)));
+                // This can happen either because something blocked the cast, for example, archer casting escape
+                // again before touching the ground, or because the cast actually succeeded but the spell
+                // doesn't produce a cast message like Judrajim or Mana Bank.
+                WynntilsMod.postEvent(new SpellEvent.Unconfirmed(lastSpell));
             }
         }
     }

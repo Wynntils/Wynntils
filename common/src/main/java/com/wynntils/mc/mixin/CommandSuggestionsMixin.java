@@ -8,7 +8,7 @@ import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.wynntils.core.events.MixinHelper;
-import com.wynntils.mc.event.CommandSuggestionEvent;
+import com.wynntils.mc.event.CommandSuggestionFillEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -52,7 +52,7 @@ public class CommandSuggestionsMixin {
                         .map(Suggestion::getText)
                         .collect(Collectors.toCollection(ArrayList::new));
 
-                CommandSuggestionEvent event = new CommandSuggestionEvent.Modify(fullInput.substring(1), list);
+                CommandSuggestionFillEvent event = new CommandSuggestionFillEvent.Modify(fullInput.substring(1), list);
                 MixinHelper.post(event);
 
                 int start = originalSuggestions.getRange().getStart();

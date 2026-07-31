@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.mod.type;
@@ -10,7 +10,8 @@ public enum CrashType {
     FEATURE("Feature"),
     OVERLAY("Overlay"),
     KEYBIND("Key Bind"),
-    SCREEN("Screen");
+    SCREEN("Screen"),
+    TOOLTIP("Tooltip");
 
     private final String name;
 

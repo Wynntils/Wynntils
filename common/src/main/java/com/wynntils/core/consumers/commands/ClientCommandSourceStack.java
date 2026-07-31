@@ -57,7 +57,7 @@ public class ClientCommandSourceStack extends CommandSourceStack {
     private static class ClientCommandSource implements CommandSource {
         @Override
         public void sendSystemMessage(Component component) {
-            McUtils.sendMessageToClient(component);
+            McUtils.sendWynntilsPrefixMessage(component);
         }
 
         @Override

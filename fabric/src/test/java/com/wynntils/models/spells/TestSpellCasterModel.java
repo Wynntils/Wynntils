@@ -329,10 +329,42 @@ public class TestSpellCasterModel {
     }
 
     @Test
+    public void productionDispatchUsesDirectRightClickForNonArcherPrimary() throws Exception {
+        List<String> events = Collections.synchronizedList(new ArrayList<>());
+        SpellCasterModel model = new SpellCasterModel(
+                new RecordingDirectClickTransport(events), delayMs -> events.add("sleep:" + delayMs));
+
+        try {
+            Assertions.assertTrue(model.queueClicks(List.of(CombatClickType.PRIMARY), false, 0, 0, 0));
+            waitFor(() -> snapshot(events).size() == 1, "Timed out waiting for the primary click to dispatch");
+
+            Assertions.assertEquals(List.of("right"), snapshot(events));
+        } finally {
+            model.shutdown();
+        }
+    }
+
+    @Test
+    public void productionDispatchUsesDirectRightClickForArcherMelee() throws Exception {
+        List<String> events = Collections.synchronizedList(new ArrayList<>());
+        SpellCasterModel model = new SpellCasterModel(
+                new RecordingDirectClickTransport(events), delayMs -> events.add("sleep:" + delayMs));
+
+        try {
+            Assertions.assertTrue(model.queueClicks(List.of(CombatClickType.MELEE), true, 0, 0, 0));
+            waitFor(() -> snapshot(events).size() == 1, "Timed out waiting for the melee click to dispatch");
+
+            Assertions.assertEquals(List.of("right"), snapshot(events));
+        } finally {
+            model.shutdown();
+        }
+    }
+
+    @Test
     public void adaptiveLagCorrectionAddsExtraDelayOnlyWhenEnabled() throws Exception {
         AtomicLong clock = new AtomicLong(200L);
         SpellCasterLagCorrectionTracker tracker = new SpellCasterLagCorrectionTracker();
-        populateIncreasingSpellSamples(tracker);
+        populateLaggingSpellCadence(tracker);
         List<Integer> adaptiveSleeps = new CopyOnWriteArrayList<>();
         SpellCasterModel adaptiveModel = new SpellCasterModel(
                 (click, usesRightClick, isArcher) -> {}, delayMs -> adaptiveSleeps.add(delayMs), tracker, clock::get);
@@ -341,14 +373,14 @@ public class TestSpellCasterModel {
             Assertions.assertTrue(adaptiveModel.queueClicks(List.of(CombatClickType.PRIMARY), false, 5, 7, 0, true));
             waitFor(() -> adaptiveSleeps.size() == 1, "Timed out waiting for the adaptive spell to execute");
 
-            Assertions.assertEquals(List.of(11), List.copyOf(adaptiveSleeps));
+            Assertions.assertEquals(List.of(10), List.copyOf(adaptiveSleeps));
         } finally {
             adaptiveModel.shutdown();
         }
 
         clock.set(200L);
         SpellCasterLagCorrectionTracker fixedTracker = new SpellCasterLagCorrectionTracker();
-        populateIncreasingSpellSamples(fixedTracker);
+        populateLaggingSpellCadence(fixedTracker);
         List<Integer> fixedSleeps = new CopyOnWriteArrayList<>();
         SpellCasterModel fixedModel = new SpellCasterModel(
                 (click, usesRightClick, isArcher) -> {}, delayMs -> fixedSleeps.add(delayMs), fixedTracker, clock::get);
@@ -377,7 +409,7 @@ public class TestSpellCasterModel {
                     model.queueClicks(List.of(CombatClickType.MELEE, CombatClickType.PRIMARY), false, 5, 7, 0, true));
             waitFor(() -> adaptiveSleeps.size() == 2, "Timed out waiting for the mixed adaptive sequence to execute");
 
-            Assertions.assertEquals(List.of(9, 7), List.copyOf(adaptiveSleeps));
+            Assertions.assertEquals(List.of(5, 16), List.copyOf(adaptiveSleeps));
         } finally {
             model.shutdown();
         }
@@ -387,8 +419,8 @@ public class TestSpellCasterModel {
     public void adaptiveLagCorrectionDecaysAfterLagStabilizes() throws Exception {
         AtomicLong clock = new AtomicLong(200L);
         SpellCasterLagCorrectionTracker tracker = new SpellCasterLagCorrectionTracker();
-        populateIncreasingSpellSamples(tracker);
-        populateStableSpellSamples(tracker, 360L, 126L, 4);
+        populateLaggingSpellCadence(tracker);
+        populateStableSpellCadence(tracker, 500L, 100L, 520L, 4);
         List<Integer> sleeps = new CopyOnWriteArrayList<>();
         SpellCasterModel model = new SpellCasterModel(
                 (click, usesRightClick, isArcher) -> {}, delayMs -> sleeps.add(delayMs), tracker, clock::get);
@@ -402,40 +434,102 @@ public class TestSpellCasterModel {
         }
     }
 
-    private static void populateIncreasingSpellSamples(SpellCasterLagCorrectionTracker tracker) {
+    @Test
+    public void spellPartialEventsContributeToAdaptiveLagCorrection() {
+        AtomicLong clock = new AtomicLong(0L);
+        SpellCasterLagCorrectionTracker tracker = new SpellCasterLagCorrectionTracker();
+        SpellCasterModel model =
+                new SpellCasterModel((click, usesRightClick, isArcher) -> {}, delayMs -> {}, tracker, clock::get);
+
+        try {
+            tracker.beginAdaptiveWindow(0L);
+            tracker.onInputSent(CombatClickType.PRIMARY, 0L);
+            clock.set(20L);
+            model.onSpellPartial(null);
+            tracker.onInputSent(CombatClickType.PRIMARY, 100L);
+            clock.set(146L);
+            model.onSpellPartial(null);
+            tracker.onInputSent(CombatClickType.PRIMARY, 200L);
+            clock.set(272L);
+            model.onSpellPartial(null);
+
+            Assertions.assertEquals(2, tracker.getObservedSampleCount(CombatClickType.PRIMARY));
+            Assertions.assertEquals(3, tracker.computeExtraDelayMs(CombatClickType.PRIMARY, 70));
+        } finally {
+            model.shutdown();
+        }
+    }
+
+    private static void populateLaggingSpellCadence(SpellCasterLagCorrectionTracker tracker) {
         tracker.beginAdaptiveWindow(0L);
-        tracker.onInputSent(CombatClickType.PRIMARY, 0L);
-        tracker.onSpellProgressObserved(100L);
-        tracker.onInputSent(CombatClickType.PRIMARY, 120L);
-        tracker.onSpellProgressObserved(230L);
-        tracker.onInputSent(CombatClickType.PRIMARY, 240L);
-        tracker.onSpellProgressObserved(365L);
+        populateSpellCadence(tracker, 0L, 100L, 20L, 126L, 4);
     }
 
     private static void populateMixedChannelSamples(SpellCasterLagCorrectionTracker tracker) {
         tracker.beginAdaptiveWindow(0L);
-        tracker.onInputSent(CombatClickType.MELEE, 0L);
-        tracker.onItemCooldownObserved(60L);
-        tracker.onInputSent(CombatClickType.MELEE, 80L);
-        tracker.onItemCooldownObserved(150L);
-        tracker.onInputSent(CombatClickType.MELEE, 160L);
-        tracker.onItemCooldownObserved(240L);
-
-        tracker.onInputSent(CombatClickType.PRIMARY, 200L);
-        tracker.onSpellProgressObserved(300L);
-        tracker.onInputSent(CombatClickType.PRIMARY, 320L);
-        tracker.onSpellProgressObserved(420L);
-        tracker.onInputSent(CombatClickType.PRIMARY, 440L);
-        tracker.onSpellProgressObserved(540L);
+        populateMeleeCadence(tracker, 0L, 80L, 20L, 4);
+        populateUnstableSpellCadence(tracker, 400L, 100L, 420L, new long[] {118L, 130L, 142L});
     }
 
-    private static void populateStableSpellSamples(
-            SpellCasterLagCorrectionTracker tracker, long firstSentAtMs, long lagMs, int sampleCount) {
+    private static void populateStableSpellCadence(
+            SpellCasterLagCorrectionTracker tracker,
+            long firstSentAtMs,
+            long sendIntervalMs,
+            long firstFeedbackAtMs,
+            int observationCount) {
+        populateSpellCadence(
+                tracker, firstSentAtMs, sendIntervalMs, firstFeedbackAtMs, sendIntervalMs, observationCount);
+    }
+
+    private static void populateSpellCadence(
+            SpellCasterLagCorrectionTracker tracker,
+            long firstSentAtMs,
+            long sendIntervalMs,
+            long firstFeedbackAtMs,
+            long feedbackIntervalMs,
+            int observationCount) {
         long sentAtMs = firstSentAtMs;
-        for (int i = 0; i < sampleCount; i++) {
+        long feedbackAtMs = firstFeedbackAtMs;
+        for (int i = 0; i < observationCount; i++) {
             tracker.onInputSent(CombatClickType.PRIMARY, sentAtMs);
-            tracker.onSpellProgressObserved(sentAtMs + lagMs);
-            sentAtMs += 120L;
+            tracker.onSpellProgressObserved(feedbackAtMs);
+            sentAtMs += sendIntervalMs;
+            feedbackAtMs += feedbackIntervalMs;
+        }
+    }
+
+    private static void populateUnstableSpellCadence(
+            SpellCasterLagCorrectionTracker tracker,
+            long firstSentAtMs,
+            long sendIntervalMs,
+            long firstFeedbackAtMs,
+            long[] feedbackIntervalsMs) {
+        long sentAtMs = firstSentAtMs;
+        long feedbackAtMs = firstFeedbackAtMs;
+
+        tracker.onInputSent(CombatClickType.PRIMARY, sentAtMs);
+        tracker.onSpellProgressObserved(feedbackAtMs);
+        sentAtMs += sendIntervalMs;
+
+        for (long feedbackIntervalMs : feedbackIntervalsMs) {
+            feedbackAtMs += feedbackIntervalMs;
+            tracker.onInputSent(CombatClickType.PRIMARY, sentAtMs);
+            tracker.onSpellProgressObserved(feedbackAtMs);
+            sentAtMs += sendIntervalMs;
+        }
+    }
+
+    private static void populateMeleeCadence(
+            SpellCasterLagCorrectionTracker tracker,
+            long firstSentAtMs,
+            long intervalMs,
+            long feedbackOffsetMs,
+            int observationCount) {
+        long sentAtMs = firstSentAtMs;
+        for (int i = 0; i < observationCount; i++) {
+            tracker.onInputSent(CombatClickType.MELEE, sentAtMs);
+            tracker.onItemCooldownObserved(sentAtMs + feedbackOffsetMs);
+            sentAtMs += intervalMs;
         }
     }
 
@@ -456,5 +550,23 @@ public class TestSpellCasterModel {
         }
 
         Assertions.fail(failureMessage);
+    }
+
+    private static final class RecordingDirectClickTransport implements SpellCasterModel.DirectClickTransport {
+        private final List<String> events;
+
+        private RecordingDirectClickTransport(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public void sendDirectRightClickInput() {
+            events.add("right");
+        }
+
+        @Override
+        public void sendLeftClickInput() {
+            events.add("left");
+        }
     }
 }

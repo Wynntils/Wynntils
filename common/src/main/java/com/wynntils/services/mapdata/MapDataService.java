@@ -101,8 +101,9 @@ public class MapDataService extends Service {
     }
 
     public Stream<MapCategory> getCategoryDefinitions(String categoryId) {
-        return getProviders().flatMap(MapDataProvider::getCategories).filter(p -> p.getCategoryId()
-                .equals(categoryId));
+        return getProviders()
+                .flatMap(MapDataProvider::getCategories)
+                .filter(p -> p.getCategoryId().equals(categoryId));
     }
 
     public String getCategoryName(String categoryId) {
@@ -141,11 +142,13 @@ public class MapDataService extends Service {
 
     public Optional<MapAttributes> getOverrideAttributesForFeature(MapFeature feature) {
         return OverrideMapAttributes.from(Stream.concat(
-                        overrideProviders.values().stream().filter(attr -> attr.getOverridenFeatureIds()
-                                .anyMatch(attrFeatureId -> attrFeatureId.equals(feature.getFeatureId()))),
-                        overrideProviders.values().stream().filter(attr -> attr.getOverridenCategoryIds()
-                                .anyMatch(attrCategoryId ->
-                                        feature.getCategoryId().startsWith(attrCategoryId))))
+                        overrideProviders.values().stream()
+                                .filter(attr -> attr.getOverridenFeatureIds()
+                                        .anyMatch(attrFeatureId -> attrFeatureId.equals(feature.getFeatureId()))),
+                        overrideProviders.values().stream()
+                                .filter(attr -> attr.getOverridenCategoryIds()
+                                        .anyMatch(attrCategoryId ->
+                                                feature.getCategoryId().startsWith(attrCategoryId))))
                 .map(provider -> provider.getOverrideAttributes(feature))
                 .toList());
     }
@@ -164,8 +167,10 @@ public class MapDataService extends Service {
     }
 
     public boolean removeJsonProvider(String providerId) {
-        boolean found = jsonProviderInfos.get().keySet().removeIf(info -> info.providerId()
-                .equals(providerId));
+        boolean found = jsonProviderInfos
+                .get()
+                .keySet()
+                .removeIf(info -> info.providerId().equals(providerId));
         if (!found) return false;
 
         jsonProviderInfos.touched();
@@ -313,8 +318,9 @@ public class MapDataService extends Service {
         } else if (mapDataProvidedType instanceof MapIcon mapIcon) {
             iconCache.remove(mapIcon.getIconId());
         } else if (mapDataProvidedType instanceof MapCategory mapCategory) {
-            resolvedAttributesCache.keySet().removeIf(feature -> feature.getCategoryId()
-                    .startsWith(mapCategory.getCategoryId()));
+            resolvedAttributesCache
+                    .keySet()
+                    .removeIf(feature -> feature.getCategoryId().startsWith(mapCategory.getCategoryId()));
         }
     }
 

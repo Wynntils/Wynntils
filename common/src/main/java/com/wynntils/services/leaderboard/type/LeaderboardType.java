@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.leaderboard.type;
@@ -33,13 +33,20 @@ public enum LeaderboardType {
     CONTENT_SOLO("playerContent"),
     // Raids
     NOG_SCORE("grootslangSrPlayers"),
+    NOG_GRAID("grootslangSrGPlayers"),
     NOG_COMPLETION("grootslangCompletion"),
     NOL_SCORE("orphionSrPlayers"),
+    NOL_GRAID("orphionSrGPlayers"),
     NOL_COMPLETION("orphionCompletion"),
     TCC_SCORE("colossusSrPlayers"),
+    TCC_GRAID("colossusSrGPlayers"),
     TCC_COMPLETION("colossusCompletion"),
     TNA_SCORE("namelessSrPlayers"),
+    TNA_GRAID("namelessSrGPlayers"),
     TNA_COMPLETION("namelessCompletion"),
+    WTP_SCORE("frumaSrPlayers"),
+    WTP_GRAID("frumaSrGPlayers"),
+    WTP_COMPLETION("frumaCompletion"),
     // Solo Gamemodes
     IRONMAN("ironmanContent"),
     ULTIMATE_IRONMAN("ultimateIronmanContent"),
@@ -61,7 +68,8 @@ public enum LeaderboardType {
     GUILD_NOG("grootslangSrGuilds", true),
     GUILD_NOL("orphionSrGuilds", true),
     GUILD_TCC("colossusSrGuilds", true),
-    GUILD_TNA("namelessSrGuilds", true);
+    GUILD_TNA("namelessSrGuilds", true),
+    GUILD_WTP("frumaSrGuilds", true);
 
     private final String key;
     private final boolean guildLeaderboard;

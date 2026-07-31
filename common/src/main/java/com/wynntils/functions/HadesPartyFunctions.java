@@ -84,7 +84,7 @@ public class HadesPartyFunctions {
 
         @Override
         public Location whenAbsent() {
-            return new Location(0, 0, 0);
+            return Location.ZERO;
         }
     }
 

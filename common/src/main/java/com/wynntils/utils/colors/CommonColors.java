@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.colors;
@@ -25,19 +25,4 @@ public final class CommonColors {
     public static final CustomColor MAGENTA = CustomColor.fromInt(0xff0083);
     public static final CustomColor ORANGE = CustomColor.fromInt(0xff9000);
     public static final CustomColor WHITE = CustomColor.fromInt(0xffffff);
-
-    // Wynncraft's custom effects done via resourcepack shaders
-
-    // Animated rainbow
-    public static final CustomColor RAINBOW = CustomColor.fromInt(0x00f000);
-    // Animated gradient from #f56217 to #0b486b
-    public static final CustomColor GRADIENT = CustomColor.fromInt(0x00f004);
-    // Smooth animated fade from #5af082 to black
-    public static final CustomColor FADE = CustomColor.fromInt(0x00f008);
-    // Animated blinking between #e63232 and black
-    public static final CustomColor BLINK = CustomColor.fromInt(0x00f00c);
-    // Animated gradient from #560505ff to #8a0303ff
-    public static final CustomColor GRADIENT_2 = CustomColor.fromInt(0x00f010);
-    // Animated shine effect between #a3cc52ff to #ffffd2ff
-    public static final CustomColor SHINE = CustomColor.fromInt(0x00f014);
 }

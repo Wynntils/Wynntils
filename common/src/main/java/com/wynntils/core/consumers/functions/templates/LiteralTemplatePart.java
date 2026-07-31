@@ -4,20 +4,13 @@
  */
 package com.wynntils.core.consumers.functions.templates;
 
-import com.wynntils.core.text.StyledText;
-
 public class LiteralTemplatePart extends TemplatePart {
     public LiteralTemplatePart(String part) {
         super(part);
     }
 
     @Override
-    public StyledText getValue() {
-        return StyledText.fromString(part);
-    }
-
-    @Override
-    public String getCodedValue() {
+    public String getValue() {
         return part;
     }
 

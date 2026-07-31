@@ -6,6 +6,7 @@ package com.wynntils.features.map;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.features.ExternalConfigurationScreen;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
@@ -27,9 +28,10 @@ import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.PointerType;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.gui.screens.Screen;
 
 @ConfigCategory(Category.MAP)
-public class MainMapFeature extends Feature {
+public class MainMapFeature extends Feature implements ExternalConfigurationScreen {
     // Use userWaypoints or foundChestLocations instead
     // This config is to be kept as an "upfixer" to migrate old data
     @Deprecated
@@ -104,5 +106,10 @@ public class MainMapFeature extends Feature {
                 McUtils.player().getBlockZ());
 
         McUtils.setScreen(WaypointCreationScreen.create(null, location));
+    }
+
+    @Override
+    public Screen getExternalConfigurationScreen(Screen previousScreen) {
+        return MainMapScreen.create(previousScreen);
     }
 }

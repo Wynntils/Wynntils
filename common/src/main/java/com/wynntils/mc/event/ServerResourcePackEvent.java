@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
@@ -46,4 +46,7 @@ public abstract class ServerResourcePackEvent extends Event {
 
     @EventThread(EventThread.Type.ANY)
     public static class Clear extends ServerResourcePackEvent {}
+
+    @EventThread(EventThread.Type.ANY)
+    public static class Change extends ServerResourcePackEvent {}
 }

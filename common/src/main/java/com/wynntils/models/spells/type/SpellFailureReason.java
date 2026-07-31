@@ -17,7 +17,8 @@ public enum SpellFailureReason {
     NOT_UNLOCKED(
             Pattern.compile(
                     "§4(?:\uE008\uE002|\uE001) You have not unlocked this spell! Unlock it using your compass."),
-            "You have not unlocked this spell!");
+            "You have not unlocked this spell!"),
+    MANA_BANK_EMPTY(Pattern.compile("§4(?:\uE008\uE002|\uE001) Your mana bank is empty!"), "Your mana bank is empty!");
 
     private final Pattern pattern;
     private final String displayMessage;
@@ -29,7 +30,9 @@ public enum SpellFailureReason {
 
     public static SpellFailureReason fromMsg(StyledText msg) {
         for (SpellFailureReason failureReason : values()) {
-            if (msg.matches(failureReason.pattern)) return failureReason;
+            if (failureReason.pattern != null && msg.matches(failureReason.pattern)) {
+                return failureReason;
+            }
         }
         return null;
     }

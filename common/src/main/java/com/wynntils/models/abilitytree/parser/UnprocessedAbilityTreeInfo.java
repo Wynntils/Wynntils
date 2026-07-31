@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.abilitytree.parser;
@@ -25,20 +25,27 @@ public class UnprocessedAbilityTreeInfo {
     private final Map<AbilityTreeLocation, AbilityTreeConnectionType> connectionMap = new HashMap<>();
     private final Map<AbilityTreeLocation, AbilityTreeSkillNode> nodeMap = new HashMap<>();
     private boolean processed = false;
+    private boolean normalizeToDefaultType = false;
+
+    public void setNormalizeToDefaultType(boolean normalizeToDefaultType) {
+        this.normalizeToDefaultType = normalizeToDefaultType;
+    }
 
     private void addNodeFromItem(ItemStack itemStack, int page, int slot) {
         AbilityTreeSkillNode node = Models.AbilityTree.ABILITY_TREE_PARSER
                 .parseNodeFromItem(itemStack, page, slot, nodes.size() + 1)
                 .key();
 
+        if (normalizeToDefaultType) {
+            node = node.withDefaultType();
+        }
+
         nodes.add(node);
         nodeMap.put(AbilityTreeLocation.fromSlot(slot, page), node);
     }
 
     private void addConnectionFromItem(ItemStack itemStack, int page, int slot) {
-        connectionMap.put(
-                AbilityTreeLocation.fromSlot(slot, page),
-                AbilityTreeConnectionType.fromDamage(itemStack.getDamageValue()));
+        connectionMap.put(AbilityTreeLocation.fromSlot(slot, page), AbilityTreeConnectionType.fromItemStack(itemStack));
     }
 
     public void processItem(ItemStack itemStack, int page, int slot, boolean processConnections) {
@@ -47,7 +54,7 @@ public class UnprocessedAbilityTreeInfo {
             return;
         }
 
-        if (processConnections && Models.AbilityTree.ABILITY_TREE_PARSER.isConnectionItem(itemStack)) {
+        if (processConnections && Models.AbilityTree.ABILITY_TREE_PARSER.isConnectionItem(itemStack, slot)) {
             addConnectionFromItem(itemStack, page, slot);
         }
     }

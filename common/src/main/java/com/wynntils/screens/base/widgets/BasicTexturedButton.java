@@ -19,12 +19,11 @@ import net.minecraft.network.chat.Component;
 public class BasicTexturedButton extends WynntilsButton implements TooltipProvider {
     protected static final int TOOLTIP_WIDTH = 200;
 
-    protected final Texture texture;
-
     protected final Consumer<Integer> onClick;
     private List<Component> tooltip;
 
-    private final boolean scaleTexture;
+    protected Texture texture;
+    protected final boolean scaleTexture;
 
     public BasicTexturedButton(
             int x, int y, int width, int height, Texture texture, Consumer<Integer> onClick, List<Component> tooltip) {
@@ -79,6 +78,10 @@ public class BasicTexturedButton extends WynntilsButton implements TooltipProvid
 
     public void setTooltip(List<Component> newTooltip) {
         tooltip = ComponentUtils.wrapTooltips(newTooltip, TOOLTIP_WIDTH);
+    }
+
+    public void setTexture(Texture texture) {
+        this.texture = texture;
     }
 
     @Override

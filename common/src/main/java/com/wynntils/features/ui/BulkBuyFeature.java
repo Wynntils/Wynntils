@@ -28,6 +28,7 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.type.ActionSpeed;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
@@ -54,25 +55,27 @@ public class BulkBuyFeature extends Feature {
     private final Config<Integer> bulkBuyAmount = new Config<>(4);
 
     @Persisted
-    private final Config<BulkBuySpeed> bulkBuySpeed = new Config<>(BulkBuySpeed.BALANCED);
+    private final Config<ActionSpeed> bulkBuySpeed = new Config<>(ActionSpeed.BALANCED);
 
-    @Persisted
-    private final Config<Integer> animationDuration = new Config<>(125);
-
-    private static final String SHOP_TITLE_SUFFIX = " Shop";
+    private static final String MERCHANT_TITLE_SUFFIX = " Merchant";
     // Test in BulkBuyFeature_PRICE_PATTERN
-    private static final Pattern PRICE_PATTERN =
-            Pattern.compile("§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §(?:c✖|a✔)(?:§6)? §f(\\d{1,3}(?:,\\d{3})*)² §8(.+)");
+    private static final Pattern PRICE_PATTERN = Pattern.compile(
+            "(?:§f\uDB00\uDC05)?§6\uDAFF\uDFFC\uF001\uDB00\uDC06 (?:§f\uDB00\uDC00)?§(?:a✔|c✖)§. (?:§f)?(\\d{1,3}(?:,\\d{3})*)² §8\\((.+)\\)");
+
+    private static final StyledText TREASURE_MERCHANT_TITLE =
+            StyledText.fromString(ChatFormatting.GREEN + "Treasure Merchant");
+    // Test in BulkBuyFeature_TREASURE_MERCHANT_PRICE_PATTERN
+    private static final Pattern TREASURE_MERCHANT_PRICE_PATTERN =
+            Pattern.compile("§6\uDAFF\uDFFC\uF001\uDB00\uDC06 §(?:a✔|c✖)§6 §f(\\d+)x §6([\\w ]+)");
+
     private static final ChatFormatting BULK_BUY_ACTIVE_COLOR = ChatFormatting.GREEN;
-    private static final StyledText PRICE_STR =
-            StyledText.fromString("§6\uDAFF\uDFFC\uE00A\uDAFF\uDFFF\uE002\uDAFF\uDFFE Price");
 
     private BulkBuyWidget bulkBuyWidget;
     private int bulkBoughtSlotNumber = -1; // Slot number of the thing we're buying
     private AbstractContainerMenu bulkBoughtContainer = null; // Shop container we're buying from
     private ItemStack bulkBoughtItemStack = null; // Item we're buying
     private int bulkBoughtAmount = 0; // Amount remaining that we need to buy
-    private int bulkBoughtPrice = 0; // Price of a single item
+    private ItemPrice bulkBoughtPrice = null; // Price of a single item
 
     public BulkBuyFeature() {
         super(ProfileDefault.onlyDefault());
@@ -83,7 +86,7 @@ public class BulkBuyFeature extends Feature {
         // This event handles the first init of the shop, we cannot use ScreenInitEvent for this as
         // it will be fired before the shop contents are sent by the server
 
-        // Shop titles are in slot 4, eg. §aScroll Shop
+        // Shop titles are in slot 4, eg. §aScroll Merchant
         // Shops are all size 54 for double chest, sometimes size 41 is sent (no idea what it's for)
         if (e.getSlot() != 4 || e.getContainer().getContainerSize() != 54) return;
 
@@ -106,14 +109,14 @@ public class BulkBuyFeature extends Feature {
         if (acm.getItems().size() != 90) return;
 
         StyledText title = StyledText.fromComponent(acm.getSlot(4).getItem().getHoverName());
-        if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(SHOP_TITLE_SUFFIX)) return;
+        if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(MERCHANT_TITLE_SUFFIX)) return;
 
         bulkBuyWidget = new BulkBuyWidget(
                 containerScreen.leftPos,
                 containerScreen.topPos - 5,
                 Texture.BULK_BUY_PANEL.width(),
                 Texture.BULK_BUY_PANEL.height(),
-                animationDuration.get());
+                250);
         // Using addRenderableWidget causes the widget's click box to cover the item slots
         // And we cannot change the Z level for widgets added like this
         // And since we don't need to handle clicks on the widget ever, this is fine
@@ -128,8 +131,10 @@ public class BulkBuyFeature extends Feature {
         ItemStack itemStack = e.getItemStack();
         if (!isBulkBuyable(container, itemStack)) return;
 
-        int itemPrice = findItemPrice(LoreUtils.getLore(itemStack));
-        if (itemPrice * (bulkBoughtAmount + bulkBuyAmount.get()) > Models.Emerald.getAmountInInventory()) {
+        ItemPrice itemPrice = findItemPrice(container, LoreUtils.getLore(itemStack));
+        if (itemPrice == null) return;
+
+        if (!itemPrice.canAfford(bulkBoughtAmount + bulkBuyAmount.get())) {
             McUtils.sendErrorToClient(I18n.get("feature.wynntils.bulkBuy.bulkBuyCannotAfford"));
             return;
         }
@@ -149,7 +154,7 @@ public class BulkBuyFeature extends Feature {
             // we're buying more of the same item
             bulkBoughtAmount += bulkBuyAmount.get();
         }
-        bulkBuyWidget.setBulkBoughtItem(new BulkBoughtItem(bulkBoughtItemStack, bulkBoughtAmount, bulkBoughtPrice));
+        updateBulkBuyWidget();
 
         e.setCanceled(true);
     }
@@ -175,15 +180,20 @@ public class BulkBuyFeature extends Feature {
         if (bulkBoughtAmount <= 0) {
             resetBulkBuy(true);
         } else {
-            bulkBuyWidget.setBulkBoughtItem(new BulkBoughtItem(bulkBoughtItemStack, bulkBoughtAmount, bulkBoughtPrice));
+            updateBulkBuyWidget();
         }
+    }
+
+    private void updateBulkBuyWidget() {
+        bulkBuyWidget.setBulkBoughtItem(new BulkBoughtItem(
+                bulkBoughtItemStack, bulkBoughtAmount, bulkBoughtPrice.formatTotal(bulkBoughtAmount)));
     }
 
     private void resetBulkBuy(boolean resetWidget) {
         bulkBoughtSlotNumber = -1;
         bulkBoughtContainer = null;
         bulkBoughtAmount = 0;
-        bulkBoughtPrice = 0;
+        bulkBoughtPrice = null;
 
         if (!resetWidget) return;
         bulkBuyWidget.setBulkBoughtItem(null);
@@ -207,19 +217,23 @@ public class BulkBuyFeature extends Feature {
         List<Component> tooltips = List.of(component);
 
         event.setTooltips(LoreUtils.appendTooltip(
-                event.getItemStack(), replacePrices(event.getItemStack(), event.getTooltips()), tooltips));
+                event.getItemStack(),
+                replacePrices(McUtils.containerMenu(), event.getItemStack(), event.getTooltips()),
+                tooltips));
     }
 
-    private int findItemPrice(List<StyledText> lore) {
+    private ItemPrice findItemPrice(AbstractContainerMenu menu, List<StyledText> lore) {
+        MerchantPriceType priceType = getPriceType(menu);
+
         for (StyledText styledTextParts : lore) {
-            Matcher priceMatcher = styledTextParts.getMatcher(PRICE_PATTERN);
+            Matcher priceMatcher = styledTextParts.getMatcher(priceType.pattern());
             if (priceMatcher.find()) {
-                return Integer.parseInt(priceMatcher.group(1).replaceAll(",", ""));
+                return priceType.createPrice(priceMatcher);
             }
         }
 
         WynntilsMod.warn("Bulk Buy could not find price for " + lore.getFirst().getString());
-        return -1;
+        return null;
     }
 
     /**
@@ -230,10 +244,12 @@ public class BulkBuyFeature extends Feature {
      * @param oldLore Lore of the item that user wants to bulk buy
      * @return New lore with the above replacements
      */
-    private List<Component> replacePrices(ItemStack itemStack, List<Component> oldLore) {
+    private List<Component> replacePrices(AbstractContainerMenu menu, ItemStack itemStack, List<Component> oldLore) {
         if (!KeyboardUtils.isShiftDown()) return oldLore;
 
         List<Component> returnable = new ArrayList<>(oldLore);
+        MerchantPriceType priceType = getPriceType(menu);
+        boolean replacedPrice = false;
 
         // Add the amount to buy to the item name
         returnable.set(0, Component.literal(bulkBuyAmount.get() + "x ").append(itemStack.getHoverName()));
@@ -243,12 +259,13 @@ public class BulkBuyFeature extends Feature {
         // lines enabled/disabled)
         for (Component line : oldLore) {
             StyledText oldLine = StyledText.fromComponent(line);
-            Matcher priceMatcher = oldLine.getMatcher(PRICE_PATTERN);
+            Matcher priceMatcher = oldLine.getMatcher(priceType.pattern());
             if (!priceMatcher.find()) continue;
 
+            ItemPrice itemPrice = priceType.createPrice(priceMatcher);
             int newPrice = Integer.parseInt(priceMatcher.group(1).replaceAll(",", "")) * bulkBuyAmount.get();
             StyledText newLine = oldLine.iterateBackwards((part, changes) -> {
-                if (newPrice > Models.Emerald.getAmountInInventory()
+                if (!itemPrice.canAfford(bulkBuyAmount.get())
                         && part.getString(null, StyleType.NONE).equals("✔")) {
                     changes.remove(part);
                     StyledTextPart newPart = new StyledTextPart(
@@ -258,14 +275,15 @@ public class BulkBuyFeature extends Feature {
                 if (part.getString(null, StyleType.NONE).startsWith(priceMatcher.group(1))) {
                     changes.remove(part);
                     StyledTextPart newPart = new StyledTextPart(
-                            Models.Emerald.getEmeraldCountString(newPrice, true) + " ",
+                            priceType.formatLineAmount(part.getString(null, StyleType.NONE), priceMatcher, newPrice),
                             part.getPartStyle().getStyle(),
                             null,
                             Style.EMPTY);
                     changes.add(newPart);
                     return IterationDecision.CONTINUE;
                 }
-                if (part.getString(null, StyleType.NONE).equals(priceMatcher.group(2))) {
+                if (priceType == MerchantPriceType.EMERALD
+                        && part.getString(null, StyleType.NONE).equals(priceMatcher.group(2))) {
                     changes.remove(part);
                     StyledTextPart newPart = new StyledTextPart(
                             "(" + Models.Emerald.getFormattedString(newPrice, false) + ")",
@@ -280,9 +298,10 @@ public class BulkBuyFeature extends Feature {
             });
 
             returnable.set(returnable.indexOf(line), newLine.getComponent());
+            replacedPrice = true;
             break;
         }
-        if (returnable == oldLore) {
+        if (!replacedPrice) {
             WynntilsMod.warn("Could not find price for " + oldLore.getFirst().getString());
         }
         return returnable;
@@ -292,26 +311,77 @@ public class BulkBuyFeature extends Feature {
         StyledText title = StyledText.fromComponent(menu.getSlot(4).getItem().getHoverName());
 
         return title.startsWith(ChatFormatting.GREEN.toString())
-                && title.endsWith(" Shop")
-                && LoreUtils.getStringLore(toBuy).contains(PRICE_STR);
+                && title.endsWith(MERCHANT_TITLE_SUFFIX)
+                && LoreUtils.getLore(toBuy).stream()
+                        .anyMatch(loreLine -> loreLine.getMatcher(
+                                        getPriceType(menu).pattern(), StyleType.DEFAULT)
+                                .find());
     }
 
-    public enum BulkBuySpeed {
-        FAST(4),
-        BALANCED(5),
-        SAFE(6),
-        VERY_SAFE(8);
+    private MerchantPriceType getPriceType(AbstractContainerMenu menu) {
+        StyledText title = StyledText.fromComponent(menu.getSlot(4).getItem().getHoverName());
 
-        private final int ticksDelay;
+        // most non-treasure merchants use emerald prices
+        return title.getString().equals(TREASURE_MERCHANT_TITLE.getString())
+                ? MerchantPriceType.TREASURE
+                : MerchantPriceType.EMERALD;
+    }
 
-        BulkBuySpeed(int ticksDelay) {
-            this.ticksDelay = ticksDelay;
+    private enum MerchantPriceType {
+        EMERALD(PRICE_PATTERN) {
+            @Override
+            ItemPrice createPrice(Matcher matcher) {
+                return new ItemPrice(Integer.parseInt(matcher.group(1).replaceAll(",", "")), null, true);
+            }
+
+            @Override
+            String formatLineAmount(String originalPart, Matcher matcher, int amount) {
+                return Models.Emerald.getEmeraldCountString(amount, true) + " ";
+            }
+        },
+        TREASURE(TREASURE_MERCHANT_PRICE_PATTERN) {
+            @Override
+            ItemPrice createPrice(Matcher matcher) {
+                return new ItemPrice(Integer.parseInt(matcher.group(1)), matcher.group(2), false);
+            }
+
+            @Override
+            String formatLineAmount(String originalPart, Matcher matcher, int amount) {
+                // Keep the currency name exactly as it appears in the lore
+                return amount + originalPart.substring(matcher.group(1).length());
+            }
+        };
+
+        private final Pattern pattern;
+
+        MerchantPriceType(Pattern pattern) {
+            this.pattern = pattern;
         }
 
-        private int getTicksDelay() {
-            return ticksDelay;
+        Pattern pattern() {
+            return pattern;
+        }
+
+        abstract ItemPrice createPrice(Matcher matcher);
+
+        abstract String formatLineAmount(String originalPart, Matcher matcher, int amount);
+    }
+
+    private record ItemPrice(int amount, String currencyName, boolean emerald) {
+        boolean canAfford(int buyAmount) {
+            int totalPrice = amount * buyAmount;
+
+            if (emerald) return totalPrice <= Models.Emerald.getAmountInInventory();
+
+            return Models.Inventory.getAmountInInventory(currencyName) >= totalPrice;
+        }
+
+        String formatTotal(int buyAmount) {
+            int totalPrice = amount * buyAmount;
+
+            return emerald ? Models.Emerald.getFormattedString(totalPrice, false) : totalPrice + "x " + currencyName;
         }
     }
 
-    public record BulkBoughtItem(ItemStack itemStack, int amount, int price) {}
+    public record BulkBoughtItem(ItemStack itemStack, int amount, String totalPrice) {}
 }

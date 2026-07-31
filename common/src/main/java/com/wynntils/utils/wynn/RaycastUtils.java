@@ -8,11 +8,15 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 public final class RaycastUtils {
@@ -100,5 +104,26 @@ public final class RaycastUtils {
         }
 
         return Optional.ofNullable(best);
+    }
+
+    public static Optional<BlockPos> getTargetedBlockPosition(double maxDistance, boolean colliderOnly) {
+        LocalPlayer player = McUtils.player();
+
+        if (player.level() == null) return Optional.empty();
+
+        Vec3 start = player.getEyePosition(1f);
+        Vec3 look = player.getLookAngle();
+        Vec3 end = start.add(look.x * maxDistance, look.y * maxDistance, look.z * maxDistance);
+
+        ClipContext.Block blockType = colliderOnly ? ClipContext.Block.COLLIDER : ClipContext.Block.OUTLINE;
+
+        BlockHitResult hitResult =
+                player.level().clip(new ClipContext(start, end, blockType, ClipContext.Fluid.NONE, player));
+
+        if (hitResult.getType() == HitResult.Type.BLOCK) {
+            return Optional.of(hitResult.getBlockPos());
+        }
+
+        return Optional.empty();
     }
 }

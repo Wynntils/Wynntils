@@ -191,7 +191,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
                 if (wynnItemOpt.isPresent()) {
                     McUtils.setScreen(ItemSharingScreen.create(wynnItemOpt.get(), slot.getItem(), true));
                 } else {
-                    McUtils.sendMessageToClient(Component.translatable("screens.wynntils.savedItems.unableToShare"));
+                    McUtils.sendWynntilsPrefixMessage(
+                            Component.translatable("screens.wynntils.savedItems.unableToShare"));
                 }
             }
         } else if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {

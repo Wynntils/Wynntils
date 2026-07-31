@@ -7,11 +7,13 @@ package com.wynntils.core.consumers.features;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.consumers.features.properties.RegisterSubFeature;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
+import com.wynntils.features.HideCrosshairInCutscenesFeature;
 import com.wynntils.features.HideTripwiresFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
@@ -55,7 +57,9 @@ import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
-import com.wynntils.features.embellishments.RemoveShinyGlintFeature;
+import com.wynntils.features.debug.PlayerInfoFooterDebuggerFeature;
+import com.wynntils.features.debug.TextureRecorderFeature;
+import com.wynntils.features.embellishments.ApplyWeaponSkinFeature;
 import com.wynntils.features.embellishments.WarHornFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
@@ -82,7 +86,9 @@ import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.features.map.WorldMarkersFeature;
+import com.wynntils.features.overlays.AbilityCooldownsOverlayFeature;
 import com.wynntils.features.overlays.AnnihilationSunOverlayFeature;
+import com.wynntils.features.overlays.ArcherBeastTrackerOverlayFeature;
 import com.wynntils.features.overlays.ArrowShieldTrackerOverlayFeature;
 import com.wynntils.features.overlays.BombBellOverlayFeature;
 import com.wynntils.features.overlays.BonusTotemTimerOverlayFeature;
@@ -97,6 +103,7 @@ import com.wynntils.features.overlays.HeldItemCooldownOverlayFeature;
 import com.wynntils.features.overlays.HeldItemNameOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
 import com.wynntils.features.overlays.LootrunOverlaysFeature;
+import com.wynntils.features.overlays.MageDistortionOverlayFeature;
 import com.wynntils.features.overlays.MantleShieldTrackerOverlayFeature;
 import com.wynntils.features.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.overlays.PartyMembersOverlayFeature;
@@ -121,19 +128,21 @@ import com.wynntils.features.players.PartyManagementScreenFeature;
 import com.wynntils.features.players.PlayerArmorHidingFeature;
 import com.wynntils.features.players.PlayerGhostTransparencyFeature;
 import com.wynntils.features.players.PlayerViewerFeature;
-import com.wynntils.features.redirects.AbilityRefreshRedirectFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.redirects.InventoryRedirectFeature;
 import com.wynntils.features.redirects.TerritoryMessageRedirectFeature;
+import com.wynntils.features.tooltips.IngredientPouchTooltipCustomizationFeature;
 import com.wynntils.features.tooltips.ItemCompareFeature;
 import com.wynntils.features.tooltips.ItemGuessFeature;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.features.tooltips.TooltipFittingFeature;
 import com.wynntils.features.tooltips.TooltipVanillaHideFeature;
 import com.wynntils.features.trademarket.TradeMarketBulkSellFeature;
+import com.wynntils.features.trademarket.TradeMarketDefaultSortOrderFeature;
 import com.wynntils.features.trademarket.TradeMarketPriceConversionFeature;
 import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
 import com.wynntils.features.trademarket.TradeMarketQuickSearchFeature;
+import com.wynntils.features.ui.AutoExpandUseItems;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.features.ui.ContainerScrollFeature;
 import com.wynntils.features.ui.CraftingProfessionLevelProgressBarFeature;
@@ -142,22 +151,24 @@ import com.wynntils.features.ui.CustomLoadingScreenFeature;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
 import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.features.ui.CustomTradeMarketResultScreenFeature;
+import com.wynntils.features.ui.EmoteWheelFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
 import com.wynntils.features.ui.ProfessionHighlightFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
+import com.wynntils.features.utilities.AutoProgressDialogueFeature;
 import com.wynntils.features.utilities.AutoSkipCutscenesFeature;
+import com.wynntils.features.utilities.BuildLoadoutsFeature;
 import com.wynntils.features.utilities.CharacterSelectionUtilitiesFeature;
 import com.wynntils.features.utilities.EnhancedStreamerModeFeature;
 import com.wynntils.features.utilities.FixCrosshairPositionFeature;
 import com.wynntils.features.utilities.GammabrightFeature;
+import com.wynntils.features.utilities.HighlightGatheringNodesFeature;
 import com.wynntils.features.utilities.PerCharacterGuildContributionFeature;
 import com.wynntils.features.utilities.SilencerFeature;
-import com.wynntils.features.utilities.SkillPointLoadoutsFeature;
 import com.wynntils.features.utilities.TranscribeMessagesFeature;
-import com.wynntils.features.utilities.TranslationFeature;
 import com.wynntils.features.utilities.ValuablesProtectionFeature;
 import com.wynntils.features.utilities.XpGainMessageFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
@@ -166,17 +177,21 @@ import com.wynntils.features.wynntils.CommandsFeature;
 import com.wynntils.features.wynntils.DataCrowdSourcingFeature;
 import com.wynntils.features.wynntils.DownloadProgressFeature;
 import com.wynntils.features.wynntils.FixPacketBugsFeature;
-import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
 import com.wynntils.features.wynntils.WeeklyConfigBackupFeature;
 import com.wynntils.features.wynntils.WynntilsHintMessagesFeature;
+import com.wynntils.features.wynntils.WynntilsTelemetryFeature;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.utils.mc.McUtils;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.WeakHashMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -188,6 +203,21 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class FeatureManager extends Manager {
     private static final Map<Feature, FeatureState> FEATURES = new LinkedHashMap<>();
     private static final Map<Class<? extends Feature>, Feature> FEATURE_INSTANCES = new LinkedHashMap<>();
+    private static final Map<Feature, Feature> SUB_FEATURE_TO_PARENT = Collections.synchronizedMap(new WeakHashMap<>());
+    private static final Map<Feature, List<Feature>> PARENT_TO_SUB_FEATURES =
+            Collections.synchronizedMap(new WeakHashMap<>());
+
+    public boolean isSubFeature(Feature feature) {
+        return SUB_FEATURE_TO_PARENT.containsKey(feature);
+    }
+
+    public Feature getParentFeature(Feature feature) {
+        return SUB_FEATURE_TO_PARENT.get(feature);
+    }
+
+    public List<Feature> getSubFeatures(Feature feature) {
+        return PARENT_TO_SUB_FEATURES.getOrDefault(feature, List.of());
+    }
 
     private final FeatureCommands commands = new FeatureCommands();
 
@@ -210,6 +240,8 @@ public final class FeatureManager extends Manager {
         registerFeature(new LogItemInfoFeature());
         registerFeature(new MappingProgressFeature());
         registerFeature(new PacketDebuggerFeature());
+        registerFeature(new PlayerInfoFooterDebuggerFeature());
+        registerFeature(new TextureRecorderFeature());
 
         // always on
         registerFeature(new LootrunFeature());
@@ -256,7 +288,7 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region embellishments
-        registerFeature(new RemoveShinyGlintFeature());
+        registerFeature(new ApplyWeaponSkinFeature());
         registerFeature(new WarHornFeature());
         registerFeature(new WybelSoundFeature());
         registerFeature(new WynntilsCosmeticsFeature());
@@ -292,7 +324,9 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region overlays
+        registerFeature(new AbilityCooldownsOverlayFeature());
         registerFeature(new AnnihilationSunOverlayFeature());
+        registerFeature(new ArcherBeastTrackerOverlayFeature());
         registerFeature(new ArrowShieldTrackerOverlayFeature());
         registerFeature(new BombBellOverlayFeature());
         registerFeature(new BonusTotemTimerOverlayFeature());
@@ -307,6 +341,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new HeldItemNameOverlayFeature());
         registerFeature(new InfoBoxFeature());
         registerFeature(new LootrunOverlaysFeature());
+        registerFeature(new MageDistortionOverlayFeature());
         registerFeature(new MantleShieldTrackerOverlayFeature());
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PartyMembersOverlayFeature());
@@ -337,13 +372,13 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region redirects
-        registerFeature(new AbilityRefreshRedirectFeature());
         registerFeature(new ChatRedirectFeature());
         registerFeature(new InventoryRedirectFeature());
         registerFeature(new TerritoryMessageRedirectFeature());
         // endregion
 
         // region tooltips
+        registerFeature(new IngredientPouchTooltipCustomizationFeature());
         registerFeature(new ItemCompareFeature());
         registerFeature(new ItemGuessFeature());
         registerFeature(new ItemStatInfoFeature());
@@ -353,12 +388,14 @@ public final class FeatureManager extends Manager {
 
         // region trademarket
         registerFeature(new TradeMarketBulkSellFeature());
+        registerFeature(new TradeMarketDefaultSortOrderFeature());
         registerFeature(new TradeMarketPriceConversionFeature());
         registerFeature(new TradeMarketPriceMatchFeature());
         registerFeature(new TradeMarketQuickSearchFeature());
         // endregion
 
         // region ui
+        registerFeature(new AutoExpandUseItems());
         registerFeature(new BulkBuyFeature());
         registerFeature(new ContainerScrollFeature());
         registerFeature(new CraftingProfessionLevelProgressBarFeature());
@@ -367,6 +404,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomSeaskipperScreenFeature());
         registerFeature(new CustomTerritoryManagementScreenFeature());
         registerFeature(new CustomTradeMarketResultScreenFeature());
+        registerFeature(new EmoteWheelFeature());
         registerFeature(new LobbyUptimeFeature());
         registerFeature(new ProfessionHighlightFeature());
         registerFeature(new WynncraftButtonFeature());
@@ -376,17 +414,19 @@ public final class FeatureManager extends Manager {
 
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
+        registerFeature(new AutoProgressDialogueFeature());
         registerFeature(new AutoSkipCutscenesFeature());
+        registerFeature(new BuildLoadoutsFeature());
         registerFeature(new CharacterSelectionUtilitiesFeature());
         registerFeature(new EnhancedStreamerModeFeature());
         registerFeature(new FixCrosshairPositionFeature());
         registerFeature(new GammabrightFeature());
-        registerFeature(new ValuablesProtectionFeature());
+        registerFeature(new HideCrosshairInCutscenesFeature());
+        registerFeature(new HighlightGatheringNodesFeature());
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
-        registerFeature(new SkillPointLoadoutsFeature());
         registerFeature(new TranscribeMessagesFeature());
-        registerFeature(new TranslationFeature());
+        registerFeature(new ValuablesProtectionFeature());
         registerFeature(new XpGainMessageFeature());
         // endregion
 
@@ -397,7 +437,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new DataCrowdSourcingFeature());
         registerFeature(new DownloadProgressFeature());
         registerFeature(new FixPacketBugsFeature());
-        registerFeature(new TelemetryFeature());
+        registerFeature(new WynntilsTelemetryFeature());
         registerFeature(new UpdatesFeature());
         registerFeature(new WeeklyConfigBackupFeature());
         registerFeature(new WynntilsHintMessagesFeature());
@@ -416,9 +456,63 @@ public final class FeatureManager extends Manager {
         addCrashCallbacks();
     }
 
+    private void checkNesting(Feature feature) {
+        Class<?> clazz = feature.getClass();
+        while (clazz != null && clazz != Feature.class) {
+            for (Field field : clazz.getDeclaredFields()) {
+                if (field.isAnnotationPresent(RegisterSubFeature.class)) {
+                    throw new RuntimeException("Nested sub-features are forbidden: "
+                            + feature.getClass().getName() + " cannot declare sub-feature " + field.getName());
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+    }
+
+    private void discoverAndRegisterSubFeatures(Feature feature) {
+        Class<?> clazz = feature.getClass();
+        while (clazz != null && clazz != Feature.class) {
+            for (Field field : clazz.getDeclaredFields()) {
+                if (field.isAnnotationPresent(RegisterSubFeature.class)) {
+                    if (!Feature.class.isAssignableFrom(field.getType())) {
+                        throw new RuntimeException("Field " + field.getName() + " in class " + clazz.getName()
+                                + " has @RegisterSubFeature but does not extend Feature.");
+                    }
+                    try {
+                        field.setAccessible(true);
+                        Object val = field.get(feature);
+                        if (val == null) {
+                            throw new RuntimeException("Field " + field.getName() + " in class " + clazz.getName()
+                                    + " is null but annotated with @RegisterSubFeature.");
+                        }
+                        Feature subFeature = (Feature) val;
+                        if (isSubFeature(feature)) {
+                            throw new RuntimeException("Nested sub-features are forbidden: "
+                                    + feature.getClass().getName()
+                                    + " is a sub-feature and cannot declare another sub-feature " + field.getName());
+                        }
+                        checkNesting(subFeature);
+
+                        SUB_FEATURE_TO_PARENT.put(subFeature, feature);
+                        PARENT_TO_SUB_FEATURES
+                                .computeIfAbsent(feature, k -> new ArrayList<>())
+                                .add(subFeature);
+
+                        registerFeature(subFeature);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException("Failed to access sub-feature field: " + field.getName(), e);
+                    }
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+    }
+
     private void registerFeature(Feature feature) {
         FEATURES.put(feature, FeatureState.DISABLED);
         FEATURE_INSTANCES.put(feature.getClass(), feature);
+
+        discoverAndRegisterSubFeatures(feature);
 
         try {
             initializeFeature(feature);
@@ -462,6 +556,12 @@ public final class FeatureManager extends Manager {
         assert !feature.getTranslatedDescription().startsWith("feature.wynntils.")
                 : "Fix i18n for " + feature.getTranslatedDescription();
 
+        // Assert that external configuration screen is properly translated
+        if (feature instanceof ExternalConfigurationScreen ecs) {
+            assert !feature.getTranslation(ecs.getTranslationKey()).startsWith("feature.wynntils.")
+                    : "Fix i18n for: " + feature.getTranslation(ecs.getTranslationKey());
+        }
+
         if (!feature.userEnabled.get()) return; // not enabled by user
 
         doEnableFeature(feature);
@@ -489,6 +589,13 @@ public final class FeatureManager extends Manager {
             throw new IllegalArgumentException("Tried to enable an unregistered feature: " + feature);
         }
 
+        if (isSubFeature(feature)) {
+            Feature parent = getParentFeature(feature);
+            if (parent != null && !isEnabled(parent)) {
+                return;
+            }
+        }
+
         FeatureState state = FEATURES.get(feature);
 
         if (state != FeatureState.DISABLED && state != FeatureState.CRASHED) return;
@@ -502,6 +609,12 @@ public final class FeatureManager extends Manager {
         Managers.Overlay.enableOverlays(feature);
 
         Managers.KeyBind.enableFeatureKeyBinds(feature);
+
+        for (Feature subFeature : getSubFeatures(feature)) {
+            if (subFeature.userEnabled.get()) {
+                enableFeature(subFeature);
+            }
+        }
     }
 
     public void disableFeature(Feature feature, boolean force) {
@@ -522,6 +635,10 @@ public final class FeatureManager extends Manager {
         Managers.Overlay.disableOverlays(feature);
 
         Managers.KeyBind.disableFeatureKeyBinds(feature);
+
+        for (Feature subFeature : getSubFeatures(feature)) {
+            disableFeature(subFeature, force);
+        }
     }
 
     public void crashFeature(Feature feature) {
@@ -598,7 +715,7 @@ public final class FeatureManager extends Manager {
                     .withStyle(style -> style.withClickEvent(
                             new ClickEvent.RunCommand("/feature enable " + feature.getShortName())));
 
-            McUtils.sendMessageToClient(enableMessage);
+            McUtils.sendWynntilsPrefixMessage(enableMessage);
         }
     }
 

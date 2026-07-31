@@ -15,6 +15,7 @@ import com.wynntils.core.consumers.functions.templates.Template;
 import com.wynntils.core.consumers.functions.templates.parser.TemplateParser;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.type.StyleType;
 import com.wynntils.functions.ActivityFunctions;
 import com.wynntils.functions.BombFunctions;
 import com.wynntils.functions.CharacterFunctions;
@@ -71,9 +72,6 @@ public final class FunctionManager extends Manager {
     private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("&(?<!\\\\)(#[0-9A-Fa-f]{8})");
     private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("&(?<!\\\\)([0-9a-fA-Fk-oK-OrR])");
     private static final Pattern NBSP_PATTERN = Pattern.compile("\u00A0");
-    private static final Pattern ESCAPED_OPEN_BRACE_PATTERN = Pattern.compile(Pattern.quote("\\[\\"));
-    private static final Pattern ESCAPED_CLOSE_BRACE_PATTERN = Pattern.compile(Pattern.quote("\\]\\"));
-    private static final Pattern ESCAPED_AMPERSAND_PATTERN = Pattern.compile(Pattern.quote("\\&\\"));
     private final List<Function<?>> functions = new ArrayList<>();
     private final Set<Function<?>> crashedFunctions = new HashSet<>();
 
@@ -187,23 +185,19 @@ public final class FunctionManager extends Manager {
 
     public String getStringFunctionValue(
             Function<?> function, FunctionArguments arguments, boolean formatted, int decimals) {
-        return getStyledTextFunctionValue(function, arguments, formatted, decimals)
-                .getString();
-    }
-
-    public StyledText getStyledTextFunctionValue(
-            Function<?> function, FunctionArguments arguments, boolean formatted, int decimals) {
         Optional<Object> value = getFunctionValueSafely(function, arguments);
         if (value.isEmpty()) {
-            return StyledText.fromString("??");
+            return "??";
         }
 
-        return formatStyledText(value.get(), formatted, decimals);
+        return format(value.get(), formatted, decimals);
     }
 
     private String format(Object value, boolean formatted, int decimals) {
         if (value instanceof Integer integer && !formatted) {
             return String.valueOf(integer);
+        } else if (value instanceof Long longValue && !formatted) {
+            return String.valueOf(longValue);
         } else if (value instanceof Number number) {
             if (formatted) {
                 // French locale has NBSP
@@ -223,17 +217,11 @@ public final class FunctionManager extends Manager {
             }
         } else if (value instanceof CustomColor color) {
             return "§" + color.toHexString();
+        } else if (value instanceof StyledText styledText) {
+            return styledText.getString(StyleType.COMPLETE);
         }
 
         return value.toString();
-    }
-
-    private StyledText formatStyledText(Object value, boolean formatted, int decimals) {
-        if (value instanceof StyledText styledText) {
-            return styledText;
-        }
-
-        return StyledText.fromString(format(value, formatted, decimals));
     }
 
     // endregion
@@ -273,9 +261,9 @@ public final class FunctionManager extends Manager {
 
     // region Template formatting
 
-    private StyledText doFormat(String templateString) {
+    private String doFormat(String templateString) {
         calculatedTemplateCache.computeIfAbsent(templateString, TemplateParser::getTemplateFromString);
-        return calculatedTemplateCache.get(templateString).getStyledText();
+        return calculatedTemplateCache.get(templateString).getString();
     }
 
     public StyledText[] doFormatLines(String templateString) {
@@ -303,14 +291,14 @@ public final class FunctionManager extends Manager {
         // Parse color codes before calculating the templates
         String escapedTemplate = parseColorCodes(resultBuilder.toString());
 
-        StyledText calculatedText = doFormat(escapedTemplate);
+        String calculatedString = doFormat(escapedTemplate);
 
         // Turn escaped {}& (`\[\`, `\]\` `\&\`) back into real {}&
-        calculatedText = calculatedText.replaceAll(ESCAPED_OPEN_BRACE_PATTERN, "{");
-        calculatedText = calculatedText.replaceAll(ESCAPED_CLOSE_BRACE_PATTERN, "}");
-        calculatedText = calculatedText.replaceAll(ESCAPED_AMPERSAND_PATTERN, "&");
+        calculatedString = calculatedString.replace("\\[\\", "{");
+        calculatedString = calculatedString.replace("\\]\\", "}");
+        calculatedString = calculatedString.replace("\\&\\", "&");
 
-        return calculatedText.split("\n");
+        return StyledText.fromString(calculatedString).split("\n");
     }
 
     private String parseColorCodes(String toProcess) {
@@ -387,12 +375,14 @@ public final class FunctionManager extends Manager {
         registerFunction(new ColorFunctions.SaturationShiftFunction());
         registerFunction(new ColorFunctions.ShineShaderFunction());
         registerFunction(new ColorFunctions.ToHexStringFunction());
+        registerFunction(new ColorFunctions.WynncraftShaderFunction());
 
         registerFunction(new ConditionalFunctions.IfCappedValueFunction());
         registerFunction(new ConditionalFunctions.IfCustomColorFunction());
         registerFunction(new ConditionalFunctions.IfFunction());
         registerFunction(new ConditionalFunctions.IfNumberFunction());
         registerFunction(new ConditionalFunctions.IfStringFunction());
+        registerFunction(new ConditionalFunctions.SwitchCaseFunction());
 
         registerFunction(new LocationFunctions.DistanceFunction());
         registerFunction(new LocationFunctions.LocationFunction());
@@ -410,19 +400,35 @@ public final class FunctionManager extends Manager {
         registerFunction(new LogicFunctions.NotFunction());
         registerFunction(new LogicFunctions.OrFunction());
 
+        registerFunction(new MathFunctions.AbsFunction());
         registerFunction(new MathFunctions.AddFunction());
+        registerFunction(new MathFunctions.CeilFunction());
+        registerFunction(new MathFunctions.ClampFunction());
+        registerFunction(new MathFunctions.DecToHexFunction());
         registerFunction(new MathFunctions.DivideFunction());
+        registerFunction(new MathFunctions.EulerFunction());
+        registerFunction(new MathFunctions.FloorFunction());
+        registerFunction(new MathFunctions.HexToDecFunction());
         registerFunction(new MathFunctions.IntegerFunction());
+        registerFunction(new MathFunctions.IsFiniteFunction());
+        registerFunction(new MathFunctions.IsInfiniteFunction());
+        registerFunction(new MathFunctions.IsNanFunction());
+        registerFunction(new MathFunctions.NaturalLogFunction());
+        registerFunction(new MathFunctions.LogFunction());
         registerFunction(new MathFunctions.LongFunction());
+        registerFunction(new MathFunctions.MapFunction());
         registerFunction(new MathFunctions.MaxFunction());
         registerFunction(new MathFunctions.MinFunction());
         registerFunction(new MathFunctions.ModuloFunction());
         registerFunction(new MathFunctions.MultiplyFunction());
+        registerFunction(new MathFunctions.PiFunction());
         registerFunction(new MathFunctions.PowerFunction());
         registerFunction(new MathFunctions.RandomFunction());
         registerFunction(new MathFunctions.RoundFunction());
+        registerFunction(new MathFunctions.SafeDivideFunction());
         registerFunction(new MathFunctions.SquareRootFunction());
         registerFunction(new MathFunctions.SubtractFunction());
+        registerFunction(new MathFunctions.WrapFunction());
 
         registerFunction(new NamedFunctions.NameFunction());
         registerFunction(new NamedFunctions.NamedValueFunction());
@@ -439,6 +445,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.LeadingZerosFunction());
         registerFunction(new StringFunctions.ParseDoubleFunction());
         registerFunction(new StringFunctions.ParseIntegerFunction());
+        registerFunction(new StringFunctions.ParseLongFunction());
         registerFunction(new StringFunctions.RegexFindFunction());
         registerFunction(new StringFunctions.RegexMatchFunction());
         registerFunction(new StringFunctions.RegexReplaceFunction());
@@ -449,6 +456,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.ToRomanNumeralsFunction());
 
         registerFunction(new StyledTextFunctions.ConcatStyledTextFunction());
+        registerFunction(new StyledTextFunctions.RepeatStyledTextFunction());
         registerFunction(new StyledTextFunctions.StyledTextFunction());
         registerFunction(new StyledTextFunctions.WithAtlasSpriteFontFunction());
         registerFunction(new StyledTextFunctions.WithBoldFunction());
@@ -487,13 +495,13 @@ public final class FunctionManager extends Manager {
         registerFunction(new BombFunctions.BombTypeFunction());
         registerFunction(new BombFunctions.BombWorldFunction());
 
+        registerFunction(new CharacterFunctions.AbilityCooldownFunction());
         registerFunction(new CharacterFunctions.AspectTierFunction());
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
         registerFunction(new CharacterFunctions.CappedAwakenedProgressFunction());
         registerFunction(new CharacterFunctions.CappedBloodPoolFunction());
         registerFunction(new CharacterFunctions.CappedCorruptedFunction());
-        registerFunction(new CharacterFunctions.CappedDistortionFunction());
         registerFunction(new CharacterFunctions.CappedFocusFunction());
         registerFunction(new CharacterFunctions.CappedHealthFunction());
         registerFunction(new CharacterFunctions.CappedHolyPowerFunction());
@@ -503,14 +511,17 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.ClassFunction());
         registerFunction(new CharacterFunctions.CommanderActivatedFunction());
         registerFunction(new CharacterFunctions.CommanderDurationFunction());
+        registerFunction(new CharacterFunctions.CrowCountFunction());
+        registerFunction(new CharacterFunctions.CurrentDistortionFunction());
         registerFunction(new CharacterFunctions.EquippedAspectFunction());
-        registerFunction(new CharacterFunctions.GuildObjectiveGoalFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveEventBonusFunction());
+        registerFunction(new CharacterFunctions.GuildObjectiveGoalFunction());
         registerFunction(new CharacterFunctions.GuildObjectiveScoreFunction());
         registerFunction(new CharacterFunctions.HasNoGuiFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
         registerFunction(new CharacterFunctions.HealthPctFunction());
+        registerFunction(new CharacterFunctions.HoundsTimeLeftFunction());
         registerFunction(new CharacterFunctions.HummingbirdsStateFunction());
         registerFunction(new CharacterFunctions.IdFunction());
         registerFunction(new CharacterFunctions.IsAspectEquippedFunction());
@@ -519,17 +530,22 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
         registerFunction(new CharacterFunctions.ManaPctFunction());
-        registerFunction(new CharacterFunctions.MirrorImageDurationFunction());
         registerFunction(new CharacterFunctions.MirrorImageCloneFunction());
+        registerFunction(new CharacterFunctions.MirrorImageDurationFunction());
         registerFunction(new CharacterFunctions.MomentumFunction());
         registerFunction(new CharacterFunctions.MomentumPercentFunction());
         registerFunction(new CharacterFunctions.OphanimActive());
         registerFunction(new CharacterFunctions.OphanimHealingPercentFunction());
         registerFunction(new CharacterFunctions.OphanimOrb());
-        registerFunction(new CharacterFunctions.PersonalObjectiveGoalFunction());
         registerFunction(new CharacterFunctions.PersonalObjectiveEventBonusFunction());
+        registerFunction(new CharacterFunctions.PersonalObjectiveGoalFunction());
         registerFunction(new CharacterFunctions.PersonalObjectiveScoreFunction());
         registerFunction(new CharacterFunctions.PowderSpecialChargeFunction());
+        registerFunction(new CharacterFunctions.PuppetCountFunction());
+        registerFunction(new CharacterFunctions.RemnantCountFunction());
+        registerFunction(new CharacterFunctions.PatchworkAbominationDurationFunction());
+        registerFunction(new CharacterFunctions.PuppetsInTimeRangeFunction());
+        registerFunction(new CharacterFunctions.SnakeCountFunction());
         registerFunction(new CharacterFunctions.SprintFunction());
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
@@ -542,6 +558,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatFunctions.KillsPerMinuteFunction());
         registerFunction(new CombatFunctions.LastDamageDealtFunction());
         registerFunction(new CombatFunctions.LastKillFunction());
+        registerFunction(new CombatFunctions.LastSpellHealthCostFunction());
+        registerFunction(new CombatFunctions.LastSpellManaCostFunction());
         registerFunction(new CombatFunctions.LastSpellNameFunction());
         registerFunction(new CombatFunctions.LastSpellRepeatCountFunction());
         registerFunction(new CombatFunctions.SpellNameFromDirectionFunction());
@@ -627,6 +645,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
         registerFunction(new InventoryFunctions.MaterialCountFunction());
         registerFunction(new InventoryFunctions.MoneyFunction());
+        registerFunction(new InventoryFunctions.TeleportScrollChargesFunction());
+        registerFunction(new InventoryFunctions.TeleportScrollRechargeTimerFunction());
 
         registerFunction(new LootrunFunctions.ChestOpenedFunction());
         registerFunction(new LootrunFunctions.ChestsOpenedThisSessionFunction());
@@ -642,6 +662,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconColorFunction());
         registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconVibrantFunction());
         registerFunction(new LootrunFunctions.LootrunMissionFunction());
+        registerFunction(new LootrunFunctions.LootrunCurrentMissionFunction());
+        registerFunction(new LootrunFunctions.LootrunCurrentMissionObjectiveFunction());
+        registerFunction(new LootrunFunctions.LootrunCurrentMissionProgressFunction());
         registerFunction(new LootrunFunctions.LootrunNextOrangeExpireFunction());
         registerFunction(new LootrunFunctions.LootrunOrangeBeaconCountFunction());
         registerFunction(new LootrunFunctions.LootrunRainbowBeaconCountFunction());
@@ -650,6 +673,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LootrunSacrificesFunction());
         registerFunction(new LootrunFunctions.LootrunStateFunction());
         registerFunction(new LootrunFunctions.LootrunTaskLocationFunction());
+        registerFunction(new LootrunFunctions.LootrunCurrentTrialFunction());
+        registerFunction(new LootrunFunctions.LootrunCurrentTrialObjectiveFunction());
+        registerFunction(new LootrunFunctions.LootrunCurrentTrialProgressFunction());
         registerFunction(new LootrunFunctions.LootrunTaskNameFunction());
         registerFunction(new LootrunFunctions.LootrunTaskTypeFunction());
         registerFunction(new LootrunFunctions.LootrunTimeFunction());
@@ -658,13 +684,15 @@ public final class FunctionManager extends Manager {
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());
         registerFunction(new MinecraftFunctions.KeyPressedFunction());
+        registerFunction(new MinecraftFunctions.LocationAtCrosshairFunction());
         registerFunction(new MinecraftFunctions.MinecraftEffectDurationFunction());
         registerFunction(new MinecraftFunctions.MyLocationFunction());
+        registerFunction(new MinecraftFunctions.PitchFunction());
         registerFunction(new MinecraftFunctions.TicksFunction());
 
         registerFunction(new MountFunctions.CappedMountStatFunction());
-        registerFunction(new MountFunctions.MountStatFunction());
-        registerFunction(new MountFunctions.MountStatMaxFunction());
+        registerFunction(new MountFunctions.CurrentMountEnergyFunction());
+        registerFunction(new MountFunctions.MountPotentialFunction());
         registerFunction(new MountFunctions.MountNameFunction());
 
         registerFunction(new ProfessionFunctions.LastHarvestMaterialLevelFunction());
@@ -707,6 +735,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new RaidFunctions.RaidTimeRemainingFunction());
         registerFunction(new RaidFunctions.RaidsRunsSinceFunction());
         registerFunction(new RaidFunctions.SpecificRaidRunsSinceFunction());
+        registerFunction(new RaidFunctions.ChosenGambitsFunction());
+        registerFunction(new RaidFunctions.ChosenGambitFunction());
+        registerFunction(new RaidFunctions.ChosenBuffsFunction());
+        registerFunction(new RaidFunctions.ChosenBuffFunction());
 
         registerFunction(new RangedFunctions.RangeHighFunction());
         registerFunction(new RangedFunctions.RangeLowFunction());
@@ -715,8 +747,15 @@ public final class FunctionManager extends Manager {
         registerFunction(new SocialFunctions.FriendsFunction());
         registerFunction(new SocialFunctions.IsFriendFunction());
         registerFunction(new SocialFunctions.IsPartyMemberFunction());
+        registerFunction(new SocialFunctions.ScoreboardPartyMembersFunction());
         registerFunction(new SocialFunctions.PartyLeaderFunction());
         registerFunction(new SocialFunctions.PartyMembersFunction());
+        registerFunction(new SocialFunctions.PartyMemberNameFunction());
+        registerFunction(new SocialFunctions.PartyMemberHealthFunction());
+        registerFunction(new SocialFunctions.PartyMemberLevelFunction());
+        registerFunction(new SocialFunctions.IsPartyMemberOnlineFunction());
+        registerFunction(new SocialFunctions.IsPartyMemberAliveFunction());
+        registerFunction(new SocialFunctions.PartyTotalLevelFunction());
         registerFunction(new SocialFunctions.PlayerNameFunction());
         registerFunction(new SocialFunctions.PlayerUuidFunction());
         registerFunction(new SocialFunctions.WynntilsRoleFunction());
@@ -724,12 +763,16 @@ public final class FunctionManager extends Manager {
         registerFunction(new SpellFunctions.ArrowShieldCountFunction());
         registerFunction(new SpellFunctions.GuardianAngelsCountFunction());
         registerFunction(new SpellFunctions.MantleShieldCountFunction());
+        registerFunction(new SpellFunctions.BrokenMantleShieldCountFunction());
         registerFunction(new SpellFunctions.ShamanMaskFunction());
         registerFunction(new SpellFunctions.ShamanTotemDistanceFunction());
         registerFunction(new SpellFunctions.ShamanTotemLocationFunction());
         registerFunction(new SpellFunctions.ShamanTotemStateFunction());
         registerFunction(new SpellFunctions.ShamanTotemTimeLeftFunction());
+        registerFunction(new SpellFunctions.ShamanTotemTransfusedAmountFunction());
+        registerFunction(new SpellFunctions.ShamanTotemPoisonAmountFunction());
         registerFunction(new SpellFunctions.ShieldTypeNameFunction());
+        registerFunction(new SpellFunctions.JudrajimActiveFunction());
 
         registerFunction(new StatisticFunctions.StatisticsAverageFunction());
         registerFunction(new StatisticFunctions.StatisticsCountFunction());

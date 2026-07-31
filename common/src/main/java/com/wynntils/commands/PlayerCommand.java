@@ -70,15 +70,19 @@ public class PlayerCommand extends Command {
 
         completableFuture.whenComplete((player, throwable) -> {
             if (throwable != null) {
-                McUtils.sendMessageToClient(Component.literal(
-                                "Unable to view player guild for " + context.getArgument("username", String.class))
-                        .withStyle(ChatFormatting.RED));
+                McUtils.mc().execute(() -> {
+                    McUtils.sendWynntilsPrefixMessage(Component.literal(
+                                    "Unable to view player guild for " + context.getArgument("username", String.class))
+                            .withStyle(ChatFormatting.RED));
+                });
                 WynntilsMod.error("Error trying to parse player guild", throwable);
             } else {
                 if (player == null) {
-                    McUtils.sendMessageToClient(
-                            Component.literal("Unknown player " + context.getArgument("username", String.class))
-                                    .withStyle(ChatFormatting.RED));
+                    McUtils.mc().execute(() -> {
+                        McUtils.sendWynntilsPrefixMessage(
+                                Component.literal("Unknown player " + context.getArgument("username", String.class))
+                                        .withStyle(ChatFormatting.RED));
+                    });
                     return;
                 }
 
@@ -112,7 +116,9 @@ public class PlayerCommand extends Command {
                     response.append(Component.literal(" is not in a guild").withStyle(ChatFormatting.GRAY));
                 }
 
-                McUtils.sendMessageToClient(response);
+                McUtils.mc().execute(() -> {
+                    McUtils.sendWynntilsPrefixMessage(response);
+                });
             }
         });
 
@@ -131,15 +137,19 @@ public class PlayerCommand extends Command {
 
         completableFuture.whenComplete((player, throwable) -> {
             if (throwable != null) {
-                McUtils.sendMessageToClient(Component.literal(
-                                "Unable to view player last seen for " + context.getArgument("username", String.class))
-                        .withStyle(ChatFormatting.RED));
+                McUtils.mc().execute(() -> {
+                    McUtils.sendWynntilsPrefixMessage(Component.literal("Unable to view player last seen for "
+                                    + context.getArgument("username", String.class))
+                            .withStyle(ChatFormatting.RED));
+                });
                 WynntilsMod.error("Error trying to parse player last seen", throwable);
             } else {
                 if (player == null) {
-                    McUtils.sendMessageToClient(
-                            Component.literal("Unknown player " + context.getArgument("username", String.class))
-                                    .withStyle(ChatFormatting.RED));
+                    McUtils.mc().execute(() -> {
+                        McUtils.sendWynntilsPrefixMessage(
+                                Component.literal("Unknown player " + context.getArgument("username", String.class))
+                                        .withStyle(ChatFormatting.RED));
+                    });
                     return;
                 }
 
@@ -163,14 +173,17 @@ public class PlayerCommand extends Command {
                             .append(Component.literal(
                                             "\nIf you think you should be able to see this, add your Wynncraft API Token to ")
                                     .withStyle(ChatFormatting.RED))
-                            .append(Component.literal("Wynntils Secrets").withStyle(style -> style.withHoverEvent(
-                                            new HoverEvent.ShowText(Component.literal("Click to open secrets menu.")))
-                                    .withClickEvent(new ClickEvent.RunCommand("/wynntils secrets"))
-                                    .withColor(ChatFormatting.GOLD)
-                                    .withUnderlined(true)));
+                            .append(Component.literal("Wynntils Secrets")
+                                    .withStyle(style -> style.withHoverEvent(new HoverEvent.ShowText(
+                                                    Component.literal("Click to open secrets menu.")))
+                                            .withClickEvent(new ClickEvent.RunCommand("/wynntils secrets"))
+                                            .withColor(ChatFormatting.GOLD)
+                                            .withUnderlined(true)));
                 }
 
-                McUtils.sendMessageToClient(response);
+                McUtils.mc().execute(() -> {
+                    McUtils.sendWynntilsPrefixMessage(response);
+                });
             }
         });
 

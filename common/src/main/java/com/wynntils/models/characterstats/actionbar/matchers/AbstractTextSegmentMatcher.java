@@ -91,6 +91,8 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
             // Parse the value from the display characters
             CappedValue value = valueFromDisplayCharacters(matcher.group("value"));
 
+            if (value == null) return null;
+
             return createSegment(segmentText, matcher.start(), matcher.end(), value);
         } while (matcher.find());
 
@@ -120,7 +122,7 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
 
         if (!matcher.matches()) {
             WynntilsMod.warn("Could not parse text action bar segment value as capped: " + value);
-            return CappedValue.EMPTY;
+            return null;
         }
 
         long current = parseShortNumber(matcher.group("current"));
@@ -128,12 +130,12 @@ public abstract class AbstractTextSegmentMatcher implements ActionBarSegmentMatc
 
         if (current > Integer.MAX_VALUE) {
             WynntilsMod.warn("Current health/mana value is too large: " + current);
-            return CappedValue.EMPTY;
+            return null;
         }
 
         if (max > Integer.MAX_VALUE) {
             WynntilsMod.warn("Max health/mana value is too large: " + max);
-            return CappedValue.EMPTY;
+            return null;
         }
 
         // The value is capped at 100

@@ -39,6 +39,7 @@ import org.lwjgl.glfw.GLFW;
 
 public final class MainMapScreen extends AbstractMapScreen {
     private MapLocation focusedMarker = null;
+    private MapButton gatheringFilterButton;
 
     private MainMapScreen() {
         super();
@@ -139,6 +140,21 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.map.manager.name")),
                         Component.translatable("screens.wynntils.map.manager.description")
                                 .withStyle(ChatFormatting.GRAY))));
+
+        gatheringFilterButton = new MapButton(
+                Texture.TOOL,
+                (b) -> McUtils.mc().setScreen(GatheringNodeFilterScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .append(Component.translatable("screens.wynntils.map.gatheringFilter.name"))
+                                .withStyle(ChatFormatting.DARK_PURPLE),
+                        Component.translatable("screens.wynntils.map.gatheringFilter.description1")
+                                .withStyle(ChatFormatting.GRAY),
+                        Component.empty(),
+                        Component.translatable("screens.wynntils.map.gatheringFilter.description2")
+                                .withStyle(ChatFormatting.GRAY)));
+
+        addMapButton(gatheringFilterButton);
 
         addMapButton(new MapButton(
                 Texture.DEFENSE_FILTER_ICON,
@@ -286,6 +302,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         // FIXME: Add back the pois that are still not converted to MapData
         //        - Provided custom pois
         //        - Remote players
+        //        - Gathering Nodes
 
         return mapFeatures;
     }

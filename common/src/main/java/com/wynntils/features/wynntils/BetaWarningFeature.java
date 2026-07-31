@@ -44,7 +44,7 @@ public class BetaWarningFeature extends Feature {
     public void onDisplayNameChange(PlayerInfoEvent.PlayerDisplayNameChangeEvent e) {
         if (warnType == WarnType.NONE) return;
 
-        McUtils.sendMessageToClient(warnType.getWarning());
+        McUtils.sendWynntilsPrefixMessage(warnType.getWarning());
         warnType = WarnType.NONE;
     }
 

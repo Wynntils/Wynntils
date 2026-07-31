@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.hades;
@@ -53,7 +53,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
         }
 
         hadesConnection.sendPacketAndFlush(
-                new HCPacketAuthenticate(Services.WynntilsAccount.getToken(), HadesVersion.VERSION_0_6_1));
+                new HCPacketAuthenticate(Services.WynntilsAccount.getToken(), HadesVersion.VERSION_0_6_3));
     }
 
     @Override
@@ -86,16 +86,18 @@ public class HadesClientHandler implements IHadesClientAdapter {
                         "Got invalid token when trying to connect to the remote player server: " + packet.getMessage());
                 userComponent = Component.literal("Got invalid token when connecting the remote player server.")
                         .withStyle(ChatFormatting.RED);
+                hadesConnection.disconnect();
             }
             case ERROR -> {
                 WynntilsMod.error("Got an error trying to connect to the remote player server: " + packet.getMessage());
                 userComponent = Component.literal("Got error when connecting the remote player server.")
                         .withStyle(ChatFormatting.RED);
+                hadesConnection.disconnect();
             }
         }
 
         if (Managers.Connection.onServer()) {
-            McUtils.sendMessageToClient(userComponent);
+            McUtils.sendWynntilsPrefixMessage(userComponent);
         }
     }
 
@@ -137,10 +139,12 @@ public class HadesClientHandler implements IHadesClientAdapter {
         WynntilsMod.info("Disconnected from the remote player server. Reason: " + packet.getReason());
 
         if (Managers.Connection.onServer()) {
-            McUtils.sendMessageToClient(Component.literal("[Wynntils] Disconnected from the remote player server.")
-                    .withStyle(ChatFormatting.YELLOW));
+            McUtils.sendWynntilsPrefixMessage(
+                    Component.literal("[Wynntils] Disconnected from the remote player server.")
+                            .withStyle(ChatFormatting.YELLOW));
         }
 
         userRegistry.getHadesUserMap().clear();
+        hadesConnection.disconnect();
     }
 }

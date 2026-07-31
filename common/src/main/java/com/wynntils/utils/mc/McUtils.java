@@ -14,6 +14,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.prediction.PredictiveAction;
@@ -134,11 +135,22 @@ public final class McUtils {
                         true));
     }
 
+    public static int getChatWidth() {
+        return ChatComponent.getWidth(mc().options.chatWidth().get());
+    }
+
     public static void sendMessageToClient(Component component) {
         mc().getChatListener().handleSystemMessage(component, false);
     }
 
-    public static void sendWynntilsMessage(Component component) {
+    public static void sendWynntilsPrefixMessage(Component component) {
+        StyledText styledText = StyledText.fromComponent(component);
+        StyledText wrapedText = StyledTextUtils.addWynntilsPrefix(styledText);
+
+        sendMessageToClient(wrapedText.getComponent());
+    }
+
+    public static void sendWynntilsPillMessage(Component component) {
         sendMessageToClient(ComponentUtils.addWynntilsPillHeader(component));
     }
 
@@ -150,7 +162,7 @@ public final class McUtils {
 
     public static void sendErrorToClient(String errorMsg) {
         WynntilsMod.warn("Chat error message sent: " + errorMsg);
-        McUtils.sendMessageToClient(Component.literal(errorMsg).withStyle(ChatFormatting.RED));
+        McUtils.sendWynntilsPrefixMessage(Component.literal(errorMsg).withStyle(ChatFormatting.RED));
     }
 
     public static void sendPacket(Packet<?> packet) {
@@ -183,5 +195,11 @@ public final class McUtils {
         // Route through ChatComponent so the existing createScreen mixin can post ChatScreenCreateEvent.
         mc().gui.getChat().saveAsDraft(keybindCommand);
         mc().gui.getChat().openScreen(chatMethod, ChatScreen::new);
+    }
+
+    public static void displayToast(Component title, Component message, long displayTimeMs) {
+        McUtils.mc()
+                .getToastManager()
+                .addToast(new SystemToast(new SystemToast.SystemToastId(displayTimeMs), title, message));
     }
 }

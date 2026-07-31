@@ -21,6 +21,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.PreciseLocation;
+import com.wynntils.utils.type.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -153,8 +154,9 @@ public final class BeaconModel extends Model {
         if (WynntilsMod.isDevelopmentEnvironment()) {
             if (itemStack.getItem() != Items.POTION) return null;
 
-            Optional<Float> beaconColorCustomModelData =
-                    Services.CustomModel.getFloat(BEACON_COLOR_CUSTOM_MODEL_DATA_KEY);
+            Optional<Pair<Float, Float>> beaconColorCustomModelData =
+                    Services.CustomModel.getRange(BEACON_COLOR_CUSTOM_MODEL_DATA_KEY);
+
             if (beaconColorCustomModelData.isEmpty()) return null;
 
             // Extract custom color from potion
@@ -177,8 +179,10 @@ public final class BeaconModel extends Model {
             int customColor = potionContents.customColor().orElse(CommonColors.WHITE.asInt());
 
             // Log the color if it's likely to be a new beacon kind
-            if (customModelValues.stream().anyMatch(beaconColorCustomModelData.get()::equals)) {
-                WynntilsMod.warn("Unknown beacon kind: " + beaconColorCustomModelData.get() + " " + customColor);
+
+            Pair<Float, Float> range = beaconColorCustomModelData.get();
+            if (customModelValues.stream().anyMatch(value -> value >= range.a() && value <= range.b())) {
+                WynntilsMod.warn("Unknown beacon kind: " + range + " " + customColor);
             }
         }
 

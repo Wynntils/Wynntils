@@ -4,26 +4,24 @@
  */
 package com.wynntils.models.ingredients.type;
 
-import java.util.Locale;
-
 public enum IngredientPosition {
-    LEFT("to the left of"),
-    RIGHT("to the right of"),
-    ABOVE("above"),
-    UNDER("under"),
-    TOUCHING("touching"),
-    NOT_TOUCHING("not touching");
+    LEFT("to the left of", "left"),
+    RIGHT("to the right of", "right"),
+    ABOVE("above", "above"),
+    UNDER("under", "under"),
+    TOUCHING("touching", "touching"),
+    NOT_TOUCHING("not touching", "notTouching");
 
-    private final String displayName;
+    private final String description;
     private final String apiName;
 
-    IngredientPosition(String displayName) {
-        this.displayName = displayName;
-        this.apiName = this.name().toLowerCase(Locale.ROOT);
+    IngredientPosition(String description, String apiName) {
+        this.description = description;
+        this.apiName = apiName;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    public String getDescription() {
+        return description;
     }
 
     public String getApiName() {

@@ -5,13 +5,13 @@
 package com.wynntils.models.rewards.type;
 
 import com.wynntils.utils.colors.CustomColor;
-import net.minecraft.ChatFormatting;
 
 public enum RuneType {
-    AZ(CustomColor.fromChatFormatting(ChatFormatting.AQUA)),
-    NII(CustomColor.fromChatFormatting(ChatFormatting.DARK_RED)),
-    UTH(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA)),
-    TOL(CustomColor.fromChatFormatting(ChatFormatting.DARK_GREEN));
+    AZ(CustomColor.fromInt(0xb0f3fc)),
+    NII(CustomColor.fromInt(0xfdb9fe)),
+    UTH(CustomColor.fromInt(0xbacefb)),
+    TOL(CustomColor.fromInt(0xb8fcb3)),
+    EK(CustomColor.fromInt(0xffd39e));
 
     private CustomColor color;
 

@@ -115,6 +115,30 @@ public class CombatFunctions {
         }
     }
 
+    public static class LastSpellManaCostFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Spell.getLastSpellManaCost();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("mana_cost");
+        }
+    }
+
+    public static class LastSpellHealthCostFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Spell.getLastSpellHealthCost();
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("health_cost", "hp_cost");
+        }
+    }
+
     public static class LastSpellRepeatCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {

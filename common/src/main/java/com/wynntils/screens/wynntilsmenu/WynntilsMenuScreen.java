@@ -138,7 +138,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         y,
                         Texture.LOOTRUN_ICON,
                         true,
-                        WynntilsLootrunPathsScreen.create(),
+                        WynntilsLootrunPathsScreen.create(this),
                         List.of(
                                 Component.literal("[>] ")
                                         .withStyle(ChatFormatting.GOLD)

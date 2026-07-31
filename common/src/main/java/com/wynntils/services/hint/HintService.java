@@ -77,7 +77,7 @@ public class HintService extends Service {
 
         if (component.equals(Component.empty())) return;
 
-        McUtils.sendWynntilsMessage(component);
+        McUtils.sendWynntilsPillMessage(component);
     }
 
     private MutableComponent formatHint(String hint) {
@@ -141,9 +141,10 @@ public class HintService extends Service {
 
     private MutableComponent createCommandPart(String command, String argument) {
         String fullCommand = "/" + command + " " + argument;
-        return Component.literal(fullCommand).withStyle(style -> style.withColor(ChatFormatting.GOLD)
-                .withUnderlined(true)
-                .withClickEvent(new ClickEvent.RunCommand(fullCommand))
-                .withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to run " + fullCommand))));
+        return Component.literal(fullCommand)
+                .withStyle(style -> style.withColor(ChatFormatting.GOLD)
+                        .withUnderlined(true)
+                        .withClickEvent(new ClickEvent.RunCommand(fullCommand))
+                        .withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to run " + fullCommand))));
     }
 }

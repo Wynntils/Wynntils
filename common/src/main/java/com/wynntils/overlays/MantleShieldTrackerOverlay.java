@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -18,8 +18,8 @@ public class MantleShieldTrackerOverlay extends TextOverlay {
     private static final String MANTLE_SYMBOL = " ⯃"; // leading space is on purpose
 
     private static final String TEMPLATE =
-            "{IF_STRING(AND(GT(MANTLE_SHIELD_COUNT; 0); EQ_STR(SHIELD_TYPE;\"Mantle\")); CONCAT(\"Mantle Shield: \"; REPEAT(\"%s\"; MANTLE_SHIELD_COUNT)); \"\")}"
-                    .formatted(MANTLE_SYMBOL);
+            "{IF_STRING(OR(GT(MANTLE_SHIELD_COUNT; 0); GT(BROKEN_MANTLE_SHIELD_COUNT; 0)); CONCAT(\"Mantle Shield:§9\"; REPEAT(\"%s\"; MANTLE_SHIELD_COUNT); \"§c\"; REPEAT(\"%s\"; BROKEN_MANTLE_SHIELD_COUNT)); \"\")}"
+                    .formatted(MANTLE_SYMBOL, MANTLE_SYMBOL);
 
     @Persisted
     private final Config<CustomColor> textColor = new Config<>(CommonColors.PURPLE);
@@ -47,6 +47,6 @@ public class MantleShieldTrackerOverlay extends TextOverlay {
 
     @Override
     public String getPreviewTemplate() {
-        return "Mantle Shield: {REPEAT(\"%s\"; 3)}".formatted(MANTLE_SYMBOL);
+        return "Mantle Shield:§9{REPEAT(\"%s\"; 4)}§c{REPEAT(\"%s\"; 2)}".formatted(MANTLE_SYMBOL, MANTLE_SYMBOL);
     }
 }

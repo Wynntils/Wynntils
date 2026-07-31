@@ -158,6 +158,10 @@ public class Argument<T> {
         return getList(Number.class);
     }
 
+    public List<Object> getObjectList() {
+        return getList(Object.class);
+    }
+
     public List<String> getStringList() {
         return getList(String.class);
     }

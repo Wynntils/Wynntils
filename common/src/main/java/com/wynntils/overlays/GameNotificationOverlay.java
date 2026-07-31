@@ -46,6 +46,9 @@ public class GameNotificationOverlay extends Overlay {
     @Persisted
     private final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
+    @Persisted(i18nKey = "overlay.wynntils.textOverlay.fontScale")
+    private final Config<Float> fontScale = new Config<>(1.0f);
+
     @Persisted
     private final Config<Boolean> overrideNewMessages = new Config<>(true);
 
@@ -166,22 +169,24 @@ public class GameNotificationOverlay extends Overlay {
                         this.getWidth(),
                         this.getHeight(),
                         this.getRenderHorizontalAlignment(),
-                        this.getRenderVerticalAlignment());
+                        this.getRenderVerticalAlignment(),
+                        fontScale.get());
     }
 
     @Override
     public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         FontRenderer.getInstance()
-                .renderTextWithAlignment(
+                .renderTextsWithAlignment(
                         guiGraphics,
                         this.getRenderX(),
                         this.getRenderY(),
-                        new TextRenderTask(
-                                StyledText.fromString("§r§a→ §r§2Player [§r§aWC1/Archer§r§2]"), textRenderSetting),
+                        List.of(new TextRenderTask(
+                                StyledText.fromString("§r§a→ §r§2Player [§r§aWC1/Archer§r§2]"), textRenderSetting)),
                         this.getWidth(),
                         this.getHeight(),
                         this.getRenderHorizontalAlignment(),
-                        this.getRenderVerticalAlignment());
+                        this.getRenderVerticalAlignment(),
+                        fontScale.get());
     }
 
     @Override

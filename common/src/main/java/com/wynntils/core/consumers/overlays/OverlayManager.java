@@ -48,6 +48,7 @@ public final class OverlayManager extends Manager {
 
     private final Set<Overlay> enabledOverlays = new HashSet<>();
     private Map<RenderElementType, List<Overlay>> renderMap = new HashMap<>();
+    private boolean renderOrdersInitialized = false;
 
     private final List<SectionCoordinates> sections = new ArrayList<>(9);
     private final Map<Class<?>, Integer> profilingTimes = new HashMap<>();
@@ -89,9 +90,10 @@ public final class OverlayManager extends Manager {
         enabledOverlays.remove(disabledOverlay);
         WynntilsMod.unregisterEventListener(disabledOverlay);
 
+        disabledOverlay.setRenderOrder(-1);
         disabledOverlay.getConfigOptionFromString("userEnabled").ifPresent(disabledOverlay::callOnConfigUpdate);
 
-        rebuildRenderOrder();
+        rebuildRenderOrderIfInitialized();
     }
 
     public void enableOverlays(Feature parent) {
@@ -106,7 +108,12 @@ public final class OverlayManager extends Manager {
 
         enabledOverlay.getConfigOptionFromString("userEnabled").ifPresent(enabledOverlay::callOnConfigUpdate);
 
-        rebuildRenderOrder();
+        rebuildRenderOrderIfInitialized();
+    }
+
+    public void enableOverlayWithDefaultRenderOrder(Overlay enabledOverlay) {
+        enabledOverlay.setRenderOrder(-1);
+        enableOverlay(enabledOverlay);
     }
 
     public void discoverOverlays(Feature feature) {
@@ -144,6 +151,11 @@ public final class OverlayManager extends Manager {
         holders.forEach(this::createOverlayGroupWithDefaults);
 
         overlayGroupMap.put(feature, holders);
+    }
+
+    public void initializeRenderOrders() {
+        rebuildAndNormalizeRenderOrder();
+        renderOrdersInitialized = true;
     }
 
     public void rebuildRenderOrder() {
@@ -185,51 +197,57 @@ public final class OverlayManager extends Manager {
         renderMap = newRenderMap;
     }
 
+    public void rebuildAndNormalizeRenderOrder() {
+        rebuildRenderOrder();
+        normalizeRenderOrders();
+    }
+
+    private void rebuildRenderOrderIfInitialized() {
+        if (Managers.Config.isLoadingConfigOptions()) return;
+
+        if (renderOrdersInitialized) {
+            rebuildAndNormalizeRenderOrder();
+        } else {
+            rebuildRenderOrder();
+        }
+    }
+
     public void updateOverlayPosition(Overlay overlay, int direction) {
-        Map<RenderElementType, List<Overlay>> newRenderMap = new HashMap<>(this.renderMap);
+        Map<RenderElementType, List<Overlay>> newRenderMap = new HashMap<>();
+        for (Map.Entry<RenderElementType, List<Overlay>> entry : this.renderMap.entrySet()) {
+            newRenderMap.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+        }
 
         RenderElementType currentElementType = overlay.getRenderElementType();
         List<Overlay> currentElementOrder = newRenderMap.get(currentElementType);
         int currentIndex = currentElementOrder.indexOf(overlay);
+        if (currentIndex == -1) return;
+
+        currentElementOrder.remove(currentIndex);
 
         if (direction == -1) {
             if (currentIndex == 0 && currentElementType != RenderElementType.overlayValues()[0]) {
                 int elementIndex = List.of(RenderElementType.overlayValues()).indexOf(currentElementType);
-
                 RenderElementType previousElement = RenderElementType.overlayValues()[elementIndex - 1];
 
                 overlay.setRenderElementType(previousElement);
-                overlay.setRenderOrder(newRenderMap.get(previousElement).size());
-            } else if (currentIndex > 0) {
-                Overlay aboveOverlay = currentElementOrder.get(currentIndex - 1);
-
-                aboveOverlay.setRenderOrder(currentIndex);
-                overlay.setRenderOrder(currentIndex - 1);
+                newRenderMap.get(previousElement).add(overlay);
+            } else {
+                currentElementOrder.add(Math.max(0, currentIndex - 1), overlay);
             }
         } else {
-            if (currentIndex == currentElementOrder.size() - 1 && currentElementType != RenderElementType.GUI_POST) {
+            if (currentIndex == currentElementOrder.size() && currentElementType != RenderElementType.GUI_POST) {
                 int elementIndex = List.of(RenderElementType.overlayValues()).indexOf(currentElementType);
-
                 RenderElementType nextElement = RenderElementType.overlayValues()[elementIndex + 1];
-                List<Overlay> nextElementOrder = newRenderMap.get(nextElement);
 
                 overlay.setRenderElementType(nextElement);
-                overlay.setRenderOrder(0);
-
-                for (Overlay other : nextElementOrder) {
-                    other.setRenderOrder(other.getRenderOrder() + 1);
-                }
-            } else if (currentIndex < currentElementOrder.size() - 1) {
-                Overlay belowOverlay = currentElementOrder.get(currentIndex + 1);
-
-                belowOverlay.setRenderOrder(currentIndex);
-                overlay.setRenderOrder(currentIndex + 1);
+                newRenderMap.get(nextElement).addFirst(overlay);
+            } else {
+                currentElementOrder.add(Math.min(currentElementOrder.size(), currentIndex + 1), overlay);
             }
         }
 
         renderMap = newRenderMap;
-
-        rebuildRenderOrder();
 
         // Check that render orders start at 0 and increment by 1, no duplicates or gaps
         // We do this here and not in rebuildRenderOrder since we want to make sure all overlays
@@ -299,6 +317,10 @@ public final class OverlayManager extends Manager {
 
     private void recreateGroupOverlaysWithIds(OverlayGroupHolder holder, List<Integer> ids) {
         holder.getOverlays().forEach(this::unregisterOverlay);
+
+        if (renderOrdersInitialized) {
+            rebuildAndNormalizeRenderOrder();
+        }
 
         holder.initGroup(ids);
 

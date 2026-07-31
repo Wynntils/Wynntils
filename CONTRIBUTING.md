@@ -18,6 +18,16 @@ Please, don't use the issue tracker for support questions. [Our discord](https:/
 
 We would like to maintain a respectful communication with our contributors. If you are not willing to adapt your code after our reviews, we are going to close your pull request. Respect goes both ways.
 
+As Wynntils is a mod for the Minecraft server Wynncraft, you need to have a valid Minecraft Java account in order to confirm your code performs as expected. If you are unable to test your code in a real environment, your pull request will likely be closed.
+
+# AI Policy
+
+We don't want to tell you what tools you can or cannot use when contributing to Wynntils, however we do want new contributions to be readable and as simple as possible.
+
+For this reason, we would prefer that for pull request descriptions and issues, AI is not used in their creation. AI tends to produce overly detailed descriptions that wastes the time of the reviewer, a 1 line fix does not need paragraphs of text.
+
+You are free to use AI in the generation of your code, however we ask that you review it first before submitting to ensure you understand it, as if you don't understand it then we likely will not either.
+
 # Your First Contribution
 
 At this point, you're ready to make your changes! Feel free to ask for help; everyone is a beginner at first :smile_cat:. A great place for this is either in your pull request, or in [our discord.](https://discord.gg/wynntils)

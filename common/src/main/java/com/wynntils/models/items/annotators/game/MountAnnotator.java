@@ -4,116 +4,115 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.items.items.game.MountItem;
+import com.wynntils.models.mount.type.MountInfo;
 import com.wynntils.models.mount.type.MountStat;
+import com.wynntils.models.mount.type.MountType;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class MountAnnotator implements GameItemAnnotator {
-    private static final Pattern MOUNT_PATTERN =
-            Pattern.compile("([\\p{L}\\p{N}'\\- ]+)\\s+(?:Whistle|Flute|Ocarina)", Pattern.CASE_INSENSITIVE);
-    private static final Map<MountStat, Pattern> CAPPED_STAT_PATTERNS = Map.of(
-            MountStat.ACCELERATION, Pattern.compile("\\bAcceleration\\b.*?(\\d+)/(\\d+)\\b"),
-            MountStat.ALTITUDE, Pattern.compile("\\bAltitude\\b.*?(\\d+)/(\\d+)\\b"),
-            MountStat.JUMP_HEIGHT, Pattern.compile("\\bJump Height\\b.*?(\\d+)/(\\d+)\\b"),
-            MountStat.ENERGY, Pattern.compile("\\bEnergy\\b.*?(\\d+)/(\\d+)\\b"),
-            MountStat.HANDLING, Pattern.compile("\\bHandling\\b.*?(\\d+)/(\\d+)\\b"),
-            MountStat.BOOST, Pattern.compile("\\bBoost\\b.*?(\\d+)/(\\d+)\\b"),
-            MountStat.SPEED, Pattern.compile("\\bSpeed\\b.*?(\\d+)/(\\d+)\\b"),
-            MountStat.TOUGHNESS, Pattern.compile("\\bToughness\\b.*?(\\d+)/(\\d+)\\b"),
-            MountStat.TRAINING, Pattern.compile("\\bTraining\\b.*?(\\d+)/(\\d+)\\b"));
-    private static final Pattern POTENTIAL_PATTERN = Pattern.compile("\\b(\\d+(?:\\.\\d+)?[kK]?)\\s+Potential\\b");
+    private static final Pattern MOUNT_PATTERN = Pattern.compile(
+            "\uDAFC\uDC00(?<name>.+?)(?:'s?)? (?<type>Saddle|Reins|Harness|Whistle|Flute|Ocarina)\uDAFC\uDC00");
+    private static final Pattern POTENTIAL_PATTERN =
+            Pattern.compile("§f\uDB00\uDC01§#e0e0e0ff(?<potential>\\d+(?:\\.\\d+k?)?)§f Potential");
+    private static final Pattern COLOR_PATTERN =
+            Pattern.compile("§f\uE00E\uDB00\uDC01§7 (?<primaryColor>.+)-(?<secondaryColor>.+)");
+    private static final Pattern ENERGY_PATTERN =
+            Pattern.compile("§8\uE023\uDAFF\uDFF7§#e0e0e0ff.§7\uDB00\uDC05Energy (?<current>\\d+)/(?<cap>\\d+)");
+    private static final Pattern STAT_PATTERN = Pattern.compile(
+            "§f(?<statName>"
+                    + Arrays.stream(MountStat.values())
+                            .map(s -> Pattern.quote(s.getName()))
+                            .collect(Collectors.joining("|"))
+                    + ").+§#acfac6ff(?<current>\\d+)§7/(?<cap>\\d+)( §8\\((?<max>\\d+)\\))?(?:§f|§#acfac6ff) §8\uE023\uDAFF\uDFF7.+");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         if (itemStack.getItem() != Items.POTION) return null;
 
         Matcher matcher = name.getMatcher(MOUNT_PATTERN);
-        if (!matcher.find()) return null;
+        if (!matcher.matches()) return null;
 
+        String type = matcher.group("type");
+        MountType mountType = MountType.fromName(type);
+
+        if (mountType == null) {
+            WynntilsMod.warn("Unknown mount type " + type);
+            return null;
+        }
+
+        boolean isSummonItem = mountType.getSummonItemName().equals(type);
         List<StyledText> lore = LoreUtils.getLore(itemStack);
-        List<String> plainLore =
-                lore.stream().map(StyledText::getStringWithoutFormatting).toList();
 
-        ParsedMountStats stats = parseMountStats(plainLore);
-        String mountName = parseMountName(name.getStringWithoutFormatting()).orElse(null);
+        MountInfo info = parseMountInfo(lore);
 
-        return new MountItem(
-                mountName,
-                stats.value(MountStat.ENERGY),
-                stats.value(MountStat.ACCELERATION),
-                stats.value(MountStat.ALTITUDE),
-                stats.value(MountStat.JUMP_HEIGHT),
-                stats.value(MountStat.ENERGY),
-                stats.value(MountStat.HANDLING),
-                stats.potentialValue(),
-                stats.value(MountStat.BOOST),
-                stats.value(MountStat.SPEED),
-                stats.value(MountStat.TOUGHNESS),
-                stats.value(MountStat.TRAINING));
+        return new MountItem(matcher.group("name"), mountType, info, isSummonItem);
     }
 
-    private ParsedMountStats parseMountStats(List<String> lines) {
-        Map<MountStat, CappedValue> statValues = new EnumMap<>(MountStat.class);
+    private MountInfo parseMountInfo(List<StyledText> lore) {
         int potential = -1;
+        Optional<String> primaryColor = Optional.empty();
+        Optional<String> secondaryColor = Optional.empty();
+        CappedValue currentEnergy = CappedValue.EMPTY;
+        Map<MountStat, CappedValue> stats = new EnumMap<>(MountStat.class);
+        Map<MountStat, Integer> maxStats = new EnumMap<>(MountStat.class);
 
-        for (String line : lines) {
-            for (Map.Entry<MountStat, Pattern> entry : CAPPED_STAT_PATTERNS.entrySet()) {
-                MountStat stat = entry.getKey();
-                if (stat != MountStat.ENERGY && statValues.containsKey(stat)) continue;
-
-                Matcher statMatcher = entry.getValue().matcher(line);
-                if (statMatcher.find()) {
-                    // Energy appears multiple times in lore; keep the latest matching line (the mount stat line).
-                    statValues.put(stat, parseCapped(statMatcher));
-                }
+        for (StyledText line : lore) {
+            Matcher matcher = line.getMatcher(POTENTIAL_PATTERN);
+            if (potential == -1 && matcher.matches()) {
+                potential = (int) StringUtils.parseSuffixedInteger(matcher.group("potential"));
+                continue;
             }
 
-            Matcher potentialMatcher = POTENTIAL_PATTERN.matcher(line);
-            if (potentialMatcher.find()) {
-                potential = (int) StringUtils.parseSuffixedInteger(potentialMatcher.group(1));
+            matcher = line.getMatcher(COLOR_PATTERN);
+            if (primaryColor.isEmpty() && matcher.matches()) {
+                primaryColor = Optional.of(matcher.group("primaryColor"));
+                secondaryColor = Optional.of(matcher.group("secondaryColor"));
+                continue;
+            }
+
+            matcher = line.getMatcher(ENERGY_PATTERN);
+            if (currentEnergy == CappedValue.EMPTY && matcher.matches()) {
+                currentEnergy = parseCapped(matcher);
+                continue;
+            }
+
+            matcher = line.getMatcher(STAT_PATTERN);
+            if (matcher.matches()) {
+                Optional<MountStat> stat = MountStat.fromName(matcher.group("statName"));
+
+                if (stat.isPresent()) {
+                    stats.put(stat.get(), parseCapped(matcher));
+
+                    if (matcher.group("max") != null) {
+                        maxStats.put(stat.get(), Integer.parseInt(matcher.group("max")));
+                    }
+                }
             }
         }
 
-        return new ParsedMountStats(statValues, potential);
+        return new MountInfo(potential, primaryColor, secondaryColor, currentEnergy, stats, maxStats);
     }
 
     private CappedValue parseCapped(Matcher matcher) {
-        int current = Integer.parseInt(matcher.group(1));
-        int max = Integer.parseInt(matcher.group(2));
-        return new CappedValue(current, max);
-    }
-
-    private record ParsedMountStats(Map<MountStat, CappedValue> statValues, int potentialValue) {
-        private CappedValue value(MountStat stat) {
-            return statValues.getOrDefault(stat, CappedValue.EMPTY);
-        }
-    }
-
-    private Optional<String> parseMountName(String plainName) {
-        Matcher matcher = MOUNT_PATTERN.matcher(plainName);
-        if (!matcher.find()) return Optional.empty();
-
-        String value = matcher.group(1).trim();
-        if (value.endsWith("'s") || value.endsWith("'S")) {
-            value = value.substring(0, value.length() - 2).trim();
-        }
-
-        if (value.endsWith("'")) {
-            value = value.substring(0, value.length() - 1).trim();
-        }
-        return value.isEmpty() ? Optional.empty() : Optional.of(value);
+        int current = Integer.parseInt(matcher.group("current"));
+        int cap = Integer.parseInt(matcher.group("cap"));
+        return new CappedValue(current, cap);
     }
 }

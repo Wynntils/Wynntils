@@ -29,8 +29,7 @@ public final class QueuedMeleeScheduler {
     }
 
     public static boolean isMeleeReady() {
-        CappedValue cooldown =
-                Models.CharacterStats.getItemCooldownTicks(McUtils.player().getItemInHand(InteractionHand.MAIN_HAND));
+        CappedValue cooldown = Models.CharacterStats.getItemCooldownTicks();
         return cooldown.current() <= 0;
     }
 

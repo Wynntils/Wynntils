@@ -83,7 +83,9 @@ public class WynntilsCommand extends Command {
                         .then(Commands.literal("profile")
                                 .then(Commands.literal("reset").executes(this::profileReset))
                                 .then(Commands.literal("showAnnotations").executes(this::profileShowAnnotations))
-                                .then(Commands.literal("showOverlays").executes(this::profileShowOverlays))))
+                                .then(Commands.literal("showOverlays").executes(this::profileShowOverlays)))
+                        .then(Commands.literal("encodeModelData")
+                                .executes(Services.CustomModelDataEncoder::encodeCustomModelData)))
                 .then(Commands.literal("discord").executes(this::discordLink))
                 .then(Commands.literal("donate").executes(this::donateLink))
                 .then(Commands.literal("downloads").executes(this::downloads))
@@ -297,7 +299,7 @@ public class WynntilsCommand extends Command {
                             Matcher m = STATUS_HEADING.matcher(line);
                             if (m.matches()) {
                                 String status = m.group(1);
-                                McUtils.sendMessageToClient(Component.literal("Wynntils status: ")
+                                McUtils.sendWynntilsPrefixMessage(Component.literal("Wynntils status: ")
                                         .withStyle(ChatFormatting.WHITE)
                                         .append(Component.literal(status).withStyle(ChatFormatting.AQUA)));
                                 return;
@@ -389,7 +391,8 @@ public class WynntilsCommand extends Command {
             WynntilsMod.info("Attempting to fetch Wynntils update.");
             CompletableFuture<UpdateResult> completableFuture = Services.Update.tryUpdate();
 
-            completableFuture.whenComplete((result, throwable) -> McUtils.sendMessageToClient(result.getMessage()));
+            completableFuture.whenComplete(
+                    (result, throwable) -> McUtils.sendWynntilsPrefixMessage(result.getMessage()));
         });
 
         context.getSource()

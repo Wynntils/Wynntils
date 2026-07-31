@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
@@ -34,7 +34,7 @@ public class IngredientEffectivenessStatProvider extends ItemStatProvider<Intege
 
     @Override
     public String getDescription() {
-        return "Ingredient effectiveness to ingredients " + ingredientPosition.getDisplayName() + " this one";
+        return "Ingredient effectiveness to ingredients " + ingredientPosition.getDescription() + " this one";
     }
 
     @Override

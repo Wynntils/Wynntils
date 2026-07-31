@@ -13,14 +13,19 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
+import com.wynntils.handlers.tooltip.TooltipStyleSupport;
+import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearItemWeightsComponent;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
+import com.wynntils.models.items.properties.PagedItemProperty;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
@@ -28,11 +33,13 @@ import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
 import com.wynntils.services.itemweight.type.ItemWeighting;
+import com.wynntils.utils.colors.WynncraftShaderColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ColorScaleUtils;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -45,8 +52,10 @@ import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -64,9 +73,6 @@ public class ItemStatInfoFeature extends Feature {
             WeightDecoratorType.FULL_CONTRIBUTION, new FullWeightDecorator(false));
 
     private final Set<WynnItem> brokenItems = new HashSet<>();
-
-    @Persisted
-    public final Config<Boolean> showStars = new Config<>(true);
 
     @Persisted
     public final Config<Boolean> colorLerp = new Config<>(true);
@@ -87,12 +93,6 @@ public class ItemStatInfoFeature extends Feature {
     public final Config<Boolean> defective = new Config<>(true);
 
     @Persisted
-    public final Config<Float> obfuscationChanceStart = new Config<>(0.08f);
-
-    @Persisted
-    public final Config<Float> obfuscationChanceEnd = new Config<>(0.04f);
-
-    @Persisted
     public final Config<StatListOrdering> identificationsOrdering = new Config<>(StatListOrdering.DEFAULT);
 
     @Persisted
@@ -102,16 +102,22 @@ public class ItemStatInfoFeature extends Feature {
     public final Config<Boolean> identificationDecorations = new Config<>(true);
 
     @Persisted
-    public final Config<ItemWeightSource> itemWeights = new Config<>(ItemWeightSource.NONE);
+    public final Config<ItemWeightSource> itemWeights = new Config<>(ItemWeightSource.ALL);
 
     @Persisted
     public final Config<Boolean> overallPercentageInName = new Config<>(true);
 
     @Persisted
+    public final Config<Boolean> overallPercentageInPerfectDefectiveName = new Config<>(true);
+
+    @Persisted
     public final Config<Boolean> showBestValueLastAlways = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> showMaxValues = new Config<>(true);
+    public final Config<Boolean> rainbowInternalRoll = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> showRollWheel = new Config<>(true);
 
     private static final NavigableMap<Float, TextColor> LERP_MAP = new TreeMap<>(Map.of(
             0f,
@@ -124,13 +130,12 @@ public class ItemStatInfoFeature extends Feature {
             TextColor.fromLegacyFormat(ChatFormatting.GREEN),
             100f,
             TextColor.fromLegacyFormat(ChatFormatting.AQUA)));
-
     private NavigableMap<Float, TextColor> flatMap = createFlatMap();
 
     public ItemStatInfoFeature() {
-        // TODO: Revert to enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
-        //  when feature fixed
-        super(ProfileDefault.DISABLED);
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
+                .build());
     }
 
     @Override
@@ -155,6 +160,7 @@ public class ItemStatInfoFeature extends Feature {
             List<Component> tooltips = TooltipUtils.getWynnItemTooltip(itemStack, wynnItem);
 
             if (tooltips.isEmpty()) return;
+
             event.setTooltips(tooltips);
         } catch (Exception e) {
             brokenItems.add(wynnItem);
@@ -175,6 +181,36 @@ public class ItemStatInfoFeature extends Feature {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onTooltipPreFinalize(ItemTooltipRenderEvent.Pre event) {
+        Optional<IdentifiableItemProperty> itemInfoOpt =
+                Models.Item.asWynnItemProperty(event.getItemStack(), IdentifiableItemProperty.class);
+        if (itemInfoOpt.isEmpty()) return;
+
+        IdentifiableItemProperty itemInfo = itemInfoOpt.get();
+        if (shouldKeepOriginalGearTooltip(itemInfo)) {
+            return;
+        }
+
+        List<Component> tooltips = new ArrayList<>(event.getTooltips());
+        if (tooltips.isEmpty()) return;
+
+        TooltipUtils.realignMarkedTooltipLines(tooltips);
+        event.setTooltips(tooltips);
+    }
+
+    private boolean shouldKeepOriginalGearTooltip(IdentifiableItemProperty<?, ?> itemInfo) {
+        if (!(itemInfo.getItemInfo() instanceof GearInfo)) {
+            return false;
+        }
+
+        if (!(itemInfo instanceof PagedItemProperty pagedItemProperty)) {
+            return false;
+        }
+
+        return !pagedItemProperty.isStatPage();
     }
 
     public NavigableMap<Float, TextColor> getColorMap() {
@@ -235,6 +271,10 @@ public class ItemStatInfoFeature extends Feature {
             float percentage = StatCalculator.getPercentage(actualValue, possibleValues);
             MutableComponent percentageTextComponent = ColorScaleUtils.getPercentageTextComponent(
                     getColorMap(), percentage, colorLerp.get(), decimalPlaces.get());
+
+            if (style.rainbowPerfectInternalRoll() && actualValue.stars() == 3) {
+                percentageTextComponent.withColor(WynncraftShaderColor.RAINBOW.color.asInt());
+            }
 
             return percentageTextComponent;
         }
@@ -308,15 +348,11 @@ public class ItemStatInfoFeature extends Feature {
         @Override
         protected List<MutableComponent> getWeightLines(
                 ItemWeighting weighting, IdentifiableItemProperty<?, ?> itemInfo) {
-            MutableComponent weightingComponent = Component.literal(" - ")
-                    .append(Component.literal(weighting.weightName() + " Scale"))
-                    .withStyle(ChatFormatting.GRAY);
-
             float percentage = Services.ItemWeight.calculateWeighting(weighting, itemInfo);
-            weightingComponent.append(ColorScaleUtils.getPercentageTextComponent(
-                    getColorMap(), percentage, colorLerp.get(), decimalPlaces.get()));
-
-            return List.of(weightingComponent);
+            return List.of(GearItemWeightsComponent.buildRightAlignedWeightLine(
+                    Component.literal(weighting.weightName() + " Scale").withStyle(ChatFormatting.WHITE),
+                    ColorScaleUtils.getPercentageTextComponent(
+                            getColorMap(), percentage, colorLerp.get(), decimalPlaces.get())));
         }
     }
 
@@ -331,15 +367,11 @@ public class ItemStatInfoFeature extends Feature {
         protected List<MutableComponent> getWeightLines(
                 ItemWeighting weighting, IdentifiableItemProperty<?, ?> itemInfo) {
             List<MutableComponent> lines = new ArrayList<>();
-            MutableComponent weightingComponent = Component.literal(" - ")
-                    .append(Component.literal(weighting.weightName() + " Scale"))
-                    .withStyle(ChatFormatting.GRAY);
-
             float weightPercentage = Services.ItemWeight.calculateWeighting(weighting, itemInfo);
-            weightingComponent.append(ColorScaleUtils.getPercentageTextComponent(
-                    getColorMap(), weightPercentage, colorLerp.get(), decimalPlaces.get()));
-
-            lines.add(weightingComponent);
+            lines.add(GearItemWeightsComponent.buildRightAlignedWeightLine(
+                    Component.literal(weighting.weightName() + " Scale").withStyle(ChatFormatting.WHITE),
+                    ColorScaleUtils.getPercentageTextComponent(
+                            getColorMap(), weightPercentage, colorLerp.get(), decimalPlaces.get())));
 
             Map<StatType, Pair<Float, Float>> statWeights = Services.ItemWeight.getStatWeights(weighting, itemInfo);
 
@@ -350,20 +382,26 @@ public class ItemStatInfoFeature extends Feature {
                     displayName += "Raw ";
                 }
 
-                String weightStr = String.format(Locale.ROOT, "(%.1f%%)", weight.a());
+                String weightStr = new DecimalFormat("#.#").format(weight.a()) + "%";
                 float percentage = distribution ? weight.b() : ((weight.a() / 100f) * weight.b());
 
-                lines.add(Component.literal("   - ")
-                        .withStyle(ChatFormatting.GRAY)
-                        .append(Component.literal(displayName))
-                        .append(Component.literal(weightStr).withStyle(ChatFormatting.WHITE))
-                        .append(ColorScaleUtils.getPercentageTextComponent(
+                lines.add(GearItemWeightsComponent.buildRightAlignedWeightLine(
+                        Component.literal(weightStr)
+                                .withStyle(ChatFormatting.DARK_GRAY)
+                                .append(Component.literal(" "))
+                                .append(Component.literal(displayName).withStyle(ChatFormatting.GRAY)),
+                        ColorScaleUtils.getPercentageTextComponent(
                                 getColorMap(), percentage, colorLerp.get(), decimalPlaces.get())));
             });
-            lines.add(Component.empty());
 
             return lines;
         }
+    }
+
+    private static MutableComponent withWynncraftFont(MutableComponent component) {
+        return Component.empty()
+                .withStyle(Style.EMPTY.withFont(TooltipStyleSupport.WYNNCRAFT_LANGUAGE_FONT))
+                .append(component);
     }
 
     private enum IdentificationDecoratorType {

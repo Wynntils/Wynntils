@@ -8,6 +8,9 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.models.abilities.label.ShamanPuppetInfo;
+import com.wynntils.models.abilities.type.AbilityCooldown;
+import com.wynntils.models.abilities.type.PuppetType;
 import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.models.characterstats.type.PowderSpecialInfo;
 import com.wynntils.models.objectives.WynnObjective;
@@ -21,6 +24,28 @@ import java.util.Optional;
 import net.minecraft.client.player.LocalPlayer;
 
 public class CharacterFunctions {
+    public static class AbilityCooldownFunction extends Function<Float> {
+        @Override
+        public Float getValue(FunctionArguments arguments) {
+            String name = arguments.getArgument("name").getStringValue();
+            boolean interpolated = arguments.getArgument("interpolated").getBooleanValue();
+
+            AbilityCooldown cooldown = AbilityCooldown.fromName(name);
+
+            if (cooldown == null || !Models.Ability.getActiveCooldowns().contains(cooldown)) return -1.0f;
+
+            return interpolated
+                    ? Models.Ability.getInterpolatedCooldown(cooldown)
+                    : cooldown.getServerRemainingSeconds();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("name", String.class, null), new Argument<>("interpolated", Boolean.class, null)));
+        }
+    }
+
     public static class CappedManaFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
@@ -275,14 +300,14 @@ public class CharacterFunctions {
     public static class HasNoGuiFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Character.getVehicle() == VehicleType.DISPLAY;
+            return Models.Cutscene.isCutsceneActive();
         }
     }
 
     public static class HummingbirdsStateFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Ability.hummingBirdsState;
+            return Models.ShamanSummon.hummingBirdsState;
         }
     }
 
@@ -443,12 +468,10 @@ public class CharacterFunctions {
         }
     }
 
-    public static class CappedDistortionFunction extends Function<CappedValue> {
+    public static class CurrentDistortionFunction extends Function<Integer> {
         @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Ability.distortionBar.isActive()
-                    ? Models.Ability.distortionBar.getBarProgress().value()
-                    : CappedValue.EMPTY;
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Ability.distortionBar.getCurrent();
         }
     }
 
@@ -472,6 +495,78 @@ public class CharacterFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             return Models.Ability.mirrorImageBar.isActive() ? Models.Ability.mirrorImageBar.getDuration() : 0;
+        }
+    }
+
+    public static class PuppetCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsByType(PuppetType.PUPPET)
+                    .count());
+        }
+    }
+
+    public static class RemnantCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsByType(PuppetType.REMNANT)
+                    .count());
+        }
+    }
+
+    public static class PatchworkAbominationDurationFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.ShamanSummon.getActivePuppetsByType(PuppetType.PATCHWORK_ABOMINATION)
+                    .findFirst()
+                    .map(ShamanPuppetInfo::getSecondsLeft)
+                    .orElse(-1);
+        }
+    }
+
+    public static class PuppetsInTimeRangeFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            int min = arguments.getArgument("min").getIntegerValue();
+            int max = arguments.getArgument("max").getIntegerValue();
+            if (min > max) {
+                int tempMax = max;
+                max = min;
+                min = tempMax;
+            }
+            int finalMin = min;
+            int finalMax = max;
+            return Math.toIntExact(Models.ShamanSummon.getActivePuppetsLabels()
+                    .map(ShamanPuppetInfo::getSecondsLeft)
+                    .filter(s -> s >= finalMin && finalMax >= s)
+                    .count());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("min", Integer.class, null), new Argument<>("max", Integer.class, null)));
+        }
+    }
+
+    public static class CrowCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.ArcherBeast.getActiveCrowCount();
+        }
+    }
+
+    public static class HoundsTimeLeftFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.ArcherBeast.getHoundsTimeLeft();
+        }
+    }
+
+    public static class SnakeCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.ArcherBeast.getActiveSnakeCount();
         }
     }
 }

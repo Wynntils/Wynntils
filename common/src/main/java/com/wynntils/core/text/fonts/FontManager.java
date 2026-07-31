@@ -10,8 +10,11 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.text.FontLookup;
+import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
+import com.wynntils.core.text.fonts.wynnfonts.BannerSymbolFont;
 import com.wynntils.core.text.fonts.wynnfonts.FancyFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
+import com.wynntils.core.text.fonts.wynnfonts.WynntilsCoordinatesFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynntilsKeybindsFont;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,6 +28,9 @@ import net.minecraft.network.chat.FontDescription;
 import net.minecraft.resources.Identifier;
 
 public final class FontManager extends Manager {
+    private static final Character SPACE_ZERO_HIGH_SURROGATE = '\uDB00';
+    private static final Character SPACE_ZERO_LOW_SURROGATE = '\uDC00';
+
     private static final String FONTMAP_RESOURCE_LOCATION = "fontmaps/";
     private final List<RegisteredFont> registeredFonts = new ArrayList<>();
     private final Map<Class<? extends RegisteredFont>, RegisteredFont> fontsByClass = new HashMap<>();
@@ -39,9 +45,12 @@ public final class FontManager extends Manager {
     }
 
     private void registerFonts() {
+        registerFont(new BannerBoxFont());
+        registerFont(new BannerSymbolFont());
         registerFont(new FancyFont());
         registerFont(new WynncraftKeybindsFont());
         registerFont(new WynntilsKeybindsFont());
+        registerFont(new WynntilsCoordinatesFont());
     }
 
     private void registerFont(RegisteredFont font) {
@@ -118,6 +127,17 @@ public final class FontManager extends Manager {
         FontEntry fontEntry = new FontEntry(registeredFont.key(), fontId, glyphs);
         fonts.put(registeredFont.key(), fontEntry);
         registeredFont.setFontEntry(fontEntry);
+    }
+
+    public static String calculateOffset(int currentWidth, int targetWidth) {
+        int delta = targetWidth - currentWidth;
+        if (delta == 0) return "";
+
+        int zeroCodePoint = Character.toCodePoint(SPACE_ZERO_HIGH_SURROGATE, SPACE_ZERO_LOW_SURROGATE);
+
+        int targetCodePoint = zeroCodePoint + delta;
+
+        return new String(Character.toChars(targetCodePoint));
     }
 
     public Map<String, FontEntry> getFonts() {

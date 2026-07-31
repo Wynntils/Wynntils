@@ -12,6 +12,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.ingredients.type.IngredientPosition;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.mount.type.MountStat;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.territories.type.GuildResource;
@@ -52,6 +53,13 @@ import com.wynntils.services.itemfilter.statproviders.TomeTypeStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TotalPriceStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TradeAmountStatProvider;
 import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
+import com.wynntils.services.itemfilter.statproviders.mount.MountEnergyStatProvider;
+import com.wynntils.services.itemfilter.statproviders.mount.MountNameStatProvider;
+import com.wynntils.services.itemfilter.statproviders.mount.MountPotentialStatProvider;
+import com.wynntils.services.itemfilter.statproviders.mount.MountPrimaryColorStatProvider;
+import com.wynntils.services.itemfilter.statproviders.mount.MountSecondaryColorStatProvider;
+import com.wynntils.services.itemfilter.statproviders.mount.MountStatProvider;
+import com.wynntils.services.itemfilter.statproviders.mount.MountTypeStatProvider;
 import com.wynntils.services.itemfilter.statproviders.territory.TerritoryAlertStatProvider;
 import com.wynntils.services.itemfilter.statproviders.territory.TerritoryDefenseStatProvider;
 import com.wynntils.services.itemfilter.statproviders.territory.TerritoryNameStatProvider;
@@ -544,6 +552,18 @@ public class ItemFilterService extends Service {
         }
 
         registerStatProvider(new FavoriteStatProvider());
+
+        // Mount stat providers
+        registerStatProvider(new MountTypeStatProvider());
+        registerStatProvider(new MountNameStatProvider());
+        registerStatProvider(new MountPotentialStatProvider());
+        registerStatProvider(new MountPrimaryColorStatProvider());
+        registerStatProvider(new MountSecondaryColorStatProvider());
+        registerStatProvider(new MountEnergyStatProvider());
+
+        for (MountStat stat : MountStat.values()) {
+            registerStatProvider(new MountStatProvider(stat));
+        }
 
         // Territory stat providers
         registerStatProvider(new TerritoryNameStatProvider());

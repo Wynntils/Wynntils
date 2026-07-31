@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
+import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
@@ -16,12 +17,19 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
-import com.wynntils.handlers.chat.event.ChatMessageEvent;
+import com.wynntils.mc.event.SetLocalPlayerVehicleEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
+import com.wynntils.models.items.items.game.MountItem;
+import com.wynntils.models.mount.type.MountChoice;
+import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.overlays.MountEnergyOverlay;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.MouseUtils;
-import java.util.List;
+import com.wynntils.utils.type.RenderElementType;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.CameraType;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
@@ -34,31 +42,28 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class MountKeybindFeature extends Feature {
     private static final Identifier MOUNT_WHISTLE_ID = Identifier.fromNamespaceAndPath("wynntils", "mount.whistle");
     private static final SoundEvent MOUNT_WHISTLE_SOUND = SoundEvent.createVariableRangeEvent(MOUNT_WHISTLE_ID);
-    private static final int DEFAULT_SUMMON_DELAY_TICKS = 10;
-    private static final int RESTORE_TIMEOUT_TICKS = 40;
 
-    // TODO: Check if there are new error messages
-    private static final List<String> MOUNT_ERROR_MESSAGES = List.of(
-            "Your mount is scared to come out right now, too many mobs are nearby.",
-            "Your mount does not have enough room to be used!",
-            "You cannot interact with your horse at the moment.",
-            "You cannot use your horse here!",
-            "Your horse spawn was disabled (in vanish)!",
-            "You can not use a horse while in war.",
-            "You cannot use your vehicle here!");
+    // How long we wait before assuming mount failure
+    private static final int MOUNT_TIME_TICKS = 10;
 
     @RegisterKeyBind
-    private final KeyBind rideMountKeybind = KeyBindDefinition.RIDE_MOUNT.create(this::rideMount);
+    private final KeyBind rideMountKeybind = KeyBindDefinition.RIDE_MOUNT.create(this::tryRideMount);
 
-    private int prevItem = -1;
-    private boolean alreadySetPrevItem = false;
-    private boolean cancelMounting = false;
+    @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)
+    private final MountEnergyOverlay mountEnergyOverlay = new MountEnergyOverlay();
 
     @Persisted
     private final Config<Boolean> playWhistle = new Config<>(true);
 
     @Persisted
-    private final Config<Integer> summonDelayTicks = new Config<>(DEFAULT_SUMMON_DELAY_TICKS);
+    private final Config<MountChoice> mountChoice = new Config<>(MountChoice.FIRST);
+
+    @Persisted
+    private final Config<Boolean> switchToThirdPersonOnMount = new Config<>(false);
+
+    private CameraType prevCameraType = null;
+
+    private int summonTick = -1;
 
     public MountKeybindFeature() {
         super(new ProfileDefault.Builder()
@@ -70,21 +75,48 @@ public class MountKeybindFeature extends Feature {
     public void onUseItem(UseItemEvent event) {
         if (!Models.WorldState.onWorld()) return;
 
-        int mountInventorySlot = Models.Mount.findMountSlotNum();
-        if (mountInventorySlot == -1) return;
-        if (McUtils.inventory().selected != mountInventorySlot) return;
+        ItemStack itemStack = McUtils.inventory().getSelectedItem();
+        Optional<MountItem> mountItemOpt = Models.Item.asWynnItem(itemStack, MountItem.class);
+        if (mountItemOpt.isEmpty()) return;
+        if (!mountItemOpt.get().isSummonItem()) return;
 
-        rideMount();
-        event.setCanceled(true);
+        playSoundIfEnabled();
+
+        summonTick = McUtils.player().tickCount;
     }
 
     @SubscribeEvent
-    public void onChatReceived(ChatMessageEvent.Match e) {
-        cancelMounting = MOUNT_ERROR_MESSAGES.stream()
-                .anyMatch(msg -> e.getMessage().getString().contains(msg));
+    public void onTick(TickEvent event) {
+        if (summonTick == -1) return;
+
+        int currentTick = McUtils.player().tickCount;
+        if (currentTick - summonTick > MOUNT_TIME_TICKS) {
+            // Assume failed to mount
+            summonTick = -1;
+        }
     }
 
-    private void rideMount() {
+    @SubscribeEvent
+    public void onVehicleChange(SetLocalPlayerVehicleEvent event) {
+        if (!Models.WorldState.onWorld()) return;
+        if (!switchToThirdPersonOnMount.get()) return;
+
+        if (event.getVehicle() == null && prevCameraType != null) {
+            restoreCamera();
+        } else {
+            prevCameraType = McUtils.options().getCameraType();
+            McUtils.options().setCameraType(CameraType.THIRD_PERSON_BACK);
+        }
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        if (switchToThirdPersonOnMount.get() && prevCameraType != null) {
+            restoreCamera();
+        }
+    }
+
+    private void tryRideMount() {
         if (!Models.WorldState.onWorld()) return;
 
         LocalPlayer player = McUtils.player();
@@ -93,7 +125,7 @@ public class MountKeybindFeature extends Feature {
             return;
         }
 
-        int mountInventorySlot = Models.Mount.findMountSlotNum();
+        int mountInventorySlot = Models.Mount.findMountSlotNum(mountChoice.get());
         if (mountInventorySlot == -1) {
             postMountErrorMessage(RideMountStatus.NO_MOUNT);
             return;
@@ -103,41 +135,25 @@ public class MountKeybindFeature extends Feature {
             return;
         }
 
-        if (!alreadySetPrevItem) {
-            prevItem = McUtils.inventory().selected;
-            alreadySetPrevItem = true;
-        }
-        ItemStack previousSlotStack = McUtils.inventory().getItem(prevItem).copy();
-
-        if (playWhistle.get()) {
-            McUtils.playSoundAmbient(MOUNT_WHISTLE_SOUND);
-        }
+        playSoundIfEnabled();
         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(mountInventorySlot));
-        Managers.TickScheduler.scheduleLater(
-                () -> {
-                    // Re-assert selected slot packet before use to reduce desync.
-                    McUtils.sendPacket(new ServerboundSetCarriedItemPacket(mountInventorySlot));
-                    MouseUtils.sendRightClickInput();
-                    waitForMountAndRestore(prevItem, previousSlotStack, RESTORE_TIMEOUT_TICKS);
-                },
-                summonDelayTicks.get());
+        Managers.TickScheduler.scheduleNextTick(() -> {
+            MouseUtils.sendRightClickInput();
+            McUtils.sendPacket(new ServerboundSetCarriedItemPacket(McUtils.inventory().selected));
+            summonTick = McUtils.player().tickCount;
+        });
     }
 
-    private void waitForMountAndRestore(int previousSlot, ItemStack previousSlotStack, int ticksLeft) {
-        LocalPlayer player = McUtils.player();
-        if (player == null) return;
+    private void restoreCamera() {
+        McUtils.options().setCameraType(prevCameraType);
+        prevCameraType = null;
+    }
 
-        if (cancelMounting || player.getVehicle() != null || ticksLeft <= 0) {
-            // Restore original local slot contents to clear any client-side ghost stack.
-            McUtils.inventory().setItem(previousSlot, previousSlotStack.copy());
-            McUtils.sendPacket(new ServerboundSetCarriedItemPacket(previousSlot));
-            alreadySetPrevItem = false;
-            cancelMounting = false;
-            return;
+    private void playSoundIfEnabled() {
+        if (playWhistle.get()) {
+            // TODO: Add unique sounds for each mount type
+            McUtils.playSoundAmbient(MOUNT_WHISTLE_SOUND);
         }
-
-        Managers.TickScheduler.scheduleNextTick(
-                () -> waitForMountAndRestore(previousSlot, previousSlotStack, ticksLeft - 1));
     }
 
     private void postMountErrorMessage(RideMountStatus status) {

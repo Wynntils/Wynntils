@@ -174,8 +174,8 @@ public class ServersCommand extends Command {
 
     private MutableComponent getServerComponent(String server) {
         return Component.literal(server)
-                .withStyle(
-                        style -> style.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to switch to ")
+                .withStyle(style ->
+                        style.withHoverEvent(new HoverEvent.ShowText(Component.literal("Click to switch to ")
                                 .withStyle(ChatFormatting.GRAY)
                                 .append(Component.literal(server).withStyle(ChatFormatting.WHITE))
                                 .append(Component.literal("\n(Requires ")

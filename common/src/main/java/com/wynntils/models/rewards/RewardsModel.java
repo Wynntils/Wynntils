@@ -17,6 +17,7 @@ import com.wynntils.models.rewards.type.CharmInstance;
 import com.wynntils.models.rewards.type.RuneType;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
+import com.wynntils.models.rewards.type.WardType;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.util.List;
@@ -29,6 +30,7 @@ public final class RewardsModel extends Model {
 
     private List<AmplifierInfo> allAmplifierInfo;
     private List<RuneType> allRuneInfo;
+    private List<WardType> allWardInfo;
 
     public RewardsModel() {
         super(List.of());
@@ -41,6 +43,7 @@ public final class RewardsModel extends Model {
 
         allAmplifierInfo = buildAmplifierInfo();
         allRuneInfo = buildRuneInfo();
+        allWardInfo = buildWardInfo();
     }
 
     public CharmInfo getCharmInfoFromDisplayName(String name) {
@@ -67,6 +70,10 @@ public final class RewardsModel extends Model {
         return allRuneInfo;
     }
 
+    public List<WardType> getAllWardInfo() {
+        return allWardInfo;
+    }
+
     public ItemAnnotation fromCharmItemStack(
             ItemStack itemStack, StyledText name, String displayName, String type, boolean isUnidentified) {
         CharmInfo charmInfo = charmInfoRegistry.getFromDisplayName(displayName);
@@ -75,16 +82,19 @@ public final class RewardsModel extends Model {
             return null;
         }
 
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, charmInfo.getVariableStatsMap());
         if (isUnidentified) {
-            return new CharmItem(charmInfo, null);
+            return new CharmItem(charmInfo, null, result.currentPage());
         }
 
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, charmInfo.getVariableStatsMap());
         if (result.tier() != charmInfo.tier()) {
             WynntilsMod.warn("Tier for " + charmInfo.name() + " is reported as " + result.tier());
         }
 
-        return new CharmItem(charmInfo, CharmInstance.create(result.rerolls(), charmInfo, result.identifications()));
+        return new CharmItem(
+                charmInfo,
+                CharmInstance.create(result.rerolls(), charmInfo, result.identifications()),
+                result.currentPage());
     }
 
     public TomeItem fromTomeItemStack(ItemStack itemStack, StyledText name, String tomeName, boolean isUnidentified) {
@@ -108,10 +118,15 @@ public final class RewardsModel extends Model {
     }
 
     private List<AmplifierInfo> buildAmplifierInfo() {
-        return List.of(new AmplifierInfo(1, 5), new AmplifierInfo(2, 10), new AmplifierInfo(3, 15));
+        return List.of(
+                new AmplifierInfo(1, 5), new AmplifierInfo(2, 10), new AmplifierInfo(3, 15), new AmplifierInfo(4, 20));
     }
 
     private List<RuneType> buildRuneInfo() {
         return List.of(RuneType.values());
+    }
+
+    private List<WardType> buildWardInfo() {
+        return List.of(WardType.values());
     }
 }

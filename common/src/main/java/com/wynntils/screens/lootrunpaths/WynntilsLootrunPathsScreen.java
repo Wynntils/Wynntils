@@ -13,12 +13,12 @@ import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.ReloadButton;
 import com.wynntils.screens.lootrunpaths.widgets.LootrunPathButton;
-import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.lootrunpaths.event.LootrunPathCacheRefreshEvent;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -35,20 +35,27 @@ import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<LootrunPathInstance, LootrunPathButton> {
-    private WynntilsLootrunPathsScreen() {
+    private final Screen previousScreen;
+
+    private WynntilsLootrunPathsScreen(Screen previousScreen) {
         super(Component.translatable("screens.wynntils.lootruns.name"));
+        this.previousScreen = previousScreen;
 
         WynntilsMod.registerEventListener(this);
     }
 
     public static Screen create() {
-        return new WynntilsLootrunPathsScreen();
+        return new WynntilsLootrunPathsScreen(null);
+    }
+
+    public static Screen create(Screen previousScreen) {
+        return new WynntilsLootrunPathsScreen(previousScreen);
     }
 
     @Override
     public void onClose() {
         WynntilsMod.unregisterEventListener(this);
-        super.onClose();
+        McUtils.setScreen(previousScreen);
     }
 
     @SubscribeEvent
@@ -67,7 +74,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                 65 + offsetY,
                 Texture.BACK_ARROW_OFFSET.width() / 2,
                 Texture.BACK_ARROW_OFFSET.height(),
-                WynntilsMenuScreen.create()));
+                previousScreen));
 
         this.addRenderableWidget(new ReloadButton(
                 Texture.CONTENT_BOOK_BACKGROUND.width() - 21 + offsetX,

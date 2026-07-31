@@ -47,11 +47,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemCooldowns;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class CharacterStatsModel extends Model {
@@ -132,11 +132,23 @@ public final class CharacterStatsModel extends Model {
         return McUtils.player().position().y - endY;
     }
 
-    public CappedValue getItemCooldownTicks(ItemStack itemStack) {
+    public float getItemCooldown(DeltaTracker deltaTracker) {
+        ItemCooldowns.CooldownInstance cooldown = getActiveCooldown();
+        if (cooldown == null) return 0.0F;
+
         ItemCooldowns cooldowns = McUtils.player().getCooldowns();
-        Identifier identifier = cooldowns.getCooldownGroup(itemStack);
-        ItemCooldowns.CooldownInstance cooldown = cooldowns.cooldowns.get(identifier);
-        if (cooldown == null || cooldown.startTime >= cooldown.endTime) return CappedValue.EMPTY; // Sanity check
+
+        float total = cooldown.endTime() - cooldown.startTime();
+        float remaining = cooldown.endTime() - (cooldowns.tickCount + deltaTracker.getGameTimeDeltaPartialTick(true));
+
+        return Mth.clamp(remaining / total, 0.0F, 1.0F);
+    }
+
+    public CappedValue getItemCooldownTicks() {
+        ItemCooldowns.CooldownInstance cooldown = getActiveCooldown();
+        if (cooldown == null) return CappedValue.EMPTY;
+
+        ItemCooldowns cooldowns = McUtils.player().getCooldowns();
 
         int remaining = cooldown.endTime - cooldowns.tickCount;
         if (remaining <= 0) return CappedValue.EMPTY;
@@ -272,5 +284,19 @@ public final class CharacterStatsModel extends Model {
         // Profession experience segments are handled in ProfessionModel, from harvesting, as those values are far
         // more precise than the action bar segments.
         isProfessionExperience = true;
+    }
+
+    // Prior to 2.2 we would check the main hand item for the cooldown but for some reason
+    // the main hand item does not always have a cooldown anymore so we just use the first
+    // one in the cooldown map
+    private ItemCooldowns.CooldownInstance getActiveCooldown() {
+        if (InventoryUtils.getItemInHand().isEmpty()) return null;
+
+        ItemCooldowns cooldowns = McUtils.player().getCooldowns();
+        if (cooldowns.cooldowns.isEmpty()) return null;
+
+        ItemCooldowns.CooldownInstance cooldown =
+                cooldowns.cooldowns.values().iterator().next();
+        return cooldown.startTime() < cooldown.endTime() ? cooldown : null;
     }
 }

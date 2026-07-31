@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.container;
@@ -7,6 +7,7 @@ package com.wynntils.handlers.container;
 import com.google.common.collect.ImmutableList;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.mc.event.ContainerSetContentEvent;
@@ -14,6 +15,7 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.models.containers.Container;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
@@ -50,6 +52,8 @@ public final class ContainerQueryHandler extends Handler {
     private List<ItemStack> lastHandledItems = List.of();
     private int ticksRemaining;
     private int ticksUntilNextOperation = -1;
+    private int setSlotAccumulationTicks = -1;
+    private final Int2ObjectArrayMap<ItemStack> accumulatedChanges = new Int2ObjectArrayMap<>();
 
     public void runQuery(ContainerQueryStep firstStep) {
         if (currentStep != null) {
@@ -144,12 +148,46 @@ public final class ContainerQueryHandler extends Handler {
                     return;
                 }
 
+                // Step finished without opening a new container, advance if more steps exist
+                try {
+                    ContainerQueryStep nextStep = currentStep.getNextStep(currentContent);
+
+                    if (nextStep != null) {
+                        currentStep = nextStep;
+                        ticksUntilNextOperation = currentStep.getNextOperationDelayTicks();
+                        return;
+                    }
+                } catch (ContainerQueryException t) {
+                    McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
+                    raiseError("Error while processing content for " + firstStepName + ": " + t.getMessage());
+                    return;
+                }
+
                 // We're done
                 endQuery();
                 McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
                 // Start next query in queue, if any
                 if (!queuedQueries.isEmpty()) {
                     runQuery(queuedQueries.pop());
+                }
+            }
+
+            return;
+        }
+
+        if (setSlotAccumulationTicks >= 0) {
+            setSlotAccumulationTicks--;
+
+            if (setSlotAccumulationTicks == 0) {
+                try {
+                    processContainer(currentContent);
+                } catch (Throwable t) {
+                    McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
+                    raiseError("Error while processing accumulated set slots for " + firstStepName + ": "
+                            + t.getMessage());
+                } finally {
+                    accumulatedChanges.clear();
+                    setSlotAccumulationTicks = -1;
                 }
             }
 
@@ -169,7 +207,8 @@ public final class ContainerQueryHandler extends Handler {
         // Are we processing a query?
         if (currentStep == null) return;
 
-        if (currentStep.verifyContainer(e.getTitle(), e.getMenuType())) {
+        Container container = Models.Container.getCurrentContainer();
+        if (container != null && currentStep.verifyContainer(container.getClass())) {
             containerId = e.getContainerId();
             currentTitle = e.getTitle();
             currentMenuType = e.getMenuType();
@@ -201,8 +240,9 @@ public final class ContainerQueryHandler extends Handler {
         if (e.getContainerId() == 0) return;
 
         if (containerId == NO_CONTAINER) {
-            // We have not registered a MenuOpenedEvent. Assume this means that this is the
-            // content of another container, so just pass it on
+            // MenuOpenedEvent.Pre should have already set the containerId if we were expecting a container.
+            // If it's still NO_CONTAINER here, we're not actively querying a container.
+            // This is the content of another container, so just pass it on
             return;
         }
 
@@ -214,6 +254,12 @@ public final class ContainerQueryHandler extends Handler {
 
         // We already processed the current step and are waiting to execute it
         if (ticksUntilNextOperation >= 0) return;
+
+        // If we were accumulating set slot changes, a full content update overrides them
+        if (setSlotAccumulationTicks >= 0) {
+            accumulatedChanges.clear();
+            setSlotAccumulationTicks = -1;
+        }
 
         if (containerId == lastHandledContentId && ItemUtils.isItemListsEqual(e.getItems(), lastHandledItems)) {
             // After opening a new container, Wynncraft sometimes sends contents twice. Ignore this.
@@ -227,6 +273,16 @@ public final class ContainerQueryHandler extends Handler {
         currentContent =
                 new ContainerContent(ImmutableList.copyOf(e.getItems()), currentTitle, currentMenuType, containerId);
         resetTimer();
+
+        // If this step uses set slot accumulation, treat SET_CONTENT as the start of accumulation
+        // rather than processing immediately. The server sometimes sends a SET_CONTENT packet
+        // from the previous page if the backround of the container changes.
+        int accumulationTicks = currentStep.getSetSlotAccumulationTicks();
+        if (accumulationTicks > 0) {
+            setSlotAccumulationTicks = accumulationTicks;
+            e.setCanceled(true);
+            return;
+        }
 
         try {
             // Now actually process this container
@@ -256,8 +312,9 @@ public final class ContainerQueryHandler extends Handler {
         if (e.getContainerId() == -1) return;
 
         if (containerId == NO_CONTAINER) {
-            // We have not registered a MenuOpenedEvent. Assume this means that this is the
-            // content of another container, so just pass it on
+            // MenuOpenedEvent.Pre should have already set the containerId if we were expecting a container.
+            // If it's still NO_CONTAINER here, we're not actively querying a container.
+            // This is the content of another container, so just pass it on
             return;
         }
 
@@ -276,12 +333,28 @@ public final class ContainerQueryHandler extends Handler {
         items.set(e.getSlot(), e.getItemStack());
         currentContent = new ContainerContent(ImmutableList.copyOf(items), currentTitle, currentMenuType, containerId);
 
+        // If we're already accumulating set slot changes, just add to the batch
+        if (setSlotAccumulationTicks >= 0) {
+            accumulatedChanges.put(e.getSlot(), e.getItemStack());
+            resetTimer();
+            e.setCanceled(true);
+            return;
+        }
+
+        // Check if this step wants delayed accumulation
+        int accumulationTicks = currentStep.getSetSlotAccumulationTicks();
+        if (accumulationTicks > 0) {
+            setSlotAccumulationTicks = accumulationTicks;
+            accumulatedChanges.put(e.getSlot(), e.getItemStack());
+            resetTimer();
+            e.setCanceled(true);
+            return;
+        }
+
         resetTimer();
 
         try {
-            // Now actually process this container
-
-            // Create a map of the changes
+            // Normal immediate processing (identical to old behavior)
             Int2ObjectArrayMap<ItemStack> changeMap = new Int2ObjectArrayMap<>();
             changeMap.put(e.getSlot(), e.getItemStack());
 
@@ -305,7 +378,7 @@ public final class ContainerQueryHandler extends Handler {
         if (nextStep != null) {
             // Go on and query another container
             currentStep = nextStep;
-            ticksUntilNextOperation = NEXT_OPERATION_DELAY_TICKS;
+            ticksUntilNextOperation = currentStep.getNextOperationDelayTicks();
         } else {
             // We're done
             endQuery();
@@ -339,6 +412,8 @@ public final class ContainerQueryHandler extends Handler {
         currentStep = null;
         currentContent = null;
         ticksUntilNextOperation = -1;
+        setSlotAccumulationTicks = -1;
+        accumulatedChanges.clear();
     }
 
     private void resetTimer() {

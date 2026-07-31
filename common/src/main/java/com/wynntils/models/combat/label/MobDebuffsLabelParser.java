@@ -21,7 +21,7 @@ public class MobDebuffsLabelParser implements LabelParser<MobDebuffsLabelInfo> {
             .map(d -> String.valueOf(d.symbol()))
             .collect(Collectors.joining());
     private static final Pattern DEBUFF_PATTERN = Pattern.compile("§(?:#?[a-z0-9]{1,8})(?<symbol>[" + DEBUFF_SYMBOLS
-            + "])(?:\\s*§7(?<value>\\d+(?:\\.\\d+)?)(?<unit>%|k|m|b)?)?");
+            + "])(?:\\s*§7(?<value>\\d+(?:\\.\\d+)?)(?<unit>%|k|m|b|s)?)?");
 
     @Override
     public MobDebuffsLabelInfo getInfo(StyledText label, Location location, Entity entity) {

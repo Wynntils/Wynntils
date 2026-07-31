@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.functions.arguments;
@@ -10,12 +10,16 @@ public class ListArgument<T> extends Argument<List> {
     private final Class<T> innerType;
 
     public ListArgument(String name, Class<T> innerType) {
+        this(name, innerType, true);
+    }
+
+    protected ListArgument(String name, Class<T> innerType, boolean check) {
         super(name, List.class, null, false);
-
-        if (!SUPPORTED_ARGUMENT_TYPES.contains(innerType)) {
-            throw new IllegalArgumentException("Unsupported inner argument type: " + innerType);
+        if (check) {
+            if (!SUPPORTED_ARGUMENT_TYPES.contains(innerType)) {
+                throw new IllegalArgumentException("Unsupported inner argument type: " + innerType);
+            }
         }
-
         this.innerType = innerType;
     }
 

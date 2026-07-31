@@ -6,6 +6,7 @@ package com.wynntils.features.players;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.features.ExternalConfigurationScreen;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
@@ -14,9 +15,11 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.hades.protocol.enums.SocialType;
+import com.wynntils.screens.playerviewer.GearSharingSettingsScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 @ConfigCategory(Category.PLAYERS)
-public class HadesFeature extends Feature {
+public class HadesFeature extends Feature implements ExternalConfigurationScreen {
     @Persisted
     public final Config<Boolean> getOtherPlayerInfo = new Config<>(true);
 
@@ -67,5 +70,10 @@ public class HadesFeature extends Feature {
                 }
             }
         }
+    }
+
+    @Override
+    public Screen getExternalConfigurationScreen(Screen previousScreen) {
+        return GearSharingSettingsScreen.create(previousScreen);
     }
 }

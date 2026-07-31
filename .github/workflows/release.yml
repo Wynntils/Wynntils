@@ -16,12 +16,12 @@ jobs:
       skipped: ${{ steps.version.outputs.skipped }}
       changelog: ${{ steps.version.outputs.changelog }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.PRIVATE_TOKEN }}
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 16
       - run: |
@@ -48,7 +48,7 @@ jobs:
           output-file: false
 
       - name: Upload version information
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build
           path: build.gradle
@@ -58,33 +58,33 @@ jobs:
     needs: [ set-version ] # Build needs the new version number
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Cache Gradle data
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .gradle
           key: ${{ runner.os }}-gradle--${{ hashFiles('**/settings.gradle', '**/gradle.properties') }}
 
-      - uses: actions/download-artifact@v4 # Download version information from changelog
+      - uses: actions/download-artifact@v8 # Download version information from changelog
         with:
           name: build
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: "temurin"
           java-version: 21
           cache: "gradle"
 
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Build with Gradle
         run: ./gradlew buildDependents -x spotlessCheck -x test
 
       - name: Upload build
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build
           path: |
@@ -100,14 +100,14 @@ jobs:
     needs: [ build, set-version ]
     steps:
       - name: Checkout release branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.PRIVATE_TOKEN }}
           ref: release
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: build
 
@@ -231,14 +231,14 @@ jobs:
     needs: [build, set-version]
     steps:
       - name: Checkout release branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.PRIVATE_TOKEN }}
           ref: release
           
       - name: Download build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: build
 

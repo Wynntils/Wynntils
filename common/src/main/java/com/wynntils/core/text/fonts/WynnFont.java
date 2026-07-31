@@ -133,6 +133,20 @@ public final class WynnFont {
         return Component.literal(glyph).withStyle(style -> style.withFont(entry.font()));
     }
 
+    public static <T extends RegisteredFont> String toGlyph(String glyphKey, Class<T> fontClass) {
+        FontEntry entry = Managers.Font.getFontEntry(fontClass);
+        if (entry == null) {
+            return glyphKey;
+        }
+
+        String glyph = entry.glyphs().get(glyphKey);
+        if (glyph == null) {
+            return glyphKey;
+        }
+
+        return glyph;
+    }
+
     private static FontEntry getFancyFont() {
         if (cachedFancyFont != null) {
             return cachedFancyFont;

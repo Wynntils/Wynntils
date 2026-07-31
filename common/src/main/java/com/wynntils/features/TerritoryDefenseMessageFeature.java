@@ -78,7 +78,7 @@ public class TerritoryDefenseMessageFeature extends Feature {
             // remove all expired messages, then send the first one
             QueuedTerritory queuedTerritory = queuedTerritories.poll();
             if (System.currentTimeMillis() - queuedTerritory.timestamp() < MESSAGE_TIMEOUT) {
-                Handlers.Command.sendCommandImmediately(DEFENSE_MESSAGE.formatted(
+                Handlers.Command.queueCommand(DEFENSE_MESSAGE.formatted(
                         queuedTerritory.territory(), queuedTerritory.defense().getAsString()));
                 break;
             }

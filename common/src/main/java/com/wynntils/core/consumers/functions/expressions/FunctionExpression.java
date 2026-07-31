@@ -8,7 +8,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.consumers.functions.arguments.parser.ArgumentParser;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.List;
 import java.util.Optional;
@@ -58,14 +57,14 @@ public final class FunctionExpression extends Expression {
     }
 
     @Override
-    public ErrorOr<StyledText> calculateFormattedStyledText() {
+    public ErrorOr<String> calculateFormattedString() {
         ErrorOr<FunctionArguments> arguments = getArguments();
         if (arguments.hasError()) {
             return ErrorOr.error(arguments.getError());
         }
 
         return ErrorOr.of(
-                Managers.Function.getStyledTextFunctionValue(function, arguments.getValue(), formatted, decimals));
+                Managers.Function.getStringFunctionValue(function, arguments.getValue(), formatted, decimals));
     }
 
     private ErrorOr<FunctionArguments> getArguments() {

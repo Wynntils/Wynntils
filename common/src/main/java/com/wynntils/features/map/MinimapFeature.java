@@ -14,7 +14,7 @@ import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
-import com.wynntils.overlays.minimap.CoordinateOverlay;
+import com.wynntils.overlays.minimap.CoordinatesOverlay;
 import com.wynntils.overlays.minimap.MinimapOverlay;
 import com.wynntils.overlays.minimap.TerritoryOverlay;
 import com.wynntils.utils.type.RenderElementType;
@@ -25,7 +25,7 @@ public class MinimapFeature extends Feature {
     public final MinimapOverlay minimapOverlay = new MinimapOverlay();
 
     @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)
-    private final Overlay coordinatesOverlay = new CoordinateOverlay();
+    private final Overlay coordinatesOverlay = new CoordinatesOverlay();
 
     @RegisterOverlay
     private final Overlay territoryOverlay = new TerritoryOverlay();

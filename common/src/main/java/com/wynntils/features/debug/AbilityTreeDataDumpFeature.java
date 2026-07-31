@@ -5,6 +5,7 @@
 package com.wynntils.features.debug;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -18,6 +19,9 @@ import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -49,18 +53,39 @@ public class AbilityTreeDataDumpFeature extends Feature {
         McUtils.player().closeContainer();
 
         // Wait for the container to close
-        Managers.TickScheduler.scheduleNextTick(
-                () -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.dumpAbilityTree(this::saveToDisk));
+        Managers.TickScheduler.scheduleNextTick(() -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.dumpAbilityTree(
+                this::saveToDisk, WynntilsMod::info, error -> {}, WynntilsMod::info));
     }
 
     private void saveToDisk(AbilityTreeInfo abilityTreeInfo) {
-        // Save the dump to a file
+        File expandedJsonFile = new File(SAVE_FOLDER, "abilities_v2_expanded.json");
+        File minifiedJsonFile = new File(SAVE_FOLDER, "abilities_v2.json");
+
+        JsonObject root = new JsonObject();
+        if (expandedJsonFile.exists()) {
+            try (FileReader reader = new FileReader(expandedJsonFile, StandardCharsets.UTF_8)) {
+                JsonElement existing = Managers.Json.GSON.fromJson(reader, JsonElement.class);
+                if (existing != null && existing.isJsonObject()) {
+                    root = existing.getAsJsonObject();
+                }
+            } catch (Exception e) {
+                WynntilsMod.error("Failed to read existing abilities file", e);
+            }
+        }
+
+        String classKey = Models.Character.getClassType().getName().toLowerCase(Locale.ROOT);
         JsonElement element = Managers.Json.GSON.toJsonTree(abilityTreeInfo);
+        root.add(classKey, element);
 
-        String fileName = Models.Character.getClassType().getName().toLowerCase(Locale.ROOT) + "_abilities.json";
-        File jsonFile = new File(SAVE_FOLDER, fileName);
-        Managers.Json.savePreciousJson(jsonFile, element.getAsJsonObject());
+        Managers.Json.savePreciousJson(expandedJsonFile, root);
 
-        McUtils.sendMessageToClient(Component.literal("Saved ability tree dump to " + jsonFile.getAbsolutePath()));
+        try (FileWriter writer = new FileWriter(minifiedJsonFile, StandardCharsets.UTF_8)) {
+            writer.write(root.toString());
+        } catch (Exception e) {
+            WynntilsMod.error("Failed to save minified abilities file", e);
+        }
+
+        McUtils.sendWynntilsPrefixMessage(Component.literal(
+                "Saved ability tree dump for " + classKey + " to " + expandedJsonFile.getAbsolutePath()));
     }
 }

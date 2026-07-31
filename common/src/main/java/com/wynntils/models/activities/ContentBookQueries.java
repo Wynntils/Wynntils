@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities;
@@ -16,6 +16,7 @@ import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentVerification;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityType;
+import com.wynntils.models.containers.containers.ContentBookContainer;
 import com.wynntils.models.items.items.gui.ActivityItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -93,7 +94,7 @@ public class ContentBookQueries {
 
                 // Open content book
                 .then(QueryStep.useItemInHotbar(InventoryUtils.CONTENT_BOOK_SLOT_NUM)
-                        .expectContainerTitle(Models.Activity.CONTENT_BOOK_TITLE))
+                        .expectContainer(ContentBookContainer.class))
 
                 // Save filter state, and set it correctly
                 .execute(() -> {
@@ -290,7 +291,7 @@ public class ContentBookQueries {
 
                 // Open compass/character menu
                 .then(QueryStep.useItemInHotbar(InventoryUtils.CONTENT_BOOK_SLOT_NUM)
-                        .expectContainerTitle(Models.Activity.CONTENT_BOOK_TITLE))
+                        .expectContainer(ContentBookContainer.class))
 
                 // Save filter state, and set it correctly
                 .execute(() -> {

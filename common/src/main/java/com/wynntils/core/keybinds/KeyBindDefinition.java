@@ -209,6 +209,14 @@ public record KeyBindDefinition(
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
             true);
+
+    public static final KeyBindDefinition TEXTURE_RECORDER = register(
+            "textureRecorder",
+            "Texture Recorder",
+            Managers.KeyBind.DEBUG_CATEGORY,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_UNKNOWN,
+            true);
     // endregion
 
     // region Inventory
@@ -464,6 +472,14 @@ public record KeyBindDefinition(
             GLFW.GLFW_KEY_UNKNOWN,
             true);
 
+    public static final KeyBindDefinition OPEN_EMOTE_WHEEL = register(
+            "emoteWheel",
+            "Emote Wheel",
+            Managers.KeyBind.UI_CATEGORY,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_UNKNOWN,
+            true);
+
     public static final KeyBindDefinition OPEN_MISC_GUIDE = register(
             "openMiscGuide",
             "Open Misc Guide",
@@ -493,6 +509,14 @@ public record KeyBindDefinition(
     public static final KeyBindDefinition TOGGLE_SILENCER = register(
             "toggleSilencer",
             "Toggle Silencer",
+            Managers.KeyBind.UTILITIES_CATEGORY,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_UNKNOWN,
+            true);
+
+    public static final KeyBindDefinition TOGGLE_DIALOGUE_AUTO_PROGRESS = register(
+            "toggleDialogueAutoProgress",
+            "Toggle Dialogue Auto Progress",
             Managers.KeyBind.UTILITIES_CATEGORY,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,

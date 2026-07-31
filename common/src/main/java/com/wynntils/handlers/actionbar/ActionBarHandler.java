@@ -38,6 +38,15 @@ public final class ActionBarHandler extends Handler {
     public void onActionBarUpdate(SystemMessageEvent.GameInfoReceivedEvent event) {
         StyledText packetText = StyledText.fromComponent(event.getMessage());
 
+        if (packetText.isEmpty()) {
+            lastParsedActionBarText = packetText;
+            lastMatchedSegments = List.of();
+
+            WynntilsMod.postEvent(new ActionBarUpdatedEvent(lastMatchedSegments));
+
+            return;
+        }
+
         // Separate the action bar text from the coordinates
         StyledText actionBarText = packetText.iterate((part, changes) -> {
             if (part.getPartStyle().getFont().equals(COORDINATES_FONT)) {
@@ -48,7 +57,10 @@ public final class ActionBarHandler extends Handler {
         });
 
         if (actionBarText.isEmpty()) {
-            WynntilsMod.warn("Failed to find action bar text in packet: " + packetText.getString());
+            if (WynntilsMod.isDevelopmentBuild() || WynntilsMod.isDevelopmentEnvironment()) {
+                WynntilsMod.warn("Failed to find action bar text in packet: " + packetText.getString());
+            }
+
             return;
         }
 

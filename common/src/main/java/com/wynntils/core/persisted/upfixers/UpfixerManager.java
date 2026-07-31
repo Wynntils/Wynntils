@@ -14,6 +14,7 @@ import com.wynntils.core.persisted.upfixers.config.BeaconBeamToWorldMarkersUpfix
 import com.wynntils.core.persisted.upfixers.config.ChatRedirectHorseToMountUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CombatXpGainToXpGainUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ContentTrackerTextOverlayUpfixer;
+import com.wynntils.core.persisted.upfixers.config.CoordinateOverlayToCoordinatesOverlayUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomBankQuickJumpsBankNameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomBankQuickJumpsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomCommandKeybindSlashStartUpfixer;
@@ -25,6 +26,7 @@ import com.wynntils.core.persisted.upfixers.config.GameBarOverlayMoveUpfixer;
 import com.wynntils.core.persisted.upfixers.config.HideDamageLabelsToHideLabelsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.HorseMountFeatureToMountKeybindFeatureUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ItemHighlightFeatureCosmeticToStoreUpfixer;
+import com.wynntils.core.persisted.upfixers.config.ItemStatInfoConfigRenameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MapToMainMapRenamedConfigsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MaxItensityToMaxIntensityUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MobTotemTimerOverlayFeatureToBonusTotemTimerOverlayFeature;
@@ -39,6 +41,8 @@ import com.wynntils.core.persisted.upfixers.config.QuestBookToContentRenamedConf
 import com.wynntils.core.persisted.upfixers.config.QuickCastTimingsToMillisecondsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.SacredSurgeToHolyPowerUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ShowAdditonalTextAboveToShowAdditionalTextAboveUpfixer;
+import com.wynntils.core.persisted.upfixers.config.SkillPointLoadoutsToBuildLoadoutsUpfixer;
+import com.wynntils.core.persisted.upfixers.config.TelemetryFeatureToWynntilsTelemetryFeatureUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteAndOverlayMovedToCommonFeature;
 import com.wynntils.core.persisted.upfixers.config.TowerAuraVignetteNameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.TradeMarketAutoOpenChatToTradeMarketQuickSearchUpfixer;
@@ -50,6 +54,7 @@ import com.wynntils.core.persisted.upfixers.config.WynntilsContentBookReplaceToS
 import com.wynntils.core.persisted.upfixers.storage.BankPageNameToBankPagePropertyUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankToAccountBankUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.DownloadSourceStringToEnumUpfixer;
+import com.wynntils.core.persisted.upfixers.storage.LoadoutMigrationUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.RemoveSetGearTierUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.UpdateChangelogToModelUpfixer;
 import java.util.ArrayList;
@@ -100,6 +105,10 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new ContentTrackerTextOverlayUpfixer());
         registerConfigUpfixer(new HorseMountFeatureToMountKeybindFeatureUpfixer());
         registerConfigUpfixer(new ChatRedirectHorseToMountUpfixer());
+        registerConfigUpfixer(new ItemStatInfoConfigRenameUpfixer());
+        registerConfigUpfixer(new TelemetryFeatureToWynntilsTelemetryFeatureUpfixer());
+        registerConfigUpfixer(new CoordinateOverlayToCoordinatesOverlayUpfixer());
+        registerConfigUpfixer(new SkillPointLoadoutsToBuildLoadoutsUpfixer());
         registerConfigUpfixer(new WorldMarkersRenameUpfixer());
         registerConfigUpfixer(new WorldMarkersDistanceConfigRenameUpfixer());
         registerConfigUpfixer(new BeaconBeamToWorldMarkersUpfixer());
@@ -111,6 +120,7 @@ public class UpfixerManager extends Manager {
         registerStorageUpfixer(new BankPageNameToBankPagePropertyUpfixer());
         registerStorageUpfixer(new DownloadSourceStringToEnumUpfixer());
         registerStorageUpfixer(new RemoveSetGearTierUpfixer());
+        registerStorageUpfixer(new LoadoutMigrationUpfixer());
     }
 
     private void registerConfigUpfixer(Upfixer upfixer) {

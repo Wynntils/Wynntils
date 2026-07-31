@@ -5,6 +5,7 @@
 package com.wynntils.screens.territorymanagement;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -15,6 +16,7 @@ import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.handlers.wrappedscreen.WrappedScreen;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
 import com.wynntils.models.items.items.gui.TerritoryItem;
+import com.wynntils.models.territories.type.TerritoryUpgrade;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.screens.base.widgets.ItemFilterUIButton;
@@ -44,6 +46,7 @@ import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -54,6 +57,8 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
+// TODO: Reimplement map screen version
+// public class TerritoryManagementScreen extends AbstractMapScreen implements WrappedScreen {
 public class TerritoryManagementScreen extends WynntilsScreen implements WrappedScreen {
     // Constants
     // The render area is the area where the territories are rendered
@@ -65,6 +70,20 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
     private static final int APPLY_BUTTON_SLOT = 0;
     private static final int LOADOUT_BUTTON_SLOT = 36;
     private static final int QUICK_FILTER_WIDTH = 150;
+    private static final Set<TerritoryUpgrade> DEFENSE_UPGRADES = Set.of(
+            TerritoryUpgrade.DAMAGE,
+            TerritoryUpgrade.ATTACK,
+            TerritoryUpgrade.HEALTH,
+            TerritoryUpgrade.DEFENCE,
+            TerritoryUpgrade.STRONGER_MINIONS,
+            TerritoryUpgrade.TOWER_MULTI_ATTACKS,
+            TerritoryUpgrade.TOWER_AURA,
+            TerritoryUpgrade.TOWER_VOLLEY);
+
+    // Map mode
+    //    private static TerritoryInfoType infoType = TerritoryInfoType.DEFENSE;
+    //    private boolean mapMode = false;
+    //    private MapButton infoTypeButton;
 
     // Territory items
     private List<Pair<ItemStack, TerritoryItem>> territoryItems = new ArrayList<>();
@@ -85,10 +104,20 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
     private final TerritoryManagementHolder holder;
 
     public TerritoryManagementScreen(WrappedScreenInfo wrappedScreenInfo, TerritoryManagementHolder holder) {
+        //        super();
         super(Component.literal("Territory Management"));
         this.wrappedScreenInfo = wrappedScreenInfo;
         this.holder = holder;
     }
+
+    //    public void setMapMode(boolean mapMode) {
+    //        this.mapMode = mapMode;
+    //    }
+    //
+    //    public void setMapPosition(float centerX, float centerZ, float zoomLevel) {
+    //        this.setZoomLevel(zoomLevel);
+    //        this.updateMapCenter(centerX, centerZ);
+    //    }
 
     @Override
     public WrappedScreenInfo getWrappedScreenInfo() {
@@ -97,6 +126,32 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
 
     @Override
     protected void doInit() {
+        super.doInit();
+
+        //        if (!mapMode) {
+        initListScreen();
+        //        } else {
+        //            initMapScreen();
+        //        }
+
+        this.addRenderableOnly(new GuildOverallProductionWidget(
+                //                mapMode ? (int) SCREEN_SIDE_OFFSET + 10 : getRenderX() - 190,
+                //                mapMode ? (int) SCREEN_SIDE_OFFSET + 35 : getRenderY() + 10,
+                getRenderX() - 190, getRenderY() + 10, 200, 150, holder));
+
+        //        if (firstInit) {
+        //            // When outside the main map, center to the middle of the map
+        //            if (!isPlayerInsideMainArea()) {
+        //                centerMapOnWorld();
+        //            }
+        //
+        //            firstInit = false;
+        //        }
+
+        updateTerritoryItems();
+    }
+
+    private void initListScreen() {
         ItemSearchWidget oldWidget = itemSearchWidget;
 
         itemSearchWidget = new ItemSearchWidget(
@@ -127,9 +182,6 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 Texture.TERRITORY_MANAGEMENT_BACKGROUND.width(),
                 110,
                 holder));
-
-        this.addRenderableOnly(
-                new GuildOverallProductionWidget(getRenderX() - 190, getRenderY() + 10, 200, 150, holder));
 
         // Back button in the sidebar
         this.addRenderableWidget(new BasicTexturedButton(
@@ -164,7 +216,10 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                                         "feature.wynntils.customTerritoryManagementScreen.disableTerritoryProductionTooltip")
                                 .withStyle(ChatFormatting.GRAY, ChatFormatting.BOLD),
                         Component.translatable(
-                                        "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper")
+                                        "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper1")
+                                .withStyle(ChatFormatting.GRAY),
+                        Component.translatable(
+                                        "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper2")
                                 .withStyle(ChatFormatting.GRAY)),
                 false));
 
@@ -283,14 +338,135 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 QUICK_FILTER_WIDTH,
                 10,
                 this));
+    }
 
-        updateTerritoryItems();
+    private void initMapScreen() {
+        //        addMapButton(new MapButton(
+        //                Texture.ARROW_LEFT_ICON,
+        //                (button) -> ContainerUtils.clickOnSlot(
+        //                        BACK_BUTTON_SLOT,
+        //                        wrappedScreenInfo.containerId(),
+        //                        button,
+        //                        wrappedScreenInfo.containerMenu().getItems()),
+        //                List.of(Component.literal("[>] ")
+        //                        .withStyle(ChatFormatting.GRAY)
+        //                        .append(Component.translatable("gui.back")))));
+        //        addMapButton(new MapButton(
+        //                Texture.DEFENSE_FILTER_ICON,
+        //                (button) -> {
+        //                    Storage<Boolean> screenTerritoryProductionTooltip = Managers.Feature.getFeatureInstance(
+        //                            CustomTerritoryManagementScreenFeature.class)
+        //                            .screenTerritoryProductionTooltip;
+        //                    screenTerritoryProductionTooltip.store(!screenTerritoryProductionTooltip.get());
+        //                },
+        //                List.of(
+        //                        Component.literal("[>] ")
+        //                                .withStyle(ChatFormatting.BLUE)
+        //                                .append(
+        //                                        Component.translatable(
+        //
+        // "feature.wynntils.customTerritoryManagementScreen.disableTerritoryProductionTooltip")),
+        //                        Component.translatable(
+        //
+        // "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper1")
+        //                                .withStyle(ChatFormatting.GRAY),
+        //                        Component.translatable(
+        //
+        // "feature.wynntils.customTerritoryManagementScreen.territoryProductionHelper2")
+        //                                .withStyle(ChatFormatting.GRAY))));
+        //        infoTypeButton = new MapButton(
+        //                Texture.OVERLAY_EXTRA_ICON,
+        //                (b) -> {
+        //                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        //                        setInfoType(infoType.getNext());
+        //                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        //                        setInfoType(infoType.getPrevious());
+        //                    }
+        //                },
+        //                getCompleteInfoTypeTooltip());
+        //        addMapButton(infoTypeButton);
+        //
+        //        if (!holder.isSelectionMode()) {
+        //            addMapButton(new MapButton(
+        //                    Texture.TERRITORY_LOADOUT,
+        //                    (button) -> ContainerUtils.clickOnSlot(
+        //                            LOADOUT_BUTTON_SLOT,
+        //                            wrappedScreenInfo.containerId(),
+        //                            button,
+        //                            wrappedScreenInfo.containerMenu().getItems()),
+        //                    List.of(
+        //                            Component.literal("[>] ")
+        //                                    .withStyle(ChatFormatting.GOLD)
+        //                                    .append(Component.translatable(
+        //                                            "feature.wynntils.customTerritoryManagementScreen.loadouts")),
+        //                            Component.translatable(
+        //
+        // "feature.wynntils.customTerritoryManagementScreen.loadouts.description")
+        //                                    .withStyle(ChatFormatting.GRAY),
+        //                            Component.translatable(
+        //
+        // "feature.wynntils.customTerritoryManagementScreen.loadouts.clickToOpen")
+        //                                    .withStyle(ChatFormatting.GREEN))));
+        //        } else {
+        //            addMapButton(new MapButton(
+        //                    Texture.CHECKMARK_YELLOW,
+        //                    (button) -> {
+        //                        holder.saveMapPos();
+        //                        ContainerUtils.clickOnSlot(
+        //                                APPLY_BUTTON_SLOT,
+        //                                wrappedScreenInfo.containerId(),
+        //                                button,
+        //                                wrappedScreenInfo.containerMenu().getItems());
+        //                    },
+        //                    List.of(
+        //                            Component.literal("[>] ")
+        //                                    .withStyle(ChatFormatting.GOLD)
+        //                                    .append(Component.translatable(
+        //
+        // "feature.wynntils.customTerritoryManagementScreen.applySelection")),
+        //                            Component.translatable(
+        //
+        // "feature.wynntils.customTerritoryManagementScreen.applySelection.description")
+        //                                    .withStyle(ChatFormatting.GRAY),
+        //                            Component.translatable(
+        //
+        // "feature.wynntils.customTerritoryManagementScreen.applySelection.clickToConfirm")
+        //                                    .withStyle(ChatFormatting.GREEN))));
+        //        }
+        //
+        //        addMapButton(new MapButton(
+        //                Texture.HELP_ICON,
+        //                (b) -> {},
+        //                List.of(
+        //                        Component.literal("[>] ")
+        //                                .withStyle(ChatFormatting.YELLOW)
+        //                                .append(Component.translatable(
+        //                                        "feature.wynntils.customTerritoryManagementScreen.help.name")),
+        //                        Component.literal("- ")
+        //                                .withStyle(ChatFormatting.GRAY)
+        //                                .append(Component.translatable(
+        //
+        // "feature.wynntils.customTerritoryManagementScreen.help.description1")),
+        //                        Component.literal("- ")
+        //                                .withStyle(ChatFormatting.GRAY)
+        //                                .append(Component.translatable(
+        //
+        // "feature.wynntils.customTerritoryManagementScreen.help.description2")))));
     }
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        //        if (!this.mapMode) {
+        renderListScreen(guiGraphics, mouseX, mouseY, partialTick);
+        //        } else {
+        //            renderMapScreen(guiGraphics, mouseX, mouseY, partialTick);
+        //        }
 
+        // Render widget tooltip
+        renderTooltip(guiGraphics, mouseX, mouseY);
+    }
+
+    private void renderListScreen(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Screen background
         RenderUtils.drawTexturedRect(guiGraphics, Texture.TERRITORY_MANAGEMENT_BACKGROUND, getRenderX(), getRenderY());
         RenderUtils.drawTexturedRect(guiGraphics, Texture.TERRITORY_SIDEBAR, getRenderX() - 22, getRenderY());
@@ -315,9 +491,50 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
 
         // Render quick filters
         renderQuickFiltersAndSorts(guiGraphics, mouseX, mouseY, partialTick);
+    }
 
-        // Render widget tooltip
-        renderTooltip(guiGraphics, mouseX, mouseY);
+    private void renderMapScreen(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        //        renderMap(guiGraphics);
+        //
+        //        RenderUtils.enableScissor(
+        //                guiGraphics,
+        //                (int) (renderX + renderedBorderXOffset),
+        //                (int) (renderY + renderedBorderYOffset),
+        //                (int) mapWidth,
+        //                (int) mapHeight);
+        //
+        //        renderPois(guiGraphics, mouseX, mouseY);
+        //
+        //        renderCursor(
+        //                guiGraphics,
+        //                1.5f,
+        //                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
+        //                        .pointerColor
+        //                        .get(),
+        //                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
+        //                        .pointerType
+        //                        .get());
+        //
+        //        RenderUtils.disableScissor(guiGraphics);
+        //
+        //        renderMapBorder(guiGraphics);
+        //
+        //        renderCoordinates(guiGraphics, mouseX, mouseY);
+        //
+        //        renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
+        //
+        //        renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
+        //
+        //        renderHoveredTerritoryInfo(guiGraphics);
+        //
+        //        if (isPanning) {
+        //            guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
+        //        } else if (holdingZoomHandle) {
+        //            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        //        } else if ((this.hovered != null && !(this.hovered instanceof TerritoryPoi))
+        //                || isMouseOverZoomHandle(mouseX, mouseY)) {
+        //            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        //        }
     }
 
     private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
@@ -402,6 +619,28 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
         for (TerritoryQuickSortWidget quickSort : quickSorts) {
             quickSort.render(guiGraphics, mouseX, mouseY, partialTick);
         }
+
+        if (draggingScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else {
+            float scrollX = getRenderX()
+                    + RENDER_AREA_POSITION.a()
+                    + RENDER_AREA_SIZE.a()
+                    + 10f
+                    - Texture.SCROLL_BUTTON.width() / 2f;
+            float scrollY = MathUtils.map(
+                    scrollOffset,
+                    0,
+                    getMaxScrollOffset(),
+                    getRenderY() + RENDER_AREA_POSITION.b(),
+                    getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b());
+            if (mouseX >= scrollX
+                    && mouseX <= scrollX + Texture.SCROLL_BUTTON.width()
+                    && mouseY >= scrollY - Texture.SCROLL_BUTTON.height() / 2f
+                    && mouseY <= scrollY + Texture.SCROLL_BUTTON.height() / 2f) {
+                guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+            }
+        }
     }
 
     private void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
@@ -416,34 +655,79 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 Lists.transform(tooltipLines, Component::getVisualOrderText), mouseX, mouseY);
     }
 
+    //    @Override
+    //    protected void renderPois(
+    //            List<Poi> pois,
+    //            GuiGraphics guiGraphics,
+    //            BoundingBox textureBoundingBox,
+    //            float poiScale,
+    //            int mouseX,
+    //            int mouseY) {
+    //        hovered = null;
+    //
+    //        List<Poi> filteredPois = getRenderedPois(pois, textureBoundingBox, poiScale, mouseX, mouseY);
+    //
+    //        // Render trading routes
+    //        // We render them in both directions because optimizing it is not cheap either
+    //        for (Poi poi : filteredPois) {
+    //            if (!(poi instanceof ManageTerritoryPoi territoryPoi)) continue;
+    //
+    //            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
+    //            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
+    //
+    //            for (String tradingRoute : territoryPoi.getTerritoryInfo().getTradingRoutes()) {
+    //                Optional<Poi> routePoi = filteredPois.stream()
+    //                        .filter(filteredPoi -> filteredPoi.getName().equals(tradingRoute))
+    //                        .findFirst();
+    //
+    //                // Only render connection if the other poi is also in the filtered pois
+    //                if (routePoi.isPresent() && filteredPois.contains(routePoi.get())) {
+    //                    float x = MapRenderer.getRenderX(routePoi.get(), mapCenterX, centerX, zoomRenderScale);
+    //                    float z = MapRenderer.getRenderZ(routePoi.get(), mapCenterZ, centerZ, zoomRenderScale);
+    //
+    //                    RenderUtils.drawLine(guiGraphics, CommonColors.DARK_GRAY, poiRenderX, poiRenderZ, x, z, 1);
+    //                }
+    //            }
+    //        }
+    //
+    //        // Reverse and Render
+    //        for (int i = filteredPois.size() - 1; i >= 0; i--) {
+    //            Poi poi = filteredPois.get(i);
+    //
+    //            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
+    //            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
+    //
+    //            poi.renderAt(
+    //                    guiGraphics, poiRenderX, poiRenderZ, hovered == poi, poiScale, zoomRenderScale, zoomLevel,
+    // true);
+    //        }
+    //    }
+
     @Override
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        double mouseX = event.x();
-        double mouseY = event.y();
-
+        //        if (!this.mapMode) {
         // Render area widgets need to handle the scroll offset
         // Check if mouse is over the render area
-        if (mouseX >= getRenderX() + RENDER_AREA_POSITION.a()
-                && mouseX <= getRenderX() + RENDER_AREA_POSITION.a() + RENDER_AREA_SIZE.a()
-                && mouseY >= getRenderY() + RENDER_AREA_POSITION.b()
-                && mouseY <= getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b()) {
+        if (event.x() >= getRenderX() + RENDER_AREA_POSITION.a()
+                && event.x() <= getRenderX() + RENDER_AREA_POSITION.a() + RENDER_AREA_SIZE.a()
+                && event.y() >= getRenderY() + RENDER_AREA_POSITION.b()
+                && event.y() <= getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b()) {
             for (AbstractWidget widget : renderAreaWidgets) {
-                if (widget.isMouseOver(mouseX, mouseY + scrollOffset)) {
+                if (widget.isMouseOver(event.x(), event.y())) {
                     return widget.mouseClicked(
-                            new MouseButtonEvent(event.x(), event.y() + scrollOffset, event.buttonInfo()),
-                            isDoubleClick);
+                            new MouseButtonEvent(event.x(), event.y(), event.buttonInfo()), isDoubleClick);
                 }
             }
         }
 
         for (TerritoryQuickFilterWidget quickFilter : quickFilters) {
-            if (quickFilter.isMouseOver(mouseX, mouseY)) {
+            if (quickFilter.isMouseOver(event.x(), event.y())) {
                 return quickFilter.mouseClicked(event, isDoubleClick);
             }
         }
 
         for (TerritoryQuickSortWidget quickSort : quickSorts) {
-            if (quickSort.isMouseOver(mouseX, mouseY)) {
+            if (quickSort.isMouseOver(event.x(), event.y())) {
                 return quickSort.mouseClicked(event, isDoubleClick);
             }
         }
@@ -460,13 +744,28 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
                 getMaxScrollOffset(),
                 getRenderY() + RENDER_AREA_POSITION.b(),
                 getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b());
-        if (mouseX >= scrollX
-                && mouseX <= scrollX + Texture.SCROLL_BUTTON.width()
-                && mouseY >= scrollY - Texture.SCROLL_BUTTON.height() / 2f
-                && mouseY <= scrollY + Texture.SCROLL_BUTTON.height() / 2f) {
+        if (event.x() >= scrollX
+                && event.x() <= scrollX + Texture.SCROLL_BUTTON.width()
+                && event.y() >= scrollY - Texture.SCROLL_BUTTON.height() / 2f
+                && event.y() <= scrollY + Texture.SCROLL_BUTTON.height() / 2f) {
             draggingScroll = true;
             return true;
         }
+        //        } else {
+        //            for (GuiEventListener child :
+        //                    Stream.concat(children().stream(), mapButtons.stream()).toList()) {
+        //                if (child.isMouseOver(event.x(), event.y())) {
+        //                    child.mouseClicked(event, isDoubleClick);
+        //                    return true;
+        //                }
+        //            }
+        //
+        //            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT
+        //                    && hovered instanceof ManageTerritoryPoi manageTerritoryPoi) {
+        //                holder.saveMapPos();
+        //                manageTerritoryPoi.onClick();
+        //            }
+        //        }
 
         return super.doMouseClicked(event, isDoubleClick);
     }
@@ -479,14 +778,19 @@ public class TerritoryManagementScreen extends WynntilsScreen implements Wrapped
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        //        if (!this.mapMode) {
         // Scroll the render area
         setScrollOffset((float) (scrollOffset - Math.signum(scrollY) * 10f));
         scrollAreaWidgets(scrollOffset);
+        //        } else {
+        //            return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+        //        }
         return true;
     }
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        //        if (!this.mapMode && draggingScroll) {
         if (draggingScroll) {
             // Calculate the new scroll offset
             float newScrollOffset = MathUtils.map(

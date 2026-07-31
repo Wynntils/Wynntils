@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
+import com.wynntils.services.hades.type.PlayerRelation;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
@@ -80,6 +81,15 @@ public class MinimapOverlay extends Overlay {
 
     @Persisted
     private final Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.ALL);
+
+    @Persisted
+    private final Config<Boolean> alwaysRenderRemoteFriendPlayers = new Config<>(false);
+
+    @Persisted
+    private final Config<Boolean> alwaysRenderRemotePartyPlayers = new Config<>(false);
+
+    @Persisted
+    private final Config<Boolean> alwaysRenderRemoteGuildPlayers = new Config<>(false);
 
     @Persisted
     public final Config<Float> remotePlayersHeadScale = new Config<>(0.4f);
@@ -150,15 +160,16 @@ public class MinimapOverlay extends Overlay {
 
         if (hideWhenUnmapped.get() != UnmappedOption.NEITHER && maps.isEmpty()) return;
 
-        // FIXME: Reimplement circle mask
         // enable mask
-        switch (maskType.get()) {
-            case RECTANGULAR ->
-                RenderUtils.enableScissor(guiGraphics, (int) renderX, (int) renderY, (int) width, (int) height);
-        }
+        RenderUtils.enableScissor(guiGraphics, (int) renderX, (int) renderY, (int) width, (int) height);
 
         // Always draw a black background to cover transparent map areas
-        RenderUtils.drawRect(guiGraphics, CommonColors.BLACK, (int) renderX, (int) renderY, (int) width, (int) height);
+        if (maskType.get() == MapMaskType.RECTANGULAR) {
+            RenderUtils.drawRect(
+                    guiGraphics, CommonColors.BLACK, (int) renderX, (int) renderY, (int) width, (int) height);
+        } else {
+            MapRenderer.renderCircularBackground(guiGraphics, CommonColors.BLACK, renderX, renderY, width, height);
+        }
 
         // enable rotation if necessary
         if (followPlayerRotation.get()) {
@@ -171,15 +182,31 @@ public class MinimapOverlay extends Overlay {
         }
 
         for (MapTexture map : maps) {
-            MapRenderer.renderMapTile(
-                    guiGraphics,
-                    map,
-                    (float) playerX,
-                    (float) playerZ,
-                    centerX,
-                    centerZ,
-                    zoomRenderScale,
-                    visibleWorldBox);
+            if (maskType.get() == MapMaskType.RECTANGULAR) {
+                MapRenderer.renderMapTile(
+                        guiGraphics,
+                        map,
+                        (float) playerX,
+                        (float) playerZ,
+                        centerX,
+                        centerZ,
+                        zoomRenderScale,
+                        visibleWorldBox);
+            } else {
+                MapRenderer.renderCircularMapTile(
+                        guiGraphics,
+                        map,
+                        (float) playerX,
+                        (float) playerZ,
+                        centerX,
+                        centerZ,
+                        zoomRenderScale,
+                        visibleWorldBox,
+                        renderX,
+                        renderY,
+                        width,
+                        height);
+            }
         }
 
         // disable rotation if necessary
@@ -209,14 +236,17 @@ public class MinimapOverlay extends Overlay {
                 this.pointerType.get(),
                 followPlayerRotation.get());
 
-        // FIXME: Reimplement circle mask
         // disable mask & render border
-        switch (maskType.get()) {
-            case RECTANGULAR -> RenderUtils.disableScissor(guiGraphics);
-        }
+        RenderUtils.disableScissor(guiGraphics);
 
         // render border
         renderMapBorder(guiGraphics, renderX, renderY, width, height);
+
+        // TODO: Reimplement
+        // render always shown players above the map border so they aren't cut off
+        //        renderAlwaysShownMiniPlayers(
+        //                guiGraphics, centerX, centerZ, width, height, playerX, playerZ, zoomRenderScale,
+        // zoomLevel.get());
 
         // Directional Text
         renderCardinalDirections(guiGraphics, width, height, centerX, centerZ);
@@ -324,17 +354,13 @@ public class MinimapOverlay extends Overlay {
             float toBorderScale = 1f;
 
             if (maskType.get() == MapMaskType.RECTANGULAR) {
-                // Scale as necessary
                 toBorderScale =
-                        Math.min(scaledWidth / Math.abs(compassOffsetX), scaledHeight / Math.abs(compassOffsetZ)) / 2;
+                        Math.min(scaledWidth / Math.abs(compassOffsetX), scaledHeight / Math.abs(compassOffsetZ)) / 2f;
+            } else if (maskType.get() == MapMaskType.CIRCLE) {
+                toBorderScale = scaledWidth
+                        / (MathUtils.magnitude(compassOffsetX, compassOffsetZ * scaledWidth / scaledHeight))
+                        / 2f;
             }
-            // FIXME: Reimplement circle mask
-            //            } else if (maskType.get() == MapMaskType.CIRCLE) {
-            //                toBorderScale = scaledWidth
-            //                        / (MathUtils.magnitude(compassOffsetX, compassOffsetZ * scaledWidth /
-            // scaledHeight))
-            //                        / 2;
-            //            }
 
             if (toBorderScale < distance) {
                 // Scale to border
@@ -389,6 +415,41 @@ public class MinimapOverlay extends Overlay {
         }
     }
 
+    private boolean shouldAlwaysRenderRemotePlayer(PlayerRelation relation) {
+        return switch (relation) {
+            case PARTY -> alwaysRenderRemotePartyPlayers.get();
+            case FRIEND -> alwaysRenderRemoteFriendPlayers.get();
+            case GUILD -> alwaysRenderRemoteGuildPlayers.get();
+            default -> false;
+        };
+    }
+
+    private float[] clampToMinimapBorder(
+            float renderX, float renderZ, float centerX, float centerZ, float width, float height) {
+        float offsetX = renderX - centerX;
+        float offsetZ = renderZ - centerZ;
+
+        float distance = MathUtils.magnitude(offsetX, offsetZ);
+        if (distance == 0) return new float[] {renderX, renderZ};
+
+        float normX = offsetX / distance;
+        float normZ = offsetZ / distance;
+
+        float toBorderScale = distance;
+
+        if (maskType.get() == MapMaskType.RECTANGULAR) {
+            toBorderScale = Math.min(width / Math.abs(normX), height / Math.abs(normZ)) / 2f;
+        } else if (maskType.get() == MapMaskType.CIRCLE) {
+            toBorderScale = width / (MathUtils.magnitude(normX, normZ * width / height)) / 2f;
+        }
+
+        if (toBorderScale < distance) {
+            return new float[] {centerX + normX * toBorderScale, centerZ + normZ * toBorderScale};
+        }
+
+        return new float[] {renderX, renderZ};
+    }
+
     private void renderCardinalDirections(
             GuiGraphics guiGraphics, float width, float height, float centerX, float centerZ) {
         if (showCompass.get() == CompassRenderType.NONE) return;
@@ -406,11 +467,9 @@ public class MinimapOverlay extends Overlay {
 
             if (maskType.get() == MapMaskType.RECTANGULAR) {
                 toBorderScaleNorth = Math.min(width / Math.abs(northDX), height / Math.abs(northDY)) / 2;
+            } else if (maskType.get() == MapMaskType.CIRCLE) {
+                toBorderScaleNorth = width / (MathUtils.magnitude(northDX, northDY * width / height)) / 2;
             }
-            // FIXME: Reimplement circle mask
-            //            } else if (maskType.get() == MapMaskType.CIRCLE) {
-            //                toBorderScaleNorth = width / (MathUtils.magnitude(northDX, northDY * width / height)) / 2;
-            //            }
 
             northDX *= toBorderScaleNorth;
             northDY *= toBorderScaleNorth;
@@ -441,11 +500,9 @@ public class MinimapOverlay extends Overlay {
 
             if (maskType.get() == MapMaskType.RECTANGULAR) {
                 toBorderScaleEast = Math.min(width / Math.abs(northDY), height / Math.abs(northDX)) / 2;
+            } else if (maskType.get() == MapMaskType.CIRCLE) {
+                toBorderScaleEast = width / (MathUtils.magnitude(eastDX, eastDY * width / height)) / 2;
             }
-            // FIXME: Reimplement circle mask
-            //            } else if (maskType.get() == MapMaskType.CIRCLE) {
-            //                toBorderScaleEast = width / (MathUtils.magnitude(eastDX, eastDY * width / height)) / 2;
-            //            }
 
             eastDX *= toBorderScaleEast;
             eastDY *= toBorderScaleEast;
@@ -477,11 +534,9 @@ public class MinimapOverlay extends Overlay {
     private void renderMapBorder(GuiGraphics guiGraphics, float renderX, float renderY, float width, float height) {
         Texture texture = borderType.get().texture();
         int grooves = borderType.get().groovesSize();
-        BorderInfo borderInfo = borderType.get().square();
-        // FIXME: Reimplement circle mask
-        //        BorderInfo borderInfo = maskType.get() == MapMaskType.CIRCLE
-        //                ? borderType.get().circle()
-        //                : borderType.get().square();
+        BorderInfo borderInfo = maskType.get() == MapMaskType.CIRCLE
+                ? borderType.get().circle()
+                : borderType.get().square();
         int tx1 = borderInfo.tx1();
         int ty1 = borderInfo.ty1();
         int tx2 = borderInfo.tx2();
@@ -528,8 +583,7 @@ public class MinimapOverlay extends Overlay {
 
     private enum MapMaskType {
         RECTANGULAR,
-        // FIXME: Reimplement circle mask
-        //        CIRCLE
+        CIRCLE
     }
 
     private enum MapBorderType {

@@ -9,6 +9,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
+import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,9 @@ import net.minecraft.network.HashedStack;
 import net.minecraft.world.item.ItemStack;
 
 public final class ItemUtils {
-    private static final String EMPTY_ACCESSORY_SLOT = "§7Accessory Slot";
+    private static final Pattern EMPTY_ARMOR_SLOT_PATTERN =
+            Pattern.compile("§7(?:Helmet|Chestplate|Leggings|Boots) Slot");
+    private static final Pattern EMPTY_ACCESSORY_SLOT_PATTERN = Pattern.compile("§7(?:Ring|Bracelet|Necklace) Slot");
     public static final Pattern ITEM_RARITY_PATTERN =
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
 
@@ -29,6 +32,20 @@ public final class ItemUtils {
         return gearItemOpt.get().getGearType().isWeapon();
     }
 
+    public static boolean isUsableWeapon(ItemStack itemStack) {
+        Optional<GearTypeItemProperty> gearItemOpt =
+                Models.Item.asWynnItemProperty(itemStack, GearTypeItemProperty.class);
+        if (gearItemOpt.isEmpty()) return false;
+        if (!gearItemOpt.get().getGearType().isValidWeapon(Models.Character.getClassType())) return false;
+
+        Optional<RequirementItemProperty> reqItemOpt =
+                Models.Item.asWynnItemProperty(itemStack, RequirementItemProperty.class);
+        if (reqItemOpt.isEmpty()) return false;
+        if (!reqItemOpt.get().meetsActualRequirements()) return false;
+
+        return true;
+    }
+
     public static boolean isGatheringTool(ItemStack itemStack) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         return wynnItemOpt
@@ -36,8 +53,12 @@ public final class ItemUtils {
                 .isPresent();
     }
 
+    public static boolean isEmptyArmorSlot(ItemStack itemStack) {
+        return getItemName(itemStack).matches(EMPTY_ARMOR_SLOT_PATTERN);
+    }
+
     public static boolean isEmptyAccessorySlot(ItemStack itemStack) {
-        return itemStack.getHoverName().getString().equals(EMPTY_ACCESSORY_SLOT);
+        return getItemName(itemStack).matches(EMPTY_ACCESSORY_SLOT_PATTERN);
     }
 
     public static StyledText getItemName(ItemStack itemStack) {

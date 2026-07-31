@@ -151,14 +151,11 @@ public class CharmInfoRegistry {
             }
 
             int level = JsonUtils.getNullableJsonInt(requirementsJson, "level");
-            // FIXME: Currently missing from API
-            //            JsonObject levelRangeJson = JsonUtils.getNullableJsonObject(requirementsJson, "levelRange");
-            //            int min = levelRangeJson.get("min").getAsInt();
-            //            int max = levelRangeJson.get("max").getAsInt();
-            int min = level;
-            int max = level;
 
-            return new CharmRequirements(level, RangedValue.of(min, max));
+            int max = level + 20;
+
+            // Minimum is always the required level of the charm
+            return new CharmRequirements(level, RangedValue.of(level, max));
         }
     }
 }

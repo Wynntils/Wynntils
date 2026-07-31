@@ -117,6 +117,12 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
         updateAllChildren();
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+        children.forEach(Overlay::tick);
+    }
+
     // As this is an abstract class, this event was subscribed to manually in ctor
     private void onResizeEvent(DisplayResizeEvent event) {
         updateAllChildren();
@@ -128,9 +134,16 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
 
     private void updateLayout(List<T> children, Map<T, OverlaySize> inherentSize) {
         // Update position for all children
+        GrowDirection direction = growDirection.get();
+
+        // Special cases
+        if (direction == GrowDirection.CENTER_VERTICAL || direction == GrowDirection.CENTER_HORIZONTAL) {
+            updateLayoutCentered(children, inherentSize, direction);
+            return;
+        }
+
         int currentHeight = 0;
         int currentWidth = 0;
-        GrowDirection direction = growDirection.get();
 
         for (T overlay : children) {
             overlay.setPosition(direction.getChildPosition(
@@ -144,11 +157,60 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
         }
     }
 
+    private void updateLayoutCentered(List<T> children, Map<T, OverlaySize> inherentSize, GrowDirection direction) {
+        int count = children.size();
+        if (count == 0) return;
+
+        boolean vertical = direction == GrowDirection.CENTER_VERTICAL;
+        int space = spacing.get();
+
+        // Total span of all children including spacing
+        int totalSize = 0;
+        for (T child : children) {
+            OverlaySize size = inherentSize.get(child);
+            totalSize += vertical ? size.getHeight() : size.getWidth();
+        }
+        totalSize += space * (count - 1);
+
+        float containerCenterX = getRenderX() + getSize().getWidth() / 2f;
+        float containerCenterY = getRenderY() + getSize().getHeight() / 2f;
+
+        // Start so that the whole group is centered
+        float cursor = (vertical ? containerCenterY : containerCenterX) - totalSize / 2f;
+
+        for (T overlay : children) {
+            OverlaySize overlaySize = inherentSize.get(overlay);
+
+            direction.updateSize(overlay, this.getSize(), overlaySize);
+
+            float x;
+            float y;
+
+            if (vertical) {
+                y = cursor;
+                x = containerCenterX - overlay.getSize().getWidth() / 2f;
+                cursor += overlaySize.getHeight() + space;
+            } else {
+                x = cursor;
+                y = containerCenterY - overlay.getSize().getHeight() / 2f;
+                cursor += overlaySize.getWidth() + space;
+            }
+
+            overlay.setPosition(new OverlayPosition(
+                    y, x, VerticalAlignment.TOP, HorizontalAlignment.LEFT, OverlayPosition.AnchorSection.TOP_LEFT));
+
+            overlay.horizontalAlignmentOverride.store(horizontalAlignmentOverride.get());
+            overlay.verticalAlignmentOverride.store(verticalAlignmentOverride.get());
+        }
+    }
+
     public enum GrowDirection {
         UP(-1, 0),
         DOWN(1, 0),
         LEFT(0, -1),
-        RIGHT(0, 1);
+        RIGHT(0, 1),
+        CENTER_VERTICAL(1, 0),
+        CENTER_HORIZONTAL(0, 1);
 
         private final int verticalMultiplier;
         private final int horizontalMultiplier;

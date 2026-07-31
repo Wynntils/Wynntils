@@ -11,11 +11,15 @@ import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.wynn.RaycastUtils;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.IdentifierException;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 
@@ -35,7 +39,20 @@ public class MinecraftFunctions {
     public static class DirFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return (double) McUtils.player().getYRot();
+            boolean wrap = arguments.getArgument("wrap").getBooleanValue();
+            double dir = (double) McUtils.player().getYRot();
+
+            return wrap ? Mth.wrapDegrees(dir) : dir;
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(List.of(new Argument<>("wrap", Boolean.class, false)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("yaw");
         }
     }
 
@@ -99,6 +116,39 @@ public class MinecraftFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new Argument<>("effectName", String.class, null)));
+        }
+    }
+
+    public static class LocationAtCrosshairFunction extends Function<Location> {
+        @Override
+        public Location getValue(FunctionArguments arguments) {
+            double distance = arguments.getArgument("distance").getDoubleValue();
+            boolean colliderOnly = arguments.getArgument("colliderOnly").getBooleanValue();
+
+            Optional<BlockPos> hitBlock = RaycastUtils.getTargetedBlockPosition(distance, colliderOnly);
+
+            if (hitBlock.isEmpty()) return Location.ZERO;
+
+            return new Location(hitBlock.get());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new Argument<>("distance", Double.class, null),
+                    new Argument<>("colliderOnly", Boolean.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("crosshair_loc");
+        }
+    }
+
+    public static class PitchFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            return (double) McUtils.player().getXRot();
         }
     }
 }

@@ -113,7 +113,7 @@ public record WynnPlayerInfo(
                     try {
                         guild = completableFuture.get();
                     } catch (InterruptedException | ExecutionException e) {
-                        McUtils.sendMessageToClient(Component.literal("Error trying to parse player guild")
+                        McUtils.sendWynntilsPrefixMessage(Component.literal("Error trying to parse player guild")
                                 .withStyle(ChatFormatting.RED));
                         guild = null;
                     }

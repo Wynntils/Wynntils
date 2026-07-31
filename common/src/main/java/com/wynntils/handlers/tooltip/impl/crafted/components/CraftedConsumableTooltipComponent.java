@@ -1,20 +1,64 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip.impl.crafted.components;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.tooltip.impl.crafted.CraftedTooltipComponent;
+import com.wynntils.handlers.tooltip.impl.identifiable.components.gear.GearTooltipAlignmentComponent;
 import com.wynntils.models.items.items.game.CraftedConsumableItem;
+import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.TooltipUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemStack;
 
 public class CraftedConsumableTooltipComponent extends CraftedTooltipComponent<CraftedConsumableItem> {
+    private static final FontDescription EMBLEM_FRAME_FONT =
+            new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/emblem/frame"));
+
+    @Override
+    public TooltipParts buildTooltipParts(ItemStack itemStack, CraftedConsumableItem craftedItem) {
+        List<Component> tooltipLines = LoreUtils.getTooltipLines(itemStack);
+        if (tooltipLines.isEmpty()) {
+            return null;
+        }
+
+        int firstIdentificationLine = -1;
+        int lastIdentificationLine = -1;
+
+        for (int i = 0; i < tooltipLines.size(); i++) {
+            if (!isIdentificationLine(tooltipLines.get(i))) {
+                continue;
+            }
+
+            if (firstIdentificationLine < 0) {
+                firstIdentificationLine = i;
+            }
+            lastIdentificationLine = i;
+        }
+
+        List<Component> header = copyRange(
+                tooltipLines, 0, firstIdentificationLine >= 0 ? firstIdentificationLine : tooltipLines.size());
+        removeDuplicateHoverNameLine(header, craftedItem);
+
+        if (firstIdentificationLine < 0 || lastIdentificationLine < firstIdentificationLine) {
+            return new TooltipParts(header, List.of());
+        }
+
+        List<Component> footer = copyRange(tooltipLines, lastIdentificationLine + 1, tooltipLines.size());
+        return new TooltipParts(header, footer);
+    }
+
     @Override
     public List<Component> buildHeaderTooltip(CraftedConsumableItem craftedItem) {
         List<Component> header = new ArrayList<>();
@@ -68,5 +112,41 @@ public class CraftedConsumableTooltipComponent extends CraftedTooltipComponent<C
                         craftedItem.getConsumableType().name().toLowerCase(Locale.ROOT)))));
 
         return footer;
+    }
+
+    @Override
+    public List<Component> finalizeTooltipLines(
+            List<Component> tooltip, int targetWidth, CraftedConsumableItem craftedItem) {
+        List<Component> finalized = new ArrayList<>(tooltip);
+        GearTooltipAlignmentComponent.realignMarkedTooltipLines(finalized);
+        return finalized;
+    }
+
+    private boolean isIdentificationLine(Component line) {
+        StyledText normalized = StyledText.fromComponent(line).getNormalized();
+        return normalized.getMatcher(WynnItemParser.IDENTIFICATION_STAT_PATTERN).matches();
+    }
+
+    private void removeDuplicateHoverNameLine(List<Component> header, CraftedConsumableItem craftedItem) {
+        if (header.size() < 2) {
+            return;
+        }
+
+        String firstLineText = header.getFirst().getString().trim();
+        if (!TooltipUtils.containsFont(header.get(1), EMBLEM_FRAME_FONT)) {
+            return;
+        }
+
+        if (firstLineText.equals(craftedItem.getName())) {
+            header.removeFirst();
+        }
+    }
+
+    private List<Component> copyRange(List<Component> lines, int startInclusive, int endExclusive) {
+        List<Component> copy = new ArrayList<>(Math.max(0, endExclusive - startInclusive));
+        for (int i = startInclusive; i < endExclusive; i++) {
+            copy.add(lines.get(i).copy());
+        }
+        return copy;
     }
 }

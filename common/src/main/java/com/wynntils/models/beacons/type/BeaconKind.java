@@ -1,11 +1,12 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.beacons.type;
 
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.type.Pair;
 import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
@@ -16,11 +17,11 @@ import net.minecraft.world.item.component.CustomModelData;
 public interface BeaconKind {
     CustomColor getCustomColor();
 
-    float getCustomModelData();
+    Pair<Float, Float> getCustomModelData();
 
     default boolean matches(ItemStack itemStack) {
         if (itemStack.getItem() != Items.POTION) return false;
-        if (getCustomModelData() == -1) return false;
+        if (getCustomModelData().a() == -1) return false;
 
         PotionContents potionContents = itemStack.get(DataComponents.POTION_CONTENTS);
         if (potionContents == null) return false;
@@ -28,8 +29,10 @@ public interface BeaconKind {
         CustomModelData potionCustomModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
         if (potionCustomModelData == null) return false;
 
+        Pair<Float, Float> range = getCustomModelData();
+
         Optional<Float> customModel = potionCustomModelData.floats().stream()
-                .filter(value -> value.equals(getCustomModelData()))
+                .filter(value -> value >= range.a() && value <= range.b())
                 .findFirst();
         if (customModel.isEmpty()) return false;
 

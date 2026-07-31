@@ -108,9 +108,11 @@ public class ItemGuessFeature extends Feature {
 
             MutableComponent itemsComponent = Component.empty();
             itemsComponent.append(itemsForLevel.getFirst());
-            itemsForLevel.stream().skip(1).forEach(i -> itemsComponent
-                    .append(Component.literal(", ").withStyle(ChatFormatting.GRAY))
-                    .append(i));
+            itemsForLevel.stream()
+                    .skip(1)
+                    .forEach(i -> itemsComponent
+                            .append(Component.literal(", ").withStyle(ChatFormatting.GRAY))
+                            .append(i));
 
             if (!itemsForLevel.isEmpty()) {
                 guesses.append(itemsComponent);

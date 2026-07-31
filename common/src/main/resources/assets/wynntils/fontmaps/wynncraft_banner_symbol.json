@@ -1,0 +1,10 @@
+{
+  "fontId": "banner/symbol",
+  "glyphs": {
+    "star_foreground": "\uE000",
+    "star_background": "\uE001",
+    "left_edge": "\uE060",
+    "space": "\uE061",
+    "right_edge": "\uE062"
+  }
+}

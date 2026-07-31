@@ -120,7 +120,8 @@ public final class WynntilsSetsGuideScreen extends WynntilsListScreen<SetInfo, I
                                     + setInfo.bonuses().size() + ")")
                             .withStyle(ChatFormatting.GRAY)));
 
-            Map<StatType, Integer> currentBonuses = setInfo.bonuses().get(equippedCount - 1);
+            Map<StatType, Integer> currentBonuses =
+                    setInfo.bonuses().get(equippedCount).minor();
 
             if (currentBonuses.isEmpty()) {
                 tooltipLines.add(Component.translatable(
@@ -130,10 +131,10 @@ public final class WynntilsSetsGuideScreen extends WynntilsListScreen<SetInfo, I
                         .withStyle(ChatFormatting.GRAY));
             } else {
                 List<StatType> sortedStats = Models.Stat.getSortedStats(
-                        setInfo.bonuses().get(equippedCount - 1).keySet(), StatListOrdering.WYNNCRAFT);
+                        setInfo.bonuses().get(equippedCount).minor().keySet(), StatListOrdering.WYNNCRAFT);
 
                 sortedStats.forEach(stat -> {
-                    int value = setInfo.bonuses().get(equippedCount - 1).get(stat);
+                    int value = setInfo.bonuses().get(equippedCount).minor().get(stat);
 
                     MutableComponent statComponent = Component.empty();
                     ChatFormatting statColor =
@@ -184,7 +185,7 @@ public final class WynntilsSetsGuideScreen extends WynntilsListScreen<SetInfo, I
                         .append(" ")
                         .append(Component.translatable(
                                 "screens.wynntils.wynntilsGuides.sets.setsButton.click"
-                                        + (equippedCount - 1 != 1 ? "Plural" : "Singular"),
+                                        + (equippedCount != 1 ? "Plural" : "Singular"),
                                 equippedCount - 1)));
             }
 

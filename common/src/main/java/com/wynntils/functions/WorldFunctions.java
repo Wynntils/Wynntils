@@ -172,7 +172,7 @@ public class WorldFunctions {
                     arguments.getArgument("totemNumber").getIntegerValue() - 1);
 
             if (bonusTotem == null) {
-                return new Location(0, 0, 0);
+                return Location.ZERO;
             }
 
             return Location.containing(bonusTotem.getPosition());
@@ -338,7 +338,7 @@ public class WorldFunctions {
                     BonusTotemType.MOB, arguments.getArgument("totemNumber").getIntegerValue() - 1);
 
             if (bonusTotem == null) {
-                return new Location(0, 0, 0);
+                return Location.ZERO;
             }
 
             return Location.containing(bonusTotem.getPosition());

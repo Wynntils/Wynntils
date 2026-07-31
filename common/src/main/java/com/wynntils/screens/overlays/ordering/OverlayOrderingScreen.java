@@ -84,7 +84,6 @@ public class OverlayOrderingScreen extends WynntilsScreen {
 
     @Override
     public void onClose() {
-        Managers.Overlay.rebuildRenderOrder();
         Managers.Config.saveConfig();
         McUtils.setScreen(previousScreen);
     }

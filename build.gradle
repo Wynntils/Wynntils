@@ -111,6 +111,7 @@ allprojects {
                     .updateYearWithLatest(true)
         }
         json {
+            ratchetFrom('origin/main')
             target "src/**/*.json"
             /*
              1. spotless replaces the Unicode escapes with the actual characters, worsening readability.
@@ -128,19 +129,22 @@ allprojects {
             endWithNewline()
         }
         format "lang", {
+            ratchetFrom('origin/main')
             target "src/main/resources/assets/wynntils/lang/*.json"
             custom "No empty language json files", {
                 it.replaceAll(/^\{\}\n$/, '')
             }
         }
         groovyGradle {
+            ratchetFrom('origin/main')
             target '**/*.gradle'
-            greclipse("${spotless_greclipse_version}").configFile("${rootDir}/greclipse.properties")
             trimTrailingWhitespace()
+            leadingTabsToSpaces(4)
             endWithNewline()
         }
 
         format "misc", {
+            ratchetFrom('origin/main')
             // define the files to apply `misc` to
             target "*.gradle", "*.md", ".gitignore", "*.properties"
             targetExclude("CHANGELOG.md")

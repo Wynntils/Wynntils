@@ -18,6 +18,7 @@ import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
 import com.wynntils.hades.protocol.enums.PacketAction;
 import com.wynntils.hades.protocol.enums.PacketDirection;
 import com.wynntils.hades.protocol.enums.SocialType;
+import com.wynntils.hades.protocol.packets.client.HCPacketGearUpdate;
 import com.wynntils.hades.protocol.packets.client.HCPacketPing;
 import com.wynntils.hades.protocol.packets.client.HCPacketSocialUpdate;
 import com.wynntils.hades.protocol.packets.client.HCPacketUpdateStatus;
@@ -155,6 +156,7 @@ public final class HadesService extends Service {
             // Send initial world data if Hades login only happened after joining the player's class
             tryResendWorldData();
         }
+        sendGearUpdate();
 
         WynntilsMod.info("Starting Hades Ping Scheduler Task");
 
@@ -237,7 +239,7 @@ public final class HadesService extends Service {
                 failed.append(Component.translatable("service.wynntils.hades.clickToConnect3")
                         .withStyle(Style.EMPTY.withColor(ChatFormatting.AQUA)));
 
-                McUtils.sendMessageToClient(failed);
+                McUtils.sendWynntilsPrefixMessage(failed);
 
                 return;
             }
@@ -274,6 +276,7 @@ public final class HadesService extends Service {
             for (InventoryAccessory accessory : InventoryAccessory.values()) {
                 if (event.getSlot() == accessory.getSlot()) {
                     updateAccessoryCache(accessory);
+                    sendGearUpdate();
                     return;
                 }
             }
@@ -281,12 +284,14 @@ public final class HadesService extends Service {
             for (InventoryArmor armorSlot : InventoryArmor.values()) {
                 if (event.getSlot() == armorSlot.getInventorySlot()) {
                     updateArmorCache(armorSlot);
+                    sendGearUpdate();
                     return;
                 }
             }
 
             if (event.getSlot() == McUtils.player().getInventory().selected) {
                 updateHeldItemCache();
+                sendGearUpdate();
             }
         }
     }
@@ -295,6 +300,7 @@ public final class HadesService extends Service {
     public void onSwappedItem(ChangeCarriedItemEvent event) {
         if (getGearShareOptions().shouldShare()) {
             updateHeldItemCache();
+            sendGearUpdate();
         }
     }
 
@@ -321,32 +327,12 @@ public final class HadesService extends Service {
             float pY = (float) player.getY();
             float pZ = (float) player.getZ();
 
-            PlayerStatus newStatus;
-
-            if (getGearShareOptions().shouldShare()) {
-                newStatus = new PlayerStatus(
-                        pX,
-                        pY,
-                        pZ,
-                        Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY),
-                        Models.CharacterStats.getMana().orElse(CappedValue.EMPTY),
-                        armor.getOrDefault(InventoryArmor.HELMET, ""),
-                        armor.getOrDefault(InventoryArmor.CHESTPLATE, ""),
-                        armor.getOrDefault(InventoryArmor.LEGGINGS, ""),
-                        armor.getOrDefault(InventoryArmor.BOOTS, ""),
-                        accessories.getOrDefault(InventoryAccessory.RING_1, ""),
-                        accessories.getOrDefault(InventoryAccessory.RING_2, ""),
-                        accessories.getOrDefault(InventoryAccessory.BRACELET, ""),
-                        accessories.getOrDefault(InventoryAccessory.NECKLACE, ""),
-                        heldItem);
-            } else {
-                newStatus = new PlayerStatus(
-                        pX,
-                        pY,
-                        pZ,
-                        Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY),
-                        Models.CharacterStats.getMana().orElse(CappedValue.EMPTY));
-            }
+            PlayerStatus newStatus = new PlayerStatus(
+                    pX,
+                    pY,
+                    pZ,
+                    Models.CharacterStats.getHealth().orElse(CappedValue.EMPTY),
+                    Models.CharacterStats.getMana().orElse(CappedValue.EMPTY));
 
             if (newStatus.equals(lastSentStatus)) {
                 tickCountUntilUpdate = 1;
@@ -354,7 +340,6 @@ public final class HadesService extends Service {
             }
 
             tickCountUntilUpdate = TICKS_PER_UPDATE;
-
             lastSentStatus = newStatus;
 
             hadesConnection.sendPacketAndFlush(new HCPacketUpdateStatus(
@@ -364,16 +349,7 @@ public final class HadesService extends Service {
                     lastSentStatus.health().current(),
                     lastSentStatus.health().max(),
                     lastSentStatus.mana().current(),
-                    lastSentStatus.mana().max(),
-                    lastSentStatus.helmet(),
-                    lastSentStatus.chestplate(),
-                    lastSentStatus.leggings(),
-                    lastSentStatus.boots(),
-                    lastSentStatus.ringOne(),
-                    lastSentStatus.ringTwo(),
-                    lastSentStatus.bracelet(),
-                    lastSentStatus.necklace(),
-                    lastSentStatus.heldItem()));
+                    lastSentStatus.mana().max()));
         }
     }
 
@@ -383,6 +359,21 @@ public final class HadesService extends Service {
         hadesConnection.sendPacket(new HCPacketUpdateWorld(
                 Models.WorldState.getCurrentWorldName(),
                 Models.Character.getId().hashCode()));
+    }
+
+    private void sendGearUpdate() {
+        if (!isConnected()) return;
+
+        hadesConnection.sendPacketAndFlush(new HCPacketGearUpdate(
+                armor.getOrDefault(InventoryArmor.HELMET, ""),
+                armor.getOrDefault(InventoryArmor.CHESTPLATE, ""),
+                armor.getOrDefault(InventoryArmor.LEGGINGS, ""),
+                armor.getOrDefault(InventoryArmor.BOOTS, ""),
+                accessories.getOrDefault(InventoryAccessory.RING_1, ""),
+                accessories.getOrDefault(InventoryAccessory.RING_2, ""),
+                accessories.getOrDefault(InventoryAccessory.BRACELET, ""),
+                accessories.getOrDefault(InventoryAccessory.NECKLACE, ""),
+                heldItem));
     }
 
     public void resetSocialType(SocialType socialType) {
@@ -431,6 +422,7 @@ public final class HadesService extends Service {
             }
 
             updateHeldItemCache();
+            sendGearUpdate();
         } else {
             armor.clear();
             armorCache.clear();
@@ -438,6 +430,7 @@ public final class HadesService extends Service {
             accessoriesCache.clear();
             heldItem = "";
             heldItemCache = null;
+            sendGearUpdate();
         }
     }
 

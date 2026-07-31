@@ -148,7 +148,7 @@ public class FunctionDumpFeature extends Feature {
         } catch (IOException e) {
             McUtils.sendErrorToClient("Failed to write " + name + " to CSV");
         }
-        McUtils.sendMessageToClient(Component.literal(
+        McUtils.sendWynntilsPrefixMessage(Component.literal(
                 ChatFormatting.GREEN + "Wrote " + name + " to CSV at " + csvOutputFile.getAbsolutePath()));
     }
 
@@ -193,7 +193,7 @@ public class FunctionDumpFeature extends Feature {
                 .keyboardHandler
                 .setClipboard(
                         clearDatabase + makeTypeEnum + makeFunctionTable + makeArgumentTable + makeDataVersionTable);
-        McUtils.sendMessageToClient(Component.literal("\n")
+        McUtils.sendWynntilsPrefixMessage(Component.literal("\n")
                 .append(Component.literal(
                         ChatFormatting.GREEN + "Copied database preparation statement to clipboard.\n"))
                 .append(Component.literal(ChatFormatting.GRAY + "Run this statement before importing new CSVs.\n"))

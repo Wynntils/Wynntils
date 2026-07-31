@@ -10,6 +10,7 @@ import com.wynntils.services.athena.WynntilsAccountService;
 import com.wynntils.services.chat.ChatTabService;
 import com.wynntils.services.cosmetics.CosmeticsService;
 import com.wynntils.services.custommodel.CustomModelService;
+import com.wynntils.services.custommodeldataencoder.CustomModelDataEncoderService;
 import com.wynntils.services.destination.DestinationService;
 import com.wynntils.services.discord.DiscordService;
 import com.wynntils.services.favorites.FavoritesService;
@@ -19,6 +20,7 @@ import com.wynntils.services.itemfilter.ItemFilterService;
 import com.wynntils.services.itemrecord.ItemRecordService;
 import com.wynntils.services.itemweight.ItemWeightService;
 import com.wynntils.services.leaderboard.LeaderboardService;
+import com.wynntils.services.loadout.LoadoutService;
 import com.wynntils.services.lootrunpaths.LootrunPathsService;
 import com.wynntils.services.map.MapService;
 import com.wynntils.services.mapdata.MapDataService;
@@ -29,14 +31,15 @@ import com.wynntils.services.secrets.SecretsService;
 import com.wynntils.services.splashes.SplashService;
 import com.wynntils.services.statistics.StatisticsService;
 import com.wynntils.services.stopwatch.StopwatchService;
-import com.wynntils.services.translation.TranslationService;
 import com.wynntils.services.usermarker.UserMarkerService;
+import com.wynntils.services.wiki.WikiService;
 
 public final class Services {
     public static final ChatTabService ChatTab = new ChatTabService();
     public static final CompatibilityService Compatibility = new CompatibilityService();
     public static final CosmeticsService Cosmetics = new CosmeticsService();
     public static final CustomModelService CustomModel = new CustomModelService();
+    public static final CustomModelDataEncoderService CustomModelDataEncoder = new CustomModelDataEncoderService();
     public static final DestinationService Destination = new DestinationService();
     public static final DiscordService Discord = new DiscordService();
     public static final FavoritesService Favorites = new FavoritesService();
@@ -46,6 +49,7 @@ public final class Services {
     public static final ItemRecordService ItemRecord = new ItemRecordService();
     public static final ItemWeightService ItemWeight = new ItemWeightService();
     public static final LeaderboardService Leaderboard = new LeaderboardService();
+    public static final LoadoutService loadout = new LoadoutService();
     public static final LootrunPathsService LootrunPaths = new LootrunPathsService();
     public static final MapDataService MapData = new MapDataService();
     public static final MapService Map = new MapService();
@@ -55,9 +59,9 @@ public final class Services {
     public static final SplashService Splash = new SplashService();
     public static final StatisticsService Statistics = new StatisticsService();
     public static final StopwatchService Stopwatch = new StopwatchService();
-    public static final TranslationService Translation = new TranslationService();
     public static final UpdateService Update = new UpdateService();
     public static final UserMarkerService UserMarker = new UserMarkerService();
     public static final WaypointsService Waypoints = new WaypointsService();
+    public static final WikiService Wiki = new WikiService();
     public static final WynntilsAccountService WynntilsAccount = new WynntilsAccountService();
 }

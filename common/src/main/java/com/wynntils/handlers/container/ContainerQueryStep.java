@@ -1,14 +1,13 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.container;
 
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
+import com.wynntils.models.containers.Container;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 
 public interface ContainerQueryStep {
@@ -20,10 +19,10 @@ public interface ContainerQueryStep {
     boolean startStep(ContainerContent container) throws ContainerQueryException;
 
     /**
-     * Verify that the container that has just opened has the expected type and
-     * title. To ensure robustness, make this test as tight as possible.
+     * Verify that the container that has just opened has the expected type.
+     * To ensure robustness, make this test as tight as possible.
      */
-    boolean verifyContainer(Component title, MenuType<?> menuType);
+    boolean verifyContainer(Class<? extends Container> containerType);
 
     /**
      * Verify that the container has the expected content change.
@@ -32,6 +31,13 @@ public interface ContainerQueryStep {
      */
     boolean verifyContentChange(
             ContainerContent container, Int2ObjectMap<ItemStack> changes, ContainerContentChangeType changeType);
+
+    /**
+     * Return the number of ticks to wait after receiving a set slot packet before processing the container.
+     */
+    default int getSetSlotAccumulationTicks() {
+        return 0;
+    }
 
     /**
      * Process the actual content of the container that this step has opened up.
@@ -52,4 +58,8 @@ public interface ContainerQueryStep {
 
     /** A way to identify this query. It is used to help avoid queueing the same query twice. */
     String getName();
+
+    default int getNextOperationDelayTicks() {
+        return 5;
+    }
 }

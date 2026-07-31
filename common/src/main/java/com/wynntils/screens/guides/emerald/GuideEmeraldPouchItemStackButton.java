@@ -39,20 +39,7 @@ public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
     public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         CustomColor color = CustomColor.fromChatFormatting(ChatFormatting.GREEN);
 
-        RenderUtils.drawTexturedRect(
-                guiGraphics,
-                Texture.HIGHLIGHT.identifier(),
-                color,
-                getX() - 1,
-                getY() - 1,
-                18,
-                18,
-                0,
-                0,
-                18,
-                18,
-                Texture.HIGHLIGHT.width(),
-                Texture.HIGHLIGHT.height());
+        RenderUtils.drawSprite(guiGraphics, Texture.HIGHLIGHT_WYNN, color, getX() - 8, getY() - 8);
 
         RenderUtils.renderItem(guiGraphics, itemStack, getX(), getY());
 

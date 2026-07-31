@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.type;
@@ -13,7 +13,7 @@ public enum ActivityStatus {
             Pattern.compile(ChatFormatting.GREEN + "Currently (in progress|tracking)"),
             Pattern.compile(ChatFormatting.GREEN + "Event has started")),
     AVAILABLE(
-            Pattern.compile(ChatFormatting.YELLOW + "Can be .+"),
+            Pattern.compile("(" + ChatFormatting.YELLOW + "|" + ChatFormatting.GREEN + ")Can be .+"),
             Pattern.compile(ChatFormatting.GREEN + "Event starting in .+")),
     UNAVAILABLE(
             Pattern.compile(ChatFormatting.RED + "Cannot be .+"),

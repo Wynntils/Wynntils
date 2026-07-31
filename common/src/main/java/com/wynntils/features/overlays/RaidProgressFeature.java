@@ -143,7 +143,7 @@ public class RaidProgressFeature extends Feature {
                     .append(Component.literal(")").withStyle(ChatFormatting.WHITE));
         }
 
-        McUtils.sendMessageToClient(raidComponents);
+        McUtils.sendWynntilsPrefixMessage(raidComponents);
     }
 
     @SubscribeEvent
@@ -154,7 +154,7 @@ public class RaidProgressFeature extends Feature {
         long seconds = (event.getTime() / 1000) % 60;
         long milliseconds = event.getTime() % 1000;
 
-        McUtils.sendMessageToClient(Component.translatable(
+        McUtils.sendWynntilsPrefixMessage(Component.translatable(
                         "feature.wynntils.raidProgress.personalBest",
                         event.getRaidName(),
                         minutes,

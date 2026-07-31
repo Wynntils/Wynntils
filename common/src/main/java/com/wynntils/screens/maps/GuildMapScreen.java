@@ -88,12 +88,20 @@ public final class GuildMapScreen extends AbstractMapScreen {
         centerMapAroundPlayer();
     }
 
+    private GuildMapScreen(Screen previousScreen) {
+        super(previousScreen);
+    }
+
     private GuildMapScreen(float mapCenterX, float mapCenterZ, float zoomLevel) {
         super(mapCenterX, mapCenterZ, zoomLevel);
     }
 
     public static Screen create() {
         return new GuildMapScreen();
+    }
+
+    public static Screen create(Screen previousScreen) {
+        return new GuildMapScreen(previousScreen);
     }
 
     public static Screen create(float mapCenterX, float mapCenterZ, float zoomLevel) {

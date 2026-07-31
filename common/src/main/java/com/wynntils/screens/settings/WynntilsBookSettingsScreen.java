@@ -728,8 +728,46 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             renderY += 12;
 
             if (configurable instanceof Feature feature) {
+                for (Feature subFeature : Managers.Feature.getSubFeatures(feature).stream()
+                        .filter(subFeature -> isSubFeatureFiltered(feature, subFeature))
+                        .filter(subFeature -> shouldShowNestedConfigurable(feature, subFeature))
+                        .sorted()
+                        .toList()) {
+                    int subMatchingConfigs = 0;
+                    for (Config<?> config : subFeature.getVisibleConfigOptions()) {
+                        if (configOptionContains(config)) {
+                            subMatchingConfigs++;
+                        }
+                    }
+                    ConfigurableButton subFeatureButton = new ConfigurableButton(
+                            12 + offsetX, renderY, 170, 12, subFeature, this, subMatchingConfigs);
+                    subFeatureButton.visible =
+                            renderY >= (21 - 12) && renderY <= (21 + (CONFIGURABLES_PER_PAGE + 1) * 11);
+                    configurables.add(subFeatureButton);
+                    renderY += 12;
+
+                    for (Overlay subOverlay : Managers.Overlay.getFeatureOverlays(subFeature).stream()
+                            .filter(this::isOverlayFiltered)
+                            .filter(subOverlay -> shouldShowNestedConfigurable(feature, subOverlay))
+                            .sorted()
+                            .toList()) {
+                        int subOverlayMatchingConfigs = 0;
+                        for (Config<?> config : subOverlay.getVisibleConfigOptions()) {
+                            if (configOptionContains(config)) {
+                                subOverlayMatchingConfigs++;
+                            }
+                        }
+                        ConfigurableButton subOverlayButton = new ConfigurableButton(
+                                12 + offsetX, renderY, 170, 12, subOverlay, this, subOverlayMatchingConfigs);
+                        subOverlayButton.visible =
+                                renderY >= (21 - 12) && renderY <= (21 + (CONFIGURABLES_PER_PAGE + 1) * 11);
+                        configurables.add(subOverlayButton);
+                        renderY += 12;
+                    }
+                }
                 for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature).stream()
                         .filter(this::isOverlayFiltered)
+                        .filter(overlay -> shouldShowNestedConfigurable(feature, overlay))
                         .sorted()
                         .toList()) {
                     matchingConfigs = 0;
@@ -889,21 +927,24 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         // Add all configurables for selected category
         if (selectedCategory != null) {
             configurableList.addAll(Managers.Feature.getFeatures().stream()
+                    .filter(feature -> !Managers.Feature.isSubFeature(feature))
                     .filter(this::isFeatureFiltered)
-                    .filter(feature -> isCategoryMatching(feature, selectedCategory))
+                    .filter(feature -> isCategoryMatchingTree(feature, selectedCategory))
                     .sorted()
                     .toList());
 
             // If there is a search query, add all matches from every other category
             if (hasSearch) {
                 configurableList.addAll(Managers.Feature.getFeatures().stream()
+                        .filter(feature -> !Managers.Feature.isSubFeature(feature))
                         .filter(this::isFeatureFiltered)
-                        .filter(feature -> !isCategoryMatching(feature, selectedCategory))
+                        .filter(feature -> !isCategoryMatchingTree(feature, selectedCategory))
                         .sorted()
                         .toList());
             }
         } else { // All tab, add all configurables
             configurableList.addAll(Managers.Feature.getFeatures().stream()
+                    .filter(feature -> !Managers.Feature.isSubFeature(feature))
                     .filter(this::isFeatureFiltered)
                     .sorted()
                     .toList());
@@ -997,6 +1038,20 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         return getCategory(configurable) == selectedCategory;
     }
 
+    private boolean isCategoryMatchingTree(Feature feature, Category selectedCategory) {
+        return isCategoryMatching(feature, selectedCategory)
+                || Managers.Overlay.getFeatureOverlays(feature).stream()
+                        .anyMatch(overlay -> isCategoryMatching(overlay, selectedCategory))
+                || Managers.Feature.getSubFeatures(feature).stream()
+                        .anyMatch(subFeature -> isCategoryMatchingTree(subFeature, selectedCategory));
+    }
+
+    private boolean shouldShowNestedConfigurable(Feature parent, Configurable configurable) {
+        if (selectedCategory == null || !searchWidget.getTextBoxInput().isEmpty()) return true;
+
+        return isCategoryMatching(parent, selectedCategory) || isCategoryMatching(configurable, selectedCategory);
+    }
+
     private boolean isFeatureFiltered(Feature feature) {
         if (searchWidget.getTextBoxInput().isEmpty()) {
             return switch (enabledFilterType) {
@@ -1012,13 +1067,33 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         boolean anyOverlayMatches =
                 Managers.Overlay.getFeatureOverlays(feature).stream().anyMatch(this::overlaySearchMatches);
 
-        return (featureSearchMatch || anyOverlayMatches);
+        boolean anySubFeatureMatches =
+                Managers.Feature.getSubFeatures(feature).stream().anyMatch(this::isFeatureFiltered);
+
+        return (featureSearchMatch || anyOverlayMatches || anySubFeatureMatches);
+    }
+
+    private boolean isSubFeatureFiltered(Feature parent, Feature subFeature) {
+        if (!searchWidget.getTextBoxInput().isEmpty()) {
+            return isFeatureFiltered(subFeature);
+        }
+
+        return switch (enabledFilterType) {
+            case NEUTRAL -> true;
+            case ENABLED -> parent.isEnabled();
+            case DISABLED -> !parent.isEnabled();
+        };
     }
 
     private boolean isOverlayFiltered(Overlay overlay) {
         if (searchWidget.getTextBoxInput().isEmpty()) {
             Feature parent = Managers.Overlay.getOverlayParent(overlay);
-            boolean parentEnabled = parent.isEnabled();
+            if (Managers.Feature.isSubFeature(parent)) {
+                Feature grandparent = Managers.Feature.getParentFeature(parent);
+                parent = grandparent;
+            }
+
+            boolean parentEnabled = parent != null && parent.isEnabled();
 
             return switch (enabledFilterType) {
                 case ENABLED -> parentEnabled;
@@ -1271,27 +1346,29 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             boolean imported = Managers.Config.importConfig(clipboard, configsToImport);
 
             if (imported) {
-                McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.importedAll")
+                McUtils.sendWynntilsPrefixMessage(Component.translatable("screens.wynntils.settingsScreen.importedAll")
                         .withStyle(ChatFormatting.GREEN));
             } else {
-                McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.import.failed")
-                        .withStyle(ChatFormatting.RED));
+                McUtils.sendWynntilsPrefixMessage(
+                        Component.translatable("screens.wynntils.settingsScreen.import.failed")
+                                .withStyle(ChatFormatting.RED));
             }
         } else if (clicked == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (selectedConfigurable != null) {
                 boolean imported = Managers.Config.importConfig(clipboard, List.of(selectedConfigurable));
 
                 if (imported) {
-                    McUtils.sendMessageToClient(Component.translatable(
+                    McUtils.sendWynntilsPrefixMessage(Component.translatable(
                                     "screens.wynntils.settingsScreen.imported",
                                     selectedConfigurable.getTranslatedName())
                             .withStyle(ChatFormatting.GREEN));
                 } else {
-                    McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.import.failed")
-                            .withStyle(ChatFormatting.RED));
+                    McUtils.sendWynntilsPrefixMessage(
+                            Component.translatable("screens.wynntils.settingsScreen.import.failed")
+                                    .withStyle(ChatFormatting.RED));
                 }
             } else {
-                McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.needToSelect")
+                McUtils.sendWynntilsPrefixMessage(Component.translatable("screens.wynntils.settingsScreen.needToSelect")
                         .withStyle(ChatFormatting.RED));
             }
         }
@@ -1315,17 +1392,17 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
             exportedSettings = Managers.Config.exportConfig(featuresToExport);
 
-            McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.exportedAll")
+            McUtils.sendWynntilsPrefixMessage(Component.translatable("screens.wynntils.settingsScreen.exportedAll")
                     .withStyle(ChatFormatting.GREEN));
         } else if (clicked == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (selectedConfigurable != null) {
                 exportedSettings = Managers.Config.exportConfig(List.of(selectedConfigurable));
 
-                McUtils.sendMessageToClient(Component.translatable(
+                McUtils.sendWynntilsPrefixMessage(Component.translatable(
                                 "screens.wynntils.settingsScreen.exported", selectedConfigurable.getTranslatedName())
                         .withStyle(ChatFormatting.GREEN));
             } else {
-                McUtils.sendMessageToClient(Component.translatable("screens.wynntils.settingsScreen.needToSelect")
+                McUtils.sendWynntilsPrefixMessage(Component.translatable("screens.wynntils.settingsScreen.needToSelect")
                         .withStyle(ChatFormatting.RED));
             }
         }
