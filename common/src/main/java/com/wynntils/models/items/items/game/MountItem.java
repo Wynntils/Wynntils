@@ -4,101 +4,44 @@
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.utils.type.CappedValue;
-import java.util.Optional;
+import com.wynntils.models.mount.type.MountInfo;
+import com.wynntils.models.mount.type.MountType;
 
 public class MountItem extends GameItem {
     private final String name;
-    private final CappedValue energy;
-    private final CappedValue acceleration;
-    private final CappedValue altitude;
-    private final CappedValue jumpHeight;
-    private final CappedValue energyStat;
-    private final CappedValue handling;
-    private final int potential;
-    private final CappedValue boost;
-    private final CappedValue speed;
-    private final CappedValue toughness;
-    private final CappedValue training;
+    private final MountType mountType;
+    private final MountInfo mountInfo;
+    private final boolean isSummonItem;
 
-    public MountItem(
-            String name,
-            CappedValue energy,
-            CappedValue acceleration,
-            CappedValue altitude,
-            CappedValue jumpHeight,
-            CappedValue energyStat,
-            CappedValue handling,
-            int potential,
-            CappedValue powerup,
-            CappedValue speed,
-            CappedValue toughness,
-            CappedValue training) {
+    public MountItem(String name, MountType mountType, MountInfo mountInfo, boolean isSummonItem) {
         this.name = name;
-        this.energy = energy;
-        this.acceleration = acceleration;
-        this.altitude = altitude;
-        this.jumpHeight = jumpHeight;
-        this.energyStat = energyStat;
-        this.handling = handling;
-        this.potential = potential;
-        this.boost = powerup;
-        this.speed = speed;
-        this.toughness = toughness;
-        this.training = training;
+        this.mountType = mountType;
+        this.mountInfo = mountInfo;
+        this.isSummonItem = isSummonItem;
     }
 
-    public Optional<String> getName() {
-        // Name is only set if the horse is named
-        return Optional.ofNullable(name);
+    public String getName() {
+        return name;
     }
 
-    public CappedValue getEnergy() {
-        return energy;
+    public MountType getMountType() {
+        return mountType;
     }
 
-    public CappedValue getAcceleration() {
-        return acceleration;
+    public MountInfo getMountInfo() {
+        return mountInfo;
     }
 
-    public CappedValue getAltitude() {
-        return altitude;
-    }
-
-    public CappedValue getJumpHeight() {
-        return jumpHeight;
-    }
-
-    public CappedValue getHandling() {
-        return handling;
-    }
-
-    public int getPotential() {
-        return potential;
-    }
-
-    public CappedValue getBoost() {
-        return boost;
-    }
-
-    public CappedValue getSpeed() {
-        return speed;
-    }
-
-    public CappedValue getToughness() {
-        return toughness;
-    }
-
-    public CappedValue getTraining() {
-        return training;
+    public boolean isSummonItem() {
+        return isSummonItem;
     }
 
     @Override
     public String toString() {
-        return "MountItem{" + "name='" + name + '\'' + ", potential=" + potential + ", energy=" + energy
-                + ", acceleration=" + acceleration + ", jumpHeight=" + jumpHeight
-                + ", altitude=" + altitude + ", energyStat=" + energyStat + ", handling=" + handling
-                + ", boost=" + boost + ", speed=" + speed + ", toughness=" + toughness + ", training="
-                + training + '}';
+        return "MountItem{" + "name='"
+                + name + '\'' + ", mountType="
+                + mountType + ", mountInfo="
+                + mountInfo + ", isSummonItem="
+                + isSummonItem + '}';
     }
 }
