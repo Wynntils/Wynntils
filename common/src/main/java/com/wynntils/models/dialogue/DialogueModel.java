@@ -12,9 +12,10 @@ import com.wynntils.models.dialogue.actionbar.matchers.DialogueSegmentMatcher;
 import com.wynntils.models.dialogue.actionbar.segments.DialogueSegment;
 import com.wynntils.models.dialogue.event.NpcDialogueEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import java.util.List;
 import java.util.Optional;
-import net.neoforged.bus.api.SubscribeEvent;
 
 public class DialogueModel extends Model {
     private DialogueSegment currentDialogueSegment;
@@ -101,8 +102,7 @@ public class DialogueModel extends Model {
         String dialogueText = dialogueSegment.getDialogueText();
         String currentDialogueText = currentDialogueSegment.getDialogueText();
 
-        // On purpose doing !() so if is equals, don't check startsWith, performance optimization
-        return !(dialogueText.equals(currentDialogueText) || dialogueText.startsWith(currentDialogueText));
+        return !dialogueText.startsWith(currentDialogueText);
     }
 
     public boolean isDialoguePresent() {
