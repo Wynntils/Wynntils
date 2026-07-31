@@ -30,8 +30,8 @@ jobs:
           token: ${{ secrets.PRIVATE_TOKEN }}
           labels: auto-generated
           committer: WynntilsBot <admin@wynntils.com>
-          commit-message: "chore: [auto-generated] Remove unused i18n entries [ci skip]"
-          title: "chore: [auto-generated] Remove unused i18n entries [ci skip]"
+          commit-message: "chore: [auto-generated] Remove unused i18n entries"
+          title: "chore: [auto-generated] Remove unused i18n entries"
           body: |
             Removes translation keys that no longer exist in `en_us.json`.
 
