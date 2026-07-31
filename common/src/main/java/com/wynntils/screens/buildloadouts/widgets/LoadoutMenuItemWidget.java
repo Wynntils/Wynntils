@@ -7,7 +7,7 @@ package com.wynntils.screens.buildloadouts.widgets;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.character.type.SavableBasicItem;
+import com.wynntils.models.character.type.SavableItem;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.character.type.SavableTome;
 import com.wynntils.models.gear.type.GearType;
@@ -161,7 +161,7 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
         return mouseX >= boxX && mouseX < boxX + BOX_SIZE && mouseY >= boxY && mouseY < boxY + BOX_SIZE;
     }
 
-    private Optional<ItemStack> decodeItemStack(SavableBasicItem stored) {
+    private Optional<ItemStack> decodeItemStack(SavableItem stored) {
         if (stored == null || stored.encoded() == null || stored.encoded().isEmpty()) return Optional.empty();
 
         EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromBase64String(stored.encoded());
@@ -224,7 +224,7 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
 
         SavableSkillPointSet skillPoints = selectedLoadout.skillPoints();
 
-        List<SavableBasicItem> orderedSlots = new ArrayList<>();
+        List<SavableItem> orderedSlots = new ArrayList<>();
         orderedSlots.add(skillPoints.weapon());
         orderedSlots.addAll(skillPoints.armourNames());
         orderedSlots.add(getSkillPointTomeEncoded(selectedLoadout));

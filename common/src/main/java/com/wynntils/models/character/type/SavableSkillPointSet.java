@@ -14,9 +14,9 @@ public record SavableSkillPointSet(
         int intelligence,
         int defence,
         int agility,
-        SavableItem weapon,
-        List<SavableItem> armourNames,
-        List<SavableItem> accessoryNames) {
+        SavableGear weapon,
+        List<SavableGear> armourNames,
+        List<SavableGear> accessoryNames) {
     /**
      * Constructs a new SavableSkillPointSet representing just a loadout.
      */
@@ -28,7 +28,7 @@ public record SavableSkillPointSet(
      * Constructs a new SavableSkillPointSet representing a full build with gear.
      */
     public SavableSkillPointSet(
-            int[] skillPoints, SavableItem weapon, List<SavableItem> armourNames, List<SavableItem> accessoryNames) {
+            int[] skillPoints, SavableGear weapon, List<SavableGear> armourNames, List<SavableGear> accessoryNames) {
         this(
                 skillPoints[0],
                 skillPoints[1],

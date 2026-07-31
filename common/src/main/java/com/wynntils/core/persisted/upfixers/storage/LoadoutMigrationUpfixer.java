@@ -11,7 +11,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.upfixers.Upfixer;
-import com.wynntils.models.character.type.SavableItem;
+import com.wynntils.models.character.type.SavableGear;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
@@ -121,7 +121,7 @@ public class LoadoutMigrationUpfixer implements Upfixer {
             String weaponName = skillPointObject.get("weapon").getAsString();
             encodeDefaultGearItem(weaponName)
                     .ifPresentOrElse(
-                            savableItem -> skillPointObject.add("weapon", savableItemToJson(savableItem)),
+                            savableGear -> skillPointObject.add("weapon", savableItemToJson(savableGear)),
                             () -> WynntilsMod.warn("Upfixer: could not encode weapon " + weaponName));
         }
 
@@ -136,7 +136,7 @@ public class LoadoutMigrationUpfixer implements Upfixer {
 
         JsonArray oldNames = skillPointObject.getAsJsonArray(key);
         // 0=helmet, 1=chestplate, 2=leggings, 3=boots
-        SavableItem[] slots = {new SavableItem(), new SavableItem(), new SavableItem(), new SavableItem()};
+        SavableGear[] slots = {new SavableGear(), new SavableGear(), new SavableGear(), new SavableGear()};
 
         for (JsonElement nameElement : oldNames) {
             if (nameElement.isJsonNull()) continue;
@@ -159,13 +159,13 @@ public class LoadoutMigrationUpfixer implements Upfixer {
 
                 encodeGearItem(gearInfo)
                         .ifPresentOrElse(
-                                savableItem -> slots[slotIndex] = savableItem,
+                                savableGear -> slots[slotIndex] = savableGear,
                                 () -> WynntilsMod.warn("Upfixer: could not encode armour " + rawName));
             });
         }
 
         JsonArray newNames = new JsonArray();
-        for (SavableItem slot : slots) {
+        for (SavableGear slot : slots) {
             newNames.add(savableItemToJson(slot));
         }
         skillPointObject.add(key, newNames);
@@ -176,7 +176,7 @@ public class LoadoutMigrationUpfixer implements Upfixer {
 
         JsonArray oldNames = skillPointObject.getAsJsonArray(key);
         // 0=ring1, 1=ring2, 2=bracelet, 3=necklace
-        SavableItem[] slots = {new SavableItem(), new SavableItem(), new SavableItem(), new SavableItem()};
+        SavableGear[] slots = {new SavableGear(), new SavableGear(), new SavableGear(), new SavableGear()};
 
         for (JsonElement nameElement : oldNames) {
             if (nameElement.isJsonNull()) continue;
@@ -202,13 +202,13 @@ public class LoadoutMigrationUpfixer implements Upfixer {
 
                 encodeGearItem(gearInfo)
                         .ifPresentOrElse(
-                                savableItem -> slots[slotIndex] = savableItem,
+                                savableGear -> slots[slotIndex] = savableGear,
                                 () -> WynntilsMod.warn("Upfixer: could not encode accessory " + rawName));
             });
         }
 
         JsonArray newNames = new JsonArray();
-        for (SavableItem slot : slots) {
+        for (SavableGear slot : slots) {
             newNames.add(savableItemToJson(slot));
         }
         skillPointObject.add(key, newNames);
@@ -223,7 +223,7 @@ public class LoadoutMigrationUpfixer implements Upfixer {
         return Optional.ofNullable(gearInfo);
     }
 
-    private static Optional<SavableItem> encodeGearItem(GearInfo gearInfo) {
+    private static Optional<SavableGear> encodeGearItem(GearInfo gearInfo) {
         List<StatActualValue> stats = new ArrayList<>();
 
         for (Map.Entry<StatType, StatPossibleValues> entry :
@@ -245,20 +245,20 @@ public class LoadoutMigrationUpfixer implements Upfixer {
             return Optional.empty();
         }
 
-        return Optional.of(new SavableItem(errorOrEncoded.getValue().toBase64String(), gearInfo.name()));
+        return Optional.of(new SavableGear(errorOrEncoded.getValue().toBase64String(), gearInfo.name()));
     }
 
-    private static Optional<SavableItem> encodeDefaultGearItem(String rawName) {
+    private static Optional<SavableGear> encodeDefaultGearItem(String rawName) {
         return resolveGearInfo(rawName).flatMap(LoadoutMigrationUpfixer::encodeGearItem);
     }
 
-    private static JsonObject savableItemToJson(SavableItem savableItem) {
+    private static JsonObject savableItemToJson(SavableGear savableGear) {
         JsonObject json = new JsonObject();
-        json.addProperty("encoded", savableItem.encoded());
-        json.addProperty("itemName", savableItem.itemName());
+        json.addProperty("encoded", savableGear.encoded());
+        json.addProperty("itemName", savableGear.itemName());
 
         String itemType = "gear";
-        if (savableItem.itemType() == ItemType.CRAFTED_GEAR) {
+        if (savableGear.itemType() == ItemType.CRAFTED_GEAR) {
             itemType = "craftedGear";
         }
 

@@ -15,7 +15,7 @@ import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.models.character.type.ClickAction;
-import com.wynntils.models.character.type.SavableItem;
+import com.wynntils.models.character.type.SavableGear;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.elements.type.Skill;
@@ -89,11 +89,11 @@ public final class SkillPointModel extends Model {
         EncodingSettings encodingSettings = new EncodingSettings(true, true);
         List<ItemStack> equippedItems = Models.Inventory.getEquippedItems();
 
-        SavableItem weaponSavableItem = null;
-        List<SavableItem> armourSavableItems =
-                new ArrayList<>(List.of(new SavableItem(), new SavableItem(), new SavableItem(), new SavableItem()));
-        List<SavableItem> accessorySavableItems =
-                new ArrayList<>(List.of(new SavableItem(), new SavableItem(), new SavableItem(), new SavableItem()));
+        SavableGear weaponSavableGear = null;
+        List<SavableGear> armourSavableGears =
+                new ArrayList<>(List.of(new SavableGear(), new SavableGear(), new SavableGear(), new SavableGear()));
+        List<SavableGear> accessorySavableGears =
+                new ArrayList<>(List.of(new SavableGear(), new SavableGear(), new SavableGear(), new SavableGear()));
 
         for (int i = 0; i < equippedItems.size(); i++) {
             ItemStack itemStack = equippedItems.get(i);
@@ -121,16 +121,16 @@ public final class SkillPointModel extends Model {
                     .replaceAll("");
             String encoded = errorOrEncoded.getValue().toBase64String();
             if (i < 4) {
-                armourSavableItems.set(i, new SavableItem(encoded, itemName, itemType));
+                armourSavableGears.set(i, new SavableGear(encoded, itemName, itemType));
             } else if (i < 8) {
-                accessorySavableItems.set(i - 4, new SavableItem(encoded, itemName, itemType));
+                accessorySavableGears.set(i - 4, new SavableGear(encoded, itemName, itemType));
             } else {
-                weaponSavableItem = new SavableItem(encoded, itemName, itemType);
+                weaponSavableGear = new SavableGear(encoded, itemName, itemType);
             }
         }
 
         SavableSkillPointSet assignedSkillPointSet =
-                new SavableSkillPointSet(skillPoints, weaponSavableItem, armourSavableItems, accessorySavableItems);
+                new SavableSkillPointSet(skillPoints, weaponSavableGear, armourSavableGears, accessorySavableGears);
         Services.loadout.saveSkillPointLoadoutAndTomes(
                 name, assignedSkillPointSet, Models.Character.getCurrentTomeSet());
         WynntilsMod.info("Saved skill point build: " + name + " " + assignedSkillPointSet);

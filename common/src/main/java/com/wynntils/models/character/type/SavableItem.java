@@ -6,12 +6,10 @@ package com.wynntils.models.character.type;
 
 import com.wynntils.models.items.encoding.type.ItemType;
 
-public record SavableItem(String encoded, String itemName, ItemType itemType) implements SavableBasicItem {
-    public SavableItem() {
-        this("", null, ItemType.GEAR);
-    }
+public interface SavableItem {
+    String encoded();
 
-    public SavableItem(String encoded, String itemName) {
-        this(encoded, itemName, ItemType.GEAR);
-    }
+    String itemName();
+
+    ItemType itemType();
 }
