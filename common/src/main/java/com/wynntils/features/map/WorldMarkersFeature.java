@@ -25,6 +25,7 @@ import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.colors.WynncraftShaderColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
@@ -159,7 +160,7 @@ public class WorldMarkersFeature extends Feature {
             }
 
             int colorInt;
-            if (color == CommonColors.RAINBOW) {
+            if (color == WynncraftShaderColor.RAINBOW.color) {
                 colorInt = currentRainbowColor.withAlpha((float) visibility).asInt();
             } else {
                 colorInt = color.withAlpha((float) visibility).asInt();

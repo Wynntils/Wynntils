@@ -147,8 +147,8 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
         updateSliders(min, max, fade);
 
         // region presets
-        this.addRenderableWidget(
-                new Button.Builder(Component.translatable("screens.wynntils.waypointVisibility.always"), (button) -> {
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.waypointVisibility.always"), (button) -> {
                             float alwaysMin = editinglabel
                                     ? DefaultMapAttributes.LABEL_ALWAYS.getMin().get()
                                     : DefaultMapAttributes.ICON_ALWAYS.getMin().get();
@@ -163,12 +163,12 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
 
                             updateSliders(alwaysMin, alwaysMax, alwaysFade);
                         })
-                        .pos((int) (dividedWidth * 4), (int) (dividedHeight * 23))
-                        .size((int) (dividedWidth * 9), 20)
-                        .build());
+                .pos((int) (dividedWidth * 4), (int) (dividedHeight * 23))
+                .size((int) (dividedWidth * 9), 20)
+                .build());
 
-        this.addRenderableWidget(
-                new Button.Builder(Component.translatable("screens.wynntils.waypointVisibility.never"), (button) -> {
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.waypointVisibility.never"), (button) -> {
                             float neverMin = editinglabel
                                     ? DefaultMapAttributes.LABEL_NEVER.getMin().get()
                                     : DefaultMapAttributes.ICON_NEVER.getMin().get();
@@ -181,9 +181,9 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
 
                             updateSliders(neverMin, neverMax, neverFade);
                         })
-                        .pos((int) (dividedWidth * 18), (int) (dividedHeight * 23))
-                        .size((int) (dividedWidth * 9), 20)
-                        .build());
+                .pos((int) (dividedWidth * 18), (int) (dividedHeight * 23))
+                .size((int) (dividedWidth * 9), 20)
+                .build());
         // endregion
 
         this.addRenderableWidget(

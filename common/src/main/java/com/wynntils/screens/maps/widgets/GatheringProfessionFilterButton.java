@@ -5,7 +5,6 @@
 package com.wynntils.screens.maps.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.core.components.Services;
 import com.wynntils.models.profession.type.MaterialType;
 import com.wynntils.screens.maps.GatheringNodeFilterScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -17,7 +16,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class GatheringProfessionFilterButton extends AbstractWidget {
     private final GatheringNodeFilterScreen filterScreen;
@@ -85,7 +83,8 @@ public class GatheringProfessionFilterButton extends AbstractWidget {
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.hasAltDown()) {
-            Services.Poi.setAllGatheringNodeTypesVisible(materialType, event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT);
+            //            Services.Poi.setAllGatheringNodeTypesVisible(materialType, event.button() ==
+            // GLFW.GLFW_MOUSE_BUTTON_LEFT);
             return true;
         }
         selected = !selected;
