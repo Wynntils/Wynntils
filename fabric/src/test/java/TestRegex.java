@@ -127,8 +127,8 @@ public class TestRegex {
     }
 
     @Test
-    public void AbilityTreeAnnotator_TREE_ABILITY_POINTS_PATTERN() {
-        PatternTester p = new PatternTester(AbilityTreeAnnotator.class, "TREE_ABILITY_POINTS_PATTERN");
+    public void AbilityTreeAnnotator_ABILITY_POINTS_PATTERN() {
+        PatternTester p = new PatternTester(AbilityTreeAnnotator.class, "ABILITY_POINTS_PATTERN");
         p.shouldMatch("§b✦ Available Points: §f0§7/45");
         p.shouldMatch("§b✦ Available Points: §f15§7/45");
     }

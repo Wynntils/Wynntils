@@ -23,7 +23,7 @@ public final class AbilityTreeAnnotator implements GuiItemAnnotator {
     private static final Pattern TREE_ABILITY_POINTS_RESET_PATTERN =
             Pattern.compile("§eShift Click to reset your tree");
 
-    // Test in AbilityTreeAnnotator_TREE_ABILITY_POINTS_PATTERN
+    // Test in AbilityTreeAnnotator_ABILITY_POINTS_PATTERN
     private static final Pattern ABILITY_POINTS_PATTERN =
             Pattern.compile("§b✦ Available Points: §(?:#a0c84bff|f)(\\d+)§7\\/(\\d+)");
 
