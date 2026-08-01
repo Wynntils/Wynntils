@@ -56,7 +56,9 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.WYNNTILS)
 public class CharacterInfoIndicatorFeature extends Feature {
-    private static final int DELAY_TICKS = 100;
+    // It takes a while for the compass to actually have the correct ability points,
+    // otherwise it is max and then the calculation fails and an error shows up in the chat.
+    private static final int DELAY_TICKS = 200;
 
     private static final Pattern UNUSED_ABILITY_POINTS_PATTERN =
             Pattern.compile("§3✦ Unused Ability Points: §f(\\d+)");
@@ -193,7 +195,25 @@ public class CharacterInfoIndicatorFeature extends Feature {
         int combatLevel = Models.CombatXp.getCombatLevel().current();
         int maxAbilityPoints = AbilityPointProgression.getPointsAtLevel(combatLevel);
 
-        if (totalAbilityPoints == maxAbilityPoints) return;
+        boolean isMismatch = totalAbilityPoints != maxAbilityPoints;
+
+        WynntilsMod.info(String.format(
+                "Ability points: used=%d, unused=%d, total=%d, max=%d for level=%d.%s",
+                usedAbilityPoints,
+                unusedAbilityPoints,
+                totalAbilityPoints,
+                maxAbilityPoints,
+                combatLevel,
+                isMismatch ? " Mismatch detected, tracked ability tree state is out of sync." : ""));
+
+        if (!isMismatch) return;
+
+
+        WynntilsMod.info(String.format(
+                "Ability point mismatch: used=%d, unused=%d, total=%d, max=%d for level=%d."
+                        + " Tracked ability tree state is out of sync.",
+                usedAbilityPoints, unusedAbilityPoints, totalAbilityPoints, maxAbilityPoints, combatLevel));
+
 
         Component clickableHere = Component.translatable(
                         "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere")

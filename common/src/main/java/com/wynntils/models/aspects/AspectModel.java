@@ -231,6 +231,9 @@ public final class AspectModel extends Model {
         equippedAspects.store(currentEquippedAspects);
         equippedAspects.touched();
 
+        ownedAspects.store(new TreeMap<>());
+        ownedAspects.touched();
+
         McUtils.player().closeContainer();
 
         Managers.TickScheduler.scheduleNextTick(() -> ASPECT_CONTAINER_QUERIES.scanAspectPages(
