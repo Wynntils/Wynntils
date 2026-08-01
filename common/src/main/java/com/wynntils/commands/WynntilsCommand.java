@@ -438,10 +438,10 @@ public class WynntilsCommand extends Command {
         // This should probably be changed to a function interface if more were to be added to it.
         Models.Character.scanCharacterInfo(() -> {
             Models.Account.scanRankInfo(true, () -> {
-                Models.Aspect.clearEquippedAspectsAndQuery(
+                Models.Aspect.clearEquippedAspectsAndRescan(
                         onStatus -> {},
                         McUtils::sendErrorToClient,
-                        aspectComplete -> Models.AbilityTree.clearEquippedAbilitesAndQuery(
+                        aspectComplete -> Models.AbilityTree.clearUnlockedAbilitesAndRescan(
                                 onStatus -> {},
                                 McUtils::sendErrorToClient,
                                 onComplete -> McUtils.sendWynntilsPrefixMessage(

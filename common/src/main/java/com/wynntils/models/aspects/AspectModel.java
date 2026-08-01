@@ -224,7 +224,7 @@ public final class AspectModel extends Model {
         return List.of();
     }
 
-    public void clearEquippedAspectsAndQuery(
+    public void clearEquippedAspectsAndRescan(
             Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
         Map<String, List<String>> currentEquippedAspects = equippedAspects.get();
         currentEquippedAspects.put(Models.Character.getId(), new ArrayList<>());

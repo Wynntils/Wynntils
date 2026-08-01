@@ -261,7 +261,7 @@ public final class AbilityTreeModel extends Model {
                 .findFirst();
     }
 
-    public void clearEquippedAbilitesAndQuery(
+    public void clearUnlockedAbilitesAndRescan(
             Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
         Map<String, List<String>> allEquippedAbilities = unlockedAbilities.get();
         allEquippedAbilities.put(Models.Character.getId(), new ArrayList<>());
