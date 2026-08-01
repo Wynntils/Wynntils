@@ -12,6 +12,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.ingredients.type.IngredientPosition;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.mount.type.MountStat;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.stats.type.StatType;
@@ -23,6 +24,8 @@ import com.wynntils.services.itemfilter.filters.PercentageStatFilter;
 import com.wynntils.services.itemfilter.filters.RangedStatFilters;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
 import com.wynntils.services.itemfilter.statproviders.ActualStatProvider;
+import com.wynntils.services.itemfilter.statproviders.AttackSpeedStatProvider;
+import com.wynntils.services.itemfilter.statproviders.AverageDpsStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ChargesModifierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ClassStatProvider;
 import com.wynntils.services.itemfilter.statproviders.CountedItemStatProvider;
@@ -291,11 +294,12 @@ public class ItemFilterService extends Service {
 
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return false;
+        String itemName = Models.Item.asWynnItemProperty(itemStack, NamedItemProperty.class)
+                .map(NamedItemProperty::getName)
+                .orElseGet(
+                        () -> StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting());
 
-        return filterMatches(searchQuery, wynnItemOpt.get())
-                && itemNameMatches(
-                        searchQuery,
-                        StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting());
+        return filterMatches(searchQuery, wynnItemOpt.get()) && itemNameMatches(searchQuery, itemName);
     }
 
     /**
@@ -524,6 +528,8 @@ public class ItemFilterService extends Service {
         registerStatProvider(new GearRestrictionStatProvider());
         registerStatProvider(new MajorIdStatProvider());
         registerStatProvider(new PowderSlotsStatProvider());
+        registerStatProvider(new AttackSpeedStatProvider());
+        registerStatProvider(new AverageDpsStatProvider());
         registerStatProvider(new HealthStatProvider());
         registerStatProvider(new TargetStatProvider());
         registerStatProvider(new TomeTypeStatProvider());
@@ -543,7 +549,7 @@ public class ItemFilterService extends Service {
 
         // Dynamic Item Stats
         registerStatProvider(new OverallStatProvider());
-        for (Skill skill : Models.Element.getGearSkillOrder()) {
+        for (Skill skill : Skill.values()) {
             registerStatProvider(new SkillStatProvider(skill));
             registerStatProvider(new SkillReqStatProvider(skill));
         }

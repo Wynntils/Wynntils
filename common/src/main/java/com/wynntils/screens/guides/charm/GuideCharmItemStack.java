@@ -35,17 +35,10 @@ public class GuideCharmItemStack extends GuideItemStack {
     }
 
     @Override
-    public Component getHoverName() {
-        return name;
-    }
-
-    @Override
     public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag flag) {
         List<Component> tooltipLines = new ArrayList<>(generatedTooltip);
 
         appendObtainInfo(tooltipLines, charmInfo.metaInfo().obtainInfo());
-        appendFavoriteInfo(tooltipLines);
-        appendWebGuideInfo(tooltipLines);
 
         return tooltipLines;
     }

@@ -8,7 +8,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.PowderTierInfo;
-import com.wynntils.models.elements.type.Skill;
 import java.util.List;
 
 public final class ElementModel extends Model {
@@ -29,10 +28,6 @@ public final class ElementModel extends Model {
                 .filter(p -> p.element() == element && p.tier() == tier)
                 .findFirst()
                 .orElse(null);
-    }
-
-    public List<Skill> getGearSkillOrder() {
-        return List.of(Skill.STRENGTH, Skill.DEXTERITY, Skill.INTELLIGENCE, Skill.AGILITY, Skill.DEFENCE);
     }
 
     public List<Element> getGearElementOrder() {

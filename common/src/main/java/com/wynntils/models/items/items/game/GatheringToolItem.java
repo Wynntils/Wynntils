@@ -8,6 +8,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.items.properties.NumberedTierItemProperty;
 import com.wynntils.models.items.properties.ProfessionItemProperty;
 import com.wynntils.models.profession.type.GatheringToolInfo;
@@ -20,7 +21,8 @@ public class GatheringToolItem extends GameItem
                 DurableItemProperty,
                 GearTierItemProperty,
                 LeveledItemProperty,
-                ProfessionItemProperty {
+                ProfessionItemProperty,
+                NamedItemProperty {
     private final GatheringToolInfo toolInfo;
     private final CappedValue durability;
 
@@ -61,5 +63,10 @@ public class GatheringToolItem extends GameItem
     @Override
     public GearTier getGearTier() {
         return toolInfo.gearTier();
+    }
+
+    @Override
+    public String getName() {
+        return toolInfo.name();
     }
 }

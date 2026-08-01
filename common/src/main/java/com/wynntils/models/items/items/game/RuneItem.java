@@ -4,9 +4,11 @@
  */
 package com.wynntils.models.items.items.game;
 
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.rewards.type.RuneType;
+import com.wynntils.utils.EnumUtils;
 
-public class RuneItem extends GameItem {
+public class RuneItem extends GameItem implements NamedItemProperty {
     private final RuneType type;
 
     public RuneItem(RuneType type) {
@@ -15,6 +17,11 @@ public class RuneItem extends GameItem {
 
     public RuneType getType() {
         return type;
+    }
+
+    @Override
+    public String getName() {
+        return EnumUtils.toNiceString(type) + " Rune";
     }
 
     @Override
