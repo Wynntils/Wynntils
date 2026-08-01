@@ -22,7 +22,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public class LoadoutMenuScrollListAspectWidget extends AbstractWidget implements IconRenderer, ItemTooltipProvider {
     private final StyledText text;
@@ -45,7 +44,9 @@ public class LoadoutMenuScrollListAspectWidget extends AbstractWidget implements
         AspectInfo aspectInfo = Models.Aspect.getAspectInfo(this.text.getString());
         this.tooltipItem = aspectInfo == null
                 ? ItemStack.EMPTY
-                : new AspectItemStack(aspectInfo, Models.Aspect.getAspectTierByName(this.text.getString()).orElse(1));
+                : new AspectItemStack(
+                        aspectInfo,
+                        Models.Aspect.getAspectTierByName(this.text.getString()).orElse(1));
     }
 
     @Override

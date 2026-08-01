@@ -236,10 +236,8 @@ public final class AspectModel extends Model {
 
         McUtils.player().closeContainer();
 
-        Managers.TickScheduler.scheduleNextTick(() -> ASPECT_CONTAINER_QUERIES.scanAspectPages(
-                onStatus,
-                onError,
-                onComplete));
+        Managers.TickScheduler.scheduleNextTick(
+                () -> ASPECT_CONTAINER_QUERIES.scanAspectPages(onStatus, onError, onComplete));
     }
 
     public void saveCurrentAspectLoadout(

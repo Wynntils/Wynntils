@@ -60,8 +60,7 @@ public class CharacterInfoIndicatorFeature extends Feature {
     // otherwise it is max and then the calculation fails and an error shows up in the chat.
     private static final int DELAY_TICKS = 200;
 
-    private static final Pattern UNUSED_ABILITY_POINTS_PATTERN =
-            Pattern.compile("§3✦ Unused Ability Points: §f(\\d+)");
+    private static final Pattern UNUSED_ABILITY_POINTS_PATTERN = Pattern.compile("§3✦ Unused Ability Points: §f(\\d+)");
 
     @Persisted(i18nKey = "feature.wynntils.characterInfoIndicator.rescanMessage")
     private final Config<Boolean> rescanMessage = new Config<>(true);
@@ -208,12 +207,10 @@ public class CharacterInfoIndicatorFeature extends Feature {
 
         if (!isMismatch) return;
 
-
         WynntilsMod.info(String.format(
                 "Ability point mismatch: used=%d, unused=%d, total=%d, max=%d for level=%d."
                         + " Tracked ability tree state is out of sync.",
                 usedAbilityPoints, unusedAbilityPoints, totalAbilityPoints, maxAbilityPoints, combatLevel));
-
 
         Component clickableHere = Component.translatable(
                         "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere")

@@ -91,10 +91,7 @@ public class AspectContainerQueries {
         builder.build().executeQuery();
     }
 
-    public void scanAspectPages(
-            Consumer<String> onStatus,
-            Consumer<String> onError,
-            Consumer<String> onComplete) {
+    public void scanAspectPages(Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
         QueryBuilder builder = ScriptedContainerQuery.builder("Aspect Page Scanner")
                 .onError(msg -> {
                     onError.accept(msg);
@@ -133,7 +130,6 @@ public class AspectContainerQueries {
                                 .expectContainer(AspectsContainer.class)
                                 .accumulateSetSlotChanges(2)
                                 .processIncomingContainer(c -> onStatus.accept("Scanning next page")));
-
 
         builder.execute(() -> onComplete.accept("Finished scanning aspect pages"));
         builder.build().executeQuery();
