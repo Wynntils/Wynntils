@@ -1,27 +1,42 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features.wynntils;
 
 import com.google.common.collect.Lists;
-import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.core.text.fonts.WynnFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
+import com.wynntils.core.text.type.StyleType;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.models.abilitytree.type.AbilityPointProgression;
+import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.screens.base.TooltipProvider;
-import com.wynntils.screens.buildloadouts.type.MenuCategory;
-import com.wynntils.screens.buildloadouts.widgets.LoadoutMenuLoadButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -29,17 +44,22 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 @ConfigCategory(Category.WYNNTILS)
 public class CharacterInfoIndicatorFeature extends Feature {
+    private static final Pattern ABILITY_ONLY_PATTERN = Pattern.compile(
+            "^§4You have §b§l(\\d+) unused Ability Points?! §4Right-Click while holding your compass to use them$");
+
+    private static final Pattern SKILL_AND_ABILITY_PATTERN = Pattern.compile(
+            "^§4You have §c§l(\\d+) unused Skill Points?§4 and §b§l(\\d+) unused Ability Points?! §4Right-Click while holding your compass to use them$");
+
+    @Persisted(i18nKey = "feature.wynntils.characterInfoIndicator.rescanMessage")
+    private final Config<Boolean> rescanMessage = new Config<>(true);
 
     public CharacterInfoIndicatorFeature() {
         super(ProfileDefault.ENABLED);
@@ -51,19 +71,19 @@ public class CharacterInfoIndicatorFeature extends Feature {
         if (!(Models.Container.getCurrentContainer() instanceof CharacterInfoContainer)) return;
 
         screen.addRenderableWidget(
-                new InfoIndicatorButton(
-                         screen.leftPos + screen.imageWidth + 26, screen.topPos));
+                new InfoIndicatorButton(screen.leftPos + screen.imageWidth + 26, screen.topPos, this));
     }
-
 
     private static final class InfoIndicatorButton extends AbstractButton implements TooltipProvider {
         private static final int BUTTON_WIDTH = 20;
         private static final int BUTTON_HEIGHT = 20;
+        private final CharacterInfoIndicatorFeature parent;
 
         private List<Component> generatedTooltip = new ArrayList<>();
 
-        public InfoIndicatorButton(int x, int y) {
+        public InfoIndicatorButton(int x, int y, CharacterInfoIndicatorFeature parent) {
             super(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, Component.literal("Info Indicator Button"));
+            this.parent = parent;
             buildTooltip();
         }
 
@@ -77,7 +97,8 @@ public class CharacterInfoIndicatorFeature extends Feature {
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
-                            StyledText.fromComponent(Component.literal("\uE027").withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT))),
+                            StyledText.fromComponent(Component.literal("\uE027")
+                                    .withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT))),
                             (this.getX() + this.width / 2f),
                             (this.getY() + this.height / 2f),
                             CommonColors.WHITE,
@@ -87,9 +108,7 @@ public class CharacterInfoIndicatorFeature extends Feature {
 
             if (isMouseOver(mouseX, mouseY)) {
                 guiGraphics.setTooltipForNextFrame(
-                        Lists.transform(getTooltipLines(), Component::getVisualOrderText),
-                        mouseX,
-                        mouseY);
+                        Lists.transform(getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
             }
         }
 
@@ -99,7 +118,7 @@ public class CharacterInfoIndicatorFeature extends Feature {
 
             this.playDownSound(McUtils.mc().getSoundManager());
 
-            WynntilsMod.info("clicked");
+            Handlers.Command.sendCommandImmediately("wynntils rescan");
 
             return true;
         }
@@ -115,16 +134,15 @@ public class CharacterInfoIndicatorFeature extends Feature {
         private void buildTooltip() {
             this.generatedTooltip = new ArrayList<>();
 
-            this.generatedTooltip.add(
-                    Component.translatable("feature.wynntils.characterInfoIndicator.tooltip.title")
-                            .withStyle(ChatFormatting.GOLD));
+            this.generatedTooltip.add(Component.translatable("feature.wynntils.characterInfoIndicator.tooltip.title")
+                    .withStyle(ChatFormatting.GOLD));
 
             this.generatedTooltip.add(Component.empty());
 
-            this.generatedTooltip.add(
-                    Component.literal("- ").withStyle(ChatFormatting.GOLD)
-                            .append(Component.translatable("feature.wynntils.characterInfoIndicator.tooltip.update")
-                                    .withStyle(ChatFormatting.WHITE)));
+            this.generatedTooltip.add(Component.literal("- ")
+                    .withStyle(ChatFormatting.GOLD)
+                    .append(Component.translatable("feature.wynntils.characterInfoIndicator.tooltip.update")
+                            .withStyle(ChatFormatting.WHITE)));
 
             this.generatedTooltip.add(Component.empty());
 
@@ -134,5 +152,60 @@ public class CharacterInfoIndicatorFeature extends Feature {
                     .append(Component.translatable("feature.wynntils.characterInfoIndicator.tooltip.leftClick")
                             .withStyle(ChatFormatting.GREEN)));
         }
+    }
+
+    @SubscribeEvent
+    public void onChatMessage(ChatMessageEvent.Match e) {
+        if (!rescanMessage.get()) return;
+
+        StyledText message = StyledTextUtils.unwrap(e.getMessage()).stripAlignment();
+        String coded = message.getString(StyleType.DEFAULT);
+
+        int unusedAbilityPoints;
+
+        Matcher abilityOnlyMatcher = ABILITY_ONLY_PATTERN.matcher(coded);
+        Matcher skillAndAbilityMatcher = SKILL_AND_ABILITY_PATTERN.matcher(coded);
+
+        if (abilityOnlyMatcher.matches()) {
+            unusedAbilityPoints = Integer.parseInt(abilityOnlyMatcher.group(1));
+        } else if (skillAndAbilityMatcher.matches()) {
+            unusedAbilityPoints = Integer.parseInt(skillAndAbilityMatcher.group(2));
+        } else {
+            return;
+        }
+
+        ClassType classType = Models.Character.getClassType();
+        List<String> equippedNames = Models.AbilityTree.getEquippedAbilities();
+
+        int usedAbilityPoints = 0;
+        for (String abilityName : equippedNames) {
+            AbilityTreeSkillNode node = Models.AbilityTree.getNodeFromNameAndClass(abilityName, classType);
+            if (node != null) {
+                usedAbilityPoints += node.cost();
+            }
+        }
+
+        int totalAbilityPoints = usedAbilityPoints + unusedAbilityPoints;
+
+        int combatLevel = Models.CombatXp.getCombatLevel().current();
+        int maxAbilityPoints = AbilityPointProgression.getPointsAtLevel(combatLevel);
+
+        if (totalAbilityPoints == maxAbilityPoints) return;
+
+        Component clickableHere = Component.translatable(
+                        "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere")
+                .withStyle(Style.EMPTY
+                        .withUnderlined(true)
+                        .withColor(CommonColors.RED.asInt())
+                        .withClickEvent(new ClickEvent.RunCommand("/wynntils rescan")));
+
+        Component fullMessage = Component.empty()
+                .append(Component.translatable("feature.wynntils.characterInfoIndicator.rescanMessage.message.prefix")
+                        .withStyle(Style.EMPTY.withColor(CommonColors.RED.asInt())))
+                .append(clickableHere)
+                .append(Component.translatable("feature.wynntils.characterInfoIndicator.rescanMessage.message.suffix")
+                        .withStyle(Style.EMPTY.withColor(CommonColors.RED.asInt())));
+
+        McUtils.sendWynntilsPrefixMessage(fullMessage);
     }
 }

@@ -5,6 +5,7 @@
 package com.wynntils.models.aspects;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -221,6 +222,22 @@ public final class AspectModel extends Model {
         }
 
         return List.of();
+    }
+
+    public void clearEquippedAspectsAndQuery(
+            Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
+        Map<String, List<String>> currentEquippedAspects = equippedAspects.get();
+        currentEquippedAspects.put(Models.Character.getId(), new ArrayList<>());
+        equippedAspects.store(currentEquippedAspects);
+        equippedAspects.touched();
+
+        McUtils.player().closeContainer();
+
+        Managers.TickScheduler.scheduleNextTick(() -> ASPECT_CONTAINER_QUERIES.dumpAspectContainer(
+                loadout -> {}, // we don't need to do anything with this because the container event reads it.
+                onStatus,
+                onError,
+                onComplete));
     }
 
     public void saveCurrentAspectLoadout(

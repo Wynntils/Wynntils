@@ -5,6 +5,7 @@
 package com.wynntils.models.abilitytree;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -28,6 +29,7 @@ import com.wynntils.models.items.items.game.AbilityTreeNodeItem;
 import com.wynntils.models.items.items.game.AbilityTreeResetItem;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.models.statuseffects.type.StatusEffect;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -246,6 +248,10 @@ public final class AbilityTreeModel extends Model {
         equippedAbilities.touched();
     }
 
+    public List<String> getEquippedAbilities() {
+        return equippedAbilities.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
+    }
+
     public Optional<String> getEquippedAbilityByName(String abilityName) {
         List<String> characterAbilities =
                 equippedAbilities.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
@@ -253,6 +259,22 @@ public final class AbilityTreeModel extends Model {
         return characterAbilities.stream()
                 .filter(aspect -> aspect.toLowerCase(Locale.ROOT).endsWith(abilityName.toLowerCase(Locale.ROOT)))
                 .findFirst();
+    }
+
+    public void clearEquippedAbilitesAndQuery(
+            Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
+        Map<String, List<String>> allEquippedAbilities = equippedAbilities.get();
+        allEquippedAbilities.put(Models.Character.getId(), new ArrayList<>());
+        equippedAbilities.store(allEquippedAbilities);
+        equippedAbilities.touched();
+
+        McUtils.player().closeContainer();
+
+        Managers.TickScheduler.scheduleNextTick(() -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.dumpAbilityTree(
+                abilityTreeInfo -> {}, // we don't need to do anything with this because the container event reads it.
+                onStatus,
+                onError,
+                onComplete));
     }
 
     public AbilityTreeInfo getAbilityTree(ClassType type) {
@@ -514,7 +536,9 @@ public final class AbilityTreeModel extends Model {
                     // Count archetype points from the *remaining* set, excluding the node itself
                     Map<String, Integer> archetypeCounts = new HashMap<>();
                     for (AbilityTreeSkillNode n : remaining) {
-                        if (n != node && n.archetypeInfo() != null && n.archetypeInfo().archetype() != null) {
+                        if (n != node
+                                && n.archetypeInfo() != null
+                                && n.archetypeInfo().archetype() != null) {
                             archetypeCounts.merge(n.archetypeInfo().archetype(), 1, Integer::sum);
                         }
                     }

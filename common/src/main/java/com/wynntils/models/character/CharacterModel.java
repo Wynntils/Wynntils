@@ -163,9 +163,14 @@ public final class CharacterModel extends Model {
     }
 
     public void scanCharacterInfo() {
+        scanCharacterInfo(null);
+    }
+
+    public void scanCharacterInfo(Runnable onComplete) {
         if (!updateCharacterId()) {
             scanCharacterInfoPending = true;
             scanCharacterInfoAlreadyScanned = false;
+            if (onComplete != null) onComplete.run();
             return;
         }
 
@@ -173,22 +178,29 @@ public final class CharacterModel extends Model {
             hasCharacter = true;
             scanCharacterInfoPending = false;
             scanCharacterInfoAlreadyScanned = true;
+            if (onComplete != null) onComplete.run();
             return;
         }
 
         WynntilsMod.info("Scheduling character info query");
         QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Character Info Query");
-        queryBuilder.onError(msg -> WynntilsMod.warn("Error querying Character Info: " + msg));
+        queryBuilder.onError(msg -> {
+            WynntilsMod.warn("Error querying Character Info: " + msg);
+            if (onComplete != null) onComplete.run();
+        });
 
-        // Open compass/character menu
         queryBuilder.then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                 .expectContainer(CharacterInfoContainer.class)
                 .processIncomingContainer(this::parseCharacterContainer));
 
-        // Scan guild container, if the player is in a guild
         Models.Guild.addGuildContainerQuerySteps(queryBuilder);
 
-        queryBuilder.build().executeQuery();
+        queryBuilder
+                .execute(() -> {
+                    if (onComplete != null) onComplete.run();
+                })
+                .build()
+                .executeQuery();
 
         previousScanId = id;
         scanCharacterInfoPending = false;
