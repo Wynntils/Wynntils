@@ -441,11 +441,11 @@ public class CharacterFunctions {
         }
     }
 
-    public static class IsAbilityEquippedFunction extends Function<Boolean> {
+    public static class IsAbilityUnlockedFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
             String abilityName = arguments.getArgument("abilityName").getStringValue();
-            return Models.AbilityTree.getEquippedAbilityByName(abilityName).isPresent();
+            return Models.AbilityTree.getUnlockedAbilityByName(abilityName).isPresent();
         }
 
         @Override

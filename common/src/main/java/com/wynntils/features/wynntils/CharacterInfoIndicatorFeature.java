@@ -19,8 +19,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.core.text.fonts.WynnFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
-import com.wynntils.core.text.type.StyleType;
-import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.abilitytree.type.AbilityPointProgression;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
@@ -32,7 +30,6 @@ import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -181,7 +178,7 @@ public class CharacterInfoIndicatorFeature extends Feature {
         int unusedAbilityPoints = Integer.parseInt(matcher.group(1));
 
         ClassType classType = Models.Character.getClassType();
-        List<String> equippedNames = Models.AbilityTree.getEquippedAbilities();
+        List<String> equippedNames = Models.AbilityTree.getUnlockedAbilities();
 
         int usedAbilityPoints = 0;
         for (String abilityName : equippedNames) {

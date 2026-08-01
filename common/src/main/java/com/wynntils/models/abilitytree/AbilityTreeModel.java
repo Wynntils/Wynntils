@@ -58,7 +58,7 @@ public final class AbilityTreeModel extends Model {
     private final AbilityTreeInfoRegistry abilityTreeInfoRegistry = new AbilityTreeInfoRegistry();
 
     @Persisted
-    private final Storage<Map<String, List<String>>> equippedAbilities = new Storage<>(new TreeMap<>());
+    private final Storage<Map<String, List<String>>> unlockedAbilities = new Storage<>(new TreeMap<>());
 
     public AbilityTreeModel() {
         super(List.of());
@@ -81,7 +81,7 @@ public final class AbilityTreeModel extends Model {
 
         if (abilitySlots.isEmpty()) return;
 
-        Map<String, List<String>> allEquippedAbilities = equippedAbilities.get();
+        Map<String, List<String>> allEquippedAbilities = unlockedAbilities.get();
         String characterId = Models.Character.getId();
         List<String> equipped = allEquippedAbilities.computeIfAbsent(characterId, id -> new ArrayList<>());
 
@@ -116,8 +116,8 @@ public final class AbilityTreeModel extends Model {
 
         if (changed) {
             allEquippedAbilities.put(characterId, equipped);
-            equippedAbilities.store(allEquippedAbilities);
-            equippedAbilities.touched();
+            unlockedAbilities.store(allEquippedAbilities);
+            unlockedAbilities.touched();
         }
     }
 
@@ -149,7 +149,7 @@ public final class AbilityTreeModel extends Model {
         String abilityName = abilityItem.getName().getString(StyleType.NONE);
         boolean unlocked = abilityItem.getAbilityTreeNodeType().getState() == AbilityTreeNodeState.UNLOCKED;
 
-        Map<String, List<String>> allEquippedAbilities = equippedAbilities.get();
+        Map<String, List<String>> allEquippedAbilities = unlockedAbilities.get();
         String characterId = Models.Character.getId();
         List<String> equipped = allEquippedAbilities.computeIfAbsent(characterId, id -> new ArrayList<>());
 
@@ -168,8 +168,8 @@ public final class AbilityTreeModel extends Model {
 
         if (changed) {
             allEquippedAbilities.put(characterId, equipped);
-            equippedAbilities.store(allEquippedAbilities);
-            equippedAbilities.touched();
+            unlockedAbilities.store(allEquippedAbilities);
+            unlockedAbilities.touched();
         }
     }
 
@@ -185,10 +185,10 @@ public final class AbilityTreeModel extends Model {
             if (abilityTreeItemOpt.isEmpty()) return;
             if (!abilityTreeItemOpt.get().getCanReset()) return;
 
-            Map<String, List<String>> allEquippedAbilities = equippedAbilities.get();
+            Map<String, List<String>> allEquippedAbilities = unlockedAbilities.get();
             allEquippedAbilities.put(Models.Character.getId(), new ArrayList<>());
-            equippedAbilities.store(allEquippedAbilities);
-            equippedAbilities.touched();
+            unlockedAbilities.store(allEquippedAbilities);
+            unlockedAbilities.touched();
         } else if (currentContainer instanceof AbilityTreeResetContainer) {
             ItemStack itemStack = event.getItemStack();
             if (itemStack.isEmpty()) return;
@@ -199,10 +199,10 @@ public final class AbilityTreeModel extends Model {
             if (!abilityResetItemOpt.get().getCanReset()) return;
 
             if (event.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-                Map<String, List<String>> allEquippedAbilities = equippedAbilities.get();
+                Map<String, List<String>> allEquippedAbilities = unlockedAbilities.get();
                 allEquippedAbilities.put(Models.Character.getId(), new ArrayList<>());
-                equippedAbilities.store(allEquippedAbilities);
-                equippedAbilities.touched();
+                unlockedAbilities.store(allEquippedAbilities);
+                unlockedAbilities.touched();
             }
         }
 
@@ -235,7 +235,7 @@ public final class AbilityTreeModel extends Model {
         Set<AbilityTreeSkillNode> toRemove =
                 computeCascadeRemoval(abilityTreeSkillNode, Models.Character.getClassType());
 
-        Map<String, List<String>> allEquippedAbilities = equippedAbilities.get();
+        Map<String, List<String>> allEquippedAbilities = unlockedAbilities.get();
         String characterId = Models.Character.getId();
         List<String> equipped = allEquippedAbilities.computeIfAbsent(characterId, id -> new ArrayList<>());
 
@@ -244,17 +244,17 @@ public final class AbilityTreeModel extends Model {
         }
 
         allEquippedAbilities.put(characterId, equipped);
-        equippedAbilities.store(allEquippedAbilities);
-        equippedAbilities.touched();
+        unlockedAbilities.store(allEquippedAbilities);
+        unlockedAbilities.touched();
     }
 
-    public List<String> getEquippedAbilities() {
-        return equippedAbilities.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
+    public List<String> getUnlockedAbilities() {
+        return unlockedAbilities.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
     }
 
-    public Optional<String> getEquippedAbilityByName(String abilityName) {
+    public Optional<String> getUnlockedAbilityByName(String abilityName) {
         List<String> characterAbilities =
-                equippedAbilities.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
+                unlockedAbilities.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
 
         return characterAbilities.stream()
                 .filter(aspect -> aspect.toLowerCase(Locale.ROOT).endsWith(abilityName.toLowerCase(Locale.ROOT)))
@@ -263,10 +263,10 @@ public final class AbilityTreeModel extends Model {
 
     public void clearEquippedAbilitesAndQuery(
             Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
-        Map<String, List<String>> allEquippedAbilities = equippedAbilities.get();
+        Map<String, List<String>> allEquippedAbilities = unlockedAbilities.get();
         allEquippedAbilities.put(Models.Character.getId(), new ArrayList<>());
-        equippedAbilities.store(allEquippedAbilities);
-        equippedAbilities.touched();
+        unlockedAbilities.store(allEquippedAbilities);
+        unlockedAbilities.touched();
 
         McUtils.player().closeContainer();
 
@@ -491,7 +491,7 @@ public final class AbilityTreeModel extends Model {
                 allNodes.stream().collect(Collectors.toMap(AbilityTreeSkillNode::name, n -> n, (a, b) -> a));
 
         String characterId = Models.Character.getId();
-        List<String> equippedNames = equippedAbilities.get().getOrDefault(characterId, List.of());
+        List<String> equippedNames = unlockedAbilities.get().getOrDefault(characterId, List.of());
 
         // Full set of nodes the player had before the removal (includes the clicked one)
         Set<AbilityTreeSkillNode> preEquipped = equippedNames.stream()
