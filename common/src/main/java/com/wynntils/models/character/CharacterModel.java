@@ -189,10 +189,12 @@ public final class CharacterModel extends Model {
             if (onComplete != null) onComplete.run();
         });
 
+        // Open compass/character menu
         queryBuilder.then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                 .expectContainer(CharacterInfoContainer.class)
                 .processIncomingContainer(this::parseCharacterContainer));
 
+        // Scan guild container, if the player is in a guild
         Models.Guild.addGuildContainerQuerySteps(queryBuilder);
 
         queryBuilder

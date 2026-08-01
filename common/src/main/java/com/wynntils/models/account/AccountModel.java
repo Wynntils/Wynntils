@@ -142,6 +142,7 @@ public final class AccountModel extends Model {
             if (onComplete != null) onComplete.run();
         });
 
+        // Open compass/character menu
         queryBuilder.then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                 .expectContainer(CharacterInfoContainer.class)
                 .processIncomingContainer(this::parseCharacterMenuContainer));
@@ -150,6 +151,7 @@ public final class AccountModel extends Model {
                 || silverbullSubscriber.get() == OptionalBoolean.NULL
                 || (silverbullSubscriber.get() != OptionalBoolean.FALSE
                         && System.currentTimeMillis() > silverbullExpiresAt.get())) {
+            // Open Cosmetics Menu
             queryBuilder.then(QueryStep.clickOnSlot(COSMETICS_SLOT)
                     .expectContainer(StoreContainer.class)
                     .processIncomingContainer(this::parseStoreContainer));
