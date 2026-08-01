@@ -5,7 +5,6 @@
 package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.profession.type.MaterialType;
@@ -13,7 +12,6 @@ import com.wynntils.screens.base.widgets.InfoButton;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.widgets.GatheringNodeFilterWidget;
 import com.wynntils.screens.maps.widgets.GatheringProfessionFilterButton;
-import com.wynntils.services.map.PoiService;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -44,7 +42,7 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
     private final MainMapScreen oldMapScreen;
     private List<GatheringNodeFilterWidget> gatheringNodeFilterWidgets = new ArrayList<>();
     private List<GatheringProfessionFilterButton> professionFilterButtons = new ArrayList<>();
-    private List<PoiService.GatheringNodeType> gatheringNodeTypes = new ArrayList<>();
+    //    private List<PoiService.GatheringNodeType> gatheringNodeTypes = new ArrayList<>();
     private Map<MaterialType, Boolean> filteredMaterialTypes = new EnumMap<>(MaterialType.class);
 
     private TextInputBoxWidget searchInput;
@@ -190,24 +188,25 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        if (gatheringNodeTypes.isEmpty()) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            guiGraphics,
-                            StyledText.fromComponent(Component.translatable(
-                                    "screens.wynntils.gatheringNodeFilterGui.noGatheringNodeTypes")),
-                            getTranslationX() + Texture.WAYPOINT_MANAGER_BACKGROUND.width() / 2f,
-                            getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() / 2f,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
-        } else {
-            RenderUtils.enableScissor(
-                    guiGraphics, (int) (getTranslationX() + 10), (int) (getTranslationY() + 16), 322, 181);
-            gatheringNodeFilterWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
-            RenderUtils.disableScissor(guiGraphics);
-        }
+        //        if (gatheringNodeTypes.isEmpty()) {
+        //            FontRenderer.getInstance()
+        //                    .renderText(
+        //                            guiGraphics,
+        //                            StyledText.fromComponent(Component.translatable(
+        //                                    "screens.wynntils.gatheringNodeFilterGui.noGatheringNodeTypes")),
+        //                            getTranslationX() + Texture.WAYPOINT_MANAGER_BACKGROUND.width() / 2f,
+        //                            getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() / 2f,
+        //                            CommonColors.WHITE,
+        //                            HorizontalAlignment.CENTER,
+        //                            VerticalAlignment.MIDDLE,
+        //                            TextShadow.NORMAL);
+        //        } else {
+        //            RenderUtils.enableScissor(
+        //                    guiGraphics, (int) (getTranslationX() + 10), (int) (getTranslationY() + 16), 322, 181);
+        //            gatheringNodeFilterWidgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY,
+        // partialTick));
+        //            RenderUtils.disableScissor(guiGraphics);
+        //        }
 
         professionFilterButtons.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
 
@@ -287,10 +286,10 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
         return true;
     }
 
-    public void toggleGatheringNodeType(PoiService.GatheringNodeType gatheringNodeType) {
-        Services.Poi.setGatheringNodeTypeVisible(
-                gatheringNodeType, !Services.Poi.isGatheringNodeTypeVisible(gatheringNodeType));
-    }
+    //    public void toggleGatheringNodeType(PoiService.GatheringNodeType gatheringNodeType) {
+    //        Services.Poi.setGatheringNodeTypeVisible(
+    //                gatheringNodeType, !Services.Poi.isGatheringNodeTypeVisible(gatheringNodeType));
+    //    }
 
     public void toggleMaterialType(MaterialType materialType, boolean selected, boolean excludeOthers) {
         if (excludeOthers) {
@@ -308,18 +307,20 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
     }
 
     private void toggleAllGatheringNodeTypes(boolean visible) {
-        Services.Poi.setAllGatheringNodeTypesVisible(visible);
+        //        Services.Poi.setAllGatheringNodeTypesVisible(visible);
     }
 
     private void renderScroll(GuiGraphics guiGraphics) {
-        if (gatheringNodeTypes.size() <= MAX_WIDGETS_PER_PAGE) return;
-
-        scrollY = getTranslationY()
-                + 15
-                + MathUtils.map(
-                        gatheringNodesScrollOffset, 0, getMaxScrollOffset(), 0, 186 - Texture.SCROLL_BUTTON.height());
-
-        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, getTranslationX() + SCROLL_RENDER_X, scrollY);
+        //        if (gatheringNodeTypes.size() <= MAX_WIDGETS_PER_PAGE) return;
+        //
+        //        scrollY = getTranslationY()
+        //                + 15
+        //                + MathUtils.map(
+        //                        gatheringNodesScrollOffset, 0, getMaxScrollOffset(), 0, 186 -
+        // Texture.SCROLL_BUTTON.height());
+        //
+        //        RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, getTranslationX() + SCROLL_RENDER_X,
+        // scrollY);
     }
 
     private void scroll(int newOffset) {
@@ -340,23 +341,24 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
 
     private void populateGatheringNodeTypes() {
         gatheringNodeFilterWidgets = new ArrayList<>();
-        gatheringNodeTypes = Services.Poi.getGatheringNodeTypes().stream()
-                .filter(gatheringNodeType -> filteredMaterialTypes.getOrDefault(gatheringNodeType.materialType(), true))
-                .filter(gatheringNodeType ->
-                        searchMatches(gatheringNodeType.sourceMaterial().name()))
-                .toList();
+        //        gatheringNodeTypes = Services.Poi.getGatheringNodeTypes().stream()
+        //                .filter(gatheringNodeType ->
+        // filteredMaterialTypes.getOrDefault(gatheringNodeType.materialType(), true))
+        //                .filter(gatheringNodeType ->
+        //                        searchMatches(gatheringNodeType.sourceMaterial().name()))
+        //                .toList();
 
         int renderX = (int) (getTranslationX() + 12);
         int renderY = (int) (getTranslationY() + 16);
 
-        for (PoiService.GatheringNodeType gatheringNodeType : gatheringNodeTypes) {
-            GatheringNodeFilterWidget gatheringNodeFilterWidget =
-                    new GatheringNodeFilterWidget(renderX, renderY, 320, 20, this, gatheringNodeType);
-
-            gatheringNodeFilterWidget.visible = renderY <= getTranslationY() + 16 + 179;
-            gatheringNodeFilterWidgets.add(gatheringNodeFilterWidget);
-            renderY += 20;
-        }
+        //        for (PoiService.GatheringNodeType gatheringNodeType : gatheringNodeTypes) {
+        //            GatheringNodeFilterWidget gatheringNodeFilterWidget =
+        //                    new GatheringNodeFilterWidget(renderX, renderY, 320, 20, this, gatheringNodeType);
+        //
+        //            gatheringNodeFilterWidget.visible = renderY <= getTranslationY() + 16 + 179;
+        //            gatheringNodeFilterWidgets.add(gatheringNodeFilterWidget);
+        //            renderY += 20;
+        //        }
 
         scroll(Math.min(gatheringNodesScrollOffset, getMaxScrollOffset()));
     }
