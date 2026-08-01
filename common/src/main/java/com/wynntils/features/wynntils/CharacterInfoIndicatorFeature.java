@@ -5,7 +5,9 @@
 package com.wynntils.features.wynntils;
 
 import com.google.common.collect.Lists;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -24,8 +26,11 @@ import com.wynntils.models.abilitytree.type.AbilityPointProgression;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
+import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -47,16 +52,17 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.WYNNTILS)
 public class CharacterInfoIndicatorFeature extends Feature {
-    private static final Pattern ABILITY_ONLY_PATTERN = Pattern.compile(
-            "^§4You have §b§l(\\d+) unused Ability Points?! §4Right-Click while holding your compass to use them$");
+    private static final int DELAY_TICKS = 100;
 
-    private static final Pattern SKILL_AND_ABILITY_PATTERN = Pattern.compile(
-            "^§4You have §c§l(\\d+) unused Skill Points?§4 and §b§l(\\d+) unused Ability Points?! §4Right-Click while holding your compass to use them$");
+    private static final Pattern UNUSED_ABILITY_POINTS_PATTERN =
+            Pattern.compile("§3✦ Unused Ability Points: §f(\\d+)");
 
     @Persisted(i18nKey = "feature.wynntils.characterInfoIndicator.rescanMessage")
     private final Config<Boolean> rescanMessage = new Config<>(true);
@@ -154,25 +160,25 @@ public class CharacterInfoIndicatorFeature extends Feature {
         }
     }
 
-    @SubscribeEvent
-    public void onChatMessage(ChatMessageEvent.Match e) {
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onWorldStateChanged(WorldStateEvent e) {
         if (!rescanMessage.get()) return;
 
-        StyledText message = StyledTextUtils.unwrap(e.getMessage()).stripAlignment();
-        String coded = message.getString(StyleType.DEFAULT);
+        if (e.getNewState() == WorldState.WORLD) {
+            Managers.TickScheduler.scheduleLater(this::handleAbilityPointsFromCompass, DELAY_TICKS);
+        }
+    }
 
-        int unusedAbilityPoints;
+    private void handleAbilityPointsFromCompass() {
+        ItemStack compassItem = McUtils.inventory().items.get(Models.Character.CHARACTER_INFO_SLOT);
+        Matcher matcher = LoreUtils.matchLoreLine(compassItem, 6, UNUSED_ABILITY_POINTS_PATTERN);
 
-        Matcher abilityOnlyMatcher = ABILITY_ONLY_PATTERN.matcher(coded);
-        Matcher skillAndAbilityMatcher = SKILL_AND_ABILITY_PATTERN.matcher(coded);
-
-        if (abilityOnlyMatcher.matches()) {
-            unusedAbilityPoints = Integer.parseInt(abilityOnlyMatcher.group(1));
-        } else if (skillAndAbilityMatcher.matches()) {
-            unusedAbilityPoints = Integer.parseInt(skillAndAbilityMatcher.group(2));
-        } else {
+        if (!matcher.matches()) {
+            WynntilsMod.warn("Compass item had unexpected unused ability points line");
             return;
         }
+
+        int unusedAbilityPoints = Integer.parseInt(matcher.group(1));
 
         ClassType classType = Models.Character.getClassType();
         List<String> equippedNames = Models.AbilityTree.getEquippedAbilities();

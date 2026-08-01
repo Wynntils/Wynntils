@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.items.annotators.game;
+package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.GameItemAnnotator;

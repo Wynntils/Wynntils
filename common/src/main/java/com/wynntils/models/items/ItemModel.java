@@ -11,8 +11,8 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.models.items.annotators.game.AbilityShardAnnotator;
-import com.wynntils.models.items.annotators.game.AbilityTreeNodeAnnotator;
-import com.wynntils.models.items.annotators.game.AbilityTreeResetAnnotator;
+import com.wynntils.models.items.annotators.gui.AbilityTreeNodeAnnotator;
+import com.wynntils.models.items.annotators.gui.AbilityTreeResetAnnotator;
 import com.wynntils.models.items.annotators.game.AmplifierAnnotator;
 import com.wynntils.models.items.annotators.game.AspectAnnotator;
 import com.wynntils.models.items.annotators.game.CharmAnnotator;
@@ -81,8 +81,6 @@ public final class ItemModel extends Model {
 
         // Then alphabetically
         Handlers.Item.registerAnnotator(new AbilityShardAnnotator());
-        Handlers.Item.registerAnnotator(new AbilityTreeNodeAnnotator());
-        Handlers.Item.registerAnnotator(new AbilityTreeResetAnnotator());
         Handlers.Item.registerAnnotator(new AmplifierAnnotator());
         Handlers.Item.registerAnnotator(new AspectAnnotator());
         Handlers.Item.registerAnnotator(new CorruptedCacheAnnotator());
@@ -106,6 +104,8 @@ public final class ItemModel extends Model {
 
         // GuiItemAnnotators
         Handlers.Item.registerAnnotator(new AbilityTreeAnnotator());
+        Handlers.Item.registerAnnotator(new AbilityTreeNodeAnnotator());
+        Handlers.Item.registerAnnotator(new AbilityTreeResetAnnotator());
         Handlers.Item.registerAnnotator(new ActivityAnnotator());
         Handlers.Item.registerAnnotator(new ArchetypeAbilitiesAnnotator());
         Handlers.Item.registerAnnotator(new CharacterAnnotator());
