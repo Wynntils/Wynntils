@@ -4,14 +4,12 @@
  */
 package com.wynntils.models.activities;
 
-import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.net.ApiResponse;
-import com.wynntils.core.net.UrlId;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
@@ -75,7 +73,6 @@ import net.neoforged.bus.api.SubscribeEvent;
  */
 public final class ActivityModel extends Model {
     public static final String CONTENT_BOOK_TITLE = "\uDAFF\uDFEE\uE004";
-    private static final String WIKI_APOSTROPHE = "&#039;";
     private static final String PLAYER_PROGRESS_ITEM_NAME = "All Player Progress";
 
     private static final Pattern LEVEL_REQ_PATTERN =
@@ -92,8 +89,6 @@ public final class ActivityModel extends Model {
             Pattern.compile(".+§f\uF000 §#[a-f0-9]{8}§lClick To (Untrack|Track)");
     private static final Pattern REQUIRES_HERO_PLUS_PATTERN = Pattern.compile(".+§7Requires §f\uE08A");
     private static final Pattern OVERALL_PROGRESS_PATTERN = Pattern.compile("^\\S*§7(\\d+) of (\\d+) completed$");
-    private static final Pattern WIKI_REDIRECT_PATTERN = Pattern.compile("#REDIRECT \\[\\[(?<redirectname>.+)\\]\\]");
-
     private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ActivityTrackerScoreboardPart();
     private static final ContentBookQueries CONTAINER_QUERIES = new ContentBookQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
@@ -386,32 +381,21 @@ public final class ActivityModel extends Model {
         switch (activityInfo.type()) {
             case QUEST, STORYLINE_QUEST -> openQuestOnWiki(activityInfo);
             case MINI_QUEST -> openMiniQuestOnWiki(activityInfo);
-            default ->
-                Managers.Net.openLink(
-                        UrlId.LINK_WIKI_LOOKUP,
-                        Map.of("title", activityInfo.name().replace(" ", "_")));
+            default -> Services.Wiki.openPage(activityInfo.name().replace(" ", "_"));
         }
     }
 
     private void openQuestOnWiki(ActivityInfo activityInfo) {
-        ApiResponse apiResponse =
-                Managers.Net.callApi(UrlId.API_WIKI_QUEST_PAGE_QUERY, Map.of("name", activityInfo.name()));
-        apiResponse.handleJsonArray(json -> {
-            String pageTitle = json.get(0)
-                    .getAsJsonObject()
-                    .get("_pageTitle")
-                    .getAsString()
-                    .replace(WIKI_APOSTROPHE, "'");
-            Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", pageTitle));
-        });
+        Services.Wiki.openPageResolvingRedirects(activityInfo.name());
     }
 
     private void openMiniQuestOnWiki(ActivityInfo activityInfo) {
-        String type = activityInfo.name().split(" ")[0];
+        String type = activityInfo.name().split(" ")[0] + "ing";
+        if (!type.equals("Slaying") && !type.equals("Gathering")) {
+            type = "Slaying";
+        }
 
-        String wikiName = "Quests#" + type + "ing_Posts";
-
-        Managers.Net.openLink(UrlId.LINK_WIKI_LOOKUP, Map.of("title", wikiName));
+        Services.Wiki.openPage("Quests#" + type + "_Posts");
     }
 
     public void openMapOnActivity(ActivityInfo activityInfo) {
@@ -459,34 +443,13 @@ public final class ActivityModel extends Model {
     }
 
     private void locateActivity(ActivityInfo activityInfo, ActivityOpenAction openAction) {
-        checkWikiForActivity(activityInfo.name(), activityInfo, openAction);
+        Services.Wiki.resolvePage(
+                activityInfo.name(),
+                wikiPage -> handleActivityWikiText(wikiPage.wikiText(), activityInfo, openAction),
+                () -> McUtils.sendErrorToClient("Unable to find activity coordinates. (Wiki page not found)"));
     }
 
-    private void checkWikiForActivity(String activityName, ActivityInfo activityInfo, ActivityOpenAction openAction) {
-        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", activityName));
-
-        apiResponse.handleJsonObject(json -> handleActivityJsonResponse(json, activityInfo, openAction));
-    }
-
-    private void handleActivityJsonResponse(JsonObject json, ActivityInfo activityInfo, ActivityOpenAction openAction) {
-        if (json.has("error")) {
-            McUtils.sendErrorToClient("Unable to find activity coordinates. (Wiki page not found)");
-            return;
-        }
-
-        String wikiText = json.get("parse")
-                .getAsJsonObject()
-                .get("wikitext")
-                .getAsJsonObject()
-                .get("*")
-                .getAsString();
-
-        Matcher redirectMatcher = WIKI_REDIRECT_PATTERN.matcher(wikiText);
-        if (redirectMatcher.matches()) {
-            checkWikiForActivity(redirectMatcher.group("redirectname"), activityInfo, openAction);
-            return;
-        }
-
+    private void handleActivityWikiText(String wikiText, ActivityInfo activityInfo, ActivityOpenAction openAction) {
         wikiText = wikiText.replace(" ", "").replace("\n", "");
 
         String xLocation = wikiText.substring(wikiText.indexOf("xcoordinate="));

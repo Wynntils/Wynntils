@@ -33,7 +33,7 @@ import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.models.items.items.gui.TradeMarketIdentificationFilterItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
-import com.wynntils.models.mount.type.MountStat;
+import com.wynntils.models.mount.type.ConfigMountStat;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -111,7 +111,7 @@ public class ItemTextOverlayFeature extends Feature {
     private final Config<Boolean> mountItemEnabled = new Config<>(true);
 
     @Persisted
-    private final Config<MountStat> mountItemStat = new Config<>(MountStat.POTENTIAL);
+    private final Config<ConfigMountStat> mountItemStat = new Config<>(ConfigMountStat.POTENTIAL);
 
     @Persisted
     private final Config<TextShadow> mountItemShadow = new Config<>(TextShadow.OUTLINE);
@@ -352,7 +352,7 @@ public class ItemTextOverlayFeature extends Feature {
             String text = dungeon.getInitials();
 
             CustomColor textColor;
-            if (item.isCorrupted()) {
+            if (item.isBroken() || item.isCorrupted()) {
                 textColor = dungeon.doesCorruptedExist() ? CORRUPTED_COLOR : REMOVED_COLOR;
             } else {
                 textColor = dungeon.doesExist() ? STANDARD_COLOR : REMOVED_COLOR;
@@ -482,18 +482,14 @@ public class ItemTextOverlayFeature extends Feature {
         }
 
         private int getSelectedMountStatValue() {
-            return switch (mountItemStat.get()) {
-                case ACCELERATION -> item.getAcceleration().current();
-                case ALTITUDE -> item.getAltitude().current();
-                case JUMP_HEIGHT -> item.getJumpHeight().current();
-                case ENERGY -> item.getEnergy().current();
-                case HANDLING -> item.getHandling().current();
-                case POTENTIAL -> item.getPotential();
-                case BOOST -> item.getBoost().current();
-                case SPEED -> item.getSpeed().current();
-                case TOUGHNESS -> item.getToughness().current();
-                case TRAINING -> item.getTraining().current();
-            };
+            if (mountItemStat.get() == ConfigMountStat.POTENTIAL) {
+                return item.getMountInfo().potential();
+            } else {
+                return item.getMountInfo()
+                        .stats()
+                        .get(mountItemStat.get().getMountStat())
+                        .current();
+            }
         }
     }
 

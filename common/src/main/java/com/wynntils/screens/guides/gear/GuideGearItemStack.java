@@ -16,28 +16,20 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 
 public final class GuideGearItemStack extends GuideItemStack {
     private final GearInfo gearInfo;
-    private final MutableComponent name;
     private List<Component> generatedTooltip;
 
     public GuideGearItemStack(GearInfo gearInfo) {
         super(gearInfo.metaInfo().material().itemStack(), new GearItem(gearInfo, null), gearInfo.name());
 
         this.gearInfo = gearInfo;
-        this.name = Component.literal(gearInfo.name()).withStyle(gearInfo.tier().getChatFormatting());
         this.generatedTooltip = List.of();
         this.set(DataComponents.TOOLTIP_STYLE, gearInfo.tier().getTooltipStyle(false));
-    }
-
-    @Override
-    public Component getHoverName() {
-        return name;
     }
 
     @Override
@@ -45,9 +37,6 @@ public final class GuideGearItemStack extends GuideItemStack {
         List<Component> tooltipLines = new ArrayList<>(generatedTooltip);
 
         appendObtainInfo(tooltipLines, Models.Gear.getObtainInfo(gearInfo));
-
-        appendFavoriteInfo(tooltipLines);
-        appendWebGuideInfo(tooltipLines);
 
         return tooltipLines;
     }

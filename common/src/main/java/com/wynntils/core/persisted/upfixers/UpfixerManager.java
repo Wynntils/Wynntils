@@ -50,6 +50,7 @@ import com.wynntils.core.persisted.upfixers.config.WynntilsContentBookReplaceToS
 import com.wynntils.core.persisted.upfixers.storage.BankPageNameToBankPagePropertyUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.BankToAccountBankUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.DownloadSourceStringToEnumUpfixer;
+import com.wynntils.core.persisted.upfixers.storage.LoadoutMigrationUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.RemoveSetGearTierUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.UpdateChangelogToModelUpfixer;
 import java.util.ArrayList;
@@ -111,6 +112,7 @@ public class UpfixerManager extends Manager {
         registerStorageUpfixer(new BankPageNameToBankPagePropertyUpfixer());
         registerStorageUpfixer(new DownloadSourceStringToEnumUpfixer());
         registerStorageUpfixer(new RemoveSetGearTierUpfixer());
+        registerStorageUpfixer(new LoadoutMigrationUpfixer());
     }
 
     private void registerConfigUpfixer(Upfixer upfixer) {

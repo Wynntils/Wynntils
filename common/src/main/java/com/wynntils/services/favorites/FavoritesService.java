@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.favorites;
@@ -92,6 +92,14 @@ public final class FavoritesService extends Service {
 
     public void removeFavorite(String unformattedName) {
         getFavoriteItems().remove(unformattedName);
+        Managers.Feature.getFeatureInstance(ItemFavoriteFeature.class)
+                .favoriteItems
+                .touched();
+        revision++;
+    }
+
+    public void clearFavorites() {
+        getFavoriteItems().clear();
         Managers.Feature.getFeatureInstance(ItemFavoriteFeature.class)
                 .favoriteItems
                 .touched();

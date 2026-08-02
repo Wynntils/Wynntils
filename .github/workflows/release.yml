@@ -249,7 +249,7 @@ jobs:
           cat CHANGELOG.md >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - uses: Kir-Antipov/mc-publish@v3.3.0
+      - uses: Kir-Antipov/mc-publish@v3.3.1
         with:
           modrinth-id: dU5Gb9Ab
           modrinth-featured: true
@@ -267,6 +267,7 @@ jobs:
           version: ${{ needs.set-version.outputs.tag }}
           version-type: release
           game-versions: 1.21.11
+          environment: client
           changelog: ${{ steps.changelog.outputs.raw }}
 
           loaders: ${{ matrix.modloader }}

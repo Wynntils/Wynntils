@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.abilitytree.type;
 
+import com.google.gson.JsonArray;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,14 +13,14 @@ public record AbilityTreeSkillNode(
         String name,
         String formattedName,
         AbilityTreeNodeType abilityTreeNodeType,
-        List<String> description,
+        List<JsonArray> description,
         int cost,
         List<String> willBlock,
         List<String> blockedBy,
         String requiredAbility,
         ArchetypeRequirement requiredArchetype,
         int requiredLevel,
-        String archetype,
+        ArchetypeInfo archetypeInfo,
         AbilityTreeLocation location,
         List<Integer> connections) {
     @Override
@@ -33,13 +34,13 @@ public record AbilityTreeSkillNode(
                 && Objects.equals(formattedName, that.formattedName)
                 && Objects.equals(requiredAbility, that.requiredAbility)
                 && Objects.equals(requiredArchetype, that.requiredArchetype)
-                && Objects.equals(archetype, that.archetype)
+                && Objects.equals(archetypeInfo, that.archetypeInfo)
                 && Objects.equals(location, that.location);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, formattedName, cost, requiredAbility, requiredArchetype, archetype, location);
+        return Objects.hash(id, formattedName, cost, requiredAbility, requiredArchetype, archetypeInfo, location);
     }
 
     public AbilityTreeSkillNode withDefaultType() {
@@ -57,7 +58,7 @@ public record AbilityTreeSkillNode(
                 requiredAbility,
                 requiredArchetype,
                 requiredLevel,
-                archetype,
+                archetypeInfo,
                 location,
                 connections);
     }
@@ -77,7 +78,7 @@ public record AbilityTreeSkillNode(
                 requiredAbility,
                 requiredArchetype,
                 requiredLevel,
-                archetype,
+                archetypeInfo,
                 location,
                 connections);
     }
@@ -95,7 +96,7 @@ public record AbilityTreeSkillNode(
                 requiredAbility,
                 requiredArchetype,
                 requiredLevel,
-                archetype,
+                archetypeInfo,
                 location,
                 connections);
     }

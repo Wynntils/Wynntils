@@ -14,7 +14,7 @@ import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.properties.EmeraldValuedItemProperty;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.screens.guides.emerald.GuideEmeraldItemStack;
+import com.wynntils.screens.guides.emerald.GuideEmeraldUnitItemStack;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Locale;
@@ -210,10 +210,10 @@ public final class EmeraldModel extends Model {
         return Models.Account.isSilverbullSubscriber() ? SILVERBULL_TAX_AMOUNT : NORMAL_TAX_AMOUNT;
     }
 
-    public List<GuideEmeraldItemStack> getAllEmeraldItems() {
+    public List<GuideEmeraldUnitItemStack> getAllEmeraldItems() {
         return List.of(
-                new GuideEmeraldItemStack(EmeraldUnits.EMERALD),
-                new GuideEmeraldItemStack(EmeraldUnits.EMERALD_BLOCK),
-                new GuideEmeraldItemStack(EmeraldUnits.LIQUID_EMERALD));
+                new GuideEmeraldUnitItemStack(EmeraldUnits.EMERALD),
+                new GuideEmeraldUnitItemStack(EmeraldUnits.EMERALD_BLOCK),
+                new GuideEmeraldUnitItemStack(EmeraldUnits.LIQUID_EMERALD));
     }
 }
