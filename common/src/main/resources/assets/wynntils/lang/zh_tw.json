@@ -150,6 +150,7 @@
   "feature.wynntils.changelog.autoClassMenu.name": "顯示更新日誌的自動職業菜單",
   "feature.wynntils.changelog.description": "啟動時顯示更新日誌。",
   "feature.wynntils.changelog.name": "更新日誌",
+  "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere": "這裡",
   "feature.wynntils.chatCoordinates.description": "添加在聊天中點擊坐標以將指南針設置到該位置的功能。",
   "feature.wynntils.chatCoordinates.name": "聊天座標",
   "feature.wynntils.chatItem.chatItemErrorEncode": "編碼物品失敗：%s",
