@@ -150,6 +150,7 @@
   "feature.wynntils.changelog.autoClassMenu.name": "Automatisch Klasse Menu om Changelog Weer te Geven",
   "feature.wynntils.changelog.description": "Toont de changelog bij het opstarten.",
   "feature.wynntils.changelog.name": "Changelog",
+  "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere": "hier",
   "feature.wynntils.chatCoordinates.description": "Voegt de mogelijkheid toe om op coördinaten in de chat te klikken om je kompas naar die locatie te zetten.",
   "feature.wynntils.chatCoordinates.name": "Chat Coördinaten",
   "feature.wynntils.chatItem.chatItemErrorEncode": "Kon item niet coderen: %s",
