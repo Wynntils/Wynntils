@@ -150,6 +150,7 @@
   "feature.wynntils.changelog.autoClassMenu.name": "Menu di Classe Automatico per Visualizzare il Registro delle Modifiche",
   "feature.wynntils.changelog.description": "Mostra il registro delle modifiche all'avvio.",
   "feature.wynntils.changelog.name": "Registro delle Modifiche",
+  "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere": "qui",
   "feature.wynntils.chatCoordinates.description": "Aggiunge la capacità di fare clic sulle coordinate nella chat per impostare la tua bussola su quella posizione.",
   "feature.wynntils.chatCoordinates.name": "Coordinate della Chat",
   "feature.wynntils.chatItem.chatItemErrorEncode": "Errore nella codifica dell'articolo: %s",
