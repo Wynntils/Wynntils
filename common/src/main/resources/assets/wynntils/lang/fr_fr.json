@@ -150,6 +150,7 @@
   "feature.wynntils.changelog.autoClassMenu.name": "Menu de Classe Automatique pour Afficher le Journal des Modifications",
   "feature.wynntils.changelog.description": "Affiche le journal des modifications au démarrage.",
   "feature.wynntils.changelog.name": "Journal des Modifications",
+  "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere": "ici",
   "feature.wynntils.chatCoordinates.description": "Ajoute la capacité de cliquer sur des coordonnées dans le chat pour définir votre boussole à cet emplacement.",
   "feature.wynntils.chatCoordinates.name": "Coordonnées du Chat",
   "feature.wynntils.chatItem.chatItemErrorEncode": "Échec de l'encodage de l'article : %s",
