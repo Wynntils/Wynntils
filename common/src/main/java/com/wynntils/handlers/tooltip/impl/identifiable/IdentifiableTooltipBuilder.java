@@ -248,7 +248,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
     private List<TooltipLine> extractHeader(
             List<Component> original, IdentifiableItemProperty<?, ?> item, TooltipOptions options) {
-        int firstDivider = findFirstLineWithFont(original, CommonFonts.DIVIDER_FONT);
+        int firstDivider = findFirstLineWithFont(original, CommonFonts.TOOLTIP_DIVIDER_FONT);
         int end = firstDivider < 0 ? original.size() : firstDivider;
         List<TooltipLine> header = new ArrayList<>(end);
         for (int i = 0; i < end; i++) {
@@ -269,8 +269,8 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
     }
 
     private List<TooltipLine> extractMajorId(List<Component> original) {
-        int majorId = findFirstLineWithFont(original, CommonFonts.MAJOR_ID_FONT);
-        int paginator = findFirstLineWithFont(original, CommonFonts.PAGE_FONT);
+        int majorId = findFirstLineWithFont(original, CommonFonts.TOOLTIP_IDENTIFICATION_MAJOR_FONT);
+        int paginator = findFirstLineWithFont(original, CommonFonts.TOOLTIP_PAGE_FONT);
         if (majorId < 0) return List.of();
 
         int start = majorId;
@@ -306,9 +306,9 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             lines.add(new TooltipLine.Fixed(Component.empty()));
         }
 
-        Component sourceName = Component.literal("\uE000")
+        Component sourceName = Component.literal("\uE005")
                 .withStyle(Style.EMPTY
-                        .withFont(CommonFonts.TOOLTIP_FONT)
+                        .withFont(CommonFonts.WYNNTILS_TOOLTIP_ICONS)
                         .withColor(source.getColor().asInt()))
                 .append(Component.literal(" " + StringUtils.capitalized(source.name()))
                         .withStyle(CommonStyles.LANGUAGE));
@@ -411,10 +411,10 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             String frame = count == 0 ? "\uE007" : skillFrame(info.tier());
             String sprite = String.valueOf((char) ((count == 0 ? '\uE010' : '\uE000') + skill.ordinal()));
             line.append(withWhiteShadow(Component.literal(frame)
-                    .withStyle(Style.EMPTY.withFont(CommonFonts.REQUIREMENT_FRAME_FONT))
+                    .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_REQUIREMENT_FRAME_FONT))
                     .append(Component.literal("\uDAFF\uDFE7"))
                     .append(Component.literal(sprite)
-                            .withStyle(Style.EMPTY.withFont(CommonFonts.REQUIREMENT_SPRITE_FONT)))));
+                            .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_REQUIREMENT_SPRITE_FONT)))));
             line.append(Component.literal("\uDB00\uDC02").withStyle(CommonStyles.SPACE));
         }
         return line;
@@ -429,7 +429,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                     || Models.SkillPoint.getTotalSkillPoints(skill) >= count;
             String icon = count == 0 ? "\uE005" : fulfilled ? "\uE006" : "\uE007";
             line.append(withWhiteShadow(Component.literal(icon + "\uDAFF\uDFFF")
-                    .withStyle(Style.EMPTY.withFont(CommonFonts.REQUIREMENT_SPRITE_FONT))));
+                    .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_REQUIREMENT_SPRITE_FONT))));
             line.append(Component.literal("\uDB00\uDC03").withStyle(CommonStyles.SPACE));
             line.append(Component.literal(String.valueOf(count))
                     .withStyle(Style.EMPTY
@@ -507,7 +507,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                                     .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
                                     .withColor(dividerColor(item.getGearTier())))
                             .append(Component.literal("\uE000")
-                                    .withStyle(Style.EMPTY.withFont(CommonFonts.MAJOR_ID_FONT)))
+                                    .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_IDENTIFICATION_MAJOR_FONT)))
                             .append(Component.literal("\uDB00\uDC02"))
                             .append(Component.literal(major.name() + ": "))
                             .append(major.lore()
@@ -534,7 +534,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         for (int page = 0; page < 3; page++) {
             paginator.append(Component.literal("\uE000")
                     .withStyle(Style.EMPTY
-                            .withFont(CommonFonts.PAGE_FONT)
+                            .withFont(CommonFonts.TOOLTIP_PAGE_FONT)
                             .withColor(page == currentPage ? 0xffea80 : 0x455449)
                             .withShadowColor(0xffffff)));
             if (page < 2) paginator.append(Component.literal("\uDB00\uDC04").withStyle(CommonStyles.LANGUAGE));
@@ -558,10 +558,13 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         MutableComponent line = Component.literal("\uDAFF\uDFF0")
                 .withStyle(style ->
                         style.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT).withShadowColor(0xffffff));
-        line.append(Component.literal(emblemFrame).withStyle(Style.EMPTY.withFont(CommonFonts.EMBLEM_FRAME_FONT)));
+        line.append(
+                Component.literal(emblemFrame).withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_EMBLEM_FRAME_FONT)));
         line.append("\uDAFF\uDFCF");
         line.append(Component.literal(emblemSprite)
-                .withStyle(Style.EMPTY.withFont(CommonFonts.EMBLEM_SPRITE_FONT).withColor(0x00eb1c)));
+                .withStyle(Style.EMPTY
+                        .withFont(CommonFonts.TOOLTIP_EMBLEM_SPRITE_FONT)
+                        .withColor(0x00eb1c)));
         line.append(Component.literal("\uDB00\uDC05").withStyle(CommonStyles.SPACE));
         line.append(title);
         return line;
@@ -710,14 +713,14 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
     private List<Component> buildOverview(GearInfo info) {
         List<Component> overview = new ArrayList<>();
         if (info.type().isWeapon()) {
-            overview.add(
-                    Component.literal(String.format("%,d", info.fixedStats().averageDps()))
-                            .withStyle(Style.EMPTY.withFont(CommonFonts.QUAD_12).withColor(dividerColor(info.tier())))
-                            .append(Component.literal(" DPS").withStyle(CommonStyles.LANGUAGE)));
+            overview.add(Component.literal(
+                            String.format("%,d", info.fixedStats().averageDps()))
+                    .withStyle(Style.EMPTY.withFont(CommonFonts.OFFSET_QUAD_12).withColor(dividerColor(info.tier())))
+                    .append(Component.literal(" DPS").withStyle(CommonStyles.LANGUAGE)));
         } else if (info.type().isArmor() || info.type().isAccessory()) {
             overview.add(Component.literal(
                             StringUtils.toSignedCommaString(info.fixedStats().healthBuff()))
-                    .withStyle(Style.EMPTY.withFont(CommonFonts.QUAD_12).withColor(dividerColor(info.tier())))
+                    .withStyle(Style.EMPTY.withFont(CommonFonts.OFFSET_QUAD_12).withColor(dividerColor(info.tier())))
                     .append(Component.literal(" Health").withStyle(CommonStyles.LANGUAGE)));
         }
 
@@ -725,7 +728,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                 .attackSpeed()
                 .ifPresent(speed -> overview.add(Component.empty()
                         .append(Component.literal("\uE007")
-                                .withStyle(Style.EMPTY.withFont(CommonFonts.ATTRIBUTE_SPRITE_FONT)))
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_ATTRIBUTE_SPRITE_FONT)))
                         .append(Component.literal(" " + speed.getName() + " ")
                                 .withStyle(Style.EMPTY
                                         .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
@@ -746,7 +749,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         MutableComponent line = Component.empty();
         for (Pair<DamageType, RangedValue> damage : damages) {
             line.append(withWhiteShadow(Component.literal(damage.a().getTooltipSprite())
-                    .withStyle(Style.EMPTY.withFont(CommonFonts.ATTRIBUTE_SPRITE_FONT))));
+                    .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_ATTRIBUTE_SPRITE_FONT))));
             line.append(
                     Component.literal(" " + damage.b().low() + "-" + damage.b().high() + " ")
                             .withStyle(Style.EMPTY
@@ -760,7 +763,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         MutableComponent line = Component.empty();
         for (Pair<Element, Integer> defence : defences) {
             line.append(withWhiteShadow(Component.literal(defence.a().getTooltipSprite())
-                    .withStyle(Style.EMPTY.withFont(CommonFonts.ATTRIBUTE_SPRITE_FONT))));
+                    .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_ATTRIBUTE_SPRITE_FONT))));
             line.append(Component.literal(" " + StringUtils.toSignedCommaString(defence.b()) + " ")
                     .withStyle(Style.EMPTY
                             .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
@@ -771,7 +774,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
     private MutableComponent requirementIcon(boolean fulfilled) {
         return withWhiteShadow(Component.literal((fulfilled ? "\uE006" : "\uE007") + "\uDAFF\uDFFF")
-                .withStyle(Style.EMPTY.withFont(CommonFonts.REQUIREMENT_SPRITE_FONT)));
+                .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_REQUIREMENT_SPRITE_FONT)));
     }
 
     private static MutableComponent withWhiteShadow(Component component) {
@@ -798,7 +801,8 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
     private static Component divider(GearTier tier) {
         return withWhiteShadow(Component.literal("\uE000")
-                .withStyle(Style.EMPTY.withFont(CommonFonts.DIVIDER_FONT).withColor(dividerColor(tier))));
+                .withStyle(
+                        Style.EMPTY.withFont(CommonFonts.TOOLTIP_DIVIDER_FONT).withColor(dividerColor(tier))));
     }
 
     private static Component identificationDivider(GearTier tier, IdentificationDisplay display) {
@@ -814,7 +818,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         int color = dividerColor(tier);
         return withWhiteShadow(Component.literal("\uE000")
                 .withStyle(Style.EMPTY
-                        .withFont(CommonFonts.IDENTIFICATION_DIVIDER_FONT)
+                        .withFont(CommonFonts.WYNNTILS_TOOLTIP_DIVIDER_FONT)
                         .withColor(color))
                 .append(Component.literal(" " + label + " ")
                         .withStyle(Style.EMPTY
@@ -822,7 +826,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                                 .withColor(color)))
                 .append(Component.literal("\uE001")
                         .withStyle(Style.EMPTY
-                                .withFont(CommonFonts.IDENTIFICATION_DIVIDER_FONT)
+                                .withFont(CommonFonts.WYNNTILS_TOOLTIP_DIVIDER_FONT)
                                 .withColor(color))));
     }
 

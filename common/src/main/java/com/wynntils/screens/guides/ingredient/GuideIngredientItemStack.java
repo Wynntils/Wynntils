@@ -302,7 +302,7 @@ public final class GuideIngredientItemStack extends GuideItemStack {
                 .withoutShadow()
                 .append(Component.literal("\uDB00\uDC30")
                         .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)))
-                .append(Component.literal("\uE001").withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_TOOLTIP)))
+                .append(Component.literal("\uE001").withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_TOOLTIP_ICONS)))
                 .append(Component.literal("\uDAFF\uDF98\uDB00\uDC4B")
                         .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)))
                 .append(Component.literal("\uE000")

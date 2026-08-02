@@ -27,7 +27,7 @@ public final class CommonFonts {
     public static final FontDescription TOOLTIP_REQUIREMENT_FRAME_FONT = font("tooltip/requirement/frame");
     public static final FontDescription TOOLTIP_REQUIREMENT_SPRITE_FONT = font("tooltip/requirement/sprite");
 
-    public static final FontDescription WYNNTILS_TOOLTIP = wynntilsFont("tooltip");
+    public static final FontDescription WYNNTILS_TOOLTIP_ICONS = wynntilsFont("tooltip/icons");
     public static final FontDescription WYNNTILS_TOOLTIP_DIVIDER_FONT = wynntilsFont("tooltip/divider");
 
     private static FontDescription.Resource font(String path) {

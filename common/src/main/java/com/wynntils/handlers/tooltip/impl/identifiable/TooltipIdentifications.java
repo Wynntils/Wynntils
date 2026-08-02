@@ -191,7 +191,7 @@ public final class TooltipIdentifications {
                 };
         line.append(Component.literal(icon)
                 .withStyle(Style.EMPTY
-                        .withFont(CommonFonts.ATTRIBUTE_SPRITE_FONT)
+                        .withFont(CommonFonts.TOOLTIP_ATTRIBUTE_SPRITE_FONT)
                         .withColor(ChatFormatting.WHITE)
                         .withShadowColor(0xFFFFFF)));
     }
