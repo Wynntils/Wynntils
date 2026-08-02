@@ -6,6 +6,7 @@ package com.wynntils.models.abilitytree;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -18,6 +19,7 @@ import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeLocation;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeType;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
+import com.wynntils.models.abilitytree.type.ArchetypeInfo;
 import com.wynntils.models.abilitytree.type.ArchetypeRequirement;
 import com.wynntils.models.character.type.ClassType;
 import java.lang.reflect.Type;
@@ -33,7 +35,7 @@ public class AbilityTreeInfoRegistry {
             .create();
 
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_STATIC_ABILITIES).handleJsonObject(this::handleAbilities);
+        registry.registerDownload(UrlId.DATA_STATIC_ABILITIES_V2).handleJsonObject(this::handleAbilities);
     }
 
     private void handleAbilities(JsonObject json) {
@@ -108,9 +110,9 @@ public class AbilityTreeInfoRegistry {
                 }
             }
 
-            List<String> description = new ArrayList<>();
+            List<JsonArray> description = new ArrayList<>();
             for (JsonElement element : json.getAsJsonArray("description")) {
-                description.add(element.getAsString());
+                description.add(element.getAsJsonArray());
             }
 
             int cost = json.get("cost").getAsInt();
@@ -140,9 +142,13 @@ public class AbilityTreeInfoRegistry {
 
             int requiredLevel = json.get("requiredLevel").getAsInt();
 
-            String archetype = json.has("archetype") && !json.get("archetype").isJsonNull()
-                    ? json.get("archetype").getAsString()
-                    : null;
+            ArchetypeInfo archetypeInfo = null;
+            if (json.has("archetypeInfo") && !json.get("archetypeInfo").isJsonNull()) {
+                JsonObject archetypeInfoJson = json.getAsJsonObject("archetypeInfo");
+                archetypeInfo = new ArchetypeInfo(
+                        archetypeInfoJson.get("archetype").getAsString(),
+                        archetypeInfoJson.get("color").getAsString());
+            }
 
             JsonObject locationJson = json.getAsJsonObject("location");
             AbilityTreeLocation location = new AbilityTreeLocation(
@@ -167,7 +173,7 @@ public class AbilityTreeInfoRegistry {
                     requiredAbility,
                     requiredArchetype,
                     requiredLevel,
-                    archetype,
+                    archetypeInfo,
                     location,
                     connections);
         }

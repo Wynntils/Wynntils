@@ -524,6 +524,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.HoundsTimeLeftFunction());
         registerFunction(new CharacterFunctions.HummingbirdsStateFunction());
         registerFunction(new CharacterFunctions.IdFunction());
+        registerFunction(new CharacterFunctions.IsAbilityUnlockedFunction());
         registerFunction(new CharacterFunctions.IsAspectEquippedFunction());
         registerFunction(new CharacterFunctions.IsRidingHorseFunction());
         registerFunction(new CharacterFunctions.LeaderboardPositionFunction());
@@ -692,8 +693,7 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new MountFunctions.CappedMountStatFunction());
         registerFunction(new MountFunctions.CurrentMountEnergyFunction());
-        registerFunction(new MountFunctions.MountStatFunction());
-        registerFunction(new MountFunctions.MountStatMaxFunction());
+        registerFunction(new MountFunctions.MountPotentialFunction());
         registerFunction(new MountFunctions.MountNameFunction());
 
         registerFunction(new ProfessionFunctions.LastHarvestMaterialLevelFunction());

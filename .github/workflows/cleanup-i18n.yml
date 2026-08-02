@@ -1,0 +1,39 @@
+# Github actions runner will run this script on a schedule
+
+name: Clean up i18n files
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *' # Runs daily
+
+jobs:
+  cleanup-i18n:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Run remove_unused_i18n.sh
+        run: bash utils/remove_unused_i18n.sh
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          labels: auto-generated
+          committer: WynntilsBot <admin@wynntils.com>
+          commit-message: "chore: [auto-generated] Remove unused i18n entries [ci skip]"
+          title: "chore: [auto-generated] Remove unused i18n entries [ci skip]"
+          body: |
+            Removes translation keys that no longer exist in `en_us.json`.
+
+            This PR has been automatically generated.
+          branch: auto-cleanup-i18n

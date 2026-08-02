@@ -5,6 +5,7 @@
 package com.wynntils.models.containers.containers;
 
 import com.wynntils.models.containers.Container;
+import com.wynntils.models.containers.type.ContainerBounds;
 import com.wynntils.models.containers.type.FullscreenContainerProperty;
 import com.wynntils.models.containers.type.ScrollableContainerProperty;
 import java.util.regex.Pattern;
@@ -38,5 +39,9 @@ public class AbilityTreeContainer extends Container
     @Override
     public int getPreviousItemSlot() {
         return 57;
+    }
+
+    public static ContainerBounds getAbilityBounds() {
+        return new ContainerBounds(0, 0, 5, 8);
     }
 }

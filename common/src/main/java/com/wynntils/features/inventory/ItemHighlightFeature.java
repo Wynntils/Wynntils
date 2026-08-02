@@ -23,6 +23,7 @@ import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.models.items.items.gui.StoreItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
+import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -200,6 +201,9 @@ public class ItemHighlightFeature extends Feature {
 
     @SubscribeEvent
     public void onGetModelData(DataComponentGetEvent.CustomModelData event) {
+        // Don't affect the guides screen
+        if (McUtils.screen() instanceof WynntilsGuideScreen) return;
+
         CustomModelData itemStackModelData = event.getOriginalValue();
 
         // The index of model data matters, so instead of removing the tier string, just replace it with an empty string

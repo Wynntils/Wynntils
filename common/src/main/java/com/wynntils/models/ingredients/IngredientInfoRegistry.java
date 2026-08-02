@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.Dependency;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
@@ -51,9 +52,13 @@ public class IngredientInfoRegistry {
     public void registerDownloads(DownloadRegistry registry) {
         registry.registerDownload(
                         UrlId.DATA_STATIC_INGREDIENTS,
-                        Dependency.multi(
-                                Models.WynnItem,
-                                Set.of(UrlId.DATA_STATIC_ITEM_OBTAIN_V2, UrlId.DATA_STATIC_MATERIAL_CONVERSION)))
+                        Dependency.complex(Set.of(
+                                Dependency.simple(Services.CustomModel, UrlId.DATA_STATIC_MODEL_DATA),
+                                Dependency.multi(
+                                        Models.WynnItem,
+                                        Set.of(
+                                                UrlId.DATA_STATIC_ITEM_OBTAIN_V2,
+                                                UrlId.DATA_STATIC_MATERIAL_CONVERSION)))))
                 .handleJsonObject(this::handleIngredients);
     }
 

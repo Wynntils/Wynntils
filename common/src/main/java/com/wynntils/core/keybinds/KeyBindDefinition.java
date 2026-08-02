@@ -416,65 +416,9 @@ public record KeyBindDefinition(
             GLFW.GLFW_KEY_UNKNOWN,
             true);
 
-    public static final KeyBindDefinition OPEN_POWDER_GUIDE = register(
-            "openPowerGuide",
-            "Open Powder Guide",
-            Managers.KeyBind.UI_CATEGORY,
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
-            true);
-
-    public static final KeyBindDefinition OPEN_ITEM_GUIDE = register(
-            "openItemGuide",
-            "Open Item Guide",
-            Managers.KeyBind.UI_CATEGORY,
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
-            true);
-
-    public static final KeyBindDefinition OPEN_INGREDIENT_GUIDE = register(
-            "openIngredientGuide",
-            "Open Ingredient Guide",
-            Managers.KeyBind.UI_CATEGORY,
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
-            true);
-
-    public static final KeyBindDefinition OPEN_CHARM_GUIDE = register(
-            "openCharmGuide",
-            "Open Charm Guide",
-            Managers.KeyBind.UI_CATEGORY,
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
-            true);
-
-    public static final KeyBindDefinition OPEN_TOME_GUIDE = register(
-            "openTomeGuide",
-            "Open Tome Guide",
-            Managers.KeyBind.UI_CATEGORY,
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
-            true);
-
-    public static final KeyBindDefinition OPEN_ASPECT_GUIDE = register(
-            "openAspectGuide",
-            "Open Aspect Guide",
-            Managers.KeyBind.UI_CATEGORY,
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
-            true);
-
-    public static final KeyBindDefinition OPEN_EMERALD_GUIDE = register(
-            "openEmeraldGuide",
-            "Open Emerald Pouch Guide",
-            Managers.KeyBind.UI_CATEGORY,
-            InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
-            true);
-
-    public static final KeyBindDefinition OPEN_MISC_GUIDE = register(
-            "openMiscGuide",
-            "Open Misc Guide",
+    public static final KeyBindDefinition OPEN_EMOTE_WHEEL = register(
+            "emoteWheel",
+            "Emote Wheel",
             Managers.KeyBind.UI_CATEGORY,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,
@@ -501,6 +445,14 @@ public record KeyBindDefinition(
     public static final KeyBindDefinition TOGGLE_SILENCER = register(
             "toggleSilencer",
             "Toggle Silencer",
+            Managers.KeyBind.UTILITIES_CATEGORY,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_UNKNOWN,
+            true);
+
+    public static final KeyBindDefinition TOGGLE_DIALOGUE_AUTO_PROGRESS = register(
+            "toggleDialogueAutoProgress",
+            "Toggle Dialogue Auto Progress",
             Managers.KeyBind.UTILITIES_CATEGORY,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UNKNOWN,

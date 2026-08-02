@@ -11,6 +11,9 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.SetBonus;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.properties.SetItemProperty;
@@ -36,7 +39,7 @@ public final class SetModel extends Model {
 
     @Override
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_STATIC_ITEM_SETS).handleReader(this::handleSetData);
+        registry.registerDownload(UrlId.DATA_STATIC_SETS).handleReader(this::handleSetData);
     }
 
     public Collection<SetInfo> getSets() {
@@ -52,6 +55,22 @@ public final class SetModel extends Model {
 
     public SetInfo getSetInfoForItem(String itemName) {
         return getSetInfo(getSetName(itemName));
+    }
+
+    public GearTier getSetGearTier(SetInfo setInfo) {
+        // Some sets have no items listed, in that case default to rare
+        GearTier gearTier = GearTier.RARE;
+
+        for (String itemName : setInfo.items()) {
+            GearInfo gearInfo = Models.Gear.getGearInfoFromDisplayName(itemName);
+
+            if (gearInfo != null && gearInfo.tier().ordinal() > gearTier.ordinal()) {
+                gearTier = gearInfo.tier();
+                break;
+            }
+        }
+
+        return gearTier;
     }
 
     /**
@@ -104,27 +123,42 @@ public final class SetModel extends Model {
         TypeToken<Map<String, RawSetInfo>> type = new TypeToken<>() {};
         Map<String, RawSetInfo> rawSets = Managers.Json.GSON.fromJson(reader, type.getType());
         rawSets.forEach((setName, rawSetInfo) -> {
-            List<Map<StatType, Integer>> bonuses = rawSetInfo.bonuses.stream()
-                    .map(bonusPair -> {
-                        Map<StatType, Integer> bonusMap = new HashMap<>();
-                        for (Map.Entry<String, Integer> entry : bonusPair.entrySet()) {
-                            StatType statType = Models.Stat.fromApiName(entry.getKey());
-                            if (statType == null) {
-                                WynntilsMod.warn("Unknown stat type: " + entry.getKey());
-                                continue;
-                            }
-                            bonusMap.put(statType, entry.getValue());
-                        }
-                        return bonusMap;
-                    })
-                    .toList();
+            Map<Integer, SetBonus> bonuses = new HashMap<>();
 
-            setData.put(setName, new SetInfo(setName, bonuses, rawSetInfo.items));
+            for (Map.Entry<String, RawSetBonus> entry : rawSetInfo.bonuses.entrySet()) {
+                int itemCount;
+                try {
+                    itemCount = Integer.parseInt(entry.getKey());
+                } catch (NumberFormatException e) {
+                    WynntilsMod.warn("Invalid set bonus item count in set: " + setName);
+                    continue;
+                }
+
+                Map<StatType, Integer> minor = new HashMap<>();
+                for (Map.Entry<String, Integer> minorEntry :
+                        entry.getValue().minor.entrySet()) {
+                    StatType statType = Models.Stat.fromApiName(minorEntry.getKey());
+                    if (statType == null) {
+                        WynntilsMod.warn("Unknown stat type in set bonus: " + minorEntry.getKey());
+                        continue;
+                    }
+                    minor.put(statType, minorEntry.getValue());
+                }
+
+                bonuses.put(itemCount, new SetBonus(entry.getValue().major(), minor));
+            }
+
+            // Ensure each item count has a value
+            int max = bonuses.keySet().stream().max(Integer::compareTo).orElse(0);
+            for (int i = 1; i <= max; i++) {
+                bonuses.putIfAbsent(i, SetBonus.EMPTY);
+            }
+
+            setData.put(setName, new SetInfo(setName, setName.replace("'", ""), bonuses, rawSetInfo.parts));
         });
     }
 
-    private static class RawSetInfo {
-        public List<Map<String, Integer>> bonuses;
-        public List<String> items;
-    }
+    private record RawSetInfo(Map<String, RawSetBonus> bonuses, List<String> parts) {}
+
+    private record RawSetBonus(List<String> major, Map<String, Integer> minor) {}
 }

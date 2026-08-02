@@ -50,6 +50,8 @@ public class AspectContainerQueries {
     private static final List<Integer> ASPECT_INVENTORY_SLOTS =
             IntStream.rangeClosed(35, 53).boxed().toList();
 
+    private static final int LAST_POSSIBLE_ASPECT_SLOT = 53;
+
     public void dumpAspectContainer(
             Consumer<SavableAspectSet> supplier,
             Consumer<String> onStatus,
@@ -89,6 +91,50 @@ public class AspectContainerQueries {
         builder.build().executeQuery();
     }
 
+    public void scanAspectPages(Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
+        QueryBuilder builder = ScriptedContainerQuery.builder("Aspect Page Scanner")
+                .onError(msg -> {
+                    onError.accept(msg);
+                    WynntilsMod.error(msg);
+                })
+
+                // Open compass menu
+                .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
+                        .expectContainer(CharacterInfoContainer.class))
+                .execute(() -> onStatus.accept("Compass menu"))
+
+                // Open ability menu
+                .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT).expectContainer(AbilityTreeContainer.class))
+                .execute(() -> onStatus.accept("Ability tree menu"))
+
+                // Open aspects menu
+                .then(QueryStep.clickOnSlot(ASPECTS_BUTTON_SLOT)
+                        .expectContainer(AbilityTreeContainer.class, AspectsContainer.class)
+                        .verifyContentChange((container, changes, changeType) ->
+                                Models.Container.getCurrentContainer() instanceof AspectsContainer))
+                .execute(() -> onStatus.accept("Aspects menu"))
+
+                // Rewind to the first page
+                .repeat(
+                        c -> ScriptedContainerQuery.containerHasSlot(
+                                c, PREVIOUS_PAGE_SLOT, Items.POTION, PREVIOUS_PAGE_ITEM_NAME),
+                        QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT)
+                                .expectContainer(AspectsContainer.class)
+                                .accumulateSetSlotChanges(2)
+                                .processIncomingContainer(c -> onStatus.accept("Moving to first page")))
+
+                // Click through every page to the last (last aspect slot is air once there are no more pages)
+                .repeat(
+                        c -> !c.items().get(LAST_POSSIBLE_ASPECT_SLOT).isEmpty(),
+                        QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
+                                .expectContainer(AspectsContainer.class)
+                                .accumulateSetSlotChanges(2)
+                                .processIncomingContainer(c -> onStatus.accept("Scanning next page")));
+
+        builder.execute(() -> onComplete.accept("Finished scanning aspect pages"));
+        builder.build().executeQuery();
+    }
+
     public void applyAspectLoadout(
             List<String> aspectsToEquip,
             Consumer<String> onStatus,
@@ -96,6 +142,9 @@ public class AspectContainerQueries {
             Consumer<String> onComplete) {
         Map<Integer, Deque<Pair<String, Integer>>> aspectLocations = new HashMap<>();
         Deque<Integer> slotsToUnequip = new ArrayDeque<>();
+
+        hasAlreadyEquippedAspects = false;
+        checkAspectSlotIdx = 0;
 
         QueryBuilder builder = ScriptedContainerQuery.builder("Aspect Unlock")
                 .onError(msg -> {
@@ -181,8 +230,7 @@ public class AspectContainerQueries {
                             if (pageAspects != null && !pageAspects.isEmpty()) return true;
 
                             // Otherwise continue only if there is another page
-                            return ScriptedContainerQuery.containerHasSlot(
-                                    c, NEXT_PAGE_SLOT, Items.POTION, NEXT_PAGE_ITEM_NAME);
+                            return !c.items().get(LAST_POSSIBLE_ASPECT_SLOT).isEmpty();
                         },
                         QueryStep.clickOnSlot(() -> {
                                     Deque<Pair<String, Integer>> pageAspects = aspectLocations.get(currentPage);

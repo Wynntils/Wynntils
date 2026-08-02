@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter;
@@ -12,6 +12,8 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.ingredients.type.IngredientPosition;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.properties.NamedItemProperty;
+import com.wynntils.models.mount.type.MountStat;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.territories.type.GuildResource;
@@ -22,6 +24,8 @@ import com.wynntils.services.itemfilter.filters.PercentageStatFilter;
 import com.wynntils.services.itemfilter.filters.RangedStatFilters;
 import com.wynntils.services.itemfilter.filters.StringStatFilter;
 import com.wynntils.services.itemfilter.statproviders.ActualStatProvider;
+import com.wynntils.services.itemfilter.statproviders.AttackSpeedStatProvider;
+import com.wynntils.services.itemfilter.statproviders.AverageDpsStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ChargesModifierStatProvider;
 import com.wynntils.services.itemfilter.statproviders.ClassStatProvider;
 import com.wynntils.services.itemfilter.statproviders.CountedItemStatProvider;
@@ -52,6 +56,13 @@ import com.wynntils.services.itemfilter.statproviders.TomeTypeStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TotalPriceStatProvider;
 import com.wynntils.services.itemfilter.statproviders.TradeAmountStatProvider;
 import com.wynntils.services.itemfilter.statproviders.UsesStatProvider;
+import com.wynntils.services.itemfilter.statproviders.mount.MountEnergyStatProvider;
+import com.wynntils.services.itemfilter.statproviders.mount.MountNameStatProvider;
+import com.wynntils.services.itemfilter.statproviders.mount.MountPotentialStatProvider;
+import com.wynntils.services.itemfilter.statproviders.mount.MountPrimaryColorStatProvider;
+import com.wynntils.services.itemfilter.statproviders.mount.MountSecondaryColorStatProvider;
+import com.wynntils.services.itemfilter.statproviders.mount.MountStatProvider;
+import com.wynntils.services.itemfilter.statproviders.mount.MountTypeStatProvider;
 import com.wynntils.services.itemfilter.statproviders.territory.TerritoryAlertStatProvider;
 import com.wynntils.services.itemfilter.statproviders.territory.TerritoryDefenseStatProvider;
 import com.wynntils.services.itemfilter.statproviders.territory.TerritoryNameStatProvider;
@@ -283,11 +294,12 @@ public class ItemFilterService extends Service {
 
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return false;
+        String itemName = Models.Item.asWynnItemProperty(itemStack, NamedItemProperty.class)
+                .map(NamedItemProperty::getName)
+                .orElseGet(
+                        () -> StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting());
 
-        return filterMatches(searchQuery, wynnItemOpt.get())
-                && itemNameMatches(
-                        searchQuery,
-                        StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting());
+        return filterMatches(searchQuery, wynnItemOpt.get()) && itemNameMatches(searchQuery, itemName);
     }
 
     /**
@@ -516,6 +528,8 @@ public class ItemFilterService extends Service {
         registerStatProvider(new GearRestrictionStatProvider());
         registerStatProvider(new MajorIdStatProvider());
         registerStatProvider(new PowderSlotsStatProvider());
+        registerStatProvider(new AttackSpeedStatProvider());
+        registerStatProvider(new AverageDpsStatProvider());
         registerStatProvider(new HealthStatProvider());
         registerStatProvider(new TargetStatProvider());
         registerStatProvider(new TomeTypeStatProvider());
@@ -535,7 +549,7 @@ public class ItemFilterService extends Service {
 
         // Dynamic Item Stats
         registerStatProvider(new OverallStatProvider());
-        for (Skill skill : Models.Element.getGearSkillOrder()) {
+        for (Skill skill : Skill.values()) {
             registerStatProvider(new SkillStatProvider(skill));
             registerStatProvider(new SkillReqStatProvider(skill));
         }
@@ -544,6 +558,18 @@ public class ItemFilterService extends Service {
         }
 
         registerStatProvider(new FavoriteStatProvider());
+
+        // Mount stat providers
+        registerStatProvider(new MountTypeStatProvider());
+        registerStatProvider(new MountNameStatProvider());
+        registerStatProvider(new MountPotentialStatProvider());
+        registerStatProvider(new MountPrimaryColorStatProvider());
+        registerStatProvider(new MountSecondaryColorStatProvider());
+        registerStatProvider(new MountEnergyStatProvider());
+
+        for (MountStat stat : MountStat.values()) {
+            registerStatProvider(new MountStatProvider(stat));
+        }
 
         // Territory stat providers
         registerStatProvider(new TerritoryNameStatProvider());

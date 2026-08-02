@@ -20,6 +20,7 @@ import com.wynntils.services.itemfilter.ItemFilterService;
 import com.wynntils.services.itemrecord.ItemRecordService;
 import com.wynntils.services.itemweight.ItemWeightService;
 import com.wynntils.services.leaderboard.LeaderboardService;
+import com.wynntils.services.loadout.LoadoutService;
 import com.wynntils.services.lootrunpaths.LootrunPathsService;
 import com.wynntils.services.map.MapService;
 import com.wynntils.services.map.PoiService;
@@ -30,6 +31,7 @@ import com.wynntils.services.secrets.SecretsService;
 import com.wynntils.services.splashes.SplashService;
 import com.wynntils.services.statistics.StatisticsService;
 import com.wynntils.services.stopwatch.StopwatchService;
+import com.wynntils.services.wiki.WikiService;
 
 public final class Services {
     public static final ChatTabService ChatTab = new ChatTabService();
@@ -46,6 +48,7 @@ public final class Services {
     public static final ItemRecordService ItemRecord = new ItemRecordService();
     public static final ItemWeightService ItemWeight = new ItemWeightService();
     public static final LeaderboardService Leaderboard = new LeaderboardService();
+    public static final LoadoutService loadout = new LoadoutService();
     public static final LootrunPathsService LootrunPaths = new LootrunPathsService();
     public static final MapDataService MapData = new MapDataService();
     public static final MapService Map = new MapService();
@@ -57,5 +60,6 @@ public final class Services {
     public static final StatisticsService Statistics = new StatisticsService();
     public static final StopwatchService Stopwatch = new StopwatchService();
     public static final UpdateService Update = new UpdateService();
+    public static final WikiService Wiki = new WikiService();
     public static final WynntilsAccountService WynntilsAccount = new WynntilsAccountService();
 }
