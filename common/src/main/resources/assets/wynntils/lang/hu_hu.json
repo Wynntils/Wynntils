@@ -150,6 +150,7 @@
   "feature.wynntils.changelog.autoClassMenu.name": "Automatikus Class Menü a Változásnapló Megjelenítéséhez",
   "feature.wynntils.changelog.description": "Megjeleníti a változásnaplót indításkor.",
   "feature.wynntils.changelog.name": "Változásnapló",
+  "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere": "ide",
   "feature.wynntils.chatCoordinates.description": "Hozzáadja a lehetőséget, hogy a csevegésben lévő koordinátákra kattintva beállítsa az iránytűt arra a helyre.",
   "feature.wynntils.chatCoordinates.name": "Csevegési Koordináták",
   "feature.wynntils.chatItem.chatItemErrorEncode": "Nem sikerült kódolni a tárgyat: %s",
