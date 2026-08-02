@@ -150,6 +150,7 @@
   "feature.wynntils.changelog.autoClassMenu.name": "Automatisches Klassenauswahlmenü zur Anzeige des Änderungsprotokolls",
   "feature.wynntils.changelog.description": "Zeigt das Änderungsprotokoll beim Start an.",
   "feature.wynntils.changelog.name": "Änderungsprotokoll",
+  "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere": "hier",
   "feature.wynntils.chatCoordinates.description": "Fügt die Möglichkeit hinzu, im Chat auf Koordinaten zu klicken, um deinen Kompass auf diesen Ort einzustellen.",
   "feature.wynntils.chatCoordinates.name": "Chat-Koordinaten",
   "feature.wynntils.chatItem.chatItemErrorEncode": "Fehler beim Kodieren des Artikels: %s",
