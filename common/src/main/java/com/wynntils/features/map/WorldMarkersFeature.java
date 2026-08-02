@@ -59,14 +59,6 @@ public class WorldMarkersFeature extends Feature {
     @Persisted
     private final Config<Float> textBackgroundOpacity = new Config<>(0.2f);
 
-    // TODO: Reimplement
-    @Persisted
-    private final Config<Float> distanceOpacity = new Config<>(1.0f);
-
-    // TODO: Reimplement
-    @Persisted
-    private final Config<Boolean> dynamicDistanceOpacity = new Config<>(false);
-
     @Persisted
     public final Config<Float> textRenderScale = new Config<>(1.0f);
 
@@ -76,11 +68,9 @@ public class WorldMarkersFeature extends Feature {
     @Persisted
     private final Config<TextShadow> textShadow = new Config<>(TextShadow.NONE);
 
-    // TODO: Reimplement
     @Persisted
     private final Config<Boolean> autoRemoveReachedMarkers = new Config<>(false);
 
-    // TODO: Reimplement
     @Persisted
     private final Config<Integer> autoRemoveReachedMarkerDistance = new Config<>(20);
 
@@ -126,6 +116,8 @@ public class WorldMarkersFeature extends Feature {
         g = MathUtils.clamp(g, 0, 255);
         b = MathUtils.clamp(b, 0, 255);
         currentRainbowColor = new CustomColor(r, g, b, 255);
+
+        removeReachedWaypoints();
     }
 
     // Rendered map location calculation happens on the RenderLevelEvent which has projectionMatrix + Camera
@@ -515,6 +507,28 @@ public class WorldMarkersFeature extends Feature {
                 }
             }
         }
+    }
+
+    private void removeReachedWaypoints() {
+        if (!autoRemoveReachedMarkers.get()) return;
+        if (McUtils.player() == null) return;
+
+        Position playerPosition = McUtils.player().position();
+        int autoRemoveDistance = Math.max(0, autoRemoveReachedMarkerDistance.get());
+
+        List<RenderedMapLocation> toRemove = new ArrayList<>();
+        for (RenderedMapLocation renderedMapLocation : renderedMapLocations) {
+            if (Services.UserMarker.isUserMarkedFeature(renderedMapLocation.mapLocation())
+                    && renderedMapLocation.distance() <= autoRemoveDistance) {
+                Services.UserMarker.removeUserMarkedFeature(renderedMapLocation.mapLocation());
+                toRemove.add(renderedMapLocation);
+            }
+        }
+
+        List<RenderedMapLocation> newRenderedMapLocations = new ArrayList<>(renderedMapLocations);
+        newRenderedMapLocations.removeAll(toRemove);
+        renderedMapLocations.clear();
+        renderedMapLocations.addAll(newRenderedMapLocations);
     }
 
     private record RenderedMapLocation(
