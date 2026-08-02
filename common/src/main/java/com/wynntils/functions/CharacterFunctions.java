@@ -441,6 +441,25 @@ public class CharacterFunctions {
         }
     }
 
+    public static class IsAbilityUnlockedFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            String abilityName = arguments.getArgument("abilityName").getStringValue();
+            return Models.AbilityTree.getUnlockedAbilityByName(abilityName).isPresent();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("abilityName", String.class, null)));
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("has_ability");
+        }
+    }
+
     public static class LeaderboardPositionFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {

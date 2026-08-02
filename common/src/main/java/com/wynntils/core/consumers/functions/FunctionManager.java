@@ -524,6 +524,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.HoundsTimeLeftFunction());
         registerFunction(new CharacterFunctions.HummingbirdsStateFunction());
         registerFunction(new CharacterFunctions.IdFunction());
+        registerFunction(new CharacterFunctions.IsAbilityUnlockedFunction());
         registerFunction(new CharacterFunctions.IsAspectEquippedFunction());
         registerFunction(new CharacterFunctions.IsRidingHorseFunction());
         registerFunction(new CharacterFunctions.LeaderboardPositionFunction());
