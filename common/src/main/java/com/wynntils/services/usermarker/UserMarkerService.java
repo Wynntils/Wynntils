@@ -102,12 +102,6 @@ public class UserMarkerService extends Service {
         USER_MARKER_PROVIDER.updateMarkers(userMarkerMapLocations);
     }
 
-    public boolean isFeatureMarked(MapFeature mapFeature) {
-        if (!(mapFeature instanceof MapLocation mapLocation)) return false;
-        return userOverridenMapLocations.contains(mapLocation)
-                || (mapLocation instanceof UserMarkerLocation && userMarkerMapLocations.contains(mapLocation));
-    }
-
     public Stream<MapLocation> getMarkedFeatures() {
         return Stream.concat(userOverridenMapLocations.stream(), userMarkerMapLocations.stream());
     }
