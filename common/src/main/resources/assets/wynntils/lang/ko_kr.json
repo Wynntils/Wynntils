@@ -183,6 +183,7 @@
   "feature.wynntils.changelog.autoClassMenu.name": "클래스 선택으로 자동 이동",
   "feature.wynntils.changelog.description": "로그인 시 모드 업데이트 사항을 출력합니다.",
   "feature.wynntils.changelog.name": "모드 업데이트 사항",
+  "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere": "여기",
   "feature.wynntils.characterSelectionUtilities.blockThirdPerson.description": "캐릭터 선택 화면에서 3인칭으로의 전환 차단",
   "feature.wynntils.characterSelectionUtilities.blockThirdPerson.name": "3인칭 차단",
   "feature.wynntils.characterSelectionUtilities.description": "캐릭터 선택 화면에서 다양한 편의 기능을 추가합니다.",
