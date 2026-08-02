@@ -7,7 +7,6 @@ package com.wynntils.services.hades.providers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.features.map.MainMapFeature;
-import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.services.hades.HadesUser;
 import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.services.hades.event.HadesUserEvent;
@@ -117,6 +116,10 @@ public class PlayerProvider extends BuiltInProvider {
             return List.of();
         }
 
+        public HadesUser getHadesUser() {
+            return hadesUser;
+        }
+
         private static final class PlayerIconDecoration implements MapDecoration {
             private static final float INITIAL_PLAYER_HEAD_RENDER_SIZE = 24;
 
@@ -133,13 +136,7 @@ public class PlayerProvider extends BuiltInProvider {
 
             @Override
             public void render(GuiGraphics guiGraphics, boolean hovered, boolean fullscreenMap, float zoomLevel) {
-                float playerHeadRenderSize = INITIAL_PLAYER_HEAD_RENDER_SIZE
-                        * (fullscreenMap
-                                ? 1
-                                : Managers.Feature.getFeatureInstance(MinimapFeature.class)
-                                        .minimapOverlay
-                                        .remotePlayersHeadScale
-                                        .get());
+                final float playerHeadRenderSize = INITIAL_PLAYER_HEAD_RENDER_SIZE;
 
                 guiGraphics.pose().pushMatrix();
                 // center the player icon
