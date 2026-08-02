@@ -210,11 +210,6 @@ public class CharacterInfoIndicatorFeature extends Feature {
 
         if (!isMismatch) return;
 
-        WynntilsMod.info(String.format(
-                "Ability point mismatch: used=%d, unused=%d, total=%d, max=%d for level=%d."
-                        + " Tracked ability tree state is out of sync.",
-                usedAbilityPoints, unusedAbilityPoints, totalAbilityPoints, maxAbilityPoints, combatLevel));
-
         Component clickableHere = Component.translatable(
                         "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere")
                 .withStyle(Style.EMPTY
