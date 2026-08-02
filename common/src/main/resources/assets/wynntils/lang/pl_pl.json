@@ -150,6 +150,7 @@
   "feature.wynntils.changelog.autoClassMenu.name": "Automatyczne Menu Klasy do Wyświetlania Dziennika Zmian",
   "feature.wynntils.changelog.description": "Wyświetla dziennik zmian przy starcie.",
   "feature.wynntils.changelog.name": "Dziennik Zmian",
+  "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere": "tutaj",
   "feature.wynntils.chatCoordinates.description": "Dodaje możliwość kliknięcia na współrzędne w czacie, aby ustawić kompas na tę lokalizację.",
   "feature.wynntils.chatCoordinates.name": "Współrzędne Czatu",
   "feature.wynntils.chatItem.chatItemErrorEncode": "Nie udało się zakodować przedmiotu: %s",
