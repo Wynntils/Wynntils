@@ -150,6 +150,7 @@
   "feature.wynntils.changelog.autoClassMenu.name": "Automatisk klassmeny för att visa ändringslogg",
   "feature.wynntils.changelog.description": "Visar ändringsloggen vid start.",
   "feature.wynntils.changelog.name": "Ändringslogg",
+  "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere": "här",
   "feature.wynntils.chatCoordinates.description": "Lägger till möjligheten att klicka på koordinater i chatten för att ställa in din kompass till den platsen.",
   "feature.wynntils.chatCoordinates.name": "Chatkoordinater",
   "feature.wynntils.chatItem.chatItemErrorEncode": "Misslyckades med att koda föremål: %s",
