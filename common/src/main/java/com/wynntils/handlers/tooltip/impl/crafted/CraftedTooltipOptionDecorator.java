@@ -17,7 +17,6 @@ import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import org.jspecify.annotations.Nullable;
 
 final class CraftedTooltipOptionDecorator implements TooltipIdentificationDecorator {
     private final TooltipOptions options;
@@ -40,7 +39,7 @@ final class CraftedTooltipOptionDecorator implements TooltipIdentificationDecora
 
     @Override
     public MutableComponent getSuffix(
-            StatActualValue actualValue, @Nullable StatPossibleValues possibleValues, TooltipStyle style) {
+            StatActualValue actualValue, StatPossibleValues possibleValues, TooltipStyle style) {
         if (!options.identificationDecorations() || actualValue.vanillaMeter().isEmpty()) {
             return Component.empty();
         }

@@ -15,8 +15,6 @@ import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
 import com.wynntils.handlers.tooltip.type.TooltipLine;
 import com.wynntils.handlers.tooltip.type.TooltipOptions;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
-import com.wynntils.models.activities.quests.QuestInfo;
-import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Skill;
@@ -44,7 +42,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
@@ -199,7 +196,7 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
         if (!TooltipUtils.containsFont(line, CommonFonts.TOOLTIP_REQUIREMENT_SPRITE_FONT)) return false;
 
         String text = line.getString();
-        return text.contains("Combat Level") || text.contains("Class Type") || text.contains("Quest");
+        return text.startsWith("\uE006") || text.startsWith("\uE007");
     }
 
     private TooltipLine rebuildRequirementLine(Component originalLine, GearRequirements requirements) {
@@ -223,24 +220,6 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
                                     .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
                                     .withColor(ChatFormatting.GRAY)),
                     Models.Character.getClassType() == classType);
-        }
-
-        if (text.contains("Quest") && requirements.quest().isPresent()) {
-            String questName = requirements.quest().get();
-            Optional<QuestInfo> questInfo = Models.Quest.getQuestFromName(questName);
-            int questLevel = questInfo.map(QuestInfo::level).orElse(1);
-            boolean fulfilled = questInfo
-                    .map(info -> info.status() == ActivityStatus.COMPLETED)
-                    .orElse(false);
-            Component value = Component.literal(StringUtils.shorten(questName, 10) + " ")
-                    .withStyle(Style.EMPTY
-                            .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
-                            .withColor(ChatFormatting.GRAY))
-                    .append(Component.literal("(Lv. " + questLevel + ")")
-                            .withStyle(Style.EMPTY
-                                    .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
-                                    .withColor(ChatFormatting.DARK_GRAY)));
-            return buildAlignedRequirementLine(" Quest", value, fulfilled);
         }
 
         return new TooltipLine.Fixed(stripLeadingOffsets(originalLine));
@@ -390,12 +369,14 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
         MutableComponent line = Component.literal("\uDAFF\uDFF0")
                 .withStyle(style ->
                         style.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT).withShadowColor(0xffffff));
-        line.append(Component.literal(emblemFrame).withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_EMBLEM_FRAME_FONT)));
+        line.append(
+                Component.literal(emblemFrame).withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_EMBLEM_FRAME_FONT)));
         line.append("\uDAFF\uDFCF");
         if (emblemSprite != null && !emblemSprite.isEmpty()) {
             line.append(Component.literal(emblemSprite)
-                    .withStyle(
-                            Style.EMPTY.withFont(CommonFonts.TOOLTIP_EMBLEM_SPRITE_FONT).withColor(0x00eb1c)));
+                    .withStyle(Style.EMPTY
+                            .withFont(CommonFonts.TOOLTIP_EMBLEM_SPRITE_FONT)
+                            .withColor(0x00eb1c)));
         }
         line.append(Component.literal("\uDB00\uDC05").withStyle(CommonStyles.SPACE));
         line.append(title);
@@ -411,10 +392,7 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
                 "\uDB00\uDC02"));
         line.append(Component.literal("\uDB00\uDC01").withStyle(CommonStyles.SPACE));
         line.append(BannerBoxFont.buildMessage(
-                StringUtils.capitalizeFirst(typeName.toLowerCase(Locale.ROOT)),
-                CustomColor.fromInt(CRAFTED_ACCENT_COLOR),
-                CommonColors.BLACK,
-                ""));
+                typeName, CustomColor.fromInt(CRAFTED_ACCENT_COLOR), CommonColors.BLACK, ""));
         return line;
     }
 
@@ -496,14 +474,6 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
             lines.add(new TooltipLine.Fixed(Component.empty()));
         }
 
-        requirements
-                .quest()
-                .ifPresent(quest -> lines.add(requirementLine(
-                        " Quest",
-                        StringUtils.shorten(quest, 10),
-                        Models.Quest.getQuestFromName(quest)
-                                .map(info -> info.status() == ActivityStatus.COMPLETED)
-                                .orElse(false))));
         requirements
                 .classType()
                 .ifPresent(classType -> lines.add(requirementLine(
@@ -596,7 +566,8 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
 
     private static Component divider() {
         return withWhiteShadow(Component.literal("\uE000")
-                .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_DIVIDER_FONT).withColor(CRAFTED_ACCENT_COLOR)));
+                .withStyle(
+                        Style.EMPTY.withFont(CommonFonts.TOOLTIP_DIVIDER_FONT).withColor(CRAFTED_ACCENT_COLOR)));
     }
 
     private static MutableComponent withWhiteShadow(Component component) {

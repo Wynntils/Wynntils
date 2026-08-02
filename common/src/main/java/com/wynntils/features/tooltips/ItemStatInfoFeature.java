@@ -21,9 +21,8 @@ import com.wynntils.handlers.tooltip.type.TooltipOptions.WeightDisplay;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gear.type.ItemWeightSource;
-import com.wynntils.models.items.properties.CraftedItemProperty;
+import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
-import com.wynntils.models.items.properties.PagedItemProperty;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.utils.mc.KeyboardUtils;
 import java.util.Map;
@@ -130,8 +129,8 @@ public class ItemStatInfoFeature extends Feature {
             if (annotation instanceof IdentifiableItemProperty<?, ?> identifiableItem) {
                 event.setTooltips(
                         Handlers.Tooltip.updateTooltip(event.getTooltips(), identifiableItem, getTooltipOptions()));
-            } else if (annotation instanceof CraftedItemProperty craftedItem) {
-                if (craftedItem instanceof PagedItemProperty pagedItem && !pagedItem.isStatPage()) return;
+            } else if (annotation instanceof CraftedGearItem craftedItem) {
+                if (!craftedItem.isStatPage()) return;
 
                 event.setTooltips(
                         Handlers.Tooltip.updateTooltip(event.getTooltips(), craftedItem, getTooltipOptions()));

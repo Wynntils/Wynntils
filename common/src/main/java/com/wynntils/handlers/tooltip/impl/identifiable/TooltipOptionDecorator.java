@@ -23,7 +23,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import org.jspecify.annotations.Nullable;
 
 public final class TooltipOptionDecorator implements TooltipIdentificationDecorator {
     private final IdentifiableItemProperty<?, ?> item;
@@ -65,7 +64,7 @@ public final class TooltipOptionDecorator implements TooltipIdentificationDecora
 
     @Override
     public MutableComponent getSuffix(
-            StatActualValue actualValue, @Nullable StatPossibleValues possibleValues, TooltipStyle style) {
+            StatActualValue actualValue, StatPossibleValues possibleValues, TooltipStyle style) {
         if (!options.identificationDecorations() || possibleValues == null) return Component.empty();
 
         IdentificationDisplay display = options.identificationDisplay();
