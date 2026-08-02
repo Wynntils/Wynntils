@@ -2,12 +2,12 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.items.items.game;
+package com.wynntils.models.items.items.gui;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeType;
 
-public class AbilityTreeNodeItem extends GameItem {
+public class AbilityTreeNodeItem extends GuiItem {
     private final StyledText name;
     private final AbilityTreeNodeType abilityTreeNodeType;
 

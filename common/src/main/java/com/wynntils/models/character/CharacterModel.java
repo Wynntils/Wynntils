@@ -170,7 +170,9 @@ public final class CharacterModel extends Model {
         if (!updateCharacterId()) {
             scanCharacterInfoPending = true;
             scanCharacterInfoAlreadyScanned = false;
-            if (onComplete != null) onComplete.run();
+            if (onComplete != null) {
+                onComplete.run();
+            }
             return;
         }
 
@@ -178,7 +180,9 @@ public final class CharacterModel extends Model {
             hasCharacter = true;
             scanCharacterInfoPending = false;
             scanCharacterInfoAlreadyScanned = true;
-            if (onComplete != null) onComplete.run();
+            if (onComplete != null) {
+                onComplete.run();
+            }
             return;
         }
 
@@ -186,7 +190,9 @@ public final class CharacterModel extends Model {
         QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Character Info Query");
         queryBuilder.onError(msg -> {
             WynntilsMod.warn("Error querying Character Info: " + msg);
-            if (onComplete != null) onComplete.run();
+            if (onComplete != null) {
+                onComplete.run();
+            }
         });
 
         // Open compass/character menu
@@ -199,7 +205,9 @@ public final class CharacterModel extends Model {
 
         queryBuilder
                 .execute(() -> {
-                    if (onComplete != null) onComplete.run();
+                    if (onComplete != null) {
+                        onComplete.run();
+                    }
                 })
                 .build()
                 .executeQuery();

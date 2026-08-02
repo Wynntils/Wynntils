@@ -15,6 +15,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.core.text.fonts.WynnFont;
@@ -62,11 +63,13 @@ public class CharacterInfoIndicatorFeature extends Feature {
 
     private static final Pattern UNUSED_ABILITY_POINTS_PATTERN = Pattern.compile("§3✦ Unused Ability Points: §f(\\d+)");
 
-    @Persisted(i18nKey = "feature.wynntils.characterInfoIndicator.rescanMessage")
+    @Persisted
     private final Config<Boolean> rescanMessage = new Config<>(true);
 
     public CharacterInfoIndicatorFeature() {
-        super(ProfileDefault.ENABLED);
+        super(new ProfileDefault.Builder()
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .build());
     }
 
     @SubscribeEvent

@@ -139,7 +139,9 @@ public final class AccountModel extends Model {
         QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Rank Info Query");
         queryBuilder.onError(msg -> {
             WynntilsMod.warn("Error querying Rank Info: " + msg);
-            if (onComplete != null) onComplete.run();
+            if (onComplete != null) {
+                onComplete.run();
+            }
         });
 
         // Open compass/character menu
@@ -160,13 +162,17 @@ public final class AccountModel extends Model {
                     + (silverbullExpiresAt.get() - System.currentTimeMillis()) + " ms left)");
             scanRankInfoPending = false;
             scanRankInfoAlreadyScanned = true;
-            if (onComplete != null) onComplete.run();
+            if (onComplete != null) {
+                onComplete.run();
+            }
             return;
         }
 
         queryBuilder
                 .execute(() -> {
-                    if (onComplete != null) onComplete.run();
+                    if (onComplete != null) {
+                        onComplete.run();
+                    }
                 })
                 .build()
                 .executeQuery();

@@ -5,16 +5,19 @@
 package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.item.GameItemAnnotator;
+import com.wynntils.handlers.item.GuiItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.models.items.items.game.AbilityTreeResetItem;
+import com.wynntils.models.items.items.gui.AbilityTreeResetItem;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
-public class AbilityTreeResetAnnotator implements GameItemAnnotator {
+public class AbilityTreeResetAnnotator implements GuiItemAnnotator {
     private static final Pattern ABILITY_TREE_RESET_PATTERN =
             Pattern.compile("^(§8§lWaiting for Shards|§a§lConfirm Sacrifice)");
+
+    private static final String WAITING_FOR_SHARDS = "§8§lWaiting for Shards";
+    private static final String CONFIRM_SACRIFICE = "§a§lConfirm Sacrifice";
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
@@ -23,9 +26,9 @@ public class AbilityTreeResetAnnotator implements GameItemAnnotator {
         if (matcher.find()) {
             String result = matcher.group(1);
 
-            if (result.equals("§8§lWaiting for Shards")) {
+            if (result.equals(WAITING_FOR_SHARDS)) {
                 return new AbilityTreeResetItem(false);
-            } else if (result.equals("§a§lConfirm Sacrifice")) {
+            } else if (result.equals(CONFIRM_SACRIFICE)) {
                 return new AbilityTreeResetItem(true);
             }
         }
