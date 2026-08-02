@@ -83,7 +83,7 @@ public abstract class TooltipBuilder {
                 .withStyle(Style.EMPTY
                         .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
                         .applyFormat(getSourceColor()))
-                .append(Component.literal("\uE001").withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_FONT)))
+                .append(Component.literal("\uE004").withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_TOOLTIP_ICONS)))
                 .append(Component.literal("\uDB00\uDC02"))
                 .append(Component.literal(source)
                         .withStyle(style -> style.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)

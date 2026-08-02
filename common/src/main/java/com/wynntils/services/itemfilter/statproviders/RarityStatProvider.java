@@ -24,6 +24,11 @@ public class RarityStatProvider extends ItemStatProvider<String> {
     }
 
     @Override
+    public Optional<String> getGuideCategory() {
+        return Optional.of("Fixed Stats");
+    }
+
+    @Override
     public List<String> getValidInputs() {
         return Arrays.stream(GearTier.validValues()).map(GearTier::getName).collect(Collectors.toList());
     }

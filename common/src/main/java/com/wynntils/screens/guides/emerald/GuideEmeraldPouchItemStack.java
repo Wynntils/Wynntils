@@ -6,23 +6,18 @@ package com.wynntils.screens.guides.emerald;
 
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
-import com.wynntils.screens.guides.GuideItemStack;
+import com.wynntils.utils.mc.ComponentUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Unit;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.TooltipFlag;
 
-public final class GuideEmeraldPouchItemStack extends GuideItemStack {
+public final class GuideEmeraldPouchItemStack extends GuideEmeraldItemStack {
     private final int tier;
-
-    private final List<Component> generatedTooltip;
 
     public GuideEmeraldPouchItemStack(int tier) {
         super(new ItemStack(Items.DIAMOND_AXE), new EmeraldPouchItem(tier, 0), "Emerald Pouch");
@@ -31,8 +26,6 @@ public final class GuideEmeraldPouchItemStack extends GuideItemStack {
         this.tier = tier;
 
         this.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
-
-        generatedTooltip = generatePouchLore(tier);
     }
 
     private static List<Component> generatePouchLore(int tier) {
@@ -69,49 +62,44 @@ public final class GuideEmeraldPouchItemStack extends GuideItemStack {
 
         List<Component> itemLore = new ArrayList<>();
 
+        Component name = Component.literal("Emerald Pouch ")
+                .withStyle(ChatFormatting.GREEN)
+                .append(Component.literal("[Tier " + tier + "]").withStyle(ChatFormatting.DARK_GREEN));
+        itemLore.add(name);
         itemLore.add(Component.empty());
-        itemLore.add(Component.literal("Emerald Pouches allows the wearer to easily ")
+        itemLore.add(Component.literal("Emerald Pouches allow the wearer to easily ")
                 .withStyle(ChatFormatting.GRAY)
                 .append(Component.literal("store ").withStyle(ChatFormatting.AQUA))
                 .append(Component.literal("and ").withStyle(ChatFormatting.GRAY))
                 .append(Component.literal("convert ").withStyle(ChatFormatting.AQUA))
-                .append(Component.literal("picked emeralds without spending extra inventory slots.")
+                .append(Component.literal("emeralds without spending extra inventory slots.")
                         .withStyle(ChatFormatting.GRAY)));
         itemLore.add(Component.empty());
-        itemLore.add(Component.literal(" - " + rows + " Rows ")
-                .withStyle(ChatFormatting.GRAY)
+        itemLore.add(Component.empty()
+                .append(Component.literal("- " + rows + " Row" + (rows == 1 ? " " : "s "))
+                        .withStyle(ChatFormatting.GRAY))
                 .append(Component.literal("(" + totalString + " Total)"))
                 .withStyle(ChatFormatting.DARK_GRAY));
 
         switch (upTo) {
-            case 0 -> itemLore.add(Component.literal("No Auto-Conversions").withStyle(ChatFormatting.GRAY));
+            case 0 -> itemLore.add(Component.literal("- No Auto-Conversions").withStyle(ChatFormatting.GRAY));
             case 1 ->
-                itemLore.add(Component.literal("Converts up to")
+                itemLore.add(Component.literal("- Converts up to")
                         .withStyle(ChatFormatting.GRAY)
                         .append(Component.literal(" Emerald Blocks").withStyle(ChatFormatting.WHITE)));
             default ->
-                itemLore.add(Component.literal("Converts up to")
+                itemLore.add(Component.literal("- Converts up to")
                         .withStyle(ChatFormatting.GRAY)
                         .append(Component.literal(" Liquid Emeralds").withStyle(ChatFormatting.WHITE)));
         }
 
-        return itemLore;
+        return ComponentUtils.wrapTooltips(itemLore, 200);
     }
 
     @Override
-    public Component getHoverName() {
-        return Component.literal("Emerald Pouch ")
-                .withStyle(ChatFormatting.GREEN)
-                .append(Component.literal("[Tier " + tier + "]").withStyle(ChatFormatting.DARK_GREEN));
-    }
-
-    @Override
-    public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag flag) {
+    public List<Component> generateLore() {
         List<Component> tooltip = new ArrayList<>();
-        tooltip.add(getHoverName());
-        tooltip.addAll(generatedTooltip);
-
-        appendFavoriteInfo(tooltip);
+        tooltip.addAll(generatePouchLore(tier));
 
         return tooltip;
     }

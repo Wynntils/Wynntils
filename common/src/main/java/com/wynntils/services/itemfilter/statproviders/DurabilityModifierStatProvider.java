@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
@@ -19,6 +19,11 @@ public class DurabilityModifierStatProvider extends ItemStatProvider<Integer> {
         int durability = ingredientItem.getIngredientInfo().durabilityModifier();
 
         return durability == 0 ? Optional.empty() : Optional.of(durability);
+    }
+
+    @Override
+    public Optional<String> getGuideCategory() {
+        return Optional.of("Crafting Modifier");
     }
 
     @Override

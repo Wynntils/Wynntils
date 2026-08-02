@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
@@ -17,6 +17,11 @@ public class PowderSlotsStatProvider extends ItemStatProvider<Integer> {
         if (!(wynnItem instanceof GearItem gearItem)) return Optional.empty();
 
         return Optional.of(gearItem.getItemInfo().powderSlots());
+    }
+
+    @Override
+    public Optional<String> getGuideCategory() {
+        return Optional.of("Fixed Stats");
     }
 
     @Override

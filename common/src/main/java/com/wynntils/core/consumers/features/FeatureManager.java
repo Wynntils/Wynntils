@@ -152,12 +152,14 @@ import com.wynntils.features.ui.CustomLoadingScreenFeature;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
 import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.features.ui.CustomTradeMarketResultScreenFeature;
+import com.wynntils.features.ui.EmoteWheelFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
 import com.wynntils.features.ui.ProfessionHighlightFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
+import com.wynntils.features.utilities.AutoProgressDialogueFeature;
 import com.wynntils.features.utilities.AutoSkipCutscenesFeature;
 import com.wynntils.features.utilities.BuildLoadoutsFeature;
 import com.wynntils.features.utilities.CharacterSelectionUtilitiesFeature;
@@ -172,6 +174,7 @@ import com.wynntils.features.utilities.ValuablesProtectionFeature;
 import com.wynntils.features.utilities.XpGainMessageFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
+import com.wynntils.features.wynntils.CharacterInfoIndicatorFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
 import com.wynntils.features.wynntils.DataCrowdSourcingFeature;
 import com.wynntils.features.wynntils.DownloadProgressFeature;
@@ -404,6 +407,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomSeaskipperScreenFeature());
         registerFeature(new CustomTerritoryManagementScreenFeature());
         registerFeature(new CustomTradeMarketResultScreenFeature());
+        registerFeature(new EmoteWheelFeature());
         registerFeature(new LobbyUptimeFeature());
         registerFeature(new ProfessionHighlightFeature());
         registerFeature(new WynncraftButtonFeature());
@@ -413,6 +417,7 @@ public final class FeatureManager extends Manager {
 
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
+        registerFeature(new AutoProgressDialogueFeature());
         registerFeature(new AutoSkipCutscenesFeature());
         registerFeature(new BuildLoadoutsFeature());
         registerFeature(new CharacterSelectionUtilitiesFeature());
@@ -431,6 +436,7 @@ public final class FeatureManager extends Manager {
         // region wynntils
         registerFeature(new BetaWarningFeature());
         registerFeature(new ChangelogFeature());
+        registerFeature(new CharacterInfoIndicatorFeature());
         registerFeature(new CommandsFeature());
         registerFeature(new DataCrowdSourcingFeature());
         registerFeature(new DownloadProgressFeature());
