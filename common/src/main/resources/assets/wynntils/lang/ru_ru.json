@@ -191,6 +191,7 @@
   "feature.wynntils.changelog.autoClassMenu.name": "Автоматическое меню выбора класса для отображения журнала изменений",
   "feature.wynntils.changelog.description": "Отображает журнал изменений при запуске.",
   "feature.wynntils.changelog.name": "Журнал изменений",
+  "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere": "здесь",
   "feature.wynntils.characterSelectionUtilities.blockThirdPerson.description": "Запрещает переход в третье лицо на экране выбора персонажа",
   "feature.wynntils.characterSelectionUtilities.blockThirdPerson.name": "Блокировать третье лицо",
   "feature.wynntils.characterSelectionUtilities.description": "Добавляет различные функции качества жизни на экран выбора персонажа.",
