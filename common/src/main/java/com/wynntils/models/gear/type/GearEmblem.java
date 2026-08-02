@@ -17,7 +17,7 @@ public record GearEmblem(GearEmblemShape gearEmblemShape, int variant) {
 
     public static GearEmblem fromString(String emblem) {
         String[] parts = emblem.split("_");
-        GearEmblemShape gearEmblemShape = GearEmblemShape.valueOf(parts[0].toUpperCase(Locale.ROOT));
+        GearEmblemShape gearEmblemShape = GearEmblem.GearEmblemShape.valueOf(parts[0].toUpperCase(Locale.ROOT));
         int variant = parts.length == 1 ? 1 : Integer.parseInt(parts[1]);
         return new GearEmblem(gearEmblemShape, variant);
     }

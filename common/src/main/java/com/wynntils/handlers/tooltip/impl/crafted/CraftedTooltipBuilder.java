@@ -185,8 +185,8 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
         if (!(craftedItem instanceof CraftedGearItem craftedGear)) {
             return new TooltipLine.Fixed(line);
         }
-        if (TooltipUtils.containsFont(line, CommonFonts.DIVIDER_FONT)
-                || TooltipUtils.containsFont(line, CommonFonts.PAGE_FONT)) {
+        if (TooltipUtils.containsFont(line, CommonFonts.WYNNTILS_TOOLTIP_DIVIDER_FONT)
+                || TooltipUtils.containsFont(line, CommonFonts.TOOLTIP_PAGE_FONT)) {
             return new TooltipLine.Centered(stripLeadingOffsets(line));
         }
         if (isRequirementValueLine(line)) {
@@ -196,7 +196,7 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
     }
 
     private boolean isRequirementValueLine(Component line) {
-        if (!TooltipUtils.containsFont(line, CommonFonts.REQUIREMENT_SPRITE_FONT)) return false;
+        if (!TooltipUtils.containsFont(line, CommonFonts.TOOLTIP_REQUIREMENT_SPRITE_FONT)) return false;
 
         String text = line.getString();
         return text.contains("Combat Level") || text.contains("Class Type") || text.contains("Quest");
@@ -248,7 +248,7 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
 
     private TooltipLine buildAlignedRequirementLine(String label, Component value, boolean fulfilled) {
         MutableComponent left = withWhiteShadow(Component.literal((fulfilled ? "\uE006" : "\uE007") + "\uDAFF\uDFFF")
-                .withStyle(Style.EMPTY.withFont(CommonFonts.REQUIREMENT_SPRITE_FONT)));
+                .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_REQUIREMENT_SPRITE_FONT)));
         left.append(Component.literal(label).withStyle(CommonStyles.LANGUAGE));
         return new TooltipLine.Aligned(left, value);
     }
@@ -296,18 +296,18 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
 
         if (type.isWeapon()) {
             lines.add(new TooltipLine.Fixed(Component.literal(String.format(Locale.ROOT, "%,d", item.getDps()))
-                    .withStyle(Style.EMPTY.withFont(CommonFonts.QUAD_12).withColor(CRAFTED_ACCENT_COLOR))
+                    .withStyle(Style.EMPTY.withFont(CommonFonts.OFFSET_QUAD_12).withColor(CRAFTED_ACCENT_COLOR))
                     .append(Component.literal(" DPS").withStyle(CommonStyles.LANGUAGE))));
         } else {
             lines.add(new TooltipLine.Fixed(Component.literal(StringUtils.toSignedCommaString(item.getHealth()))
-                    .withStyle(Style.EMPTY.withFont(CommonFonts.QUAD_12).withColor(CRAFTED_ACCENT_COLOR))
+                    .withStyle(Style.EMPTY.withFont(CommonFonts.OFFSET_QUAD_12).withColor(CRAFTED_ACCENT_COLOR))
                     .append(Component.literal(" Health").withStyle(CommonStyles.LANGUAGE))));
         }
 
         item.getAttackSpeed()
                 .ifPresent(speed -> lines.add(new TooltipLine.Fixed(Component.empty()
                         .append(withWhiteShadow(Component.literal("\uE007")
-                                .withStyle(Style.EMPTY.withFont(CommonFonts.ATTRIBUTE_SPRITE_FONT))))
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_ATTRIBUTE_SPRITE_FONT))))
                         .append(Component.literal(" " + speed.getName() + " ")
                                 .withStyle(Style.EMPTY
                                         .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
@@ -347,7 +347,7 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
 
         if (item.getDuration() > 0) {
             lines.add(new TooltipLine.Fixed(withWhiteShadow(Component.literal("\uE00C")
-                            .withStyle(Style.EMPTY.withFont(CommonFonts.ATTRIBUTE_SPRITE_FONT)))
+                            .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_ATTRIBUTE_SPRITE_FONT)))
                     .append(Component.literal(" " + StringUtils.formatDuration(item.getDuration()) + " ")
                             .withStyle(CommonStyles.LANGUAGE))
                     .append(Component.literal("Duration")
@@ -390,12 +390,12 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
         MutableComponent line = Component.literal("\uDAFF\uDFF0")
                 .withStyle(style ->
                         style.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT).withShadowColor(0xffffff));
-        line.append(Component.literal(emblemFrame).withStyle(Style.EMPTY.withFont(CommonFonts.EMBLEM_FRAME_FONT)));
+        line.append(Component.literal(emblemFrame).withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_EMBLEM_FRAME_FONT)));
         line.append("\uDAFF\uDFCF");
         if (emblemSprite != null && !emblemSprite.isEmpty()) {
             line.append(Component.literal(emblemSprite)
                     .withStyle(
-                            Style.EMPTY.withFont(CommonFonts.EMBLEM_SPRITE_FONT).withColor(0x00eb1c)));
+                            Style.EMPTY.withFont(CommonFonts.TOOLTIP_EMBLEM_SPRITE_FONT).withColor(0x00eb1c)));
         }
         line.append(Component.literal("\uDB00\uDC05").withStyle(CommonStyles.SPACE));
         line.append(title);
@@ -422,7 +422,7 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
         MutableComponent line = Component.empty();
         for (Pair<DamageType, RangedValue> damage : damages) {
             line.append(withWhiteShadow(Component.literal(damage.a().getTooltipSprite())
-                    .withStyle(Style.EMPTY.withFont(CommonFonts.ATTRIBUTE_SPRITE_FONT))));
+                    .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_ATTRIBUTE_SPRITE_FONT))));
             line.append(
                     Component.literal(" " + damage.b().low() + "-" + damage.b().high() + " ")
                             .withStyle(Style.EMPTY
@@ -436,7 +436,7 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
         MutableComponent line = Component.empty();
         for (Pair<Element, Integer> defence : defences) {
             line.append(withWhiteShadow(Component.literal(defence.a().getTooltipSprite())
-                    .withStyle(Style.EMPTY.withFont(CommonFonts.ATTRIBUTE_SPRITE_FONT))));
+                    .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_ATTRIBUTE_SPRITE_FONT))));
             line.append(Component.literal(" " + StringUtils.toSignedCommaString(defence.b()) + " ")
                     .withStyle(Style.EMPTY
                             .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
@@ -534,10 +534,10 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
             String frame = count == 0 ? "\uE007" : "\uE006";
             String sprite = String.valueOf((char) ((count == 0 ? '\uE010' : '\uE000') + skill.ordinal()));
             line.append(withWhiteShadow(Component.literal(frame)
-                    .withStyle(Style.EMPTY.withFont(CommonFonts.REQUIREMENT_FRAME_FONT))
+                    .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_REQUIREMENT_FRAME_FONT))
                     .append(Component.literal("\uDAFF\uDFE7"))
                     .append(Component.literal(sprite)
-                            .withStyle(Style.EMPTY.withFont(CommonFonts.REQUIREMENT_SPRITE_FONT)))));
+                            .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_REQUIREMENT_SPRITE_FONT)))));
             line.append(Component.literal("\uDB00\uDC02").withStyle(CommonStyles.SPACE));
         }
         return line;
@@ -550,7 +550,7 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
             boolean fulfilled = count == 0 || Models.SkillPoint.getTotalSkillPoints(skill) >= count;
             String icon = count == 0 ? "\uE005" : fulfilled ? "\uE006" : "\uE007";
             line.append(withWhiteShadow(Component.literal(icon + "\uDAFF\uDFFF")
-                    .withStyle(Style.EMPTY.withFont(CommonFonts.REQUIREMENT_SPRITE_FONT))));
+                    .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_REQUIREMENT_SPRITE_FONT))));
             line.append(Component.literal("\uDB00\uDC03").withStyle(CommonStyles.SPACE));
             line.append(Component.literal(String.valueOf(count))
                     .withStyle(Style.EMPTY
@@ -571,7 +571,7 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
 
     private MutableComponent requirementIcon(boolean fulfilled) {
         return withWhiteShadow(Component.literal((fulfilled ? "\uE006" : "\uE007") + "\uDAFF\uDFFF")
-                .withStyle(Style.EMPTY.withFont(CommonFonts.REQUIREMENT_SPRITE_FONT)));
+                .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_REQUIREMENT_SPRITE_FONT)));
     }
 
     private List<TooltipLine> buildPaginator(CraftedGearItem item) {
@@ -584,7 +584,7 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
         for (int page = 0; page < 3; page++) {
             paginator.append(Component.literal("\uE000")
                     .withStyle(Style.EMPTY
-                            .withFont(CommonFonts.PAGE_FONT)
+                            .withFont(CommonFonts.TOOLTIP_PAGE_FONT)
                             .withColor(page == currentPage ? 0xffea80 : 0x455449)
                             .withShadowColor(0xffffff)));
             if (page < 2) paginator.append(Component.literal("\uDB00\uDC04").withStyle(CommonStyles.LANGUAGE));
@@ -596,7 +596,7 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
 
     private static Component divider() {
         return withWhiteShadow(Component.literal("\uE000")
-                .withStyle(Style.EMPTY.withFont(CommonFonts.DIVIDER_FONT).withColor(CRAFTED_ACCENT_COLOR)));
+                .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_DIVIDER_FONT).withColor(CRAFTED_ACCENT_COLOR)));
     }
 
     private static MutableComponent withWhiteShadow(Component component) {

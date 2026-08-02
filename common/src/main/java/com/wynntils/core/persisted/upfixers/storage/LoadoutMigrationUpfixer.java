@@ -230,8 +230,8 @@ public class LoadoutMigrationUpfixer implements Upfixer {
                 gearInfo.getVariableStatsMap().entrySet()) {
             StatType statType = entry.getKey();
             StatPossibleValues val = entry.getValue();
-            RangedValue internalRoll = StatCalculator.calculateInternalRollRange(val, val.baseValue(), 0);
-            stats.add(new StatActualValue(statType, val.baseValue(), 0, internalRoll, false));
+            RangedValue internalRoll = StatCalculator.calculateInternalRollRange(val, val.baseValue(), false);
+            stats.add(new StatActualValue(statType, val.baseValue(), false, internalRoll, false));
         }
 
         GearInstance gearInstance =
