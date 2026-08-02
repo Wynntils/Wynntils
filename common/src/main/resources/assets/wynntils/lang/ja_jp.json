@@ -150,6 +150,7 @@
   "feature.wynntils.changelog.autoClassMenu.name": "変更ログを表示するための自動クラスメニュー",
   "feature.wynntils.changelog.description": "起動時に変更ログを表示します。",
   "feature.wynntils.changelog.name": "変更ログ",
+  "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere": "ここ",
   "feature.wynntils.chatCoordinates.description": "チャット内の座標をクリックして、その場所にコンパスを設定する機能を追加します。",
   "feature.wynntils.chatCoordinates.name": "チャット座標",
   "feature.wynntils.chatItem.chatItemErrorEncode": "アイテムのエンコードに失敗しました: %s",
