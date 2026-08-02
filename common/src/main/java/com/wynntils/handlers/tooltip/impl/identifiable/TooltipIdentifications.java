@@ -141,7 +141,7 @@ public final class TooltipIdentifications {
                         StringUtils.toSignedString(value) + statType.getUnit().getDisplayName())
                 .withStyle(Style.EMPTY
                         .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
-                        .withColor(positive ? ChatFormatting.GREEN : ChatFormatting.RED));
+                        .withColor((positive ? CommonColors.WYNNCRAFT_GREEN : CommonColors.WYNNCRAFT_RED).asInt()));
         if (suffix != null) right.append(suffix);
         return Pair.of(left, right);
     }
