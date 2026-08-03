@@ -72,30 +72,45 @@ public final class StatModel extends Model {
     }
 
     public StatActualValue buildActualValue(
-            StatType statType, int value, int stars, StatPossibleValues possibleValues) {
-        return buildActualValue(statType, value, stars, possibleValues, false);
-    }
-
-    public StatActualValue buildActualValue(
-            StatType statType, int value, int stars, StatPossibleValues possibleValues, boolean hasIconPrefix) {
-        return buildActualValue(statType, value, stars, possibleValues, hasIconPrefix, Optional.empty());
+            StatType statType, int value, boolean perfectInternalRoll, StatPossibleValues possibleValues) {
+        return buildActualValue(statType, value, perfectInternalRoll, possibleValues, false);
     }
 
     public StatActualValue buildActualValue(
             StatType statType,
             int value,
-            int stars,
+            boolean perfectInternalRoll,
+            StatPossibleValues possibleValues,
+            boolean hasIconPrefix) {
+        return buildActualValue(statType, value, perfectInternalRoll, possibleValues, hasIconPrefix, Optional.empty());
+    }
+
+    public StatActualValue buildActualValue(
+            StatType statType,
+            int value,
+            boolean perfectInternalRoll,
             StatPossibleValues possibleValues,
             boolean hasIconPrefix,
             Optional<Character> vanillaMeter) {
         RangedValue internalRoll = possibleValues != null
-                ? StatCalculator.calculateInternalRollRange(possibleValues, value, stars)
+                ? StatCalculator.calculateInternalRollRange(possibleValues, value, perfectInternalRoll)
                 : RangedValue.NONE;
-        return new StatActualValue(statType, value, stars, internalRoll, hasIconPrefix, vanillaMeter);
+        return new StatActualValue(statType, value, perfectInternalRoll, internalRoll, hasIconPrefix, vanillaMeter);
     }
 
     public StatType fromDisplayName(String displayName, String unit) {
         return statTypeLookup.get(displayName, unit);
+    }
+
+    public StatType fromDisplayName(String displayName, String unit, Set<StatType> possibleStatTypes) {
+        StatType statType = fromDisplayName(displayName, unit);
+        if (statType == null || possibleStatTypes.contains(statType)) return statType;
+
+        return possibleStatTypes.stream()
+                .filter(possibleStatType -> possibleStatType.getDisplayName().equals(statType.getDisplayName()))
+                .filter(possibleStatType -> possibleStatType.getUnit() == statType.getUnit())
+                .findFirst()
+                .orElse(statType);
     }
 
     public StatType fromInternalRollId(String id) {

@@ -15,5 +15,8 @@ public interface TooltipIdentificationDecorator {
         return title.copy();
     }
 
+    /**
+     * @param possibleValues the known roll range, or {@code null} when the server only provides an estimated meter
+     */
     MutableComponent getSuffix(StatActualValue actualValue, StatPossibleValues possibleValues, TooltipStyle style);
 }

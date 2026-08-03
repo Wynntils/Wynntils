@@ -10,15 +10,20 @@ import java.util.Optional;
 public record StatActualValue(
         StatType statType,
         int value,
-        int stars,
+        boolean perfectInternalRoll,
         RangedValue internalRoll,
         boolean hasIconPrefix,
         Optional<Character> vanillaMeter) {
-    public StatActualValue(StatType statType, int value, int stars, RangedValue internalRoll) {
-        this(statType, value, stars, internalRoll, false, Optional.empty());
+    public StatActualValue(StatType statType, int value, boolean perfectInternalRoll, RangedValue internalRoll) {
+        this(statType, value, perfectInternalRoll, internalRoll, false, Optional.empty());
     }
 
-    public StatActualValue(StatType statType, int value, int stars, RangedValue internalRoll, boolean hasIconPrefix) {
-        this(statType, value, stars, internalRoll, hasIconPrefix, Optional.empty());
+    public StatActualValue(
+            StatType statType,
+            int value,
+            boolean perfectInternalRoll,
+            RangedValue internalRoll,
+            boolean hasIconPrefix) {
+        this(statType, value, perfectInternalRoll, internalRoll, hasIconPrefix, Optional.empty());
     }
 }

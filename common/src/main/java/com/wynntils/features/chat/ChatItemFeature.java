@@ -108,14 +108,15 @@ public class ChatItemFeature extends Feature {
         // check for new chat item encoding
         Matcher matcher = Models.ItemEncoding.getEncodedDataPattern().matcher(chatInput.getValue());
         while (matcher.find()) {
-            String itemName = matcher.group("name");
             EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromUtf16String(matcher.group("data"));
-            ErrorOr<WynnItem> errorOrDecodedItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, itemName);
+            ErrorOr<WynnItem> errorOrDecodedItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, null);
 
             String name = getItemName(errorOrDecodedItem);
 
-            chatInput.setValue(chatInput.getValue().replace(matcher.group(), "<" + name + ">"));
-            chatItems.put(name, matcher.group());
+            // Only hide the encoded data behind the placeholder. A crafted item's quoted name must
+            // remain ordinary chat text so Wynncraft moderation can inspect it.
+            chatInput.setValue(chatInput.getValue().replace(matcher.group("data"), "<" + name + ">"));
+            chatItems.put(name, matcher.group("data"));
         }
     }
 
@@ -203,20 +204,19 @@ public class ChatItemFeature extends Feature {
                 Models.ItemEncoding.getEncodedDataPattern().matcher(partToReplace.getString(null, StyleType.NONE));
 
         while (matcher.find()) {
-            String itemName = matcher.group("name");
             EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromUtf16String(matcher.group("data"));
-            ErrorOr<WynnItem> errorOrDecodedItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, itemName);
+            ErrorOr<WynnItem> errorOrDecodedItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, null);
 
             String unformattedString = partToReplace.getString(null, StyleType.NONE);
 
-            String firstPart = unformattedString.substring(0, matcher.start());
-            String lastPart = unformattedString.substring(matcher.end());
+            String firstPart = unformattedString.substring(0, matcher.start("data"));
+            String lastPart = unformattedString.substring(matcher.end("data"));
 
             PartStyle partStyle = partToReplace.getPartStyle();
 
             StyledTextPart first = new StyledTextPart(firstPart, partStyle.getStyle(), null, Style.EMPTY);
             List<StyledTextPart> replacedParts = errorOrDecodedItem.hasError()
-                    ? List.of(createErrorPart(matcher.group(), errorOrDecodedItem.getError()))
+                    ? List.of(createErrorPart(matcher.group("data"), errorOrDecodedItem.getError()))
                     : createItemPart(errorOrDecodedItem.getValue());
             StyledTextPart last = new StyledTextPart(lastPart, partStyle.getStyle(), null, Style.EMPTY);
 

@@ -54,23 +54,28 @@ public abstract class TooltipBuilder {
             ItemWeightSource weightSource,
             TooltipWeightDecorator weightDecorator) {
         if (tooltipLinesCache == null) {
-            List<Component> decoratedHeader = decorateHeader(header, identificationDecorator);
-            int targetWidth = 0;
-            for (Component line : decoratedHeader) {
-                targetWidth = Math.max(targetWidth, McUtils.mc().font.width(line));
-            }
-            for (Component line : footer) {
-                targetWidth = Math.max(targetWidth, McUtils.mc().font.width(line));
-            }
-
-            List<Component> tooltip = new ArrayList<>();
-            tooltip.addAll(decoratedHeader);
-            tooltip.addAll(getIdentificationLines(currentClass, style, identificationDecorator, targetWidth));
-            tooltip.addAll(footer);
-            tooltipLinesCache = prependSource(tooltip);
+            tooltipLinesCache = buildTooltipLines(currentClass, style, identificationDecorator);
         }
 
         return tooltipLinesCache;
+    }
+
+    protected final List<Component> buildTooltipLines(
+            ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator identificationDecorator) {
+        List<Component> decoratedHeader = decorateHeader(header, identificationDecorator);
+        int targetWidth = 0;
+        for (Component line : decoratedHeader) {
+            targetWidth = Math.max(targetWidth, McUtils.mc().font.width(line));
+        }
+        for (Component line : footer) {
+            targetWidth = Math.max(targetWidth, McUtils.mc().font.width(line));
+        }
+
+        List<Component> tooltip = new ArrayList<>();
+        tooltip.addAll(decoratedHeader);
+        tooltip.addAll(getIdentificationLines(currentClass, style, identificationDecorator, targetWidth));
+        tooltip.addAll(footer);
+        return prependSource(postProcessTooltipLines(tooltip));
     }
 
     private Component buildSourceLine() {
@@ -106,6 +111,10 @@ public abstract class TooltipBuilder {
     protected List<Component> decorateHeader(
             List<Component> header, TooltipIdentificationDecorator identificationDecorator) {
         return header;
+    }
+
+    protected List<Component> postProcessTooltipLines(List<Component> tooltip) {
+        return List.copyOf(tooltip);
     }
 
     protected static Pair<List<Component>, List<Component>> extractHeaderAndFooter(List<Component> lore) {

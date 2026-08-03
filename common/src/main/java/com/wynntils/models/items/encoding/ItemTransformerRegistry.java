@@ -1,11 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.data.EndData;
 import com.wynntils.models.items.encoding.data.NameData;
@@ -92,12 +91,9 @@ public final class ItemTransformerRegistry {
         TypeData typeData = typeDataOpt.get();
         ItemTransformer<WynnItem> transformer = itemTransformers.get(typeData.itemType());
 
-        // Don't use the name block for crafted gear and consumables
-        // This is used for crafted gear and consumables, so that "bad" names can't be injected into the item
         if (typeData.itemType() == ItemType.CRAFTED_GEAR || typeData.itemType() == ItemType.CRAFTED_CONSUMABLE) {
             itemData.removeIf(data -> data instanceof NameData);
 
-            // Override the name block if we have a clear-chat name
             if (itemName != null) {
                 itemData.add(NameData.sanitized(itemName));
             }
@@ -131,17 +127,7 @@ public final class ItemTransformerRegistry {
     // FIXME: This could be much more sophisticated in the future,
     //        e.g. by requesting the minimum versions required from each transformer instead.
     private static ItemTransformingVersion getEncodingVersionAccordingToItem(WynnItem wynnItem) {
-        ItemTransformingVersion versionToEncodeWith = ItemTransformingVersion.VERSION_1;
-        if (wynnItem instanceof GearItem gearItem) {
-            boolean shinyStatPresentWithRerolls = gearItem.getItemInstance()
-                    .map(GearInstance::shinyStat)
-                    .flatMap(shinyStat -> shinyStat.map(stat -> stat.shinyRerolls() != 0))
-                    .orElse(false);
-            if (shinyStatPresentWithRerolls) {
-                versionToEncodeWith = ItemTransformingVersion.VERSION_2;
-            }
-        }
-        return versionToEncodeWith;
+        return ItemTransformingVersion.VERSION_3;
     }
 
     private ErrorOr<WynnItem> decodeItem(List<ItemData> itemData, ItemTransformer<WynnItem> transformer) {

@@ -65,7 +65,7 @@ public final class TooltipOptionDecorator implements TooltipIdentificationDecora
     @Override
     public MutableComponent getSuffix(
             StatActualValue actualValue, StatPossibleValues possibleValues, TooltipStyle style) {
-        if (!options.identificationDecorations()) return Component.empty();
+        if (!options.identificationDecorations() || possibleValues == null) return Component.empty();
 
         IdentificationDisplay display = options.identificationDisplay();
         MutableComponent suffix =
@@ -130,7 +130,7 @@ public final class TooltipOptionDecorator implements TooltipIdentificationDecora
                         options.decimalPlaces(),
                         calculation.estimated())
                 .withStyle(componentStyle -> componentStyle.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT));
-        if (style.rainbowInternalRoll() && actualValue.stars() == 3) {
+        if (style.rainbowInternalRoll() && actualValue.perfectInternalRoll()) {
             percentage.withColor(WynncraftShaderColor.RAINBOW.color.asInt());
         }
         return percentage;
