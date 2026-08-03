@@ -26,7 +26,7 @@ repositories {
         url "https://jitpack.io"
     }
     maven {
-        url "https://maven.terraformersmc.com/"
+        url "https://api.modrinth.com/maven"
     }
 }
 
@@ -36,7 +36,7 @@ dependencies {
     include(modImplementation(fabricApi.module("fabric-api-base", fabric_version)))
     include(modImplementation(fabricApi.module("fabric-resource-loader-v1", fabric_version)))
 
-    modCompileOnly("com.terraformersmc:modmenu:${modmenu_version}")
+    modCompileOnly("maven.modrinth:modmenu:${modmenu_version}")
 
     testImplementation(common(project(path: ":common", configuration: "namedElements"))) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
