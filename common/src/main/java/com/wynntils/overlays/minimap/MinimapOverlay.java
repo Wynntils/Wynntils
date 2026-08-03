@@ -13,10 +13,12 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
+import com.wynntils.services.hades.providers.PlayerProvider;
 import com.wynntils.services.hades.type.PlayerRelation;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
+import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.features.type.MapLocation;
@@ -242,11 +244,9 @@ public class MinimapOverlay extends Overlay {
         // render border
         renderMapBorder(guiGraphics, renderX, renderY, width, height);
 
-        // TODO: Reimplement
         // render always shown players above the map border so they aren't cut off
-        //        renderAlwaysShownMiniPlayers(
-        //                guiGraphics, centerX, centerZ, width, height, playerX, playerZ, zoomRenderScale,
-        // zoomLevel.get());
+        renderAlwaysShownMiniPlayers(
+                guiGraphics, centerX, centerZ, width, height, playerX, playerZ, zoomRenderScale, zoomLevel.get());
 
         // Directional Text
         renderCardinalDirections(guiGraphics, width, height, centerX, centerZ);
@@ -304,7 +304,9 @@ public class MinimapOverlay extends Overlay {
                     rotationVector,
                     zoomLevel,
                     zoomRenderScale,
-                    mapFeatureScale.get(),
+                    feature instanceof PlayerProvider.RemotePlayerLocation
+                            ? remotePlayersHeadScale.get()
+                            : mapFeatureScale.get(),
                     false,
                     false);
         }
@@ -410,6 +412,64 @@ public class MinimapOverlay extends Overlay {
                     HorizontalAlignment.CENTER,
                     VerticalAlignment.TOP,
                     TextShadow.NORMAL);
+
+            guiGraphics.pose().popMatrix();
+        }
+    }
+
+    private void renderAlwaysShownMiniPlayers(
+            GuiGraphics guiGraphics,
+            float centerX,
+            float centerZ,
+            float width,
+            float height,
+            double playerX,
+            double playerZ,
+            float zoomRenderScale,
+            float zoomLevel) {
+        List<PlayerProvider.RemotePlayerLocation> remotePlayerLocations = Services.MapData.getFeatures()
+                .filter(feature -> feature instanceof PlayerProvider.RemotePlayerLocation)
+                .map(feature -> (PlayerProvider.RemotePlayerLocation) feature)
+                .filter(feature ->
+                        shouldAlwaysRenderRemotePlayer(feature.getHadesUser().getRelation()))
+                .toList();
+
+        for (PlayerProvider.RemotePlayerLocation remotePlayerLocation : remotePlayerLocations) {
+            float poiRenderX = MapRenderer.getRenderX(
+                    remotePlayerLocation.getLocation().x(), (float) playerX, centerX, zoomRenderScale);
+            float poiRenderZ = MapRenderer.getRenderZ(
+                    remotePlayerLocation.getLocation().z(), (float) playerZ, centerZ, zoomRenderScale);
+
+            if (followPlayerRotation.get()) {
+                float dx = poiRenderX - centerX;
+                float dz = poiRenderZ - centerZ;
+
+                float yaw = McUtils.mc().gameRenderer.getMainCamera().yRot();
+                float rot = (float) Math.toRadians(180 - yaw);
+
+                float sin = (float) Math.sin(rot);
+                float cos = (float) Math.cos(rot);
+
+                float rdX = dx * cos - dz * sin;
+                float rdZ = dx * sin + dz * cos;
+
+                poiRenderX = centerX + rdX;
+                poiRenderZ = centerZ + rdZ;
+            }
+
+            float[] clamped = clampToMinimapBorder(poiRenderX, poiRenderZ, centerX, centerZ, width, height);
+            poiRenderX = clamped[0];
+            poiRenderZ = clamped[1];
+
+            guiGraphics.pose().pushMatrix();
+            guiGraphics.pose().translate(poiRenderX, poiRenderZ);
+            guiGraphics.pose().scale(remotePlayersHeadScale.get(), remotePlayersHeadScale.get());
+
+            // hacky, but render the player icon
+            remotePlayerLocation
+                    .getAttributes()
+                    .flatMap(MapAttributes::getIconDecoration)
+                    .ifPresent(decoration -> decoration.render(guiGraphics, false, false, zoomLevel));
 
             guiGraphics.pose().popMatrix();
         }
