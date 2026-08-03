@@ -74,6 +74,14 @@ public final class ItemTransformerRegistry {
     }
 
     public ErrorOr<WynnItem> decodeItem(EncodedByteBuffer encodedByteBuffer, String itemName) {
+        return decodeItem(encodedByteBuffer, itemName, false);
+    }
+
+    public ErrorOr<WynnItem> decodeItemWithTrustedName(EncodedByteBuffer encodedByteBuffer, String itemName) {
+        return decodeItem(encodedByteBuffer, itemName, true);
+    }
+
+    private ErrorOr<WynnItem> decodeItem(EncodedByteBuffer encodedByteBuffer, String itemName, boolean trustedName) {
         ErrorOr<List<ItemData>> errorOrItemData = dataTransformerRegistry.decodeData(encodedByteBuffer);
         if (errorOrItemData.hasError()) {
             return ErrorOr.error(errorOrItemData.getError());
@@ -95,7 +103,7 @@ public final class ItemTransformerRegistry {
             itemData.removeIf(data -> data instanceof NameData);
 
             if (itemName != null) {
-                itemData.add(NameData.sanitized(itemName));
+                itemData.add(trustedName ? NameData.fromTrustedName(itemName) : NameData.sanitized(itemName));
             }
         }
 

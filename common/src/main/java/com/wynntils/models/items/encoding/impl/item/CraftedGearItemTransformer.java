@@ -14,6 +14,7 @@ import com.wynntils.models.items.encoding.data.CustomIdentificationsData;
 import com.wynntils.models.items.encoding.data.DamageData;
 import com.wynntils.models.items.encoding.data.DefenseData;
 import com.wynntils.models.items.encoding.data.DurabilityData;
+import com.wynntils.models.items.encoding.data.NameData;
 import com.wynntils.models.items.encoding.data.PowderData;
 import com.wynntils.models.items.encoding.data.RequirementsData;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
@@ -71,9 +72,13 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         }
         requirements = requirementsData.requirements();
 
-        // Crafted names remain ordinary chat text and never become part of the decoded item.
-        String name = "Crafted "
-                + StringUtils.capitalizeFirst(gearTypeData.gearType().name().toLowerCase(Locale.ROOT));
+        // Crafted names are shared as ordinary chat text and converted to NameData during decoding.
+        NameData nameData = itemDataMap.get(NameData.class);
+        String name = nameData != null && nameData.name().isPresent()
+                ? nameData.name().get()
+                : "Crafted "
+                        + StringUtils.capitalizeFirst(
+                                gearTypeData.gearType().name().toLowerCase(Locale.ROOT));
 
         DamageData damageData = itemDataMap.get(DamageData.class);
         if (damageData != null && damageData.attackSpeed().isPresent()) {
