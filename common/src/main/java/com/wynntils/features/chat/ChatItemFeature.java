@@ -16,7 +16,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
@@ -40,7 +39,6 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.ErrorOr;
-import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -108,15 +106,16 @@ public class ChatItemFeature extends Feature {
         // check for new chat item encoding
         Matcher matcher = Models.ItemEncoding.getEncodedDataPattern().matcher(chatInput.getValue());
         while (matcher.find()) {
+            String itemName = matcher.group("name");
             EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromUtf16String(matcher.group("data"));
-            ErrorOr<WynnItem> errorOrDecodedItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, null);
+            ErrorOr<WynnItem> errorOrDecodedItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, itemName);
 
             String name = getItemName(errorOrDecodedItem);
 
             // Only hide the encoded data behind the placeholder. A crafted item's quoted name must
             // remain ordinary chat text so Wynncraft moderation can inspect it.
-            chatInput.setValue(chatInput.getValue().replace(matcher.group("data"), "<" + name + ">"));
-            chatItems.put(name, matcher.group("data"));
+            chatInput.setValue(chatInput.getValue().replace(matcher.group(), "<" + name + ">"));
+            chatItems.put(name, matcher.group());
         }
     }
 
@@ -146,11 +145,7 @@ public class ChatItemFeature extends Feature {
 
         StyledText unwrapped = StyledTextUtils.unwrap(message);
 
-        // Decode old chat item encoding
-        StyledText modified = unwrapped.iterate((part, changes) -> {
-            decodeChatEncoding(changes, part);
-            return IterationDecision.CONTINUE;
-        });
+        StyledText modified = decodeChatEncoding(unwrapped);
 
         if (modified.equals(unwrapped)) return;
 
@@ -199,35 +194,35 @@ public class ChatItemFeature extends Feature {
         }
     }
 
-    private void decodeChatEncoding(List<StyledTextPart> changes, StyledTextPart partToReplace) {
-        Matcher matcher =
-                Models.ItemEncoding.getEncodedDataPattern().matcher(partToReplace.getString(null, StyleType.NONE));
+    private StyledText decodeChatEncoding(StyledText message) {
+        Matcher matcher = Models.ItemEncoding.getEncodedDataPattern().matcher(message.getStringWithoutFormatting());
+        List<StyledText> decodedParts = new ArrayList<>();
+        int previousEnd = 0;
 
         while (matcher.find()) {
+            if (matcher.start() > previousEnd) {
+                decodedParts.add(message.substring(previousEnd, matcher.start(), StyleType.NONE));
+            }
+
+            String itemName = matcher.group("name");
             EncodedByteBuffer encodedByteBuffer = EncodedByteBuffer.fromUtf16String(matcher.group("data"));
-            ErrorOr<WynnItem> errorOrDecodedItem = Models.ItemEncoding.decodeItem(encodedByteBuffer, null);
+            ErrorOr<WynnItem> errorOrDecodedItem =
+                    Models.ItemEncoding.decodeItemWithTrustedName(encodedByteBuffer, itemName);
 
-            String unformattedString = partToReplace.getString(null, StyleType.NONE);
-
-            String firstPart = unformattedString.substring(0, matcher.start("data"));
-            String lastPart = unformattedString.substring(matcher.end("data"));
-
-            PartStyle partStyle = partToReplace.getPartStyle();
-
-            StyledTextPart first = new StyledTextPart(firstPart, partStyle.getStyle(), null, Style.EMPTY);
-            List<StyledTextPart> replacedParts = errorOrDecodedItem.hasError()
-                    ? List.of(createErrorPart(matcher.group("data"), errorOrDecodedItem.getError()))
-                    : createItemPart(errorOrDecodedItem.getValue());
-            StyledTextPart last = new StyledTextPart(lastPart, partStyle.getStyle(), null, Style.EMPTY);
-
-            changes.remove(partToReplace);
-            changes.add(first);
-            changes.addAll(replacedParts);
-            changes.add(last);
-
-            partToReplace = last;
-            matcher = Models.ItemEncoding.getEncodedDataPattern().matcher(lastPart);
+            decodedParts.add(
+                    errorOrDecodedItem.hasError()
+                            ? StyledText.fromPart(createErrorPart(matcher.group(), errorOrDecodedItem.getError()))
+                            : StyledText.fromParts(createItemPart(errorOrDecodedItem.getValue())));
+            previousEnd = matcher.end();
         }
+
+        if (decodedParts.isEmpty()) return message;
+
+        if (previousEnd < message.length(StyleType.NONE)) {
+            decodedParts.add(message.substring(previousEnd, StyleType.NONE));
+        }
+
+        return StyledText.concat(decodedParts);
     }
 
     private StyledTextPart createErrorPart(String originalString, String error) {

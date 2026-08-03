@@ -9,6 +9,7 @@ import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.items.encoding.data.CustomConsumableTypeData;
 import com.wynntils.models.items.encoding.data.CustomIdentificationsData;
 import com.wynntils.models.items.encoding.data.EffectsData;
+import com.wynntils.models.items.encoding.data.NameData;
 import com.wynntils.models.items.encoding.data.RequirementsData;
 import com.wynntils.models.items.encoding.data.UsesData;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
@@ -57,9 +58,11 @@ public class CraftedConsumableItemTransformer extends ItemTransformer<CraftedCon
 
         level = requirementsData.requirements().level();
 
-        // Crafted names remain ordinary chat text and never become part of the decoded item.
-        String name =
-                "Crafted " + StringUtils.capitalizeFirst(consumableType.name().toLowerCase(Locale.ROOT));
+        // Crafted names are shared as ordinary chat text and converted to NameData during decoding.
+        NameData nameData = itemDataMap.get(NameData.class);
+        String name = nameData != null && nameData.name().isPresent()
+                ? nameData.name().get()
+                : "Crafted " + StringUtils.capitalizeFirst(consumableType.name().toLowerCase(Locale.ROOT));
 
         EffectsData effectsData = itemDataMap.get(EffectsData.class);
         if (effectsData != null) {

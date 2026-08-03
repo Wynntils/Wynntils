@@ -29,7 +29,7 @@ public final class ItemEncodingModel extends Model {
     private static final String RANGE_B =
             "[" + new String(Character.toChars(0x100000)) + "-" + new String(Character.toChars(0x10FFFD)) + "]";
     private static final Pattern ENCODED_DATA_PATTERN =
-            Pattern.compile("(?<data>(" + RANGE_A + "|" + RANGE_B + ")+)( \"(?<name>.+)\")?");
+            Pattern.compile("(?<data>(" + RANGE_A + "|" + RANGE_B + ")+)( \"(?<name>[^\"]+)\")?");
 
     private final ItemTransformerRegistry itemTransformerRegistry = new ItemTransformerRegistry();
 
@@ -43,6 +43,10 @@ public final class ItemEncodingModel extends Model {
 
     public ErrorOr<WynnItem> decodeItem(EncodedByteBuffer encodedByteBuffer, String itemName) {
         return itemTransformerRegistry.decodeItem(encodedByteBuffer, itemName);
+    }
+
+    public ErrorOr<WynnItem> decodeItemWithTrustedName(EncodedByteBuffer encodedByteBuffer, String itemName) {
+        return itemTransformerRegistry.decodeItemWithTrustedName(encodedByteBuffer, itemName);
     }
 
     public boolean canEncodeItem(WynnItem wynnItem) {
