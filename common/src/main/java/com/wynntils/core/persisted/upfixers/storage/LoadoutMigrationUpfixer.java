@@ -124,23 +124,34 @@ public class LoadoutMigrationUpfixer implements Upfixer {
 
         skillPointObject.addProperty(
                 "strength",
-                oldSkillPointObject.has("strength") ? oldSkillPointObject.get("strength").getAsInt() : 0);
+                oldSkillPointObject.has("strength")
+                        ? oldSkillPointObject.get("strength").getAsInt()
+                        : 0);
         skillPointObject.addProperty(
                 "dexterity",
-                oldSkillPointObject.has("dexterity") ? oldSkillPointObject.get("dexterity").getAsInt() : 0);
+                oldSkillPointObject.has("dexterity")
+                        ? oldSkillPointObject.get("dexterity").getAsInt()
+                        : 0);
         skillPointObject.addProperty(
                 "intelligence",
-                oldSkillPointObject.has("intelligence") ? oldSkillPointObject.get("intelligence").getAsInt() : 0);
+                oldSkillPointObject.has("intelligence")
+                        ? oldSkillPointObject.get("intelligence").getAsInt()
+                        : 0);
         skillPointObject.addProperty(
                 "defence",
-                oldSkillPointObject.has("defence") ? oldSkillPointObject.get("defence").getAsInt() : 0);
+                oldSkillPointObject.has("defence")
+                        ? oldSkillPointObject.get("defence").getAsInt()
+                        : 0);
         skillPointObject.addProperty(
                 "agility",
-                oldSkillPointObject.has("agility") ? oldSkillPointObject.get("agility").getAsInt() : 0);
+                oldSkillPointObject.has("agility")
+                        ? oldSkillPointObject.get("agility").getAsInt()
+                        : 0);
 
         skillPointObject.add("weapon", JsonNull.INSTANCE);
 
-        if (oldSkillPointObject.has("weapon") && !oldSkillPointObject.get("weapon").isJsonNull()) {
+        if (oldSkillPointObject.has("weapon")
+                && !oldSkillPointObject.get("weapon").isJsonNull()) {
             String weaponName = oldSkillPointObject.get("weapon").getAsString();
             encodeDefaultGearItem(weaponName)
                     .ifPresentOrElse(
@@ -158,7 +169,8 @@ public class LoadoutMigrationUpfixer implements Upfixer {
     }
 
     private JsonArray migrateArmourNameArray(JsonObject oldSkillPointObject) {
-        if (!oldSkillPointObject.has("armourNames") || !oldSkillPointObject.get("armourNames").isJsonArray()) return null;
+        if (!oldSkillPointObject.has("armourNames")
+                || !oldSkillPointObject.get("armourNames").isJsonArray()) return null;
 
         JsonArray oldNames = oldSkillPointObject.getAsJsonArray("armourNames");
         // 0=helmet, 1=chestplate, 2=leggings, 3=boots
@@ -198,7 +210,8 @@ public class LoadoutMigrationUpfixer implements Upfixer {
     }
 
     private JsonArray migrateAccessoryNameArray(JsonObject oldSkillPointObject) {
-        if (!oldSkillPointObject.has("accessoryNames") || !oldSkillPointObject.get("accessoryNames").isJsonArray()) return null;
+        if (!oldSkillPointObject.has("accessoryNames")
+                || !oldSkillPointObject.get("accessoryNames").isJsonArray()) return null;
 
         JsonArray oldNames = oldSkillPointObject.getAsJsonArray("accessoryNames");
         // 0=ring1, 1=ring2, 2=bracelet, 3=necklace

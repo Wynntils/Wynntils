@@ -44,11 +44,11 @@ public class LoadoutMenuScrollListAbilityWidget extends AbstractWidget implement
 
         abilityItemStack = parent.getSelectedLoadout().hasAbilityTree() && abilityTreeSkillNode != null
                 ? new AbilityTreeNodeItemStack(
-                abilityTreeSkillNode,
-                parent.getSelectedLoadout().abilityTree())
+                        abilityTreeSkillNode, parent.getSelectedLoadout().abilityTree())
                 : ItemStack.EMPTY;
 
-        ultimateAbility = abilityTreeSkillNode != null && abilityTreeSkillNode.abilityTreeNodeType().isUltimate();
+        ultimateAbility = abilityTreeSkillNode != null
+                && abilityTreeSkillNode.abilityTreeNodeType().isUltimate();
     }
 
     @Override
