@@ -7,7 +7,6 @@ package com.wynntils.features.wynntils;
 import com.google.common.collect.Lists;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -21,6 +20,8 @@ import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.core.text.fonts.WynnFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.abilitytree.type.AbilityPointProgression;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.character.type.ClassType;
@@ -35,9 +36,11 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -57,9 +60,10 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.WYNNTILS)
 public class CharacterInfoIndicatorFeature extends Feature {
-    // It takes a while for the compass to actually have the correct ability points,
-    // otherwise it is max and then the calculation fails and an error shows up in the chat.
-    private static final int DELAY_TICKS = 20 * 30;
+    private boolean compassScanPending = false;
+    private int compassSettleTicks = -1;
+
+    private static final int COMPASS_SETTLE_DELAY = 20 * 20; // 20s
 
     private static final Pattern UNUSED_ABILITY_POINTS_PATTERN = Pattern.compile("§3✦ Unused Ability Points: §f(\\d+)");
 
@@ -165,13 +169,34 @@ public class CharacterInfoIndicatorFeature extends Feature {
     public void onWorldStateChanged(WorldStateEvent e) {
         if (!rescanMessage.get()) return;
 
-        if (e.getNewState() == WorldState.WORLD) {
-            Managers.TickScheduler.scheduleLater(this::handleAbilityPointsFromCompass, DELAY_TICKS);
+        compassScanPending = e.getNewState() == WorldState.WORLD;
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onSetSlot(SetSlotEvent.Post event) {
+        if (!compassScanPending) return;
+        if (!Objects.equals(event.getContainer(), McUtils.inventory())) return;
+        if (event.getSlot() != InventoryUtils.COMPASS_SLOT_NUM) return;
+
+        compassSettleTicks = COMPASS_SETTLE_DELAY;
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent e) {
+        if (compassSettleTicks < 0) return;
+
+        if (compassSettleTicks == 0) {
+            compassSettleTicks = -1;
+            compassScanPending = false;
+            handleAbilityPointsFromCompass();
+            return;
         }
+
+        compassSettleTicks--;
     }
 
     private void handleAbilityPointsFromCompass() {
-        ItemStack compassItem = McUtils.inventory().items.get(Models.Character.CHARACTER_INFO_SLOT);
+        ItemStack compassItem = McUtils.inventory().items.get(InventoryUtils.COMPASS_SLOT_NUM);
         Matcher matcher = LoreUtils.matchLoreLine(compassItem, 6, UNUSED_ABILITY_POINTS_PATTERN);
 
         if (!matcher.matches()) {
