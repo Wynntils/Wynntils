@@ -254,7 +254,7 @@ public class LoadoutMigrationUpfixer implements Upfixer {
     }
 
     private static Optional<GearInfo> resolveGearInfo(String rawName) {
-        String removeFormatting = rawName.replaceFirst("§.", "");
+        String removeFormatting = rawName.replaceAll("§.", "");
         String cleanName = SANITIZE_PATTERN.matcher(removeFormatting).replaceAll("");
         GearInfo gearInfo = Models.Gear.getGearInfoFromDisplayName(cleanName);
         if (gearInfo == null) {
