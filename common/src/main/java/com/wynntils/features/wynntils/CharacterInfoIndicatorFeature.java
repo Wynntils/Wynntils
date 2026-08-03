@@ -167,8 +167,6 @@ public class CharacterInfoIndicatorFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onWorldStateChanged(WorldStateEvent e) {
-        if (!rescanMessage.get()) return;
-
         compassScanPending = e.getNewState() == WorldState.WORLD;
     }
 
@@ -234,6 +232,7 @@ public class CharacterInfoIndicatorFeature extends Feature {
                 isMismatch ? " Mismatch detected, tracked ability tree state is out of sync." : ""));
 
         if (!isMismatch) return;
+        if (!rescanMessage.get()) return;
 
         Component clickableHere = Component.translatable(
                         "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere")
