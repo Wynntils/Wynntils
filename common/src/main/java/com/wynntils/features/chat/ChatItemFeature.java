@@ -112,6 +112,8 @@ public class ChatItemFeature extends Feature {
 
             String name = getItemName(errorOrDecodedItem);
 
+            // Only hide the encoded data behind the placeholder. A crafted item's quoted name must
+            // remain ordinary chat text so Wynncraft moderation can inspect it.
             chatInput.setValue(chatInput.getValue().replace(matcher.group(), "<" + name + ">"));
             chatItems.put(name, matcher.group());
         }
