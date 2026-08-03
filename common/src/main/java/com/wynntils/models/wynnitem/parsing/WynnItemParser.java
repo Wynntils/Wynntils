@@ -405,7 +405,9 @@ public final class WynnItemParser {
                     String unit = statMatcher.group("unit");
                     boolean hasIconPrefix = statMatcher.group("iconPrefix") != null;
 
-                    StatType statType = Models.Stat.fromDisplayName(statDisplayName, unit);
+                    StatType statType = possibleValuesMap == null
+                            ? Models.Stat.fromDisplayName(statDisplayName, unit)
+                            : Models.Stat.fromDisplayName(statDisplayName, unit, possibleValuesMap.keySet());
                     if (statType == null) {
                         WynntilsMod.warn(
                                 "Item " + itemStack.getHoverName() + " has unknown identified stat " + statDisplayName);

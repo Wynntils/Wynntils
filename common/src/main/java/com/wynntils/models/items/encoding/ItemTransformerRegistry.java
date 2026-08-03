@@ -90,7 +90,7 @@ public final class ItemTransformerRegistry {
 
         TypeData typeData = typeDataOpt.get();
         ItemTransformer<WynnItem> transformer = itemTransformers.get(typeData.itemType());
-        
+
         if (typeData.itemType() == ItemType.CRAFTED_GEAR || typeData.itemType() == ItemType.CRAFTED_CONSUMABLE) {
             itemData.removeIf(data -> data instanceof NameData);
 

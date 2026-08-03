@@ -102,6 +102,17 @@ public final class StatModel extends Model {
         return statTypeLookup.get(displayName, unit);
     }
 
+    public StatType fromDisplayName(String displayName, String unit, Set<StatType> possibleStatTypes) {
+        StatType statType = fromDisplayName(displayName, unit);
+        if (statType == null || possibleStatTypes.contains(statType)) return statType;
+
+        return possibleStatTypes.stream()
+                .filter(possibleStatType -> possibleStatType.getDisplayName().equals(statType.getDisplayName()))
+                .filter(possibleStatType -> possibleStatType.getUnit() == statType.getUnit())
+                .findFirst()
+                .orElse(statType);
+    }
+
     public StatType fromInternalRollId(String id) {
         for (StatType statType : statTypeRegistry) {
             if (statType.getInternalRollName().equals(id)) return statType;
