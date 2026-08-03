@@ -25,6 +25,7 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.RangedValue;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,10 +33,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.regex.Pattern;
 
 public class LoadoutMigrationUpfixer implements Upfixer {
-    private static final Pattern SANITIZE_PATTERN = Pattern.compile("[^a-zA-Z0-9'\\-.,!?\\s]");
     private static final String OLD_ABILITY_TREE_KEY = "model.abilityTree.abilityTreeLoadouts";
     private static final String OLD_ASPECT_KEY = "model.aspect.aspectLoadouts";
     private static final String OLD_SKILL_POINT_KEY = "model.skillPoint.skillPointLoadouts";
@@ -255,7 +254,7 @@ public class LoadoutMigrationUpfixer implements Upfixer {
 
     private static Optional<GearInfo> resolveGearInfo(String rawName) {
         String removeFormatting = rawName.replaceAll("§.", "");
-        String cleanName = SANITIZE_PATTERN.matcher(removeFormatting).replaceAll("");
+        String cleanName = WynnUtils.stripItemNameMarkers(removeFormatting);
         GearInfo gearInfo = Models.Gear.getGearInfoFromDisplayName(cleanName);
         if (gearInfo == null) {
             WynntilsMod.warn("Upfixer: no gear info found for " + cleanName);
