@@ -59,7 +59,7 @@ import org.lwjgl.glfw.GLFW;
 public class CharacterInfoIndicatorFeature extends Feature {
     // It takes a while for the compass to actually have the correct ability points,
     // otherwise it is max and then the calculation fails and an error shows up in the chat.
-    private static final int DELAY_TICKS = 200;
+    private static final int DELAY_TICKS = 20 * 30;
 
     private static final Pattern UNUSED_ABILITY_POINTS_PATTERN = Pattern.compile("§3✦ Unused Ability Points: §f(\\d+)");
 
