@@ -92,6 +92,20 @@ public class MapDataService extends Service {
         reloadJsonOverrideProviders();
     }
 
+    // mapdataservice
+    public Stream<MapCategory> getDefinedCategories() {
+        return getProviders().flatMap(MapDataProvider::getCategories);
+    }
+
+    public Stream<String> getFeatureCategoryIds() {
+        return getFeatures().distinct().map(MapFeature::getCategoryId);
+    }
+
+    public Stream<String> allPossibleCategories() {
+        return Stream.concat(getFeatureCategoryIds(), getDefinedCategories().map(MapCategory::getCategoryId))
+                .distinct();
+    }
+
     public Stream<MapFeature> getFeatures() {
         return getProviders().flatMap(MapDataProvider::getFeatures);
     }

@@ -176,6 +176,24 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.GRAY))));
 
         addMapButton(new MapButton(
+                Texture.CATEGORY_MANAGER_ICON,
+                (b) -> McUtils.mc().setScreen(CategoryManagementScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.AQUA)
+                                .append(Component.translatable("Category Management")),
+                        Component.translatable("Edit categories").withStyle(ChatFormatting.GRAY))));
+
+        addMapButton(new MapButton(
+                Texture.PROVIDER_MANAGER_ICON,
+                (b) -> McUtils.mc().setScreen(ProviderManagementScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.RED)
+                                .append(Component.translatable("Provider Management")),
+                        Component.translatable("Edit providers").withStyle(ChatFormatting.GRAY))));
+
+        addMapButton(new MapButton(
                 Texture.HELP_ICON,
                 (b) -> {},
                 List.of(
@@ -212,6 +230,26 @@ public final class MainMapScreen extends AbstractMapScreen {
                         Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
                                 .append(Component.translatable("screens.wynntils.map.help.description10")))));
+
+        addMapButton(new MapButton(
+                Texture.CATEGORY_MANAGER_ICON,
+                (b) -> McUtils.mc().setScreen(CategoryManagementScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.AQUA)
+                                .append(Component.translatable("Category Management")),
+                        Component.translatable("Edit categories")
+                                .withStyle(ChatFormatting.GRAY))));
+
+        addMapButton(new MapButton(
+                Texture.PROVIDER_MANAGER_ICON,
+                (b) -> McUtils.mc().setScreen(ProviderManagementScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.RED)
+                                .append(Component.translatable("Provider Management")),
+                        Component.translatable("Edit providers")
+                                .withStyle(ChatFormatting.GRAY))));
 
         if (firstInit) {
             // When in an unmapped area, center to the middle of the map if the feature is enabled
