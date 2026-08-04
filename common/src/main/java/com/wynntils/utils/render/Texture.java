@@ -76,6 +76,54 @@ public enum Texture {
     TAG_SEARCH("content_book/tag_search.png", 140, 30),
     // endregion
 
+    // region Build Loadouts
+    BUILD_LOADOUTS_BACKGROUND("build_loadouts/build_loadouts_tome.png", 576, 320),
+    BUILD_LOADOUTS_WIDGET_BACKGROUND("build_loadouts/scallable_widget_background.png", 34, 19, 6, 6, 6, 6),
+    BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT("build_loadouts/scallable_widget_background_light.png", 34, 19, 6, 6, 6, 6),
+    BUILD_LOADOUTS_WIDGET_BACKGROUND_RED("build_loadouts/scallable_widget_background_red.png", 34, 19, 6, 6, 6, 6),
+    BUILD_LOADOUTS_WIDGET_BACKGROUND_GREEN("build_loadouts/scallable_widget_background_green.png", 34, 19, 6, 6, 6, 6),
+    BUILD_LOADOUTS_WIDGET_BACKGROUND_DARKGREEN(
+            "build_loadouts/scallable_widget_background_darkgreen.png", 34, 19, 6, 6, 6, 6),
+    BUILD_LOADOUTS_WIDGET_BACKGROUND_BLUE("build_loadouts/scallable_widget_background_blue.png", 34, 19, 6, 6, 6, 6),
+    BUILD_LOADOUTS_WIDGET_BACKGROUND_GOLD("build_loadouts/scallable_widget_background_gold.png", 34, 19, 6, 6, 6, 6),
+    BUILD_LOADOUTS_TEXT_INPUT_BOX("build_loadouts/text_input_box.png", 50, 20, 6, 6, 6, 6),
+    BUILD_LOADOUTS_INFO_WIDGET_BOX("build_loadouts/info_widget_box.png", 50, 20, 2, 2, 2, 2),
+    BUILD_LOADOUTS_WARNING_WIDGET_BOX("build_loadouts/warning_widget_box.png", 50, 20, 2, 2, 2, 2),
+    BUILD_LOADOUTS_SCROLL_SIDE_BAR("build_loadouts/scroll_side_bar.png", 9, 61, 4, 5, 9, 9),
+    BUILD_LOADOUTS_MENU_RIBBON("build_loadouts/menu_ribbon.png", 104, 17, 31, 29, 9, 8),
+    BUILD_LOADOUTS_SCROLL_LIST_TOP_BUTTON("build_loadouts/scroll_list_top_button.png", 40, 18, 13, 13, 10, 2),
+    BUILD_LOADOUTS_SCROLL_LIST_TOP_BUTTON_BLUE("build_loadouts/scroll_list_top_button_blue.png", 40, 18, 13, 13, 10, 2),
+    BUILD_LOADOUTS_WIDGET_SELECT_TAB("build_loadouts/widget_select_tab.png", 6, 5),
+    BUILD_LOADOUTS_FLAG("build_loadouts/flag.png", 197, 45),
+    BUILD_LOADOUTS_ABILITY_TREE_LOADOUTS_ICON("build_loadouts/ability_tree_loadouts_icon.png", 50, 24),
+    BUILD_LOADOUTS_BUILD_LOADOUTS_ICON("build_loadouts/build_loadouts_icon.png", 31, 28),
+    BUILD_LOADOUTS_PLUS_ICON("build_loadouts/plus_icon.png", 9, 9),
+    BUILD_LOADOUTS_SEARCH_ICON("build_loadouts/search_icon.png", 8, 8),
+    BUILD_LOADOUTS_INFO_ICON("build_loadouts/info_icon.png", 20, 20),
+    BUILD_LOADOUTS_WARNING_ICON("build_loadouts/warning_icon.png", 20, 19),
+    BUILD_LOADOUTS_SCOLL_BAR_BUTTON("build_loadouts/scroll_bar_button.png", 7, 21),
+    BUILD_LOADOUTS_RENAME_ICON("build_loadouts/rename_icon.png", 23, 20),
+    BUILD_LOADOUTS_RENAME_ICON_WITH_INKWELL("build_loadouts/rename_icon_with_inkwell.png", 23, 20),
+    BUILD_LOADOUTS_STAR_ICON("build_loadouts/star_icon.png", 12, 12),
+    BUILD_LOADOUTS_STAR_ICON_OUTLINE("build_loadouts/star_icon_outline.png", 12, 12),
+    // endregion
+
+    // region Emote Wheel
+    EMOTE_CONFIG_GUI("emote_wheel/config_gui.png", 149, 215),
+    EMOTE_CONFIG_BUTTON("emote_wheel/config_button.png", 58, 58),
+    EMOTE_WHEEL_STYLE_TOOLTIP("emote_wheel/tooltip.png", 64, 64),
+    EMOTE_WHEEL_STYLE_TOOLTIP_HOVERED("emote_wheel/tooltip_hovered.png", 64, 64),
+    EMOTE_WHEEL_STYLE_BUTTON("emote_wheel/button.png", 32, 32),
+    EMOTE_WHEEL_STYLE_BUTTON_HOVERED("emote_wheel/button_hovered.png", 32, 32),
+    // endregion
+
+    // region Guide
+    GUIDE_BACKGROUND("guide/guide_background.png", 176, 78, 6, 13, 17, 0),
+    GUIDE_TITLE("guide/guide_title.png", 160, 32),
+    GUIDE_WIDGET_BACKGROUND("guide/widget_background.png", 16, 16, 4, 4, 4, 4),
+    GUIDE_WIDGET_BACKGROUND_HOVERED("guide/widget_background_hovered.png", 16, 16, 4, 4, 4, 4),
+    // endregion
+
     // region Guild Log
     ECONOMY_LOG_ICON("guild_log/economy_log_icon.png", 16, 16),
     GENERAL_LOG_ICON("guild_log/general_log_icon.png", 16, 16),
@@ -175,6 +223,8 @@ public enum Texture {
     DAGGER_FILTER_ICON("icons/guide_filters/dagger_filter_icon.png", 16, 16),
     EXPERTISE_TOME_FILTER_ICON("icons/guide_filters/expertise_tome_filter_icon.png", 16, 16),
     FABLED_FILTER_ICON("icons/guide_filters/fabled_filter_icon.png", 16, 16),
+    FARMING_FILTER_ICON("icons/guide_filters/farming_filter_icon.png", 16, 16),
+    FISHING_FILTER_ICON("icons/guide_filters/fishing_filter_icon.png", 16, 16),
     GUILD_TOME_FILTER_ICON("icons/guide_filters/guild_tome_filter_icon.png", 16, 16),
     HELMET_FILTER_ICON("icons/guide_filters/helmet_filter_icon.png", 16, 16),
     JEWELING_FILTER_ICON("icons/guide_filters/jeweling_filter_icon.png", 16, 16),
@@ -182,6 +232,7 @@ public enum Texture {
     LEGGINGS_FILTER_ICON("icons/guide_filters/leggings_filter_icon.png", 16, 16),
     LOOTRUN_TOME_FILTER_ICON("icons/guide_filters/lootrun_tome_filter_icon.png", 16, 16),
     MARATHON_TOME_FILTER_ICON("icons/guide_filters/marathon_tome_filter_icon.png", 16, 16),
+    MINING_FILTER_ICON("icons/guide_filters/mining_filter_icon.png", 16, 16),
     MYSTICISM_TOME_FILTER_ICON("icons/guide_filters/mysticism_tome_filter_icon.png", 16, 16),
     MYTHIC_FILTER_ICON("icons/guide_filters/mythic_filter_icon.png", 16, 16),
     NECKLACE_FILTER_ICON("icons/guide_filters/necklace_filter_icon.png", 16, 16),
@@ -198,8 +249,9 @@ public enum Texture {
     TIER_3_FILTER_ICON("icons/guide_filters/tier_3_filter_icon.png", 16, 16),
     UNIQUE_FILTER_ICON("icons/guide_filters/unique_filter_icon.png", 16, 16),
     WAND_FILTER_ICON("icons/guide_filters/wand_filter_icon.png", 16, 16),
-    WEAPON_TOME_FILTER_ICON("icons/guide_filters/weapon_tome_filter_icon.png", 16, 16),
     WEAPONSMITHING_FILTER_ICON("icons/guide_filters/weaponsmithing_filter_icon.png", 16, 16),
+    WEAPON_TOME_FILTER_ICON("icons/guide_filters/weapon_tome_filter_icon.png", 16, 16),
+    WOODCUTTING_FILTER_ICON("icons/guide_filters/woodcutting_filter_icon.png", 16, 16),
     WOODWORKING_FILTER_ICON("icons/guide_filters/woodworking_filter_icon.png", 16, 16),
 
     // Trade Market
@@ -457,19 +509,42 @@ public enum Texture {
     VIGNETTE("ui_components/vignette.png", 512, 512),
     WAYPOINT_MANAGER_BACKGROUND("ui_components/waypoint_manager_background.png", 358, 206),
     WIDGET_BACKGROUND_LONG("ui_components/widget_background_long.png", 198, 20),
-    WOOD_STRIP("ui_components/wood_strip.png", 198, 20);
+    WOOD_STRIP("ui_components/wood_strip.png", 198, 20),
+    // endregion
+
+    // region Aspect
+    ASPECT_ARCHER("aspect", "archer", 48, 48),
+    ASPECT_ARCHER_FLAME("aspect", "flame_pink", 48, 48),
+    ASPECT_ASSASSIN("aspect", "assassin", 48, 48),
+    ASPECT_ASSASSIN_FLAME("aspect", "flame_purple", 48, 48),
+    ASPECT_MAGE("aspect", "mage", 48, 48),
+    ASPECT_MAGE_FLAME("aspect", "flame_yellow", 48, 48),
+    ASPECT_SHAMAN("aspect", "shaman", 48, 48),
+    ASPECT_SHAMAN_FLAME("aspect", "flame_blue", 48, 48),
+    ASPECT_WARRIOR("aspect", "warrior", 48, 48),
+    ASPECT_WARRIOR_FLAME("aspect", "flame_orange", 48, 48);
     // endregion
 
     private final Identifier identifier;
     private final Identifier atlas;
     private final int width;
     private final int height;
+    private final boolean nineSliced;
+    private final int left;
+    private final int right;
+    private final int top;
+    private final int bottom;
 
     Texture(String name, int width, int height) {
         this.identifier = Identifier.fromNamespaceAndPath("wynntils", "textures/" + name);
         this.width = width;
         this.height = height;
         atlas = null;
+        this.nineSliced = false;
+        this.left = 0;
+        this.right = 0;
+        this.top = 0;
+        this.bottom = 0;
     }
 
     Texture(String atlas, String name, int width, int height) {
@@ -477,6 +552,23 @@ public enum Texture {
         this.atlas = Identifier.fromNamespaceAndPath("wynntils", atlas);
         this.width = width;
         this.height = height;
+        this.nineSliced = false;
+        this.left = 0;
+        this.right = 0;
+        this.top = 0;
+        this.bottom = 0;
+    }
+
+    Texture(String name, int width, int height, int left, int right, int top, int bottom) {
+        this.identifier = Identifier.fromNamespaceAndPath("wynntils", "textures/" + name);
+        this.width = width;
+        this.height = height;
+        atlas = null;
+        this.nineSliced = true;
+        this.left = left;
+        this.right = right;
+        this.top = top;
+        this.bottom = bottom;
     }
 
     public Identifier atlas() {
@@ -493,5 +585,25 @@ public enum Texture {
 
     public int height() {
         return height;
+    }
+
+    public boolean isNineSliced() {
+        return nineSliced;
+    }
+
+    public int left() {
+        return left;
+    }
+
+    public int right() {
+        return right;
+    }
+
+    public int top() {
+        return top;
+    }
+
+    public int bottom() {
+        return bottom;
     }
 }

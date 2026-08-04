@@ -13,6 +13,7 @@ public record GatheringToolInfo(
         String apiName,
         int tier,
         ItemMaterial material,
+        GatheringToolType gatheringToolType,
         ProfessionType professionType,
         int gatheringSpeed,
         int durability,

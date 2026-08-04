@@ -58,4 +58,8 @@ public interface ContainerQueryStep {
 
     /** A way to identify this query. It is used to help avoid queueing the same query twice. */
     String getName();
+
+    default int getNextOperationDelayTicks() {
+        return 5;
+    }
 }

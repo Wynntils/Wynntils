@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats;
@@ -203,7 +203,6 @@ public final class StatCalculator {
     public static double getPerfectChance(StatPossibleValues possibleValues) {
         StatCalculationInfo statCalculationInfo =
                 possibleValues.statType().getStatCalculationInfo(possibleValues.baseValue());
-        boolean treatAsNegative = possibleValues.statType().treatAsInverted() ^ possibleValues.baseValue() < 0;
 
         int allCases =
                 statCalculationInfo.range().high() - statCalculationInfo.range().low() + 1;
@@ -211,11 +210,7 @@ public final class StatCalculator {
         // Internal roll range for maximum value
         // Do not confuse this with a "3 star" roll, aka perfect internal roll
         RangedValue perfectInternalRollRange = calculateInternalRollRange(
-                possibleValues,
-                treatAsNegative
-                        ? possibleValues.range().low()
-                        : possibleValues.range().high(),
-                -1);
+                possibleValues, possibleValues.range().high(), -1);
         int perfectCases = perfectInternalRollRange.high() - perfectInternalRollRange.low() + 1;
 
         return ((double) perfectCases) / allCases * 100;

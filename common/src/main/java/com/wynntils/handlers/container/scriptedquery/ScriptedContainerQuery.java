@@ -75,6 +75,7 @@ public final class ScriptedContainerQuery implements ContainerQueryStep {
 
     @Override
     public ContainerQueryStep getNextStep(ContainerContent container) {
+        if (currentStep == null) return null;
         return currentStep.getNextStep(this);
     }
 

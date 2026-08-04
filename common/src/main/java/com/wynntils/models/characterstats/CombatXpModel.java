@@ -38,7 +38,7 @@ public final class CombatXpModel extends Model {
         54980910, 60479000, 66526900, 73179590, 80497550, 88547300, 97402030, 107142240, 1145146860
     };
     // spotless:on
-    private static final int MAX_LEVEL = 121;
+    public static final int MAX_LEVEL = 121;
 
     private float lastTickXp = 0;
     private int trackedLevel = 0;

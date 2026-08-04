@@ -29,7 +29,8 @@ public class BannerSymbolFont extends RegisteredFont {
             int activeStars,
             CustomColor backgroundColor,
             CustomColor starColor,
-            CustomColor inactiveStarColor) {
+            CustomColor inactiveStarColor,
+            String suffix) {
         MutableComponent component = Component.empty()
                 .withStyle(Style.EMPTY.withFont(BANNER_SYMBOL_FONT))
                 .withoutShadow();
@@ -71,7 +72,7 @@ public class BannerSymbolFont extends RegisteredFont {
                     Component.literal(inactiveStarsForeground.toString()).withColor(inactiveStarColor.asInt()));
         }
 
-        component.append(Component.literal("\uDB00\uDC02"));
+        component.append(suffix);
 
         return component;
     }

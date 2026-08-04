@@ -11,10 +11,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.net.Dependency;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.profession.type.GatheringToolInfo;
+import com.wynntils.models.profession.type.GatheringToolType;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.wynnitem.AbstractItemInfoDeserializer;
 import com.wynntils.models.wynnitem.type.ItemMaterial;
@@ -37,7 +40,9 @@ public class GatheringToolInfoRegistry {
     private Map<String, GatheringToolInfo> gatheringToolInfoLookupApiName = Map.of();
 
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_STATIC_TOOLS).handleJsonObject(this::handleGatheringTools);
+        registry.registerDownload(
+                        UrlId.DATA_STATIC_TOOLS, Dependency.simple(Services.CustomModel, UrlId.DATA_STATIC_MODEL_DATA))
+                .handleJsonObject(this::handleGatheringTools);
     }
 
     public GatheringToolInfo getFromDisplayName(String toolName) {
@@ -98,7 +103,9 @@ public class GatheringToolInfoRegistry {
 
             ItemMaterial material = parseMaterial(json, displayName);
 
-            ProfessionType professionType = ProfessionType.fromString(JsonUtils.getNullableJsonString(json, "subType"));
+            GatheringToolType gatheringToolType =
+                    GatheringToolType.fromApiName(JsonUtils.getNullableJsonString(json, "subType"));
+            ProfessionType professionType = gatheringToolType.getProfessionType();
 
             int gatheringSpeed = JsonUtils.getNullableJsonInt(json, "gatheringSpeed");
             int durability = JsonUtils.getNullableJsonInt(json, "durability");
@@ -113,6 +120,7 @@ public class GatheringToolInfoRegistry {
                     internalName,
                     tier,
                     material,
+                    gatheringToolType,
                     professionType,
                     gatheringSpeed,
                     durability,

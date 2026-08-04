@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.type;
@@ -38,6 +38,11 @@ public enum ItemProviderType {
      * A filter for materials.
      */
     MATERIAL,
+
+    /**
+     * A filter for mount items.
+     */
+    MOUNT,
 
     /**
      * A filter for priced items, or for items, that have an emerald value.

@@ -230,7 +230,8 @@ public class IngredientPouchTooltipCustomizationFeature extends Feature {
                         ingredient.tier(),
                         CustomColor.fromChatFormatting(ChatFormatting.DARK_GRAY),
                         CustomColor.fromChatFormatting(getColorForTier(ingredient.tier())),
-                        CustomColor.fromChatFormatting(ChatFormatting.BLACK)));
+                        CustomColor.fromChatFormatting(ChatFormatting.BLACK),
+                        ""));
     }
 
     private ChatFormatting getColorForTier(Integer tier) {

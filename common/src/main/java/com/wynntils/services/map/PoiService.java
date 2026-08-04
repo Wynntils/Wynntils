@@ -11,8 +11,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.json.JsonManager;
+import com.wynntils.core.net.Dependency;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
@@ -88,7 +90,10 @@ public class PoiService extends Service {
         registry.registerDownload(UrlId.DATA_STATIC_SERVICES_CROWDSOURCED).handleReader(this::handleServices);
         registry.registerDownload(UrlId.DATA_STATIC_COMBAT_LOCATIONS).handleReader(this::handleCombat);
         registry.registerDownload(UrlId.DATA_STATIC_CAVE_INFO).handleReader(this::handleCaves);
-        registry.registerDownload(UrlId.DATA_STATIC_GATHERING_NODES).handleReader(this::handleGatheringNodes);
+        registry.registerDownload(
+                        UrlId.DATA_STATIC_GATHERING_NODES,
+                        Dependency.simple(Models.Profession, UrlId.DATA_STATIC_MATERIALS))
+                .handleReader(this::handleGatheringNodes);
     }
 
     @Override

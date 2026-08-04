@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.character.type;
@@ -14,9 +14,9 @@ public record SavableSkillPointSet(
         int intelligence,
         int defence,
         int agility,
-        String weapon,
-        List<String> armourNames,
-        List<String> accessoryNames) {
+        SavableGear weapon,
+        List<SavableGear> armourNames,
+        List<SavableGear> accessoryNames) {
     /**
      * Constructs a new SavableSkillPointSet representing just a loadout.
      */
@@ -28,7 +28,7 @@ public record SavableSkillPointSet(
      * Constructs a new SavableSkillPointSet representing a full build with gear.
      */
     public SavableSkillPointSet(
-            int[] skillPoints, String weapon, List<String> armourNames, List<String> accessoryNames) {
+            int[] skillPoints, SavableGear weapon, List<SavableGear> armourNames, List<SavableGear> accessoryNames) {
         this(
                 skillPoints[0],
                 skillPoints[1],

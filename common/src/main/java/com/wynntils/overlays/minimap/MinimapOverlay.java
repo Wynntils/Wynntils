@@ -80,10 +80,19 @@ public class MinimapOverlay extends Overlay {
     private final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
 
     @Persisted
+    private final Config<Boolean> alwaysRenderRemoteFriendPlayers = new Config<>(false);
+
+    @Persisted
     private final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
     @Persisted
+    private final Config<Boolean> alwaysRenderRemotePartyPlayers = new Config<>(false);
+
+    @Persisted
     private final Config<Boolean> renderRemoteGuildPlayers = new Config<>(true);
+
+    @Persisted
+    private final Config<Boolean> alwaysRenderRemoteGuildPlayers = new Config<>(false);
 
     @Persisted
     public final Config<Float> remotePlayersHeadScale = new Config<>(0.4f);
@@ -233,6 +242,10 @@ public class MinimapOverlay extends Overlay {
         // render border
         renderMapBorder(guiGraphics, renderX, renderY, width, height);
 
+        // render always shown players above the map border so they aren't cut off
+        renderAlwaysShownMiniPlayers(
+                guiGraphics, centerX, centerZ, width, height, playerX, playerZ, zoomRenderScale, zoomLevel.get());
+
         // Directional Text
         renderCardinalDirections(guiGraphics, width, height, centerX, centerZ);
     }
@@ -257,9 +270,10 @@ public class MinimapOverlay extends Overlay {
         poisToRender = Stream.concat(
                 poisToRender,
                 getMiniPlayerPois(
-                        renderRemotePartyPlayers.get(),
-                        renderRemoteFriendPlayers.get(),
-                        renderRemoteGuildPlayers.get()));
+                                renderRemotePartyPlayers.get(),
+                                renderRemoteFriendPlayers.get(),
+                                renderRemoteGuildPlayers.get())
+                        .filter(poi -> !shouldAlwaysRenderRemotePlayer(poi.getRelation())));
         poisToRender = Stream.concat(poisToRender, Services.Poi.getFilteredGatheringNodePois());
 
         Poi[] pois = poisToRender.toArray(Poi[]::new);
@@ -460,6 +474,85 @@ public class MinimapOverlay extends Overlay {
             poi.renderAt(guiGraphics, renderX, renderZ, false, poiScale.get(), zoomRenderScale, zoomLevel, false);
             RenderUtils.disableScissor(guiGraphics);
         }
+    }
+
+    private void renderAlwaysShownMiniPlayers(
+            GuiGraphics guiGraphics,
+            float centerX,
+            float centerZ,
+            float width,
+            float height,
+            double playerX,
+            double playerZ,
+            float zoomRenderScale,
+            float zoomLevel) {
+        List<PlayerMiniMapPoi> playerPois = getMiniPlayerPois(
+                        renderRemotePartyPlayers.get(), renderRemoteFriendPlayers.get(), renderRemoteGuildPlayers.get())
+                .filter(poi -> shouldAlwaysRenderRemotePlayer(poi.getRelation()))
+                .toList();
+
+        for (PlayerMiniMapPoi poi : playerPois) {
+            float poiRenderX = MapRenderer.getRenderX(poi, (float) playerX, centerX, zoomRenderScale);
+            float poiRenderZ = MapRenderer.getRenderZ(poi, (float) playerZ, centerZ, zoomRenderScale);
+
+            if (followPlayerRotation.get()) {
+                float dx = poiRenderX - centerX;
+                float dz = poiRenderZ - centerZ;
+
+                float yaw = McUtils.mc().gameRenderer.getMainCamera().yRot();
+                float rot = (float) Math.toRadians(180 - yaw);
+
+                float sin = (float) Math.sin(rot);
+                float cos = (float) Math.cos(rot);
+
+                float rdX = dx * cos - dz * sin;
+                float rdZ = dx * sin + dz * cos;
+
+                poiRenderX = centerX + rdX;
+                poiRenderZ = centerZ + rdZ;
+            }
+
+            float[] clamped = clampToMinimapBorder(poiRenderX, poiRenderZ, centerX, centerZ, width, height);
+            poiRenderX = clamped[0];
+            poiRenderZ = clamped[1];
+
+            poi.renderAt(guiGraphics, poiRenderX, poiRenderZ, false, poiScale.get(), zoomRenderScale, zoomLevel, false);
+        }
+    }
+
+    private boolean shouldAlwaysRenderRemotePlayer(PlayerRelation relation) {
+        return switch (relation) {
+            case PARTY -> alwaysRenderRemotePartyPlayers.get();
+            case FRIEND -> alwaysRenderRemoteFriendPlayers.get();
+            case GUILD -> alwaysRenderRemoteGuildPlayers.get();
+            default -> false;
+        };
+    }
+
+    private float[] clampToMinimapBorder(
+            float renderX, float renderZ, float centerX, float centerZ, float width, float height) {
+        float offsetX = renderX - centerX;
+        float offsetZ = renderZ - centerZ;
+
+        float distance = MathUtils.magnitude(offsetX, offsetZ);
+        if (distance == 0) return new float[] {renderX, renderZ};
+
+        float normX = offsetX / distance;
+        float normZ = offsetZ / distance;
+
+        float toBorderScale = distance;
+
+        if (maskType.get() == MapMaskType.RECTANGULAR) {
+            toBorderScale = Math.min(width / Math.abs(normX), height / Math.abs(normZ)) / 2f;
+        } else if (maskType.get() == MapMaskType.CIRCLE) {
+            toBorderScale = width / (MathUtils.magnitude(normX, normZ * width / height)) / 2f;
+        }
+
+        if (toBorderScale < distance) {
+            return new float[] {centerX + normX * toBorderScale, centerZ + normZ * toBorderScale};
+        }
+
+        return new float[] {renderX, renderZ};
     }
 
     private Stream<PlayerMiniMapPoi> getMiniPlayerPois(

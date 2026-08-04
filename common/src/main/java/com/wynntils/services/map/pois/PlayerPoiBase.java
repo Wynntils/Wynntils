@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.map.pois;
 
 import com.wynntils.services.hades.HadesUser;
+import com.wynntils.services.hades.type.PlayerRelation;
 import com.wynntils.services.map.type.DisplayPriority;
 import com.wynntils.utils.mc.type.PoiLocation;
 
@@ -19,6 +20,10 @@ public abstract class PlayerPoiBase implements Poi {
     protected PlayerPoiBase(HadesUser user, float playerHeadScale) {
         this.user = user;
         this.playerHeadRenderSize = INITIAL_PLAYER_HEAD_RENDER_SIZE * playerHeadScale;
+    }
+
+    public PlayerRelation getRelation() {
+        return user.getRelation();
     }
 
     @Override

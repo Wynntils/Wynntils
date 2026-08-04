@@ -10,6 +10,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.handlers.item.ItemHandler;
+import com.wynntils.models.items.annotators.game.AbilityShardAnnotator;
 import com.wynntils.models.items.annotators.game.AmplifierAnnotator;
 import com.wynntils.models.items.annotators.game.AspectAnnotator;
 import com.wynntils.models.items.annotators.game.CharmAnnotator;
@@ -40,6 +41,8 @@ import com.wynntils.models.items.annotators.game.TrinketAnnotator;
 import com.wynntils.models.items.annotators.game.UnknownGearAnnotator;
 import com.wynntils.models.items.annotators.game.WardAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
+import com.wynntils.models.items.annotators.gui.AbilityTreeNodeAnnotator;
+import com.wynntils.models.items.annotators.gui.AbilityTreeResetAnnotator;
 import com.wynntils.models.items.annotators.gui.ActivityAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.CharacterAnnotator;
@@ -77,6 +80,7 @@ public final class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new UnknownGearAnnotator());
 
         // Then alphabetically
+        Handlers.Item.registerAnnotator(new AbilityShardAnnotator());
         Handlers.Item.registerAnnotator(new AmplifierAnnotator());
         Handlers.Item.registerAnnotator(new AspectAnnotator());
         Handlers.Item.registerAnnotator(new CorruptedCacheAnnotator());
@@ -100,6 +104,8 @@ public final class ItemModel extends Model {
 
         // GuiItemAnnotators
         Handlers.Item.registerAnnotator(new AbilityTreeAnnotator());
+        Handlers.Item.registerAnnotator(new AbilityTreeNodeAnnotator());
+        Handlers.Item.registerAnnotator(new AbilityTreeResetAnnotator());
         Handlers.Item.registerAnnotator(new ActivityAnnotator());
         Handlers.Item.registerAnnotator(new ArchetypeAbilitiesAnnotator());
         Handlers.Item.registerAnnotator(new CharacterAnnotator());
