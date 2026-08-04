@@ -415,6 +415,12 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
         if (addButton.isHovered()) {
             guiGraphics.setTooltipForNextFrame(
                     Lists.transform(addButton.getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
+        } else if (saveButton.isHovered()) {
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(saveButton.getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
+        } else if (discardButton.isHovered()) {
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(discardButton.getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
         } else if (deleteButton.isHovered() && selectedTrigger != null) {
             guiGraphics.setTooltipForNextFrame(
                     Lists.transform(deleteButton.getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
