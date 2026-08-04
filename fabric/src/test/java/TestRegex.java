@@ -24,6 +24,7 @@ import com.wynntils.models.containers.containers.AbilityTreeContainer;
 import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.guild.GuildModel;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
+import com.wynntils.models.items.annotators.game.MountAnnotator;
 import com.wynntils.models.items.annotators.game.RuneAnnotator;
 import com.wynntils.models.items.annotators.game.TomeAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
@@ -647,6 +648,85 @@ public class TestRegex {
         PatternTester p = new PatternTester(MessageFilterFeature.class, "SYSTEM_INFO");
         p.shouldMatch(
                 "§#a0aec0ff\uE01B\uE002 Follow us on Twitter to stay up to date with Wynncraft at §#77aefcffwynn.gg/twitter");
+    }
+
+    @Test
+    public void MountAnnotator_MOUNT_PATTERN() {
+        PatternTester p = new PatternTester(MountAnnotator.class, "MOUNT_PATTERN");
+        p.shouldMatch("\uDAFC\uDC00Mystic Cinder's Reins\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00Dust Rose's Harness\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00Wyvern Reins\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00Horse Saddle\uDAFC\uDC00");
+    }
+
+    @Test
+    public void MountAnnotator_POTENTIAL_PATTERN() {
+        PatternTester p = new PatternTester(MountAnnotator.class, "POTENTIAL_PATTERN");
+        p.shouldMatch("§f\uDB00\uDC01§#e0e0e0ff240§f Potential");
+        p.shouldMatch("§f\uDB00\uDC01§#e0e0e0ff640§f Potential");
+        p.shouldMatch("§f\uDB00\uDC01§#e0e0e0ff979§f Potential");
+        p.shouldMatch("§f\uDB00\uDC01§#e0e0e0ff1k§f Potential");
+        p.shouldMatch("§f\uDB00\uDC01§#e0e0e0ff1.3k§f Potential");
+    }
+
+    @Test
+    public void MountAnnotator_COLOR_PATTERN() {
+        PatternTester p = new PatternTester(MountAnnotator.class, "COLOR_PATTERN");
+        p.shouldMatch("§f\uE00E\uDB00\uDC01§7 Chestnut-Reddish");
+        p.shouldMatch("§f\uE00E\uDB00\uDC01§7 Azure-Horn");
+    }
+
+    @Test
+    public void MountAnnotator_ENERGY_PATTERN() {
+        PatternTester p = new PatternTester(MountAnnotator.class, "ENERGY_PATTERN");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#e0e0e0ff\uE023§7\uDB00\uDC05Energy 317/317");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#e0e0e0ff\uE01F§7\uDB00\uDC05Energy 210/221");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#e0e0e0ff\uE01E§7\uDB00\uDC05Energy 210/229");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#e0e0e0ff\uE010§7\uDB00\uDC05Energy 100/204");
+    }
+
+    @Test
+    public void MountAnnotator_STAT_PATTERN() {
+        PatternTester p = new PatternTester(MountAnnotator.class, "STAT_PATTERN");
+        // With max
+        p.shouldMatch(
+                "§fSpeed\uDAFF\uDFE7\uDB00\uDC68§#acfac6ff2§7/60 §8(80)§#acfac6ff §8\uE023\uDAFF\uDFF7§a\uE000§7\uDAFF\uDFF7\uF008");
+        p.shouldMatch(
+                "§fAcceleration\uDAFF\uDFCA\uDB00\uDC68§#acfac6ff2§7/60 §8(80)§#acfac6ff §8\uE023\uDAFF\uDFF7§a\uE000§7\uDAFF\uDFF7\uF008");
+        p.shouldMatch(
+                "§fJump Height\uDAFF\uDFCC\uDB00\uDC68§#acfac6ff2§7/60 §8(80)§#acfac6ff §8\uE023\uDAFF\uDFF7§a\uE000§7\uDAFF\uDFF7\uF008");
+        p.shouldMatch(
+                "§fAltitude\uDAFF\uDFDF\uDB00\uDC7D§#acfac6ff1§7/30 §8(30)§#acfac6ff §8\uE023\uDAFF\uDFF7§a\uDB00\uDC09§7\uDAFF\uDFF7\uDB00\uDC09");
+        p.shouldMatch(
+                "§fEnergy\uDAFF\uDFE2\uDB00\uDC68§#acfac6ff2§7/60 §8(80)§#acfac6ff §8\uE023\uDAFF\uDFF7§a\uE000§7\uDAFF\uDFF7\uF008");
+        p.shouldMatch(
+                "§fHandling\uDAFF\uDFDD\uDB00\uDC68§#acfac6ff2§7/60 §8(80)§#acfac6ff §8\uE023\uDAFF\uDFF7§a\uE000§7\uDAFF\uDFF7\uF008");
+        p.shouldMatch(
+                "§fToughness\uDAFF\uDFD2\uDB00\uDC68§#acfac6ff2§7/60 §8(80)§#acfac6ff §8\uE023\uDAFF\uDFF7§a\uE000§7\uDAFF\uDFF7\uF008");
+        p.shouldMatch(
+                "§fBoost\uDAFF\uDFE8\uDB00\uDC68§#acfac6ff2§7/60 §8(80)§#acfac6ff §8\uE023\uDAFF\uDFF7§a\uE000§7\uDAFF\uDFF7\uF008");
+        p.shouldMatch(
+                "§fTraining\uDAFF\uDFDD\uDB00\uDC68§#acfac6ff2§7/60 §8(80)§#acfac6ff §8\uE023\uDAFF\uDFF7§a\uE000§7\uDAFF\uDFF7");
+
+        // Without max
+        p.shouldMatch(
+                "§fSpeed\uDAFF\uDFE7\uDB00\uDC44§#acfac6ff140§7/140§f §8\uE023\uDAFF\uDFF7§a\uE023§7\uDAFF\uDFF7\uDB00\uDC09");
+        p.shouldMatch(
+                "§fAcceleration\uDAFF\uDFCA\uDB00\uDC44§#acfac6ff140§7/140§f §8\uE023\uDAFF\uDFF7§a\uE023§7\uDAFF\uDFF7\uDB00\uDC09");
+        p.shouldMatch(
+                "§fJump Height\uDAFF\uDFCC\uDB00\uDC44§#acfac6ff140§7/140§f §8\uE023\uDAFF\uDFF7§a\uE023§7\uDAFF\uDFF7\uDB00\uDC09");
+        p.shouldMatch(
+                "§fAltitude\uDAFF\uDFDF\uDB00\uDC56§#acfac6ff46§7/64§f §8\uE023\uDAFF\uDFF7§a\uE017§7\uDAFF\uDFF7\uDB00\uDC09");
+        p.shouldMatch(
+                "§fEnergy\uDAFF\uDFE2\uDB00\uDC44§#acfac6ff140§7/140§f §8\uE023\uDAFF\uDFF7§a\uE023§7\uDAFF\uDFF7\uDB00\uDC09");
+        p.shouldMatch(
+                "§fHandling\uDAFF\uDFDD\uDB00\uDC44§#acfac6ff140§7/140§f §8\uE023\uDAFF\uDFF7§a\uE023§7\uDAFF\uDFF7\uDB00\uDC09");
+        p.shouldMatch(
+                "§fToughness\uDAFF\uDFD2\uDB00\uDC44§#acfac6ff140§7/140§f §8\uE023\uDAFF\uDFF7§a\uE023§7\uDAFF\uDFF7\uDB00\uDC09");
+        p.shouldMatch(
+                "§fBoost\uDAFF\uDFE8\uDB00\uDC44§#acfac6ff140§7/140§f §8\uE023\uDAFF\uDFF7§a\uE023§7\uDAFF\uDFF7\uDB00\uDC09");
+        p.shouldMatch(
+                "§fTraining\uDAFF\uDFDD\uDB00\uDC44§#acfac6ff140§7/140§f §8\uE023\uDAFF\uDFF7§a\uE023§7\uDAFF\uDFF7\uDB00\uDC09");
     }
 
     @Test
