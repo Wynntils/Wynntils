@@ -6,6 +6,7 @@ package com.wynntils.core.persisted.upfixers.storage;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
@@ -24,9 +25,11 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.RangedValue;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -115,26 +118,60 @@ public class LoadoutMigrationUpfixer implements Upfixer {
     private JsonElement migrateSkillPointGearNames(JsonElement skillPointElement) {
         if (skillPointElement == null || !skillPointElement.isJsonObject()) return skillPointElement;
 
-        JsonObject skillPointObject = skillPointElement.getAsJsonObject();
+        JsonObject oldSkillPointObject = skillPointElement.getAsJsonObject();
+        JsonObject skillPointObject = new JsonObject();
 
-        if (skillPointObject.has("weapon") && !skillPointObject.get("weapon").isJsonNull()) {
-            String weaponName = skillPointObject.get("weapon").getAsString();
+        skillPointObject.addProperty(
+                "strength",
+                oldSkillPointObject.has("strength")
+                        ? oldSkillPointObject.get("strength").getAsInt()
+                        : 0);
+        skillPointObject.addProperty(
+                "dexterity",
+                oldSkillPointObject.has("dexterity")
+                        ? oldSkillPointObject.get("dexterity").getAsInt()
+                        : 0);
+        skillPointObject.addProperty(
+                "intelligence",
+                oldSkillPointObject.has("intelligence")
+                        ? oldSkillPointObject.get("intelligence").getAsInt()
+                        : 0);
+        skillPointObject.addProperty(
+                "defence",
+                oldSkillPointObject.has("defence")
+                        ? oldSkillPointObject.get("defence").getAsInt()
+                        : 0);
+        skillPointObject.addProperty(
+                "agility",
+                oldSkillPointObject.has("agility")
+                        ? oldSkillPointObject.get("agility").getAsInt()
+                        : 0);
+
+        skillPointObject.add("weapon", JsonNull.INSTANCE);
+
+        if (oldSkillPointObject.has("weapon")
+                && !oldSkillPointObject.get("weapon").isJsonNull()) {
+            String weaponName = oldSkillPointObject.get("weapon").getAsString();
             encodeDefaultGearItem(weaponName)
                     .ifPresentOrElse(
                             savableGear -> skillPointObject.add("weapon", savableItemToJson(savableGear)),
                             () -> WynntilsMod.warn("Upfixer: could not encode weapon " + weaponName));
         }
 
-        migrateArmourNameArray(skillPointObject, "armourNames");
-        migrateAccessoryNameArray(skillPointObject, "accessoryNames");
+        JsonArray armourArray = migrateArmourNameArray(oldSkillPointObject);
+        JsonArray accessoryArray = migrateAccessoryNameArray(oldSkillPointObject);
+
+        skillPointObject.add("armourNames", Objects.requireNonNullElseGet(armourArray, JsonArray::new));
+        skillPointObject.add("accessoryNames", Objects.requireNonNullElseGet(accessoryArray, JsonArray::new));
 
         return skillPointObject;
     }
 
-    private void migrateArmourNameArray(JsonObject skillPointObject, String key) {
-        if (!skillPointObject.has(key) || !skillPointObject.get(key).isJsonArray()) return;
+    private JsonArray migrateArmourNameArray(JsonObject oldSkillPointObject) {
+        if (!oldSkillPointObject.has("armourNames")
+                || !oldSkillPointObject.get("armourNames").isJsonArray()) return null;
 
-        JsonArray oldNames = skillPointObject.getAsJsonArray(key);
+        JsonArray oldNames = oldSkillPointObject.getAsJsonArray("armourNames");
         // 0=helmet, 1=chestplate, 2=leggings, 3=boots
         SavableGear[] slots = {new SavableGear(), new SavableGear(), new SavableGear(), new SavableGear()};
 
@@ -168,13 +205,14 @@ public class LoadoutMigrationUpfixer implements Upfixer {
         for (SavableGear slot : slots) {
             newNames.add(savableItemToJson(slot));
         }
-        skillPointObject.add(key, newNames);
+        return newNames;
     }
 
-    private void migrateAccessoryNameArray(JsonObject skillPointObject, String key) {
-        if (!skillPointObject.has(key) || !skillPointObject.get(key).isJsonArray()) return;
+    private JsonArray migrateAccessoryNameArray(JsonObject oldSkillPointObject) {
+        if (!oldSkillPointObject.has("accessoryNames")
+                || !oldSkillPointObject.get("accessoryNames").isJsonArray()) return null;
 
-        JsonArray oldNames = skillPointObject.getAsJsonArray(key);
+        JsonArray oldNames = oldSkillPointObject.getAsJsonArray("accessoryNames");
         // 0=ring1, 1=ring2, 2=bracelet, 3=necklace
         SavableGear[] slots = {new SavableGear(), new SavableGear(), new SavableGear(), new SavableGear()};
 
@@ -211,11 +249,12 @@ public class LoadoutMigrationUpfixer implements Upfixer {
         for (SavableGear slot : slots) {
             newNames.add(savableItemToJson(slot));
         }
-        skillPointObject.add(key, newNames);
+        return newNames;
     }
 
     private static Optional<GearInfo> resolveGearInfo(String rawName) {
-        String cleanName = rawName.replaceFirst("§.", "");
+        String removeFormatting = rawName.replaceAll("§.", "");
+        String cleanName = WynnUtils.stripItemNameMarkers(removeFormatting);
         GearInfo gearInfo = Models.Gear.getGearInfoFromDisplayName(cleanName);
         if (gearInfo == null) {
             WynntilsMod.warn("Upfixer: no gear info found for " + cleanName);
