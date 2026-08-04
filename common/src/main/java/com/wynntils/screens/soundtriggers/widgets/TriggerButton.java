@@ -144,6 +144,7 @@ public class TriggerButton extends WynntilsButton {
     public void hideEditInput() {
         editInput.visible = false;
         parentScreen.setFocusedTextInput(null);
+        textToRender = trigger.getName();
     }
 
     public SoundTrigger getTrigger() {
