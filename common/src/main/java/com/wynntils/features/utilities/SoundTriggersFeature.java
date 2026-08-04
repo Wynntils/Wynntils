@@ -8,7 +8,9 @@ import com.wynntils.core.consumers.features.ExternalConfigurationScreen;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.screens.soundtriggers.SoundTriggerManagmentScreen;
@@ -22,6 +24,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
+@ConfigCategory(Category.UTILITIES)
 public class SoundTriggersFeature extends Feature implements ExternalConfigurationScreen {
     @Persisted
     private final Config<Float> globalVolumeModifier = new Config<>(100f);
