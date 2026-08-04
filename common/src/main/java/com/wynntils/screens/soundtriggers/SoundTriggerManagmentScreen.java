@@ -64,10 +64,15 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
     private static final Component ADD_BUTTON_TOOLTIP =
             Component.translatable("screens.wynntils.soundTriggerManagementScreen.addButton.tooltip");
 
-    private static final Component CLOSE_BUTTON_TEXT =
-            Component.translatable("screens.wynntils.soundTriggerManagementScreen.closeButton.text");
-    private static final Component CLOSE_BUTTON_TOOLTIP =
-            Component.translatable("screens.wynntils.soundTriggerManagementScreen.closeButton.tooltip");
+    private static final Component SAVE_BUTTON_TEXT =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.saveButton.text");
+    private static final Component SAVE_BUTTON_TOOLTIP =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.saveButton.tooltip");
+
+    private static final Component DISCARD_BUTTON_TEXT =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.discardButton.text");
+    private static final Component DISCARD_BUTTON_TOOLTIP =
+            Component.translatable("screens.wynntils.soundTriggerManagementScreen.discardButton.tooltip");
 
     private static final Component DELETE_BUTTON_TEXT =
             Component.translatable("screens.wynntils.soundTriggerManagementScreen.deleteButton.text");
@@ -121,6 +126,7 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
     private final Screen previousScreen;
 
     public final Storage<List<SoundTrigger>> soundTriggers;
+    private final List<SoundTrigger> soundTriggersCopy = new ArrayList<>();
 
     private final SearchWidget searchWidget;
 
@@ -131,7 +137,8 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
     private float scrollY;
 
     private TriggerSideButton addButton;
-    private TriggerSideButton closeButton;
+    private TriggerSideButton saveButton;
+    private TriggerSideButton discardButton;
     private TriggerSideButton deleteButton;
 
     // region Setting Widgets
@@ -156,6 +163,9 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
         this.previousScreen = previousScreen;
         this.soundTriggers =
                 Managers.Feature.getFeatureInstance(SoundTriggersFeature.class).getRegisteredTriggers();
+        for (SoundTrigger trigger : soundTriggers.get()) {
+            soundTriggersCopy.add(trigger.copy());
+        }
 
         this.searchWidget = new SearchWidget(
                 7 + getTranslationXint(),
@@ -198,15 +208,25 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
                 ADD_BUTTON_TOOLTIP,
                 ADD_BUTTON_TEXT);
 
-        this.closeButton = new TriggerSideButton(
+        this.saveButton = new TriggerSideButton(
                 getTranslationXint() - SIDE_BUTTON_TEXTURE.width() + 4,
                 getTranslationYint() + 58,
                 SIDE_BUTTON_TEXTURE.width(),
                 SIDE_BUTTON_TEXTURE.height() / 2,
                 SIDE_BUTTON_TEXTURE,
                 i -> onClose(),
-                CLOSE_BUTTON_TOOLTIP,
-                CLOSE_BUTTON_TEXT);
+                SAVE_BUTTON_TOOLTIP,
+                SAVE_BUTTON_TEXT);
+
+        this.discardButton = new TriggerSideButton(
+                getTranslationXint() - SIDE_BUTTON_TEXTURE.width() + 4,
+                getTranslationYint() + 88,
+                SIDE_BUTTON_TEXTURE.width(),
+                SIDE_BUTTON_TEXTURE.height() / 2,
+                SIDE_BUTTON_TEXTURE,
+                i -> closeWithoutsaving(),
+                DISCARD_BUTTON_TOOLTIP,
+                DISCARD_BUTTON_TEXT);
 
         this.deleteButton = new TriggerSideButton(
                 getTranslationXint() - SIDE_BUTTON_TEXTURE.width() + 4,
@@ -323,7 +343,8 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         addButton.render(guiGraphics, mouseX, mouseY, partialTick);
-        closeButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        saveButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        discardButton.render(guiGraphics, mouseX, mouseY, partialTick);
         if (selectedTrigger != null) {
             deleteButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }
@@ -566,7 +587,8 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
     private List<GuiEventListener> getAllWidgets() {
         List<GuiEventListener> list = new ArrayList<>(triggerButtons);
         list.add(addButton);
-        list.add(closeButton);
+        list.add(saveButton);
+        list.add(discardButton);
         list.add(deleteButton);
         if (selectedTrigger != null) {
             list.addAll(children());
@@ -599,6 +621,13 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
             }
         }
         return null;
+    }
+
+    private void closeWithoutsaving() {
+        soundTriggers.get().clear();
+        soundTriggers.get().addAll(soundTriggersCopy);
+        soundTriggers.touched();
+        onClose();
     }
 
     public SoundTrigger getSelectedTrigger() {

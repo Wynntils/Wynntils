@@ -138,6 +138,10 @@ public class SoundTrigger {
         this.interval = interval;
     }
 
+    public SoundTrigger copy() {
+        return new SoundTrigger(type, controllerFunction, identifierFunction, name, volume, interval, pitch);
+    }
+
     private boolean getLastResult() {
         if (lastResult == null) {
             lastResult = true;
