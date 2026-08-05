@@ -256,7 +256,7 @@
   "feature.wynntils.characterInfoIndicator.name": "Character Info Indicator",
   "feature.wynntils.characterInfoIndicator.rescanMessage.description": "Should the rescan message appear in chat?",
   "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere": "here",
-  "feature.wynntils.characterInfoIndicator.rescanMessage.message.prefix": "Your ability tree is outdated click ",
+  "feature.wynntils.characterInfoIndicator.rescanMessage.message.prefix": "Your ability tree is outdated, click ",
   "feature.wynntils.characterInfoIndicator.rescanMessage.message.suffix": " to update.",
   "feature.wynntils.characterInfoIndicator.rescanMessage.name": "Rescan Message",
   "feature.wynntils.characterInfoIndicator.tooltip.leftClick": "Left-Click to update",
