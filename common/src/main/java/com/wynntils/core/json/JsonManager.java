@@ -20,6 +20,7 @@ import com.wynntils.services.mapdata.attributes.impl.MapAreaAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapPathAttributesImpl;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
+import com.wynntils.services.mapdata.providers.user.UserOverrideProviderInfo;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.EnumUtils;
@@ -51,6 +52,8 @@ public final class JsonManager extends Manager {
             .registerTypeAdapter(MapLocationAttributesImpl.class, new JsonProvider.JsonAttributeSerializer())
             .registerTypeAdapter(MapAreaAttributesImpl.class, new JsonProvider.JsonAttributeSerializer())
             .registerTypeAdapter(MapPathAttributesImpl.class, new JsonProvider.JsonAttributeSerializer())
+            .registerTypeAdapter(
+                    UserOverrideProviderInfo.class, new UserOverrideProviderInfo.UserOverrideProviderInfoSerializer())
             .registerTypeHierarchyAdapter(MapCategory.class, new JsonProvider.JsonCategorySerializer())
             .registerTypeHierarchyAdapter(MapIcon.class, new JsonProvider.JsonIconSerializer())
             .registerTypeAdapterFactory(new EnumUtils.EnumTypeAdapterFactory<>())
