@@ -26,17 +26,21 @@ import com.wynntils.services.mapdata.providers.json.JsonProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.services.mapdata.providers.type.MapDataOverrideProvider;
 import com.wynntils.services.mapdata.providers.type.MapDataProvider;
+import com.wynntils.services.mapdata.providers.user.UserOverrideProvider;
+import com.wynntils.services.mapdata.providers.user.UserOverrideProviderInfo;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapDataProvidedType;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -47,6 +51,7 @@ public class MapDataService extends Service {
     private static final ServiceListProvider SERVICE_LIST_PROVIDER = new ServiceListProvider();
     private static final CombatListProvider COMBAT_LIST_PROVIDER = new CombatListProvider();
     private static final PlaceListProvider PLACE_LIST_PROVIDER = new PlaceListProvider();
+    private static final UserOverrideProvider USER_OVERRIDE_PROVIDER = new UserOverrideProvider();
 
     private static final MapDataProvider ONLINE_PLACEHOLDER_PROVIDER = new PlaceholderProvider();
     // FIXME: i18n
@@ -59,13 +64,16 @@ public class MapDataService extends Service {
     private final Map<MapFeature, ResolvedMapAttributes> resolvedAttributesCache = new HashMap<>();
     private final Map<String, Optional<MapIcon>> iconCache = new HashMap<>();
 
+    // Storage for user override providers
+    @Persisted
+    private final Storage<List<UserOverrideProviderInfo>> userOverrideInfos = new Storage<>(new ArrayList<>());
+
     // Storage for json providers
     @Persisted
     private final Storage<Map<JsonProviderInfo, Boolean>> jsonProviderInfos = new Storage<>(new LinkedHashMap<>());
 
     public MapDataService() {
         super(List.of());
-
         createBuiltInProviders();
     }
 
@@ -73,6 +81,8 @@ public class MapDataService extends Service {
     public void onStorageLoad(Storage<?> storage) {
         if (storage == jsonProviderInfos) {
             reloadJsonProviders();
+        } else if (storage == userOverrideInfos) {
+            USER_OVERRIDE_PROVIDER.updateInfos(userOverrideInfos.get());
         }
     }
 
@@ -220,6 +230,55 @@ public class MapDataService extends Service {
         return Collections.unmodifiableMap(jsonProviderInfos.get());
     }
 
+    // region User overrides
+
+    public List<UserOverrideProviderInfo> getUserOverrides() {
+        return Collections.unmodifiableList(userOverrideInfos.get());
+    }
+
+    public void setUserOverride(UserOverrideProviderInfo info) {
+        List<UserOverrideProviderInfo> overrides = userOverrideInfos.get();
+
+        overrides.removeIf(existing -> Objects.equals(existing.targetCategoryId(), info.targetCategoryId())
+                && Objects.equals(existing.targetFeatureId(), info.targetFeatureId()));
+        overrides.add(info);
+
+        userOverrideInfos.touched();
+        USER_OVERRIDE_PROVIDER.updateInfos(overrides);
+
+        if (info.targetFeatureId() != null) {
+            resolvedAttributesCache
+                    .keySet()
+                    .removeIf(f -> info.targetFeatureId().equals(f.getFeatureId()));
+        } else if (info.targetCategoryId() != null) {
+            resolvedAttributesCache.keySet().removeIf(f -> f.getCategoryId().startsWith(info.targetCategoryId()));
+        }
+    }
+
+    public boolean removeUserOverride(String targetCategoryId, String targetFeatureId) {
+        List<UserOverrideProviderInfo> overrides = userOverrideInfos.get();
+
+        boolean removed = overrides.removeIf(info -> Objects.equals(info.targetCategoryId(), targetCategoryId)
+                && Objects.equals(info.targetFeatureId(), targetFeatureId));
+
+        if (!removed) {
+            return false;
+        }
+
+        userOverrideInfos.touched();
+        USER_OVERRIDE_PROVIDER.updateInfos(overrides);
+
+        if (targetFeatureId != null) {
+            resolvedAttributesCache.keySet().removeIf(f -> targetFeatureId.equals(f.getFeatureId()));
+        } else if (targetCategoryId != null) {
+            resolvedAttributesCache.keySet().removeIf(f -> f.getCategoryId().startsWith(targetCategoryId));
+        }
+
+        return true;
+    }
+
+    // end region
+
     public void registerOverrideProvider(String overrideProviderId, MapDataOverrideProvider provider) {
         overrideProviders.putFirst(overrideProviderId, provider);
         provider.onChange(this::onProviderChange);
@@ -263,6 +322,9 @@ public class MapDataService extends Service {
         registerBuiltInProvider(SERVICE_LIST_PROVIDER);
         registerBuiltInProvider(COMBAT_LIST_PROVIDER);
         registerBuiltInProvider(PLACE_LIST_PROVIDER);
+
+        // Override
+        registerOverrideProvider(USER_OVERRIDE_PROVIDER.getProviderId(), USER_OVERRIDE_PROVIDER);
     }
 
     private void registerProvider(String providerId, MapDataProvider provider) {
