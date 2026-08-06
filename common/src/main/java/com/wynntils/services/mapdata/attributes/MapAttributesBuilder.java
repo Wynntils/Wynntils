@@ -94,16 +94,19 @@ public class MapAttributesBuilder {
         return this;
     }
 
-    public void setFillColor(CustomColor fillColor) {
+    public MapAttributesBuilder setFillColor(CustomColor fillColor) {
         this.fillColor = fillColor;
+        return this;
     }
 
-    public void setBorderColor(CustomColor borderColor) {
+    public MapAttributesBuilder setBorderColor(CustomColor borderColor) {
         this.borderColor = borderColor;
+        return this;
     }
 
-    public void setBorderWidth(Float borderWidth) {
+    public MapAttributesBuilder setBorderWidth(Float borderWidth) {
         this.borderWidth = borderWidth;
+        return this;
     }
 
     public MapLocationAttributesBuilder asLocationAttributes() {
