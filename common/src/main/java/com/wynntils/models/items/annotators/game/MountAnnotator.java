@@ -43,7 +43,7 @@ public final class MountAnnotator implements GameItemAnnotator {
                     + Arrays.stream(MountStat.values())
                             .map(s -> Pattern.quote(s.getName()))
                             .collect(Collectors.joining("|"))
-                    + ").+§#acfac6ff(?<current>\\d+)§7/(?<cap>\\d+)( §8\\((?<max>\\d+)\\))?(?:§f|§#acfac6ff) §8\uE023\uDAFF\uDFF7§a(?<currentMeter>.)§7\uDAFF\uDFF7(\uDB00\uDC09|(?<maxMeter>.))");
+                    + ").+§#acfac6ff(?<current>\\d+)§7/(?<cap>\\d+)( §8\\((?<max>\\d+)\\))?(?:§f|§#acfac6ff) §8\uE023\uDAFF\uDFF7§a(?<currentMeter>.)§7\uDAFF\uDFF7(\uDB00\uDC09|(?<maxMeter>.))?");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
