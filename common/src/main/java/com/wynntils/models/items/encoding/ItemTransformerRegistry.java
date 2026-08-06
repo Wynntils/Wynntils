@@ -14,6 +14,7 @@ import com.wynntils.models.items.encoding.impl.item.CharmItemTransformer;
 import com.wynntils.models.items.encoding.impl.item.CraftedConsumableItemTransformer;
 import com.wynntils.models.items.encoding.impl.item.CraftedGearItemTransformer;
 import com.wynntils.models.items.encoding.impl.item.GearItemTransformer;
+import com.wynntils.models.items.encoding.impl.item.MountItemTransformer;
 import com.wynntils.models.items.encoding.impl.item.TomeItemTransformer;
 import com.wynntils.models.items.encoding.type.DataTransformer;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
@@ -26,6 +27,7 @@ import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.type.ErrorOr;
@@ -99,9 +101,14 @@ public final class ItemTransformerRegistry {
         TypeData typeData = typeDataOpt.get();
         ItemTransformer<WynnItem> transformer = itemTransformers.get(typeData.itemType());
 
-        if (typeData.itemType() == ItemType.CRAFTED_GEAR || typeData.itemType() == ItemType.CRAFTED_CONSUMABLE) {
+        // Don't use the name block for crafted gear, consumables and mounts
+        // This is used for crafted gear, consumables and mounts, so that "bad" names can't be injected into the item
+        if (typeData.itemType() == ItemType.CRAFTED_GEAR
+                || typeData.itemType() == ItemType.CRAFTED_CONSUMABLE
+                || typeData.itemType() == ItemType.MOUNT) {
             itemData.removeIf(data -> data instanceof NameData);
 
+            // Override the name block if we have a clear-chat name
             if (itemName != null) {
                 itemData.add(trustedName ? NameData.fromTrustedName(itemName) : NameData.sanitized(itemName));
             }
@@ -156,6 +163,7 @@ public final class ItemTransformerRegistry {
         registerItemTransformer(CharmItem.class, new CharmItemTransformer());
         registerItemTransformer(CraftedGearItem.class, new CraftedGearItemTransformer());
         registerItemTransformer(CraftedConsumableItem.class, new CraftedConsumableItemTransformer());
+        registerItemTransformer(MountItem.class, new MountItemTransformer());
     }
 
     private static final class ItemTransformerMap {

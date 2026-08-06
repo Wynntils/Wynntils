@@ -60,7 +60,7 @@ public abstract class TooltipBuilder {
         return tooltipLinesCache;
     }
 
-    protected final List<Component> buildTooltipLines(
+    protected List<Component> buildTooltipLines(
             ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator identificationDecorator) {
         List<Component> decoratedHeader = decorateHeader(header, identificationDecorator);
         int targetWidth = 0;

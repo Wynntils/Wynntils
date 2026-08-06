@@ -3489,7 +3489,7 @@
   "screens.wynntils.itemSharing.extended.description1": "Encode base values and static stats, eg. Strength",
   "screens.wynntils.itemSharing.extended.description2": "Note that items encoded in this mode will not follow item changes, stats are frozen in their current state.",
   "screens.wynntils.itemSharing.extended.name": "Extended Encoding",
-  "screens.wynntils.itemSharing.itemName.description": "Share the custom name of the crafted item?",
+  "screens.wynntils.itemSharing.itemName.description": "Share the custom name of the crafted/mount item?",
   "screens.wynntils.itemSharing.itemName.name": "Share Item Name",
   "screens.wynntils.itemSharing.openRecord": "Open Item Record",
   "screens.wynntils.itemSharing.save": "Save to Record",

@@ -270,6 +270,12 @@
     "url": "https://cdn.wynntils.com/static/Data-Storage/model_data.json"
   },
   {
+    "id": "dataStaticMountColors",
+    "md5": "3aa53aba6cc97c06488ba556c2453b82",
+    "path": "Data-Storage/mount_colors.json",
+    "url": "https://cdn.wynntils.com/static/Data-Storage/mount_colors.json"
+  },
+  {
     "id": "dataStaticPlaceMapFeatures",
     "md5": "cb890e5fa52b1b3e40f203f456ce9c26",
     "path": "Reference/place_mapfeatures.json",

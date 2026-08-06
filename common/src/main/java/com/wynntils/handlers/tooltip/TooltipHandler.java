@@ -8,9 +8,11 @@ import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.tooltip.impl.crafted.CraftedTooltipBuilder;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
+import com.wynntils.handlers.tooltip.impl.mount.MountTooltipBuilder;
 import com.wynntils.handlers.tooltip.type.TooltipOptions;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
+import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import java.util.HashMap;
@@ -99,6 +101,10 @@ public final class TooltipHandler extends Handler {
 
     public TooltipBuilder fromParsedItemStack(ItemStack itemStack, CraftedItemProperty craftedItemProperty) {
         return CraftedTooltipBuilder.fromParsedItemStack(itemStack, craftedItemProperty);
+    }
+
+    public MountTooltipBuilder buildNew(MountItem mountItem, String source) {
+        return MountTooltipBuilder.buildNewItem(mountItem, source);
     }
 
     private record UpdateKey(List<Component> originalLines, TooltipOptions options) {}

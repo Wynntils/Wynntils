@@ -27,6 +27,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
@@ -130,6 +131,14 @@ public class ChatItemFeature extends Feature {
 
             if (decodedItem instanceof NamedItemProperty namedItemProperty) {
                 name = namedItemProperty.getName();
+
+                if (decodedItem instanceof MountItem mountItem) {
+                    name = mountItem.getName() + (mountItem.getName().endsWith("s") ? "'" : "'s")
+                            + " "
+                            + (mountItem.isSummonItem()
+                                    ? mountItem.getMountType().getSummonItemName()
+                                    : mountItem.getMountType().getMountItemName());
+                }
             }
         }
 
@@ -259,6 +268,14 @@ public class ChatItemFeature extends Feature {
                                 ComponentUtils.makeObfuscated("Defective " + nameText.getString(), 0, 0));
                     }
                 }
+            }
+
+            if (wynnItem instanceof MountItem mountItem) {
+                nameText = StyledText.fromString(
+                        mountItem.getName() + (mountItem.getName().endsWith("s") ? "'" : "'s") + " "
+                                + (mountItem.isSummonItem()
+                                        ? mountItem.getMountType().getSummonItemName()
+                                        : mountItem.getMountType().getMountItemName()));
             }
         }
 

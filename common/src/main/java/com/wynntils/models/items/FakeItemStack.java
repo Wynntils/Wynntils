@@ -10,6 +10,7 @@ import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
@@ -113,6 +114,9 @@ public class FakeItemStack extends ItemStack {
                                 () -> useBackingTooltip
                                         ? Handlers.Tooltip.fromParsedItemStack(itemStack, craftedItemProperty)
                                         : Handlers.Tooltip.buildNew(craftedItemProperty, source));
+            } else if (wynnItem instanceof MountItem mountItem) {
+                tooltipBuilder = wynnItem.getData()
+                        .getOrCalculate(WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(mountItem, source));
             }
 
             if (tooltipBuilder == null) return List.of();
