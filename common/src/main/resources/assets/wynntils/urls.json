@@ -115,7 +115,7 @@
   },
   {
     "id": "dataStaticAbilitiesV2",
-    "md5": "22aa3213b0cacb7af22fc6e9a1fc795d",
+    "md5": "6760e7db7f9e869ff79cfd41b564e60a",
     "path": "Reference/abilities_v2.json",
     "url": "https://cdn.wynntils.com/static/Reference/abilities_v2.json"
   },
@@ -205,7 +205,7 @@
   },
   {
     "id": "dataStaticItemDisplayModelData",
-    "md5": "c671ca906fad075b15fbe0c7cd826349",
+    "md5": "6229aeaa674b007683cddceaed5069ae",
     "path": "Data-Storage/item_display_model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/item_display_model_data.json"
   },
@@ -247,7 +247,7 @@
   },
   {
     "id": "dataStaticMaps",
-    "md5": "ece0805306e1ecee7fb593d4ae7fa4d1",
+    "md5": "cdf3f6fdebf5032676941408ddc5c982",
     "path": "Reference/maps.json",
     "url": "https://cdn.wynntils.com/static/Reference/maps.json"
   },
@@ -301,7 +301,7 @@
   },
   {
     "id": "dataStaticServiceMapFeatures",
-    "md5": "b3dfac646f57308040c9e73bbd34afd9",
+    "md5": "e984f96f5840a95fbe0804a5efd153c2",
     "path": "Data-Storage/service_mapfeatures.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/service_mapfeatures.json"
   },
@@ -313,7 +313,7 @@
   },
   {
     "id": "dataStaticServicesCrowdsourced",
-    "md5": "65033f8a69248311aaff8004222a0be0",
+    "md5": "dcc5a40556b968e038ec1548a203261f",
     "path": "Data-Storage/services_crowdsourced.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/services_crowdsourced.json"
   },
