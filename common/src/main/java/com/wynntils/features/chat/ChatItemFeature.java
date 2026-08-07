@@ -36,6 +36,7 @@ import com.wynntils.models.items.properties.ShinyItemProperty;
 import com.wynntils.screens.itemsharing.ItemSharingScreen;
 import com.wynntils.screens.itemsharing.SavedItemsScreen;
 import com.wynntils.utils.EncodedByteBuffer;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
@@ -133,7 +134,7 @@ public class ChatItemFeature extends Feature {
                 name = namedItemProperty.getName();
 
                 if (decodedItem instanceof MountItem mountItem) {
-                    name = mountItem.getName() + (mountItem.getName().endsWith("s") ? "'" : "'s")
+                    name = StringUtils.toPossessive(mountItem.getName())
                             + " "
                             + (mountItem.isSummonItem()
                                     ? mountItem.getMountType().getSummonItemName()
@@ -271,11 +272,10 @@ public class ChatItemFeature extends Feature {
             }
 
             if (wynnItem instanceof MountItem mountItem) {
-                nameText = StyledText.fromString(
-                        mountItem.getName() + (mountItem.getName().endsWith("s") ? "'" : "'s") + " "
-                                + (mountItem.isSummonItem()
-                                        ? mountItem.getMountType().getSummonItemName()
-                                        : mountItem.getMountType().getMountItemName()));
+                nameText = StyledText.fromString(StringUtils.toPossessive(mountItem.getName()) + " "
+                        + (mountItem.isSummonItem()
+                                ? mountItem.getMountType().getSummonItemName()
+                                : mountItem.getMountType().getMountItemName()));
             }
         }
 

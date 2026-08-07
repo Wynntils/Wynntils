@@ -65,9 +65,8 @@ public final class MountTooltipBuilder extends TooltipBuilder {
                                 .withColor(CustomColor.fromInt(0x00eb1c).asInt()))
                         .withoutShadow())
                 .append(Component.literal("\uDB00\uDC05").withStyle(Style.EMPTY.withFont(CommonFonts.SPACE_FONT)))
-                .append(Component.literal(
-                                mountItem.getName() + (mountItem.getName().endsWith("s") ? "'" : "'s") + " "
-                                        + mountItem.getMountType().getMountItemName())
+                .append(Component.literal(StringUtils.toPossessive(mountItem.getName()) + " "
+                                + mountItem.getMountType().getMountItemName())
                         .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)));
         tooltipLines.add(emblemLine);
 
