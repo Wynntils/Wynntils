@@ -12,6 +12,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.pipelines.CustomRenderPipelines;
+import com.wynntils.utils.render.state.ColoredLineBatchRenderState;
 import com.wynntils.utils.render.state.ColoredTrianglesRenderState;
 import com.wynntils.utils.render.state.TexturedPolygonRenderState;
 import com.wynntils.utils.render.type.PointerType;
@@ -251,6 +252,11 @@ public final class MapRenderer {
         ChunkPos bottomRight =
                 new ChunkPos(new BlockPos((int) renderedWorldBoundingBox.x2(), 0, (int) renderedWorldBoundingBox.z2()));
 
+        // Accumulate every grid line into a single batch, submitted once below, instead of one
+        // GuiElementRenderState submission per line (which is O(visible chunks) submissions/frame
+        // and was the dominant rendering cost under the 1.21.6+ GUI render state model).
+        List<ColoredLineBatchRenderState.Segment> segments = new ArrayList<>();
+
         // Render the chunk grid, with a 1px border around each chunk.
         for (int x = topLeft.x; x <= bottomRight.x; x++) {
             for (int z = topLeft.z; z <= bottomRight.z; z++) {
@@ -275,8 +281,9 @@ public final class MapRenderer {
                         mappedChunks.contains(new ChunkPos(x - 1, z).toLong()) ? CommonColors.GREEN : renderColor;
 
                 // Render the top and left borders of the chunk
-                RenderUtils.drawLine(guiGraphics, topRenderColor, x1, z1, x2, z1, CHUNK_LINE_WIDTH);
-                RenderUtils.drawLine(guiGraphics, leftRenderColor, x1, z1, x1, z2, CHUNK_LINE_WIDTH);
+                segments.add(new ColoredLineBatchRenderState.Segment(x1, z1, x2, z1, CHUNK_LINE_WIDTH, topRenderColor));
+                segments.add(
+                        new ColoredLineBatchRenderState.Segment(x1, z1, x1, z2, CHUNK_LINE_WIDTH, leftRenderColor));
 
                 // Render the right border, if the chunk is the rightmost chunk
                 if (x == bottomRight.x) {
@@ -284,7 +291,8 @@ public final class MapRenderer {
                     CustomColor rightRenderColor =
                             mappedChunks.contains(new ChunkPos(x + 1, z).toLong()) ? CommonColors.GREEN : renderColor;
 
-                    RenderUtils.drawLine(guiGraphics, rightRenderColor, x2, z1, x2, z2, CHUNK_LINE_WIDTH);
+                    segments.add(new ColoredLineBatchRenderState.Segment(
+                            x2, z1, x2, z2, CHUNK_LINE_WIDTH, rightRenderColor));
                 }
 
                 // Render the bottom border, if the chunk is the bottommost chunk
@@ -293,10 +301,20 @@ public final class MapRenderer {
                     CustomColor bottomRenderColor =
                             mappedChunks.contains(new ChunkPos(x, z + 1).toLong()) ? CommonColors.GREEN : renderColor;
 
-                    RenderUtils.drawLine(guiGraphics, bottomRenderColor, x1, z2, x2, z2, CHUNK_LINE_WIDTH);
+                    segments.add(new ColoredLineBatchRenderState.Segment(
+                            x1, z2, x2, z2, CHUNK_LINE_WIDTH, bottomRenderColor));
                 }
             }
         }
+
+        if (segments.isEmpty()) return;
+
+        guiGraphics.guiRenderState.submitGuiElement(new ColoredLineBatchRenderState(
+                RenderPipelines.GUI,
+                TextureSetup.noTexture(),
+                new Matrix3x2f(guiGraphics.pose()),
+                segments,
+                guiGraphics.scissorStack.peek()));
     }
 
     public static void renderLootrunLine(
