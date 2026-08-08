@@ -37,6 +37,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -53,6 +54,7 @@ import org.lwjgl.glfw.GLFW;
 
 public final class AbilityTreeModel extends Model {
     public static final int ABILITY_TREE_PAGES = 9;
+    private static final int MAX_ABILITY_TREE_RESCAN_ATTEMPTS = 3;
     public static final AbilityTreeParser ABILITY_TREE_PARSER = new AbilityTreeParser();
     public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
     private final AbilityTreeInfoRegistry abilityTreeInfoRegistry = new AbilityTreeInfoRegistry();
@@ -261,8 +263,21 @@ public final class AbilityTreeModel extends Model {
                 .findFirst();
     }
 
+    public AbilityTreeInfo getAbilityTree(ClassType type) {
+        return abilityTreeInfoRegistry.getAbilityTree(type);
+    }
+
+    public AbilityTreeSkillNode getNodeFromNameAndClass(String name, ClassType classType) {
+        return abilityTreeInfoRegistry.getNodeFromNameAndClass(name, classType);
+    }
+
     public void clearUnlockedAbilitesAndRescan(
             Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
+        clearUnlockedAbilitesAndRescan(onStatus, onError, onComplete, 0);
+    }
+
+    private void clearUnlockedAbilitesAndRescan(
+            Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete, int attempt) {
         Map<String, List<String>> allEquippedAbilities = unlockedAbilities.get();
         allEquippedAbilities.put(Models.Character.getId(), new ArrayList<>());
         unlockedAbilities.store(allEquippedAbilities);
@@ -274,24 +289,72 @@ public final class AbilityTreeModel extends Model {
                 abilityTreeInfo -> {}, // we don't need to do anything with this because the container event reads it.
                 onStatus,
                 onError,
-                onComplete));
-    }
+                (complete) -> {
+                    String characterId = Models.Character.getId();
+                    List<String> scanned = unlockedAbilities.get().getOrDefault(characterId, List.of());
 
-    public AbilityTreeInfo getAbilityTree(ClassType type) {
-        return abilityTreeInfoRegistry.getAbilityTree(type);
-    }
+                    Set<String> seen = new HashSet<>();
+                    boolean hasDuplicates = scanned.stream().anyMatch(n -> !seen.add(n));
 
-    public AbilityTreeSkillNode getNodeFromNameAndClass(String name, ClassType classType) {
-        return abilityTreeInfoRegistry.getNodeFromNameAndClass(name, classType);
+                    if (hasDuplicates) {
+                        if (attempt >= MAX_ABILITY_TREE_RESCAN_ATTEMPTS) {
+                            WynntilsMod.warn("Duplicate ability names still present after " + attempt
+                                    + " rescans while clearing/rescanning: " + scanned);
+                            onError.accept("Failed to scan ability tree correctly, please try again.");
+                            return;
+                        }
+
+                        WynntilsMod.warn("Duplicate ability names found while rescanning (attempt " + (attempt + 1)
+                                + "), retrying: " + scanned);
+                        onStatus.accept("Detected a duplicate ability, retrying (" + (attempt + 1) + "/"
+                                + MAX_ABILITY_TREE_RESCAN_ATTEMPTS + ")...");
+
+                        clearUnlockedAbilitesAndRescan(onStatus, onError, onComplete, attempt + 1);
+                        return;
+                    }
+
+                    onComplete.accept("Ability tree rescanned successfully.");
+                }));
     }
 
     public void saveCurrentAbilityTree(
             String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
+        saveCurrentAbilityTree(name, onStatus, onError, onComplete, 0);
+    }
+
+    private void saveCurrentAbilityTree(
+            String name,
+            Consumer<String> onStatus,
+            Consumer<String> onError,
+            Consumer<String> onComplete,
+            int attempt) {
         ABILITY_TREE_CONTAINER_QUERIES.getUnlockedAbilityTree(
                 treeInfo -> {
                     List<String> abilityNames = treeInfo.nodes().stream()
                             .map(AbilityTreeSkillNode::name)
                             .toList();
+
+                    Set<String> seen = new HashSet<>();
+                    boolean hasDuplicates = abilityNames.stream().anyMatch(n -> !seen.add(n));
+
+                    if (hasDuplicates) {
+                        if (attempt >= MAX_ABILITY_TREE_RESCAN_ATTEMPTS) {
+                            WynntilsMod.warn("Duplicate ability names still present after " + attempt
+                                    + " rescans while saving loadout \"" + name + "\": " + abilityNames);
+                            onError.accept("Failed to scan ability tree correctly, please try again.");
+                            return;
+                        }
+
+                        WynntilsMod.warn("Duplicate ability names found while saving loadout \"" + name + "\" (attempt "
+                                + (attempt + 1) + "), rescanning: " + abilityNames);
+                        onStatus.accept("Detected a duplicate ability, retrying (" + (attempt + 1) + "/"
+                                + MAX_ABILITY_TREE_RESCAN_ATTEMPTS + ")...");
+
+                        Managers.TickScheduler.scheduleNextTick(
+                                () -> saveCurrentAbilityTree(name, onStatus, onError, onComplete, attempt + 1));
+                        return;
+                    }
+
                     ClassType classType = Models.Character.getClassType();
                     Services.loadout.saveAbilityTreeLoadout(name, new SavableAbilityTree(abilityNames, classType));
                     WynntilsMod.info("Saved ability tree loadout: " + name);
@@ -329,6 +392,16 @@ public final class AbilityTreeModel extends Model {
                 .map(AbilityTreeSkillNode::withUnlockedType)
                 .collect(Collectors.toCollection(ArrayList::new));
         if (nodes.isEmpty()) return List.of();
+
+        // If a loadout somehow contains a duplicate (idk how this happens) remove it.
+        Map<Integer, AbilityTreeSkillNode> dedupedById = new LinkedHashMap<>();
+        for (AbilityTreeSkillNode node : nodes) {
+            if (dedupedById.putIfAbsent(node.id(), node) != null) {
+                WynntilsMod.warn("Duplicate ability tree node id " + node.id() + " (" + node.name()
+                        + ") found while building loadout application order, ignoring duplicate.");
+            }
+        }
+        nodes = new ArrayList<>(dedupedById.values());
 
         Map<String, AbilityTreeSkillNode> byName =
                 nodes.stream().collect(Collectors.toMap(AbilityTreeSkillNode::name, n -> n, (a, b) -> a));
