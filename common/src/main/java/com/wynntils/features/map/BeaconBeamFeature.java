@@ -21,6 +21,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.colors.WynncraftShaderColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.render.CustomBeaconRenderer;
 import java.util.List;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
 import net.minecraft.core.Position;
@@ -111,7 +112,7 @@ public class BeaconBeamFeature extends Feature {
             long gameTime = McUtils.mc().level.getGameTime();
             float animationTime = (gameTime % 40) + partial;
 
-            BeaconRenderer.submitBeaconBeam(
+            CustomBeaconRenderer.submitBeaconBeam(
                     poseStack,
                     event.getSubmitNodeStorage(),
                     BeaconRenderer.BEAM_LOCATION,
