@@ -652,8 +652,10 @@ public final class MapRenderer {
         return matrix.transformPosition(new Vector2f(x, y));
     }
 
-    private record CircleMask(float centerX, float centerY, float radiusX, float radiusY) {
-        private static CircleMask fromBounds(float x, float y, float width, float height) {
+    // Public so callers outside this package (e.g. MapFeatureRenderer) can pass mask bounds down to
+    // a circularly-clipped render state without recomputing the same center/radius math themselves.
+    public record CircleMask(float centerX, float centerY, float radiusX, float radiusY) {
+        public static CircleMask fromBounds(float x, float y, float width, float height) {
             return new CircleMask(x + width / 2f, y + height / 2f, width / 2f, height / 2f);
         }
 
