@@ -290,6 +290,13 @@ public class MinimapOverlay extends Overlay {
         Vector2f screenCenter = new Vector2f(centerX, centerZ);
         Vector2f rotationVector = new Vector2f(cosRotationRadians, sinRotationRadians);
 
+        // Non-null only for the circular mask type - MapFeatureRenderer then clips each feature's
+        // icon to this mask per-pixel, so it fades out smoothly at the boundary instead of the
+        // feature list being pre-filtered by center point (which pops icons fully in/out of view).
+        MapRenderer.CircleMask circularMask = maskType.get() == MapMaskType.CIRCLE
+                ? new MapRenderer.CircleMask(centerX, centerZ, width / 2f, height / 2f)
+                : null;
+
         List<Pair<MapFeature, ResolvedMapAttributes>> renderedMapFeatures = mapFeatures.toList();
         for (Pair<MapFeature, ResolvedMapAttributes> featurePair : renderedMapFeatures) {
             MapFeature feature = featurePair.a();
@@ -308,7 +315,8 @@ public class MinimapOverlay extends Overlay {
                             ? remotePlayersHeadScale.get()
                             : mapFeatureScale.get(),
                     false,
-                    false);
+                    false,
+                    circularMask);
         }
 
         // Render all marked features (user waypoints/compass markers)
