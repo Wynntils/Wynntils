@@ -42,8 +42,10 @@ import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -363,6 +365,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 .map(f -> (TerritoryArea) f)
                 .toList();
 
+        Map<String, TerritoryArea> territoryAreasByName = territoryAreas.stream()
+                .collect(Collectors.toMap(
+                        area -> area.getTerritoryProfile().getName(), area -> area, (first, second) -> first));
+
         // Accumulate every trading-route line into a single batch, submitted once below, instead of
         // one GuiElementRenderState submission per route
         List<ColoredLineBatchRenderState.Segment> segments = new ArrayList<>();
@@ -374,10 +380,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 if (territoryInfo == null) continue;
 
                 for (String tradingRoute : territoryInfo.getTradingRoutes()) {
-                    TerritoryArea destination = territoryAreas.stream()
-                            .filter(area -> area.getTerritoryProfile().getName().equals(tradingRoute))
-                            .findFirst()
-                            .orElse(null);
+                    TerritoryArea destination = territoryAreasByName.get(tradingRoute);
 
                     if (destination == null) continue;
 
