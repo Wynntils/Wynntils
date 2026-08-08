@@ -1,0 +1,68 @@
+/*
+ * Copyright © Wynntils 2025-2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.utils.render.state;
+
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.wynntils.utils.colors.CustomColor;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.render.TextureSetup;
+import net.minecraft.client.gui.render.state.GuiElementRenderState;
+import org.joml.Matrix3x2f;
+
+// A colored ellipse filling the given bounds, rendered as a single quad whose UV carries each
+// vertex's normalized [-1, 1] local position; the actual circular shape is computed per-pixel by
+// CustomRenderPipelines.CIRCLE_MASK_PIPELINE's fragment shader instead of being approximated as a
+// CPU-generated polygon (see docs/rendering/gui-render-state.md).
+public record CircleMaskRenderState(
+        RenderPipeline pipeline,
+        TextureSetup textureSetup,
+        Matrix3x2f pose,
+        float x1,
+        float y1,
+        float x2,
+        float y2,
+        CustomColor color,
+        ScreenRectangle scissorArea,
+        ScreenRectangle bounds)
+        implements GuiElementRenderState {
+    public CircleMaskRenderState(
+            RenderPipeline pipeline,
+            TextureSetup textureSetup,
+            Matrix3x2f pose,
+            float x1,
+            float y1,
+            float x2,
+            float y2,
+            CustomColor color,
+            ScreenRectangle scissorArea) {
+        this(
+                pipeline,
+                textureSetup,
+                pose,
+                x1,
+                y1,
+                x2,
+                y2,
+                color,
+                scissorArea,
+                getBounds(x1, y1, x2, y2, pose, scissorArea));
+    }
+
+    @Override
+    public void buildVertices(VertexConsumer consumer) {
+        consumer.addVertexWith2DPose(pose, x1, y1).setUv(-1f, -1f).setColor(color.r(), color.g(), color.b(), color.a());
+        consumer.addVertexWith2DPose(pose, x1, y2).setUv(-1f, 1f).setColor(color.r(), color.g(), color.b(), color.a());
+        consumer.addVertexWith2DPose(pose, x2, y2).setUv(1f, 1f).setColor(color.r(), color.g(), color.b(), color.a());
+        consumer.addVertexWith2DPose(pose, x2, y1).setUv(1f, -1f).setColor(color.r(), color.g(), color.b(), color.a());
+    }
+
+    private static ScreenRectangle getBounds(
+            float x1, float y1, float x2, float y2, Matrix3x2f pose, ScreenRectangle scissorArea) {
+        ScreenRectangle screenRectangle =
+                new ScreenRectangle((int) x1, (int) y1, (int) (x2 - x1), (int) (y2 - y1)).transformMaxBounds(pose);
+        return scissorArea != null ? scissorArea.intersection(screenRectangle) : screenRectangle;
+    }
+}
