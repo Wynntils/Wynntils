@@ -442,10 +442,10 @@ public class WynntilsCommand extends Command {
             Models.Character.scanCharacterInfo(() -> {
                 Models.Account.scanRankInfo(true, () -> {
                     Models.Aspect.clearEquippedAspectsAndRescan(
-                            onStatus -> {},
+                            WynntilsMod::info,
                             McUtils::sendErrorToClient,
                             aspectComplete -> Models.AbilityTree.clearUnlockedAbilitesAndRescan(
-                                    onStatus -> {},
+                                    WynntilsMod::info,
                                     McUtils::sendErrorToClient,
                                     onComplete -> McUtils.sendWynntilsPrefixMessage(
                                             Component.translatable("command.wynntils.rescan.endText")
