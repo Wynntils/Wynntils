@@ -12,6 +12,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.pipelines.CustomRenderPipelines;
+import com.wynntils.utils.render.state.CircleMaskRenderState;
 import com.wynntils.utils.render.state.ColoredLineBatchRenderState;
 import com.wynntils.utils.render.state.ColoredTrianglesRenderState;
 import com.wynntils.utils.render.state.TexturedPolygonRenderState;
@@ -126,24 +127,16 @@ public final class MapRenderer {
 
     public static void renderCircularBackground(
             GuiGraphics guiGraphics, CustomColor color, float x, float y, float width, float height) {
-        Matrix3x2f pose = new Matrix3x2f(guiGraphics.pose());
-        CircleMask mask = CircleMask.fromBounds(x, y, width, height);
-        List<Vector2f> vertices = new ArrayList<>(CIRCLE_MASK_SEGMENTS * 3);
-        Vector2f center = new Vector2f(mask.centerX(), mask.centerY());
-
-        for (int i = 0; i < CIRCLE_MASK_SEGMENTS; i++) {
-            float startAngle = (float) (Math.PI * 2.0 * i / CIRCLE_MASK_SEGMENTS);
-            float endAngle = (float) (Math.PI * 2.0 * (i + 1) / CIRCLE_MASK_SEGMENTS);
-            vertices.add(center);
-            vertices.add(mask.point(startAngle));
-            vertices.add(mask.point(endAngle));
-        }
-
-        guiGraphics.guiRenderState.submitGuiElement(new ColoredTrianglesRenderState(
-                CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
+        // The circle is rendered as a single quad; CIRCLE_MASK_PIPELINE's fragment shader masks it
+        // to an exact ellipse per-pixel.
+        guiGraphics.guiRenderState.submitGuiElement(new CircleMaskRenderState(
+                CustomRenderPipelines.CIRCLE_MASK_PIPELINE,
                 TextureSetup.noTexture(),
-                pose,
-                vertices,
+                new Matrix3x2f(guiGraphics.pose()),
+                x,
+                y,
+                x + width,
+                y + height,
                 color,
                 guiGraphics.scissorStack.peek()));
     }
