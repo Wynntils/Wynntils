@@ -15,6 +15,8 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.pipelines.CustomRenderPipelines;
 import com.wynntils.utils.render.state.ArcRenderState;
+import com.wynntils.utils.render.state.ColoredLineBatchRenderState;
+import com.wynntils.utils.render.state.ColoredTriangleBatchRenderState;
 import com.wynntils.utils.render.state.CustomRectangleRenderState;
 import com.wynntils.utils.render.state.DiagonalColoredRectangleRenderState;
 import com.wynntils.utils.render.state.FloatBlitRenderState;
@@ -24,6 +26,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -988,17 +991,17 @@ public final class RenderUtils {
      * Draws a progress bar (textureY1 and textureY2 now specify both textures with background being on top of the bar)
      *
      * @param guiGraphics guiGraphics to use
-     * @param texture   the texture to use
+     * @param texture     the texture to use
      * @param customColor the color for the bar
-     * @param x1        left x on screen
-     * @param y1        top y on screen
-     * @param x2        right x on screen
-     * @param y2        bottom right on screen
-     * @param textureX1 texture left x for the part
-     * @param textureY1 texture top y for the part (top of background)
-     * @param textureX2 texture right x for the part
-     * @param textureY2 texture bottom y for the part (bottom of bar)
-     * @param progress  progress of the bar, 0.0f to 1.0f is left to right and 0.0f to -1.0f is right to left
+     * @param x1          left x on screen
+     * @param y1          top y on screen
+     * @param x2          right x on screen
+     * @param y2          bottom right on screen
+     * @param textureX1   texture left x for the part
+     * @param textureY1   texture top y for the part (top of background)
+     * @param textureX2   texture right x for the part
+     * @param textureY2   texture bottom y for the part (bottom of bar)
+     * @param progress    progress of the bar, 0.0f to 1.0f is left to right and 0.0f to -1.0f is right to left
      */
     public static void drawColoredProgressBar(
             GuiGraphics guiGraphics,
@@ -1035,16 +1038,16 @@ public final class RenderUtils {
      * Draws a progress bar (textureY1 and textureY2 now specify both textures with background being on top of the bar)
      *
      * @param guiGraphics guiGraphics to use
-     * @param texture   the texture to use
-     * @param x1        left x on screen
-     * @param y1        top y on screen
-     * @param x2        right x on screen
-     * @param y2        bottom right on screen
-     * @param textureX1 texture left x for the part
-     * @param textureY1 texture top y for the part (top of background)
-     * @param textureX2 texture right x for the part
-     * @param textureY2 texture bottom y for the part (bottom of bar)
-     * @param progress  progress of the bar, 0.0f to 1.0f is left to right and 0.0f to -1.0f is right to left
+     * @param texture     the texture to use
+     * @param x1          left x on screen
+     * @param y1          top y on screen
+     * @param x2          right x on screen
+     * @param y2          bottom right on screen
+     * @param textureX1   texture left x for the part
+     * @param textureY1   texture top y for the part (top of background)
+     * @param textureX2   texture right x for the part
+     * @param textureY2   texture bottom y for the part (bottom of bar)
+     * @param progress    progress of the bar, 0.0f to 1.0f is left to right and 0.0f to -1.0f is right to left
      */
     public static void drawProgressBar(
             GuiGraphics guiGraphics,
@@ -1514,71 +1517,47 @@ public final class RenderUtils {
             return;
         }
 
-        // Fill the polygon using a triangle fan decomposition
+        Matrix3x2f pose = new Matrix3x2f(guiGraphics.pose());
+        var scissorArea = guiGraphics.scissorStack.peek();
+
+        // Fill the polygon using a triangle fan decomposition, submitted as a single batched draw
+        // instead of one submission per triangle (or, as before, per pixel row of every triangle).
         if (fillColor != CustomColor.NONE) {
             Vector2f firstVertex = vertices.getFirst();
+            List<ColoredTriangleBatchRenderState.Triangle> triangles = new ArrayList<>(vertices.size() - 2);
             for (int i = 1; i < vertices.size() - 1; i++) {
                 Vector2f v1 = vertices.get(i);
                 Vector2f v2 = vertices.get(i + 1);
+                triangles.add(new ColoredTriangleBatchRenderState.Triangle(firstVertex, v1, v2, fillColor));
+            }
 
-                // Draw each triangle as a filled shape
-                // Approximate triangle fill using drawLine with enough width
-                // For a proper fill, we draw lines from v1 to v2 across the triangle
-                drawTriangleFill(guiGraphics, fillColor, firstVertex, v1, v2);
+            if (!triangles.isEmpty()) {
+                guiGraphics.guiRenderState.submitGuiElement(new ColoredTriangleBatchRenderState(
+                        CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
+                        TextureSetup.noTexture(),
+                        pose,
+                        triangles,
+                        scissorArea));
             }
         }
 
-        // Draw border lines
+        // Draw border lines, also batched into a single submission
         if (borderColor != CustomColor.NONE && borderWidth > 0f) {
+            List<ColoredLineBatchRenderState.Segment> segments = new ArrayList<>(vertices.size());
             for (int i = 0; i < vertices.size() - 1; i++) {
                 Vector2f v1 = vertices.get(i);
                 Vector2f v2 = vertices.get(i + 1);
-                drawLine(guiGraphics, borderColor, v1.x(), v1.y(), v2.x(), v2.y(), borderWidth);
+                segments.add(new ColoredLineBatchRenderState.Segment(
+                        v1.x(), v1.y(), v2.x(), v2.y(), borderWidth, borderColor));
             }
             // Close the polygon
             Vector2f last = vertices.getLast();
             Vector2f first = vertices.getFirst();
-            drawLine(guiGraphics, borderColor, last.x(), last.y(), first.x(), first.y(), borderWidth);
+            segments.add(new ColoredLineBatchRenderState.Segment(
+                    last.x(), last.y(), first.x(), first.y(), borderWidth, borderColor));
+
+            guiGraphics.guiRenderState.submitGuiElement(new ColoredLineBatchRenderState(
+                    RenderPipelines.GUI, TextureSetup.noTexture(), pose, segments, scissorArea));
         }
-    }
-
-    private static void drawTriangleFill(
-            GuiGraphics guiGraphics, CustomColor color, Vector2f v0, Vector2f v1, Vector2f v2) {
-        // Approximate triangle fill by drawing horizontal lines (scanline fill)
-        float minY = Math.min(v0.y(), Math.min(v1.y(), v2.y()));
-        float maxY = Math.max(v0.y(), Math.max(v1.y(), v2.y()));
-
-        for (float y = minY; y <= maxY; y += 1.0f) {
-            // Find the x intersections of the scanline with the triangle edges
-            float minX = Float.MAX_VALUE;
-            float maxX = Float.MIN_VALUE;
-
-            float[] xs = new float[3];
-            boolean[] valid = new boolean[3];
-
-            valid[0] = intersectEdge(v0, v1, y, xs, 0);
-            valid[1] = intersectEdge(v1, v2, y, xs, 1);
-            valid[2] = intersectEdge(v2, v0, y, xs, 2);
-
-            for (int i = 0; i < 3; i++) {
-                if (valid[i]) {
-                    minX = Math.min(minX, xs[i]);
-                    maxX = Math.max(maxX, xs[i]);
-                }
-            }
-
-            if (minX <= maxX) {
-                fill(guiGraphics, color, minX, y, maxX, y + 1);
-            }
-        }
-    }
-
-    private static boolean intersectEdge(Vector2f a, Vector2f b, float y, float[] xs, int index) {
-        if ((a.y() <= y && b.y() > y) || (b.y() <= y && a.y() > y)) {
-            float t = (y - a.y()) / (b.y() - a.y());
-            xs[index] = a.x() + t * (b.x() - a.x());
-            return true;
-        }
-        return false;
     }
 }
