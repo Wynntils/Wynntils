@@ -33,12 +33,14 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.state.ColoredLineBatchRenderState;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingPolygon;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -46,10 +48,13 @@ import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
+import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
@@ -358,6 +363,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 .map(f -> (TerritoryArea) f)
                 .toList();
 
+        // Accumulate every trading-route line into a single batch, submitted once below, instead of
+        // one GuiElementRenderState submission per route
+        List<ColoredLineBatchRenderState.Segment> segments = new ArrayList<>();
+
         for (MapFeature feature : territoryAreas) {
             if (feature instanceof TerritoryArea territoryArea) {
                 TerritoryInfo territoryInfo = Models.Territory.getTerritoryInfo(
@@ -382,17 +391,25 @@ public final class GuildMapScreen extends AbstractMapScreen {
                             MapRenderer.getRenderX((int) secondCentroid.x(), mapCenterX, centerX, zoomRenderScale);
                     float secondWorldZ =
                             MapRenderer.getRenderZ((int) secondCentroid.y(), mapCenterZ, centerZ, zoomRenderScale);
-                    RenderUtils.drawLine(
-                            guiGraphics,
-                            CommonColors.DARK_GRAY.withAlpha(0.5f),
+                    segments.add(new ColoredLineBatchRenderState.Segment(
                             firstWorldX,
                             firstWorldZ,
                             secondWorldX,
                             secondWorldZ,
-                            1);
+                            1,
+                            CommonColors.DARK_GRAY.withAlpha(0.5f)));
                 }
             }
         }
+
+        if (segments.isEmpty()) return;
+
+        guiGraphics.guiRenderState.submitGuiElement(new ColoredLineBatchRenderState(
+                RenderPipelines.GUI,
+                TextureSetup.noTexture(),
+                new Matrix3x2f(guiGraphics.pose()),
+                segments,
+                guiGraphics.scissorStack.peek()));
     }
 
     private void renderHeadquarterIcons(GuiGraphics guiGraphics) {
