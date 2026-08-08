@@ -485,7 +485,8 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<MapMarkerOptions> getMarkerOptions() {
-                    return Optional.of(new MapMarkerOptionsBuilder().withHasDistance(true));
+                    return Optional.of(
+                            new MapMarkerOptionsBuilder().withHasDistance(true).withHasLabel(true));
                 }
 
                 @Override
