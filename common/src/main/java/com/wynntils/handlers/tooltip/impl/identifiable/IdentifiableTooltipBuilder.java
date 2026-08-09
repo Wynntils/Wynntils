@@ -110,11 +110,6 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         return new IdentifiableTooltipBuilder<>(identifiableItem, splitLore.a(), splitLore.b(), source, false);
     }
 
-    public static IdentifiableTooltipBuilder fromParsedItemStack(
-            ItemStack itemStack, IdentifiableItemProperty itemInfo) {
-        return fromTooltipLines(LoreUtils.getTooltipLines(itemStack), itemInfo);
-    }
-
     @Override
     public List<Component> getTooltipLines(ClassType currentClass, TooltipOptions options) {
         return getTooltipLines(currentClass, options, TOOLTIP_MIN_WIDTH);
@@ -122,7 +117,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
     public List<Component> getTooltipLines(ClassType currentClass, TooltipOptions options, int minimumWidth) {
         if (!synthetic && itemInfo instanceof PagedItemProperty pagedItem && !pagedItem.isStatPage()) {
-            return super.getTooltipLines(
+            return getTooltipLines(
                     currentClass,
                     options.style(),
                     new TooltipOptionDecorator(itemInfo, options),

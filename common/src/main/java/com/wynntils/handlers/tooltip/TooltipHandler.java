@@ -72,31 +72,21 @@ public final class TooltipHandler extends Handler {
                 .getTooltipLines(Models.Character.getClassType(), options);
     }
 
-    public IdentifiableTooltipBuilder buildNew(
-            IdentifiableItemProperty identifiableItem, boolean hideUnidentified, boolean showItemType) {
-        return buildNew(identifiableItem, hideUnidentified, showItemType, "");
+    public IdentifiableTooltipBuilder buildNew(IdentifiableItemProperty identifiableItem) {
+        return buildNew(identifiableItem, "");
     }
 
-    public IdentifiableTooltipBuilder buildNew(
-            IdentifiableItemProperty identifiableItem, boolean hideUnidentified, boolean showItemType, String source) {
+    public IdentifiableTooltipBuilder buildNew(IdentifiableItemProperty identifiableItem, String source) {
         return IdentifiableTooltipBuilder.buildNewItem(identifiableItem, source);
     }
 
     public IdentifiableTooltipBuilder buildFromItemStack(
-            ItemStack itemStack,
-            IdentifiableItemProperty identifiableItem,
-            boolean hideUnidentified,
-            boolean showItemType,
-            String source) {
+            ItemStack itemStack, IdentifiableItemProperty identifiableItem, String source) {
         return IdentifiableTooltipBuilder.buildFromItemStack(itemStack, identifiableItem, source);
     }
 
     public CraftedTooltipBuilder buildNew(CraftedItemProperty craftedItemProperty, String source) {
         return CraftedTooltipBuilder.buildNewItem(craftedItemProperty, source);
-    }
-
-    public TooltipBuilder fromParsedItemStack(ItemStack itemStack, IdentifiableItemProperty itemInfo) {
-        return IdentifiableTooltipBuilder.fromParsedItemStack(itemStack, itemInfo);
     }
 
     public TooltipBuilder fromParsedItemStack(ItemStack itemStack, CraftedItemProperty craftedItemProperty) {

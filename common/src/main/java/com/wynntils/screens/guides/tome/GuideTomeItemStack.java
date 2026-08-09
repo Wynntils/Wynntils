@@ -52,8 +52,7 @@ public class GuideTomeItemStack extends GuideItemStack {
         Optional<TomeItem> tomeItemOpt = Models.Item.asWynnItem(this, TomeItem.class);
         if (tomeItemOpt.isEmpty()) return;
         TomeItem tomeItem = tomeItemOpt.get();
-        tomeItem.getData()
-                .getOrCalculate(WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(tomeItem, true, false));
+        tomeItem.getData().getOrCalculate(WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(tomeItem));
         this.generatedTooltip = TooltipUtils.getWynnItemTooltip(
                 this, tomeItem, getGuideFooterWidth(tomeInfo.metaInfo().obtainInfo()));
     }

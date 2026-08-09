@@ -103,9 +103,8 @@ public class FakeItemStack extends ItemStack {
                         .getOrCalculate(
                                 WynnItemData.TOOLTIP_KEY,
                                 () -> useBackingTooltip
-                                        ? Handlers.Tooltip.buildFromItemStack(
-                                                itemStack, identifiableItem, false, true, source)
-                                        : Handlers.Tooltip.buildNew(identifiableItem, false, true, source));
+                                        ? Handlers.Tooltip.buildFromItemStack(itemStack, identifiableItem, source)
+                                        : Handlers.Tooltip.buildNew(identifiableItem, source));
 
             } else if (wynnItem instanceof CraftedItemProperty craftedItemProperty) {
                 tooltipBuilder = wynnItem.getData()
