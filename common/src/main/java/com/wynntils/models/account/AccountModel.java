@@ -129,11 +129,20 @@ public final class AccountModel extends Model {
     }
 
     public void scanRankInfo(boolean forceParseUnexpired) {
+        scanRankInfo(forceParseUnexpired, null);
+    }
+
+    public void scanRankInfo(boolean forceParseUnexpired, Runnable onComplete) {
         scanRankInfoForceParseUnexpired = forceParseUnexpired;
 
         WynntilsMod.info("Scheduling rank info query");
         QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Rank Info Query");
-        queryBuilder.onError(msg -> WynntilsMod.warn("Error querying Rank Info: " + msg));
+        queryBuilder.onError(msg -> {
+            WynntilsMod.warn("Error querying Rank Info: " + msg);
+            if (onComplete != null) {
+                onComplete.run();
+            }
+        });
 
         // Open compass/character menu
         queryBuilder.then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
@@ -153,10 +162,20 @@ public final class AccountModel extends Model {
                     + (silverbullExpiresAt.get() - System.currentTimeMillis()) + " ms left)");
             scanRankInfoPending = false;
             scanRankInfoAlreadyScanned = true;
+            if (onComplete != null) {
+                onComplete.run();
+            }
             return;
         }
 
-        queryBuilder.build().executeQuery();
+        queryBuilder
+                .execute(() -> {
+                    if (onComplete != null) {
+                        onComplete.run();
+                    }
+                })
+                .build()
+                .executeQuery();
         scanRankInfoPending = false;
         scanRankInfoAlreadyScanned = true;
     }

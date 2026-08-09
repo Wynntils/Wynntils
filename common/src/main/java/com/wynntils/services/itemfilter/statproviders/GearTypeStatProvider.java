@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
@@ -20,6 +20,11 @@ public class GearTypeStatProvider extends ItemStatProvider<String> {
 
         return Optional.of(
                 EnumUtils.toNiceString(gearTypeItemProperty.getGearType().name()));
+    }
+
+    @Override
+    public Optional<String> getGuideCategory() {
+        return Optional.of("Fixed Stats");
     }
 
     @Override

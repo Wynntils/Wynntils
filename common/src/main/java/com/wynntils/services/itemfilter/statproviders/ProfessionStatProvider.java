@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
@@ -33,6 +33,11 @@ public class ProfessionStatProvider extends ItemStatProvider<Boolean> {
     @Override
     public String getDescription() {
         return getTranslation("description", professionType.getDisplayName());
+    }
+
+    @Override
+    public Optional<String> getGuideCategory() {
+        return Optional.of("Profession Info");
     }
 
     @Override

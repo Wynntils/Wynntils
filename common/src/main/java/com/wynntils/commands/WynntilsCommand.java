@@ -23,6 +23,7 @@ import com.wynntils.screens.secrets.SecretsScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.services.athena.type.UpdateResult;
 import com.wynntils.utils.FileUtils;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -431,8 +432,27 @@ public class WynntilsCommand extends Command {
     }
 
     private int rescan(CommandContext<CommandSourceStack> context) {
-        Models.Character.scanCharacterInfo();
-        Models.Account.scanRankInfo(true);
+        McUtils.sendWynntilsPrefixMessage(
+                Component.translatable("command.wynntils.rescan.startText").withColor(CommonColors.YELLOW.asInt()));
+
+        McUtils.player().closeContainer();
+
+        // This should probably be changed to a function interface if more were to be added to it.
+        Managers.TickScheduler.scheduleNextTick(() -> {
+            Models.Character.scanCharacterInfo(() -> {
+                Models.Account.scanRankInfo(true, () -> {
+                    Models.Aspect.clearEquippedAspectsAndRescan(
+                            WynntilsMod::info,
+                            McUtils::sendErrorToClient,
+                            aspectComplete -> Models.AbilityTree.clearUnlockedAbilitesAndRescan(
+                                    WynntilsMod::info,
+                                    McUtils::sendErrorToClient,
+                                    onComplete -> McUtils.sendWynntilsPrefixMessage(
+                                            Component.translatable("command.wynntils.rescan.endText")
+                                                    .withColor(CommonColors.GREEN.asInt()))));
+                });
+            });
+        });
         return 1;
     }
 

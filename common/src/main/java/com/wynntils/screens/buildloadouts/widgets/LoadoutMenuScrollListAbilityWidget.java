@@ -41,12 +41,14 @@ public class LoadoutMenuScrollListAbilityWidget extends AbstractWidget implement
 
         AbilityTreeSkillNode abilityTreeSkillNode = Models.AbilityTree.getNodeFromNameAndClass(
                 this.text.getString(), parent.getSelectedLoadout().getClassType());
-        abilityItemStack = new AbilityTreeNodeItemStack(
-                abilityTreeSkillNode,
-                parent.getSelectedLoadout().hasAbilityTree()
-                        ? parent.getSelectedLoadout().abilityTree()
-                        : null);
-        ultimateAbility = abilityTreeSkillNode.abilityTreeNodeType().isUltimate();
+
+        abilityItemStack = parent.getSelectedLoadout().hasAbilityTree() && abilityTreeSkillNode != null
+                ? new AbilityTreeNodeItemStack(
+                        abilityTreeSkillNode, parent.getSelectedLoadout().abilityTree())
+                : ItemStack.EMPTY;
+
+        ultimateAbility = abilityTreeSkillNode != null
+                && abilityTreeSkillNode.abilityTreeNodeType().isUltimate();
     }
 
     @Override

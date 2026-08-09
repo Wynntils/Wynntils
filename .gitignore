@@ -10,7 +10,7 @@ classes/
 
 # Data generated while running Minecraft or tests
 run/
-.devauth/microsoft_accounts.json
+.devauth/
 */logs/*
 
 # IDEs
