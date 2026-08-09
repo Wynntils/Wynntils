@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CommonStyles;
 import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
+import com.wynntils.core.text.fonts.wynnfonts.TooltipIdentificationMeterFont;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
 import com.wynntils.handlers.tooltip.TooltipLayout;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
@@ -42,10 +43,8 @@ import java.util.Locale;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public final class CraftedTooltipBuilder extends TooltipBuilder {
@@ -56,8 +55,6 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
             new GearEmblem(GearEmblemShape.STICKER, CRAFTED_EMBLEM_VARIANT).getFrameCode();
     private static final String CRAFTED_CONSUMABLE_FRAME =
             new GearEmblem(GearEmblemShape.HEXAGON, CRAFTED_EMBLEM_VARIANT).getFrameCode();
-    private static final FontDescription IDENTIFICATION_METER_FONT =
-            new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/identification/meter"));
 
     private final CraftedItemProperty craftedItem;
     private final List<Component> header;
@@ -279,6 +276,7 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
                     .append(Component.literal(" Health").withStyle(CommonStyles.LANGUAGE))));
         }
 
+        lines.add(new TooltipLine.Fixed(buildDurabilityLine(item)));
         item.getAttackSpeed()
                 .ifPresent(speed -> lines.add(new TooltipLine.Fixed(Component.empty()
                         .append(withWhiteShadow(Component.literal("\uE007")
@@ -297,7 +295,6 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
         if (!item.getDefences().isEmpty()) {
             lines.add(new TooltipLine.Fixed(buildDefenceLine(item.getDefences())));
         }
-        lines.add(new TooltipLine.Fixed(buildDurabilityLine(item)));
 
         lines.add(new TooltipLine.Centered(divider()));
         lines.addAll(buildGearRequirements(item));
@@ -420,8 +417,12 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
     }
 
     private Component buildDurabilityLine(CraftedGearItem item) {
-        MutableComponent line =
-                buildMeter(item.getDurability().current(), item.getDurability().max());
+        MutableComponent line = Component.empty()
+                .append(TooltipIdentificationMeterFont.buildCounterSingleLayerMeter(
+                        item.getDurability(),
+                        CustomColor.fromInt(CRAFTED_ACCENT_COLOR),
+                        CustomColor.fromChatFormatting(ChatFormatting.DARK_GRAY),
+                        ""));
         line.append(Component.literal(" Durability " + item.getDurability().current() + "/"
                         + item.getDurability().max())
                 .withStyle(Style.EMPTY
@@ -431,8 +432,12 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
     }
 
     private Component buildChargesLine(CraftedConsumableItem item) {
-        MutableComponent line =
-                buildMeter(item.getUses().current(), item.getUses().max());
+        MutableComponent line = Component.empty()
+                .append(TooltipIdentificationMeterFont.buildCounterSingleLayerMeter(
+                        item.getUses(),
+                        CustomColor.fromInt(CRAFTED_ACCENT_COLOR),
+                        CustomColor.fromChatFormatting(ChatFormatting.DARK_GRAY),
+                        ""));
         line.append(Component.literal(
                         " " + item.getUses().current() + "/" + item.getUses().max() + " ")
                 .withStyle(CommonStyles.LANGUAGE));
@@ -441,22 +446,6 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
                         .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
                         .withColor(ChatFormatting.GRAY)));
         return line;
-    }
-
-    private MutableComponent buildMeter(int current, int maximum) {
-        int fill = maximum <= 0
-                ? 0
-                : current >= maximum ? 35 : Math.clamp((int) Math.floor(current * 35d / maximum), 0, 35);
-        return Component.literal("\uE023\uDAFF\uDFF7")
-                .withStyle(Style.EMPTY
-                        .withFont(IDENTIFICATION_METER_FONT)
-                        .withColor(ChatFormatting.DARK_GRAY)
-                        .withShadowColor(0xffffff))
-                .append(Component.literal(String.valueOf((char) ('\uE000' + fill)))
-                        .withStyle(Style.EMPTY
-                                .withFont(IDENTIFICATION_METER_FONT)
-                                .withColor(CRAFTED_ACCENT_COLOR)
-                                .withShadowColor(0xffffff)));
     }
 
     private List<TooltipLine> buildGearRequirements(CraftedGearItem item) {
