@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
@@ -8,7 +8,6 @@ import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.items.properties.EmeraldValuedItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.items.properties.NumberedTierItemProperty;
-import com.wynntils.utils.MathUtils;
 
 public class EmeraldPouchItem extends GameItem
         implements NamedItemProperty, NumberedTierItemProperty, EmeraldValuedItemProperty {
@@ -58,7 +57,7 @@ public class EmeraldPouchItem extends GameItem
 
     @Override
     public String getName() {
-        return "Emerald Pouch [Tier " + MathUtils.toRoman(tier) + "]";
+        return "Emerald Pouch [Tier " + tier + "]";
     }
 
     @Override

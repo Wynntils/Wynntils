@@ -103,7 +103,7 @@ public class MountKeybindFeature extends Feature {
 
         if (event.getVehicle() == null && prevCameraType != null) {
             restoreCamera();
-        } else {
+        } else if (summonTick != -1) {
             prevCameraType = McUtils.options().getCameraType();
             McUtils.options().setCameraType(CameraType.THIRD_PERSON_BACK);
         }

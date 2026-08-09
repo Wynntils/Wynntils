@@ -22,15 +22,7 @@ import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.screens.activities.WynntilsContentBookScreen;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
-import com.wynntils.screens.guides.WynntilsGuidesListScreen;
-import com.wynntils.screens.guides.aspect.WynntilsAspectGuideScreen;
-import com.wynntils.screens.guides.charm.WynntilsCharmGuideScreen;
-import com.wynntils.screens.guides.emerald.WynntilsEmeraldGuideScreen;
-import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
-import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
-import com.wynntils.screens.guides.misc.WynntilsMiscGuideScreen;
-import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
-import com.wynntils.screens.guides.tome.WynntilsTomeGuideScreen;
+import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
@@ -64,40 +56,8 @@ public class WynntilsContentBookFeature extends Feature {
             () -> McUtils.mc().setScreen(OverlayManagementScreen.create(null)));
 
     @RegisterKeyBind
-    private final KeyBind openPowderGuide = KeyBindDefinition.OPEN_POWDER_GUIDE.create(
-            () -> WynntilsMenuScreenBase.openBook(WynntilsPowderGuideScreen.create()));
-
-    @RegisterKeyBind
-    private final KeyBind openItemGuide = KeyBindDefinition.OPEN_ITEM_GUIDE.create(
-            () -> WynntilsMenuScreenBase.openBook(WynntilsItemGuideScreen.create()));
-
-    @RegisterKeyBind
-    private final KeyBind openIngredientGuide = KeyBindDefinition.OPEN_INGREDIENT_GUIDE.create(
-            () -> WynntilsMenuScreenBase.openBook(WynntilsIngredientGuideScreen.create()));
-
-    @RegisterKeyBind
-    private final KeyBind openCharmGuide = KeyBindDefinition.OPEN_CHARM_GUIDE.create(
-            () -> WynntilsMenuScreenBase.openBook(WynntilsCharmGuideScreen.create()));
-
-    @RegisterKeyBind
-    private final KeyBind openTomeGuide = KeyBindDefinition.OPEN_TOME_GUIDE.create(
-            () -> WynntilsMenuScreenBase.openBook(WynntilsTomeGuideScreen.create()));
-
-    @RegisterKeyBind
-    private final KeyBind openAspectGuide = KeyBindDefinition.OPEN_ASPECT_GUIDE.create(
-            () -> WynntilsMenuScreenBase.openBook(WynntilsAspectGuideScreen.create()));
-
-    @RegisterKeyBind
-    private final KeyBind openEmeraldGuide = KeyBindDefinition.OPEN_EMERALD_GUIDE.create(
-            () -> WynntilsMenuScreenBase.openBook(WynntilsEmeraldGuideScreen.create()));
-
-    @RegisterKeyBind
-    private final KeyBind openMiscGuide = KeyBindDefinition.OPEN_MISC_GUIDE.create(
-            () -> WynntilsMenuScreenBase.openBook(WynntilsMiscGuideScreen.create()));
-
-    @RegisterKeyBind
     private final KeyBind openGuidesList = KeyBindDefinition.OPEN_GUIDES_LIST.create(
-            () -> WynntilsMenuScreenBase.openBook(WynntilsGuidesListScreen.create()));
+            () -> WynntilsMenuScreenBase.openBook(WynntilsGuideScreen.create(null)));
 
     @Persisted
     private final Config<ShiftBehavior> shiftBehaviorConfig = new Config<>(ShiftBehavior.DISABLED_IF_SHIFT_HELD);

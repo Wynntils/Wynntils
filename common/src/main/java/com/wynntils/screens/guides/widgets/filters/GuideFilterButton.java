@@ -4,16 +4,10 @@
  */
 package com.wynntils.screens.guides.widgets.filters;
 
-import com.google.common.collect.Lists;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
-import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -24,39 +18,14 @@ public abstract class GuideFilterButton<T extends ItemStatProvider<?>> extends A
 
     protected boolean state;
 
-    protected GuideFilterButton(int x, int y, Texture texture) {
-        super(x, y, 16, 16, Component.empty());
+    protected GuideFilterButton(int x, int y, int width, int height, Texture texture) {
+        super(x, y, width, height, Component.empty());
 
         this.texture = texture;
     }
 
-    @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics, texture, getX(), getY());
-
-        if (!isHovered && !state) return;
-
-        RenderUtils.drawRect(
-                guiGraphics,
-                (state ? CommonColors.ORANGE : CommonColors.WHITE).withAlpha(isHovered ? 0.7f : 0.5f),
-                getX(),
-                getY(),
-                getWidth(),
-                getHeight());
-
-        handleCursor(guiGraphics);
-
-        if (isHovered) {
-            guiGraphics.setTooltipForNextFrame(
-                    Lists.transform(
-                            ComponentUtils.wrapTooltips(
-                                    List.of(Component.translatable(
-                                            "screens.wynntils.wynntilsGuides.filterWidget.tooltip", getFilterName())),
-                                    200),
-                            Component::getVisualOrderText),
-                    mouseX,
-                    mouseY);
-        }
+    protected GuideFilterButton(int x, int y, Texture texture) {
+        this(x, y, 16, 16, texture);
     }
 
     @Override
@@ -69,8 +38,6 @@ public abstract class GuideFilterButton<T extends ItemStatProvider<?>> extends A
     protected abstract void updateStateFromQuery(ItemSearchQuery searchQuery);
 
     protected abstract StatProviderAndFilterPair getFilterPair(T provider);
-
-    protected abstract String getFilterName();
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}

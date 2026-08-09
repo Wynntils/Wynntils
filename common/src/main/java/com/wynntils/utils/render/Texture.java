@@ -117,6 +117,13 @@ public enum Texture {
     EMOTE_WHEEL_STYLE_BUTTON_HOVERED("emote_wheel/button_hovered.png", 32, 32),
     // endregion
 
+    // region Guide
+    GUIDE_BACKGROUND("guide/guide_background.png", 176, 78, 6, 13, 17, 0),
+    GUIDE_TITLE("guide/guide_title.png", 160, 32),
+    GUIDE_WIDGET_BACKGROUND("guide/widget_background.png", 16, 16, 4, 4, 4, 4),
+    GUIDE_WIDGET_BACKGROUND_HOVERED("guide/widget_background_hovered.png", 16, 16, 4, 4, 4, 4),
+    // endregion
+
     // region Guild Log
     ECONOMY_LOG_ICON("guild_log/economy_log_icon.png", 16, 16),
     GENERAL_LOG_ICON("guild_log/general_log_icon.png", 16, 16),
@@ -216,6 +223,8 @@ public enum Texture {
     DAGGER_FILTER_ICON("icons/guide_filters/dagger_filter_icon.png", 16, 16),
     EXPERTISE_TOME_FILTER_ICON("icons/guide_filters/expertise_tome_filter_icon.png", 16, 16),
     FABLED_FILTER_ICON("icons/guide_filters/fabled_filter_icon.png", 16, 16),
+    FARMING_FILTER_ICON("icons/guide_filters/farming_filter_icon.png", 16, 16),
+    FISHING_FILTER_ICON("icons/guide_filters/fishing_filter_icon.png", 16, 16),
     GUILD_TOME_FILTER_ICON("icons/guide_filters/guild_tome_filter_icon.png", 16, 16),
     HELMET_FILTER_ICON("icons/guide_filters/helmet_filter_icon.png", 16, 16),
     JEWELING_FILTER_ICON("icons/guide_filters/jeweling_filter_icon.png", 16, 16),
@@ -223,6 +232,7 @@ public enum Texture {
     LEGGINGS_FILTER_ICON("icons/guide_filters/leggings_filter_icon.png", 16, 16),
     LOOTRUN_TOME_FILTER_ICON("icons/guide_filters/lootrun_tome_filter_icon.png", 16, 16),
     MARATHON_TOME_FILTER_ICON("icons/guide_filters/marathon_tome_filter_icon.png", 16, 16),
+    MINING_FILTER_ICON("icons/guide_filters/mining_filter_icon.png", 16, 16),
     MYSTICISM_TOME_FILTER_ICON("icons/guide_filters/mysticism_tome_filter_icon.png", 16, 16),
     MYTHIC_FILTER_ICON("icons/guide_filters/mythic_filter_icon.png", 16, 16),
     NECKLACE_FILTER_ICON("icons/guide_filters/necklace_filter_icon.png", 16, 16),
@@ -239,8 +249,9 @@ public enum Texture {
     TIER_3_FILTER_ICON("icons/guide_filters/tier_3_filter_icon.png", 16, 16),
     UNIQUE_FILTER_ICON("icons/guide_filters/unique_filter_icon.png", 16, 16),
     WAND_FILTER_ICON("icons/guide_filters/wand_filter_icon.png", 16, 16),
-    WEAPON_TOME_FILTER_ICON("icons/guide_filters/weapon_tome_filter_icon.png", 16, 16),
     WEAPONSMITHING_FILTER_ICON("icons/guide_filters/weaponsmithing_filter_icon.png", 16, 16),
+    WEAPON_TOME_FILTER_ICON("icons/guide_filters/weapon_tome_filter_icon.png", 16, 16),
+    WOODCUTTING_FILTER_ICON("icons/guide_filters/woodcutting_filter_icon.png", 16, 16),
     WOODWORKING_FILTER_ICON("icons/guide_filters/woodworking_filter_icon.png", 16, 16),
 
     // Trade Market

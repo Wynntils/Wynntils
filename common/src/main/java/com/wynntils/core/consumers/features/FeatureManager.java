@@ -173,6 +173,7 @@ import com.wynntils.features.utilities.ValuablesProtectionFeature;
 import com.wynntils.features.utilities.XpGainMessageFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
+import com.wynntils.features.wynntils.CharacterInfoIndicatorFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
 import com.wynntils.features.wynntils.DataCrowdSourcingFeature;
 import com.wynntils.features.wynntils.DownloadProgressFeature;
@@ -433,6 +434,7 @@ public final class FeatureManager extends Manager {
         // region wynntils
         registerFeature(new BetaWarningFeature());
         registerFeature(new ChangelogFeature());
+        registerFeature(new CharacterInfoIndicatorFeature());
         registerFeature(new CommandsFeature());
         registerFeature(new DataCrowdSourcingFeature());
         registerFeature(new DownloadProgressFeature());

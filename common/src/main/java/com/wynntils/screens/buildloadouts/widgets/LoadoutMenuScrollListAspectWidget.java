@@ -6,6 +6,7 @@ package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.aspects.type.AspectInfo;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.screens.buildloadouts.type.AspectItemStack;
 import com.wynntils.utils.colors.CommonColors;
@@ -40,9 +41,12 @@ public class LoadoutMenuScrollListAspectWidget extends AbstractWidget implements
         this.parent = parent;
         this.aspectTexture = parent.getSelectedLoadout().getAspectTexture();
         this.aspectFlameTexture = parent.getSelectedLoadout().getFlameTexture();
-        this.tooltipItem = new AspectItemStack(
-                Models.Aspect.getAspectInfo(this.text.getString()),
-                Models.Aspect.getAspectTierByName(this.text.getString()).orElse(1));
+        AspectInfo aspectInfo = Models.Aspect.getAspectInfo(this.text.getString());
+        this.tooltipItem = aspectInfo == null
+                ? ItemStack.EMPTY
+                : new AspectItemStack(
+                        aspectInfo,
+                        Models.Aspect.getAspectTierByName(this.text.getString()).orElse(1));
     }
 
     @Override
