@@ -1,7 +1,19 @@
+Add Command Expansion
+- Added `/bug` and aliases `/bugs`, `/issue` and `/reportbug`
+- Added `/helmet` and `/helmets` aliases to `/hats`
+- Added `/chestplate` and alias `/chestplates`
+- Added `/leggings` and alias `/legging`
+- Added `/boots` and alias `/boot`
+- Added `/silverbull` alias to `/use`
+
+Main Map
+- Exchange Merchants now show on the map
+
+Reduced queue delay between messages sent by Wynntils features from 5 seconds to 1 second
+
 Fixes
-- Fix cases where loadouts were not carried over to version 4.2.4+
-  - If you replace your storage file with a backup it should carry them over correctly
-- Fix ability tree and aspect query sometimes failing
-- Fix build loadout screen crash when saving wrong class
-- Fixed outdated ability tree message showing when not outdated
-- Fix parsing of whole-thousand mount potential values
+- Auto 3rd person on mount will no longer trigger when opening crates or doing emotes
+- Fixed ability tree and aspect scan failing when aspects are not unlocked
+- Fixed issue with duplicate ids in build loadouts causing screen crashes
+- Fixed x-pm set guide entry name
+- Fixed beacons not becoming transparent when nearby
