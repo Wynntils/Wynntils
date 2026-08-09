@@ -364,8 +364,15 @@ public final class MainMapScreen extends AbstractMapScreen {
             if (hoveredFeature instanceof MapLocation hoveredLocation) {
                 McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
 
+                // Check if this is an user marked feature
                 if (Services.UserMarker.isUserMarkedFeature(hoveredLocation)) {
                     Services.UserMarker.removeUserMarkedFeature(hoveredLocation);
+                    return true;
+                }
+
+                // Check if this is a user waypoint
+                if (Services.UserMarker.isMarkerAtLocation(hoveredLocation.getLocation())) {
+                    Services.UserMarker.removeMarkerAtLocation(hoveredLocation.getLocation());
                     return true;
                 }
 
@@ -438,7 +445,10 @@ public final class MainMapScreen extends AbstractMapScreen {
         if (markedLocations.isEmpty()) return;
 
         // Invalidate the focused marker if it's not marked anymore
-        if (!Services.UserMarker.isUserMarkedFeature(focusedMarker)) {
+        boolean stillMarked = focusedMarker != null
+                && (Services.UserMarker.isUserMarkedFeature(focusedMarker)
+                        || Services.UserMarker.isMarkerAtLocation(focusedMarker.getLocation()));
+        if (!stillMarked) {
             focusedMarker = null;
         }
 
