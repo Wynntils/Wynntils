@@ -163,7 +163,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "8c552bac2070185d27da5603503cd9d0",
+    "md5": "d48b6fd625bf9f70f446c096d32f95cb",
     "path": "Reference/gear.json",
     "url": "https://cdn.wynntils.com/static/Reference/gear.json"
   },
@@ -193,7 +193,7 @@
   },
   {
     "id": "dataStaticIngredients",
-    "md5": "64ae031a3e6d10e8141db418eb1ad92a",
+    "md5": "476012d10a3b2cb38b014949a94336a5",
     "path": "Reference/ingredients.json",
     "url": "https://cdn.wynntils.com/static/Reference/ingredients.json"
   },
@@ -259,7 +259,7 @@
   },
   {
     "id": "dataStaticMaterials",
-    "md5": "e07a10a953d1ac3e3346906ba9a68778",
+    "md5": "0df3488d80a2209ac32ed0ee4094a09c",
     "path": "Reference/materials.json",
     "url": "https://cdn.wynntils.com/static/Reference/materials.json"
   },
@@ -289,7 +289,7 @@
   },
   {
     "id": "dataStaticRecipes",
-    "md5": "391e48e4f03e6b0f3e282235af5a1c12",
+    "md5": "26dc3a3616fed14d6b7263d403a7922a",
     "path": "Reference/recipes.json",
     "url": "https://cdn.wynntils.com/static/Reference/recipes.json"
   },
@@ -319,7 +319,7 @@
   },
   {
     "id": "dataStaticSets",
-    "md5": "c6a30d7c6ce5d9c53364991ad250a2af",
+    "md5": "3ffede8e051e430f5422279ece930480",
     "path": "Reference/sets.json",
     "url": "https://cdn.wynntils.com/static/Reference/sets.json"
   },
@@ -343,7 +343,7 @@
   },
   {
     "id": "dataStaticTomes",
-    "md5": "95df03b9227f77efa622fe52070412e1",
+    "md5": "2bcb8ae12b4928b3fa25a462c8a545f3",
     "path": "Reference/tomes.json",
     "url": "https://cdn.wynntils.com/static/Reference/tomes.json"
   },
