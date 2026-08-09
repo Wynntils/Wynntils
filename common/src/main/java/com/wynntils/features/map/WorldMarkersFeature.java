@@ -28,6 +28,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.colors.WynncraftShaderColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.render.CustomBeaconRenderer;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -178,7 +179,7 @@ public class WorldMarkersFeature extends Feature {
             long gameTime = McUtils.mc().level.getGameTime();
             float animationTime = (gameTime % 40) + partial;
 
-            BeaconRenderer.submitBeaconBeam(
+            CustomBeaconRenderer.submitBeaconBeam(
                     poseStack,
                     event.getSubmitNodeStorage(),
                     BeaconRenderer.BEAM_LOCATION,
