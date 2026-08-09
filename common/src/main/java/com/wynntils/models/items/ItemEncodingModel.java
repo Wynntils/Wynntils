@@ -9,7 +9,10 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.items.encoding.ItemTransformerRegistry;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
+import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.List;
@@ -61,8 +64,11 @@ public final class ItemEncodingModel extends Model {
         String itemName = "";
 
         // Crafted names stay as ordinary quoted chat text after the encoded item.
-        if (shareItemName.get() && wynnItem instanceof CraftedItemProperty craftedItemProperty) {
-            itemName = " \"" + craftedItemProperty.getName() + "\"";
+        if (shareItemName.get()
+                && !(wynnItem instanceof GearItem)
+                && (wynnItem instanceof CraftedItemProperty || wynnItem instanceof MountItem)
+                && wynnItem instanceof NamedItemProperty namedItemProperty) {
+            itemName = " \"" + namedItemProperty.getName() + "\"";
         }
 
         return encodedItem.toUtf16String() + itemName;

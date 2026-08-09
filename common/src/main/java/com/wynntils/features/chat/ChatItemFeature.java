@@ -27,6 +27,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
@@ -35,6 +36,7 @@ import com.wynntils.models.items.properties.ShinyItemProperty;
 import com.wynntils.screens.itemsharing.ItemSharingScreen;
 import com.wynntils.screens.itemsharing.SavedItemsScreen;
 import com.wynntils.utils.EncodedByteBuffer;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
@@ -130,6 +132,14 @@ public class ChatItemFeature extends Feature {
 
             if (decodedItem instanceof NamedItemProperty namedItemProperty) {
                 name = namedItemProperty.getName();
+
+                if (decodedItem instanceof MountItem mountItem) {
+                    name = StringUtils.toPossessive(mountItem.getName())
+                            + " "
+                            + (mountItem.isSummonItem()
+                                    ? mountItem.getMountType().getSummonItemName()
+                                    : mountItem.getMountType().getMountItemName());
+                }
             }
         }
 
@@ -259,6 +269,13 @@ public class ChatItemFeature extends Feature {
                                 ComponentUtils.makeObfuscated("Defective " + nameText.getString(), 0, 0));
                     }
                 }
+            }
+
+            if (wynnItem instanceof MountItem mountItem) {
+                nameText = StyledText.fromString(StringUtils.toPossessive(mountItem.getName()) + " "
+                        + (mountItem.isSummonItem()
+                                ? mountItem.getMountType().getSummonItemName()
+                                : mountItem.getMountType().getMountItemName()));
             }
         }
 
