@@ -510,10 +510,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                                     .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_IDENTIFICATION_MAJOR_FONT)))
                             .append(Component.literal("\uDB00\uDC02"))
                             .append(Component.literal(major.name() + ": "))
-                            .append(major.lore()
-                                    .map(part -> part.withStyle(
-                                            style -> style.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)))
-                                    .getComponent());
+                            .append(major.lore().getComponent());
                     ComponentUtils.splitComponent(text, TOOLTIP_MIN_WIDTH).stream()
                             .map(TooltipLine.Fixed::new)
                             .forEach(lines::add);
