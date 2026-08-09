@@ -136,8 +136,7 @@ public final class MapFeatureRenderer {
 
             if (circularMask != null) {
                 // Clip the icon to the mask per-pixel instead of drawing it in full, so an icon
-                // near the mask boundary fades out smoothly like the map tile itself does, instead
-                // of popping fully visible/invisible based on its center point.
+                // near the mask boundary fades out smoothly
                 RenderUtils.drawCircularMaskedTexturedRect(
                         guiGraphics,
                         icon.get().getIdentifier(),

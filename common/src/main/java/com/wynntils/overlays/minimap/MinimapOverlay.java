@@ -291,8 +291,7 @@ public class MinimapOverlay extends Overlay {
         Vector2f rotationVector = new Vector2f(cosRotationRadians, sinRotationRadians);
 
         // Non-null only for the circular mask type - MapFeatureRenderer then clips each feature's
-        // icon to this mask per-pixel, so it fades out smoothly at the boundary instead of the
-        // feature list being pre-filtered by center point (which pops icons fully in/out of view).
+        // icon to this mask per-pixel, so it fades out smoothly at the boundary
         MapRenderer.CircleMask circularMask = maskType.get() == MapMaskType.CIRCLE
                 ? new MapRenderer.CircleMask(centerX, centerZ, width / 2f, height / 2f)
                 : null;
