@@ -4,7 +4,6 @@
  */
 package com.wynntils.handlers.tooltip.impl.crafted;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CommonStyles;
 import com.wynntils.core.text.fonts.CommonFonts;
@@ -33,7 +32,6 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
@@ -65,7 +63,6 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
     private final List<Component> header;
     private final List<Component> footer;
     private final List<Component> sourceLines;
-    private final boolean synthetic;
     private final Map<TooltipKey, List<Component>> cache = new HashMap<>();
 
     private CraftedTooltipBuilder(
@@ -75,12 +72,11 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
             List<Component> sourceLines,
             String source,
             boolean synthetic) {
-        super(header, footer, source);
+        super(header, footer, source, synthetic);
         this.craftedItem = craftedItem;
         this.header = List.copyOf(header);
         this.footer = List.copyOf(footer);
         this.sourceLines = List.copyOf(sourceLines);
-        this.synthetic = synthetic;
     }
 
     public static CraftedTooltipBuilder buildNewItem(CraftedItemProperty craftedItem, String source) {
@@ -307,7 +303,7 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
         lines.addAll(buildGearRequirements(item));
         lines.add(new TooltipLine.Centered(divider()));
         lines.addAll(CraftedTooltipIdentifications.buildLines(item, currentClass, decorator, style));
-        lines.addAll(buildPaginator(item));
+        lines.addAll(buildPaginationLines(item));
         return List.copyOf(lines);
     }
 
@@ -542,27 +538,6 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
     private MutableComponent requirementIcon(boolean fulfilled) {
         return withWhiteShadow(Component.literal((fulfilled ? "\uE006" : "\uE007") + "\uDAFF\uDFFF")
                 .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_REQUIREMENT_SPRITE_FONT)));
-    }
-
-    private List<TooltipLine> buildPaginator(CraftedGearItem item) {
-        int currentPage = item.currentPage();
-        MutableComponent keyPrompt = Component.literal(synthetic ? "\uE001" : "\uF002")
-                .withStyle(Style.EMPTY.withFont(
-                        synthetic ? CommonFonts.WYNNTILS_TOOLTIP_ICONS : CommonFonts.CHAT_TILE_FONT))
-                .append(Component.literal("\uDAFF\uDF98\uDB00\uDC3F").withStyle(CommonStyles.LANGUAGE));
-        int keyPromptAdvance = McUtils.mc().font.width(keyPrompt);
-        MutableComponent paginator = Component.empty().append(keyPrompt);
-        for (int page = 0; page < 3; page++) {
-            paginator.append(Component.literal("\uE000")
-                    .withStyle(Style.EMPTY
-                            .withFont(CommonFonts.TOOLTIP_PAGE_FONT)
-                            .withColor(page == currentPage ? 0xffea80 : 0x455449)
-                            .withShadowColor(0xffffff)));
-            if (page < 2) paginator.append(Component.literal("\uDB00\uDC04").withStyle(CommonStyles.LANGUAGE));
-        }
-        paginator.append(Component.literal(Managers.Font.calculateOffset(0, keyPromptAdvance))
-                .withStyle(CommonStyles.SPACE));
-        return List.of(new TooltipLine.Centered(paginator), new TooltipLine.Fixed(Component.empty()));
     }
 
     private static Component divider() {

@@ -4,7 +4,6 @@
  */
 package com.wynntils.handlers.tooltip.impl.identifiable;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.CommonStyles;
@@ -47,7 +46,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
@@ -74,7 +72,6 @@ import net.minecraft.world.item.ItemStack;
 public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
     private static final int TOOLTIP_MIN_WIDTH = 140;
     private final IdentifiableItemProperty<T, U> itemInfo;
-    private final boolean synthetic;
     private final List<Component> layoutSourceLines;
     private final Map<TooltipKey, List<Component>> cache = new HashMap<>();
 
@@ -84,9 +81,8 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             List<Component> footer,
             String source,
             boolean synthetic) {
-        super(header, footer, source);
+        super(header, footer, source, synthetic);
         this.itemInfo = itemInfo;
-        this.synthetic = synthetic;
         List<Component> sourceLines = new ArrayList<>(header.size() + footer.size());
         sourceLines.addAll(header);
         sourceLines.addAll(footer);
@@ -216,6 +212,12 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             reroll.add(1, new TooltipLine.Fixed(Component.empty()));
         }
 
+        List<TooltipLine> paginationLines = new ArrayList<>();
+
+        if (item instanceof PagedItemProperty pagedItem) {
+            paginationLines = buildPaginationLines(pagedItem);
+        }
+
         Sections sections = new Sections(
                 header,
                 buildWeights(item, options),
@@ -224,7 +226,7 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                 reroll,
                 stats,
                 majorId,
-                buildPaginator(item));
+                paginationLines);
 
         return TooltipLayout.align(sections.lines(tier, options.identificationDisplay()), minimumWidth);
     }
@@ -517,29 +519,6 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                     return lines;
                 })
                 .orElseGet(List::of);
-    }
-
-    private List<TooltipLine> buildPaginator(IdentifiableItemProperty<?, ?> item) {
-        if (!(item instanceof PagedItemProperty pagedItem)) return List.of();
-
-        int currentPage = pagedItem.currentPage();
-        MutableComponent keyPrompt = Component.literal(synthetic ? "\uE001" : "\uF002")
-                .withStyle(Style.EMPTY.withFont(
-                        synthetic ? CommonFonts.WYNNTILS_TOOLTIP_ICONS : CommonFonts.CHAT_TILE_FONT))
-                .append(Component.literal("\uDAFF\uDF98\uDB00\uDC3F").withStyle(CommonStyles.LANGUAGE));
-        int keyPromptAdvance = McUtils.mc().font.width(keyPrompt);
-        MutableComponent paginator = Component.empty().append(keyPrompt);
-        for (int page = 0; page < 3; page++) {
-            paginator.append(Component.literal("\uE000")
-                    .withStyle(Style.EMPTY
-                            .withFont(CommonFonts.TOOLTIP_PAGE_FONT)
-                            .withColor(page == currentPage ? 0xffea80 : 0x455449)
-                            .withShadowColor(0xffffff)));
-            if (page < 2) paginator.append(Component.literal("\uDB00\uDC04").withStyle(CommonStyles.LANGUAGE));
-        }
-        paginator.append(Component.literal(Managers.Font.calculateOffset(0, keyPromptAdvance))
-                .withStyle(CommonStyles.SPACE));
-        return List.of(new TooltipLine.Centered(paginator), new TooltipLine.Fixed(Component.empty()));
     }
 
     private Component buildNameLine(IdentifiableItemProperty<?, ?> item, TooltipOptions options) {

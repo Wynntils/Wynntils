@@ -33,13 +33,12 @@ import net.minecraft.network.chat.Style;
 public final class MountTooltipBuilder extends TooltipBuilder {
     private static final CustomColor MOUNT_INFO_COLOR = CustomColor.fromInt(0xe0e0e0);
     private static final CustomColor STAT_VALUE_COLOR = CustomColor.fromInt(0xacfac6);
-    private static final CustomColor METER_BACKGROUND_COLOR = CustomColor.fromInt(0xaaaaaa);
     private static final String DEFAULT_SPACE = "\uDAFF\uDFB9\uDB00\uDC4F";
 
     private final MountItem mountItem;
 
     private MountTooltipBuilder(MountItem mountItem, List<Component> header, List<Component> footer, String source) {
-        super(header, footer, source);
+        super(header, footer, source, true);
         this.mountItem = mountItem;
     }
 

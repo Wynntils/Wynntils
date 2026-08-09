@@ -4,15 +4,19 @@
  */
 package com.wynntils.handlers.tooltip;
 
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.text.CommonStyles;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
+import com.wynntils.handlers.tooltip.type.TooltipLine;
 import com.wynntils.handlers.tooltip.type.TooltipOptions;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.ItemWeightSource;
+import com.wynntils.models.items.properties.PagedItemProperty;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.mc.McUtils;
@@ -22,6 +26,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
 public abstract class TooltipBuilder {
@@ -31,12 +36,15 @@ public abstract class TooltipBuilder {
     private final List<Component> header;
     private final List<Component> footer;
     private final String source;
+    protected final boolean synthetic;
+
     private List<Component> tooltipLinesCache;
 
-    protected TooltipBuilder(List<Component> header, List<Component> footer, String source) {
+    protected TooltipBuilder(List<Component> header, List<Component> footer, String source, boolean synthetic) {
         this.header = List.copyOf(header);
         this.footer = List.copyOf(footer);
         this.source = source;
+        this.synthetic = synthetic;
     }
 
     public List<Component> getTooltipLines(ClassType currentClass) {
@@ -88,6 +96,27 @@ public abstract class TooltipBuilder {
                 .append(Component.literal(source)
                         .withStyle(style -> style.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
                                 .applyFormat(ChatFormatting.WHITE)));
+    }
+
+    protected List<TooltipLine> buildPaginationLines(PagedItemProperty item) {
+        int currentPage = item.currentPage();
+        MutableComponent keyPrompt = Component.literal(synthetic ? "\uE001" : "\uF002")
+                .withStyle(Style.EMPTY.withFont(
+                        synthetic ? CommonFonts.WYNNTILS_TOOLTIP_ICONS : CommonFonts.CHAT_TILE_FONT))
+                .append(Component.literal("\uDAFF\uDF98\uDB00\uDC3F").withStyle(CommonStyles.LANGUAGE));
+        int keyPromptAdvance = McUtils.mc().font.width(keyPrompt);
+        MutableComponent paginator = Component.empty().append(keyPrompt);
+        for (int page = 0; page < 3; page++) {
+            paginator.append(Component.literal("\uE000")
+                    .withStyle(Style.EMPTY
+                            .withFont(CommonFonts.TOOLTIP_PAGE_FONT)
+                            .withColor(page == currentPage ? 0xffea80 : 0x455449)
+                            .withShadowColor(0xffffff)));
+            if (page < 2) paginator.append(Component.literal("\uDB00\uDC04").withStyle(CommonStyles.LANGUAGE));
+        }
+        paginator.append(Component.literal(Managers.Font.calculateOffset(0, keyPromptAdvance))
+                .withStyle(CommonStyles.SPACE));
+        return List.of(new TooltipLine.Centered(paginator), new TooltipLine.Fixed(Component.empty()));
     }
 
     protected ChatFormatting getSourceColor() {
