@@ -4,6 +4,7 @@
  */
 package com.wynntils.handlers.tooltip.impl.crafted;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CommonStyles;
 import com.wynntils.core.text.fonts.CommonFonts;
@@ -51,8 +52,12 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
     private static final int TOOLTIP_MIN_WIDTH = 140;
     private static final int CRAFTED_ACCENT_COLOR = 0xaed4d4;
     private static final int CRAFTED_EMBLEM_VARIANT = 4;
-    private static final String CRAFTED_GEAR_FRAME =
-            new GearEmblem(GearEmblemShape.STICKER, CRAFTED_EMBLEM_VARIANT).getFrameCode();
+    private static final String CRAFTED_WEAPON_FRAME =
+            new GearEmblem(GearEmblemShape.DIAMOND, CRAFTED_EMBLEM_VARIANT).getFrameCode();
+    private static final String CRAFTED_ARMOR_FRAME =
+            new GearEmblem(GearEmblemShape.SHIELD, CRAFTED_EMBLEM_VARIANT).getFrameCode();
+    private static final String CRAFTED_ACCESSORY_FRAME =
+            new GearEmblem(GearEmblemShape.CIRCLE, CRAFTED_EMBLEM_VARIANT).getFrameCode();
     private static final String CRAFTED_CONSUMABLE_FRAME =
             new GearEmblem(GearEmblemShape.HEXAGON, CRAFTED_EMBLEM_VARIANT).getFrameCode();
 
@@ -261,8 +266,22 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
             CraftedGearItem item, ClassType currentClass, TooltipStyle style, CraftedTooltipOptionDecorator decorator) {
         List<TooltipLine> lines = new ArrayList<>();
         GearType type = item.getGearType();
+
+        String frameCode;
+
+        if (type.isWeapon()) {
+            frameCode = CRAFTED_WEAPON_FRAME;
+        } else if (type.isAccessory()) {
+            frameCode = CRAFTED_ACCESSORY_FRAME;
+        } else if (type.isArmor()) {
+            frameCode = CRAFTED_ARMOR_FRAME;
+        } else {
+            WynntilsMod.error("Unexpected crafted item type: " + type);
+            frameCode = CRAFTED_WEAPON_FRAME;
+        }
+
         lines.add(new TooltipLine.Fixed(
-                buildNameLine(CRAFTED_GEAR_FRAME, type.getFrameSpriteCode(), buildSyntheticTitle(item, decorator))));
+                buildNameLine(frameCode, type.getFrameSpriteCode(), buildSyntheticTitle(item, decorator))));
         lines.add(new TooltipLine.Fixed(buildTypeLine(type.name())));
         lines.add(new TooltipLine.Fixed(Component.empty()));
 

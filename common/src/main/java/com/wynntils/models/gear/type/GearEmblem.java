@@ -31,8 +31,8 @@ public record GearEmblem(GearEmblemShape gearEmblemShape, int variant) {
         SQUARE(1),
         HEXAGON(2),
         SHIELD(3),
-        CIRCLE(4),
-        STICKER(5);
+        STICKER(4),
+        CIRCLE(5);
 
         private final int offset;
 
