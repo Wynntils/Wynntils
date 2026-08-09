@@ -72,6 +72,12 @@ public class AddCommandExpansionFeature extends Feature {
         // There is also an alias "servers" for "hub", but it conflicts with our command
         // so don't include it here
 
+        // "bug" aliases
+        suggestions.add("bug");
+        addAlias("bugs", AliasCommandLevel.ALL);
+        addAlias("issue", AliasCommandLevel.ALL);
+        addAlias("reportbug", AliasCommandLevel.ALL);
+
         // "class" aliases
         suggestions.add("class");
         addAlias("classes", AliasCommandLevel.ALL);
@@ -95,6 +101,20 @@ public class AddCommandExpansionFeature extends Feature {
         // "hats" aliases
         suggestions.add("hats");
         addAlias("hat", AliasCommandLevel.ALL);
+        addAlias("helmet", AliasCommandLevel.ALL);
+        addAlias("helmets", AliasCommandLevel.ALL);
+
+        // "chestplates" aliases
+        suggestions.add("chestplates");
+        addAlias("chestplate", AliasCommandLevel.ALL);
+
+        // "leggings" aliases
+        suggestions.add("leggings");
+        addAlias("legging", AliasCommandLevel.ALL);
+
+        // "boots" aliases
+        suggestions.add("boots");
+        addAlias("boot", AliasCommandLevel.ALL);
 
         // "mounts" aliases
         suggestions.add("mounts");
@@ -117,6 +137,7 @@ public class AddCommandExpansionFeature extends Feature {
         addAlias("rank", AliasCommandLevel.ALL);
         addAlias("shop", AliasCommandLevel.ALL);
         addAlias("store", AliasCommandLevel.ALL);
+        addAlias("silverbull", AliasCommandLevel.ALL);
 
         // "kill" aliases
         suggestions.add("kill");

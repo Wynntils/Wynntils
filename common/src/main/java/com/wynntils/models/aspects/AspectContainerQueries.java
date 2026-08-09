@@ -78,6 +78,12 @@ public class AspectContainerQueries {
                 // Open ability menu
                 .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT).expectContainer(AbilityTreeContainer.class))
                 .execute(() -> onStatus.accept("Ability tree menu"))
+                .reprocess(container -> {
+                    ItemStack aspectItem = container.items().get(ASPECTS_BUTTON_SLOT);
+                    if (aspectItem.equals(ItemStack.EMPTY)) {
+                        throw new ContainerQueryException("You do not have aspects unlocked");
+                    }
+                })
 
                 // Open aspects menu
                 .then(QueryStep.clickOnSlot(ASPECTS_BUTTON_SLOT)
@@ -106,6 +112,15 @@ public class AspectContainerQueries {
                 // Open ability menu
                 .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT).expectContainer(AbilityTreeContainer.class))
                 .execute(() -> onStatus.accept("Ability tree menu"))
+                .reprocess(container -> {
+                    ItemStack aspectItem = container.items().get(ASPECTS_BUTTON_SLOT);
+                    if (aspectItem.equals(ItemStack.EMPTY)) {
+                        // This is inside the scan for the /wynntils rescan command, so we need to run the onComplete,
+                        // otherwise the ability tree does not get scanned.
+                        onComplete.accept("You do not have aspects unlocked, continuing scan...");
+                        throw new ContainerQueryException("You do not have aspects unlocked, continuing scan...");
+                    }
+                })
 
                 // Open aspects menu
                 .then(QueryStep.clickOnSlot(ASPECTS_BUTTON_SLOT)
@@ -160,6 +175,12 @@ public class AspectContainerQueries {
                 // Open ability menu
                 .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT).expectContainer(AbilityTreeContainer.class))
                 .execute(() -> onStatus.accept("Ability tree menu"))
+                .reprocess(container -> {
+                    ItemStack aspectItem = container.items().get(ASPECTS_BUTTON_SLOT);
+                    if (aspectItem.equals(ItemStack.EMPTY)) {
+                        throw new ContainerQueryException("You do not have aspects unlocked");
+                    }
+                })
 
                 // Open aspects menu
                 .then(QueryStep.clickOnSlot(ASPECTS_BUTTON_SLOT)
