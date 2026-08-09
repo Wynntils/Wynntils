@@ -164,7 +164,14 @@ public class MinimapOverlay extends Overlay {
         if (hideWhenUnmapped.get() != UnmappedOption.NEITHER && maps.isEmpty()) return;
 
         // enable mask
-        RenderUtils.enableScissor(guiGraphics, (int) renderX, (int) renderY, (int) width, (int) height);
+        // Round the scissor bounds outward (floor min, ceil max) so it never clips inside the true
+        // float bounds - the border is drawn afterwards using the exact floats, so any inward
+        // truncation here would cut the background/map content short of the border, leaving a gap.
+        int scissorX1 = (int) Math.floor(renderX);
+        int scissorY1 = (int) Math.floor(renderY);
+        int scissorX2 = (int) Math.ceil(renderX + width);
+        int scissorY2 = (int) Math.ceil(renderY + height);
+        RenderUtils.enableScissor(guiGraphics, scissorX1, scissorY1, scissorX2 - scissorX1, scissorY2 - scissorY1);
 
         // Always draw a black background to cover transparent map areas
         if (maskType.get() == MapMaskType.RECTANGULAR) {
