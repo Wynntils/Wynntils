@@ -32,7 +32,6 @@ subprojects {
 
         runs {
             client {
-                property("devauth.configDir", getRootProject().file(".devauth").absolutePath)
                 if (usingHotswapAgent) {
                     vmArgs "-XX:+AllowEnhancedClassRedefinition"
                     // https://youtrack.jetbrains.com/issue/JBR-7351/JVM-CodeCache-will-not-be-cleaned-using-G1GC-if-Hotswap-Agent-is-enabled-since-JBR-6419-jbr21.351
@@ -40,6 +39,8 @@ subprojects {
                     vmArgs "-XX:HotswapAgent=fatjar"
                 }
                 vmArgs "-ea" // run dev builds with asserts
+                vmArgs "-Ddevauth.enabled=true" // enable devauth
+                vmArgs "-Ddevauth.account=main"
                 client()
             }
         }
