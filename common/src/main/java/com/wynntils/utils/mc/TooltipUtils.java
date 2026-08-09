@@ -45,18 +45,13 @@ public final class TooltipUtils {
     }
 
     public static List<Component> getWynnItemTooltip(ItemStack itemStack, WynnItem wynnItem) {
-        return getWynnItemTooltip(itemStack, wynnItem, 0);
-    }
-
-    public static List<Component> getWynnItemTooltip(ItemStack itemStack, WynnItem wynnItem, int minimumWidth) {
         // Has to be an Object class with the if statement until Item Compare tooltips are built with TooltipBuilder.
         Object cachedTooltip = wynnItem.getData().get(WynnItemData.TOOLTIP_KEY);
         if (cachedTooltip instanceof TooltipBuilder tooltipBuilder) {
             ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
             TooltipOptions options = feature.isEnabled() ? feature.getTooltipOptions() : TooltipOptions.DEFAULT;
             if (tooltipBuilder instanceof IdentifiableTooltipBuilder<?, ?> identifiableTooltipBuilder) {
-                return identifiableTooltipBuilder.getTooltipLines(
-                        Models.Character.getClassType(), options, minimumWidth);
+                return identifiableTooltipBuilder.getTooltipLines(Models.Character.getClassType(), options, 0);
             }
             return tooltipBuilder.getTooltipLines(Models.Character.getClassType(), options);
         }
