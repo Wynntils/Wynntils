@@ -23,6 +23,7 @@ import com.wynntils.utils.render.state.DiagonalColoredRectangleRenderState;
 import com.wynntils.utils.render.state.FloatBlitRenderState;
 import com.wynntils.utils.render.state.FloatColoredRectangleRenderState;
 import com.wynntils.utils.render.state.MulticoloredRectangleRenderState;
+import com.wynntils.utils.render.type.CircleMask;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
@@ -599,7 +600,7 @@ public final class RenderUtils {
             float y,
             float width,
             float height,
-            MapRenderer.CircleMask mask) {
+            CircleMask mask) {
         AbstractTexture abstractTexture = McUtils.mc().getTextureManager().getTexture(identifier);
         guiGraphics.guiRenderState.submitGuiElement(new CircleClippedBlitRenderState(
                 CustomRenderPipelines.CIRCLE_CLIPPED_TEXTURED_PIPELINE,

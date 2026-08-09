@@ -16,6 +16,7 @@ import com.wynntils.utils.render.state.CircleMaskRenderState;
 import com.wynntils.utils.render.state.ColoredLineBatchRenderState;
 import com.wynntils.utils.render.state.ColoredTrianglesRenderState;
 import com.wynntils.utils.render.state.TexturedPolygonRenderState;
+import com.wynntils.utils.render.type.CircleMask;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.Vertex;
 import com.wynntils.utils.type.BoundingBox;
@@ -650,18 +651,5 @@ public final class MapRenderer {
 
     private static Vector2f transform(Matrix3x2f matrix, float x, float y) {
         return matrix.transformPosition(new Vector2f(x, y));
-    }
-
-    // Public so callers outside this package (e.g. MapFeatureRenderer) can pass mask bounds down to
-    // a circularly-clipped render state without recomputing the same center/radius math themselves.
-    public record CircleMask(float centerX, float centerY, float radiusX, float radiusY) {
-        public static CircleMask fromBounds(float x, float y, float width, float height) {
-            return new CircleMask(x + width / 2f, y + height / 2f, width / 2f, height / 2f);
-        }
-
-        private Vector2f point(float angle) {
-            return new Vector2f(
-                    centerX + (float) Math.cos(angle) * radiusX, centerY + (float) Math.sin(angle) * radiusY);
-        }
     }
 }

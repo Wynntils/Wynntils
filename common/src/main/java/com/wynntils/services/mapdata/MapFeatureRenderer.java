@@ -18,8 +18,8 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.type.CircleMask;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -54,7 +54,7 @@ public final class MapFeatureRenderer {
             float featureRenderScale,
             boolean hovered,
             boolean fullscreenMap,
-            MapRenderer.CircleMask circularMask) {
+            CircleMask circularMask) {
         if (feature instanceof MapLocation location) {
             renderMapLocation(
                     guiGraphics,
@@ -101,7 +101,7 @@ public final class MapFeatureRenderer {
             float featureRenderScale,
             boolean hovered,
             boolean fullscreenMap,
-            MapRenderer.CircleMask circularMask) {
+            CircleMask circularMask) {
         float renderScale = hovered ? featureRenderScale * 1.05f : featureRenderScale;
         int labelHeight = (int) (FontRenderer.getInstance().getFont().lineHeight * renderScale * TEXT_SCALE);
 

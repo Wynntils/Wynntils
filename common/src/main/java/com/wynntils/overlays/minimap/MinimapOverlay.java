@@ -35,6 +35,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.CircleMask;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
@@ -292,9 +293,8 @@ public class MinimapOverlay extends Overlay {
 
         // Non-null only for the circular mask type - MapFeatureRenderer then clips each feature's
         // icon to this mask per-pixel, so it fades out smoothly at the boundary
-        MapRenderer.CircleMask circularMask = maskType.get() == MapMaskType.CIRCLE
-                ? new MapRenderer.CircleMask(centerX, centerZ, width / 2f, height / 2f)
-                : null;
+        CircleMask circularMask =
+                maskType.get() == MapMaskType.CIRCLE ? new CircleMask(centerX, centerZ, width / 2f, height / 2f) : null;
 
         List<Pair<MapFeature, ResolvedMapAttributes>> renderedMapFeatures = mapFeatures.toList();
         for (Pair<MapFeature, ResolvedMapAttributes> featurePair : renderedMapFeatures) {
