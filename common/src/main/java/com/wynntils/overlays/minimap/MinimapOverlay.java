@@ -35,6 +35,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.CircleMask;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
@@ -163,7 +164,14 @@ public class MinimapOverlay extends Overlay {
         if (hideWhenUnmapped.get() != UnmappedOption.NEITHER && maps.isEmpty()) return;
 
         // enable mask
-        RenderUtils.enableScissor(guiGraphics, (int) renderX, (int) renderY, (int) width, (int) height);
+        // Round the scissor bounds outward (floor min, ceil max) so it never clips inside the true
+        // float bounds - the border is drawn afterwards using the exact floats, so any inward
+        // truncation here would cut the background/map content short of the border, leaving a gap.
+        int scissorX1 = (int) Math.floor(renderX);
+        int scissorY1 = (int) Math.floor(renderY);
+        int scissorX2 = (int) Math.ceil(renderX + width);
+        int scissorY2 = (int) Math.ceil(renderY + height);
+        RenderUtils.enableScissor(guiGraphics, scissorX1, scissorY1, scissorX2 - scissorX1, scissorY2 - scissorY1);
 
         // Always draw a black background to cover transparent map areas
         if (maskType.get() == MapMaskType.RECTANGULAR) {
@@ -290,6 +298,11 @@ public class MinimapOverlay extends Overlay {
         Vector2f screenCenter = new Vector2f(centerX, centerZ);
         Vector2f rotationVector = new Vector2f(cosRotationRadians, sinRotationRadians);
 
+        // Non-null only for the circular mask type - MapFeatureRenderer then clips each feature's
+        // icon to this mask per-pixel, so it fades out smoothly at the boundary
+        CircleMask circularMask =
+                maskType.get() == MapMaskType.CIRCLE ? new CircleMask(centerX, centerZ, width / 2f, height / 2f) : null;
+
         List<Pair<MapFeature, ResolvedMapAttributes>> renderedMapFeatures = mapFeatures.toList();
         for (Pair<MapFeature, ResolvedMapAttributes> featurePair : renderedMapFeatures) {
             MapFeature feature = featurePair.a();
@@ -308,7 +321,8 @@ public class MinimapOverlay extends Overlay {
                             ? remotePlayersHeadScale.get()
                             : mapFeatureScale.get(),
                     false,
-                    false);
+                    false,
+                    circularMask);
         }
 
         // Render all marked features (user waypoints/compass markers)

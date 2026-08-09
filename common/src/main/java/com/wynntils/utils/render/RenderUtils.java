@@ -15,6 +15,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.pipelines.CustomRenderPipelines;
 import com.wynntils.utils.render.state.ArcRenderState;
+import com.wynntils.utils.render.state.CircleClippedBlitRenderState;
 import com.wynntils.utils.render.state.ColoredLineBatchRenderState;
 import com.wynntils.utils.render.state.ColoredTriangleBatchRenderState;
 import com.wynntils.utils.render.state.CustomRectangleRenderState;
@@ -22,6 +23,7 @@ import com.wynntils.utils.render.state.DiagonalColoredRectangleRenderState;
 import com.wynntils.utils.render.state.FloatBlitRenderState;
 import com.wynntils.utils.render.state.FloatColoredRectangleRenderState;
 import com.wynntils.utils.render.state.MulticoloredRectangleRenderState;
+import com.wynntils.utils.render.type.CircleMask;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
@@ -585,6 +587,39 @@ public final class RenderUtils {
                 textureHeight,
                 textureWidth,
                 textureHeight);
+    }
+
+    // Same as drawScalingTexturedRect, but clipped per-pixel to an arbitrary circular/elliptical
+    // mask in absolute screen space (e.g. a round minimap's boundary) instead of drawing the full
+    // rect - see CircleClippedBlitRenderState.
+    public static void drawCircularMaskedTexturedRect(
+            GuiGraphics guiGraphics,
+            Identifier identifier,
+            CustomColor color,
+            float x,
+            float y,
+            float width,
+            float height,
+            CircleMask mask) {
+        AbstractTexture abstractTexture = McUtils.mc().getTextureManager().getTexture(identifier);
+        guiGraphics.guiRenderState.submitGuiElement(new CircleClippedBlitRenderState(
+                CustomRenderPipelines.CIRCLE_CLIPPED_TEXTURED_PIPELINE,
+                TextureSetup.singleTexture(abstractTexture.getTextureView(), abstractTexture.getSampler()),
+                new Matrix3x2f(guiGraphics.pose()),
+                x,
+                y,
+                x + width,
+                y + height,
+                0f,
+                1f,
+                0f,
+                1f,
+                color,
+                mask.centerX(),
+                mask.centerY(),
+                mask.radiusX(),
+                mask.radiusY(),
+                guiGraphics.scissorStack.peek()));
     }
 
     // nine slice scalling

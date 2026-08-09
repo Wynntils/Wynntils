@@ -265,7 +265,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                     zoomRenderScale,
                     featureScale,
                     feature == hoveredFeature,
-                    true);
+                    true,
+                    null);
         }
     }
 
