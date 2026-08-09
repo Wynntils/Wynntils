@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.profession.providers;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.profession.type.GatheringNodeType;
 import com.wynntils.models.profession.type.MaterialType;
@@ -34,15 +35,18 @@ import java.util.stream.Stream;
  * The per-resource categories are not hardcoded; they are built from the categories present in the
  * downloaded data and resolved against the material registry, so a resource Wynncraft adds later
  * needs no code change here.
+ * <p>
+ * The download handler runs off the render thread, while the filter is applied from the screen on
+ * the render thread, so all state is published by swapping an immutable snapshot rather than by
+ * mutating a shared collection.
  */
 public class GatheringNodeProvider extends BuiltInProvider {
     public static final String GATHERING_CATEGORY_ID = "wynntils:gathering";
-    public static final String UNKNOWN_GATHERING_CATEGORY_ID = GATHERING_CATEGORY_ID + ":unknown";
 
-    private static final List<MapFeature> ALL_FEATURES = new ArrayList<>();
-    private static final List<MapFeature> VISIBLE_FEATURES = new ArrayList<>();
-    private static final List<MapCategory> RESOURCE_CATEGORIES = new ArrayList<>();
-    private static final Map<String, GatheringNodeType> NODE_TYPES = new HashMap<>();
+    private volatile List<MapFeature> allFeatures = List.of();
+    private volatile List<MapFeature> visibleFeatures = List.of();
+    private volatile List<MapCategory> resourceCategories = List.of();
+    private volatile Map<String, GatheringNodeType> nodeTypes = Map.of();
 
     @Override
     public String getProviderId() {
@@ -51,12 +55,12 @@ public class GatheringNodeProvider extends BuiltInProvider {
 
     @Override
     public Stream<MapFeature> getFeatures() {
-        return VISIBLE_FEATURES.stream();
+        return visibleFeatures.stream();
     }
 
     @Override
     public Stream<MapCategory> getCategories() {
-        return RESOURCE_CATEGORIES.stream();
+        return resourceCategories.stream();
     }
 
     @Override
@@ -66,52 +70,62 @@ public class GatheringNodeProvider extends BuiltInProvider {
     }
 
     public void updateNodes(List<GatheringNodeLocation> nodes) {
-        ALL_FEATURES.forEach(this::notifyCallbacks);
-        ALL_FEATURES.clear();
-        ALL_FEATURES.addAll(nodes);
+        allFeatures.forEach(this::notifyCallbacks);
+        allFeatures = List.copyOf(nodes);
 
         rebuildNodeTypes();
         applyFilter();
     }
 
     public List<GatheringNodeType> getNodeTypes() {
-        return NODE_TYPES.values().stream().sorted().toList();
+        return nodeTypes.values().stream().sorted().toList();
     }
 
     /**
-     * Recomputes which nodes are shown on the map. Nodes of a resource that could not be resolved
-     * against the material registry are always shown, as they cannot be filtered.
+     * Recomputes which nodes are shown on the map. No callbacks are fired, as only the set of shown
+     * features changes, not the attributes of any of them, so there is nothing cached to invalidate.
      */
     public void applyFilter() {
-        // No callbacks here on purpose. Only the set of shown features changes, not the attributes
-        // of any of them, so there is nothing cached to invalidate.
-        VISIBLE_FEATURES.clear();
+        Map<String, GatheringNodeType> currentNodeTypes = nodeTypes;
 
-        for (MapFeature feature : ALL_FEATURES) {
-            GatheringNodeType nodeType = NODE_TYPES.get(feature.getCategoryId());
-            if (nodeType == null || Models.Profession.isGatheringNodeTypeVisible(nodeType)) {
-                VISIBLE_FEATURES.add(feature);
-            }
-        }
+        visibleFeatures = allFeatures.stream()
+                .filter(feature -> {
+                    GatheringNodeType nodeType = currentNodeTypes.get(feature.getCategoryId());
+                    return nodeType != null && Models.Profession.isGatheringNodeTypeVisible(nodeType);
+                })
+                .toList();
     }
 
     private void rebuildNodeTypes() {
-        RESOURCE_CATEGORIES.forEach(this::notifyCallbacks);
-        RESOURCE_CATEGORIES.clear();
-        NODE_TYPES.clear();
+        resourceCategories.forEach(this::notifyCallbacks);
+
+        Map<String, GatheringNodeType> newNodeTypes = new HashMap<>();
+        List<MapCategory> newCategories = new ArrayList<>();
+        List<String> unresolved = new ArrayList<>();
 
         for (String categoryId :
-                ALL_FEATURES.stream().map(MapFeature::getCategoryId).distinct().toList()) {
+                allFeatures.stream().map(MapFeature::getCategoryId).distinct().toList()) {
             Optional<Pair<MaterialType, SourceMaterial>> material =
                     Models.Profession.findMaterialBySourceName(getResourceName(categoryId));
-            if (material.isEmpty()) continue;
+            if (material.isEmpty()) {
+                unresolved.add(categoryId);
+                continue;
+            }
 
             GatheringNodeType nodeType = new GatheringNodeType(
                     categoryId, material.get().key(), material.get().value());
 
-            NODE_TYPES.put(categoryId, nodeType);
-            RESOURCE_CATEGORIES.add(new GatheringResourceCategory(nodeType));
+            newNodeTypes.put(categoryId, nodeType);
+            newCategories.add(new GatheringResourceCategory(nodeType));
         }
+
+        if (!unresolved.isEmpty()) {
+            // Nodes of these categories cannot be named or filtered, so they are not shown at all
+            WynntilsMod.warn("Unknown gathering node resources, they will not be shown on the map: " + unresolved);
+        }
+
+        nodeTypes = Map.copyOf(newNodeTypes);
+        resourceCategories = List.copyOf(newCategories);
     }
 
     public static String getProfessionCategoryId(MaterialType materialType) {

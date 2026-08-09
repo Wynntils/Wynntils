@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -94,7 +95,7 @@ public final class ProfessionModel extends Model {
 
     // Keyed by map data category id. Gathering nodes are hidden until the user asks for them.
     @Persisted
-    private final Storage<Map<String, Boolean>> visibleGatheringNodeTypes = new Storage<>(new ConcurrentHashMap<>());
+    private final Storage<Map<String, Boolean>> visibleGatheringNodeTypes = new Storage<>(new TreeMap<>());
 
     private long lastGatherTime = 0L;
     private HarvestInfo lastHarvest;

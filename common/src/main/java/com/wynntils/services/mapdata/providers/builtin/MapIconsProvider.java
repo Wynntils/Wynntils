@@ -69,7 +69,6 @@ public class MapIconsProvider extends BuiltInProvider {
             new BuiltInIcon("wynntils:icon:symbols:fireball", Texture.FIREBALL),
             new BuiltInIcon("wynntils:icon:symbols:flag", Texture.FLAG),
             new BuiltInIcon("wynntils:icon:symbols:pointer", Texture.POINTER),
-            new BuiltInIcon("wynntils:icon:symbols:question-mark", Texture.QUESTION_MARK_ICON),
             new BuiltInIcon("wynntils:icon:symbols:sign", Texture.SIGN),
             new BuiltInIcon("wynntils:icon:symbols:star", Texture.STAR),
             new BuiltInIcon("wynntils:icon:symbols:wall", Texture.WALL),

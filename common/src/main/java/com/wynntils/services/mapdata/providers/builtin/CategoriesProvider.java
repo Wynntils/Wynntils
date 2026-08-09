@@ -49,7 +49,6 @@ public class CategoriesProvider extends BuiltInProvider {
         for (MaterialType materialType : MaterialType.values()) {
             PROVIDED_CATEGORIES.add(new GatheringProfessionCategory(materialType));
         }
-        PROVIDED_CATEGORIES.add(new GatheringUnknownCategory());
         for (int tier = 1; tier <= LootChestTier.values().length; tier++) {
             PROVIDED_CATEGORIES.add(new FoundChestCategory(tier));
         }
@@ -396,33 +395,6 @@ public class CategoriesProvider extends BuiltInProvider {
                 @Override
                 public Optional<CustomColor> getLabelColor() {
                     return Optional.of(CustomColor.fromChatFormatting(materialType.getLabelColor()));
-                }
-
-                @Override
-                public Optional<MapVisibility> getIconVisibility() {
-                    return Optional.of(DefaultMapAttributes.ICON_ALWAYS);
-                }
-            });
-        }
-    }
-
-    private static final class GatheringUnknownCategory implements MapCategory {
-        @Override
-        public String getCategoryId() {
-            return GatheringNodeProvider.UNKNOWN_GATHERING_CATEGORY_ID;
-        }
-
-        @Override
-        public Optional<String> getName() {
-            return Optional.of("Unknown Gathering Nodes");
-        }
-
-        @Override
-        public Optional<MapAttributes> getAttributes() {
-            return Optional.of(new AbstractMapAttributes() {
-                @Override
-                public Optional<String> getIconId() {
-                    return Optional.of("wynntils:icon:symbols:question-mark");
                 }
 
                 @Override
