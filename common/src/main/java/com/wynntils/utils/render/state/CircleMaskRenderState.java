@@ -14,8 +14,7 @@ import org.joml.Matrix3x2f;
 
 // A colored ellipse filling the given bounds, rendered as a single quad whose UV carries each
 // vertex's normalized [-1, 1] local position; the actual circular shape is computed per-pixel by
-// CustomRenderPipelines.CIRCLE_MASK_PIPELINE's fragment shader instead of being approximated as a
-// CPU-generated polygon (see docs/rendering/gui-render-state.md).
+// CustomRenderPipelines.CIRCLE_MASK_PIPELINE's fragment shader
 public record CircleMaskRenderState(
         RenderPipeline pipeline,
         TextureSetup textureSetup,
