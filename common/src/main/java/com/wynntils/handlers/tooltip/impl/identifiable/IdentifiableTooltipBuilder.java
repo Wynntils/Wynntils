@@ -523,8 +523,9 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         if (!(item instanceof PagedItemProperty pagedItem)) return List.of();
 
         int currentPage = pagedItem.currentPage();
-        MutableComponent keyPrompt = Component.literal("\uF002")
-                .withStyle(Style.EMPTY.withFont(CommonFonts.CHAT_TILE_FONT))
+        MutableComponent keyPrompt = Component.literal(synthetic ? "\uE001" : "\uF002")
+                .withStyle(Style.EMPTY.withFont(
+                        synthetic ? CommonFonts.WYNNTILS_TOOLTIP_ICONS : CommonFonts.CHAT_TILE_FONT))
                 .append(Component.literal("\uDAFF\uDF98\uDB00\uDC3F").withStyle(CommonStyles.LANGUAGE));
         int keyPromptAdvance = McUtils.mc().font.width(keyPrompt);
         MutableComponent paginator = Component.empty().append(keyPrompt);
