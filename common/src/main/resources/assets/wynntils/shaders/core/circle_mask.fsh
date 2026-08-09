@@ -3,10 +3,7 @@
 // Paired with vanilla's core/position_tex_color vertex shader (see
 // CustomRenderPipelines.CIRCLE_MASK_PIPELINE). There is no sampler here - UV0 is reused to carry
 // each vertex's normalized position in [-1, 1] across the quad's bounding box, and this fragment
-// shader masks it to an ellipse via a distance test. This replaces a CPU-side loop that generated
-// a CIRCLE_MASK_SEGMENTS-sided polygon approximation of the circle every frame: the GPU now
-// evaluates the exact (non-faceted) shape per-pixel, anti-aliased via screen-space derivatives,
-// instead of the CPU building new vertices for a fixed-resolution polygon every frame.
+// shader masks it to an ellipse via a distance test.
 layout(std140) uniform DynamicTransforms {
     mat4 ModelViewMat;
     vec4 ColorModulator;
