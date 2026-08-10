@@ -7,6 +7,8 @@ package com.wynntils.services.mapdata.providers.builtin;
 import com.google.common.base.CaseFormat;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.containers.type.LootChestTier;
+import com.wynntils.models.profession.providers.GatheringNodeProvider;
+import com.wynntils.models.profession.type.MaterialType;
 import com.wynntils.services.hades.type.PlayerRelation;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.MapMarkerOptionsBuilder;
@@ -42,6 +44,10 @@ public class CategoriesProvider extends BuiltInProvider {
         }
         for (PlaceLocation.PlaceType layer : PlaceLocation.PlaceType.values()) {
             PROVIDED_CATEGORIES.add(new PlaceCategory(layer));
+        }
+        PROVIDED_CATEGORIES.add(new GatheringCategory());
+        for (MaterialType materialType : MaterialType.values()) {
+            PROVIDED_CATEGORIES.add(new GatheringProfessionCategory(materialType));
         }
         for (int tier = 1; tier <= LootChestTier.values().length; tier++) {
             PROVIDED_CATEGORIES.add(new FoundChestCategory(tier));
@@ -328,6 +334,72 @@ public class CategoriesProvider extends BuiltInProvider {
                 @Override
                 public Optional<MapVisibility> getLabelVisibility() {
                     return Optional.of(DefaultMapAttributes.LABEL_NEVER);
+                }
+            });
+        }
+    }
+
+    private static final class GatheringCategory implements MapCategory {
+        @Override
+        public String getCategoryId() {
+            return GatheringNodeProvider.GATHERING_CATEGORY_ID;
+        }
+
+        @Override
+        public Optional<String> getName() {
+            return Optional.of("Gathering Nodes");
+        }
+
+        @Override
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
+                @Override
+                public Optional<Integer> getPriority() {
+                    return Optional.of(100);
+                }
+
+                @Override
+                public Optional<MapVisibility> getLabelVisibility() {
+                    return Optional.of(DefaultMapAttributes.LABEL_NEVER);
+                }
+            });
+        }
+    }
+
+    private static final class GatheringProfessionCategory implements MapCategory {
+        private final MaterialType materialType;
+
+        private GatheringProfessionCategory(MaterialType materialType) {
+            this.materialType = materialType;
+        }
+
+        @Override
+        public String getCategoryId() {
+            return GatheringNodeProvider.getProfessionCategoryId(materialType);
+        }
+
+        @Override
+        public Optional<String> getName() {
+            return Optional.of(materialType.getProfessionType().getDisplayName() + " Nodes");
+        }
+
+        @Override
+        public Optional<MapAttributes> getAttributes() {
+            return Optional.of(new AbstractMapAttributes() {
+                @Override
+                public Optional<String> getIconId() {
+                    return Optional.of("wynntils:icon:gathering:"
+                            + materialType.getProfessionType().name().toLowerCase(Locale.ROOT));
+                }
+
+                @Override
+                public Optional<CustomColor> getLabelColor() {
+                    return Optional.of(CustomColor.fromChatFormatting(materialType.getLabelColor()));
+                }
+
+                @Override
+                public Optional<MapVisibility> getIconVisibility() {
+                    return Optional.of(DefaultMapAttributes.ICON_ALWAYS);
                 }
             });
         }

@@ -156,6 +156,12 @@
     "url": "https://cdn.wynntils.com/static/Data-Storage/destinations.json"
   },
   {
+    "id": "dataStaticGatheringNodeMapFeatures",
+    "md5": "e8d7a686ff4b445d692599136147cf2b",
+    "path": "Reference/gathering_node_mapfeatures.json",
+    "url": "https://cdn.wynntils.com/static/Reference/gathering_node_mapfeatures.json"
+  },
+  {
     "id": "dataStaticGatheringNodes",
     "md5": "3edf9ef125979de9dc242253b16d1531",
     "path": "Reference/gathering_nodes.json",

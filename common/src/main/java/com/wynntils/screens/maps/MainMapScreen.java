@@ -310,7 +310,6 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         // FIXME: Add back the pois that are still not converted to MapData
         //        - Provided custom pois
-        //        - Gathering Nodes
 
         return mapFeatures;
     }
