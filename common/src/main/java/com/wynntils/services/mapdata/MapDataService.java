@@ -22,6 +22,7 @@ import com.wynntils.services.mapdata.providers.builtin.CombatListProvider;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.providers.builtin.PlaceListProvider;
 import com.wynntils.services.mapdata.providers.builtin.ServiceListProvider;
+import com.wynntils.services.mapdata.providers.json.JsonOverrideProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.services.mapdata.providers.type.MapDataOverrideProvider;
@@ -63,6 +64,11 @@ public class MapDataService extends Service {
     @Persisted
     private final Storage<Map<JsonProviderInfo, Boolean>> jsonProviderInfos = new Storage<>(new LinkedHashMap<>());
 
+    // Storage for json override providers
+    @Persisted
+    private final Storage<Map<JsonOverrideProvider, Boolean>> jsonOverrideProviders =
+            new Storage<>(new LinkedHashMap<>());
+
     public MapDataService() {
         super(List.of());
 
@@ -74,12 +80,16 @@ public class MapDataService extends Service {
         if (storage == jsonProviderInfos) {
             reloadJsonProviders();
         }
+        if (storage == jsonOverrideProviders) {
+            reloadJsonOverrideProviders();
+        }
     }
 
     @Override
     public void reloadData() {
         getProviders().forEach(MapDataProvider::reloadData);
         reloadJsonProviders();
+        reloadJsonOverrideProviders();
     }
 
     public Stream<MapFeature> getFeatures() {
@@ -220,6 +230,44 @@ public class MapDataService extends Service {
         return Collections.unmodifiableMap(jsonProviderInfos.get());
     }
 
+    public void addOverrideProvider(JsonOverrideProvider provider) {
+        jsonOverrideProviders.get().keySet().removeIf(i -> i.getProviderId().equals(provider.getProviderId()));
+        jsonOverrideProviders.get().put(provider, true);
+        jsonOverrideProviders.touched();
+        registerOverrideProvider(provider.getProviderId(), provider);
+    }
+
+    public void removeOverrideProvider(String providerId) {
+        jsonOverrideProviders.get().keySet().removeIf(i -> i.getProviderId().equals(providerId));
+        jsonOverrideProviders.touched();
+        unregisterOverrideProvider(providerId);
+    }
+
+    public void toggleOverrideProvider(String providerId) {
+        Optional<JsonOverrideProvider> providerOpt = jsonOverrideProviders.get().keySet().stream()
+                .filter(info -> info.getProviderId().equals(providerId))
+                .findFirst();
+        if (providerOpt.isEmpty()) return;
+
+        JsonOverrideProvider provider = providerOpt.get();
+        boolean enabled = jsonOverrideProviders.get().get(provider);
+        jsonOverrideProviders.get().put(provider, !enabled);
+        jsonOverrideProviders.touched();
+
+        if (enabled) {
+            unregisterOverrideProvider(providerId);
+        } else {
+            registerOverrideProvider(providerId, provider);
+        }
+    }
+
+    public JsonOverrideProvider getOverrideProvider(String providerId) {
+        return jsonOverrideProviders.get().keySet().stream()
+                .filter(info -> info.getProviderId().equals(providerId))
+                .findFirst()
+                .orElse(null);
+    }
+
     public void registerOverrideProvider(String overrideProviderId, MapDataOverrideProvider provider) {
         overrideProviders.putFirst(overrideProviderId, provider);
         provider.onChange(this::onProviderChange);
@@ -310,6 +358,13 @@ public class MapDataService extends Service {
                 .filter(Map.Entry::getValue)
                 .map(Map.Entry::getKey)
                 .forEach(this::registerJsonProvider);
+    }
+
+    private void reloadJsonOverrideProviders() {
+        jsonOverrideProviders.get().entrySet().stream()
+                .filter(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
+                .forEach(provider -> this.registerOverrideProvider(provider.getProviderId(), provider));
     }
 
     private void onProviderChange(MapDataProvidedType mapDataProvidedType) {
