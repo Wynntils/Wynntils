@@ -21,6 +21,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
@@ -386,13 +387,8 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
     }
 
     private void saveChatTab() {
-        if (edited != null) {
-            Services.ChatTab.removeTab(edited);
-        }
-
-        int insertIndex = orderInput.getTextBoxInput().isEmpty()
-                ? Services.ChatTab.getTabCount()
-                : Math.min(Services.ChatTab.getTabCount(), Integer.parseInt(orderInput.getTextBoxInput()));
+        OptionalInt requestedOrder = getRequestedOrder();
+        if (requestedOrder.isEmpty()) return;
 
         ChatTab chatTab = new ChatTab(
                 nameInput.getTextBoxInput(),
@@ -403,28 +399,42 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
                         .map(box -> RecipientType.fromName(box.getMessage().getString()))
                         .collect(Collectors.toSet()),
                 filterRegexInput.getTextBoxInput().isBlank() ? null : filterRegexInput.getTextBoxInput());
+
+        if (edited != null) {
+            Services.ChatTab.removeTab(edited);
+        }
+
+        int insertIndex = Math.min(Services.ChatTab.getTabCount(), requestedOrder.getAsInt());
         Services.ChatTab.addTab(insertIndex, chatTab);
         McUtils.setScreen(ChatTabEditingScreen.create(chatTab, previousScreen));
     }
 
     private void updateSaveButtonActive() {
-        if (orderInput != null && !orderInput.getTextBoxInput().isBlank()) {
-            try {
-                Integer.parseInt(orderInput.getTextBoxInput());
-                orderInput.setRenderColor(CommonColors.GREEN);
-            } catch (NumberFormatException ignored) {
-                orderInput.setRenderColor(CommonColors.RED);
-                saveButton.active = false;
-                saveAndCloseButton.active = false;
-            }
-        }
-
         if (saveButton == null || saveAndCloseButton == null) return;
+
+        boolean orderValid = getRequestedOrder().isPresent();
+        orderInput.setRenderColor(orderInput.getTextBoxInput().isEmpty()
+                ? CommonColors.WHITE
+                : orderValid ? CommonColors.GREEN : CommonColors.RED);
 
         saveButton.active = !nameInput.getTextBoxInput().isEmpty()
                 && validatePattern()
-                && recipientTypeBoxes.stream().anyMatch(WynntilsCheckbox::isSelected);
+                && recipientTypeBoxes.stream().anyMatch(WynntilsCheckbox::isSelected)
+                && orderValid;
         saveAndCloseButton.active = saveButton.active;
+    }
+
+    private OptionalInt getRequestedOrder() {
+        if (orderInput.getTextBoxInput().isEmpty()) {
+            return OptionalInt.of(Services.ChatTab.getTabCount());
+        }
+
+        try {
+            int requestedOrder = Integer.parseInt(orderInput.getTextBoxInput());
+            return requestedOrder >= 0 ? OptionalInt.of(requestedOrder) : OptionalInt.empty();
+        } catch (NumberFormatException ignored) {
+            return OptionalInt.empty();
+        }
     }
 
     private boolean validatePattern() {
