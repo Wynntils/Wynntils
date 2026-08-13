@@ -21,7 +21,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.OptionalInt;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
@@ -387,7 +387,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
     }
 
     private void saveChatTab() {
-        OptionalInt requestedOrder = getRequestedOrder();
+        Optional<Integer> requestedOrder = getRequestedOrder();
         if (requestedOrder.isEmpty()) return;
 
         ChatTab chatTab = new ChatTab(
@@ -404,7 +404,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
             Services.ChatTab.removeTab(edited);
         }
 
-        int insertIndex = Math.min(Services.ChatTab.getTabCount(), requestedOrder.getAsInt());
+        int insertIndex = Math.min(Services.ChatTab.getTabCount(), requestedOrder.get());
         Services.ChatTab.addTab(insertIndex, chatTab);
         McUtils.setScreen(ChatTabEditingScreen.create(chatTab, previousScreen));
     }
@@ -425,16 +425,16 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
         saveAndCloseButton.active = saveButton.active;
     }
 
-    private OptionalInt getRequestedOrder() {
+    private Optional<Integer> getRequestedOrder() {
         if (orderInput.getTextBoxInput().isEmpty()) {
-            return OptionalInt.of(Services.ChatTab.getTabCount());
+            return Optional.of(Services.ChatTab.getTabCount());
         }
 
         try {
             int requestedOrder = Integer.parseInt(orderInput.getTextBoxInput());
-            return requestedOrder >= 0 ? OptionalInt.of(requestedOrder) : OptionalInt.empty();
+            return requestedOrder >= 0 ? Optional.of(requestedOrder) : Optional.empty();
         } catch (NumberFormatException ignored) {
-            return OptionalInt.empty();
+            return Optional.empty();
         }
     }
 
