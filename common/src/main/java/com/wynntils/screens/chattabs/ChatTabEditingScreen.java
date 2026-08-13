@@ -413,9 +413,10 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
         if (saveButton == null || saveAndCloseButton == null) return;
 
         boolean orderValid = getRequestedOrder().isPresent();
-        orderInput.setRenderColor(orderInput.getTextBoxInput().isEmpty()
-                ? CommonColors.WHITE
-                : orderValid ? CommonColors.GREEN : CommonColors.RED);
+        orderInput.setRenderColor(
+                orderInput.getTextBoxInput().isEmpty()
+                        ? CommonColors.WHITE
+                        : orderValid ? CommonColors.GREEN : CommonColors.RED);
 
         saveButton.active = !nameInput.getTextBoxInput().isEmpty()
                 && validatePattern()
