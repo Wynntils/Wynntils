@@ -153,20 +153,21 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
                         TextShadow.NORMAL);
     }
 
+    // Render this as a polygon, otherwise it looks bad.
     private void renderArrow(GuiGraphics guiGraphics, int arrowX) {
         float cx = arrowX + ARROW_WIDTH / 2f;
         float cy = y + ROW_HEIGHT / 2f;
-        float r = ARROW_WIDTH / 2.5f;
+        float half = 3.2f;
 
         List<Vector2f> vertices = expanded
                 ? List.of(
-                        new Vector2f(cx - r, cy - r / 1.5f),
-                        new Vector2f(cx + r, cy - r / 1.5f),
-                        new Vector2f(cx, cy + r / 1.5f))
+                new Vector2f(cx - half, cy - half),
+                new Vector2f(cx + half, cy - half),
+                new Vector2f(cx, cy + half))
                 : List.of(
-                        new Vector2f(cx - r / 1.5f, cy - r),
-                        new Vector2f(cx - r / 1.5f, cy + r),
-                        new Vector2f(cx + r / 1.5f, cy));
+                new Vector2f(cx - half, cy - half),
+                new Vector2f(cx - half, cy + half),
+                new Vector2f(cx + half, cy));
 
         RenderUtils.drawPolygon(guiGraphics, CommonColors.WHITE, CustomColor.NONE, 0f, vertices);
     }

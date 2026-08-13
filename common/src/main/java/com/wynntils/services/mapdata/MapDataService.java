@@ -32,7 +32,10 @@ import com.wynntils.services.mapdata.type.MapDataProvidedType;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.BoundingShape;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -40,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MapDataService extends Service {
@@ -116,6 +120,48 @@ public class MapDataService extends Service {
 
     public Stream<MapFeature> getFeaturesForCategory(String categoryId) {
         return getFeatures().filter(f -> f.getCategoryId().startsWith(categoryId));
+    }
+
+    public Optional<MapAttributes> getBaseAttributesForCategory(String categoryId) {
+        List<MapAttributes> attributesList = getCategoryDefinitions(categoryId)
+                .map(MapCategory::getAttributes)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+        return OverrideMapAttributes.from(attributesList);
+    }
+
+    public Optional<MapAttributes> getAttributesForCategory(String categoryId) {
+        Optional<MapAttributes> baseOpt = getBaseAttributesForCategory(categoryId);
+
+        // Collect overrides that apply to this category
+        List<MapAttributes> overrideAttrs = new ArrayList<>();
+        // Dummy feature to satisfy the provider API – only the categoryId is used
+        MapFeature dummyFeature = new MapFeature() {
+            @Override public String getFeatureId() { return "dummy"; }
+            @Override public String getCategoryId() { return categoryId; }
+            @Override public Optional<MapAttributes> getAttributes() { return Optional.empty(); }
+            @Override public boolean isVisible(BoundingShape boundingShape) { return false; }
+            @Override public List<String> getTags() { return List.of(); }
+        };
+
+        for (MapDataOverrideProvider provider : overrideProviders.values()) {
+            // Check if this provider overrides the whole category (or a parent)
+            if (provider.getOverridenCategoryIds().anyMatch(catId -> categoryId.startsWith(catId))) {
+                MapAttributes overrideAttr = provider.getOverrideAttributes(dummyFeature);
+                if (overrideAttr != null) {
+                    overrideAttrs.add(overrideAttr);
+                }
+            }
+        }
+
+        // Combine overrides (higher priority) and base attributes
+        if (baseOpt.isPresent() || !overrideAttrs.isEmpty()) {
+            List<MapAttributes> combined = new ArrayList<>(overrideAttrs);
+            baseOpt.ifPresent(combined::add);
+            return OverrideMapAttributes.from(combined);
+        }
+        return Optional.empty();
     }
 
     // region Lookup features and attribute resolution

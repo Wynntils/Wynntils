@@ -33,7 +33,7 @@ public class CategorySearchWidget extends SearchWidget {
     protected void renderBackground(GuiGraphics guiGraphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
-                Texture.MANAGER_WIDGET_BORDER,
+                Texture.MANAGER_WIDGET_BACKGROUND,
                 getX() - 5 - Texture.BUILD_LOADOUTS_SEARCH_ICON.width(),
                 getY(),
                 this.width + 5 + Texture.BUILD_LOADOUTS_SEARCH_ICON.width(),
