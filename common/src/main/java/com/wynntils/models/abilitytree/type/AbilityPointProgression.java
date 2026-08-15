@@ -62,7 +62,7 @@ public final class AbilityPointProgression {
     }
 
     private static int getLoanedPoints() {
-        return switch (Models.Account.getRank()) {
+        return switch (Models.Account.getSupporterRank()) {
             case VIP_PLUS -> 2;
             case HERO, HERO_PLUS, CHAMPION -> 4;
             default -> 0;
