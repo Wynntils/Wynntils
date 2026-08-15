@@ -1,19 +1,11 @@
-Add Command Expansion
-- Added `/bug` and aliases `/bugs`, `/issue` and `/reportbug`
-- Added `/helmet` and `/helmets` aliases to `/hats`
-- Added `/chestplate` and alias `/chestplates`
-- Added `/leggings` and alias `/legging`
-- Added `/boots` and alias `/boot`
-- Added `/silverbull` alias to `/use`
-
-Main Map
-- Exchange Merchants now show on the map
-
-Reduced queue delay between messages sent by Wynntils features from 5 seconds to 1 second
+Container Search & Container Scroll
+- Housing song selection screen is now searchable and scrollable
 
 Fixes
-- Auto 3rd person on mount will no longer trigger when opening crates or doing emotes
-- Fixed ability tree and aspect scan failing when aspects are not unlocked
-- Fixed issue with duplicate ids in build loadouts causing screen crashes
-- Fixed x-pm set guide entry name
-- Fixed beacons not becoming transparent when nearby
+- Fixed closing boxed item search on trade market preventing further interactions
+- Fixed trade market default sort always using left click to find quickest path
+- Fixed ctrl click message always displaying with valuables protection in trade market even with ctrl click config disabled
+- Fixed silencer not disabling when disabling the feature
+- Fixed bad chat tab ordering deleting tab on save
+- Fixed crashing when opening map when not on world
+- Fixed ability tree outdated message displaying when character/class wasn't parsed correctly and when player has a non-support rank
