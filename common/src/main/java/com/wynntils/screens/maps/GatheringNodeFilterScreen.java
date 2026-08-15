@@ -5,15 +5,15 @@
 package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.core.components.Services;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.profession.type.GatheringNodeType;
 import com.wynntils.models.profession.type.MaterialType;
 import com.wynntils.screens.base.widgets.InfoButton;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.widgets.GatheringNodeFilterWidget;
 import com.wynntils.screens.maps.widgets.GatheringProfessionFilterButton;
-import com.wynntils.services.map.PoiService;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -44,8 +44,8 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
     private final MainMapScreen oldMapScreen;
     private List<GatheringNodeFilterWidget> gatheringNodeFilterWidgets = new ArrayList<>();
     private List<GatheringProfessionFilterButton> professionFilterButtons = new ArrayList<>();
-    private List<PoiService.GatheringNodeType> gatheringNodeTypes = new ArrayList<>();
-    private Map<MaterialType, Boolean> filteredMaterialTypes = new EnumMap<>(MaterialType.class);
+    private List<GatheringNodeType> gatheringNodeTypes = new ArrayList<>();
+    private final Map<MaterialType, Boolean> filteredMaterialTypes = new EnumMap<>(MaterialType.class);
 
     private TextInputBoxWidget searchInput;
 
@@ -287,9 +287,9 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
         return true;
     }
 
-    public void toggleGatheringNodeType(PoiService.GatheringNodeType gatheringNodeType) {
-        Services.Poi.setGatheringNodeTypeVisible(
-                gatheringNodeType, !Services.Poi.isGatheringNodeTypeVisible(gatheringNodeType));
+    public void toggleGatheringNodeType(GatheringNodeType gatheringNodeType) {
+        Models.Profession.setGatheringNodeTypeVisible(
+                gatheringNodeType, !Models.Profession.isGatheringNodeTypeVisible(gatheringNodeType));
     }
 
     public void toggleMaterialType(MaterialType materialType, boolean selected, boolean excludeOthers) {
@@ -308,7 +308,7 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
     }
 
     private void toggleAllGatheringNodeTypes(boolean visible) {
-        Services.Poi.setAllGatheringNodeTypesVisible(visible);
+        Models.Profession.setAllGatheringNodeTypesVisible(visible);
     }
 
     private void renderScroll(GuiGraphics guiGraphics) {
@@ -340,7 +340,7 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
 
     private void populateGatheringNodeTypes() {
         gatheringNodeFilterWidgets = new ArrayList<>();
-        gatheringNodeTypes = Services.Poi.getGatheringNodeTypes().stream()
+        gatheringNodeTypes = Models.Profession.getGatheringNodeTypes().stream()
                 .filter(gatheringNodeType -> filteredMaterialTypes.getOrDefault(gatheringNodeType.materialType(), true))
                 .filter(gatheringNodeType ->
                         searchMatches(gatheringNodeType.sourceMaterial().name()))
@@ -349,7 +349,7 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
         int renderX = (int) (getTranslationX() + 12);
         int renderY = (int) (getTranslationY() + 16);
 
-        for (PoiService.GatheringNodeType gatheringNodeType : gatheringNodeTypes) {
+        for (GatheringNodeType gatheringNodeType : gatheringNodeTypes) {
             GatheringNodeFilterWidget gatheringNodeFilterWidget =
                     new GatheringNodeFilterWidget(renderX, renderY, 320, 20, this, gatheringNodeType);
 

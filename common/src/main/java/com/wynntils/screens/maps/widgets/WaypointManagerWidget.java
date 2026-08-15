@@ -4,12 +4,12 @@
  */
 package com.wynntils.screens.maps.widgets;
 
-import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.maps.PoiCreationScreen;
+import com.wynntils.screens.maps.WaypointCreationScreen;
 import com.wynntils.screens.maps.WaypointManagementScreen;
-import com.wynntils.services.map.pois.CustomPoi;
+import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -40,41 +40,53 @@ public class WaypointManagerWidget extends AbstractWidget {
     private final boolean selected;
     private final boolean selectionMode;
 
+    private final MapIcon mapIcon;
     private final float iconRenderX;
     private float iconRenderY;
     private final float iconWidth;
     private final float iconHeight;
 
-    private final CustomColor color;
-    private final CustomPoi poi;
+    private final CustomColor iconColor;
+    private final CustomColor labelColor;
+    private final TextShadow labelShadow;
+    private final String waypointLabel;
+    private final WaypointLocation waypoint;
 
     public WaypointManagerWidget(
             int x,
             int y,
             int width,
             int height,
-            CustomPoi waypoint,
+            WaypointLocation waypoint,
             WaypointManagementScreen managementScreen,
             boolean selectionMode,
             boolean selected) {
-        super(x, y, width, height, Component.literal(waypoint.getName()));
-        this.poi = waypoint;
+        super(
+                x,
+                y,
+                width,
+                height,
+                Component.literal(waypoint.getAttributes().get().getLabel().get()));
+        this.waypoint = waypoint;
         this.managementScreen = managementScreen;
         this.selectionMode = selectionMode;
         this.selected = selected;
 
-        color = waypoint.getVisibility() == CustomPoi.Visibility.HIDDEN ? CommonColors.GRAY : CommonColors.WHITE;
+        labelColor = waypoint.getAttributes().get().getLabelColor().orElse(CommonColors.WHITE);
+        labelShadow = waypoint.getAttributes().get().getLabelShadow().orElse(TextShadow.NORMAL);
+        iconColor = waypoint.getAttributes().get().getIconColor().orElse(CommonColors.WHITE);
+        waypointLabel = waypoint.getAttributes().get().getLabel().get();
 
         editButton = new Button.Builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.edit"),
-                        (button) -> McUtils.mc().setScreen(PoiCreationScreen.create(managementScreen, waypoint)))
+                        (button) -> McUtils.mc().setScreen(WaypointCreationScreen.create(managementScreen, waypoint)))
                 .pos(x + width - 20 - (40 * 2), y)
                 .size(40, 20)
                 .build();
 
         deleteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.delete"), (button) -> {
-                            managementScreen.deleteWaypoint(waypoint, true);
+                            managementScreen.deleteWaypoint(waypoint);
                         })
                 .pos(x + width - 20 - 40, y)
                 .size(40, 20)
@@ -101,27 +113,47 @@ public class WaypointManagerWidget extends AbstractWidget {
                 .size(40 * 2 + 20, 20)
                 .build();
 
-        List<CustomPoi> pois = managementScreen.getWaypoints();
+        List<WaypointLocation> waypoints = managementScreen.getWaypoints();
 
         // Don't allow waypoints to be moved if at the top/bottom of the list
-        if (pois.indexOf(waypoint) == 0) {
+        if (waypoints.indexOf(waypoint) == 0) {
             upButton.active = false;
         }
 
-        if (pois.indexOf(waypoint) == (pois.size() - 1)) {
+        if (waypoints.indexOf(waypoint) == (waypoints.size() - 1)) {
             downButton.active = false;
         }
 
-        // Scale the icon to fill 80% of the button
-        float scaleFactor = 0.8f
-                * Math.min(width, height)
-                / Math.max(poi.getIcon().width(), poi.getIcon().height());
-        iconWidth = poi.getIcon().width() * scaleFactor;
-        iconHeight = poi.getIcon().height() * scaleFactor;
+        Optional<String> iconId = waypoint.getAttributes().get().getIconId();
 
-        // Calculate x/y position of the icon to keep it centered
-        iconRenderX = x + 2;
-        iconRenderY = (y + height / 2f) - iconHeight / 2f;
+        if (iconId.isPresent()) {
+            Optional<MapIcon> mapIconOpt = Services.MapData.getIcon(iconId.get());
+
+            if (mapIconOpt.isPresent()) {
+                mapIcon = mapIconOpt.get();
+
+                // Scale the icon to fill 80% of the button
+                float scaleFactor = 0.8f * Math.min(width, height) / Math.max(mapIcon.getWidth(), mapIcon.getHeight());
+                iconWidth = mapIcon.getWidth() * scaleFactor;
+                iconHeight = mapIcon.getHeight() * scaleFactor;
+
+                // Calculate x/y position of the icon to keep it centered
+                iconRenderX = x + 2;
+                iconRenderY = (y + height / 2f) - iconHeight / 2f;
+            } else {
+                iconWidth = -1;
+                iconHeight = -1;
+                iconRenderX = -1;
+                iconRenderY = -1;
+                mapIcon = null;
+            }
+        } else {
+            iconWidth = -1;
+            iconHeight = -1;
+            iconRenderX = -1;
+            iconRenderY = -1;
+            mapIcon = null;
+        }
     }
 
     @Override
@@ -131,19 +163,20 @@ public class WaypointManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics,
-                        StyledText.fromString(poi.getName()),
+                        StyledText.fromString(waypointLabel),
                         getX() + 25,
                         getY() + 10,
                         95,
-                        color,
+                        labelColor,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
+                        labelShadow);
 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString(String.valueOf(poi.getLocation().getX())),
+                        StyledText.fromString(
+                                String.valueOf(waypoint.getLocation().x())),
                         getX() + 140,
                         getY() + 10,
                         CommonColors.WHITE,
@@ -151,16 +184,14 @@ public class WaypointManagerWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        Optional<Integer> poiY = poi.getLocation().getY();
-
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        poiY.map(integer -> StyledText.fromString(String.valueOf(integer)))
-                                .orElse(StyledText.EMPTY),
+                        StyledText.fromString(
+                                String.valueOf(waypoint.getLocation().y())),
                         getX() + 170,
                         getY() + 10,
-                        color,
+                        CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
@@ -168,10 +199,11 @@ public class WaypointManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString(String.valueOf(poi.getLocation().getZ())),
+                        StyledText.fromString(
+                                String.valueOf(waypoint.getLocation().z())),
                         getX() + 200,
                         getY() + 10,
-                        color,
+                        CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
@@ -187,7 +219,7 @@ public class WaypointManagerWidget extends AbstractWidget {
                     getX(),
                     getY(),
                     getX() + width,
-                    getY() + height - 1,
+                    getY() + height,
                     1f);
         } else {
             editButton.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -195,25 +227,22 @@ public class WaypointManagerWidget extends AbstractWidget {
             upButton.render(guiGraphics, mouseX, mouseY, partialTick);
             downButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }
-
-        if (this.isHovered) {
-            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
-        }
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (!isMouseOver(event.x(), event.y())) return false;
+        double mouseX = event.x();
+        double mouseY = event.y();
+        int button = event.button();
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        if (!isMouseOver(mouseX, mouseY)) return false;
+
+        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
-
-            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(
-                    poi.getLocation().asLocation(), poi.getIcon(), poi.getColor(), poi.getColor(), poi.getName());
+            Services.UserMarker.addUserMarkedFeature(waypoint);
             return true;
-        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
-                    poi.getLocation().asLocation());
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            Services.UserMarker.removeUserMarkedFeature(waypoint);
             return true;
         }
 
@@ -232,7 +261,7 @@ public class WaypointManagerWidget extends AbstractWidget {
         if (clickedButton) {
             return clickedButton;
         } else {
-            managementScreen.selectWaypoint(poi);
+            managementScreen.selectWaypoint(waypoint);
             return true;
         }
     }
@@ -247,20 +276,24 @@ public class WaypointManagerWidget extends AbstractWidget {
         downButton.setY(y);
         selectButton.setY(y);
 
-        iconRenderY = (y + height / 2f) - iconHeight / 2f;
+        if (mapIcon != null) {
+            iconRenderY = (y + height / 2f) - iconHeight / 2f;
+        }
     }
 
     private void renderIcon(GuiGraphics guiGraphics) {
+        if (mapIcon == null) return;
+
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
-                poi.getIcon().identifier(),
-                poi.getIconColor(),
+                mapIcon.getIdentifier(),
+                iconColor,
                 iconRenderX,
                 iconRenderY,
                 iconWidth,
                 iconHeight,
-                poi.getIcon().width(),
-                poi.getIcon().height());
+                mapIcon.getWidth(),
+                mapIcon.getHeight());
     }
 
     @Override

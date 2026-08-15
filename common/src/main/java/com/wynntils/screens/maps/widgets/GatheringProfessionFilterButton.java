@@ -5,7 +5,7 @@
 package com.wynntils.screens.maps.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.core.components.Services;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.profession.type.MaterialType;
 import com.wynntils.screens.maps.GatheringNodeFilterScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -85,7 +85,8 @@ public class GatheringProfessionFilterButton extends AbstractWidget {
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.hasAltDown()) {
-            Services.Poi.setAllGatheringNodeTypesVisible(materialType, event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT);
+            Models.Profession.setAllGatheringNodeTypesVisible(
+                    materialType, event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT);
             return true;
         }
         selected = !selected;

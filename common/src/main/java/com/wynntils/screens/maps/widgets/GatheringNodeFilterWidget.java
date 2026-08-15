@@ -5,10 +5,10 @@
 package com.wynntils.screens.maps.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.core.components.Services;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.profession.type.GatheringNodeType;
 import com.wynntils.screens.maps.GatheringNodeFilterScreen;
-import com.wynntils.services.map.PoiService;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
@@ -26,7 +26,7 @@ import net.minecraft.network.chat.Component;
 
 public class GatheringNodeFilterWidget extends AbstractWidget {
     private final GatheringNodeFilterScreen filterScreen;
-    private final PoiService.GatheringNodeType gatheringNodeType;
+    private final GatheringNodeType gatheringNodeType;
     private final Texture icon;
     private final Button toggleButton;
     private final float iconWidth;
@@ -39,7 +39,7 @@ public class GatheringNodeFilterWidget extends AbstractWidget {
             int width,
             int height,
             GatheringNodeFilterScreen filterScreen,
-            PoiService.GatheringNodeType gatheringNodeType) {
+            GatheringNodeType gatheringNodeType) {
         super(
                 x,
                 y,
@@ -67,8 +67,9 @@ public class GatheringNodeFilterWidget extends AbstractWidget {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawScalingTexturedRect(guiGraphics, icon, getX() + 2, iconRenderY, iconWidth, iconHeight);
 
-        CustomColor color =
-                Services.Poi.isGatheringNodeTypeVisible(gatheringNodeType) ? CommonColors.WHITE : CommonColors.GRAY;
+        CustomColor color = Models.Profession.isGatheringNodeTypeVisible(gatheringNodeType)
+                ? CommonColors.WHITE
+                : CommonColors.GRAY;
 
         FontRenderer.getInstance()
                 .renderScrollingText(
@@ -119,7 +120,7 @@ public class GatheringNodeFilterWidget extends AbstractWidget {
     }
 
     private Component getToggleText() {
-        return Services.Poi.isGatheringNodeTypeVisible(gatheringNodeType)
+        return Models.Profession.isGatheringNodeTypeVisible(gatheringNodeType)
                 ? Component.translatable("screens.wynntils.gatheringNodeFilterGui.hide")
                 : Component.translatable("screens.wynntils.gatheringNodeFilterGui.show");
     }
