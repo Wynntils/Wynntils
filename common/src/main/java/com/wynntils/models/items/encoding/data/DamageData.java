@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.data;
@@ -12,5 +12,9 @@ import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 import java.util.Optional;
 
-public record DamageData(Optional<GearAttackSpeed> attackSpeed, List<Pair<DamageType, RangedValue>> damages)
-        implements ItemData {}
+public record DamageData(int dps, Optional<GearAttackSpeed> attackSpeed, List<Pair<DamageType, RangedValue>> damages)
+        implements ItemData {
+    public DamageData(Optional<GearAttackSpeed> attackSpeed, List<Pair<DamageType, RangedValue>> damages) {
+        this(0, attackSpeed, damages);
+    }
+}

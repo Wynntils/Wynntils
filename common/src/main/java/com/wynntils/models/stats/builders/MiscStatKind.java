@@ -48,7 +48,7 @@ public enum MiscStatKind {
     // Special tome only stats, which are only found as base stats on tomes
     SLAYING_XP("Slaying XP", StatUnit.PERCENT, "slayingXP", "SLAYING_XP", StatType.SpecialStatType.TOME_BASE_STAT),
     GATHERING_XP(
-            "Gathering XP",
+            "Gathering Experience",
             StatUnit.PERCENT,
             "gatheringExperience",
             "GATHERING_XP",

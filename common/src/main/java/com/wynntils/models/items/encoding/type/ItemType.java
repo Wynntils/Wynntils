@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.type;
@@ -9,7 +9,8 @@ public enum ItemType {
     TOME(1),
     CHARM(2),
     CRAFTED_GEAR(3),
-    CRAFTED_CONSUMABLE(4);
+    CRAFTED_CONSUMABLE(4),
+    MOUNT(5);
 
     private final byte encodingId;
 

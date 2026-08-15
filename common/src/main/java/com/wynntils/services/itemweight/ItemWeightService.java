@@ -18,7 +18,6 @@ import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.services.itemweight.type.ItemWeighting;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.Pair;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -29,26 +28,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
-import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 
 public class ItemWeightService extends Service {
-    private static final FontDescription PILL_FONT =
-            new FontDescription.Resource(Identifier.withDefaultNamespace("banner/pill"));
-    private static final CustomColor NORI_COLOR = CustomColor.fromInt(0x1cb5fc);
-    private static final CustomColor WYNNPOOL_COLOR = CustomColor.fromInt(0xfc9700);
-    private static final Style NORI_STYLE = Style.EMPTY.withFont(PILL_FONT).withColor(NORI_COLOR.asInt());
-    private static final Style WYNNPOOL_STYLE = Style.EMPTY.withFont(PILL_FONT).withColor(WYNNPOOL_COLOR.asInt());
-
-    public static final Component NORI_HEADER = Component.literal(
-                    "\uE060\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE062")
-            .withStyle(NORI_STYLE);
-    public static final Component WYNNPOOL_HEADER = Component.literal(
-                    "\uE060\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE048\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE062")
-            .withStyle(WYNNPOOL_STYLE);
-
     private Map<ItemWeightSource, Map<String, List<ItemWeighting>>> weightings = new HashMap<>();
 
     public ItemWeightService() {

@@ -5,124 +5,99 @@
 package com.wynntils.handlers.tooltip;
 
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.components.Models;
 import com.wynntils.handlers.tooltip.impl.crafted.CraftedTooltipBuilder;
-import com.wynntils.handlers.tooltip.impl.crafted.CraftedTooltipComponent;
-import com.wynntils.handlers.tooltip.impl.crafted.components.CraftedConsumableTooltipComponent;
-import com.wynntils.handlers.tooltip.impl.crafted.components.CraftedGearTooltipComponent;
 import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipComponent;
-import com.wynntils.handlers.tooltip.impl.identifiable.components.CharmTooltipComponent;
-import com.wynntils.handlers.tooltip.impl.identifiable.components.GearTooltipComponent;
-import com.wynntils.handlers.tooltip.impl.identifiable.components.TomeTooltipComponent;
-import com.wynntils.models.items.items.game.CharmItem;
-import com.wynntils.models.items.items.game.CraftedConsumableItem;
-import com.wynntils.models.items.items.game.CraftedGearItem;
-import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.models.items.items.game.TomeItem;
+import com.wynntils.handlers.tooltip.impl.mount.MountTooltipBuilder;
+import com.wynntils.handlers.tooltip.type.TooltipOptions;
+import com.wynntils.models.items.WynnItem;
+import com.wynntils.models.items.WynnItemData;
+import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.function.Supplier;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class TooltipHandler extends Handler {
-    private final Map<Class<? extends IdentifiableItemProperty>, IdentifiableTooltipComponent>
-            identifiableTooltipComponents = new HashMap<>();
-    private final Map<Class<? extends CraftedItemProperty>, CraftedTooltipComponent> craftedTooltipComponents =
-            new HashMap<>();
+    public List<Component> updateTooltip(
+            List<Component> originalLines, IdentifiableItemProperty<?, ?> identifiableItem, TooltipOptions options) {
+        if (identifiableItem.getIdentifications().isEmpty()) return originalLines;
 
-    public TooltipHandler() {
-        registerTooltipComponents();
+        return updateTooltip(
+                originalLines,
+                identifiableItem,
+                options,
+                () -> calculateUpdatedTooltip(originalLines, identifiableItem, options));
     }
 
-    /**
-     * Creates a tooltip builder that provides a synthetic header and footer with no source
-     */
-    public IdentifiableTooltipBuilder buildNew(
-            IdentifiableItemProperty identifiableItem, boolean hideUnidentified, boolean showItemType) {
-        return buildNew(identifiableItem, hideUnidentified, showItemType, "");
+    public List<Component> updateTooltip(
+            List<Component> originalLines, CraftedItemProperty craftedItem, TooltipOptions options) {
+        if (craftedItem.getIdentifications().isEmpty()) return originalLines;
+
+        return updateTooltip(
+                originalLines,
+                craftedItem,
+                options,
+                () -> CraftedTooltipBuilder.fromTooltipLines(originalLines, craftedItem)
+                        .getTooltipLines(Models.Character.getClassType(), options));
     }
 
-    /**
-     * Creates a tooltip builder that provides a synthetic header and footer with the given source
-     */
-    public IdentifiableTooltipBuilder buildNew(
-            IdentifiableItemProperty identifiableItem, boolean hideUnidentified, boolean showItemType, String source) {
-        IdentifiableTooltipComponent tooltipComponent = identifiableTooltipComponents.get(identifiableItem.getClass());
-        if (tooltipComponent == null) {
-            throw new IllegalArgumentException("No tooltip component registered for "
-                    + identifiableItem.getClass().getName());
+    private List<Component> updateTooltip(
+            List<Component> originalLines, Object item, TooltipOptions options, Supplier<List<Component>> calculator) {
+        if (!(item instanceof WynnItem wynnItem)) return calculator.get();
+
+        Object cachedTooltip = wynnItem.getData().get(WynnItemData.TOOLTIP_KEY);
+        if (cachedTooltip instanceof TooltipBuilder) {
+            return originalLines;
         }
 
-        return IdentifiableTooltipBuilder.buildNewItem(
-                identifiableItem, tooltipComponent, hideUnidentified, showItemType, source);
+        UpdatedTooltipCache cache;
+        if (cachedTooltip instanceof UpdatedTooltipCache updatedTooltipCache) {
+            cache = updatedTooltipCache;
+        } else {
+            cache = new UpdatedTooltipCache();
+            wynnItem.getData().store(WynnItemData.TOOLTIP_KEY, cache);
+        }
+
+        UpdateKey key = new UpdateKey(List.copyOf(originalLines), options);
+        return cache.computeIfAbsent(key, ignored -> calculator.get());
+    }
+
+    private List<Component> calculateUpdatedTooltip(
+            List<Component> originalLines, IdentifiableItemProperty<?, ?> identifiableItem, TooltipOptions options) {
+        return IdentifiableTooltipBuilder.fromTooltipLines(originalLines, identifiableItem)
+                .getTooltipLines(Models.Character.getClassType(), options);
+    }
+
+    public IdentifiableTooltipBuilder buildNew(IdentifiableItemProperty identifiableItem) {
+        return buildNew(identifiableItem, "");
+    }
+
+    public IdentifiableTooltipBuilder buildNew(IdentifiableItemProperty identifiableItem, String source) {
+        return IdentifiableTooltipBuilder.buildNewItem(identifiableItem, source);
     }
 
     public IdentifiableTooltipBuilder buildFromItemStack(
-            ItemStack itemStack,
-            IdentifiableItemProperty identifiableItem,
-            boolean hideUnidentified,
-            boolean showItemType,
-            String source) {
-        IdentifiableTooltipComponent tooltipComponent = identifiableTooltipComponents.get(identifiableItem.getClass());
-        if (tooltipComponent == null) {
-            throw new IllegalArgumentException("No tooltip component registered for "
-                    + identifiableItem.getClass().getName());
-        }
-
-        return IdentifiableTooltipBuilder.buildFromItemStack(
-                itemStack, identifiableItem, tooltipComponent, hideUnidentified, showItemType, source);
+            ItemStack itemStack, IdentifiableItemProperty identifiableItem, String source) {
+        return IdentifiableTooltipBuilder.buildFromItemStack(itemStack, identifiableItem, source);
     }
 
-    /**
-     * Creates a tooltip builder that provides a synthetic header and footer with the given source
-     */
     public CraftedTooltipBuilder buildNew(CraftedItemProperty craftedItemProperty, String source) {
-        CraftedTooltipComponent tooltipComponent = craftedTooltipComponents.get(craftedItemProperty.getClass());
-        if (tooltipComponent == null) {
-            throw new IllegalArgumentException("No tooltip component registered for "
-                    + craftedItemProperty.getClass().getName());
-        }
-
-        return CraftedTooltipBuilder.buildNewItem(craftedItemProperty, tooltipComponent, source);
+        return CraftedTooltipBuilder.buildNewItem(craftedItemProperty, source);
     }
 
-    /**
-     * Creates a tooltip builder that parses the header and footer from an existing tooltip
-     */
-    public TooltipBuilder fromParsedItemStack(ItemStack itemStack, IdentifiableItemProperty itemInfo) {
-        return IdentifiableTooltipBuilder.fromParsedItemStack(itemStack, itemInfo);
-    }
-
-    /**
-     * Creates a tooltip builder that parses the header and footer from an existing tooltip
-     */
     public TooltipBuilder fromParsedItemStack(ItemStack itemStack, CraftedItemProperty craftedItemProperty) {
-        CraftedTooltipComponent tooltipComponent = craftedTooltipComponents.get(craftedItemProperty.getClass());
-        if (tooltipComponent == null) {
-            throw new IllegalArgumentException("No tooltip component registered for "
-                    + craftedItemProperty.getClass().getName());
-        }
-
-        return CraftedTooltipBuilder.buildFromItemStack(itemStack, craftedItemProperty, tooltipComponent);
+        return CraftedTooltipBuilder.fromParsedItemStack(itemStack, craftedItemProperty);
     }
 
-    private void registerTooltipComponents() {
-        registerTooltipComponent(CharmItem.class, new CharmTooltipComponent());
-        registerTooltipComponent(GearItem.class, new GearTooltipComponent());
-        registerTooltipComponent(TomeItem.class, new TomeTooltipComponent());
-
-        registerTooltipComponent(CraftedGearItem.class, new CraftedGearTooltipComponent());
-        registerTooltipComponent(CraftedConsumableItem.class, new CraftedConsumableTooltipComponent());
+    public MountTooltipBuilder buildNew(MountItem mountItem, String source) {
+        return MountTooltipBuilder.buildNewItem(mountItem, source);
     }
 
-    private <T, U, I extends IdentifiableItemProperty<T, U>> void registerTooltipComponent(
-            Class<I> itemClass, IdentifiableTooltipComponent<T, U> tooltipComponent) {
-        identifiableTooltipComponents.put(itemClass, tooltipComponent);
-    }
+    private record UpdateKey(List<Component> originalLines, TooltipOptions options) {}
 
-    private <T extends CraftedItemProperty> void registerTooltipComponent(
-            Class<T> itemClass, CraftedTooltipComponent<T> tooltipComponent) {
-        craftedTooltipComponents.put(itemClass, tooltipComponent);
-    }
+    private static final class UpdatedTooltipCache extends HashMap<UpdateKey, List<Component>> {}
 }

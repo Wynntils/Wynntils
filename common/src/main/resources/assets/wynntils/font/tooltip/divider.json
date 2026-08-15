@@ -1,0 +1,14 @@
+{
+  "providers": [
+    {
+      "ascent": 6,
+      "chars": [
+        "\uE000",
+        "\uE001"
+      ],
+      "file": "wynntils:font/tooltip/divider/identification_divider.png",
+      "height": 8,
+      "type": "bitmap"
+    }
+  ]
+}

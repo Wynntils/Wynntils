@@ -6,12 +6,12 @@ package com.wynntils.models.mount.type;
 
 import com.wynntils.utils.type.CappedValue;
 import java.util.Map;
-import java.util.Optional;
 
 public record MountInfo(
         int potential,
-        Optional<String> primaryColor,
-        Optional<String> secondaryColor,
+        MountColorInfo primaryColorInfo,
+        MountColorInfo secondaryColorInfo,
         CappedValue currentEnergy,
         Map<MountStat, CappedValue> stats,
+        boolean estimatedMaxStats,
         Map<MountStat, Integer> maxStats) {}
