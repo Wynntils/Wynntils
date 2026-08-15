@@ -156,6 +156,12 @@
     "url": "https://cdn.wynntils.com/static/Data-Storage/destinations.json"
   },
   {
+    "id": "dataStaticGatheringNodeMapFeatures",
+    "md5": "e8d7a686ff4b445d692599136147cf2b",
+    "path": "Reference/gathering_node_mapfeatures.json",
+    "url": "https://cdn.wynntils.com/static/Reference/gathering_node_mapfeatures.json"
+  },
+  {
     "id": "dataStaticGatheringNodes",
     "md5": "3edf9ef125979de9dc242253b16d1531",
     "path": "Reference/gathering_nodes.json",
@@ -163,7 +169,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "d48b6fd625bf9f70f446c096d32f95cb",
+    "md5": "6363d86c7a45f4d61b52b7610f3d563f",
     "path": "Reference/gear.json",
     "url": "https://cdn.wynntils.com/static/Reference/gear.json"
   },
@@ -205,7 +211,7 @@
   },
   {
     "id": "dataStaticItemDisplayModelData",
-    "md5": "6229aeaa674b007683cddceaed5069ae",
+    "md5": "9133e68a1691eaa15e40b5d694c83e41",
     "path": "Data-Storage/item_display_model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/item_display_model_data.json"
   },
