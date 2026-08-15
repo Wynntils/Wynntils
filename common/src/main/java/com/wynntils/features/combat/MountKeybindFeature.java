@@ -17,6 +17,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
+import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.SetLocalPlayerVehicleEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
@@ -73,16 +74,12 @@ public class MountKeybindFeature extends Feature {
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
-        if (!Models.WorldState.onWorld()) return;
+        handleMountItemUse();
+    }
 
-        ItemStack itemStack = McUtils.inventory().getSelectedItem();
-        Optional<MountItem> mountItemOpt = Models.Item.asWynnItem(itemStack, MountItem.class);
-        if (mountItemOpt.isEmpty()) return;
-        if (!mountItemOpt.get().isSummonItem()) return;
-
-        playSoundIfEnabled();
-
-        summonTick = McUtils.player().tickCount;
+    @SubscribeEvent
+    public void onSwing(ArmSwingEvent event) {
+        handleMountItemUse();
     }
 
     @SubscribeEvent
@@ -114,6 +111,19 @@ public class MountKeybindFeature extends Feature {
         if (switchToThirdPersonOnMount.get() && prevCameraType != null) {
             restoreCamera();
         }
+    }
+
+    private void handleMountItemUse() {
+        if (!Models.WorldState.onWorld()) return;
+
+        ItemStack itemStack = McUtils.inventory().getSelectedItem();
+        Optional<MountItem> mountItemOpt = Models.Item.asWynnItem(itemStack, MountItem.class);
+        if (mountItemOpt.isEmpty()) return;
+        if (!mountItemOpt.get().isSummonItem()) return;
+
+        playSoundIfEnabled();
+
+        summonTick = McUtils.player().tickCount;
     }
 
     private void tryRideMount() {
