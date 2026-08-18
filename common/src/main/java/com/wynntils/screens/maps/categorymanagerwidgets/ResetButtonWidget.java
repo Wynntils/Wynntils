@@ -2,7 +2,6 @@ package com.wynntils.screens.maps.categorymanagerwidgets;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.CategoryManagementScreen;
-import com.wynntils.screens.maps.type.OverrideType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -36,7 +35,7 @@ public class ResetButtonWidget extends AbstractWidget {
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
-                Texture.MANAGER_WIDGET_BACKGROUND,
+                Texture.MANAGER_WIDGET_BACKGROUND_RED,
                 x,
                 y,
                 this.width,

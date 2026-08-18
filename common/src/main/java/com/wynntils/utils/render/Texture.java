@@ -363,6 +363,8 @@ public enum Texture {
 
     // Category Management Screen
     CATEGORY_MANAGER_ICON("map/managers/category_manager/category_manager_icon.png", 16, 16),
+    CATEGORY_MANAGER_OPTION_HEADER("map/managers/category_manager/category_manager_header.png", 70, 16, 4, 9, 8, 8),
+    CATEGORY_MANAGER_OPTION_HEADER_LINE("map/managers/category_manager/category_manager_header_line.png", 40, 16, 1, 10, 8, 8),
 
     // Provider Management Screen
     PROVIDER_MANAGER_ICON("map/managers/provider_manager/provider_manager_icon.png", 16, 16),
@@ -378,6 +380,11 @@ public enum Texture {
     MANAGER_SCROLL_BAR_BUTTON("map/managers/scroll_bar_button.png", 9, 8, 4, 4, 4, 4),
     MANAGER_FOLDER_ICON("map/managers/folder_icon.png", 12, 12),
     MANAGER_FILE_ICON("map/managers/file_icon.png", 12, 12),
+    MANAGER_TEXT_BOX_BACKGROUND("map/managers/textbox_background.png", 20, 16, 3, 3, 3, 3),
+    MANAGER_SLIDER_FILLED("map/managers/filled_slider.png", 9, 6, 4, 1, 3, 3),
+    MANAGER_SLIDER_EMPTY("map/managers/empty_slider.png", 9, 6, 1, 4, 3, 3),
+    MANAGER_TOGGLE_BUTTON_OFF("map/managers/toggle_button_off.png", 43, 18, 18, 19, 8, 8),
+    MANAGER_TOGGLE_BUTTON_ON("map/managers/toggle_button_on.png", 43, 18, 18, 19, 8, 8),
 
     // Player Viewer
     DUEL_ICON("icons/player_viewer/duel_icon.png", 14, 14),

@@ -5,6 +5,8 @@ import com.wynntils.screens.maps.type.OptionCategory;
 import com.wynntils.screens.maps.type.ScrollableWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -14,27 +16,41 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
-final class CategoryHeaderWidget extends AbstractWidget implements ScrollableWidget<Void> {
-    private static final int HEIGHT = 14;
-
+public class CategoryHeaderWidget extends AbstractWidget implements ScrollableWidget<Void> {
     private final OptionCategory category;
 
     CategoryHeaderWidget(OptionCategory category) {
-        super(0, 0, 0, HEIGHT, Component.literal(category.getDisplayName()));
+        super(0, 0, 0, 16, Component.literal(category.getDisplayName()));
         this.category = category;
     }
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.CATEGORY_MANAGER_OPTION_HEADER,
+                getX(),
+                getY(),
+                150,
+                this.height);
+
         FontRenderer.getInstance().renderText(
                 guiGraphics,
                 StyledText.fromString(getMessage().getString()),
-                getX() + getWidth() / 2f,
-                getY() + getHeight() / 2f,
+                getX() + 20,
+                getY() + this.height / 2f,
                 CommonColors.WHITE,
-                HorizontalAlignment.CENTER,
+                HorizontalAlignment.LEFT,
                 VerticalAlignment.MIDDLE,
                 TextShadow.NORMAL);
+
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.CATEGORY_MANAGER_OPTION_HEADER_LINE,
+                getX() + 150 + 5,
+                getY(),
+                this.width - 150 - 5,
+                this.height);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.wynntils.screens.maps.categorymanagerwidgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.screens.maps.CategoryManagementScreen;
 import com.wynntils.screens.maps.type.ScrollableWidget;
 import com.wynntils.utils.MathUtils;
@@ -171,7 +172,7 @@ public abstract class ScrollBarWidget extends AbstractWidget {
 
             scrollOffsetY = Math.max(0, Math.min(newOffset, getMaxScrollOffsetY()));
 
-            return super.mouseDragged(event, dragX, dragY);
+            return true;
         }
 
         return false;
@@ -202,6 +203,8 @@ public abstract class ScrollBarWidget extends AbstractWidget {
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
+        WynntilsMod.info("released mouse");
+
         draggingScrollY = false;
         return super.mouseReleased(event);
     }

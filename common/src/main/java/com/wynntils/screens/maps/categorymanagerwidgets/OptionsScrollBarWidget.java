@@ -1,16 +1,20 @@
 package com.wynntils.screens.maps.categorymanagerwidgets;
 
-import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.screens.maps.CategoryManagementScreen;
 import com.wynntils.screens.maps.type.OptionCategory;
 import com.wynntils.screens.maps.type.ScrollableWidget;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import com.wynntils.utils.MathUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.input.MouseButtonEvent;
 
 public class OptionsScrollBarWidget extends ScrollBarWidget {
+    private static final int WIDGET_PADDING = 3;
+
     private final List<ScrollableWidget<?>> registeredWidgets = new ArrayList<>();
 
     public OptionsScrollBarWidget(int x, int y, int width, int height, CategoryManagementScreen parent) {
@@ -21,8 +25,12 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
         registeredWidgets.add(widget);
     }
 
-    public void clearWidgets() {
-        registeredWidgets.clear();
+    public List<ScrollableWidget<?>> getRegisteredWidgets() {
+        return Collections.unmodifiableList(registeredWidgets);
+    }
+
+    private int getHeightWithPadding(int index, int widgetHeight, int totalWidgets) {
+        return widgetHeight + (index < totalWidgets - 1 ? WIDGET_PADDING : 0);
     }
 
     @Override
@@ -52,16 +60,17 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
         int viewportLeft = getX() + SCROLL_BAR_WIDTH_PADDING;
         int currentY = viewportTop - scrollOffsetY;
 
-        for (ScrollableWidget<?> widget : getWidgets()) {
-            AbstractWidget aw = (AbstractWidget) widget;
-            int widgetHeight = aw.getHeight();
+        List<ScrollableWidget<?>> widgets = getWidgets();
+        for (int i = 0; i < widgets.size(); i++) {
+            AbstractWidget abstractWidget = (AbstractWidget) widgets.get(i);
+            int widgetHeight = abstractWidget.getHeight();
             if (currentY + widgetHeight >= viewportTop && currentY <= viewportBottom) {
-                aw.setX(viewportLeft);
-                aw.setY(currentY);
-                aw.setWidth(contentWidth);
-                aw.render(guiGraphics, mouseX, mouseY, partialTick);
+                abstractWidget.setX(viewportLeft);
+                abstractWidget.setY(currentY);
+                abstractWidget.setWidth(contentWidth);
+                abstractWidget.render(guiGraphics, mouseX, mouseY, partialTick);
             }
-            currentY += widgetHeight;
+            currentY += getHeightWithPadding(i, widgetHeight, widgets.size());
         }
     }
 
@@ -71,36 +80,28 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
             return true;
         }
 
-        int viewportTop = getY() + SCROLL_BAR_HEIGHT_PADDING;
-        int viewportBottom = viewportTop + getViewportHeight();
-        int contentWidth = getViewportWidth();
-        int viewportLeft = getX() + SCROLL_BAR_WIDTH_PADDING;
-        int viewportRight = viewportLeft + contentWidth;
+        int currentY = getY() + SCROLL_BAR_HEIGHT_PADDING - scrollOffsetY;
 
-        // Ignore clicks outside the viewport area
-        if (!(event.x() >= viewportLeft && event.x() < viewportRight &&
-                event.y() >= viewportTop && event.y() < viewportBottom)) {
-            return false;
-        }
-
-        int currentY = viewportTop - scrollOffsetY;
-        for (ScrollableWidget<?> widget : getWidgets()) {
-            AbstractWidget aw = (AbstractWidget) widget;
-            int widgetHeight = aw.getHeight();
-            if (currentY + widgetHeight >= viewportTop && currentY <= viewportBottom) {
-                aw.setX(viewportLeft);
-                aw.setY(currentY);
-                aw.setWidth(contentWidth);
-                if (aw.mouseClicked(event, isDoubleClick)) {
+        List<ScrollableWidget<?>> widgets = getWidgets();
+        for (int i = 0; i < widgets.size(); i++) {
+            AbstractWidget abstractWidget = (AbstractWidget) widgets.get(i);
+            int widgetHeight = abstractWidget.getHeight();
+            if (isInsideViewport(event.x(), event.y())) {
+                abstractWidget.setX(getX() + SCROLL_BAR_WIDTH_PADDING);
+                abstractWidget.setY(currentY);
+                abstractWidget.setWidth(getViewportWidth());
+                if (abstractWidget.isHovered() && abstractWidget.mouseClicked(event, isDoubleClick)) {
                     return true;
                 }
             }
-            currentY += widgetHeight;
+            currentY += getHeightWithPadding(i, widgetHeight, widgets.size());
         }
 
         return false;
     }
 
+    //TODO: make this better so that when i drag the button outside of the widget y it still works.
+    // fix ishovered check basically
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         // Let the scrollbar handle its own dragging first
@@ -108,104 +109,83 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
             return true;
         }
 
-        int viewportTop = getY() + SCROLL_BAR_HEIGHT_PADDING;
-        int viewportBottom = viewportTop + getViewportHeight();
-        int contentWidth = getViewportWidth();
-        int viewportLeft = getX() + SCROLL_BAR_WIDTH_PADDING;
-        int viewportRight = viewportLeft + contentWidth;
-
-        // Ignore drags that started or happen outside the viewport
-        if (!(event.x() >= viewportLeft && event.x() < viewportRight &&
-                event.y() >= viewportTop && event.y() < viewportBottom)) {
-            return false;
-        }
-
-        int currentY = viewportTop - scrollOffsetY;
-        for (ScrollableWidget<?> widget : getWidgets()) {
-            AbstractWidget aw = (AbstractWidget) widget;
-            int widgetHeight = aw.getHeight();
-            if (currentY + widgetHeight >= viewportTop && currentY <= viewportBottom) {
-                aw.setX(viewportLeft);
-                aw.setY(currentY);
-                aw.setWidth(contentWidth);
-                if (aw.mouseDragged(event, dragX, dragY)) {
+        int currentY = getY() + SCROLL_BAR_HEIGHT_PADDING - scrollOffsetY;
+        List<ScrollableWidget<?>> widgets = getWidgets();
+        for (int i = 0; i < widgets.size(); i++) {
+            AbstractWidget abstractWidget = (AbstractWidget) widgets.get(i);
+            int widgetHeight = abstractWidget.getHeight();
+            if (isInsideViewport(event.x(), event.y())) {
+                abstractWidget.setX(getX() + SCROLL_BAR_WIDTH_PADDING);
+                abstractWidget.setY(currentY);
+                abstractWidget.setWidth(getViewportWidth());
+                if (abstractWidget.isHovered() && abstractWidget.mouseDragged(event, dragX, dragY)) {
                     return true;
                 }
             }
-            currentY += widgetHeight;
+            currentY += getHeightWithPadding(i, widgetHeight, widgets.size());
         }
         return false;
     }
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
-        // Let the scrollbar handle release first
-        if (super.mouseReleased(event)) {
-            return true;
-        }
+        int currentY = getY() + SCROLL_BAR_HEIGHT_PADDING - scrollOffsetY;
 
-        int viewportTop = getY() + SCROLL_BAR_HEIGHT_PADDING;
-        int viewportBottom = viewportTop + getViewportHeight();
-        int contentWidth = getViewportWidth();
-        int viewportLeft = getX() + SCROLL_BAR_WIDTH_PADDING;
-        int viewportRight = viewportLeft + contentWidth;
-
-        // Only forward if the release is inside the viewport
-        if (!(event.x() >= viewportLeft && event.x() < viewportRight &&
-                event.y() >= viewportTop && event.y() < viewportBottom)) {
-            return false;
-        }
-
-        int currentY = viewportTop - scrollOffsetY;
-        for (ScrollableWidget<?> widget : getWidgets()) {
-            AbstractWidget aw = (AbstractWidget) widget;
-            int widgetHeight = aw.getHeight();
-            if (currentY + widgetHeight >= viewportTop && currentY <= viewportBottom) {
-                aw.setX(viewportLeft);
-                aw.setY(currentY);
-                aw.setWidth(contentWidth);
-                if (aw.mouseReleased(event)) {
+        List<ScrollableWidget<?>> widgets = getWidgets();
+        for (int i = 0; i < widgets.size(); i++) {
+            AbstractWidget abstractWidget = (AbstractWidget) widgets.get(i);
+            int widgetHeight = abstractWidget.getHeight();
+            if (isInsideViewport(event.x(), event.y())) {
+                abstractWidget.setX(getX() + SCROLL_BAR_WIDTH_PADDING);
+                abstractWidget.setY(currentY);
+                abstractWidget.setWidth(getViewportWidth());
+                if (abstractWidget.isHovered() && abstractWidget.mouseReleased(event)) {
                     return true;
                 }
             }
-            currentY += widgetHeight;
+            currentY += getHeightWithPadding(i, widgetHeight, widgets.size());
         }
-        return false;
+        return super.mouseReleased(event);
     }
+
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        // Let the scrollbar handle scrolling first (e.g., move the thumb)
-        if (super.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
-            return true;
-        }
-
-        int viewportTop = getY() + SCROLL_BAR_HEIGHT_PADDING;
-        int viewportBottom = viewportTop + getViewportHeight();
-        int contentWidth = getViewportWidth();
-        int viewportLeft = getX() + SCROLL_BAR_WIDTH_PADDING;
-        int viewportRight = viewportLeft + contentWidth;
-
-        // Only forward if the scroll occurs inside the viewport
-        if (!(mouseX >= viewportLeft && mouseX < viewportRight &&
-                mouseY >= viewportTop && mouseY < viewportBottom)) {
+        if (!isInsideViewport(mouseX, mouseY)) {
             return false;
         }
 
-        int currentY = viewportTop - scrollOffsetY;
-        for (ScrollableWidget<?> widget : getWidgets()) {
-            AbstractWidget aw = (AbstractWidget) widget;
-            int widgetHeight = aw.getHeight();
-            if (currentY + widgetHeight >= viewportTop && currentY <= viewportBottom) {
-                aw.setX(viewportLeft);
-                aw.setY(currentY);
-                aw.setWidth(contentWidth);
-                if (aw.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
+        int currentY = getY() + SCROLL_BAR_HEIGHT_PADDING - scrollOffsetY;
+
+        List<ScrollableWidget<?>> widgets = getWidgets();
+        for (int i = 0; i < widgets.size(); i++) {
+            AbstractWidget abstractWidget = (AbstractWidget) widgets.get(i);
+            int widgetHeight = abstractWidget.getHeight();
+            if (isInsideViewport(mouseX, mouseY)) {
+                abstractWidget.setX(getX() + SCROLL_BAR_WIDTH_PADDING);
+                abstractWidget.setY(currentY);
+                abstractWidget.setWidth(getViewportWidth());
+                if (abstractWidget.isHovered() && abstractWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
                     return true;
                 }
             }
-            currentY += widgetHeight;
+            currentY += getHeightWithPadding(i, widgetHeight, widgets.size());
         }
-        return false;
+        return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
+    }
+
+    private boolean isInsideViewport(double x, double y) {
+        int viewportTop = getY() + SCROLL_BAR_HEIGHT_PADDING;
+        int viewportBottom = viewportTop + getViewportHeight();
+        int viewportLeft = getX() + SCROLL_BAR_WIDTH_PADDING;
+        int viewportRight = viewportLeft + getViewportWidth();
+
+        return MathUtils.isInside(
+                (int) x,
+                (int) y,
+                viewportLeft,
+                viewportRight,
+                viewportTop,
+                viewportBottom);
     }
 }

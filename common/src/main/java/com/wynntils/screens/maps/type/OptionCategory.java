@@ -2,9 +2,10 @@ package com.wynntils.screens.maps.type;
 
 public enum OptionCategory {
     GENERAL("General"),
-    DISPLAY("Display"),
-    PERFORMANCE("Performance"),
-    ADVANCED("Advanced");
+    LABEL("Label"),
+    ICON("Icon"),
+    MARKER("Marker"),
+    AREA_BORDER("Area & Border");
 
     private final String displayName;
 

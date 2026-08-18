@@ -1,38 +1,51 @@
 package com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.maps.CategoryManagementScreen;
+import com.wynntils.screens.maps.categorymanagerwidgets.screen.IconSelectionScreen;
 import com.wynntils.screens.maps.type.OptionCategory;
 import com.wynntils.screens.maps.type.ScrollableWidget;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class IconOptionWidget extends AbstractWidget implements ScrollableWidget<Boolean> {
-    private final OptionCategory category;
-    private boolean value;
+public class IconOptionWidget extends AbstractWidget implements ScrollableWidget<String> {
+    private static final int BUTTON_WIDTH = 100;
+    private static final int BUTTON_HEIGHT = 20;
+    private static final int ICON_BORDER = 4;
 
-    public IconOptionWidget(String label, OptionCategory category, boolean initialValue) {
-        super(0, 0, 0, 20, Component.literal(label));
+    private final OptionCategory category;
+    private String value;
+
+    public IconOptionWidget(String label, OptionCategory category, String initialIconId) {
+        super(0, 0, 0, 32, Component.literal(label));
         this.category = category;
-        this.value = initialValue;
+        this.value = initialIconId;
     }
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        FontRenderer fontRenderer = FontRenderer.getInstance();
+        if (isMouseOverIconButton(mouseX, mouseY)) {
+            handleCursor(guiGraphics);
+        }
 
-        fontRenderer.renderText(
+        FontRenderer.getInstance().renderText(
                 guiGraphics,
                 StyledText.fromString(getMessage().getString()),
                 getX(),
@@ -42,29 +55,72 @@ public class IconOptionWidget extends AbstractWidget implements ScrollableWidget
                 VerticalAlignment.MIDDLE,
                 TextShadow.NORMAL);
 
-        String valueText = value ? "ON" : "OFF";
-        CustomColor valueColor = value ? CommonColors.GREEN : CommonColors.RED;
-
-        int valueX = getX() + getWidth() - fontRenderer.getFont().width(valueText) - 4;
-        fontRenderer.renderText(
+        RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
-                StyledText.fromString(valueText),
-                valueX,
+                Texture.MANAGER_WIDGET_BACKGROUND,
+                getX() + this.width - BUTTON_WIDTH,
+                getY() + (this.height - BUTTON_HEIGHT) / 2f,
+                this.BUTTON_WIDTH,
+                this.BUTTON_HEIGHT
+        );
+
+        FontRenderer.getInstance().renderText(
+                guiGraphics,
+                StyledText.fromString("Select Icon"),
+                getX() + this.width - BUTTON_WIDTH / 2f,
                 getY() + this.height / 2f,
-                valueColor,
-                HorizontalAlignment.LEFT,
+                CommonColors.WHITE,
+                HorizontalAlignment.CENTER,
                 VerticalAlignment.MIDDLE,
                 TextShadow.NORMAL);
+
+        MapIcon icon = Services.MapData.getIconOrFallback(value);
+        int iconWidth = icon.getWidth();
+        int iconHeight = icon.getHeight();
+        int iconBoxSize = Math.min(
+                Math.max(iconWidth, iconHeight) + ICON_BORDER * 2,
+                this.height
+        );
+
+        int iconBoxX = getX() + this.width - BUTTON_WIDTH - iconBoxSize - 5;
+        int iconBoxY = getY() + (this.height - iconBoxSize) / 2;
+
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.MANAGER_TEXT_BOX_BACKGROUND,
+                iconBoxX,
+                iconBoxY,
+                iconBoxSize,
+                iconBoxSize
+        );
+
+        RenderUtils.drawTexturedRect(
+                guiGraphics,
+                RenderPipelines.GUI_TEXTURED,
+                icon.getIdentifier(),
+                CustomColor.NONE,
+                iconBoxX + (iconBoxSize - iconWidth) / 2f,
+                iconBoxY + (iconBoxSize - iconHeight) / 2f,
+                iconWidth,
+                iconHeight,
+                0f,
+                0f,
+                iconWidth,
+                iconHeight,
+                iconWidth,
+                iconHeight
+        );
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
 
+        if (isMouseOverIconButton(event.x(), event.y())) {
+            this.playDownSound(McUtils.mc().getSoundManager());
 
-        if (isMouseOverValueText(event.x(), event.y())) {
-            this.playDownSound(Minecraft.getInstance().getSoundManager());
-            value = !value;
+            CategoryManagementScreen currentScreen = (CategoryManagementScreen) McUtils.screen();
+            McUtils.mc().setScreen(new IconSelectionScreen(currentScreen, icon -> this.value = icon.getIconId(), value));
             return true;
         }
         return false;
@@ -73,33 +129,27 @@ public class IconOptionWidget extends AbstractWidget implements ScrollableWidget
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
-    private boolean isMouseOverValueText(double mouseX, double mouseY) {
-        String valueText = value ? "ON" : "OFF";
-        FontRenderer fontRenderer = FontRenderer.getInstance();
-        int textWidth = fontRenderer.getFont().width(valueText);
-
-        int valueX = getX() + getWidth() - textWidth - 4;
-
+    private boolean isMouseOverIconButton(double mouseX, double mouseY) {
         return MathUtils.isInside(
                 (int) mouseX,
                 (int) mouseY,
-                valueX,
-                valueX + textWidth - 1,
-                getY(),
-                getY() + getHeight() - 1
+                getX() + getWidth() - BUTTON_WIDTH,
+                getX() + getWidth() - 1,
+                getY() + (this.height - BUTTON_HEIGHT) / 2,
+                getY() + (this.height - BUTTON_HEIGHT) / 2 + BUTTON_HEIGHT
         );
     }
 
     // ----- ScrollableWidget implementation -----
 
     @Override
-    public Boolean getValue() {
+    public String getValue() {
         return value;
     }
 
     @Override
-    public void setValue(Boolean newValue) {
-        value = value;
+    public void setValue(String newValue) {
+        this.value = newValue;
     }
 
     @Override
