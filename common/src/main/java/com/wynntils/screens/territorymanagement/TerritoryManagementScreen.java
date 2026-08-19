@@ -532,7 +532,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
         RenderUtils.disableScissor(guiGraphics);
 
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        renderMapBorder(guiGraphics);
 
         renderCoordinates(guiGraphics, mouseX, mouseY);
 

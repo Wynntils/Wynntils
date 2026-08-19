@@ -195,8 +195,10 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         }
     }
 
-    @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    // Drawn by the subclasses on top of the map itself, so this must not be hooked into the vanilla
+    // renderBackground call: that one runs before render(), and overriding it would both paint the
+    // border on screens that show no map and suppress the vanilla menu blur behind the screen.
+    protected void renderMapBorder(GuiGraphics guiGraphics) {
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics, Texture.FULLSCREEN_MAP_BORDER, renderX, renderY, renderWidth, renderHeight);
     }
