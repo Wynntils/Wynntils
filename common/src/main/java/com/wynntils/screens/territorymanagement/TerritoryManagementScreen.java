@@ -133,6 +133,11 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         this.mapMode = mapMode;
     }
 
+    @Override
+    protected boolean shouldRenderMapControls() {
+        return mapMode;
+    }
+
     public void setMapPosition(float centerX, float centerZ, float zoomLevel) {
         this.setZoomLevel(zoomLevel);
         this.updateMapCenter(centerX, centerZ);
