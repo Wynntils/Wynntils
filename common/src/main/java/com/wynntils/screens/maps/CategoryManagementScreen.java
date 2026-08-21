@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.maps;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
@@ -30,7 +29,6 @@ import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -510,7 +508,7 @@ public final class CategoryManagementScreen extends WynntilsScreen {
 
     private void updateOptionWidgets() {
         Optional<MapAttributes> ownAttributes = Services.MapData.getOwnAttributesForCategory(this.selectedCategory);
-        Optional<MapAttributes> resolvedAttributes = Services.MapData.getResolvedAttributesForCategory(this.selectedCategory);
+        Optional<MapAttributes> resolvedAttributes = Services.MapData.getInheritedAttributesForCategory(this.selectedCategory);
 
         for (AbstractOptionWidget<?> widget : optionsScrollBar.getRegisteredWidgets()) {
             widget.updateFromAttributes(ownAttributes, resolvedAttributes);

@@ -121,8 +121,17 @@ public class IconSelectionScreen extends WynntilsScreen {
 
         @Override
         protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+            if (this.isHovered) {
+                handleCursor(guiGraphics);
+            }
+
             RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics, backgroundTexture, getX(), getY(), getWidth(), getHeight());
+                    guiGraphics,
+                    backgroundTexture,
+                    getX(),
+                    getY(),
+                    getWidth(),
+                    getHeight());
 
             FontRenderer.getInstance().renderText(
                     guiGraphics,
@@ -172,12 +181,31 @@ public class IconSelectionScreen extends WynntilsScreen {
                 int cellY = getY();
 
                 boolean selected = icon.getIconId().equals(selectedIconId);
-                boolean hovered = MathUtils.isInside(mouseX, mouseY, cellX, cellX + CELL_SIZE - 1, cellY, cellY + CELL_SIZE - 1);
+                boolean hovered = MathUtils.isInside(
+                        mouseX,
+                        mouseY,
+                        cellX,
+                        cellX + CELL_SIZE - 1,
+                        cellY,
+                        cellY + CELL_SIZE - 1);
 
                 if (selected) {
-                    guiGraphics.fill(cellX, cellY, cellX + CELL_SIZE, cellY + CELL_SIZE, 0x8033CC33);
+                    RenderUtils.drawRect(
+                            guiGraphics,
+                            CustomColor.fromInt(0x8033cc33),
+                            cellX,
+                            cellY,
+                            CELL_SIZE,
+                            CELL_SIZE);
+                    handleCursor(guiGraphics);
                 } else if (hovered) {
-                    guiGraphics.fill(cellX, cellY, cellX + CELL_SIZE, cellY + CELL_SIZE, 0x40FFFFFF);
+                    RenderUtils.drawRect(
+                            guiGraphics,CustomColor.fromInt(0x40ffffff),
+                            cellX,
+                            cellY,
+                            CELL_SIZE,
+                            CELL_SIZE);
+                    handleCursor(guiGraphics);
                 }
 
                 renderIcon(guiGraphics, icon, cellX, cellY);
@@ -195,11 +223,16 @@ public class IconSelectionScreen extends WynntilsScreen {
                     RenderPipelines.GUI_TEXTURED,
                     icon.getIdentifier(),
                     CustomColor.NONE,
-                    drawX, drawY,
-                    iconWidth, iconHeight,
-                    0f, 0f,
-                    iconWidth, iconHeight,
-                    iconWidth, iconHeight);
+                    drawX,
+                    drawY,
+                    iconWidth,
+                    iconHeight,
+                    0f,
+                    0f,
+                    iconWidth,
+                    iconHeight,
+                    iconWidth,
+                    iconHeight);
         }
 
         @Override
@@ -245,7 +278,8 @@ public class IconSelectionScreen extends WynntilsScreen {
 
         private static List<IconGridRowWidget> chunkIntoRows(
                 List<MapIcon> icons,
-                Consumer<MapIcon> onIconSelected, Supplier<String> selectedIconIdSupplier) {
+                Consumer<MapIcon> onIconSelected,
+                Supplier<String> selectedIconIdSupplier) {
             List<IconGridRowWidget> rows = new ArrayList<>();
             for (int i = 0; i < icons.size(); i += GRID_COLUMNS) {
                 List<MapIcon> rowIcons = new ArrayList<>(icons.subList(i, Math.min(i + GRID_COLUMNS, icons.size())));

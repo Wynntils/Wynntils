@@ -21,15 +21,12 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public class ToggleOptionWidget extends AbstractOptionWidget<Boolean> {
-    private static final int BUTTON_HEIGHT = 20;
-
-
     public ToggleOptionWidget(
             String label,
             OptionCategory category,
             boolean defaultValue,
             Function<MapAttributes, Optional<Boolean>> valueGetter) {
-        super(label, 20, category, defaultValue, valueGetter);
+        super(label, 18, category, defaultValue, valueGetter);
     }
 
     @Override
@@ -48,13 +45,11 @@ public class ToggleOptionWidget extends AbstractOptionWidget<Boolean> {
             handleCursor(guiGraphics);
         }
 
-        RenderUtils.drawNineSliceScalingTexturedRect(
+        RenderUtils.drawTexturedRect(
                 guiGraphics,
                 getButtonTexture(),
                 getButtonX(),
-                getY() + (this.height - BUTTON_HEIGHT) / 2f,
-                getButtonTexture().width(),
-                BUTTON_HEIGHT);
+                getY() + (this.height - getButtonTexture().height()) / 2f);
     }
 
     @Override
@@ -84,7 +79,7 @@ public class ToggleOptionWidget extends AbstractOptionWidget<Boolean> {
 
     private boolean isMouseInsideButton(double mouseX, double mouseY) {
         int buttonX = getButtonX();
-        int buttonY = getY() + (this.height - BUTTON_HEIGHT) / 2;
+        int buttonY = getY() + (this.height - getButtonTexture().height()) / 2;
 
         return MathUtils.isInside(
                 (int) mouseX,
@@ -92,7 +87,7 @@ public class ToggleOptionWidget extends AbstractOptionWidget<Boolean> {
                 buttonX,
                 buttonX + getButtonTexture().width(),
                 buttonY,
-                buttonY + BUTTON_HEIGHT
+                buttonY + getButtonTexture().height()
         );
     }
 }

@@ -32,7 +32,6 @@ import com.wynntils.services.mapdata.type.MapDataProvidedType;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.type.BoundingShape;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -132,23 +131,12 @@ public class MapDataService extends Service {
         return OverrideMapAttributes.from(attributesList);
     }
 
-    private MapFeature createDummyFeature(String categoryId) {
-        return new MapFeature() {
-            @Override public String getFeatureId() { return "dummy"; }
-            @Override public String getCategoryId() { return categoryId; }
-            @Override public Optional<MapAttributes> getAttributes() { return Optional.empty(); }
-            @Override public boolean isVisible(BoundingShape boundingShape) { return false; }
-            @Override public List<String> getTags() { return List.of(); }
-        };
-    }
-
     public Optional<MapAttributes> getOwnAttributesForCategory(String categoryId) {
         List<MapAttributes> ownAttributes = new ArrayList<>();
 
-        MapFeature<?> dummyFeature = createDummyFeature(categoryId);
         overrideProviders.values().stream()
                 .filter(provider -> provider.getOverridenCategoryIds().anyMatch(categoryId::equals))
-                .map(provider -> provider.getOverrideAttributes(dummyFeature))
+                .map(provider -> provider.getOverrideAttributes(null))
                 .filter(Objects::nonNull)
                 .forEach(ownAttributes::add);
 
@@ -157,13 +145,12 @@ public class MapDataService extends Service {
         return OverrideMapAttributes.from(ownAttributes);
     }
 
-    public Optional<MapAttributes> getResolvedAttributesForCategory(String categoryId) {
+    public Optional<MapAttributes> getInheritedAttributesForCategory(String categoryId) {
         List<MapAttributes> resolvedAttributes = new ArrayList<>();
 
-        MapFeature<?> dummyFeature = createDummyFeature(categoryId);
         overrideProviders.values().stream()
                 .filter(provider -> provider.getOverridenCategoryIds().anyMatch(categoryId::startsWith))
-                .map(provider -> provider.getOverrideAttributes(dummyFeature))
+                .map(provider -> provider.getOverrideAttributes(null))
                 .filter(Objects::nonNull)
                 .forEach(resolvedAttributes::add);
 

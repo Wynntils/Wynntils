@@ -70,7 +70,7 @@ public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
             int decimalPlaces,
             Function<MapAttributes, Optional<Float>> valueGetter,
             CategoryManagementScreen parent) {
-        super(label, 20, category, defaultValue, valueGetter);
+        super(label, 18, category, defaultValue, valueGetter);
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.step = step;
@@ -157,13 +157,21 @@ public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
         draggingTextbox = overTextbox && textboxHandled;
         if (textboxHandled) return true;
 
-        if (MathUtils.isInside(
+        int trackLeft = getTrackLeft();
+        int trackRight = getTrackRight();
+        int trackY = getY() + (this.height - TRACK_HEIGHT) / 2;
+
+        boolean overTrack = MathUtils.isInside(
                 (int) event.x(),
                 (int) event.y(),
-                getTrackLeft(),
-                getTrackRight(),
-                getY(),
-                getY() + getHeight() - 1)) {
+                trackLeft,
+                trackRight,
+                trackY,
+                trackY + TRACK_HEIGHT - 1);
+
+        boolean overHead = isMouseOverHead(event.x(), event.y());
+
+        if (overTrack || overHead) {
             draggingSlider = true;
             this.playDownSound(McUtils.mc().getSoundManager());
             updateValueFromMouseX(event.x());

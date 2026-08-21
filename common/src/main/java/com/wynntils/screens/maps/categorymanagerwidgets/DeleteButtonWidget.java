@@ -18,6 +18,8 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.Locale;
+
 public class DeleteButtonWidget extends AbstractWidget {
     private final int x;
     private final int y;
@@ -60,7 +62,11 @@ public class DeleteButtonWidget extends AbstractWidget {
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
 
-        Services.MapData.removeOverrideProvider("json-override:" + parent.getSelectedCategory());
+        Services.MapData.removeOverrideProvider(
+                "json-override:" +
+                        parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT) +
+                        ":" +
+                        parent.getSelectedCategory());
         parent.setSelectedCategory(parent.getSelectedCategory());
 
         return true;

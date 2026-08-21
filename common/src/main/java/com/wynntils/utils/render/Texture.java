@@ -383,8 +383,8 @@ public enum Texture {
     MANAGER_TEXT_BOX_BACKGROUND("map/managers/textbox_background.png", 20, 16, 3, 3, 3, 3),
     MANAGER_SLIDER_FILLED("map/managers/filled_slider.png", 9, 6, 4, 1, 3, 3),
     MANAGER_SLIDER_EMPTY("map/managers/empty_slider.png", 9, 6, 1, 4, 3, 3),
-    MANAGER_TOGGLE_BUTTON_OFF("map/managers/toggle_button_off.png", 43, 18, 18, 19, 8, 8),
-    MANAGER_TOGGLE_BUTTON_ON("map/managers/toggle_button_on.png", 43, 18, 18, 19, 8, 8),
+    MANAGER_TOGGLE_BUTTON_OFF("map/managers/toggle_button_off.png", 38, 18),
+    MANAGER_TOGGLE_BUTTON_ON("map/managers/toggle_button_on.png", 38, 18),
 
     // Player Viewer
     DUEL_ICON("icons/player_viewer/duel_icon.png", 14, 14),

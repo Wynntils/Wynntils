@@ -135,6 +135,18 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
             RenderUtils.drawRect(guiGraphics, HOVER_HIGHLIGHT, contentX, y, contentWidth, ROW_HEIGHT);
         }
 
+        boolean mouseOverRow = MathUtils.isInside(
+                mouseX,
+                mouseY,
+                contentX,
+                contentX + contentWidth - 1,
+                y,
+                y + ROW_HEIGHT - 1);
+
+        if (mouseOverRow) {
+            handleCursor(guiGraphics);
+        }
+
         if (!node.isLeaf()) {
             renderArrow(guiGraphics, getArrowX());
         }

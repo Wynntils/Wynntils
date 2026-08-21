@@ -1,5 +1,6 @@
 package com.wynntils.screens.maps.categorymanagerwidgets;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.CategoryManagementScreen;
@@ -25,6 +26,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -71,9 +73,11 @@ public class SaveButtonWidget extends AbstractWidget {
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
 
+        String overrideName = parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT) + ":" + parent.getSelectedCategory();
+
         MapAttributesBuilder builder = new MapAttributesBuilder();
         Optional.ofNullable(Services.MapData.getOverrideProvider(
-                        "json-override:" + parent.getSelectedCategory()))
+                        "json-override:" + overrideName))
                 .ifPresent(provider -> builder.from(provider.getOverrideAttributes(null)));
 
         buildOption(
@@ -212,7 +216,7 @@ public class SaveButtonWidget extends AbstractWidget {
         };
 
         Services.MapData.addOverrideProvider(new JsonOverrideProvider(
-                parent.getSelectedCategory(),
+                overrideName,
                 attributes,
                 Set.of(),
                 Set.of(parent.getSelectedCategory())));

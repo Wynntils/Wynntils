@@ -31,7 +31,7 @@ public class TextOptionWidget extends AbstractOptionWidget<String> {
             String defaultValue,
             Function<MapAttributes, Optional<String>> valueGetter,
             CategoryManagementScreen parent) {
-        super(label, 16, category, defaultValue, valueGetter);
+        super(label, 18, category, defaultValue, valueGetter);
         this.valueTextBox = new TexturedTextInputBoxWidget(
                 getTextboxX(),
                 getY(),
