@@ -1,5 +1,6 @@
 package com.wynntils.screens.maps.categorymanagerwidgets;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.CategoryManagementScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -17,13 +18,13 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class ResetButtonWidget extends AbstractWidget {
+public class DeleteButtonWidget extends AbstractWidget {
     private final int x;
     private final int y;
     private final CategoryManagementScreen parent;
 
-    public ResetButtonWidget(int x, int y, int width, int height, CategoryManagementScreen parent) {
-        super(x, y, width, height, Component.literal("Override Selection Widget"));
+    public DeleteButtonWidget(int x, int y, int width, int height, CategoryManagementScreen parent) {
+        super(x, y, width, height, Component.literal("Delete Button Widget"));
         this.x = x;
         this.y = y;
         this.parent = parent;
@@ -35,7 +36,7 @@ public class ResetButtonWidget extends AbstractWidget {
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
-                Texture.MANAGER_WIDGET_BACKGROUND,
+                Texture.MANAGER_WIDGET_BACKGROUND_RED,
                 x,
                 y,
                 this.width,
@@ -44,7 +45,7 @@ public class ResetButtonWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("Reset"),
+                        StyledText.fromString("Delete"),
                         x + this.width / 2f,
                         y + this.height / 2f,
                         CommonColors.WHITE,
@@ -59,6 +60,7 @@ public class ResetButtonWidget extends AbstractWidget {
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
 
+        Services.MapData.removeOverrideProvider("json-override:" + parent.getSelectedCategory());
         parent.setSelectedCategory(parent.getSelectedCategory());
 
         return true;

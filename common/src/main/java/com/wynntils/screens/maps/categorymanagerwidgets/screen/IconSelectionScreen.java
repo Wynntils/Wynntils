@@ -5,8 +5,7 @@ import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.CategoryManagementScreen;
 import com.wynntils.screens.maps.categorymanagerwidgets.ScrollBarWidget;
-import com.wynntils.screens.maps.type.OptionCategory;
-import com.wynntils.screens.maps.type.ScrollableWidget;
+import com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets.AbstractOptionWidget;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -150,13 +149,13 @@ public class IconSelectionScreen extends WynntilsScreen {
         protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
     }
 
-    private static class IconGridRowWidget extends AbstractWidget implements ScrollableWidget<List<MapIcon>> {
+    private static class IconGridRowWidget extends AbstractOptionWidget<List<MapIcon>> {
         private final List<MapIcon> icons;
         private final Consumer<MapIcon> onIconSelected;
         private final Supplier<String> selectedIconIdSupplier;
 
         IconGridRowWidget(List<MapIcon> icons, Consumer<MapIcon> onIconSelected, Supplier<String> selectedIconIdSupplier) {
-            super(0, 0, 0, CELL_SIZE, Component.literal("Icon Row"));
+            super("icon row", 0, null, null, null);
             this.icons = icons;
             this.onIconSelected = onIconSelected;
             this.selectedIconIdSupplier = selectedIconIdSupplier;
@@ -218,24 +217,6 @@ public class IconSelectionScreen extends WynntilsScreen {
 
         @Override
         protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
-
-        @Override
-        public List<MapIcon> getValue() {
-            return icons;
-        }
-
-        @Override
-        public void setValue(List<MapIcon> newValue) {}
-
-        @Override
-        public OptionCategory getCategory() {
-            return OptionCategory.GENERAL;
-        }
-
-        @Override
-        public boolean isVisible() {
-            return true;
-        }
 
         @Override
         public int getHeight() {

@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 
 public enum ActivityType {
-    RECOMMENDED("Recommended", "recommended", null, null, null),
+    RECOMMENDED("Recommended", "recommended", CustomColor.NONE, null, null),
     QUEST("Quest", "quests", CustomColor.fromInt(0x29cc96), Texture.QUEST_ICON, "quest"),
     STORYLINE_QUEST("Quest", "quests", CustomColor.fromInt(0x33b33b), Texture.STORYLINE_QUEST_ICON, "story_quest"),
     MINI_QUEST("Mini-Quest", "mini-quests", CustomColor.fromInt(0xb38fad), Texture.MINI_QUEST_ICON, "mini_quest"),

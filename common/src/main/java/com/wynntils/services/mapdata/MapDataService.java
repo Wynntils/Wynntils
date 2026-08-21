@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -131,37 +132,51 @@ public class MapDataService extends Service {
         return OverrideMapAttributes.from(attributesList);
     }
 
-    public Optional<MapAttributes> getAttributesForCategory(String categoryId) {
-        Optional<MapAttributes> baseOpt = getBaseAttributesForCategory(categoryId);
-
-        // Collect overrides that apply to this category
-        List<MapAttributes> overrideAttrs = new ArrayList<>();
-        // Dummy feature to satisfy the provider API – only the categoryId is used
-        MapFeature dummyFeature = new MapFeature() {
+    private MapFeature createDummyFeature(String categoryId) {
+        return new MapFeature() {
             @Override public String getFeatureId() { return "dummy"; }
             @Override public String getCategoryId() { return categoryId; }
             @Override public Optional<MapAttributes> getAttributes() { return Optional.empty(); }
             @Override public boolean isVisible(BoundingShape boundingShape) { return false; }
             @Override public List<String> getTags() { return List.of(); }
         };
+    }
 
-        for (MapDataOverrideProvider provider : overrideProviders.values()) {
-            // Check if this provider overrides the whole category (or a parent)
-            if (provider.getOverridenCategoryIds().anyMatch(catId -> categoryId.startsWith(catId))) {
-                MapAttributes overrideAttr = provider.getOverrideAttributes(dummyFeature);
-                if (overrideAttr != null) {
-                    overrideAttrs.add(overrideAttr);
-                }
-            }
+    public Optional<MapAttributes> getOwnAttributesForCategory(String categoryId) {
+        List<MapAttributes> ownAttributes = new ArrayList<>();
+
+        MapFeature<?> dummyFeature = createDummyFeature(categoryId);
+        overrideProviders.values().stream()
+                .filter(provider -> provider.getOverridenCategoryIds().anyMatch(categoryId::equals))
+                .map(provider -> provider.getOverrideAttributes(dummyFeature))
+                .filter(Objects::nonNull)
+                .forEach(ownAttributes::add);
+
+        getBaseAttributesForCategory(categoryId).ifPresent(ownAttributes::add);
+
+        return OverrideMapAttributes.from(ownAttributes);
+    }
+
+    public Optional<MapAttributes> getResolvedAttributesForCategory(String categoryId) {
+        List<MapAttributes> resolvedAttributes = new ArrayList<>();
+
+        MapFeature<?> dummyFeature = createDummyFeature(categoryId);
+        overrideProviders.values().stream()
+                .filter(provider -> provider.getOverridenCategoryIds().anyMatch(categoryId::startsWith))
+                .map(provider -> provider.getOverrideAttributes(dummyFeature))
+                .filter(Objects::nonNull)
+                .forEach(resolvedAttributes::add);
+
+        for (String id = categoryId; id != null; id = getParentCategoryId(id)) {
+            getBaseAttributesForCategory(id).ifPresent(resolvedAttributes::add);
         }
 
-        // Combine overrides (higher priority) and base attributes
-        if (baseOpt.isPresent() || !overrideAttrs.isEmpty()) {
-            List<MapAttributes> combined = new ArrayList<>(overrideAttrs);
-            baseOpt.ifPresent(combined::add);
-            return OverrideMapAttributes.from(combined);
-        }
-        return Optional.empty();
+        return OverrideMapAttributes.from(resolvedAttributes);
+    }
+
+    private String getParentCategoryId(String categoryId) {
+        int index = categoryId.lastIndexOf(':');
+        return index == -1 ? null : categoryId.substring(0, index);
     }
 
     // region Lookup features and attribute resolution

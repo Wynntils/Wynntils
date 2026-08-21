@@ -2,7 +2,7 @@ package com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.type.OptionCategory;
-import com.wynntils.screens.maps.type.ScrollableWidget;
+import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
@@ -13,35 +13,33 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class TextShadowOptionWidget extends AbstractWidget implements ScrollableWidget<TextShadow> {
+import java.util.Optional;
+import java.util.function.Function;
+
+public class TextShadowOptionWidget extends AbstractOptionWidget<TextShadow> {
     private static final int BUTTON_WIDTH = 70;
     private static final int BUTTON_HEIGHT = 20;
 
-    private final OptionCategory category;
-    private TextShadow value;
-
-    public TextShadowOptionWidget(String label, OptionCategory category, TextShadow initialValue) {
-        super(0, 0, 0, 20, Component.literal(label));
-        this.category = category;
-        this.value = initialValue;
+    public TextShadowOptionWidget(
+            String label,
+            OptionCategory category,
+            TextShadow defaultValue,
+            Function<MapAttributes, Optional<TextShadow>> valueGetter) {
+        super(label, 20, category, defaultValue, valueGetter);
     }
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        FontRenderer fontRenderer = FontRenderer.getInstance();
-
-        fontRenderer.renderText(
+        FontRenderer.getInstance().renderText(
                 guiGraphics,
                 StyledText.fromString(getMessage().getString()),
                 getX(),
                 getY() + this.height / 2f,
-                CommonColors.WHITE,
+                !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
                 HorizontalAlignment.LEFT,
                 VerticalAlignment.MIDDLE,
                 TextShadow.NORMAL);
@@ -61,7 +59,7 @@ public class TextShadowOptionWidget extends AbstractWidget implements Scrollable
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT);
 
-        fontRenderer.renderText(
+        FontRenderer.getInstance().renderText(
                 guiGraphics,
                 StyledText.fromString(TextShadowInternal.from(value).getDisplayName()),
                 buttonX + BUTTON_WIDTH / 2f,
@@ -78,7 +76,9 @@ public class TextShadowOptionWidget extends AbstractWidget implements Scrollable
 
         if (isMouseOverButton(event.x(), event.y())) {
             this.playDownSound(McUtils.mc().getSoundManager());
-            this.value = TextShadowInternal.from(value).next().toTextShadow();
+
+            setValue(TextShadowInternal.from(value).next().toTextShadow());
+
             return true;
         }
         return false;
@@ -99,37 +99,6 @@ public class TextShadowOptionWidget extends AbstractWidget implements Scrollable
                 buttonY,
                 buttonY + BUTTON_HEIGHT - 1
         );
-    }
-
-    // ----- ScrollableWidget implementation -----
-
-    @Override
-    public TextShadow getValue() {
-        return value;
-    }
-
-    @Override
-    public void setValue(TextShadow newValue) {
-        this.value = newValue;
-    }
-
-    @Override
-    public OptionCategory getCategory() {
-        return category;
-    }
-
-    @Override
-    public boolean isVisible() {
-        return visible;
-    }
-
-    @Override
-    public int getHeight() {
-        return height;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
     }
 
     private enum TextShadowInternal {

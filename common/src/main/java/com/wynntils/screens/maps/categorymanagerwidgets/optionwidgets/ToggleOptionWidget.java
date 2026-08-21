@@ -2,7 +2,7 @@ package com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.type.OptionCategory;
-import com.wynntils.screens.maps.type.ScrollableWidget;
+import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -13,22 +13,23 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class ToggleOptionWidget extends AbstractWidget implements ScrollableWidget<Boolean> {
+import java.util.Optional;
+import java.util.function.Function;
+
+public class ToggleOptionWidget extends AbstractOptionWidget<Boolean> {
     private static final int BUTTON_HEIGHT = 20;
 
-    private final OptionCategory category;
-    private boolean value;
 
-    public ToggleOptionWidget(String label, OptionCategory category, boolean initialValue) {
-        super(0, 0, 0, 20, Component.literal(label));
-        this.category = category;
-        this.value = initialValue;
+    public ToggleOptionWidget(
+            String label,
+            OptionCategory category,
+            boolean defaultValue,
+            Function<MapAttributes, Optional<Boolean>> valueGetter) {
+        super(label, 20, category, defaultValue, valueGetter);
     }
 
     @Override
@@ -38,7 +39,7 @@ public class ToggleOptionWidget extends AbstractWidget implements ScrollableWidg
                 StyledText.fromString(getMessage().getString()),
                 getX(),
                 getY() + this.height / 2f,
-                CommonColors.WHITE,
+                !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
                 HorizontalAlignment.LEFT,
                 VerticalAlignment.MIDDLE,
                 TextShadow.NORMAL);
@@ -62,7 +63,9 @@ public class ToggleOptionWidget extends AbstractWidget implements ScrollableWidg
 
         if (isMouseInsideButton(event.x(), event.y())) {
             this.playDownSound(Minecraft.getInstance().getSoundManager());
-            value = !value;
+
+            setValue(!this.value);
+
             return true;
         }
         return false;
@@ -72,7 +75,7 @@ public class ToggleOptionWidget extends AbstractWidget implements ScrollableWidg
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private Texture getButtonTexture() {
-        return value ? Texture.MANAGER_TOGGLE_BUTTON_ON : Texture.MANAGER_TOGGLE_BUTTON_OFF;
+        return this.value ? Texture.MANAGER_TOGGLE_BUTTON_ON : Texture.MANAGER_TOGGLE_BUTTON_OFF;
     }
 
     private int getButtonX() {
@@ -91,36 +94,5 @@ public class ToggleOptionWidget extends AbstractWidget implements ScrollableWidg
                 buttonY,
                 buttonY + BUTTON_HEIGHT
         );
-    }
-
-    // ----- ScrollableWidget implementation -----
-
-    @Override
-    public Boolean getValue() {
-        return value;
-    }
-
-    @Override
-    public void setValue(Boolean newValue) {
-        value = newValue != null && newValue;
-    }
-
-    @Override
-    public OptionCategory getCategory() {
-        return category;
-    }
-
-    @Override
-    public boolean isVisible() {
-        return visible;
-    }
-
-    @Override
-    public int getHeight() {
-        return height;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
     }
 }

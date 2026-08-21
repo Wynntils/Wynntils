@@ -1,13 +1,11 @@
 package com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.CategoryManagementScreen;
 import com.wynntils.screens.maps.categorymanagerwidgets.TexturedTextInputBoxWidget;
 import com.wynntils.screens.maps.type.OptionCategory;
-import com.wynntils.screens.maps.type.ScrollableWidget;
+import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
@@ -18,13 +16,14 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class IntSliderOptionWidget extends AbstractWidget implements ScrollableWidget<Integer> {
+import java.util.Optional;
+import java.util.function.Function;
+
+public class IntSliderOptionWidget extends AbstractOptionWidget<Integer> {
     // Gap between the end of the label text and the start of the slider track.
     private static final int LABEL_PADDING = 8;
 
@@ -39,14 +38,11 @@ public class IntSliderOptionWidget extends AbstractWidget implements ScrollableW
     private static final int HEAD_WIDTH = 8;
     private static final int HEAD_HEIGHT = 14;
 
-    private final OptionCategory category;
     private final int minValue;
     private final int maxValue;
     private final int step;
 
     private final TexturedTextInputBoxWidget valueTextBox;
-
-    private int value;
 
     private boolean draggingSlider = false;
     private boolean draggingTextbox = false;
@@ -57,20 +53,21 @@ public class IntSliderOptionWidget extends AbstractWidget implements ScrollableW
             int initialValue,
             int minValue,
             int maxValue,
+            Function<MapAttributes, Optional<Integer>> valueGetter,
             CategoryManagementScreen parent) {
-        this(label, category, initialValue, minValue, maxValue, 1, parent);
+        this(label, category, initialValue, minValue, maxValue, 1, valueGetter, parent);
     }
 
     private IntSliderOptionWidget(
             String label,
             OptionCategory category,
-            int initialValue,
+            int defaultValue,
             int minValue,
             int maxValue,
             int step,
+            Function<MapAttributes, Optional<Integer>> valueGetter,
             CategoryManagementScreen parent) {
-        super(0, 0, 0, 20, Component.literal(label));
-        this.category = category;
+        super(label, 20, category, defaultValue, valueGetter);
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.step = step;
@@ -83,7 +80,7 @@ public class IntSliderOptionWidget extends AbstractWidget implements ScrollableW
                 parent,
                 TexturedTextInputBoxWidget.Mode.INTEGER);
 
-        setInternalValue(initialValue, false);
+        setInternalValue(defaultValue, false);
     }
 
     @Override
@@ -97,7 +94,7 @@ public class IntSliderOptionWidget extends AbstractWidget implements ScrollableW
                 StyledText.fromString(getMessage().getString()),
                 getX(),
                 getY() + this.height / 2f,
-                CommonColors.WHITE,
+                !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
                 HorizontalAlignment.LEFT,
                 VerticalAlignment.MIDDLE,
                 TextShadow.NORMAL);
@@ -205,7 +202,11 @@ public class IntSliderOptionWidget extends AbstractWidget implements ScrollableW
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private void onTextInputUpdate(String text) {
-        this.value = valueTextBox.getValueAsInt();
+        Integer newValue = valueTextBox.getValueAsInt();
+
+        if (newValue != null) {
+            super.setValue(newValue);
+        }
     }
 
     private void updateValueFromMouseX(double mouseX) {
@@ -233,12 +234,7 @@ public class IntSliderOptionWidget extends AbstractWidget implements ScrollableW
             clamped = MathUtils.clamp(clamped, min, max);
         }
 
-        this.value = clamped;
-        valueTextBox.setTextBoxInput(formatValue(this.value));
-    }
-
-    private String formatValue(int value) {
-        return String.valueOf(value);
+        setValue(clamped);
     }
 
     private int getTextboxX() {
@@ -280,36 +276,12 @@ public class IntSliderOptionWidget extends AbstractWidget implements ScrollableW
                 (headY + HEAD_HEIGHT));
     }
 
-    // ----- ScrollableWidget implementation -----
-
-    @Override
-    public Integer getValue() {
-        return value;
-    }
-
     @Override
     public void setValue(Integer newValue) {
-        setInternalValue(newValue, false);
+        super.setValue(newValue);
+        valueTextBox.setTextBoxInput(String.valueOf(newValue));
     }
 
-    @Override
-    public OptionCategory getCategory() {
-        return category;
-    }
-
-    @Override
-    public boolean isVisible() {
-        return visible;
-    }
-
-    @Override
-    public int getHeight() {
-        return height;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
 
     @Override
     public boolean isMouseOverTextBox(double mouseX, double mouseY) {

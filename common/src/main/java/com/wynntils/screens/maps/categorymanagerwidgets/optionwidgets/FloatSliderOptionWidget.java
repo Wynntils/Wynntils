@@ -1,15 +1,14 @@
 package com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.CategoryManagementScreen;
 import com.wynntils.screens.maps.categorymanagerwidgets.TexturedTextInputBoxWidget;
 import com.wynntils.screens.maps.type.OptionCategory;
-import com.wynntils.screens.maps.type.ScrollableWidget;
+import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -18,13 +17,14 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class FloatSliderOptionWidget extends AbstractWidget implements ScrollableWidget<Float> {
+import java.util.Optional;
+import java.util.function.Function;
+
+public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
     // Gap between the end of the label text and the start of the slider track.
     private static final int LABEL_PADDING = 8;
 
@@ -39,7 +39,6 @@ public class FloatSliderOptionWidget extends AbstractWidget implements Scrollabl
     private static final int HEAD_WIDTH = 8;
     private static final int HEAD_HEIGHT = 14;
 
-    private final OptionCategory category;
     private final float minValue;
     private final float maxValue;
     private final float step;
@@ -47,32 +46,31 @@ public class FloatSliderOptionWidget extends AbstractWidget implements Scrollabl
 
     private final TexturedTextInputBoxWidget valueTextBox;
 
-    private float value;
-
     private boolean draggingSlider = false;
     private boolean draggingTextbox = false;
 
     public FloatSliderOptionWidget(
             String label,
             OptionCategory category,
-            float initialValue,
+            float defaultValue,
             float minValue,
             float maxValue,
+            Function<MapAttributes, Optional<Float>> valueGetter,
             CategoryManagementScreen parent) {
-        this(label, category, initialValue, minValue, maxValue, 0.1f, 1, parent);
+        this(label, category, defaultValue, minValue, maxValue, 0.1f, 1, valueGetter, parent);
     }
 
     private FloatSliderOptionWidget(
             String label,
             OptionCategory category,
-            float initialValue,
+            float defaultValue,
             float minValue,
             float maxValue,
             float step,
             int decimalPlaces,
+            Function<MapAttributes, Optional<Float>> valueGetter,
             CategoryManagementScreen parent) {
-        super(0, 0, 0, 20, Component.literal(label));
-        this.category = category;
+        super(label, 20, category, defaultValue, valueGetter);
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.step = step;
@@ -86,7 +84,7 @@ public class FloatSliderOptionWidget extends AbstractWidget implements Scrollabl
                 parent,
                 TexturedTextInputBoxWidget.Mode.FLOAT);
 
-        setInternalValue(initialValue, false);
+        setInternalValue(defaultValue, false);
     }
 
     @Override
@@ -100,7 +98,7 @@ public class FloatSliderOptionWidget extends AbstractWidget implements Scrollabl
                 StyledText.fromString(getMessage().getString()),
                 getX(),
                 getY() + this.height / 2f,
-                CommonColors.WHITE,
+                !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
                 HorizontalAlignment.LEFT,
                 VerticalAlignment.MIDDLE,
                 TextShadow.NORMAL);
@@ -208,7 +206,11 @@ public class FloatSliderOptionWidget extends AbstractWidget implements Scrollabl
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private void onTextInputUpdate(String text) {
-        this.value = valueTextBox.getValueAsFloat();
+        Float newValue = valueTextBox.getValueAsFloat();
+
+        if (newValue != null) {
+            super.setValue(newValue);
+        }
     }
 
     private void updateValueFromMouseX(double mouseX) {
@@ -236,8 +238,7 @@ public class FloatSliderOptionWidget extends AbstractWidget implements Scrollabl
             clamped = MathUtils.clamp(clamped, min, max);
         }
 
-        this.value = clamped;
-        valueTextBox.setTextBoxInput(formatValue(this.value));
+        setValue(clamped);
     }
 
     private String formatValue(float value) {
@@ -286,35 +287,10 @@ public class FloatSliderOptionWidget extends AbstractWidget implements Scrollabl
                 (headY + HEAD_HEIGHT));
     }
 
-    // ----- ScrollableWidget implementation -----
-
-    @Override
-    public Float getValue() {
-        return value;
-    }
-
     @Override
     public void setValue(Float newValue) {
-        setInternalValue(newValue, false);
-    }
-
-    @Override
-    public OptionCategory getCategory() {
-        return category;
-    }
-
-    @Override
-    public boolean isVisible() {
-        return visible;
-    }
-
-    @Override
-    public int getHeight() {
-        return height;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
+        super.setValue(newValue);
+        valueTextBox.setTextBoxInput(formatValue(newValue));
     }
 
     @Override

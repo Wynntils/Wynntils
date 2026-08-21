@@ -1,9 +1,8 @@
 package com.wynntils.screens.maps.categorymanagerwidgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.screens.maps.CategoryManagementScreen;
-import com.wynntils.screens.maps.type.ScrollableWidget;
+import com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets.AbstractOptionWidget;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -56,15 +55,24 @@ public abstract class ScrollBarWidget extends AbstractWidget {
         this.parent = parent;
     }
 
+    protected int getWidgetHeightPadding() {
+        return 0;
+    }
+
     /**
      * The widgets whose combined height determines the scrollable canvas height.
      */
-    protected abstract List<? extends ScrollableWidget<?>> getWidgets();
+    protected abstract List<? extends AbstractOptionWidget<?>> getWidgets();
 
     private int getCanvasHeight() {
+        List<? extends AbstractOptionWidget<?>> widgets = getWidgets();
         int total = 0;
-        for (ScrollableWidget<?> widget : getWidgets()) {
-            total += widget.getHeight();
+
+        for (int i = 0; i < widgets.size(); i++) {
+            total += widgets.get(i).getHeight();
+            if (i < widgets.size() - 1) {
+                total += getWidgetHeightPadding();
+            }
         }
         return total;
     }
@@ -203,8 +211,6 @@ public abstract class ScrollBarWidget extends AbstractWidget {
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
-        WynntilsMod.info("released mouse");
-
         draggingScrollY = false;
         return super.mouseReleased(event);
     }

@@ -5,30 +5,33 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.CategoryManagementScreen;
 import com.wynntils.screens.maps.categorymanagerwidgets.TexturedTextInputBoxWidget;
 import com.wynntils.screens.maps.type.OptionCategory;
-import com.wynntils.screens.maps.type.ScrollableWidget;
+import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class TextOptionWidget extends AbstractWidget implements ScrollableWidget<String> {
+import java.util.Optional;
+import java.util.function.Function;
+
+public class TextOptionWidget extends AbstractOptionWidget<String> {
     // Gap between the end of the label text and the start of the text box.
     private static final int LABEL_PADDING = 8;
 
-    private final OptionCategory category;
     private final TexturedTextInputBoxWidget valueTextBox;
-    private String value;
 
-    public TextOptionWidget(String label, OptionCategory category, String initialValue, CategoryManagementScreen parent) {
-        super(0, 0, 0, 20, Component.literal(label));
-        this.category = category;
+    public TextOptionWidget(
+            String label,
+            OptionCategory category,
+            String defaultValue,
+            Function<MapAttributes, Optional<String>> valueGetter,
+            CategoryManagementScreen parent) {
+        super(label, 16, category, defaultValue, valueGetter);
         this.valueTextBox = new TexturedTextInputBoxWidget(
                 getTextboxX(),
                 getY(),
@@ -38,7 +41,7 @@ public class TextOptionWidget extends AbstractWidget implements ScrollableWidget
                 parent,
                 TexturedTextInputBoxWidget.Mode.STRING);
 
-        setInternalValue(initialValue);
+        setValue(defaultValue == null ? "" : defaultValue);
     }
 
     @Override
@@ -48,7 +51,7 @@ public class TextOptionWidget extends AbstractWidget implements ScrollableWidget
                 StyledText.fromString(getMessage().getString()),
                 getX(),
                 getY() + this.height / 2f,
-                CommonColors.WHITE,
+                !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
                 HorizontalAlignment.LEFT,
                 VerticalAlignment.MIDDLE,
                 TextShadow.NORMAL);
@@ -81,12 +84,7 @@ public class TextOptionWidget extends AbstractWidget implements ScrollableWidget
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private void onTextInputUpdate(String text) {
-        this.value = text;
-    }
-
-    private void setInternalValue(String newValue) {
-        this.value = newValue == null ? "" : newValue;
-        valueTextBox.setTextBoxInput(this.value);
+        super.setValue(text);
     }
 
     private int getTextboxX() {
@@ -98,35 +96,10 @@ public class TextOptionWidget extends AbstractWidget implements ScrollableWidget
         return Math.max(0, getX() + getWidth() - getTextboxX());
     }
 
-    // ----- ScrollableWidget implementation -----
-
-    @Override
-    public String getValue() {
-        return value;
-    }
-
     @Override
     public void setValue(String newValue) {
-        setInternalValue(newValue);
-    }
-
-    @Override
-    public OptionCategory getCategory() {
-        return category;
-    }
-
-    @Override
-    public boolean isVisible() {
-        return visible;
-    }
-
-    @Override
-    public int getHeight() {
-        return height;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
+        super.setValue(newValue);
+        valueTextBox.setTextBoxInput(newValue);
     }
 
     @Override

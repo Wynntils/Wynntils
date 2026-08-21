@@ -6,7 +6,7 @@ import com.wynntils.screens.colorpicker.ColorPickerScreen;
 import com.wynntils.screens.maps.CategoryManagementScreen;
 import com.wynntils.screens.maps.categorymanagerwidgets.TexturedTextInputBoxWidget;
 import com.wynntils.screens.maps.type.OptionCategory;
-import com.wynntils.screens.maps.type.ScrollableWidget;
+import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -18,30 +18,33 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class ColorOptionWidget extends AbstractWidget implements ScrollableWidget<CustomColor> {
+import java.util.Optional;
+import java.util.function.Function;
+
+public class ColorOptionWidget extends AbstractOptionWidget<CustomColor> {
     private static final int SWATCH_BORDER = 3;
     private static final int BUTTON_SIZE = 20;
     private static final int EDIT_BUTTON_WIDTH = 70;
     private static final int ELEMENT_GAP = 5;
 
-    private final OptionCategory category;
-    private CustomColor value;
+
     private final TexturedTextInputBoxWidget valueTextBox;
     private final CategoryManagementScreen parent;
 
-    public ColorOptionWidget(String label, OptionCategory category, CustomColor initialColor, CategoryManagementScreen parent) {
-        super(0, 0, 0, 20, Component.literal(label));
-        this.category = category;
-        this.value = initialColor;
+    public ColorOptionWidget(
+            String label,
+            OptionCategory category,
+            CustomColor defaultColor,
+            Function<MapAttributes, Optional<CustomColor>> valueGetter,
+            CategoryManagementScreen parent) {
+        super(label, 20, category, defaultColor, valueGetter);
         this.parent = parent;
         this.valueTextBox = new TexturedTextInputBoxWidget(0, 0, 60, BUTTON_SIZE, this::onTextInputUpdate, parent, TexturedTextInputBoxWidget.Mode.HEXSTRING);
-        this.valueTextBox.setTextBoxInput(initialColor.toHexString());
+        setValue(defaultColor);
     }
 
     @Override
@@ -51,7 +54,7 @@ public class ColorOptionWidget extends AbstractWidget implements ScrollableWidge
                 StyledText.fromString(getMessage().getString()),
                 getX(),
                 getY() + this.height / 2f,
-                CommonColors.WHITE,
+                !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
                 HorizontalAlignment.LEFT,
                 VerticalAlignment.MIDDLE,
                 TextShadow.NORMAL);
@@ -114,7 +117,7 @@ public class ColorOptionWidget extends AbstractWidget implements ScrollableWidge
         if (isMouseOverEditButton(event.x(), event.y())) {
             this.playDownSound(McUtils.mc().getSoundManager());
 
-            valueTextBox.setTextBoxInput(value.toHexString());
+            setValue(value);
             McUtils.setScreen(ColorPickerScreen.create(McUtils.screen(), valueTextBox));
             return true;
         }
@@ -125,10 +128,10 @@ public class ColorOptionWidget extends AbstractWidget implements ScrollableWidge
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private void onTextInputUpdate(String text) {
-        try {
-            this.value = CustomColor.fromHexString(text);
-        } catch (Exception ignored) {
-            // Keep the previous value while the input is mid-edit / invalid.
+        CustomColor newValue = CustomColor.fromHexString(text);
+
+        if (newValue != null) {
+            super.setValue(newValue);
         }
     }
 
@@ -146,36 +149,10 @@ public class ColorOptionWidget extends AbstractWidget implements ScrollableWidge
         );
     }
 
-    // ----- ScrollableWidget implementation -----
-
-    @Override
-    public CustomColor getValue() {
-        return value;
-    }
-
     @Override
     public void setValue(CustomColor newValue) {
-        this.value = newValue;
-        this.valueTextBox.setTextBoxInput(newValue.toHexString());
-    }
-
-    @Override
-    public OptionCategory getCategory() {
-        return category;
-    }
-
-    @Override
-    public boolean isVisible() {
-        return visible;
-    }
-
-    @Override
-    public int getHeight() {
-        return height;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
+        super.setValue(newValue);
+        valueTextBox.setTextBoxInput(newValue.toHexString());
     }
 
     @Override

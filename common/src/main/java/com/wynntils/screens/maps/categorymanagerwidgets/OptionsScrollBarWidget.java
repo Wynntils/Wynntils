@@ -1,45 +1,50 @@
 package com.wynntils.screens.maps.categorymanagerwidgets;
 
 import com.wynntils.screens.maps.CategoryManagementScreen;
+import com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets.CategoryHeaderWidget;
 import com.wynntils.screens.maps.type.OptionCategory;
-import com.wynntils.screens.maps.type.ScrollableWidget;
+import com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets.AbstractOptionWidget;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import com.wynntils.utils.MathUtils;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.input.MouseButtonEvent;
 
 public class OptionsScrollBarWidget extends ScrollBarWidget {
-    private static final int WIDGET_PADDING = 3;
+    private static final int WIDGET_HEIGHT_PADDING = 4;
 
-    private final List<ScrollableWidget<?>> registeredWidgets = new ArrayList<>();
+    private final List<AbstractOptionWidget<?>> registeredWidgets = new ArrayList<>();
 
     public OptionsScrollBarWidget(int x, int y, int width, int height, CategoryManagementScreen parent) {
         super(x, y, width, height, parent);
     }
 
-    public void addWidget(ScrollableWidget<?> widget) {
+    public void addWidget(AbstractOptionWidget<?> widget) {
         registeredWidgets.add(widget);
     }
 
-    public List<ScrollableWidget<?>> getRegisteredWidgets() {
+    public List<AbstractOptionWidget<?>> getRegisteredWidgets() {
         return Collections.unmodifiableList(registeredWidgets);
     }
 
+    @Override
+    protected int getWidgetHeightPadding() {
+        return WIDGET_HEIGHT_PADDING;
+    }
+
     private int getHeightWithPadding(int index, int widgetHeight, int totalWidgets) {
-        return widgetHeight + (index < totalWidgets - 1 ? WIDGET_PADDING : 0);
+        return widgetHeight + (index < totalWidgets - 1 ? getWidgetHeightPadding() : 0);
     }
 
     @Override
-    protected List<ScrollableWidget<?>> getWidgets() {
-        List<ScrollableWidget<?>> layout = new ArrayList<>();
+    protected List<AbstractOptionWidget<?>> getWidgets() {
+        List<AbstractOptionWidget<?>> layout = new ArrayList<>();
 
         for (OptionCategory category : OptionCategory.values()) {
-            List<ScrollableWidget<?>> inCategory = registeredWidgets.stream()
-                    .filter(ScrollableWidget::isVisible)
+            List<AbstractOptionWidget<?>> inCategory = registeredWidgets.stream()
+                    .filter(widget -> widget.visible)
                     .filter(widget -> widget.getCategory() == category)
                     .toList();
 
@@ -60,15 +65,15 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
         int viewportLeft = getX() + SCROLL_BAR_WIDTH_PADDING;
         int currentY = viewportTop - scrollOffsetY;
 
-        List<ScrollableWidget<?>> widgets = getWidgets();
+        List<AbstractOptionWidget<?>> widgets = getWidgets();
         for (int i = 0; i < widgets.size(); i++) {
-            AbstractWidget abstractWidget = (AbstractWidget) widgets.get(i);
-            int widgetHeight = abstractWidget.getHeight();
+            AbstractOptionWidget<?> abstractOptionWidget = widgets.get(i);
+            int widgetHeight = abstractOptionWidget.getHeight();
             if (currentY + widgetHeight >= viewportTop && currentY <= viewportBottom) {
-                abstractWidget.setX(viewportLeft);
-                abstractWidget.setY(currentY);
-                abstractWidget.setWidth(contentWidth);
-                abstractWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+                abstractOptionWidget.setX(viewportLeft);
+                abstractOptionWidget.setY(currentY);
+                abstractOptionWidget.setWidth(contentWidth);
+                abstractOptionWidget.render(guiGraphics, mouseX, mouseY, partialTick);
             }
             currentY += getHeightWithPadding(i, widgetHeight, widgets.size());
         }
@@ -82,15 +87,15 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
 
         int currentY = getY() + SCROLL_BAR_HEIGHT_PADDING - scrollOffsetY;
 
-        List<ScrollableWidget<?>> widgets = getWidgets();
+        List<AbstractOptionWidget<?>> widgets = getWidgets();
         for (int i = 0; i < widgets.size(); i++) {
-            AbstractWidget abstractWidget = (AbstractWidget) widgets.get(i);
-            int widgetHeight = abstractWidget.getHeight();
+            AbstractOptionWidget<?> abstractOptionWidget = widgets.get(i);
+            int widgetHeight = abstractOptionWidget.getHeight();
             if (isInsideViewport(event.x(), event.y())) {
-                abstractWidget.setX(getX() + SCROLL_BAR_WIDTH_PADDING);
-                abstractWidget.setY(currentY);
-                abstractWidget.setWidth(getViewportWidth());
-                if (abstractWidget.isHovered() && abstractWidget.mouseClicked(event, isDoubleClick)) {
+                abstractOptionWidget.setX(getX() + SCROLL_BAR_WIDTH_PADDING);
+                abstractOptionWidget.setY(currentY);
+                abstractOptionWidget.setWidth(getViewportWidth());
+                if (abstractOptionWidget.isHovered() && abstractOptionWidget.mouseClicked(event, isDoubleClick)) {
                     return true;
                 }
             }
@@ -110,15 +115,15 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
         }
 
         int currentY = getY() + SCROLL_BAR_HEIGHT_PADDING - scrollOffsetY;
-        List<ScrollableWidget<?>> widgets = getWidgets();
+        List<AbstractOptionWidget<?>> widgets = getWidgets();
         for (int i = 0; i < widgets.size(); i++) {
-            AbstractWidget abstractWidget = (AbstractWidget) widgets.get(i);
-            int widgetHeight = abstractWidget.getHeight();
+            AbstractOptionWidget<?> abstractOptionWidget = widgets.get(i);
+            int widgetHeight = abstractOptionWidget.getHeight();
             if (isInsideViewport(event.x(), event.y())) {
-                abstractWidget.setX(getX() + SCROLL_BAR_WIDTH_PADDING);
-                abstractWidget.setY(currentY);
-                abstractWidget.setWidth(getViewportWidth());
-                if (abstractWidget.isHovered() && abstractWidget.mouseDragged(event, dragX, dragY)) {
+                abstractOptionWidget.setX(getX() + SCROLL_BAR_WIDTH_PADDING);
+                abstractOptionWidget.setY(currentY);
+                abstractOptionWidget.setWidth(getViewportWidth());
+                if (abstractOptionWidget.isHovered() && abstractOptionWidget.mouseDragged(event, dragX, dragY)) {
                     return true;
                 }
             }
@@ -131,15 +136,15 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
     public boolean mouseReleased(MouseButtonEvent event) {
         int currentY = getY() + SCROLL_BAR_HEIGHT_PADDING - scrollOffsetY;
 
-        List<ScrollableWidget<?>> widgets = getWidgets();
+        List<AbstractOptionWidget<?>> widgets = getWidgets();
         for (int i = 0; i < widgets.size(); i++) {
-            AbstractWidget abstractWidget = (AbstractWidget) widgets.get(i);
-            int widgetHeight = abstractWidget.getHeight();
+            AbstractOptionWidget<?> abstractOptionWidget = widgets.get(i);
+            int widgetHeight = abstractOptionWidget.getHeight();
             if (isInsideViewport(event.x(), event.y())) {
-                abstractWidget.setX(getX() + SCROLL_BAR_WIDTH_PADDING);
-                abstractWidget.setY(currentY);
-                abstractWidget.setWidth(getViewportWidth());
-                if (abstractWidget.isHovered() && abstractWidget.mouseReleased(event)) {
+                abstractOptionWidget.setX(getX() + SCROLL_BAR_WIDTH_PADDING);
+                abstractOptionWidget.setY(currentY);
+                abstractOptionWidget.setWidth(getViewportWidth());
+                if (abstractOptionWidget.isHovered() && abstractOptionWidget.mouseReleased(event)) {
                     return true;
                 }
             }
@@ -157,15 +162,15 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
 
         int currentY = getY() + SCROLL_BAR_HEIGHT_PADDING - scrollOffsetY;
 
-        List<ScrollableWidget<?>> widgets = getWidgets();
+        List<AbstractOptionWidget<?>> widgets = getWidgets();
         for (int i = 0; i < widgets.size(); i++) {
-            AbstractWidget abstractWidget = (AbstractWidget) widgets.get(i);
-            int widgetHeight = abstractWidget.getHeight();
+            AbstractOptionWidget<?> abstractOptionWidget = widgets.get(i);
+            int widgetHeight = abstractOptionWidget.getHeight();
             if (isInsideViewport(mouseX, mouseY)) {
-                abstractWidget.setX(getX() + SCROLL_BAR_WIDTH_PADDING);
-                abstractWidget.setY(currentY);
-                abstractWidget.setWidth(getViewportWidth());
-                if (abstractWidget.isHovered() && abstractWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
+                abstractOptionWidget.setX(getX() + SCROLL_BAR_WIDTH_PADDING);
+                abstractOptionWidget.setY(currentY);
+                abstractOptionWidget.setWidth(getViewportWidth());
+                if (abstractOptionWidget.isHovered() && abstractOptionWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
                     return true;
                 }
             }

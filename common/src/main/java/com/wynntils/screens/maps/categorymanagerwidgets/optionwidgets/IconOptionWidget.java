@@ -5,7 +5,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.CategoryManagementScreen;
 import com.wynntils.screens.maps.categorymanagerwidgets.screen.IconSelectionScreen;
 import com.wynntils.screens.maps.type.OptionCategory;
-import com.wynntils.screens.maps.type.ScrollableWidget;
+import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -18,25 +18,26 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class IconOptionWidget extends AbstractWidget implements ScrollableWidget<String> {
+import java.util.Optional;
+import java.util.function.Function;
+
+public class IconOptionWidget extends AbstractOptionWidget<String>  {
     private static final int BUTTON_WIDTH = 100;
     private static final int BUTTON_HEIGHT = 20;
     private static final int ICON_BORDER = 4;
 
-    private final OptionCategory category;
-    private String value;
 
-    public IconOptionWidget(String label, OptionCategory category, String initialIconId) {
-        super(0, 0, 0, 32, Component.literal(label));
-        this.category = category;
-        this.value = initialIconId;
+    public IconOptionWidget(
+            String label,
+            OptionCategory category,
+            String defaultIconId,
+            Function<MapAttributes, Optional<String>> valueGetter) {
+        super(label, 32, category, defaultIconId, valueGetter);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class IconOptionWidget extends AbstractWidget implements ScrollableWidget
                 StyledText.fromString(getMessage().getString()),
                 getX(),
                 getY() + this.height / 2f,
-                CommonColors.WHITE,
+                !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
                 HorizontalAlignment.LEFT,
                 VerticalAlignment.MIDDLE,
                 TextShadow.NORMAL);
@@ -120,7 +121,10 @@ public class IconOptionWidget extends AbstractWidget implements ScrollableWidget
             this.playDownSound(McUtils.mc().getSoundManager());
 
             CategoryManagementScreen currentScreen = (CategoryManagementScreen) McUtils.screen();
-            McUtils.mc().setScreen(new IconSelectionScreen(currentScreen, icon -> this.value = icon.getIconId(), value));
+            McUtils.mc().setScreen(new IconSelectionScreen(
+                    currentScreen,
+                    icon -> setValue(icon.getIconId()),
+                    value));
             return true;
         }
         return false;
@@ -138,36 +142,5 @@ public class IconOptionWidget extends AbstractWidget implements ScrollableWidget
                 getY() + (this.height - BUTTON_HEIGHT) / 2,
                 getY() + (this.height - BUTTON_HEIGHT) / 2 + BUTTON_HEIGHT
         );
-    }
-
-    // ----- ScrollableWidget implementation -----
-
-    @Override
-    public String getValue() {
-        return value;
-    }
-
-    @Override
-    public void setValue(String newValue) {
-        this.value = newValue;
-    }
-
-    @Override
-    public OptionCategory getCategory() {
-        return category;
-    }
-
-    @Override
-    public boolean isVisible() {
-        return visible;
-    }
-
-    @Override
-    public int getHeight() {
-        return height;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
     }
 }

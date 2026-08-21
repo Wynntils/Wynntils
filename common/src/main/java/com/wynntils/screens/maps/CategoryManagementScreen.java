@@ -5,15 +5,18 @@
 package com.wynntils.screens.maps;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.categorymanagerwidgets.CategorySearchWidget;
 import com.wynntils.screens.maps.categorymanagerwidgets.CategoryTreeWidget;
+import com.wynntils.screens.maps.categorymanagerwidgets.DeleteButtonWidget;
 import com.wynntils.screens.maps.categorymanagerwidgets.ResetButtonWidget;
 import com.wynntils.screens.maps.categorymanagerwidgets.OptionsScrollBarWidget;
 import com.wynntils.screens.maps.categorymanagerwidgets.OverrideSelectionWidget;
 import com.wynntils.screens.maps.categorymanagerwidgets.SaveButtonWidget;
+import com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets.AbstractOptionWidget;
 import com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets.ColorOptionWidget;
 import com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets.IconOptionWidget;
 import com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets.FloatSliderOptionWidget;
@@ -23,10 +26,10 @@ import com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets.TextShadow
 import com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets.ToggleOptionWidget;
 import com.wynntils.screens.maps.type.OptionCategory;
 import com.wynntils.screens.maps.type.OverrideType;
-import com.wynntils.screens.maps.type.ScrollableWidget;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -53,37 +56,38 @@ public final class CategoryManagementScreen extends WynntilsScreen {
 
     public SaveButtonWidget saveButtonWidget;
     public ResetButtonWidget resetButtonWidget;
+    public DeleteButtonWidget deleteButtonWidget;
 
     public OptionsScrollBarWidget optionsScrollBar;
 
 
     // region Feature (common) Attributes
 
-    private IntSliderOptionWidget priorityOptionWidget;
-    private IntSliderOptionWidget levelOptionWidget;
+    public IntSliderOptionWidget priorityOptionWidget;
+    public IntSliderOptionWidget levelOptionWidget;
 
     // endregion
 
     // region Label Attributes
 
-    private TextOptionWidget labelOptionWidget;
-    private TextOptionWidget descriptionOptionWidget;
+    public TextOptionWidget labelOptionWidget;
+    public TextOptionWidget descriptionOptionWidget;
 
-    private FloatSliderOptionWidget labelVisibilityMinOptionWidget;
-    private FloatSliderOptionWidget labelVisibilityMaxOptionWidget;
-    private FloatSliderOptionWidget labelVisibilityFadeOptionWidget;
-    private ColorOptionWidget labelColorOptionWidget;
-    private TextShadowOptionWidget labelShadowOptionWidget;
+    public FloatSliderOptionWidget labelVisibilityMinOptionWidget;
+    public FloatSliderOptionWidget labelVisibilityMaxOptionWidget;
+    public FloatSliderOptionWidget labelVisibilityFadeOptionWidget;
+    public ColorOptionWidget labelColorOptionWidget;
+    public TextShadowOptionWidget labelShadowOptionWidget;
 
     // endregion
 
     // region Icon Attributes
 
-    private IconOptionWidget iconOptionWidget;
-    private FloatSliderOptionWidget iconVisibilityMinOptionWidget;
-    private FloatSliderOptionWidget iconVisibilityMaxOptionWidget;
-    private FloatSliderOptionWidget iconVisibilityFadeOptionWidget;
-    private ColorOptionWidget iconColorOptionWidget;
+    public IconOptionWidget iconOptionWidget;
+    public FloatSliderOptionWidget iconVisibilityMinOptionWidget;
+    public FloatSliderOptionWidget iconVisibilityMaxOptionWidget;
+    public FloatSliderOptionWidget iconVisibilityFadeOptionWidget;
+    public ColorOptionWidget iconColorOptionWidget;
 
     //TODO: look at map decotation will probably need toggle for isvisible? idk
 
@@ -91,33 +95,25 @@ public final class CategoryManagementScreen extends WynntilsScreen {
 
     // region MapLocation Marker Attributes
 
-    private ToggleOptionWidget hasMarkerOptionWidget;
+    public ToggleOptionWidget hasMarkerOptionWidget;
 
-    private FloatSliderOptionWidget markerMinDistanceOptionWidget;
-    private FloatSliderOptionWidget markerMaxDistanceOptionWidget;
-    private FloatSliderOptionWidget markerFadeOptionWidget;
-    private ColorOptionWidget markerBeaconColorOptionWidget;
-    private ToggleOptionWidget markerHasLabelOptionWidget;
-    private ToggleOptionWidget markerHasDistanceLabelOptionWidget;
-    private ToggleOptionWidget markerHasIconOptionWidget;
+    public FloatSliderOptionWidget markerMinDistanceOptionWidget;
+    public FloatSliderOptionWidget markerMaxDistanceOptionWidget;
+    public FloatSliderOptionWidget markerFadeOptionWidget;
+    public ColorOptionWidget markerBeaconColorOptionWidget;
+    public ToggleOptionWidget markerHasLabelOptionWidget;
+    public ToggleOptionWidget markerHasDistanceLabelOptionWidget;
+    public ToggleOptionWidget markerHasIconOptionWidget;
 
     // endregion
 
     // region Area & Border Attributes
 
-    private ColorOptionWidget fillColorOptionWidget;
-    private ColorOptionWidget borderColorOptionWidget;
-    private FloatSliderOptionWidget borderWidthOptionWidget;
+    public ColorOptionWidget fillColorOptionWidget;
+    public ColorOptionWidget borderColorOptionWidget;
+    public FloatSliderOptionWidget borderWidthOptionWidget;
 
     // endregion
-
-
-    private ColorOptionWidget colorOptionWidget;
-    private FloatSliderOptionWidget floatSliderOptionWidget;
-    private IntSliderOptionWidget intSliderOptionWidget;
-    private ToggleOptionWidget toggleOptionWidget;
-    private TextOptionWidget textOptionWidget;
-    private TextShadowOptionWidget textShadowOptionWidget;
 
     private String selectedCategory;
     private OverrideType selectedOverrideType = OverrideType.MAP_LOCATION_OVERRIDE;
@@ -151,53 +147,213 @@ public final class CategoryManagementScreen extends WynntilsScreen {
 
         // region Feature (common) Attributes
 
-        priorityOptionWidget = new IntSliderOptionWidget("Priority", OptionCategory.GENERAL, 0, 0, 100, this);
-        levelOptionWidget = new IntSliderOptionWidget("Level", OptionCategory.GENERAL, 0, 0, 110, this);
+        priorityOptionWidget = new IntSliderOptionWidget(
+                "Priority",
+                OptionCategory.GENERAL,
+                1,
+                1,
+                1000,
+                MapAttributes::getPriority,
+                this);
+
+        levelOptionWidget = new IntSliderOptionWidget(
+                "Level",
+                OptionCategory.GENERAL,
+                0,
+                0,
+                Models.CombatXp.MAX_LEVEL,
+                MapAttributes::getLevel,
+                this);
 
         // endregion
 
         // region Label Attributes
 
-        labelOptionWidget = new TextOptionWidget("Label", OptionCategory.LABEL, "None", this);
-        descriptionOptionWidget = new TextOptionWidget("Description", OptionCategory.LABEL, "None", this);
+        labelOptionWidget = new TextOptionWidget(
+                "Label",
+                OptionCategory.LABEL,
+                "",
+                MapAttributes::getLabel,
+                this);
 
-        labelVisibilityMinOptionWidget = new FloatSliderOptionWidget("Label Visibility Min", OptionCategory.LABEL, 0f, 0f, 1f, this);
-        labelVisibilityMaxOptionWidget = new FloatSliderOptionWidget("Label Visibility Max", OptionCategory.LABEL, 0f, 0f, 1f, this);
-        labelVisibilityFadeOptionWidget = new FloatSliderOptionWidget("Label Visibility Fade", OptionCategory.LABEL, 0f, 0f, 1f, this);
-        labelColorOptionWidget = new ColorOptionWidget("Label Color", OptionCategory.LABEL, CustomColor.NONE, this);
-        labelShadowOptionWidget = new TextShadowOptionWidget("Label Shadow", OptionCategory.LABEL, TextShadow.NORMAL);
+        descriptionOptionWidget = new TextOptionWidget(
+                "Description",
+                OptionCategory.LABEL,
+                "",
+                MapAttributes::getDescription,
+                this);
+
+        labelVisibilityMinOptionWidget = new FloatSliderOptionWidget(
+                "Label Visibility Min",
+                OptionCategory.LABEL,
+                0f,
+                0f,
+                100f,
+                attrs -> attrs.getLabelVisibility().flatMap(MapVisibility::getMin),
+                this);
+
+        labelVisibilityMaxOptionWidget = new FloatSliderOptionWidget(
+                "Label Visibility Max",
+                OptionCategory.LABEL,
+                0f,
+                0f,
+                100f,
+                attrs -> attrs.getLabelVisibility().flatMap(MapVisibility::getMax),
+                this);
+
+        labelVisibilityFadeOptionWidget = new FloatSliderOptionWidget(
+                "Label Visibility Fade",
+                OptionCategory.LABEL,
+                0f,
+                0f,
+                100f,
+                attrs -> attrs.getLabelVisibility().flatMap(MapVisibility::getFade),
+                this);
+
+        labelColorOptionWidget = new ColorOptionWidget(
+                "Label Color",
+                OptionCategory.LABEL,
+                CommonColors.WHITE,
+                MapAttributes::getLabelColor,
+                this);
+
+        labelShadowOptionWidget = new TextShadowOptionWidget(
+                "Label Shadow",
+                OptionCategory.LABEL,
+                TextShadow.NORMAL,
+                MapAttributes::getLabelShadow);
 
         // endregion
 
         // region Icon Attributes
 
-        iconOptionWidget = new IconOptionWidget("Icon", OptionCategory.ICON, "none");
-        iconVisibilityMinOptionWidget = new FloatSliderOptionWidget("Icon Visibility Min", OptionCategory.ICON, 0f, 0f, 1f, this);
-        iconVisibilityMaxOptionWidget = new FloatSliderOptionWidget("Icon Visibility Max", OptionCategory.ICON, 0f, 0f, 1f, this);
-        iconVisibilityFadeOptionWidget = new FloatSliderOptionWidget("Icon Visibility Fade", OptionCategory.ICON, 0f, 0f, 1f, this);
-        iconColorOptionWidget = new ColorOptionWidget("Icon Color", OptionCategory.ICON, CustomColor.NONE, this);
+        iconOptionWidget = new IconOptionWidget(
+                "Icon",
+                OptionCategory.ICON,
+                "none",
+                MapAttributes::getIconId);
+
+        iconVisibilityMinOptionWidget = new FloatSliderOptionWidget(
+                "Icon Visibility Min",
+                OptionCategory.ICON,
+                0f,
+                0f,
+                100f,
+                attrs -> attrs.getIconVisibility().flatMap(MapVisibility::getMin),
+                this);
+
+        iconVisibilityMaxOptionWidget = new FloatSliderOptionWidget(
+                "Icon Visibility Max",
+                OptionCategory.ICON,
+                0f,
+                0f,
+                100f,
+                attrs -> attrs.getIconVisibility().flatMap(MapVisibility::getMax),
+                this);
+
+        iconVisibilityFadeOptionWidget = new FloatSliderOptionWidget(
+                "Icon Visibility Fade",
+                OptionCategory.ICON,
+                0f,
+                0f,
+                100f,
+                attrs -> attrs.getIconVisibility().flatMap(MapVisibility::getFade),
+                this);
+        iconColorOptionWidget = new ColorOptionWidget(
+                "Icon Color",
+                OptionCategory.ICON,
+                CommonColors.WHITE,
+                MapAttributes::getIconColor,
+                this);
 
         // endregion
 
         // region MapLocation Marker Attributes
 
-        hasMarkerOptionWidget = new ToggleOptionWidget("Has Marker", OptionCategory.MARKER, false);
+        hasMarkerOptionWidget = new ToggleOptionWidget(
+                "Has Marker",
+                OptionCategory.MARKER,
+                false,
+                MapAttributes::getHasMarker);
 
-        markerMinDistanceOptionWidget = new FloatSliderOptionWidget("Marker Min Distance", OptionCategory.MARKER,  0f, 0f, 500f, this);
-        markerMaxDistanceOptionWidget = new FloatSliderOptionWidget("Marker Max Distance", OptionCategory.MARKER, 0f, 0f, 500f, this);
-        markerFadeOptionWidget = new FloatSliderOptionWidget("Marker Fade", OptionCategory.MARKER, 0f, 0f, 500f, this);
-        markerBeaconColorOptionWidget = new ColorOptionWidget("Marker Beacon Color", OptionCategory.MARKER, CustomColor.NONE, this);
-        markerHasLabelOptionWidget = new ToggleOptionWidget("Marker Has Label", OptionCategory.MARKER,  false);
-        markerHasDistanceLabelOptionWidget = new ToggleOptionWidget("Marker Has Distance Label", OptionCategory.MARKER, false);
-        markerHasIconOptionWidget = new ToggleOptionWidget("Marker Has Icon", OptionCategory.MARKER, false);
+        markerMinDistanceOptionWidget = new FloatSliderOptionWidget(
+                "Marker Min Distance",
+                OptionCategory.MARKER,
+                0f,
+                0f,
+                6000f,
+                attrs -> attrs.getMarkerOptions().flatMap(MapMarkerOptions::getMinDistance),
+                this);
+
+        markerMaxDistanceOptionWidget = new FloatSliderOptionWidget(
+                "Marker Max Distance",
+                OptionCategory.MARKER,
+                0f,
+                0f,
+                6000f,
+                attrs -> attrs.getMarkerOptions().flatMap(MapMarkerOptions::getMaxDistance),
+                this);
+
+        markerFadeOptionWidget = new FloatSliderOptionWidget(
+                "Marker Fade",
+                OptionCategory.MARKER,
+                0f,
+                0f,
+                100f,
+                attrs -> attrs.getMarkerOptions().flatMap(MapMarkerOptions::getFade),
+                this);
+
+        markerBeaconColorOptionWidget = new ColorOptionWidget(
+                "Marker Beacon Color",
+                OptionCategory.MARKER,
+                CommonColors.WHITE,
+                attrs -> attrs.getMarkerOptions().flatMap(MapMarkerOptions::getBeaconColor),
+                this);
+
+        markerHasLabelOptionWidget = new ToggleOptionWidget(
+                "Marker Has Label",
+                OptionCategory.MARKER,
+                false,
+                attrs -> attrs.getMarkerOptions().flatMap(MapMarkerOptions::getHasLabel));
+
+        markerHasDistanceLabelOptionWidget = new ToggleOptionWidget(
+                "Marker Has Distance Label",
+                OptionCategory.MARKER,
+                false,
+                attrs -> attrs.getMarkerOptions().flatMap(MapMarkerOptions::getHasDistanceLabel));
+
+        markerHasIconOptionWidget = new ToggleOptionWidget(
+                "Marker Has Icon",
+                OptionCategory.MARKER,
+                false,
+                attrs -> attrs.getMarkerOptions().flatMap(MapMarkerOptions::getHasIcon));
 
         // endregion
 
         // region Area & Border Attributes
 
-        fillColorOptionWidget = new ColorOptionWidget("Fill Color", OptionCategory.AREA_BORDER, CustomColor.NONE, this);
-        borderColorOptionWidget = new ColorOptionWidget("Border Color", OptionCategory.AREA_BORDER, CustomColor.NONE, this);
-        borderWidthOptionWidget = new FloatSliderOptionWidget("Border Width", OptionCategory.AREA_BORDER, 0f, 0f, 10f, this);
+        fillColorOptionWidget = new ColorOptionWidget(
+                "Fill Color",
+                OptionCategory.AREA_BORDER,
+                CommonColors.WHITE,
+                MapAttributes::getFillColor,
+                this);
+
+        borderColorOptionWidget = new ColorOptionWidget(
+                "Border Color",
+                OptionCategory.AREA_BORDER,
+                CommonColors.WHITE,
+                MapAttributes::getBorderColor,
+                this);
+
+        borderWidthOptionWidget = new FloatSliderOptionWidget(
+                "Border Width",
+                OptionCategory.AREA_BORDER,
+                0f,
+                0f,
+                10f,
+                MapAttributes::getBorderWidth,
+                this);
 
         // endregion
 
@@ -267,7 +423,7 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         this.addRenderableWidget(overrideSelectionWidget);
 
         saveButtonWidget = new SaveButtonWidget(
-                offsetX + WIDTH_OFFSET + 200 + 5 + 40,
+                offsetX + WIDTH_OFFSET + 200 + 5,
                 offsetY + HEIGHT_OFFSET + 284 - 20,
                 103,
                 20,
@@ -276,7 +432,7 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         this.addRenderableWidget(saveButtonWidget);
 
         resetButtonWidget = new ResetButtonWidget(
-                offsetX + WIDTH_OFFSET + 200 + 5 + (103 + 16) * 2 - 40,
+                offsetX + WIDTH_OFFSET + 200 + 5 + (103 + 16) * 1,
                 offsetY + HEIGHT_OFFSET + 284 - 20,
                 103,
                 20,
@@ -284,7 +440,17 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         );
         this.addRenderableWidget(resetButtonWidget);
 
+        deleteButtonWidget = new DeleteButtonWidget(
+                offsetX + WIDTH_OFFSET + 200 + 5 + (103 + 16) * 2,
+                offsetY + HEIGHT_OFFSET + 284 - 20,
+                103,
+                20,
+                this
+        );
+        this.addRenderableWidget(deleteButtonWidget);
+
         updateMenu();
+        updateOptionWidgetsVisibility();
     }
 
     @Override
@@ -305,10 +471,9 @@ public final class CategoryManagementScreen extends WynntilsScreen {
             return true;
         }
 
-        for (ScrollableWidget<?> widget : optionsScrollBar.getRegisteredWidgets()) {
+        for (AbstractOptionWidget<?> widget : optionsScrollBar.getRegisteredWidgets()) {
             if (widget.isMouseOverTextBox(event.x(), event.y())) {
                 setFocusedTextInput(widget.getTextInputBoxWidget());
-                WynntilsMod.info("setting to text box");
             }
         }
 
@@ -331,137 +496,67 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         overrideSelectionWidget.visible = false;
         saveButtonWidget.visible = false;
         resetButtonWidget.visible = false;
+        deleteButtonWidget.visible = false;
         optionsScrollBar.visible = false;
 
         if (this.selectedCategory != null) {
             overrideSelectionWidget.visible = true;
             saveButtonWidget.visible = true;
             resetButtonWidget.visible = true;
+            deleteButtonWidget.visible = true;
             optionsScrollBar.visible = true;
         }
     }
 
     private void updateOptionWidgets() {
-        Optional<MapAttributes> attributesOptional = Services.MapData.getAttributesForCategory(this.selectedCategory);
+        Optional<MapAttributes> ownAttributes = Services.MapData.getOwnAttributesForCategory(this.selectedCategory);
+        Optional<MapAttributes> resolvedAttributes = Services.MapData.getResolvedAttributesForCategory(this.selectedCategory);
 
-        if (attributesOptional.isEmpty()) return;
-        MapAttributes attributes = attributesOptional.get();
-
-
-        if (attributes.getPriority().isPresent()) {
-            priorityOptionWidget.setValue(attributes.getPriority().get());
+        for (AbstractOptionWidget<?> widget : optionsScrollBar.getRegisteredWidgets()) {
+            widget.updateFromAttributes(ownAttributes, resolvedAttributes);
         }
+    }
 
-        if (attributes.getLevel().isPresent()) {
-            levelOptionWidget.setValue(attributes.getLevel().get());
-        }
+    private void updateOptionWidgetsVisibility() {
+        optionsScrollBar.scrollOffsetY = 0;
 
-        if (attributes.getLabel().isPresent()) {
-            labelOptionWidget.setValue(attributes.getLabel().get());
-        }
+        boolean isLocation = selectedOverrideType == OverrideType.MAP_LOCATION_OVERRIDE;
+        boolean isArea = selectedOverrideType == OverrideType.MAP_AREA_OVERRIDE;
 
-        if (attributes.getDescription().isPresent()) {
-            descriptionOptionWidget.setValue(attributes.getDescription().get());
-        }
+        // Feature (common) Attributes - always visible
+        priorityOptionWidget.visible = true;
+        levelOptionWidget.visible = true;
 
-        if (attributes.getLabelVisibility().isPresent()) {
-            MapVisibility labelVisibility = attributes.getLabelVisibility().get();
+        // Label Attributes - always visible
+        labelOptionWidget.visible = true;
+        descriptionOptionWidget.visible = true;
+        labelVisibilityMinOptionWidget.visible = true;
+        labelVisibilityMaxOptionWidget.visible = true;
+        labelVisibilityFadeOptionWidget.visible = true;
+        labelColorOptionWidget.visible = true;
+        labelShadowOptionWidget.visible = true;
 
-            if (labelVisibility.getMin().isPresent()) {
-                labelVisibilityMinOptionWidget.setValue(labelVisibility.getMin().get());
-            }
+        // Icon Attributes - MapLocation only
+        iconOptionWidget.visible = isLocation;
+        iconVisibilityMinOptionWidget.visible = isLocation;
+        iconVisibilityMaxOptionWidget.visible = isLocation;
+        iconVisibilityFadeOptionWidget.visible = isLocation;
+        iconColorOptionWidget.visible = isLocation;
 
-            if (labelVisibility.getMax().isPresent()) {
-                labelVisibilityMaxOptionWidget.setValue(labelVisibility.getMax().get());
-            }
+        // MapLocation Marker Attributes - MapLocation only
+        hasMarkerOptionWidget.visible = isLocation;
+        markerMinDistanceOptionWidget.visible = isLocation;
+        markerMaxDistanceOptionWidget.visible = isLocation;
+        markerFadeOptionWidget.visible = isLocation;
+        markerBeaconColorOptionWidget.visible = isLocation;
+        markerHasLabelOptionWidget.visible = isLocation;
+        markerHasDistanceLabelOptionWidget.visible = isLocation;
+        markerHasIconOptionWidget.visible = isLocation;
 
-            if (labelVisibility.getFade().isPresent()) {
-                labelVisibilityFadeOptionWidget.setValue(labelVisibility.getFade().get());
-            }
-        }
-
-        if (attributes.getLabelColor().isPresent()) {
-            labelColorOptionWidget.setValue(attributes.getLabelColor().get());
-        }
-
-        if (attributes.getLabelShadow().isPresent()) {
-            labelShadowOptionWidget.setValue(attributes.getLabelShadow().get());
-        }
-
-        if (attributes.getIconId().isPresent()) {
-            iconOptionWidget.setValue(attributes.getIconId().get());
-        }
-
-        if (attributes.getIconVisibility().isPresent()) {
-            MapVisibility iconVisibility = attributes.getIconVisibility().get();
-
-            if (iconVisibility.getMin().isPresent()) {
-                iconVisibilityMinOptionWidget.setValue(iconVisibility.getMin().get());
-            }
-
-            if (iconVisibility.getMax().isPresent()) {
-                iconVisibilityMaxOptionWidget.setValue(iconVisibility.getMax().get());
-            }
-
-            if (iconVisibility.getFade().isPresent()) {
-                iconVisibilityFadeOptionWidget.setValue(iconVisibility.getFade().get());
-            }
-        }
-
-        if (attributes.getIconColor().isPresent()) {
-            iconColorOptionWidget.setValue(attributes.getIconColor().get());
-        }
-
-
-
-        if (attributes.getHasMarker().isPresent()) {
-            hasMarkerOptionWidget.setValue(attributes.getHasMarker().get());
-        }
-
-        if (attributes.getMarkerOptions().isPresent()) {
-            MapMarkerOptions markerOptions = attributes.getMarkerOptions().get();
-
-            if (markerOptions.getMinDistance().isPresent()) {
-                markerMinDistanceOptionWidget.setValue(markerOptions.getMinDistance().get());
-            }
-
-            if (markerOptions.getMaxDistance().isPresent()) {
-                markerMaxDistanceOptionWidget.setValue(markerOptions.getMaxDistance().get());
-            }
-
-            if (markerOptions.getFade().isPresent()) {
-                markerFadeOptionWidget.setValue(markerOptions.getFade().get());
-            }
-
-            if (markerOptions.getBeaconColor().isPresent()) {
-                markerBeaconColorOptionWidget.setValue(markerOptions.getBeaconColor().get());
-            }
-
-            if (markerOptions.getHasLabel().isPresent()) {
-                markerHasLabelOptionWidget.setValue(markerOptions.getHasLabel().get());
-            }
-
-            if (markerOptions.getHasDistanceLabel().isPresent()) {
-                markerHasDistanceLabelOptionWidget.setValue(markerOptions.getHasDistanceLabel().get());
-            }
-
-            if (markerOptions.getHasIcon().isPresent()) {
-                markerHasIconOptionWidget.setValue(markerOptions.getHasIcon().get());
-            }
-        }
-
-        if (attributes.getFillColor().isPresent()) {
-            fillColorOptionWidget.setValue(attributes.getFillColor().get());
-        }
-
-        if (attributes.getBorderColor().isPresent()) {
-            borderColorOptionWidget.setValue(attributes.getBorderColor().get());
-        }
-
-        if (attributes.getBorderWidth().isPresent()) {
-            borderWidthOptionWidget.setValue(attributes.getBorderWidth().get());
-        }
-
+        // Area & Border Attributes - MapArea only
+        fillColorOptionWidget.visible = isArea;
+        borderColorOptionWidget.visible = isArea;
+        borderWidthOptionWidget.visible = isArea;
     }
 
     public void setSelectedCategory(String category) {
@@ -476,6 +571,7 @@ public final class CategoryManagementScreen extends WynntilsScreen {
 
     public void setSelectedOverrideType(OverrideType newOverrideType) {
         selectedOverrideType = newOverrideType;
+        updateOptionWidgetsVisibility();
     }
 
     public OverrideType getSelectedOverrideType() {

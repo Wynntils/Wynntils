@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 public class TexturedTextInputBoxWidget extends TextInputBoxWidget {
-    private static final Component DEFAULT_TEXT = Component.literal("Empty...");
+    private static final Component DEFAULT_TEXT = Component.literal("None");
     private static final Pattern INTEGER_PATTERN = Pattern.compile("^-?\\d*$");
     private static final Pattern FLOAT_PATTERN = Pattern.compile("^-?\\d*\\.?\\d*$");
     private static final Pattern HEXSTRING_PATTERN = Pattern.compile("^#?[0-9a-fA-F]{0,8}$");
