@@ -112,8 +112,6 @@ public class CustomWaypointIconScreen extends WynntilsGridLayoutScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-
         RenderUtils.drawRect(
                 guiGraphics,
                 CommonColors.BLACK.withAlpha(100),

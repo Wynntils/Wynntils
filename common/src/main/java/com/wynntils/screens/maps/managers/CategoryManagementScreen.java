@@ -131,7 +131,6 @@ public final class CategoryManagementScreen extends WynntilsScreen {
     @Override
     protected void rebuildWidgets() {}
 
-    //TODO: fix this and like make it so it sets the positions instead of rebuilding.
     @Override
     public void resize(int width, int height) {
         this.width = width;

@@ -59,9 +59,6 @@ public abstract class ScrollBarWidget extends AbstractWidget {
         return 0;
     }
 
-    /**
-     * The widgets whose combined height determines the scrollable canvas height.
-     */
     protected abstract List<? extends AbstractOptionWidget<?>> getWidgets();
 
     private int getCanvasHeight() {
@@ -236,12 +233,7 @@ public abstract class ScrollBarWidget extends AbstractWidget {
         return this.x + this.width - Texture.MANAGER_SCROLL_BAR_VERTICAL.width() - VERTICAL_SCROLL_BAR_EDGE_PADDING;
     }
 
-    // --- Vertical bar geometry ---
-    // The bar texture (arrows baked into its top/bottom caps) is drawn across the full area
-    // between getVerticalScrollBarY() and getVerticalScrollBarYBottom() - see renderVerticalScroll().
-    // The methods below instead carve out the sub-region reserved for the thumb, which must stay
-    // clear of those baked-in arrow caps.
-
+    // --- Vertical bar ---
     private float getVerticalScrollBarY() {
         return this.y + SCROLL_BAR_HEIGHT_PADDING;
     }

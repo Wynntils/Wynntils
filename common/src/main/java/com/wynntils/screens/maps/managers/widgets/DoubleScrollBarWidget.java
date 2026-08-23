@@ -350,12 +350,7 @@ public abstract class DoubleScrollBarWidget extends AbstractWidget {
                 - HORIZONTAL_SCROLL_BAR_EDGE_PADDING;
     }
 
-    // --- Vertical bar geometry ---
-    // The bar texture (arrows baked into its top/bottom caps) is drawn across the full area
-    // between getVerticalBarAreaTop() and getVerticalBarAreaBottom() - see renderVerticalScroll().
-    // The methods below instead carve out the sub-region reserved for the thumb, which must stay
-    // clear of those baked-in arrow caps.
-
+    // --- Vertical bar ---
     private float getVerticalScrollBarY() {
         return this.y + SCROLL_BAR_HEIGHT_PADDING;
     }
@@ -392,12 +387,7 @@ public abstract class DoubleScrollBarWidget extends AbstractWidget {
         return getVerticalScrollBarYBottom() - SCROLL_ARROW_BUTTON_HEIGHT_VERTICAL;
     }
 
-    // --- Horizontal bar geometry ---
-    // The bar texture (arrows baked into its left/right caps) is drawn across the full area
-    // between getHorizontalBarAreaLeft() and getHorizontalBarAreaRight() - see
-    // renderHorizontalScroll(). The methods below instead carve out the sub-region reserved for
-    // the thumb, which must stay clear of those baked-in arrow caps.
-
+    // --- Horizontal bar ---
     private float getHorizontalScrollBarX() {
         return this.x + SCROLL_BAR_WIDTH_PADDING;
     }
