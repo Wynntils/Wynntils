@@ -21,7 +21,7 @@ public class CategoryHeaderWidget extends AbstractOptionWidget<Void> {
 
     public CategoryHeaderWidget(OptionCategory category) {
         super(
-                Component.literal(category.getDisplayName()),
+                category.getDisplayName(),
                 Component.empty(),
                 26,
                 category,

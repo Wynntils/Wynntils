@@ -73,7 +73,7 @@ public class IconSelectionScreen extends WynntilsScreen {
                 gridY + gridHeight + BUTTON_TOP_GAP,
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
-                Component.literal("Cancel"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.iconSelectionScreen.cancel"),
                 Texture.MANAGER_WIDGET_BACKGROUND_RED,
                 this::onCancel));
 
@@ -82,7 +82,7 @@ public class IconSelectionScreen extends WynntilsScreen {
                 gridY + gridHeight + BUTTON_TOP_GAP,
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
-                Component.literal("Save"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.iconSelectionScreen.save"),
                 Texture.MANAGER_WIDGET_BACKGROUND_GREEN,
                 this::onSave));
     }
@@ -107,7 +107,7 @@ public class IconSelectionScreen extends WynntilsScreen {
     public void onClose() {
         McUtils.mc().setScreen(previousScreen);
     }
-    
+
     private static class StyledButton extends AbstractWidget {
         private final Texture backgroundTexture;
         private final Runnable onClick;
@@ -221,7 +221,7 @@ public class IconSelectionScreen extends WynntilsScreen {
                     guiGraphics,
                     RenderPipelines.GUI_TEXTURED,
                     icon.getIdentifier(),
-                    CustomColor.NONE,
+                    CommonColors.WHITE,
                     drawX,
                     drawY,
                     iconWidth,

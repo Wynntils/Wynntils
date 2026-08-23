@@ -102,7 +102,7 @@ public class ColorOptionWidget extends AbstractOptionWidget<CustomColor> {
 
         FontRenderer.getInstance().renderText(
                 guiGraphics,
-                StyledText.fromString("Edit Color"),
+                StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.categoryManager.colorOptionWidget.editColorText")),
                 editButtonX + EDIT_BUTTON_WIDTH / 2f,
                 elementY + BUTTON_SIZE / 2f,
                 CommonColors.WHITE,

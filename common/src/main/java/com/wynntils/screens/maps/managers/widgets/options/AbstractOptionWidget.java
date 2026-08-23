@@ -112,7 +112,11 @@ public abstract class AbstractOptionWidget<T> extends AbstractWidget {
 
         ChatFormatting color = this.inherited ? ChatFormatting.GRAY : ChatFormatting.WHITE;
 
-        Component label = Component.literal(this.inherited ? "Inherited" : "Not Inherited").withStyle(color);
+        Component label = (
+                this.inherited ?
+                Component.translatable("screens.wynntils.map.managers.categoryManager.abstractOptionWidget.inheritedText") :
+                        Component.translatable("screens.wynntils.map.managers.categoryManager.abstractOptionWidget.notInheritedText"))
+                .withStyle(color);
 
         this.generatedTooltip.add(
                 Component.literal("- ").withStyle(ChatFormatting.GOLD).append(label));

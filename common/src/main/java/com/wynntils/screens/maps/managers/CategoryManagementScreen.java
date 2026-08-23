@@ -148,8 +148,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         // region Feature (common) Attributes
 
         priorityOptionWidget = new IntSliderOptionWidget(
-                Component.literal("Priority"),
-                Component.literal("1–1000, where 1000 is the highest priority, drawn on top of everything else."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.priority"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.priority.description"),
                 OptionCategory.GENERAL,
                 1,
                 1000,
@@ -157,12 +157,12 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 this);
 
         levelOptionWidget = new IntSliderOptionWidget(
-                Component.literal("Level"),
-                Component.literal("The minimum combat level at which this category is suitable.")
+                Component.translatable("screens.wynntils.map.managers.categoryManager.level"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.level.description1")
                         .append("\n\n")
-                        .append("0 means no information is available or the level is not applicable.")
+                        .append(Component.translatable("screens.wynntils.map.managers.categoryManager.level.description2"))
                         .append("\n\n")
-                        .append("1 means suitable for all levels."),
+                        .append(Component.translatable("screens.wynntils.map.managers.categoryManager.level.description3")),
                 OptionCategory.GENERAL,
                 0,
                 Models.CombatXp.MAX_LEVEL,
@@ -174,22 +174,22 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         // region Label Attributes
 
         labelOptionWidget = new TextOptionWidget(
-                Component.literal("Label"),
-                Component.literal("The primary text label displayed for this category on the map and in-world."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.label"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.label.description"),
                 OptionCategory.LABEL,
                 MapAttributes::getLabel,
                 this);
 
         descriptionOptionWidget = new TextOptionWidget(
-                Component.literal("Description"),
-                Component.literal("The secondary text label displayed for this category on the map and in-world."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.description"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.description.description"),
                 OptionCategory.LABEL,
                 MapAttributes::getDescription,
                 this);
 
         labelVisibilityMinOptionWidget = new FloatSliderOptionWidget(
-                Component.literal("Label Visibility Min"),
-                Component.literal("The minimum distance at which the label is visible."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.labelVisibilityMin"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.labelVisibilityMin.description"),
                 OptionCategory.LABEL,
                 0f,
                 100f,
@@ -197,8 +197,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 this);
 
         labelVisibilityMaxOptionWidget = new FloatSliderOptionWidget(
-                Component.literal("Label Visibility Max"),
-                Component.literal("The maximum distance at which the label is visible."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.labelVisibilityMax"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.labelVisibilityMax.description"),
                 OptionCategory.LABEL,
                 0f,
                 100f,
@@ -206,8 +206,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 this);
 
         labelVisibilityFadeOptionWidget = new FloatSliderOptionWidget(
-                Component.literal("Label Visibility Fade"),
-                Component.literal("The distance over which the label fades in or out."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.labelVisibilityFade"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.labelVisibilityFade.description"),
                 OptionCategory.LABEL,
                 0f,
                 100f,
@@ -215,15 +215,15 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 this);
 
         labelColorOptionWidget = new ColorOptionWidget(
-                Component.literal("Label Color"),
-                Component.literal("The color of the label on the map and in-world."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.labelColor"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.labelColor.description"),
                 OptionCategory.LABEL,
                 MapAttributes::getLabelColor,
                 this);
 
         labelShadowOptionWidget = new TextShadowOptionWidget(
-                Component.literal("Label Shadow"),
-                Component.literal("The shadow style of the label on the map and in-world."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.labelShadow"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.labelShadow.description"),
                 OptionCategory.LABEL,
                 MapAttributes::getLabelShadow);
 
@@ -232,14 +232,14 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         // region Icon Attributes
 
         iconOptionWidget = new IconOptionWidget(
-                Component.literal("Icon"),
-                Component.literal("The icon displayed for this category."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.icon"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.icon.description"),
                 OptionCategory.ICON,
                 MapAttributes::getIconId);
 
         iconVisibilityMinOptionWidget = new FloatSliderOptionWidget(
-                Component.literal("Icon Visibility Min"),
-                Component.literal("The minimum distance at which the icon is visible."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.iconVisibilityMin"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.iconVisibilityMin.description"),
                 OptionCategory.ICON,
                 0f,
                 100f,
@@ -247,8 +247,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 this);
 
         iconVisibilityMaxOptionWidget = new FloatSliderOptionWidget(
-                Component.literal("Icon Visibility Max"),
-                Component.literal("The maximum distance at which the icon is visible."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.iconVisibilityMax"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.iconVisibilityMax.description"),
                 OptionCategory.ICON,
                 0f,
                 100f,
@@ -256,16 +256,17 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 this);
 
         iconVisibilityFadeOptionWidget = new FloatSliderOptionWidget(
-                Component.literal("Icon Visibility Fade"),
-                Component.literal("The distance over which the icon fades in or out."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.iconVisibilityFade"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.iconVisibilityFade.description"),
                 OptionCategory.ICON,
                 0f,
                 100f,
                 attrs -> attrs.getIconVisibility().flatMap(MapVisibility::getFade),
                 this);
+
         iconColorOptionWidget = new ColorOptionWidget(
-                Component.literal("Icon Color"),
-                Component.literal("The color of the icon."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.iconColor"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.iconColor.description"),
                 OptionCategory.ICON,
                 MapAttributes::getIconColor,
                 this);
@@ -275,16 +276,16 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         // region MapLocation Marker Attributes
 
         hasMarkerOptionWidget = new ToggleOptionWidget(
-                Component.literal("Has Marker"),
-                Component.literal("Determines whether this category has a marker in the world.")
+                Component.translatable("screens.wynntils.map.managers.categoryManager.hasMarker"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.hasMarker.description1")
                         .append("\n\n")
-                        .append("The marker may still not be visible, depending on the marker options."),
+                        .append(Component.translatable("screens.wynntils.map.managers.categoryManager.hasMarker.description2")),
                 OptionCategory.MARKER,
                 MapAttributes::getHasMarker);
 
         markerMinDistanceOptionWidget = new FloatSliderOptionWidget(
-                Component.literal("Marker Min Distance"),
-                Component.literal("The minimum distance at which the marker is visible."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.markerMinDistance"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.markerMinDistance.description"),
                 OptionCategory.MARKER,
                 0f,
                 15000f,
@@ -292,8 +293,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 this);
 
         markerMaxDistanceOptionWidget = new FloatSliderOptionWidget(
-                Component.literal("Marker Max Distance"),
-                Component.literal("The maximum distance at which the marker is visible."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.markerMaxDistance"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.markerMaxDistance.description"),
                 OptionCategory.MARKER,
                 0f,
                 15000f,
@@ -301,8 +302,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 this);
 
         markerFadeOptionWidget = new FloatSliderOptionWidget(
-                Component.literal("Marker Fade"),
-                Component.literal("The distance over which the marker fades in or out."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.markerFade"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.markerFade.description"),
                 OptionCategory.MARKER,
                 0f,
                 100f,
@@ -310,27 +311,27 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 this);
 
         markerBeaconColorOptionWidget = new ColorOptionWidget(
-                Component.literal("Marker Beacon Color"),
-                Component.literal("The color of the marker's beacon."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.markerBeaconColor"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.markerBeaconColor.description"),
                 OptionCategory.MARKER,
                 attrs -> attrs.getMarkerOptions().flatMap(MapMarkerOptions::getBeaconColor),
                 this);
 
         markerHasLabelOptionWidget = new ToggleOptionWidget(
-                Component.literal("Marker Has Label"),
-                Component.literal("Determines whether the marker displays a label."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.markerHasLabel"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.markerHasLabel.description"),
                 OptionCategory.MARKER,
                 attrs -> attrs.getMarkerOptions().flatMap(MapMarkerOptions::getHasLabel));
 
         markerHasDistanceLabelOptionWidget = new ToggleOptionWidget(
-                Component.literal("Marker Has Distance Label"),
-                Component.literal("Determines whether the marker displays the distance."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.markerHasDistanceLabel"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.markerHasDistanceLabel.description"),
                 OptionCategory.MARKER,
                 attrs -> attrs.getMarkerOptions().flatMap(MapMarkerOptions::getHasDistanceLabel));
 
         markerHasIconOptionWidget = new ToggleOptionWidget(
-                Component.literal("Marker Has Icon"),
-                Component.literal("Determines whether the marker displays an icon."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.markerHasIcon"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.markerHasIcon.description"),
                 OptionCategory.MARKER,
                 attrs -> attrs.getMarkerOptions().flatMap(MapMarkerOptions::getHasIcon));
 
@@ -339,22 +340,22 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         // region Area & Border Attributes
 
         fillColorOptionWidget = new ColorOptionWidget(
-                Component.literal("Fill Color"),
-                Component.literal("The color used to fill this category's area on the map."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.fillColor"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.fillColor.description"),
                 OptionCategory.AREA_BORDER,
                 MapAttributes::getFillColor,
                 this);
 
         borderColorOptionWidget = new ColorOptionWidget(
-                Component.literal("Border Color"),
-                Component.literal("The color of this category's border on the map."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.borderColor"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.borderColor.description"),
                 OptionCategory.AREA_BORDER,
                 MapAttributes::getBorderColor,
                 this);
 
         borderWidthOptionWidget = new FloatSliderOptionWidget(
-                Component.literal("Border Width"),
-                Component.literal("The width of this category's border on the map."),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.borderWidth"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.borderWidth.description"),
                 OptionCategory.AREA_BORDER,
                 0f,
                 10f,

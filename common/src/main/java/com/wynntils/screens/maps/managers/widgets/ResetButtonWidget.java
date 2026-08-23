@@ -31,7 +31,7 @@ public class ResetButtonWidget extends AbstractWidget implements TooltipProvider
     private List<Component> generatedTooltip = new ArrayList<>();
 
     public ResetButtonWidget(int x, int y, int width, int height, CategoryManagementScreen parent) {
-        super(x, y, width, height, Component.literal("Override Selection Widget"));
+        super(x, y, width, height, Component.literal("Reset Button Widget"));
         this.x = x;
         this.y = y;
         this.parent = parent;
@@ -53,7 +53,7 @@ public class ResetButtonWidget extends AbstractWidget implements TooltipProvider
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("Reset"),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.categoryManager.resetButton.label")),
                         x + this.width / 2f,
                         y + this.height / 2f,
                         CommonColors.WHITE,
@@ -84,10 +84,11 @@ public class ResetButtonWidget extends AbstractWidget implements TooltipProvider
     private void generateTooltip() {
         this.generatedTooltip = new ArrayList<>();
 
-        this.generatedTooltip.add(Component.literal("Reset").withStyle(ChatFormatting.GOLD));
+        this.generatedTooltip.add(Component.translatable("screens.wynntils.map.managers.categoryManager.resetButton.label")
+                .withStyle(ChatFormatting.GOLD));
 
-        StyledText description = StyledText.fromString(
-                "Discards any unsaved changes and reverts all fields back to their last saved values.");
+        StyledText description = StyledText.fromComponent(
+                Component.translatable("screens.wynntils.map.managers.categoryManager.resetButton.description"));
 
         for (StyledText line : RenderedStringUtils.wrapTextBySize(description, 210)) {
             this.generatedTooltip.add(

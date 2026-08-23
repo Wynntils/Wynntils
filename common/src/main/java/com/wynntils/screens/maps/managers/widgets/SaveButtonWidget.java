@@ -64,7 +64,7 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("Save"),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.categoryManager.saveButton.label")),
                         x + this.width / 2f,
                         y + this.height / 2f,
                         CommonColors.WHITE,
@@ -191,7 +191,7 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
                 iconVisibilityValue,
                 MapAttributesBuilder::setIconVisibility);
 
-    // markerOptions
+        // markerOptions
         boolean markerOptionsInherited = parent.markerMinDistanceOptionWidget.isChanged()
                 || parent.markerMaxDistanceOptionWidget.isChanged()
                 || parent.markerFadeOptionWidget.isChanged()
@@ -254,26 +254,33 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
     public void generateTooltip() {
         this.generatedTooltip = new ArrayList<>();
 
-        this.generatedTooltip.add(Component.literal("Save").withStyle(ChatFormatting.GOLD));
+        this.generatedTooltip.add(Component.translatable("screens.wynntils.map.managers.categoryManager.saveButton.label")
+                .withStyle(ChatFormatting.GOLD));
 
         Component typeLabel = Component.literal(formatOverrideType(parent.getSelectedOverrideType()))
                 .withStyle(ChatFormatting.YELLOW);
-        this.generatedTooltip.add(Component.literal("Type: ").withStyle(ChatFormatting.GRAY).append(typeLabel));
+        this.generatedTooltip.add(Component.translatable("screens.wynntils.map.managers.categoryManager.saveButton.type")
+                .withStyle(ChatFormatting.GRAY)
+                .append(typeLabel));
 
         boolean overrideExists = Services.MapData.getOverrideProvider("json-override:"
                 + parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT)
                 + ":"
                 + parent.getSelectedCategory()) != null;
 
-        Component actionLabel = Component.literal(overrideExists ? "Update" : "Create")
+        Component actionLabel = Component.translatable(overrideExists
+                        ? "screens.wynntils.map.managers.categoryManager.saveButton.action.update"
+                        : "screens.wynntils.map.managers.categoryManager.saveButton.action.create")
                 .withStyle(overrideExists ? ChatFormatting.AQUA : ChatFormatting.GREEN);
-        this.generatedTooltip.add(Component.literal("Action: ").withStyle(ChatFormatting.GRAY).append(actionLabel));
+        this.generatedTooltip.add(Component.translatable("screens.wynntils.map.managers.categoryManager.saveButton.action")
+                .withStyle(ChatFormatting.GRAY)
+                .append(actionLabel));
 
         this.generatedTooltip.add(Component.empty());
 
-        StyledText description = StyledText.fromString(overrideExists
-                ? "Save the changes made to this category. This will update the existing override for the selected map data type."
-                : "Save the changes made to this category. This will create a new override for the selected map data type.");
+        StyledText description = StyledText.fromComponent(Component.translatable(overrideExists
+                ? "screens.wynntils.map.managers.categoryManager.saveButton.description.update"
+                : "screens.wynntils.map.managers.categoryManager.saveButton.description.create"));
 
         for (StyledText line : RenderedStringUtils.wrapTextBySize(description, 210)) {
             this.generatedTooltip.add(

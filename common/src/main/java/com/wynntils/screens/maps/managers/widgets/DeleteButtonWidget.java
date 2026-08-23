@@ -55,7 +55,7 @@ public class DeleteButtonWidget extends AbstractWidget implements TooltipProvide
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("Delete"),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.categoryManager.deleteButton.label")),
                         x + this.width / 2f,
                         y + this.height / 2f,
                         CommonColors.WHITE,
@@ -91,17 +91,18 @@ public class DeleteButtonWidget extends AbstractWidget implements TooltipProvide
     public void generateTooltip() {
         this.generatedTooltip = new ArrayList<>();
 
-        this.generatedTooltip.add(Component.literal("Delete").withStyle(ChatFormatting.GOLD));
+        this.generatedTooltip.add(Component.translatable("screens.wynntils.map.managers.categoryManager.deleteButton.label")
+                .withStyle(ChatFormatting.GOLD));
 
         boolean overrideExists = Services.MapData.getOverrideProvider(
                 "json-override:"
-                + parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT)
-                + ":"
-                + parent.getSelectedCategory()) != null;
+                        + parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT)
+                        + ":"
+                        + parent.getSelectedCategory()) != null;
 
-        StyledText description = StyledText.fromString(overrideExists
-                ? "Removes the override for the selected category, reverting it back to the default attributes."
-                : "There is no override to delete for the selected category.");
+        StyledText description = StyledText.fromComponent(Component.translatable(overrideExists
+                ? "screens.wynntils.map.managers.categoryManager.deleteButton.description"
+                : "screens.wynntils.map.managers.categoryManager.deleteButton.description.empty"));
 
         for (StyledText line : RenderedStringUtils.wrapTextBySize(description, 210)) {
             this.generatedTooltip.add(Component.empty()

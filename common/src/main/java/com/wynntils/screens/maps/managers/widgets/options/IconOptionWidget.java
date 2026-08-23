@@ -68,7 +68,7 @@ public class IconOptionWidget extends AbstractOptionWidget<String>  {
 
         FontRenderer.getInstance().renderText(
                 guiGraphics,
-                StyledText.fromString("Select Icon"),
+                StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.categoryManager.iconOptionWidget.editIconText")),
                 getX() + this.width - BUTTON_WIDTH / 2f,
                 getY() + this.height / 2f,
                 CommonColors.WHITE,
@@ -100,7 +100,7 @@ public class IconOptionWidget extends AbstractOptionWidget<String>  {
                 guiGraphics,
                 RenderPipelines.GUI_TEXTURED,
                 icon.getIdentifier(),
-                CustomColor.NONE,
+                CommonColors.WHITE,
                 iconBoxX + (iconBoxSize - iconWidth) / 2f,
                 iconBoxY + (iconBoxSize - iconHeight) / 2f,
                 iconWidth,
