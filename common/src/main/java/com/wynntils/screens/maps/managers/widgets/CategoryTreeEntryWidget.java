@@ -34,7 +34,8 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
     public static final int HORIZONTAL_PADDING = 2;
 
     private static final CustomColor HOVER_HIGHLIGHT = CommonColors.GRAY.withAlpha(0.35f);
-    private static final CustomColor SELECTED_HIGHLIGHT = CustomColor.fromInt(0xbf3b46).withAlpha(0.35f);
+    private static final CustomColor SELECTED_HIGHLIGHT =
+            CustomColor.fromInt(0xbf3b46).withAlpha(0.35f);
 
     private final CategoryTreeNode node;
     private final int column;
@@ -103,7 +104,6 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
         return x;
     }
 
-
     public int getIconX() {
         return x + ARROW_WIDTH + ARROW_ICON_GAP;
     }
@@ -135,13 +135,8 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
             RenderUtils.drawRect(guiGraphics, HOVER_HIGHLIGHT, contentX, y, contentWidth, ROW_HEIGHT);
         }
 
-        boolean mouseOverRow = MathUtils.isInside(
-                mouseX,
-                mouseY,
-                contentX,
-                contentX + contentWidth - 1,
-                y,
-                y + ROW_HEIGHT - 1);
+        boolean mouseOverRow =
+                MathUtils.isInside(mouseX, mouseY, contentX, contentX + contentWidth - 1, y, y + ROW_HEIGHT - 1);
 
         if (mouseOverRow) {
             handleCursor(guiGraphics);
@@ -173,22 +168,24 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
 
         List<Vector2f> vertices = expanded
                 ? List.of(
-                new Vector2f(cx - half, cy - half),
-                new Vector2f(cx + half, cy - half),
-                new Vector2f(cx, cy + half))
+                        new Vector2f(cx - half, cy - half),
+                        new Vector2f(cx + half, cy - half),
+                        new Vector2f(cx, cy + half))
                 : List.of(
-                new Vector2f(cx - half, cy - half),
-                new Vector2f(cx - half, cy + half),
-                new Vector2f(cx + half, cy));
+                        new Vector2f(cx - half, cy - half),
+                        new Vector2f(cx - half, cy + half),
+                        new Vector2f(cx + half, cy));
 
         RenderUtils.drawPolygon(guiGraphics, CommonColors.WHITE, CustomColor.NONE, 0f, vertices);
     }
 
     private void renderIcon(GuiGraphics guiGraphics, int iconX, boolean isLeaf) {
         if (isLeaf) {
-            RenderUtils.drawTexturedRect(guiGraphics, Texture.MANAGER_FILE_ICON, iconX, y + (ROW_HEIGHT - ICON_SIZE) / 2f);
+            RenderUtils.drawTexturedRect(
+                    guiGraphics, Texture.MANAGER_FILE_ICON, iconX, y + (ROW_HEIGHT - ICON_SIZE) / 2f);
         } else {
-            RenderUtils.drawTexturedRect(guiGraphics, Texture.MANAGER_FOLDER_ICON, iconX, y + (ROW_HEIGHT - ICON_SIZE) / 2f);
+            RenderUtils.drawTexturedRect(
+                    guiGraphics, Texture.MANAGER_FOLDER_ICON, iconX, y + (ROW_HEIGHT - ICON_SIZE) / 2f);
         }
     }
 

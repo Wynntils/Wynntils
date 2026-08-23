@@ -6,7 +6,6 @@ package com.wynntils.services.mapdata.attributes;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.services.mapdata.attributes.impl.MapAreaAttributesImpl;
-import com.wynntils.services.mapdata.attributes.impl.MapAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapMarkerOptionsImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapPathAttributesImpl;
@@ -43,14 +42,16 @@ public class MapAttributesBuilder {
         this.level = attributes.getLevel().orElse(null);
         this.label = attributes.getLabel().orElse(null);
         this.description = attributes.getDescription().orElse(null);
-        this.labelVisibility = (MapVisibilityImpl) attributes.getLabelVisibility().orElse(null);
+        this.labelVisibility =
+                (MapVisibilityImpl) attributes.getLabelVisibility().orElse(null);
         this.labelColor = attributes.getLabelColor().orElse(null);
         this.labelShadow = attributes.getLabelShadow().orElse(null);
         this.icon = attributes.getIconId().orElse(null);
         this.iconVisibility = (MapVisibilityImpl) attributes.getIconVisibility().orElse(null);
         this.iconColor = attributes.getIconColor().orElse(null);
         this.hasMarker = attributes.getHasMarker().orElse(null);
-        this.markerOptions = (MapMarkerOptionsImpl) attributes.getMarkerOptions().orElse(null);
+        this.markerOptions =
+                (MapMarkerOptionsImpl) attributes.getMarkerOptions().orElse(null);
         this.fillColor = attributes.getFillColor().orElse(null);
         this.borderColor = attributes.getBorderColor().orElse(null);
         this.borderWidth = attributes.getBorderWidth().orElse(null);

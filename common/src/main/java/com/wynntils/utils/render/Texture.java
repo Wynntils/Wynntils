@@ -364,7 +364,8 @@ public enum Texture {
     // Category Management Screen
     CATEGORY_MANAGER_ICON("map/managers/category_manager/category_manager_icon.png", 16, 16),
     CATEGORY_MANAGER_OPTION_HEADER("map/managers/category_manager/category_manager_header.png", 70, 16, 4, 9, 8, 8),
-    CATEGORY_MANAGER_OPTION_HEADER_LINE("map/managers/category_manager/category_manager_header_line.png", 40, 16, 1, 10, 8, 8),
+    CATEGORY_MANAGER_OPTION_HEADER_LINE(
+            "map/managers/category_manager/category_manager_header_line.png", 40, 16, 1, 10, 8, 8),
 
     // Provider Management Screen
     PROVIDER_MANAGER_ICON("map/managers/provider_manager/provider_manager_icon.png", 16, 16),

@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers;
 
 import com.wynntils.core.components.Services;
@@ -44,7 +48,8 @@ public class IconSelectionScreen extends WynntilsScreen {
 
     private String tempSelectedIconId;
 
-    public IconSelectionScreen(CategoryManagementScreen previousScreen, Consumer<MapIcon> onIconSelect, String currentIconId) {
+    public IconSelectionScreen(
+            CategoryManagementScreen previousScreen, Consumer<MapIcon> onIconSelect, String currentIconId) {
         super(Component.literal("Icon Selection Screen"));
         this.previousScreen = previousScreen;
         this.onIconSelect = onIconSelect;
@@ -112,7 +117,8 @@ public class IconSelectionScreen extends WynntilsScreen {
         private final Texture backgroundTexture;
         private final Runnable onClick;
 
-        StyledButton(int x, int y, int width, int height, Component message, Texture backgroundTexture, Runnable onClick) {
+        StyledButton(
+                int x, int y, int width, int height, Component message, Texture backgroundTexture, Runnable onClick) {
             super(x, y, width, height, message);
             this.backgroundTexture = backgroundTexture;
             this.onClick = onClick;
@@ -125,22 +131,18 @@ public class IconSelectionScreen extends WynntilsScreen {
             }
 
             RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics,
-                    backgroundTexture,
-                    getX(),
-                    getY(),
-                    getWidth(),
-                    getHeight());
+                    guiGraphics, backgroundTexture, getX(), getY(), getWidth(), getHeight());
 
-            FontRenderer.getInstance().renderText(
-                    guiGraphics,
-                    StyledText.fromString(getMessage().getString()),
-                    getX() + getWidth() / 2f,
-                    getY() + getHeight() / 2f,
-                    CommonColors.WHITE,
-                    HorizontalAlignment.CENTER,
-                    VerticalAlignment.MIDDLE,
-                    TextShadow.NORMAL);
+            FontRenderer.getInstance()
+                    .renderText(
+                            guiGraphics,
+                            StyledText.fromString(getMessage().getString()),
+                            getX() + getWidth() / 2f,
+                            getY() + getHeight() / 2f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
         }
 
         @Override
@@ -162,7 +164,8 @@ public class IconSelectionScreen extends WynntilsScreen {
         private final Consumer<MapIcon> onIconSelected;
         private final Supplier<String> selectedIconIdSupplier;
 
-        IconGridRowWidget(List<MapIcon> icons, Consumer<MapIcon> onIconSelected, Supplier<String> selectedIconIdSupplier) {
+        IconGridRowWidget(
+                List<MapIcon> icons, Consumer<MapIcon> onIconSelected, Supplier<String> selectedIconIdSupplier) {
             super(Component.literal("icon row"), Component.empty(), 0, null, null);
             this.icons = icons;
             this.onIconSelected = onIconSelected;
@@ -180,30 +183,16 @@ public class IconSelectionScreen extends WynntilsScreen {
                 int cellY = getY();
 
                 boolean selected = icon.getIconId().equals(selectedIconId);
-                boolean hovered = MathUtils.isInside(
-                        mouseX,
-                        mouseY,
-                        cellX,
-                        cellX + CELL_SIZE - 1,
-                        cellY,
-                        cellY + CELL_SIZE - 1);
+                boolean hovered =
+                        MathUtils.isInside(mouseX, mouseY, cellX, cellX + CELL_SIZE - 1, cellY, cellY + CELL_SIZE - 1);
 
                 if (selected) {
                     RenderUtils.drawRect(
-                            guiGraphics,
-                            CustomColor.fromInt(0x8033cc33),
-                            cellX,
-                            cellY,
-                            CELL_SIZE,
-                            CELL_SIZE);
+                            guiGraphics, CustomColor.fromInt(0x8033cc33), cellX, cellY, CELL_SIZE, CELL_SIZE);
                     handleCursor(guiGraphics);
                 } else if (hovered) {
                     RenderUtils.drawRect(
-                            guiGraphics,CustomColor.fromInt(0x40ffffff),
-                            cellX,
-                            cellY,
-                            CELL_SIZE,
-                            CELL_SIZE);
+                            guiGraphics, CustomColor.fromInt(0x40ffffff), cellX, cellY, CELL_SIZE, CELL_SIZE);
                     handleCursor(guiGraphics);
                 }
 
@@ -276,9 +265,7 @@ public class IconSelectionScreen extends WynntilsScreen {
         }
 
         private static List<IconGridRowWidget> chunkIntoRows(
-                List<MapIcon> icons,
-                Consumer<MapIcon> onIconSelected,
-                Supplier<String> selectedIconIdSupplier) {
+                List<MapIcon> icons, Consumer<MapIcon> onIconSelected, Supplier<String> selectedIconIdSupplier) {
             List<IconGridRowWidget> rows = new ArrayList<>();
             for (int i = 0; i < icons.size(); i += GRID_COLUMNS) {
                 List<MapIcon> rowIcons = new ArrayList<>(icons.subList(i, Math.min(i + GRID_COLUMNS, icons.size())));
@@ -333,8 +320,10 @@ public class IconSelectionScreen extends WynntilsScreen {
             int viewportLeft = getX() + SCROLL_BAR_WIDTH_PADDING;
             int viewportRight = viewportLeft + getViewportWidth();
 
-            if (!(event.x() >= viewportLeft && event.x() < viewportRight
-                    && event.y() >= viewportTop && event.y() < viewportBottom)) {
+            if (!(event.x() >= viewportLeft
+                    && event.x() < viewportRight
+                    && event.y() >= viewportTop
+                    && event.y() < viewportBottom)) {
                 return false;
             }
 

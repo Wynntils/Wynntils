@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets;
 
 import com.wynntils.core.text.StyledText;
@@ -12,6 +16,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -20,8 +25,6 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.List;
 
 public class OverrideSelectionWidget extends AbstractWidget {
     private static final int ARROW_WIDTH = 8;
@@ -58,12 +61,7 @@ public class OverrideSelectionWidget extends AbstractWidget {
         }
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.MANAGER_WIDGET_BACKGROUND,
-                x,
-                y,
-                this.width,
-                collapsedHeight);
+                guiGraphics, Texture.MANAGER_WIDGET_BACKGROUND, x, y, this.width, collapsedHeight);
 
         renderArrow(guiGraphics);
 
@@ -102,12 +100,7 @@ public class OverrideSelectionWidget extends AbstractWidget {
                     : Texture.MANAGER_WIDGET_BACKGROUND;
 
             RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics,
-                    backgroundTexture,
-                    rowX,
-                    rowY,
-                    rowWidth,
-                    optionHeight);
+                    guiGraphics, backgroundTexture, rowX, rowY, rowWidth, optionHeight);
 
             FontRenderer.getInstance()
                     .renderText(
@@ -130,13 +123,13 @@ public class OverrideSelectionWidget extends AbstractWidget {
 
         List<Vector2f> vertices = expanded
                 ? List.of(
-                new Vector2f(cx - half, cy - half),
-                new Vector2f(cx + half, cy - half),
-                new Vector2f(cx, cy + half))
+                        new Vector2f(cx - half, cy - half),
+                        new Vector2f(cx + half, cy - half),
+                        new Vector2f(cx, cy + half))
                 : List.of(
-                new Vector2f(cx - half, cy - half),
-                new Vector2f(cx - half, cy + half),
-                new Vector2f(cx + half, cy));
+                        new Vector2f(cx - half, cy - half),
+                        new Vector2f(cx - half, cy + half),
+                        new Vector2f(cx + half, cy));
 
         RenderUtils.drawPolygon(guiGraphics, CommonColors.WHITE, CustomColor.NONE, 0f, vertices);
     }
@@ -175,7 +168,9 @@ public class OverrideSelectionWidget extends AbstractWidget {
     }
 
     private int getOptionsAreaHeight() {
-        return OVERRIDE_TYPES.length * optionHeight + (OVERRIDE_TYPES.length + 1) * OPTION_VERTICAL_SPACING + OPTION_VERTICAL_SPACING;
+        return OVERRIDE_TYPES.length * optionHeight
+                + (OVERRIDE_TYPES.length + 1) * OPTION_VERTICAL_SPACING
+                + OPTION_VERTICAL_SPACING;
     }
 
     private int getOptionRowY(int index) {
@@ -213,7 +208,6 @@ public class OverrideSelectionWidget extends AbstractWidget {
                 x + ARROW_PADDING,
                 x + ARROW_PADDING + ARROW_WIDTH - 1,
                 y + ARROW_HEIGHT / 2,
-                y + collapsedHeight - ARROW_HEIGHT / 2 - 1
-        );
+                y + collapsedHeight - ARROW_HEIGHT / 2 - 1);
     }
 }

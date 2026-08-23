@@ -444,24 +444,24 @@ public abstract class DoubleScrollBarWidget extends AbstractWidget {
         float trackX = getVerticalScrollBarX();
 
         return MathUtils.isInside(
-                (int) mouseX, (int) mouseY,
+                (int) mouseX,
+                (int) mouseY,
                 (int) trackX,
                 (int) (trackX + Texture.MANAGER_SCROLL_BAR_VERTICAL.width() - 1),
                 (int) scrollBarY,
-                (int) (scrollBarY + verticalButtonLength - 1)
-        );
+                (int) (scrollBarY + verticalButtonLength - 1));
     }
 
     private boolean isOntopOfHorizontalScrollDragButton(double mouseX, double mouseY) {
         float trackY = getHorizontalScrollBarY();
 
         return MathUtils.isInside(
-                (int) mouseX, (int) mouseY,
+                (int) mouseX,
+                (int) mouseY,
                 (int) scrollBarX,
                 (int) (scrollBarX + horizontalButtonLength - 1),
                 (int) trackY,
-                (int) (trackY + Texture.MANAGER_SCROLL_BAR_HORIZONTAL.height() - 1)
-        );
+                (int) (trackY + Texture.MANAGER_SCROLL_BAR_HORIZONTAL.height() - 1));
     }
 
     private boolean isOntopOfVerticalUpButton(double mouseX, double mouseY) {
@@ -511,12 +511,8 @@ public abstract class DoubleScrollBarWidget extends AbstractWidget {
     private boolean isOntopOfArrowButton(
             double mouseX, double mouseY, float buttonX, float buttonY, int buttonWidth, int buttonHeight) {
         return MathUtils.isInside(
-                (int) mouseX, (int) mouseY,
-                (int) buttonX,
-                (int) (buttonX + buttonWidth - 1),
-                (int) buttonY,
-                (int) (buttonY + buttonHeight - 1)
-        );
+                (int) mouseX, (int) mouseY, (int) buttonX, (int) (buttonX + buttonWidth - 1), (int) buttonY, (int)
+                        (buttonY + buttonHeight - 1));
     }
 
     @Override

@@ -11,36 +11,35 @@ import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.MainMapScreen;
+import com.wynntils.screens.maps.managers.type.OptionCategory;
+import com.wynntils.screens.maps.managers.type.OverrideType;
 import com.wynntils.screens.maps.managers.widgets.CategorySearchWidget;
 import com.wynntils.screens.maps.managers.widgets.CategoryTreeWidget;
 import com.wynntils.screens.maps.managers.widgets.DeleteButtonWidget;
-import com.wynntils.screens.maps.managers.widgets.ResetButtonWidget;
 import com.wynntils.screens.maps.managers.widgets.OptionsScrollBarWidget;
 import com.wynntils.screens.maps.managers.widgets.OverrideSelectionWidget;
+import com.wynntils.screens.maps.managers.widgets.ResetButtonWidget;
 import com.wynntils.screens.maps.managers.widgets.SaveButtonWidget;
 import com.wynntils.screens.maps.managers.widgets.options.AbstractOptionWidget;
 import com.wynntils.screens.maps.managers.widgets.options.ColorOptionWidget;
-import com.wynntils.screens.maps.managers.widgets.options.IconOptionWidget;
 import com.wynntils.screens.maps.managers.widgets.options.FloatSliderOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.options.IconOptionWidget;
 import com.wynntils.screens.maps.managers.widgets.options.IntSliderOptionWidget;
 import com.wynntils.screens.maps.managers.widgets.options.TextOptionWidget;
 import com.wynntils.screens.maps.managers.widgets.options.TextShadowOptionWidget;
 import com.wynntils.screens.maps.managers.widgets.options.ToggleOptionWidget;
-import com.wynntils.screens.maps.managers.type.OptionCategory;
-import com.wynntils.screens.maps.managers.type.OverrideType;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-
-import java.util.Optional;
 
 public final class CategoryManagementScreen extends WynntilsScreen {
     private static final int WIDTH_OFFSET = 15;
@@ -59,7 +58,6 @@ public final class CategoryManagementScreen extends WynntilsScreen {
     public DeleteButtonWidget deleteButtonWidget;
 
     public OptionsScrollBarWidget optionsScrollBar;
-
 
     // region Feature (common) Attributes
 
@@ -89,7 +87,7 @@ public final class CategoryManagementScreen extends WynntilsScreen {
     public FloatSliderOptionWidget iconVisibilityFadeOptionWidget;
     public ColorOptionWidget iconColorOptionWidget;
 
-    //TODO: look at map decotation will probably need toggle for isvisible? idk
+    // TODO: look at map decotation will probably need toggle for isvisible? idk
 
     // endregion
 
@@ -127,7 +125,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         return new CategoryManagementScreen(previousScreen);
     }
 
-    // This makes it so when we open a color picker screen or an icon selection screen that the widgets do not get cleared.
+    // This makes it so when we open a color picker screen or an icon selection screen that the widgets do not get
+    // cleared.
     @Override
     protected void rebuildWidgets() {}
 
@@ -159,9 +158,11 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.managers.categoryManager.level"),
                 Component.translatable("screens.wynntils.map.managers.categoryManager.level.description1")
                         .append("\n\n")
-                        .append(Component.translatable("screens.wynntils.map.managers.categoryManager.level.description2"))
+                        .append(Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.level.description2"))
                         .append("\n\n")
-                        .append(Component.translatable("screens.wynntils.map.managers.categoryManager.level.description3")),
+                        .append(Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.level.description3")),
                 OptionCategory.GENERAL,
                 0,
                 Models.CombatXp.MAX_LEVEL,
@@ -278,7 +279,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.managers.categoryManager.hasMarker"),
                 Component.translatable("screens.wynntils.map.managers.categoryManager.hasMarker.description1")
                         .append("\n\n")
-                        .append(Component.translatable("screens.wynntils.map.managers.categoryManager.hasMarker.description2")),
+                        .append(Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.hasMarker.description2")),
                 OptionCategory.MARKER,
                 MapAttributes::getHasMarker);
 
@@ -324,7 +326,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
 
         markerHasDistanceLabelOptionWidget = new ToggleOptionWidget(
                 Component.translatable("screens.wynntils.map.managers.categoryManager.markerHasDistanceLabel"),
-                Component.translatable("screens.wynntils.map.managers.categoryManager.markerHasDistanceLabel.description"),
+                Component.translatable(
+                        "screens.wynntils.map.managers.categoryManager.markerHasDistanceLabel.description"),
                 OptionCategory.MARKER,
                 attrs -> attrs.getMarkerOptions().flatMap(MapMarkerOptions::getHasDistanceLabel));
 
@@ -364,28 +367,17 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         // endregion
 
         categorySearchWidget = new CategorySearchWidget(
-                offsetX + WIDTH_OFFSET,
-                offsetY + HEIGHT_OFFSET,
-                (text) -> categoryTreeWidget.filter(text),
-                this);
+                offsetX + WIDTH_OFFSET, offsetY + HEIGHT_OFFSET, (text) -> categoryTreeWidget.filter(text), this);
         this.addRenderableWidget(categorySearchWidget);
 
         categoryTreeWidget =
-                new CategoryTreeWidget(
-                        offsetX + WIDTH_OFFSET,
-                        offsetY + HEIGHT_OFFSET + 25,
-                        200,
-                        284 - 25,
-                        this);
-        categoryTreeWidget.setCategories(Services.MapData.allPossibleCategories().toList());
+                new CategoryTreeWidget(offsetX + WIDTH_OFFSET, offsetY + HEIGHT_OFFSET + 25, 200, 284 - 25, this);
+        categoryTreeWidget.setCategories(
+                Services.MapData.allPossibleCategories().toList());
         this.addRenderableWidget(categoryTreeWidget);
 
         optionsScrollBar = new OptionsScrollBarWidget(
-                offsetX + WIDTH_OFFSET + 200 + 5,
-                offsetY + HEIGHT_OFFSET + 25,
-                341,
-                284 - 50,
-                this);
+                offsetX + WIDTH_OFFSET + 200 + 5, offsetY + HEIGHT_OFFSET + 25, 341, 284 - 50, this);
 
         optionsScrollBar.addWidget(priorityOptionWidget);
         optionsScrollBar.addWidget(levelOptionWidget);
@@ -419,40 +411,20 @@ public final class CategoryManagementScreen extends WynntilsScreen {
 
         this.addRenderableWidget(optionsScrollBar);
 
-        overrideSelectionWidget = new OverrideSelectionWidget(
-                offsetX + WIDTH_OFFSET + 200 + 5,
-                offsetY + HEIGHT_OFFSET,
-                150,
-                20,
-                this
-        );
+        overrideSelectionWidget =
+                new OverrideSelectionWidget(offsetX + WIDTH_OFFSET + 200 + 5, offsetY + HEIGHT_OFFSET, 150, 20, this);
         this.addRenderableWidget(overrideSelectionWidget);
 
         saveButtonWidget = new SaveButtonWidget(
-                offsetX + WIDTH_OFFSET + 200 + 5,
-                offsetY + HEIGHT_OFFSET + 284 - 20,
-                103,
-                20,
-                this
-        );
+                offsetX + WIDTH_OFFSET + 200 + 5, offsetY + HEIGHT_OFFSET + 284 - 20, 103, 20, this);
         this.addRenderableWidget(saveButtonWidget);
 
         resetButtonWidget = new ResetButtonWidget(
-                offsetX + WIDTH_OFFSET + 200 + 5 + (103 + 16) * 1,
-                offsetY + HEIGHT_OFFSET + 284 - 20,
-                103,
-                20,
-                this
-        );
+                offsetX + WIDTH_OFFSET + 200 + 5 + (103 + 16) * 1, offsetY + HEIGHT_OFFSET + 284 - 20, 103, 20, this);
         this.addRenderableWidget(resetButtonWidget);
 
         deleteButtonWidget = new DeleteButtonWidget(
-                offsetX + WIDTH_OFFSET + 200 + 5 + (103 + 16) * 2,
-                offsetY + HEIGHT_OFFSET + 284 - 20,
-                103,
-                20,
-                this
-        );
+                offsetX + WIDTH_OFFSET + 200 + 5 + (103 + 16) * 2, offsetY + HEIGHT_OFFSET + 284 - 20, 103, 20, this);
         this.addRenderableWidget(deleteButtonWidget);
 
         updateMenu();
@@ -520,7 +492,6 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         McUtils.mc().setScreen(previousScreen);
     }
 
-
     private void updateMenu() {
         overrideSelectionWidget.visible = false;
         saveButtonWidget.visible = false;
@@ -539,7 +510,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
 
     private void updateOptionWidgets() {
         Optional<MapAttributes> ownAttributes = Services.MapData.getOwnAttributesForCategory(this.selectedCategory);
-        Optional<MapAttributes> resolvedAttributes = Services.MapData.getInheritedAttributesForCategory(this.selectedCategory);
+        Optional<MapAttributes> resolvedAttributes =
+                Services.MapData.getInheritedAttributesForCategory(this.selectedCategory);
 
         for (AbstractOptionWidget<?> widget : optionsScrollBar.getRegisteredWidgets()) {
             widget.updateFromAttributes(ownAttributes, resolvedAttributes);

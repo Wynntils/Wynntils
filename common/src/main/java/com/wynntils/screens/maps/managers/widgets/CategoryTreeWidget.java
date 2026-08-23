@@ -74,11 +74,7 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
         recalculateCanvasSize();
     }
 
-    private void addVisibleRows(
-            CategoryTreeNode node,
-            int column,
-            boolean[] parentTrail,
-            boolean hasMoreSiblings) {
+    private void addVisibleRows(CategoryTreeNode node, int column, boolean[] parentTrail, boolean hasMoreSiblings) {
         boolean[] trail = Arrays.copyOf(parentTrail, parentTrail.length + 1);
         trail[column] = hasMoreSiblings;
 
@@ -86,16 +82,7 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
         boolean selected = node.getFullId() != null && node.getFullId().equals(selectedFullId);
 
         CategoryTreeEntryWidget widget = new CategoryTreeEntryWidget(
-                0,
-                0,
-                0,
-                node,
-                column,
-                trail,
-                expanded,
-                selected,
-                () -> toggleExpanded(node),
-                () -> selectNode(node));
+                0, 0, 0, node, column, trail, expanded, selected, () -> toggleExpanded(node), () -> selectNode(node));
         rowWidgets.add(widget);
 
         if (!expanded) return;
@@ -127,7 +114,7 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
     }
 
     private void recalculateCanvasSize() {
-        int contentHeight = rowWidgets.size() * CategoryTreeEntryWidget.ROW_HEIGHT+ TREE_TOP_PADDING;
+        int contentHeight = rowWidgets.size() * CategoryTreeEntryWidget.ROW_HEIGHT + TREE_TOP_PADDING;
 
         int maxContentWidth = 0;
         for (CategoryTreeEntryWidget widget : rowWidgets) {
@@ -183,10 +170,11 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
         float midY = rowY + rowHeight / 2f;
 
         for (int c = 0; c <= column; c++) {
-            //c-1 is needed. we do not draw the line on our current column but a column to the left.
-            float lineX = baseX + (c-1) * CategoryTreeEntryWidget.INDENT_WIDTH + CategoryTreeEntryWidget.ARROW_WIDTH / 2f;
+            // c-1 is needed. we do not draw the line on our current column but a column to the left.
+            float lineX =
+                    baseX + (c - 1) * CategoryTreeEntryWidget.INDENT_WIDTH + CategoryTreeEntryWidget.ARROW_WIDTH / 2f;
 
-            //if wynntils:service this will draw the service line.
+            // if wynntils:service this will draw the service line.
             if (c == column) {
                 float endY = continues[column] ? rowY + rowHeight : midY;
 
@@ -199,7 +187,8 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
         }
 
         // Horizontal branch from immediate parent column to node's icon/arrow
-        float parentX = baseX + (column - 1) * CategoryTreeEntryWidget.INDENT_WIDTH + CategoryTreeEntryWidget.ARROW_WIDTH / 2f;
+        float parentX =
+                baseX + (column - 1) * CategoryTreeEntryWidget.INDENT_WIDTH + CategoryTreeEntryWidget.ARROW_WIDTH / 2f;
         float endX = widget.getNode().isLeaf() ? widget.getIconX() - 2 : widget.getArrowX() - 2;
 
         RenderUtils.drawLine(guiGraphics, LINE_COLOR, parentX, midY, endX, midY, 1f);

@@ -1,10 +1,14 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets.options;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.managers.CategoryManagementScreen;
-import com.wynntils.screens.maps.managers.widgets.TexturedTextInputBoxWidget;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
+import com.wynntils.screens.maps.managers.widgets.TexturedTextInputBoxWidget;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -15,14 +19,13 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.Optional;
+import java.util.function.Function;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.Optional;
-import java.util.function.Function;
 
 public class IntSliderOptionWidget extends AbstractOptionWidget<Integer> {
     // Gap between the end of the label text and the start of the slider track.
@@ -90,15 +93,16 @@ public class IntSliderOptionWidget extends AbstractOptionWidget<Integer> {
             handleCursor(guiGraphics);
         }
 
-        FontRenderer.getInstance().renderText(
-                guiGraphics,
-                StyledText.fromString(getMessage().getString()),
-                getX(),
-                getY() + this.height / 2f,
-                !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
-                HorizontalAlignment.LEFT,
-                VerticalAlignment.MIDDLE,
-                TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromString(getMessage().getString()),
+                        getX(),
+                        getY() + this.height / 2f,
+                        !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
 
         valueTextBox.setX(getTextboxX());
         valueTextBox.setY(getY());
@@ -118,21 +122,12 @@ public class IntSliderOptionWidget extends AbstractOptionWidget<Integer> {
 
         if (filledWidth > 0f) {
             RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics,
-                    Texture.MANAGER_SLIDER_FILLED,
-                    trackLeft, trackY,
-                    filledWidth,
-                    TRACK_HEIGHT);
+                    guiGraphics, Texture.MANAGER_SLIDER_FILLED, trackLeft, trackY, filledWidth, TRACK_HEIGHT);
         }
 
         if (emptyWidth > 0f) {
             RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics,
-                    Texture.MANAGER_SLIDER_EMPTY,
-                    headCenterX,
-                    trackY,
-                    emptyWidth,
-                    TRACK_HEIGHT);
+                    guiGraphics, Texture.MANAGER_SLIDER_EMPTY, headCenterX, trackY, emptyWidth, TRACK_HEIGHT);
         }
 
         RenderUtils.drawNineSliceScalingTexturedRect(
@@ -159,12 +154,7 @@ public class IntSliderOptionWidget extends AbstractOptionWidget<Integer> {
         int trackY = getY() + (this.height - TRACK_HEIGHT) / 2;
 
         boolean overTrack = MathUtils.isInside(
-                (int) event.x(),
-                (int) event.y(),
-                trackLeft,
-                trackRight,
-                trackY,
-                trackY + TRACK_HEIGHT - 1);
+                (int) event.x(), (int) event.y(), trackLeft, trackRight, trackY, trackY + TRACK_HEIGHT - 1);
 
         boolean overHead = isMouseOverHead(event.x(), event.y());
 
@@ -277,12 +267,7 @@ public class IntSliderOptionWidget extends AbstractOptionWidget<Integer> {
         int headY = getY() + (this.height - HEAD_HEIGHT) / 2;
 
         return MathUtils.isInside(
-                (int) mouseX,
-                (int) mouseY,
-                (int) headX,
-                (int) (headX + HEAD_WIDTH),
-                headY,
-                (headY + HEAD_HEIGHT));
+                (int) mouseX, (int) mouseY, (int) headX, (int) (headX + HEAD_WIDTH), headY, (headY + HEAD_HEIGHT));
     }
 
     @Override
@@ -290,7 +275,6 @@ public class IntSliderOptionWidget extends AbstractOptionWidget<Integer> {
         super.setValue(newValue);
         valueTextBox.setTextBoxInput(String.valueOf(newValue));
     }
-
 
     @Override
     public boolean isMouseOverTextBox(double mouseX, double mouseY) {

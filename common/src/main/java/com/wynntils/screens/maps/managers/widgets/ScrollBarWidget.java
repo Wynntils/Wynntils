@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
@@ -278,12 +282,12 @@ public abstract class ScrollBarWidget extends AbstractWidget {
         float trackX = getVerticalScrollBarX();
 
         return MathUtils.isInside(
-                (int) mouseX, (int) mouseY,
+                (int) mouseX,
+                (int) mouseY,
                 (int) trackX,
                 (int) (trackX + Texture.MANAGER_SCROLL_BAR_VERTICAL.width() - 1),
                 (int) scrollBarY,
-                (int) (scrollBarY + verticalButtonLength - 1)
-        );
+                (int) (scrollBarY + verticalButtonLength - 1));
     }
 
     private boolean isOntopOfVerticalUpButton(double mouseX, double mouseY) {
@@ -311,12 +315,8 @@ public abstract class ScrollBarWidget extends AbstractWidget {
     private boolean isOntopOfArrowButton(
             double mouseX, double mouseY, float buttonX, float buttonY, int buttonWidth, int buttonHeight) {
         return MathUtils.isInside(
-                (int) mouseX, (int) mouseY,
-                (int) buttonX,
-                (int) (buttonX + buttonWidth - 1),
-                (int) buttonY,
-                (int) (buttonY + buttonHeight - 1)
-        );
+                (int) mouseX, (int) mouseY, (int) buttonX, (int) (buttonX + buttonWidth - 1), (int) buttonY, (int)
+                        (buttonY + buttonHeight - 1));
     }
 
     @Override

@@ -32,7 +32,6 @@ import com.wynntils.services.mapdata.type.MapDataProvidedType;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,7 +95,6 @@ public class MapDataService extends Service {
         reloadJsonOverrideProviders();
     }
 
-    // mapdataservice
     public Stream<MapCategory> getDefinedCategories() {
         return getProviders().flatMap(MapDataProvider::getCategories);
     }

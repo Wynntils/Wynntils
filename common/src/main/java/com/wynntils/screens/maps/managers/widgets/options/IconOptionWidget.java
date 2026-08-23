@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets.options;
 
 import com.wynntils.core.components.Services;
@@ -9,7 +13,6 @@ import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -17,6 +20,8 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.Optional;
+import java.util.function.Function;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -24,14 +29,10 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.Optional;
-import java.util.function.Function;
-
-public class IconOptionWidget extends AbstractOptionWidget<String>  {
+public class IconOptionWidget extends AbstractOptionWidget<String> {
     private static final int BUTTON_WIDTH = 100;
     private static final int BUTTON_HEIGHT = 20;
     private static final int ICON_BORDER = 4;
-
 
     public IconOptionWidget(
             Component label,
@@ -47,15 +48,16 @@ public class IconOptionWidget extends AbstractOptionWidget<String>  {
             handleCursor(guiGraphics);
         }
 
-        FontRenderer.getInstance().renderText(
-                guiGraphics,
-                StyledText.fromString(getMessage().getString()),
-                getX(),
-                getY() + this.height / 2f,
-                !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
-                HorizontalAlignment.LEFT,
-                VerticalAlignment.MIDDLE,
-                TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromString(getMessage().getString()),
+                        getX(),
+                        getY() + this.height / 2f,
+                        !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
@@ -63,38 +65,30 @@ public class IconOptionWidget extends AbstractOptionWidget<String>  {
                 getX() + this.width - BUTTON_WIDTH,
                 getY() + (this.height - BUTTON_HEIGHT) / 2f,
                 this.BUTTON_WIDTH,
-                this.BUTTON_HEIGHT
-        );
+                this.BUTTON_HEIGHT);
 
-        FontRenderer.getInstance().renderText(
-                guiGraphics,
-                StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.categoryManager.iconOptionWidget.editIconText")),
-                getX() + this.width - BUTTON_WIDTH / 2f,
-                getY() + this.height / 2f,
-                CommonColors.WHITE,
-                HorizontalAlignment.CENTER,
-                VerticalAlignment.MIDDLE,
-                TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromComponent(Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.iconOptionWidget.editIconText")),
+                        getX() + this.width - BUTTON_WIDTH / 2f,
+                        getY() + this.height / 2f,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
 
         MapIcon icon = Services.MapData.getIconOrFallback(value);
         int iconWidth = icon.getWidth();
         int iconHeight = icon.getHeight();
-        int iconBoxSize = Math.min(
-                Math.max(iconWidth, iconHeight) + ICON_BORDER * 2,
-                this.height
-        );
+        int iconBoxSize = Math.min(Math.max(iconWidth, iconHeight) + ICON_BORDER * 2, this.height);
 
         int iconBoxX = getX() + this.width - BUTTON_WIDTH - iconBoxSize - 5;
         int iconBoxY = getY() + (this.height - iconBoxSize) / 2;
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.MANAGER_TEXT_BOX_BACKGROUND,
-                iconBoxX,
-                iconBoxY,
-                iconBoxSize,
-                iconBoxSize
-        );
+                guiGraphics, Texture.MANAGER_TEXT_BOX_BACKGROUND, iconBoxX, iconBoxY, iconBoxSize, iconBoxSize);
 
         RenderUtils.drawTexturedRect(
                 guiGraphics,
@@ -110,8 +104,7 @@ public class IconOptionWidget extends AbstractOptionWidget<String>  {
                 iconWidth,
                 iconHeight,
                 iconWidth,
-                iconHeight
-        );
+                iconHeight);
     }
 
     @Override
@@ -122,10 +115,7 @@ public class IconOptionWidget extends AbstractOptionWidget<String>  {
             this.playDownSound(McUtils.mc().getSoundManager());
 
             CategoryManagementScreen currentScreen = (CategoryManagementScreen) McUtils.screen();
-            McUtils.mc().setScreen(new IconSelectionScreen(
-                    currentScreen,
-                    icon -> setValue(icon.getIconId()),
-                    value));
+            McUtils.mc().setScreen(new IconSelectionScreen(currentScreen, icon -> setValue(icon.getIconId()), value));
             return true;
         }
         return false;
@@ -141,7 +131,6 @@ public class IconOptionWidget extends AbstractOptionWidget<String>  {
                 getX() + getWidth() - BUTTON_WIDTH,
                 getX() + getWidth() - 1,
                 getY() + (this.height - BUTTON_HEIGHT) / 2,
-                getY() + (this.height - BUTTON_HEIGHT) / 2 + BUTTON_HEIGHT
-        );
+                getY() + (this.height - BUTTON_HEIGHT) / 2 + BUTTON_HEIGHT);
     }
 }

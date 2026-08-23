@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets.options;
 
 import com.wynntils.core.text.StyledText;
@@ -20,12 +24,7 @@ public class CategoryHeaderWidget extends AbstractOptionWidget<Void> {
     private final OptionCategory category;
 
     public CategoryHeaderWidget(OptionCategory category) {
-        super(
-                category.getDisplayName(),
-                Component.empty(),
-                26,
-                category,
-                null);
+        super(category.getDisplayName(), Component.empty(), 26, category, null);
         this.category = category;
     }
 
@@ -39,15 +38,16 @@ public class CategoryHeaderWidget extends AbstractOptionWidget<Void> {
                 150,
                 CATEGORY_HEIGHT);
 
-        FontRenderer.getInstance().renderText(
-                guiGraphics,
-                StyledText.fromString(getMessage().getString()),
-                getX() + 20,
-                getY() + this.height / 2f,
-                CommonColors.WHITE,
-                HorizontalAlignment.LEFT,
-                VerticalAlignment.MIDDLE,
-                TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromString(getMessage().getString()),
+                        getX() + 20,
+                        getY() + this.height / 2f,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,

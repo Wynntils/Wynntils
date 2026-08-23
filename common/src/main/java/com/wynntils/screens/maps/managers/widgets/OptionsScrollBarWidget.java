@@ -1,14 +1,17 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets;
 
 import com.wynntils.screens.maps.managers.CategoryManagementScreen;
-import com.wynntils.screens.maps.managers.widgets.options.CategoryHeaderWidget;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.screens.maps.managers.widgets.options.AbstractOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.options.CategoryHeaderWidget;
+import com.wynntils.utils.MathUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import com.wynntils.utils.MathUtils;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.MouseButtonEvent;
 
@@ -151,7 +154,6 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
         return super.mouseReleased(event);
     }
 
-
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         if (!isInsideViewport(mouseX, mouseY)) {
@@ -168,7 +170,8 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
                 abstractOptionWidget.setX(getX() + SCROLL_BAR_WIDTH_PADDING);
                 abstractOptionWidget.setY(currentY);
                 abstractOptionWidget.setWidth(getViewportWidth());
-                if (abstractOptionWidget.isHovered() && abstractOptionWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
+                if (abstractOptionWidget.isHovered()
+                        && abstractOptionWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
                     return true;
                 }
             }
@@ -183,12 +186,6 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
         int viewportLeft = getX() + SCROLL_BAR_WIDTH_PADDING;
         int viewportRight = viewportLeft + getViewportWidth();
 
-        return MathUtils.isInside(
-                (int) x,
-                (int) y,
-                viewportLeft,
-                viewportRight,
-                viewportTop,
-                viewportBottom);
+        return MathUtils.isInside((int) x, (int) y, viewportLeft, viewportRight, viewportTop, viewportBottom);
     }
 }

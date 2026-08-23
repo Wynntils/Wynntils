@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.managers.type;
 
+import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -41,7 +42,6 @@ public class CategoryTreeNode {
         return children.isEmpty();
     }
 
-    // ---- internal methods used by CategoryTree ----
     public void addChild(CategoryTreeNode child) {
         children.add(child);
     }
@@ -61,46 +61,6 @@ public class CategoryTreeNode {
 
     @Override
     public String toString() {
-        return toJson();
-    }
-
-    private String toJson() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append("\"fullId\":\"").append(escapeJson(fullId)).append("\",");
-        sb.append("\"name\":\"").append(escapeJson(name)).append("\",");
-        sb.append("\"children\":[");
-        for (int i = 0; i < children.size(); i++) {
-            if (i > 0) sb.append(",");
-            sb.append(children.get(i).toJson());  // recursive call
-        }
-        sb.append("]");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    private static String escapeJson(String s) {
-        if (s == null) return "null";
-        StringBuilder sb = new StringBuilder();
-        for (char c : s.toCharArray()) {
-            switch (c) {
-                case '"':  sb.append("\\\""); break;
-                case '\\': sb.append("\\\\"); break;
-                case '/':  sb.append("\\/"); break;
-                case '\b': sb.append("\\b"); break;
-                case '\f': sb.append("\\f"); break;
-                case '\n': sb.append("\\n"); break;
-                case '\r': sb.append("\\r"); break;
-                case '\t': sb.append("\\t"); break;
-                default:
-                    if (c < 0x20) {
-                        sb.append(String.format("\\u%04x", (int) c));
-                    } else {
-                        sb.append(c);
-                    }
-                    break;
-            }
-        }
-        return sb.toString();
+        return new Gson().toJson(this);
     }
 }

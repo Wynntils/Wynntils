@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets.options;
 
 import com.wynntils.core.text.StyledText;
@@ -8,16 +12,15 @@ import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.network.chat.Component;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
 
 public abstract class AbstractOptionWidget<T> extends AbstractWidget {
     protected final OptionCategory category;
@@ -86,16 +89,10 @@ public abstract class AbstractOptionWidget<T> extends AbstractWidget {
     public List<Component> getTooltipLines(double mouseX, double mouseY) {
         int textWidth = FontRenderer.getInstance().getFont().width(getMessage().getString());
         int textHeight = FontRenderer.getInstance().getFont().lineHeight;
-        int heightStart =  getY() + (this.height - textHeight) / 2;
+        int heightStart = getY() + (this.height - textHeight) / 2;
 
         boolean isTextHovered = MathUtils.isInside(
-                (int) mouseX,
-                (int) mouseY,
-                getX(),
-                getX() + textWidth,
-                heightStart,
-                heightStart + textHeight
-        );
+                (int) mouseX, (int) mouseY, getX(), getX() + textWidth, heightStart, heightStart + textHeight);
 
         if (isTextHovered) {
             return Collections.unmodifiableList(this.generatedTooltip);
@@ -107,15 +104,15 @@ public abstract class AbstractOptionWidget<T> extends AbstractWidget {
     protected void generateTooltip() {
         this.generatedTooltip = new ArrayList<>();
 
-        this.generatedTooltip.add(Component.empty().append(this.getMessage())
-                .withStyle(ChatFormatting.GOLD));
+        this.generatedTooltip.add(Component.empty().append(this.getMessage()).withStyle(ChatFormatting.GOLD));
 
         ChatFormatting color = this.inherited ? ChatFormatting.GRAY : ChatFormatting.WHITE;
 
-        Component label = (
-                this.inherited ?
-                Component.translatable("screens.wynntils.map.managers.categoryManager.abstractOptionWidget.inheritedText") :
-                        Component.translatable("screens.wynntils.map.managers.categoryManager.abstractOptionWidget.notInheritedText"))
+        Component label = (this.inherited
+                        ? Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.abstractOptionWidget.inheritedText")
+                        : Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.abstractOptionWidget.notInheritedText"))
                 .withStyle(color);
 
         this.generatedTooltip.add(
@@ -126,11 +123,13 @@ public abstract class AbstractOptionWidget<T> extends AbstractWidget {
         StyledText[] wrappedText = RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(description), 200);
 
         for (StyledText text : wrappedText) {
-            this.generatedTooltip.add(Component.empty().append(text.getComponent()).withStyle(ChatFormatting.GRAY));
+            this.generatedTooltip.add(
+                    Component.empty().append(text.getComponent()).withStyle(ChatFormatting.GRAY));
         }
     }
 
-    public void updateFromAttributes(Optional<MapAttributes> ownAttributes, Optional<MapAttributes> resolvedAttributes) {
+    public void updateFromAttributes(
+            Optional<MapAttributes> ownAttributes, Optional<MapAttributes> resolvedAttributes) {
         Optional<T> ownValue = ownAttributes.flatMap(valueGetter);
         Optional<T> inheritedValue = resolvedAttributes.flatMap(valueGetter);
 

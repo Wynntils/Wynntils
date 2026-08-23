@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets;
 
 import com.wynntils.core.components.Services;
@@ -12,6 +16,10 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -20,11 +28,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
 
 public class DeleteButtonWidget extends AbstractWidget implements TooltipProvider {
     private final int x;
@@ -45,17 +48,13 @@ public class DeleteButtonWidget extends AbstractWidget implements TooltipProvide
         handleCursor(guiGraphics);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.MANAGER_WIDGET_BACKGROUND_RED,
-                x,
-                y,
-                this.width,
-                this.height);
+                guiGraphics, Texture.MANAGER_WIDGET_BACKGROUND_RED, x, y, this.width, this.height);
 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.categoryManager.deleteButton.label")),
+                        StyledText.fromComponent(Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.deleteButton.label")),
                         x + this.width / 2f,
                         y + this.height / 2f,
                         CommonColors.WHITE,
@@ -71,10 +70,9 @@ public class DeleteButtonWidget extends AbstractWidget implements TooltipProvide
         this.playDownSound(Minecraft.getInstance().getSoundManager());
 
         Services.MapData.removeOverrideProvider(
-                "json-override:" +
-                        parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT) +
-                        ":" +
-                        parent.getSelectedCategory());
+                "json-override:" + parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT)
+                        + ":"
+                        + parent.getSelectedCategory());
         parent.setSelectedCategory(parent.getSelectedCategory());
 
         return true;
@@ -91,18 +89,20 @@ public class DeleteButtonWidget extends AbstractWidget implements TooltipProvide
     public void generateTooltip() {
         this.generatedTooltip = new ArrayList<>();
 
-        this.generatedTooltip.add(Component.translatable("screens.wynntils.map.managers.categoryManager.deleteButton.label")
-                .withStyle(ChatFormatting.GOLD));
+        this.generatedTooltip.add(
+                Component.translatable("screens.wynntils.map.managers.categoryManager.deleteButton.label")
+                        .withStyle(ChatFormatting.GOLD));
 
-        boolean overrideExists = Services.MapData.getOverrideProvider(
-                "json-override:"
+        boolean overrideExists = Services.MapData.getOverrideProvider("json-override:"
                         + parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT)
                         + ":"
-                        + parent.getSelectedCategory()) != null;
+                        + parent.getSelectedCategory())
+                != null;
 
-        StyledText description = StyledText.fromComponent(Component.translatable(overrideExists
-                ? "screens.wynntils.map.managers.categoryManager.deleteButton.description"
-                : "screens.wynntils.map.managers.categoryManager.deleteButton.description.empty"));
+        StyledText description = StyledText.fromComponent(Component.translatable(
+                overrideExists
+                        ? "screens.wynntils.map.managers.categoryManager.deleteButton.description"
+                        : "screens.wynntils.map.managers.categoryManager.deleteButton.description.empty"));
 
         for (StyledText line : RenderedStringUtils.wrapTextBySize(description, 210)) {
             this.generatedTooltip.add(Component.empty()
@@ -110,5 +110,4 @@ public class DeleteButtonWidget extends AbstractWidget implements TooltipProvide
                     .withStyle(overrideExists ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY));
         }
     }
-
 }

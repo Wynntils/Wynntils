@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets;
 
 import com.wynntils.core.components.Services;
@@ -18,6 +22,13 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.BiConsumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -26,14 +37,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.BiConsumer;
 
 public class SaveButtonWidget extends AbstractWidget implements TooltipProvider {
     private final int x;
@@ -54,17 +57,13 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
         handleCursor(guiGraphics);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.MANAGER_WIDGET_BACKGROUND_GREEN,
-                x,
-                y,
-                this.width,
-                this.height);
+                guiGraphics, Texture.MANAGER_WIDGET_BACKGROUND_GREEN, x, y, this.width, this.height);
 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.categoryManager.saveButton.label")),
+                        StyledText.fromComponent(Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.saveButton.label")),
                         x + this.width / 2f,
                         y + this.height / 2f,
                         CommonColors.WHITE,
@@ -79,11 +78,11 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
 
-        String overrideName = parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT) + ":" + parent.getSelectedCategory();
+        String overrideName =
+                parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT) + ":" + parent.getSelectedCategory();
 
         MapAttributesBuilder builder = new MapAttributesBuilder();
-        Optional.ofNullable(Services.MapData.getOverrideProvider(
-                        "json-override:" + overrideName))
+        Optional.ofNullable(Services.MapData.getOverrideProvider("json-override:" + overrideName))
                 .ifPresent(provider -> builder.from(provider.getOverrideAttributes(null)));
 
         buildOption(
@@ -158,7 +157,6 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
                 parent.borderWidthOptionWidget.getValue(),
                 MapAttributesBuilder::setBorderWidth);
 
-
         // labelVisibility
         boolean labelVisibilityInherited = parent.labelVisibilityMinOptionWidget.isChanged()
                 || parent.labelVisibilityMaxOptionWidget.isChanged()
@@ -169,11 +167,7 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
                 parent.labelVisibilityMaxOptionWidget.getValue(),
                 parent.labelVisibilityFadeOptionWidget.getValue());
 
-        buildOption(
-                builder,
-                labelVisibilityInherited,
-                labelVisibilityValue,
-                MapAttributesBuilder::setLabelVisibility);
+        buildOption(builder, labelVisibilityInherited, labelVisibilityValue, MapAttributesBuilder::setLabelVisibility);
 
         // iconVisibility
         boolean iconVisibilityInherited = parent.iconVisibilityMinOptionWidget.isChanged()
@@ -185,11 +179,7 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
                 parent.iconVisibilityMaxOptionWidget.getValue(),
                 parent.iconVisibilityFadeOptionWidget.getValue());
 
-        buildOption(
-                builder,
-                iconVisibilityInherited,
-                iconVisibilityValue,
-                MapAttributesBuilder::setIconVisibility);
+        buildOption(builder, iconVisibilityInherited, iconVisibilityValue, MapAttributesBuilder::setIconVisibility);
 
         // markerOptions
         boolean markerOptionsInherited = parent.markerMinDistanceOptionWidget.isChanged()
@@ -209,23 +199,17 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
                 parent.markerHasDistanceLabelOptionWidget.getValue(),
                 parent.markerHasIconOptionWidget.getValue());
 
-        buildOption(
-                builder,
-                markerOptionsInherited,
-                markerOptionsValue,
-                MapAttributesBuilder::setMarkerOptions);
+        buildOption(builder, markerOptionsInherited, markerOptionsValue, MapAttributesBuilder::setMarkerOptions);
 
-        MapAttributesImpl attributes = switch (parent.getSelectedOverrideType()) {
-            case MAP_LOCATION_OVERRIDE -> builder.asLocationAttributes().build();
-            case MAP_PATH_OVERRIDE -> builder.asPathAttributes().build();
-            case MAP_AREA_OVERRIDE -> builder.asAreaAttributes().build();
-        };
+        MapAttributesImpl attributes =
+                switch (parent.getSelectedOverrideType()) {
+                    case MAP_LOCATION_OVERRIDE -> builder.asLocationAttributes().build();
+                    case MAP_PATH_OVERRIDE -> builder.asPathAttributes().build();
+                    case MAP_AREA_OVERRIDE -> builder.asAreaAttributes().build();
+                };
 
-        Services.MapData.addOverrideProvider(new JsonOverrideProvider(
-                overrideName,
-                attributes,
-                Set.of(),
-                Set.of(parent.getSelectedCategory())));
+        Services.MapData.addOverrideProvider(
+                new JsonOverrideProvider(overrideName, attributes, Set.of(), Set.of(parent.getSelectedCategory())));
 
         parent.setSelectedCategory(parent.getSelectedCategory());
 
@@ -237,7 +221,6 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
             boolean isChanged,
             T widgetValue,
             BiConsumer<MapAttributesBuilder, T> setter) {
-
         if (!isChanged) return;
 
         setter.accept(builder, widgetValue);
@@ -254,33 +237,39 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
     public void generateTooltip() {
         this.generatedTooltip = new ArrayList<>();
 
-        this.generatedTooltip.add(Component.translatable("screens.wynntils.map.managers.categoryManager.saveButton.label")
-                .withStyle(ChatFormatting.GOLD));
+        this.generatedTooltip.add(
+                Component.translatable("screens.wynntils.map.managers.categoryManager.saveButton.label")
+                        .withStyle(ChatFormatting.GOLD));
 
         Component typeLabel = Component.literal(formatOverrideType(parent.getSelectedOverrideType()))
                 .withStyle(ChatFormatting.YELLOW);
-        this.generatedTooltip.add(Component.translatable("screens.wynntils.map.managers.categoryManager.saveButton.type")
-                .withStyle(ChatFormatting.GRAY)
-                .append(typeLabel));
+        this.generatedTooltip.add(
+                Component.translatable("screens.wynntils.map.managers.categoryManager.saveButton.type")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(typeLabel));
 
         boolean overrideExists = Services.MapData.getOverrideProvider("json-override:"
-                + parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT)
-                + ":"
-                + parent.getSelectedCategory()) != null;
+                        + parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT)
+                        + ":"
+                        + parent.getSelectedCategory())
+                != null;
 
-        Component actionLabel = Component.translatable(overrideExists
-                        ? "screens.wynntils.map.managers.categoryManager.saveButton.action.update"
-                        : "screens.wynntils.map.managers.categoryManager.saveButton.action.create")
+        Component actionLabel = Component.translatable(
+                        overrideExists
+                                ? "screens.wynntils.map.managers.categoryManager.saveButton.action.update"
+                                : "screens.wynntils.map.managers.categoryManager.saveButton.action.create")
                 .withStyle(overrideExists ? ChatFormatting.AQUA : ChatFormatting.GREEN);
-        this.generatedTooltip.add(Component.translatable("screens.wynntils.map.managers.categoryManager.saveButton.action")
-                .withStyle(ChatFormatting.GRAY)
-                .append(actionLabel));
+        this.generatedTooltip.add(
+                Component.translatable("screens.wynntils.map.managers.categoryManager.saveButton.action")
+                        .withStyle(ChatFormatting.GRAY)
+                        .append(actionLabel));
 
         this.generatedTooltip.add(Component.empty());
 
-        StyledText description = StyledText.fromComponent(Component.translatable(overrideExists
-                ? "screens.wynntils.map.managers.categoryManager.saveButton.description.update"
-                : "screens.wynntils.map.managers.categoryManager.saveButton.description.create"));
+        StyledText description = StyledText.fromComponent(Component.translatable(
+                overrideExists
+                        ? "screens.wynntils.map.managers.categoryManager.saveButton.description.update"
+                        : "screens.wynntils.map.managers.categoryManager.saveButton.description.create"));
 
         for (StyledText line : RenderedStringUtils.wrapTextBySize(description, 210)) {
             this.generatedTooltip.add(
@@ -293,7 +282,8 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
         StringBuilder formatted = new StringBuilder();
 
         for (String word : words) {
-            formatted.append(word.charAt(0))
+            formatted
+                    .append(word.charAt(0))
                     .append(word.substring(1).toLowerCase(Locale.ROOT))
                     .append(" ");
         }

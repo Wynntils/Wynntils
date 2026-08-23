@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets.options;
 
 import com.wynntils.core.text.StyledText;
@@ -12,14 +16,13 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.Optional;
+import java.util.function.Function;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.Optional;
-import java.util.function.Function;
 
 public class TextShadowOptionWidget extends AbstractOptionWidget<TextShadow> {
     private static final int BUTTON_WIDTH = 70;
@@ -35,15 +38,16 @@ public class TextShadowOptionWidget extends AbstractOptionWidget<TextShadow> {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        FontRenderer.getInstance().renderText(
-                guiGraphics,
-                StyledText.fromString(getMessage().getString()),
-                getX(),
-                getY() + this.height / 2f,
-                !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
-                HorizontalAlignment.LEFT,
-                VerticalAlignment.MIDDLE,
-                TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromString(getMessage().getString()),
+                        getX(),
+                        getY() + this.height / 2f,
+                        !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
 
         int elementY = getY() + (this.height - BUTTON_HEIGHT) / 2;
         int buttonX = getX() + getWidth() - BUTTON_WIDTH;
@@ -53,22 +57,18 @@ public class TextShadowOptionWidget extends AbstractOptionWidget<TextShadow> {
         }
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.MANAGER_WIDGET_BACKGROUND,
-                buttonX,
-                elementY,
-                BUTTON_WIDTH,
-                BUTTON_HEIGHT);
+                guiGraphics, Texture.MANAGER_WIDGET_BACKGROUND, buttonX, elementY, BUTTON_WIDTH, BUTTON_HEIGHT);
 
-        FontRenderer.getInstance().renderText(
-                guiGraphics,
-                StyledText.fromString(TextShadowInternal.from(value).getDisplayName()),
-                buttonX + BUTTON_WIDTH / 2f,
-                elementY + BUTTON_HEIGHT / 2f,
-                CommonColors.WHITE,
-                HorizontalAlignment.CENTER,
-                VerticalAlignment.MIDDLE,
-                value);
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromString(TextShadowInternal.from(value).getDisplayName()),
+                        buttonX + BUTTON_WIDTH / 2f,
+                        elementY + BUTTON_HEIGHT / 2f,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        value);
     }
 
     @Override
@@ -93,13 +93,7 @@ public class TextShadowOptionWidget extends AbstractOptionWidget<TextShadow> {
         int buttonX = getX() + getWidth() - BUTTON_WIDTH;
 
         return MathUtils.isInside(
-                (int) mouseX,
-                (int) mouseY,
-                buttonX,
-                buttonX + BUTTON_WIDTH - 1,
-                buttonY,
-                buttonY + BUTTON_HEIGHT - 1
-        );
+                (int) mouseX, (int) mouseY, buttonX, buttonX + BUTTON_WIDTH - 1, buttonY, buttonY + BUTTON_HEIGHT - 1);
     }
 
     private enum TextShadowInternal {

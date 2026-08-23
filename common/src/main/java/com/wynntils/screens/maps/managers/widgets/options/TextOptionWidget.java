@@ -1,24 +1,27 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets.options;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.managers.CategoryManagementScreen;
-import com.wynntils.screens.maps.managers.widgets.TexturedTextInputBoxWidget;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
+import com.wynntils.screens.maps.managers.widgets.TexturedTextInputBoxWidget;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.Optional;
+import java.util.function.Function;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.Optional;
-import java.util.function.Function;
 
 public class TextOptionWidget extends AbstractOptionWidget<String> {
     // Gap between the end of the label text and the start of the text box.
@@ -47,15 +50,16 @@ public class TextOptionWidget extends AbstractOptionWidget<String> {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        FontRenderer.getInstance().renderText(
-                guiGraphics,
-                StyledText.fromString(getMessage().getString()),
-                getX(),
-                getY() + this.height / 2f,
-                !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
-                HorizontalAlignment.LEFT,
-                VerticalAlignment.MIDDLE,
-                TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromString(getMessage().getString()),
+                        getX(),
+                        getY() + this.height / 2f,
+                        !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
 
         valueTextBox.setX(getTextboxX());
         valueTextBox.setY(getY());

@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets.options;
 
 import com.wynntils.core.text.StyledText;
@@ -11,15 +15,14 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.Optional;
+import java.util.function.Function;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.Optional;
-import java.util.function.Function;
 
 public class ToggleOptionWidget extends AbstractOptionWidget<Boolean> {
     public ToggleOptionWidget(
@@ -32,15 +35,16 @@ public class ToggleOptionWidget extends AbstractOptionWidget<Boolean> {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        FontRenderer.getInstance().renderText(
-                guiGraphics,
-                StyledText.fromString(getMessage().getString()),
-                getX(),
-                getY() + this.height / 2f,
-                !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
-                HorizontalAlignment.LEFT,
-                VerticalAlignment.MIDDLE,
-                TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromString(getMessage().getString()),
+                        getX(),
+                        getY() + this.height / 2f,
+                        !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
 
         if (isMouseInsideButton(mouseX, mouseY)) {
             handleCursor(guiGraphics);
@@ -88,7 +92,6 @@ public class ToggleOptionWidget extends AbstractOptionWidget<Boolean> {
                 buttonX,
                 buttonX + getButtonTexture().width(),
                 buttonY,
-                buttonY + getButtonTexture().height()
-        );
+                buttonY + getButtonTexture().height());
     }
 }

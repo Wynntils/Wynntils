@@ -64,10 +64,8 @@ public class CategoryTree {
             boolean hasMatchingDescendant = !filteredGrandChildren.isEmpty();
 
             if (childMatches || hasMatchingDescendant) {
-                CategoryTreeNode newNode = new CategoryTreeNode(
-                        child.getFullId(),
-                        child.getName(),
-                        filteredGrandChildren);
+                CategoryTreeNode newNode =
+                        new CategoryTreeNode(child.getFullId(), child.getName(), filteredGrandChildren);
                 result.add(newNode);
             }
         }

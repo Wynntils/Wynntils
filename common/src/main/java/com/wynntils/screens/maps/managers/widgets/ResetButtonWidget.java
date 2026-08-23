@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets;
 
 import com.wynntils.core.text.StyledText;
@@ -11,6 +15,9 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -19,10 +26,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class ResetButtonWidget extends AbstractWidget implements TooltipProvider {
     private final int x;
@@ -43,17 +46,13 @@ public class ResetButtonWidget extends AbstractWidget implements TooltipProvider
         handleCursor(guiGraphics);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.MANAGER_WIDGET_BACKGROUND,
-                x,
-                y,
-                this.width,
-                this.height);
+                guiGraphics, Texture.MANAGER_WIDGET_BACKGROUND, x, y, this.width, this.height);
 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.categoryManager.resetButton.label")),
+                        StyledText.fromComponent(Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.resetButton.label")),
                         x + this.width / 2f,
                         y + this.height / 2f,
                         CommonColors.WHITE,
@@ -84,8 +83,9 @@ public class ResetButtonWidget extends AbstractWidget implements TooltipProvider
     private void generateTooltip() {
         this.generatedTooltip = new ArrayList<>();
 
-        this.generatedTooltip.add(Component.translatable("screens.wynntils.map.managers.categoryManager.resetButton.label")
-                .withStyle(ChatFormatting.GOLD));
+        this.generatedTooltip.add(
+                Component.translatable("screens.wynntils.map.managers.categoryManager.resetButton.label")
+                        .withStyle(ChatFormatting.GOLD));
 
         StyledText description = StyledText.fromComponent(
                 Component.translatable("screens.wynntils.map.managers.categoryManager.resetButton.description"));
