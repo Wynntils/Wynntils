@@ -1,10 +1,8 @@
-package com.wynntils.screens.maps.categorymanagerwidgets;
+package com.wynntils.screens.maps.managers.widgets;
 
-import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
-import com.wynntils.screens.maps.CategoryManagementScreen;
-import com.wynntils.screens.maps.type.OverrideType;
+import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -25,7 +23,6 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 public class ResetButtonWidget extends AbstractWidget implements TooltipProvider {
     private final int x;

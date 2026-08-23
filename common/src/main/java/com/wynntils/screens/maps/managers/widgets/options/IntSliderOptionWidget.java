@@ -1,14 +1,13 @@
-package com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets;
+package com.wynntils.screens.maps.managers.widgets.options;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import com.wynntils.screens.maps.CategoryManagementScreen;
-import com.wynntils.screens.maps.categorymanagerwidgets.TexturedTextInputBoxWidget;
-import com.wynntils.screens.maps.type.OptionCategory;
+import com.wynntils.screens.maps.managers.CategoryManagementScreen;
+import com.wynntils.screens.maps.managers.widgets.TexturedTextInputBoxWidget;
+import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -25,7 +24,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
+public class IntSliderOptionWidget extends AbstractOptionWidget<Integer> {
     // Gap between the end of the label text and the start of the slider track.
     private static final int LABEL_PADDING = 8;
 
@@ -40,42 +39,39 @@ public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
     private static final int HEAD_WIDTH = 8;
     private static final int HEAD_HEIGHT = 14;
 
-    private final float minValue;
-    private final float maxValue;
-    private final float step;
-    private final int decimalPlaces;
+    private final int minValue;
+    private final int maxValue;
+    private final int step;
 
     private final TexturedTextInputBoxWidget valueTextBox;
 
     private boolean draggingSlider = false;
     private boolean draggingTextbox = false;
 
-    public FloatSliderOptionWidget(
+    public IntSliderOptionWidget(
             Component label,
             Component description,
             OptionCategory category,
-            float minValue,
-            float maxValue,
-            Function<MapAttributes, Optional<Float>> valueGetter,
+            int minValue,
+            int maxValue,
+            Function<MapAttributes, Optional<Integer>> valueGetter,
             CategoryManagementScreen parent) {
-        this(label, description, category, minValue, maxValue, 0.1f, 1, valueGetter, parent);
+        this(label, description, category, minValue, maxValue, 1, valueGetter, parent);
     }
 
-    private FloatSliderOptionWidget(
+    private IntSliderOptionWidget(
             Component label,
             Component description,
             OptionCategory category,
-            float minValue,
-            float maxValue,
-            float step,
-            int decimalPlaces,
-            Function<MapAttributes, Optional<Float>> valueGetter,
+            int minValue,
+            int maxValue,
+            int step,
+            Function<MapAttributes, Optional<Integer>> valueGetter,
             CategoryManagementScreen parent) {
         super(label, description, 18, category, valueGetter);
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.step = step;
-        this.decimalPlaces = decimalPlaces;
         this.valueTextBox = new TexturedTextInputBoxWidget(
                 getTextboxX(),
                 getY(),
@@ -83,7 +79,7 @@ public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
                 this.height,
                 this::onTextInputUpdate,
                 parent,
-                TexturedTextInputBoxWidget.Mode.FLOAT);
+                TexturedTextInputBoxWidget.Mode.INTEGER);
 
         setInternalValue(defaultValue, false);
     }
@@ -215,7 +211,7 @@ public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private void onTextInputUpdate(String text) {
-        Float newValue = valueTextBox.getValueAsFloat();
+        Integer newValue = valueTextBox.getValueAsInt();
 
         if (newValue != null) {
             super.setValue(newValue);
@@ -234,27 +230,20 @@ public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
         float clampedMouseX = MathUtils.clamp((float) mouseX - HEAD_WIDTH / 2f, travelLeft, travelRight);
         float newValue = MathUtils.map(clampedMouseX, travelLeft, travelRight, minValue, maxValue);
 
-        setInternalValue(newValue, true);
+        setInternalValue(Math.round(newValue), true);
     }
 
-    private void setInternalValue(float newValue, boolean snapToStep) {
-        float min = Math.min(minValue, maxValue);
-        float max = Math.max(minValue, maxValue);
-        float clamped = MathUtils.clamp(newValue, min, max);
+    private void setInternalValue(int newValue, boolean snapToStep) {
+        int min = Math.min(minValue, maxValue);
+        int max = Math.max(minValue, maxValue);
+        int clamped = MathUtils.clamp(newValue, min, max);
 
-        if (snapToStep && step > 0f) {
-            clamped = minValue + Math.round((clamped - minValue) / step) * step;
+        if (snapToStep && step > 0) {
+            clamped = minValue + Math.round((clamped - minValue) / (float) step) * step;
             clamped = MathUtils.clamp(clamped, min, max);
         }
 
         setValue(clamped);
-    }
-
-    private String formatValue(float value) {
-        if (decimalPlaces <= 0) {
-            return String.valueOf(Math.round(value));
-        }
-        return String.format("%." + decimalPlaces + "f", value);
     }
 
     private int getTextboxX() {
@@ -276,9 +265,9 @@ public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
 
         if (travelRight <= travelLeft || maxValue <= minValue) return travelLeft;
 
-        float min = Math.min(minValue, maxValue);
-        float max = Math.max(minValue, maxValue);
-        float clampedValue = MathUtils.clamp(value, min, max);
+        int min = Math.min(minValue, maxValue);
+        int max = Math.max(minValue, maxValue);
+        int clampedValue = MathUtils.clamp(value, min, max);
 
         return MathUtils.map(clampedValue, minValue, maxValue, travelLeft, travelRight);
     }
@@ -297,10 +286,11 @@ public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
     }
 
     @Override
-    public void setValue(Float newValue) {
+    public void setValue(Integer newValue) {
         super.setValue(newValue);
-        valueTextBox.setTextBoxInput(formatValue(newValue));
+        valueTextBox.setTextBoxInput(String.valueOf(newValue));
     }
+
 
     @Override
     public boolean isMouseOverTextBox(double mouseX, double mouseY) {

@@ -1,10 +1,10 @@
-package com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets;
+package com.wynntils.screens.maps.managers.widgets.options;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.maps.CategoryManagementScreen;
-import com.wynntils.screens.maps.categorymanagerwidgets.screen.IconSelectionScreen;
-import com.wynntils.screens.maps.type.OptionCategory;
+import com.wynntils.screens.maps.managers.CategoryManagementScreen;
+import com.wynntils.screens.maps.managers.IconSelectionScreen;
+import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;

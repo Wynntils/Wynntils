@@ -1,10 +1,8 @@
-package com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets;
+package com.wynntils.screens.maps.managers.widgets.options;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import com.wynntils.screens.maps.type.OptionCategory;
+import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.utils.MathUtils;

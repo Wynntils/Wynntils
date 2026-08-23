@@ -1,9 +1,9 @@
-package com.wynntils.screens.maps.categorymanagerwidgets;
+package com.wynntils.screens.maps.managers.widgets;
 
-import com.wynntils.screens.maps.CategoryManagementScreen;
-import com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets.CategoryHeaderWidget;
-import com.wynntils.screens.maps.type.OptionCategory;
-import com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets.AbstractOptionWidget;
+import com.wynntils.screens.maps.managers.CategoryManagementScreen;
+import com.wynntils.screens.maps.managers.widgets.options.CategoryHeaderWidget;
+import com.wynntils.screens.maps.managers.type.OptionCategory;
+import com.wynntils.screens.maps.managers.widgets.options.AbstractOptionWidget;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

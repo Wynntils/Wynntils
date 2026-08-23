@@ -1,9 +1,9 @@
-package com.wynntils.screens.maps.categorymanagerwidgets;
+package com.wynntils.screens.maps.managers.widgets;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
-import com.wynntils.screens.maps.CategoryManagementScreen;
+import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;

@@ -2,10 +2,10 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.maps.categorymanagerwidgets;
+package com.wynntils.screens.maps.managers.widgets;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.maps.type.CategoryTreeNode;
+import com.wynntils.screens.maps.managers.type.CategoryTreeNode;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;

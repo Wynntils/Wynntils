@@ -1,16 +1,14 @@
-package com.wynntils.screens.maps.categorymanagerwidgets;
+package com.wynntils.screens.maps.managers.widgets;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
-import com.wynntils.screens.maps.CategoryManagementScreen;
-import com.wynntils.screens.maps.type.OverrideType;
+import com.wynntils.screens.maps.managers.CategoryManagementScreen;
+import com.wynntils.screens.maps.managers.type.OverrideType;
 import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
 import com.wynntils.services.mapdata.attributes.impl.MapAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapMarkerOptionsImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapVisibilityImpl;
-import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonOverrideProvider;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.RenderedStringUtils;

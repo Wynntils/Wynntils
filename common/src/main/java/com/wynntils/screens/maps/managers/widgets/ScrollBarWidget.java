@@ -1,8 +1,8 @@
-package com.wynntils.screens.maps.categorymanagerwidgets;
+package com.wynntils.screens.maps.managers.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.screens.maps.CategoryManagementScreen;
-import com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets.AbstractOptionWidget;
+import com.wynntils.screens.maps.managers.CategoryManagementScreen;
+import com.wynntils.screens.maps.managers.widgets.options.AbstractOptionWidget;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;

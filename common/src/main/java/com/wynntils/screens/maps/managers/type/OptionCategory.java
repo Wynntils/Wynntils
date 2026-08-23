@@ -1,4 +1,4 @@
-package com.wynntils.screens.maps.type;
+package com.wynntils.screens.maps.managers.type;
 
 public enum OptionCategory {
     GENERAL("General"),

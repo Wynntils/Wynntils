@@ -1,4 +1,4 @@
-package com.wynntils.screens.maps.type;
+package com.wynntils.screens.maps.managers.type;
 
 public enum OverrideType {
     MAP_LOCATION_OVERRIDE("Map Location override"),

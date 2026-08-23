@@ -2,12 +2,11 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.maps.categorymanagerwidgets;
+package com.wynntils.screens.maps.managers.widgets;
 
-import com.wynntils.core.WynntilsMod;
-import com.wynntils.screens.maps.CategoryManagementScreen;
-import com.wynntils.screens.maps.type.CategoryTree;
-import com.wynntils.screens.maps.type.CategoryTreeNode;
+import com.wynntils.screens.maps.managers.CategoryManagementScreen;
+import com.wynntils.screens.maps.managers.type.CategoryTree;
+import com.wynntils.screens.maps.managers.type.CategoryTreeNode;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import java.util.ArrayList;

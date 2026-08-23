@@ -1,4 +1,4 @@
-package com.wynntils.screens.maps.categorymanagerwidgets;
+package com.wynntils.screens.maps.managers.widgets;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;

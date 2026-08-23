@@ -1,11 +1,10 @@
-package com.wynntils.screens.maps.categorymanagerwidgets.screen;
+package com.wynntils.screens.maps.managers;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.maps.CategoryManagementScreen;
-import com.wynntils.screens.maps.categorymanagerwidgets.ScrollBarWidget;
-import com.wynntils.screens.maps.categorymanagerwidgets.optionwidgets.AbstractOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.ScrollBarWidget;
+import com.wynntils.screens.maps.managers.widgets.options.AbstractOptionWidget;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;

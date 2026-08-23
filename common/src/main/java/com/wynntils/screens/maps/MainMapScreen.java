@@ -9,6 +9,8 @@ import com.wynntils.core.components.Services;
 import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
+import com.wynntils.screens.maps.managers.CategoryManagementScreen;
+import com.wynntils.screens.maps.managers.ProviderManagementScreen;
 import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
