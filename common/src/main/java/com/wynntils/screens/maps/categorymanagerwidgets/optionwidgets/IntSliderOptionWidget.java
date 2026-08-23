@@ -18,6 +18,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Optional;
@@ -48,26 +49,26 @@ public class IntSliderOptionWidget extends AbstractOptionWidget<Integer> {
     private boolean draggingTextbox = false;
 
     public IntSliderOptionWidget(
-            String label,
+            Component label,
+            Component description,
             OptionCategory category,
-            int initialValue,
             int minValue,
             int maxValue,
             Function<MapAttributes, Optional<Integer>> valueGetter,
             CategoryManagementScreen parent) {
-        this(label, category, initialValue, minValue, maxValue, 1, valueGetter, parent);
+        this(label, description, category, minValue, maxValue, 1, valueGetter, parent);
     }
 
     private IntSliderOptionWidget(
-            String label,
+            Component label,
+            Component description,
             OptionCategory category,
-            int defaultValue,
             int minValue,
             int maxValue,
             int step,
             Function<MapAttributes, Optional<Integer>> valueGetter,
             CategoryManagementScreen parent) {
-        super(label, 18, category, defaultValue, valueGetter);
+        super(label, description, 18, category, valueGetter);
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.step = step;

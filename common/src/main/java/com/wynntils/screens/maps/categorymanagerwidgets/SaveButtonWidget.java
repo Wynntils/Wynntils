@@ -3,6 +3,7 @@ package com.wynntils.screens.maps.categorymanagerwidgets;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.maps.CategoryManagementScreen;
 import com.wynntils.screens.maps.type.OverrideType;
 import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
@@ -12,12 +13,14 @@ import com.wynntils.services.mapdata.attributes.impl.MapVisibilityImpl;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.providers.json.JsonOverrideProvider;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -26,21 +29,26 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-public class SaveButtonWidget extends AbstractWidget {
+public class SaveButtonWidget extends AbstractWidget implements TooltipProvider {
     private final int x;
     private final int y;
     private final CategoryManagementScreen parent;
+    private List<Component> generatedTooltip = new ArrayList<>();
 
     public SaveButtonWidget(int x, int y, int width, int height, CategoryManagementScreen parent) {
         super(x, y, width, height, Component.literal("Save Button Widget"));
         this.x = x;
         this.y = y;
         this.parent = parent;
+        generateTooltip();
     }
 
     @Override
@@ -239,4 +247,52 @@ public class SaveButtonWidget extends AbstractWidget {
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
+
+    @Override
+    public List<Component> getTooltipLines() {
+        return Collections.unmodifiableList(this.generatedTooltip);
+    }
+
+    public void generateTooltip() {
+        this.generatedTooltip = new ArrayList<>();
+
+        this.generatedTooltip.add(Component.literal("Save").withStyle(ChatFormatting.GOLD));
+
+        Component typeLabel = Component.literal(formatOverrideType(parent.getSelectedOverrideType()))
+                .withStyle(ChatFormatting.YELLOW);
+        this.generatedTooltip.add(Component.literal("Type: ").withStyle(ChatFormatting.GRAY).append(typeLabel));
+
+        boolean overrideExists = Services.MapData.getOverrideProvider("json-override:"
+                + parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT)
+                + ":"
+                + parent.getSelectedCategory()) != null;
+
+        Component actionLabel = Component.literal(overrideExists ? "Update" : "Create")
+                .withStyle(overrideExists ? ChatFormatting.AQUA : ChatFormatting.GREEN);
+        this.generatedTooltip.add(Component.literal("Action: ").withStyle(ChatFormatting.GRAY).append(actionLabel));
+
+        this.generatedTooltip.add(Component.empty());
+
+        StyledText description = StyledText.fromString(overrideExists
+                ? "Save the changes made to this category. This will update the existing override for the selected map data type."
+                : "Save the changes made to this category. This will create a new override for the selected map data type.");
+
+        for (StyledText line : RenderedStringUtils.wrapTextBySize(description, 210)) {
+            this.generatedTooltip.add(
+                    Component.empty().append(line.getComponent()).withStyle(ChatFormatting.GRAY));
+        }
+    }
+
+    private static String formatOverrideType(OverrideType overrideType) {
+        String[] words = overrideType.name().split("_");
+        StringBuilder formatted = new StringBuilder();
+
+        for (String word : words) {
+            formatted.append(word.charAt(0))
+                    .append(word.substring(1).toLowerCase(Locale.ROOT))
+                    .append(" ");
+        }
+
+        return formatted.toString().trim();
+    }
 }

@@ -164,7 +164,7 @@ public class IconSelectionScreen extends WynntilsScreen {
         private final Supplier<String> selectedIconIdSupplier;
 
         IconGridRowWidget(List<MapIcon> icons, Consumer<MapIcon> onIconSelected, Supplier<String> selectedIconIdSupplier) {
-            super("icon row", 0, null, null, null);
+            super(Component.literal("icon row"), Component.empty(), 0, null, null);
             this.icons = icons;
             this.onIconSelected = onIconSelected;
             this.selectedIconIdSupplier = selectedIconIdSupplier;

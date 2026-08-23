@@ -5,6 +5,7 @@
 package com.wynntils.models.activities.type;
 
 import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
 import java.util.Objects;
@@ -13,7 +14,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 
 public enum ActivityType {
-    RECOMMENDED("Recommended", "recommended", CustomColor.NONE, null, null),
+    RECOMMENDED("Recommended", "recommended", CommonColors.WHITE, null, null),
     QUEST("Quest", "quests", CustomColor.fromInt(0x29cc96), Texture.QUEST_ICON, "quest"),
     STORYLINE_QUEST("Quest", "quests", CustomColor.fromInt(0x33b33b), Texture.STORYLINE_QUEST_ICON, "story_quest"),
     MINI_QUEST("Mini-Quest", "mini-quests", CustomColor.fromInt(0xb38fad), Texture.MINI_QUEST_ICON, "mini_quest"),

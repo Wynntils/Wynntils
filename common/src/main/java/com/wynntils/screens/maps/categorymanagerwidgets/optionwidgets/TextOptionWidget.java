@@ -14,6 +14,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Optional;
@@ -26,12 +27,12 @@ public class TextOptionWidget extends AbstractOptionWidget<String> {
     private final TexturedTextInputBoxWidget valueTextBox;
 
     public TextOptionWidget(
-            String label,
+            Component label,
+            Component description,
             OptionCategory category,
-            String defaultValue,
             Function<MapAttributes, Optional<String>> valueGetter,
             CategoryManagementScreen parent) {
-        super(label, 18, category, defaultValue, valueGetter);
+        super(label, description, 18, category, valueGetter);
         this.valueTextBox = new TexturedTextInputBoxWidget(
                 getTextboxX(),
                 getY(),

@@ -39,7 +39,7 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
     }
 
     @Override
-    protected List<AbstractOptionWidget<?>> getWidgets() {
+    public List<AbstractOptionWidget<?>> getWidgets() {
         List<AbstractOptionWidget<?>> layout = new ArrayList<>();
 
         for (OptionCategory category : OptionCategory.values()) {
@@ -105,8 +105,6 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
         return false;
     }
 
-    //TODO: make this better so that when i drag the button outside of the widget y it still works.
-    // fix ishovered check basically
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         // Let the scrollbar handle its own dragging first
@@ -179,7 +177,7 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
         return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
     }
 
-    private boolean isInsideViewport(double x, double y) {
+    public boolean isInsideViewport(double x, double y) {
         int viewportTop = getY() + SCROLL_BAR_HEIGHT_PADDING;
         int viewportBottom = viewportTop + getViewportHeight();
         int viewportLeft = getX() + SCROLL_BAR_WIDTH_PADDING;

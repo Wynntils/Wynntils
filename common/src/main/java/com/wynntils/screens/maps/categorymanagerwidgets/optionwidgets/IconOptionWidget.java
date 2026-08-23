@@ -21,6 +21,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Optional;
@@ -33,11 +34,11 @@ public class IconOptionWidget extends AbstractOptionWidget<String>  {
 
 
     public IconOptionWidget(
-            String label,
+            Component label,
+            Component description,
             OptionCategory category,
-            String defaultIconId,
             Function<MapAttributes, Optional<String>> valueGetter) {
-        super(label, 32, category, defaultIconId, valueGetter);
+        super(label, description, 32, category, valueGetter);
     }
 
     @Override

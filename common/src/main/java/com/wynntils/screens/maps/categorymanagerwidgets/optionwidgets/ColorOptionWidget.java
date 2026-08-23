@@ -11,17 +11,24 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.RenderedStringUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -31,20 +38,20 @@ public class ColorOptionWidget extends AbstractOptionWidget<CustomColor> {
     private static final int EDIT_BUTTON_WIDTH = 70;
     private static final int ELEMENT_GAP = 5;
 
-
     private final TexturedTextInputBoxWidget valueTextBox;
     private final CategoryManagementScreen parent;
 
     public ColorOptionWidget(
-            String label,
+            Component label,
+            Component description,
             OptionCategory category,
-            CustomColor defaultColor,
             Function<MapAttributes, Optional<CustomColor>> valueGetter,
             CategoryManagementScreen parent) {
-        super(label, 20, category, defaultColor, valueGetter);
+        super(label, description, 20, category, valueGetter);
         this.parent = parent;
         this.valueTextBox = new TexturedTextInputBoxWidget(0, 0, 60, BUTTON_SIZE, this::onTextInputUpdate, parent, TexturedTextInputBoxWidget.Mode.HEXSTRING);
-        setValue(defaultColor);
+        setValue(defaultValue);
+        generateTooltip();
     }
 
     @Override

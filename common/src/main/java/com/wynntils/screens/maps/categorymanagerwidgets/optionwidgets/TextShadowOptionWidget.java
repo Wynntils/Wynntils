@@ -15,6 +15,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Optional;
@@ -25,11 +26,11 @@ public class TextShadowOptionWidget extends AbstractOptionWidget<TextShadow> {
     private static final int BUTTON_HEIGHT = 20;
 
     public TextShadowOptionWidget(
-            String label,
+            Component label,
+            Component description,
             OptionCategory category,
-            TextShadow defaultValue,
             Function<MapAttributes, Optional<TextShadow>> valueGetter) {
-        super(label, 20, category, defaultValue, valueGetter);
+        super(label, description, 20, category, valueGetter);
     }
 
     @Override

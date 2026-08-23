@@ -12,6 +12,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
 
 public class CategoryHeaderWidget extends AbstractOptionWidget<Void> {
     private static int CATEGORY_HEIGHT = 16;
@@ -19,7 +20,12 @@ public class CategoryHeaderWidget extends AbstractOptionWidget<Void> {
     private final OptionCategory category;
 
     public CategoryHeaderWidget(OptionCategory category) {
-        super(category.getDisplayName(), 26, category, null, null);
+        super(
+                Component.literal(category.getDisplayName()),
+                Component.empty(),
+                26,
+                category,
+                null);
         this.category = category;
     }
 

@@ -19,6 +19,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Optional;
@@ -50,27 +51,27 @@ public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
     private boolean draggingTextbox = false;
 
     public FloatSliderOptionWidget(
-            String label,
+            Component label,
+            Component description,
             OptionCategory category,
-            float defaultValue,
             float minValue,
             float maxValue,
             Function<MapAttributes, Optional<Float>> valueGetter,
             CategoryManagementScreen parent) {
-        this(label, category, defaultValue, minValue, maxValue, 0.1f, 1, valueGetter, parent);
+        this(label, description, category, minValue, maxValue, 0.1f, 1, valueGetter, parent);
     }
 
     private FloatSliderOptionWidget(
-            String label,
+            Component label,
+            Component description,
             OptionCategory category,
-            float defaultValue,
             float minValue,
             float maxValue,
             float step,
             int decimalPlaces,
             Function<MapAttributes, Optional<Float>> valueGetter,
             CategoryManagementScreen parent) {
-        super(label, 18, category, defaultValue, valueGetter);
+        super(label, description, 18, category, valueGetter);
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.step = step;

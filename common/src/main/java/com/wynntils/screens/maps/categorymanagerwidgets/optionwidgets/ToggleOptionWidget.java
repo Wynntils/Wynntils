@@ -15,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Optional;
@@ -22,11 +23,11 @@ import java.util.function.Function;
 
 public class ToggleOptionWidget extends AbstractOptionWidget<Boolean> {
     public ToggleOptionWidget(
-            String label,
+            Component label,
+            Component description,
             OptionCategory category,
-            boolean defaultValue,
             Function<MapAttributes, Optional<Boolean>> valueGetter) {
-        super(label, 18, category, defaultValue, valueGetter);
+        super(label, description, 18, category, valueGetter);
     }
 
     @Override
