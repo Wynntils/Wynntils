@@ -12,6 +12,7 @@ import com.wynntils.handlers.tooltip.impl.mount.MountTooltipBuilder;
 import com.wynntils.handlers.tooltip.type.TooltipOptions;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
+import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
@@ -22,6 +23,19 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class TooltipHandler extends Handler {
+    public List<Component> updateWynnItemTooltip(
+            List<Component> originalLines, WynnItem wynnItem, TooltipOptions options) {
+        if (wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItem) {
+            return updateTooltip(originalLines, identifiableItem, options);
+        }
+
+        if (wynnItem instanceof CraftedGearItem craftedItem && craftedItem.isStatPage()) {
+            return updateTooltip(originalLines, craftedItem, options);
+        }
+
+        return originalLines;
+    }
+
     public List<Component> updateTooltip(
             List<Component> originalLines, IdentifiableItemProperty<?, ?> identifiableItem, TooltipOptions options) {
         if (identifiableItem.getIdentifications().isEmpty()) return originalLines;

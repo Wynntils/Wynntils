@@ -24,19 +24,19 @@ import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.items.game.CraftedGearItem;
-import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -136,31 +136,23 @@ public class ItemStatInfoFeature extends Feature {
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         if (event.getTooltips().isEmpty()) return;
 
-        ItemStack itemStack = event.getItemStack();
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(event.getItemStack());
         if (wynnItemOpt.isEmpty()) return;
 
-        WynnItem wynnItem = wynnItemOpt.get();
-        if (brokenItems.contains(wynnItem)) return;
+        event.setTooltips(getUpdatedTooltip(event.getItemStack(), wynnItemOpt.get(), event.getTooltips()));
+    }
+
+    public List<Component> getUpdatedTooltip(ItemStack itemStack, WynnItem wynnItem, List<Component> tooltips) {
+        if (brokenItems.contains(wynnItem)) return tooltips;
 
         try {
-            Handlers.Item.getItemStackAnnotation(event.getItemStack()).ifPresent(annotation -> {
-                if (annotation instanceof IdentifiableItemProperty<?, ?> identifiableItem) {
-                    event.setTooltips(
-                            Handlers.Tooltip.updateTooltip(event.getTooltips(), identifiableItem, getTooltipOptions()));
-                } else if (annotation instanceof CraftedGearItem craftedItem) {
-                    if (!craftedItem.isStatPage()) return;
-
-                    event.setTooltips(
-                            Handlers.Tooltip.updateTooltip(event.getTooltips(), craftedItem, getTooltipOptions()));
-                }
-            });
+            return Handlers.Tooltip.updateWynnItemTooltip(tooltips, wynnItem, getTooltipOptions());
         } catch (Exception e) {
             brokenItems.add(wynnItem);
 
             String itemName = wynnItem.getClass().getSimpleName();
             Optional<NamedItemProperty> namedItemPropertyOpt =
-                    Models.Item.asWynnItemProperty(event.getItemStack(), NamedItemProperty.class);
+                    Models.Item.asWynnItemProperty(itemStack, NamedItemProperty.class);
             if (namedItemPropertyOpt.isPresent()) {
                 itemName = namedItemPropertyOpt.get().getName();
             }
@@ -173,6 +165,8 @@ public class ItemStatInfoFeature extends Feature {
                 // Give up and disable feature
                 throw new RuntimeException(e);
             }
+
+            return tooltips;
         }
     }
 

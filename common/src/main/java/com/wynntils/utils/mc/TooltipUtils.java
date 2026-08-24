@@ -45,18 +45,24 @@ public final class TooltipUtils {
     }
 
     public static List<Component> getWynnItemTooltip(ItemStack itemStack, WynnItem wynnItem) {
-        // Has to be an Object class with the if statement until Item Compare tooltips are built with TooltipBuilder.
+        ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
+        TooltipOptions options = feature.isEnabled() ? feature.getTooltipOptions() : TooltipOptions.DEFAULT;
+
+        // Items without a real tooltip to build upon, like when comparing, have a builder cached instead.
+        // Has to be an Object class with the if statement, as other items cache their updated tooltips here.
         Object cachedTooltip = wynnItem.getData().get(WynnItemData.TOOLTIP_KEY);
         if (cachedTooltip instanceof TooltipBuilder tooltipBuilder) {
-            ItemStatInfoFeature feature = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
-            TooltipOptions options = feature.isEnabled() ? feature.getTooltipOptions() : TooltipOptions.DEFAULT;
             if (tooltipBuilder instanceof IdentifiableTooltipBuilder<?, ?> identifiableTooltipBuilder) {
                 return identifiableTooltipBuilder.getTooltipLines(Models.Character.getClassType(), options, 0);
             }
             return tooltipBuilder.getTooltipLines(Models.Character.getClassType(), options);
         }
 
-        return LoreUtils.getTooltipLines(itemStack);
+        // All other items are restyled from their actual tooltip, as done when hovering over them
+        List<Component> tooltipLines = LoreUtils.getTooltipLines(itemStack);
+        if (!feature.isEnabled()) return tooltipLines;
+
+        return feature.getUpdatedTooltip(itemStack, wynnItem, tooltipLines);
     }
 
     public static boolean containsFont(Component component, FontDescription font) {
