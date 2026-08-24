@@ -4,7 +4,9 @@
  */
 package com.wynntils.features.tooltips;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
@@ -21,19 +23,28 @@ import com.wynntils.handlers.tooltip.type.TooltipOptions.WeightDisplay;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gear.type.ItemWeightSource;
+import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.utils.mc.KeyboardUtils;
+import com.wynntils.utils.mc.McUtils;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextColor;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemStatInfoFeature extends Feature {
+    private final Set<WynnItem> brokenItems = new HashSet<>();
+
     @Persisted
     public final Config<Boolean> perfect = new Config<>(true);
 
@@ -125,17 +136,44 @@ public class ItemStatInfoFeature extends Feature {
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         if (event.getTooltips().isEmpty()) return;
 
-        Handlers.Item.getItemStackAnnotation(event.getItemStack()).ifPresent(annotation -> {
-            if (annotation instanceof IdentifiableItemProperty<?, ?> identifiableItem) {
-                event.setTooltips(
-                        Handlers.Tooltip.updateTooltip(event.getTooltips(), identifiableItem, getTooltipOptions()));
-            } else if (annotation instanceof CraftedGearItem craftedItem) {
-                if (!craftedItem.isStatPage()) return;
+        ItemStack itemStack = event.getItemStack();
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
+        if (wynnItemOpt.isEmpty()) return;
 
-                event.setTooltips(
-                        Handlers.Tooltip.updateTooltip(event.getTooltips(), craftedItem, getTooltipOptions()));
+        WynnItem wynnItem = wynnItemOpt.get();
+        if (brokenItems.contains(wynnItem)) return;
+
+        try {
+            Handlers.Item.getItemStackAnnotation(event.getItemStack()).ifPresent(annotation -> {
+                if (annotation instanceof IdentifiableItemProperty<?, ?> identifiableItem) {
+                    event.setTooltips(
+                            Handlers.Tooltip.updateTooltip(event.getTooltips(), identifiableItem, getTooltipOptions()));
+                } else if (annotation instanceof CraftedGearItem craftedItem) {
+                    if (!craftedItem.isStatPage()) return;
+
+                    event.setTooltips(
+                            Handlers.Tooltip.updateTooltip(event.getTooltips(), craftedItem, getTooltipOptions()));
+                }
+            });
+        } catch (Exception e) {
+            brokenItems.add(wynnItem);
+
+            String itemName = wynnItem.getClass().getSimpleName();
+            Optional<NamedItemProperty> namedItemPropertyOpt =
+                    Models.Item.asWynnItemProperty(event.getItemStack(), NamedItemProperty.class);
+            if (namedItemPropertyOpt.isPresent()) {
+                itemName = namedItemPropertyOpt.get().getName();
             }
-        });
+
+            WynntilsMod.error("Exception when creating tooltips for item " + itemName, e);
+            WynntilsMod.warn("This item has been disabled from ItemStatInfoFeature: " + wynnItem);
+            McUtils.sendErrorToClient("Wynntils error: Problem showing tooltip for item " + itemName);
+
+            if (brokenItems.size() > 10) {
+                // Give up and disable feature
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public TooltipOptions getTooltipOptions() {
