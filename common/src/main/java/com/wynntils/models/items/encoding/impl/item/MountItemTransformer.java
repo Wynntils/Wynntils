@@ -106,6 +106,20 @@ public class MountItemTransformer extends ItemTransformer<MountItem> {
             return ErrorOr.error("Mount item potential cannot exceed 80,000!");
         }
 
+        // Check that the correct jump height/altitude stat is set.
+        if (mountType == MountType.WYVERN
+                && (stats.containsKey(MountStat.JUMP_HEIGHT) || maxStats.containsKey(MountStat.JUMP_HEIGHT))) {
+            return ErrorOr.error("Wyvern cannot have jump height stat!");
+        } else if (mountType != MountType.WYVERN
+                && (stats.containsKey(MountStat.ALTITUDE) || maxStats.containsKey(MountStat.ALTITUDE))) {
+            return ErrorOr.error("Non-wyvern mounts cannot have altitude stat!");
+        }
+
+        // Ensure that all 8 stats are present. -1 as jump height and altitude are not always present on each mount.
+        if (stats.size() != MountStat.values().length - 1 || maxStats.size() != MountStat.values().length - 1) {
+            return ErrorOr.error("Mount item does not contain all stats!");
+        }
+
         // Next check each of the stats are not negative and do not exceed the limit or maximum value.
         for (Map.Entry<MountStat, CappedValue> statEntry : stats.entrySet()) {
             if (statEntry.getValue().current() < 0 || statEntry.getValue().max() < 0) {
@@ -124,20 +138,6 @@ public class MountItemTransformer extends ItemTransformer<MountItem> {
             } else if (maxStats.get(statEntry.getKey()) > MAX_STAT_VALUE) {
                 return ErrorOr.error("Mount item max stat cannot exceed 10,000!");
             }
-        }
-
-        // Check that the correct jump height/altitude stat is set.
-        if (mountType == MountType.WYVERN
-                && (stats.containsKey(MountStat.JUMP_HEIGHT) || maxStats.containsKey(MountStat.JUMP_HEIGHT))) {
-            return ErrorOr.error("Wyvern cannot have jump height stat!");
-        } else if (mountType != MountType.WYVERN
-                && (stats.containsKey(MountStat.ALTITUDE) || maxStats.containsKey(MountStat.ALTITUDE))) {
-            return ErrorOr.error("Non-wyvern mounts cannot have altitude stat!");
-        }
-
-        // Ensure that all 8 stats are present. -1 as jump height and altitude are not always present on each mount.
-        if (stats.size() != MountStat.values().length - 1 || maxStats.size() != MountStat.values().length - 1) {
-            return ErrorOr.error("Mount item does not contain all stats!");
         }
 
         // Check that the mount supports the primary and secondary colors.
