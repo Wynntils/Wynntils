@@ -194,7 +194,7 @@ public class OverrideSelectionWidget extends AbstractWidget {
         return null;
     }
 
-    private boolean isMouseOverAnyOption(double mouseX, double mouseY) {
+    public boolean isMouseOverAnyOption(double mouseX, double mouseY) {
         return expanded && getOptionAt(mouseX, mouseY) != null;
     }
 

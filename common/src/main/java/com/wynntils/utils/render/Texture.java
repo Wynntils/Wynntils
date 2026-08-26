@@ -386,6 +386,7 @@ public enum Texture {
     MANAGER_SLIDER_EMPTY("map/managers/empty_slider.png", 9, 6, 1, 4, 3, 3),
     MANAGER_TOGGLE_BUTTON_OFF("map/managers/toggle_button_off.png", 38, 18),
     MANAGER_TOGGLE_BUTTON_ON("map/managers/toggle_button_on.png", 38, 18),
+    MANAGER_QUESTION_MARK_ICON("map/managers/question_mark_icon.png", 12, 16),
 
     // Player Viewer
     DUEL_ICON("icons/player_viewer/duel_icon.png", 14, 14),

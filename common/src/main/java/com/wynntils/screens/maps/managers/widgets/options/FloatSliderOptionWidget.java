@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.managers.widgets.options;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.managers.CategoryManagementScreen;
@@ -92,7 +93,9 @@ public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (isMouseOverHead(mouseX, mouseY)) {
+        if (draggingSlider) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_EW);
+        } else if (isMouseOverHead(mouseX, mouseY)) {
             handleCursor(guiGraphics);
         }
 
@@ -292,7 +295,7 @@ public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
     }
 
     @Override
-    public TextInputBoxWidget getTextInputBoxWidget() {
+    public TextInputBoxWidget getTextInputBoxWidget(double mouseX, double mouseY) {
         return valueTextBox;
     }
 }

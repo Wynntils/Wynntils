@@ -19,7 +19,6 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -69,10 +68,7 @@ public class DeleteButtonWidget extends AbstractWidget implements TooltipProvide
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
 
-        Services.MapData.removeOverrideProvider(
-                "json-override:" + parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT)
-                        + ":"
-                        + parent.getSelectedCategory());
+        Services.MapData.removeOverrideProvider(parent.getOverrideName(true));
         parent.setSelectedCategory(parent.getSelectedCategory());
 
         return true;
@@ -93,18 +89,14 @@ public class DeleteButtonWidget extends AbstractWidget implements TooltipProvide
                 Component.translatable("screens.wynntils.map.managers.categoryManager.deleteButton.label")
                         .withStyle(ChatFormatting.GOLD));
 
-        boolean overrideExists = Services.MapData.getOverrideProvider("json-override:"
-                        + parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT)
-                        + ":"
-                        + parent.getSelectedCategory())
-                != null;
+        boolean overrideExists = Services.MapData.getOverrideProvider(parent.getOverrideName(true)) != null;
 
-        StyledText description = StyledText.fromComponent(Component.translatable(
-                overrideExists
-                        ? "screens.wynntils.map.managers.categoryManager.deleteButton.description"
-                        : "screens.wynntils.map.managers.categoryManager.deleteButton.description.empty"));
+        Component description = overrideExists
+                ? Component.translatable("screens.wynntils.map.managers.categoryManager.deleteButton.description")
+                : Component.translatable(
+                        "screens.wynntils.map.managers.categoryManager.deleteButton.description.empty");
 
-        for (StyledText line : RenderedStringUtils.wrapTextBySize(description, 210)) {
+        for (StyledText line : RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(description), 210)) {
             this.generatedTooltip.add(Component.empty()
                     .append(line.getComponent())
                     .withStyle(overrideExists ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY));

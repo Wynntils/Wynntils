@@ -4,8 +4,8 @@
  */
 package com.wynntils.screens.maps.managers.type;
 
-import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -14,14 +14,12 @@ public class CategoryTreeNode {
     private final String name;
     private final List<CategoryTreeNode> children = new ArrayList<>();
 
-    // For internal/folder nodes (no category)
     public CategoryTreeNode(String fullId, String name, List<CategoryTreeNode> children) {
         this.fullId = fullId;
         this.name = name;
         this.children.addAll(children);
     }
 
-    // Two-arg convenience constructor (folder nodes by default)
     public CategoryTreeNode(String fullId, String name) {
         this(fullId, name, new ArrayList<>());
     }
@@ -35,7 +33,7 @@ public class CategoryTreeNode {
     }
 
     public List<CategoryTreeNode> getChildren() {
-        return java.util.Collections.unmodifiableList(children);
+        return Collections.unmodifiableList(children);
     }
 
     public boolean isLeaf() {
@@ -57,10 +55,5 @@ public class CategoryTreeNode {
 
     public void sortChildren(Comparator<CategoryTreeNode> comparator) {
         children.sort(comparator);
-    }
-
-    @Override
-    public String toString() {
-        return new Gson().toJson(this);
     }
 }

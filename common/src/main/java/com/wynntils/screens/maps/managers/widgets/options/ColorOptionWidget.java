@@ -158,7 +158,7 @@ public class ColorOptionWidget extends AbstractOptionWidget<CustomColor> {
     }
 
     @Override
-    public TextInputBoxWidget getTextInputBoxWidget() {
+    public TextInputBoxWidget getTextInputBoxWidget(double mouseX, double mouseY) {
         return valueTextBox;
     }
 }

@@ -87,10 +87,10 @@ public class ResetButtonWidget extends AbstractWidget implements TooltipProvider
                 Component.translatable("screens.wynntils.map.managers.categoryManager.resetButton.label")
                         .withStyle(ChatFormatting.GOLD));
 
-        StyledText description = StyledText.fromComponent(
-                Component.translatable("screens.wynntils.map.managers.categoryManager.resetButton.description"));
+        Component description =
+                Component.translatable("screens.wynntils.map.managers.categoryManager.resetButton.description");
 
-        for (StyledText line : RenderedStringUtils.wrapTextBySize(description, 210)) {
+        for (StyledText line : RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(description), 210)) {
             this.generatedTooltip.add(
                     Component.empty().append(line.getComponent()).withStyle(ChatFormatting.GRAY));
         }

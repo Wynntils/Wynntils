@@ -5,9 +5,9 @@
 package com.wynntils.screens.maps.managers.type;
 
 public enum OverrideType {
-    MAP_LOCATION_OVERRIDE("Map Location override"),
-    MAP_PATH_OVERRIDE("Map Path override"),
-    MAP_AREA_OVERRIDE("Map Area override");
+    MAP_LOCATION_OVERRIDE("Map Location Override"),
+    MAP_PATH_OVERRIDE("Map Path Override"),
+    MAP_AREA_OVERRIDE("Map Area Override");
 
     private final String displayName;
 

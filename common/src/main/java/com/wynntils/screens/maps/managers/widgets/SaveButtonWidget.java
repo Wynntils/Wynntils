@@ -78,11 +78,8 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
 
-        String overrideName =
-                parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT) + ":" + parent.getSelectedCategory();
-
         MapAttributesBuilder builder = new MapAttributesBuilder();
-        Optional.ofNullable(Services.MapData.getOverrideProvider("json-override:" + overrideName))
+        Optional.ofNullable(Services.MapData.getOverrideProvider(parent.getOverrideName(true)))
                 .ifPresent(provider -> builder.from(provider.getOverrideAttributes(null)));
 
         buildOption(
@@ -158,28 +155,19 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
                 MapAttributesBuilder::setBorderWidth);
 
         // labelVisibility
-        boolean labelVisibilityInherited = parent.labelVisibilityMinOptionWidget.isChanged()
-                || parent.labelVisibilityMaxOptionWidget.isChanged()
-                || parent.labelVisibilityFadeOptionWidget.isChanged();
-
-        MapVisibilityImpl labelVisibilityValue = new MapVisibilityImpl(
-                parent.labelVisibilityMinOptionWidget.getValue(),
-                parent.labelVisibilityMaxOptionWidget.getValue(),
-                parent.labelVisibilityFadeOptionWidget.getValue());
-
-        buildOption(builder, labelVisibilityInherited, labelVisibilityValue, MapAttributesBuilder::setLabelVisibility);
+        buildOption(
+                builder,
+                parent.labelVisibilityOptionWidget.isChanged(),
+                new MapVisibilityImpl(parent.labelVisibilityOptionWidget.getValue()),
+                MapAttributesBuilder::setLabelVisibility);
 
         // iconVisibility
-        boolean iconVisibilityInherited = parent.iconVisibilityMinOptionWidget.isChanged()
-                || parent.iconVisibilityMaxOptionWidget.isChanged()
-                || parent.iconVisibilityFadeOptionWidget.isChanged();
 
-        MapVisibilityImpl iconVisibilityValue = new MapVisibilityImpl(
-                parent.iconVisibilityMinOptionWidget.getValue(),
-                parent.iconVisibilityMaxOptionWidget.getValue(),
-                parent.iconVisibilityFadeOptionWidget.getValue());
-
-        buildOption(builder, iconVisibilityInherited, iconVisibilityValue, MapAttributesBuilder::setIconVisibility);
+        buildOption(
+                builder,
+                parent.iconVisibilityOptionWidget.isChanged(),
+                new MapVisibilityImpl(parent.iconVisibilityOptionWidget.getValue()),
+                MapAttributesBuilder::setIconVisibility);
 
         // markerOptions
         boolean markerOptionsInherited = parent.markerMinDistanceOptionWidget.isChanged()
@@ -208,8 +196,8 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
                     case MAP_AREA_OVERRIDE -> builder.asAreaAttributes().build();
                 };
 
-        Services.MapData.addOverrideProvider(
-                new JsonOverrideProvider(overrideName, attributes, Set.of(), Set.of(parent.getSelectedCategory())));
+        Services.MapData.addOverrideProvider(new JsonOverrideProvider(
+                parent.getOverrideName(false), attributes, Set.of(), Set.of(parent.getSelectedCategory())));
 
         parent.setSelectedCategory(parent.getSelectedCategory());
 
@@ -248,17 +236,15 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
                         .withStyle(ChatFormatting.GRAY)
                         .append(typeLabel));
 
-        boolean overrideExists = Services.MapData.getOverrideProvider("json-override:"
-                        + parent.getSelectedOverrideType().name().toLowerCase(Locale.ROOT)
-                        + ":"
-                        + parent.getSelectedCategory())
-                != null;
+        boolean overrideExists = Services.MapData.getOverrideProvider(parent.getOverrideName(true)) != null;
 
-        Component actionLabel = Component.translatable(
-                        overrideExists
-                                ? "screens.wynntils.map.managers.categoryManager.saveButton.action.update"
-                                : "screens.wynntils.map.managers.categoryManager.saveButton.action.create")
+        Component actionLabel = (overrideExists
+                        ? Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.saveButton.action.update")
+                        : Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.saveButton.action.create"))
                 .withStyle(overrideExists ? ChatFormatting.AQUA : ChatFormatting.GREEN);
+
         this.generatedTooltip.add(
                 Component.translatable("screens.wynntils.map.managers.categoryManager.saveButton.action")
                         .withStyle(ChatFormatting.GRAY)
@@ -266,12 +252,12 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
 
         this.generatedTooltip.add(Component.empty());
 
-        StyledText description = StyledText.fromComponent(Component.translatable(
-                overrideExists
-                        ? "screens.wynntils.map.managers.categoryManager.saveButton.description.update"
-                        : "screens.wynntils.map.managers.categoryManager.saveButton.description.create"));
+        Component description = (overrideExists
+                ? Component.translatable("screens.wynntils.map.managers.categoryManager.saveButton.description.update")
+                : Component.translatable(
+                        "screens.wynntils.map.managers.categoryManager.saveButton.description.create"));
 
-        for (StyledText line : RenderedStringUtils.wrapTextBySize(description, 210)) {
+        for (StyledText line : RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(description), 210)) {
             this.generatedTooltip.add(
                     Component.empty().append(line.getComponent()).withStyle(ChatFormatting.GRAY));
         }

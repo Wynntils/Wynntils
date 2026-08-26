@@ -607,7 +607,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public Optional<CustomColor> getLabelColor() {
-                    return Optional.of(activityType.getColor());
+                    return Optional.ofNullable(activityType.getColor());
                 }
 
                 @Override

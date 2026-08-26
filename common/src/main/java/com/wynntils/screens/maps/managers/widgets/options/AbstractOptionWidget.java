@@ -29,10 +29,9 @@ public abstract class AbstractOptionWidget<T> extends AbstractWidget {
     private T loadedValue;
     protected Component description;
     protected List<Component> generatedTooltip = new ArrayList<>();
+    protected final Function<MapAttributes, Optional<T>> valueGetter;
 
     protected boolean inherited;
-
-    private final Function<MapAttributes, Optional<T>> valueGetter;
 
     protected AbstractOptionWidget(
             Component label,
@@ -82,7 +81,7 @@ public abstract class AbstractOptionWidget<T> extends AbstractWidget {
         return false;
     }
 
-    public TextInputBoxWidget getTextInputBoxWidget() {
+    public TextInputBoxWidget getTextInputBoxWidget(double mouseX, double mouseY) {
         return null;
     }
 

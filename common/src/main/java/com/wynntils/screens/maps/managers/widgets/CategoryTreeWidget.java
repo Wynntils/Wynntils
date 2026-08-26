@@ -83,6 +83,7 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
 
         CategoryTreeEntryWidget widget = new CategoryTreeEntryWidget(
                 0, 0, 0, node, column, trail, expanded, selected, () -> toggleExpanded(node), () -> selectNode(node));
+
         rowWidgets.add(widget);
 
         if (!expanded) return;

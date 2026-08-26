@@ -113,7 +113,7 @@ public class TextOptionWidget extends AbstractOptionWidget<String> {
     }
 
     @Override
-    public TextInputBoxWidget getTextInputBoxWidget() {
+    public TextInputBoxWidget getTextInputBoxWidget(double mouseX, double mouseY) {
         return valueTextBox;
     }
 }
