@@ -7,6 +7,7 @@ package com.wynntils.services.mapdata.attributes.impl;
 import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
+import java.util.List;
 
 public final class MapLocationAttributesImpl extends MapAttributesImpl implements MapLocationAttributes {
     public MapLocationAttributesImpl(
@@ -35,8 +36,8 @@ public final class MapLocationAttributesImpl extends MapAttributesImpl implement
                 iconColor,
                 hasMarker,
                 markerOptions,
-                null,
-                null,
+                List.of(),
+                List.of(),
                 null);
     }
 

@@ -7,6 +7,7 @@ package com.wynntils.services.mapdata.attributes.impl;
 import com.wynntils.services.mapdata.attributes.type.MapAreaAttributes;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
+import java.util.List;
 
 public final class MapAreaAttributesImpl extends MapAttributesImpl implements MapAreaAttributes {
     public MapAreaAttributesImpl(
@@ -17,8 +18,8 @@ public final class MapAreaAttributesImpl extends MapAttributesImpl implements Ma
             MapVisibilityImpl labelVisibility,
             CustomColor labelColor,
             TextShadow labelShadow,
-            CustomColor fillColor,
-            CustomColor borderColor,
+            List<CustomColor> fillColors,
+            List<CustomColor> borderColors,
             Float borderWidth) {
         super(
                 priority,
@@ -33,8 +34,8 @@ public final class MapAreaAttributesImpl extends MapAttributesImpl implements Ma
                 null,
                 null,
                 null,
-                fillColor,
-                borderColor,
+                fillColors,
+                borderColors,
                 borderWidth);
     }
 

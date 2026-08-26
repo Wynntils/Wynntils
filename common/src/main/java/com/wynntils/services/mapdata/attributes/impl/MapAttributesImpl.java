@@ -10,6 +10,7 @@ import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
+import java.util.List;
 import java.util.Optional;
 
 public class MapAttributesImpl implements MapAttributes {
@@ -25,8 +26,8 @@ public class MapAttributesImpl implements MapAttributes {
     private final CustomColor iconColor;
     private final Boolean hasMarker;
     private final MapMarkerOptionsImpl markerOptions;
-    private final CustomColor fillColor;
-    private final CustomColor borderColor;
+    private final List<CustomColor> fillColors;
+    private final List<CustomColor> borderColors;
     private final Float borderWidth;
 
     public MapAttributesImpl(
@@ -42,8 +43,8 @@ public class MapAttributesImpl implements MapAttributes {
             CustomColor iconColor,
             Boolean hasMarker,
             MapMarkerOptionsImpl markerOptions,
-            CustomColor fillColor,
-            CustomColor borderColor,
+            List<CustomColor> fillColors,
+            List<CustomColor> borderColors,
             Float borderWidth) {
         this.priority = priority;
         this.level = level;
@@ -57,8 +58,8 @@ public class MapAttributesImpl implements MapAttributes {
         this.iconColor = iconColor;
         this.hasMarker = hasMarker;
         this.markerOptions = markerOptions;
-        this.fillColor = fillColor;
-        this.borderColor = borderColor;
+        this.fillColors = fillColors == null ? List.of() : fillColors;
+        this.borderColors = borderColors == null ? List.of() : borderColors;
         this.borderWidth = borderWidth;
     }
 
@@ -76,8 +77,8 @@ public class MapAttributesImpl implements MapAttributes {
                 attributes.iconColor,
                 attributes.hasMarker,
                 attributes.markerOptions,
-                attributes.fillColor,
-                attributes.borderColor,
+                attributes.fillColors,
+                attributes.borderColors,
                 attributes.borderWidth);
     }
 
@@ -142,13 +143,13 @@ public class MapAttributesImpl implements MapAttributes {
     }
 
     @Override
-    public Optional<CustomColor> getFillColor() {
-        return Optional.ofNullable(fillColor);
+    public Optional<List<CustomColor>> getFillColors() {
+        return Optional.of(fillColors);
     }
 
     @Override
-    public Optional<CustomColor> getBorderColor() {
-        return Optional.ofNullable(borderColor);
+    public Optional<List<CustomColor>> getBorderColors() {
+        return Optional.of(borderColors);
     }
 
     @Override

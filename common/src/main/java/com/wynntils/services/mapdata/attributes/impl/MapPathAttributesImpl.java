@@ -7,6 +7,7 @@ package com.wynntils.services.mapdata.attributes.impl;
 import com.wynntils.services.mapdata.attributes.type.MapPathAttributes;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
+import java.util.List;
 
 public final class MapPathAttributesImpl extends MapAttributesImpl implements MapPathAttributes {
     public MapPathAttributesImpl(
@@ -30,8 +31,8 @@ public final class MapPathAttributesImpl extends MapAttributesImpl implements Ma
                 null,
                 null,
                 null,
-                null,
-                null,
+                List.of(),
+                List.of(),
                 null);
     }
 
