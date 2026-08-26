@@ -203,7 +203,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         RenderUtils.disableScissor(guiGraphics);
 
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        renderMapBorder(guiGraphics);
 
         renderCoordinates(guiGraphics, mouseX, mouseY);
 
@@ -418,15 +418,13 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.MAP_INFO_TOOLTIP_TOP, xOffset, yOffset);
-        RenderUtils.drawTexturedRect(
+        RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
                 Texture.MAP_INFO_TOOLTIP_CENTER,
                 xOffset,
                 Texture.MAP_INFO_TOOLTIP_TOP.height() + yOffset,
                 textureWidth,
-                centerHeight,
-                textureWidth,
-                Texture.MAP_INFO_TOOLTIP_CENTER.height());
+                centerHeight);
         RenderUtils.drawTexturedRect(
                 guiGraphics,
                 Texture.MAP_INFO_NAME_BOX,

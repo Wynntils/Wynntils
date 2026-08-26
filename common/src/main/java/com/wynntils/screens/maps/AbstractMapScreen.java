@@ -158,6 +158,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
         mapButtons = new ArrayList<>();
 
+        if (!shouldRenderMapControls()) return;
+
         // region Zoom slider & buttons
         this.addRenderableWidget(Button.builder(Component.literal("-"), (button -> {
                     int adjustment = KeyboardUtils.isShiftDown() ? 1 : 5;
@@ -181,6 +183,15 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         // endregion
     }
 
+    /**
+     * Whether this screen currently shows the map, and with it the map controls.
+     * Subclasses that can hide the map return false in that state, so that the zoom buttons are not
+     * added as widgets: they would otherwise be rendered and clickable on top of the other content.
+     */
+    protected boolean shouldRenderMapControls() {
+        return true;
+    }
+
     protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         List<GuiEventListener> widgets =
                 Streams.concat(children.stream(), mapButtons.stream()).toList();
@@ -195,8 +206,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         }
     }
 
-    @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderMapBorder(GuiGraphics guiGraphics) {
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics, Texture.FULLSCREEN_MAP_BORDER, renderX, renderY, renderWidth, renderHeight);
     }

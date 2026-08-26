@@ -25,6 +25,7 @@ import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.providers.TerritoryProvider;
 import com.wynntils.models.territories.type.TerritoryConnectionType;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
+import com.wynntils.screens.territorymanagement.mapdata.ManageTerritoryProvider;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Deque;
@@ -56,6 +57,7 @@ public final class TerritoryModel extends Model {
             .create();
 
     private static final TerritoryProvider TERRITORY_PROVIDER = new TerritoryProvider();
+    private static final ManageTerritoryProvider MANAGE_TERRITORY_PROVIDER = new ManageTerritoryProvider();
 
     // This is the info gathered from the advancement from Wynncraft
     private final Map<String, TerritoryInfo> territoryInfoMap = new ConcurrentHashMap<>();
@@ -91,6 +93,7 @@ public final class TerritoryModel extends Model {
     @SubscribeEvent
     public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
         Services.MapData.registerBuiltInProvider(TERRITORY_PROVIDER);
+        Services.MapData.registerBuiltInProvider(MANAGE_TERRITORY_PROVIDER);
     }
 
     public Collection<TerritoryProfile> getTerritoryProfiles() {
