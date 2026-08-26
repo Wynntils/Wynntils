@@ -26,15 +26,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-/**
- * A territory shown on {@link TerritoryManagementScreen}'s map mode, replacing the pre-Mapdata
- * {@code ManageTerritoryPoi} that was deleted when the POI system was replaced by Mapdata.
- * <p>
- * The category id deliberately does not start with {@code wynntils:territory}, since
- * {@link com.wynntils.services.mapdata.MapDataService#getFeaturesForCategory} does a prefix match on
- * category id - if it did start with that prefix, {@code GuildMapScreen} would pick these features up
- * alongside the real territory areas it renders.
- */
 public final class ManageTerritoryArea implements MapArea {
     private final TerritoryManagementHolder holder;
     private final TerritoryProfile territoryProfile;
@@ -87,6 +78,12 @@ public final class ManageTerritoryArea implements MapArea {
         return MapDataUtils.sanitizeFeatureId(territoryProfile.getName());
     }
 
+    /**
+     * The category id deliberately does not start with {@code wynntils:territory}, since
+     * {@link com.wynntils.services.mapdata.MapDataService#getFeaturesForCategory} does a prefix match on
+     * category id - if it did start with that prefix, {@code GuildMapScreen} would pick these features up
+     * alongside the real territory areas it renders.
+     */
     @Override
     public String getCategoryId() {
         return "wynntils:guild:managed-territory";
