@@ -42,6 +42,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public final class SeaskipperModel extends Model {
+    private static final Gson GSON = new GsonBuilder()
+            .registerTypeHierarchyAdapter(
+                    SeaskipperDestinationProfile.class, new SeaskipperDestinationProfileDeserializer())
+            .create();
     private static final SeaskipperDestinationAreaProvider SEASKIPPER_DESTINATION_AREA_PROVIDER =
             new SeaskipperDestinationAreaProvider();
     private static final String BOAT_NAME = "Boat";
@@ -165,11 +169,7 @@ public final class SeaskipperModel extends Model {
 
     private void handleSeaskipperDestinationAreas(Reader reader) {
         Type type = new TypeToken<ArrayList<SeaskipperDestinationProfile>>() {}.getType();
-        Gson gson = new GsonBuilder()
-                .registerTypeHierarchyAdapter(
-                        SeaskipperDestinationProfile.class, new SeaskipperDestinationProfileDeserializer())
-                .create();
-        List<SeaskipperDestinationProfile> profiles = gson.fromJson(reader, type);
+        List<SeaskipperDestinationProfile> profiles = GSON.fromJson(reader, type);
 
         allDestinations.clear();
         allDestinations.addAll(profiles.stream()
