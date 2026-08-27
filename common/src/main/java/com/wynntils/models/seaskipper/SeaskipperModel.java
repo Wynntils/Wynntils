@@ -5,6 +5,14 @@
 package com.wynntils.models.seaskipper;
 
 import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
@@ -21,6 +29,7 @@ import com.wynntils.models.seaskipper.type.SeaskipperDestination;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationProfile;
 import com.wynntils.screens.maps.CustomSeaskipperScreen;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.io.Reader;
 import java.lang.reflect.Type;
@@ -54,8 +63,8 @@ public final class SeaskipperModel extends Model {
 
     @Override
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_STATIC_SEASKIPPER_DESTINATIONS)
-                .handleReader(this::handleSeaskipperDestinations);
+        registry.registerDownload(UrlId.DATA_STATIC_SEASKIPPER_DESTINATION_AREAS)
+                .handleReader(this::handleSeaskipperDestinationAreas);
     }
 
     @SubscribeEvent
@@ -154,14 +163,40 @@ public final class SeaskipperModel extends Model {
         return !allDestinations.isEmpty();
     }
 
-    private void handleSeaskipperDestinations(Reader reader) {
+    private void handleSeaskipperDestinationAreas(Reader reader) {
         Type type = new TypeToken<ArrayList<SeaskipperDestinationProfile>>() {}.getType();
-        List<SeaskipperDestinationProfile> profiles = WynntilsMod.GSON.fromJson(reader, type);
+        Gson gson = new GsonBuilder()
+                .registerTypeHierarchyAdapter(
+                        SeaskipperDestinationProfile.class, new SeaskipperDestinationProfileDeserializer())
+                .create();
+        List<SeaskipperDestinationProfile> profiles = gson.fromJson(reader, type);
 
         allDestinations.clear();
         allDestinations.addAll(profiles.stream()
                 .map(profile -> new SeaskipperDestination(profile, null, -1))
                 .toList());
         SEASKIPPER_DESTINATION_AREA_PROVIDER.updateDestinations(allDestinations);
+    }
+
+    private static final class SeaskipperDestinationProfileDeserializer
+            implements JsonDeserializer<SeaskipperDestinationProfile> {
+        @Override
+        public SeaskipperDestinationProfile deserialize(
+                JsonElement jsonElement, Type jsonType, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject json = jsonElement.getAsJsonObject();
+            String destination = json.get("destination").getAsString();
+            int combatLevel = json.get("combatLevel").getAsInt();
+
+            List<Location> points = new ArrayList<>();
+            JsonArray pointsArray = json.getAsJsonArray("points");
+            for (JsonElement pointElement : pointsArray) {
+                JsonObject pointJson = pointElement.getAsJsonObject();
+                int x = pointJson.get("x").getAsInt();
+                int z = pointJson.get("z").getAsInt();
+                points.add(new Location(x, 0, z));
+            }
+
+            return new SeaskipperDestinationProfile(destination, combatLevel, points);
+        }
     }
 }

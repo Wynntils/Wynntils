@@ -4,13 +4,13 @@
  */
 package com.wynntils.models.seaskipper.type;
 
-public record SeaskipperDestinationProfile(
-        String destination, int combatLevel, int startX, int startZ, int endX, int endZ) {
-    public int getX() {
-        return (startX + endX) / 2;
-    }
+import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.BoundingPolygon;
+import java.util.List;
+import org.joml.Vector2f;
 
-    public int getZ() {
-        return (startZ + endZ) / 2;
+public record SeaskipperDestinationProfile(String destination, int combatLevel, List<Location> points) {
+    public Vector2f getCenter() {
+        return BoundingPolygon.fromLocations(points).centroid();
     }
 }

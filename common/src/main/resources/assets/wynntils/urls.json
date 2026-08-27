@@ -300,6 +300,12 @@
     "url": "https://cdn.wynntils.com/static/Reference/recipes.json"
   },
   {
+    "id": "dataStaticSeaskipperDestinationAreas",
+    "md5": "ee4ae3643e2b453a936a70c9a564bea2",
+    "path": "Data-Storage/seaskipper_destination_areas.json",
+    "url": "https://cdn.wynntils.com/static/Data-Storage/seaskipper_destination_areas.json"
+  },
+  {
     "id": "dataStaticSeaskipperDestinations",
     "md5": "dc9eb0e70e689368aec0ef0e41a77a96",
     "path": "Data-Storage/seaskipper_destinations.json",

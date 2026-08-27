@@ -24,24 +24,7 @@ public class SeaskipperDestinationArea implements MapArea {
     public SeaskipperDestinationArea(SeaskipperDestination destination) {
         this.destination = destination;
 
-        // Polygon vertices, with the last vertex connecting to the first,
-        // in a counterclockwise orientation
-        // The provided coordinates are not trusted to be in a specific order,
-        // so we must order them ourselves
-        int startX =
-                Math.max(destination.profile().startX(), destination.profile().endX());
-        int startZ =
-                Math.max(destination.profile().startZ(), destination.profile().endZ());
-        int endX =
-                Math.min(destination.profile().startX(), destination.profile().endX());
-        int endZ =
-                Math.min(destination.profile().startZ(), destination.profile().endZ());
-
-        this.polygonArea = List.of(
-                new Location(startX, 0, startZ),
-                new Location(endX, 0, startZ),
-                new Location(endX, 0, endZ),
-                new Location(startX, 0, endZ));
+        this.polygonArea = destination.profile().points();
         this.boundingPolygon = BoundingPolygon.fromLocations(polygonArea);
     }
 
