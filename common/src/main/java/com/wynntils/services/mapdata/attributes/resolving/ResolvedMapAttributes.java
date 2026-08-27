@@ -7,7 +7,6 @@ package com.wynntils.services.mapdata.attributes.resolving;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
-import java.util.List;
 
 public record ResolvedMapAttributes(
         int priority,
@@ -23,6 +22,6 @@ public record ResolvedMapAttributes(
         MapDecoration iconDecoration,
         boolean hasMarker,
         ResolvedMarkerOptions markerOptions,
-        List<CustomColor> fillColor,
-        List<CustomColor> borderColor,
+        CustomColor fillColor,
+        CustomColor borderColor,
         float borderWidth) {}

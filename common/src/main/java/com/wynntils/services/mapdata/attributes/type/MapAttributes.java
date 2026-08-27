@@ -6,7 +6,6 @@ package com.wynntils.services.mapdata.attributes.type;
 
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -77,11 +76,11 @@ public interface MapAttributes {
 
     // region Area & Border Attributes
 
-    // The colors of the area on the map
-    Optional<List<CustomColor>> getFillColors();
+    // The color of the area on the map
+    Optional<CustomColor> getFillColor();
 
-    // The colors of the border on the map
-    Optional<List<CustomColor>> getBorderColors();
+    // The color of the border on the map
+    Optional<CustomColor> getBorderColor();
 
     // The width of the border on the map
     Optional<Float> getBorderWidth();

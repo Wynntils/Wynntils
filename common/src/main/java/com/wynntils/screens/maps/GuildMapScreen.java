@@ -18,6 +18,7 @@ import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.map.type.TerritoryFilterType;
+import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.attributes.impl.AbstractMapAreaAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
@@ -509,6 +510,17 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     @Override
+    protected Optional<MapFeatureRenderer.OverridenAreaColors> getOverridenAreaColors(MapFeature feature) {
+        if (!resourceMode || !(feature instanceof TerritoryArea territoryArea)) return Optional.empty();
+
+        List<CustomColor> resourceColors = Models.Territory.getTerritoryInfo(
+                        territoryArea.getTerritoryProfile().getName())
+                .getResourceColors();
+        return Optional.of(new MapFeatureRenderer.OverridenAreaColors(
+                resourceColors.stream().map(color -> color.withAlpha(80)).toList(), resourceColors));
+    }
+
+    @Override
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         for (GuiEventListener child :
                 Stream.concat(children().stream(), mapButtons.stream()).toList()) {
@@ -972,13 +984,13 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 }
 
                 @Override
-                public Optional<List<CustomColor>> getFillColors() {
-                    return Optional.of(List.of(guildColor.withAlpha(80)));
+                public Optional<CustomColor> getFillColor() {
+                    return Optional.of(guildColor.withAlpha(80));
                 }
 
                 @Override
-                public Optional<List<CustomColor>> getBorderColors() {
-                    return Optional.of(List.of(guildColor));
+                public Optional<CustomColor> getBorderColor() {
+                    return Optional.of(guildColor);
                 }
             };
         }
@@ -1003,20 +1015,23 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
             return new AbstractMapAreaAttributes() {
                 @Override
-                public Optional<List<CustomColor>> getFillColors() {
-                    return Optional.of(getResourceColors(territoryArea).stream()
-                            .map(x -> x.withAlpha(80))
-                            .toList());
+                public Optional<CustomColor> getFillColor() {
+                    // The multiple resource colors are applied directly by GuildMapScreen while rendering.
+                    return getResourceColor(territoryArea).map(color -> color.withAlpha(80));
                 }
 
                 @Override
-                public Optional<List<CustomColor>> getBorderColors() {
-                    return Optional.ofNullable(getResourceColors(territoryArea));
+                public Optional<CustomColor> getBorderColor() {
+                    // The multiple resource colors are applied directly by GuildMapScreen while rendering.
+                    return Optional.ofNullable(Models.Territory.getTerritoryInfo(
+                                    territoryArea.getTerritoryProfile().getName()))
+                            .map(TerritoryInfo::getResourceColors)
+                            .map(colors -> colors.size() > 1 ? CommonColors.RED : colors.getFirst());
                 }
 
                 @Override
                 public Optional<CustomColor> getLabelColor() {
-                    return getResourceColors(territoryArea).stream().findFirst();
+                    return getResourceColor(territoryArea);
                 }
             };
         }
@@ -1031,10 +1046,11 @@ public final class GuildMapScreen extends AbstractMapScreen {
             return Stream.of("wynntils:territory");
         }
 
-        private static List<CustomColor> getResourceColors(TerritoryArea territoryArea) {
-            return Models.Territory.getTerritoryInfo(
-                            territoryArea.getTerritoryProfile().getName())
-                    .getResourceColors();
+        private static Optional<CustomColor> getResourceColor(TerritoryArea territoryArea) {
+            return Optional.ofNullable(Models.Territory.getTerritoryInfo(
+                            territoryArea.getTerritoryProfile().getName()))
+                    .map(TerritoryInfo::getResourceColors)
+                    .map(List::getFirst);
         }
     }
 }

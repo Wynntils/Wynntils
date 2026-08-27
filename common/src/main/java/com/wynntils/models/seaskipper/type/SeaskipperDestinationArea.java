@@ -79,13 +79,13 @@ public class SeaskipperDestinationArea implements MapArea {
             }
 
             @Override
-            public Optional<List<CustomColor>> getFillColors() {
-                return Optional.of(List.of(getColor().withAlpha(80)));
+            public Optional<CustomColor> getFillColor() {
+                return Optional.of(getColor().withAlpha(80));
             }
 
             @Override
-            public Optional<List<CustomColor>> getBorderColors() {
-                return Optional.of(List.of(getColor()));
+            public Optional<CustomColor> getBorderColor() {
+                return Optional.of(getColor());
             }
 
             private CustomColor getColor() {

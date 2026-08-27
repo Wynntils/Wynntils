@@ -114,18 +114,19 @@ public final class ManageTerritoryArea implements MapArea {
             }
 
             @Override
-            public Optional<List<CustomColor>> getFillColors() {
-                return Optional.of(
-                        getInfoColors().stream().map(x -> x.withAlpha(80)).toList());
+            public Optional<CustomColor> getFillColor() {
+                // The multiple info colors are applied directly by TerritoryManagementScreen while rendering.
+                return Optional.of(CustomColor.blend(getInfoColors()).withAlpha(80));
             }
 
             @Override
-            public Optional<List<CustomColor>> getBorderColors() {
+            public Optional<CustomColor> getBorderColor() {
                 if (holder.territoryConnections().get(getTerritoryItem()) == TerritoryConnectionType.UNCONNECTED) {
-                    return Optional.of(List.of(CommonColors.RED));
+                    return Optional.of(CommonColors.RED);
                 }
 
-                return Optional.of(getInfoColors());
+                // The multiple info colors are applied directly by TerritoryManagementScreen while rendering.
+                return Optional.of(CustomColor.blend(getInfoColors()));
             }
 
             @Override
@@ -171,6 +172,18 @@ public final class ManageTerritoryArea implements MapArea {
         }
 
         return colors;
+    }
+
+    public List<CustomColor> getFillColors() {
+        return getInfoColors().stream().map(color -> color.withAlpha(80)).toList();
+    }
+
+    public List<CustomColor> getBorderColors() {
+        if (holder.territoryConnections().get(getTerritoryItem()) == TerritoryConnectionType.UNCONNECTED) {
+            return List.of(CommonColors.RED);
+        }
+
+        return getInfoColors();
     }
 
     public void onClick() {
