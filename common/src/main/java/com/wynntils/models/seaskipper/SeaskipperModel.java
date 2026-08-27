@@ -30,6 +30,7 @@ import com.wynntils.models.seaskipper.type.SeaskipperDestinationProfile;
 import com.wynntils.screens.maps.CustomSeaskipperScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.BoundingPolygon;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.io.Reader;
 import java.lang.reflect.Type;
@@ -196,7 +197,8 @@ public final class SeaskipperModel extends Model {
                 points.add(new Location(x, 0, z));
             }
 
-            return new SeaskipperDestinationProfile(destination, combatLevel, points);
+            return new SeaskipperDestinationProfile(
+                    destination, combatLevel, points, BoundingPolygon.fromLocations(points));
         }
     }
 }

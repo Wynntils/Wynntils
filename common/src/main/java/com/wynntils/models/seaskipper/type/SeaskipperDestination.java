@@ -6,7 +6,6 @@ package com.wynntils.models.seaskipper.type;
 
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.BoundingPolygon;
 import net.minecraft.world.phys.Vec3;
 
 public record SeaskipperDestination(SeaskipperDestinationProfile profile, SeaskipperDestinationItem item, int slot) {
@@ -17,6 +16,6 @@ public record SeaskipperDestination(SeaskipperDestinationProfile profile, Seaski
     public boolean isPlayerInside() {
         Vec3 position = McUtils.player().position();
 
-        return BoundingPolygon.fromLocations(profile.points()).contains((float) position.x(), (float) position.z());
+        return profile.boundingPolygon().contains((float) position.x(), (float) position.z());
     }
 }

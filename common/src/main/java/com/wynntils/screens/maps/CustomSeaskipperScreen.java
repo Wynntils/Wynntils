@@ -563,7 +563,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
     private void zoomToDestination(SeaskipperDestination destination) {
         // Center on the destination
-        Vector2f center = destination.profile().getCenter();
+        Vector2f center = destination.profile().boundingPolygon().centroid();
         updateMapCenter(center.x, center.y);
 
         setZoomLevel(DEFAULT_ZOOM_LEVEL);
