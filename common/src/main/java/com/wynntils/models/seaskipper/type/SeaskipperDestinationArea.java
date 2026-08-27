@@ -40,7 +40,7 @@ public class SeaskipperDestinationArea implements MapArea {
 
     @Override
     public String getFeatureId() {
-        return MapDataUtils.sanitizeFeatureId(destination.profile().destination());
+        return MapDataUtils.sanitizeFeatureId(destination.profile().destination()) + "-seaskipper-location";
     }
 
     @Override
