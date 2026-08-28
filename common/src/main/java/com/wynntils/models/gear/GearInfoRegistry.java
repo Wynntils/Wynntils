@@ -36,6 +36,9 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public class GearInfoRegistry {
+    private static final Gson GSON = new GsonBuilder()
+            .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer())
+            .create();
     private List<GearInfo> gearInfoRegistry = List.of();
     private Map<String, GearInfo> gearInfoLookup = Map.of();
     private Map<String, GearInfo> gearInfoLookupApiName = Map.of();
@@ -68,10 +71,6 @@ public class GearInfoRegistry {
     }
 
     private void handleGearInfo(JsonObject json) {
-        Gson gson = new GsonBuilder()
-                .registerTypeHierarchyAdapter(GearInfo.class, new GearInfoDeserializer())
-                .create();
-
         List<GearInfo> gearRegistry = new ArrayList<>();
 
         for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
@@ -81,7 +80,7 @@ public class GearInfoRegistry {
             itemObject.addProperty("name", entry.getKey());
 
             // Deserialize the item
-            GearInfo gearInfo = gson.fromJson(itemObject, GearInfo.class);
+            GearInfo gearInfo = GSON.fromJson(itemObject, GearInfo.class);
 
             // Add the item to the registry
             gearRegistry.add(gearInfo);
