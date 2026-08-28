@@ -124,7 +124,11 @@ public class GearInfoRegistry {
                 throw new RuntimeException("Invalid Wynncraft data: item has no gear tier");
             }
 
-            GearEmblem emblem = GearEmblem.fromString(json.get("emblem").getAsString());
+            String emblemStr = JsonUtils.getNullableJsonString(json, "emblem");
+
+            GearEmblem emblem = emblemStr == null
+                    ? new GearEmblem(GearEmblem.GearEmblemShape.DIAMOND, 1)
+                    : GearEmblem.fromString(emblemStr);
 
             int powderSlots = JsonUtils.getNullableJsonInt(json, "powderSlots");
 
