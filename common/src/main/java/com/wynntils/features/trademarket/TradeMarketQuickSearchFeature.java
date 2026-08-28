@@ -229,12 +229,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
         if (!Models.TradeMarket.getTradeMarketState().isResults() || hoveredSlot == null || !hoveredSlot.hasItem())
             return;
 
-        if (instantSearch.get() != KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            instantSearchingSendChat = true;
-            instantSearchingCloseMenu = true;
-        } else {
-            quickSearching = true;
-        }
+        boolean shouldInstantSearch = instantSearch.get() != KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT);
 
         ItemStack itemStack = hoveredSlot.getItem();
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
@@ -275,7 +270,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
                                     Component.literal(possibleGear
                                             .get(col * rowCount + row)
                                             .name()),
-                                    this::onGuessGearPress)
+                                    button -> onGuessGearPress(button, shouldInstantSearch))
                             .pos(xStart + col * buttonWidth, yStart + buttonHeight * row)
                             .size(buttonWidth, buttonHeight)
                             .build());
@@ -309,7 +304,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
         searchQuery = StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
         searchQuery = getSearchQuery(searchQuery);
 
-        clickOnSearchSlot();
+        startQuickSearch(shouldInstantSearch);
     }
 
     private String getSearchQuery(String rawName) {
@@ -329,14 +324,23 @@ public class TradeMarketQuickSearchFeature extends Feature {
         return searchTerm;
     }
 
-    private void onGuessGearPress(Button button) {
+    private void onGuessGearPress(Button button, boolean shouldInstantSearch) {
         guessedGearList.clear();
         searchQuery = button.getMessage().getString();
-        clickOnSearchSlot();
+        startQuickSearch(shouldInstantSearch);
     }
 
-    private void clickOnSearchSlot() {
+    private void startQuickSearch(boolean shouldInstantSearch) {
         if (searchQuery == null || searchQuery.isBlank()) return;
+
+        // Only arm the pending search after a concrete query is ready; the gear box chooser can be dismissed
+        if (shouldInstantSearch) {
+            instantSearchingSendChat = true;
+            instantSearchingCloseMenu = true;
+        } else {
+            quickSearching = true;
+        }
+
         ContainerUtils.clickOnSlot(
                 SEARCH_SLOT,
                 McUtils.containerMenu().containerId,

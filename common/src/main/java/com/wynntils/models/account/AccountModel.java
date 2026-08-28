@@ -28,6 +28,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.OptionalBoolean;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ScheduledExecutorService;
@@ -37,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -48,13 +50,22 @@ public final class AccountModel extends Model {
             Pattern.compile("§3Welcome to the §b✮ Silverbull Trading Company§3!");
     private static final Pattern SILVERBULL_UPDATE_PATTERN = Pattern.compile("§7Your subscription has been extended.");
     private static final Pattern SILVERBULL_PATTERN = Pattern.compile("§8Become a Silverbull Member to");
+
     // Test in AccountModel_SILVERBULL_DURATION_PATTERN
     private static final Pattern SILVERBULL_DURATION_PATTERN = Pattern.compile(
             "§#00a2e8ff- §7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)? ?(?:(?<minutes>\\d+) minutes?)? ?(?:(?<seconds>\\d+) seconds?)?");
     public static final Component SILVERBULL_STAR = Component.literal(" ✮").withStyle(ChatFormatting.AQUA);
+
     private static final String RANK_STRING =
             Arrays.stream(PlayerRank.values()).map(PlayerRank::getTag).collect(Collectors.joining());
     private static final Pattern RANK_TAG_PATTERN = Pattern.compile("§f(?<rank>[" + RANK_STRING + "])");
+
+    private static final List<Integer> SUPPORTER_RANK_ITEM_SLOTS =
+            IntStream.rangeClosed(0, 8).boxed().toList().reversed();
+    private static final Pattern SUPPORTER_RANK_UNLOCKED_PATTERN =
+            Pattern.compile("§#a0c84bffThanks for supporting Wynncraft!");
+    private static final Pattern SUPPORTER_RANK_PATTERN = Pattern.compile(".*§f(.)");
+
     private static final int COSMETICS_SLOT = 25;
     private static final int SILVERBULL_SLOT = 36;
 
@@ -65,7 +76,10 @@ public final class AccountModel extends Model {
     private final Storage<OptionalBoolean> silverbullSubscriber = new Storage<>(OptionalBoolean.NULL);
 
     @Persisted
-    private Storage<PlayerRank> rank = new Storage<>(PlayerRank.NONE);
+    private final Storage<PlayerRank> rank = new Storage<>(PlayerRank.NONE);
+
+    @Persisted
+    private final Storage<PlayerRank> supporterRank = new Storage<>(PlayerRank.NONE);
 
     private static final int PLAYER_INFO_UPDATE_MS = 60000;
     private ScheduledFuture<?> scheduledFuture;
@@ -126,6 +140,14 @@ public final class AccountModel extends Model {
 
     public PlayerRank getRank() {
         return rank.get();
+    }
+
+    public PlayerRank getSupporterRank() {
+        return supporterRank.get();
+    }
+
+    public boolean hasScannedRankInfo() {
+        return scanRankInfoAlreadyScanned;
     }
 
     public void scanRankInfo(boolean forceParseUnexpired) {
@@ -196,12 +218,33 @@ public final class AccountModel extends Model {
         Matcher rankMatcher = hoverName.getMatcher(RANK_TAG_PATTERN);
         if (rankMatcher.find()) {
             rank.store(PlayerRank.fromString(rankMatcher.group("rank")));
+            rank.touched();
         }
     }
 
     private void parseStoreContainer(ContainerContent container) {
-        ItemStack silverbullItem = container.items().get(SILVERBULL_SLOT);
+        for (int slot : SUPPORTER_RANK_ITEM_SLOTS) {
+            ItemStack rankItem = container.items().get(slot);
+            Collection<StyledText> lore = LoreUtils.getLore(rankItem);
 
+            if (lore.stream().noneMatch(line -> line.matches(SUPPORTER_RANK_UNLOCKED_PATTERN))) {
+                continue;
+            }
+
+            Matcher matcher = StyledText.fromComponent(rankItem.getHoverName()).getMatcher(SUPPORTER_RANK_PATTERN);
+
+            if (matcher.matches()) {
+                PlayerRank playerRank = PlayerRank.fromString(matcher.group(1));
+
+                WynntilsMod.info("Parsed supporter rank: " + playerRank);
+
+                supporterRank.store(playerRank);
+                supporterRank.touched();
+                break;
+            }
+        }
+
+        ItemStack silverbullItem = container.items().get(SILVERBULL_SLOT);
         Matcher status = LoreUtils.matchLoreLine(silverbullItem, 6, SILVERBULL_PATTERN);
         silverbullSubscriber.store(status.matches() ? OptionalBoolean.FALSE : OptionalBoolean.TRUE);
         WynntilsMod.info("Parsed Silverbull subscription status: " + silverbullSubscriber.get());
