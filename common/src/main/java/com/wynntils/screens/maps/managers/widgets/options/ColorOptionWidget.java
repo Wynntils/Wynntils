@@ -30,6 +30,7 @@ import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class ColorOptionWidget extends AbstractOptionWidget<CustomColor> {
+    // If you change the size of the swatch you have to edit Texture.MANAGER_SWATCH_BACKGROUND too.
     private static final int SWATCH_BORDER = 3;
     private static final int BUTTON_SIZE = 20;
     private static final int EDIT_BUTTON_WIDTH = 70;
@@ -79,12 +80,16 @@ public class ColorOptionWidget extends AbstractOptionWidget<CustomColor> {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.MANAGER_TEXT_BOX_BACKGROUND, swatchX, elementY, BUTTON_SIZE, BUTTON_SIZE);
 
-        guiGraphics.fill(
+        RenderUtils.drawTexturedRect(
+                guiGraphics, Texture.MANAGER_SWATCH_BACKGROUND, swatchX + SWATCH_BORDER, elementY + SWATCH_BORDER);
+
+        RenderUtils.fill(
+                guiGraphics,
+                CustomColor.fromInt(value.asInt()),
                 swatchX + SWATCH_BORDER,
                 elementY + SWATCH_BORDER,
                 swatchX + BUTTON_SIZE - SWATCH_BORDER,
-                elementY + BUTTON_SIZE - SWATCH_BORDER,
-                value.asInt());
+                elementY + BUTTON_SIZE - SWATCH_BORDER);
 
         // Value text box
         valueTextBox.setX(textBoxX);
@@ -110,6 +115,10 @@ public class ColorOptionWidget extends AbstractOptionWidget<CustomColor> {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (super.mouseClicked(event, isDoubleClick)) {
+            return true;
+        }
+
         if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
 
         if (isMouseOverEditButton(event.x(), event.y())) {

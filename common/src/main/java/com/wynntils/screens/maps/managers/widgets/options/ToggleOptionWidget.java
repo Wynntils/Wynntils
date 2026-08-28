@@ -59,6 +59,10 @@ public class ToggleOptionWidget extends AbstractOptionWidget<Boolean> {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (super.mouseClicked(event, isDoubleClick)) {
+            return true;
+        }
+
         if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
 
         if (isMouseInsideButton(event.x(), event.y())) {

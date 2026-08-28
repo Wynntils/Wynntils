@@ -9,6 +9,7 @@ import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.services.mapdata.attributes.merge.MapAttributesMerger;
 import com.wynntils.services.mapdata.attributes.resolving.MapAttributesResolver;
 import com.wynntils.services.mapdata.attributes.resolving.OverrideMapAttributes;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
@@ -126,7 +127,11 @@ public class MapDataService extends Service {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
-        return OverrideMapAttributes.from(attributesList);
+
+        if (attributesList.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(MapAttributesMerger.mergeAttributes(attributesList));
     }
 
     public Optional<MapAttributes> getOwnAttributesForCategory(String categoryId) {
@@ -140,14 +145,18 @@ public class MapDataService extends Service {
 
         getBaseAttributesForCategory(categoryId).ifPresent(ownAttributes::add);
 
-        return OverrideMapAttributes.from(ownAttributes);
+        if (ownAttributes.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(MapAttributesMerger.mergeAttributes(ownAttributes));
     }
 
     public Optional<MapAttributes> getInheritedAttributesForCategory(String categoryId) {
         List<MapAttributes> resolvedAttributes = new ArrayList<>();
 
         overrideProviders.values().stream()
-                .filter(provider -> provider.getOverridenCategoryIds().anyMatch(categoryId::startsWith))
+                .filter(provider -> provider.getOverridenCategoryIds()
+                        .anyMatch(id -> categoryId.startsWith(id) && !id.equals(categoryId)))
                 .map(provider -> provider.getOverrideAttributes(null))
                 .filter(Objects::nonNull)
                 .forEach(resolvedAttributes::add);
@@ -156,12 +165,10 @@ public class MapDataService extends Service {
             getBaseAttributesForCategory(id).ifPresent(resolvedAttributes::add);
         }
 
-        return OverrideMapAttributes.from(resolvedAttributes);
-    }
-
-    private String getParentCategoryId(String categoryId) {
-        int index = categoryId.lastIndexOf(':');
-        return index == -1 ? null : categoryId.substring(0, index);
+        if (resolvedAttributes.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(MapAttributesMerger.mergeAttributes(resolvedAttributes));
     }
 
     // region Lookup features and attribute resolution
@@ -541,6 +548,12 @@ public class MapDataService extends Service {
         }
 
         return 0;
+    }
+
+    private String getParentCategoryId(String categoryId) {
+        int index = categoryId.lastIndexOf(':');
+        if (index == -1) return null;
+        return categoryId.substring(0, index);
     }
 
     private static final class PlaceholderProvider implements MapDataProvider {

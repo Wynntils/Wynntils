@@ -144,6 +144,10 @@ public class IntSliderOptionWidget extends AbstractOptionWidget<Integer> {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (super.mouseClicked(event, isDoubleClick)) {
+            return true;
+        }
+
         if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
 
         boolean overTextbox = valueTextBox.isMouseOver(event.x(), event.y());

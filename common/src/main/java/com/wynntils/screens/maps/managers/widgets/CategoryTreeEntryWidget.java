@@ -4,8 +4,11 @@
  */
 package com.wynntils.screens.maps.managers.widgets;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.type.CategoryTreeNode;
+import com.wynntils.screens.maps.managers.type.OverrideType;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -49,6 +52,8 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
     private final Runnable onToggleExpand;
     private final Runnable onSelect;
 
+    private final CategoryManagementScreen parent;
+
     public CategoryTreeEntryWidget(
             int x,
             int y,
@@ -59,7 +64,8 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
             boolean expanded,
             boolean selected,
             Runnable onToggleExpand,
-            Runnable onSelect) {
+            Runnable onSelect,
+            CategoryManagementScreen parent) {
         super(x, y, width, ROW_HEIGHT, Component.literal(""));
         this.x = x;
         this.y = y;
@@ -70,6 +76,7 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
         this.selected = selected;
         this.onToggleExpand = onToggleExpand;
         this.onSelect = onSelect;
+        this.parent = parent;
     }
 
     @Override
@@ -148,6 +155,8 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
 
         renderIcon(guiGraphics, getIconX(), node.isLeaf());
 
+        renderOverrideIndicator(guiGraphics);
+
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
@@ -187,6 +196,33 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
             RenderUtils.drawTexturedRect(
                     guiGraphics, Texture.MANAGER_FOLDER_ICON, iconX, y + (ROW_HEIGHT - ICON_SIZE) / 2f);
         }
+    }
+
+    private void renderOverrideIndicator(GuiGraphics guiGraphics) {
+        if (!hasOverride()) return;
+
+        RenderUtils.drawScalingTexturedRect(
+                guiGraphics,
+                Texture.FAVORITE_ICON.identifier(),
+                getIconX() - (node.isLeaf() ? 3 : 4),
+                y,
+                9,
+                9,
+                Texture.FAVORITE_ICON.width(),
+                Texture.FAVORITE_ICON.height());
+    }
+
+    private boolean hasOverride() {
+        if (node.getFullId() == null) return false;
+
+        for (OverrideType overrideType : OverrideType.values()) {
+            String overrideName = parent.getOverrideName(overrideType, node.getFullId(), true);
+            if (Services.MapData.getOverrideProvider(overrideName) != null) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

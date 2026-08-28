@@ -5,6 +5,8 @@
 package com.wynntils.screens.maps.managers.widgets.options;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.WynnFont;
+import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
@@ -14,6 +16,7 @@ import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -26,6 +29,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -42,12 +47,17 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
     private final MapVisibility neverVisibility;
     private final MapVisibility alwaysVisibility;
 
-    private final FloatSliderOptionWidget minSlider;
-    private final FloatSliderOptionWidget maxSlider;
-    private final FloatSliderOptionWidget fadeSlider;
+    public final FloatSliderOptionWidget minSlider;
+    public final FloatSliderOptionWidget maxSlider;
+    public final FloatSliderOptionWidget fadeSlider;
+
     private final List<FloatSliderOptionWidget> sliders;
 
-    private Mode currentMode = Mode.DEFAULT;
+    private final Component minSliderName;
+    private final Component maxSliderName;
+    private final Component fadeSliderName;
+
+    private Mode currentMode = Mode.ALWAYS;
 
     public VisiblityOptionWidget(
             Component label,
@@ -71,9 +81,13 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
         this.maxSlider = createSlider(maxSliderName, maxSliderDescription, category, MapVisibility::getMax, parent);
         this.fadeSlider = createSlider(fadeSliderName, fadeSliderDescription, category, MapVisibility::getFade, parent);
 
+        this.minSliderName = minSliderName;
+        this.maxSliderName = maxSliderName;
+        this.fadeSliderName = fadeSliderName;
+
         this.sliders = List.of(minSlider, maxSlider, fadeSlider);
 
-        applyMode(Mode.DEFAULT);
+        applyMode(currentMode);
     }
 
     private FloatSliderOptionWidget createSlider(
@@ -141,19 +155,35 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
-
-        if (isMouseOverButton(event.x(), event.y())) {
-            this.playDownSound(McUtils.mc().getSoundManager());
-            cycleMode();
+        if (super.mouseClicked(event, isDoubleClick)) {
             return true;
         }
 
-        if (isExtended()) {
-            for (FloatSliderOptionWidget slider : sliders) {
-                if (slider.mouseClicked(event, isDoubleClick)) return true;
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            // Mode button
+            if (isMouseOverButton(event.x(), event.y())) {
+                this.playDownSound(McUtils.mc().getSoundManager());
+                cycleMode();
+                return true;
+            }
+
+            if (isExtended()) {
+                for (FloatSliderOptionWidget slider : sliders) {
+                    if (slider.mouseClicked(event, isDoubleClick)) {
+                        return true;
+                    }
+                }
+            }
+        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (isExtended()) {
+                for (FloatSliderOptionWidget slider : sliders) {
+                    if (slider.mouseClicked(event, isDoubleClick)) {
+                        return true;
+                    }
+                }
             }
         }
+
         return false;
     }
 
@@ -186,31 +216,6 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
     }
 
     @Override
-    public List<Component> getTooltipLines(double mouseX, double mouseY) {
-        if (isExtended()) {
-            for (FloatSliderOptionWidget slider : sliders) {
-                List<Component> lines = slider.getTooltipLines(mouseX, mouseY);
-
-                if (!lines.isEmpty()) {
-                    return lines;
-                }
-            }
-        }
-
-        int textWidth = FontRenderer.getInstance().getFont().width(getMessage().getString());
-        int textHeight = FontRenderer.getInstance().getFont().lineHeight;
-        int labelY = getY() + (TOP_ROW_HEIGHT - textHeight) / 2;
-
-        boolean isTextHovered =
-                MathUtils.isInside((int) mouseX, (int) mouseY, getX(), getX() + textWidth, labelY, labelY + textHeight);
-
-        if (isTextHovered) {
-            return Collections.unmodifiableList(this.generatedTooltip);
-        }
-        return new ArrayList<>();
-    }
-
-    @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private boolean isExtended() {
@@ -227,7 +232,6 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
         switch (mode) {
             case NEVER -> setValue(neverVisibility);
             case ALWAYS -> setValue(alwaysVisibility);
-            case DEFAULT -> setValue(this.defaultValue);
             case CUSTOM -> {
                 if (getValue() == null) {
                     setValue(alwaysVisibility);
@@ -239,10 +243,7 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
         setHeight(isExtended() ? computeExtendedHeight() : TOP_ROW_HEIGHT);
     }
 
-    private Mode determineMode(boolean inherited, MapVisibility value) {
-        if (inherited) {
-            return Mode.DEFAULT;
-        }
+    private Mode determineMode(MapVisibility value) {
         if (isSameVisibility(value, neverVisibility)) {
             return Mode.NEVER;
         }
@@ -306,7 +307,13 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
             slider.updateFromAttributes(ownAttributes, resolvedAttributes);
         }
 
-        applyMode(determineMode(inherited, getValue()));
+        // Manually update this again, because resolvedattributes does not contain default attributes
+        // and the sliders do resolve them.
+        setValue(new MapVisibilityImpl(minSlider.getValue(), maxSlider.getValue(), fadeSlider.getValue()));
+
+        this.currentMode = determineMode(getValue());
+        setHeight(isExtended() ? computeExtendedHeight() : TOP_ROW_HEIGHT);
+        generateTooltip();
     }
 
     @Override
@@ -334,6 +341,30 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
     }
 
     @Override
+    public void setValue(MapVisibility newValue) {
+        value = newValue;
+        generateTooltip();
+    }
+
+    @Override
+    public void resetToDefault() {
+        super.resetToDefault();
+
+        minSlider.resetToDefault();
+        maxSlider.resetToDefault();
+        fadeSlider.resetToDefault();
+
+        this.currentMode = determineMode(getValue());
+        setHeight(isExtended() ? computeExtendedHeight() : TOP_ROW_HEIGHT);
+        generateTooltip();
+    }
+
+    @Override
+    public boolean isChanged() {
+        return !isSameVisibility(value, loadedValue);
+    }
+
+    @Override
     public boolean isMouseOverTextBox(double mouseX, double mouseY) {
         if (!isExtended()) return false;
 
@@ -357,11 +388,115 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
         return null;
     }
 
+    @Override
+    public List<Component> getTooltipLines(double mouseX, double mouseY) {
+        if (isExtended()) {
+            for (FloatSliderOptionWidget slider : sliders) {
+                List<Component> lines = slider.getTooltipLines(mouseX, mouseY);
+
+                if (!lines.isEmpty()) {
+                    return lines;
+                }
+            }
+        }
+
+        int textWidth = FontRenderer.getInstance().getFont().width(getMessage().getString());
+        int textHeight = FontRenderer.getInstance().getFont().lineHeight;
+        int labelY = getY() + (TOP_ROW_HEIGHT - textHeight) / 2;
+
+        boolean isTextHovered =
+                MathUtils.isInside((int) mouseX, (int) mouseY, getX(), getX() + textWidth, labelY, labelY + textHeight);
+
+        if (isTextHovered) {
+            return Collections.unmodifiableList(this.generatedTooltip);
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    protected void generateTooltip() {
+        this.generatedTooltip = new ArrayList<>();
+
+        this.generatedTooltip.add(Component.empty().append(this.getMessage()).withStyle(ChatFormatting.GOLD));
+
+        ChatFormatting color = this.inherited ? ChatFormatting.GRAY : ChatFormatting.WHITE;
+
+        Component label = (this.inherited
+                        ? Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.abstractOptionWidget.inheritedText")
+                        : Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.abstractOptionWidget.notInheritedText"))
+                .withStyle(color);
+
+        this.generatedTooltip.add(
+                Component.literal("- ").withStyle(ChatFormatting.GOLD).append(label));
+
+        this.generatedTooltip.add(Component.empty());
+
+        if (value != null) {
+            if (value.getMin().isPresent()) {
+                this.generatedTooltip.add(Component.literal("- ")
+                        .withStyle(ChatFormatting.GOLD)
+                        .append(minSliderName.copy().withStyle(ChatFormatting.GRAY))
+                        .append(Component.literal(": ").withStyle(ChatFormatting.GRAY))
+                        .append(Component.literal(String.valueOf(value.getMin().get()))
+                                .withStyle(ChatFormatting.WHITE)));
+            }
+
+            if (value.getMax().isPresent()) {
+                this.generatedTooltip.add(Component.literal("- ")
+                        .withStyle(ChatFormatting.GOLD)
+                        .append(maxSliderName.copy().withStyle(ChatFormatting.GRAY))
+                        .append(Component.literal(": ").withStyle(ChatFormatting.GRAY))
+                        .append(Component.literal(String.valueOf(value.getMax().get()))
+                                .withStyle(ChatFormatting.WHITE)));
+            }
+
+            if (value.getFade().isPresent()) {
+                this.generatedTooltip.add(Component.literal("- ")
+                        .withStyle(ChatFormatting.GOLD)
+                        .append(fadeSliderName.copy().withStyle(ChatFormatting.GRAY))
+                        .append(Component.literal(": ").withStyle(ChatFormatting.GRAY))
+                        .append(Component.literal(String.valueOf(value.getFade().get()))
+                                .withStyle(ChatFormatting.WHITE)));
+            }
+        }
+
+        this.generatedTooltip.add(Component.empty());
+
+        StyledText[] wrappedText = RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(description), 200);
+
+        for (StyledText text : wrappedText) {
+            this.generatedTooltip.add(
+                    Component.empty().append(text.getComponent()).withStyle(ChatFormatting.GRAY));
+        }
+
+        this.generatedTooltip.add(Component.empty());
+
+        this.generatedTooltip.add(Component.empty()
+                .append(WynnFont.asFont("right_click", WynncraftKeybindsFont.class))
+                .append(" ")
+                .append(Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.abstractOptionWidget.rightClickText")
+                        .withStyle(ChatFormatting.GREEN)));
+    }
+
+    @Override
+    protected boolean isMouseOverLabel(double mouseX, double mouseY) {
+        Font font = FontRenderer.getInstance().getFont();
+        int textWidth = font.width(getMessage().getString());
+        int textHeight = font.lineHeight;
+        int textY = getY() + (TOP_ROW_HEIGHT - textHeight) / 2;
+        return MathUtils.isInside((int) mouseX, (int) mouseY, getX(), getX() + textWidth, textY, textY + textHeight);
+    }
+
     private enum Mode {
-        DEFAULT(Component.literal("default")),
-        NEVER(Component.literal("never")),
-        ALWAYS(Component.literal("always")),
-        CUSTOM(Component.literal("custom"));
+        NEVER(Component.translatable(
+                "screens.wynntils.map.managers.categoryManager.visibilityOptionWidget.mode.never")),
+        ALWAYS(Component.translatable(
+                "screens.wynntils.map.managers.categoryManager.visibilityOptionWidget.mode.always")),
+        CUSTOM(Component.translatable(
+                "screens.wynntils.map.managers.categoryManager.visibilityOptionWidget.mode.custom"));
 
         private final Component displayName;
 

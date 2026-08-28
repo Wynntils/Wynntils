@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.managers.widgets;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.type.OverrideType;
@@ -32,6 +33,8 @@ public class OverrideSelectionWidget extends AbstractWidget {
     private static final int ARROW_PADDING = 4;
     private static final int OPTION_HORIZONTAL_PADDING = 4;
     private static final int OPTION_VERTICAL_SPACING = 2;
+    private static final int OPTION_ICON_SIZE = 9;
+    private static final int OPTION_ICON_GAP = 3;
 
     private static final OverrideType[] OVERRIDE_TYPES = OverrideType.values();
 
@@ -91,28 +94,50 @@ public class OverrideSelectionWidget extends AbstractWidget {
 
     private void renderOptions(GuiGraphics guiGraphics) {
         for (int i = 0; i < OVERRIDE_TYPES.length; i++) {
+            OverrideType overrideType = OVERRIDE_TYPES[i];
+
             int rowY = getOptionRowY(i);
             int rowX = x + OPTION_HORIZONTAL_PADDING;
             int rowWidth = this.width - OPTION_HORIZONTAL_PADDING * 2;
 
-            Texture backgroundTexture = (OVERRIDE_TYPES[i] == selectedType)
+            Texture backgroundTexture = (overrideType == selectedType)
                     ? Texture.MANAGER_WIDGET_BACKGROUND_RED
                     : Texture.MANAGER_WIDGET_BACKGROUND;
 
             RenderUtils.drawNineSliceScalingTexturedRect(
                     guiGraphics, backgroundTexture, rowX, rowY, rowWidth, optionHeight);
 
+            if (hasOverride(overrideType)) {
+                RenderUtils.drawScalingTexturedRect(
+                        guiGraphics,
+                        Texture.FAVORITE_ICON.identifier(),
+                        rowX + OPTION_ICON_GAP,
+                        rowY + (optionHeight - OPTION_ICON_SIZE) / 2f,
+                        OPTION_ICON_SIZE,
+                        OPTION_ICON_SIZE,
+                        Texture.FAVORITE_ICON.width(),
+                        Texture.FAVORITE_ICON.height());
+            }
+
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
-                            StyledText.fromString(OVERRIDE_TYPES[i].getDisplayName()),
-                            x + OPTION_HORIZONTAL_PADDING + ARROW_PADDING * 2 + ARROW_WIDTH,
+                            StyledText.fromString(overrideType.getDisplayName()),
+                            rowX + rowWidth / 2f,
                             rowY + optionHeight / 2f,
                             CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
+                            HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         }
+    }
+
+    private boolean hasOverride(OverrideType overrideType) {
+        if (parent.getSelectedCategory() == null) return false;
+
+        return Services.MapData.getOverrideProvider(
+                        parent.getOverrideName(overrideType, parent.getSelectedCategory(), true))
+                != null;
     }
 
     // Render this as a polygon, otherwise it looks bad.
@@ -194,7 +219,7 @@ public class OverrideSelectionWidget extends AbstractWidget {
         return null;
     }
 
-    public boolean isMouseOverAnyOption(double mouseX, double mouseY) {
+    private boolean isMouseOverAnyOption(double mouseX, double mouseY) {
         return expanded && getOptionAt(mouseX, mouseY) != null;
     }
 

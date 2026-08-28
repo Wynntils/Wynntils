@@ -70,6 +70,10 @@ public class TextOptionWidget extends AbstractOptionWidget<String> {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (super.mouseClicked(event, isDoubleClick)) {
+            return true;
+        }
+
         if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
 
         return valueTextBox.mouseClicked(event, isDoubleClick);

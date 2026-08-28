@@ -82,7 +82,17 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
         boolean selected = node.getFullId() != null && node.getFullId().equals(selectedFullId);
 
         CategoryTreeEntryWidget widget = new CategoryTreeEntryWidget(
-                0, 0, 0, node, column, trail, expanded, selected, () -> toggleExpanded(node), () -> selectNode(node));
+                0,
+                0,
+                0,
+                node,
+                column,
+                trail,
+                expanded,
+                selected,
+                () -> toggleExpanded(node),
+                () -> selectNode(node),
+                parent);
 
         rowWidgets.add(widget);
 

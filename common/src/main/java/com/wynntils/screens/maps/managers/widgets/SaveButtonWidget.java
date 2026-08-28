@@ -9,6 +9,11 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.type.OverrideType;
+import com.wynntils.screens.maps.managers.widgets.options.AbstractOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.options.ColorOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.options.FloatSliderOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.options.ToggleOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.options.VisiblityOptionWidget;
 import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
 import com.wynntils.services.mapdata.attributes.impl.MapAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapMarkerOptionsImpl;
@@ -155,37 +160,58 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
                 MapAttributesBuilder::setBorderWidth);
 
         // labelVisibility
+        VisiblityOptionWidget labelVisibility = parent.labelVisibilityOptionWidget;
+
         buildOption(
                 builder,
-                parent.labelVisibilityOptionWidget.isChanged(),
-                new MapVisibilityImpl(parent.labelVisibilityOptionWidget.getValue()),
+                labelVisibility.minSlider.isChanged()
+                        || labelVisibility.maxSlider.isChanged()
+                        || labelVisibility.fadeSlider.isChanged(),
+                new MapVisibilityImpl(
+                        valueOrNull(labelVisibility.minSlider),
+                        valueOrNull(labelVisibility.maxSlider),
+                        valueOrNull(labelVisibility.fadeSlider)),
                 MapAttributesBuilder::setLabelVisibility);
 
         // iconVisibility
+        VisiblityOptionWidget iconVisibility = parent.iconVisibilityOptionWidget;
 
         buildOption(
                 builder,
-                parent.iconVisibilityOptionWidget.isChanged(),
-                new MapVisibilityImpl(parent.iconVisibilityOptionWidget.getValue()),
+                iconVisibility.minSlider.isChanged()
+                        || iconVisibility.maxSlider.isChanged()
+                        || iconVisibility.fadeSlider.isChanged(),
+                new MapVisibilityImpl(
+                        valueOrNull(iconVisibility.minSlider),
+                        valueOrNull(iconVisibility.maxSlider),
+                        valueOrNull(iconVisibility.fadeSlider)),
                 MapAttributesBuilder::setIconVisibility);
 
         // markerOptions
-        boolean markerOptionsInherited = parent.markerMinDistanceOptionWidget.isChanged()
-                || parent.markerMaxDistanceOptionWidget.isChanged()
-                || parent.markerFadeOptionWidget.isChanged()
-                || parent.markerBeaconColorOptionWidget.isChanged()
-                || parent.markerHasLabelOptionWidget.isChanged()
-                || parent.markerHasDistanceLabelOptionWidget.isChanged()
-                || parent.markerHasIconOptionWidget.isChanged();
+        FloatSliderOptionWidget markerMinDistance = parent.markerMinDistanceOptionWidget;
+        FloatSliderOptionWidget markerMaxDistance = parent.markerMaxDistanceOptionWidget;
+        FloatSliderOptionWidget markerFade = parent.markerFadeOptionWidget;
+        ColorOptionWidget markerBeaconColor = parent.markerBeaconColorOptionWidget;
+        ToggleOptionWidget markerHasLabel = parent.markerHasLabelOptionWidget;
+        ToggleOptionWidget markerHasDistanceLabel = parent.markerHasDistanceLabelOptionWidget;
+        ToggleOptionWidget markerHasIcon = parent.markerHasIconOptionWidget;
+
+        boolean markerOptionsInherited = isChanged(markerMinDistance)
+                || isChanged(markerMaxDistance)
+                || isChanged(markerFade)
+                || isChanged(markerBeaconColor)
+                || isChanged(markerHasLabel)
+                || isChanged(markerHasDistanceLabel)
+                || isChanged(markerHasIcon);
 
         MapMarkerOptionsImpl markerOptionsValue = new MapMarkerOptionsImpl(
-                parent.markerMinDistanceOptionWidget.getValue(),
-                parent.markerMaxDistanceOptionWidget.getValue(),
-                parent.markerFadeOptionWidget.getValue(),
-                parent.markerBeaconColorOptionWidget.getValue(),
-                parent.markerHasLabelOptionWidget.getValue(),
-                parent.markerHasDistanceLabelOptionWidget.getValue(),
-                parent.markerHasIconOptionWidget.getValue());
+                valueOrNull(markerMinDistance),
+                valueOrNull(markerMaxDistance),
+                valueOrNull(markerFade),
+                valueOrNull(markerBeaconColor),
+                valueOrNull(markerHasLabel),
+                valueOrNull(markerHasDistanceLabel),
+                valueOrNull(markerHasIcon));
 
         buildOption(builder, markerOptionsInherited, markerOptionsValue, MapAttributesBuilder::setMarkerOptions);
 
@@ -212,6 +238,14 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
         if (!isChanged) return;
 
         setter.accept(builder, widgetValue);
+    }
+
+    private boolean isChanged(AbstractOptionWidget<?> widget) {
+        return widget.isChanged(); // || !widget.isInherited();
+    }
+
+    private <T> T valueOrNull(AbstractOptionWidget<T> widget) {
+        return isChanged(widget) ? widget.getValue() : null;
     }
 
     @Override

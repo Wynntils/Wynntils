@@ -543,13 +543,17 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         return selectedOverrideType;
     }
 
-    public String getOverrideName(boolean includeJsonOverride) {
+    public String getOverrideName(boolean includeJsonOverridePrefix) {
+        return getOverrideName(getSelectedOverrideType(), getSelectedCategory(), includeJsonOverridePrefix);
+    }
+
+    public String getOverrideName(OverrideType overrideType, String categoryId, boolean includeJsonOverridePrefix) {
         String overrideName = "";
 
-        if (includeJsonOverride) {
+        if (includeJsonOverridePrefix) {
             overrideName += "json-override:";
         }
-        overrideName += getSelectedOverrideType().name().toLowerCase(Locale.ROOT) + ":" + getSelectedCategory();
+        overrideName += overrideType.name().toLowerCase(Locale.ROOT) + ":" + categoryId;
 
         return overrideName;
     }

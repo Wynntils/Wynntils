@@ -5,11 +5,14 @@
 package com.wynntils.screens.maps.managers.widgets.options;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.WynnFont;
+import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.ArrayList;
@@ -19,17 +22,23 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import org.lwjgl.glfw.GLFW;
 
 public abstract class AbstractOptionWidget<T> extends AbstractWidget {
     protected final OptionCategory category;
     protected final T defaultValue;
     protected T value;
-    private T loadedValue;
+    protected T loadedValue;
     protected Component description;
     protected List<Component> generatedTooltip = new ArrayList<>();
     protected final Function<MapAttributes, Optional<T>> valueGetter;
+
+    private Optional<T> ownValue;
+    private Optional<T> inheritedValue;
 
     protected boolean inherited;
 
@@ -61,6 +70,12 @@ public abstract class AbstractOptionWidget<T> extends AbstractWidget {
         value = newValue;
     }
 
+    public void resetToDefault() {
+        T newValue = inheritedValue.orElse(defaultValue);
+        setValue(newValue);
+        generateTooltip();
+    }
+
     public OptionCategory getCategory() {
         return category;
     }
@@ -86,14 +101,7 @@ public abstract class AbstractOptionWidget<T> extends AbstractWidget {
     }
 
     public List<Component> getTooltipLines(double mouseX, double mouseY) {
-        int textWidth = FontRenderer.getInstance().getFont().width(getMessage().getString());
-        int textHeight = FontRenderer.getInstance().getFont().lineHeight;
-        int heightStart = getY() + (this.height - textHeight) / 2;
-
-        boolean isTextHovered = MathUtils.isInside(
-                (int) mouseX, (int) mouseY, getX(), getX() + textWidth, heightStart, heightStart + textHeight);
-
-        if (isTextHovered) {
+        if (isMouseOverLabel(mouseX, mouseY)) {
             return Collections.unmodifiableList(this.generatedTooltip);
         }
 
@@ -125,12 +133,21 @@ public abstract class AbstractOptionWidget<T> extends AbstractWidget {
             this.generatedTooltip.add(
                     Component.empty().append(text.getComponent()).withStyle(ChatFormatting.GRAY));
         }
+
+        this.generatedTooltip.add(Component.empty());
+
+        this.generatedTooltip.add(Component.empty()
+                .append(WynnFont.asFont("right_click", WynncraftKeybindsFont.class))
+                .append(" ")
+                .append(Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.abstractOptionWidget.rightClickText")
+                        .withStyle(ChatFormatting.GREEN)));
     }
 
     public void updateFromAttributes(
             Optional<MapAttributes> ownAttributes, Optional<MapAttributes> resolvedAttributes) {
-        Optional<T> ownValue = ownAttributes.flatMap(valueGetter);
-        Optional<T> inheritedValue = resolvedAttributes.flatMap(valueGetter);
+        ownValue = ownAttributes.flatMap(valueGetter);
+        inheritedValue = resolvedAttributes.flatMap(valueGetter);
 
         if (ownValue.isPresent()) {
             loadedValue = ownValue.get();
@@ -152,5 +169,24 @@ public abstract class AbstractOptionWidget<T> extends AbstractWidget {
         setValue(defaultValue);
         setInherited(true);
         generateTooltip();
+    }
+
+    @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT && isMouseOverLabel(event.x(), event.y())) {
+            resetToDefault();
+            this.playDownSound(McUtils.mc().getSoundManager());
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean isMouseOverLabel(double mouseX, double mouseY) {
+        Font font = FontRenderer.getInstance().getFont();
+        int textWidth = font.width(getMessage().getString());
+        int textHeight = font.lineHeight;
+        int textY = getY() + (this.height - textHeight) / 2;
+
+        return MathUtils.isInside((int) mouseX, (int) mouseY, getX(), getX() + textWidth, textY, textY + textHeight);
     }
 }
