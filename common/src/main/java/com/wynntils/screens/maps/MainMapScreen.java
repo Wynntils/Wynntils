@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.features.debug.MappingProgressFeature;
@@ -293,6 +294,14 @@ public final class MainMapScreen extends AbstractMapScreen {
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
         renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
+
+        if (isPanning) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
+        } else if (holdingZoomHandle) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (this.hoveredFeature != null || isMouseOverZoomHandle(mouseX, mouseY)) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }

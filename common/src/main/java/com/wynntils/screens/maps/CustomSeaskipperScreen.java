@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -228,6 +229,16 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         for (SeaskipperDestinationButton destinationButton : destinationButtons) {
             destinationButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }
+
+        if (isPanning) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
+        } else if (draggingScroll || holdingZoomHandle) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (this.hoveredFeature != null
+                || isMouseOverScrollButton(mouseX, mouseY)
+                || isMouseOverZoomHandle(mouseX, mouseY)) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
     }
 
     private void renderSeaskipperPaths(GuiGraphics guiGraphics) {
@@ -301,13 +312,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         }
 
         if (!draggingScroll && (availableDestinations.size() > MAX_DESTINATIONS)) {
-            if (MathUtils.isInside(
-                    (int) event.x(),
-                    (int) event.y(),
-                    (int) scrollButtonRenderX,
-                    (int) (scrollButtonRenderX + Texture.SCROLL_BUTTON.width() * currentTextureScale),
-                    (int) scrollButtonRenderY,
-                    (int) (scrollButtonRenderY + Texture.SCROLL_BUTTON.height() * currentTextureScale))) {
+            if (isMouseOverScrollButton(event.x(), event.y())) {
                 draggingScroll = true;
 
                 return true;
@@ -604,6 +609,16 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
             buttonY += (int) ((Texture.DESTINATION_BUTTON.height() / 2) * currentTextureScale) + buttonOffset;
         }
+    }
+
+    private boolean isMouseOverScrollButton(double mouseX, double mouseY) {
+        return MathUtils.isInside(
+                (int) mouseX,
+                (int) mouseY,
+                (int) scrollButtonRenderX,
+                (int) (scrollButtonRenderX + Texture.SCROLL_BUTTON.width() * currentTextureScale),
+                (int) scrollButtonRenderY,
+                (int) (scrollButtonRenderY + Texture.SCROLL_BUTTON.height() * currentTextureScale));
     }
 
     private void toggleBorders() {

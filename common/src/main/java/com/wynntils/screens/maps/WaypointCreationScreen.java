@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -738,6 +739,10 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                         TextShadow.NORMAL,
                         1);
         // endregion
+
+        if (isPanning) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
+        }
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
