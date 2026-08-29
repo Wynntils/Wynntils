@@ -2155,7 +2155,6 @@
   "screens.wynntils.itemSharing.extended.description1": "Koda grundvärden och statiska statistik, t.ex. Styrka",
   "screens.wynntils.itemSharing.extended.description2": "Observera att objekt som kodas i detta läge inte kommer att följa objektändringar, statistik är frysta i sitt nuvarande tillstånd.",
   "screens.wynntils.itemSharing.extended.name": "Utökad kodning",
-  "screens.wynntils.itemSharing.itemName.description": "Dela det anpassade namnet på det tillverkade objektet?",
   "screens.wynntils.itemSharing.itemName.name": "Dela objektnamn",
   "screens.wynntils.itemSharing.openRecord": "Öppna objektregister",
   "screens.wynntils.itemSharing.save": "Spara till register",
