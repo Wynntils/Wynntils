@@ -13,9 +13,9 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
-import com.wynntils.models.items.items.game.CraftedConsumableItem;
-import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.MountItem;
+import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
@@ -239,7 +239,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
                                     Component.translatable("screens.wynntils.itemSharing.extended.description1"),
                                     Component.translatable("screens.wynntils.itemSharing.extended.description2")),
                             150))));
-        } else if (wynnItem instanceof CraftedGearItem || wynnItem instanceof CraftedConsumableItem) {
+        } else if (wynnItem instanceof CraftedItemProperty || wynnItem instanceof MountItem) {
             options.add(this.addRenderableWidget(new WynntilsCheckbox(
                     backgroundX + 15,
                     backgroundY + 25,

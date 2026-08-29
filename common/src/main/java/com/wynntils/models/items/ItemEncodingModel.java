@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items;
@@ -10,7 +10,9 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.items.encoding.ItemTransformerRegistry;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.List;
@@ -30,7 +32,7 @@ public final class ItemEncodingModel extends Model {
     private static final String RANGE_B =
             "[" + new String(Character.toChars(0x100000)) + "-" + new String(Character.toChars(0x10FFFD)) + "]";
     private static final Pattern ENCODED_DATA_PATTERN =
-            Pattern.compile("(?<data>(" + RANGE_A + "|" + RANGE_B + ")+)( \"(?<name>.+)\")?");
+            Pattern.compile("(?<data>(" + RANGE_A + "|" + RANGE_B + ")+)( \"(?<name>[^\"]+)\")?");
 
     private final ItemTransformerRegistry itemTransformerRegistry = new ItemTransformerRegistry();
 
@@ -46,6 +48,10 @@ public final class ItemEncodingModel extends Model {
         return itemTransformerRegistry.decodeItem(encodedByteBuffer, itemName);
     }
 
+    public ErrorOr<WynnItem> decodeItemWithTrustedName(EncodedByteBuffer encodedByteBuffer, String itemName) {
+        return itemTransformerRegistry.decodeItemWithTrustedName(encodedByteBuffer, itemName);
+    }
+
     public boolean canEncodeItem(WynnItem wynnItem) {
         return itemTransformerRegistry.canEncodeItem(wynnItem);
     }
@@ -57,11 +63,12 @@ public final class ItemEncodingModel extends Model {
     public String makeItemString(WynnItem wynnItem, EncodedByteBuffer encodedItem) {
         String itemName = "";
 
-        // Gear items are named, but their names are encoded in the data
+        // Crafted names stay as ordinary quoted chat text after the encoded item.
         if (shareItemName.get()
                 && !(wynnItem instanceof GearItem)
-                && wynnItem instanceof CraftedItemProperty craftedItemProperty) {
-            itemName = " \"" + craftedItemProperty.getName() + "\"";
+                && (wynnItem instanceof CraftedItemProperty || wynnItem instanceof MountItem)
+                && wynnItem instanceof NamedItemProperty namedItemProperty) {
+            itemName = " \"" + namedItemProperty.getName() + "\"";
         }
 
         return encodedItem.toUtf16String() + itemName;

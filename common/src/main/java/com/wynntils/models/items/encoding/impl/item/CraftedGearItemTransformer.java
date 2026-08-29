@@ -38,12 +38,12 @@ import java.util.Locale;
 public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem> {
     @Override
     public ErrorOr<CraftedGearItem> decodeItem(ItemDataMap itemDataMap) {
-        String name;
         GearType gearType;
         int effectStrength;
         CappedValue durability;
         GearRequirements requirements;
         GearAttackSpeed attackSpeed = null;
+        int dps = 0;
         int health = 0;
         List<Pair<DamageType, RangedValue>> damages = new ArrayList<>();
         List<Pair<Element, Integer>> defences = new ArrayList<>();
@@ -72,20 +72,17 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         }
         requirements = requirementsData.requirements();
 
-        // Optional blocks
-        // Warning: The name data from Crafted items is deliberately removed from the item data map to prevent
-        //           input sanitization issues.
-        //           The name data present here is from plain-text string shared after the encoded item.
+        // Crafted names are shared as ordinary chat text and converted to NameData during decoding.
         NameData nameData = itemDataMap.get(NameData.class);
-        if (nameData != null && nameData.name().isPresent()) {
-            name = nameData.name().get();
-        } else {
-            name = "Crafted "
-                    + StringUtils.capitalizeFirst(gearTypeData.gearType().name().toLowerCase(Locale.ROOT));
-        }
+        String name = nameData != null && nameData.name().isPresent()
+                ? nameData.name().get()
+                : "Crafted "
+                        + StringUtils.capitalizeFirst(
+                                gearTypeData.gearType().name().toLowerCase(Locale.ROOT));
 
         DamageData damageData = itemDataMap.get(DamageData.class);
         if (damageData != null && damageData.attackSpeed().isPresent()) {
+            dps = damageData.dps();
             attackSpeed = damageData.attackSpeed().get();
             damages = damageData.damages();
         }
@@ -99,17 +96,19 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         CustomIdentificationsData identificationsData = itemDataMap.get(CustomIdentificationsData.class);
         if (identificationsData != null) {
             possibleValues = identificationsData.possibleValues();
-            // For crafted items, the max values can be used to calculate the current values (from the overall
-            // effectiveness).
-            identifications = identificationsData.possibleValues().stream()
-                    .map(statPossibleValues -> {
-                        int max = statPossibleValues.range().high();
-                        // Negative stats do not decay, they always stay at the max
-                        int value = (max <= 0) ? max : Math.round(max * effectStrength / 100f);
+            if (!identificationsData.identifications().isEmpty()) {
+                identifications = identificationsData.identifications();
+            } else {
+                // V1/V2 encoded the old crafted effectiveness and maximum stat values.
+                identifications = identificationsData.possibleValues().stream()
+                        .map(statPossibleValues -> {
+                            int max = statPossibleValues.range().high();
+                            int value = (max <= 0) ? max : Math.round(max * effectStrength / 100f);
 
-                        return new StatActualValue(statPossibleValues.statType(), value, 0, RangedValue.NONE);
-                    })
-                    .toList();
+                            return new StatActualValue(statPossibleValues.statType(), value, false, RangedValue.NONE);
+                        })
+                        .toList();
+            }
         }
 
         PowderData powderData = itemDataMap.get(PowderData.class);
@@ -122,6 +121,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
                 name,
                 gearType,
                 attackSpeed,
+                dps,
                 health,
                 damages,
                 defences,
@@ -144,14 +144,11 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         dataList.add(new DurabilityData(100, item.getDurability()));
         dataList.add(new RequirementsData(item.getRequirements()));
 
-        // Optional blocks
-        if (encodingSettings.shareItemName()) {
-            dataList.add(NameData.sanitized(item.getName()));
-        }
-
-        dataList.add(new DamageData(item.getAttackSpeed(), item.getDamages()));
+        // Crafted names deliberately remain outside the encoded payload. They are appended as normal
+        // chat text by ItemEncodingModel so Wynncraft's chat moderation can inspect them.
+        dataList.add(new DamageData(item.getDps(), item.getAttackSpeed(), item.getDamages()));
         dataList.add(new DefenseData(item.getHealth(), item.getDefences()));
-        dataList.add(new CustomIdentificationsData(item.getPossibleValues()));
+        dataList.add(new CustomIdentificationsData(item.getPossibleValues(), item.getIdentifications()));
         dataList.add(PowderData.from(item));
 
         return dataList;

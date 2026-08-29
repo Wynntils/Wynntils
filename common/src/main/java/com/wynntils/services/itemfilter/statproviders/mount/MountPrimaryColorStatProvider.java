@@ -10,6 +10,6 @@ import java.util.Optional;
 public class MountPrimaryColorStatProvider extends BaseMountStatProvider<String> {
     @Override
     public Optional<String> getValue(MountItem mountItem) {
-        return mountItem.getMountInfo().primaryColor();
+        return Optional.of(mountItem.getMountInfo().primaryColorInfo().displayName());
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear.type;
@@ -17,12 +17,21 @@ public record GearInfo(
         String name,
         GearType type,
         GearTier tier,
+        GearEmblem emblem,
         int powderSlots,
         GearMetaInfo metaInfo,
         GearRequirements requirements,
         FixedStats fixedStats,
         List<Pair<StatType, StatPossibleValues>> variableStats,
         Optional<SetInfo> setInfo) {
+    public String getEmblemFrameCode() {
+        return emblem.getFrameCode();
+    }
+
+    public String getEmblemSpriteCode() {
+        return type.getFrameSpriteCode();
+    }
+
     public StatPossibleValues getPossibleValues(StatType statType) {
         return this.variableStats().stream()
                 .filter(p -> p.key().equals(statType))

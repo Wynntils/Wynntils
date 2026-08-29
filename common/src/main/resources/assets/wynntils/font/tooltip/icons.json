@@ -1,0 +1,22 @@
+{
+  "providers": [
+    {
+      "ascent": 0,
+      "chars": [
+        "\uE001\uE002\uE003"
+      ],
+      "file": "wynntils:font/tooltip/keybinds.png",
+      "height": 10,
+      "type": "bitmap"
+    },
+    {
+      "ascent": 8,
+      "chars": [
+        "\uE004\uE005"
+      ],
+      "file": "wynntils:font/tooltip/sprite.png",
+      "height": 9,
+      "type": "bitmap"
+    }
+  ]
+}

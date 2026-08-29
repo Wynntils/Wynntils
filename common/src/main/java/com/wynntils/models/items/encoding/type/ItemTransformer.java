@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.type;
@@ -7,6 +7,7 @@ package com.wynntils.models.items.encoding.type;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.data.IdentificationData;
 import com.wynntils.models.items.encoding.data.TypeData;
+import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
@@ -56,7 +57,23 @@ public abstract class ItemTransformer<T extends WynnItem> {
                 return ErrorOr.error(processResult.getError());
             }
 
+            Map<StatType, StatPossibleValues> finalStatPossibleValues = statPossibleValues;
             identifications = identificationData.identifications().stream()
+                    .map(actualValue -> {
+                        StatPossibleValues possibleValues = finalStatPossibleValues.get(actualValue.statType());
+                        if (!actualValue.internalRoll().equals(RangedValue.NONE) || possibleValues == null) {
+                            return actualValue;
+                        }
+
+                        return new StatActualValue(
+                                actualValue.statType(),
+                                actualValue.value(),
+                                actualValue.perfectInternalRoll(),
+                                StatCalculator.calculateInternalRollRange(
+                                        possibleValues, actualValue.value(), actualValue.perfectInternalRoll()),
+                                actualValue.hasIconPrefix(),
+                                actualValue.vanillaMeter());
+                    })
                     .collect(Collectors.toMap(StatActualValue::statType, Function.identity()));
         } else {
             // If there are no encoded possible values, use the item info's possible values
@@ -72,7 +89,7 @@ public abstract class ItemTransformer<T extends WynnItem> {
                 identifications.put(
                         possibleValues.statType(),
                         new StatActualValue(
-                                possibleValues.statType(), possibleValues.baseValue(), 0, RangedValue.NONE));
+                                possibleValues.statType(), possibleValues.baseValue(), false, RangedValue.NONE));
             }
         }
 

@@ -5,56 +5,73 @@
 package com.wynntils.screens.guides.charm;
 
 import com.wynntils.core.components.Handlers;
-import com.wynntils.core.components.Models;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.rewards.type.CharmInfo;
 import com.wynntils.screens.guides.GuideItemStack;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.TooltipUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 
 public class GuideCharmItemStack extends GuideItemStack {
+    private final CharmItem charmItem;
     private final CharmInfo charmInfo;
-    private final MutableComponent name;
+
     private List<Component> generatedTooltip;
+    private int currentPage = 0;
 
     public GuideCharmItemStack(CharmInfo charmInfo) {
         super(charmInfo.metaInfo().material().itemStack(), new CharmItem(charmInfo, null), charmInfo.name());
 
+        this.charmItem = new CharmItem(charmInfo, null);
         this.charmInfo = charmInfo;
-        this.name =
-                Component.literal(charmInfo.name()).withStyle(charmInfo.tier().getChatFormatting());
-        this.generatedTooltip = List.of();
+        this.set(DataComponents.TOOLTIP_STYLE, charmInfo.tier().getTooltipStyle(false));
     }
 
     @Override
-    public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag flag) {
-        List<Component> tooltipLines = new ArrayList<>(generatedTooltip);
+    public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag isAdvanced) {
+        if (generatedTooltip == null) {
+            List<Component> tooltip = new ArrayList<>(buildTooltip());
 
-        appendObtainInfo(tooltipLines, charmInfo.metaInfo().obtainInfo());
+            generatedTooltip = tooltip;
+        }
 
-        return tooltipLines;
+        return generatedTooltip;
     }
 
     public CharmInfo getCharmInfo() {
         return charmInfo;
     }
 
-    public void buildTooltip() {
-        IdentifiableTooltipBuilder tooltipBuilder =
-                Handlers.Tooltip.buildNew(new CharmItem(charmInfo, null), true, false);
-        this.generatedTooltip = tooltipBuilder.getTooltipLines(Models.Character.getClassType());
+    public void changePage() {
+        if (currentPage == 0) {
+            currentPage = 2;
+        } else if (currentPage == 2) {
+            currentPage = 0;
+        }
 
-        // Force ItemStatInfoFeature to recreate its cache
-        Optional<CharmItem> charmItemOpt = Models.Item.asWynnItem(this, CharmItem.class);
-        if (charmItemOpt.isEmpty()) return;
-        charmItemOpt.get().getData().clear(WynnItemData.TOOLTIP_KEY);
+        generatedTooltip = null;
+    }
+
+    public List<Component> buildTooltip() {
+        if (currentPage == 0) {
+            charmItem.getData().getOrCalculate(WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(charmItem));
+            return TooltipUtils.getWynnItemTooltip(this, charmItem);
+        } else {
+            List<Component> tooltipLines =
+                    buildObtainInfoPage(charmItem.getItemInfo().metaInfo().obtainInfo());
+            int widestLine = tooltipLines.stream()
+                    .mapToInt(McUtils.mc().font::width)
+                    .max()
+                    .orElse(0);
+            tooltipLines.addAll(buildPaginationLines(currentPage, 3, widestLine));
+            return tooltipLines;
+        }
     }
 }
