@@ -2125,7 +2125,6 @@
   "screens.wynntils.itemSharing.extended.description1": "基本値と静的統計をエンコードします。例：力",
   "screens.wynntils.itemSharing.extended.description2": "このモードでエンコードされたアイテムは、アイテムの変更に従わず、統計は現在の状態で固定されていることに注意してください。",
   "screens.wynntils.itemSharing.extended.name": "拡張エンコーディング",
-  "screens.wynntils.itemSharing.itemName.description": "作成したアイテムのカスタム名を共有しますか？",
   "screens.wynntils.itemSharing.itemName.name": "アイテム名を共有",
   "screens.wynntils.itemSharing.openRecord": "アイテム記録を開く",
   "screens.wynntils.itemSharing.save": "記録に保存",
