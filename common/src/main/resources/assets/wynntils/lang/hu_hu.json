@@ -2125,7 +2125,6 @@
   "screens.wynntils.itemSharing.extended.description1": "Alapértékek és statikus statisztikák kódolása, pl. Erő",
   "screens.wynntils.itemSharing.extended.description2": "Vegye figyelembe, hogy az ebben a módban kódolt tárgyak nem követik a tárgyváltozásokat, a statisztikák jelenlegi állapotukban vannak rögzítve.",
   "screens.wynntils.itemSharing.extended.name": "Kiterjesztett kódolás",
-  "screens.wynntils.itemSharing.itemName.description": "Megosztja a készített tárgy egyedi nevét?",
   "screens.wynntils.itemSharing.itemName.name": "Tárgynév megosztása",
   "screens.wynntils.itemSharing.openRecord": "Tárgyrekord megnyitása",
   "screens.wynntils.itemSharing.save": "Mentés a rekordba",
