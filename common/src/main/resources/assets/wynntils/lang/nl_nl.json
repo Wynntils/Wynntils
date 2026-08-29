@@ -2125,7 +2125,6 @@
   "screens.wynntils.itemSharing.extended.description1": "Basiswaarden en statische statistieken coderen, bijv. Kracht",
   "screens.wynntils.itemSharing.extended.description2": "Houd er rekening mee dat items die in deze modus zijn gecodeerd, itemwijzigingen niet volgen, statistieken zijn bevroren in hun huidige staat.",
   "screens.wynntils.itemSharing.extended.name": "Uitgebreide codering",
-  "screens.wynntils.itemSharing.itemName.description": "Deel de aangepaste naam van het vervaardigde item?",
   "screens.wynntils.itemSharing.itemName.name": "Deel itemnaam",
   "screens.wynntils.itemSharing.openRecord": "Open itemrecord",
   "screens.wynntils.itemSharing.save": "Opslaan in record",
