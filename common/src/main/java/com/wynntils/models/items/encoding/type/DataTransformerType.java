@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.type;
@@ -21,6 +21,12 @@ public enum DataTransformerType {
     CUSTOM_CONSUMABLE_TYPE_DATA_TRANSFORMER(13),
     USES_DATA_TRANSFORMER(14),
     EFFECTS_DATA_TRANSFORMER(15),
+    MOUNT_TYPE_DATA_TRANSFORMER(16),
+    MOUNT_POTENTIAL_DATA_TRANSFORMER(17),
+    MOUNT_COLOR_DATA_TRANSFORMER(18),
+    MOUNT_ENERGY_DATA_TRANSFORMER(19),
+    MOUNT_STATS_DATA_TRANSFORMER(20),
+    MOUNT_STATS_MAX_DATA_TRANSFORMER(21),
     END_DATA_TRANSFORMER(255);
 
     private final byte id;

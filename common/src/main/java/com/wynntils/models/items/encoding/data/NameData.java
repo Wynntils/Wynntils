@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.data;
@@ -24,6 +24,16 @@ public record NameData(Optional<String> name) implements ItemData {
      */
     public static NameData fromSafeName(IdentifiableItemProperty property) {
         return new NameData(Optional.ofNullable(property.getName()));
+    }
+
+    /**
+     * Creates name data from a name that has already been validated by a trusted source.
+     *
+     * @param name the trusted item name
+     * @return a new {@link NameData} object with the given name
+     */
+    public static NameData fromTrustedName(String name) {
+        return new NameData(Optional.ofNullable(name));
     }
 
     /**

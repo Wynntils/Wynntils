@@ -363,6 +363,38 @@ public record KeyBindDefinition(
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_KP_ADD,
             true);
+
+    public static final KeyBindDefinition SHOW_IDENTIFICATION_RANGE = register(
+            "showIdentificationRange",
+            "Show identification range",
+            Managers.KeyBind.TOOLTIPS_CATEGORY,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_LEFT_SHIFT,
+            false);
+
+    public static final KeyBindDefinition SHOW_IDENTIFICATION_REROLL = register(
+            "showIdentificationReroll",
+            "Show identification reroll",
+            Managers.KeyBind.TOOLTIPS_CATEGORY,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_LEFT_CONTROL,
+            false);
+
+    public static final KeyBindDefinition SHOW_WEIGHT_DISTRIBUTION = register(
+            "showWeightDistribution",
+            "Show weight distribution",
+            Managers.KeyBind.TOOLTIPS_CATEGORY,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_LEFT_SHIFT,
+            false);
+
+    public static final KeyBindDefinition SHOW_WEIGHT_CONTRIBUTION = register(
+            "showWeightContribution",
+            "Show weight contribution",
+            Managers.KeyBind.TOOLTIPS_CATEGORY,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_LEFT_CONTROL,
+            false);
     // endregion
 
     // region Trade Market

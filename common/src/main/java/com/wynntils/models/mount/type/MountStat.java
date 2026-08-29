@@ -8,22 +8,24 @@ import com.wynntils.utils.EnumUtils;
 import java.util.Optional;
 
 public enum MountStat {
-    ACCELERATION("acceleration"),
-    ALTITUDE("altitude"),
-    JUMP_HEIGHT("jumpHeight"),
-    ENERGY("energy"),
-    HANDLING("handling"),
-    BOOST("boost"),
-    SPEED("speed"),
-    TOUGHNESS("toughness"),
-    TRAINING("training");
+    SPEED("speed", 0),
+    ACCELERATION("acceleration", 1),
+    JUMP_HEIGHT("jumpHeight", 2),
+    ALTITUDE("altitude", 3),
+    ENERGY("energy", 4),
+    HANDLING("handling", 5),
+    TOUGHNESS("toughness", 6),
+    BOOST("boost", 7),
+    TRAINING("training", 8);
 
     private final String name;
     private final String key;
+    private final int encodingId;
 
-    MountStat(String key) {
+    MountStat(String key, int encodingId) {
         this.name = EnumUtils.toNiceString(name());
         this.key = key;
+        this.encodingId = encodingId;
     }
 
     public static Optional<MountStat> fromName(String name) {
@@ -44,7 +46,21 @@ public enum MountStat {
         return Optional.empty();
     }
 
+    public static MountStat fromEncodingId(int encodingId) {
+        for (MountStat stat : values()) {
+            if (stat.encodingId == encodingId) {
+                return stat;
+            }
+        }
+
+        return null;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public int getEncodingId() {
+        return encodingId;
     }
 }

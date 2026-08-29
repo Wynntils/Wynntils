@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -26,17 +26,24 @@ import java.util.Map;
 import java.util.Optional;
 
 public class IdentificationDataTransformer extends DataTransformer<IdentificationData> {
+    private static final int PERFECT_INTERNAL_ROLL_FLAG = 1;
+    private static final int ICON_PREFIX_FLAG = 1 << 1;
+    private static final int VANILLA_METER_FLAG = 1 << 2;
+    private static final char EMPTY_VANILLA_METER = '\uE000';
+    private static final char FULL_VANILLA_METER = '\uE023';
+
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, IdentificationData data) {
         return switch (version) {
             case VERSION_1, VERSION_2 -> encodeIdentifications(data, data.extendedEncoding());
+            case VERSION_3 -> encodeIdentificationsV3(data, data.extendedEncoding());
         };
     }
 
     @Override
     protected boolean shouldEncodeData(ItemTransformingVersion version, IdentificationData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2 -> {
+            case VERSION_1, VERSION_2, VERSION_3 -> {
                 if (data.extendedEncoding()) {
                     yield !data.identifications().isEmpty();
                 } else {
@@ -54,6 +61,7 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
             ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
             case VERSION_1, VERSION_2 -> decodeIdentifications(byteReader);
+            case VERSION_3 -> decodeIdentificationsV3(byteReader);
         };
     }
 
@@ -257,5 +265,133 @@ public class IdentificationDataTransformer extends DataTransformer<Identificatio
 
         return ErrorOr.of(
                 new IdentificationData(identifications, possibleValuesMap, extendedData, pendingCalculations));
+    }
+
+    private ErrorOr<UnsignedByte[]> encodeIdentificationsV3(IdentificationData data, boolean extendedEncoding) {
+        if (data.identifications().size() > 255) {
+            WynntilsMod.warn("Item has more than 255 identifications!");
+            return ErrorOr.error("Cannot encode more than 255 identifications!");
+        }
+
+        List<UnsignedByte> bytes = new ArrayList<>();
+        byte encodedSize = (byte) data.identifications().stream()
+                .filter(stat -> {
+                    StatPossibleValues possibleValues = data.possibleValues().get(stat.statType());
+                    return possibleValues == null || !possibleValues.isPreIdentified();
+                })
+                .count();
+        bytes.add(UnsignedByte.of(encodedSize));
+        bytes.add(UnsignedByte.of((byte) (extendedEncoding ? 1 : 0)));
+
+        if (extendedEncoding) {
+            List<StatActualValue> preIdentifiedStats = data.identifications().stream()
+                    .filter(stat -> {
+                        StatPossibleValues possibleValues =
+                                data.possibleValues().get(stat.statType());
+                        return possibleValues != null && possibleValues.isPreIdentified();
+                    })
+                    .toList();
+            bytes.add(UnsignedByte.of((byte) preIdentifiedStats.size()));
+
+            for (StatActualValue identification : preIdentifiedStats) {
+                StatPossibleValues possibleValues = data.possibleValues().get(identification.statType());
+                ErrorOr<Void> result = encodeStatType(bytes, identification.statType());
+                if (result.hasError()) return ErrorOr.error(result.getError());
+                bytes.addAll(List.of(UnsignedByteUtils.encodeVariableSizedInteger(possibleValues.baseValue())));
+            }
+        }
+
+        for (StatActualValue identification : data.identifications()) {
+            StatPossibleValues possibleValues = data.possibleValues().get(identification.statType());
+            if (possibleValues == null) {
+                return ErrorOr.error("Unable to encode stat type, no possible values for id: "
+                        + identification.statType().getDisplayName());
+            }
+            if (possibleValues.isPreIdentified()) continue;
+
+            ErrorOr<Void> result = encodeStatType(bytes, identification.statType());
+            if (result.hasError()) return ErrorOr.error(result.getError());
+
+            if (extendedEncoding) {
+                bytes.addAll(List.of(UnsignedByteUtils.encodeVariableSizedInteger(possibleValues.baseValue())));
+            }
+            bytes.addAll(List.of(UnsignedByteUtils.encodeVariableSizedInteger(identification.value())));
+
+            int flags = 0;
+            if (identification.perfectInternalRoll()) flags |= PERFECT_INTERNAL_ROLL_FLAG;
+            if (identification.hasIconPrefix()) flags |= ICON_PREFIX_FLAG;
+            if (identification.vanillaMeter().isPresent()) flags |= VANILLA_METER_FLAG;
+            bytes.add(UnsignedByte.of((byte) flags));
+
+            if (identification.vanillaMeter().isPresent()) {
+                char vanillaMeter = identification.vanillaMeter().get();
+                if (vanillaMeter < EMPTY_VANILLA_METER || vanillaMeter > FULL_VANILLA_METER) {
+                    return ErrorOr.error("Invalid vanilla identification meter: " + vanillaMeter);
+                }
+                bytes.add(UnsignedByte.of((byte) (vanillaMeter - EMPTY_VANILLA_METER)));
+            }
+        }
+
+        return ErrorOr.of(bytes.toArray(new UnsignedByte[0]));
+    }
+
+    private ErrorOr<IdentificationData> decodeIdentificationsV3(ArrayReader<UnsignedByte> byteReader) {
+        List<StatActualValue> identifications = new ArrayList<>();
+        List<StatPossibleValues> possibleValues = new ArrayList<>();
+
+        int identificationCount = byteReader.read().value();
+        boolean extendedData = byteReader.read().value() == 1;
+        int preIdentifiedCount = extendedData ? byteReader.read().value() : 0;
+
+        for (int i = 0; i < preIdentifiedCount + identificationCount; i++) {
+            int id = byteReader.read().value();
+            Optional<StatType> statTypeOpt = Models.Stat.getStatTypeForId(id);
+            if (statTypeOpt.isEmpty()) {
+                WynntilsMod.warn("No stat type found for id " + id);
+                return ErrorOr.error("Unable to decode stat type for id: " + id);
+            }
+
+            StatType statType = statTypeOpt.get();
+            boolean preIdentified = i < preIdentifiedCount;
+            if (extendedData) {
+                int baseValue = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
+                RangedValue range = StatCalculator.calculatePossibleValuesRange(baseValue, preIdentified, statType);
+                possibleValues.add(new StatPossibleValues(statType, range, baseValue, preIdentified));
+                if (preIdentified) continue;
+            }
+
+            int value = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
+            int flags = byteReader.read().value();
+            Optional<Character> vanillaMeter = Optional.empty();
+            if ((flags & VANILLA_METER_FLAG) != 0) {
+                int meterOffset = byteReader.read().value();
+                if (meterOffset > FULL_VANILLA_METER - EMPTY_VANILLA_METER) {
+                    return ErrorOr.error("Invalid vanilla identification meter offset: " + meterOffset);
+                }
+                vanillaMeter = Optional.of((char) (EMPTY_VANILLA_METER + meterOffset));
+            }
+
+            identifications.add(new StatActualValue(
+                    statType,
+                    value,
+                    (flags & PERFECT_INTERNAL_ROLL_FLAG) != 0,
+                    RangedValue.NONE,
+                    (flags & ICON_PREFIX_FLAG) != 0,
+                    vanillaMeter));
+        }
+
+        HashMap<StatType, StatPossibleValues> possibleValuesMap = possibleValues.stream()
+                .collect(HashMap::new, (map, value) -> map.put(value.statType(), value), HashMap::putAll);
+        return ErrorOr.of(new IdentificationData(identifications, possibleValuesMap, extendedData, new HashMap<>()));
+    }
+
+    private ErrorOr<Void> encodeStatType(List<UnsignedByte> bytes, StatType statType) {
+        Optional<Integer> idOpt = Models.Stat.getIdForStatType(statType);
+        if (idOpt.isEmpty()) {
+            WynntilsMod.warn("No ID found for stat type " + statType.getApiName());
+            return ErrorOr.error("Unable to encode stat type: " + statType.getDisplayName());
+        }
+        bytes.add(UnsignedByte.of((byte) idOpt.get().intValue()));
+        return ErrorOr.of(null);
     }
 }

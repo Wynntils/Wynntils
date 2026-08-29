@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.block;
@@ -17,7 +17,7 @@ public class CustomGearTypeTransformer extends DataTransformer<CustomGearTypeDat
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, CustomGearTypeData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2 -> {
+            case VERSION_1, VERSION_2, VERSION_3 -> {
                 if (data.gearType().getEncodingId() == -1) {
                     yield ErrorOr.error("Gear type cannot be encoded.");
                 }
@@ -33,7 +33,7 @@ public class CustomGearTypeTransformer extends DataTransformer<CustomGearTypeDat
     public ErrorOr<CustomGearTypeData> decodeData(
             ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1, VERSION_2 -> {
+            case VERSION_1, VERSION_2, VERSION_3 -> {
                 GearType gearType = GearType.fromEncodingId(byteReader.read().value());
 
                 if (gearType == null) {

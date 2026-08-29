@@ -5,20 +5,22 @@
 package com.wynntils.models.mount.type;
 
 public enum MountType {
-    HORSE("Saddle", "Whistle", "Stable Story", 9),
-    WYVERN("Reins", "Flute", "The Canyon Guides", 84),
-    ADASAUR("Harness", "Ocarina", "Burning Bonds", 115);
+    HORSE("Saddle", "Whistle", "Stable Story", 9, 0),
+    WYVERN("Reins", "Flute", "The Canyon Guides", 84, 1),
+    ADASAUR("Harness", "Ocarina", "Burning Bonds", 115, 2);
 
     private String mountItemName;
     private String summonItemName;
     private String questRequirement;
     private int level;
+    private final int encodingId;
 
-    MountType(String mountItemName, String summonItemName, String questRequirement, int level) {
+    MountType(String mountItemName, String summonItemName, String questRequirement, int level, int encodingId) {
         this.mountItemName = mountItemName;
         this.summonItemName = summonItemName;
         this.questRequirement = questRequirement;
         this.level = level;
+        this.encodingId = encodingId;
     }
 
     public static MountType fromName(String name) {
@@ -28,6 +30,13 @@ public enum MountType {
             }
         }
 
+        return null;
+    }
+
+    public static MountType fromEncodingId(int id) {
+        for (MountType mountType : values()) {
+            if (mountType.encodingId == id) return mountType;
+        }
         return null;
     }
 
@@ -45,5 +54,9 @@ public enum MountType {
 
     public int getLevel() {
         return level;
+    }
+
+    public int getEncodingId() {
+        return encodingId;
     }
 }
