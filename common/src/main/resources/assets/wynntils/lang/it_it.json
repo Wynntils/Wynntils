@@ -2125,7 +2125,6 @@
   "screens.wynntils.itemSharing.extended.description1": "Codificare valori base e statistiche statiche, ad esempio Forza",
   "screens.wynntils.itemSharing.extended.description2": "Nota che gli oggetti codificati in questa modalità non seguiranno le modifiche degli oggetti, le statistiche sono congelate nel loro stato attuale.",
   "screens.wynntils.itemSharing.extended.name": "Codifica Estesa",
-  "screens.wynntils.itemSharing.itemName.description": "Condividere il nome personalizzato dell'oggetto creato?",
   "screens.wynntils.itemSharing.itemName.name": "Condividi Nome dell'Oggetto",
   "screens.wynntils.itemSharing.openRecord": "Apri Registro degli Oggetti",
   "screens.wynntils.itemSharing.save": "Salva nel Registro",
