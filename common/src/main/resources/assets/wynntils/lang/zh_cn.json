@@ -2125,7 +2125,6 @@
   "screens.wynntils.itemSharing.extended.description1": "编码基本值和静态统计，例如力量",
   "screens.wynntils.itemSharing.extended.description2": "请注意，以此模式编码的物品不会跟随物品更改，统计数据冻结在其当前状态。",
   "screens.wynntils.itemSharing.extended.name": "扩展编码",
-  "screens.wynntils.itemSharing.itemName.description": "分享自定义制作物品的名称？",
   "screens.wynntils.itemSharing.itemName.name": "分享物品名称",
   "screens.wynntils.itemSharing.openRecord": "打开物品记录",
   "screens.wynntils.itemSharing.save": "保存到记录",
