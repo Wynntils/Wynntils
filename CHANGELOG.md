@@ -1,11 +1,24 @@
-Container Search & Container Scroll
-- Housing song selection screen is now searchable and scrollable
+Chat Items
+- Added back major IDs
+- Mounts can now be shared in chat
+
+Custom Item Highlights
+- Mounts now have a rarity highlight
+
+Guides
+- Added major IDs to item guide
+
+Item Statistics Info
+- Added keybinds for the different shift/ctrl views, defaults match previous behaviour
+- Tweaked weighting segment view slightly
+- Added title to stats segment when viewing stat ranges, reroll chance or inner roll
+- Stats that are outdated no longer display "[NEW]" and will instead display a less accurate percentage, indicated by a ~ prefix
 
 Fixes
-- Fixed closing boxed item search on trade market preventing further interactions
-- Fixed trade market default sort always using left click to find quickest path
-- Fixed ctrl click message always displaying with valuables protection in trade market even with ctrl click config disabled
-- Fixed silencer not disabling when disabling the feature
-- Fixed bad chat tab ordering deleting tab on save
-- Fixed crashing when opening map when not on world
-- Fixed ability tree outdated message displaying when character/class wasn't parsed correctly and when player has a non-support rank
+- Summoning a mount with left click will now trigger auto 3rd person and whistle if enabled
+- Fixed the territory management hotkey not working in wars
+- Fixed tomes missing reroll count
+- Fixed chat and guide items only using the default emblem background for items
+- Fixed crafted items not being shareable
+- Fixed chat and guide charms missing stats
+- Fixed charm of the void not displaying percentage for gathering experience
