@@ -2128,7 +2128,6 @@
   "screens.wynntils.itemSharing.extended.description1": "Basiswerte und statische Statistiken kodieren, z.B. Stärke",
   "screens.wynntils.itemSharing.extended.description2": "Beachten Sie, dass Gegenstände, die in diesem Modus kodiert sind, keine Gegenstandsänderungen verfolgen, die Statistiken sind in ihrem aktuellen Zustand eingefroren.",
   "screens.wynntils.itemSharing.extended.name": "Erweiterte Kodierung",
-  "screens.wynntils.itemSharing.itemName.description": "Den benutzerdefinierten Namen des hergestellten Gegenstands teilen?",
   "screens.wynntils.itemSharing.itemName.name": "Gegenstandsname teilen",
   "screens.wynntils.itemSharing.openRecord": "Gegenstandsprotokoll öffnen",
   "screens.wynntils.itemSharing.save": "Im Protokoll speichern",
