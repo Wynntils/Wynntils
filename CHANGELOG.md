@@ -1,5 +1,6 @@
 Chat Items
 - Added back major IDs
+- Mounts can now be shared in chat
 
 Custom Item Highlights
 - Mounts now have a rarity highlight
