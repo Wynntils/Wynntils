@@ -2870,7 +2870,6 @@
   "screens.wynntils.itemSharing.extended.description1": "Кодировать базовые значения и статические характеристики, например, Сила",
   "screens.wynntils.itemSharing.extended.description2": "Обратите внимание, что предметы, закодированные в этом режиме, не будут следовать изменениям предметов, статистика заморожена в их текущем состоянии.",
   "screens.wynntils.itemSharing.extended.name": "Расширенное кодирование",
-  "screens.wynntils.itemSharing.itemName.description": "Поделиться пользовательским именем созданного предмета?",
   "screens.wynntils.itemSharing.itemName.name": "Поделиться именем предмета",
   "screens.wynntils.itemSharing.openRecord": "Открыть журнал предметов",
   "screens.wynntils.itemSharing.save": "Сохранить в журнале",
