@@ -2125,7 +2125,6 @@
   "screens.wynntils.itemSharing.extended.description1": "Kodowanie wartości podstawowych i statystyk statycznych, np. Siła",
   "screens.wynntils.itemSharing.extended.description2": "Zauważ, że przedmioty zakodowane w tym trybie nie będą śledzić zmian przedmiotów, statystyki są zamrożone w ich obecnym stanie.",
   "screens.wynntils.itemSharing.extended.name": "Rozszerzone kodowanie",
-  "screens.wynntils.itemSharing.itemName.description": "Udostępnić niestandardową nazwę wykonanego przedmiotu?",
   "screens.wynntils.itemSharing.itemName.name": "Udostępnij nazwę przedmiotu",
   "screens.wynntils.itemSharing.openRecord": "Otwórz rejestr przedmiotów",
   "screens.wynntils.itemSharing.save": "Zapisz w rejestrze",
