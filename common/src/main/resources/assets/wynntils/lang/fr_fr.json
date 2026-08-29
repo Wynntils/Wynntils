@@ -2129,7 +2129,6 @@
   "screens.wynntils.itemSharing.extended.description1": "Encoder les valeurs de base et les statistiques statiques, par exemple, Force",
   "screens.wynntils.itemSharing.extended.description2": "Notez que les objets encodés dans ce mode ne suivront pas les changements d'objets, les statistiques sont figées dans leur état actuel.",
   "screens.wynntils.itemSharing.extended.name": "Encodage Étendu",
-  "screens.wynntils.itemSharing.itemName.description": "Partager le nom personnalisé de l'objet fabriqué ?",
   "screens.wynntils.itemSharing.itemName.name": "Partager le Nom de l'Objet",
   "screens.wynntils.itemSharing.openRecord": "Ouvrir le Registre d'Objets",
   "screens.wynntils.itemSharing.save": "Enregistrer dans le Registre",
