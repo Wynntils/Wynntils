@@ -2125,7 +2125,6 @@
   "screens.wynntils.itemSharing.extended.description1": "Codificar valores base y estadísticas estáticas, por ejemplo, Fuerza",
   "screens.wynntils.itemSharing.extended.description2": "Tenga en cuenta que los ítems codificados en este modo no seguirán los cambios de ítems, las estadísticas están congeladas en su estado actual.",
   "screens.wynntils.itemSharing.extended.name": "Codificación Extendida",
-  "screens.wynntils.itemSharing.itemName.description": "¿Compartir el nombre personalizado del ítem elaborado?",
   "screens.wynntils.itemSharing.itemName.name": "Compartir Nombre del Ítem",
   "screens.wynntils.itemSharing.openRecord": "Abrir Registro de Ítems",
   "screens.wynntils.itemSharing.save": "Guardar en el Registro",
