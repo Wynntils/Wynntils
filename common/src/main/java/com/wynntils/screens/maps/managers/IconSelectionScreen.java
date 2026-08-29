@@ -70,7 +70,7 @@ public class IconSelectionScreen extends WynntilsScreen {
                 gridY,
                 gridWidth,
                 gridHeight,
-                icon -> tempSelectedIconId = icon.getIconId(),
+                icon -> tempSelectedIconId = (icon == null) ? MapIcon.NO_ICON_ID : icon.getIconId(),
                 () -> tempSelectedIconId));
 
         this.addRenderableWidget(new StyledButton(
@@ -98,7 +98,11 @@ public class IconSelectionScreen extends WynntilsScreen {
 
     private void onSave() {
         if (tempSelectedIconId != null && !tempSelectedIconId.isEmpty()) {
-            Services.MapData.getIcon(tempSelectedIconId).ifPresent(onIconSelect);
+            if (tempSelectedIconId.equals(MapIcon.NO_ICON_ID)) {
+                onIconSelect.accept(null);
+            } else {
+                Services.MapData.getIcon(tempSelectedIconId).ifPresent(onIconSelect);
+            }
         }
         this.onClose();
     }
@@ -182,7 +186,8 @@ public class IconSelectionScreen extends WynntilsScreen {
                 int cellX = getX() + i * CELL_SIZE;
                 int cellY = getY();
 
-                boolean selected = icon.getIconId().equals(selectedIconId);
+                String iconId = icon == null ? MapIcon.NO_ICON_ID : icon.getIconId();
+                boolean selected = iconId.equals(selectedIconId);
                 boolean hovered =
                         MathUtils.isInside(mouseX, mouseY, cellX, cellX + CELL_SIZE - 1, cellY, cellY + CELL_SIZE - 1);
 
@@ -196,31 +201,41 @@ public class IconSelectionScreen extends WynntilsScreen {
                     handleCursor(guiGraphics);
                 }
 
-                renderIcon(guiGraphics, icon, cellX, cellY);
+                if (icon == null) {
+                    FontRenderer.getInstance()
+                            .renderText(
+                                    guiGraphics,
+                                    StyledText.fromComponent(Component.translatable(
+                                            "screens.wynntils.map.managers.categoryManager.iconOptionWidget.noneText")),
+                                    cellX + CELL_SIZE / 2f,
+                                    cellY + CELL_SIZE / 2f,
+                                    CommonColors.WHITE,
+                                    HorizontalAlignment.CENTER,
+                                    VerticalAlignment.MIDDLE,
+                                    TextShadow.NORMAL);
+                } else {
+                    int iconWidth = icon.getWidth();
+                    int iconHeight = icon.getHeight();
+                    int drawX = cellX + (CELL_SIZE - iconWidth) / 2;
+                    int drawY = cellY + (CELL_SIZE - iconHeight) / 2;
+
+                    RenderUtils.drawTexturedRect(
+                            guiGraphics,
+                            RenderPipelines.GUI_TEXTURED,
+                            icon.getIdentifier(),
+                            CommonColors.WHITE,
+                            drawX,
+                            drawY,
+                            iconWidth,
+                            iconHeight,
+                            0f,
+                            0f,
+                            iconWidth,
+                            iconHeight,
+                            iconWidth,
+                            iconHeight);
+                }
             }
-        }
-
-        private void renderIcon(GuiGraphics guiGraphics, MapIcon icon, int cellX, int cellY) {
-            int iconWidth = icon.getWidth();
-            int iconHeight = icon.getHeight();
-            int drawX = cellX + (CELL_SIZE - iconWidth) / 2;
-            int drawY = cellY + (CELL_SIZE - iconHeight) / 2;
-
-            RenderUtils.drawTexturedRect(
-                    guiGraphics,
-                    RenderPipelines.GUI_TEXTURED,
-                    icon.getIdentifier(),
-                    CommonColors.WHITE,
-                    drawX,
-                    drawY,
-                    iconWidth,
-                    iconHeight,
-                    0f,
-                    0f,
-                    iconWidth,
-                    iconHeight,
-                    iconWidth,
-                    iconHeight);
         }
 
         @Override
@@ -257,9 +272,11 @@ public class IconSelectionScreen extends WynntilsScreen {
                 Supplier<String> selectedIconIdSupplier) {
             super(x, y, width, height, null);
 
-            List<MapIcon> icons = Services.MapData.getIcons()
+            List<MapIcon> icons = new ArrayList<>();
+            icons.add(null); // "None" option
+            icons.addAll(Services.MapData.getIcons()
                     .sorted(Comparator.comparing(MapIcon::getIconId))
-                    .toList();
+                    .toList());
 
             this.rows = chunkIntoRows(icons, onIconSelected, selectedIconIdSupplier);
         }

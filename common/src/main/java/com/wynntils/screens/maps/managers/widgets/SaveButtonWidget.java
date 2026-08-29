@@ -87,77 +87,18 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
         Optional.ofNullable(Services.MapData.getOverrideProvider(parent.getOverrideName(true)))
                 .ifPresent(provider -> builder.from(provider.getOverrideAttributes(null)));
 
-        buildOption(
-                builder,
-                parent.priorityOptionWidget.isChanged(),
-                parent.priorityOptionWidget.getValue(),
-                MapAttributesBuilder::setPriority);
-
-        buildOption(
-                builder,
-                parent.levelOptionWidget.isChanged(),
-                parent.levelOptionWidget.getValue(),
-                MapAttributesBuilder::setLevel);
-
-        buildOption(
-                builder,
-                parent.labelOptionWidget.isChanged(),
-                parent.labelOptionWidget.getValue(),
-                MapAttributesBuilder::setLabel);
-
-        buildOption(
-                builder,
-                parent.descriptionOptionWidget.isChanged(),
-                parent.descriptionOptionWidget.getValue(),
-                MapAttributesBuilder::setDescription);
-
-        buildOption(
-                builder,
-                parent.labelColorOptionWidget.isChanged(),
-                parent.labelColorOptionWidget.getValue(),
-                MapAttributesBuilder::setLabelColor);
-
-        buildOption(
-                builder,
-                parent.labelShadowOptionWidget.isChanged(),
-                parent.labelShadowOptionWidget.getValue(),
-                MapAttributesBuilder::setLabelShadow);
-
-        buildOption(
-                builder,
-                parent.iconOptionWidget.isChanged(),
-                parent.iconOptionWidget.getValue(),
-                MapAttributesBuilder::setIcon);
-
-        buildOption(
-                builder,
-                parent.iconColorOptionWidget.isChanged(),
-                parent.iconColorOptionWidget.getValue(),
-                MapAttributesBuilder::setIconColor);
-
-        buildOption(
-                builder,
-                parent.hasMarkerOptionWidget.isChanged(),
-                parent.hasMarkerOptionWidget.getValue(),
-                MapAttributesBuilder::setHasMarker);
-
-        buildOption(
-                builder,
-                parent.fillColorOptionWidget.isChanged(),
-                parent.fillColorOptionWidget.getValue(),
-                MapAttributesBuilder::setFillColor);
-
-        buildOption(
-                builder,
-                parent.borderColorOptionWidget.isChanged(),
-                parent.borderColorOptionWidget.getValue(),
-                MapAttributesBuilder::setBorderColor);
-
-        buildOption(
-                builder,
-                parent.borderWidthOptionWidget.isChanged(),
-                parent.borderWidthOptionWidget.getValue(),
-                MapAttributesBuilder::setBorderWidth);
+        applyOption(builder, parent.priorityOptionWidget, MapAttributesBuilder::setPriority);
+        applyOption(builder, parent.levelOptionWidget, MapAttributesBuilder::setLevel);
+        applyOption(builder, parent.labelOptionWidget, MapAttributesBuilder::setLabel);
+        applyOption(builder, parent.descriptionOptionWidget, MapAttributesBuilder::setDescription);
+        applyOption(builder, parent.labelColorOptionWidget, MapAttributesBuilder::setLabelColor);
+        applyOption(builder, parent.labelShadowOptionWidget, MapAttributesBuilder::setLabelShadow);
+        applyOption(builder, parent.iconOptionWidget, MapAttributesBuilder::setIcon);
+        applyOption(builder, parent.iconColorOptionWidget, MapAttributesBuilder::setIconColor);
+        applyOption(builder, parent.hasMarkerOptionWidget, MapAttributesBuilder::setHasMarker);
+        applyOption(builder, parent.fillColorOptionWidget, MapAttributesBuilder::setFillColor);
+        applyOption(builder, parent.borderColorOptionWidget, MapAttributesBuilder::setBorderColor);
+        applyOption(builder, parent.borderWidthOptionWidget, MapAttributesBuilder::setBorderWidth);
 
         // labelVisibility
         VisiblityOptionWidget labelVisibility = parent.labelVisibilityOptionWidget;
@@ -196,13 +137,13 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
         ToggleOptionWidget markerHasDistanceLabel = parent.markerHasDistanceLabelOptionWidget;
         ToggleOptionWidget markerHasIcon = parent.markerHasIconOptionWidget;
 
-        boolean markerOptionsInherited = isChanged(markerMinDistance)
-                || isChanged(markerMaxDistance)
-                || isChanged(markerFade)
-                || isChanged(markerBeaconColor)
-                || isChanged(markerHasLabel)
-                || isChanged(markerHasDistanceLabel)
-                || isChanged(markerHasIcon);
+        boolean markerOptionsInherited = markerMinDistance.isChanged()
+                || markerMaxDistance.isChanged()
+                || markerFade.isChanged()
+                || markerBeaconColor.isChanged()
+                || markerHasLabel.isChanged()
+                || markerHasDistanceLabel.isChanged()
+                || markerHasIcon.isChanged();
 
         MapMarkerOptionsImpl markerOptionsValue = new MapMarkerOptionsImpl(
                 valueOrNull(markerMinDistance),
@@ -230,6 +171,11 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
         return true;
     }
 
+    private <T> void applyOption(
+            MapAttributesBuilder builder, AbstractOptionWidget<T> widget, BiConsumer<MapAttributesBuilder, T> setter) {
+        setter.accept(builder, valueOrNull(widget));
+    }
+
     private <T> void buildOption(
             MapAttributesBuilder builder,
             boolean isChanged,
@@ -240,12 +186,8 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
         setter.accept(builder, widgetValue);
     }
 
-    private boolean isChanged(AbstractOptionWidget<?> widget) {
-        return widget.isChanged(); // || !widget.isInherited();
-    }
-
     private <T> T valueOrNull(AbstractOptionWidget<T> widget) {
-        return isChanged(widget) ? widget.getValue() : null;
+        return widget.isOverridden() ? widget.getValue() : null;
     }
 
     @Override

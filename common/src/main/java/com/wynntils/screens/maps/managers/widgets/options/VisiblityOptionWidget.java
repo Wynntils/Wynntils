@@ -120,7 +120,7 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
                         StyledText.fromString(getMessage().getString()),
                         getX(),
                         getY() + TOP_ROW_HEIGHT / 2f,
-                        !inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
+                        !inherited || isOverridden() ? CommonColors.WHITE : CommonColors.GRAY,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
@@ -362,6 +362,13 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
     @Override
     public boolean isChanged() {
         return !isSameVisibility(value, loadedValue);
+    }
+
+    @Override
+    public boolean isOverridden() {
+        MapVisibility effectiveInherited =
+                inheritedValue.isPresent() ? inheritedValue.orElse(defaultValue) : defaultValue;
+        return !isSameVisibility(value, effectiveInherited);
     }
 
     @Override

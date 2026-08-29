@@ -107,25 +107,13 @@ public class OverrideSelectionWidget extends AbstractWidget {
             RenderUtils.drawNineSliceScalingTexturedRect(
                     guiGraphics, backgroundTexture, rowX, rowY, rowWidth, optionHeight);
 
-            if (hasOverride(overrideType)) {
-                RenderUtils.drawScalingTexturedRect(
-                        guiGraphics,
-                        Texture.FAVORITE_ICON.identifier(),
-                        rowX + OPTION_ICON_GAP,
-                        rowY + (optionHeight - OPTION_ICON_SIZE) / 2f,
-                        OPTION_ICON_SIZE,
-                        OPTION_ICON_SIZE,
-                        Texture.FAVORITE_ICON.width(),
-                        Texture.FAVORITE_ICON.height());
-            }
-
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
                             StyledText.fromString(overrideType.getDisplayName()),
                             rowX + rowWidth / 2f,
                             rowY + optionHeight / 2f,
-                            CommonColors.WHITE,
+                            hasOverride(overrideType) ? CommonColors.WHITE : CommonColors.GRAY,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);

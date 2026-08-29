@@ -38,7 +38,7 @@ public abstract class AbstractOptionWidget<T> extends AbstractWidget {
     protected final Function<MapAttributes, Optional<T>> valueGetter;
 
     private Optional<T> ownValue;
-    private Optional<T> inheritedValue;
+    protected Optional<T> inheritedValue;
 
     protected boolean inherited;
 
@@ -74,6 +74,12 @@ public abstract class AbstractOptionWidget<T> extends AbstractWidget {
         T newValue = inheritedValue.orElse(defaultValue);
         setValue(newValue);
         generateTooltip();
+    }
+
+    public boolean isOverridden() {
+        T effectiveInherited =
+                (inheritedValue != null && inheritedValue.isPresent()) ? inheritedValue.get() : defaultValue;
+        return !Objects.equals(value, effectiveInherited);
     }
 
     public OptionCategory getCategory() {

@@ -22,6 +22,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Optional;
 import java.util.function.Function;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -54,7 +55,7 @@ public class IconOptionWidget extends AbstractOptionWidget<String> {
                         StyledText.fromString(getMessage().getString()),
                         getX(),
                         getY() + this.height / 2f,
-                        !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
+                        !this.inherited || isOverridden() ? CommonColors.WHITE : CommonColors.GRAY,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
@@ -79,32 +80,62 @@ public class IconOptionWidget extends AbstractOptionWidget<String> {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        MapIcon icon = Services.MapData.getIconOrFallback(value);
-        int iconWidth = icon.getWidth();
-        int iconHeight = icon.getHeight();
-        int iconBoxSize = Math.min(Math.max(iconWidth, iconHeight) + ICON_BORDER * 2, this.height);
+        boolean isNoneIcon = value == null || value.equals(MapIcon.NO_ICON_ID);
 
-        int iconBoxX = getX() + this.width - BUTTON_WIDTH - iconBoxSize - 5;
-        int iconBoxY = getY() + (this.height - iconBoxSize) / 2;
+        if (isNoneIcon) {
+            Font font = FontRenderer.getInstance().getFont();
+            Component noneText =
+                    Component.translatable("screens.wynntils.map.managers.categoryManager.iconOptionWidget.noneText");
+            int textWidth = font.width(noneText);
+            int textHeight = font.lineHeight;
 
-        RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics, Texture.MANAGER_TEXT_BOX_BACKGROUND, iconBoxX, iconBoxY, iconBoxSize, iconBoxSize);
+            int iconBoxWidth = textWidth + ICON_BORDER * 2;
+            int iconBoxHeight = Math.min(textHeight + ICON_BORDER * 2, this.height);
 
-        RenderUtils.drawTexturedRect(
-                guiGraphics,
-                RenderPipelines.GUI_TEXTURED,
-                icon.getIdentifier(),
-                CommonColors.WHITE,
-                iconBoxX + (iconBoxSize - iconWidth) / 2f,
-                iconBoxY + (iconBoxSize - iconHeight) / 2f,
-                iconWidth,
-                iconHeight,
-                0f,
-                0f,
-                iconWidth,
-                iconHeight,
-                iconWidth,
-                iconHeight);
+            int iconBoxX = getX() + this.width - BUTTON_WIDTH - iconBoxWidth - 5;
+            int iconBoxY = getY() + (this.height - iconBoxHeight) / 2;
+
+            RenderUtils.drawNineSliceScalingTexturedRect(
+                    guiGraphics, Texture.MANAGER_TEXT_BOX_BACKGROUND, iconBoxX, iconBoxY, iconBoxWidth, iconBoxHeight);
+
+            FontRenderer.getInstance()
+                    .renderText(
+                            guiGraphics,
+                            StyledText.fromComponent(noneText),
+                            iconBoxX + iconBoxWidth / 2f,
+                            iconBoxY + iconBoxHeight / 2f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+        } else {
+            MapIcon icon = Services.MapData.getIconOrFallback(value);
+            int iconWidth = icon.getWidth();
+            int iconHeight = icon.getHeight();
+            int iconBoxSize = Math.min(Math.max(iconWidth, iconHeight) + ICON_BORDER * 2, this.height);
+
+            int iconBoxX = getX() + this.width - BUTTON_WIDTH - iconBoxSize - 5;
+            int iconBoxY = getY() + (this.height - iconBoxSize) / 2;
+
+            RenderUtils.drawNineSliceScalingTexturedRect(
+                    guiGraphics, Texture.MANAGER_TEXT_BOX_BACKGROUND, iconBoxX, iconBoxY, iconBoxSize, iconBoxSize);
+
+            RenderUtils.drawTexturedRect(
+                    guiGraphics,
+                    RenderPipelines.GUI_TEXTURED,
+                    icon.getIdentifier(),
+                    CommonColors.WHITE,
+                    iconBoxX + (iconBoxSize - iconWidth) / 2f,
+                    iconBoxY + (iconBoxSize - iconHeight) / 2f,
+                    iconWidth,
+                    iconHeight,
+                    0f,
+                    0f,
+                    iconWidth,
+                    iconHeight,
+                    iconWidth,
+                    iconHeight);
+        }
     }
 
     @Override
@@ -119,7 +150,11 @@ public class IconOptionWidget extends AbstractOptionWidget<String> {
             this.playDownSound(McUtils.mc().getSoundManager());
 
             CategoryManagementScreen currentScreen = (CategoryManagementScreen) McUtils.screen();
-            McUtils.mc().setScreen(new IconSelectionScreen(currentScreen, icon -> setValue(icon.getIconId()), value));
+            McUtils.mc()
+                    .setScreen(new IconSelectionScreen(
+                            currentScreen,
+                            icon -> setValue(icon == null ? MapIcon.NO_ICON_ID : icon.getIconId()),
+                            value));
             return true;
         }
         return false;

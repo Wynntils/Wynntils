@@ -44,7 +44,7 @@ public class TextShadowOptionWidget extends AbstractOptionWidget<TextShadow> {
                         StyledText.fromString(getMessage().getString()),
                         getX(),
                         getY() + this.height / 2f,
-                        !this.inherited || isChanged() ? CommonColors.WHITE : CommonColors.GRAY,
+                        !this.inherited || isOverridden() ? CommonColors.WHITE : CommonColors.GRAY,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);

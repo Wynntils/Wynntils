@@ -155,15 +155,13 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
 
         renderIcon(guiGraphics, getIconX(), node.isLeaf());
 
-        renderOverrideIndicator(guiGraphics);
-
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
                         StyledText.fromString(node.getName()),
                         getIconX() + ICON_SIZE + ICON_TEXT_GAP,
                         y + ROW_HEIGHT / 2f,
-                        CommonColors.WHITE,
+                        hasOverride() ? CommonColors.WHITE : CommonColors.GRAY,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
@@ -196,20 +194,6 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
             RenderUtils.drawTexturedRect(
                     guiGraphics, Texture.MANAGER_FOLDER_ICON, iconX, y + (ROW_HEIGHT - ICON_SIZE) / 2f);
         }
-    }
-
-    private void renderOverrideIndicator(GuiGraphics guiGraphics) {
-        if (!hasOverride()) return;
-
-        RenderUtils.drawScalingTexturedRect(
-                guiGraphics,
-                Texture.FAVORITE_ICON.identifier(),
-                getIconX() - (node.isLeaf() ? 3 : 4),
-                y,
-                9,
-                9,
-                Texture.FAVORITE_ICON.width(),
-                Texture.FAVORITE_ICON.height());
     }
 
     private boolean hasOverride() {

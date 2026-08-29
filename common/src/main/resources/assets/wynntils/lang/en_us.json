@@ -3557,6 +3557,7 @@
   "screens.wynntils.map.managers.categoryManager.iconColor": "Icon Color",
   "screens.wynntils.map.managers.categoryManager.iconColor.description": "The color of the icon.",
   "screens.wynntils.map.managers.categoryManager.iconOptionWidget.editIconText": "Edit Icon",
+  "screens.wynntils.map.managers.categoryManager.iconOptionWidget.noneText": "None",
   "screens.wynntils.map.managers.categoryManager.iconSelectionScreen.cancel": "Cancel",
   "screens.wynntils.map.managers.categoryManager.iconSelectionScreen.save": "Save",
   "screens.wynntils.map.managers.categoryManager.iconVisibility": "Icon Visibility",
