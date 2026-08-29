@@ -2483,7 +2483,6 @@
   "screens.wynntils.itemSharing.extended.description1": "아이템의 기본 특성과 정적 특성(Strength 등)을 같이 인코딩합니다.",
   "screens.wynntils.itemSharing.extended.description2": "이 설정을 활성화하면 아이템의 변경사항을 적용하지 않고, 현재 특성을 그대로 보존합니다.",
   "screens.wynntils.itemSharing.extended.name": "인코딩 확장",
-  "screens.wynntils.itemSharing.itemName.description": "제작 아이템의 커스텀 이름도 공유할까요?",
   "screens.wynntils.itemSharing.itemName.name": "아이템 이름 공유",
   "screens.wynntils.itemSharing.openRecord": "아이템 레코드 열기",
   "screens.wynntils.itemSharing.save": "레코드에 저장",
