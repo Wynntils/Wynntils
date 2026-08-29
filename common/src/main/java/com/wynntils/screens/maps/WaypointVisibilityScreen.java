@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
@@ -308,6 +309,10 @@ public class WaypointVisibilityScreen extends AbstractMapScreen {
                         TextShadow.NORMAL);
 
         renderZoomText(guiGraphics);
+
+        if (isPanning) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
+        }
     }
 
     @Override
