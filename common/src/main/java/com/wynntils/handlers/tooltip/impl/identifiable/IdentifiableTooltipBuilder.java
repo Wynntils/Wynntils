@@ -4,6 +4,7 @@
  */
 package com.wynntils.handlers.tooltip.impl.identifiable;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.CommonStyles;
@@ -46,6 +47,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
@@ -429,16 +431,33 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                     || instance != null
                             && instance.metGearRequirements().skillReqsMet().getOrDefault(skill, false);
             String icon = count == 0 ? "\uE005" : fulfilled ? "\uE006" : "\uE007";
-            line.append(withWhiteShadow(Component.literal(icon + "\uDAFF\uDFFF")
-                    .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_REQUIREMENT_SPRITE_FONT))));
-            line.append(Component.literal("\uDB00\uDC03").withStyle(CommonStyles.SPACE));
-            line.append(Component.literal(String.valueOf(count))
-                    .withStyle(Style.EMPTY
-                            .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
-                            .withColor(count == 0 ? 0x555555 : fulfilled ? 0xacfac6 : 0xfaacac)));
-            line.append(Component.literal("\uDB00\uDC04").withStyle(CommonStyles.SPACE));
+
+            Component skillValue = Component.empty()
+                    .append(withWhiteShadow(Component.literal(icon + "\uDAFF\uDFFF")
+                            .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_REQUIREMENT_SPRITE_FONT))))
+                    .append(Component.literal("\uDB00\uDC03").withStyle(CommonStyles.SPACE))
+                    .append(Component.literal(String.valueOf(count))
+                            .withStyle(Style.EMPTY
+                                    .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
+                                    .withColor(count == 0 ? 0x555555 : fulfilled ? 0xacfac6 : 0xfaacac)));
+
+            line.append(centerInSkillCell(skillValue));
         }
         return line;
+    }
+
+    private Component centerInSkillCell(Component component) {
+        int contentWidth = McUtils.mc().font.width(component);
+
+        int left = Math.max(0, (27 - contentWidth) / 2);
+        int right = Math.max(0, 27 - contentWidth - left);
+
+        return Component.empty()
+                .append(Component.literal(Managers.Font.calculateOffset(0, left))
+                        .withStyle(CommonStyles.SPACE))
+                .append(component)
+                .append(Component.literal(Managers.Font.calculateOffset(0, right))
+                        .withStyle(CommonStyles.SPACE));
     }
 
     private List<TooltipLine> buildShiny(IdentifiableItemProperty<?, ?> item, GearTier tier) {
