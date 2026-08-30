@@ -4,18 +4,14 @@
  */
 package com.wynntils.screens.maps.managers.type;
 
+import com.wynntils.utils.EnumUtils;
+
 public enum OverrideType {
-    MAP_LOCATION_OVERRIDE("Map Location Override"),
-    MAP_PATH_OVERRIDE("Map Path Override"),
-    MAP_AREA_OVERRIDE("Map Area Override");
-
-    private final String displayName;
-
-    OverrideType(String displayName) {
-        this.displayName = displayName;
-    }
+    MAP_LOCATION_OVERRIDE,
+    MAP_PATH_OVERRIDE,
+    MAP_AREA_OVERRIDE;
 
     public String getDisplayName() {
-        return displayName;
+        return EnumUtils.toNiceString(name());
     }
 }

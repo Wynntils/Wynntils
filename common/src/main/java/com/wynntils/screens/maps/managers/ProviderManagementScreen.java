@@ -7,6 +7,7 @@ package com.wynntils.screens.maps.managers;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
+import com.wynntils.screens.maps.AbstractMapScreen;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -16,16 +17,16 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 public final class ProviderManagementScreen extends WynntilsScreen {
-    private final MainMapScreen previousScreen;
+    private final AbstractMapScreen previousScreen;
     private int offsetX;
     private int offsetY;
 
-    private ProviderManagementScreen(MainMapScreen previousScreen) {
+    private ProviderManagementScreen(AbstractMapScreen previousScreen) {
         super(Component.literal("Provider Management Screen"));
         this.previousScreen = previousScreen;
     }
 
-    public static Screen create(MainMapScreen oldMapScreen) {
+    public static Screen create(AbstractMapScreen oldMapScreen) {
         return new ProviderManagementScreen(oldMapScreen);
     }
 
@@ -35,8 +36,6 @@ public final class ProviderManagementScreen extends WynntilsScreen {
 
         offsetX = (int) ((this.width - Texture.MANAGER_BACKGROUND.width()) / 2f);
         offsetY = (int) ((this.height - Texture.MANAGER_BACKGROUND.height()) / 2f);
-
-        Services.MapData.getFeatures().forEach((element) -> WynntilsMod.info("feature: " + element.getCategoryId()));
     }
 
     @Override
@@ -50,6 +49,6 @@ public final class ProviderManagementScreen extends WynntilsScreen {
 
     @Override
     public void onClose() {
-        McUtils.mc().setScreen(previousScreen);
+        McUtils.setScreen(previousScreen);
     }
 }

@@ -16,6 +16,8 @@ import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
+import com.wynntils.screens.maps.managers.CategoryManagementScreen;
+import com.wynntils.screens.maps.managers.ProviderManagementScreen;
 import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.map.type.TerritoryFilterType;
 import com.wynntils.services.mapdata.attributes.impl.AbstractMapAreaAttributes;
@@ -267,6 +269,30 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.guildMap.mainMap.name")),
                         Component.translatable("screens.wynntils.guildMap.mainMap.description")
                                 .withStyle(ChatFormatting.GRAY))));
+
+        addMapButton(new MapButton(
+                Texture.CATEGORY_MANAGER_ICON,
+                (b) -> McUtils.setScreen(CategoryManagementScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .append(Component.translatable("screens.wynntils.map.categoryManager.name"))
+                                .withStyle(ChatFormatting.AQUA),
+                        Component.translatable("screens.wynntils.map.categoryManager.description1")
+                                .withStyle(ChatFormatting.GRAY),
+                        Component.empty(),
+                        Component.translatable("screens.wynntils.map.categoryManager.description2")
+                                .withStyle(ChatFormatting.GRAY))));
+
+        addMapButton(new MapButton(
+                Texture.PROVIDER_MANAGER_ICON,
+                (b) -> McUtils.setScreen(ProviderManagementScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .append(Component.translatable("screens.wynntils.map.providerManager.name"))
+                                .withStyle(ChatFormatting.RED),
+                        Component.translatable("screens.wynntils.map.providerManager.description1")
+                                .withStyle(ChatFormatting.GRAY))));
+
 
         addMapButton(new MapButton(
                 Texture.HELP_ICON,

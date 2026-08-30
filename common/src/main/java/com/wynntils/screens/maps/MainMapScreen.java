@@ -179,21 +179,26 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         addMapButton(new MapButton(
                 Texture.CATEGORY_MANAGER_ICON,
-                (b) -> McUtils.mc().setScreen(CategoryManagementScreen.create(this)),
+                (b) -> McUtils.setScreen(CategoryManagementScreen.create(this)),
                 List.of(
                         Component.literal("[>] ")
-                                .withStyle(ChatFormatting.AQUA)
-                                .append(Component.translatable("Category Management")),
-                        Component.translatable("Edit categories").withStyle(ChatFormatting.GRAY))));
+                                .append(Component.translatable("screens.wynntils.map.categoryManager.name"))
+                                .withStyle(ChatFormatting.AQUA),
+                        Component.translatable("screens.wynntils.map.categoryManager.description1")
+                                .withStyle(ChatFormatting.GRAY),
+                        Component.empty(),
+                        Component.translatable("screens.wynntils.map.categoryManager.description2")
+                                .withStyle(ChatFormatting.GRAY))));
 
         addMapButton(new MapButton(
                 Texture.PROVIDER_MANAGER_ICON,
-                (b) -> McUtils.mc().setScreen(ProviderManagementScreen.create(this)),
+                (b) -> McUtils.setScreen(ProviderManagementScreen.create(this)),
                 List.of(
                         Component.literal("[>] ")
-                                .withStyle(ChatFormatting.RED)
-                                .append(Component.translatable("Provider Management")),
-                        Component.translatable("Edit providers").withStyle(ChatFormatting.GRAY))));
+                                .append(Component.translatable("screens.wynntils.map.providerManager.name"))
+                                .withStyle(ChatFormatting.RED),
+                        Component.translatable("screens.wynntils.map.providerManager.description1")
+                                .withStyle(ChatFormatting.GRAY))));
 
         addMapButton(new MapButton(
                 Texture.HELP_ICON,

@@ -7,25 +7,21 @@ package com.wynntils.screens.maps.managers.type;
 import net.minecraft.network.chat.Component;
 
 public enum OptionCategory {
-    GENERAL("General", "screens.wynntils.map.managers.categoryManager.optionCategory.general"),
-    LABEL("Label", "screens.wynntils.map.managers.categoryManager.optionCategory.label"),
-    ICON("Icon", "screens.wynntils.map.managers.categoryManager.optionCategory.icon"),
-    MARKER("Marker", "screens.wynntils.map.managers.categoryManager.optionCategory.marker"),
-    AREA_BORDER("Area & Border", "screens.wynntils.map.managers.categoryManager.optionCategory.AreaAndBorder");
+    GENERAL("general"),
+    LABEL("label"),
+    ICON("icon"),
+    MARKER("marker"),
+    AREA_BORDER("areaAndBorder");
 
-    private final String name;
-    private final String displayName;
+    private static final String TRANSLATION_KEY_PREFIX = "screens.wynntils.map.managers.categoryManager.optionCategory.";
 
-    OptionCategory(String name, String displayName) {
-        this.name = name;
-        this.displayName = displayName;
-    }
+    private final String translationKey;
 
-    public String getName() {
-        return name;
+    OptionCategory(String translationKey) {
+        this.translationKey = translationKey;
     }
 
     public Component getDisplayName() {
-        return Component.translatable(displayName);
+        return Component.translatable(TRANSLATION_KEY_PREFIX + translationKey);
     }
 }

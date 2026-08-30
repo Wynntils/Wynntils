@@ -10,6 +10,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
+import com.wynntils.screens.maps.AbstractMapScreen;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.screens.maps.managers.type.OverrideType;
@@ -48,7 +49,7 @@ public final class CategoryManagementScreen extends WynntilsScreen {
     private static final int WIDTH_OFFSET = 15;
     private static final int HEIGHT_OFFSET = 18;
 
-    private final MainMapScreen previousScreen;
+    private final AbstractMapScreen previousScreen;
     private int offsetX;
     private int offsetY;
 
@@ -99,12 +100,12 @@ public final class CategoryManagementScreen extends WynntilsScreen {
     private String selectedCategory;
     private OverrideType selectedOverrideType = OverrideType.MAP_LOCATION_OVERRIDE;
 
-    private CategoryManagementScreen(MainMapScreen previousScreen) {
+    private CategoryManagementScreen(AbstractMapScreen previousScreen) {
         super(Component.literal("Category Management Screen"));
         this.previousScreen = previousScreen;
     }
 
-    public static Screen create(MainMapScreen previousScreen) {
+    public static Screen create(AbstractMapScreen previousScreen) {
         return new CategoryManagementScreen(previousScreen);
     }
 
@@ -450,7 +451,7 @@ public final class CategoryManagementScreen extends WynntilsScreen {
 
     @Override
     public void onClose() {
-        McUtils.mc().setScreen(previousScreen);
+        McUtils.setScreen(previousScreen);
     }
 
     private void updateMenu() {
