@@ -40,12 +40,15 @@ final class CraftedTooltipOptionDecorator implements TooltipIdentificationDecora
     @Override
     public MutableComponent getSuffix(
             StatActualValue actualValue, StatPossibleValues possibleValues, TooltipStyle style) {
-        if (!options.identificationDecorations() || actualValue.vanillaMeter().isEmpty()) {
-            return Component.empty();
-        }
+        if (!options.identificationDecorations()) return Component.empty();
 
-        float percentage = StatCalculator.getPercentageFromVanillaMeter(
-                actualValue.vanillaMeter().get());
+        float percentage;
+        if (actualValue.vanillaMeter().isPresent()) {
+            percentage = StatCalculator.getPercentageFromVanillaMeter(
+                    actualValue.vanillaMeter().get());
+        } else {
+            percentage = 0;
+        }
         MutableComponent suffix = ColorScaleUtils.getPercentageTextComponent(
                         options.colorMap(), percentage, options.colorLerp(), options.decimalPlaces(), true)
                 .withStyle(componentStyle -> componentStyle.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT));
