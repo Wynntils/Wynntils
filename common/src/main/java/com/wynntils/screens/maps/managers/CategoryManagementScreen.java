@@ -11,7 +11,6 @@ import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.AbstractMapScreen;
-import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.screens.maps.managers.type.OverrideType;
 import com.wynntils.screens.maps.managers.widgets.CategorySearchWidget;

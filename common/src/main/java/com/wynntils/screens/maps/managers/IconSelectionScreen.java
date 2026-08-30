@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.maps.managers;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -54,9 +52,7 @@ public class IconSelectionScreen extends WynntilsScreen {
     private String tempSelectedIconId;
 
     public IconSelectionScreen(
-            CategoryManagementScreen previousScreen,
-            Consumer<MapIcon> onIconSelect,
-            String currentIconId) {
+            CategoryManagementScreen previousScreen, Consumer<MapIcon> onIconSelect, String currentIconId) {
         super(Component.literal("Icon Selection Screen"));
         this.previousScreen = previousScreen;
         this.onIconSelect = onIconSelect;
@@ -72,12 +68,7 @@ public class IconSelectionScreen extends WynntilsScreen {
         int gridX = (this.width - gridWidth) / 2;
         int gridY = (this.height - gridHeight) / 2;
 
-
-        this.addRenderableWidget(new IconGridScrollWidget(
-                gridX,
-                gridY,
-                gridWidth,
-                gridHeight));
+        this.addRenderableWidget(new IconGridScrollWidget(gridX, gridY, gridWidth, gridHeight));
 
         this.addRenderableWidget(new StyledButton(
                 (this.width / 2) - BUTTON_WIDTH - BUTTON_GAP / 2,
@@ -221,32 +212,15 @@ public class IconSelectionScreen extends WynntilsScreen {
 
                 String iconId = icon == null ? MapIcon.NO_ICON_ID : icon.getIconId();
                 boolean selected = iconId.equals(selectedIconId);
-                boolean hovered = MathUtils.isInside(
-                        mouseX,
-                        mouseY,
-                        cellX,
-                        cellX + CELL_SIZE - 1,
-                        cellY,
-                        cellY + CELL_SIZE - 1);
+                boolean hovered =
+                        MathUtils.isInside(mouseX, mouseY, cellX, cellX + CELL_SIZE - 1, cellY, cellY + CELL_SIZE - 1);
 
                 if (selected) {
-                    RenderUtils.drawRect(
-                            guiGraphics,
-                            SELECTED_COLOR,
-                            cellX,
-                            cellY,
-                            CELL_SIZE,
-                            CELL_SIZE);
+                    RenderUtils.drawRect(guiGraphics, SELECTED_COLOR, cellX, cellY, CELL_SIZE, CELL_SIZE);
 
                     handleCursor(guiGraphics);
                 } else if (hovered) {
-                    RenderUtils.drawRect(
-                            guiGraphics,
-                            HOVERED_COLOR,
-                            cellX,
-                            cellY,
-                            CELL_SIZE,
-                            CELL_SIZE);
+                    RenderUtils.drawRect(guiGraphics, HOVERED_COLOR, cellX, cellY, CELL_SIZE, CELL_SIZE);
 
                     handleCursor(guiGraphics);
                 }
@@ -297,9 +271,7 @@ public class IconSelectionScreen extends WynntilsScreen {
             this.playDownSound(McUtils.mc().getSoundManager());
 
             MapIcon icon = icons.get(index);
-            IconSelectionScreen.this.tempSelectedIconId = (icon == null)
-                    ? MapIcon.NO_ICON_ID
-                    : icon.getIconId();
+            IconSelectionScreen.this.tempSelectedIconId = (icon == null) ? MapIcon.NO_ICON_ID : icon.getIconId();
             return true;
         }
 
@@ -312,13 +284,7 @@ public class IconSelectionScreen extends WynntilsScreen {
         private final Runnable onClick;
 
         private StyledButton(
-                int x,
-                int y,
-                int width,
-                int height,
-                Component message,
-                Texture backgroundTexture,
-                Runnable onClick) {
+                int x, int y, int width, int height, Component message, Texture backgroundTexture, Runnable onClick) {
             super(x, y, width, height, message);
             this.backgroundTexture = backgroundTexture;
             this.onClick = onClick;
@@ -331,12 +297,7 @@ public class IconSelectionScreen extends WynntilsScreen {
             }
 
             RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics,
-                    backgroundTexture,
-                    getX(),
-                    getY(),
-                    getWidth(),
-                    getHeight());
+                    guiGraphics, backgroundTexture, getX(), getY(), getWidth(), getHeight());
 
             FontRenderer.getInstance()
                     .renderText(

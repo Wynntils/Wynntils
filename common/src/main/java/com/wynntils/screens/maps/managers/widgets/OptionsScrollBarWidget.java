@@ -1,11 +1,17 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets;
 
-import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.screens.maps.managers.widgets.options.AbstractOptionWidget;
 import com.wynntils.screens.maps.managers.widgets.options.CategoryHeaderWidget;
-import com.wynntils.utils.MathUtils;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.MouseButtonEvent;
 
@@ -99,7 +105,7 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
         }
 
         for (AbstractOptionWidget<?> abstractOptionWidget : getWidgets()) {
-            if (isInsideViewport(event.x(),event.y())
+            if (isInsideViewport(event.x(), event.y())
                     && abstractOptionWidget.isHovered()
                     && abstractOptionWidget.mouseClicked(event, isDoubleClick)) {
                 return true;

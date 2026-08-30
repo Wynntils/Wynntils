@@ -293,7 +293,6 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         Component.translatable("screens.wynntils.map.providerManager.description1")
                                 .withStyle(ChatFormatting.GRAY))));
 
-
         addMapButton(new MapButton(
                 Texture.HELP_ICON,
                 (b) -> {},

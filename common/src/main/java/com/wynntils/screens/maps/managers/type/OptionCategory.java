@@ -13,7 +13,8 @@ public enum OptionCategory {
     MARKER("marker"),
     AREA_BORDER("areaAndBorder");
 
-    private static final String TRANSLATION_KEY_PREFIX = "screens.wynntils.map.managers.categoryManager.optionCategory.";
+    private static final String TRANSLATION_KEY_PREFIX =
+            "screens.wynntils.map.managers.categoryManager.optionCategory.";
 
     private final String translationKey;
 

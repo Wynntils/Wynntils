@@ -234,12 +234,7 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
         int contentWidth = getContentWidth() + leftPadding + HORIZONTAL_PADDING;
 
         return MathUtils.isInside(
-                (int) mouseX,
-                (int) mouseY,
-                contentX,
-                contentX + contentWidth - 1,
-                y,
-                y + ROW_HEIGHT - 1);
+                (int) mouseX, (int) mouseY, contentX, contentX + contentWidth - 1, y, y + ROW_HEIGHT - 1);
     }
 
     @Override

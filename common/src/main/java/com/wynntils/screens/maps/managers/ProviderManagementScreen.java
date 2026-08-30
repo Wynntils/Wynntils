@@ -4,11 +4,8 @@
  */
 package com.wynntils.screens.maps.managers;
 
-import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.screens.maps.AbstractMapScreen;
-import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
