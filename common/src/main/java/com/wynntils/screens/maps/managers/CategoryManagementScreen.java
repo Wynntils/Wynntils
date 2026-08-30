@@ -340,7 +340,7 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         // endregion
 
         optionsScrollBar = new OptionsScrollBarWidget(
-                offsetX + WIDTH_OFFSET + 200 + 5, offsetY + HEIGHT_OFFSET + 25, 341, 284 - 50, this);
+                offsetX + WIDTH_OFFSET + 200 + 5, offsetY + HEIGHT_OFFSET + 25, 341, 284 - 50);
 
         optionsScrollBar.addWidget(priorityOptionWidget);
         optionsScrollBar.addWidget(levelOptionWidget);
@@ -479,6 +479,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         for (AbstractOptionWidget<?> widget : optionsScrollBar.getRegisteredWidgets()) {
             widget.updateFromAttributes(ownAttributes, resolvedAttributes);
         }
+
+        optionsScrollBar.updateWidgetPositions();
     }
 
     private void updateOptionWidgetsVisibility() {
@@ -488,35 +490,37 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         boolean isArea = selectedOverrideType == OverrideType.MAP_AREA_OVERRIDE;
 
         // Feature (common) Attributes - always visible
-        priorityOptionWidget.visible = true;
-        levelOptionWidget.visible = true;
+        priorityOptionWidget.display = true;
+        levelOptionWidget.display = true;
 
         // Label Attributes - always visible
-        labelOptionWidget.visible = true;
-        descriptionOptionWidget.visible = true;
-        labelColorOptionWidget.visible = true;
-        labelShadowOptionWidget.visible = true;
-        labelVisibilityOptionWidget.visible = true;
+        labelOptionWidget.display = true;
+        descriptionOptionWidget.display = true;
+        labelColorOptionWidget.display = true;
+        labelShadowOptionWidget.display = true;
+        labelVisibilityOptionWidget.display = true;
 
         // Icon Attributes - MapLocation only
-        iconOptionWidget.visible = isLocation;
-        iconVisibilityOptionWidget.visible = isLocation;
-        iconColorOptionWidget.visible = isLocation;
+        iconOptionWidget.display = isLocation;
+        iconVisibilityOptionWidget.display = isLocation;
+        iconColorOptionWidget.display = isLocation;
 
         // MapLocation Marker Attributes - MapLocation only
-        hasMarkerOptionWidget.visible = isLocation;
-        markerMinDistanceOptionWidget.visible = isLocation;
-        markerMaxDistanceOptionWidget.visible = isLocation;
-        markerFadeOptionWidget.visible = isLocation;
-        markerBeaconColorOptionWidget.visible = isLocation;
-        markerHasLabelOptionWidget.visible = isLocation;
-        markerHasDistanceLabelOptionWidget.visible = isLocation;
-        markerHasIconOptionWidget.visible = isLocation;
+        hasMarkerOptionWidget.display = isLocation;
+        markerMinDistanceOptionWidget.display = isLocation;
+        markerMaxDistanceOptionWidget.display = isLocation;
+        markerFadeOptionWidget.display = isLocation;
+        markerBeaconColorOptionWidget.display = isLocation;
+        markerHasLabelOptionWidget.display = isLocation;
+        markerHasDistanceLabelOptionWidget.display = isLocation;
+        markerHasIconOptionWidget.display = isLocation;
 
         // Area & Border Attributes - MapArea only
-        fillColorOptionWidget.visible = isArea;
-        borderColorOptionWidget.visible = isArea;
-        borderWidthOptionWidget.visible = isArea;
+        fillColorOptionWidget.display = isArea;
+        borderColorOptionWidget.display = isArea;
+        borderWidthOptionWidget.display = isArea;
+
+        optionsScrollBar.updateWidgetPositions();
     }
 
     public void setSelectedCategory(String category) {

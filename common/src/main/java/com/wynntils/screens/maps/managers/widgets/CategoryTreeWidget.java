@@ -157,8 +157,6 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
     protected void renderCategoryTree(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (filteredRoot == null || rowWidgets.isEmpty()) return;
 
-        updateRowPositions();
-
         for (CategoryTreeEntryWidget widget : rowWidgets) {
             // Cull rows outside the scissored area
             if (widget.getY() + CategoryTreeEntryWidget.ROW_HEIGHT < this.y || widget.getY() > this.y + this.height) {
@@ -221,9 +219,7 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        boolean result = super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
+    protected void onScrollOffsetChanged() {
         updateRowPositions();
-        return result;
     }
 }

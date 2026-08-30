@@ -77,8 +77,15 @@ public abstract class DoubleScrollBarWidget extends AbstractWidget {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
 
+        int oldScrollOffsetX = scrollOffsetX;
+        int oldScrollOffsetY = scrollOffsetY;
+
         scrollOffsetX = Math.max(0, Math.min(scrollOffsetX, getMaxScrollOffsetX()));
         scrollOffsetY = Math.max(0, Math.min(scrollOffsetY, getMaxScrollOffsetY()));
+
+        if (oldScrollOffsetX != scrollOffsetX || oldScrollOffsetY != scrollOffsetY) {
+            onScrollOffsetChanged();
+        }
     }
 
     private int getViewportWidth() {
@@ -229,6 +236,7 @@ public abstract class DoubleScrollBarWidget extends AbstractWidget {
                     getMaxScrollOffsetY()));
 
             scrollOffsetY = Math.max(0, Math.min(newOffset, getMaxScrollOffsetY()));
+            onScrollOffsetChanged();
 
             return super.mouseDragged(event, dragX, dragY);
         }
@@ -244,6 +252,7 @@ public abstract class DoubleScrollBarWidget extends AbstractWidget {
                     getMaxScrollOffsetX()));
 
             scrollOffsetX = Math.max(0, Math.min(newOffset, getMaxScrollOffsetX()));
+            onScrollOffsetChanged();
 
             return super.mouseDragged(event, dragX, dragY);
         }
@@ -255,24 +264,28 @@ public abstract class DoubleScrollBarWidget extends AbstractWidget {
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (isOntopOfVerticalUpButton(event.x(), event.y())) {
             scrollOffsetY = Math.max(0, scrollOffsetY - SCROLL_ARROW_STEP);
+            onScrollOffsetChanged();
             this.playDownSound(Minecraft.getInstance().getSoundManager());
             return true;
         }
 
         if (isOntopOfVerticalDownButton(event.x(), event.y())) {
             scrollOffsetY = Math.min(getMaxScrollOffsetY(), scrollOffsetY + SCROLL_ARROW_STEP);
+            onScrollOffsetChanged();
             this.playDownSound(Minecraft.getInstance().getSoundManager());
             return true;
         }
 
         if (isOntopOfHorizontalLeftButton(event.x(), event.y())) {
             scrollOffsetX = Math.max(0, scrollOffsetX - SCROLL_ARROW_STEP);
+            onScrollOffsetChanged();
             this.playDownSound(Minecraft.getInstance().getSoundManager());
             return true;
         }
 
         if (isOntopOfHorizontalRightButton(event.x(), event.y())) {
             scrollOffsetX = Math.min(getMaxScrollOffsetX(), scrollOffsetX + SCROLL_ARROW_STEP);
+            onScrollOffsetChanged();
             this.playDownSound(Minecraft.getInstance().getSoundManager());
             return true;
         }
@@ -302,17 +315,20 @@ public abstract class DoubleScrollBarWidget extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        int scrollAmount = (int) (-deltaY * SCROLL_FACTOR);
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        int scrollAmount = (int) (-scrollY * SCROLL_FACTOR);
 
         if (isOverHorizontalScrollBar(mouseX, mouseY)) {
             scrollOffsetX = Math.max(0, Math.min(scrollOffsetX + scrollAmount, getMaxScrollOffsetX()));
         } else {
             scrollOffsetY = Math.max(0, Math.min(scrollOffsetY + scrollAmount, getMaxScrollOffsetY()));
         }
+        onScrollOffsetChanged();
 
         return true;
     }
+
+    protected abstract void onScrollOffsetChanged();
 
     private boolean isOverHorizontalScrollBar(double mouseX, double mouseY) {
         if (!isHorizontalScrollNeeded()) return false;

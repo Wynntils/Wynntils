@@ -36,6 +36,7 @@ public abstract class AbstractOptionWidget<T> extends AbstractWidget {
     protected Component description;
     protected List<Component> generatedTooltip = new ArrayList<>();
     protected final Function<MapAttributes, Optional<T>> valueGetter;
+    public boolean display = true;
 
     private Optional<T> ownValue;
     protected Optional<T> inheritedValue;

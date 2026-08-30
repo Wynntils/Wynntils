@@ -5,7 +5,6 @@
 package com.wynntils.screens.maps.managers.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.widgets.options.AbstractOptionWidget;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -42,7 +41,6 @@ public abstract class ScrollBarWidget extends AbstractWidget {
 
     private final int x;
     private final int y;
-    private final CategoryManagementScreen parent;
 
     public int scrollOffsetY = 0;
 
@@ -52,11 +50,10 @@ public abstract class ScrollBarWidget extends AbstractWidget {
     private float scrollBarY;
     private float verticalButtonLength;
 
-    public ScrollBarWidget(int x, int y, int width, int height, CategoryManagementScreen parent) {
+    public ScrollBarWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Component.literal("Category Tree Widget"));
         this.x = x;
         this.y = y;
-        this.parent = parent;
     }
 
     protected int getWidgetHeightPadding() {
@@ -92,8 +89,11 @@ public abstract class ScrollBarWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        // Canvas height can change every frame (widgets added/removed), so keep the offset in bounds.
+        int oldOffset = scrollOffsetY;
         scrollOffsetY = Math.max(0, Math.min(scrollOffsetY, getMaxScrollOffsetY()));
+        if (oldOffset != scrollOffsetY) {
+            onScrollOffsetChanged();
+        }
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.MANAGER_WIDGET_BACKGROUND, x, y, this.width, this.height);
@@ -180,6 +180,7 @@ public abstract class ScrollBarWidget extends AbstractWidget {
                     getMaxScrollOffsetY()));
 
             scrollOffsetY = Math.max(0, Math.min(newOffset, getMaxScrollOffsetY()));
+            onScrollOffsetChanged();
 
             return true;
         }
@@ -191,12 +192,14 @@ public abstract class ScrollBarWidget extends AbstractWidget {
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (isOntopOfVerticalUpButton(event.x(), event.y())) {
             scrollOffsetY = Math.max(0, scrollOffsetY - SCROLL_ARROW_STEP);
+            onScrollOffsetChanged();
             this.playDownSound(Minecraft.getInstance().getSoundManager());
             return true;
         }
 
         if (isOntopOfVerticalDownButton(event.x(), event.y())) {
             scrollOffsetY = Math.min(getMaxScrollOffsetY(), scrollOffsetY + SCROLL_ARROW_STEP);
+            onScrollOffsetChanged();
             this.playDownSound(Minecraft.getInstance().getSoundManager());
             return true;
         }
@@ -221,9 +224,12 @@ public abstract class ScrollBarWidget extends AbstractWidget {
         int scrollAmount = (int) (-deltaY * SCROLL_FACTOR);
 
         scrollOffsetY = Math.max(0, Math.min(scrollOffsetY + scrollAmount, getMaxScrollOffsetY()));
+        onScrollOffsetChanged();
 
         return true;
     }
+
+    protected abstract void onScrollOffsetChanged();
 
     private int getMaxScrollOffsetY() {
         return Math.max(0, getCanvasHeight() - getViewportHeight());
@@ -317,6 +323,15 @@ public abstract class ScrollBarWidget extends AbstractWidget {
         return MathUtils.isInside(
                 (int) mouseX, (int) mouseY, (int) buttonX, (int) (buttonX + buttonWidth - 1), (int) buttonY, (int)
                         (buttonY + buttonHeight - 1));
+    }
+
+    public boolean isInsideViewport(double x, double y) {
+        int viewportTop = getY() + SCROLL_BAR_HEIGHT_PADDING;
+        int viewportBottom = viewportTop + getViewportHeight();
+        int viewportLeft = getX() + SCROLL_BAR_WIDTH_PADDING;
+        int viewportRight = viewportLeft + getViewportWidth();
+
+        return MathUtils.isInside((int) x, (int) y, viewportLeft, viewportRight, viewportTop, viewportBottom);
     }
 
     @Override

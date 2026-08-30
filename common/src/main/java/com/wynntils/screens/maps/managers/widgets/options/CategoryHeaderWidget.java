@@ -19,13 +19,10 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class CategoryHeaderWidget extends AbstractOptionWidget<Void> {
-    private static int CATEGORY_HEIGHT = 16;
-
-    private final OptionCategory category;
+    private static final int CATEGORY_HEIGHT = 16;
 
     public CategoryHeaderWidget(OptionCategory category) {
         super(category.getDisplayName(), Component.empty(), 26, category, null);
-        this.category = category;
     }
 
     @Override

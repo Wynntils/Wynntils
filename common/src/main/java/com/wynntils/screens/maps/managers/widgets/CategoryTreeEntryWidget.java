@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.managers.widgets;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.managers.CategoryManagementScreen;
@@ -135,18 +136,16 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
         int leftPadding = node.isLeaf() ? HORIZONTAL_PADDING : 0;
         int contentX = getContentX() - leftPadding;
         int contentWidth = getContentWidth() + leftPadding + HORIZONTAL_PADDING;
+        boolean mouseOverRow = isMouseOver(mouseX, mouseY);
 
         if (selected) {
             RenderUtils.drawRect(guiGraphics, SELECTED_HIGHLIGHT, contentX, y, contentWidth, ROW_HEIGHT);
-        } else if (isHovered) {
+        } else if (mouseOverRow) {
             RenderUtils.drawRect(guiGraphics, HOVER_HIGHLIGHT, contentX, y, contentWidth, ROW_HEIGHT);
         }
 
-        boolean mouseOverRow =
-                MathUtils.isInside(mouseX, mouseY, contentX, contentX + contentWidth - 1, y, y + ROW_HEIGHT - 1);
-
         if (mouseOverRow) {
-            handleCursor(guiGraphics);
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
 
         if (!node.isLeaf()) {
@@ -226,6 +225,21 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
 
     private boolean isMouseOverArrow(double mouseX, double mouseY) {
         return MathUtils.isInside((int) mouseX, (int) mouseY, x, x + ARROW_WIDTH, y, y + ROW_HEIGHT);
+    }
+
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        int leftPadding = node.isLeaf() ? HORIZONTAL_PADDING : 0;
+        int contentX = getContentX() - leftPadding;
+        int contentWidth = getContentWidth() + leftPadding + HORIZONTAL_PADDING;
+
+        return MathUtils.isInside(
+                (int) mouseX,
+                (int) mouseY,
+                contentX,
+                contentX + contentWidth - 1,
+                y,
+                y + ROW_HEIGHT - 1);
     }
 
     @Override

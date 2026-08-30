@@ -57,6 +57,8 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
     private final Component maxSliderName;
     private final Component fadeSliderName;
 
+    private final CategoryManagementScreen parent;
+
     private Mode currentMode = Mode.ALWAYS;
 
     public VisiblityOptionWidget(
@@ -86,6 +88,7 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
         this.fadeSliderName = fadeSliderName;
 
         this.sliders = List.of(minSlider, maxSlider, fadeSlider);
+        this.parent = parent;
 
         applyMode(currentMode);
     }
@@ -241,6 +244,10 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
 
         updateSlidersFromValue();
         setHeight(isExtended() ? computeExtendedHeight() : TOP_ROW_HEIGHT);
+
+        if (parent.optionsScrollBar != null) {
+            parent.optionsScrollBar.updateWidgetPositions();
+        }
     }
 
     private Mode determineMode(MapVisibility value) {
