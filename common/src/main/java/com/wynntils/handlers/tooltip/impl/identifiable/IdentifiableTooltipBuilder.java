@@ -376,17 +376,21 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
         info.requirements()
                 .quest()
-                .ifPresent(quest -> requirements.add(
-                        requirementLine(" Quest", StringUtils.shorten(quest, 10), item.meetsActualRequirements())));
+                .ifPresent(quest -> requirements.add(requirementLine(
+                        " Quest",
+                        StringUtils.shorten(quest, 10),
+                        item.getMetGearRequirements().questReqMet())));
         info.requirements()
                 .classType()
                 .ifPresent(classType -> requirements.add(requirementLine(
-                        " Class Type", classType.getFullName(), Models.Character.getClassType() == classType)));
+                        " Class Type",
+                        classType.getFullName(),
+                        item.getMetGearRequirements().classReqMet())));
         if (info.requirements().level() > 0) {
             requirements.add(requirementLine(
                     " Combat Level",
                     String.valueOf(info.requirements().level()),
-                    Models.CharacterStats.getLevel() >= info.requirements().level()));
+                    item.getMetGearRequirements().levelReqMet()));
         }
         return requirements;
     }
@@ -422,8 +426,8 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         for (Skill skill : Skill.values()) {
             int count = skillRequirement(info, skill);
             boolean fulfilled = count == 0
-                    || instance != null && instance.meetsRequirements()
-                    || Models.SkillPoint.getTotalSkillPoints(skill) >= count;
+                    || instance != null
+                            && instance.metGearRequirements().skillReqsMet().getOrDefault(skill, false);
             String icon = count == 0 ? "\uE005" : fulfilled ? "\uE006" : "\uE007";
             line.append(withWhiteShadow(Component.literal(icon + "\uDAFF\uDFFF")
                     .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_REQUIREMENT_SPRITE_FONT))));

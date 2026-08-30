@@ -114,7 +114,7 @@ public final class GearModel extends Model {
                     result.powders(),
                     result.rerolls(),
                     result.shinyStat(),
-                    result.allRequirementsMet(),
+                    result.metGearRequirements(),
                     result.setInstance());
         }
 
@@ -156,7 +156,7 @@ public final class GearModel extends Model {
                 result.identifications(),
                 result.powders(),
                 result.powderSlots(),
-                result.allRequirementsMet(),
+                result.metGearRequirements(),
                 result.durability(),
                 result.currentPage());
     }
@@ -184,7 +184,7 @@ public final class GearModel extends Model {
                 result.damages(),
                 result.defences(),
                 result.requirements(),
-                result.allRequirementsMet(),
+                result.metGearRequirements(),
                 result.identifications(),
                 result.powders(),
                 result.powderSlots(),

@@ -9,6 +9,7 @@ import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.MetGearRequirements;
 import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.ShinyStat;
@@ -43,33 +44,6 @@ public record WynnItemParseResult(
         CappedValue uses,
         int durationSeconds,
         Optional<ShinyStat> shinyStat,
-        boolean allRequirementsMet,
+        MetGearRequirements metGearRequirements,
         Optional<SetInstance> setInstance,
-        int currentPage) {
-    public static WynnItemParseResult fromInternalRoll(
-            List<StatActualValue> identifications, List<Powder> powders, int rerolls) {
-        return new WynnItemParseResult(
-                null,
-                null,
-                0,
-                0,
-                0,
-                null,
-                List.of(),
-                List.of(),
-                null,
-                identifications,
-                List.of(),
-                List.of(),
-                powders,
-                0,
-                rerolls,
-                CappedValue.EMPTY,
-                CappedValue.EMPTY,
-                0,
-                Optional.empty(),
-                true,
-                Optional.empty(),
-                0);
-    }
-}
+        int currentPage) {}
