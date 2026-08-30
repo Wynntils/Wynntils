@@ -294,8 +294,10 @@ public final class StatCalculator {
 
     public static Optional<Float> calculateOverallQualityFromVanillaMeters(List<StatActualValue> identifications) {
         DoubleSummaryStatistics percents = identifications.stream()
-                .flatMap(actualValue -> actualValue.vanillaMeter().stream())
-                .mapToDouble(StatCalculator::getPercentageFromVanillaMeter)
+                .mapToDouble(actualValue -> actualValue
+                        .vanillaMeter()
+                        .map(StatCalculator::getPercentageFromVanillaMeter)
+                        .orElse(0f))
                 .summaryStatistics();
         if (percents.getCount() == 0) return Optional.empty();
 
