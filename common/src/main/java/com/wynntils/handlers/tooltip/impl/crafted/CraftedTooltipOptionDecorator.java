@@ -51,7 +51,7 @@ final class CraftedTooltipOptionDecorator implements TooltipIdentificationDecora
         } else {
             percentage = 0;
         }
-        MutableComponent suffix;
+        MutableComponent suffix = Component.empty();
         boolean rainbowPerfect = style.rainbowInternalRoll() && actualValue.perfectInternalRoll();
 
         if (style.craftedPercentages()) {
@@ -62,7 +62,7 @@ final class CraftedTooltipOptionDecorator implements TooltipIdentificationDecora
             if (rainbowPerfect) {
                 suffix.withColor(WynncraftShaderColor.RAINBOW.color.asInt());
             }
-        } else {
+        } else if (options.style().showRollWheel()) {
             suffix = Component.literal(" ")
                     .append(ColorScaleUtils.getWheelTextComponent(
                             options.colorMap(), percentage, options.colorLerp(), rainbowPerfect));
