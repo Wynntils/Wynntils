@@ -1028,6 +1028,8 @@
   "feature.wynntils.itemScreenshot.saveToDisk.name": "Save Item Screenshots to Disk",
   "feature.wynntils.itemStatInfo.colorLerp.description": "Should the colored percentage for item ID vary smoothly instead of between fixed levels?",
   "feature.wynntils.itemStatInfo.colorLerp.name": "Color Lerp",
+  "feature.wynntils.itemStatInfo.craftedPercentages.description": "Replace the roll wheel with a percentage for crafted items?",
+  "feature.wynntils.itemStatInfo.craftedPercentages.name": "Crafted Percentages",
   "feature.wynntils.itemStatInfo.decimalPlaces.description": "How many decimal places should item stats display?",
   "feature.wynntils.itemStatInfo.decimalPlaces.name": "Stat Decimal Places",
   "feature.wynntils.itemStatInfo.defective.description": "Should the names of defective (0%%) items look garbled?",
