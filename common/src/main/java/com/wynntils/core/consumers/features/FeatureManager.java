@@ -10,6 +10,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.properties.RegisterSubFeature;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
@@ -678,6 +679,15 @@ public final class FeatureManager extends Manager {
             throw new IllegalArgumentException("Feature " + featureClass + " is not registered");
         }
         return featureClass.cast(feature);
+    }
+
+    public List<Feature> getEnabledDependents(Config<?> config, Feature.DependencyType dependencyType) {
+        return FEATURES.keySet().stream()
+                .filter(Feature::isEnabled)
+                .filter(feature -> feature.getConfigDependencies().stream()
+                        .anyMatch(dependency -> dependency.config() == config && dependency.type() == dependencyType))
+                .sorted()
+                .toList();
     }
 
     public Optional<Feature> getFeatureFromString(String featureName) {

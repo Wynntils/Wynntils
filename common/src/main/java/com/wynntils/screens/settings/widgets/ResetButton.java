@@ -6,7 +6,7 @@ package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.persisted.config.Config;
-import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
+import com.wynntils.screens.settings.BaseWynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -65,7 +65,7 @@ public class ResetButton extends GeneralSettingsButton {
         onClick.run();
 
         // Reload configurables to update checkbox
-        if (McUtils.screen() instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
+        if (McUtils.screen() instanceof BaseWynntilsBookSettingsScreen bookSettingsScreen) {
             bookSettingsScreen.populateConfigurables();
         }
     }

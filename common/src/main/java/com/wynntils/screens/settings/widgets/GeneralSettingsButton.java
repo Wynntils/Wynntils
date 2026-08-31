@@ -74,7 +74,7 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
             isHovered = false;
         }
 
-        if (isHovered) {
+        if (isHovered && !tooltip.isEmpty()) {
             guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
         }
     }

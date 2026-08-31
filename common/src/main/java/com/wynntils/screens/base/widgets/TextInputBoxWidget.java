@@ -206,7 +206,7 @@ public class TextInputBoxWidget extends AbstractWidget {
                 VerticalAlignment.MIDDLE,
                 false);
 
-        if (isHovered && tooltip != null) {
+        if (isHovered && tooltip != null && !tooltip.isEmpty()) {
             guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
         }
 

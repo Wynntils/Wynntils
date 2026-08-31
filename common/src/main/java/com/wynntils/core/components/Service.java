@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
@@ -16,7 +16,7 @@ import java.util.List;
  *
  * Services are created as singletons in the {@link Services} holding class.
  */
-public abstract class Service extends CoreComponent {
+public abstract class Service extends ConfigurableCoreComponent {
     protected Service(List<Service> dependencies) {
         // dependencies are technically not used, but only required
         // as a reminder for implementers to be wary about dependencies
