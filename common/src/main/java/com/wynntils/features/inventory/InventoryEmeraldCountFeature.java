@@ -32,6 +32,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
+import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
@@ -65,7 +66,11 @@ public class InventoryEmeraldCountFeature extends Feature {
     private final Config<Boolean> smartEmeraldPouchRendering = new Config<>(true);
 
     public InventoryEmeraldCountFeature() {
-        super(ProfileDefault.onlyDefault());
+        super(
+                ProfileDefault.onlyDefault(),
+                List.of(
+                        ConfigDependency.functionality(Models.Emerald.countEmeralds),
+                        ConfigDependency.customization(Models.Emerald.recountInterval)));
     }
 
     @SubscribeEvent
