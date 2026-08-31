@@ -8,6 +8,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.models.players.event.FriendsEvent;
@@ -68,6 +70,9 @@ public final class FriendsModel extends Model {
     // endregion
 
     private static final int REQUEST_RATELIMIT = 250;
+
+    @Persisted
+    public final Config<Boolean> queryFriendsList = new Config<>(true);
 
     private ListStatus friendMessageStatus = ListStatus.IDLE;
     private long lastFriendRequest = 0;
@@ -236,6 +241,7 @@ public final class FriendsModel extends Model {
      * When the response is received, friends will be updated.
      */
     public void requestData() {
+        if (!queryFriendsList.get()) return;
         if (McUtils.player() == null) return;
 
         if (System.currentTimeMillis() - lastFriendRequest > REQUEST_RATELIMIT) {

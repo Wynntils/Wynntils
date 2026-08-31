@@ -16,6 +16,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.hades.protocol.enums.SocialType;
 import com.wynntils.screens.playerviewer.GearSharingSettingsScreen;
+import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 
 @ConfigCategory(Category.PLAYERS)
@@ -33,9 +34,11 @@ public class HadesFeature extends Feature implements ExternalConfigurationScreen
     public final Config<Boolean> shareWithGuild = new Config<>(true);
 
     public HadesFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
+                        .build(),
+                List.of(ConfigDependency.functionality(Models.Friends.queryFriendsList)));
     }
 
     @Override
