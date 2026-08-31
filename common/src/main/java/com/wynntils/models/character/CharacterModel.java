@@ -7,6 +7,8 @@ package com.wynntils.models.character;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
@@ -67,6 +69,9 @@ public final class CharacterModel extends Model {
     private static final int TOME_SLOT = 8;
     private static final int CONTENT_BOOK_SLOT = 62;
     private static final int TOME_MENU_CONTENT_BOOK_SLOT = 89;
+
+    @Persisted
+    public final Config<Boolean> queryCharacterInfoMenu = new Config<>(true);
 
     private List<TomeItem> equippedTomes = new ArrayList<>();
 
@@ -186,6 +191,10 @@ public final class CharacterModel extends Model {
             return;
         }
 
+        if (!queryCharacterInfoMenu.get()
+                && !Models.Guild.queryGuildInfoMenu.get()
+                && !Models.Guild.queryGuildDiplomacyMenu.get()) return;
+
         WynntilsMod.info("Scheduling character info query");
         QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Character Info Query");
         queryBuilder.onError(msg -> {
@@ -200,8 +209,10 @@ public final class CharacterModel extends Model {
                 .expectContainer(CharacterInfoContainer.class)
                 .processIncomingContainer(this::parseCharacterContainer));
 
-        // Scan guild container, if the player is in a guild
-        Models.Guild.addGuildContainerQuerySteps(queryBuilder);
+        if (Models.Guild.queryGuildInfoMenu.get() || Models.Guild.queryGuildDiplomacyMenu.get()) {
+            // Scan guild container, if the player is in a guild
+            Models.Guild.addGuildContainerQuerySteps(queryBuilder);
+        }
 
         queryBuilder
                 .execute(() -> {
