@@ -60,6 +60,12 @@ public final class CombatModel extends Model {
     @Persisted
     public final Config<Boolean> trackDamage = new Config<>(true);
 
+    @Persisted
+    public final Config<Boolean> trackKills = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> trackDebuffs = new Config<>(true);
+
     private String focusedMobName = "";
     private MobElementals focusedMobElementals = MobElementals.EMPTY;
     private long focusedMobHealth;
@@ -112,7 +118,7 @@ public final class CombatModel extends Model {
             WynntilsMod.postEvent(new DamageDealtEvent(damages));
 
             lastDamageDealtTimestamp = System.currentTimeMillis();
-        } else if (event.getLabelInfo() instanceof KillLabelInfo killLabelInfo) {
+        } else if (trackKills.get() && event.getLabelInfo() instanceof KillLabelInfo killLabelInfo) {
             killSet.put(killLabelInfo.getKillCredit());
 
             if (killLabelInfo.getKillCredit() == KillCreditType.SELF) {
@@ -133,7 +139,7 @@ public final class CombatModel extends Model {
             return;
         }
 
-        if (labelInfo.get() instanceof MobDebuffsLabelInfo debuffInfo) {
+        if (trackDebuffs.get() && labelInfo.get() instanceof MobDebuffsLabelInfo debuffInfo) {
             debuffTextDisplays.put(
                     debuffInfo.getEntity().getId(),
                     new DebuffLabelEntry(debuffInfo, (Display.TextDisplay) debuffInfo.getEntity()));
