@@ -66,9 +66,11 @@ public class RangeVisualizerFeature extends Feature {
     private final Config<Boolean> showMajorIDCircles = new Config<>(true);
 
     public RangeVisualizerFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
+                        .build(),
+                List.of(ConfigDependency.functionality(Models.Raid.trackRaids)));
     }
 
     // Handles rendering for other players and ourselves in third person

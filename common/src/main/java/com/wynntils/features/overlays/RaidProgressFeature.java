@@ -41,7 +41,11 @@ public class RaidProgressFeature extends Feature {
     private final Config<Boolean> playSoundOnBest = new Config<>(true);
 
     public RaidProgressFeature() {
-        super(ProfileDefault.onlyDefault(), List.of(ConfigDependency.functionality(Models.Combat.trackDamage)));
+        super(
+                ProfileDefault.onlyDefault(),
+                List.of(
+                        ConfigDependency.functionality(Models.Raid.trackRaids),
+                        ConfigDependency.functionality(Models.Combat.trackDamage)));
     }
 
     @SubscribeEvent
