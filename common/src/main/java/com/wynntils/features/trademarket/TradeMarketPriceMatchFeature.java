@@ -22,6 +22,7 @@ import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -39,7 +40,9 @@ public class TradeMarketPriceMatchFeature extends Feature {
     private long priceToSend = 0;
 
     public TradeMarketPriceMatchFeature() {
-        super(ProfileDefault.onlyDefault());
+        super(
+                ProfileDefault.onlyDefault(),
+                List.of(ConfigDependency.functionality(Models.Account.queryRankInfoOnJoin)));
     }
 
     @SubscribeEvent
