@@ -35,7 +35,9 @@ public class PlayerViewerFeature extends Feature {
                 new ProfileDefault.Builder()
                         .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
                         .build(),
-                List.of(ConfigDependency.functionality(Models.Friends.queryFriendsList)));
+                List.of(
+                        ConfigDependency.functionality(Models.Friends.queryFriendsList),
+                        ConfigDependency.functionality(Models.Party.queryPartyMembers)));
     }
 
     private void tryOpenPlayerViewer() {

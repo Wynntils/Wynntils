@@ -38,7 +38,9 @@ public class HadesFeature extends Feature implements ExternalConfigurationScreen
                 new ProfileDefault.Builder()
                         .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
                         .build(),
-                List.of(ConfigDependency.functionality(Models.Friends.queryFriendsList)));
+                List.of(
+                        ConfigDependency.functionality(Models.Friends.queryFriendsList),
+                        ConfigDependency.functionality(Models.Party.queryPartyMembers)));
     }
 
     @Override

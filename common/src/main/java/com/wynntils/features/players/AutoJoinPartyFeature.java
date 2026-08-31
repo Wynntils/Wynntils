@@ -28,7 +28,11 @@ public class AutoJoinPartyFeature extends Feature {
     private final Config<Boolean> onlySameWorld = new Config<>(true);
 
     public AutoJoinPartyFeature() {
-        super(ProfileDefault.onlyDefault(), List.of(ConfigDependency.functionality(Models.Friends.queryFriendsList)));
+        super(
+                ProfileDefault.onlyDefault(),
+                List.of(
+                        ConfigDependency.functionality(Models.Friends.queryFriendsList),
+                        ConfigDependency.functionality(Models.Party.queryPartyMembers)));
     }
 
     @SubscribeEvent
