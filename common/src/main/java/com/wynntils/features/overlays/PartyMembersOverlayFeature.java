@@ -5,6 +5,7 @@
 package com.wynntils.features.overlays;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -26,6 +27,8 @@ public class PartyMembersOverlayFeature extends Feature {
                 new ProfileDefault.Builder()
                         .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER)
                         .build(),
-                List.of(ConfigDependency.functionality(Models.Party.queryPartyMembers)));
+                List.of(
+                        ConfigDependency.functionality(Models.Party.queryPartyMembers),
+                        ConfigDependency.functionality(Services.Hades.connectToHades)));
     }
 }

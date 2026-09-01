@@ -97,9 +97,11 @@ public class CustomNametagRendererFeature extends Feature {
     private Player hitPlayerCache = null;
 
     public CustomNametagRendererFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
+                        .build(),
+                List.of(ConfigDependency.functionality(Services.Hades.connectToHades)));
     }
 
     @SubscribeEvent

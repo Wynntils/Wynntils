@@ -41,7 +41,8 @@ public class HadesFeature extends Feature implements ExternalConfigurationScreen
                 List.of(
                         ConfigDependency.functionality(Models.Friends.queryFriendsList),
                         ConfigDependency.functionality(Models.Party.queryPartyMembers),
-                        ConfigDependency.functionality(Models.Guild.requestGuildMembers)));
+                        ConfigDependency.functionality(Models.Guild.requestGuildMembers),
+                        ConfigDependency.functionality(Services.Hades.connectToHades)));
     }
 
     @Override

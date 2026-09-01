@@ -70,7 +70,9 @@ public class RangeVisualizerFeature extends Feature {
                 new ProfileDefault.Builder()
                         .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
                         .build(),
-                List.of(ConfigDependency.functionality(Models.Raid.trackRaids)));
+                List.of(
+                        ConfigDependency.functionality(Models.Raid.trackRaids),
+                        ConfigDependency.functionality(Services.Hades.connectToHades)));
     }
 
     // Handles rendering for other players and ourselves in third person

@@ -5,6 +5,7 @@
 package com.wynntils.features.players;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
@@ -37,7 +38,8 @@ public class PlayerViewerFeature extends Feature {
                         .build(),
                 List.of(
                         ConfigDependency.functionality(Models.Friends.queryFriendsList),
-                        ConfigDependency.functionality(Models.Party.queryPartyMembers)));
+                        ConfigDependency.functionality(Models.Party.queryPartyMembers),
+                        ConfigDependency.functionality(Services.Hades.connectToHades)));
     }
 
     private void tryOpenPlayerViewer() {

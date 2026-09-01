@@ -5,6 +5,7 @@
 package com.wynntils.features.map;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
@@ -43,6 +44,8 @@ public class MinimapFeature extends Feature {
                 new ProfileDefault.Builder()
                         .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
                         .build(),
-                List.of(ConfigDependency.functionality(Models.Territory.lookupApiInfo)));
+                List.of(
+                        ConfigDependency.functionality(Models.Territory.lookupApiInfo),
+                        ConfigDependency.functionality(Services.Hades.connectToHades)));
     }
 }
