@@ -3212,6 +3212,8 @@
   "model.wynntils.guild.queryGuildDiplomacyMenu.name": "Query Guild Diplomacy Menu",
   "model.wynntils.guild.queryGuildInfoMenu.description": "Should the guild info menu be queried on join to check for information such as guild level, objectices completed and allies?",
   "model.wynntils.guild.queryGuildInfoMenu.name": "Query Guild Info Menu",
+  "model.wynntils.guild.requestGuildMembers.description": "Should the Wynncraft API be queried to update guild members?",
+  "model.wynntils.guild.requestGuildMembers.name": "Request Guild Members",
   "model.wynntils.party.name": "Party",
   "model.wynntils.party.queryPartyMembers.description": "Should your party members be queried at certain intervals?",
   "model.wynntils.party.queryPartyMembers.name": "Query Party Members",

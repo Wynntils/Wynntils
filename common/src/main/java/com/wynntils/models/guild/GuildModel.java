@@ -148,6 +148,9 @@ public final class GuildModel extends Model {
     private static final List<Integer> OBJECTIVE_GOALS = List.of(5, 15, 30);
 
     @Persisted
+    public final Config<Boolean> requestGuildMembers = new Config<>(true);
+
+    @Persisted
     public final Config<Boolean> queryGuildInfoMenu = new Config<>(true);
 
     @Persisted
@@ -469,7 +472,7 @@ public final class GuildModel extends Model {
     }
 
     public void requestGuildMembers() {
-        if (guildName != null && !guildName.isEmpty()) {
+        if (requestGuildMembers.get() && guildName != null && !guildName.isEmpty()) {
             if (System.currentTimeMillis() - lastGuildRequest > REQUEST_RATELIMIT || guildMembers.isEmpty()) {
                 CompletableFuture<GuildInfo> completableFuture = getGuild(guildName);
 
