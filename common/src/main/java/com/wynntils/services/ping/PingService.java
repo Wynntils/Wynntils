@@ -5,6 +5,8 @@
 package com.wynntils.services.ping;
 
 import com.wynntils.core.components.Service;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.mc.event.PongReceivedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -20,6 +22,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class PingService extends Service {
     private static final int MS_PER_PING = 1000;
     private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+
+    @Persisted
+    public final Config<Boolean> calculatePing = new Config<>(true);
 
     private int lastPing = 0;
 
@@ -43,6 +48,8 @@ public class PingService extends Service {
     }
 
     private void sendPingPacket() {
+        if (!calculatePing.get()) return;
+
         McUtils.sendPacket(new ServerboundPingRequestPacket(Util.getMillis()));
     }
 
