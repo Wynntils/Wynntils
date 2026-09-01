@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.statistics;
@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -21,6 +22,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 public final class StatisticsService extends Service {
     private final StatisticsCollectors collectors = new StatisticsCollectors();
+
+    @Persisted
+    public final Config<Boolean> collectStatistics = new Config<>(true);
 
     // All statistics, per character
     @Persisted
@@ -61,6 +65,8 @@ public final class StatisticsService extends Service {
     }
 
     public void addToStatistics(StatisticKind kind, long amount) {
+        if (!collectStatistics.get()) return;
+
         StatisticEntry newValue = currentStatistics.containsKey(kind)
                 ? currentStatistics.get(kind).getUpdatedEntry(amount)
                 : new StatisticEntry(amount, 1, amount, amount, System.currentTimeMillis(), System.currentTimeMillis());
