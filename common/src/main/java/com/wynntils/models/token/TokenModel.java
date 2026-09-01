@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.token;
@@ -7,6 +7,8 @@ package com.wynntils.models.token;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.EntityLabelEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
@@ -44,6 +46,9 @@ public final class TokenModel extends Model {
     private static final Pattern TYPE_PATTERN = Pattern.compile("^§7Get §[e6]\\[(?:(\\d+) )?(.*)\\]$");
     private static final StyledText VERIFICATION_STRING = StyledText.fromString("§7Right-click to add");
 
+    @Persisted
+    public final Config<Boolean> trackTokenGatekeepers = new Config<>(true);
+
     private final Map<Integer, TokenGatekeeper> activeGatekeepers = new HashMap<>();
     private final Map<TokenGatekeeper, TokenInventoryWatcher> inventoryWatchers = new HashMap<>();
     private final TimedSet<BakingTokenGatekeeper> bakingGatekeepers = new TimedSet<>(5, TimeUnit.SECONDS, true);
@@ -76,6 +81,7 @@ public final class TokenModel extends Model {
 
     @SubscribeEvent
     public void onLabelChange(EntityLabelEvent.Changed event) {
+        if (!trackTokenGatekeepers.get()) return;
         if (!(event.getEntity() instanceof ArmorStand)) return;
 
         StyledText name = event.getName();
@@ -167,6 +173,7 @@ public final class TokenModel extends Model {
 
     @SubscribeEvent
     public void onLabelVisibility(EntityLabelEvent.Visibility event) {
+        if (!trackTokenGatekeepers.get()) return;
         if (!event.getVisibility()) {
             // This is the normal way in which gatekeepers are "removed" when done
             int id = event.getEntity().getId();
@@ -200,6 +207,8 @@ public final class TokenModel extends Model {
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
         inventoryWatchers.values().forEach(Models.Inventory::unregisterWatcher);
+
+        if (!trackTokenGatekeepers.get()) return;
 
         Set<TokenGatekeeper> oldGatekeepers = new HashSet<>(activeGatekeepers.values());
 
