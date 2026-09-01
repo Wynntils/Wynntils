@@ -23,6 +23,7 @@ import com.wynntils.models.worlds.event.StreamModeEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
+import java.util.List;
 import java.util.Locale;
 import net.minecraft.core.Position;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -46,9 +47,11 @@ public class DiscordRichPresenceFeature extends Feature {
     private TerritoryProfile lastTerritoryProfile = null;
 
     public DiscordRichPresenceFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
+                        .build(),
+                List.of(ConfigDependency.functionality(Models.Territory.lookupApiInfo)));
     }
 
     @SubscribeEvent

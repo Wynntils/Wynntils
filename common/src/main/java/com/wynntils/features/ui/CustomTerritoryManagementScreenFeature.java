@@ -73,7 +73,9 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
                 new ProfileDefault.Builder()
                         .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
                         .build(),
-                List.of(ConfigDependency.functionality(Models.Guild.queryGuildDiplomacyMenu)));
+                List.of(
+                        ConfigDependency.functionality(Models.Guild.queryGuildDiplomacyMenu),
+                        ConfigDependency.functionality(Models.Territory.lookupApiInfo)));
     }
 
     @SubscribeEvent

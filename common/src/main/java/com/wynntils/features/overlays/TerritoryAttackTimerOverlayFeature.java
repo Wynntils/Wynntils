@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.overlays;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -13,6 +14,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.overlays.TerritoryAttackTimerOverlay;
+import java.util.List;
 
 @ConfigCategory(Category.OVERLAYS)
 public class TerritoryAttackTimerOverlayFeature extends Feature {
@@ -23,6 +25,6 @@ public class TerritoryAttackTimerOverlayFeature extends Feature {
     public final Config<Boolean> displayBeaconBeam = new Config<>(true);
 
     public TerritoryAttackTimerOverlayFeature() {
-        super(ProfileDefault.onlyDefault());
+        super(ProfileDefault.onlyDefault(), List.of(ConfigDependency.functionality(Models.Territory.lookupApiInfo)));
     }
 }
