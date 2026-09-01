@@ -7,9 +7,9 @@ package com.wynntils.models.items.encoding.impl.item;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearAttackSpeed;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearType;
-import com.wynntils.models.gear.type.MetGearRequirements;
 import com.wynntils.models.items.encoding.data.CustomGearTypeData;
 import com.wynntils.models.items.encoding.data.CustomIdentificationsData;
 import com.wynntils.models.items.encoding.data.DamageData;
@@ -131,7 +131,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
                 identifications,
                 powders,
                 powderSlots,
-                MetGearRequirements.UNKNOWN,
+                GearInstanceRequirements.UNKNOWN,
                 durability,
                 0));
     }

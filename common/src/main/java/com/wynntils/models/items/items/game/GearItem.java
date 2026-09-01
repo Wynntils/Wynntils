@@ -8,9 +8,9 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
-import com.wynntils.models.gear.type.MetGearRequirements;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.items.properties.ClassableItemProperty;
@@ -184,12 +184,12 @@ public class GearItem extends GameItem
 
     @Override
     public boolean meetsActualRequirements() {
-        return gearInstance != null && gearInstance.metGearRequirements().meetsAllRequirements();
+        return gearInstance != null && gearInstance.gearInstanceRequirements().meetsAllRequirements();
     }
 
     @Override
-    public MetGearRequirements getMetGearRequirements() {
-        return gearInstance == null ? MetGearRequirements.UNKNOWN : gearInstance.metGearRequirements();
+    public GearInstanceRequirements getGearInstanceRequirements() {
+        return gearInstance == null ? GearInstanceRequirements.UNKNOWN : gearInstance.gearInstanceRequirements();
     }
 
     @Override

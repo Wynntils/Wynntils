@@ -14,9 +14,9 @@ import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearAttackSpeed;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.models.gear.type.MetGearRequirements;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.stats.type.DamageType;
@@ -466,7 +466,7 @@ public final class WynnItemParser {
                 uses,
                 durationSeconds,
                 shinyStat,
-                new MetGearRequirements(levelReqMet, classReqMet, skillReqsMet, questReqMet),
+                new GearInstanceRequirements(levelReqMet, classReqMet, skillReqsMet, questReqMet),
                 Optional.of(new SetInstance(setInfo, activeItems, setWynnCount, wynnBonuses)),
                 currentPage);
     }

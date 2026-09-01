@@ -381,18 +381,18 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                 .ifPresent(quest -> requirements.add(requirementLine(
                         " Quest",
                         StringUtils.shorten(quest, 10),
-                        item.getMetGearRequirements().questReqMet())));
+                        item.getGearInstanceRequirements().questReqMet())));
         info.requirements()
                 .classType()
                 .ifPresent(classType -> requirements.add(requirementLine(
                         " Class Type",
                         classType.getFullName(),
-                        item.getMetGearRequirements().classReqMet())));
+                        item.getGearInstanceRequirements().classReqMet())));
         if (info.requirements().level() > 0) {
             requirements.add(requirementLine(
                     " Combat Level",
                     String.valueOf(info.requirements().level()),
-                    item.getMetGearRequirements().levelReqMet()));
+                    item.getGearInstanceRequirements().levelReqMet()));
         }
         return requirements;
     }
@@ -429,7 +429,9 @@ public final class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             int count = skillRequirement(info, skill);
             boolean fulfilled = count == 0
                     || instance != null
-                            && instance.metGearRequirements().skillReqsMet().getOrDefault(skill, false);
+                            && instance.gearInstanceRequirements()
+                                    .skillReqsMet()
+                                    .getOrDefault(skill, false);
             String icon = count == 0 ? "\uE005" : fulfilled ? "\uE006" : "\uE007";
 
             Component skillValue = Component.empty()

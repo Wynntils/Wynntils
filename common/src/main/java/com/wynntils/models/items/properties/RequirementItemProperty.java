@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.properties;
 
-import com.wynntils.models.gear.type.MetGearRequirements;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 
 public interface RequirementItemProperty {
     /**
@@ -15,5 +15,5 @@ public interface RequirementItemProperty {
     /**
      * @return the met gear requirements info for the item
      */
-    MetGearRequirements getMetGearRequirements();
+    GearInstanceRequirements getGearInstanceRequirements();
 }

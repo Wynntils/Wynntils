@@ -7,9 +7,9 @@ package com.wynntils.models.gear.type;
 import com.wynntils.models.elements.type.Skill;
 import java.util.Map;
 
-public record MetGearRequirements(
+public record GearInstanceRequirements(
         boolean levelReqMet, boolean classReqMet, Map<Skill, Boolean> skillReqsMet, boolean questReqMet) {
-    public static final MetGearRequirements UNKNOWN = new MetGearRequirements(false, false, Map.of(), false);
+    public static final GearInstanceRequirements UNKNOWN = new GearInstanceRequirements(false, false, Map.of(), false);
 
     public boolean meetsAllRequirements() {
         return levelReqMet

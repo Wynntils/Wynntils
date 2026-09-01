@@ -19,7 +19,7 @@ public record GearInstance(
         int rerolls,
         Optional<Float> overallQuality,
         Optional<ShinyStat> shinyStat,
-        MetGearRequirements metGearRequirements,
+        GearInstanceRequirements gearInstanceRequirements,
         Optional<SetInstance> setInstance) {
     public static GearInstance create(
             GearInfo gearInfo,
@@ -27,7 +27,7 @@ public record GearInstance(
             List<Powder> powders,
             int rerolls,
             Optional<ShinyStat> shinyStat,
-            MetGearRequirements metGearRequirements,
+            GearInstanceRequirements gearInstanceRequirements,
             Optional<SetInstance> setInstance) {
         return new GearInstance(
                 identifications,
@@ -36,7 +36,7 @@ public record GearInstance(
                 StatCalculator.calculateOverallQuality(
                         gearInfo.name(), gearInfo.getPossibleValueList(), identifications),
                 shinyStat,
-                metGearRequirements,
+                gearInstanceRequirements,
                 setInstance);
     }
 

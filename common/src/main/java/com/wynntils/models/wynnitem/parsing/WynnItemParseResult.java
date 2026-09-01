@@ -7,9 +7,9 @@ package com.wynntils.models.wynnitem.parsing;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearAttackSpeed;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.models.gear.type.MetGearRequirements;
 import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.ShinyStat;
@@ -44,6 +44,6 @@ public record WynnItemParseResult(
         CappedValue uses,
         int durationSeconds,
         Optional<ShinyStat> shinyStat,
-        MetGearRequirements metGearRequirements,
+        GearInstanceRequirements gearInstanceRequirements,
         Optional<SetInstance> setInstance,
         int currentPage) {}

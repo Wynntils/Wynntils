@@ -8,7 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
-import com.wynntils.models.gear.type.MetGearRequirements;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.items.encoding.data.IdentificationData;
 import com.wynntils.models.items.encoding.data.NameData;
 import com.wynntils.models.items.encoding.data.PowderData;
@@ -75,7 +75,13 @@ public class GearItemTransformer extends ItemTransformer<GearItem> {
         return ErrorOr.of(new GearItem(
                 gearInfo,
                 GearInstance.create(
-                        gearInfo, idList, powders, rerolls, shinyStat, MetGearRequirements.UNKNOWN, Optional.empty())));
+                        gearInfo,
+                        idList,
+                        powders,
+                        rerolls,
+                        shinyStat,
+                        GearInstanceRequirements.UNKNOWN,
+                        Optional.empty())));
     }
 
     @Override

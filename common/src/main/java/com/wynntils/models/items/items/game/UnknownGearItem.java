@@ -8,10 +8,10 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearAttackSpeed;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
-import com.wynntils.models.gear.type.MetGearRequirements;
 import com.wynntils.models.gear.type.SetInfo;
 import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.items.properties.ClassableItemProperty;
@@ -51,7 +51,7 @@ public class UnknownGearItem extends GameItem
     private final List<Pair<DamageType, RangedValue>> damages;
     private final List<Pair<Element, Integer>> defences;
     private final GearRequirements requirements;
-    private final MetGearRequirements metGearRequirements;
+    private final GearInstanceRequirements gearInstanceRequirements;
     private final List<StatActualValue> identifications;
     private final List<Powder> powders;
     private final int powderSlots;
@@ -70,7 +70,7 @@ public class UnknownGearItem extends GameItem
             List<Pair<DamageType, RangedValue>> damages,
             List<Pair<Element, Integer>> defences,
             GearRequirements requirements,
-            MetGearRequirements metGearRequirements,
+            GearInstanceRequirements gearInstanceRequirements,
             List<StatActualValue> identifications,
             List<Powder> powders,
             int powderSlots,
@@ -87,7 +87,7 @@ public class UnknownGearItem extends GameItem
         this.damages = damages;
         this.defences = defences;
         this.requirements = requirements;
-        this.metGearRequirements = metGearRequirements;
+        this.gearInstanceRequirements = gearInstanceRequirements;
         this.identifications = identifications;
         this.powders = powders;
         this.powderSlots = powderSlots;
@@ -160,12 +160,12 @@ public class UnknownGearItem extends GameItem
 
     @Override
     public boolean meetsActualRequirements() {
-        return metGearRequirements.meetsAllRequirements();
+        return gearInstanceRequirements.meetsAllRequirements();
     }
 
     @Override
-    public MetGearRequirements getMetGearRequirements() {
-        return metGearRequirements;
+    public GearInstanceRequirements getGearInstanceRequirements() {
+        return gearInstanceRequirements;
     }
 
     @Override
@@ -199,8 +199,8 @@ public class UnknownGearItem extends GameItem
                 + health + ", damages="
                 + damages + ", defences="
                 + defences + ", requirements="
-                + requirements + ", metGearRequirements="
-                + metGearRequirements + ", identifications="
+                + requirements + ", gearInstanceRequirements="
+                + gearInstanceRequirements + ", identifications="
                 + identifications + ", powders="
                 + powders + ", powderSlots="
                 + powderSlots + ", rerolls="
