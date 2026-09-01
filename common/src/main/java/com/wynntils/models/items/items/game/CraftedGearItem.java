@@ -8,6 +8,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearAttackSpeed;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
@@ -52,7 +53,7 @@ public class CraftedGearItem extends GameItem
     private final List<StatActualValue> identifications;
     private final List<Powder> powders;
     private final int powderSlots;
-    private final boolean requirementsMet;
+    private final GearInstanceRequirements gearInstanceRequirements;
     private final CappedValue durability;
     private int currentPage;
 
@@ -69,7 +70,7 @@ public class CraftedGearItem extends GameItem
             List<StatActualValue> identifications,
             List<Powder> powders,
             int powderSlots,
-            boolean requirementsMet,
+            GearInstanceRequirements gearInstanceRequirements,
             CappedValue durability,
             int currentPage) {
         this.name = name;
@@ -84,7 +85,7 @@ public class CraftedGearItem extends GameItem
         this.identifications = identifications;
         this.powders = powders;
         this.powderSlots = powderSlots;
-        this.requirementsMet = requirementsMet;
+        this.gearInstanceRequirements = gearInstanceRequirements;
         this.durability = durability;
         this.currentPage = currentPage;
     }
@@ -170,7 +171,12 @@ public class CraftedGearItem extends GameItem
 
     @Override
     public boolean meetsActualRequirements() {
-        return requirementsMet;
+        return gearInstanceRequirements.meetsAllRequirements();
+    }
+
+    @Override
+    public GearInstanceRequirements getGearInstanceRequirements() {
+        return gearInstanceRequirements;
     }
 
     @Override
