@@ -15,6 +15,7 @@ import com.wynntils.core.persisted.upfixers.Upfixer;
 import com.wynntils.models.character.type.SavableGear;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.encoding.type.ItemType;
 import com.wynntils.models.items.items.game.GearItem;
@@ -273,8 +274,14 @@ public class LoadoutMigrationUpfixer implements Upfixer {
             stats.add(new StatActualValue(statType, val.baseValue(), false, internalRoll, false));
         }
 
-        GearInstance gearInstance =
-                new GearInstance(stats, List.of(), 0, Optional.empty(), Optional.empty(), true, Optional.empty());
+        GearInstance gearInstance = new GearInstance(
+                stats,
+                List.of(),
+                0,
+                Optional.empty(),
+                Optional.empty(),
+                GearInstanceRequirements.UNKNOWN,
+                Optional.empty());
         GearItem defaultGearItem = new GearItem(gearInfo, gearInstance);
 
         EncodingSettings encodingSettings = new EncodingSettings(true, true);

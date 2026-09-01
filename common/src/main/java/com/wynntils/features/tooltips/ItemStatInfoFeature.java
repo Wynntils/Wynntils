@@ -76,6 +76,9 @@ public class ItemStatInfoFeature extends Feature {
     public final Config<Boolean> rainbowInternalRoll = new Config<>(true);
 
     @Persisted
+    public final Config<Boolean> craftedPercentages = new Config<>(true);
+
+    @Persisted
     public final Config<Boolean> showRollWheel = new Config<>(true);
 
     @Persisted
@@ -177,6 +180,7 @@ public class ItemStatInfoFeature extends Feature {
                         groupIdentifications.get(),
                         showBestValueLastAlways.get(),
                         rainbowInternalRoll.get(),
+                        craftedPercentages.get(),
                         showRollWheel.get()),
                 perfect.get(),
                 defective.get(),

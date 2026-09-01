@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.item;
@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.items.encoding.data.IdentificationData;
 import com.wynntils.models.items.encoding.data.NameData;
 import com.wynntils.models.items.encoding.data.PowderData;
@@ -72,7 +73,15 @@ public class GearItemTransformer extends ItemTransformer<GearItem> {
         List<StatActualValue> idList = identifications.values().stream().toList();
 
         return ErrorOr.of(new GearItem(
-                gearInfo, GearInstance.create(gearInfo, idList, powders, rerolls, shinyStat, false, Optional.empty())));
+                gearInfo,
+                GearInstance.create(
+                        gearInfo,
+                        idList,
+                        powders,
+                        rerolls,
+                        shinyStat,
+                        GearInstanceRequirements.UNKNOWN,
+                        Optional.empty())));
     }
 
     @Override

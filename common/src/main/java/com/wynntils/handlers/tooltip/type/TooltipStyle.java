@@ -11,4 +11,5 @@ public record TooltipStyle(
         boolean groupIdentifications,
         boolean showBestValueLastAlways,
         boolean rainbowInternalRoll,
+        boolean craftedPercentages,
         boolean showRollWheel) {}
