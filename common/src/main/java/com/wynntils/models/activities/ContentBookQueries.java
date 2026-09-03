@@ -146,6 +146,10 @@ public class ContentBookQueries {
                                     c, NEXT_PAGE_SLOT, Items.POTION, SCROLL_DOWN_TEXT);
                         },
                         QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
+                                // Content book page changes arrive as individual slot updates rather than a
+                                // full container update. Wait for the batch so the next iteration sees the
+                                // complete page.
+                                .accumulateSetSlotChanges(2)
                                 .processIncomingContainer(c -> processContentBookPage(c, newActivity)))
 
                 // Restore filter to original value
@@ -337,7 +341,10 @@ public class ContentBookQueries {
                             ContainerUtils.clickOnSlot(slot, c.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, c.items());
                             return false;
                         },
-                        QueryStep.clickOnMatchingSlot(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT))
+                        QueryStep.clickOnMatchingSlot(NEXT_PAGE_SLOT, Items.POTION, SCROLL_DOWN_TEXT)
+                                // Content book page changes arrive as individual slot updates rather than a
+                                // full container update. Wait for the batch before searching again.
+                                .accumulateSetSlotChanges(2))
 
                 // Restore filter to original value
                 .execute(() -> filterLoopCount = 0)
