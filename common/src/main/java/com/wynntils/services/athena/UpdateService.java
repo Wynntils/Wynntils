@@ -14,6 +14,7 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.event.DownloadEvent;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.services.athena.type.ChangelogMap;
 import com.wynntils.services.athena.type.ModUpdateInfo;
@@ -39,6 +40,9 @@ public final class UpdateService extends Service {
     private static final String WYNNTILS_UPDATE_FILE_NAME = "wynntils-update.jar";
     private static final File UPDATES_FOLDER = WynntilsMod.getModStorageDir(WYNNTILS_UPDATE_FOLDER);
 
+    @Persisted
+    public final Config<Boolean> checkForUpdates = new Config<>(true);
+
     // If we don't know the last version, assume we just downloaded the mod, so don't show the changelog
     @Persisted
     public final Storage<String> lastShownChangelogVersion = new Storage<>(WynntilsMod.getVersion());
@@ -60,7 +64,9 @@ public final class UpdateService extends Service {
     }
 
     public CompletableFuture<ModUpdateInfo> getLatestBuild() {
-        if (WynntilsMod.isDevelopmentEnvironment()) return CompletableFuture.completedFuture(null);
+        if (WynntilsMod.isDevelopmentEnvironment() || !checkForUpdates.get()) {
+            return CompletableFuture.completedFuture(null);
+        }
 
         CompletableFuture<ModUpdateInfo> future = new CompletableFuture<>();
 

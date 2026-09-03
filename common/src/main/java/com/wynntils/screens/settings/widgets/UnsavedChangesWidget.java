@@ -5,7 +5,7 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
+import com.wynntils.screens.settings.BaseWynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -25,7 +25,7 @@ public class UnsavedChangesWidget extends AbstractWidget {
     private final Button yesButton;
     private final Button noButton;
 
-    public UnsavedChangesWidget(int x, int y, WynntilsBookSettingsScreen settingsScreen) {
+    public UnsavedChangesWidget(int x, int y, BaseWynntilsBookSettingsScreen settingsScreen) {
         super(
                 x,
                 y,

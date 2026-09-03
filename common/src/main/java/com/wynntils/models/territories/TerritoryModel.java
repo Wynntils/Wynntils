@@ -15,6 +15,8 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.models.items.items.gui.TerritoryItem;
@@ -52,6 +54,9 @@ public final class TerritoryModel extends Model {
     private static final Gson TERRITORY_PROFILE_GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer())
             .create();
+
+    @Persisted
+    public final Config<Boolean> lookupApiInfo = new Config<>(true);
 
     // This is territory POIs as returned by the advancement from Wynncraft
     private final Map<String, TerritoryPoi> territoryPoiMap = new ConcurrentHashMap<>();
@@ -230,6 +235,8 @@ public final class TerritoryModel extends Model {
     }
 
     private void updateTerritoryProfileMap() {
+        if (!lookupApiInfo.get()) return;
+
         // If the player is not in a guild, we don't need to update the territory data as often
         if (!Models.Guild.isInGuild() && System.currentTimeMillis() - lastGuildUpdate < NO_GUILD_TERRITORY_UPDATE_MS) {
             return;

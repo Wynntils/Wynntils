@@ -9,6 +9,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
@@ -68,6 +69,12 @@ public final class AccountModel extends Model {
 
     private static final int COSMETICS_SLOT = 25;
     private static final int SILVERBULL_SLOT = 36;
+
+    @Persisted
+    public final Config<Boolean> queryRankInfoOnJoin = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> queryApiDetails = new Config<>(true);
 
     @Persisted
     private final Storage<Long> silverbullExpiresAt = new Storage<>(0L);
@@ -204,6 +211,7 @@ public final class AccountModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetSlot(SetSlotEvent.Post event) {
+        if (!queryRankInfoOnJoin.get()) return;
         if (!scanRankInfoPending || scanRankInfoAlreadyScanned) return;
         if (!Objects.equals(event.getContainer(), McUtils.inventory())) return;
         if (event.getSlot() != InventoryUtils.COMPASS_SLOT_NUM) return;
@@ -274,6 +282,8 @@ public final class AccountModel extends Model {
     }
 
     private void updatePlayerInfo() {
+        if (!queryApiDetails.get()) return;
+
         Models.Player.getPlayerFullInfo(McUtils.player().getStringUUID()).whenComplete((wynnPlayerInfo, throwable) -> {
             if (throwable != null) {
                 WynntilsMod.warn("Failed to update player info", throwable);

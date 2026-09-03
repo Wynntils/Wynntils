@@ -72,7 +72,7 @@ public class WynncraftButtonFeature extends Feature {
     private final Config<Boolean> returnToTitle = new Config<>(true);
 
     public WynncraftButtonFeature() {
-        super(ProfileDefault.ENABLED);
+        super(ProfileDefault.ENABLED, List.of(ConfigDependency.functionality(Services.Update.checkForUpdates)));
     }
 
     @SubscribeEvent

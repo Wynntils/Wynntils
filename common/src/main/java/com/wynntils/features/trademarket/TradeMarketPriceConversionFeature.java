@@ -13,14 +13,17 @@ import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.utils.mc.McUtils;
+import java.util.List;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketPriceConversionFeature extends Feature {
     public TradeMarketPriceConversionFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
+                        .build(),
+                List.of(ConfigDependency.functionality(Models.Account.queryRankInfoOnJoin)));
     }
 
     @SubscribeEvent

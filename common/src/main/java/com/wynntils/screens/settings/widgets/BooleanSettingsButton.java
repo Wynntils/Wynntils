@@ -5,10 +5,9 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.wynntils.core.persisted.config.Config;
-import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
+import com.wynntils.screens.settings.BaseWynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import net.minecraft.client.input.InputWithModifiers;
@@ -18,16 +17,9 @@ import net.minecraft.network.chat.MutableComponent;
 public class BooleanSettingsButton extends GeneralSettingsButton {
     private final Config<Boolean> config;
 
-    public BooleanSettingsButton(int x, int y, Config<Boolean> config, int maskTopY, int maskBottomY) {
-        super(
-                x,
-                y,
-                90,
-                20,
-                getTitle(config),
-                ComponentUtils.wrapTooltips(List.of(Component.literal(config.getDescription())), 150),
-                maskTopY,
-                maskBottomY);
+    public BooleanSettingsButton(
+            int x, int y, Config<Boolean> config, List<Component> tooltip, int maskTopY, int maskBottomY) {
+        super(x, y, 90, 20, getTitle(config), tooltip, maskTopY, maskBottomY);
         this.config = config;
     }
 
@@ -38,7 +30,7 @@ public class BooleanSettingsButton extends GeneralSettingsButton {
 
         // Reload the configurables in case the enabled button was toggled so the checkboxes
         // can change state
-        if (McUtils.screen() instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
+        if (McUtils.screen() instanceof BaseWynntilsBookSettingsScreen bookSettingsScreen) {
             bookSettingsScreen.populateConfigurables();
         }
     }

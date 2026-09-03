@@ -6,6 +6,8 @@ package com.wynntils.models.emeralds;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.TickEvent;
@@ -15,6 +17,7 @@ import com.wynntils.models.items.properties.EmeraldValuedItemProperty;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.screens.guides.emerald.GuideEmeraldUnitItemStack;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Locale;
@@ -39,6 +42,12 @@ public final class EmeraldModel extends Model {
     private static final double SILVERBULL_TAX_AMOUNT = 1.03;
     private static final double NORMAL_TAX_AMOUNT = 1.05;
 
+    @Persisted
+    public final Config<Boolean> countEmeralds = new Config<>(true);
+
+    @Persisted
+    public final Config<Integer> recountInterval = new Config<>(1);
+
     private int inventoryEmeralds = 0;
     private int containerEmeralds = 0;
 
@@ -56,6 +65,9 @@ public final class EmeraldModel extends Model {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
+        if (!countEmeralds.get()) return;
+        if (McUtils.player().tickCount % MathUtils.clamp(recountInterval.get(), 1, 20) != 0) return;
+
         recountEmeralds();
     }
 

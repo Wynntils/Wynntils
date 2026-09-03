@@ -8,7 +8,6 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
-import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
@@ -21,6 +20,7 @@ import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.settings.widgets.CategoryButton;
+import com.wynntils.screens.settings.widgets.ComponentTypeButton;
 import com.wynntils.screens.settings.widgets.ConfigTile;
 import com.wynntils.screens.settings.widgets.ConfigurableButton;
 import com.wynntils.screens.settings.widgets.SettingsCategoryTabButton;
@@ -43,7 +43,6 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -65,7 +64,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public final class WynntilsBookSettingsScreen extends WynntilsScreen {
+public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
     // Constants
     private static final float SCROLL_FACTOR = 10f;
     private static final int MASK_TOP_Y = 21;
@@ -85,6 +84,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private final List<WynntilsButton> configs = new ArrayList<>();
     private List<Configurable> configurableList;
     private Map<Configurable, List<ConfigTile>> configurableMap = new HashMap<>();
+    private SettingsPageTabButton previousCategoryButton;
+    private SettingsPageTabButton nextCategoryButton;
     private List<SettingsCategoryTabButton> categoryButtons = new ArrayList<>();
 
     // Renderables
@@ -116,11 +117,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     private final Screen previousScreen;
 
-    private WynntilsBookSettingsScreen(Screen previousScreen) {
+    protected BaseWynntilsBookSettingsScreen(Screen previousScreen) {
         super(Component.translatable("screens.wynntils.settingsScreen.name"));
 
         this.previousScreen = previousScreen;
-
         searchWidget = new SettingsSearchWidget(
                 55,
                 Texture.CONFIG_BOOK_BACKGROUND.height() + 6,
@@ -137,10 +137,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         // Get all categories, sort a-z
         sortedCategories = Arrays.asList(Category.values());
         sortedCategories.sort(Comparator.comparing(Enum::name));
-    }
-
-    public static Screen create(Screen previousScreen) {
-        return new WynntilsBookSettingsScreen(previousScreen);
     }
 
     @Override
@@ -253,66 +249,88 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         // endregion
 
         // region Category tags
-        int xPos = (int) (Texture.TAG_RED.width() * 0.85) + offsetX;
+        if (shouldShowCategoryControls()) {
+            int xPos = (int) (Texture.TAG_RED.width() * 0.85) + offsetX;
 
-        allCategoriesButton = this.addRenderableWidget(new SettingsCategoryTabButton(
-                xPos,
-                (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
-                Texture.TAG_RED.width(),
-                Texture.TAG_RED.height(),
-                (b) -> changeCategory(null),
-                List.of(Component.literal("All")),
-                selectedCategory == null,
-                offsetX,
-                offsetY));
+            allCategoriesButton = this.addRenderableWidget(new SettingsCategoryTabButton(
+                    xPos,
+                    (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
+                    Texture.TAG_RED.width(),
+                    Texture.TAG_RED.height(),
+                    (b) -> changeCategory(null),
+                    List.of(Component.literal("All")),
+                    selectedCategory == null,
+                    offsetX,
+                    offsetY));
 
-        if (selectedCategory == null) {
-            selectedCategoryButton = allCategoriesButton;
+            if (selectedCategory == null) {
+                selectedCategoryButton = allCategoriesButton;
+            }
+
+            xPos += Texture.TAG_RED.width() + 1;
+
+            enabledStateTabButton = this.addRenderableWidget(new SettingsEnabledStateTabButton(
+                    xPos,
+                    (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
+                    Texture.TAG_RED.width(),
+                    Texture.TAG_RED.height(),
+                    this::cycleEnabledState,
+                    List.of(Component.translatable("screens.wynntils.settingsScreen.cycleEnabled")),
+                    enabledFilterType.getIcon(),
+                    offsetX,
+                    offsetY));
+
+            xPos += Texture.TAG_RED.width() * 2 + 1;
+
+            previousCategoryButton = this.addRenderableWidget(new SettingsPageTabButton(
+                    xPos,
+                    (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
+                    Texture.TAG_RED.width(),
+                    Texture.TAG_RED.height(),
+                    (b) -> scrollCategories(-1),
+                    List.of(Component.translatable("screens.wynntils.settingsScreen.previous")),
+                    false,
+                    offsetX,
+                    offsetY));
+
+            xPos += (int) ((Texture.TAG_RED.width() * 1.25) * (MAX_DISPLAYED_CATEGORIES + 1)
+                    - Texture.TAG_RED.width() * 0.25);
+
+            nextCategoryButton = this.addRenderableWidget(new SettingsPageTabButton(
+                    xPos,
+                    (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
+                    Texture.TAG_RED.width(),
+                    Texture.TAG_RED.height(),
+                    (b) -> scrollCategories(1),
+                    List.of(Component.translatable("screens.wynntils.settingsScreen.next")),
+                    true,
+                    offsetX,
+                    offsetY));
         }
 
-        xPos += Texture.TAG_RED.width() + 1;
-
-        enabledStateTabButton = this.addRenderableWidget(new SettingsEnabledStateTabButton(
-                xPos,
-                (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
-                Texture.TAG_RED.width(),
-                Texture.TAG_RED.height(),
-                this::cycleEnabledState,
-                List.of(Component.translatable("screens.wynntils.settingsScreen.cycleEnabled")),
-                enabledFilterType.getIcon(),
-                offsetX,
-                offsetY));
-
-        xPos += Texture.TAG_RED.width() * 2 + 1;
-
-        this.addRenderableWidget(new SettingsPageTabButton(
-                xPos,
-                (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
-                Texture.TAG_RED.width(),
-                Texture.TAG_RED.height(),
-                (b) -> scrollCategories(-1),
-                List.of(Component.translatable("screens.wynntils.settingsScreen.previous")),
-                false,
-                offsetX,
-                offsetY));
-
-        xPos += (int)
-                ((Texture.TAG_RED.width() * 1.25) * (MAX_DISPLAYED_CATEGORIES + 1) - Texture.TAG_RED.width() * 0.25);
-
-        this.addRenderableWidget(new SettingsPageTabButton(
-                xPos,
-                (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
-                Texture.TAG_RED.width(),
-                Texture.TAG_RED.height(),
-                (b) -> scrollCategories(1),
-                List.of(Component.translatable("screens.wynntils.settingsScreen.next")),
-                true,
+        this.addRenderableWidget(new SettingsSideTabButton(
+                (int) -(Texture.TAG_BLUE.width() * 0.75f) + offsetX,
+                offsetY + Texture.CONFIG_BOOK_BACKGROUND.height() - Texture.TAG_GREEN.height() - 20,
+                Texture.TAG_GREEN.width(),
+                Texture.TAG_GREEN.height(),
+                (b) -> switchSettingsView(),
+                ComponentUtils.wrapTooltips(
+                        List.of(
+                                Component.translatable(
+                                                "screens.wynntils.settingsScreen.swapView",
+                                                getSettingsViewSwitchTargetName())
+                                        .withStyle(ChatFormatting.WHITE),
+                                Component.translatable("screens.wynntils.settingsScreen.swapView.description")
+                                        .withStyle(ChatFormatting.GRAY)),
+                        150),
+                Texture.TAG_GREEN,
+                Texture.SETTINGS_TYPE_ICON,
                 offsetX,
                 offsetY));
 
         this.addRenderableWidget(new SettingsSideTabButton(
                 (int) -(Texture.TAG_BLUE.width() * 0.75f) + offsetX,
-                offsetY + Texture.CONFIG_BOOK_BACKGROUND.height() - Texture.TAG_GREEN.height() - 20,
+                offsetY + Texture.CONFIG_BOOK_BACKGROUND.height() - Texture.TAG_GREEN.height() - 45,
                 Texture.TAG_GREEN.width(),
                 Texture.TAG_GREEN.height(),
                 (b) -> McUtils.setScreen(ConfigProfileScreen.create(this, Managers.Config.getSelectedProfile())),
@@ -350,9 +368,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         renderBg(guiGraphics);
 
-        String categoryName = selectedCategory == null
-                ? I18n.get("screens.wynntils.settingsScreen.all")
-                : I18n.get(selectedCategory.toString());
+        String categoryName = getCategoryTitle(selectedCategory);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -689,113 +705,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     public void populateConfigurables() {
         configurables.clear();
 
-        Category oldCategory = selectedCategory;
-
-        int renderY = 21 + offsetY;
-
-        for (Configurable configurable : configurableList) {
-            Category category;
-
-            if (configurable instanceof Feature feature) {
-                category = feature.getCategory();
-            } else if (configurable instanceof Overlay overlay) {
-                category = Managers.Overlay.getOverlayParent(overlay).getCategory();
-            } else {
-                throw new IllegalStateException("Unknown configurable type: " + configurable.getClass());
-            }
-
-            if (category != oldCategory) {
-                CategoryButton categoryButton = new CategoryButton(12 + offsetX, renderY, 170, 12, category);
-                categoryButton.visible = renderY >= (21 - 12) && renderY <= (21 + (CONFIGURABLES_PER_PAGE + 1) * 11);
-                configurables.add(categoryButton);
-                oldCategory = category;
-                renderY += 12;
-            }
-
-            int matchingConfigs = 0;
-
-            for (Config<?> config : configurable.getVisibleConfigOptions()) {
-                if (configOptionContains(config)) {
-                    matchingConfigs++;
-                }
-            }
-
-            ConfigurableButton configurableButton =
-                    new ConfigurableButton(12 + offsetX, renderY, 170, 12, configurable, this, matchingConfigs);
-            configurableButton.visible = renderY >= (21 - 12) && renderY <= (21 + (CONFIGURABLES_PER_PAGE + 1) * 11);
-            configurables.add(configurableButton);
-
-            renderY += 12;
-
-            if (configurable instanceof Feature feature) {
-                for (Feature subFeature : Managers.Feature.getSubFeatures(feature).stream()
-                        .filter(subFeature -> isSubFeatureFiltered(feature, subFeature))
-                        .filter(subFeature -> shouldShowNestedConfigurable(feature, subFeature))
-                        .sorted()
-                        .toList()) {
-                    int subMatchingConfigs = 0;
-                    for (Config<?> config : subFeature.getVisibleConfigOptions()) {
-                        if (configOptionContains(config)) {
-                            subMatchingConfigs++;
-                        }
-                    }
-                    ConfigurableButton subFeatureButton = new ConfigurableButton(
-                            12 + offsetX, renderY, 170, 12, subFeature, this, subMatchingConfigs);
-                    subFeatureButton.visible =
-                            renderY >= (21 - 12) && renderY <= (21 + (CONFIGURABLES_PER_PAGE + 1) * 11);
-                    configurables.add(subFeatureButton);
-                    renderY += 12;
-
-                    for (Overlay subOverlay : Managers.Overlay.getFeatureOverlays(subFeature).stream()
-                            .filter(this::isOverlayFiltered)
-                            .filter(subOverlay -> shouldShowNestedConfigurable(feature, subOverlay))
-                            .sorted()
-                            .toList()) {
-                        int subOverlayMatchingConfigs = 0;
-                        for (Config<?> config : subOverlay.getVisibleConfigOptions()) {
-                            if (configOptionContains(config)) {
-                                subOverlayMatchingConfigs++;
-                            }
-                        }
-                        ConfigurableButton subOverlayButton = new ConfigurableButton(
-                                12 + offsetX, renderY, 170, 12, subOverlay, this, subOverlayMatchingConfigs);
-                        subOverlayButton.visible =
-                                renderY >= (21 - 12) && renderY <= (21 + (CONFIGURABLES_PER_PAGE + 1) * 11);
-                        configurables.add(subOverlayButton);
-                        renderY += 12;
-                    }
-                }
-                for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature).stream()
-                        .filter(this::isOverlayFiltered)
-                        .filter(overlay -> shouldShowNestedConfigurable(feature, overlay))
-                        .sorted()
-                        .toList()) {
-                    matchingConfigs = 0;
-
-                    for (Config<?> config : overlay.getVisibleConfigOptions()) {
-                        if (configOptionContains(config)) {
-                            matchingConfigs++;
-                        }
-                    }
-
-                    ConfigurableButton overlayButton =
-                            new ConfigurableButton(12 + offsetX, renderY, 170, 12, overlay, this, matchingConfigs);
-                    overlayButton.visible = renderY >= (21 - 12) && renderY <= (21 + (CONFIGURABLES_PER_PAGE + 1) * 11);
-                    configurables.add(overlayButton);
-                    renderY += 12;
-                }
-            }
-        }
+        populateConfigurableEntries(configurables, configurableList, 21 + offsetY);
 
         if (selectedConfigurable != null) {
-            Stream<Configurable> configurablesList = Stream.concat(
-                    Managers.Feature.getFeatures().stream(),
-                    Managers.Feature.getFeatures().stream()
-                            .map(Managers.Overlay::getFeatureOverlays)
-                            .flatMap(Collection::stream)
-                            .map(overlay -> (Configurable) overlay));
-
-            Configurable newSelected = configurablesList
+            Configurable newSelected = getSelectableConfigurables().stream()
                     .filter(configurable -> configurable.getJsonName().equals(selectedConfigurable.getJsonName()))
                     .findFirst()
                     .orElse(null);
@@ -805,10 +718,47 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         scrollConfigurables(configurablesScrollOffset);
 
-        configurableMap = Stream.concat(
-                        Managers.Feature.getFeatures().stream(), Managers.Overlay.getOverlays().stream())
+        configurableMap = getConfigurableMapConfigurables().stream()
                 .collect(Collectors.toMap(
                         configurable -> configurable, this::buildConfigTiles, (a, b) -> a, LinkedHashMap::new));
+    }
+
+    protected abstract int populateConfigurableEntries(
+            List<WynntilsButton> configurables, List<Configurable> configurableList, int renderY);
+
+    protected void addComponentTypeButton(List<WynntilsButton> configurables, int renderY, String coreType) {
+        ComponentTypeButton categoryButton = new ComponentTypeButton(12 + offsetX, renderY, 170, 12, coreType);
+        categoryButton.visible = isConfigurableEntryVisible(renderY);
+        configurables.add(categoryButton);
+    }
+
+    protected void addCategoryButton(List<WynntilsButton> configurables, int renderY, Category category) {
+        CategoryButton categoryButton = new CategoryButton(12 + offsetX, renderY, 170, 12, category);
+        categoryButton.visible = isConfigurableEntryVisible(renderY);
+        configurables.add(categoryButton);
+    }
+
+    protected void addConfigurableButton(List<WynntilsButton> configurables, int renderY, Configurable configurable) {
+        ConfigurableButton configurableButton = new ConfigurableButton(
+                12 + offsetX, renderY, 170, 12, configurable, this, countMatchingConfigs(configurable));
+        configurableButton.visible = isConfigurableEntryVisible(renderY);
+        configurables.add(configurableButton);
+    }
+
+    protected int countMatchingConfigs(Configurable configurable) {
+        int matchingConfigs = 0;
+
+        for (Config<?> config : configurable.getVisibleConfigOptions()) {
+            if (configOptionContains(config)) {
+                matchingConfigs++;
+            }
+        }
+
+        return matchingConfigs;
+    }
+
+    private boolean isConfigurableEntryVisible(int renderY) {
+        return renderY >= (21 - 12) && renderY <= (21 + (CONFIGURABLES_PER_PAGE + 1) * 11);
     }
 
     private void populateConfigs() {
@@ -869,6 +819,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         return selectedConfigurable;
     }
 
+    protected Category getSelectedCategory() {
+        return selectedCategory;
+    }
+
     public int getMaskTopY() {
         return offsetY + MASK_TOP_Y;
     }
@@ -882,6 +836,39 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     private void populateCategories() {
+        if (!shouldShowCategoryControls()) {
+            if (allCategoriesButton != null) {
+                allCategoriesButton.visible = false;
+            }
+            if (enabledStateTabButton != null) {
+                enabledStateTabButton.visible = false;
+            }
+            if (previousCategoryButton != null) {
+                previousCategoryButton.visible = false;
+            }
+            if (nextCategoryButton != null) {
+                nextCategoryButton.visible = false;
+            }
+
+            for (AbstractWidget widget : categoryButtons) {
+                widget.visible = false;
+            }
+            return;
+        }
+
+        if (allCategoriesButton != null) {
+            allCategoriesButton.visible = true;
+        }
+        if (enabledStateTabButton != null) {
+            enabledStateTabButton.visible = true;
+        }
+        if (previousCategoryButton != null) {
+            previousCategoryButton.visible = true;
+        }
+        if (nextCategoryButton != null) {
+            nextCategoryButton.visible = true;
+        }
+
         for (AbstractWidget widget : categoryButtons) {
             this.removeWidget(widget);
         }
@@ -920,35 +907,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     private void getFilteredConfigurables() {
-        configurableList = new ArrayList<>();
-
-        boolean hasSearch = !searchWidget.getTextBoxInput().isEmpty();
-
-        // Add all configurables for selected category
-        if (selectedCategory != null) {
-            configurableList.addAll(Managers.Feature.getFeatures().stream()
-                    .filter(feature -> !Managers.Feature.isSubFeature(feature))
-                    .filter(this::isFeatureFiltered)
-                    .filter(feature -> isCategoryMatchingTree(feature, selectedCategory))
-                    .sorted()
-                    .toList());
-
-            // If there is a search query, add all matches from every other category
-            if (hasSearch) {
-                configurableList.addAll(Managers.Feature.getFeatures().stream()
-                        .filter(feature -> !Managers.Feature.isSubFeature(feature))
-                        .filter(this::isFeatureFiltered)
-                        .filter(feature -> !isCategoryMatchingTree(feature, selectedCategory))
-                        .sorted()
-                        .toList());
-            }
-        } else { // All tab, add all configurables
-            configurableList.addAll(Managers.Feature.getFeatures().stream()
-                    .filter(feature -> !Managers.Feature.isSubFeature(feature))
-                    .filter(this::isFeatureFiltered)
-                    .sorted()
-                    .toList());
-        }
+        configurableList = getFilteredConfigurables(selectedCategory);
     }
 
     private List<ConfigTile> buildConfigTiles(Configurable configurable) {
@@ -1010,6 +969,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     private void scrollCategories(int direction) {
+        if (!shouldShowCategoryControls()) return;
         if (Math.abs(categoriesScrollOffset + direction) == sortedCategories.size()) {
             categoriesScrollOffset = 0;
         } else {
@@ -1034,76 +994,25 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         populateConfigurables();
     }
 
-    private boolean isCategoryMatching(Configurable configurable, Category selectedCategory) {
-        return getCategory(configurable) == selectedCategory;
+    protected abstract List<Configurable> getCurrentRootConfigurables();
+
+    protected abstract List<Configurable> getFilteredConfigurables(Category selectedCategory);
+
+    protected abstract List<Configurable> getSelectableConfigurables();
+
+    protected abstract List<Configurable> getConfigurableMapConfigurables();
+
+    protected abstract boolean shouldShowCategoryControls();
+
+    protected abstract String getCategoryTitle(Category selectedCategory);
+
+    protected abstract Component getSettingsViewSwitchTargetName();
+
+    private void switchSettingsView() {
+        McUtils.mc().setScreen(createSettingsViewSwitchScreen(previousScreen));
     }
 
-    private boolean isCategoryMatchingTree(Feature feature, Category selectedCategory) {
-        return isCategoryMatching(feature, selectedCategory)
-                || Managers.Overlay.getFeatureOverlays(feature).stream()
-                        .anyMatch(overlay -> isCategoryMatching(overlay, selectedCategory))
-                || Managers.Feature.getSubFeatures(feature).stream()
-                        .anyMatch(subFeature -> isCategoryMatchingTree(subFeature, selectedCategory));
-    }
-
-    private boolean shouldShowNestedConfigurable(Feature parent, Configurable configurable) {
-        if (selectedCategory == null || !searchWidget.getTextBoxInput().isEmpty()) return true;
-
-        return isCategoryMatching(parent, selectedCategory) || isCategoryMatching(configurable, selectedCategory);
-    }
-
-    private boolean isFeatureFiltered(Feature feature) {
-        if (searchWidget.getTextBoxInput().isEmpty()) {
-            return switch (enabledFilterType) {
-                case NEUTRAL -> true;
-                case ENABLED -> feature.isEnabled();
-                case DISABLED -> !feature.isEnabled();
-            };
-        }
-
-        boolean featureSearchMatch = searchMatches(feature)
-                || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains);
-
-        boolean anyOverlayMatches =
-                Managers.Overlay.getFeatureOverlays(feature).stream().anyMatch(this::overlaySearchMatches);
-
-        boolean anySubFeatureMatches =
-                Managers.Feature.getSubFeatures(feature).stream().anyMatch(this::isFeatureFiltered);
-
-        return (featureSearchMatch || anyOverlayMatches || anySubFeatureMatches);
-    }
-
-    private boolean isSubFeatureFiltered(Feature parent, Feature subFeature) {
-        if (!searchWidget.getTextBoxInput().isEmpty()) {
-            return isFeatureFiltered(subFeature);
-        }
-
-        return switch (enabledFilterType) {
-            case NEUTRAL -> true;
-            case ENABLED -> parent.isEnabled();
-            case DISABLED -> !parent.isEnabled();
-        };
-    }
-
-    private boolean isOverlayFiltered(Overlay overlay) {
-        if (searchWidget.getTextBoxInput().isEmpty()) {
-            Feature parent = Managers.Overlay.getOverlayParent(overlay);
-            if (Managers.Feature.isSubFeature(parent)) {
-                Feature grandparent = Managers.Feature.getParentFeature(parent);
-                parent = grandparent;
-            }
-
-            boolean parentEnabled = parent != null && parent.isEnabled();
-
-            return switch (enabledFilterType) {
-                case ENABLED -> parentEnabled;
-                case DISABLED -> !parentEnabled;
-                case NEUTRAL -> true;
-            };
-        }
-
-        return overlaySearchMatches(overlay);
-    }
+    protected abstract Screen createSettingsViewSwitchScreen(Screen previousScreen);
 
     private void scrollToMatchingConfig() {
         List<Config<?>> configsOptions = selectedConfigurable.getVisibleConfigOptions().stream()
@@ -1125,6 +1034,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     private void changeCategory(Category category) {
+        if (!shouldShowCategoryControls()) return;
         configurablesScrollOffset = 0;
 
         // Deselect old category, reset texture to default
@@ -1154,22 +1064,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         populateCategories();
     }
 
-    private Category getCategory(Configurable configurable) {
-        if (configurable instanceof Feature feature) {
-            return feature.getCategory();
-        } else if (configurable instanceof Overlay overlay) {
-            return Managers.Overlay.getOverlayParent(overlay).getCategory();
-        } else {
-            throw new IllegalStateException("Unknown configurable type: " + configurable.getClass());
-        }
-    }
-
-    private boolean overlaySearchMatches(Overlay overlay) {
-        return searchMatches(overlay)
-                || overlay.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains);
-    }
-
-    private boolean searchMatches(Translatable translatable) {
+    protected boolean searchMatches(Translatable translatable) {
         // For info boxes and custom bars, we want to search for their custom name if given
         // if there is no match, then check the translated name
         if (translatable instanceof CustomNameProperty customNameProperty) {
@@ -1335,13 +1230,13 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         String clipboard = McUtils.mc().keyboardHandler.getClipboard();
 
         if (clicked == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            List<Configurable> configsToImport = Managers.Feature.getFeatures().stream()
-                    .map(feature -> (Configurable) feature)
-                    .collect(Collectors.toList());
+            List<Configurable> configsToImport = new ArrayList<>(getCurrentRootConfigurables());
 
-            configsToImport.addAll(Managers.Overlay.getOverlays().stream()
-                    .filter(overlay -> !configsToImport.contains(Managers.Overlay.getOverlayParent(overlay)))
-                    .toList());
+            if (shouldIncludeInactiveOverlaysInConfigList()) {
+                configsToImport.addAll(Managers.Overlay.getOverlays().stream()
+                        .filter(overlay -> !configsToImport.contains(Managers.Overlay.getOverlayParent(overlay)))
+                        .toList());
+            }
 
             boolean imported = Managers.Config.importConfig(clipboard, configsToImport);
 
@@ -1382,13 +1277,13 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         if (clicked == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             // Get all features and overlays into a list
-            List<Configurable> featuresToExport = Managers.Feature.getFeatures().stream()
-                    .map(feature -> (Configurable) feature)
-                    .collect(Collectors.toList());
+            List<Configurable> featuresToExport = new ArrayList<>(getCurrentRootConfigurables());
 
-            featuresToExport.addAll(Managers.Overlay.getOverlays().stream()
-                    .filter(overlay -> !featuresToExport.contains(Managers.Overlay.getOverlayParent(overlay)))
-                    .toList());
+            if (shouldIncludeInactiveOverlaysInConfigList()) {
+                featuresToExport.addAll(Managers.Overlay.getOverlays().stream()
+                        .filter(overlay -> !featuresToExport.contains(Managers.Overlay.getOverlayParent(overlay)))
+                        .toList());
+            }
 
             exportedSettings = Managers.Config.exportConfig(featuresToExport);
 
@@ -1409,6 +1304,18 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
         // Save to clipboard
         McUtils.mc().keyboardHandler.setClipboard(exportedSettings);
+    }
+
+    protected boolean shouldIncludeInactiveOverlaysInConfigList() {
+        return false;
+    }
+
+    protected String getSearchInput() {
+        return searchWidget.getTextBoxInput();
+    }
+
+    protected EnabledFilterType getEnabledFilterType() {
+        return enabledFilterType;
     }
 
     public enum EnabledFilterType {

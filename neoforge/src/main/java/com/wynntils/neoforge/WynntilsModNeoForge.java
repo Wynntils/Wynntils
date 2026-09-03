@@ -5,7 +5,7 @@
 package com.wynntils.neoforge;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
+import com.wynntils.screens.settings.WynntilsFeaturesSettingsScreen;
 import java.io.File;
 import java.nio.file.Path;
 import net.neoforged.fml.ModLoadingContext;
@@ -37,6 +37,7 @@ public class WynntilsModNeoForge {
 
         ModLoadingContext.get()
                 .registerExtensionPoint(
-                        IConfigScreenFactory.class, () -> (mc, parent) -> WynntilsBookSettingsScreen.create(parent));
+                        IConfigScreenFactory.class,
+                        () -> (mc, parent) -> WynntilsFeaturesSettingsScreen.create(parent));
     }
 }

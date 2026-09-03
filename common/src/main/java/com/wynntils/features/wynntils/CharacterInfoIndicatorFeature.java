@@ -71,9 +71,11 @@ public class CharacterInfoIndicatorFeature extends Feature {
     private final Config<Boolean> rescanMessage = new Config<>(true);
 
     public CharacterInfoIndicatorFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
+                        .build(),
+                List.of(ConfigDependency.functionality(Models.Account.queryRankInfoOnJoin)));
     }
 
     @SubscribeEvent

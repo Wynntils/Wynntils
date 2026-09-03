@@ -5,6 +5,7 @@
 package com.wynntils.features.players;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
@@ -18,6 +19,7 @@ import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.screens.playerviewer.PlayerViewerScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
+import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -30,9 +32,14 @@ public class PlayerViewerFeature extends Feature {
     private PlayerViewerScreen playerViewerScreen = null;
 
     public PlayerViewerFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
+                        .build(),
+                List.of(
+                        ConfigDependency.functionality(Models.Friends.queryFriendsList),
+                        ConfigDependency.functionality(Models.Party.queryPartyMembers),
+                        ConfigDependency.functionality(Services.Hades.connectToHades)));
     }
 
     private void tryOpenPlayerViewer() {

@@ -7,6 +7,8 @@ package com.wynntils.models.combat;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.labels.event.LabelsRemovedEvent;
 import com.wynntils.handlers.labels.event.TextDisplayChangedEvent;
@@ -55,6 +57,15 @@ public final class CombatModel extends Model {
 
     private final Map<Integer, DebuffLabelEntry> debuffTextDisplays = new HashMap<>();
 
+    @Persisted
+    public final Config<Boolean> trackDamage = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> trackKills = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> trackDebuffs = new Config<>(true);
+
     private String focusedMobName = "";
     private MobElementals focusedMobElementals = MobElementals.EMPTY;
     private long focusedMobHealth;
@@ -76,7 +87,7 @@ public final class CombatModel extends Model {
 
     @SubscribeEvent
     public void onLabelIdentified(LabelIdentifiedEvent event) {
-        if (event.getLabelInfo() instanceof DamageLabelInfo damageLabelInfo) {
+        if (trackDamage.get() && event.getLabelInfo() instanceof DamageLabelInfo damageLabelInfo) {
             int id = damageLabelInfo.getEntity().getId();
             Map<DamageType, Long> damages;
 
@@ -107,7 +118,7 @@ public final class CombatModel extends Model {
             WynntilsMod.postEvent(new DamageDealtEvent(damages));
 
             lastDamageDealtTimestamp = System.currentTimeMillis();
-        } else if (event.getLabelInfo() instanceof KillLabelInfo killLabelInfo) {
+        } else if (trackKills.get() && event.getLabelInfo() instanceof KillLabelInfo killLabelInfo) {
             killSet.put(killLabelInfo.getKillCredit());
 
             if (killLabelInfo.getKillCredit() == KillCreditType.SELF) {
@@ -128,7 +139,7 @@ public final class CombatModel extends Model {
             return;
         }
 
-        if (labelInfo.get() instanceof MobDebuffsLabelInfo debuffInfo) {
+        if (trackDebuffs.get() && labelInfo.get() instanceof MobDebuffsLabelInfo debuffInfo) {
             debuffTextDisplays.put(
                     debuffInfo.getEntity().getId(),
                     new DebuffLabelEntry(debuffInfo, (Display.TextDisplay) debuffInfo.getEntity()));

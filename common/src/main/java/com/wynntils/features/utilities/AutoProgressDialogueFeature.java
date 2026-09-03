@@ -23,6 +23,7 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.dialogue.event.NpcDialogueEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
+import java.util.List;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
@@ -83,7 +84,7 @@ public class AutoProgressDialogueFeature extends Feature {
     private String autoProgressMessageState = null;
 
     public AutoProgressDialogueFeature() {
-        super(ProfileDefault.DISABLED);
+        super(ProfileDefault.DISABLED, List.of(ConfigDependency.functionality(Services.Ping.calculatePing)));
     }
 
     @SubscribeEvent

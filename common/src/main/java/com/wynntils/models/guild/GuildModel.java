@@ -16,6 +16,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
@@ -144,6 +146,15 @@ public final class GuildModel extends Model {
     private static final List<Integer> DIPLOMACY_SLOTS = List.of(2, 3, 4, 5, 6, 7, 8);
 
     private static final List<Integer> OBJECTIVE_GOALS = List.of(5, 15, 30);
+
+    @Persisted
+    public final Config<Boolean> requestGuildMembers = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> queryGuildInfoMenu = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> queryGuildDiplomacyMenu = new Config<>(true);
 
     private Map<String, GuildProfile> guildProfileMap = new HashMap<>();
     private final Map<String, DiplomacyInfo> guildDiplomacyMap = new HashMap<>();
@@ -357,7 +368,7 @@ public final class GuildModel extends Model {
                                 .expectContainer(GuildManagementContainer.class)
                                 .processIncomingContainer(this::parseGuildContainer))
                 .conditionalThen(
-                        container -> !guildName.isEmpty(),
+                        container -> !guildName.isEmpty() && queryGuildDiplomacyMenu.get(),
                         // We always check diplomacy in case its changed while we weren't looking (ex. in /class or
                         // switching accounts)
                         QueryStep.clickOnSlot(DIPLOMACY_MENU_SLOT)
@@ -461,7 +472,7 @@ public final class GuildModel extends Model {
     }
 
     public void requestGuildMembers() {
-        if (guildName != null && !guildName.isEmpty()) {
+        if (requestGuildMembers.get() && guildName != null && !guildName.isEmpty()) {
             if (System.currentTimeMillis() - lastGuildRequest > REQUEST_RATELIMIT || guildMembers.isEmpty()) {
                 CompletableFuture<GuildInfo> completableFuture = getGuild(guildName);
 
