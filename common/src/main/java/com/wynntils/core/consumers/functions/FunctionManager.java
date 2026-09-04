@@ -484,6 +484,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new ActivityFunctions.ActivityNameFunction());
         registerFunction(new ActivityFunctions.ActivityTaskFunction());
         registerFunction(new ActivityFunctions.ActivityTypeFunction());
+        registerFunction(new ActivityFunctions.GatherMiniquestProgressFunction());
+        registerFunction(new ActivityFunctions.GatherMiniquestRequiredItemFunction());
         registerFunction(new ActivityFunctions.IsTrackingActivityFunction());
 
         registerFunction(new BombFunctions.BombEndTimeFunction());
