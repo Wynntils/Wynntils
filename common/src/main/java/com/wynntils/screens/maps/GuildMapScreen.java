@@ -280,7 +280,6 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.AQUA),
                         Component.translatable("screens.wynntils.map.categoryManager.description1")
                                 .withStyle(ChatFormatting.GRAY),
-                        Component.empty(),
                         Component.translatable("screens.wynntils.map.categoryManager.description2")
                                 .withStyle(ChatFormatting.GRAY))));
 

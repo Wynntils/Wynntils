@@ -219,6 +219,11 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
             return true;
         }
 
+        if (isDoubleClick && !node.isLeaf()) {
+            onToggleExpand.run();
+            return true;
+        }
+
         onSelect.run();
         return true;
     }
