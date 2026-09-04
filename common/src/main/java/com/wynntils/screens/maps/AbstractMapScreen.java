@@ -503,6 +503,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected void renderCursor(
             GuiGraphics guiGraphics, float pointerScale, CustomColor pointerColor, PointerType pointerType) {
+        if (McUtils.player() == null) return;
+
         double pX = McUtils.player().getX();
         double pZ = McUtils.player().getZ();
 
@@ -567,6 +569,11 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     protected void centerMapAroundPlayer() {
+        if (McUtils.player() == null) {
+            centerMapOnWorld();
+            return;
+        }
+
         updateMapCenter(
                 (float) McUtils.player().getX(), (float) McUtils.player().getZ());
     }
@@ -579,6 +586,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     protected boolean isPlayerInsideMainArea() {
+        if (McUtils.player() == null) return false;
+
         return MathUtils.isInside(
                 (int) McUtils.player().getX(), (int) McUtils.player().getZ(), MIN_X, MAX_X, MIN_Z, MAX_Z);
     }

@@ -14,6 +14,7 @@ import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearAttackSpeed;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.SetInfo;
@@ -35,12 +36,15 @@ import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
@@ -52,10 +56,10 @@ public final class WynnItemParser {
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/divider"));
 
     private static final Pattern HEALTH_PATTERN =
-            Pattern.compile("^§f\uDB00\uDC02§#(?:[a-f0-9]{8})([+-][\\d,]+)§f Health$");
+            Pattern.compile("^(?:§f\uDB00\uDC02)?§#(?:[a-f0-9]{8})([+-][\\d,]+)§f Health$");
 
     // Test in WynnItemParser_DPS_PATTERN
-    private static final Pattern DPS_PATTERN = Pattern.compile("^§#(?:[a-f0-9]{8})([\\d,]+)§f DPS$");
+    private static final Pattern DPS_PATTERN = Pattern.compile("^(?:§f\uDB00\uDC02)?§#(?:[a-f0-9]{8})([\\d,]+)§f DPS$");
 
     private static final Pattern DURABILITY_PATTERN =
             Pattern.compile("§8\uE023\uDAFF\uDFF7§#.{8}.§7 Durability (\\d+)\\/(\\d+)");
@@ -71,7 +75,7 @@ public final class WynnItemParser {
 
     // Test in WynnItemParser_ITEM_ATTACK_SPEED_PATTERN
     private static final Pattern ITEM_ATTACK_SPEED_PATTERN =
-            Pattern.compile("^§f\uE007§7 ([\\w ]+) §8\\((\\d+.\\d+) hits\\/s\\)$");
+            Pattern.compile("^§f(?:\uDB00\uDC02)?\uE007§7 ([\\w ]+) §8\\((\\d+.\\d+) hits\\/s\\)$");
 
     // Test in WynnItemParser_ITEM_DAMAGE_PATTERN
     private static final Pattern ITEM_DAMAGE_PATTERN =
@@ -85,7 +89,7 @@ public final class WynnItemParser {
 
     // Test in WynnItemParser_IDENTIFICATION_STAT_PATTERN
     public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
-            "§f(?<iconPrefix>(?:\uDAFF\uDFFF\uE010\uDB00\uDC02|\uE011\uDB00\uDC02|\uDAFF\uDFFF\uE012\uDB00\uDC02|\uDAFF\uDFFF\uE013\uDB00\uDC01\uDB00\uDC02|\uE014\uDB00\uDC02))?(?<statName>[\\w\\.\\- ]+).+?§#(acfac6ff|faacacff)(?<value>[-+][\\d,]+)(?<unit>%| tier|\\/[35]s)?(?:§f §8.+?(?:§(?<indicatorColor>#[a-zA-Z0-9]{8})(.)?)?)?");
+            "§f(?<iconPrefix>(?:\uDAFF\uDFFF\uE010\uDB00\uDC02|\uE011\uDB00\uDC02|\uDAFF\uDFFF\uE012\uDB00\uDC02|\uDAFF\uDFFF\uE013\uDB00\uDC01\uDB00\uDC02|\uE014\uDB00\uDC02))?(?<statName>[\\w\\.\\- ]+).+?§#(acfac6ff|faacacff)(?<value>[-+][\\d,]+)(?<unit>%| tier|\\/[35]s)?(?:§f §8.+?(?:§(?<indicatorColor>#[a-zA-Z0-9]{8})(?<vanillaMeter>[\uE000-\uE023])?)?)?");
 
     // Test in WynnItemParser_TIER_PATTERN
     private static final Pattern TIER_PATTERN = Pattern.compile("^(?:§.)*\\uDB00\\uDC26(?:§([5bcdef]))?.+");
@@ -163,7 +167,12 @@ public final class WynnItemParser {
         GearTier tier = null;
         String itemType = extractFrameSpriteCode(itemStack);
         Optional<ShinyStat> shinyStat = Optional.empty();
-        boolean allRequirementsMet = true;
+        boolean levelReqMet = true;
+        boolean classReqMet = true;
+        boolean questReqMet = true;
+        Map<Skill, Boolean> skillReqsMet = Arrays.stream(Skill.values())
+                .collect(
+                        Collectors.toMap(skill -> skill, skill -> true, (a, b) -> a, () -> new EnumMap<>(Skill.class)));
         SetInfo setInfo = null;
         Map<String, Boolean> activeItems = new HashMap<>();
         int setWynnCount = 0;
@@ -315,7 +324,7 @@ public final class WynnItemParser {
 
                     String mark = levelMatcher.group(1);
                     if (mark.contains("\uE007")) {
-                        allRequirementsMet = false;
+                        levelReqMet = false;
                     }
 
                     continue;
@@ -327,12 +336,12 @@ public final class WynnItemParser {
                     Matcher partMatcher = normalizedCoded.getMatcher(SKILL_REQ_PART_PATTERN);
                     int index = 0;
                     while (partMatcher.find()) {
-                        if (partMatcher.group(1).equals("\uE007")) {
-                            allRequirementsMet = false;
-                        }
-
                         Skill skill = Skill.values()[index];
                         skillReqs.add(Pair.of(skill, Integer.parseInt(partMatcher.group(2))));
+
+                        if (partMatcher.group(1).equals("\uE007")) {
+                            skillReqsMet.put(skill, false);
+                        }
 
                         index++;
                     }
@@ -353,7 +362,7 @@ public final class WynnItemParser {
 
                     String mark = classMatcher.group(1);
                     if (mark.contains("\uE007")) {
-                        allRequirementsMet = false;
+                        classReqMet = false;
                     }
 
                     continue;
@@ -366,7 +375,7 @@ public final class WynnItemParser {
 
                     String mark = questMatcher.group(1);
                     if (mark.contains("\uE007")) {
-                        allRequirementsMet = false;
+                        questReqMet = false;
                     }
 
                     continue;
@@ -386,7 +395,7 @@ public final class WynnItemParser {
                 if (shinyStatMatcher.matches() && shinyStat.isEmpty()) {
                     String shinyName = shinyStatMatcher.group(1);
                     int shinyValue = Integer.parseInt(shinyStatMatcher.group(2).replace(",", ""));
-                    int shinyRerolls = parseRerolls(shinyStatMatcher.group(3));
+                    int shinyRerolls = Math.max(0, parseBannerNumber(shinyStatMatcher.group(3)));
                     shinyStat =
                             Optional.of(new ShinyStat(Models.Shiny.getShinyStat(shinyName), shinyValue, shinyRerolls));
                     segment++;
@@ -405,7 +414,9 @@ public final class WynnItemParser {
                     String unit = statMatcher.group("unit");
                     boolean hasIconPrefix = statMatcher.group("iconPrefix") != null;
 
-                    StatType statType = Models.Stat.fromDisplayName(statDisplayName, unit);
+                    StatType statType = possibleValuesMap == null
+                            ? Models.Stat.fromDisplayName(statDisplayName, unit)
+                            : Models.Stat.fromDisplayName(statDisplayName, unit, possibleValuesMap.keySet());
                     if (statType == null) {
                         WynntilsMod.warn(
                                 "Item " + itemStack.getHoverName() + " has unknown identified stat " + statDisplayName);
@@ -420,14 +431,16 @@ public final class WynnItemParser {
                             && statMatcher
                                     .group("indicatorColor")
                                     .equals(WynncraftShaderColor.RAINBOW.color.toHexString());
-                    int stars = perfectInternalRoll ? 3 : 0;
+                    String vanillaMeterGroup = statMatcher.group("vanillaMeter");
+                    Optional<Character> vanillaMeter =
+                            vanillaMeterGroup == null ? Optional.empty() : Optional.of(vanillaMeterGroup.charAt(0));
 
                     // Load the possible values for this stat
                     StatPossibleValues possibleValues =
                             possibleValuesMap != null ? possibleValuesMap.get(statType) : null;
 
-                    StatActualValue actualValue =
-                            Models.Stat.buildActualValue(statType, value, stars, possibleValues, hasIconPrefix);
+                    StatActualValue actualValue = Models.Stat.buildActualValue(
+                            statType, value, perfectInternalRoll, possibleValues, hasIconPrefix, vanillaMeter);
                     identifications.add(actualValue);
                 }
             }
@@ -453,7 +466,7 @@ public final class WynnItemParser {
                 uses,
                 durationSeconds,
                 shinyStat,
-                allRequirementsMet,
+                new GearInstanceRequirements(levelReqMet, classReqMet, skillReqsMet, questReqMet),
                 Optional.of(new SetInstance(setInfo, activeItems, setWynnCount, wynnBonuses)),
                 currentPage);
     }
@@ -503,7 +516,15 @@ public final class WynnItemParser {
     private static int parseRerolls(String rerollsString) {
         if (!rerollsString.endsWith("\uF005")) return 0;
 
-        Matcher matcher = REROLL_EXTRACT_PATTERN.matcher(rerollsString);
+        int rerolls = parseBannerNumber(rerollsString);
+        if (rerolls < 0) {
+            WynntilsMod.warn("Could not find reroll segment");
+        }
+        return rerolls;
+    }
+
+    private static int parseBannerNumber(String text) {
+        Matcher matcher = REROLL_EXTRACT_PATTERN.matcher(text);
         String rawNumberSegment = null;
 
         while (matcher.find()) {
@@ -511,7 +532,6 @@ public final class WynnItemParser {
         }
 
         if (rawNumberSegment == null) {
-            WynntilsMod.warn("Could not find reroll segment");
             return -1;
         }
 

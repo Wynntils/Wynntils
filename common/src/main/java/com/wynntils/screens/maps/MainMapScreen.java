@@ -274,7 +274,9 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         renderMapFeatures(guiGraphics, mouseX, mouseY);
 
-        if (Managers.Feature.getFeatureInstance(MappingProgressFeature.class).isEnabled()) {
+        if (Models.WorldState.onWorld()
+                && Managers.Feature.getFeatureInstance(MappingProgressFeature.class)
+                        .isEnabled()) {
             renderChunkBorders(guiGraphics);
         }
 

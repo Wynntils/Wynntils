@@ -8,6 +8,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearAttackSpeed;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
@@ -43,6 +44,7 @@ public class CraftedGearItem extends GameItem
     private final String name;
     private final GearType gearType;
     private final GearAttackSpeed attackSpeed;
+    private final int dps;
     private final int health;
     private final List<Pair<DamageType, RangedValue>> damages;
     private final List<Pair<Element, Integer>> defences;
@@ -51,7 +53,7 @@ public class CraftedGearItem extends GameItem
     private final List<StatActualValue> identifications;
     private final List<Powder> powders;
     private final int powderSlots;
-    private final boolean requirementsMet;
+    private final GearInstanceRequirements gearInstanceRequirements;
     private final CappedValue durability;
     private int currentPage;
 
@@ -59,6 +61,7 @@ public class CraftedGearItem extends GameItem
             String name,
             GearType gearType,
             GearAttackSpeed attackSpeed,
+            int dps,
             int health,
             List<Pair<DamageType, RangedValue>> damages,
             List<Pair<Element, Integer>> defences,
@@ -67,12 +70,13 @@ public class CraftedGearItem extends GameItem
             List<StatActualValue> identifications,
             List<Powder> powders,
             int powderSlots,
-            boolean requirementsMet,
+            GearInstanceRequirements gearInstanceRequirements,
             CappedValue durability,
             int currentPage) {
         this.name = name;
         this.gearType = gearType;
         this.attackSpeed = attackSpeed;
+        this.dps = dps;
         this.health = health;
         this.damages = damages;
         this.defences = defences;
@@ -81,7 +85,7 @@ public class CraftedGearItem extends GameItem
         this.identifications = identifications;
         this.powders = powders;
         this.powderSlots = powderSlots;
-        this.requirementsMet = requirementsMet;
+        this.gearInstanceRequirements = gearInstanceRequirements;
         this.durability = durability;
         this.currentPage = currentPage;
     }
@@ -98,6 +102,10 @@ public class CraftedGearItem extends GameItem
 
     public Optional<GearAttackSpeed> getAttackSpeed() {
         return Optional.ofNullable(attackSpeed);
+    }
+
+    public int getDps() {
+        return dps;
     }
 
     public int getHealth() {
@@ -163,7 +171,12 @@ public class CraftedGearItem extends GameItem
 
     @Override
     public boolean meetsActualRequirements() {
-        return requirementsMet;
+        return gearInstanceRequirements.meetsAllRequirements();
+    }
+
+    @Override
+    public GearInstanceRequirements getGearInstanceRequirements() {
+        return gearInstanceRequirements;
     }
 
     @Override
@@ -181,7 +194,8 @@ public class CraftedGearItem extends GameItem
         return "CraftedGearItem{" + "name='"
                 + name + '\'' + ", gearType="
                 + gearType + ", attackSpeed="
-                + attackSpeed + ", health="
+                + attackSpeed + ", dps="
+                + dps + ", health="
                 + health + ", damages="
                 + damages + ", defences="
                 + defences + ", requirements="

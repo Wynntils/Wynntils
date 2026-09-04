@@ -5,55 +5,73 @@
 package com.wynntils.screens.guides.tome;
 
 import com.wynntils.core.components.Handlers;
-import com.wynntils.core.components.Models;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
 import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.screens.guides.GuideItemStack;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.TooltipUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 
 public class GuideTomeItemStack extends GuideItemStack {
+    private final TomeItem tomeItem;
     private final TomeInfo tomeInfo;
-    private final MutableComponent name;
+
     private List<Component> generatedTooltip;
+    private int currentPage = 0;
 
     public GuideTomeItemStack(TomeInfo tomeInfo) {
         super(tomeInfo.metaInfo().material().itemStack(), new TomeItem(tomeInfo, null), tomeInfo.name());
 
+        this.tomeItem = new TomeItem(tomeInfo, null);
         this.tomeInfo = tomeInfo;
-        this.name = Component.literal(tomeInfo.name()).withStyle(tomeInfo.tier().getChatFormatting());
-        this.generatedTooltip = List.of();
+        this.set(DataComponents.TOOLTIP_STYLE, tomeInfo.tier().getTooltipStyle(false));
     }
 
     @Override
-    public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag flag) {
-        List<Component> tooltipLines = new ArrayList<>(generatedTooltip);
+    public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag isAdvanced) {
+        if (generatedTooltip == null) {
+            List<Component> tooltip = new ArrayList<>(buildTooltip());
 
-        appendObtainInfo(tooltipLines, tomeInfo.metaInfo().obtainInfo());
+            generatedTooltip = tooltip;
+        }
 
-        return tooltipLines;
+        return generatedTooltip;
     }
 
     public TomeInfo getTomeInfo() {
         return tomeInfo;
     }
 
-    public void buildTooltip() {
-        IdentifiableTooltipBuilder tooltipBuilder =
-                Handlers.Tooltip.buildNew(new TomeItem(tomeInfo, null), true, false);
-        this.generatedTooltip = tooltipBuilder.getTooltipLines(Models.Character.getClassType());
+    public void changePage() {
+        if (currentPage == 0) {
+            currentPage = 1;
+        } else {
+            currentPage = 0;
+        }
 
-        // Force ItemStatInfoFeature to recreate its cache
-        Optional<TomeItem> tomeItemOpt = Models.Item.asWynnItem(this, TomeItem.class);
-        if (tomeItemOpt.isEmpty()) return;
-        tomeItemOpt.get().getData().clear(WynnItemData.TOOLTIP_KEY);
+        generatedTooltip = null;
+    }
+
+    public List<Component> buildTooltip() {
+        if (currentPage == 0) {
+            tomeItem.getData().getOrCalculate(WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(tomeItem));
+            return TooltipUtils.getWynnItemTooltip(this, tomeItem);
+        } else {
+            List<Component> tooltipLines =
+                    buildObtainInfoPage(tomeItem.getItemInfo().metaInfo().obtainInfo());
+            int widestLine = tooltipLines.stream()
+                    .mapToInt(McUtils.mc().font::width)
+                    .max()
+                    .orElse(0);
+            tooltipLines.addAll(buildPaginationLines(currentPage, 3, widestLine));
+            return tooltipLines;
+        }
     }
 }

@@ -169,7 +169,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "d48b6fd625bf9f70f446c096d32f95cb",
+    "md5": "6e0adae5d56f1bc33c386b8b8b797702",
     "path": "Reference/gear.json",
     "url": "https://cdn.wynntils.com/static/Reference/gear.json"
   },
@@ -211,7 +211,7 @@
   },
   {
     "id": "dataStaticItemDisplayModelData",
-    "md5": "6229aeaa674b007683cddceaed5069ae",
+    "md5": "9133e68a1691eaa15e40b5d694c83e41",
     "path": "Data-Storage/item_display_model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/item_display_model_data.json"
   },
@@ -301,7 +301,7 @@
   },
   {
     "id": "dataStaticSeaskipperDestinationAreas",
-    "md5": "8db9b03c9b880fc14d11c2455597b35d",
+    "md5": "0752e59f611bb881cb452cdd07639c7f",
     "path": "Data-Storage/seaskipper_destination_areas.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/seaskipper_destination_areas.json"
   },
@@ -331,7 +331,7 @@
   },
   {
     "id": "dataStaticSets",
-    "md5": "3ffede8e051e430f5422279ece930480",
+    "md5": "818d9f860c880010146146c0650ba3f9",
     "path": "Reference/sets.json",
     "url": "https://cdn.wynntils.com/static/Reference/sets.json"
   },

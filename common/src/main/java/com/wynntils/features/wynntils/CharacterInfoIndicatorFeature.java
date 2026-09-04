@@ -72,7 +72,7 @@ public class CharacterInfoIndicatorFeature extends Feature {
 
     public CharacterInfoIndicatorFeature() {
         super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
+                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
                 .build());
     }
 
@@ -233,6 +233,8 @@ public class CharacterInfoIndicatorFeature extends Feature {
 
         if (!isMismatch) return;
         if (!rescanMessage.get()) return;
+        if (Models.Character.getId().equals("-")) return;
+        if (!Models.Account.hasScannedRankInfo()) return;
 
         Component clickableHere = Component.translatable(
                         "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere")

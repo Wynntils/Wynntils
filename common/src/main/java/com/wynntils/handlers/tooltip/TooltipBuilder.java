@@ -4,51 +4,55 @@
  */
 package com.wynntils.handlers.tooltip;
 
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.text.CommonStyles;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.handlers.tooltip.type.TooltipIdentificationDecorator;
+import com.wynntils.handlers.tooltip.type.TooltipLine;
+import com.wynntils.handlers.tooltip.type.TooltipOptions;
 import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.handlers.tooltip.type.TooltipWeightDecorator;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.ItemWeightSource;
+import com.wynntils.models.items.properties.PagedItemProperty;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 import java.util.regex.Matcher;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 
 public abstract class TooltipBuilder {
     private static final TooltipStyle DEFAULT_TOOLTIP_STYLE =
-            new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true, true);
+            new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true, false, true);
+
     private final List<Component> header;
     private final List<Component> footer;
     private final String source;
+    protected final boolean synthetic;
 
-    // The identificationsCache is only valid if the cached dependencies match
-    private ClassType cachedCurrentClass;
-    private ItemWeightSource cachedWeightSource;
-    private TooltipStyle cachedStyle;
-    private TooltipIdentificationDecorator cachedIdentificationDecorator;
-    private TooltipWeightDecorator cachedWeightDecorator;
-    private List<Component> identificationsCache;
-    private List<Component> weightedHeaderCache;
     private List<Component> tooltipLinesCache;
 
-    protected TooltipBuilder(List<Component> header, List<Component> footer, String source) {
-        this.header = header;
-        this.footer = footer;
+    protected TooltipBuilder(List<Component> header, List<Component> footer, String source, boolean synthetic) {
+        this.header = List.copyOf(header);
+        this.footer = List.copyOf(footer);
         this.source = source;
+        this.synthetic = synthetic;
     }
 
     public List<Component> getTooltipLines(ClassType currentClass) {
         return getTooltipLines(currentClass, DEFAULT_TOOLTIP_STYLE, null, ItemWeightSource.NONE, null);
+    }
+
+    public List<Component> getTooltipLines(ClassType currentClass, TooltipOptions options) {
+        return getTooltipLines(currentClass, options.style(), null, options.itemWeightSource(), null);
     }
 
     public List<Component> getTooltipLines(
@@ -57,82 +61,89 @@ public abstract class TooltipBuilder {
             TooltipIdentificationDecorator identificationDecorator,
             ItemWeightSource weightSource,
             TooltipWeightDecorator weightDecorator) {
-        List<Component> tooltip;
-        // Identification lines are rendered differently depending on current class, requested
-        // style and provided decorator. If all match, use cache.
-        if (tooltipLinesCache == null
-                || currentClass != cachedCurrentClass
-                || cachedWeightSource != weightSource
-                || !Objects.equals(cachedStyle, style)
-                || !Objects.equals(this.cachedIdentificationDecorator, identificationDecorator)
-                || !Objects.equals(this.cachedWeightDecorator, weightDecorator)) {
-            if (weightSource != ItemWeightSource.NONE) {
-                weightedHeaderCache = getWeightedHeaderLines(header, weightSource, weightDecorator, style);
-            } else {
-                weightedHeaderCache = null;
-            }
-
-            List<Component> headerToUse = weightedHeaderCache != null ? weightedHeaderCache : header;
-            int targetWidth = calculateTargetWidth(headerToUse, footer);
-            identificationsCache = getIdentificationLines(currentClass, style, identificationDecorator, targetWidth);
-            cachedCurrentClass = currentClass;
-            cachedWeightSource = weightSource;
-            cachedStyle = style;
-            this.cachedIdentificationDecorator = identificationDecorator;
-            this.cachedWeightDecorator = weightDecorator;
-
-            tooltip = new ArrayList<>(headerToUse);
-            if (!source.isEmpty()) {
-                tooltip.add(0, buildSourceLine());
-                tooltip.add(1, Component.empty());
-            }
-
-            tooltip.addAll(identificationsCache);
-            tooltip.addAll(footer);
-
-            int finalTargetWidth = tooltip.stream()
-                    .mapToInt(line -> McUtils.mc().font.width(line))
-                    .max()
-                    .orElse(0);
-            tooltipLinesCache = List.copyOf(postProcessTooltipLines(tooltip, finalTargetWidth));
+        if (tooltipLinesCache == null) {
+            tooltipLinesCache = buildTooltipLines(currentClass, style, identificationDecorator);
         }
 
         return tooltipLinesCache;
     }
 
-    private int calculateTargetWidth(List<Component> headerLines, List<Component> footerLines) {
+    protected List<Component> buildTooltipLines(
+            ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator identificationDecorator) {
+        List<Component> decoratedHeader = decorateHeader(header, identificationDecorator);
         int targetWidth = 0;
-
-        for (Component line : headerLines) {
+        for (Component line : decoratedHeader) {
+            targetWidth = Math.max(targetWidth, McUtils.mc().font.width(line));
+        }
+        for (Component line : footer) {
             targetWidth = Math.max(targetWidth, McUtils.mc().font.width(line));
         }
 
-        for (Component line : footerLines) {
-            targetWidth = Math.max(targetWidth, McUtils.mc().font.width(line));
-        }
-
-        if (!source.isEmpty()) {
-            targetWidth = Math.max(targetWidth, McUtils.mc().font.width(buildSourceLine()));
-        }
-
-        return targetWidth;
+        List<Component> tooltip = new ArrayList<>();
+        tooltip.addAll(decoratedHeader);
+        tooltip.addAll(getIdentificationLines(currentClass, style, identificationDecorator, targetWidth));
+        tooltip.addAll(footer);
+        return prependSource(postProcessTooltipLines(tooltip));
     }
 
     private Component buildSourceLine() {
-        return BannerBoxFont.buildMessage(source.toLowerCase(Locale.ROOT), CommonColors.WHITE, CommonColors.BLACK, "");
+        return Component.empty()
+                .withStyle(Style.EMPTY
+                        .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
+                        .applyFormat(getSourceColor()))
+                .append(Component.literal("\uE004").withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_TOOLTIP_ICONS)))
+                .append(Component.literal("\uDB00\uDC02"))
+                .append(Component.literal(source)
+                        .withStyle(style -> style.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
+                                .applyFormat(ChatFormatting.WHITE)));
     }
 
-    protected abstract List<Component> getWeightedHeaderLines(
-            List<Component> originalHeader,
-            ItemWeightSource weightSource,
-            TooltipWeightDecorator weightDecorator,
-            TooltipStyle style);
+    protected List<TooltipLine> buildPaginationLines(PagedItemProperty item) {
+        int currentPage = item.currentPage();
+        MutableComponent keyPrompt = Component.literal(synthetic ? "\uE001" : "\uF002")
+                .withStyle(Style.EMPTY.withFont(
+                        synthetic ? CommonFonts.WYNNTILS_TOOLTIP_ICONS : CommonFonts.CHAT_TILE_FONT))
+                .append(Component.literal("\uDAFF\uDF98\uDB00\uDC3F").withStyle(CommonStyles.LANGUAGE));
+        int keyPromptAdvance = McUtils.mc().font.width(keyPrompt);
+        MutableComponent paginator = Component.empty().append(keyPrompt);
+        for (int page = 0; page < 3; page++) {
+            paginator.append(Component.literal("\uE000")
+                    .withStyle(Style.EMPTY
+                            .withFont(CommonFonts.TOOLTIP_PAGE_FONT)
+                            .withColor(page == currentPage ? 0xffea80 : 0x455449)
+                            .withShadowColor(0xffffff)));
+            if (page < 2) paginator.append(Component.literal("\uDB00\uDC04").withStyle(CommonStyles.LANGUAGE));
+        }
+        paginator.append(Component.literal(Managers.Font.calculateOffset(0, keyPromptAdvance))
+                .withStyle(CommonStyles.SPACE));
+        return List.of(new TooltipLine.Centered(paginator), new TooltipLine.Fixed(Component.empty()));
+    }
 
-    protected abstract List<Component> getIdentificationLines(
-            ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator, int targetWidth);
+    protected ChatFormatting getSourceColor() {
+        return ChatFormatting.WHITE;
+    }
 
-    protected List<Component> postProcessTooltipLines(List<Component> tooltip, int targetWidth) {
-        return tooltip;
+    protected List<Component> prependSource(List<Component> lines) {
+        if (source.isEmpty()) return List.copyOf(lines);
+
+        List<Component> tooltip = new ArrayList<>(lines.size() + 1);
+        tooltip.add(buildSourceLine());
+        tooltip.addAll(lines);
+        return List.copyOf(tooltip);
+    }
+
+    protected List<Component> getIdentificationLines(
+            ClassType currentClass, TooltipStyle style, TooltipIdentificationDecorator decorator, int targetWidth) {
+        return List.of();
+    }
+
+    protected List<Component> decorateHeader(
+            List<Component> header, TooltipIdentificationDecorator identificationDecorator) {
+        return header;
+    }
+
+    protected List<Component> postProcessTooltipLines(List<Component> tooltip) {
+        return List.copyOf(tooltip);
     }
 
     protected static Pair<List<Component>, List<Component>> extractHeaderAndFooter(List<Component> lore) {
@@ -155,45 +166,34 @@ public abstract class TooltipBuilder {
                 } else {
                     Matcher matcher = codedLine.getMatcher(WynnItemParser.IDENTIFICATION_STAT_PATTERN);
                     if (matcher.matches()) {
-                        // Some orders do not have a blank line after a skill point line,
-                        // so reset the flag here
                         skillPointsStarted = false;
 
                         String statName = matcher.group("statName");
-
                         if (Skill.isSkill(statName)) {
                             skillPointsStarted = true;
                             foundSkills = true;
-                            // Skill points are in a separate section to the rest of the identifications,
-                            // but we still don't want to keep them
                         } else {
                             foundIdentifications = true;
-                            // Don't keep identifications lines at all
                         }
 
                         headerEnded = true;
                         continue;
                     } else if (skillPointsStarted) {
-                        // If there were skill points, there might be a blank line after them
                         skillPointsStarted = false;
                         continue;
                     }
                 }
             }
 
-            // We want to keep this line, so figure out where to put it
             if (!headerEnded) {
                 header.add(loreLine);
             } else {
-                // From now on, we can skip looking for identification lines
                 footerStarted = true;
                 footer.add(loreLine);
             }
         }
 
         if (foundSkills && !foundIdentifications) {
-            // If there were skills but no identifications,
-            // then the footer is missing a blank line
             footer.addFirst(Component.literal(""));
         }
 
