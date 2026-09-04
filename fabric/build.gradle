@@ -61,6 +61,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
+
+    // Some tests compare formatted numbers against strings written with a decimal point, so on
+    // a machine whose locale uses a decimal comma they fail for no reason to do with the code.
+    systemProperty "user.language", "en"
+    systemProperty "user.country", "US"
 }
 
 processResources {
