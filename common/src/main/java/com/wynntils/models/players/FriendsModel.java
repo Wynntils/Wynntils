@@ -10,6 +10,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
+import com.wynntils.handlers.playerlist.event.PlayerListColumnUpdatedEvent;
 import com.wynntils.models.players.event.FriendsEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -27,12 +28,16 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class FriendsModel extends Model {
     // \uE008\uE002 is for the first line
     // \uE001  is for the other lines
     private static final String FRIEND_PREFIX_REGEX = "(?:§(?:a|4))?(?:\uE008\uE002|\uE001) ";
+
+    private static final Pattern FRIEND_PLAYER_LIST_REGEX =
+            Pattern.compile("§.\\[(?<server>[A-Z]+\\d{1,3})\\] §.(?<username>\\w{1,16})");
 
     // region Friend Regexes
     /*
@@ -68,6 +73,8 @@ public final class FriendsModel extends Model {
     // endregion
 
     private static final int REQUEST_RATELIMIT = 250;
+
+    private boolean useCommands = false;
 
     private ListStatus friendMessageStatus = ListStatus.IDLE;
     private long lastFriendRequest = 0;
@@ -168,6 +175,31 @@ public final class FriendsModel extends Model {
         }
     }
 
+    @SubscribeEvent
+    public void onPlayerListColumnUpdate(PlayerListColumnUpdatedEvent.Friends event) {
+        if (!event.isExhaustive()) {
+            useCommands = true;
+            if (friends.isEmpty()) {
+                requestData();
+            }
+            return;
+        }
+
+        Set<String> newFriends = new HashSet<>();
+        for (ClientboundPlayerInfoUpdatePacket.Entry entry : event.getEntries()) {
+            String displayName = entry.displayName().getString();
+            Matcher matcher = FRIEND_PLAYER_LIST_REGEX.matcher(displayName);
+
+            String username = matcher.group("username");
+            newFriends.add(username);
+            onlineFriends.put(username, matcher.group("server"));
+        }
+
+        friends = newFriends;
+        WynntilsMod.postEvent(
+                new HadesRelationsUpdateEvent.FriendList(friends, HadesRelationsUpdateEvent.ChangeType.RELOAD));
+    }
+
     private boolean tryParseNoFriendList(StyledText styledText) {
         if (styledText.getMatcher(FRIEND_LIST_FAIL_2).matches()) {
             WynntilsMod.info("Friend list is empty.");
@@ -236,7 +268,7 @@ public final class FriendsModel extends Model {
      * When the response is received, friends will be updated.
      */
     public void requestData() {
-        if (McUtils.player() == null) return;
+        if (!useCommands || McUtils.player() == null) return;
 
         if (System.currentTimeMillis() - lastFriendRequest > REQUEST_RATELIMIT) {
             friendMessageStatus = ListStatus.EXPECTING;

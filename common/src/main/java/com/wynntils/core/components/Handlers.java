@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
@@ -12,6 +12,7 @@ import com.wynntils.handlers.container.ContainerQueryHandler;
 import com.wynntils.handlers.item.ItemHandler;
 import com.wynntils.handlers.labels.LabelHandler;
 import com.wynntils.handlers.particle.ParticleHandler;
+import com.wynntils.handlers.playerlist.PlayerListHandler;
 import com.wynntils.handlers.scoreboard.ScoreboardHandler;
 import com.wynntils.handlers.tooltip.TooltipHandler;
 import com.wynntils.handlers.wrappedscreen.WrappedScreenHandler;
@@ -25,6 +26,7 @@ public final class Handlers {
     public static final ItemHandler Item = new ItemHandler();
     public static final LabelHandler Label = new LabelHandler();
     public static final ParticleHandler Particle = new ParticleHandler();
+    public static final PlayerListHandler PlayerList = new PlayerListHandler();
     public static final ScoreboardHandler Scoreboard = new ScoreboardHandler();
     public static final TooltipHandler Tooltip = new TooltipHandler();
     public static final WrappedScreenHandler WrappedScreen = new WrappedScreenHandler();
