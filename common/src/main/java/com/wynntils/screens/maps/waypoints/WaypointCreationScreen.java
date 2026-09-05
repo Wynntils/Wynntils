@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.maps;
+package com.wynntils.screens.maps.waypoints;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
@@ -13,7 +13,8 @@ import com.wynntils.screens.base.widgets.ColorPickerWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
-import com.wynntils.screens.maps.widgets.IconButton;
+import com.wynntils.screens.maps.AbstractMapScreen;
+import com.wynntils.screens.maps.waypoints.widgets.IconButton;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
 import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;

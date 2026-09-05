@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.maps;
+package com.wynntils.screens.maps.waypoints;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Models;
@@ -12,8 +12,9 @@ import com.wynntils.models.profession.type.GatheringNodeType;
 import com.wynntils.models.profession.type.MaterialType;
 import com.wynntils.screens.base.widgets.InfoButton;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import com.wynntils.screens.maps.widgets.GatheringNodeFilterWidget;
-import com.wynntils.screens.maps.widgets.GatheringProfessionFilterButton;
+import com.wynntils.screens.maps.MainMapScreen;
+import com.wynntils.screens.maps.waypoints.widgets.GatheringNodeFilterWidget;
+import com.wynntils.screens.maps.waypoints.widgets.GatheringProfessionFilterButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;

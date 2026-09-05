@@ -19,7 +19,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.screens.maps.MainMapScreen;
-import com.wynntils.screens.maps.WaypointCreationScreen;
+import com.wynntils.screens.maps.waypoints.WaypointCreationScreen;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;

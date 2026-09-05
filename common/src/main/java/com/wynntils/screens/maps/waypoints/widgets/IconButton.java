@@ -2,11 +2,11 @@
  * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.maps.widgets;
+package com.wynntils.screens.maps.waypoints.widgets;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.maps.WaypointCreationScreen;
-import com.wynntils.screens.maps.WaypointManagementScreen;
+import com.wynntils.screens.maps.waypoints.WaypointCreationScreen;
+import com.wynntils.screens.maps.waypoints.WaypointManagementScreen;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
