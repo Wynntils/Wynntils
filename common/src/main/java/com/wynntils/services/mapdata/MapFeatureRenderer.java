@@ -55,6 +55,36 @@ public final class MapFeatureRenderer {
             boolean hovered,
             boolean fullscreenMap,
             CircleMask circularMask) {
+        renderMapFeature(
+                guiGraphics,
+                feature,
+                attributes,
+                mapCenter,
+                screenCenter,
+                rotationVector,
+                zoomLevel,
+                zoomRenderScale,
+                featureRenderScale,
+                hovered,
+                fullscreenMap,
+                Optional.empty(),
+                circularMask);
+    }
+
+    public static void renderMapFeature(
+            GuiGraphics guiGraphics,
+            MapFeature feature,
+            ResolvedMapAttributes attributes,
+            Vector2f mapCenter,
+            Vector2f screenCenter,
+            Vector2f rotationVector,
+            float zoomLevel,
+            float zoomRenderScale,
+            float featureRenderScale,
+            boolean hovered,
+            boolean fullscreenMap,
+            Optional<OverridenAreaColors> overridenAreaColors,
+            CircleMask circularMask) {
         if (feature instanceof MapLocation location) {
             renderMapLocation(
                     guiGraphics,
@@ -81,7 +111,8 @@ public final class MapFeatureRenderer {
                     zoomRenderScale,
                     featureRenderScale,
                     hovered,
-                    fullscreenMap);
+                    fullscreenMap,
+                    overridenAreaColors);
         } else {
             WynntilsMod.warn(
                     "Could not render feature of type " + feature.getClass().getSimpleName() + " with ID "
@@ -225,7 +256,8 @@ public final class MapFeatureRenderer {
             float zoomRenderScale,
             float featureRenderScale,
             boolean hovered,
-            boolean fullscreenMap) {
+            boolean fullscreenMap,
+            Optional<OverridenAreaColors> overridenAreaColors) {
         List<Vector2f> worldVertices = area.getBoundingPolygon().vertices();
 
         // Transform area vertices to screen coordinates
@@ -233,12 +265,21 @@ public final class MapFeatureRenderer {
                 .map(vertex -> getRenderLocation(mapCenter, screenCenter, rotationVector, zoomRenderScale, vertex))
                 .toList();
 
-        RenderUtils.drawPolygon(
-                guiGraphics,
-                attributes.fillColor(),
-                attributes.borderColor(),
-                attributes.borderWidth() + (hovered ? 1 : 0),
-                screenVertices);
+        if (overridenAreaColors.isPresent()) {
+            RenderUtils.drawPolygon(
+                    guiGraphics,
+                    overridenAreaColors.get().fillColors(),
+                    overridenAreaColors.get().borderColors(),
+                    attributes.borderWidth() + (hovered ? 1 : 0),
+                    screenVertices);
+        } else {
+            RenderUtils.drawPolygon(
+                    guiGraphics,
+                    attributes.fillColor(),
+                    attributes.borderColor(),
+                    attributes.borderWidth() + (hovered ? 1 : 0),
+                    screenVertices);
+        }
 
         BoundingPolygon boundingPolygon = BoundingPolygon.fromVertices(screenVertices);
         Vector2f centroid = boundingPolygon.centroid();
@@ -389,4 +430,6 @@ public final class MapFeatureRenderer {
         // Calculate the final render position
         return screenCenter.add(rotatedDistanceVector, new Vector2f());
     }
+
+    public record OverridenAreaColors(List<CustomColor> fillColors, List<CustomColor> borderColors) {}
 }

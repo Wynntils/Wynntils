@@ -43,6 +43,7 @@ import com.wynntils.screens.territorymanagement.widgets.quicksorts.TerritoryQuic
 import com.wynntils.screens.territorymanagement.widgets.quicksorts.TerritoryTreasuryQuickSortWidget;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.map.type.TerritoryInfoType;
+import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -740,6 +741,14 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         return Stream.concat(
                 Services.MapData.getFeaturesForCategory("wynntils:guild:managed-territory"),
                 Services.MapData.getFeaturesForCategory("wynntils:personal:user-marker"));
+    }
+
+    @Override
+    protected Optional<MapFeatureRenderer.OverridenAreaColors> getOverridenAreaColors(MapFeature feature) {
+        if (!(feature instanceof ManageTerritoryArea territoryArea)) return Optional.empty();
+
+        return Optional.of(new MapFeatureRenderer.OverridenAreaColors(
+                territoryArea.getFillColors(), territoryArea.getBorderColors()));
     }
 
     private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {

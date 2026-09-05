@@ -21,6 +21,7 @@ import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.ProviderManagementScreen;
 import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.map.type.TerritoryFilterType;
+import com.wynntils.services.mapdata.MapFeatureRenderer;
 import com.wynntils.services.mapdata.attributes.impl.AbstractMapAreaAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
@@ -543,6 +544,17 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     @Override
+    protected Optional<MapFeatureRenderer.OverridenAreaColors> getOverridenAreaColors(MapFeature feature) {
+        if (!resourceMode || !(feature instanceof TerritoryArea territoryArea)) return Optional.empty();
+
+        List<CustomColor> resourceColors = Models.Territory.getTerritoryInfo(
+                        territoryArea.getTerritoryProfile().getName())
+                .getResourceColors();
+        return Optional.of(new MapFeatureRenderer.OverridenAreaColors(
+                resourceColors.stream().map(color -> color.withAlpha(80)).toList(), resourceColors));
+    }
+
+    @Override
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         for (GuiEventListener child :
                 Stream.concat(children().stream(), mapButtons.stream()).toList()) {
@@ -1038,13 +1050,13 @@ public final class GuildMapScreen extends AbstractMapScreen {
             return new AbstractMapAreaAttributes() {
                 @Override
                 public Optional<CustomColor> getFillColor() {
+                    // The multiple resource colors are applied directly by GuildMapScreen while rendering.
                     return getResourceColor(territoryArea).map(color -> color.withAlpha(80));
                 }
 
                 @Override
                 public Optional<CustomColor> getBorderColor() {
-                    // FIXME: This should just be the resource color, but at the moment this serves as a replacement
-                    //        for multiple resource color support
+                    // The multiple resource colors are applied directly by GuildMapScreen while rendering.
                     return Optional.ofNullable(Models.Territory.getTerritoryInfo(
                                     territoryArea.getTerritoryProfile().getName()))
                             .map(TerritoryInfo::getResourceColors)

@@ -115,29 +115,22 @@ public final class ManageTerritoryArea implements MapArea {
 
             @Override
             public Optional<CustomColor> getFillColor() {
-                // FIXME: This should render the component colors separately, but at the moment this serves as a
-                //        replacement for multiple area color support in mapdata. Revisit once MapAreaAttributes
-                //        can express more than one fill/border color (see also GuildMapScreen:996).
+                // The multiple info colors are applied directly by TerritoryManagementScreen while rendering.
                 return Optional.of(CustomColor.blend(getInfoColors()).withAlpha(80));
             }
 
             @Override
             public Optional<CustomColor> getBorderColor() {
-                // FIXME: This should render the component colors separately, but at the moment this serves as a
-                //        replacement for multiple area color support in mapdata. Revisit once MapAreaAttributes
-                //        can express more than one fill/border color (see also GuildMapScreen:996).
                 if (holder.territoryConnections().get(getTerritoryItem()) == TerritoryConnectionType.UNCONNECTED) {
                     return Optional.of(CommonColors.RED);
                 }
 
+                // The multiple info colors are applied directly by TerritoryManagementScreen while rendering.
                 return Optional.of(CustomColor.blend(getInfoColors()));
             }
 
             @Override
             public Optional<CustomColor> getLabelColor() {
-                // FIXME: This should render the component colors separately, but at the moment this serves as a
-                //        replacement for multiple area color support in mapdata. Revisit once MapAreaAttributes
-                //        can express more than one fill/border color (see also GuildMapScreen:996).
                 return Optional.of(CustomColor.blend(getInfoColors()));
             }
         });
@@ -179,6 +172,18 @@ public final class ManageTerritoryArea implements MapArea {
         }
 
         return colors;
+    }
+
+    public List<CustomColor> getFillColors() {
+        return getInfoColors().stream().map(color -> color.withAlpha(80)).toList();
+    }
+
+    public List<CustomColor> getBorderColors() {
+        if (holder.territoryConnections().get(getTerritoryItem()) == TerritoryConnectionType.UNCONNECTED) {
+            return List.of(CommonColors.RED);
+        }
+
+        return getInfoColors();
     }
 
     public void onClick() {
