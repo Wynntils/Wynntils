@@ -15,6 +15,7 @@ import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.handlers.wrappedscreen.WrappedScreen;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
+import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.items.items.gui.TerritoryItem;
 import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
@@ -26,6 +27,8 @@ import com.wynntils.screens.base.widgets.ItemFilterUIButton;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.maps.AbstractMapScreen;
 import com.wynntils.screens.maps.widgets.MapButton;
+import com.wynntils.screens.territorymanagement.mapdata.ManageTerritoryArea;
+import com.wynntils.screens.territorymanagement.mapdata.ManageTerritoryProvider;
 import com.wynntils.screens.territorymanagement.widgets.GuildOverallProductionWidget;
 import com.wynntils.screens.territorymanagement.widgets.TerritoryApplyLoadoutButton;
 import com.wynntils.screens.territorymanagement.widgets.TerritoryHighlightLegendWidget;
@@ -39,10 +42,8 @@ import com.wynntils.screens.territorymanagement.widgets.quicksorts.TerritoryOver
 import com.wynntils.screens.territorymanagement.widgets.quicksorts.TerritoryQuickSortWidget;
 import com.wynntils.screens.territorymanagement.widgets.quicksorts.TerritoryTreasuryQuickSortWidget;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
-import com.wynntils.services.map.pois.ManageTerritoryPoi;
-import com.wynntils.services.map.pois.Poi;
-import com.wynntils.services.map.pois.TerritoryPoi;
 import com.wynntils.services.map.type.TerritoryInfoType;
+import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.type.PoiLocation;
@@ -50,10 +51,10 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.state.ColoredLineBatchRenderState;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.BoundingBox;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -68,10 +69,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix3x2f;
+import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 
 public class TerritoryManagementScreen extends AbstractMapScreen implements WrappedScreen {
@@ -102,7 +107,6 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
     // Territory items
     private List<Pair<ItemStack, TerritoryItem>> territoryItems = new ArrayList<>();
-    private final List<ManageTerritoryPoi> territoryPois = new ArrayList<>();
 
     // Widgets
     private final List<AbstractWidget> renderAreaWidgets = new ArrayList<>();
@@ -127,6 +131,11 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
     public void setMapMode(boolean mapMode) {
         this.mapMode = mapMode;
+    }
+
+    @Override
+    protected boolean shouldRenderMapControls() {
+        return mapMode;
     }
 
     public void setMapPosition(float centerX, float centerZ, float zoomLevel) {
@@ -510,7 +519,11 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                 (int) mapWidth,
                 (int) mapHeight);
 
-        renderPois(guiGraphics, mouseX, mouseY);
+        renderTerritoryAreaPaths(guiGraphics);
+
+        renderMapFeatures(guiGraphics, mouseX, mouseY);
+
+        renderTerritoryDecorations(guiGraphics);
 
         renderCursor(
                 guiGraphics,
@@ -538,10 +551,195 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
             guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
         } else if (holdingZoomHandle) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
-        } else if ((this.hovered != null && !(this.hovered instanceof TerritoryPoi))
-                || isMouseOverZoomHandle(mouseX, mouseY)) {
+        } else if (hoveredFeature != null || isMouseOverZoomHandle(mouseX, mouseY)) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
+    }
+
+    private void renderTerritoryAreaPaths(GuiGraphics guiGraphics) {
+        List<ManageTerritoryArea> territoryAreas = getRenderedMapFeatures()
+                .filter(f -> f instanceof ManageTerritoryArea)
+                .map(f -> (ManageTerritoryArea) f)
+                .toList();
+
+        Map<String, ManageTerritoryArea> territoryAreasByName = territoryAreas.stream()
+                .collect(Collectors.toMap(
+                        area -> area.getTerritoryProfile().getName(), area -> area, (first, second) -> first));
+
+        // Accumulate every trading-route line into a single batch, submitted once below, instead of
+        // one GuiElementRenderState submission per route
+        List<ColoredLineBatchRenderState.Segment> segments = new ArrayList<>();
+
+        for (ManageTerritoryArea territoryArea : territoryAreas) {
+            TerritoryInfo territoryInfo = Models.Territory.getTerritoryInfo(
+                    territoryArea.getTerritoryProfile().getName());
+            if (territoryInfo == null) continue;
+
+            for (String tradingRoute : territoryInfo.getTradingRoutes()) {
+                ManageTerritoryArea destination = territoryAreasByName.get(tradingRoute);
+
+                if (destination == null) continue;
+
+                Vector2f firstCentroid = territoryArea.getBoundingPolygon().centroid();
+                Vector2f secondCentroid = destination.getBoundingPolygon().centroid();
+                float firstWorldX =
+                        MapRenderer.getRenderX((int) firstCentroid.x(), mapCenterX, centerX, zoomRenderScale);
+                float firstWorldZ =
+                        MapRenderer.getRenderZ((int) firstCentroid.y(), mapCenterZ, centerZ, zoomRenderScale);
+                float secondWorldX =
+                        MapRenderer.getRenderX((int) secondCentroid.x(), mapCenterX, centerX, zoomRenderScale);
+                float secondWorldZ =
+                        MapRenderer.getRenderZ((int) secondCentroid.y(), mapCenterZ, centerZ, zoomRenderScale);
+                segments.add(new ColoredLineBatchRenderState.Segment(
+                        firstWorldX,
+                        firstWorldZ,
+                        secondWorldX,
+                        secondWorldZ,
+                        1,
+                        CommonColors.DARK_GRAY.withAlpha(0.5f)));
+            }
+        }
+
+        if (segments.isEmpty()) return;
+
+        guiGraphics.guiRenderState.submitGuiElement(new ColoredLineBatchRenderState(
+                RenderPipelines.GUI,
+                TextureSetup.noTexture(),
+                new Matrix3x2f(guiGraphics.pose()),
+                segments,
+                guiGraphics.scissorStack.peek()));
+    }
+
+    private void renderTerritoryDecorations(GuiGraphics guiGraphics) {
+        List<ManageTerritoryArea> territoryAreas = getRenderedMapFeatures()
+                .filter(f -> f instanceof ManageTerritoryArea)
+                .map(f -> (ManageTerritoryArea) f)
+                .toList();
+
+        for (ManageTerritoryArea territoryArea : territoryAreas) {
+            TerritoryItem territoryItem = territoryArea.getTerritoryItem();
+            TerritoryProfile territoryProfile = territoryArea.getTerritoryProfile();
+
+            final int width = Math.abs(territoryProfile.getEndX() - territoryProfile.getStartX());
+            final int height = Math.abs(territoryProfile.getEndZ() - territoryProfile.getStartZ());
+            final float renderWidth = width * zoomRenderScale;
+            final float renderHeight = height * zoomRenderScale;
+
+            Vector2f centroid = territoryArea.getBoundingPolygon().centroid();
+            float centerScreenX = MapRenderer.getRenderX((int) centroid.x(), mapCenterX, centerX, zoomRenderScale);
+            float centerScreenZ = MapRenderer.getRenderZ((int) centroid.y(), mapCenterZ, centerZ, zoomRenderScale);
+
+            final float actualRenderX = centerScreenX - renderWidth / 2f;
+            final float actualRenderZ = centerScreenZ - renderHeight / 2f;
+
+            // Render the territory production type icons
+            Set<GuildResource> productionTypes = territoryItem.getProduction().keySet().stream()
+                    .filter(GuildResource::isMaterialResource)
+                    .collect(Collectors.toUnmodifiableSet());
+
+            if (!productionTypes.isEmpty() && zoomRenderScale >= 0.2f) {
+                int iconYOffset = 4;
+                if (territoryItem.isSelected() || territoryItem.isPending() || territoryItem.isHeadquarters()) {
+                    iconYOffset += 4;
+                }
+
+                if (productionTypes.size() <= 2) {
+                    GuildResource productionType = productionTypes.iterator().next();
+                    String symbol = productionType.getPrettySymbol().trim();
+                    symbol += productionTypes.size() == 2
+                            ? productionTypes
+                                    .iterator()
+                                    .next()
+                                    .getPrettySymbol()
+                                    .trim()
+                            : "";
+                    if (territoryItem.getDoubleResource()) {
+                        symbol += symbol;
+                    }
+
+                    FontRenderer.getInstance()
+                            .renderAlignedTextInBox(
+                                    guiGraphics,
+                                    StyledText.fromString(symbol),
+                                    actualRenderX,
+                                    actualRenderX + renderWidth + (territoryItem.getDoubleEmeralds() ? 8 : 0),
+                                    actualRenderZ + renderHeight / 2 + iconYOffset,
+                                    actualRenderZ + renderHeight,
+                                    0,
+                                    CommonColors.WHITE,
+                                    HorizontalAlignment.CENTER,
+                                    VerticalAlignment.TOP,
+                                    TextShadow.NORMAL);
+
+                    // Render E icon separately so we can shift it down to be aligned
+                    if (territoryItem.getDoubleEmeralds()) {
+                        FontRenderer.getInstance()
+                                .renderAlignedTextInBox(
+                                        guiGraphics,
+                                        StyledText.fromComponent(Component.literal(EmeraldUnits.EMERALD.getSymbol())
+                                                .withStyle(ChatFormatting.GREEN)),
+                                        actualRenderX,
+                                        actualRenderX + renderWidth - 8,
+                                        actualRenderZ + renderHeight / 2 + iconYOffset + 1,
+                                        actualRenderZ + renderHeight,
+                                        0,
+                                        CommonColors.WHITE,
+                                        HorizontalAlignment.CENTER,
+                                        VerticalAlignment.TOP,
+                                        TextShadow.NORMAL);
+                    }
+                } else {
+                    int i = 0;
+                    for (GuildResource productionType : productionTypes) {
+                        String symbol = productionType.getPrettySymbol().trim();
+                        FontRenderer.getInstance()
+                                .renderText(
+                                        guiGraphics,
+                                        StyledText.fromString(symbol),
+                                        actualRenderX + renderWidth / 2 + i * 8 - 12,
+                                        actualRenderZ + renderHeight / 2 + iconYOffset,
+                                        CommonColors.WHITE,
+                                        HorizontalAlignment.CENTER,
+                                        VerticalAlignment.TOP,
+                                        TextShadow.NORMAL);
+                        i++;
+                    }
+                }
+            }
+
+            if (territoryItem.isPending() && !territoryItem.isSelected()) {
+                RenderUtils.drawTexturedRect(
+                        guiGraphics,
+                        Texture.CHECKMARK_GRAY,
+                        actualRenderX + renderWidth / 2f - Texture.CHECKMARK_GRAY.width() / 2f,
+                        actualRenderZ + renderHeight / 2f - Texture.CHECKMARK_GRAY.height() / 2f);
+            } else if (!territoryItem.isPending() && territoryItem.isSelected()) {
+                RenderUtils.drawTexturedRect(
+                        guiGraphics,
+                        Texture.CHECKMARK_GREEN,
+                        actualRenderX + renderWidth / 2f - Texture.CHECKMARK_GREEN.width() / 2f,
+                        actualRenderZ + renderHeight / 2f - Texture.CHECKMARK_GREEN.height() / 2f);
+            } else if (territoryItem.isPending() && territoryItem.isSelected()) {
+                RenderUtils.drawTexturedRect(
+                        guiGraphics,
+                        Texture.CHECKMARK_YELLOW,
+                        actualRenderX + renderWidth / 2f - Texture.CHECKMARK_YELLOW.width() / 2f,
+                        actualRenderZ + renderHeight / 2f - Texture.CHECKMARK_YELLOW.height() / 2f);
+            } else if (territoryItem.isHeadquarters()) {
+                RenderUtils.drawTexturedRect(
+                        guiGraphics,
+                        Texture.GUILD_HEADQUARTERS,
+                        actualRenderX + renderWidth / 2f - Texture.GUILD_HEADQUARTERS.width() / 2f,
+                        actualRenderZ + renderHeight / 2f - Texture.GUILD_HEADQUARTERS.height() / 2f);
+            }
+        }
+    }
+
+    @Override
+    protected Stream<MapFeature> getRenderedMapFeatures() {
+        return Stream.concat(
+                Services.MapData.getFeaturesForCategory("wynntils:guild:managed-territory"),
+                Services.MapData.getFeaturesForCategory("wynntils:personal:user-marker"));
     }
 
     private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
@@ -664,53 +862,6 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     }
 
     @Override
-    protected void renderPois(
-            List<Poi> pois,
-            GuiGraphics guiGraphics,
-            BoundingBox textureBoundingBox,
-            float poiScale,
-            int mouseX,
-            int mouseY) {
-        hovered = null;
-
-        List<Poi> filteredPois = getRenderedPois(pois, textureBoundingBox, poiScale, mouseX, mouseY);
-
-        // Render trading routes
-        // We render them in both directions because optimizing it is not cheap either
-        for (Poi poi : filteredPois) {
-            if (!(poi instanceof ManageTerritoryPoi territoryPoi)) continue;
-
-            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
-            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
-
-            for (String tradingRoute : territoryPoi.getTerritoryInfo().getTradingRoutes()) {
-                Optional<Poi> routePoi = filteredPois.stream()
-                        .filter(filteredPoi -> filteredPoi.getName().equals(tradingRoute))
-                        .findFirst();
-
-                // Only render connection if the other poi is also in the filtered pois
-                if (routePoi.isPresent() && filteredPois.contains(routePoi.get())) {
-                    float x = MapRenderer.getRenderX(routePoi.get(), mapCenterX, centerX, zoomRenderScale);
-                    float z = MapRenderer.getRenderZ(routePoi.get(), mapCenterZ, centerZ, zoomRenderScale);
-
-                    RenderUtils.drawLine(guiGraphics, CommonColors.DARK_GRAY, poiRenderX, poiRenderZ, x, z, 1);
-                }
-            }
-        }
-
-        // Reverse and Render
-        for (int i = filteredPois.size() - 1; i >= 0; i--) {
-            Poi poi = filteredPois.get(i);
-
-            float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, zoomRenderScale);
-            float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, zoomRenderScale);
-
-            poi.renderAt(
-                    guiGraphics, poiRenderX, poiRenderZ, hovered == poi, poiScale, zoomRenderScale, zoomLevel, true);
-        }
-    }
-
-    @Override
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!this.mapMode) {
             // Render area widgets need to handle the scroll offset
@@ -768,9 +919,9 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
             }
 
             if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT
-                    && hovered instanceof ManageTerritoryPoi manageTerritoryPoi) {
+                    && hoveredFeature instanceof ManageTerritoryArea manageTerritoryArea) {
                 holder.saveMapPos();
-                manageTerritoryPoi.onClick();
+                manageTerritoryArea.onClick();
             }
         }
 
@@ -797,7 +948,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
-        if (this.mapMode && draggingScroll) {
+        if (!this.mapMode && draggingScroll) {
             // Calculate the new scroll offset
             float newScrollOffset = MathUtils.map(
                     (float) event.y(),
@@ -841,17 +992,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
             populateRenderAreaWidgets();
             scrollOffset = Math.min(getMaxScrollOffset(), scrollOffset);
         } else {
-            territoryPois.clear();
-            for (Pair<ItemStack, TerritoryItem> entry : territoryItems) {
-                TerritoryItem item = entry.value();
-                TerritoryPoi advancementPoi = Models.Territory.getTerritoryPoiFromAdvancement(item.getName());
-                territoryPois.add(new ManageTerritoryPoi(
-                        holder,
-                        advancementPoi.getTerritoryInfo(),
-                        advancementPoi.getTerritoryProfile(),
-                        entry.key(),
-                        () -> item));
-            }
+            ManageTerritoryProvider.updateFeatures(holder);
         }
     }
 
@@ -867,6 +1008,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     private void setInfoType(TerritoryInfoType type) {
         infoType = type;
         infoTypeButton.setTooltip(getCompleteInfoTypeTooltip());
+        ManageTerritoryProvider.refreshColors();
     }
 
     private void populateRenderAreaWidgets() {
@@ -910,33 +1052,17 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     }
 
     private void renderHoveredTerritoryInfo(GuiGraphics guiGraphics) {
-        if (!(hovered instanceof ManageTerritoryPoi territoryPoi)) return;
+        if (!(hoveredFeature instanceof ManageTerritoryArea territoryArea)) return;
 
         int xOffset = (int) (width - SCREEN_SIDE_OFFSET - 250);
         int yOffset = (int) (SCREEN_SIDE_OFFSET + 40);
 
-        renderTerritoryTooltip(guiGraphics, xOffset, yOffset, territoryPoi);
-    }
-
-    private void renderPois(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        List<Poi> renderedPois = new ArrayList<>();
-
-        renderedPois.addAll(territoryPois);
-
-        Models.Marker.USER_WAYPOINTS_PROVIDER.getPois().forEach(renderedPois::add);
-
-        renderPois(
-                renderedPois,
-                guiGraphics,
-                BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
-                1,
-                mouseX,
-                mouseY);
+        renderTerritoryTooltip(guiGraphics, xOffset, yOffset, territoryArea);
     }
 
     private void renderTerritoryTooltip(
-            GuiGraphics guiGraphics, int xOffset, int yOffset, ManageTerritoryPoi territoryPoi) {
-        final TerritoryItem item = territoryPoi.getTerritoryItem();
+            GuiGraphics guiGraphics, int xOffset, int yOffset, ManageTerritoryArea territoryArea) {
+        final TerritoryItem item = territoryArea.getTerritoryItem();
 
         final List<Component> tooltipLines = new ArrayList<>();
 
@@ -967,16 +1093,17 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                                 + item.getDefenseDifficulty().getAsString()));
         tooltipLines.add(defences.getComponent());
 
-        TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(item.getName());
-        TerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
+        TerritoryProfile territoryProfile = territoryArea.getTerritoryProfile();
+        TerritoryInfo territoryInfo = Models.Territory.getTerritoryInfo(item.getName());
 
-        String timeHeldString = territoryProfile.getGuild().equals(territoryInfo.getGuildName())
-                ? territoryProfile.getTimeAcquiredColor() + territoryProfile.getReadableRelativeTimeAcquired()
-                : "-";
+        String timeHeldString =
+                territoryInfo != null && territoryProfile.getGuild().equals(territoryInfo.getGuildName())
+                        ? territoryProfile.getTimeAcquiredColor() + territoryProfile.getReadableRelativeTimeAcquired()
+                        : "-";
         tooltipLines.add(StyledText.fromString(ChatFormatting.GRAY + "Time Held: " + timeHeldString)
                 .getComponent());
 
-        if (item.getTreasuryBonus() > 0) {
+        if (territoryInfo != null && item.getTreasuryBonus() > 0) {
             tooltipLines.add(Component.literal(""));
 
             StyledText treasury = StyledText.fromString(ChatFormatting.LIGHT_PURPLE
@@ -1061,7 +1188,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,
-                        StyledText.fromString(territoryPoi.getName()),
+                        StyledText.fromString(item.getName()),
                         7 + xOffset,
                         textureWidth + xOffset,
                         Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + yOffset,
@@ -1076,17 +1203,19 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                         TextShadow.OUTLINE);
     }
 
-    private boolean centerOnHeadquarters() {
+    private void centerOnHeadquarters() {
         Optional<Pair<ItemStack, TerritoryItem>> hqItem = territoryItems.stream()
                 .filter((item) -> item.b().isHeadquarters())
                 .findFirst();
         if (hqItem.isPresent()) {
-            PoiLocation location = Models.Territory.getTerritoryProfile(
-                            hqItem.get().b().getName())
-                    .getCenterLocation();
+            TerritoryProfile territoryProfile =
+                    Models.Territory.getTerritoryProfile(hqItem.get().b().getName());
+            // The API territory list may not have loaded yet, or may not know this territory
+            if (territoryProfile == null) return;
+
+            PoiLocation location = territoryProfile.getCenterLocation();
             updateMapCenter(location.getX(), location.getZ());
         }
-        return hqItem.isPresent();
     }
 
     private AbstractWidget getHoveredWidget(int mouseX, int mouseY) {

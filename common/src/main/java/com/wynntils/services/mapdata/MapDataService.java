@@ -9,6 +9,7 @@ import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.services.mapdata.attributes.merge.MapAttributesMerger;
 import com.wynntils.services.mapdata.attributes.resolving.MapAttributesResolver;
 import com.wynntils.services.mapdata.attributes.resolving.OverrideMapAttributes;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
@@ -22,6 +23,7 @@ import com.wynntils.services.mapdata.providers.builtin.CombatListProvider;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.providers.builtin.PlaceListProvider;
 import com.wynntils.services.mapdata.providers.builtin.ServiceListProvider;
+import com.wynntils.services.mapdata.providers.json.JsonOverrideProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.services.mapdata.providers.type.MapDataOverrideProvider;
@@ -32,13 +34,16 @@ import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MapDataService extends Service {
@@ -63,6 +68,11 @@ public class MapDataService extends Service {
     @Persisted
     private final Storage<Map<JsonProviderInfo, Boolean>> jsonProviderInfos = new Storage<>(new LinkedHashMap<>());
 
+    // Storage for json override providers
+    @Persisted
+    private final Storage<Map<JsonOverrideProvider, Boolean>> jsonOverrideProviders =
+            new Storage<>(new LinkedHashMap<>());
+
     public MapDataService() {
         super(List.of());
 
@@ -74,12 +84,29 @@ public class MapDataService extends Service {
         if (storage == jsonProviderInfos) {
             reloadJsonProviders();
         }
+        if (storage == jsonOverrideProviders) {
+            reloadJsonOverrideProviders();
+        }
     }
 
     @Override
     public void reloadData() {
         getProviders().forEach(MapDataProvider::reloadData);
         reloadJsonProviders();
+        reloadJsonOverrideProviders();
+    }
+
+    public Stream<MapCategory> getDefinedCategories() {
+        return getProviders().flatMap(MapDataProvider::getCategories);
+    }
+
+    public Stream<String> getFeatureCategoryIds() {
+        return getFeatures().distinct().map(MapFeature::getCategoryId);
+    }
+
+    public Stream<String> allPossibleCategories() {
+        return Stream.concat(getFeatureCategoryIds(), getDefinedCategories().map(MapCategory::getCategoryId))
+                .distinct();
     }
 
     public Stream<MapFeature> getFeatures() {
@@ -92,6 +119,56 @@ public class MapDataService extends Service {
 
     public Stream<MapFeature> getFeaturesForCategory(String categoryId) {
         return getFeatures().filter(f -> f.getCategoryId().startsWith(categoryId));
+    }
+
+    public Optional<MapAttributes> getBaseAttributesForCategory(String categoryId) {
+        List<MapAttributes> attributesList = getCategoryDefinitions(categoryId)
+                .map(MapCategory::getAttributes)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+
+        if (attributesList.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(MapAttributesMerger.mergeAttributes(attributesList));
+    }
+
+    public Optional<MapAttributes> getOwnAttributesForCategory(String categoryId) {
+        List<MapAttributes> ownAttributes = new ArrayList<>();
+
+        overrideProviders.values().stream()
+                .filter(provider -> provider.getOverridenCategoryIds().anyMatch(categoryId::equals))
+                .map(provider -> provider.getOverrideAttributes(null))
+                .filter(Objects::nonNull)
+                .forEach(ownAttributes::add);
+
+        getBaseAttributesForCategory(categoryId).ifPresent(ownAttributes::add);
+
+        if (ownAttributes.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(MapAttributesMerger.mergeAttributes(ownAttributes));
+    }
+
+    public Optional<MapAttributes> getInheritedAttributesForCategory(String categoryId) {
+        List<MapAttributes> resolvedAttributes = new ArrayList<>();
+
+        overrideProviders.values().stream()
+                .filter(provider -> provider.getOverridenCategoryIds()
+                        .anyMatch(id -> categoryId.startsWith(id) && !id.equals(categoryId)))
+                .map(provider -> provider.getOverrideAttributes(null))
+                .filter(Objects::nonNull)
+                .forEach(resolvedAttributes::add);
+
+        for (String id = categoryId; id != null; id = getParentCategoryId(id)) {
+            getBaseAttributesForCategory(id).ifPresent(resolvedAttributes::add);
+        }
+
+        if (resolvedAttributes.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(MapAttributesMerger.mergeAttributes(resolvedAttributes));
     }
 
     // region Lookup features and attribute resolution
@@ -220,6 +297,44 @@ public class MapDataService extends Service {
         return Collections.unmodifiableMap(jsonProviderInfos.get());
     }
 
+    public void addOverrideProvider(JsonOverrideProvider provider) {
+        jsonOverrideProviders.get().keySet().removeIf(i -> i.getProviderId().equals(provider.getProviderId()));
+        jsonOverrideProviders.get().put(provider, true);
+        jsonOverrideProviders.touched();
+        registerOverrideProvider(provider.getProviderId(), provider);
+    }
+
+    public void removeOverrideProvider(String providerId) {
+        jsonOverrideProviders.get().keySet().removeIf(i -> i.getProviderId().equals(providerId));
+        jsonOverrideProviders.touched();
+        unregisterOverrideProvider(providerId);
+    }
+
+    public void toggleOverrideProvider(String providerId) {
+        Optional<JsonOverrideProvider> providerOpt = jsonOverrideProviders.get().keySet().stream()
+                .filter(info -> info.getProviderId().equals(providerId))
+                .findFirst();
+        if (providerOpt.isEmpty()) return;
+
+        JsonOverrideProvider provider = providerOpt.get();
+        boolean enabled = jsonOverrideProviders.get().get(provider);
+        jsonOverrideProviders.get().put(provider, !enabled);
+        jsonOverrideProviders.touched();
+
+        if (enabled) {
+            unregisterOverrideProvider(providerId);
+        } else {
+            registerOverrideProvider(providerId, provider);
+        }
+    }
+
+    public JsonOverrideProvider getOverrideProvider(String providerId) {
+        return jsonOverrideProviders.get().keySet().stream()
+                .filter(info -> info.getProviderId().equals(providerId))
+                .findFirst()
+                .orElse(null);
+    }
+
     public void registerOverrideProvider(String overrideProviderId, MapDataOverrideProvider provider) {
         overrideProviders.putFirst(overrideProviderId, provider);
         provider.onChange(this::onProviderChange);
@@ -310,6 +425,13 @@ public class MapDataService extends Service {
                 .filter(Map.Entry::getValue)
                 .map(Map.Entry::getKey)
                 .forEach(this::registerJsonProvider);
+    }
+
+    private void reloadJsonOverrideProviders() {
+        jsonOverrideProviders.get().entrySet().stream()
+                .filter(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
+                .forEach(provider -> this.registerOverrideProvider(provider.getProviderId(), provider));
     }
 
     private void onProviderChange(MapDataProvidedType mapDataProvidedType) {
@@ -426,6 +548,12 @@ public class MapDataService extends Service {
         }
 
         return 0;
+    }
+
+    private String getParentCategoryId(String categoryId) {
+        int index = categoryId.lastIndexOf(':');
+        if (index == -1) return null;
+        return categoryId.substring(0, index);
     }
 
     private static final class PlaceholderProvider implements MapDataProvider {

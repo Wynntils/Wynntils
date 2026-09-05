@@ -7,6 +7,8 @@ package com.wynntils.models.profession;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
@@ -20,6 +22,8 @@ import com.wynntils.models.profession.label.GatheringNodeHarvestLabelInfo;
 import com.wynntils.models.profession.label.GatheringNodeHarvestLabelParser;
 import com.wynntils.models.profession.label.GatheringNodeLabelParser;
 import com.wynntils.models.profession.label.ProfessionGatheringNodeLabelInfo;
+import com.wynntils.models.profession.providers.GatheringNodeProvider;
+import com.wynntils.models.profession.type.GatheringNodeType;
 import com.wynntils.models.profession.type.GatheringToolInfo;
 import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.MaterialInfo;
@@ -39,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -50,8 +55,11 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ProfessionModel extends Model {
+    private static final GatheringNodeProvider GATHERING_NODE_PROVIDER = new GatheringNodeProvider();
+
     private final GatheringToolInfoRegistry gatheringToolInfoRegistry = new GatheringToolInfoRegistry();
     private final MaterialInfoRegistry materialInfoRegistry = new MaterialInfoRegistry();
+    private final GatheringNodeRegistry gatheringNodeRegistry = new GatheringNodeRegistry(GATHERING_NODE_PROVIDER);
 
     // §dx2.0 §7[+§d28 §fⒺ §7Scribing XP] §6[56%]
     private static final Pattern PROFESSION_CRAFT_PATTERN = Pattern.compile(
@@ -85,6 +93,10 @@ public final class ProfessionModel extends Model {
     @Persisted
     private final Storage<Integer> professionDryStreak = new Storage<>(0);
 
+    // Keyed by map data category id. Gathering nodes are hidden until the user asks for them.
+    @Persisted
+    private final Storage<Map<String, Boolean>> visibleGatheringNodeTypes = new Storage<>(new TreeMap<>());
+
     private long lastGatherTime = 0L;
     private HarvestInfo lastHarvest;
 
@@ -110,6 +122,19 @@ public final class ProfessionModel extends Model {
     public void registerDownloads(DownloadRegistry registry) {
         gatheringToolInfoRegistry.registerDownloads(registry);
         materialInfoRegistry.registerDownloads(registry);
+        gatheringNodeRegistry.registerDownloads(registry);
+    }
+
+    @SubscribeEvent
+    public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerBuiltInProvider(GATHERING_NODE_PROVIDER);
+    }
+
+    @Override
+    public void onStorageLoad(Storage<?> storage) {
+        if (storage == visibleGatheringNodeTypes) {
+            GATHERING_NODE_PROVIDER.applyFilter();
+        }
     }
 
     @SubscribeEvent
@@ -331,6 +356,40 @@ public final class ProfessionModel extends Model {
 
     public Set<ProfessionGatheringNodeLabelInfo> getNodesSet() {
         return Collections.unmodifiableSet(nodesSet);
+    }
+
+    public List<GatheringNodeType> getGatheringNodeTypes() {
+        return GATHERING_NODE_PROVIDER.getNodeTypes();
+    }
+
+    public boolean isGatheringNodeTypeVisible(GatheringNodeType gatheringNodeType) {
+        return visibleGatheringNodeTypes.get().getOrDefault(gatheringNodeType.categoryId(), false);
+    }
+
+    public void setGatheringNodeTypeVisible(GatheringNodeType gatheringNodeType, boolean visible) {
+        visibleGatheringNodeTypes.get().put(gatheringNodeType.categoryId(), visible);
+        visibleGatheringNodeTypes.touched();
+
+        GATHERING_NODE_PROVIDER.applyFilter();
+    }
+
+    public void setAllGatheringNodeTypesVisible(boolean visible) {
+        setGatheringNodeTypesVisible(getGatheringNodeTypes(), visible);
+    }
+
+    public void setAllGatheringNodeTypesVisible(MaterialType materialType, boolean visible) {
+        setGatheringNodeTypesVisible(
+                getGatheringNodeTypes().stream()
+                        .filter(nodeType -> nodeType.materialType() == materialType)
+                        .toList(),
+                visible);
+    }
+
+    private void setGatheringNodeTypesVisible(List<GatheringNodeType> gatheringNodeTypes, boolean visible) {
+        gatheringNodeTypes.forEach(nodeType -> visibleGatheringNodeTypes.get().put(nodeType.categoryId(), visible));
+        visibleGatheringNodeTypes.touched();
+
+        GATHERING_NODE_PROVIDER.applyFilter();
     }
 
     public List<ProfessionType> getIngredientProfessionOrder() {

@@ -9,7 +9,8 @@ public record JsonProviderInfo(
         JsonProviderType providerType,
         String providerFilename,
         String providerFilePath,
-        String providerUrl) {
+        String providerUrl)
+        implements Comparable<JsonProviderInfo> {
     public static JsonProviderInfo createBuiltin(String providerId, String providerFilename) {
         return new JsonProviderInfo(providerId, JsonProviderType.BUNDLED, providerFilename, null, null);
     }
@@ -28,6 +29,11 @@ public record JsonProviderInfo(
             case LOCAL -> "local / " + providerFilePath;
             case REMOTE -> "remote / " + providerUrl;
         };
+    }
+
+    @Override
+    public int compareTo(JsonProviderInfo other) {
+        return providerId.compareTo(other.providerId);
     }
 
     public enum JsonProviderType {
