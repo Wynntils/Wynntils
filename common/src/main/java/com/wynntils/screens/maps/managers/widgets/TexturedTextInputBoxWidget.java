@@ -24,6 +24,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
+import org.lwjgl.glfw.GLFW;
 
 public class TexturedTextInputBoxWidget extends TextInputBoxWidget {
     private static final Component DEFAULT_TEXT =
@@ -31,6 +32,9 @@ public class TexturedTextInputBoxWidget extends TextInputBoxWidget {
     private static final Pattern INTEGER_PATTERN = Pattern.compile("^-?\\d*$");
     private static final Pattern FLOAT_PATTERN = Pattern.compile("^-?\\d*\\.?\\d*$");
     private static final Pattern HEXSTRING_PATTERN = Pattern.compile("^#?[0-9a-fA-F]{0,8}$");
+    // Accepted Identifier name pattern `^[a-z0-9/._-]+`
+    // This is made stricter to avoid weird names
+    private static final Pattern STRICT_IDENTIFIER_PATTERN = Pattern.compile("^[a-z0-9-]*$");
 
     private final Mode mode;
 
@@ -60,7 +64,7 @@ public class TexturedTextInputBoxWidget extends TextInputBoxWidget {
 
         boolean result = super.charTyped(event);
 
-        enforceValidInput(oldText, oldCursor);
+        enforceValidInput(oldText, oldCursor, event.codepoint());
 
         return result;
     }
@@ -72,7 +76,7 @@ public class TexturedTextInputBoxWidget extends TextInputBoxWidget {
 
         boolean result = super.keyPressed(event);
 
-        enforceValidInput(oldText, oldCursor);
+        enforceValidInput(oldText, oldCursor, event.key());
 
         return result;
     }
@@ -84,8 +88,14 @@ public class TexturedTextInputBoxWidget extends TextInputBoxWidget {
         }
     }
 
-    private void enforceValidInput(String oldText, int oldCursor) {
+    private void enforceValidInput(String oldText, int oldCursor, int keyCode) {
         if (!isInputValid(getTextBoxInput())) {
+            if (mode == Mode.IDENTIFIER && keyCode == GLFW.GLFW_KEY_SPACE) {
+                super.setTextBoxInput(getTextBoxInput().replaceAll(" ", "-"));
+                setCursorAndHighlightPositions(oldCursor + 1);
+                return;
+            }
+
             super.setTextBoxInput(oldText);
             setCursorAndHighlightPositions(oldCursor);
         }
@@ -101,6 +111,7 @@ public class TexturedTextInputBoxWidget extends TextInputBoxWidget {
             case INTEGER -> INTEGER_PATTERN.matcher(input).matches();
             case FLOAT -> FLOAT_PATTERN.matcher(input).matches();
             case HEXSTRING -> HEXSTRING_PATTERN.matcher(input).matches();
+            case IDENTIFIER -> STRICT_IDENTIFIER_PATTERN.matcher(input).matches();
         };
     }
 
@@ -217,6 +228,7 @@ public class TexturedTextInputBoxWidget extends TextInputBoxWidget {
         STRING,
         INTEGER,
         FLOAT,
-        HEXSTRING
+        HEXSTRING,
+        IDENTIFIER
     }
 }
