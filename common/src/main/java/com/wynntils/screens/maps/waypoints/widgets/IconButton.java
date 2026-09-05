@@ -5,7 +5,6 @@
 package com.wynntils.screens.maps.waypoints.widgets;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.maps.waypoints.WaypointCreationScreen;
 import com.wynntils.screens.maps.waypoints.WaypointManagementScreen;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.colors.CommonColors;
@@ -97,9 +96,7 @@ public class IconButton extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (McUtils.screen() instanceof WaypointCreationScreen waypointCreationScreen) {
-            waypointCreationScreen.setSelectedIcon(mapIcon);
-        } else if (McUtils.screen() instanceof WaypointManagementScreen waypointManagementScreen) {
+        if (McUtils.screen() instanceof WaypointManagementScreen waypointManagementScreen) {
             this.selected = !selected;
 
             String id = mapIcon == null ? MapIcon.NO_ICON_ID : mapIcon.getIconId();

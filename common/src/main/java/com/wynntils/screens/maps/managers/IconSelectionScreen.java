@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -46,17 +47,21 @@ public class IconSelectionScreen extends WynntilsScreen {
     private static final CustomColor SELECTED_COLOR = CustomColor.fromInt(0x8033cc33);
     private static final CustomColor HOVERED_COLOR = CustomColor.fromInt(0x40ffffff);
 
-    private final CategoryManagementScreen previousScreen;
+    private final Screen previousScreen;
     private final Consumer<MapIcon> onIconSelect;
 
     private String tempSelectedIconId;
 
-    public IconSelectionScreen(
-            CategoryManagementScreen previousScreen, Consumer<MapIcon> onIconSelect, String currentIconId) {
+    private IconSelectionScreen(Screen previousScreen, Consumer<MapIcon> onIconSelect, String currentIconId) {
         super(Component.literal("Icon Selection Screen"));
         this.previousScreen = previousScreen;
         this.onIconSelect = onIconSelect;
         this.tempSelectedIconId = currentIconId;
+    }
+
+    public static IconSelectionScreen create(
+            Screen previousScreen, Consumer<MapIcon> onIconSelect, String currentIconId) {
+        return new IconSelectionScreen(previousScreen, onIconSelect, currentIconId);
     }
 
     @Override
