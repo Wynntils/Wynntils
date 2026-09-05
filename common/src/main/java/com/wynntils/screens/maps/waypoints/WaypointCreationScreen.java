@@ -12,8 +12,9 @@ import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.base.widgets.ColorPickerWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.maps.AbstractMapScreen;
+import com.wynntils.screens.maps.managers.IconCreationScreen;
+import com.wynntils.screens.maps.managers.IconSelectionScreen;
 import com.wynntils.screens.maps.waypoints.widgets.IconButton;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
@@ -36,8 +37,6 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -57,24 +56,19 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     // Constants
     private static final Pattern COORDINATE_PATTERN = Pattern.compile("[-+]?\\d{1,8}");
     private static final float GRID_DIVISIONS = 64.0f;
-    private static final int ICONS_PER_PAGE = 5;
     private static final String DEFAULT_CATEGORY = "wynntils:personal:waypoint";
-
-    // Collections
-    private final List<MapIcon> availableIcons = new ArrayList<>();
-    private final List<IconButton> iconButtons = new ArrayList<>();
 
     // Widgets
     private Button addCustomIconButton;
-    private Button previousIconButton;
+    private Button chooseIconButton;
     private Button centerOnPlayerButton;
     private Button centerOnWorldButton;
-    private Button nextIconButton;
     private Button saveButton;
     private Button editIconVisibilityButton;
     private Button editLabelVisibilityButton;
     private ColorPickerWidget iconColorPicker;
     private ColorPickerWidget labelColorPicker;
+    private IconButton iconPreview;
     private OptionButton labelShadowButton;
     private TextInputBoxWidget labelInput;
     private TextInputBoxWidget labelColorInput;
@@ -83,7 +77,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     private TextInputBoxWidget yInput;
     private TextInputBoxWidget zInput;
     private TextInputBoxWidget focusedTextInput;
-    private WynntilsCheckbox iconCheckbox;
 
     // UI Size, positions etc
     private float dividedWidth;
@@ -92,12 +85,10 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     // Screen information
     private final Screen returnScreen;
     private boolean firstSetup;
-    private int iconScrollOffset = 0;
     private Location setupLocation;
     private WaypointLocation oldWaypoint;
 
     // Waypoint details
-    private boolean useIcon = true;
     private CustomColor iconColorCache = CommonColors.WHITE;
     private CustomColor labelColorCache = CommonColors.WHITE;
     private Integer parsedXInput;
@@ -105,7 +96,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     private Integer parsedZInput;
     private MapVisibilityImpl iconVisibility;
     private MapVisibilityImpl labelVisibility;
-    private MapIcon selectedIcon;
     private String category = ""; // The subcategories of the default
     private String fullCategory = DEFAULT_CATEGORY; // The full category including DEFAULT_CATEGORY
     private String iconId = MapIcon.NO_ICON_ID;
@@ -149,8 +139,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
     @Override
     protected void doInit() {
-        availableIcons.clear();
-
         if (firstSetup) {
             updateMapCenter(McUtils.player().getBlockX(), McUtils.player().getBlockZ());
         }
@@ -245,95 +233,39 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         // endregion
 
         // region Icon
-        availableIcons.clear();
-        availableIcons.addAll(Services.MapData.getIcons().toList());
-
         if (firstSetup) {
             if (oldAttributes != null) {
-                String oldIconId = oldAttributes.iconId();
-
-                if (oldIconId.equals(MapIcon.NO_ICON_ID)) {
-                    useIcon = false;
-                } else {
-                    Optional<MapIcon> oldMapIcon = availableIcons.stream()
-                            .filter(mapIcon -> mapIcon.getIconId().equals(oldIconId))
-                            .findFirst();
-
-                    oldMapIcon.ifPresent(oldIcon -> selectedIcon = oldIcon);
-
-                    iconScrollOffset = availableIcons.indexOf(selectedIcon);
-
-                    iconId = oldIconId;
-                }
+                iconId = oldAttributes.iconId();
             } else {
-                String flagIconId = MapIconsProvider.getIconIdFromTexture(Texture.FLAG);
-                Optional<MapIcon> flagIcon = availableIcons.stream()
-                        .filter(mapIcon -> mapIcon.getIconId().equals(flagIconId))
-                        .findFirst();
-
-                flagIcon.ifPresent(icon -> selectedIcon = icon);
-
-                iconScrollOffset = availableIcons.indexOf(selectedIcon);
-
-                useIcon = true;
-                iconId = flagIconId;
+                iconId = MapIconsProvider.getIconIdFromTexture(Texture.FLAG);
             }
         }
 
-        iconCheckbox = new WynntilsCheckbox(
-                (int) dividedWidth,
-                (int) (dividedHeight * 22),
-                20,
-                Component.translatable("screens.wynntils.waypointCreation.icon"),
-                useIcon,
-                (int) (dividedWidth * 6),
-                ((checkbox, bl) -> toggleIcon()));
-        this.addRenderableWidget(iconCheckbox);
-
-        previousIconButton = new Button.Builder(Component.literal("<"), (button) -> {
-                    if (iconScrollOffset - 1 < 0) {
-                        iconScrollOffset = availableIcons.size() - 1;
-                    } else {
-                        iconScrollOffset--;
-                    }
-
-                    populateIcons();
-                })
-                .pos((int) (dividedWidth * 8), (int) (dividedHeight * 22))
-                .size(20, 20)
+        chooseIconButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.waypointCreation.chooseIcon"),
+                        (button) -> McUtils.mc()
+                                .setScreen(IconSelectionScreen.create(
+                                        this,
+                                        icon -> setIconId(icon == null ? MapIcon.NO_ICON_ID : icon.getIconId()),
+                                        iconId)))
+                .pos((int) dividedWidth, (int) (dividedHeight * 22))
+                .size((int) (dividedWidth * 8), 20)
                 .build();
-        this.addRenderableWidget(previousIconButton);
+        this.addRenderableWidget(chooseIconButton);
 
-        previousIconButton.visible = useIcon;
-
-        nextIconButton = new Button.Builder(Component.literal(">"), (button) -> {
-                    if (iconScrollOffset + 1 >= availableIcons.size()) {
-                        iconScrollOffset = 0;
-                    } else {
-                        iconScrollOffset++;
-                    }
-
-                    populateIcons();
-                })
-                .pos((int) (dividedWidth * 20), (int) (dividedHeight * 22))
-                .size(20, 20)
-                .build();
-        this.addRenderableWidget(nextIconButton);
-
-        nextIconButton.visible = useIcon;
-
-        // Keep this buttons width the same as the area for the displayed icons
-        int iconButtonWidth = (int) (dividedWidth * 20) - (int) ((dividedWidth * 8) + 20);
+        updateIconPreview();
 
         addCustomIconButton = new Button.Builder(
                         Component.translatable("screens.wynntils.waypointCreation.addCustomIcon"),
-                        (button) -> McUtils.mc().setScreen(CustomWaypointIconScreen.create(this)))
-                .pos((int) (dividedWidth * 8) + 20, (int) (dividedHeight * 22) + 20)
-                .size(iconButtonWidth, 20)
+                        (button) -> McUtils.mc().setScreen(IconCreationScreen.create(this, icon -> {
+                            if (icon != null) {
+                                setIconId(icon.getIconId());
+                            }
+                        })))
+                .pos((int) (dividedWidth * 12), (int) (dividedHeight * 22))
+                .size((int) (dividedWidth * 10), 20)
                 .build();
         this.addRenderableWidget(addCustomIconButton);
-
-        addCustomIconButton.visible = useIcon;
 
         iconColorInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 23),
@@ -358,8 +290,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
                 iconColorInput);
         this.addRenderableWidget(iconColorInput);
 
-        iconColorInput.visible = useIcon;
-
         if (firstSetup && oldAttributes != null) {
             iconColorInput.setTextBoxInput(oldAttributes.iconColor().toHexString());
         } else if (iconColorInput.getTextBoxInput().isEmpty()) {
@@ -369,8 +299,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         iconColorPicker =
                 new ColorPickerWidget((int) (dividedWidth * 29), (int) (dividedHeight * 22), 20, 20, iconColorInput);
         this.addRenderableWidget(iconColorPicker);
-
-        iconColorPicker.visible = useIcon;
         // endregion
 
         // region Location
@@ -545,11 +473,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         // endregion
 
         updateWaypoint();
-        populateIcons();
         firstSetup = false;
-
-        previousIconButton.active = availableIcons.size() > ICONS_PER_PAGE;
-        nextIconButton.active = availableIcons.size() > ICONS_PER_PAGE;
     }
 
     @Override
@@ -632,20 +556,33 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         // endregion
 
         // region Icon
-        if (useIcon) {
+        if (iconPreview != null) {
+            iconPreview.render(guiGraphics, mouseX, mouseY, partialTick);
+        } else {
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
-                            StyledText.fromString(I18n.get("screens.wynntils.waypointCreation.iconColor") + ":"),
-                            dividedWidth * 23.0f,
-                            dividedHeight * 20.5f,
+                            StyledText.fromComponent(Component.translatable(
+                                    "screens.wynntils.map.managers.categoryManager.iconOptionWidget.noneText")),
+                            dividedWidth * 9.1f,
+                            (dividedHeight * 22) + 10,
                             CommonColors.WHITE,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
-
-            renderIcons(guiGraphics, mouseX, mouseY, partialTick);
+                            TextShadow.NORMAL,
+                            0.75f);
         }
+
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromString(I18n.get("screens.wynntils.waypointCreation.iconColor") + ":"),
+                        dividedWidth * 23.0f,
+                        dividedHeight * 20.5f,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
         // endregion
 
         // region Location
@@ -762,12 +699,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
             return true;
         }
 
-        for (IconButton iconButton : iconButtons) {
-            if (iconButton.isMouseOver(event.x(), event.y())) {
-                return iconButton.mouseClicked(event, isDoubleClick);
-            }
-        }
-
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             int gameX = (int) ((event.x() - centerX) / zoomRenderScale + mapCenterX);
             int gameZ = (int) ((event.y() - centerZ) / zoomRenderScale + mapCenterZ);
@@ -832,12 +763,10 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         fullCategory = this.category.isEmpty() ? DEFAULT_CATEGORY : DEFAULT_CATEGORY + ":" + this.category;
     }
 
-    public void setSelectedIcon(MapIcon selectedIcon) {
-        this.selectedIcon = selectedIcon;
+    public void setIconId(String iconId) {
+        this.iconId = iconId;
 
-        populateIcons();
-        updateIcon();
-        updateWaypoint();
+        updateIconPreview();
     }
 
     public WaypointLocation getWaypoint() {
@@ -854,16 +783,15 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         updateWaypoint();
     }
 
-    private void renderIcons(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        for (IconButton iconButton : iconButtons) {
-            iconButton.render(guiGraphics, mouseX, mouseY, partialTick);
+    private void updateIconPreview() {
+        Optional<MapIcon> mapIconOpt = Services.MapData.getIcon(iconId);
+
+        if (mapIconOpt.isPresent()) {
+            iconPreview =
+                    new IconButton((int) (dividedWidth * 9), (int) (dividedHeight * 22), 20, mapIconOpt.get(), false);
+        } else {
+            iconPreview = null;
         }
-    }
-
-    private void updateIcon() {
-        if (selectedIcon == null) return;
-
-        iconId = selectedIcon.getIconId();
     }
 
     private void updateWaypoint() {
@@ -908,7 +836,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         saveButton.active = validWaypoint;
         editLabelVisibilityButton.active = validWaypoint;
-        editIconVisibilityButton.active = validWaypoint && useIcon;
+        editIconVisibilityButton.active = validWaypoint;
     }
 
     private void saveWaypoint() {
@@ -917,29 +845,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         }
 
         Services.Waypoints.addWaypoint(waypoint);
-    }
-
-    private void populateIcons() {
-        iconButtons.clear();
-
-        if (availableIcons.isEmpty()) return;
-
-        int numIcons = availableIcons.size();
-        int totalWidth = (int) (dividedWidth * 20) - (int) ((dividedWidth * 8) + 20);
-        int buttonWidth = totalWidth / ICONS_PER_PAGE;
-        int iconIndex;
-
-        for (int i = 0; i < Math.min(availableIcons.size(), ICONS_PER_PAGE); i++) {
-            iconIndex = (iconScrollOffset + i) % numIcons;
-            MapIcon currentIcon = availableIcons.get(iconIndex);
-
-            int xPos = (int) (dividedWidth * 8) + 20 + (i * buttonWidth);
-
-            IconButton iconButton = new IconButton(
-                    xPos, (int) (dividedHeight * 22), buttonWidth, currentIcon, currentIcon == selectedIcon);
-
-            iconButtons.add(iconButton);
-        }
     }
 
     private void handleLabelShadowClick(int button) {
@@ -955,40 +860,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         labelShadow = TextShadow.values()[index];
 
         labelShadowButton.setMessage(Component.literal(labelShadow.name()));
-    }
-
-    private void toggleIcon() {
-        useIcon = !useIcon;
-
-        previousIconButton.visible = useIcon;
-        nextIconButton.visible = useIcon;
-        addCustomIconButton.visible = useIcon;
-        iconColorInput.visible = useIcon;
-        iconColorPicker.visible = useIcon;
-
-        if (!useIcon && getFocusedTextInput() == iconColorInput) {
-            this.setFocusedTextInput(null);
-        }
-
-        if (useIcon) {
-            availableIcons.addAll(Services.MapData.getIcons().toList());
-
-            if (selectedIcon != null) {
-                iconId = selectedIcon.getIconId();
-            }
-        } else {
-            if (getFocusedTextInput() == iconColorInput) {
-                this.setFocusedTextInput(null);
-            }
-
-            iconId = MapIcon.NO_ICON_ID;
-            availableIcons.clear();
-        }
-
-        updateWaypoint();
-
-        nextIconButton.active = availableIcons.size() > ICONS_PER_PAGE;
-        previousIconButton.active = availableIcons.size() > ICONS_PER_PAGE;
     }
 
     private static final class OptionButton extends WynntilsButton {

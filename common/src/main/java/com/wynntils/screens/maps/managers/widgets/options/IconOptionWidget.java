@@ -6,7 +6,6 @@ package com.wynntils.screens.maps.managers.widgets.options;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.IconSelectionScreen;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
@@ -149,12 +148,8 @@ public class IconOptionWidget extends AbstractOptionWidget<String> {
         if (isMouseOverIconButton(event.x(), event.y())) {
             this.playDownSound(McUtils.mc().getSoundManager());
 
-            CategoryManagementScreen currentScreen = (CategoryManagementScreen) McUtils.screen();
-            McUtils.mc()
-                    .setScreen(new IconSelectionScreen(
-                            currentScreen,
-                            icon -> setValue(icon == null ? MapIcon.NO_ICON_ID : icon.getIconId()),
-                            value));
+            McUtils.setScreen(IconSelectionScreen.create(
+                    McUtils.screen(), icon -> setValue(icon == null ? MapIcon.NO_ICON_ID : icon.getIconId()), value));
             return true;
         }
         return false;

@@ -8,6 +8,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.managers.widgets.ScrollBarWidget;
+import com.wynntils.screens.maps.managers.widgets.StyledButton;
 import com.wynntils.screens.maps.managers.widgets.options.AbstractOptionWidget;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
@@ -26,8 +27,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -46,17 +47,21 @@ public class IconSelectionScreen extends WynntilsScreen {
     private static final CustomColor SELECTED_COLOR = CustomColor.fromInt(0x8033cc33);
     private static final CustomColor HOVERED_COLOR = CustomColor.fromInt(0x40ffffff);
 
-    private final CategoryManagementScreen previousScreen;
+    private final Screen previousScreen;
     private final Consumer<MapIcon> onIconSelect;
 
     private String tempSelectedIconId;
 
-    public IconSelectionScreen(
-            CategoryManagementScreen previousScreen, Consumer<MapIcon> onIconSelect, String currentIconId) {
+    private IconSelectionScreen(Screen previousScreen, Consumer<MapIcon> onIconSelect, String currentIconId) {
         super(Component.literal("Icon Selection Screen"));
         this.previousScreen = previousScreen;
         this.onIconSelect = onIconSelect;
         this.tempSelectedIconId = currentIconId;
+    }
+
+    public static IconSelectionScreen create(
+            Screen previousScreen, Consumer<MapIcon> onIconSelect, String currentIconId) {
+        return new IconSelectionScreen(previousScreen, onIconSelect, currentIconId);
     }
 
     @Override
@@ -272,52 +277,6 @@ public class IconSelectionScreen extends WynntilsScreen {
 
             MapIcon icon = icons.get(index);
             IconSelectionScreen.this.tempSelectedIconId = (icon == null) ? MapIcon.NO_ICON_ID : icon.getIconId();
-            return true;
-        }
-
-        @Override
-        protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
-    }
-
-    private static final class StyledButton extends AbstractWidget {
-        private final Texture backgroundTexture;
-        private final Runnable onClick;
-
-        private StyledButton(
-                int x, int y, int width, int height, Component message, Texture backgroundTexture, Runnable onClick) {
-            super(x, y, width, height, message);
-            this.backgroundTexture = backgroundTexture;
-            this.onClick = onClick;
-        }
-
-        @Override
-        protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-            if (this.isHovered) {
-                handleCursor(guiGraphics);
-            }
-
-            RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics, backgroundTexture, getX(), getY(), getWidth(), getHeight());
-
-            FontRenderer.getInstance()
-                    .renderText(
-                            guiGraphics,
-                            StyledText.fromString(getMessage().getString()),
-                            getX() + getWidth() / 2f,
-                            getY() + getHeight() / 2f,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
-        }
-
-        @Override
-        public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-            if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
-            if (!this.isMouseOver(event.x(), event.y())) return false;
-
-            this.playDownSound(McUtils.mc().getSoundManager());
-            onClick.run();
             return true;
         }
 
