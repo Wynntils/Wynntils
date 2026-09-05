@@ -231,7 +231,7 @@ public class IconCreationScreen extends WynntilsScreen {
                 || iconBase64Input.getTextBoxInput().isEmpty()) {
             newIcon = null;
             saveIconButton.active = false;
-            errorText = Component.translatable("screens.wynntils.customWaypointIcon."
+            errorText = Component.translatable("screens.wynntils.iconCreation."
                     + (iconNameInput.getTextBoxInput().isEmpty() ? "invalidName" : "invalidBase64"));
             return;
         }
