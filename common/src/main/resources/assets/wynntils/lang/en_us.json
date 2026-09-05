@@ -3861,6 +3861,7 @@
   "screens.wynntils.waypointCreation.centerPlayer": "Click to place your waypoint at your current position",
   "screens.wynntils.waypointCreation.centerWorld": "Click to place your waypoint at the center of the world",
   "screens.wynntils.waypointCreation.changeCategory": "Change Category",
+  "screens.wynntils.waypointCreation.chooseIcon": "Choose Icon",
   "screens.wynntils.waypointCreation.createTitle": "Create Waypoint",
   "screens.wynntils.waypointCreation.currentCategory": "Current Category",
   "screens.wynntils.waypointCreation.editIconVisibility": "Edit Icon Visibility",
