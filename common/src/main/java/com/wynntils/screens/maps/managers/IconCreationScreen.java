@@ -11,6 +11,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.managers.widgets.StyledButton;
 import com.wynntils.screens.maps.managers.widgets.TexturedTextInputBoxWidget;
 import com.wynntils.services.mapdata.impl.MapIconImpl;
+import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -21,6 +22,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
@@ -38,6 +40,7 @@ public class IconCreationScreen extends WynntilsScreen {
     private static final int ICON_BORDER = 4;
 
     private final Screen previousScreen;
+    private final Consumer<MapIcon> onIconSelect;
 
     private int backgroundX;
     private int backgroundY;
@@ -48,14 +51,15 @@ public class IconCreationScreen extends WynntilsScreen {
     private TexturedTextInputBoxWidget iconNameInput;
     private TexturedTextInputBoxWidget iconBase64Input;
 
-    private IconCreationScreen(Screen previousScreen) {
+    private IconCreationScreen(Screen previousScreen, Consumer<MapIcon> onIconSelect) {
         super(Component.literal("Icon Creation Screen"));
 
         this.previousScreen = previousScreen;
+        this.onIconSelect = onIconSelect;
     }
 
-    public static Screen create(Screen previousScreen) {
-        return new IconCreationScreen(previousScreen);
+    public static IconCreationScreen create(Screen previousScreen, Consumer<MapIcon> onIconSelect) {
+        return new IconCreationScreen(previousScreen, onIconSelect);
     }
 
     @Override
@@ -107,6 +111,7 @@ public class IconCreationScreen extends WynntilsScreen {
                 Texture.MANAGER_WIDGET_BACKGROUND_GREEN,
                 () -> {
                     Services.Waypoints.addCustomIcon(newIcon);
+                    Services.MapData.getIcon(newIcon.getIconId()).ifPresent(onIconSelect);
                     this.onClose();
                 });
 
