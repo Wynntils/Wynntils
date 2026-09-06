@@ -33,9 +33,7 @@ public final class StyledButton extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (this.isHovered) {
-            handleCursor(guiGraphics);
-        }
+        handleCursor(guiGraphics);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, backgroundTexture, getX(), getY(), getWidth(), getHeight());
