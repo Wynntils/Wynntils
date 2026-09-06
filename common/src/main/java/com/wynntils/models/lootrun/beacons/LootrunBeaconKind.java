@@ -28,10 +28,10 @@ public enum LootrunBeaconKind implements BeaconKind, NullableConfig {
     CRIMSON(CustomColor.fromInt(0xF010), WynncraftShaderColor.GRADIENT_2.color),
     RAINBOW(CustomColor.fromInt(0x00F000), WynncraftShaderColor.RAINBOW.color);
 
-    // These values are used to identify the beacon kind
+    // These values are used to identify the lootrunBeacon kind
     private final CustomColor customColor;
 
-    // This value is used to render the beacon kind in Wynntils
+    // This value is used to render the lootrunBeacon kind in Wynntils
     private final CustomColor displayColor;
 
     LootrunBeaconKind(CustomColor customColor, CustomColor displayColor) {

@@ -22,8 +22,8 @@ public interface MapMarkerOptions {
     // The fade distance for the marker visibility circles
     Optional<Float> getFade();
 
-    // The color of the beacon beam
-    // If empty, or alpha is 0, no beacon beam will be rendered
+    // The color of the lootrunBeacon beam
+    // If empty, or alpha is 0, no lootrunBeacon beam will be rendered
     Optional<CustomColor> getBeaconColor();
 
     // Whether to render the label

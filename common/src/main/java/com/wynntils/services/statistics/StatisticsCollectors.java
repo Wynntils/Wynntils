@@ -73,7 +73,7 @@ public final class StatisticsCollectors {
 
             if (event.getItemSource() == ValuableFoundEvent.ItemSource.LOOTRUN_REWARD_CHEST) {
                 Services.Statistics.addToStatistics(
-                        StatisticKind.LOOTRUNS_PULLS_WITHOUT_MYTHIC, Models.Lootrun.dryPulls.get());
+                        StatisticKind.LOOTRUNS_PULLS_WITHOUT_MYTHIC, Models.LootrunReward.dryPulls.get());
             }
         }
     }

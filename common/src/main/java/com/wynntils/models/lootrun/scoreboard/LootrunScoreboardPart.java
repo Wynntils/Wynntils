@@ -142,12 +142,12 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             // If we hit a line that's neither a Mission nor a Trial break immediately
             break;
         }
-        Models.Lootrun.setCurrentMission(currentMission);
-        Models.Lootrun.setCurrentTrial(currentTrial);
-        Models.Lootrun.setCurrentMissionObjective(currentMissionObjective);
-        Models.Lootrun.setCurrentMissionProgress(currentMissionProgress);
-        Models.Lootrun.setCurrentTrialObjective(currentTrialObjective);
-        Models.Lootrun.setCurrentTrialProgress(currentTrialProgress);
+        Models.Mission.setCurrentMission(currentMission);
+        Models.Trial.setCurrentTrial(currentTrial);
+        Models.Mission.setCurrentMissionObjective(currentMissionObjective);
+        Models.Mission.setCurrentMissionProgress(currentMissionProgress);
+        Models.Trial.setCurrentTrialObjective(currentTrialObjective);
+        Models.Trial.setCurrentTrialProgress(currentTrialProgress);
     }
 
     @Override

@@ -51,7 +51,7 @@ public final class BeaconModel extends Model {
             new FontDescription.Resource(Identifier.withDefaultNamespace("marker"));
     private static final List<BeaconKind> beaconRegistry = new ArrayList<>();
     private static final List<BeaconMarkerKind> beaconMarkerRegistry = new ArrayList<>();
-    // Maps base entity id to corresponding beacon
+    // Maps base entity id to corresponding lootrunBeacon
     private final Map<Integer, Beacon> beacons = new Int2ObjectArrayMap<>();
     private final Map<Integer, BeaconMarker> beaconMarkers = new Int2ObjectArrayMap<>();
 
@@ -73,7 +73,7 @@ public final class BeaconModel extends Model {
 
             ItemStack itemStack = (ItemStack) dataValue.value();
 
-            // Try to identify the beacon kind, when the display item's data is set
+            // Try to identify the lootrunBeacon kind, when the display item's data is set
             BeaconKind beaconKind = beaconKindFromItemStack(itemStack);
 
             if (beaconKind == null) return;
@@ -178,11 +178,11 @@ public final class BeaconModel extends Model {
             // If there is no custom color, assume it's white
             int customColor = potionContents.customColor().orElse(CommonColors.WHITE.asInt());
 
-            // Log the color if it's likely to be a new beacon kind
+            // Log the color if it's likely to be a new lootrunBeacon kind
 
             Pair<Float, Float> range = beaconColorCustomModelData.get();
             if (customModelValues.stream().anyMatch(value -> value >= range.a() && value <= range.b())) {
-                WynntilsMod.warn("Unknown beacon kind: " + range + " " + customColor);
+                WynntilsMod.warn("Unknown lootrunBeacon kind: " + range + " " + customColor);
             }
         }
 
