@@ -14,6 +14,7 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.maps.AbstractMapScreen;
+import com.wynntils.screens.maps.managers.IconCreationScreen;
 import com.wynntils.screens.maps.waypoints.widgets.IconButton;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
@@ -327,7 +328,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         addCustomIconButton = new Button.Builder(
                         Component.translatable("screens.wynntils.waypointCreation.addCustomIcon"),
-                        (button) -> McUtils.mc().setScreen(CustomWaypointIconScreen.create(this)))
+                        (button) -> McUtils.mc().setScreen(IconCreationScreen.create(this)))
                 .pos((int) (dividedWidth * 8) + 20, (int) (dividedHeight * 22) + 20)
                 .size(iconButtonWidth, 20)
                 .build();
