@@ -276,11 +276,16 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                     featureScale,
                     feature == hoveredFeature,
                     true,
+                    getOverridenAreaColors(feature),
                     null);
         }
     }
 
     protected abstract Stream<MapFeature> getRenderedMapFeatures();
+
+    protected Optional<MapFeatureRenderer.OverridenAreaColors> getOverridenAreaColors(MapFeature feature) {
+        return Optional.empty();
+    }
 
     protected void setCompassToMouseCoords(double mouseX, double mouseY, boolean removeAll) {
         if (removeAll) {

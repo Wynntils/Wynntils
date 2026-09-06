@@ -28,7 +28,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -1547,6 +1546,15 @@ public final class RenderUtils {
             CustomColor borderColor,
             float borderWidth,
             List<Vector2f> vertices) {
+        drawPolygon(guiGraphics, List.of(fillColor), List.of(borderColor), borderWidth, vertices);
+    }
+
+    public static void drawPolygon(
+            GuiGraphics guiGraphics,
+            List<CustomColor> fillColors,
+            List<CustomColor> borderColors,
+            float borderWidth,
+            List<Vector2f> vertices) {
         if (vertices.size() < 3) {
             WynntilsMod.warn("Tried to draw a polygon with less than 3 vertices");
             return;
@@ -1555,42 +1563,23 @@ public final class RenderUtils {
         Matrix3x2f pose = new Matrix3x2f(guiGraphics.pose());
         var scissorArea = guiGraphics.scissorStack.peek();
 
-        // Fill the polygon using a triangle fan decomposition, submitted as a single batched draw
-        // instead of one submission per triangle (or, as before, per pixel row of every triangle).
-        if (fillColor != CustomColor.NONE) {
-            Vector2f firstVertex = vertices.getFirst();
-            List<ColoredTriangleBatchRenderState.Triangle> triangles = new ArrayList<>(vertices.size() - 2);
-            for (int i = 1; i < vertices.size() - 1; i++) {
-                Vector2f v1 = vertices.get(i);
-                Vector2f v2 = vertices.get(i + 1);
-                triangles.add(new ColoredTriangleBatchRenderState.Triangle(firstVertex, v1, v2, fillColor));
-            }
-
-            if (!triangles.isEmpty()) {
-                guiGraphics.guiRenderState.submitGuiElement(new ColoredTriangleBatchRenderState(
-                        CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
-                        TextureSetup.noTexture(),
-                        pose,
-                        triangles,
-                        scissorArea));
-            }
+        // The fill is submitted as a single batched draw instead of one submission per triangle
+        // (or, as before, per pixel row of every triangle).
+        List<ColoredTriangleBatchRenderState.Triangle> triangles =
+                PolygonGeometry.createFillTriangles(vertices, fillColors);
+        if (!triangles.isEmpty()) {
+            guiGraphics.guiRenderState.submitGuiElement(new ColoredTriangleBatchRenderState(
+                    CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
+                    TextureSetup.noTexture(),
+                    pose,
+                    triangles,
+                    scissorArea));
         }
 
         // Draw border lines, also batched into a single submission
-        if (borderColor != CustomColor.NONE && borderWidth > 0f) {
-            List<ColoredLineBatchRenderState.Segment> segments = new ArrayList<>(vertices.size());
-            for (int i = 0; i < vertices.size() - 1; i++) {
-                Vector2f v1 = vertices.get(i);
-                Vector2f v2 = vertices.get(i + 1);
-                segments.add(new ColoredLineBatchRenderState.Segment(
-                        v1.x(), v1.y(), v2.x(), v2.y(), borderWidth, borderColor));
-            }
-            // Close the polygon
-            Vector2f last = vertices.getLast();
-            Vector2f first = vertices.getFirst();
-            segments.add(new ColoredLineBatchRenderState.Segment(
-                    last.x(), last.y(), first.x(), first.y(), borderWidth, borderColor));
-
+        List<ColoredLineBatchRenderState.Segment> segments =
+                PolygonGeometry.createBorderSegments(vertices, borderColors, borderWidth);
+        if (!segments.isEmpty()) {
             guiGraphics.guiRenderState.submitGuiElement(new ColoredLineBatchRenderState(
                     RenderPipelines.GUI, TextureSetup.noTexture(), pose, segments, scissorArea));
         }
