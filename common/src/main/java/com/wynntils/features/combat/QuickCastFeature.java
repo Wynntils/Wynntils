@@ -20,6 +20,7 @@ import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.DestroyBlockEvent;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
@@ -123,6 +125,13 @@ public class QuickCastFeature extends Feature {
     public void onWorldChange(WorldStateEvent event) {
         clearInputSelectionState();
         Models.SpellCaster.clear();
+    }
+
+    @SubscribeEvent
+    public void onScreenInit(ScreenInitEvent.Post event) {
+        if (!(event.getScreen() instanceof ChatScreen)) return;
+
+        clearInputSelectionState();
     }
 
     @SubscribeEvent
