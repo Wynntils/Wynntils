@@ -11,6 +11,7 @@ import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.mount.type.MountChoice;
 import com.wynntils.models.mount.type.MountStat;
+import com.wynntils.models.mount.type.MountType;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Optional;
@@ -84,6 +85,18 @@ public class MountFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new Argument<>("mountType", String.class, null)));
+        }
+    }
+
+    public static class MountTypeFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return Models.Mount.getCurrentMountType().map(MountType::name).orElse("");
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("mnt_type");
         }
     }
 
