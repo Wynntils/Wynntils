@@ -495,6 +495,7 @@ public enum Texture {
     ITEM_FILTER_BACKGROUND("ui_components/item_filter_background.png", 358, 206),
     ITEM_SHARING_BACKGROUND("ui_components/item_sharing_background.png", 250, 100),
     LIST_SEARCH("ui_components/list_search.png", 133, 23),
+    MOUNT_JUMP_BAR("ui_components/mount_jump_bar.png", 179, 6),
     OVERLAY_ORDERING_BACKGROUND("ui_components/overlay_ordering_background.png", 234, 206),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 358, 206),
     PLAYER_VIEWER_BACKGROUND("ui_components/player_viewer_background.png", 126, 88),

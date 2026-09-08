@@ -1306,6 +1306,8 @@
   "feature.wynntils.minimap.overlay.territory.name": "Territory",
   "feature.wynntils.minimap.overlay.territory.showOwner.description": "How the guild controlling this territory should be displayed.",
   "feature.wynntils.minimap.overlay.territory.showOwner.name": "Show Territory Owner",
+  "feature.wynntils.mountJumpBar.description": "Restores the jump bar when riding a mount.",
+  "feature.wynntils.mountJumpBar.name": "Mount Jump Bar",
   "feature.wynntils.mountKeybind.description": "Adds the ability to get on a mount with a keybind.",
   "feature.wynntils.mountKeybind.mountChoice.description": "Which mount should be summoned when the mount keybind is pressed?",
   "feature.wynntils.mountKeybind.mountChoice.name": "Mount Choice",
