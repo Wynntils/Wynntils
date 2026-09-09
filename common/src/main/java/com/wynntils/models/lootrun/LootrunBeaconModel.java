@@ -557,6 +557,7 @@ public class LootrunBeaconModel extends Model {
 
     private void newBeacons() {
         possibleTaskLocations.clear();
+        beacons.clear();
         vibrantBeacons.clear();
     }
 
