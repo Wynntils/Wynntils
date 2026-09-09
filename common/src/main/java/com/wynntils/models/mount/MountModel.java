@@ -15,6 +15,7 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.handlers.actionbar.event.ActionBarRenderEvent;
 import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.mc.event.ArmSwingEvent;
+import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.SetLocalPlayerVehicleEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
@@ -73,6 +74,16 @@ public final class MountModel extends Model {
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
+        handleMountItemUse();
+    }
+
+    @SubscribeEvent
+    public void onInteract(PlayerInteractEvent.InteractAt event) {
+        handleMountItemUse();
+    }
+
+    @SubscribeEvent
+    public void onUseItemOn(PlayerInteractEvent.RightClickBlock event) {
         handleMountItemUse();
     }
 
