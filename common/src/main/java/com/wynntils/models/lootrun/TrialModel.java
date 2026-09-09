@@ -14,6 +14,7 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.lootrun.beacons.LootrunBeaconKind;
 import com.wynntils.models.lootrun.event.LootrunChallengeEvent;
+import com.wynntils.models.lootrun.event.LootrunStartedEvent;
 import com.wynntils.models.lootrun.event.LootrunStateEvent;
 import com.wynntils.models.lootrun.type.LootrunTrialDetails;
 import com.wynntils.models.lootrun.type.TrialType;
@@ -50,6 +51,13 @@ public class TrialModel extends Model {
         String id = Models.Character.getId();
 
         lootrunTrialDetailsStorage.get().putIfAbsent(id, new LootrunTrialDetails());
+        lootrunTrialDetailsStorage.touched();
+    }
+
+    @SubscribeEvent
+    public void onLootrunStarted(LootrunStartedEvent event) {
+        // Ensure we start with fresh details
+        lootrunTrialDetailsStorage.get().put(Models.Character.getId(), new LootrunTrialDetails());
         lootrunTrialDetailsStorage.touched();
     }
 

@@ -14,6 +14,7 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.lootrun.beacons.LootrunBeaconKind;
 import com.wynntils.models.lootrun.event.LootrunChallengeEvent;
+import com.wynntils.models.lootrun.event.LootrunStartedEvent;
 import com.wynntils.models.lootrun.event.LootrunStateEvent;
 import com.wynntils.models.lootrun.type.LootrunMissionDetails;
 import com.wynntils.models.lootrun.type.MissionType;
@@ -57,6 +58,13 @@ public class MissionModel extends Model {
         String id = Models.Character.getId();
 
         lootrunMissionDetailsStorage.get().putIfAbsent(id, new LootrunMissionDetails());
+        lootrunMissionDetailsStorage.touched();
+    }
+
+    @SubscribeEvent
+    public void onLootrunStarted(LootrunStartedEvent event) {
+        // Ensure we start with fresh details
+        lootrunMissionDetailsStorage.get().put(Models.Character.getId(), new LootrunMissionDetails());
         lootrunMissionDetailsStorage.touched();
     }
 

@@ -18,6 +18,7 @@ import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.lootrun.event.LootrunChallengeCountEvent;
 import com.wynntils.models.lootrun.event.LootrunChallengeEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEventBuilder;
+import com.wynntils.models.lootrun.event.LootrunStartedEvent;
 import com.wynntils.models.lootrun.event.LootrunStateEvent;
 import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
 import com.wynntils.models.lootrun.type.LootrunDetails;
@@ -98,6 +99,12 @@ public class LootrunModel extends Model {
 
         if (title.matches(PREPARE_TO_LOOTRUN_PATTERN)) {
             setLootrunLocation(LootrunLocation.fromBlockPos(McUtils.player().blockPosition()));
+
+            WynntilsMod.postEvent(new LootrunStartedEvent(getLootrunLocation()));
+
+            // Ensure we start with fresh details
+            lootrunDetailsStorage.get().put(Models.Character.getId(), new LootrunDetails());
+            lootrunDetailsStorage.touched();
         }
     }
 

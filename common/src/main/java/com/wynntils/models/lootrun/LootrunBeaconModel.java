@@ -30,6 +30,7 @@ import com.wynntils.models.lootrun.beacons.LootrunBeaconMarkerKind;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
 import com.wynntils.models.lootrun.event.LootrunChallengeCountEvent;
 import com.wynntils.models.lootrun.event.LootrunChallengeEvent;
+import com.wynntils.models.lootrun.event.LootrunStartedEvent;
 import com.wynntils.models.lootrun.event.LootrunStateEvent;
 import com.wynntils.models.lootrun.markers.LootrunBeaconMarkerProvider;
 import com.wynntils.models.lootrun.particle.LootrunTaskParticleVerifier;
@@ -140,6 +141,13 @@ public class LootrunBeaconModel extends Model {
         String id = Models.Character.getId();
 
         lootrunBeaconDetailsStorage.get().putIfAbsent(id, new LootrunBeaconDetails());
+        lootrunBeaconDetailsStorage.touched();
+    }
+
+    @SubscribeEvent
+    public void onLootrunStarted(LootrunStartedEvent event) {
+        // Ensure we start with fresh details
+        lootrunBeaconDetailsStorage.get().put(Models.Character.getId(), new LootrunBeaconDetails());
         lootrunBeaconDetailsStorage.touched();
     }
 
