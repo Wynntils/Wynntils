@@ -10,22 +10,36 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
+import com.wynntils.services.mapdata.MapDataService;
 import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
-import java.io.File;
+import com.wynntils.utils.mc.McUtils;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.Util;
 
 public class MapCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> PROVIDER_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     Services.MapData.getJsonProviderInfos().keySet().stream()
+                            .map(JsonProviderInfo::providerId)
+                            .toArray(String[]::new),
+                    builder);
+
+    private static final SuggestionProvider<CommandSourceStack> REMOVABLE_PROVIDER_SUGGESTION_PROVIDER =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    Services.MapData.getJsonProviderInfos().keySet().stream()
+                            .filter(info -> info.providerType() == JsonProviderInfo.JsonProviderType.REMOTE)
                             .map(JsonProviderInfo::providerId)
                             .toArray(String[]::new),
                     builder);
@@ -40,20 +54,23 @@ public class MapCommand extends Command {
             LiteralArgumentBuilder<CommandSourceStack> base, CommandBuildContext context) {
         return Commands.literal("map")
                 .then(Commands.literal("provider")
-                        .then(Commands.literal("add")
-                                .then(Commands.argument("name", StringArgumentType.string())
-                                        .then(Commands.argument("urlOrPath", StringArgumentType.string())
-                                                .executes(this::addProvider))))
-                        .then(Commands.literal("remove")
-                                .then(Commands.argument("providerId", StringArgumentType.greedyString())
-                                        .suggests(PROVIDER_SUGGESTION_PROVIDER)
-                                        .executes(this::removeProvider)))
-                        .then(Commands.literal("list").executes(this::listProviders))
-                        .then(Commands.literal("reload").executes(this::reloadProviders))
+                        .then(Commands.literal("remote")
+                                .then(Commands.literal("add")
+                                        .then(Commands.argument("name", StringArgumentType.string())
+                                                .then(Commands.argument("url", StringArgumentType.string())
+                                                        .executes(this::addProvider))))
+                                .then(Commands.literal("remove")
+                                        .then(Commands.argument("name", StringArgumentType.greedyString())
+                                                .suggests(REMOVABLE_PROVIDER_SUGGESTION_PROVIDER)
+                                                .executes(this::removeProvider))))
+                        .then(Commands.literal("local")
+                                .then(Commands.literal("folder").executes(this::localProvidersFolder)))
                         .then(Commands.literal("toggle")
-                                .then(Commands.argument("providerId", StringArgumentType.greedyString())
+                                .then(Commands.argument("name", StringArgumentType.greedyString())
                                         .suggests(PROVIDER_SUGGESTION_PROVIDER)
-                                        .executes(this::toggleProvider))));
+                                        .executes(this::toggleProvider)))
+                        .then(Commands.literal("reload").executes(this::reloadProviders))
+                        .then(Commands.literal("list").executes(this::listProviders)));
     }
 
     private int reloadProviders(CommandContext<CommandSourceStack> context) {
@@ -61,81 +78,147 @@ public class MapCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        () -> Component.literal("Successfully reloaded all mapdata providers.")
+                        () -> Component.translatable("command.wynntils.map.reloadProviders")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
         return 1;
     }
 
+    private int localProvidersFolder(CommandContext<CommandSourceStack> context) {
+        Util.getPlatform().openFile(MapDataService.LOCAL_PROVIDERS);
+        return 1;
+    }
+
     private int addProvider(CommandContext<CommandSourceStack> context) {
         String name = context.getArgument("name", String.class);
-        String urlOrPath = context.getArgument("urlOrPath", String.class);
+        String url = context.getArgument("url", String.class);
 
+        URI uri;
         try {
-            URI uri = URI.create(urlOrPath);
-            Services.MapData.addJsonProvider(JsonProviderInfo.createRemote(name, urlOrPath));
-            context.getSource()
-                    .sendSuccess(
-                            () -> Component.literal("Successfully added remote mapdata provider.")
-                                    .withStyle(ChatFormatting.GREEN),
-                            false);
-            return 1;
+            uri = URI.create(url);
         } catch (IllegalArgumentException e) {
-            // continue, it might be a file
-        }
-
-        File file = new File(urlOrPath);
-        if (file.exists()) {
-            Services.MapData.addJsonProvider(JsonProviderInfo.createLocal(name, urlOrPath));
             context.getSource()
-                    .sendSuccess(
-                            () -> Component.literal("Successfully added local mapdata provider.")
-                                    .withStyle(ChatFormatting.GREEN),
-                            false);
-            return 1;
+                    .sendFailure(Component.translatable("command.wynntils.map.invalidUrl")
+                            .withStyle(ChatFormatting.RED));
+            return 0;
         }
 
-        context.getSource()
-                .sendFailure(Component.literal("The provided URL or path is not valid.")
-                        .withStyle(ChatFormatting.RED));
+        String scheme = uri.getScheme();
+        if (scheme == null || !(scheme.equals("http") || scheme.equals("https"))) {
+            context.getSource()
+                    .sendFailure(Component.translatable("command.wynntils.map.invalidUrlScheme")
+                            .withStyle(ChatFormatting.RED));
+            return 0;
+        }
 
-        return 0;
+        Services.MapData.addJsonProvider(JsonProviderInfo.createRemote(name, url));
+        context.getSource()
+                .sendSuccess(
+                        () -> Component.translatable("command.wynntils.map.providerAdded")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
+        return 1;
     }
 
     private int removeProvider(CommandContext<CommandSourceStack> context) {
         String name = context.getArgument("name", String.class);
 
+        Optional<JsonProviderInfo> providerOpt = Services.MapData.getJsonProviderInfos().keySet().stream()
+                .filter(info -> info.providerId().equals(name))
+                .findFirst();
+
+        if (providerOpt.isEmpty()) {
+            context.getSource()
+                    .sendFailure(Component.translatable("command.wynntils.map.providerNotFound")
+                            .withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        if (providerOpt.get().providerType() != JsonProviderInfo.JsonProviderType.REMOTE) {
+            context.getSource()
+                    .sendFailure(Component.translatable("command.wynntils.map.onlyRemoteRemovable")
+                            .withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
         if (!Services.MapData.removeJsonProvider(name)) {
             context.getSource()
-                    .sendFailure(Component.literal("The provided name does not match any mapdata provider.")
+                    .sendFailure(Component.translatable("command.wynntils.map.removeFailed")
                             .withStyle(ChatFormatting.RED));
             return 0;
         }
 
         context.getSource()
                 .sendSuccess(
-                        () -> Component.literal("Successfully removed mapdata provider.")
+                        () -> Component.translatable("command.wynntils.map.providerRemoved")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
         return 1;
     }
 
     private int listProviders(CommandContext<CommandSourceStack> context) {
-        MutableComponent message = Component.literal("Mapdata providers: ").withStyle(ChatFormatting.YELLOW);
+        MutableComponent message = Component.literal("Json providers:").withStyle(ChatFormatting.YELLOW);
 
         for (JsonProviderInfo providerInfo :
                 Services.MapData.getJsonProviderInfos().keySet()) {
+            String path = providerInfo.path();
             boolean enabled = Services.MapData.isJsonProviderEnabled(providerInfo.providerId());
+            ChatFormatting statusColor = enabled ? ChatFormatting.GREEN : ChatFormatting.RED;
+            String statusKey = enabled ? "command.wynntils.map.enabled" : "command.wynntils.map.disabled";
 
-            message.append(Component.literal("\n"));
-            message.append(Component.literal(providerInfo.providerId()).withStyle(ChatFormatting.GOLD));
-            message.append(Component.literal(enabled ? " (enabled)" : " (disabled)")
-                    .withStyle(enabled ? ChatFormatting.GREEN : ChatFormatting.RED));
-            message.append(Component.empty());
-            message.append(Component.literal(" (").withStyle(ChatFormatting.GRAY));
-            message.append(Component.literal(providerInfo.path()).withStyle(ChatFormatting.GRAY));
-            message.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
+            MutableComponent pathComponent;
+
+            switch (providerInfo.providerType()) {
+                case LOCAL -> {
+                    String displayPath = path;
+                    try {
+                        Path fullPath = Path.of(path);
+                        Path mcDir = McUtils.getGameDirectory().toPath();
+                        if (fullPath.startsWith(mcDir)) {
+                            displayPath = mcDir.relativize(fullPath).toString();
+                        }
+                    } catch (Exception e) {
+                        // fall back to the full path if anything goes wrong
+                    }
+
+                    pathComponent = Component.literal(displayPath)
+                            .withStyle(Style.EMPTY
+                                    .withColor(ChatFormatting.WHITE)
+                                    .withClickEvent(new ClickEvent.OpenFile(path))
+                                    .withHoverEvent(new HoverEvent.ShowText(
+                                            Component.translatable("command.wynntils.map.openFile"))));
+                }
+                case REMOTE -> {
+                    URI uri;
+                    try {
+                        uri = URI.create(path);
+                    } catch (IllegalArgumentException e) {
+                        context.getSource()
+                                .sendFailure(Component.translatable("command.wynntils.map.invalidUrl")
+                                        .withStyle(ChatFormatting.RED));
+                        return 0;
+                    }
+
+                    pathComponent = Component.literal(path)
+                            .withStyle(Style.EMPTY
+                                    .withColor(ChatFormatting.WHITE)
+                                    .withClickEvent(new ClickEvent.OpenUrl(uri))
+                                    .withHoverEvent(new HoverEvent.ShowText(
+                                            Component.translatable("command.wynntils.map.openUrl"))));
+                }
+                default -> pathComponent = Component.literal(path).withStyle(ChatFormatting.GRAY);
+            }
+
+            message.append("\n")
+                    .append(Component.literal(providerInfo.providerId()).withStyle(ChatFormatting.GOLD))
+                    .append(Component.literal(" (").withStyle(statusColor))
+                    .append(Component.translatable(statusKey).withStyle(statusColor))
+                    .append(Component.literal(")").withStyle(statusColor))
+                    .append(Component.literal(" [" + providerInfo.providerType() + "]")
+                            .withStyle(ChatFormatting.AQUA))
+                    .append(Component.literal("\n  ").withStyle(ChatFormatting.GRAY))
+                    .append(pathComponent);
         }
 
         context.getSource().sendSuccess(() -> message, false);
@@ -143,36 +226,40 @@ public class MapCommand extends Command {
     }
 
     private int toggleProvider(CommandContext<CommandSourceStack> context) {
-        String providerId = context.getArgument("providerId", String.class);
+        String name = context.getArgument("name", String.class);
 
         Optional<JsonProviderInfo> providerOpt = Services.MapData.getJsonProviderInfos().keySet().stream()
-                .filter(provider -> provider.providerId().equals(providerId))
+                .filter(provider -> provider.providerId().equals(name))
                 .findFirst();
 
         if (providerOpt.isEmpty()) {
             context.getSource()
-                    .sendFailure(Component.literal("The provided id does not match any mapdata provider.")
+                    .sendFailure(Component.translatable("command.wynntils.map.providerNotFound")
                             .withStyle(ChatFormatting.RED));
             return 0;
         }
 
         if (Services.MapData.toggleJsonProvider(providerOpt.get().providerId())) {
-            context.getSource()
-                    .sendSuccess(
-                            () -> Component.literal("Successfully toggled mapdata provider ")
-                                    .append(Component.literal(providerId).withStyle(ChatFormatting.GREEN))
-                                    .append(Component.literal(" to "))
-                                    .append(Component.literal(
-                                                    Services.MapData.isJsonProviderEnabled(providerId)
-                                                            ? "enabled"
-                                                            : "disabled")
-                                            .withStyle(ChatFormatting.UNDERLINE)),
-                            false);
+            boolean enabled = Services.MapData.isJsonProviderEnabled(name);
+            ChatFormatting statusColor = enabled ? ChatFormatting.GREEN : ChatFormatting.RED;
+
+            MutableComponent statusComponent = Component.translatable(
+                            enabled ? "command.wynntils.map.enabled" : "command.wynntils.map.disabled")
+                    .withStyle(statusColor);
+
+            MutableComponent message = Component.translatable("command.wynntils.map.providerToggledPrefix")
+                    .withStyle(ChatFormatting.GREEN)
+                    .append(Component.literal(name).withStyle(ChatFormatting.WHITE))
+                    .append(Component.translatable("command.wynntils.map.providerToggledSuffix")
+                            .withStyle(ChatFormatting.GREEN))
+                    .append(statusComponent);
+
+            context.getSource().sendSuccess(() -> message, false);
             return 1;
         }
 
         context.getSource()
-                .sendFailure(Component.literal("Could not toggle the mapdata provider with the provided id.")
+                .sendFailure(Component.translatable("command.wynntils.map.toggleFailed")
                         .withStyle(ChatFormatting.RED));
         return 0;
     }
