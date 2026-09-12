@@ -32,6 +32,7 @@ public enum DebuffType {
     TWILIGHT('\uE04B', CustomColor.fromInt(0x5B88FC)),
     UNSTABLE('\uE046', CustomColor.fromInt(0x7A3CFFFF)),
     WEAKNESS('\u2694', ChatFormatting.RED),
+    WEATHERING('\uE032', CustomColor.fromInt(0x575DB5)),
     WHIPPED('\u21F6', ChatFormatting.GOLD),
     WIND_PRISON('\u274B', ChatFormatting.RED);
 
