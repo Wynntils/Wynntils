@@ -73,29 +73,41 @@ public class MantraBarOverlay extends BaseBarOverlay {
 
     private StyledText getText() {
         MutableComponent text = Component.empty()
-                .append(Component.literal("\uE024")
-                        .withStyle(Style.EMPTY.withColor(0xf4557d).withFont(CommonFonts.COMMON_FONT)))
+                .append(Component.literal(ShamanMaskType.LUNATIC.getMaskDisplayString())
+                        .withStyle(Style.EMPTY
+                                .withColor(ShamanMaskType.LUNATIC.getColor().asInt())
+                                .withFont(CommonFonts.COMMON_FONT)))
                 .append(Component.literal(" "));
         if (showMaskNames.get()) {
-            text.append(Component.literal("Lunatic ").withStyle(Style.EMPTY.withColor(0xf4557d)));
+            text.append(Component.literal("Lunatic ")
+                    .withStyle(Style.EMPTY.withColor(
+                            ShamanMaskType.LUNATIC.getColor().asInt())));
         }
         text.append(Component.literal("+" + Models.Ability.mantraBar.getMaskOverload(ShamanMaskType.LUNATIC) + "%")
                         .withStyle(getOverloadColor(ShamanMaskType.LUNATIC)))
                 .append(Component.literal(" | ").withStyle(ChatFormatting.GRAY))
-                .append(Component.literal("\uE022")
-                        .withStyle(Style.EMPTY.withColor(0x99e9ff).withFont(CommonFonts.COMMON_FONT)))
+                .append(Component.literal(ShamanMaskType.HERETIC.getMaskDisplayString())
+                        .withStyle(Style.EMPTY
+                                .withColor(ShamanMaskType.HERETIC.getColor().asInt())
+                                .withFont(CommonFonts.COMMON_FONT)))
                 .append(Component.literal(" "));
         if (showMaskNames.get()) {
-            text.append(Component.literal("Heretic ").withStyle(Style.EMPTY.withColor(0x99e9ff)));
+            text.append(Component.literal("Heretic ")
+                    .withStyle(Style.EMPTY.withColor(
+                            ShamanMaskType.HERETIC.getColor().asInt())));
         }
         text.append(Component.literal("+" + Models.Ability.mantraBar.getMaskOverload(ShamanMaskType.HERETIC) + "%")
                         .withStyle(getOverloadColor(ShamanMaskType.HERETIC)))
                 .append(Component.literal(" | ").withStyle(ChatFormatting.GRAY))
-                .append(Component.literal("\uE023")
-                        .withStyle(Style.EMPTY.withColor(0xffc251).withFont(CommonFonts.COMMON_FONT)))
+                .append(Component.literal(ShamanMaskType.FANATIC.getMaskDisplayString())
+                        .withStyle(Style.EMPTY
+                                .withColor(ShamanMaskType.FANATIC.getColor().asInt())
+                                .withFont(CommonFonts.COMMON_FONT)))
                 .append(Component.literal(" "));
         if (showMaskNames.get()) {
-            text.append(Component.literal("Fanatic ").withStyle(Style.EMPTY.withColor(0xffc251)));
+            text.append(Component.literal("Fanatic ")
+                    .withStyle(Style.EMPTY.withColor(
+                            ShamanMaskType.FANATIC.getColor().asInt())));
         }
         text.append(Component.literal("+" + Models.Ability.mantraBar.getMaskOverload(ShamanMaskType.FANATIC) + "%")
                 .withStyle(getOverloadColor(ShamanMaskType.FANATIC)));

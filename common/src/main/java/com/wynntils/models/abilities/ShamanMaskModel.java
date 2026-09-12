@@ -98,9 +98,9 @@ public final class ShamanMaskModel extends Model {
         ShamanMaskType parsedMask = ShamanMaskType.NONE;
 
         for (ShamanMaskType type : ShamanMaskType.values()) {
-            if (type.getParseString() == null) continue;
+            if (type.getParseStyledText() == null) continue;
 
-            if (title.contains(type.getParseString())) {
+            if (title.contains(type.getParseStyledText())) {
                 parsedMask = type;
                 break;
             }
