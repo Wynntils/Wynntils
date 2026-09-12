@@ -19,6 +19,7 @@ import com.wynntils.overlays.gamebars.HealthBarOverlay;
 import com.wynntils.overlays.gamebars.HolyPowerBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBankBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBarOverlay;
+import com.wynntils.overlays.gamebars.MantraBarOverlay;
 import com.wynntils.overlays.gamebars.MirrorImageBarOverlay;
 import com.wynntils.overlays.gamebars.MomentumBarOverlay;
 import com.wynntils.overlays.gamebars.NightcloakKnivesBarOverlay;
@@ -56,6 +57,9 @@ public class GameBarsOverlayFeature extends Feature {
 
     @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final ManaBankBarOverlay manaBankBarOverlay = new ManaBankBarOverlay();
+
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
+    private final MantraBarOverlay mantraBarOverlay = new MantraBarOverlay();
 
     @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final MirrorImageBarOverlay mirrorImageBarOverlay = new MirrorImageBarOverlay();

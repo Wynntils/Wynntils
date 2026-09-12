@@ -11,6 +11,7 @@ import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.abilities.label.ShamanPuppetInfo;
 import com.wynntils.models.abilities.type.AbilityCooldown;
 import com.wynntils.models.abilities.type.PuppetType;
+import com.wynntils.models.abilities.type.ShamanMaskType;
 import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.models.characterstats.type.PowderSpecialInfo;
 import com.wynntils.models.objectives.WynnObjective;
@@ -586,6 +587,42 @@ public class CharacterFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             return Models.ArcherBeast.getActiveSnakeCount();
+        }
+    }
+
+    public static class MaskOverloadFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            String maskname = arguments.getArgument("maskType").getStringValue();
+            ShamanMaskType maskType = ShamanMaskType.find(maskname);
+
+            if (maskType == null) return 0;
+
+            return Models.Ability.mantraBar.getMaskOverload(maskType);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("maskType", String.class, null)));
+        }
+    }
+
+    public static class IsMaskOverloadCappedFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            String maskname = arguments.getArgument("maskType").getStringValue();
+            ShamanMaskType maskType = ShamanMaskType.find(maskname);
+
+            if (maskType == null) return false;
+
+            return Models.Ability.mantraBar.isOverloadCapped(maskType);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("maskType", String.class, null)));
         }
     }
 }

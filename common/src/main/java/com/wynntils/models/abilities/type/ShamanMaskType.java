@@ -28,7 +28,7 @@ public enum ShamanMaskType {
 
     public static ShamanMaskType find(String text) {
         for (ShamanMaskType type : values()) {
-            if (type.alias.equals(text) || type.getName().equals(text)) {
+            if (type.alias.equalsIgnoreCase(text) || type.getName().equalsIgnoreCase(text)) {
                 return type;
             }
         }

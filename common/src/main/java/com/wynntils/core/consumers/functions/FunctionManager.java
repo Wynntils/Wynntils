@@ -526,11 +526,13 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.IdFunction());
         registerFunction(new CharacterFunctions.IsAbilityUnlockedFunction());
         registerFunction(new CharacterFunctions.IsAspectEquippedFunction());
+        registerFunction(new CharacterFunctions.IsMaskOverloadCappedFunction());
         registerFunction(new CharacterFunctions.IsRidingHorseFunction());
         registerFunction(new CharacterFunctions.LeaderboardPositionFunction());
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
         registerFunction(new CharacterFunctions.ManaPctFunction());
+        registerFunction(new CharacterFunctions.MaskOverloadFunction());
         registerFunction(new CharacterFunctions.MirrorImageCloneFunction());
         registerFunction(new CharacterFunctions.MirrorImageDurationFunction());
         registerFunction(new CharacterFunctions.MomentumFunction());
