@@ -154,6 +154,7 @@ import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.features.ui.CustomTradeMarketResultScreenFeature;
 import com.wynntils.features.ui.EmoteWheelFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
+import com.wynntils.features.ui.MountJumpBarFeature;
 import com.wynntils.features.ui.ProfessionHighlightFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
@@ -409,6 +410,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomTradeMarketResultScreenFeature());
         registerFeature(new EmoteWheelFeature());
         registerFeature(new LobbyUptimeFeature());
+        registerFeature(new MountJumpBarFeature());
         registerFeature(new ProfessionHighlightFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
