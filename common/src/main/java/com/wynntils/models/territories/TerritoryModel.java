@@ -13,16 +13,19 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.models.items.items.gui.TerritoryItem;
+import com.wynntils.models.territories.event.TerritoriesUpdatedEvent;
 import com.wynntils.models.territories.profile.TerritoryProfile;
+import com.wynntils.models.territories.providers.TerritoryProvider;
 import com.wynntils.models.territories.type.TerritoryConnectionType;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
-import com.wynntils.services.map.pois.TerritoryPoi;
-import java.util.ArrayList;
+import com.wynntils.screens.territorymanagement.mapdata.ManageTerritoryProvider;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Deque;
@@ -53,14 +56,14 @@ public final class TerritoryModel extends Model {
             .registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer())
             .create();
 
-    // This is territory POIs as returned by the advancement from Wynncraft
-    private final Map<String, TerritoryPoi> territoryPoiMap = new ConcurrentHashMap<>();
+    private static final TerritoryProvider TERRITORY_PROVIDER = new TerritoryProvider();
+    private static final ManageTerritoryProvider MANAGE_TERRITORY_PROVIDER = new ManageTerritoryProvider();
+
+    // This is the info gathered from the advancement from Wynncraft
+    private final Map<String, TerritoryInfo> territoryInfoMap = new ConcurrentHashMap<>();
 
     // This is the profiles as downloaded from Athena
     private Map<String, TerritoryProfile> territoryProfileMap = new HashMap<>();
-
-    // This is just a cache of TerritoryPois created for all territoryProfileMap values
-    private Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
 
     private ScheduledFuture<?> scheduledFuture;
     private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
@@ -87,6 +90,16 @@ public final class TerritoryModel extends Model {
                 this::updateTerritoryProfileMap, 0, IN_GUILD_TERRITORY_UPDATE_MS, TimeUnit.MILLISECONDS);
     }
 
+    @SubscribeEvent
+    public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
+        Services.MapData.registerBuiltInProvider(TERRITORY_PROVIDER);
+        Services.MapData.registerBuiltInProvider(MANAGE_TERRITORY_PROVIDER);
+    }
+
+    public Collection<TerritoryProfile> getTerritoryProfiles() {
+        return territoryProfileMap.values();
+    }
+
     public TerritoryProfile getTerritoryProfile(String name) {
         return territoryProfileMap.get(name);
     }
@@ -110,16 +123,8 @@ public final class TerritoryModel extends Model {
         return territoryProfileMap.keySet().stream();
     }
 
-    public Set<TerritoryPoi> getTerritoryPois() {
-        return allTerritoryPois;
-    }
-
-    public List<TerritoryPoi> getTerritoryPoisFromAdvancement() {
-        return new ArrayList<>(territoryPoiMap.values());
-    }
-
-    public TerritoryPoi getTerritoryPoiFromAdvancement(String name) {
-        return territoryPoiMap.get(name);
+    public TerritoryInfo getTerritoryInfo(String name) {
+        return territoryInfoMap.get(name);
     }
 
     public TerritoryProfile getTerritoryProfileForPosition(Position position) {
@@ -163,14 +168,8 @@ public final class TerritoryModel extends Model {
             tempMap.put(territoryName, container);
         }
 
-        for (Map.Entry<String, TerritoryInfo> entry : tempMap.entrySet()) {
-            TerritoryProfile territoryProfile = getTerritoryProfile(entry.getKey());
-
-            if (territoryProfile == null) continue;
-
-            territoryPoiMap.put(
-                    entry.getKey(), new TerritoryPoi(() -> getTerritoryProfile(entry.getKey()), entry.getValue()));
-        }
+        territoryInfoMap.putAll(tempMap);
+        WynntilsMod.postEvent(new TerritoriesUpdatedEvent.Advancements());
     }
 
     public Map<TerritoryItem, TerritoryConnectionType> getTerritoryConnections(List<TerritoryItem> territoryItems) {
@@ -199,10 +198,8 @@ public final class TerritoryModel extends Model {
             for (TerritoryItem territoryItem : territoryItems) {
                 if (connectedTerritories.contains(territoryItem)) continue;
 
-                TerritoryInfo currentTerritoryInfo =
-                        getTerritoryPoiFromAdvancement(current.getName()).getTerritoryInfo();
-                TerritoryInfo territoryInfo =
-                        getTerritoryPoiFromAdvancement(territoryItem.getName()).getTerritoryInfo();
+                TerritoryInfo currentTerritoryInfo = getTerritoryInfo(current.getName());
+                TerritoryInfo territoryInfo = getTerritoryInfo(territoryItem.getName());
 
                 // Note: Wynn is bugged, and sometimes forgets to add the bi-directional trading routes to both
                 // territories
@@ -252,9 +249,8 @@ public final class TerritoryModel extends Model {
                     }
 
                     territoryProfileMap = tempMap;
-                    allTerritoryPois = territoryProfileMap.values().stream()
-                            .map(TerritoryPoi::new)
-                            .collect(Collectors.toSet());
+
+                    WynntilsMod.postEventOnMainThread(new TerritoriesUpdatedEvent.Api());
 
                     lastGuildUpdate = System.currentTimeMillis();
                 },
