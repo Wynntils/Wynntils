@@ -115,13 +115,13 @@
   },
   {
     "id": "dataStaticAbilitiesV2",
-    "md5": "6760e7db7f9e869ff79cfd41b564e60a",
+    "md5": "1fe3fa866b18cf069e30d0f3463e6acd",
     "path": "Reference/abilities_v2.json",
     "url": "https://cdn.wynntils.com/static/Reference/abilities_v2.json"
   },
   {
     "id": "dataStaticAspects",
-    "md5": "851a3249f739ce5252a1494d60a206cd",
+    "md5": "f8b35d7118efb326b897bbc89e150247",
     "path": "Reference/aspects.json",
     "url": "https://cdn.wynntils.com/static/Reference/aspects.json"
   },
@@ -145,7 +145,7 @@
   },
   {
     "id": "dataStaticCombatMapFeatures",
-    "md5": "6cc7d6e1eba310bb64da1d37c91b04f8",
+    "md5": "de636b915381de0b27ccc75227c42eec",
     "path": "Reference/combat_mapfeatures.json",
     "url": "https://cdn.wynntils.com/static/Reference/combat_mapfeatures.json"
   },
@@ -169,7 +169,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "6e0adae5d56f1bc33c386b8b8b797702",
+    "md5": "9c84e0701be51bfcfecbcc9ece418fb6",
     "path": "Reference/gear.json",
     "url": "https://cdn.wynntils.com/static/Reference/gear.json"
   },
@@ -199,7 +199,7 @@
   },
   {
     "id": "dataStaticIngredients",
-    "md5": "476012d10a3b2cb38b014949a94336a5",
+    "md5": "20633374220ec4ef070d9621fbc9cad5",
     "path": "Reference/ingredients.json",
     "url": "https://cdn.wynntils.com/static/Reference/ingredients.json"
   },
@@ -211,7 +211,7 @@
   },
   {
     "id": "dataStaticItemDisplayModelData",
-    "md5": "9133e68a1691eaa15e40b5d694c83e41",
+    "md5": "9f949f17e445b3c2ae5ce231359138be",
     "path": "Data-Storage/item_display_model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/item_display_model_data.json"
   },
@@ -253,7 +253,7 @@
   },
   {
     "id": "dataStaticMaps",
-    "md5": "cdf3f6fdebf5032676941408ddc5c982",
+    "md5": "be924a7cb57c2eb217c46e11f96d5e54",
     "path": "Reference/maps.json",
     "url": "https://cdn.wynntils.com/static/Reference/maps.json"
   },
@@ -265,13 +265,13 @@
   },
   {
     "id": "dataStaticMaterials",
-    "md5": "0df3488d80a2209ac32ed0ee4094a09c",
+    "md5": "3b6d5d4c0b8ee66c7f4d4a98dbfc5c5b",
     "path": "Reference/materials.json",
     "url": "https://cdn.wynntils.com/static/Reference/materials.json"
   },
   {
     "id": "dataStaticModelData",
-    "md5": "c4dac966d06e73bd1c21ff23f6cacaa9",
+    "md5": "710e884c8d79b151a7edfa2a800ff3c8",
     "path": "Data-Storage/model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/model_data.json"
   },
@@ -295,7 +295,7 @@
   },
   {
     "id": "dataStaticRecipes",
-    "md5": "26dc3a3616fed14d6b7263d403a7922a",
+    "md5": "6d25bde3e5ecd4e43bf5614b3605ba8a",
     "path": "Reference/recipes.json",
     "url": "https://cdn.wynntils.com/static/Reference/recipes.json"
   },
@@ -313,7 +313,7 @@
   },
   {
     "id": "dataStaticServiceMapFeatures",
-    "md5": "e984f96f5840a95fbe0804a5efd153c2",
+    "md5": "84a7903b18958a8e692fc93e4dc964bb",
     "path": "Data-Storage/service_mapfeatures.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/service_mapfeatures.json"
   },
@@ -325,13 +325,13 @@
   },
   {
     "id": "dataStaticServicesCrowdsourced",
-    "md5": "dcc5a40556b968e038ec1548a203261f",
+    "md5": "2e4503daa873788fec096c194781b4b8",
     "path": "Data-Storage/services_crowdsourced.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/services_crowdsourced.json"
   },
   {
     "id": "dataStaticSets",
-    "md5": "818d9f860c880010146146c0650ba3f9",
+    "md5": "74c3a7896dbc3649eea626f76ce8cc0d",
     "path": "Reference/sets.json",
     "url": "https://cdn.wynntils.com/static/Reference/sets.json"
   },
@@ -355,7 +355,7 @@
   },
   {
     "id": "dataStaticTomes",
-    "md5": "2bcb8ae12b4928b3fa25a462c8a545f3",
+    "md5": "39f13c9a83b34905b305233309d86533",
     "path": "Reference/tomes.json",
     "url": "https://cdn.wynntils.com/static/Reference/tomes.json"
   },
