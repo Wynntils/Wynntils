@@ -17,13 +17,11 @@ import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class ShamanMaskModel extends Model {
     private static final Pattern AWAKENED_PATTERN = Pattern.compile("^§[0-9a-f]§lAwakened$");
-    private static final Pattern MASK_PATTERN = Pattern.compile("§(?:b|6|c)Mask of the (Heretic|Lunatic|Fanatic)");
     private static final StyledText AWAKENED_STATUS_EFFECT = StyledText.fromString("§7Awakened");
 
     private ShamanMaskType currentMaskType = ShamanMaskType.NONE;
@@ -55,7 +53,7 @@ public final class ShamanMaskModel extends Model {
     public void onSubtitle(SubtitleSetTextEvent event) {
         StyledText title = StyledText.fromComponent(event.getComponent());
 
-        if (title.contains("Mask of the ") || title.contains("➤")) {
+        if (title.contains("➤")) {
             parseMask(title);
 
             if (currentMaskType == null) return;
@@ -97,24 +95,24 @@ public final class ShamanMaskModel extends Model {
     }
 
     private void parseMask(StyledText title) {
-        Matcher matcher = title.getMatcher(MASK_PATTERN);
-
         ShamanMaskType parsedMask = ShamanMaskType.NONE;
 
-        if (matcher.matches()) {
-            parsedMask = ShamanMaskType.find(matcher.group(1));
-        } else {
-            for (ShamanMaskType type : ShamanMaskType.values()) {
-                if (type.getParseString() == null) continue;
+        for (ShamanMaskType type : ShamanMaskType.values()) {
+            if (type.getParseString() == null) continue;
 
-                if (title.contains(type.getParseString())) {
-                    parsedMask = type;
-                    break;
-                }
+            if (title.contains(type.getParseString())) {
+                parsedMask = type;
+                break;
             }
         }
 
-        currentMaskType = parsedMask;
+        // If we are currently wearing the awakened mask, then we want to change to this mask when it expires, but keep
+        // awakened as the current mask
+        if (currentMaskType == ShamanMaskType.AWAKENED) {
+            previousMaskType = parsedMask;
+        } else {
+            currentMaskType = parsedMask;
+        }
     }
 
     public ShamanMaskType getCurrentMaskType() {

@@ -474,7 +474,6 @@
   "feature.wynntils.functionDump.name": "関数をCSVにダンプ",
   "feature.wynntils.gameBarsOverlay.description": "マナや健康などの便利なゲーム情報を表示するオーバーレイとして、画面に事前に作成されたバーを追加します。",
   "feature.wynntils.gameBarsOverlay.name": "ゲームバー",
-  "feature.wynntils.gameBarsOverlay.overlay.awakenedProgressBar.name": "覚醒バー",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime.description": "バーをアニメーション化しますか？無効にするにはこれを0に設定します。",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime.name": "アニメーション",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.barTexture.description": "バーに使用するテクスチャは何ですか？",

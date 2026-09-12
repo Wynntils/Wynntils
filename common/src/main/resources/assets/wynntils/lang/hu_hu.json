@@ -474,7 +474,6 @@
   "feature.wynntils.functionDump.name": "Funkciók Mentése CSV-be",
   "feature.wynntils.gameBarsOverlay.description": "Előre elkészített sávokat ad a képernyőhöz, amelyek hasznos játékadatokat, például manát és egészséget jelenítenek meg.",
   "feature.wynntils.gameBarsOverlay.name": "Játék Sávok",
-  "feature.wynntils.gameBarsOverlay.overlay.awakenedProgressBar.name": "Ébredt Sáv",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime.description": "Legyen a sáv animált? А́llítsa 0-ra a letiltáshoz.",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime.name": "Animált",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.barTexture.description": "Milyen textúrát használjon a sáv?",

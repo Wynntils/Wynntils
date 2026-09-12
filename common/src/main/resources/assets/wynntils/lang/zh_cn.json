@@ -474,7 +474,6 @@
   "feature.wynntils.functionDump.name": "导出功能到CSV",
   "feature.wynntils.gameBarsOverlay.description": "在屏幕上添加预制条作为覆盖，显示有用的游戏信息，如法力和健康。",
   "feature.wynntils.gameBarsOverlay.name": "游戏条",
-  "feature.wynntils.gameBarsOverlay.overlay.awakenedProgressBar.name": "觉醒条",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime.description": "条形图是否应动画化？设置为0以禁用。",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime.name": "动画",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.barTexture.description": "条形图应该使用什么纹理？",
