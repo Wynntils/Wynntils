@@ -31,22 +31,25 @@ import com.wynntils.services.mapdata.providers.type.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapDataProvidedType;
 import com.wynntils.services.mapdata.type.MapIcon;
+import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MapDataService extends Service {
+    public static final File LOCAL_PROVIDERS = WynntilsMod.getModStorageDir("localProviders");
+
     private static final CategoriesProvider CATEGORIES_PROVIDER = new CategoriesProvider();
     private static final MapIconsProvider MAP_ICONS_PROVIDER = new MapIconsProvider();
     private static final ServiceListProvider SERVICE_LIST_PROVIDER = new ServiceListProvider();
@@ -61,8 +64,8 @@ public class MapDataService extends Service {
     private final LinkedHashMap<String, MapDataOverrideProvider> overrideProviders = new LinkedHashMap();
 
     // Cache for resolved attributes and icons
-    private final Map<MapFeature, ResolvedMapAttributes> resolvedAttributesCache = new HashMap<>();
-    private final Map<String, Optional<MapIcon>> iconCache = new HashMap<>();
+    private final Map<MapFeature, ResolvedMapAttributes> resolvedAttributesCache = new ConcurrentHashMap<>();
+    private final Map<String, Optional<MapIcon>> iconCache = new ConcurrentHashMap<>();
 
     // Storage for json providers
     @Persisted
@@ -76,12 +79,15 @@ public class MapDataService extends Service {
     public MapDataService() {
         super(List.of());
 
+        FileUtils.mkdir(LOCAL_PROVIDERS);
+
         createBuiltInProviders();
     }
 
     @Override
     public void onStorageLoad(Storage<?> storage) {
         if (storage == jsonProviderInfos) {
+            refreshLocalJsonProviders();
             reloadJsonProviders();
         }
         if (storage == jsonOverrideProviders) {
@@ -92,6 +98,7 @@ public class MapDataService extends Service {
     @Override
     public void reloadData() {
         getProviders().forEach(MapDataProvider::reloadData);
+        refreshLocalJsonProviders();
         reloadJsonProviders();
         reloadJsonOverrideProviders();
     }
@@ -425,6 +432,36 @@ public class MapDataService extends Service {
                 .filter(Map.Entry::getValue)
                 .map(Map.Entry::getKey)
                 .forEach(this::registerJsonProvider);
+    }
+
+    public void refreshLocalJsonProviders() {
+        File[] files = LOCAL_PROVIDERS.listFiles();
+
+        if (files != null) {
+            for (File file : files) {
+                if (!file.getName().endsWith(".json")) continue;
+
+                boolean alreadyKnown = jsonProviderInfos.get().keySet().stream()
+                        .anyMatch(info -> info.providerType() == JsonProviderInfo.JsonProviderType.LOCAL
+                                && info.providerFilePath().equals(file.getAbsolutePath()));
+
+                if (alreadyKnown) continue;
+
+                String providerId = file.getName().substring(0, file.getName().length() - ".json".length());
+
+                JsonProviderInfo providerInfo = JsonProviderInfo.createLocal(providerId, file.getAbsolutePath());
+
+                addJsonProvider(providerInfo);
+            }
+        }
+
+        // Delete local providers whose file no longer exists
+        jsonProviderInfos.get().keySet().stream()
+                .filter(info -> info.providerType() == JsonProviderInfo.JsonProviderType.LOCAL)
+                .filter(info -> !new File(info.providerFilePath()).isFile())
+                .map(JsonProviderInfo::providerId)
+                .toList()
+                .forEach(this::removeJsonProvider);
     }
 
     private void reloadJsonOverrideProviders() {
