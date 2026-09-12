@@ -136,9 +136,17 @@ public class MapCommand extends Command {
         }
 
         if (providerOpt.get().providerType() != JsonProviderInfo.JsonProviderType.REMOTE) {
+            MutableComponent folderCommand = Component.literal("/wynntils map provider local folder")
+                    .withStyle(Style.EMPTY
+                            .withColor(ChatFormatting.YELLOW)
+                            .withClickEvent(new ClickEvent.RunCommand("/wynntils map provider local folder"))
+                            .withHoverEvent(new HoverEvent.ShowText(
+                                    Component.translatable("command.wynntils.map.openFolder"))));
+
             context.getSource()
                     .sendFailure(Component.translatable("command.wynntils.map.onlyRemoteRemovable")
-                            .withStyle(ChatFormatting.RED));
+                            .withStyle(ChatFormatting.RED)
+                            .append(folderCommand));
             return 0;
         }
 
@@ -158,7 +166,7 @@ public class MapCommand extends Command {
     }
 
     private int listProviders(CommandContext<CommandSourceStack> context) {
-        MutableComponent message = Component.literal("Json providers:").withStyle(ChatFormatting.YELLOW);
+        MutableComponent message = Component.literal("JSON providers:").withStyle(ChatFormatting.YELLOW);
 
         for (JsonProviderInfo providerInfo :
                 Services.MapData.getJsonProviderInfos().keySet()) {
