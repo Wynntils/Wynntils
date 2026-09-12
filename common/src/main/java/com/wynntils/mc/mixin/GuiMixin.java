@@ -178,6 +178,14 @@ public abstract class GuiMixin {
     }
 
     @Inject(
+            method = "renderOverlayMessage(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
+            at = @At("TAIL"))
+    private void onRenderOverlayMessageyPost(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        MixinHelper.post(new RenderEvent.Post(
+                guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.ACTION_BAR));
+    }
+
+    @Inject(
             method = "renderTitle(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
             at = @At("HEAD"))
     private void onRenderTitlePre(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {

@@ -15,6 +15,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -61,12 +62,13 @@ public class AbilityTreeDataDumpFeature extends Feature {
         File expandedJsonFile = new File(SAVE_FOLDER, "abilities_v2_expanded.json");
         File minifiedJsonFile = new File(SAVE_FOLDER, "abilities_v2.json");
 
-        JsonObject root = new JsonObject();
+        JsonObject existingRoot = new JsonObject();
+
         if (expandedJsonFile.exists()) {
             try (FileReader reader = new FileReader(expandedJsonFile, StandardCharsets.UTF_8)) {
                 JsonElement existing = Managers.Json.GSON.fromJson(reader, JsonElement.class);
                 if (existing != null && existing.isJsonObject()) {
-                    root = existing.getAsJsonObject();
+                    existingRoot = existing.getAsJsonObject();
                 }
             } catch (Exception e) {
                 WynntilsMod.error("Failed to read existing abilities file", e);
@@ -75,12 +77,24 @@ public class AbilityTreeDataDumpFeature extends Feature {
 
         String classKey = Models.Character.getClassType().getName().toLowerCase(Locale.ROOT);
         JsonElement element = Managers.Json.GSON.toJsonTree(abilityTreeInfo);
-        root.add(classKey, element);
+        existingRoot.add(classKey, element);
 
-        Managers.Json.savePreciousJson(expandedJsonFile, root);
+        // Rebuild the root in ClassType enum order.
+        JsonObject sortedRoot = new JsonObject();
+
+        for (ClassType classType : ClassType.values()) {
+            String key = classType.getName().toLowerCase(Locale.ROOT);
+
+            JsonElement classElement = existingRoot.get(key);
+            if (classElement != null) {
+                sortedRoot.add(key, classElement);
+            }
+        }
+
+        Managers.Json.savePreciousJson(expandedJsonFile, sortedRoot);
 
         try (FileWriter writer = new FileWriter(minifiedJsonFile, StandardCharsets.UTF_8)) {
-            writer.write(root.toString());
+            writer.write(sortedRoot.toString());
         } catch (Exception e) {
             WynntilsMod.error("Failed to save minified abilities file", e);
         }

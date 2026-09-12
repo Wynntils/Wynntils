@@ -695,6 +695,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new MountFunctions.CurrentMountEnergyFunction());
         registerFunction(new MountFunctions.MountPotentialFunction());
         registerFunction(new MountFunctions.MountNameFunction());
+        registerFunction(new MountFunctions.MountTypeFunction());
 
         registerFunction(new ProfessionFunctions.LastHarvestMaterialLevelFunction());
         registerFunction(new ProfessionFunctions.LastHarvestMaterialNameFunction());
