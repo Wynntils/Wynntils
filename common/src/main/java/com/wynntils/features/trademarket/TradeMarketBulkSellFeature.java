@@ -19,6 +19,7 @@ import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import java.util.Optional;
 import java.util.function.Supplier;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.input.InputWithModifiers;
@@ -51,9 +52,10 @@ public class TradeMarketBulkSellFeature extends Feature {
         if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
 
         String soldItemName = Models.TradeMarket.getSoldItemName();
+        Optional<Integer> soldItemTier = Models.TradeMarket.getSoldItemTier();
         removeSellButtons(containerScreen);
         if (soldItemName == null) return;
-        addSellButtons(containerScreen, soldItemName);
+        addSellButtons(containerScreen, soldItemName, soldItemTier);
     }
 
     @SubscribeEvent
@@ -66,11 +68,16 @@ public class TradeMarketBulkSellFeature extends Feature {
         sendAmountMessage = false;
     }
 
-    private void addSellButtons(ContainerScreen containerScreen, String soldItemName) {
+    private void addSellButtons(ContainerScreen containerScreen, String soldItemName, Optional<Integer> soldItemTier) {
         containerScreen.addRenderableWidget(new SellButton(
                 containerScreen.leftPos - SellButton.BUTTON_WIDTH - 1,
                 containerScreen.topPos + 30,
-                () -> Models.Inventory.getAmountInInventory(soldItemName),
+                () -> {
+                    if (soldItemTier.isPresent()) {
+                        return Models.Inventory.getMaterialsAmountInInventory(soldItemName, soldItemTier.get(), true);
+                    }
+                    return Models.Inventory.getAmountInInventory(soldItemName);
+                },
                 true));
 
         if (bulkSell1Amount.get() > 0) {
