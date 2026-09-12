@@ -63,7 +63,7 @@ public class TooltipFittingFeature extends Feature {
         lastScaleFactor = scaleFactor;
     }
 
-    // Ensure that other features that manager their own positioner aren't affected by this
+    // Ensure that other features that manage their own positioner aren't affected by this
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onTooltipRenderPosition(TooltipRenderEvent.Position event) {
         if (lastScaleFactor == 1f || event.getPositioner() != null) return;
