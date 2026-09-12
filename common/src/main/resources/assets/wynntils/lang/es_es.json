@@ -474,7 +474,6 @@
   "feature.wynntils.functionDump.name": "Volcar Funciones a CSV",
   "feature.wynntils.gameBarsOverlay.description": "Agrega barras predefinidas a la pantalla como superposiciones que muestran información útil del juego como maná y salud.",
   "feature.wynntils.gameBarsOverlay.name": "Barras de Juego",
-  "feature.wynntils.gameBarsOverlay.overlay.awakenedProgressBar.name": "Barra Despierta",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime.description": "¿Debería animarse la barra? Establezca esto en 0 para desactivar.",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime.name": "Animado",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.barTexture.description": "¿Qué textura debería usarse para la barra?",

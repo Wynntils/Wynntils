@@ -163,15 +163,6 @@ public class CharacterFunctions {
         }
     }
 
-    public static class CappedAwakenedProgressFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Ability.awakenedBar.isActive()
-                    ? Models.Ability.awakenedBar.getBarProgress().value()
-                    : CappedValue.EMPTY;
-        }
-    }
-
     public static class CappedBloodPoolFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {

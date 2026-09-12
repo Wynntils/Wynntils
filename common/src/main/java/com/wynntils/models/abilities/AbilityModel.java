@@ -11,7 +11,6 @@ import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.abilities.bossbars.AwakenedBar;
 import com.wynntils.models.abilities.bossbars.BloodPoolBar;
 import com.wynntils.models.abilities.bossbars.CommanderBar;
 import com.wynntils.models.abilities.bossbars.CorruptedBar;
@@ -48,8 +47,6 @@ public final class AbilityModel extends Model {
     private static final Pattern REFRESH_PATTERN = Pattern.compile("\\[⬤\\] (.+) has been refreshed!");
     private static final float COOLDOWN_EPSILON_SECONDS = 0.001f;
 
-    public static final TrackedBar awakenedBar = new AwakenedBar();
-
     public static final TrackedBar bloodPoolBar = new BloodPoolBar();
 
     public static final CommanderBar commanderBar = new CommanderBar();
@@ -75,7 +72,6 @@ public final class AbilityModel extends Model {
     public static final OphanimBar ophanimBar = new OphanimBar();
 
     private static final List<TrackedBar> ALL_BARS = Arrays.asList(
-            awakenedBar,
             bloodPoolBar,
             commanderBar,
             corruptedBar,
