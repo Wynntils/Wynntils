@@ -121,7 +121,7 @@ public final class TradeMarketModel extends Model {
     private TradeMarketState tradeMarketState = TradeMarketState.NOT_ACTIVE;
 
     private String soldItemName = null;
-    private int soldItemTier = 0;
+    private Optional<Integer> soldItemTier = Optional.empty();
 
     public TradeMarketModel() {
         super(List.of());
@@ -364,7 +364,7 @@ public final class TradeMarketModel extends Model {
         return soldItemName;
     }
 
-    public int getSoldItemTier() {
+    public Optional<Integer> getSoldItemTier() {
         return soldItemTier;
     }
 
@@ -374,7 +374,7 @@ public final class TradeMarketModel extends Model {
         if (!(McUtils.screen() instanceof ContainerScreen cs)) return;
 
         soldItemName = null;
-        soldItemTier = 0;
+        soldItemTier = Optional.empty();
 
         ItemStack itemStack = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
         if (itemStack != ItemStack.EMPTY) {
@@ -386,7 +386,7 @@ public final class TradeMarketModel extends Model {
                 if (materialItemOpt.isPresent()) {
                     MaterialItem materialItem = materialItemOpt.get();
                     soldItemName = materialItem.getName();
-                    soldItemTier = materialItem.getQualityTier();
+                    soldItemTier = Optional.of(materialItem.getQualityTier());
                 }
             }
         }
