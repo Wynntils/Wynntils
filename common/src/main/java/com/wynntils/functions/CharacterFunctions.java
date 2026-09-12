@@ -616,4 +616,13 @@ public class CharacterFunctions {
                     List.of(new Argument<>("maskType", String.class, null)));
         }
     }
+
+    public static class MaskOverloadDecayFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Ability.mantraBar.isActive()
+                    ? Models.Ability.mantraBar.getBarProgress().value()
+                    : CappedValue.EMPTY;
+        }
+    }
 }

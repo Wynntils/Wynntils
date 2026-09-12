@@ -2818,6 +2818,8 @@
   "function.wynntils.maskOverload.argument.maskType": "Which mask type to get the overload of?",
   "function.wynntils.maskOverload.description": "The overload value of the given mask",
   "function.wynntils.maskOverload.name": "Mask Overload",
+  "function.wynntils.maskOverloadDecay.description": "The decay progress of the current mask overload",
+  "function.wynntils.maskOverloadDecay.name": "Mask Overload Decay",
   "function.wynntils.materialCount.argument.exact": "Whether to check for exact tier or include higher tiers",
   "function.wynntils.materialCount.argument.name": "The name that the material starts with",
   "function.wynntils.materialCount.argument.tier": "Tier number of the material",
