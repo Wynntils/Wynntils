@@ -4,7 +4,9 @@
  */
 package com.wynntils.mc.event;
 
+import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.neoforged.bus.api.Event;
 
@@ -24,8 +26,15 @@ public abstract class TooltipRenderEvent extends Event {
     }
 
     public static class Pre extends TooltipRenderEvent {
-        public Pre(GuiGraphics guiGraphics) {
+        private final List<ClientTooltipComponent> tooltips;
+
+        public Pre(GuiGraphics guiGraphics, List<ClientTooltipComponent> tooltips) {
             super(guiGraphics);
+            this.tooltips = tooltips;
+        }
+
+        public List<ClientTooltipComponent> getTooltips() {
+            return tooltips;
         }
     }
 

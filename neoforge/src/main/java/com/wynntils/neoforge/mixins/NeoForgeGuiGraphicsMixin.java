@@ -84,7 +84,7 @@ public abstract class NeoForgeGuiGraphicsMixin {
             Identifier background,
             ItemStack tooltipStack,
             CallbackInfo ci) {
-        MixinHelper.post(new TooltipRenderEvent.Pre((GuiGraphics) (Object) this));
+        MixinHelper.post(new TooltipRenderEvent.Pre((GuiGraphics) (Object) this, components));
     }
 
     @WrapOperation(
