@@ -19,7 +19,6 @@ import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
-
 import java.util.Optional;
 import java.util.function.Supplier;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
