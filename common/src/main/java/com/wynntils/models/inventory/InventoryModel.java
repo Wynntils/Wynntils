@@ -97,7 +97,7 @@ public final class InventoryModel extends Model {
             StyledText itemName = StyledText.fromComponent(itemStack.getHoverName())
                     .getNormalized()
                     .trim();
-            if (WynnUtils.stripItemNameMarkers(itemName.getString()).endsWith(name)) {
+            if (WynnUtils.stripItemNameMarkers(itemName.getString(), false).endsWith(name)) {
                 amount += itemStack.getCount();
             }
         }

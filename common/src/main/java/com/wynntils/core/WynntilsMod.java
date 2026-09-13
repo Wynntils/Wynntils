@@ -99,6 +99,12 @@ public final class WynntilsMod {
         componentMap.values().stream().flatMap(List::stream).forEach(CoreComponent::reloadData);
     }
 
+    public static <T extends CoreComponent> List<T> getComponents(Class<T> componentClass) {
+        return componentMap.getOrDefault(componentClass, List.of()).stream()
+                .map(componentClass::cast)
+                .toList();
+    }
+
     private static void handleExceptionInEventListener(Throwable t, Event event) {
         StackTraceElement[] stackTrace = t.getStackTrace();
 

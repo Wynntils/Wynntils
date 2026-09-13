@@ -11,7 +11,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.TooltipRenderEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
@@ -19,7 +18,6 @@ import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
-import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Vector2i;
@@ -40,20 +38,17 @@ public class TooltipFittingFeature extends Feature {
         super(ProfileDefault.ENABLED);
     }
 
-    // scaling should only happen after every other feature has updated tooltip
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onTooltipPre(ItemTooltipRenderEvent.Pre e) {
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onTooltipRenderPre(TooltipRenderEvent.Pre e) {
         Window window = McUtils.mc().getWindow();
 
         // calculate scale factor
         float scaleFactor = universalScale.get();
 
         if (fitToScreen.get()) {
-            List<Component> tooltips = e.getTooltips();
+            List<ClientTooltipComponent> tooltips = e.getTooltips();
 
-            List<ClientTooltipComponent> clientTooltipComponents = TooltipUtils.getClientTooltipComponent(tooltips);
-
-            int tooltipHeight = TooltipUtils.getTooltipHeight(clientTooltipComponents);
+            int tooltipHeight = TooltipUtils.getTooltipHeight(tooltips);
 
             tooltipHeight *= universalScale.get();
 
@@ -68,23 +63,18 @@ public class TooltipFittingFeature extends Feature {
         lastScaleFactor = scaleFactor;
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onTooltipRenderPre(TooltipRenderEvent.Pre e) {
-        if (lastScaleFactor == 1f) return;
+    // Ensure that other features that manage their own positioner aren't affected by this
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onTooltipRenderPosition(TooltipRenderEvent.Position event) {
+        if (lastScaleFactor == 1f || event.getPositioner() != null) return;
 
         // push pose before scaling, so we can pop it afterwards
-        GuiGraphics guiGraphics = e.getGuiGraphics();
+        GuiGraphics guiGraphics = event.getGuiGraphics();
         guiGraphics.pose().pushMatrix();
         guiGraphics.pose().scale(lastScaleFactor, lastScaleFactor);
 
-        scaledLast = true;
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onTooltipRenderPosition(TooltipRenderEvent.Position event) {
-        if (!scaledLast) return;
-
         event.setPositioner(new ScaledTooltipPositioner(lastScaleFactor));
+        scaledLast = true;
     }
 
     // highest priority to reset pose before other features start rendering

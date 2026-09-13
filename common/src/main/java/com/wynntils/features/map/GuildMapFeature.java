@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.map;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.ExternalConfigurationScreen;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -20,6 +21,7 @@ import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.PointerType;
+import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 
 @ConfigCategory(Category.MAP)
@@ -34,9 +36,11 @@ public class GuildMapFeature extends Feature implements ExternalConfigurationScr
     public final KeyBind openGuildMapKeybind = KeyBindDefinition.OPEN_GUILD_MAP.create(this::openGuildMap);
 
     public GuildMapFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
+                        .build(),
+                List.of(ConfigDependency.functionality(Models.Territory.lookupApiInfo)));
     }
 
     private void openGuildMap() {

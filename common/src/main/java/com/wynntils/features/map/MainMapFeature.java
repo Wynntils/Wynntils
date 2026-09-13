@@ -6,6 +6,7 @@ package com.wynntils.features.map;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.ExternalConfigurationScreen;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -128,7 +129,7 @@ public class MainMapFeature extends Feature implements ExternalConfigurationScre
     public final KeyBind newWaypointKeybind = KeyBindDefinition.NEW_WAYPOINT.create(this::openWaypointSetup);
 
     public MainMapFeature() {
-        super(ProfileDefault.ENABLED);
+        super(ProfileDefault.ENABLED, List.of(ConfigDependency.functionality(Services.Hades.connectToHades)));
     }
 
     private void openMainMap() {
