@@ -25,9 +25,9 @@ public record JsonProviderInfo(
 
     public String path() {
         return switch (providerType) {
-            case BUNDLED -> "bundled / " + providerFilename;
-            case LOCAL -> "local / " + providerFilePath;
-            case REMOTE -> "remote / " + providerUrl;
+            case BUNDLED -> providerFilename;
+            case LOCAL -> providerFilePath;
+            case REMOTE -> providerUrl;
         };
     }
 

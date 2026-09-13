@@ -93,7 +93,9 @@ public final class JsonProvider implements MapDataProvider {
      * @param registerCallback The callback to call with the loaded provider
      */
     public static void loadOnlineResource(String id, String url, BiConsumer<String, JsonProvider> registerCallback) {
-        Download dl = Managers.Net.download(URI.create(url), id);
+        // Online providers start with online: the : is an illegal character in windows file names.
+        String cacheName = id.replace(':', '_');
+        Download dl = Managers.Net.download(URI.create(url), cacheName);
         dl.handleReader(
                 reader -> {
                     try {
