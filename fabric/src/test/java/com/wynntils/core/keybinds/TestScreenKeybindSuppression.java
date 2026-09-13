@@ -14,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.lwjgl.glfw.GLFW;
 
-public class TestChatKeybindSuppression {
+public class TestScreenKeybindSuppression {
     private WynntilsKeyMapping mapping;
 
     @BeforeAll
@@ -25,8 +25,8 @@ public class TestChatKeybindSuppression {
     @BeforeEach
     public void createMapping() {
         mapping = new WynntilsKeyMapping(new KeyBindDefinition(
-                "testChatInput",
-                "Test chat input",
+                "testScreenInput",
+                "Test screen input",
                 KeyBindManager.COMMANDS_CATEGORY,
                 InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_L,
@@ -34,9 +34,9 @@ public class TestChatKeybindSuppression {
     }
 
     @Test
-    public void blocksKeysHeldBeforeChatUntilReleaseAndFreshPress() {
+    public void blocksKeysHeldBeforeScreenUntilReleaseAndFreshPress() {
         mapping.setDown(true);
-        mapping.suppressChatInput();
+        mapping.suppressScreenInput();
         Assertions.assertFalse(mapping.isDown());
 
         mapping.setDown(true);
@@ -53,7 +53,7 @@ public class TestChatKeybindSuppression {
     }
 
     @Test
-    public void typingAndRepeatingInChatCannotActivateMapping() {
+    public void inputConsumedByAScreenCannotActivateMapping() {
         mapping.onInput(GLFW.GLFW_PRESS, true);
         mapping.setDown(true);
         Assertions.assertFalse(mapping.isDown());
@@ -63,8 +63,8 @@ public class TestChatKeybindSuppression {
     }
 
     @Test
-    public void screenResetsDoNotClearChatSuppression() {
-        mapping.suppressChatInput();
+    public void screenResetsDoNotClearSuppression() {
+        mapping.suppressScreenInput();
         KeyMapping.releaseAll();
         mapping.setDown(true);
         Assertions.assertFalse(mapping.isDown());
@@ -72,17 +72,17 @@ public class TestChatKeybindSuppression {
 
     @Test
     public void freshPressRecoversWhenReleaseWasNotObserved() {
-        mapping.suppressChatInput();
+        mapping.suppressScreenInput();
         mapping.onInput(GLFW.GLFW_PRESS, false);
         mapping.setDown(true);
         Assertions.assertTrue(mapping.isDown());
     }
 
     @Test
-    public void vanillaMappingsAreNotSuppressedByChat() {
+    public void vanillaMappingsAreNotSuppressedByScreens() {
         KeyMapping vanillaMapping = new KeyMapping(
                 "testVanillaInput", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_L, KeyBindManager.COMMANDS_CATEGORY);
-        mapping.suppressChatInput();
+        mapping.suppressScreenInput();
         vanillaMapping.setDown(true);
         mapping.setDown(true);
         Assertions.assertTrue(vanillaMapping.isDown());
@@ -90,9 +90,9 @@ public class TestChatKeybindSuppression {
     }
 
     @Test
-    public void mouseMappingsRemainUsableInAndAfterChat() {
+    public void mouseMappingsRemainUsableInAndAfterScreens() {
         mapping.setKey(InputConstants.Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_4));
-        mapping.suppressChatInput();
+        mapping.suppressScreenInput();
         mapping.setDown(true);
         Assertions.assertTrue(mapping.isDown());
         mapping.setDown(false);
@@ -102,20 +102,20 @@ public class TestChatKeybindSuppression {
 
     @Test
     public void rebindingDoesNotCarrySuppressionToAnotherKeyOrMouseButton() {
-        mapping.suppressChatInput();
+        mapping.suppressScreenInput();
         mapping.setKey(InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_K));
         mapping.setDown(true);
         Assertions.assertTrue(mapping.isDown());
 
-        mapping.suppressChatInput();
+        mapping.suppressScreenInput();
         mapping.setKey(InputConstants.Type.MOUSE.getOrCreate(GLFW.GLFW_MOUSE_BUTTON_4));
         mapping.setDown(true);
         Assertions.assertTrue(mapping.isDown());
     }
 
     @Test
-    public void reapplyingTheSameBindingDoesNotLetAHeldChatKeyThrough() {
-        mapping.suppressChatInput();
+    public void reapplyingTheSameBindingDoesNotLetAHeldScreenKeyThrough() {
+        mapping.suppressScreenInput();
         mapping.setKey(InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_L));
         mapping.setDown(true);
         Assertions.assertFalse(mapping.isDown());
@@ -125,7 +125,7 @@ public class TestChatKeybindSuppression {
     public void scanCodeMappingsAlsoRespectSuppressionAndRelease() {
         mapping.setKey(InputConstants.Type.SCANCODE.getOrCreate(42));
         Assertions.assertTrue(mapping.matches(new KeyEvent(GLFW.GLFW_KEY_UNKNOWN, 42, 0)));
-        mapping.suppressChatInput();
+        mapping.suppressScreenInput();
         mapping.onInput(GLFW.GLFW_REPEAT, false);
         mapping.setDown(true);
         Assertions.assertFalse(mapping.isDown());
@@ -133,5 +133,34 @@ public class TestChatKeybindSuppression {
         mapping.onInput(GLFW.GLFW_PRESS, false);
         mapping.setDown(true);
         Assertions.assertTrue(mapping.isDown());
+    }
+
+    @Test
+    public void explicitScreenRestorationAllowsAHeldKeyToContinueAfterClosing() {
+        mapping.suppressScreenInput();
+        mapping.setDown(true, true);
+        Assertions.assertTrue(mapping.isDown());
+        mapping.setDown(true, false);
+        Assertions.assertTrue(mapping.isDown());
+    }
+
+    @Test
+    public void forwardedRepeatsRemainUsableInScreens() {
+        mapping.suppressScreenInput();
+        mapping.setDown(true, true);
+        mapping.onInput(GLFW.GLFW_REPEAT, true);
+        Assertions.assertFalse(mapping.isDown());
+        mapping.setDown(true, true);
+        Assertions.assertTrue(mapping.isDown());
+        mapping.setDown(true, false);
+        Assertions.assertTrue(mapping.isDown());
+    }
+
+    @Test
+    public void openingAnotherScreenSuppressesPreviouslyForwardedInput() {
+        mapping.setDown(true, true);
+        mapping.suppressScreenInput();
+        mapping.setDown(true, false);
+        Assertions.assertFalse(mapping.isDown());
     }
 }

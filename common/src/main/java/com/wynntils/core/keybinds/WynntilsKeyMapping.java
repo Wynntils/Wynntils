@@ -5,41 +5,49 @@
 package com.wynntils.core.keybinds;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.KeyMapping;
 import org.lwjgl.glfw.GLFW;
 
 public final class WynntilsKeyMapping extends KeyMapping {
-    private boolean blockedByChat;
+    private boolean blockedByScreen;
 
     public WynntilsKeyMapping(KeyBindDefinition definition) {
         super(definition.translationKey(), definition.type(), definition.defaultKey(), definition.category());
     }
 
-    public void onInput(int action, boolean inChat) {
+    public void onInput(int action, boolean inScreen) {
         if (action == GLFW.GLFW_RELEASE) {
-            blockedByChat = false;
-        } else if (inChat) {
-            suppressChatInput();
+            blockedByScreen = false;
+        } else if (inScreen) {
+            suppressScreenInput();
         } else if (action == GLFW.GLFW_PRESS) {
-            blockedByChat = false;
+            blockedByScreen = false;
         }
     }
 
-    public void suppressChatInput() {
+    public void suppressScreenInput() {
         if (key.getType() == InputConstants.Type.MOUSE) return;
 
-        blockedByChat = true;
+        blockedByScreen = true;
         super.setDown(false);
     }
 
     @Override
     public void setDown(boolean down) {
-        super.setDown(down && !blockedByChat);
+        setDown(down, down && McUtils.mc() != null && McUtils.screen() != null);
+    }
+
+    void setDown(boolean down, boolean inScreen) {
+        if (down && inScreen) {
+            blockedByScreen = false;
+        }
+        super.setDown(down && !blockedByScreen);
     }
 
     @Override
     public void setKey(InputConstants.Key key) {
-        if (!this.key.equals(key)) blockedByChat = false;
+        if (!this.key.equals(key)) blockedByScreen = false;
         super.setKey(key);
     }
 }

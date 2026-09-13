@@ -29,7 +29,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
-import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.bus.api.EventPriority;
@@ -165,19 +164,17 @@ public final class KeyBindManager extends Manager {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
     public void onKeyInput(KeyInputEvent e) {
-        boolean inChat = McUtils.screen() instanceof ChatScreen;
+        boolean inScreen = McUtils.screen() != null;
         for (WynntilsKeyMapping mapping : mappingsById.values()) {
             if (mapping.matches(e.getKeyEvent())) {
-                mapping.onInput(e.getAction(), inChat);
+                mapping.onInput(e.getAction(), inScreen);
             }
         }
     }
 
     @SubscribeEvent
-    public void onScreenInit(ScreenInitEvent.Post e) {
-        if (!(e.getScreen() instanceof ChatScreen)) return;
-
-        mappingsById.values().forEach(WynntilsKeyMapping::suppressChatInput);
+    public void onScreenInit(ScreenInitEvent.Pre e) {
+        mappingsById.values().forEach(WynntilsKeyMapping::suppressScreenInput);
     }
 
     @SubscribeEvent

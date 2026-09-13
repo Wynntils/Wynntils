@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
@@ -128,9 +127,7 @@ public class QuickCastFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onScreenInit(ScreenInitEvent.Post event) {
-        if (!(event.getScreen() instanceof ChatScreen)) return;
-
+    public void onScreenInit(ScreenInitEvent.Pre event) {
         clearInputSelectionState();
     }
 
