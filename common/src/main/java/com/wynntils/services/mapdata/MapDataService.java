@@ -441,6 +441,15 @@ public class MapDataService extends Service {
         invalidateCaches(providerInfo.provider());
     }
 
+    private Optional<MapDataProvider> getJsonProviderFromInfo(JsonProviderInfo info) {
+        String prefix = switch (info.providerType()) {
+            case BUNDLED -> "bundled:";
+            case LOCAL -> "local:";
+            case REMOTE -> "online:";
+        };
+        return Optional.ofNullable(allProviders.get(prefix + info.providerId()));
+    }
+
     private void registerJsonProvider(JsonProviderInfo providerInfo) {
         if (!providerEnabledOverrides.get().getOrDefault(providerInfo.completeId(), true)) {
             registerJsonProvider(providerInfo.completeId(), UNLOADED_PLACEHOLDER_PROVIDER);
@@ -563,6 +572,13 @@ public class MapDataService extends Service {
         return registeredProviders.entrySet().stream()
                 .filter(entry -> isProviderEnabled(entry.getKey()))
                 .map(entry -> entry.getValue().provider());
+    }
+
+    public Optional<MapDataProvider> getProviderFromId(String providerId) {
+        return allProviders.entrySet().stream()
+                .filter(entry -> entry.getKey().endsWith(providerId))
+                .map(Map.Entry::getValue)
+                .findFirst();
     }
 
     // endregion
