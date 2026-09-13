@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.maps.managers.widgets;
+package com.wynntils.screens.maps.managers.widgets.categorymanager;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
@@ -21,11 +21,11 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
-public class InfoWidget extends AbstractWidget implements TooltipProvider {
+public class CategoryInfoWidget extends AbstractWidget implements TooltipProvider {
     private final CategoryManagementScreen parent;
     private List<Component> generatedTooltip = new ArrayList<>();
 
-    public InfoWidget(int x, int y, int width, int height, CategoryManagementScreen parent) {
+    public CategoryInfoWidget(int x, int y, int width, int height, CategoryManagementScreen parent) {
         super(x, y, width, height, Component.literal("Info Widget"));
         this.parent = parent;
         generateTooltip();

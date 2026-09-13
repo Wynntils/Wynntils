@@ -6,7 +6,6 @@ package com.wynntils.screens.maps.managers.widgets;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
-import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -17,14 +16,15 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import com.wynntils.screens.base.widgets.SearchWidget;
 
-public class CategorySearchWidget extends SearchWidget {
-    public CategorySearchWidget(int x, int y, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
+public class ManagerSearchWidget extends SearchWidget {
+    public ManagerSearchWidget(int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
         super(
                 x + 5 + Texture.BUILD_LOADOUTS_SEARCH_ICON.width(),
                 y,
-                200 - 5 - Texture.BUILD_LOADOUTS_SEARCH_ICON.width(),
-                20,
+                width,
+                height,
                 onUpdateConsumer,
                 textboxScreen);
     }

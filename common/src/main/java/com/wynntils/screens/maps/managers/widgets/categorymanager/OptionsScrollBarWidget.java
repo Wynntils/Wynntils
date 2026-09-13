@@ -2,11 +2,12 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.maps.managers.widgets;
+package com.wynntils.screens.maps.managers.widgets.categorymanager;
 
 import com.wynntils.screens.maps.managers.type.OptionCategory;
-import com.wynntils.screens.maps.managers.widgets.options.AbstractOptionWidget;
-import com.wynntils.screens.maps.managers.widgets.options.CategoryHeaderWidget;
+import com.wynntils.screens.maps.managers.widgets.ScrollBarWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.AbstractOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.CategoryHeaderWidget;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;

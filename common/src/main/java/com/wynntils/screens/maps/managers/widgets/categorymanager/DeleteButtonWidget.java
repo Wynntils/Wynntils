@@ -2,9 +2,10 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.maps.managers.widgets;
+package com.wynntils.screens.maps.managers.widgets.categorymanager;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.maps.managers.CategoryManagementScreen;
@@ -27,14 +28,14 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
-public class ResetButtonWidget extends AbstractWidget implements TooltipProvider {
+public class DeleteButtonWidget extends AbstractWidget implements TooltipProvider {
     private final int x;
     private final int y;
     private final CategoryManagementScreen parent;
     private List<Component> generatedTooltip = new ArrayList<>();
 
-    public ResetButtonWidget(int x, int y, int width, int height, CategoryManagementScreen parent) {
-        super(x, y, width, height, Component.literal("Reset Button Widget"));
+    public DeleteButtonWidget(int x, int y, int width, int height, CategoryManagementScreen parent) {
+        super(x, y, width, height, Component.literal("Delete Button Widget"));
         this.x = x;
         this.y = y;
         this.parent = parent;
@@ -46,13 +47,13 @@ public class ResetButtonWidget extends AbstractWidget implements TooltipProvider
         handleCursor(guiGraphics);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics, Texture.MANAGER_WIDGET_BACKGROUND, x, y, this.width, this.height);
+                guiGraphics, Texture.MANAGER_WIDGET_BACKGROUND_RED, x, y, this.width, this.height);
 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
                         StyledText.fromComponent(Component.translatable(
-                                "screens.wynntils.map.managers.categoryManager.resetButton.label")),
+                                "screens.wynntils.map.managers.categoryManager.deleteButton.label")),
                         x + this.width / 2f,
                         y + this.height / 2f,
                         CommonColors.WHITE,
@@ -67,6 +68,7 @@ public class ResetButtonWidget extends AbstractWidget implements TooltipProvider
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
 
+        Services.MapData.removeOverrideProvider(parent.getOverrideName(true));
         parent.setSelectedCategory(parent.getSelectedCategory());
 
         return true;
@@ -80,19 +82,24 @@ public class ResetButtonWidget extends AbstractWidget implements TooltipProvider
         return Collections.unmodifiableList(this.generatedTooltip);
     }
 
-    private void generateTooltip() {
+    public void generateTooltip() {
         this.generatedTooltip = new ArrayList<>();
 
         this.generatedTooltip.add(
-                Component.translatable("screens.wynntils.map.managers.categoryManager.resetButton.label")
+                Component.translatable("screens.wynntils.map.managers.categoryManager.deleteButton.label")
                         .withStyle(ChatFormatting.GOLD));
 
-        Component description =
-                Component.translatable("screens.wynntils.map.managers.categoryManager.resetButton.description");
+        boolean overrideExists = Services.MapData.getOverrideProvider(parent.getOverrideName(true)) != null;
+
+        Component description = overrideExists
+                ? Component.translatable("screens.wynntils.map.managers.categoryManager.deleteButton.description")
+                : Component.translatable(
+                        "screens.wynntils.map.managers.categoryManager.deleteButton.description.empty");
 
         for (StyledText line : RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(description), 210)) {
-            this.generatedTooltip.add(
-                    Component.empty().append(line.getComponent()).withStyle(ChatFormatting.GRAY));
+            this.generatedTooltip.add(Component.empty()
+                    .append(line.getComponent())
+                    .withStyle(overrideExists ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY));
         }
     }
 }

@@ -13,23 +13,23 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.AbstractMapScreen;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.screens.maps.managers.type.OverrideType;
-import com.wynntils.screens.maps.managers.widgets.CategorySearchWidget;
-import com.wynntils.screens.maps.managers.widgets.CategoryTreeWidget;
-import com.wynntils.screens.maps.managers.widgets.DeleteButtonWidget;
-import com.wynntils.screens.maps.managers.widgets.InfoWidget;
-import com.wynntils.screens.maps.managers.widgets.OptionsScrollBarWidget;
-import com.wynntils.screens.maps.managers.widgets.OverrideSelectionWidget;
-import com.wynntils.screens.maps.managers.widgets.ResetButtonWidget;
-import com.wynntils.screens.maps.managers.widgets.SaveButtonWidget;
-import com.wynntils.screens.maps.managers.widgets.options.AbstractOptionWidget;
-import com.wynntils.screens.maps.managers.widgets.options.ColorOptionWidget;
-import com.wynntils.screens.maps.managers.widgets.options.FloatSliderOptionWidget;
-import com.wynntils.screens.maps.managers.widgets.options.IconOptionWidget;
-import com.wynntils.screens.maps.managers.widgets.options.IntSliderOptionWidget;
-import com.wynntils.screens.maps.managers.widgets.options.TextOptionWidget;
-import com.wynntils.screens.maps.managers.widgets.options.TextShadowOptionWidget;
-import com.wynntils.screens.maps.managers.widgets.options.ToggleOptionWidget;
-import com.wynntils.screens.maps.managers.widgets.options.VisiblityOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.ManagerSearchWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.CategoryTreeWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.DeleteButtonWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.CategoryInfoWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.OptionsScrollBarWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.OverrideSelectionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.ResetButtonWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.SaveButtonWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.AbstractOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.ColorOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.FloatSliderOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.IconOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.IntSliderOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.TextOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.TextShadowOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.ToggleOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.VisiblityOptionWidget;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
@@ -52,11 +52,11 @@ public final class CategoryManagementScreen extends WynntilsScreen {
     private int offsetX;
     private int offsetY;
 
-    public CategorySearchWidget categorySearchWidget;
+    public ManagerSearchWidget categorySearchWidget;
     public CategoryTreeWidget categoryTreeWidget;
 
     public OverrideSelectionWidget overrideSelectionWidget;
-    public InfoWidget infoWidget;
+    public CategoryInfoWidget infoWidget;
     public SaveButtonWidget saveButtonWidget;
     public ResetButtonWidget resetButtonWidget;
     public DeleteButtonWidget deleteButtonWidget;
@@ -126,11 +126,16 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         offsetX = (int) ((this.width - Texture.MANAGER_BACKGROUND.width()) / 2f);
         offsetY = (int) ((this.height - Texture.MANAGER_BACKGROUND.height()) / 2f);
 
-        infoWidget = new InfoWidget(offsetX + WIDTH_OFFSET + 546 - 20, offsetY + HEIGHT_OFFSET, 20, 20, this);
+        infoWidget = new CategoryInfoWidget(offsetX + WIDTH_OFFSET + 546 - 20, offsetY + HEIGHT_OFFSET, 20, 20, this);
         this.addRenderableWidget(infoWidget);
 
-        categorySearchWidget = new CategorySearchWidget(
-                offsetX + WIDTH_OFFSET, offsetY + HEIGHT_OFFSET, (text) -> categoryTreeWidget.filter(text), this);
+        categorySearchWidget = new ManagerSearchWidget(
+                offsetX + WIDTH_OFFSET,
+                offsetY + HEIGHT_OFFSET,
+                200 - 5 - Texture.BUILD_LOADOUTS_SEARCH_ICON.width(),
+                20,
+                (text) -> categoryTreeWidget.filter(text),
+                this);
         this.addRenderableWidget(categorySearchWidget);
 
         categoryTreeWidget =
