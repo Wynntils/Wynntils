@@ -5,7 +5,6 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.wynntils.core.persisted.config.Config;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.EnumSet;
 import java.util.List;
@@ -18,16 +17,8 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
     private final Config<E> config;
     private final List<E> enumConstants;
 
-    public EnumSettingsButton(int x, int y, Config<E> config, int maskTopY, int maskBottomY) {
-        super(
-                x,
-                y,
-                90,
-                20,
-                Component.literal(config.getValueString()),
-                ComponentUtils.wrapTooltips(List.of(Component.literal(config.getDescription())), 150),
-                maskTopY,
-                maskBottomY);
+    public EnumSettingsButton(int x, int y, Config<E> config, List<Component> tooltip, int maskTopY, int maskBottomY) {
+        super(x, y, 90, 20, Component.literal(config.getValueString()), tooltip, maskTopY, maskBottomY);
         this.config = config;
         enumConstants = EnumSet.allOf((Class<E>) config.getType()).stream().toList();
     }

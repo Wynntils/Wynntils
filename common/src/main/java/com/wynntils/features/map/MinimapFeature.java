@@ -4,6 +4,8 @@
  */
 package com.wynntils.features.map;
 
+import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
@@ -18,6 +20,7 @@ import com.wynntils.overlays.minimap.CoordinatesOverlay;
 import com.wynntils.overlays.minimap.MinimapOverlay;
 import com.wynntils.overlays.minimap.TerritoryOverlay;
 import com.wynntils.utils.type.RenderElementType;
+import java.util.List;
 
 @ConfigCategory(Category.MAP)
 public class MinimapFeature extends Feature {
@@ -37,8 +40,12 @@ public class MinimapFeature extends Feature {
     public final KeyBind zoomOut = KeyBindDefinition.MINIMAP_ZOOM_OUT.create(() -> minimapOverlay.adjustZoomLevel(-2));
 
     public MinimapFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
+                        .build(),
+                List.of(
+                        ConfigDependency.functionality(Models.Territory.lookupApiInfo),
+                        ConfigDependency.functionality(Services.Hades.connectToHades)));
     }
 }

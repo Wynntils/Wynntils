@@ -15,6 +15,7 @@ import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.mc.McUtils;
+import java.util.List;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
@@ -23,9 +24,11 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UTILITIES)
 public class BuildLoadoutsFeature extends Feature {
     public BuildLoadoutsFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
+                        .build(),
+                List.of(ConfigDependency.functionality(Models.Account.queryRankInfoOnJoin)));
     }
 
     @SubscribeEvent

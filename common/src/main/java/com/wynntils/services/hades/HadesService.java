@@ -10,6 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
@@ -70,6 +71,9 @@ public final class HadesService extends Service {
 
     private static final EncodingSettings HADES_ENCODING_SETTINGS = new EncodingSettings(false, false);
 
+    @Persisted
+    public final Config<Boolean> connectToHades = new Config<>(true);
+
     private final HadesUserRegistry userRegistry = new HadesUserRegistry();
 
     private CompletableFuture<Void> connectionFuture;
@@ -113,6 +117,8 @@ public final class HadesService extends Service {
     }
 
     private synchronized void connect() {
+        if (!connectToHades.get()) return;
+
         // Try to log in to Hades, if we're not already connected or trying to connect
         if (!isConnected() && (connectionFuture == null || connectionFuture.isDone())) {
             connectionFuture = CompletableFuture.runAsync(this::tryCreateConnection);
@@ -211,6 +217,8 @@ public final class HadesService extends Service {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
+        if (!connectToHades.get()) return;
+
         if (event.getNewState() != WorldState.NOT_CONNECTED && Services.WynntilsAccount.isLoggedIn()) {
             connect();
         }

@@ -7,6 +7,8 @@ package com.wynntils.models.abilities;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
@@ -85,6 +87,9 @@ public final class AbilityModel extends Model {
             nightcloakKnivesBar,
             ophanimBar);
 
+    @Persisted
+    public final Config<Boolean> trackAbilityCooldowns = new Config<>(true);
+
     private final Set<AbilityCooldown> activeCooldowns = new HashSet<>();
     private final Map<AbilityCooldown, Float> interpolatedCooldowns = new HashMap<>();
     private final Map<AbilityCooldown, Long> lastTickNanosMap = new HashMap<>();
@@ -97,6 +102,8 @@ public final class AbilityModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onStatusEffectUpdate(StatusEffectsChangedEvent event) {
+        if (!trackAbilityCooldowns.get()) return;
+
         Set<AbilityCooldown> presentCooldowns = new HashSet<>();
 
         for (StatusEffect statusEffect : event.getOriginalStatusEffects()) {
@@ -139,6 +146,8 @@ public final class AbilityModel extends Model {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
+        if (!trackAbilityCooldowns.get()) return;
+
         for (AbilityCooldown cooldown : activeCooldowns) {
             long now = System.nanoTime();
             long lastTickNanos = lastTickNanosMap.getOrDefault(cooldown, 0L);
@@ -175,6 +184,8 @@ public final class AbilityModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageEvent.Match event) {
+        if (!trackAbilityCooldowns.get()) return;
+
         Matcher matcher = event.getMessage().getMatcher(REFRESH_PATTERN, StyleType.NONE);
         if (!matcher.matches()) return;
 
