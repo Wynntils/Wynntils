@@ -474,7 +474,6 @@
   "feature.wynntils.functionDump.name": "Zrzut Funkcji do CSV",
   "feature.wynntils.gameBarsOverlay.description": "Dodaje gotowe paski na ekranie jako nakładki wyświetlające przydatne informacje o grze, takie jak mana i zdrowie.",
   "feature.wynntils.gameBarsOverlay.name": "Paski Gry",
-  "feature.wynntils.gameBarsOverlay.overlay.awakenedProgressBar.name": "Pasek Przebudzenia",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime.description": "Czy pasek powinien być animowany? Ustaw na 0, aby wyłączyć.",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime.name": "Animowany",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.barTexture.description": "Jaką teksturę powinien mieć pasek?",

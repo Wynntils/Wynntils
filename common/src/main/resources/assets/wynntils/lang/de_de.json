@@ -477,7 +477,6 @@
   "feature.wynntils.functionDump.name": "Funktionen in CSV exportieren",
   "feature.wynntils.gameBarsOverlay.description": "Fügt vorgefertigte Balken als Overlays auf dem Bildschirm hinzu, die nützliche Spielinformationen wie Mana und Gesundheit anzeigen.",
   "feature.wynntils.gameBarsOverlay.name": "Spielbalken",
-  "feature.wynntils.gameBarsOverlay.overlay.awakenedProgressBar.name": "Erweckter Balken",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime.description": "Soll der Balken animiert werden? Auf 0 setzen, um zu deaktivieren.",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime.name": "Animiert",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.barTexture.description": "Welche Textur sollte für die Leiste verwendet werden?",

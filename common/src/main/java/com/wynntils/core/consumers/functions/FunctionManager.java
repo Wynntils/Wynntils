@@ -499,7 +499,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.AspectTierFunction());
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
-        registerFunction(new CharacterFunctions.CappedAwakenedProgressFunction());
         registerFunction(new CharacterFunctions.CappedBloodPoolFunction());
         registerFunction(new CharacterFunctions.CappedCorruptedFunction());
         registerFunction(new CharacterFunctions.CappedFocusFunction());
@@ -526,11 +525,14 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.IdFunction());
         registerFunction(new CharacterFunctions.IsAbilityUnlockedFunction());
         registerFunction(new CharacterFunctions.IsAspectEquippedFunction());
+        registerFunction(new CharacterFunctions.IsMaskOverloadCappedFunction());
         registerFunction(new CharacterFunctions.IsRidingHorseFunction());
         registerFunction(new CharacterFunctions.LeaderboardPositionFunction());
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
         registerFunction(new CharacterFunctions.ManaPctFunction());
+        registerFunction(new CharacterFunctions.MaskOverloadDecayFunction());
+        registerFunction(new CharacterFunctions.MaskOverloadFunction());
         registerFunction(new CharacterFunctions.MirrorImageCloneFunction());
         registerFunction(new CharacterFunctions.MirrorImageDurationFunction());
         registerFunction(new CharacterFunctions.MomentumFunction());

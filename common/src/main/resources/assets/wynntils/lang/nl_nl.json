@@ -474,7 +474,6 @@
   "feature.wynntils.functionDump.name": "Functies Dumpen naar CSV",
   "feature.wynntils.gameBarsOverlay.description": "Voegt vooraf gemaakte balken toe aan het scherm als overlays die nuttige spelinformatie zoals mana en gezondheid weergeven.",
   "feature.wynntils.gameBarsOverlay.name": "Spelbalken",
-  "feature.wynntils.gameBarsOverlay.overlay.awakenedProgressBar.name": "Ontwaakte Balk",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime.description": "Moet de balk geanimeerd zijn? Stel in op 0 om uit te schakelen.",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime.name": "Geanimeerd",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.barTexture.description": "Welke textuur moet voor de balk worden gebruikt?",
