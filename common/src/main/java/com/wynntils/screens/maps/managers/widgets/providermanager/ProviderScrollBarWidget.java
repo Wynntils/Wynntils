@@ -154,6 +154,8 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
+        super.mouseReleased(event);
+
         for (AbstractProviderWidget abstractProviderWidget : getWidgets()) {
             if (isInsideViewport(event.x(), event.y())
                     && abstractProviderWidget.isHovered()
@@ -161,7 +163,8 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
                 return true;
             }
         }
-        return super.mouseReleased(event);
+
+        return false;
     }
 
     @Override

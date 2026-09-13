@@ -35,7 +35,7 @@ public class NewProviderButton extends AbstractWidget implements TooltipProvider
     private List<Component> generatedTooltip = new ArrayList<>();
 
     public NewProviderButton(int x, int y, int width, int height, ProviderManagementScreen parent) {
-        super(x, y, width, height, Component.literal("Save Button Widget"));
+        super(x, y, width, height, Component.literal("New Provider Button"));
         this.x = x;
         this.y = y;
         this.parent = parent;
