@@ -26,6 +26,7 @@ import com.wynntils.models.containers.containers.trademarket.TradeMarketRevealIt
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesContainer;
 import com.wynntils.models.containers.type.ContainerBounds;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.trademarket.event.TradeMarketChatInputEvent;
 import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent;
@@ -123,6 +124,7 @@ public final class TradeMarketModel extends Model {
 
     private String soldItemName = null;
     private Optional<Integer> soldItemTier = Optional.empty();
+    private Optional<Boolean> soldItemIdentified = Optional.empty();
 
     public TradeMarketModel() {
         super(List.of());
@@ -369,6 +371,10 @@ public final class TradeMarketModel extends Model {
         return soldItemTier;
     }
 
+    public Optional<Boolean> getSoldItemIdentified() {
+        return soldItemIdentified;
+    }
+
     private void handleSellDialogueUpdate() {
         if (tradeMarketState != TradeMarketState.SELLING) return;
 
@@ -376,6 +382,7 @@ public final class TradeMarketModel extends Model {
 
         soldItemName = null;
         soldItemTier = Optional.empty();
+        soldItemIdentified = Optional.empty();
 
         ItemStack itemStack = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
         if (itemStack != ItemStack.EMPTY) {
@@ -388,6 +395,13 @@ public final class TradeMarketModel extends Model {
                     MaterialItem materialItem = materialItemOpt.get();
                     soldItemName = materialItem.getName();
                     soldItemTier = Optional.of(materialItem.getQualityTier());
+                    return;
+                }
+                Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
+                if (gearItemOpt.isPresent()) {
+                    if (!soldItemName.startsWith("Unidentified ")) {
+                        soldItemIdentified = Optional.of(true);
+                    }
                 }
             }
         }
