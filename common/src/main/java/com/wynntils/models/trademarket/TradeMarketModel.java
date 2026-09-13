@@ -395,10 +395,7 @@ public final class TradeMarketModel extends Model {
                     MaterialItem materialItem = materialItemOpt.get();
                     soldItemName = materialItem.getName();
                     soldItemTier = Optional.of(materialItem.getQualityTier());
-                    return;
-                }
-                Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
-                if (gearItemOpt.isPresent()) {
+                } else if (Models.Item.asWynnItem(itemStack, GearItem.class).isPresent()) {
                     if (!soldItemName.startsWith("Unidentified ")) {
                         soldItemIdentified = Optional.of(true);
                     }
