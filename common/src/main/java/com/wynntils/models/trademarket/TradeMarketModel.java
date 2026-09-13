@@ -382,7 +382,7 @@ public final class TradeMarketModel extends Model {
             StyledText itemStackName = StyledText.fromComponent(itemStack.getHoverName());
             Matcher m = itemStackName.getMatcher(SELL_ITEM_NAME_PATTERN);
             if (m.matches() && !m.group(1).contains(EMPTY_ITEM_SLOT)) {
-                soldItemName = WynnUtils.stripItemNameMarkers(m.group(1));
+                soldItemName = WynnUtils.stripItemNameMarkers(m.group(1), false);
                 Optional<MaterialItem> materialItemOpt = Models.Item.asWynnItem(itemStack, MaterialItem.class);
                 if (materialItemOpt.isPresent()) {
                     MaterialItem materialItem = materialItemOpt.get();

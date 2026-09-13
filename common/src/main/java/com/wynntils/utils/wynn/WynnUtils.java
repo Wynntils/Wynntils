@@ -28,9 +28,13 @@ public final class WynnUtils {
      * Removes Wynncraft's item-name boundary marker character used around certain item names.
      */
     public static String stripItemNameMarkers(String input) {
+        return stripItemNameMarkers(input, true);
+    }
+
+    public static String stripItemNameMarkers(String input, boolean stripUnidentified) {
         if (input == null) return "";
         return input.replace(ITEM_NAME_MARKER, "")
-                .replace(UNIDENTIFIED_ITEM_MARKER, "")
+                .replace(UNIDENTIFIED_ITEM_MARKER, stripUnidentified ? "" : "Unidentified ")
                 .replace(UNKNOWN_MARKER, "");
     }
 }
