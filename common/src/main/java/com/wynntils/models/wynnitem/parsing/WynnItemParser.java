@@ -14,6 +14,7 @@ import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearAttackSpeed;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.SetInfo;
@@ -35,12 +36,15 @@ import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
@@ -163,7 +167,12 @@ public final class WynnItemParser {
         GearTier tier = null;
         String itemType = extractFrameSpriteCode(itemStack);
         Optional<ShinyStat> shinyStat = Optional.empty();
-        boolean allRequirementsMet = true;
+        boolean levelReqMet = true;
+        boolean classReqMet = true;
+        boolean questReqMet = true;
+        Map<Skill, Boolean> skillReqsMet = Arrays.stream(Skill.values())
+                .collect(
+                        Collectors.toMap(skill -> skill, skill -> true, (a, b) -> a, () -> new EnumMap<>(Skill.class)));
         SetInfo setInfo = null;
         Map<String, Boolean> activeItems = new HashMap<>();
         int setWynnCount = 0;
@@ -315,7 +324,7 @@ public final class WynnItemParser {
 
                     String mark = levelMatcher.group(1);
                     if (mark.contains("\uE007")) {
-                        allRequirementsMet = false;
+                        levelReqMet = false;
                     }
 
                     continue;
@@ -327,12 +336,12 @@ public final class WynnItemParser {
                     Matcher partMatcher = normalizedCoded.getMatcher(SKILL_REQ_PART_PATTERN);
                     int index = 0;
                     while (partMatcher.find()) {
-                        if (partMatcher.group(1).equals("\uE007")) {
-                            allRequirementsMet = false;
-                        }
-
                         Skill skill = Skill.values()[index];
                         skillReqs.add(Pair.of(skill, Integer.parseInt(partMatcher.group(2))));
+
+                        if (partMatcher.group(1).equals("\uE007")) {
+                            skillReqsMet.put(skill, false);
+                        }
 
                         index++;
                     }
@@ -353,7 +362,7 @@ public final class WynnItemParser {
 
                     String mark = classMatcher.group(1);
                     if (mark.contains("\uE007")) {
-                        allRequirementsMet = false;
+                        classReqMet = false;
                     }
 
                     continue;
@@ -366,7 +375,7 @@ public final class WynnItemParser {
 
                     String mark = questMatcher.group(1);
                     if (mark.contains("\uE007")) {
-                        allRequirementsMet = false;
+                        questReqMet = false;
                     }
 
                     continue;
@@ -457,7 +466,7 @@ public final class WynnItemParser {
                 uses,
                 durationSeconds,
                 shinyStat,
-                allRequirementsMet,
+                new GearInstanceRequirements(levelReqMet, classReqMet, skillReqsMet, questReqMet),
                 Optional.of(new SetInstance(setInfo, activeItems, setWynnCount, wynnBonuses)),
                 currentPage);
     }

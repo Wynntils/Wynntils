@@ -9,7 +9,6 @@ import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.overlays.gamebars.AwakenedProgressBarOverlay;
 import com.wynntils.overlays.gamebars.BloodPoolBarOverlay;
 import com.wynntils.overlays.gamebars.CommanderBarOverlay;
 import com.wynntils.overlays.gamebars.CorruptedBarOverlay;
@@ -19,6 +18,7 @@ import com.wynntils.overlays.gamebars.HealthBarOverlay;
 import com.wynntils.overlays.gamebars.HolyPowerBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBankBarOverlay;
 import com.wynntils.overlays.gamebars.ManaBarOverlay;
+import com.wynntils.overlays.gamebars.MantraBarOverlay;
 import com.wynntils.overlays.gamebars.MirrorImageBarOverlay;
 import com.wynntils.overlays.gamebars.MomentumBarOverlay;
 import com.wynntils.overlays.gamebars.NightcloakKnivesBarOverlay;
@@ -27,9 +27,6 @@ import com.wynntils.utils.type.RenderElementType;
 
 @ConfigCategory(Category.OVERLAYS)
 public class GameBarsOverlayFeature extends Feature {
-    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
-    private final AwakenedProgressBarOverlay awakenedProgressBarOverlay = new AwakenedProgressBarOverlay();
-
     @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final BloodPoolBarOverlay bloodPoolBarOverlay = new BloodPoolBarOverlay();
 
@@ -56,6 +53,9 @@ public class GameBarsOverlayFeature extends Feature {
 
     @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final ManaBankBarOverlay manaBankBarOverlay = new ManaBankBarOverlay();
+
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
+    private final MantraBarOverlay mantraBarOverlay = new MantraBarOverlay();
 
     @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final MirrorImageBarOverlay mirrorImageBarOverlay = new MirrorImageBarOverlay();

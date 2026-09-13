@@ -24,7 +24,7 @@ public record TooltipOptions(
         boolean colorLerp,
         int decimalPlaces) {
     public static final TooltipOptions DEFAULT = new TooltipOptions(
-            new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true, true),
+            new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true, false, true),
             false,
             false,
             false,

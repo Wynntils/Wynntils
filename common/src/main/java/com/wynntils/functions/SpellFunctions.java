@@ -22,7 +22,6 @@ import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
 import java.util.Locale;
-import net.minecraft.ChatFormatting;
 
 public class SpellFunctions {
     public static class ArrowShieldCountFunction extends Function<Integer> {
@@ -120,16 +119,16 @@ public class SpellFunctions {
     public static class ShamanMaskFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            ChatFormatting color = arguments.getArgument("isColored").getBooleanValue()
-                    ? Models.ShamanMask.getCurrentMaskType().getColor()
-                    : ChatFormatting.WHITE;
-
             Boolean useShortName = arguments.getArgument("useShortName").getBooleanValue();
             String name = useShortName
                     ? Models.ShamanMask.getCurrentMaskType().getAlias()
                     : Models.ShamanMask.getCurrentMaskType().getName();
+            boolean isColored = arguments.getArgument("isColored").getBooleanValue();
+            String colorString = isColored
+                    ? "§" + Models.ShamanMask.getCurrentMaskType().getColor().toHexString()
+                    : "";
 
-            return color + name;
+            return colorString + name;
         }
 
         @Override

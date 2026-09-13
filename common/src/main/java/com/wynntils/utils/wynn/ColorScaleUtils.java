@@ -4,12 +4,17 @@
  */
 package com.wynntils.utils.wynn;
 
+import com.wynntils.core.text.fonts.wynnfonts.TooltipIdentificationMeterFont;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.colors.WynncraftShaderColor;
+import com.wynntils.utils.type.CappedValue;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Objects;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -48,6 +53,19 @@ public final class ColorScaleUtils {
                 .toPlainString();
         return Component.literal(" [" + (estimated ? "~" : "") + percentString + "%]")
                 .withStyle(color);
+    }
+
+    public static MutableComponent getWheelTextComponent(
+            NavigableMap<Float, TextColor> colorMap, float percentage, boolean colorLerp, boolean rainbowPerfect) {
+        CustomColor fillColor = CustomColor.fromTextColor(
+                colorLerp ? getPercentageColor(colorMap, percentage) : getFlatPercentageColor(colorMap, percentage));
+        CappedValue value = CappedValue.fromProgress(percentage / 100, 100);
+        return TooltipIdentificationMeterFont.buildCounterSingleLayerMeter(
+                        value,
+                        rainbowPerfect && value.isAtCap() ? WynncraftShaderColor.RAINBOW.color : fillColor,
+                        CustomColor.fromChatFormatting(ChatFormatting.DARK_GRAY),
+                        "")
+                .copy();
     }
 
     private static TextColor getPercentageColor(NavigableMap<Float, TextColor> colorMap, float percentage) {

@@ -30,7 +30,9 @@ final class CraftedTooltipOptionDecorator implements TooltipIdentificationDecora
     @Override
     public MutableComponent getTitle(Component title) {
         MutableComponent decorated = title.copy();
-        if (options.overallPercentageInName() && overallPercentage.isPresent()) {
+        if (options.style().craftedPercentages()
+                && options.overallPercentageInName()
+                && overallPercentage.isPresent()) {
             decorated.append(ColorScaleUtils.getPercentageTextComponent(
                     options.colorMap(), overallPercentage.get(), options.colorLerp(), options.decimalPlaces(), true));
         }
@@ -40,17 +42,30 @@ final class CraftedTooltipOptionDecorator implements TooltipIdentificationDecora
     @Override
     public MutableComponent getSuffix(
             StatActualValue actualValue, StatPossibleValues possibleValues, TooltipStyle style) {
-        if (!options.identificationDecorations() || actualValue.vanillaMeter().isEmpty()) {
-            return Component.empty();
-        }
+        if (!options.identificationDecorations()) return Component.empty();
 
-        float percentage = StatCalculator.getPercentageFromVanillaMeter(
-                actualValue.vanillaMeter().get());
-        MutableComponent suffix = ColorScaleUtils.getPercentageTextComponent(
-                        options.colorMap(), percentage, options.colorLerp(), options.decimalPlaces(), true)
-                .withStyle(componentStyle -> componentStyle.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT));
-        if (style.rainbowInternalRoll() && actualValue.perfectInternalRoll()) {
-            suffix.withColor(WynncraftShaderColor.RAINBOW.color.asInt());
+        float percentage;
+        if (actualValue.vanillaMeter().isPresent()) {
+            percentage = StatCalculator.getPercentageFromVanillaMeter(
+                    actualValue.vanillaMeter().get());
+        } else {
+            percentage = 0;
+        }
+        MutableComponent suffix = Component.empty();
+        boolean rainbowPerfect = style.rainbowInternalRoll() && actualValue.perfectInternalRoll();
+
+        if (style.craftedPercentages()) {
+            suffix = ColorScaleUtils.getPercentageTextComponent(
+                            options.colorMap(), percentage, options.colorLerp(), options.decimalPlaces(), true)
+                    .withStyle(componentStyle -> componentStyle.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT));
+
+            if (rainbowPerfect) {
+                suffix.withColor(WynncraftShaderColor.RAINBOW.color.asInt());
+            }
+        } else if (options.style().showRollWheel()) {
+            suffix = Component.literal(" ")
+                    .append(ColorScaleUtils.getWheelTextComponent(
+                            options.colorMap(), percentage, options.colorLerp(), rainbowPerfect));
         }
         return suffix;
     }

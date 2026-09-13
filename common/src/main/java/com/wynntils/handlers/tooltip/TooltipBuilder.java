@@ -31,7 +31,7 @@ import net.minecraft.network.chat.Style;
 
 public abstract class TooltipBuilder {
     private static final TooltipStyle DEFAULT_TOOLTIP_STYLE =
-            new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true, true);
+            new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true, false, true);
 
     private final List<Component> header;
     private final List<Component> footer;
