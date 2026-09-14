@@ -88,6 +88,20 @@ public final class MapRenderer {
             float centerZ,
             float zoomRenderScale,
             BoundingBox view) {
+        renderMapTile(
+                guiGraphics, map, mapCenterX, mapCenterZ, centerX, centerZ, zoomRenderScale, view, CommonColors.WHITE);
+    }
+
+    public static void renderMapTile(
+            GuiGraphics guiGraphics,
+            MapTexture map,
+            float mapCenterX,
+            float mapCenterZ,
+            float centerX,
+            float centerZ,
+            float zoomRenderScale,
+            BoundingBox view,
+            CustomColor color) {
         float x1 = map.getX1();
         float z1 = map.getZ1();
         float x2 = map.getX2() + 1f;
@@ -113,7 +127,7 @@ public final class MapRenderer {
         RenderUtils.drawTexturedRect(
                 guiGraphics,
                 map.identifier(),
-                CommonColors.WHITE,
+                color,
                 sx1,
                 sy1,
                 sx2 - sx1,
@@ -154,7 +168,8 @@ public final class MapRenderer {
             float maskX,
             float maskY,
             float maskWidth,
-            float maskHeight) {
+            float maskHeight,
+            CustomColor color) {
         float mapMinX = map.getX1();
         float mapMinZ = map.getZ1();
         float mapMaxX = map.getX2() + 1f;
@@ -180,7 +195,7 @@ public final class MapRenderer {
         renderCircleMaskedTexturedRect(
                 guiGraphics,
                 map.identifier(),
-                CommonColors.WHITE,
+                color,
                 screenMinX,
                 screenMinY,
                 screenMaxX,

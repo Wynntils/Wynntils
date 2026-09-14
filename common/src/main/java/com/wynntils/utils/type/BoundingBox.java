@@ -21,6 +21,17 @@ public record BoundingBox(float x1, float z1, float x2, float z2) implements Bou
         assert x1 <= x2 && z1 <= z2;
     }
 
+    /** The overlapping area, or {@link #EMPTY} when the boxes do not overlap. */
+    public BoundingBox intersection(BoundingBox other) {
+        float ix1 = Math.max(x1, other.x1);
+        float iz1 = Math.max(z1, other.z1);
+        float ix2 = Math.min(x2, other.x2);
+        float iz2 = Math.min(z2, other.z2);
+        if (ix1 >= ix2 || iz1 >= iz2) return EMPTY;
+
+        return new BoundingBox(ix1, iz1, ix2, iz2);
+    }
+
     @Override
     public boolean contains(float x, float z) {
         return x1 <= x && x <= x2 && z1 <= z && z <= z2;

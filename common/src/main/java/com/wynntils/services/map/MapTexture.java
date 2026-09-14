@@ -98,6 +98,11 @@ public class MapTexture {
         return new BoundingBox(x1, z1, x2, z2);
     }
 
+    /** Like {@link #getBox()} but with exclusive far edges, so it spans every texel the tile covers. */
+    public BoundingBox getBlockBox() {
+        return new BoundingBox(x1, z1, x2 + 1, z2 + 1);
+    }
+
     public int getTextureHeight() {
         return textureHeight;
     }
