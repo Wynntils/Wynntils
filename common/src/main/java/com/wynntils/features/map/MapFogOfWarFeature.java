@@ -41,6 +41,7 @@ public class MapFogOfWarFeature extends Feature {
     private static final int SAMPLE_INTERVAL_TICKS = 20;
     private static final int MIN_REVEAL_RADIUS = 1;
     private static final int MAX_REVEAL_RADIUS = 8;
+    private static final String NO_CHARACTER_ID = "-";
     private static final List<String> STATIC_CONTENT_CATEGORIES =
             List.of("wynntils:place", "wynntils:service", "wynntils:content", "wynntils:gathering");
 
@@ -130,7 +131,10 @@ public class MapFogOfWarFeature extends Feature {
     private Optional<DiscoveryRecord> activeRecord() {
         if (!isEnabled() || !Models.Character.hasCharacter()) return Optional.empty();
 
+        // The id is still the placeholder between selecting a character and the character info scan
         String characterId = Models.Character.getId();
+        if (characterId.equals(NO_CHARACTER_ID)) return Optional.empty();
+
         if (!characterId.equals(currentCharacterId)) {
             currentCharacterId = characterId;
             currentRecord = new DiscoveryRecord(discoveredChunks.get().getOrDefault(characterId, Set.of()));
