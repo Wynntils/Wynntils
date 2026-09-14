@@ -5,10 +5,15 @@
 package com.wynntils.services.mapdata;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.mc.event.TickEvent;
+import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.mapdata.attributes.merge.MapAttributesMerger;
 import com.wynntils.services.mapdata.attributes.resolving.MapAttributesResolver;
 import com.wynntils.services.mapdata.attributes.resolving.OverrideMapAttributes;
@@ -17,6 +22,10 @@ import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapVisibility;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.features.type.MapFeature;
+import com.wynntils.services.mapdata.features.type.MapLocation;
+import com.wynntils.services.mapdata.fog.DiscoveryRecord;
+import com.wynntils.services.mapdata.fog.FogMasks;
+import com.wynntils.services.mapdata.fog.FogOverlay;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.mapdata.providers.builtin.CategoriesProvider;
 import com.wynntils.services.mapdata.providers.builtin.CombatListProvider;
@@ -32,8 +41,12 @@ import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapDataProvidedType;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.FileUtils;
+import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.BoundingBox;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,10 +55,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class MapDataService extends Service {
     public static final File LOCAL_PROVIDERS = WynntilsMod.getModStorageDir("localProviders");
@@ -59,6 +74,12 @@ public class MapDataService extends Service {
     private static final MapDataProvider ONLINE_PLACEHOLDER_PROVIDER = new PlaceholderProvider();
     // FIXME: i18n
     private static final String NAMELESS_CATEGORY = "Category '%s'";
+
+    private static final int FOG_SAMPLE_INTERVAL_TICKS = 20;
+    private static final int FOG_MIN_REVEAL_RADIUS = 1;
+    private static final int FOG_MAX_REVEAL_RADIUS = 8;
+    private static final List<String> FOG_STATIC_CONTENT_CATEGORIES =
+            List.of("wynntils:place", "wynntils:service", "wynntils:content", "wynntils:gathering");
 
     private final LinkedHashMap<String, MapDataProvider> allProviders = new LinkedHashMap<>();
     private final LinkedHashMap<String, MapDataOverrideProvider> overrideProviders = new LinkedHashMap();
@@ -75,6 +96,33 @@ public class MapDataService extends Service {
     @Persisted
     private final Storage<Map<JsonOverrideProvider, Boolean>> jsonOverrideProviders =
             new Storage<>(new LinkedHashMap<>());
+
+    // Fog of war: character id -> discovered chunk keys. Concrete map type so Gson deserialises into one that is
+    // safe to serialise on the storage thread while the game thread reveals into it
+    @Persisted
+    private final Storage<ConcurrentHashMap<String, Set<Long>>> discoveredChunks =
+            new Storage<>(new ConcurrentHashMap<>());
+
+    @Persisted
+    public final Config<Boolean> fogOfWar = new Config<>(false).withDefault(ConfigProfile.NEW_PLAYER, true);
+
+    @Persisted
+    public final Config<Boolean> fogMinimap = new Config<>(true);
+
+    @Persisted
+    public final Config<Float> fogOpacity = new Config<>(1f);
+
+    @Persisted
+    public final Config<Integer> fogRevealRadius = new Config<>(3);
+
+    @Persisted
+    public final Config<Boolean> fogHidesUndiscoveredContent = new Config<>(true);
+
+    private final FogMasks fogMasks = new FogMasks();
+
+    private String fogCharacterId;
+    private DiscoveryRecord fogRecord;
+    private int ticksUntilFogSample = 0;
 
     public MapDataService() {
         super(List.of());
@@ -511,6 +559,75 @@ public class MapDataService extends Service {
     /**
      * This method requires a MapVisibility with all values non-empty to work correctly.
      */
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        if (--ticksUntilFogSample > 0) return;
+        ticksUntilFogSample = FOG_SAMPLE_INTERVAL_TICKS;
+
+        Optional<DiscoveryRecord> record = activeDiscoveryRecord();
+        if (record.isEmpty() || !Models.WorldState.onWorld() || Models.Housing.isOnHousing()) return;
+
+        double x = McUtils.player().getX();
+        double z = McUtils.player().getZ();
+        BoundingBox playerBlock = new BoundingBox((float) x, (float) z, (float) x + 1, (float) z + 1);
+        if (Services.Map.getMapsForBoundingBox(playerBlock).isEmpty()) return;
+
+        int radius = MathUtils.clamp(fogRevealRadius.get(), FOG_MIN_REVEAL_RADIUS, FOG_MAX_REVEAL_RADIUS);
+        if (!record.get().reveal(x, z, radius)) return;
+
+        discoveredChunks.touched();
+        fogMasks.invalidate();
+    }
+
+    /** What to draw over a tile for fog of war, or empty when fog should not be drawn. */
+    public Optional<FogOverlay> getFogOverlay(MapTexture map) {
+        return activeDiscoveryRecord()
+                .map(record -> new FogOverlay(fogMasks.maskFor(map, record), FogMasks.PADDING_BLOCKS, fogColor()));
+    }
+
+    /** Drops static world content (places, services, combat, gathering) whose location is not discovered. */
+    public Stream<MapFeature> withoutUndiscovered(Stream<MapFeature> features) {
+        Optional<DiscoveryRecord> record = activeDiscoveryRecord();
+        if (record.isEmpty() || !fogHidesUndiscoveredContent.get()) return features;
+
+        return features.filter(feature -> !(feature instanceof MapLocation location)
+                || !isStaticWorldContent(location.getCategoryId())
+                || record.get()
+                        .isDiscovered(
+                                location.getLocation().x(),
+                                location.getLocation().z()));
+    }
+
+    public void resetFogOfWar() {
+        activeDiscoveryRecord().ifPresent(record -> {
+            record.clear();
+            discoveredChunks.touched();
+            fogMasks.invalidate();
+        });
+    }
+
+    /** The current character's record while fog should apply; empty when disabled or no character is selected. */
+    private Optional<DiscoveryRecord> activeDiscoveryRecord() {
+        if (!fogOfWar.get() || !Models.Character.hasCharacter()) return Optional.empty();
+
+        String characterId = Models.Character.getId();
+        if (!characterId.equals(fogCharacterId)) {
+            fogCharacterId = characterId;
+            fogRecord = new DiscoveryRecord(discoveredChunks.get().getOrDefault(characterId, Set.of()));
+            discoveredChunks.get().put(characterId, fogRecord.chunks());
+            fogMasks.invalidate();
+        }
+        return Optional.of(fogRecord);
+    }
+
+    private CustomColor fogColor() {
+        return CommonColors.BLACK.withAlpha(Math.round(MathUtils.clamp(fogOpacity.get(), 0f, 1f) * 255));
+    }
+
+    private static boolean isStaticWorldContent(String categoryId) {
+        return FOG_STATIC_CONTENT_CATEGORIES.stream().anyMatch(categoryId::startsWith);
+    }
+
     public float calculateVisibility(ResolvedMapVisibility mapVisibility, float zoomLevel) {
         float min = mapVisibility.min();
         float max = mapVisibility.max();

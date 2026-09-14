@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.map;
+package com.wynntils.services.mapdata.fog;
 
 import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.resources.Identifier;

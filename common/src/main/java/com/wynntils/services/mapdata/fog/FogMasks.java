@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.map;
+package com.wynntils.services.mapdata.fog;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.textures.AddressMode;
@@ -18,11 +18,11 @@ import net.minecraft.resources.Identifier;
  * One GPU mask texture per map tile, one texel per chunk, red = discovered. Sampled with LINEAR filtering by
  * FOG_MASK_PIPELINE so fog fades over a chunk. Masks are rebuilt lazily whenever {@link #invalidate()} was called.
  */
-final class FogMasks {
+public final class FogMasks {
     private static final int CHUNK_SIZE = 16;
     // One chunk of padding on every side, filled from neighbouring tiles' chunks, so the fade is
     // continuous across tile seams instead of clamping at each tile's edge
-    static final int PADDING_BLOCKS = CHUNK_SIZE;
+    public static final int PADDING_BLOCKS = CHUNK_SIZE;
     private static final int DISCOVERED = 0xFFFFFFFF;
     private static final int UNDISCOVERED = 0xFF000000;
 
@@ -31,11 +31,11 @@ final class FogMasks {
 
     private int version = 0;
 
-    void invalidate() {
+    public void invalidate() {
         version++;
     }
 
-    Identifier maskFor(MapTexture map, DiscoveryRecord record) {
+    public Identifier maskFor(MapTexture map, DiscoveryRecord record) {
         Identifier identifier = Identifier.fromNamespaceAndPath(
                 "wynntils", "/fog" + map.identifier().getPath());
         DynamicTexture mask = masks.get(identifier);

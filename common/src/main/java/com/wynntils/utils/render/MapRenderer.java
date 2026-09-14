@@ -5,9 +5,9 @@
 package com.wynntils.utils.render;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.wynntils.features.map.FogOverlay;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.MapTexture;
+import com.wynntils.services.mapdata.fog.FogOverlay;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.colors.CommonColors;

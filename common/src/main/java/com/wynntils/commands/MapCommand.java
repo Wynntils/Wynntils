@@ -70,7 +70,20 @@ public class MapCommand extends Command {
                                         .suggests(PROVIDER_SUGGESTION_PROVIDER)
                                         .executes(this::toggleProvider)))
                         .then(Commands.literal("reload").executes(this::reloadProviders))
-                        .then(Commands.literal("list").executes(this::listProviders)));
+                        .then(Commands.literal("list").executes(this::listProviders)))
+                .then(Commands.literal("fog").then(Commands.literal("reset").executes(this::resetFogOfWar)));
+    }
+
+    private int resetFogOfWar(CommandContext<CommandSourceStack> context) {
+        Services.MapData.resetFogOfWar();
+
+        context.getSource()
+                .sendSuccess(
+                        () -> Component.translatable("command.wynntils.map.fogReset")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
+
+        return 1;
     }
 
     private int reloadProviders(CommandContext<CommandSourceStack> context) {

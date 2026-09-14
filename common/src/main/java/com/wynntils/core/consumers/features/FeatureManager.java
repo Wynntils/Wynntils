@@ -85,7 +85,6 @@ import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.inventory.UnidentifiedItemIconFeature;
 import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.features.map.MainMapFeature;
-import com.wynntils.features.map.MapFogOfWarFeature;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.features.map.WorldMarkersFeature;
 import com.wynntils.features.overlays.AbilityCooldownsOverlayFeature;
@@ -323,7 +322,6 @@ public final class FeatureManager extends Manager {
         // region map
         registerFeature(new GuildMapFeature());
         registerFeature(new MainMapFeature());
-        registerFeature(new MapFogOfWarFeature());
         registerFeature(new MinimapFeature());
         registerFeature(new WorldMarkersFeature());
         // endregion
