@@ -53,10 +53,9 @@ public class TradeMarketBulkSellFeature extends Feature {
 
         String soldItemName = Models.TradeMarket.getSoldItemName();
         Optional<Integer> soldItemTier = Models.TradeMarket.getSoldItemTier();
-        Optional<Boolean> soldItemIdentified = Models.TradeMarket.getSoldItemIdentified();
         removeSellButtons(containerScreen);
         if (soldItemName == null) return;
-        addSellButtons(containerScreen, soldItemName, soldItemTier, soldItemIdentified);
+        addSellButtons(containerScreen, soldItemName, soldItemTier);
     }
 
     @SubscribeEvent
@@ -69,20 +68,13 @@ public class TradeMarketBulkSellFeature extends Feature {
         sendAmountMessage = false;
     }
 
-    private void addSellButtons(
-            ContainerScreen containerScreen,
-            String soldItemName,
-            Optional<Integer> soldItemTier,
-            Optional<Boolean> soldItemIdentified) {
+    private void addSellButtons(ContainerScreen containerScreen, String soldItemName, Optional<Integer> soldItemTier) {
         containerScreen.addRenderableWidget(new SellButton(
                 containerScreen.leftPos - SellButton.BUTTON_WIDTH - 1,
                 containerScreen.topPos + 30,
                 () -> {
                     if (soldItemTier.isPresent()) {
                         return Models.Inventory.getMaterialsAmountInInventory(soldItemName, soldItemTier.get(), true);
-                    }
-                    if (soldItemIdentified.isPresent()) {
-                        return 1;
                     }
                     return Models.Inventory.getAmountInInventory(soldItemName);
                 },
