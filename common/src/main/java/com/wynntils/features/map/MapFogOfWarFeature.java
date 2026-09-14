@@ -33,7 +33,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.MAP)
@@ -60,12 +59,14 @@ public class MapFogOfWarFeature extends Feature {
     @Persisted
     private final Config<Boolean> hideStaticContent = new Config<>(true);
 
-    // Keyed by character id
+    // Character id -> chunk keys. Concrete map type so Gson deserialises into one that is safe to serialise on the
+    // storage thread while the game thread reveals into it
     @Persisted
     private final Storage<ConcurrentHashMap<String, Set<Long>>> discoveredChunks =
             new Storage<>(new ConcurrentHashMap<>());
 
     private final FogMasks fogMasks = new FogMasks();
+
     private String currentCharacterId;
     private DiscoveryRecord currentRecord;
     private int ticksUntilSample = 0;
@@ -87,7 +88,9 @@ public class MapFogOfWarFeature extends Feature {
         BoundingBox playerBlock = new BoundingBox((float) x, (float) z, (float) x + 1, (float) z + 1);
         if (Services.Map.getMapsForBoundingBox(playerBlock).isEmpty()) return;
 
-        record.get().reveal(x, z, MathUtils.clamp(revealRadius.get(), MIN_REVEAL_RADIUS, MAX_REVEAL_RADIUS));
+        int radius = MathUtils.clamp(revealRadius.get(), MIN_REVEAL_RADIUS, MAX_REVEAL_RADIUS);
+        if (!record.get().reveal(x, z, radius)) return;
+
         discoveredChunks.touched();
         fogMasks.invalidate();
     }
@@ -106,16 +109,13 @@ public class MapFogOfWarFeature extends Feature {
         return Optional.of(currentRecord);
     }
 
-    /** The fog mask texture for a tile, or empty when fog should not be drawn. */
-    public Optional<Identifier> fogMask(MapTexture map) {
-        return activeRecord().map(record -> fogMasks.maskFor(map, record));
+    /** What to draw over a tile, or empty when fog should not be drawn. */
+    public Optional<FogOverlay> fogOverlay(MapTexture map) {
+        return activeRecord()
+                .map(record -> new FogOverlay(fogMasks.maskFor(map, record), FogMasks.PADDING_BLOCKS, fogColor()));
     }
 
-    public int fogMaskPadding() {
-        return FogMasks.PADDING_BLOCKS;
-    }
-
-    public CustomColor fogColor() {
+    private CustomColor fogColor() {
         return CommonColors.BLACK.withAlpha(Math.round(MathUtils.clamp(fogOpacity.get(), 0f, 1f) * 255));
     }
 
@@ -138,7 +138,7 @@ public class MapFogOfWarFeature extends Feature {
 
     private int resetCurrentCharacter(CommandContext<CommandSourceStack> context) {
         activeRecord().ifPresent(record -> {
-            record.chunks().clear();
+            record.clear();
             discoveredChunks.touched();
             fogMasks.invalidate();
         });

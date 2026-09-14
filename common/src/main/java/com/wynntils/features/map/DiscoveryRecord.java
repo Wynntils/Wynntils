@@ -27,14 +27,21 @@ public final class DiscoveryRecord {
         return chunks;
     }
 
-    public void reveal(double worldX, double worldZ, int radiusChunks) {
+    /** @return whether any new chunk was discovered */
+    public boolean reveal(double worldX, double worldZ, int radiusChunks) {
         int chunkX = toChunk(worldX);
         int chunkZ = toChunk(worldZ);
+        boolean changed = false;
         for (int x = chunkX - radiusChunks; x <= chunkX + radiusChunks; x++) {
             for (int z = chunkZ - radiusChunks; z <= chunkZ + radiusChunks; z++) {
-                chunks.add(chunkKey(x, z));
+                changed |= chunks.add(chunkKey(x, z));
             }
         }
+        return changed;
+    }
+
+    public void clear() {
+        chunks.clear();
     }
 
     public boolean isDiscovered(double worldX, double worldZ) {

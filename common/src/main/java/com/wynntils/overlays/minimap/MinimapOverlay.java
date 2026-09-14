@@ -13,6 +13,7 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.map.FogOverlay;
 import com.wynntils.features.map.MapFogOfWarFeature;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
 import com.wynntils.services.hades.providers.PlayerProvider;
@@ -51,7 +52,6 @@ import java.util.stream.Stream;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.Identifier;
 import org.joml.Vector2f;
 
 public class MinimapOverlay extends Overlay {
@@ -224,16 +224,14 @@ public class MinimapOverlay extends Overlay {
             }
 
             if (!fogOfWar.fogMinimap.get()) continue;
-            Optional<Identifier> fogMask = fogOfWar.fogMask(map);
-            if (fogMask.isEmpty()) continue;
+            Optional<FogOverlay> fog = fogOfWar.fogOverlay(map);
+            if (fog.isEmpty()) continue;
 
             if (maskType.get() == MapMaskType.RECTANGULAR) {
                 MapRenderer.renderFogOverlay(
                         guiGraphics,
                         map,
-                        fogMask.get(),
-                        fogOfWar.fogMaskPadding(),
-                        fogOfWar.fogColor(),
+                        fog.get(),
                         (float) playerX,
                         (float) playerZ,
                         centerX,
@@ -244,9 +242,7 @@ public class MinimapOverlay extends Overlay {
                 MapRenderer.renderCircularFogOverlay(
                         guiGraphics,
                         map,
-                        fogMask.get(),
-                        fogOfWar.fogMaskPadding(),
-                        fogOfWar.fogColor(),
+                        fog.get(),
                         (float) playerX,
                         (float) playerZ,
                         centerX,

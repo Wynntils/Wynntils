@@ -28,13 +28,13 @@ final class FogMasks {
 
     private final Map<Identifier, DynamicTexture> masks = new HashMap<>();
     private final Map<Identifier, Integer> builtVersions = new HashMap<>();
+
     private int version = 0;
 
     void invalidate() {
         version++;
     }
 
-    // ponytail: a tile that disappears on a maps.json reload keeps its mask until restart; a few KB each
     Identifier maskFor(MapTexture map, DiscoveryRecord record) {
         Identifier identifier = Identifier.fromNamespaceAndPath(
                 "wynntils", "/fog" + map.identifier().getPath());
@@ -48,6 +48,10 @@ final class FogMasks {
             builtVersions.put(identifier, version);
         }
         return identifier;
+    }
+
+    private static int maskSize(int blocks) {
+        return Math.ceilDiv(blocks, CHUNK_SIZE) + 2;
     }
 
     private static DynamicTexture register(Identifier identifier, MapTexture map) {
@@ -65,6 +69,8 @@ final class FogMasks {
     }
 
     private static void fill(DynamicTexture mask, MapTexture map, DiscoveryRecord record) {
+        // Mask texels line up with the tile only when the tile origin is chunk-aligned; every tile in maps.json is
+        assert map.getX1() % CHUNK_SIZE == 0 && map.getZ1() % CHUNK_SIZE == 0;
         int firstChunkX = Math.floorDiv(map.getX1(), CHUNK_SIZE) - 1;
         int firstChunkZ = Math.floorDiv(map.getZ1(), CHUNK_SIZE) - 1;
         for (int z = 0; z < mask.getPixels().getHeight(); z++) {
@@ -74,9 +80,5 @@ final class FogMasks {
             }
         }
         mask.upload();
-    }
-
-    static int maskSize(int blocks) {
-        return Math.ceilDiv(blocks, CHUNK_SIZE) + 2;
     }
 }

@@ -5,6 +5,7 @@
 package com.wynntils.utils.render;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.wynntils.features.map.FogOverlay;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.utils.MathUtils;
@@ -104,13 +105,10 @@ public final class MapRenderer {
                 view);
     }
 
-    /** Draws a fog-of-war mask over the tile; the mask texture carries {@code maskPadding} extra blocks per side. */
     public static void renderFogOverlay(
             GuiGraphics guiGraphics,
             MapTexture map,
-            Identifier mask,
-            int maskPadding,
-            CustomColor fogColor,
+            FogOverlay fog,
             float mapCenterX,
             float mapCenterZ,
             float centerX,
@@ -121,9 +119,9 @@ public final class MapRenderer {
                 guiGraphics,
                 map,
                 CustomRenderPipelines.FOG_MASK_PIPELINE,
-                mask,
-                fogColor,
-                maskPadding,
+                fog.mask(),
+                fog.color(),
+                fog.paddingBlocks(),
                 mapCenterX,
                 mapCenterZ,
                 centerX,
@@ -232,9 +230,7 @@ public final class MapRenderer {
     public static void renderCircularFogOverlay(
             GuiGraphics guiGraphics,
             MapTexture map,
-            Identifier mask,
-            int maskPadding,
-            CustomColor fogColor,
+            FogOverlay fog,
             float mapCenterX,
             float mapCenterZ,
             float centerX,
@@ -249,9 +245,9 @@ public final class MapRenderer {
                 guiGraphics,
                 map,
                 CustomRenderPipelines.FOG_MASK_PIPELINE,
-                mask,
-                fogColor,
-                maskPadding,
+                fog.mask(),
+                fog.color(),
+                fog.paddingBlocks(),
                 mapCenterX,
                 mapCenterZ,
                 centerX,

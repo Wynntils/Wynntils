@@ -545,19 +545,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         for (MapTexture map : Services.Map.getMapsForBoundingBox(view)) {
             MapRenderer.renderMapTile(
                     guiGraphics, map, mapCenterX, mapCenterZ, centerX, centerZ, zoomRenderScale, view);
-            fogOfWar.fogMask(map)
-                    .ifPresent(mask -> MapRenderer.renderFogOverlay(
-                            guiGraphics,
-                            map,
-                            mask,
-                            fogOfWar.fogMaskPadding(),
-                            fogOfWar.fogColor(),
-                            mapCenterX,
-                            mapCenterZ,
-                            centerX,
-                            centerZ,
-                            zoomRenderScale,
-                            view));
+            fogOfWar.fogOverlay(map)
+                    .ifPresent(fog -> MapRenderer.renderFogOverlay(
+                            guiGraphics, map, fog, mapCenterX, mapCenterZ, centerX, centerZ, zoomRenderScale, view));
         }
 
         RenderUtils.disableScissor(guiGraphics);
