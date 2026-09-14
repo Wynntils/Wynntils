@@ -999,6 +999,15 @@ public class TestRegex {
     }
 
     @Test
+    public void TradeMarketModel_SELL_ITEM_NAME_PATTERN() {
+        PatternTester p = new PatternTester(TradeMarketModel.class, "SELL_ITEM_NAME_PATTERN");
+        p.shouldMatch("\uDAFC\uDC00§bTorrential Tide\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§bX-PM4 Deadlock\uDAFC\uDC00");
+        p.shouldMatch("§#82eff4ffAbility Shard");
+        p.shouldMatch("§4Broken Galleon'sÀÀÀGraveyard Key");
+    }
+
+    @Test
     public void WynnItemParser_DPS_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "DPS_PATTERN");
         p.shouldMatch("§#f2c2f2ff330§f DPS");

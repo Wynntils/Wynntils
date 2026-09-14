@@ -102,7 +102,8 @@ public final class TradeMarketModel extends Model {
     private static final Pattern PRICE_PATTERN = Pattern.compile(
             "§[67] - (?:§f(?<amount>[\\d,]+) §7x )?§(?:(?:(?:c✖|a✔) §f)|f§m|f)(?<price>[\\d,]+)§7(?:§m)?²(?:§b ✮ (?<silverbullPrice>[\\d,]+)§3²)?(?: .+)?");
 
-    private static final Pattern SELL_ITEM_NAME_PATTERN = Pattern.compile("\uDAFC\uDC00§.(.+)\uDAFC\uDC00");
+    // Test in TradeMarketModel_SELL_ITEM_NAME_PATTERN
+    private static final Pattern SELL_ITEM_NAME_PATTERN = Pattern.compile("(?:\uDAFC\uDC00|)§.(.+)(?:\uDAFC\uDC00|)");
     private static final String EMPTY_ITEM_SLOT = "Empty Item Slot";
 
     public static final int SORT_ORDER_SLOT = 52;
@@ -395,9 +396,13 @@ public final class TradeMarketModel extends Model {
                     MaterialItem materialItem = materialItemOpt.get();
                     soldItemName = materialItem.getName();
                     soldItemTier = Optional.of(materialItem.getQualityTier());
-                } else if (Models.Item.asWynnItem(itemStack, GearItem.class).isPresent()) {
-                    if (!soldItemName.startsWith("Unidentified ")) {
-                        soldItemIdentified = Optional.of(true);
+                } else {
+                    Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
+                    if (gearItemOpt.isPresent()) {
+                        GearItem gearItem = gearItemOpt.get();
+                        if (!gearItem.isUnidentified()) {
+                            soldItemIdentified = Optional.of(true);
+                        }
                     }
                 }
             }
