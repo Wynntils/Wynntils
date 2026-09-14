@@ -26,6 +26,7 @@ public final class FogMasks {
     private static final int DISCOVERED = 0xFFFFFFFF;
     private static final int UNDISCOVERED = 0xFF000000;
 
+    private final Map<Identifier, Identifier> identifiers = new HashMap<>();
     private final Map<Identifier, DynamicTexture> masks = new HashMap<>();
     private final Map<Identifier, Integer> builtVersions = new HashMap<>();
 
@@ -35,9 +36,15 @@ public final class FogMasks {
         version++;
     }
 
+    public void release() {
+        masks.keySet().forEach(McUtils.mc().getTextureManager()::release);
+        masks.clear();
+        builtVersions.clear();
+    }
+
     public Identifier maskFor(MapTexture map, DiscoveryRecord record) {
-        Identifier identifier = Identifier.fromNamespaceAndPath(
-                "wynntils", "/fog" + map.identifier().getPath());
+        Identifier identifier = identifiers.computeIfAbsent(
+                map.identifier(), tile -> Identifier.fromNamespaceAndPath("wynntils", "/fog" + tile.getPath()));
         DynamicTexture mask = masks.get(identifier);
         if (mask == null) {
             mask = register(identifier, map);
@@ -69,8 +76,10 @@ public final class FogMasks {
     }
 
     private static void fill(DynamicTexture mask, MapTexture map, DiscoveryRecord record) {
-        // Mask texels line up with the tile only when the tile origin is chunk-aligned; every tile in maps.json is
+        // Mask texels line up with the tile only when its origin and size are chunk-aligned, which every tile in
+        // maps.json is; MapRenderer relies on the same alignment when it pads the tile UVs
         assert map.getX1() % CHUNK_SIZE == 0 && map.getZ1() % CHUNK_SIZE == 0;
+        assert map.getTextureWidth() % CHUNK_SIZE == 0 && map.getTextureHeight() % CHUNK_SIZE == 0;
         int firstChunkX = Math.floorDiv(map.getX1(), CHUNK_SIZE) - 1;
         int firstChunkZ = Math.floorDiv(map.getZ1(), CHUNK_SIZE) - 1;
         for (int z = 0; z < mask.getPixels().getHeight(); z++) {

@@ -119,12 +119,22 @@ public class MapFogOfWarFeature extends Feature {
                                 location.getLocation().z()));
     }
 
-    public void resetCurrentCharacter() {
-        activeRecord().ifPresent(record -> {
-            record.clear();
-            discoveredChunks.touched();
-            fogMasks.invalidate();
-        });
+    /** @return whether there was a current character record to reset */
+    public boolean resetCurrentCharacter() {
+        Optional<DiscoveryRecord> record = activeRecord();
+        if (record.isEmpty()) return false;
+
+        record.get().clear();
+        discoveredChunks.touched();
+        fogMasks.invalidate();
+        return true;
+    }
+
+    @Override
+    public void onDisable() {
+        fogMasks.release();
+        currentCharacterId = null;
+        currentRecord = null;
     }
 
     /** The current character's record while fog should apply; empty when disabled or no character is selected. */
@@ -150,6 +160,9 @@ public class MapFogOfWarFeature extends Feature {
     }
 
     private static boolean isStaticWorldContent(String categoryId) {
-        return STATIC_CONTENT_CATEGORIES.stream().anyMatch(categoryId::startsWith);
+        for (String category : STATIC_CONTENT_CATEGORIES) {
+            if (categoryId.startsWith(category)) return true;
+        }
+        return false;
     }
 }

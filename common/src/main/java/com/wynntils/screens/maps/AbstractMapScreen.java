@@ -221,8 +221,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
         Stream<Pair<MapFeature, ResolvedMapAttributes>> mapFeatures = Managers.Feature.getFeatureInstance(
                         MapFogOfWarFeature.class)
-                .withoutUndiscovered(getRenderedMapFeatures())
-                .filter(feature -> feature.isVisible(mapBoundingBox))
+                .withoutUndiscovered(getRenderedMapFeatures().filter(feature -> feature.isVisible(mapBoundingBox)))
                 .map(feature -> Pair.of(feature, Services.MapData.resolveMapAttributes(feature)))
                 .sorted(Comparator.comparing(pair -> pair.b().priority()));
 

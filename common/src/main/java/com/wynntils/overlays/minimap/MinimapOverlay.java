@@ -325,10 +325,11 @@ public class MinimapOverlay extends Overlay {
 
         // Get all MapData features
         MapFogOfWarFeature fogOfWar = Managers.Feature.getFeatureInstance(MapFogOfWarFeature.class);
+        Stream<MapFeature> visibleFeatures =
+                Services.MapData.getFeatures().filter(feature -> feature.isVisible(visibleWorldBox));
         Stream<Pair<MapFeature, ResolvedMapAttributes>> mapFeatures = (fogOfWar.fogMinimap.get()
-                        ? fogOfWar.withoutUndiscovered(Services.MapData.getFeatures())
-                        : Services.MapData.getFeatures())
-                .filter(feature -> feature.isVisible(visibleWorldBox))
+                        ? fogOfWar.withoutUndiscovered(visibleFeatures)
+                        : visibleFeatures)
                 .filter(feature -> !(feature instanceof TerritoryArea) || renderTerritories.get())
                 .filter(feature -> !(feature instanceof SeaskipperDestinationArea))
                 .map(feature -> Pair.of(feature, Services.MapData.resolveMapAttributes(feature)))

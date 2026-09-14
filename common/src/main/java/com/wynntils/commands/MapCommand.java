@@ -77,7 +77,12 @@ public class MapCommand extends Command {
     }
 
     private int resetFogOfWar(CommandContext<CommandSourceStack> context) {
-        Managers.Feature.getFeatureInstance(MapFogOfWarFeature.class).resetCurrentCharacter();
+        if (!Managers.Feature.getFeatureInstance(MapFogOfWarFeature.class).resetCurrentCharacter()) {
+            context.getSource()
+                    .sendFailure(Component.translatable("command.wynntils.map.fogResetUnavailable")
+                            .withStyle(ChatFormatting.RED));
+            return 0;
+        }
 
         context.getSource()
                 .sendSuccess(
