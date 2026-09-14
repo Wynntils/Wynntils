@@ -26,6 +26,7 @@ import com.wynntils.models.containers.containers.trademarket.TradeMarketRevealIt
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesContainer;
 import com.wynntils.models.containers.type.ContainerBounds;
+import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.trademarket.event.TradeMarketChatInputEvent;
 import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent;
 import com.wynntils.models.trademarket.event.TradeMarketStateEvent;
@@ -38,6 +39,7 @@ import com.wynntils.screens.trademarket.TradeMarketSearchResultHolder;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
@@ -120,6 +122,7 @@ public final class TradeMarketModel extends Model {
     private TradeMarketState tradeMarketState = TradeMarketState.NOT_ACTIVE;
 
     private String soldItemName = null;
+    private Optional<Integer> soldItemTier = Optional.empty();
 
     public TradeMarketModel() {
         super(List.of());
@@ -362,22 +365,31 @@ public final class TradeMarketModel extends Model {
         return soldItemName;
     }
 
+    public Optional<Integer> getSoldItemTier() {
+        return soldItemTier;
+    }
+
     private void handleSellDialogueUpdate() {
         if (tradeMarketState != TradeMarketState.SELLING) return;
 
         if (!(McUtils.screen() instanceof ContainerScreen cs)) return;
+
+        soldItemName = null;
+        soldItemTier = Optional.empty();
 
         ItemStack itemStack = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
         if (itemStack != ItemStack.EMPTY) {
             StyledText itemStackName = StyledText.fromComponent(itemStack.getHoverName());
             Matcher m = itemStackName.getMatcher(SELL_ITEM_NAME_PATTERN);
             if (m.matches() && !m.group(1).contains(EMPTY_ITEM_SLOT)) {
-                soldItemName = m.group(1);
-            } else {
-                soldItemName = null;
+                soldItemName = WynnUtils.stripItemNameMarkers(m.group(1), false);
+                Optional<MaterialItem> materialItemOpt = Models.Item.asWynnItem(itemStack, MaterialItem.class);
+                if (materialItemOpt.isPresent()) {
+                    MaterialItem materialItem = materialItemOpt.get();
+                    soldItemName = materialItem.getName();
+                    soldItemTier = Optional.of(materialItem.getQualityTier());
+                }
             }
-        } else {
-            soldItemName = null;
         }
 
         StyledText sellPriceItemName = StyledText.fromComponent(

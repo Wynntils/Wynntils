@@ -5,6 +5,7 @@
 package com.wynntils.features.overlays;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
@@ -18,6 +19,7 @@ import com.wynntils.overlays.RaidProgressOverlay;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.RenderElementType;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -39,7 +41,11 @@ public class RaidProgressFeature extends Feature {
     private final Config<Boolean> playSoundOnBest = new Config<>(true);
 
     public RaidProgressFeature() {
-        super(ProfileDefault.onlyDefault());
+        super(
+                ProfileDefault.onlyDefault(),
+                List.of(
+                        ConfigDependency.functionality(Models.Raid.trackRaids),
+                        ConfigDependency.functionality(Models.Combat.trackDamage)));
     }
 
     @SubscribeEvent

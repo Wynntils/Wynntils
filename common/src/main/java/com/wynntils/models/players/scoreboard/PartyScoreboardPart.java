@@ -32,6 +32,8 @@ public class PartyScoreboardPart extends ScoreboardPart {
 
     @Override
     public void onSegmentChange(ScoreboardSegment newValue) {
+        if (!Models.Party.queryPartyMembers.get()) return;
+
         List<PartyMember> parsedMembers = parsePartyMembers(newValue.getContent());
 
         Models.Party.resetScoreboardData();

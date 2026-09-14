@@ -12,6 +12,8 @@ import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
+import com.wynntils.mc.event.KeyInputEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
 import com.wynntils.utils.mc.McUtils;
@@ -29,6 +31,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -60,7 +63,7 @@ public final class KeyBindManager extends Manager {
 
     private final Set<KeyBind> enabledKeyBinds = ConcurrentHashMap.newKeySet();
     private final Map<Feature, List<KeyBind>> keyBinds = new ConcurrentHashMap<>();
-    private final Map<String, KeyMapping> mappingsById = new ConcurrentHashMap<>();
+    private final Map<String, WynntilsKeyMapping> mappingsById = new ConcurrentHashMap<>();
 
     private boolean registeredKeybinds = false;
 
@@ -75,7 +78,7 @@ public final class KeyBindManager extends Manager {
         List<KeyMapping> list = new ArrayList<>(Arrays.asList(options.keyMappings));
 
         for (KeyBindDefinition def : KeyBindDefinition.definitions()) {
-            KeyMapping mapping = new KeyMapping(def.translationKey(), def.type(), def.defaultKey(), def.category());
+            WynntilsKeyMapping mapping = new WynntilsKeyMapping(def);
 
             list.add(mapping);
             mappingsById.put(def.id(), mapping);
@@ -99,7 +102,7 @@ public final class KeyBindManager extends Manager {
     }
 
     KeyMapping findActiveKeyMapping(
-            String keybindName, KeyMapping[] activeMappings, Map<String, KeyMapping> mappingsById) {
+            String keybindName, KeyMapping[] activeMappings, Map<String, ? extends KeyMapping> mappingsById) {
         KeyBindDefinition definition = getKeyBindDefinition(keybindName);
         if (definition != null) {
             KeyMapping registeredMapping = mappingsById.get(definition.id());
@@ -157,6 +160,21 @@ public final class KeyBindManager extends Manager {
     @SubscribeEvent
     public void onTick(TickEvent e) {
         triggerKeybinds();
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
+    public void onKeyInput(KeyInputEvent e) {
+        boolean inScreen = McUtils.screen() != null;
+        for (WynntilsKeyMapping mapping : mappingsById.values()) {
+            if (mapping.matches(e.getKeyEvent())) {
+                mapping.onInput(e.getAction(), inScreen);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onScreenInit(ScreenInitEvent.Pre e) {
+        mappingsById.values().forEach(WynntilsKeyMapping::suppressScreenInput);
     }
 
     @SubscribeEvent

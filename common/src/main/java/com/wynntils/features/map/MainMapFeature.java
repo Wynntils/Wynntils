@@ -69,7 +69,7 @@ public class MainMapFeature extends Feature implements ExternalConfigurationScre
     public final KeyBind newWaypointKeybind = KeyBindDefinition.NEW_WAYPOINT.create(this::openWaypointSetup);
 
     public MainMapFeature() {
-        super(ProfileDefault.ENABLED);
+        super(ProfileDefault.ENABLED, List.of(ConfigDependency.functionality(Services.Hades.connectToHades)));
     }
 
     // Keep track of whether migration has already occurred this instance

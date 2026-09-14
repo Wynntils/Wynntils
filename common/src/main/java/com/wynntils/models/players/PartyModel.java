@@ -8,6 +8,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
@@ -98,6 +100,9 @@ public final class PartyModel extends Model {
     private static final ScoreboardPart PARTY_SCOREBOARD_PART = new PartyScoreboardPart();
 
     public static final int MAX_PARTY_MEMBER_COUNT = 10;
+
+    @Persisted
+    public final Config<Boolean> queryPartyMembers = new Config<>(true);
 
     private boolean expectingPartyMessage = false; // Whether the client is expecting a response from "/party list"
     private long lastPartyRequest = 0; // The last time the client requested party data
@@ -352,6 +357,7 @@ public final class PartyModel extends Model {
      * Hades relations will be updated and PartyEvent.Listed will be posted.
      */
     public void requestData() {
+        if (!queryPartyMembers.get()) return;
         if (McUtils.player() == null) return;
 
         if (System.currentTimeMillis() - lastPartyRequest < 250) {

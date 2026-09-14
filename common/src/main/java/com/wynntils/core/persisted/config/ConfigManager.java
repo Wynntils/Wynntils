@@ -11,8 +11,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.util.UndashedUuid;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.ConfigurableCoreComponent;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Service;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.DynamicOverlay;
@@ -87,6 +90,11 @@ public final class ConfigManager extends Manager {
         // Register all features and overlays
         Managers.Feature.getFeatures().forEach(this::registerFeature);
 
+        // Register core component config options
+        Stream.of(Model.class, Service.class)
+                .flatMap(componentClass -> WynntilsMod.getComponents(componentClass).stream())
+                .forEach(this::registerConfigOptions);
+
         // Now, we have to apply upfixers, before any config loading happens
         // FIXME: Solve generics type issue
         Set<PersistedValue<?>> workaround = new HashSet<>(CONFIGS);
@@ -150,6 +158,9 @@ public final class ConfigManager extends Manager {
         Managers.Persisted.registerOwner(configurable);
 
         List<Config<?>> configs = getConfigOptions(configurable);
+        if (!configs.isEmpty() && configurable instanceof ConfigurableCoreComponent coreComponent) {
+            verifyCoreComponentI18n(coreComponent);
+        }
         configurable.addConfigOptions(configs);
         CONFIGS.addAll(configs);
         for (Config<?> config : configs) {
@@ -164,6 +175,16 @@ public final class ConfigManager extends Manager {
                 WynntilsMod.error("String-based constructor is missing in type for Config: " + type);
                 throw new RuntimeException("Internal error");
             }
+        }
+    }
+
+    private void verifyCoreComponentI18n(ConfigurableCoreComponent component) {
+        if (!WynntilsMod.isDevelopmentEnvironment()) return;
+
+        String translatedName = component.getTranslatedName();
+        if (translatedName.startsWith(component.getTypeName().toLowerCase(java.util.Locale.ROOT) + ".wynntils.")) {
+            WynntilsMod.error("Core component name i18n is missing for " + translatedName);
+            throw new AssertionError("Missing i18n for " + translatedName);
         }
     }
 
@@ -378,11 +399,11 @@ public final class ConfigManager extends Manager {
 
         if (WynntilsMod.isDevelopmentEnvironment()) {
             if (configObj.isVisible()) {
-                if (configObj.getDisplayName().startsWith("feature.wynntils.")) {
+                if (isMissingI18n(configObj.getDisplayName())) {
                     WynntilsMod.error("Config displayName i18n is missing for " + configObj.getDisplayName());
                     throw new AssertionError("Missing i18n for " + configObj.getDisplayName());
                 }
-                if (configObj.getDescription().startsWith("feature.wynntils.")) {
+                if (isMissingI18n(configObj.getDescription())) {
                     WynntilsMod.error("Config description i18n is missing for " + configObj.getDescription());
                     throw new AssertionError("Missing i18n for " + configObj.getDescription());
                 }
@@ -393,6 +414,12 @@ public final class ConfigManager extends Manager {
             }
         }
         return configObj;
+    }
+
+    private static boolean isMissingI18n(String value) {
+        return value.startsWith("feature.wynntils.")
+                || value.startsWith("model.wynntils.")
+                || value.startsWith("service.wynntils.");
     }
 
     public Stream<Config<?>> getConfigs() {

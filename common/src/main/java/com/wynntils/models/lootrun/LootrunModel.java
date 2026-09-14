@@ -15,6 +15,7 @@ import com.wynntils.core.mod.event.WynntilsInitEvent;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
@@ -175,6 +176,9 @@ public final class LootrunModel extends Model {
     public static final LootrunLocationProvider LOOTRUN_LOCATION_PROVIDER = new LootrunLocationProvider();
 
     @Persisted
+    public final Config<Boolean> logDebugBeaconInfo = new Config<>(false);
+
+    @Persisted
     public final Storage<Integer> dryPulls = new Storage<>(0);
 
     @Persisted
@@ -287,8 +291,7 @@ public final class LootrunModel extends Model {
             possibleTaskLocations.add(new TaskLocation(location.toString(), location, LootrunTaskType.UNKNOWN));
         }
 
-        // Only log this in development environments.
-        if (!WynntilsMod.isDevelopmentEnvironment()) return;
+        if (!logDebugBeaconInfo.get()) return;
 
         // Check if we have tasks from multiple locations, log in case we do.
         for (LootrunLocation location : LootrunLocation.values()) {

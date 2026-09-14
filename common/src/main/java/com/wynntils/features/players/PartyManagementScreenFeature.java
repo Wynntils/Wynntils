@@ -5,6 +5,7 @@
 package com.wynntils.features.players;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
@@ -18,6 +19,7 @@ import com.wynntils.models.players.event.FriendsEvent;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.screens.partymanagement.PartyManagementScreen;
 import com.wynntils.utils.mc.McUtils;
+import java.util.List;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.PLAYERS)
@@ -31,9 +33,13 @@ public class PartyManagementScreenFeature extends Feature {
     });
 
     public PartyManagementScreenFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
+                        .build(),
+                List.of(
+                        ConfigDependency.functionality(Models.Friends.queryFriendsList),
+                        ConfigDependency.functionality(Models.Party.queryPartyMembers)));
     }
 
     @SubscribeEvent
