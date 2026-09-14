@@ -6,7 +6,7 @@
 // tile itself: undiscovered terrain is redrawn as a monotone ink-on-parchment ramp of the tile's
 // luminance, lightly blurred and posterised into a few flat tones so that only the broad geography
 // (coast, forest, mountain masses) stays legible while fine detail, colour, names and icons are
-// withheld. The vertex alpha is the fog strength: it blends between plain greyscale (0) and the
+// withheld. Water keeps a distinct pale, cool tone so coastlines and rivers read. The vertex alpha is the fog strength: it blends between plain greyscale (0) and the
 // full ramp (1), never back towards the original colours.
 layout(std140) uniform DynamicTransforms {
     mat4 ModelViewMat;
@@ -28,6 +28,9 @@ const vec3 PAPER = vec3(0.94, 0.88, 0.74);
 const float MIN_LUMINANCE = 0.35;
 const float TONE_BANDS = 4.0;
 const float BLUR_TEXELS = 1.0;
+// Water on the map is a deeply saturated blue; ice and snow are only faintly blue-tinted
+const vec3 WATER = vec3(0.84, 0.85, 0.80);
+const float WATER_BLUE_DOMINANCE = 0.30;
 
 void main() {
     float discovered = smoothstep(0.0, 1.0, texture(Sampler0, texCoord0).r);
@@ -43,9 +46,10 @@ void main() {
                     + texture(Sampler1, tileCoord - vec2(0.0, blur.y)))
             / 5.0;
 
+    bool isWater = tile.b - max(tile.r, tile.g) > WATER_BLUE_DOMINANCE;
     float luminance = dot(tile.rgb, vec3(0.299, 0.587, 0.114));
     luminance = floor(luminance * TONE_BANDS + 0.5) / TONE_BANDS;
-    vec3 parchment = mix(INK, PAPER, mix(MIN_LUMINANCE, 1.0, luminance));
+    vec3 parchment = isWater ? WATER : mix(INK, PAPER, mix(MIN_LUMINANCE, 1.0, luminance));
     vec4 color = vec4(mix(vec3(luminance), parchment, vertexColor.a), tile.a * (1.0 - discovered));
 
     if (color.a == 0.0) {
