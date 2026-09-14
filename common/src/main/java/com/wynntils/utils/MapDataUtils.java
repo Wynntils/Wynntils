@@ -8,6 +8,10 @@ import java.util.Locale;
 
 public final class MapDataUtils {
     public static String sanitizeFeatureId(String featureId) {
-        return featureId.replace(" ", "-").replaceAll("[^a-zA-Z\\-]", "").toLowerCase(Locale.ROOT);
+        return featureId
+                .replace(" ", "-")
+                .replaceAll("[^a-zA-Z0-9\\-]", "")
+                .replaceAll("^[0-9]+", "")
+                .toLowerCase(Locale.ROOT);
     }
 }
