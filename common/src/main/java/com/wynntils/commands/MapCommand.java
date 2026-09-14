@@ -8,8 +8,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
+import com.wynntils.features.map.MapFogOfWarFeature;
 import com.wynntils.services.mapdata.MapDataService;
 import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.utils.mc.McUtils;
@@ -75,7 +77,7 @@ public class MapCommand extends Command {
     }
 
     private int resetFogOfWar(CommandContext<CommandSourceStack> context) {
-        Services.MapData.resetFogOfWar();
+        Managers.Feature.getFeatureInstance(MapFogOfWarFeature.class).resetCurrentCharacter();
 
         context.getSource()
                 .sendSuccess(
