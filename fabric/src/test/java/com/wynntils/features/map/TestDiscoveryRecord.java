@@ -4,8 +4,6 @@
  */
 package com.wynntils.features.map;
 
-import com.wynntils.utils.type.BoundingBox;
-import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -33,57 +31,6 @@ public class TestDiscoveryRecord {
     }
 
     @Test
-    public void emptyRecordHasNoRuns() {
-        DiscoveryRecord record = new DiscoveryRecord();
-
-        Assertions.assertEquals(List.of(), record.discoveredRuns(new BoundingBox(-100, -100, 100, 100)));
-    }
-
-    @Test
-    public void singleChunkIsOneRunOfItsOwnBounds() {
-        DiscoveryRecord record = new DiscoveryRecord();
-        record.reveal(40, 40, 0); // chunk (2, 2) = blocks 32..48
-
-        Assertions.assertEquals(
-                List.of(new BoundingBox(32, 32, 48, 48)), record.discoveredRuns(new BoundingBox(0, 0, 100, 100)));
-    }
-
-    @Test
-    public void adjacentChunksInARowMergeIntoOneRunButRowsDoNot() {
-        DiscoveryRecord record = new DiscoveryRecord();
-        record.reveal(24, 24, 1); // chunks 0..2 x 0..2
-
-        Assertions.assertEquals(
-                List.of(new BoundingBox(0, 0, 48, 16), new BoundingBox(0, 16, 48, 32), new BoundingBox(0, 32, 48, 48)),
-                record.discoveredRuns(new BoundingBox(-100, -100, 100, 100)));
-    }
-
-    @Test
-    public void gapsSplitRuns() {
-        DiscoveryRecord record = new DiscoveryRecord();
-        record.reveal(8, 8, 0); // chunk (0, 0)
-        record.reveal(40, 8, 0); // chunk (2, 0)
-
-        Assertions.assertEquals(
-                List.of(new BoundingBox(0, 0, 16, 16), new BoundingBox(32, 0, 48, 16)),
-                record.discoveredRuns(new BoundingBox(-100, -100, 100, 100)));
-    }
-
-    @Test
-    public void runsAreClippedToTheQueryBoxAndOutsideChunksIgnored() {
-        DiscoveryRecord record = new DiscoveryRecord();
-        record.reveal(24, 24, 1); // chunks 0..2 x 0..2, blocks 0..48
-        record.reveal(200, 200, 0); // outside the box
-
-        Assertions.assertEquals(
-                List.of(
-                        new BoundingBox(10, 10, 40, 16),
-                        new BoundingBox(10, 16, 40, 32),
-                        new BoundingBox(10, 32, 40, 40)),
-                record.discoveredRuns(new BoundingBox(10, 10, 40, 40)));
-    }
-
-    @Test
     public void everyBlockInsideARevealedChunkIsDiscovered() {
         DiscoveryRecord record = new DiscoveryRecord();
         record.reveal(-1, -1, 0); // chunk (-1, -1) = blocks -16..-1
@@ -106,18 +53,7 @@ public class TestDiscoveryRecord {
         Assertions.assertTrue(record.isDiscovered(143, 143)); // chunk (8, 8)
         Assertions.assertFalse(record.isDiscovered(-129, 0)); // chunk (-9, 0)
         Assertions.assertFalse(record.isDiscovered(144, 0)); // chunk (9, 0)
-        Assertions.assertEquals(
-                List.of(new BoundingBox(-128, -128, 144, -112)),
-                record.discoveredRuns(new BoundingBox(-200, -128, 200, -112)));
-    }
-
-    @Test
-    public void overlappingRevealsMergeIntoOneRunPerRow() {
-        DiscoveryRecord record = new DiscoveryRecord();
-        record.reveal(8, 8, 1); // chunks -1..1
-        record.reveal(24, 8, 1); // chunks 0..2
-
-        Assertions.assertEquals(
-                List.of(new BoundingBox(-16, 0, 48, 16)), record.discoveredRuns(new BoundingBox(-100, 0, 100, 16)));
+        Assertions.assertTrue(record.isDiscoveredChunk(8, -8));
+        Assertions.assertFalse(record.isDiscoveredChunk(9, -8));
     }
 }

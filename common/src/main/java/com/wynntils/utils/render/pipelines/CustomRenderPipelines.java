@@ -85,6 +85,22 @@ public class CustomRenderPipelines extends RenderPipelines {
             .withCull(false)
             .build());
 
+    // Fog of war overlay for a map tile: vanilla's pass-through vertex shader paired with a fragment
+    // shader that reads a per-chunk discovery mask and fades the fog colour out over discovered
+    // chunks. See assets/wynntils/shaders/core/fog_mask.fsh and MapFogOfWarFeature.
+    public static final RenderPipeline FOG_MASK_PIPELINE =
+            register(RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+                    .withLocation("pipeline/wynntils_fog_mask")
+                    .withVertexShader("core/position_tex_color")
+                    .withFragmentShader(Identifier.fromNamespaceAndPath(WynntilsMod.MOD_ID, "core/fog_mask"))
+                    .withSampler("Sampler0")
+                    .withBlend(BlendFunction.TRANSLUCENT)
+                    .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
+                    .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+                    .withDepthWrite(false)
+                    .withCull(false)
+                    .build());
+
     public static final RenderPipeline PROGRESS_BAR_PIPELINE =
             register(RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
                     .withLocation("pipeline/wynntils_progress_bar")

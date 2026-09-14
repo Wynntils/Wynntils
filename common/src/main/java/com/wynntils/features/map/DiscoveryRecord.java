@@ -4,9 +4,6 @@
  */
 package com.wynntils.features.map;
 
-import com.wynntils.utils.type.BoundingBox;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -41,34 +38,11 @@ public final class DiscoveryRecord {
     }
 
     public boolean isDiscovered(double worldX, double worldZ) {
-        return chunks.contains(chunkKey(toChunk(worldX), toChunk(worldZ)));
+        return isDiscoveredChunk(toChunk(worldX), toChunk(worldZ));
     }
 
-    /** Discovered area inside the box as one world-space rect per horizontal run of discovered chunks. */
-    public List<BoundingBox> discoveredRuns(BoundingBox box) {
-        List<BoundingBox> runs = new ArrayList<>();
-        int minChunkX = toChunk(box.x1());
-        int maxChunkX = toChunk(Math.nextDown(box.x2()));
-        int minChunkZ = toChunk(box.z1());
-        int maxChunkZ = toChunk(Math.nextDown(box.z2()));
-
-        for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ++) {
-            int runStart = Integer.MIN_VALUE;
-            for (int chunkX = minChunkX; chunkX <= maxChunkX + 1; chunkX++) {
-                boolean discovered = chunkX <= maxChunkX && chunks.contains(chunkKey(chunkX, chunkZ));
-                if (discovered && runStart == Integer.MIN_VALUE) {
-                    runStart = chunkX;
-                } else if (!discovered && runStart != Integer.MIN_VALUE) {
-                    runs.add(new BoundingBox(
-                            Math.max(box.x1(), runStart << 4),
-                            Math.max(box.z1(), chunkZ << 4),
-                            Math.min(box.x2(), chunkX << 4),
-                            Math.min(box.z2(), (chunkZ + 1) << 4)));
-                    runStart = Integer.MIN_VALUE;
-                }
-            }
-        }
-        return runs;
+    public boolean isDiscoveredChunk(int chunkX, int chunkZ) {
+        return chunks.contains(chunkKey(chunkX, chunkZ));
     }
 
     private static int toChunk(double world) {

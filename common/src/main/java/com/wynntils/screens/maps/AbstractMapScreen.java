@@ -12,7 +12,6 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.debug.MappingProgressFeature;
-import com.wynntils.features.map.DiscoveryRecord;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MapFogOfWarFeature;
 import com.wynntils.screens.base.TooltipProvider;
@@ -542,18 +541,23 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 BoundingBox.centered(mapCenterX, mapCenterZ, mapWidth / zoomRenderScale, mapHeight / zoomRenderScale);
 
         MapFogOfWarFeature fogOfWar = Managers.Feature.getFeatureInstance(MapFogOfWarFeature.class);
-        Optional<DiscoveryRecord> discoveryRecord = fogOfWar.activeRecord();
-        CustomColor tileColor = discoveryRecord.isPresent() ? fogOfWar.fogTint() : CommonColors.WHITE;
 
         for (MapTexture map : Services.Map.getMapsForBoundingBox(view)) {
             MapRenderer.renderMapTile(
-                    guiGraphics, map, mapCenterX, mapCenterZ, centerX, centerZ, zoomRenderScale, view, tileColor);
-            if (discoveryRecord.isEmpty()) continue;
-
-            for (BoundingBox run : discoveryRecord.get().discoveredRuns(view.intersection(map.getBlockBox()))) {
-                MapRenderer.renderMapTile(
-                        guiGraphics, map, mapCenterX, mapCenterZ, centerX, centerZ, zoomRenderScale, run);
-            }
+                    guiGraphics, map, mapCenterX, mapCenterZ, centerX, centerZ, zoomRenderScale, view);
+            fogOfWar.fogMask(map)
+                    .ifPresent(mask -> MapRenderer.renderFogOverlay(
+                            guiGraphics,
+                            map,
+                            mask,
+                            fogOfWar.fogMaskPadding(),
+                            fogOfWar.fogColor(),
+                            mapCenterX,
+                            mapCenterZ,
+                            centerX,
+                            centerZ,
+                            zoomRenderScale,
+                            view));
         }
 
         RenderUtils.disableScissor(guiGraphics);

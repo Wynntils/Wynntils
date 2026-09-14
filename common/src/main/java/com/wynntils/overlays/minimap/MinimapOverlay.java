@@ -13,7 +13,6 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.map.DiscoveryRecord;
 import com.wynntils.features.map.MapFogOfWarFeature;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
 import com.wynntils.services.hades.providers.PlayerProvider;
@@ -52,6 +51,7 @@ import java.util.stream.Stream;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.Identifier;
 import org.joml.Vector2f;
 
 public class MinimapOverlay extends Overlay {
@@ -195,43 +195,68 @@ public class MinimapOverlay extends Overlay {
         }
 
         MapFogOfWarFeature fogOfWar = Managers.Feature.getFeatureInstance(MapFogOfWarFeature.class);
-        Optional<DiscoveryRecord> discoveryRecord =
-                fogOfWar.fogMinimap.get() ? fogOfWar.activeRecord() : Optional.empty();
-        CustomColor tileColor = discoveryRecord.isPresent() ? fogOfWar.fogTint() : CommonColors.WHITE;
 
         for (MapTexture map : maps) {
-            renderMapTile(
-                    guiGraphics,
-                    map,
-                    playerX,
-                    playerZ,
-                    centerX,
-                    centerZ,
-                    zoomRenderScale,
-                    visibleWorldBox,
-                    renderX,
-                    renderY,
-                    width,
-                    height,
-                    tileColor);
-            if (discoveryRecord.isEmpty()) continue;
-
-            for (BoundingBox run :
-                    discoveryRecord.get().discoveredRuns(visibleWorldBox.intersection(map.getBlockBox()))) {
-                renderMapTile(
+            if (maskType.get() == MapMaskType.RECTANGULAR) {
+                MapRenderer.renderMapTile(
                         guiGraphics,
                         map,
-                        playerX,
-                        playerZ,
+                        (float) playerX,
+                        (float) playerZ,
                         centerX,
                         centerZ,
                         zoomRenderScale,
-                        run,
+                        visibleWorldBox);
+            } else {
+                MapRenderer.renderCircularMapTile(
+                        guiGraphics,
+                        map,
+                        (float) playerX,
+                        (float) playerZ,
+                        centerX,
+                        centerZ,
+                        zoomRenderScale,
+                        visibleWorldBox,
                         renderX,
                         renderY,
                         width,
-                        height,
-                        CommonColors.WHITE);
+                        height);
+            }
+
+            if (!fogOfWar.fogMinimap.get()) continue;
+            Optional<Identifier> fogMask = fogOfWar.fogMask(map);
+            if (fogMask.isEmpty()) continue;
+
+            if (maskType.get() == MapMaskType.RECTANGULAR) {
+                MapRenderer.renderFogOverlay(
+                        guiGraphics,
+                        map,
+                        fogMask.get(),
+                        fogOfWar.fogMaskPadding(),
+                        fogOfWar.fogColor(),
+                        (float) playerX,
+                        (float) playerZ,
+                        centerX,
+                        centerZ,
+                        zoomRenderScale,
+                        visibleWorldBox);
+            } else {
+                MapRenderer.renderCircularFogOverlay(
+                        guiGraphics,
+                        map,
+                        fogMask.get(),
+                        fogOfWar.fogMaskPadding(),
+                        fogOfWar.fogColor(),
+                        (float) playerX,
+                        (float) playerZ,
+                        centerX,
+                        centerZ,
+                        zoomRenderScale,
+                        visibleWorldBox,
+                        renderX,
+                        renderY,
+                        width,
+                        height);
             }
         }
 
@@ -274,49 +299,6 @@ public class MinimapOverlay extends Overlay {
 
         // Directional Text
         renderCardinalDirections(guiGraphics, width, height, centerX, centerZ);
-    }
-
-    private void renderMapTile(
-            GuiGraphics guiGraphics,
-            MapTexture map,
-            double playerX,
-            double playerZ,
-            float centerX,
-            float centerZ,
-            float zoomRenderScale,
-            BoundingBox worldBox,
-            float renderX,
-            float renderY,
-            float width,
-            float height,
-            CustomColor color) {
-        if (maskType.get() == MapMaskType.RECTANGULAR) {
-            MapRenderer.renderMapTile(
-                    guiGraphics,
-                    map,
-                    (float) playerX,
-                    (float) playerZ,
-                    centerX,
-                    centerZ,
-                    zoomRenderScale,
-                    worldBox,
-                    color);
-        } else {
-            MapRenderer.renderCircularMapTile(
-                    guiGraphics,
-                    map,
-                    (float) playerX,
-                    (float) playerZ,
-                    centerX,
-                    centerZ,
-                    zoomRenderScale,
-                    worldBox,
-                    renderX,
-                    renderY,
-                    width,
-                    height,
-                    color);
-        }
     }
 
     private void renderMapFeatures(

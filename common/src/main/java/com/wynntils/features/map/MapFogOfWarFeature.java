@@ -18,9 +18,11 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.features.type.MapLocation;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.BoundingBox;
@@ -31,6 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.MAP)
@@ -62,6 +65,7 @@ public class MapFogOfWarFeature extends Feature {
     private final Storage<ConcurrentHashMap<String, Set<Long>>> discoveredChunks =
             new Storage<>(new ConcurrentHashMap<>());
 
+    private final FogMasks fogMasks = new FogMasks();
     private String currentCharacterId;
     private DiscoveryRecord currentRecord;
     private int ticksUntilSample = 0;
@@ -85,6 +89,7 @@ public class MapFogOfWarFeature extends Feature {
 
         record.get().reveal(x, z, MathUtils.clamp(revealRadius.get(), MIN_REVEAL_RADIUS, MAX_REVEAL_RADIUS));
         discoveredChunks.touched();
+        fogMasks.invalidate();
     }
 
     /** The current character's record while fog should apply; empty when disabled or no character is selected. */
@@ -96,13 +101,22 @@ public class MapFogOfWarFeature extends Feature {
             currentCharacterId = characterId;
             currentRecord = new DiscoveryRecord(discoveredChunks.get().getOrDefault(characterId, Set.of()));
             discoveredChunks.get().put(characterId, currentRecord.chunks());
+            fogMasks.invalidate();
         }
         return Optional.of(currentRecord);
     }
 
-    public CustomColor fogTint() {
-        float brightness = 1f - MathUtils.clamp(fogOpacity.get(), 0f, 1f);
-        return new CustomColor(brightness, brightness, brightness, 1f);
+    /** The fog mask texture for a tile, or empty when fog should not be drawn. */
+    public Optional<Identifier> fogMask(MapTexture map) {
+        return activeRecord().map(record -> fogMasks.maskFor(map, record));
+    }
+
+    public int fogMaskPadding() {
+        return FogMasks.PADDING_BLOCKS;
+    }
+
+    public CustomColor fogColor() {
+        return CommonColors.BLACK.withAlpha(Math.round(MathUtils.clamp(fogOpacity.get(), 0f, 1f) * 255));
     }
 
     /** Drops static world content (places, services, combat, gathering) whose location is not discovered. */
@@ -126,6 +140,7 @@ public class MapFogOfWarFeature extends Feature {
         activeRecord().ifPresent(record -> {
             record.chunks().clear();
             discoveredChunks.touched();
+            fogMasks.invalidate();
         });
         return 1;
     }
