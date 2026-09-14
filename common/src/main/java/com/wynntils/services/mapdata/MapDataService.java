@@ -111,7 +111,7 @@ public class MapDataService extends Service {
     public final Config<Boolean> fogMinimap = new Config<>(true);
 
     @Persisted
-    public final Config<Float> fogOpacity = new Config<>(1f);
+    public final Config<Float> fogOpacity = new Config<>(0.85f);
 
     @Persisted
     public final Config<Integer> fogRevealRadius = new Config<>(3);
