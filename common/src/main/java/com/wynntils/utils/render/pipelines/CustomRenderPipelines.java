@@ -101,6 +101,22 @@ public class CustomRenderPipelines extends RenderPipelines {
                     .withCull(false)
                     .build());
 
+    // As FOG_MASK_PIPELINE, but also samples the map tile (Sampler1) to redraw undiscovered terrain as a
+    // monotone parchment map. See assets/wynntils/shaders/core/fog_parchment.fsh.
+    public static final RenderPipeline FOG_PARCHMENT_PIPELINE =
+            register(RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+                    .withLocation("pipeline/wynntils_fog_parchment")
+                    .withVertexShader("core/position_tex_color")
+                    .withFragmentShader(Identifier.fromNamespaceAndPath(WynntilsMod.MOD_ID, "core/fog_parchment"))
+                    .withSampler("Sampler0")
+                    .withSampler("Sampler1")
+                    .withBlend(BlendFunction.TRANSLUCENT)
+                    .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
+                    .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+                    .withDepthWrite(false)
+                    .withCull(false)
+                    .build());
+
     public static final RenderPipeline PROGRESS_BAR_PIPELINE =
             register(RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
                     .withLocation("pipeline/wynntils_progress_bar")

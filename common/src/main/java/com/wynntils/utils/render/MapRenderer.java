@@ -8,6 +8,7 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.mapdata.fog.FogOverlay;
+import com.wynntils.services.mapdata.fog.FogStyle;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -29,9 +30,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ChunkPos;
 import org.joml.Matrix3x2f;
 import org.joml.Vector2d;
@@ -94,7 +93,7 @@ public final class MapRenderer {
                 guiGraphics,
                 map,
                 RenderPipelines.GUI_TEXTURED,
-                map.identifier(),
+                RenderUtils.singleTextureSetup(map.identifier()),
                 CommonColors.WHITE,
                 0,
                 mapCenterX,
@@ -118,8 +117,8 @@ public final class MapRenderer {
         renderTileQuad(
                 guiGraphics,
                 map,
-                CustomRenderPipelines.FOG_MASK_PIPELINE,
-                fog.mask(),
+                fogPipeline(fog),
+                fogTextureSetup(fog, map),
                 fog.color(),
                 fog.paddingBlocks(),
                 mapCenterX,
@@ -130,11 +129,23 @@ public final class MapRenderer {
                 view);
     }
 
+    private static RenderPipeline fogPipeline(FogOverlay fog) {
+        return fog.style() == FogStyle.PARCHMENT
+                ? CustomRenderPipelines.FOG_PARCHMENT_PIPELINE
+                : CustomRenderPipelines.FOG_MASK_PIPELINE;
+    }
+
+    private static TextureSetup fogTextureSetup(FogOverlay fog, MapTexture map) {
+        return fog.style() == FogStyle.PARCHMENT
+                ? RenderUtils.doubleTextureSetup(fog.mask(), map.identifier())
+                : RenderUtils.singleTextureSetup(fog.mask());
+    }
+
     private static void renderTileQuad(
             GuiGraphics guiGraphics,
             MapTexture map,
             RenderPipeline pipeline,
-            Identifier texture,
+            TextureSetup textureSetup,
             CustomColor color,
             int texturePadding,
             float mapCenterX,
@@ -168,7 +179,7 @@ public final class MapRenderer {
         RenderUtils.drawTexturedRect(
                 guiGraphics,
                 pipeline,
-                texture,
+                textureSetup,
                 color,
                 sx1,
                 sy1,
@@ -215,7 +226,7 @@ public final class MapRenderer {
                 guiGraphics,
                 map,
                 RenderPipelines.GUI_TEXTURED,
-                map.identifier(),
+                RenderUtils.singleTextureSetup(map.identifier()),
                 CommonColors.WHITE,
                 0,
                 mapCenterX,
@@ -244,8 +255,8 @@ public final class MapRenderer {
         renderCircularTileQuad(
                 guiGraphics,
                 map,
-                CustomRenderPipelines.FOG_MASK_PIPELINE,
-                fog.mask(),
+                fogPipeline(fog),
+                fogTextureSetup(fog, map),
                 fog.color(),
                 fog.paddingBlocks(),
                 mapCenterX,
@@ -261,7 +272,7 @@ public final class MapRenderer {
             GuiGraphics guiGraphics,
             MapTexture map,
             RenderPipeline pipeline,
-            Identifier texture,
+            TextureSetup textureSetup,
             CustomColor color,
             int texturePadding,
             float mapCenterX,
@@ -298,7 +309,7 @@ public final class MapRenderer {
         renderCircleMaskedTexturedRect(
                 guiGraphics,
                 pipeline,
-                texture,
+                textureSetup,
                 color,
                 screenMinX,
                 screenMinY,
@@ -658,7 +669,7 @@ public final class MapRenderer {
     private static void renderCircleMaskedTexturedRect(
             GuiGraphics guiGraphics,
             RenderPipeline pipeline,
-            Identifier identifier,
+            TextureSetup textureSetup,
             CustomColor color,
             float x1,
             float y1,
@@ -669,18 +680,12 @@ public final class MapRenderer {
             float v1,
             float v2,
             CircleMask mask) {
-        AbstractTexture texture = McUtils.mc().getTextureManager().getTexture(identifier);
         Matrix3x2f pose = new Matrix3x2f(guiGraphics.pose());
         List<Vertex> vertices = clipTexturedRectToCircle(pose, x1, y1, x2, y2, u1, u2, v1, v2, mask);
         if (vertices.isEmpty()) return;
 
         guiGraphics.guiRenderState.submitGuiElement(new TexturedPolygonRenderState(
-                pipeline,
-                TextureSetup.singleTexture(texture.getTextureView(), texture.getSampler()),
-                pose,
-                vertices,
-                color,
-                guiGraphics.scissorStack.peek()));
+                pipeline, textureSetup, pose, vertices, color, guiGraphics.scissorStack.peek()));
     }
 
     private static List<Vertex> clipTexturedRectToCircle(

@@ -26,6 +26,7 @@ import com.wynntils.services.mapdata.features.type.MapLocation;
 import com.wynntils.services.mapdata.fog.DiscoveryRecord;
 import com.wynntils.services.mapdata.fog.FogMasks;
 import com.wynntils.services.mapdata.fog.FogOverlay;
+import com.wynntils.services.mapdata.fog.FogStyle;
 import com.wynntils.services.mapdata.fog.RevealShape;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.mapdata.providers.builtin.CategoriesProvider;
@@ -106,6 +107,9 @@ public class MapDataService extends Service {
 
     @Persisted
     public final Config<Boolean> fogOfWar = new Config<>(false).withDefault(ConfigProfile.NEW_PLAYER, true);
+
+    @Persisted
+    public final Config<FogStyle> fogStyle = new Config<>(FogStyle.PARCHMENT);
 
     @Persisted
     public final Config<Boolean> fogMinimap = new Config<>(true);
@@ -586,7 +590,8 @@ public class MapDataService extends Service {
     /** What to draw over a tile for fog of war, or empty when fog should not be drawn. */
     public Optional<FogOverlay> getFogOverlay(MapTexture map) {
         return activeDiscoveryRecord()
-                .map(record -> new FogOverlay(fogMasks.maskFor(map, record), FogMasks.PADDING_BLOCKS, fogColor()));
+                .map(record -> new FogOverlay(
+                        fogStyle.get(), fogMasks.maskFor(map, record), FogMasks.PADDING_BLOCKS, fogColor()));
     }
 
     /** Drops static world content (places, services, combat, gathering) whose location is not discovered. */
@@ -625,7 +630,8 @@ public class MapDataService extends Service {
     }
 
     private CustomColor fogColor() {
-        return CommonColors.BLACK.withAlpha(Math.round(MathUtils.clamp(fogOpacity.get(), 0f, 1f) * 255));
+        CustomColor base = fogStyle.get() == FogStyle.DARKEN ? CommonColors.BLACK : CommonColors.WHITE;
+        return base.withAlpha(Math.round(MathUtils.clamp(fogOpacity.get(), 0f, 1f) * 255));
     }
 
     private static boolean isStaticWorldContent(String categoryId) {
