@@ -4268,6 +4268,8 @@
   "service.wynntils.mapData.fogOpacity.name": "Fog Opacity",
   "service.wynntils.mapData.fogRevealRadius.description": "How many chunks around you are discovered, between 1 and 8.",
   "service.wynntils.mapData.fogRevealRadius.name": "Fog Reveal Radius",
+  "service.wynntils.mapData.fogRevealShape.description": "Should the area discovered around you be a square or a circle?",
+  "service.wynntils.mapData.fogRevealShape.name": "Fog Reveal Shape",
   "service.wynntils.mapData.name": "Map Data",
   "service.wynntils.ping.calculatePing.description": "Should ping be calculated by sending a ping packet every second?",
   "service.wynntils.ping.calculatePing.name": "Calculate Ping",

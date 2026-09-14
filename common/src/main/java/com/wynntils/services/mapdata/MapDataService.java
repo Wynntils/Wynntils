@@ -26,6 +26,7 @@ import com.wynntils.services.mapdata.features.type.MapLocation;
 import com.wynntils.services.mapdata.fog.DiscoveryRecord;
 import com.wynntils.services.mapdata.fog.FogMasks;
 import com.wynntils.services.mapdata.fog.FogOverlay;
+import com.wynntils.services.mapdata.fog.RevealShape;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.mapdata.providers.builtin.CategoriesProvider;
 import com.wynntils.services.mapdata.providers.builtin.CombatListProvider;
@@ -114,6 +115,9 @@ public class MapDataService extends Service {
 
     @Persisted
     public final Config<Integer> fogRevealRadius = new Config<>(3);
+
+    @Persisted
+    public final Config<RevealShape> fogRevealShape = new Config<>(RevealShape.SQUARE);
 
     @Persisted
     public final Config<Boolean> fogHidesUndiscoveredContent = new Config<>(true);
@@ -573,7 +577,7 @@ public class MapDataService extends Service {
         if (Services.Map.getMapsForBoundingBox(playerBlock).isEmpty()) return;
 
         int radius = MathUtils.clamp(fogRevealRadius.get(), FOG_MIN_REVEAL_RADIUS, FOG_MAX_REVEAL_RADIUS);
-        if (!record.get().reveal(x, z, radius)) return;
+        if (!record.get().reveal(x, z, radius, fogRevealShape.get())) return;
 
         discoveredChunks.touched();
         fogMasks.invalidate();

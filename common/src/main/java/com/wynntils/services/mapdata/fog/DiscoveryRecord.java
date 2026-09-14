@@ -28,13 +28,14 @@ public final class DiscoveryRecord {
     }
 
     /** @return whether any new chunk was discovered */
-    public boolean reveal(double worldX, double worldZ, int radiusChunks) {
+    public boolean reveal(double worldX, double worldZ, int radiusChunks, RevealShape shape) {
         int chunkX = toChunk(worldX);
         int chunkZ = toChunk(worldZ);
         boolean changed = false;
-        for (int x = chunkX - radiusChunks; x <= chunkX + radiusChunks; x++) {
-            for (int z = chunkZ - radiusChunks; z <= chunkZ + radiusChunks; z++) {
-                changed |= chunks.add(chunkKey(x, z));
+        for (int dx = -radiusChunks; dx <= radiusChunks; dx++) {
+            for (int dz = -radiusChunks; dz <= radiusChunks; dz++) {
+                if (!shape.contains(dx, dz, radiusChunks)) continue;
+                changed |= chunks.add(chunkKey(chunkX + dx, chunkZ + dz));
             }
         }
         return changed;
