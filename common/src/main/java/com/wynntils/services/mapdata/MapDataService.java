@@ -117,7 +117,7 @@ public class MapDataService extends Service {
     public final Config<Integer> fogRevealRadius = new Config<>(3);
 
     @Persisted
-    public final Config<RevealShape> fogRevealShape = new Config<>(RevealShape.SQUARE);
+    public final Config<RevealShape> fogRevealShape = new Config<>(RevealShape.CIRCLE);
 
     @Persisted
     public final Config<Boolean> fogHidesUndiscoveredContent = new Config<>(true);
