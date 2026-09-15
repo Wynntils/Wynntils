@@ -127,7 +127,7 @@ public final class UpdateScreen extends WynntilsScreen {
         // Update in progress
         if (completionTrigger != null && updateResult == null) return;
 
-        McUtils.mc().setScreen(previousScreen);
+        McUtils.setScreen(previousScreen);
     }
 
     @Override

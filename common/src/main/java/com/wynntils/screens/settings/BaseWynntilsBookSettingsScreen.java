@@ -1009,7 +1009,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
     protected abstract Component getSettingsViewSwitchTargetName();
 
     private void switchSettingsView() {
-        McUtils.mc().setScreen(createSettingsViewSwitchScreen(previousScreen));
+        McUtils.setScreen(createSettingsViewSwitchScreen(previousScreen));
     }
 
     protected abstract Screen createSettingsViewSwitchScreen(Screen previousScreen);

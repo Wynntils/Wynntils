@@ -277,7 +277,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     public void changeToMainMap() {
-        McUtils.mc().setScreen(MainMapScreen.create(mapCenterX, mapCenterZ, zoomLevel));
+        McUtils.setScreen(MainMapScreen.create(mapCenterX, mapCenterZ, zoomLevel));
     }
 
     @Override

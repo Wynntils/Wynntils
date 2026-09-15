@@ -67,7 +67,7 @@ public class WaypointManagerWidget extends AbstractWidget {
 
         editButton = new Button.Builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.edit"),
-                        (button) -> McUtils.mc().setScreen(PoiCreationScreen.create(managementScreen, waypoint)))
+                        (button) -> McUtils.setScreen(PoiCreationScreen.create(managementScreen, waypoint)))
                 .pos(x + width - 20 - (40 * 2), y)
                 .size(40, 20)
                 .build();

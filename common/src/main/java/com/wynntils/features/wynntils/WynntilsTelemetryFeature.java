@@ -109,7 +109,7 @@ public class WynntilsTelemetryFeature extends Feature {
                 new SystemToast.SystemToastId(TELEMETRY_PROMPT_DISPLAY_TIME),
                 Component.literal(this.getTranslatedName()),
                 toastMessage);
-        McUtils.mc().getToastManager().addToast(telemetryPromptToast);
+        McUtils.toastManager().addToast(telemetryPromptToast);
         promptExpire = System.currentTimeMillis() + TELEMETRY_PROMPT_DISPLAY_TIME;
     }
 

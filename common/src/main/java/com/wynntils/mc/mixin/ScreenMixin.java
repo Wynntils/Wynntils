@@ -12,8 +12,8 @@ import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.TitleScreenRebuildEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
+import com.wynntils.utils.mc.McUtils;
 import net.minecraft.CrashReport;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -95,7 +95,7 @@ public abstract class ScreenMixin implements ScreenExtension {
             at = @At("HEAD"),
             cancellable = true)
     private void wrapScreenErrorPre(CrashReport crashReport, CallbackInfo ci) {
-        if (!(Minecraft.getInstance().screen instanceof WynntilsScreen wynntilsScreen)) return;
+        if (!(McUtils.screen() instanceof WynntilsScreen wynntilsScreen)) return;
 
         // This is too involved in error handling to worth risk sending events
         wynntilsScreen.wrapCurrentScreenError(crashReport);

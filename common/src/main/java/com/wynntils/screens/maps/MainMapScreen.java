@@ -90,7 +90,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         addMapButton(new MapButton(
                 Texture.ADD_ICON,
-                (b) -> McUtils.mc().setScreen(PoiCreationScreen.create(this)),
+                (b) -> McUtils.setScreen(PoiCreationScreen.create(this)),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.DARK_GREEN)
@@ -151,7 +151,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         addMapButton(new MapButton(
                 Texture.WAYPOINT_MANAGER_ICON,
-                (b) -> McUtils.mc().setScreen(WaypointManagementScreen.create(this)),
+                (b) -> McUtils.setScreen(WaypointManagementScreen.create(this)),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.RED)
@@ -161,7 +161,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         gatheringFilterButton = new MapButton(
                 Texture.TOOL,
-                (b) -> McUtils.mc().setScreen(GatheringNodeFilterScreen.create(this)),
+                (b) -> McUtils.setScreen(GatheringNodeFilterScreen.create(this)),
                 List.of(
                         Component.literal("[>] ")
                                 .append(Component.translatable("screens.wynntils.map.gatheringFilter.name"))
@@ -320,7 +320,7 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     public void changeToGuildMap() {
-        McUtils.mc().setScreen(GuildMapScreen.create(mapCenterX, mapCenterZ, zoomLevel));
+        McUtils.setScreen(GuildMapScreen.create(mapCenterX, mapCenterZ, zoomLevel));
     }
 
     private void renderPois(GuiGraphics guiGraphics, int mouseX, int mouseY) {

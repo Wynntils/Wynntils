@@ -75,7 +75,7 @@ public class CompatibilityService extends Service {
                         new SystemToast.SystemToastId(TOAST_DISPLAY_TIME),
                         Component.translatable("service.wynntils.compatibility.toastTitle"),
                         toastMessage);
-                McUtils.mc().getToastManager().addToast(warningToast);
+                McUtils.toastManager().addToast(warningToast);
                 toastExpire = System.currentTimeMillis() + TOAST_DISPLAY_TIME;
             }
         } else if (event.getNewState() == WorldState.NOT_CONNECTED) {
@@ -91,7 +91,7 @@ public class CompatibilityService extends Service {
             toastExpire = 0L;
             warningToast = null;
 
-            McUtils.mc().setScreen(CompatibilityWarningScreen.create(compatibilityTier));
+            McUtils.setScreen(CompatibilityWarningScreen.create(compatibilityTier));
         }
     }
 
@@ -152,7 +152,7 @@ public class CompatibilityService extends Service {
 
         if (compatibilityTier.shouldScreenPrompt() && !isCompatible()) {
             // This has to be done on the main thread
-            McUtils.mc().execute(() -> McUtils.mc().setScreen(CompatibilityWarningScreen.create(compatibilityTier)));
+            McUtils.mc().execute(() -> McUtils.setScreen(CompatibilityWarningScreen.create(compatibilityTier)));
         }
     }
 }
