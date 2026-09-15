@@ -1846,7 +1846,6 @@
   "function.wynntils.raidsRunsSince.argument.sinceDays": "Le nombre de jours à inclure",
   "function.wynntils.shamanMask.argument.isColored": "Le nom doit-il être coloré selon la couleur du masque ?",
   "function.wynntils.shamanMask.argument.useShortName": "Le nom court doit-il être utilisé à la place du nom complet ?",
-  "function.wynntils.shamanMask.description": "Quel masque de chaman vous portez actuellement",
   "function.wynntils.shamanMask.name": "Masque de Chaman",
   "function.wynntils.shamanTotemDistance.argument.totemNumber": "Le numéro du totem pour obtenir la distance",
   "function.wynntils.shamanTotemDistance.description": "La distance entre vous et le totem du chaman",
