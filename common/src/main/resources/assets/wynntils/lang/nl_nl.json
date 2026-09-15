@@ -1842,7 +1842,6 @@
   "function.wynntils.raidsRunsSince.argument.sinceDays": "Het aantal dagen om op te nemen",
   "function.wynntils.shamanMask.argument.isColored": "Moet de naam gekleurd zijn volgens de kleur van het masker?",
   "function.wynntils.shamanMask.argument.useShortName": "Moet de korte naam worden gebruikt in plaats van de volledige naam?",
-  "function.wynntils.shamanMask.description": "Welk sjamanenmasker draag je momenteel",
   "function.wynntils.shamanMask.name": "Sjamanenmasker",
   "function.wynntils.shamanTotemDistance.argument.totemNumber": "Het nummer van de totem om de afstand van te krijgen",
   "function.wynntils.shamanTotemDistance.description": "De afstand tussen jou en de sjamanentotem",
