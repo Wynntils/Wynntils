@@ -1001,10 +1001,14 @@ public class TestRegex {
     @Test
     public void TradeMarketModel_SELL_ITEM_NAME_PATTERN() {
         PatternTester p = new PatternTester(TradeMarketModel.class, "SELL_ITEM_NAME_PATTERN");
+        // Regular items
         p.shouldMatch("\uDAFC\uDC00§bTorrential Tide\uDAFC\uDC00");
         p.shouldMatch("\uDAFC\uDC00§bX-PM4 Deadlock\uDAFC\uDC00");
+        // Items without ITEM_NAME_MARKER
         p.shouldMatch("§#82eff4ffAbility Shard");
         p.shouldMatch("§4Broken Galleon'sÀÀÀGraveyard Key");
+        // Items without color code
+        p.shouldMatch("\uDAFC\uDC00Wyvern Reins\uDAFC\uDC00");
     }
 
     @Test

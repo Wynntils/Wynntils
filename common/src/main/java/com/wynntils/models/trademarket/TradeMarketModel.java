@@ -104,7 +104,8 @@ public final class TradeMarketModel extends Model {
             "§[67] - (?:§f(?<amount>[\\d,]+) §7x )?§(?:(?:(?:c✖|a✔) §f)|f§m|f)(?<price>[\\d,]+)§7(?:§m)?²(?:§b ✮ (?<silverbullPrice>[\\d,]+)§3²)?(?: .+)?");
 
     // Test in TradeMarketModel_SELL_ITEM_NAME_PATTERN
-    private static final Pattern SELL_ITEM_NAME_PATTERN = Pattern.compile("(?:\uDAFC\uDC00|)§.(.+)(?:\uDAFC\uDC00|)");
+    private static final Pattern SELL_ITEM_NAME_PATTERN =
+            Pattern.compile("(?:\uDAFC\uDC00)?(?:§.)?(.+)(?:\uDAFC\uDC00)?");
     private static final String EMPTY_ITEM_SLOT = "Empty Item Slot";
 
     public static final int SORT_ORDER_SLOT = 52;
