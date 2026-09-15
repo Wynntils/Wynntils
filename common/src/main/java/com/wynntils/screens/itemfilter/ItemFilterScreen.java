@@ -5,6 +5,7 @@
 package com.wynntils.screens.itemfilter;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
@@ -61,7 +62,6 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import org.lwjgl.glfw.GLFW;
 
 public final class ItemFilterScreen extends WynntilsScreen {
     // Constants
@@ -630,10 +630,10 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
+        if (event.key() == InputConstants.KEY_ESCAPE && this.shouldCloseOnEsc()) {
             onClose();
             return true;
-        } else if (event.key() == GLFW.GLFW_KEY_ENTER && applyButton.active) {
+        } else if (event.key() == InputConstants.KEY_RETURN && applyButton.active) {
             updateStateFromItemSearchWidget();
             applyButton.active = false;
         }
@@ -960,7 +960,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
     }
 
     private void clickPreset(int button, int presetIndex) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (button == InputConstants.MOUSE_BUTTON_LEFT) {
             if (KeyboardUtils.isShiftDown()) { // Shift the preset up
                 int indexToSwap = presetIndex == 0 ? presets.size() - 1 : presetIndex - 1;
 
@@ -976,7 +976,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 itemSearchWidget.setTextBoxInput(presets.get(presetIndex).b());
                 updateStateFromItemSearchWidget();
             }
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (button == InputConstants.MOUSE_BUTTON_RIGHT) {
             if (KeyboardUtils.isShiftDown()) { // Shift the preset down
                 int indexToSwap = presetIndex == presets.size() - 1 ? 0 : presetIndex + 1;
 

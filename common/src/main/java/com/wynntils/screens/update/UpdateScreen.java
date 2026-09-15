@@ -11,6 +11,7 @@ import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.changelog.ChangelogScreen;
 import com.wynntils.services.athena.type.UpdateResult;
+import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -20,7 +21,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.UniversalTexture;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -127,7 +127,7 @@ public final class UpdateScreen extends WynntilsScreen {
         // Update in progress
         if (completionTrigger != null && updateResult == null) return;
 
-        McUtils.mc().setScreen(previousScreen);
+        McUtils.setScreen(previousScreen);
     }
 
     @Override
@@ -280,20 +280,19 @@ public final class UpdateScreen extends WynntilsScreen {
         Services.Update.tryUpdate().thenAccept(result -> {
             if (result == UpdateResult.SUCCESSFUL) {
                 completionFinish = System.currentTimeMillis() + 3000L;
-                Executors.newSingleThreadScheduledExecutor()
-                        .schedule(
-                                () -> {
-                                    // This has to be done on the main thread
-                                    McUtils.mc().execute(() -> {
-                                        if (exit) {
-                                            System.exit(0);
-                                        } else {
-                                            connectToServer();
-                                        }
-                                    });
-                                },
-                                3000,
-                                TimeUnit.MILLISECONDS);
+                TaskUtils.schedule(
+                        () -> {
+                            // This has to be done on the main thread
+                            McUtils.mc().execute(() -> {
+                                if (exit) {
+                                    System.exit(0);
+                                } else {
+                                    connectToServer();
+                                }
+                            });
+                        },
+                        3,
+                        TimeUnit.SECONDS);
             } else {
                 toggleButtons(true);
             }

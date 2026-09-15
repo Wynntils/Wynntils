@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.guides.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -44,7 +45,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import org.lwjgl.glfw.GLFW;
 
 public abstract class GuideContainerWidget<T> extends AbstractWidget implements TextboxScreen {
     private static final float SCROLL_FACTOR = 10f;
@@ -425,7 +425,7 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+        if (event.key() == InputConstants.KEY_ESCAPE) {
             return false;
         }
 

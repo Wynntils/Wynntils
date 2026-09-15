@@ -5,6 +5,7 @@
 package com.wynntils.features.wynntils;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
@@ -56,7 +57,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.WYNNTILS)
 public class CharacterInfoIndicatorFeature extends Feature {
@@ -127,7 +127,7 @@ public class CharacterInfoIndicatorFeature extends Feature {
 
         @Override
         public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-            if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
+            if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
 
             this.playDownSound(McUtils.mc().getSoundManager());
 

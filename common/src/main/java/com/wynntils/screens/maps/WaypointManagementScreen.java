@@ -193,7 +193,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         // region add waypoint button
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.add"),
-                        (button) -> McUtils.mc().setScreen(PoiCreationScreen.create(this)))
+                        (button) -> McUtils.setScreen(PoiCreationScreen.create(this)))
                 .pos(
                         (int) (getTranslationX() + Texture.WAYPOINT_MANAGER_BACKGROUND.width() + 10),
                         (int) (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10) - 60)
@@ -375,7 +375,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
 
     @Override
     public void onClose() {
-        McUtils.mc().setScreen(oldMapScreen);
+        McUtils.setScreen(oldMapScreen);
     }
 
     @Override

@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.settings;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.persisted.config.ConfigProfile;
@@ -36,7 +37,6 @@ import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import org.joml.Vector2i;
-import org.lwjgl.glfw.GLFW;
 
 public class ConfigProfileScreen extends WynntilsScreen {
     private static final FontDescription.Resource RIBBON_FONT =
@@ -276,11 +276,11 @@ public class ConfigProfileScreen extends WynntilsScreen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (McUtils.options().keyLeft.matches(event) || event.key() == GLFW.GLFW_KEY_LEFT) {
+        if (McUtils.options().keyLeft.matches(event) || event.key() == InputConstants.KEY_LEFT) {
             updateFocusedProfile(-1);
-        } else if (McUtils.options().keyRight.matches(event) || event.key() == GLFW.GLFW_KEY_RIGHT) {
+        } else if (McUtils.options().keyRight.matches(event) || event.key() == InputConstants.KEY_RIGHT) {
             updateFocusedProfile(1);
-        } else if (event.key() == GLFW.GLFW_KEY_SPACE || event.key() == GLFW.GLFW_KEY_ENTER) {
+        } else if (event.key() == InputConstants.KEY_SPACE || event.key() == InputConstants.KEY_RETURN) {
             Managers.Config.setSelectedProfile(focusedProfile);
         }
 

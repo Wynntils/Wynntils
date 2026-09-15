@@ -12,7 +12,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.RenderTileLevelLastEvent;
+import com.wynntils.mc.event.SubmitCustomGeometryEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.utils.MathUtils;
@@ -65,7 +65,7 @@ public class BeaconBeamFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onRenderLevelLast(RenderTileLevelLastEvent event) {
+    public void onSubmitCustomGeometry(SubmitCustomGeometryEvent event) {
         List<MarkerInfo> markers = Models.Marker.getAllMarkers().toList();
         if (markers.isEmpty()) return;
 
@@ -108,15 +108,15 @@ public class BeaconBeamFeature extends Feature {
                 colorInt = color.withAlpha(alpha).asInt();
             }
 
-            float partial = event.getDeltaTracker().getGameTimeDeltaPartialTick(false);
-            long gameTime = McUtils.mc().level.getGameTime();
+            float partial = McUtils.mc().getDeltaTracker().getGameTimeDeltaPartialTick(false);
+            long gameTime = event.getLevelRenderState().gameTime;
             float animationTime = (gameTime % 40) + partial;
 
             CustomBeaconRenderer.submitBeaconBeam(
                     poseStack,
-                    event.getSubmitNodeStorage(),
+                    event.getSubmitNodeCollector(),
                     BeaconRenderer.BEAM_LOCATION,
-                    partial,
+                    1.0f,
                     animationTime,
                     0,
                     BeaconRenderer.MAX_RENDER_Y,

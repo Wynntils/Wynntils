@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.ui;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -37,7 +38,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UI)
 public class ProfessionHighlightFeature extends Feature {
@@ -205,7 +205,7 @@ public class ProfessionHighlightFeature extends Feature {
             }
 
             // Left click increases the profession type
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                 if (profession == null) {
                     profession = ProfessionType.craftingProfessionTypes().getFirst();
                 } else {
@@ -224,7 +224,7 @@ public class ProfessionHighlightFeature extends Feature {
             }
 
             // Right click decreases the profession type
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 if (profession == null) {
                     profession = ProfessionType.craftingProfessionTypes().getLast();
                 } else {

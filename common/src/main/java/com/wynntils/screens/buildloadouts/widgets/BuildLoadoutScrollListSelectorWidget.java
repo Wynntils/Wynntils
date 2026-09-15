@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.buildloadouts.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.screens.buildloadouts.type.ScrollListCategory;
@@ -20,7 +21,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class BuildLoadoutScrollListSelectorWidget extends AbstractWidget {
     private final StyledText text;
@@ -70,7 +70,7 @@ public class BuildLoadoutScrollListSelectorWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
+        if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
 
