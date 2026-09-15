@@ -1842,7 +1842,6 @@
   "function.wynntils.raidsRunsSince.argument.sinceDays": "Il numero di giorni da includere",
   "function.wynntils.shamanMask.argument.isColored": "Il nome dovrebbe essere colorato in base al colore della maschera?",
   "function.wynntils.shamanMask.argument.useShortName": "Dovrebbe essere usato il nome corto invece del nome completo?",
-  "function.wynntils.shamanMask.description": "Quale maschera da sciamano stai attualmente indossando",
   "function.wynntils.shamanMask.name": "Maschera da Sciamano",
   "function.wynntils.shamanTotemDistance.argument.totemNumber": "Il numero del totem per ottenere la distanza",
   "function.wynntils.shamanTotemDistance.description": "La distanza tra te e il totem dello sciamano",
