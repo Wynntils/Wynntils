@@ -1842,7 +1842,6 @@
   "function.wynntils.raidsRunsSince.argument.sinceDays": "要包括的天數",
   "function.wynntils.shamanMask.argument.isColored": "名稱是否應根據面具的顏色著色？",
   "function.wynntils.shamanMask.argument.useShortName": "是否應使用短名稱而不是全名？",
-  "function.wynntils.shamanMask.description": "您當前佩戴的薩滿面具",
   "function.wynntils.shamanMask.name": "薩滿面具",
   "function.wynntils.shamanTotemDistance.argument.totemNumber": "獲取距離的圖騰編號",
   "function.wynntils.shamanTotemDistance.description": "您與薩滿圖騰之間的距離",
