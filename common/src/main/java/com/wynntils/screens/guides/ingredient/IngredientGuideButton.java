@@ -29,10 +29,17 @@ public class IngredientGuideButton extends GuideButton {
         List<String> modelDataString =
                 List.of(PROFESSION_STAR_KEY + itemStack.getIngredientInfo().tier());
         CustomModelData oldCustomModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
-        CustomModelData newCustomModelData = new CustomModelData(
-                oldCustomModelData.floats(), oldCustomModelData.flags(), modelDataString, oldCustomModelData.colors());
 
-        itemStack.set(DataComponents.CUSTOM_MODEL_DATA, newCustomModelData);
+        if (oldCustomModelData != null) {
+            CustomModelData newCustomModelData = new CustomModelData(
+                    oldCustomModelData.floats(),
+                    oldCustomModelData.flags(),
+                    modelDataString,
+                    oldCustomModelData.colors());
+
+            itemStack.set(DataComponents.CUSTOM_MODEL_DATA, newCustomModelData);
+        }
+
         itemStack.set(DataComponents.TOOLTIP_STYLE, TOOLTIP_STYLE);
     }
 
