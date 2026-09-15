@@ -126,7 +126,7 @@ public final class TradeMarketModel extends Model {
 
     private String soldItemName = null;
     private Optional<Integer> soldItemTier = Optional.empty();
-    private Optional<Boolean> disableSellButtons = Optional.empty();
+    private boolean shouldDisableSellButtons = false;
 
     public TradeMarketModel() {
         super(List.of());
@@ -373,8 +373,8 @@ public final class TradeMarketModel extends Model {
         return soldItemTier;
     }
 
-    public Optional<Boolean> getDisableSellButtons() {
-        return disableSellButtons;
+    public boolean getShouldDisableSellButtons() {
+        return shouldDisableSellButtons;
     }
 
     private void handleSellDialogueUpdate() {
@@ -384,7 +384,7 @@ public final class TradeMarketModel extends Model {
 
         soldItemName = null;
         soldItemTier = Optional.empty();
-        disableSellButtons = Optional.empty();
+        shouldDisableSellButtons = false;
 
         ItemStack itemStack = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
         if (itemStack != ItemStack.EMPTY) {
@@ -400,12 +400,12 @@ public final class TradeMarketModel extends Model {
                 }
                 Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
                 if (gearItemOpt.isPresent() && !gearItemOpt.get().isUnidentified()) {
-                    disableSellButtons = Optional.of(true);
+                    shouldDisableSellButtons = true;
                 }
                 Optional<CraftedItemProperty> craftedItemPropertyOpt =
                         Models.Item.asWynnItemProperty(itemStack, CraftedItemProperty.class);
                 if (craftedItemPropertyOpt.isPresent()) {
-                    disableSellButtons = Optional.of(true);
+                    shouldDisableSellButtons = true;
                 }
             }
         }

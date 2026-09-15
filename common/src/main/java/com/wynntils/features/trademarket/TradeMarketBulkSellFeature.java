@@ -53,10 +53,10 @@ public class TradeMarketBulkSellFeature extends Feature {
 
         String soldItemName = Models.TradeMarket.getSoldItemName();
         Optional<Integer> soldItemTier = Models.TradeMarket.getSoldItemTier();
-        Optional<Boolean> disableSellButtons = Models.TradeMarket.getDisableSellButtons();
+        boolean shouldDisableSellButtons = Models.TradeMarket.getShouldDisableSellButtons();
         removeSellButtons(containerScreen);
         if (soldItemName == null) return;
-        if (disableSellButtons.isEmpty()) {
+        if (!shouldDisableSellButtons) {
             addSellButtons(containerScreen, soldItemName, soldItemTier);
         }
     }
