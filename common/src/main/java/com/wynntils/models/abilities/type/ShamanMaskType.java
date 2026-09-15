@@ -14,8 +14,7 @@ public enum ShamanMaskType {
     NONE("None", CommonColors.GRAY, null, null),
     LUNATIC("L", CustomColor.fromInt(0xf4557d), "\uE024"),
     HERETIC("H", CustomColor.fromInt(0x99e9ff), "\uE022"),
-    FANATIC("F", CustomColor.fromInt(0xffc251), "\uE023"),
-    AWAKENED("A", CommonColors.WHITE, "Awakened", StyledText.fromString("§fAwakened"));
+    FANATIC("F", CustomColor.fromInt(0xffc251), "\uE023");
 
     private final String alias;
     private final CustomColor color;
