@@ -24,6 +24,7 @@ import com.wynntils.models.players.type.PlayerRank;
 import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.OptionalBoolean;
@@ -34,7 +35,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -90,7 +90,8 @@ public final class AccountModel extends Model {
 
     private static final int PLAYER_INFO_UPDATE_MS = 60000;
     private ScheduledFuture<?> scheduledFuture;
-    private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
+    private final ScheduledExecutorService timerExecutor =
+            TaskUtils.createSingleThreadScheduledExecutor("Wynntils-account-%d");
     private WynnPlayerInfo playerInfo;
     private boolean scanRankInfoPending;
     private boolean scanRankInfoAlreadyScanned;

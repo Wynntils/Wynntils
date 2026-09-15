@@ -40,6 +40,7 @@ import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.services.hades.type.GearShareOptions;
 import com.wynntils.services.hades.type.PlayerStatus;
 import com.wynntils.utils.EncodedByteBuffer;
+import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
@@ -52,7 +53,6 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
@@ -158,7 +158,7 @@ public final class HadesService extends Service {
 
         WynntilsMod.info("Starting Hades Ping Scheduler Task");
 
-        pingScheduler = Executors.newSingleThreadScheduledExecutor();
+        pingScheduler = TaskUtils.createSingleThreadScheduledExecutor("Wynntils-hades-ping-%d");
         pingScheduler.scheduleAtFixedRate(this::sendPing, 0, MS_PER_PING, TimeUnit.MILLISECONDS);
     }
 
