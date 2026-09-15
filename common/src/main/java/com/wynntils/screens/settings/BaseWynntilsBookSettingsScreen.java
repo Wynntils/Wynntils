@@ -5,6 +5,7 @@
 package com.wynntils.screens.settings;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
@@ -62,7 +63,6 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
     // Constants
@@ -684,7 +684,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+        if (event.key() == InputConstants.KEY_ESCAPE) {
             this.onClose();
             return true;
         }
@@ -981,7 +981,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     private void cycleEnabledState(int button) {
-        int direction = button == GLFW.GLFW_MOUSE_BUTTON_LEFT ? 1 : -1;
+        int direction = button == InputConstants.MOUSE_BUTTON_LEFT ? 1 : -1;
         EnabledFilterType[] values = EnabledFilterType.values();
         int currentIndex = enabledFilterType.ordinal();
         int newIndex = (currentIndex + direction + values.length) % values.length;
@@ -1229,7 +1229,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
     private void importSettings(int clicked) {
         String clipboard = McUtils.mc().keyboardHandler.getClipboard();
 
-        if (clicked == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (clicked == InputConstants.MOUSE_BUTTON_LEFT) {
             List<Configurable> configsToImport = new ArrayList<>(getCurrentRootConfigurables());
 
             if (shouldIncludeInactiveOverlaysInConfigList()) {
@@ -1248,7 +1248,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
                         Component.translatable("screens.wynntils.settingsScreen.import.failed")
                                 .withStyle(ChatFormatting.RED));
             }
-        } else if (clicked == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (clicked == InputConstants.MOUSE_BUTTON_RIGHT) {
             if (selectedConfigurable != null) {
                 boolean imported = Managers.Config.importConfig(clipboard, List.of(selectedConfigurable));
 
@@ -1275,7 +1275,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
     private void exportSettings(int clicked) {
         String exportedSettings = "";
 
-        if (clicked == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (clicked == InputConstants.MOUSE_BUTTON_LEFT) {
             // Get all features and overlays into a list
             List<Configurable> featuresToExport = new ArrayList<>(getCurrentRootConfigurables());
 
@@ -1289,7 +1289,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
 
             McUtils.sendWynntilsPrefixMessage(Component.translatable("screens.wynntils.settingsScreen.exportedAll")
                     .withStyle(ChatFormatting.GREEN));
-        } else if (clicked == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (clicked == InputConstants.MOUSE_BUTTON_RIGHT) {
             if (selectedConfigurable != null) {
                 exportedSettings = Managers.Config.exportConfig(List.of(selectedConfigurable));
 

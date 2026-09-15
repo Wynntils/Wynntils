@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.chat;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -29,7 +30,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.CHAT)
 public class InputTranscriptionFeature extends Feature {
@@ -95,7 +95,7 @@ public class InputTranscriptionFeature extends Feature {
 
     @SubscribeEvent
     public void onChatScreenKeyTyped(ChatScreenKeyTypedEvent event) {
-        if (event.getKeyCode() != GLFW.GLFW_KEY_BACKSPACE) return;
+        if (event.getKeyCode() != InputConstants.KEY_BACKSPACE) return;
         if (!(McUtils.screen() instanceof ChatScreen chatScreen)) return;
         if (!transcriptionButtons.get()) return;
         if (!chatScreen.input.getHighlighted().isBlank()) return;

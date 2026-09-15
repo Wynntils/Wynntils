@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.guides.gear;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Services;
 import com.wynntils.screens.guides.widgets.GuideButton;
 import com.wynntils.utils.colors.CustomColor;
@@ -11,7 +12,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
-import org.lwjgl.glfw.GLFW;
 
 public class GearGuideButton extends GuideButton {
     private final GuideGearItemStack gearItemStack;
@@ -46,7 +46,7 @@ public class GearGuideButton extends GuideButton {
             return;
         }
 
-        if (input.input() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (input.input() == InputConstants.MOUSE_BUTTON_LEFT) {
             gearItemStack.changePage();
         }
     }

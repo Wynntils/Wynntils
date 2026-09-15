@@ -5,6 +5,7 @@
 package com.wynntils.screens.overlays.placement;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.Corner;
@@ -49,7 +50,6 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec2;
-import org.lwjgl.glfw.GLFW;
 
 public final class OverlayManagementScreen extends WynntilsScreen {
     // This is used to calculate alignment lines
@@ -319,7 +319,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         setupButtons();
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && KeyboardUtils.isShiftDown()) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_MIDDLE && KeyboardUtils.isShiftDown()) {
             selectedOverlay.getConfigOptionFromString("position").ifPresent(Config::reset);
             selectedOverlay.getConfigOptionFromString("size").ifPresent(Config::reset);
             selectedOverlay
@@ -426,12 +426,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         userInteracted = true;
         animationLengthRemaining = 0;
 
-        if (event.key() == GLFW.GLFW_KEY_ENTER) {
+        if (event.key() == InputConstants.KEY_RETURN) {
             Managers.Config.saveConfig();
             onClose();
             McUtils.setScreen(previousScreen);
             return true;
-        } else if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+        } else if (event.key() == InputConstants.KEY_ESCAPE) {
             onClose();
             McUtils.setScreen(previousScreen);
             return true;
@@ -441,10 +441,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         // Shirt + Arrow keys change overlay alignment
         if (KeyboardUtils.isShiftDown()) {
-            if (event.key() == GLFW.GLFW_KEY_UP || event.key() == GLFW.GLFW_KEY_DOWN) {
+            if (event.key() == InputConstants.KEY_UP || event.key() == InputConstants.KEY_DOWN) {
                 int index = selectedOverlay.getRenderVerticalAlignment().ordinal();
 
-                if (event.key() == GLFW.GLFW_KEY_DOWN) {
+                if (event.key() == InputConstants.KEY_DOWN) {
                     index += 1;
                 } else {
                     index -= 1;
@@ -458,10 +458,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                         .getConfigOptionFromString("verticalAlignmentOverride")
                         .ifPresent(config -> ((Config<VerticalAlignment>) config).setValue(values[finalIndex]));
 
-            } else if (event.key() == GLFW.GLFW_KEY_RIGHT || event.key() == GLFW.GLFW_KEY_LEFT) {
+            } else if (event.key() == InputConstants.KEY_RIGHT || event.key() == InputConstants.KEY_LEFT) {
                 int index = selectedOverlay.getRenderHorizontalAlignment().ordinal();
 
-                if (event.key() == GLFW.GLFW_KEY_RIGHT) {
+                if (event.key() == InputConstants.KEY_RIGHT) {
                     index += 1;
                 } else {
                     index -= 1;
@@ -480,10 +480,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             int offsetX = 0;
             int offsetY = 0;
 
-            if (event.key() == GLFW.GLFW_KEY_UP) offsetY = -1;
-            else if (event.key() == GLFW.GLFW_KEY_DOWN) offsetY = 1;
-            else if (event.key() == GLFW.GLFW_KEY_RIGHT) offsetX = 1;
-            else if (event.key() == GLFW.GLFW_KEY_LEFT) offsetX = -1;
+            if (event.key() == InputConstants.KEY_UP) offsetY = -1;
+            else if (event.key() == InputConstants.KEY_DOWN) offsetY = 1;
+            else if (event.key() == InputConstants.KEY_RIGHT) offsetX = 1;
+            else if (event.key() == InputConstants.KEY_LEFT) offsetX = -1;
 
             final int finalOffsetX = offsetX;
             final int finalOffsetY = offsetY;
@@ -499,7 +499,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                                     finalOffsetY)));
         }
 
-        if (event.key() == GLFW.GLFW_KEY_LEFT_SHIFT || event.key() == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+        if (event.key() == InputConstants.KEY_LSHIFT || event.key() == InputConstants.KEY_RSHIFT) {
             snappingEnabled = false;
             edgeAlignmentSnapMap.clear();
             alignmentLinesToRender.clear();
@@ -510,7 +510,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     public boolean keyReleased(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_LEFT_SHIFT || event.key() == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+        if (event.key() == InputConstants.KEY_LSHIFT || event.key() == InputConstants.KEY_RSHIFT) {
             snappingEnabled = true;
         }
         return super.keyReleased(event);

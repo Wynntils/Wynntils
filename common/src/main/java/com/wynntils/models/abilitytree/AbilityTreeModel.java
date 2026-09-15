@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.abilitytree;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
@@ -50,7 +51,6 @@ import java.util.stream.Collectors;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 public final class AbilityTreeModel extends Model {
     public static final int ABILITY_TREE_PAGES = 9;
@@ -200,7 +200,7 @@ public final class AbilityTreeModel extends Model {
             if (abilityResetItemOpt.isEmpty()) return;
             if (!abilityResetItemOpt.get().getCanReset()) return;
 
-            if (event.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.getMouseButton() == InputConstants.MOUSE_BUTTON_LEFT) {
                 Map<String, List<String>> allEquippedAbilities = unlockedAbilities.get();
                 allEquippedAbilities.put(Models.Character.getId(), new ArrayList<>());
                 unlockedAbilities.store(allEquippedAbilities);
@@ -225,7 +225,7 @@ public final class AbilityTreeModel extends Model {
 
         StatusEffect statusEffect = Models.StatusEffect.searchStatusEffectByName("Tree Manipulation");
 
-        if (statusEffect == null || event.getMouseButton() != GLFW.GLFW_MOUSE_BUTTON_RIGHT) return;
+        if (statusEffect == null || event.getMouseButton() != InputConstants.MOUSE_BUTTON_RIGHT) return;
 
         AbilityTreeNodeItem abilityItem = abilityItemOpt.get();
         String abilityName = abilityItem.getName().getString(StyleType.NONE);

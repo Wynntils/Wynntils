@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.territorymanagement.widgets.quicksorts;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -25,7 +26,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public abstract class TerritoryQuickSortWidget extends AbstractWidget {
     private final TerritoryManagementScreen screen;
@@ -75,11 +75,11 @@ public abstract class TerritoryQuickSortWidget extends AbstractWidget {
             if (clicked) {
                 this.playDownSound(Minecraft.getInstance().getSoundManager());
 
-                if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                     forwardClick();
-                } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
                     backwardClick();
-                } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+                } else if (event.button() == InputConstants.MOUSE_BUTTON_MIDDLE) {
                     resetClick();
                 }
 
@@ -94,9 +94,9 @@ public abstract class TerritoryQuickSortWidget extends AbstractWidget {
 
     @Override
     protected boolean isValidClickButton(MouseButtonInfo buttonInfo) {
-        return buttonInfo.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT
-                || buttonInfo.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT
-                || buttonInfo.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE;
+        return buttonInfo.button() == InputConstants.MOUSE_BUTTON_LEFT
+                || buttonInfo.button() == InputConstants.MOUSE_BUTTON_RIGHT
+                || buttonInfo.button() == InputConstants.MOUSE_BUTTON_MIDDLE;
     }
 
     public final String getItemSearchQuery() {

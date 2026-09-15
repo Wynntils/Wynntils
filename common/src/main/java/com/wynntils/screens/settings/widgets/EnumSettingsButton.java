@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.settings.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.mc.McUtils;
 import java.util.EnumSet;
@@ -11,7 +12,6 @@ import java.util.List;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton {
     private final Config<E> config;
@@ -29,9 +29,9 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
 
         int addToIndex;
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             addToIndex = 1;
-        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             addToIndex = -1;
         } else {
             return false;

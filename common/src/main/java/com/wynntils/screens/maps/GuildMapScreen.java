@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
@@ -42,7 +43,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public final class GuildMapScreen extends AbstractMapScreen {
     private boolean resourceMode = false;
@@ -110,7 +110,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 Texture.DEFENSE_FILTER_ICON,
                 (b) -> {
                     // Left and right clicks cycle through the defense levels, middle click resets to OFF
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+                    if (b == InputConstants.MOUSE_BUTTON_MIDDLE) {
                         territoryDefenseFilterEnabled = false;
                         territoryDefenseFilterType = TerritoryFilterType.DEFAULT;
                         territoryDefenseFilterButton.setTooltip(getCompleteDefenseFilterTooltip());
@@ -127,10 +127,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
                     }
 
                     territoryDefenseFilterEnabled = true;
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                    if (b == InputConstants.MOUSE_BUTTON_LEFT) {
                         territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterNext(
                                 territoryDefenseFilterType != TerritoryFilterType.DEFAULT);
-                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                    } else if (b == InputConstants.MOUSE_BUTTON_RIGHT) {
                         territoryDefenseFilterLevel = territoryDefenseFilterLevel.getFilterPrevious(
                                 territoryDefenseFilterType != TerritoryFilterType.DEFAULT);
                     }
@@ -144,7 +144,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 Texture.TREASURY,
                 (b) -> {
                     // Left and right clicks cycle through the treasury levels, middle click resets to OFF
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+                    if (b == InputConstants.MOUSE_BUTTON_MIDDLE) {
                         territoryTreasuryFilterEnabled = false;
                         territoryTreasuryFilterType = TerritoryFilterType.DEFAULT;
                         territoryTreasuryFilterButton.setTooltip(getCompleteTreasuryFilterTooltip());
@@ -161,10 +161,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
                     }
 
                     territoryTreasuryFilterEnabled = true;
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                    if (b == InputConstants.MOUSE_BUTTON_LEFT) {
                         territoryTreasuryFilterLevel = territoryTreasuryFilterLevel.getFilterNext(
                                 territoryTreasuryFilterType != TerritoryFilterType.DEFAULT);
-                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                    } else if (b == InputConstants.MOUSE_BUTTON_RIGHT) {
                         territoryTreasuryFilterLevel = territoryTreasuryFilterLevel.getFilterPrevious(
                                 territoryTreasuryFilterType != TerritoryFilterType.DEFAULT);
                     }
@@ -338,17 +338,17 @@ public final class GuildMapScreen extends AbstractMapScreen {
         }
 
         // Manage on shift right click
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT
                 && KeyboardUtils.isShiftDown()
                 && hovered instanceof TerritoryPoi territoryPoi) {
             Handlers.Command.queueCommand("gu territory " + territoryPoi.getName());
-        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        } else if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             if (hovered instanceof WaypointPoi) {
                 Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(
                         hovered.getLocation().asLocation());
                 return true;
             }
-        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        } else if (event.button() == InputConstants.MOUSE_BUTTON_MIDDLE) {
             setCompassToMouseCoords(event.x(), event.y(), !KeyboardUtils.isShiftDown());
             return true;
         }

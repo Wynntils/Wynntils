@@ -328,16 +328,17 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+        if (event.key() == InputConstants.KEY_ESCAPE) {
             this.onClose();
             return true;
         }
-        if (event.key() == GLFW.GLFW_KEY_EQUAL || event.key() == GLFW.GLFW_KEY_KP_ADD) {
+        if (event.key() == InputConstants.KEY_EQUALS || event.key() == InputConstants.KEY_ADD) {
             // Take steps of 2 to make it easier to zoom in and out
             adjustZoomLevel(2);
             return true;
         }
-        if (event.key() == GLFW.GLFW_KEY_MINUS || event.key() == GLFW.GLFW_KEY_KP_SUBTRACT) {
+        // InputConstants does not have a mapping for KEY_KP_SUBTRACT
+        if (event.key() == InputConstants.KEY_MINUS || event.key() == GLFW.GLFW_KEY_KP_SUBTRACT) {
             // Take steps of 2 to make it easier to zoom in and out
             adjustZoomLevel(-2);
             return true;
