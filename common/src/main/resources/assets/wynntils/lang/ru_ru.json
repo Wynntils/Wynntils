@@ -2501,7 +2501,6 @@
   "function.wynntils.scoreboardPartyMembers.name": "Участники группы с табло",
   "function.wynntils.shamanMask.argument.isColored": "Должно ли имя быть окрашено в соответствии с цветом маски?",
   "function.wynntils.shamanMask.argument.useShortName": "Следует ли использовать короткое имя вместо полного?",
-  "function.wynntils.shamanMask.description": "Какую маску шамана вы сейчас носите",
   "function.wynntils.shamanMask.name": "Маска Шамана",
   "function.wynntils.shamanTotemDistance.argument.totemNumber": "Номер тотема для получения расстояния",
   "function.wynntils.shamanTotemDistance.description": "Расстояние между вами и тотемом шамана",
