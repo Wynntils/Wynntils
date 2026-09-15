@@ -26,7 +26,9 @@ import com.wynntils.models.containers.containers.trademarket.TradeMarketRevealIt
 import com.wynntils.models.containers.containers.trademarket.TradeMarketSellContainer;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesContainer;
 import com.wynntils.models.containers.type.ContainerBounds;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.MaterialItem;
+import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.trademarket.event.TradeMarketChatInputEvent;
 import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent;
 import com.wynntils.models.trademarket.event.TradeMarketStateEvent;
@@ -101,7 +103,9 @@ public final class TradeMarketModel extends Model {
     private static final Pattern PRICE_PATTERN = Pattern.compile(
             "§[67] - (?:§f(?<amount>[\\d,]+) §7x )?§(?:(?:(?:c✖|a✔) §f)|f§m|f)(?<price>[\\d,]+)§7(?:§m)?²(?:§b ✮ (?<silverbullPrice>[\\d,]+)§3²)?(?: .+)?");
 
-    private static final Pattern SELL_ITEM_NAME_PATTERN = Pattern.compile("\uDAFC\uDC00§.(.+)\uDAFC\uDC00");
+    // Test in TradeMarketModel_SELL_ITEM_NAME_PATTERN
+    private static final Pattern SELL_ITEM_NAME_PATTERN =
+            Pattern.compile("(?:\uDAFC\uDC00)?(?:§.)?(.+)(?:\uDAFC\uDC00)?");
     private static final String EMPTY_ITEM_SLOT = "Empty Item Slot";
 
     public static final int SORT_ORDER_SLOT = 52;
@@ -123,6 +127,7 @@ public final class TradeMarketModel extends Model {
 
     private String soldItemName = null;
     private Optional<Integer> soldItemTier = Optional.empty();
+    private boolean shouldDisableSellButtons = false;
 
     public TradeMarketModel() {
         super(List.of());
@@ -369,6 +374,10 @@ public final class TradeMarketModel extends Model {
         return soldItemTier;
     }
 
+    public boolean getShouldDisableSellButtons() {
+        return shouldDisableSellButtons;
+    }
+
     private void handleSellDialogueUpdate() {
         if (tradeMarketState != TradeMarketState.SELLING) return;
 
@@ -376,6 +385,7 @@ public final class TradeMarketModel extends Model {
 
         soldItemName = null;
         soldItemTier = Optional.empty();
+        shouldDisableSellButtons = false;
 
         ItemStack itemStack = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
         if (itemStack != ItemStack.EMPTY) {
@@ -388,6 +398,15 @@ public final class TradeMarketModel extends Model {
                     MaterialItem materialItem = materialItemOpt.get();
                     soldItemName = materialItem.getName();
                     soldItemTier = Optional.of(materialItem.getQualityTier());
+                }
+                Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
+                if (gearItemOpt.isPresent() && !gearItemOpt.get().isUnidentified()) {
+                    shouldDisableSellButtons = true;
+                }
+                Optional<CraftedItemProperty> craftedItemPropertyOpt =
+                        Models.Item.asWynnItemProperty(itemStack, CraftedItemProperty.class);
+                if (craftedItemPropertyOpt.isPresent()) {
+                    shouldDisableSellButtons = true;
                 }
             }
         }
