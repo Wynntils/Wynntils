@@ -41,6 +41,15 @@ public final class DiscoveryRecord {
         return changed;
     }
 
+    /** Reveals every chunk that overlaps the world-space box (inclusive corners). */
+    public void revealArea(double x1, double z1, double x2, double z2) {
+        for (int x = toChunk(x1); x <= toChunk(x2); x++) {
+            for (int z = toChunk(z1); z <= toChunk(z2); z++) {
+                chunks.add(chunkKey(x, z));
+            }
+        }
+    }
+
     public void clear() {
         chunks.clear();
     }

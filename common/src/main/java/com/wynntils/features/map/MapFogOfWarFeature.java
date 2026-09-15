@@ -42,6 +42,10 @@ public class MapFogOfWarFeature extends Feature {
     private static final int MIN_REVEAL_RADIUS = 1;
     private static final int MAX_REVEAL_RADIUS = 8;
     private static final String NO_CHARACTER_ID = "-";
+    private static final String GLOBAL_RECORD_ID = "global";
+    private static final int MAX_COMMAND_REVEAL_RADIUS = 64;
+    // Shown while no character is selected in per-character mode: everything fogged, never written to
+    private static final DiscoveryRecord NOTHING_DISCOVERED = new DiscoveryRecord();
     private static final List<String> STATIC_CONTENT_CATEGORIES =
             List.of("wynntils:place", "wynntils:service", "wynntils:content", "wynntils:gathering");
 
@@ -50,6 +54,9 @@ public class MapFogOfWarFeature extends Feature {
 
     @Persisted
     public final Config<Boolean> fogMinimap = new Config<>(true);
+
+    @Persisted
+    private final Config<Boolean> perCharacter = new Config<>(true);
 
     @Persisted
     private final Config<Float> fogOpacity = new Config<>(0.85f);
@@ -71,7 +78,7 @@ public class MapFogOfWarFeature extends Feature {
 
     private final FogMasks fogMasks = new FogMasks();
 
-    private String currentCharacterId;
+    private String currentRecordId;
     private DiscoveryRecord currentRecord;
     private int ticksUntilSample = 0;
 
@@ -84,7 +91,7 @@ public class MapFogOfWarFeature extends Feature {
         if (--ticksUntilSample > 0) return;
         ticksUntilSample = SAMPLE_INTERVAL_TICKS;
 
-        Optional<DiscoveryRecord> record = activeRecord();
+        Optional<DiscoveryRecord> record = writableRecord();
         if (record.isEmpty() || !Models.WorldState.onWorld() || Models.Housing.isOnHousing()) return;
 
         double x = McUtils.player().getX();
@@ -95,8 +102,30 @@ public class MapFogOfWarFeature extends Feature {
         int radius = MathUtils.clamp(revealRadius.get(), MIN_REVEAL_RADIUS, MAX_REVEAL_RADIUS);
         if (!record.get().reveal(x, z, radius, revealShape.get())) return;
 
-        discoveredChunks.touched();
-        fogMasks.invalidate();
+        recordChanged();
+    }
+
+    /** Reveals every chunk of every map tile for the current record. */
+    public boolean revealAll() {
+        Optional<DiscoveryRecord> record = writableRecord();
+        if (record.isEmpty()) return false;
+
+        for (MapTexture map : Services.Map.getMaps()) {
+            record.get().revealArea(map.getX1(), map.getZ1(), map.getX2(), map.getZ2());
+        }
+        recordChanged();
+        return true;
+    }
+
+    /** Reveals the configured shape around the player with the given radius in chunks. */
+    public boolean revealAround(int radiusChunks) {
+        Optional<DiscoveryRecord> record = writableRecord();
+        if (record.isEmpty()) return false;
+
+        int radius = MathUtils.clamp(radiusChunks, MIN_REVEAL_RADIUS, MAX_COMMAND_REVEAL_RADIUS);
+        record.get().reveal(McUtils.player().getX(), McUtils.player().getZ(), radius, revealShape.get());
+        recordChanged();
+        return true;
     }
 
     /** What to draw over a tile, or empty when fog should not be drawn. */
@@ -119,39 +148,67 @@ public class MapFogOfWarFeature extends Feature {
                                 location.getLocation().z()));
     }
 
-    /** @return whether there was a current character record to reset */
-    public boolean resetCurrentCharacter() {
-        Optional<DiscoveryRecord> record = activeRecord();
+    /** @return whether there was a record to reset */
+    public boolean resetCurrentRecord() {
+        Optional<DiscoveryRecord> record = writableRecord();
         if (record.isEmpty()) return false;
 
         record.get().clear();
-        discoveredChunks.touched();
-        fogMasks.invalidate();
+        recordChanged();
         return true;
     }
 
     @Override
     public void onDisable() {
         fogMasks.release();
-        currentCharacterId = null;
+        currentRecordId = null;
         currentRecord = null;
     }
 
-    /** The current character's record while fog should apply; empty when disabled or no character is selected. */
+    /** The record fog is drawn from; empty only while the feature is disabled. */
     private Optional<DiscoveryRecord> activeRecord() {
-        if (!isEnabled() || !Models.Character.hasCharacter()) return Optional.empty();
+        if (!isEnabled()) return Optional.empty();
+
+        String recordId = recordId();
+        if (recordId == null) {
+            bind(null, NOTHING_DISCOVERED);
+            return Optional.of(NOTHING_DISCOVERED);
+        }
+
+        if (!recordId.equals(currentRecordId)) {
+            DiscoveryRecord record = new DiscoveryRecord(discoveredChunks.get().getOrDefault(recordId, Set.of()));
+            discoveredChunks.get().put(recordId, record.chunks());
+            bind(recordId, record);
+        }
+        return Optional.of(currentRecord);
+    }
+
+    /** The record that may be revealed into; empty while there is nothing to attribute discoveries to. */
+    private Optional<DiscoveryRecord> writableRecord() {
+        return activeRecord().filter(record -> record != NOTHING_DISCOVERED);
+    }
+
+    /** Storage key for the current record, or null while per-character fog has no character to attribute to. */
+    private String recordId() {
+        if (!perCharacter.get()) return GLOBAL_RECORD_ID;
+        if (!Models.Character.hasCharacter()) return null;
 
         // The id is still the placeholder between selecting a character and the character info scan
         String characterId = Models.Character.getId();
-        if (characterId.equals(NO_CHARACTER_ID)) return Optional.empty();
+        return characterId.equals(NO_CHARACTER_ID) ? null : characterId;
+    }
 
-        if (!characterId.equals(currentCharacterId)) {
-            currentCharacterId = characterId;
-            currentRecord = new DiscoveryRecord(discoveredChunks.get().getOrDefault(characterId, Set.of()));
-            discoveredChunks.get().put(characterId, currentRecord.chunks());
-            fogMasks.invalidate();
-        }
-        return Optional.of(currentRecord);
+    private void bind(String recordId, DiscoveryRecord record) {
+        if (record == currentRecord) return;
+
+        currentRecordId = recordId;
+        currentRecord = record;
+        fogMasks.invalidate();
+    }
+
+    private void recordChanged() {
+        discoveredChunks.touched();
+        fogMasks.invalidate();
     }
 
     private CustomColor fogColor() {

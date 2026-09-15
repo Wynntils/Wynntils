@@ -82,4 +82,19 @@ public class TestDiscoveryRecord {
         Assertions.assertFalse(record.isDiscoveredChunk(3, 3));
         Assertions.assertEquals(29, record.chunks().size());
     }
+
+    @Test
+    public void revealAreaMarksEveryChunkTouchingTheBox() {
+        DiscoveryRecord record = new DiscoveryRecord();
+
+        record.revealArea(-20, 0, 40, 15); // touches chunks -2..2 in x, 0 in z
+
+        Assertions.assertTrue(record.isDiscoveredChunk(-2, 0));
+        Assertions.assertTrue(record.isDiscoveredChunk(2, 0));
+        Assertions.assertFalse(record.isDiscoveredChunk(-3, 0));
+        Assertions.assertFalse(record.isDiscoveredChunk(3, 0));
+        Assertions.assertFalse(record.isDiscoveredChunk(0, 1));
+        Assertions.assertFalse(record.isDiscoveredChunk(0, -1));
+        Assertions.assertEquals(5, record.chunks().size());
+    }
 }
