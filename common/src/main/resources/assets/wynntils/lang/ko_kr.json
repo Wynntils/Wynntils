@@ -2164,7 +2164,6 @@
   "function.wynntils.rainbowShader.name": "Wynncraft 레인보우 셰이더",
   "function.wynntils.shamanMask.argument.isColored": "이름의 색을 마스크 색으로 설정",
   "function.wynntils.shamanMask.argument.useShortName": "단축 이름을 사용",
-  "function.wynntils.shamanMask.description": "현재 장착 중인 샤먼 마스크 이름",
   "function.wynntils.shamanMask.name": "샤먼 마스크",
   "function.wynntils.shamanTotemDistance.argument.totemNumber": "검사할 토템 번호",
   "function.wynntils.shamanTotemDistance.description": "샤먼 토템까지의 거리",
