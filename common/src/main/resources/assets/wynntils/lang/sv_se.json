@@ -1870,7 +1870,6 @@
   "function.wynntils.raidsRunsSince.argument.sinceDays": "Antalet dagar att inkludera",
   "function.wynntils.shamanMask.argument.isColored": "Ska namnet färgas enligt maskens färg?",
   "function.wynntils.shamanMask.argument.useShortName": "Ska det korta namnet användas istället för det fullständiga namnet?",
-  "function.wynntils.shamanMask.description": "Vilken shamanmask du för närvarande bär",
   "function.wynntils.shamanMask.name": "Shamanmask",
   "function.wynntils.shamanTotemDistance.argument.totemNumber": "Numret på totemet för att få avståndet från",
   "function.wynntils.shamanTotemDistance.description": "Avståndet mellan dig och shamanens totem",
