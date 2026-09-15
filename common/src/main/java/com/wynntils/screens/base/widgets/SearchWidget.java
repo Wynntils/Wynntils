@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.base.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
