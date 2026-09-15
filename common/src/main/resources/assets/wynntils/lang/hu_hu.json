@@ -1842,7 +1842,6 @@
   "function.wynntils.raidsRunsSince.argument.sinceDays": "A napok száma, amelyeket bele kell foglalni",
   "function.wynntils.shamanMask.argument.isColored": "Legyen a név színezve a maszk színe szerint?",
   "function.wynntils.shamanMask.argument.useShortName": "A rövid nevet használja a teljes név helyett?",
-  "function.wynntils.shamanMask.description": "Milyen sámán maszkot viselsz jelenleg",
   "function.wynntils.shamanMask.name": "Sámán Maszk",
   "function.wynntils.shamanTotemDistance.argument.totemNumber": "A totem száma, amelytől a távolságot megkapja",
   "function.wynntils.shamanTotemDistance.description": "A távolság közted és a sámán totem között",
