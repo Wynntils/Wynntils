@@ -1842,7 +1842,6 @@
   "function.wynntils.raidsRunsSince.argument.sinceDays": "含める日数",
   "function.wynntils.shamanMask.argument.isColored": "名前はマスクの色に応じて色付けされるべきですか？",
   "function.wynntils.shamanMask.argument.useShortName": "フルネームの代わりに短い名前を使用しますか？",
-  "function.wynntils.shamanMask.description": "現在装備しているシャーマンマスク",
   "function.wynntils.shamanMask.name": "シャーマンマスク",
   "function.wynntils.shamanTotemDistance.argument.totemNumber": "距離を取得するためのトーテム番号",
   "function.wynntils.shamanTotemDistance.description": "あなたとシャーマントーテムの距離",
