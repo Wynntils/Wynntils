@@ -1,7 +1,3 @@
-/*
- * Copyright © Wynntils 2024-2025.
- * This file is released under LGPLv3. See LICENSE for full license details.
- */
 package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.core.text.StyledText;
@@ -9,21 +5,20 @@ import com.wynntils.handlers.item.GuiItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.character.type.CharacterGamemode;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.items.items.gui.CharacterCreationItem;
 import com.wynntils.models.items.items.gui.CharacterItem;
 import com.wynntils.utils.mc.LoreUtils;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.world.item.ItemStack;
 
-public class CharacterAnnotator implements GuiItemAnnotator {
+public class CharacterCreationAnnotator implements GuiItemAnnotator {
     private static final String GAMEMODE_ICONS = "\uE027\uE083\uE026\uE029\uE028";
 
-    private static final Pattern CHARACTER_MENU_NAME_PATTERN =
-            Pattern.compile("[\uDB00\uDC0B-\uDB00\uDC46]§6(§o)?(?<name>[A-Za-z0-9_ ]{1,20})");
-
+    private static final  Pattern  CHARACTER_CREATION_NAME_PATTERN = Pattern.compile("§a§lConfirm and Create");
 
     // Test in CharacterAnnotator_CHARACTER_MENU_CLASS_PATTERN
     private static final Pattern CHARACTER_MENU_CLASS_PATTERN = Pattern.compile(
@@ -32,17 +27,12 @@ public class CharacterAnnotator implements GuiItemAnnotator {
     private static final Pattern GAMEMODE_PATTERN =
             Pattern.compile("(?<color>§.)?(?<icon>[" + GAMEMODE_ICONS + "])");
 
-    // Test in CharacterAnnotator_CHARACTER_MENU_LEVEL_PATTERN
-    private static final Pattern CHARACTER_MENU_LEVEL_PATTERN =
-            Pattern.compile("§6- §7Level: §f(?<level>\\d+)§7 §8\\(\\d+(?:\\.\\d+)?%\\)");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher matcher = StyledText.fromComponent(itemStack.getHoverName()).getMatcher(CHARACTER_MENU_NAME_PATTERN);
+        Matcher matcher = StyledText.fromComponent(itemStack.getHoverName()).getMatcher(CHARACTER_CREATION_NAME_PATTERN);
         if (!matcher.matches()) return null;
 
-        String className = matcher.group("name");
-        int level = 0;
         ClassType classType = null;
         boolean reskinned = false;
         Set<CharacterGamemode> gamemodes = EnumSet.noneOf(CharacterGamemode.class);
@@ -54,16 +44,11 @@ public class CharacterAnnotator implements GuiItemAnnotator {
                 reskinned = ClassType.isReskinned(classMatcher.group("class"));
                 gamemodes = parseGamemodes(classMatcher.group("gamemodes"));
             }
-
-            Matcher levelMatcher = lore.getMatcher(CHARACTER_MENU_LEVEL_PATTERN);
-            if (levelMatcher.matches()) {
-                level = Integer.parseInt(levelMatcher.group(1));
-            }
         }
 
         if (classType == null || classType == ClassType.NONE) return null;
 
-        return new CharacterItem(className, level, classType, reskinned, gamemodes);
+        return new CharacterCreationItem(classType, reskinned, gamemodes);
     }
 
     private static Set<CharacterGamemode> parseGamemodes(String gamemodeText) {

@@ -13,6 +13,7 @@ import com.wynntils.models.containers.containers.AbilityTreeResetContainer;
 import com.wynntils.models.containers.containers.AspectsContainer;
 import com.wynntils.models.containers.containers.BlacksmithRepairContainer;
 import com.wynntils.models.containers.containers.BlacksmithSellContainer;
+import com.wynntils.models.containers.containers.CharacterCreationContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.CharacterSelectionContainer;
 import com.wynntils.models.containers.containers.ContentBookContainer;
@@ -138,6 +139,7 @@ public final class ContainerModel extends Model {
         registerContainer(new BookshelfContainer());
         registerContainer(new ChallengeRewardContainer());
         registerContainer(new CharacterBankContainer());
+        registerContainer(new CharacterCreationContainer());
         registerContainer(new CharacterInfoContainer());
         registerContainer(new CharacterSelectionContainer());
         registerContainer(new ContentBookContainer());
