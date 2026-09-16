@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -33,6 +34,10 @@ public final class MapService extends Service {
     @Override
     public void registerDownloads(DownloadRegistry registry) {
         registry.registerDownload(UrlId.DATA_STATIC_MAPS).handleReader(this::handleMaps);
+    }
+
+    public List<MapTexture> getMaps() {
+        return Collections.unmodifiableList(maps);
     }
 
     public List<MapTexture> getMapsForBoundingBox(BoundingBox box) {

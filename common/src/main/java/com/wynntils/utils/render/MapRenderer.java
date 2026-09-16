@@ -4,8 +4,11 @@
  */
 package com.wynntils.utils.render;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.MapTexture;
+import com.wynntils.services.mapdata.fog.FogOverlay;
+import com.wynntils.services.mapdata.fog.FogStyle;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -27,9 +30,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ChunkPos;
 import org.joml.Matrix3x2f;
 import org.joml.Vector2d;
@@ -88,6 +89,71 @@ public final class MapRenderer {
             float centerZ,
             float zoomRenderScale,
             BoundingBox view) {
+        renderTileQuad(
+                guiGraphics,
+                map,
+                RenderPipelines.GUI_TEXTURED,
+                RenderUtils.singleTextureSetup(map.identifier()),
+                CommonColors.WHITE,
+                0,
+                mapCenterX,
+                mapCenterZ,
+                centerX,
+                centerZ,
+                zoomRenderScale,
+                view);
+    }
+
+    public static void renderFogOverlay(
+            GuiGraphics guiGraphics,
+            MapTexture map,
+            FogOverlay fog,
+            float mapCenterX,
+            float mapCenterZ,
+            float centerX,
+            float centerZ,
+            float zoomRenderScale,
+            BoundingBox view) {
+        renderTileQuad(
+                guiGraphics,
+                map,
+                fogPipeline(fog),
+                fogTextureSetup(fog, map),
+                fog.color(),
+                fog.paddingBlocks(),
+                mapCenterX,
+                mapCenterZ,
+                centerX,
+                centerZ,
+                zoomRenderScale,
+                view);
+    }
+
+    private static RenderPipeline fogPipeline(FogOverlay fog) {
+        return fog.style() == FogStyle.PARCHMENT
+                ? CustomRenderPipelines.FOG_PARCHMENT_PIPELINE
+                : CustomRenderPipelines.FOG_MASK_PIPELINE;
+    }
+
+    private static TextureSetup fogTextureSetup(FogOverlay fog, MapTexture map) {
+        return fog.style() == FogStyle.PARCHMENT
+                ? RenderUtils.doubleTextureSetup(fog.mask(), map.identifier())
+                : RenderUtils.singleTextureSetup(fog.mask());
+    }
+
+    private static void renderTileQuad(
+            GuiGraphics guiGraphics,
+            MapTexture map,
+            RenderPipeline pipeline,
+            TextureSetup textureSetup,
+            CustomColor color,
+            int texturePadding,
+            float mapCenterX,
+            float mapCenterZ,
+            float centerX,
+            float centerZ,
+            float zoomRenderScale,
+            BoundingBox view) {
         float x1 = map.getX1();
         float z1 = map.getZ1();
         float x2 = map.getX2() + 1f;
@@ -105,15 +171,16 @@ public final class MapRenderer {
         float sx2 = centerX + (vx2 - mapCenterX) * zoomRenderScale;
         float sy2 = centerZ + (vz2 - mapCenterZ) * zoomRenderScale;
 
-        float u1 = (vx1 - x1);
-        float v1 = (vz1 - z1);
-        float u2 = (vx2 - x1);
-        float v2 = (vz2 - z1);
+        float u1 = (vx1 - x1) + texturePadding;
+        float v1 = (vz1 - z1) + texturePadding;
+        float u2 = (vx2 - x1) + texturePadding;
+        float v2 = (vz2 - z1) + texturePadding;
 
         RenderUtils.drawTexturedRect(
                 guiGraphics,
-                map.identifier(),
-                CommonColors.WHITE,
+                pipeline,
+                textureSetup,
+                color,
                 sx1,
                 sy1,
                 sx2 - sx1,
@@ -122,8 +189,8 @@ public final class MapRenderer {
                 v1,
                 u2 - u1,
                 v2 - v1,
-                map.getTextureWidth(),
-                map.getTextureHeight());
+                map.getTextureWidth() + 2 * texturePadding,
+                map.getTextureHeight() + 2 * texturePadding);
     }
 
     public static void renderCircularBackground(
@@ -155,6 +222,66 @@ public final class MapRenderer {
             float maskY,
             float maskWidth,
             float maskHeight) {
+        renderCircularTileQuad(
+                guiGraphics,
+                map,
+                RenderPipelines.GUI_TEXTURED,
+                RenderUtils.singleTextureSetup(map.identifier()),
+                CommonColors.WHITE,
+                0,
+                mapCenterX,
+                mapCenterZ,
+                centerX,
+                centerZ,
+                zoomRenderScale,
+                view,
+                CircleMask.fromBounds(maskX, maskY, maskWidth, maskHeight));
+    }
+
+    public static void renderCircularFogOverlay(
+            GuiGraphics guiGraphics,
+            MapTexture map,
+            FogOverlay fog,
+            float mapCenterX,
+            float mapCenterZ,
+            float centerX,
+            float centerZ,
+            float zoomRenderScale,
+            BoundingBox view,
+            float maskX,
+            float maskY,
+            float maskWidth,
+            float maskHeight) {
+        renderCircularTileQuad(
+                guiGraphics,
+                map,
+                fogPipeline(fog),
+                fogTextureSetup(fog, map),
+                fog.color(),
+                fog.paddingBlocks(),
+                mapCenterX,
+                mapCenterZ,
+                centerX,
+                centerZ,
+                zoomRenderScale,
+                view,
+                CircleMask.fromBounds(maskX, maskY, maskWidth, maskHeight));
+    }
+
+    private static void renderCircularTileQuad(
+            GuiGraphics guiGraphics,
+            MapTexture map,
+            RenderPipeline pipeline,
+            TextureSetup textureSetup,
+            CustomColor color,
+            int texturePadding,
+            float mapCenterX,
+            float mapCenterZ,
+            float centerX,
+            float centerZ,
+            float zoomRenderScale,
+            BoundingBox view,
+            CircleMask circleMask) {
         float mapMinX = map.getX1();
         float mapMinZ = map.getZ1();
         float mapMaxX = map.getX2() + 1f;
@@ -172,15 +299,18 @@ public final class MapRenderer {
         float screenMaxX = centerX + (clippedMaxX - mapCenterX) * zoomRenderScale;
         float screenMaxY = centerZ + (clippedMaxZ - mapCenterZ) * zoomRenderScale;
 
-        float u1 = (clippedMinX - mapMinX) / map.getTextureWidth();
-        float v1 = (clippedMinZ - mapMinZ) / map.getTextureHeight();
-        float u2 = (clippedMaxX - mapMinX) / map.getTextureWidth();
-        float v2 = (clippedMaxZ - mapMinZ) / map.getTextureHeight();
+        float textureWidth = map.getTextureWidth() + 2 * texturePadding;
+        float textureHeight = map.getTextureHeight() + 2 * texturePadding;
+        float u1 = (clippedMinX - mapMinX + texturePadding) / textureWidth;
+        float v1 = (clippedMinZ - mapMinZ + texturePadding) / textureHeight;
+        float u2 = (clippedMaxX - mapMinX + texturePadding) / textureWidth;
+        float v2 = (clippedMaxZ - mapMinZ + texturePadding) / textureHeight;
 
         renderCircleMaskedTexturedRect(
                 guiGraphics,
-                map.identifier(),
-                CommonColors.WHITE,
+                pipeline,
+                textureSetup,
+                color,
                 screenMinX,
                 screenMinY,
                 screenMaxX,
@@ -189,7 +319,7 @@ public final class MapRenderer {
                 u2,
                 v1,
                 v2,
-                CircleMask.fromBounds(maskX, maskY, maskWidth, maskHeight));
+                circleMask);
     }
 
     public static void renderCursor(
@@ -538,7 +668,8 @@ public final class MapRenderer {
 
     private static void renderCircleMaskedTexturedRect(
             GuiGraphics guiGraphics,
-            Identifier identifier,
+            RenderPipeline pipeline,
+            TextureSetup textureSetup,
             CustomColor color,
             float x1,
             float y1,
@@ -549,18 +680,12 @@ public final class MapRenderer {
             float v1,
             float v2,
             CircleMask mask) {
-        AbstractTexture texture = McUtils.mc().getTextureManager().getTexture(identifier);
         Matrix3x2f pose = new Matrix3x2f(guiGraphics.pose());
         List<Vertex> vertices = clipTexturedRectToCircle(pose, x1, y1, x2, y2, u1, u2, v1, v2, mask);
         if (vertices.isEmpty()) return;
 
         guiGraphics.guiRenderState.submitGuiElement(new TexturedPolygonRenderState(
-                RenderPipelines.GUI_TEXTURED,
-                TextureSetup.singleTexture(texture.getTextureView(), texture.getSampler()),
-                pose,
-                vertices,
-                color,
-                guiGraphics.scissorStack.peek()));
+                pipeline, textureSetup, pose, vertices, color, guiGraphics.scissorStack.peek()));
     }
 
     private static List<Vertex> clipTexturedRectToCircle(

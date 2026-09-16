@@ -13,6 +13,7 @@ import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.features.map.MapFogOfWarFeature;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.map.MapTexture;
@@ -218,8 +219,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 .mapFeatureScale
                 .get();
 
-        Stream<Pair<MapFeature, ResolvedMapAttributes>> mapFeatures = getRenderedMapFeatures()
-                .filter(feature -> feature.isVisible(mapBoundingBox))
+        Stream<Pair<MapFeature, ResolvedMapAttributes>> mapFeatures = Managers.Feature.getFeatureInstance(
+                        MapFogOfWarFeature.class)
+                .withoutUndiscovered(getRenderedMapFeatures().filter(feature -> feature.isVisible(mapBoundingBox)))
                 .map(feature -> Pair.of(feature, Services.MapData.resolveMapAttributes(feature)))
                 .sorted(Comparator.comparing(pair -> pair.b().priority()));
 
@@ -537,9 +539,14 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         BoundingBox view =
                 BoundingBox.centered(mapCenterX, mapCenterZ, mapWidth / zoomRenderScale, mapHeight / zoomRenderScale);
 
+        MapFogOfWarFeature fogOfWar = Managers.Feature.getFeatureInstance(MapFogOfWarFeature.class);
+
         for (MapTexture map : Services.Map.getMapsForBoundingBox(view)) {
             MapRenderer.renderMapTile(
                     guiGraphics, map, mapCenterX, mapCenterZ, centerX, centerZ, zoomRenderScale, view);
+            fogOfWar.fogOverlay(map)
+                    .ifPresent(fog -> MapRenderer.renderFogOverlay(
+                            guiGraphics, map, fog, mapCenterX, mapCenterZ, centerX, centerZ, zoomRenderScale, view));
         }
 
         RenderUtils.disableScissor(guiGraphics);

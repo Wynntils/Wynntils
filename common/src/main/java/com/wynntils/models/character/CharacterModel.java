@@ -135,6 +135,7 @@ public final class CharacterModel extends Model {
         // Whenever we're leaving a world, clear the current character
         if (e.getOldState() == WorldState.WORLD) {
             hasCharacter = false;
+            id = "-";
         }
 
         if (e.getNewState() == WorldState.WORLD) {
