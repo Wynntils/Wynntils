@@ -4,217 +4,40 @@
  */
 package com.wynntils.mc.mixin;
 
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.wynntils.core.events.MixinHelper;
-import com.wynntils.mc.event.HotbarSlotRenderEvent;
-import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.RenderElementType;
-import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.Minecraft;
+import com.wynntils.mc.event.ScreenClosedEvent;
+import com.wynntils.mc.event.ScreenOpenedEvent;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.LevelLoadingScreen;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.client.gui.screens.Screen;
+import net.neoforged.bus.api.Event;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Gui.class)
 public abstract class GuiMixin {
-    @Shadow
-    @Final
-    private Minecraft minecraft;
-
-    @Inject(
-            method =
-                    "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;IILnet/minecraft/client/DeltaTracker;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void renderSlotPre(
-            GuiGraphicsExtractor guiGraphics,
-            int x,
-            int y,
-            DeltaTracker deltaTracker,
-            Player player,
-            ItemStack itemStack,
-            int i,
-            CallbackInfo info) {
-        HotbarSlotRenderEvent.Pre event = new HotbarSlotRenderEvent.Pre(guiGraphics, itemStack, x, y);
+    @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("RETURN"))
+    private void setScreenPost(Screen screen, CallbackInfo ci, @Share("oldScreen") LocalRef<Screen> oldScreen) {
+        Event event = (screen == null)
+                ? new ScreenClosedEvent.Post(oldScreen.get())
+                : new ScreenOpenedEvent.Post(screen, oldScreen.get());
         MixinHelper.post(event);
+    }
 
+    @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("HEAD"), cancellable = true)
+    private void setScreenPre(Screen screen, CallbackInfo ci, @Share("oldScreen") LocalRef<Screen> oldScreen) {
+        oldScreen.set(((Gui) (Object) this).screen());
+
+        // "var" is needed since there is no specific enough common supertype between ScreenOpenedEvent.Pre and
+        // ScreenClosedEvent.Pre
+        var event = (screen == null)
+                ? new ScreenClosedEvent.Pre(oldScreen.get())
+                : new ScreenOpenedEvent.Pre(screen, oldScreen.get());
+        MixinHelper.postAlways(event);
         if (event.isCanceled()) {
-            info.cancel();
-        }
-    }
-
-    @Inject(
-            method =
-                    "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;IILnet/minecraft/client/DeltaTracker;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V"))
-    private void renderSlotCountPre(
-            GuiGraphicsExtractor guiGraphics,
-            int x,
-            int y,
-            DeltaTracker deltaTracker,
-            Player player,
-            ItemStack itemStack,
-            int i,
-            CallbackInfo info) {
-        MixinHelper.post(new HotbarSlotRenderEvent.CountPre(guiGraphics, itemStack, x, y));
-    }
-
-    @Inject(
-            method =
-                    "renderSlot(Lnet/minecraft/client/gui/GuiGraphics;IILnet/minecraft/client/DeltaTracker;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
-            at = @At("RETURN"))
-    private void renderSlotPost(
-            GuiGraphicsExtractor guiGraphics,
-            int x,
-            int y,
-            DeltaTracker deltaTracker,
-            Player player,
-            ItemStack itemStack,
-            int i,
-            CallbackInfo info) {
-        MixinHelper.post(new HotbarSlotRenderEvent.Post(guiGraphics, itemStack, x, y));
-    }
-
-    @Inject(
-            method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"))
-    private void onRenderGuiPre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        if (this.minecraft.screen instanceof LevelLoadingScreen) return;
-        if (McUtils.options().hideGui) return;
-        MixinHelper.post(
-                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.GUI_PRE));
-    }
-
-    @Inject(
-            method = "render(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("RETURN"))
-    private void onRenderGuiPost(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        if (this.minecraft.screen instanceof LevelLoadingScreen) return;
-        if (McUtils.options().hideGui) return;
-        MixinHelper.post(new RenderEvent.Post(
-                guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.GUI_POST));
-    }
-
-    @Inject(
-            method = "renderCameraOverlays(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"))
-    private void onRenderCameraOverlaysPre(
-            GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        MixinHelper.post(new RenderEvent.Pre(
-                guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.CAMERA_OVERLAYS));
-    }
-
-    @Inject(
-            method = "renderCrosshair(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void onRenderCrosshairPre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        RenderEvent.Pre event =
-                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.CROSSHAIR);
-        MixinHelper.post(event);
-        if (event.isCanceled()) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(
-            method = "renderSelectedItemName(Lnet/minecraft/client/gui/GuiGraphics;)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void onRenderSelectedItemNamePre(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
-        if (!MixinHelper.onWynncraft()) return;
-
-        RenderEvent.Pre event = new RenderEvent.Pre(
-                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderElementType.SELECTED_ITEM);
-        MixinHelper.post(event);
-
-        if (event.isCanceled()) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(
-            method = "renderBossOverlay(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"))
-    private void onRenderBossOverlayPre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        MixinHelper.post(new RenderEvent.Pre(
-                guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.BOSS_BARS));
-    }
-
-    @Inject(
-            method =
-                    "renderScoreboardSidebar(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void onRenderScoreboardSidebarPre(
-            GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        if (!MixinHelper.onWynncraft()) return;
-
-        RenderEvent.Pre event = new RenderEvent.Pre(
-                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderElementType.SCOREBOARD);
-        MixinHelper.post(event);
-
-        if (event.isCanceled()) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(
-            method = "renderOverlayMessage(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"))
-    private void onRenderOverlayMessageyPre(
-            GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        MixinHelper.post(new RenderEvent.Pre(
-                guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.ACTION_BAR));
-    }
-
-    @Inject(
-            method = "renderOverlayMessage(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("TAIL"))
-    private void onRenderOverlayMessageyPost(
-            GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        MixinHelper.post(new RenderEvent.Post(
-                guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.ACTION_BAR));
-    }
-
-    @Inject(
-            method = "renderTitle(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"))
-    private void onRenderTitlePre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        MixinHelper.post(
-                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.TITLE));
-    }
-
-    @Inject(
-            method = "renderChat(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"))
-    private void onRenderChatPre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        MixinHelper.post(
-                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.CHAT));
-    }
-
-    @Inject(
-            method = "renderTabList(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void onRenderTabListPre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        RenderEvent.Pre renderEvent = new RenderEvent.Pre(
-                guiGraphics, DeltaTracker.ZERO, McUtils.window(), RenderElementType.PLAYER_TAB_LIST);
-        MixinHelper.post(renderEvent);
-
-        if (renderEvent.isCanceled()) {
             ci.cancel();
         }
     }

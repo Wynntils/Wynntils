@@ -33,6 +33,7 @@
     "GuiMessageLineMixin",
     "GuiMessageMixin",
     "GuiMixin",
+    "HudMixin",
     "HumanoidArmorLayerMixin",
     "ItemEntityRendererMixin",
     "ItemStackLayerRenderStateMixin",

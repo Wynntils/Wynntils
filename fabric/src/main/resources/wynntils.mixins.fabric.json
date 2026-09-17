@@ -1,8 +1,8 @@
 {
   "client": [
     "FabricAbstractContainerScreenMixin",
-    "FabricGuiMixin",
-    "FabricGuiGraphicsExtractorMixin"
+    "FabricGuiGraphicsExtractorMixin",
+    "FabricHudMixin"
   ],
   "compatibilityLevel": "JAVA_17",
   "injected_interfaces": {},

@@ -24,7 +24,7 @@ public abstract class NeoForgeLevelRendererMixin {
     // Wynncraft uses this behaviour to hide the local player in certain cases such as the character selection screen.
     @Redirect(
             method =
-                    "extractVisibleEntities(Lnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/culling/Frustum;Lnet/minecraft/client/DeltaTracker;Lnet/minecraft/client/renderer/state/LevelRenderState;)V",
+                    "extractVisibleEntities(Lnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/culling/Frustum;Lnet/minecraft/client/DeltaTracker;Lnet/minecraft/client/renderer/state/level/LevelRenderState;)V",
             at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
     private boolean removePlayerFromVisibleEntities(
             List<Object> list,
