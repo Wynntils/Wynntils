@@ -45,8 +45,6 @@ accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScr
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen topPos I
 accessible field net/minecraft/client/renderer/GameRenderer fogRenderer Lnet/minecraft/client/renderer/fog/FogRenderer;
 accessible field net/minecraft/client/renderer/RenderPipelines GLOBALS_SNIPPET Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;
-accessible field net/minecraft/client/renderer/feature/NameTagFeatureRenderer$Storage nameTagSubmitsNormal Ljava/util/List;
-accessible field net/minecraft/client/renderer/feature/NameTagFeatureRenderer$Storage nameTagSubmitsSeethrough Ljava/util/List;
 accessible field net/minecraft/client/renderer/item/ItemStackRenderState displayContext Lnet/minecraft/world/item/ItemDisplayContext;
 accessible field net/minecraft/client/renderer/texture/AbstractTexture sampler Lcom/mojang/blaze3d/textures/GpuSampler;
 accessible field net/minecraft/network/chat/Style font Lnet/minecraft/network/chat/FontDescription;

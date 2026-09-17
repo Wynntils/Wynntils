@@ -10,17 +10,21 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.NametagBackgroundOpacityEvent;
 import com.wynntils.mc.event.NametagScaleEvent;
-import net.minecraft.client.renderer.feature.NameTagFeatureRenderer;
+import net.minecraft.client.renderer.SubmitNodeCollection;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(NameTagFeatureRenderer.Storage.class)
-public class NameTagFeatureRendererStorageMixin {
+@Mixin(SubmitNodeCollection.class)
+public class SubmitNodeCollectionMixin {
     @ModifyArg(
             method =
-                    "add(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/phys/Vec3;ILnet/minecraft/network/chat/Component;ZIDLnet/minecraft/client/renderer/state/CameraRenderState;)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options;getBackgroundOpacity(F)F"))
+                    "submitNameTag(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/phys/Vec3;ILnet/minecraft/network/chat/Component;ZILnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/renderer/state/OptionsRenderState;getBackgroundOpacity(F)F"))
     private float onNametagOpacityGet(float backgroundOpacity) {
         NametagBackgroundOpacityEvent event = new NametagBackgroundOpacityEvent(backgroundOpacity);
         MixinHelper.post(event);
@@ -30,7 +34,7 @@ public class NameTagFeatureRendererStorageMixin {
 
     @WrapOperation(
             method =
-                    "add(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/phys/Vec3;ILnet/minecraft/network/chat/Component;ZIDLnet/minecraft/client/renderer/state/CameraRenderState;)V",
+                    "submitNameTag(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/phys/Vec3;ILnet/minecraft/network/chat/Component;ZILnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
             at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/vertex/PoseStack;scale(FFF)V"))
     private void modifyNametagScale(PoseStack poseStack, float x, float y, float z, Operation<Void> original) {
         NametagScaleEvent event = new NametagScaleEvent();
