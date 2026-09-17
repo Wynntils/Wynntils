@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.core.text.StyledText;
@@ -6,31 +10,28 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.character.type.CharacterGamemode;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.items.items.gui.CharacterCreationItem;
-import com.wynntils.models.items.items.gui.CharacterItem;
 import com.wynntils.utils.mc.LoreUtils;
-import net.minecraft.world.item.ItemStack;
-
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.world.item.ItemStack;
 
 public class CharacterCreationAnnotator implements GuiItemAnnotator {
     private static final String GAMEMODE_ICONS = "\uE027\uE083\uE026\uE029\uE028";
 
-    private static final  Pattern  CHARACTER_CREATION_NAME_PATTERN = Pattern.compile("§a§lConfirm and Create");
+    private static final Pattern CHARACTER_CREATION_NAME_PATTERN = Pattern.compile("§a§lConfirm and Create");
 
     // Test in CharacterAnnotator_CHARACTER_MENU_CLASS_PATTERN
-    private static final Pattern CHARACTER_MENU_CLASS_PATTERN = Pattern.compile(
-            "§6- §7Class:(?: (?<gamemodes>(?:(?:§.)?[" + GAMEMODE_ICONS + "])+)§7)? §f(?<class>.+)");
+    private static final Pattern CHARACTER_MENU_CLASS_PATTERN =
+            Pattern.compile("§6- §7Class:(?: (?<gamemodes>(?:(?:§.)?[" + GAMEMODE_ICONS + "])+)§7)? §f(?<class>.+)");
 
-    private static final Pattern GAMEMODE_PATTERN =
-            Pattern.compile("(?<color>§.)?(?<icon>[" + GAMEMODE_ICONS + "])");
-
+    private static final Pattern GAMEMODE_PATTERN = Pattern.compile("(?<color>§.)?(?<icon>[" + GAMEMODE_ICONS + "])");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher matcher = StyledText.fromComponent(itemStack.getHoverName()).getMatcher(CHARACTER_CREATION_NAME_PATTERN);
+        Matcher matcher =
+                StyledText.fromComponent(itemStack.getHoverName()).getMatcher(CHARACTER_CREATION_NAME_PATTERN);
         if (!matcher.matches()) return null;
 
         ClassType classType = null;

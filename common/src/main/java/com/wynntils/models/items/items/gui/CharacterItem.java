@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.gui;
@@ -18,11 +18,7 @@ public class CharacterItem extends GuiItem {
     private final Set<CharacterGamemode> gamemodes;
 
     public CharacterItem(
-            String className,
-            int level,
-            ClassType classType,
-            boolean reskinned,
-            Set<CharacterGamemode> gamemodes) {
+            String className, int level, ClassType classType, boolean reskinned, Set<CharacterGamemode> gamemodes) {
         this.className = className;
         this.level = level;
         this.classType = classType;

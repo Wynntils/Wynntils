@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
@@ -11,7 +11,6 @@ import com.wynntils.models.character.type.CharacterGamemode;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.items.items.gui.CharacterItem;
 import com.wynntils.utils.mc.LoreUtils;
-
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -24,13 +23,11 @@ public class CharacterAnnotator implements GuiItemAnnotator {
     private static final Pattern CHARACTER_MENU_NAME_PATTERN =
             Pattern.compile("[\uDB00\uDC0B-\uDB00\uDC46]§6(§o)?(?<name>[A-Za-z0-9_ ]{1,20})");
 
-
     // Test in CharacterAnnotator_CHARACTER_MENU_CLASS_PATTERN
-    private static final Pattern CHARACTER_MENU_CLASS_PATTERN = Pattern.compile(
-            "§6- §7Class:(?: (?<gamemodes>(?:(?:§.)?[" + GAMEMODE_ICONS + "])+)§7)? §f(?<class>.+)");
+    private static final Pattern CHARACTER_MENU_CLASS_PATTERN =
+            Pattern.compile("§6- §7Class:(?: (?<gamemodes>(?:(?:§.)?[" + GAMEMODE_ICONS + "])+)§7)? §f(?<class>.+)");
 
-    private static final Pattern GAMEMODE_PATTERN =
-            Pattern.compile("(?<color>§.)?(?<icon>[" + GAMEMODE_ICONS + "])");
+    private static final Pattern GAMEMODE_PATTERN = Pattern.compile("(?<color>§.)?(?<icon>[" + GAMEMODE_ICONS + "])");
 
     // Test in CharacterAnnotator_CHARACTER_MENU_LEVEL_PATTERN
     private static final Pattern CHARACTER_MENU_LEVEL_PATTERN =

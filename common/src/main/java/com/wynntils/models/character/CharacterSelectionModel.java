@@ -33,7 +33,6 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
-
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -119,7 +118,8 @@ public final class CharacterSelectionModel extends Model {
         currentCharacterLevel = characterSelectionLevelSegment.getLevel();
     }
 
-    private void updateCurrentCharacterGamemodes(CharacterSelectionGamemodesSegment characterSelectionGamemodesSegment) {
+    private void updateCurrentCharacterGamemodes(
+            CharacterSelectionGamemodesSegment characterSelectionGamemodesSegment) {
         gamemodes = characterSelectionGamemodesSegment.getGamemodes();
     }
 
