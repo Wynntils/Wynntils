@@ -165,7 +165,7 @@ public final class ChatTabService extends Service {
         });
 
         vanillaChatComponent = McUtils.getChat();
-        McUtils.mc().gui.chat = new WrappingChatComponent(McUtils.mc());
+        McUtils.mc().gui.hud.chat = new WrappingChatComponent(McUtils.mc());
 
         setFocusedTab(getChatTabs().getFirst());
     }
@@ -173,7 +173,7 @@ public final class ChatTabService extends Service {
     public void disable() {
         if (!isEnabled()) return;
 
-        McUtils.mc().gui.chat = vanillaChatComponent;
+        McUtils.mc().gui.hud.chat = vanillaChatComponent;
         vanillaChatComponent = null;
 
         reset();
