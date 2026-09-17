@@ -20,7 +20,7 @@ import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.item.ItemStack;
@@ -53,7 +53,7 @@ public class LoadoutMenuScrollListWidget extends ScrollListWidget implements Ite
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND, x - 5, y - 5, this.width + 10, this.height + 10);
 
@@ -71,7 +71,7 @@ public class LoadoutMenuScrollListWidget extends ScrollListWidget implements Ite
     }
 
     @Override
-    public void renderHoveredItemTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    public void renderHoveredItemTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         for (AbstractWidget widget : getWidgets()) {
             if (widget instanceof ItemTooltipProvider itemTooltipProvider && widget.isMouseOver(mouseX, mouseY)) {
                 itemTooltipProvider.renderHoveredItemTooltip(guiGraphics, mouseX, mouseY);

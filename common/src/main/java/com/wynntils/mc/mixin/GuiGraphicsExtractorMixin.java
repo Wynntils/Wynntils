@@ -17,7 +17,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -29,8 +29,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(GuiGraphics.class)
-public abstract class GuiGraphicsMixin {
+@Mixin(GuiGraphicsExtractor.class)
+public abstract class GuiGraphicsExtractorMixin {
     // Note: Call site 1 of 3 of ItemTooltipRenderEvent. Check the event class for more info.
     //       This mixin works on Fabric, and on NeoForge as well.
     @WrapOperation(
@@ -41,7 +41,7 @@ public abstract class GuiGraphicsMixin {
                             target =
                                     "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"))
     private void setTooltipForNextFramePre(
-            GuiGraphics instance,
+            GuiGraphicsExtractor instance,
             Font font,
             List<Component> tooltipLines,
             Optional<TooltipComponent> visualTooltipComponent,
@@ -51,7 +51,7 @@ public abstract class GuiGraphicsMixin {
             Operation<Void> operation,
             @Local(argsOnly = true) ItemStack itemStack) {
         ItemTooltipRenderEvent.Pre event = new ItemTooltipRenderEvent.Pre(
-                (GuiGraphics) (Object) this,
+                (GuiGraphicsExtractor) (Object) this,
                 itemStack,
                 Screen.getTooltipFromItem(McUtils.mc(), itemStack),
                 mouseX,
@@ -125,7 +125,7 @@ public abstract class GuiGraphicsMixin {
                             target =
                                     "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)V"))
     private void changeCountOverlayColor(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Font font,
             String text,
             int x,

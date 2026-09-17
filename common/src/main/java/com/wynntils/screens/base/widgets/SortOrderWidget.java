@@ -11,7 +11,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.RenderDirection;
 import java.util.List;
 import java.util.Locale;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
@@ -35,7 +35,7 @@ public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         Texture sortTexture =
                 switch (sortableActivityScreen.getActivitySortOrder()) {
                     case LEVEL -> Texture.SORT_LEVEL_OFFSET;

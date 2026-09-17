@@ -20,7 +20,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.UniversalTexture;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class TokenBarsOverlay extends ContainerOverlay<TokenBarsOverlay.TokenBarOverlay> {
@@ -82,7 +82,7 @@ public class TokenBarsOverlay extends ContainerOverlay<TokenBarsOverlay.TokenBar
         }
 
         @Override
-        protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
+        protected void renderBar(GuiGraphicsExtractor guiGraphics, float renderY, float renderHeight, float progress) {
             RenderUtils.drawColoredProgressBar(
                     guiGraphics,
                     Texture.UNIVERSAL_BAR,

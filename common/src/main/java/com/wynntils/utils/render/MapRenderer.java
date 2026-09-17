@@ -21,7 +21,7 @@ import com.wynntils.utils.type.BoundingBox;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -78,7 +78,7 @@ public final class MapRenderer {
     }
 
     public static void renderMapTile(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             MapTexture map,
             float mapCenterX,
             float mapCenterZ,
@@ -125,7 +125,7 @@ public final class MapRenderer {
     }
 
     public static void renderCircularBackground(
-            GuiGraphics guiGraphics, CustomColor color, float x, float y, float width, float height) {
+            GuiGraphicsExtractor guiGraphics, CustomColor color, float x, float y, float width, float height) {
         Matrix3x2f pose = new Matrix3x2f(guiGraphics.pose());
         CircleMask mask = CircleMask.fromBounds(x, y, width, height);
         List<Vector2f> vertices = new ArrayList<>(CIRCLE_MASK_SEGMENTS * 3);
@@ -149,7 +149,7 @@ public final class MapRenderer {
     }
 
     public static void renderCircularMapTile(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             MapTexture map,
             float mapCenterX,
             float mapCenterZ,
@@ -199,7 +199,7 @@ public final class MapRenderer {
     }
 
     public static void renderCursor(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             float renderX,
             float renderY,
             float pointerScale,
@@ -239,7 +239,7 @@ public final class MapRenderer {
     }
 
     public static void renderChunks(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             BoundingBox renderedWorldBoundingBox,
             Set<Long> mappedChunks,
             float mapCenterX,
@@ -301,7 +301,7 @@ public final class MapRenderer {
     }
 
     public static void renderLootrunLine(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             LootrunPathInstance lootrun,
             float lootrunWidth,
             float outlineWidth,
@@ -548,7 +548,7 @@ public final class MapRenderer {
     }
 
     private static void renderCircleMaskedTexturedRect(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Identifier identifier,
             CustomColor color,
             float x1,

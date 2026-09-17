@@ -27,7 +27,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.InputWithModifiers;
@@ -77,7 +77,7 @@ public class ConfigTile extends WynntilsButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         resetButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
         renderDisplayName(guiGraphics);
@@ -95,9 +95,9 @@ public class ConfigTile extends WynntilsButton {
     }
 
     @Override
-    protected void handleCursor(GuiGraphics guiGraphics) {}
+    protected void handleCursor(GuiGraphicsExtractor guiGraphics) {}
 
-    private void renderDisplayName(GuiGraphics guiGraphics) {
+    private void renderDisplayName(GuiGraphicsExtractor guiGraphics) {
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics,

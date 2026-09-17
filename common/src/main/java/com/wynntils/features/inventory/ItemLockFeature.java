@@ -31,7 +31,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Inventory;
@@ -156,7 +156,7 @@ public class ItemLockFeature extends Feature {
     }
 
     private void renderLockedSlot(
-            GuiGraphics guiGraphics, AbstractContainerScreen<?> containerScreen, Slot lockedSlot) {
+            GuiGraphicsExtractor guiGraphics, AbstractContainerScreen<?> containerScreen, Slot lockedSlot) {
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
                 Texture.ITEM_LOCK.identifier(),

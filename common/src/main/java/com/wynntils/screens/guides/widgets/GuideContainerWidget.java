@@ -34,7 +34,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -203,7 +203,7 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.GUIDE_BACKGROUND, getX(), getY() + 28, getBackgroundWidth(), getHeight() - 28);
 
@@ -300,7 +300,7 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
         rebuildWidgets();
     }
 
-    private void renderScroll(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderScroll(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (getMaxScrollOffset() <= 0) return;
 
         scrollY = getScrollAreaStartY()

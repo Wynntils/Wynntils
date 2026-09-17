@@ -32,7 +32,7 @@ import com.wynntils.utils.type.RenderElementType;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Camera;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Position;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -335,7 +335,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                         icon.height());
 
                 // apply rotation
-                GuiGraphics guiGraphics = event.getGuiGraphics();
+                GuiGraphicsExtractor guiGraphics = event.getGuiGraphics();
                 guiGraphics.pose().pushMatrix();
                 guiGraphics.pose().translate(pointerDisplayPositionX, pointerDisplayPositionY);
                 guiGraphics.pose().mul(new Matrix3x2f().rotation((float) Math.toRadians(angle)));

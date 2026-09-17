@@ -14,7 +14,7 @@ import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.services.itemfilter.type.StatValue;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
@@ -97,7 +97,7 @@ public class InequalityStatValueFilterWidget extends InequalityNumericFilterWidg
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
         percentageCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);

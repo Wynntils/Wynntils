@@ -17,7 +17,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.RenderDirection;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
@@ -81,7 +81,7 @@ public final class LoadingScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         int textureWidth = Texture.BACKGROUND_SPLASH.width();
         int textureHeight = Texture.BACKGROUND_SPLASH.height();
         float widthScaleFactor = (float) this.width / textureWidth;
@@ -160,7 +160,7 @@ public final class LoadingScreen extends WynntilsScreen {
         drawSpinner(guiGraphics, centerX, 150 + offsetY, state);
     }
 
-    private void drawSpinner(GuiGraphics guiGraphics, float x, float y, boolean state) {
+    private void drawSpinner(GuiGraphicsExtractor guiGraphics, float x, float y, boolean state) {
         RenderUtils.drawHoverableTexturedRect(
                 guiGraphics,
                 Texture.RELOAD_ICON_OFFSET,

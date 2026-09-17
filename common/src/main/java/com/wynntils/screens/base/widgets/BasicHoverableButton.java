@@ -9,7 +9,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.RenderDirection;
 import java.util.List;
 import java.util.function.Consumer;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 
 public class BasicHoverableButton extends BasicTexturedButton {
@@ -19,7 +19,7 @@ public class BasicHoverableButton extends BasicTexturedButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawScalingHoverableTexturedRect(
                 guiGraphics, texture, getX(), getY(), getWidth(), getHeight(), isHovered, RenderDirection.VERTICAL);
     }

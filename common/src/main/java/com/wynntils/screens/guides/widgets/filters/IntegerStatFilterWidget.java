@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -122,7 +122,7 @@ public class IntegerStatFilterWidget<T extends ItemStatProvider<?>> extends Guid
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics,
@@ -340,7 +340,7 @@ public class IntegerStatFilterWidget<T extends ItemStatProvider<?>> extends Guid
         }
 
         @Override
-        protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
             RenderUtils.drawRect(
                     guiGraphics,
                     (isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY).withAlpha(0.5f),

@@ -29,7 +29,7 @@
     "EntityMixin",
     "EntityRenderStateMixin",
     "EntityRendererMixin",
-    "GuiGraphicsMixin",
+    "GuiGraphicsExtractorMixin",
     "GuiMessageLineMixin",
     "GuiMessageMixin",
     "GuiMixin",

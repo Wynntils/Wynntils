@@ -17,7 +17,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
@@ -48,18 +48,18 @@ public abstract class GuideButton extends WynntilsButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBaseItem(guiGraphics, getColor());
         renderFavoriteIcon(guiGraphics);
         renderTooltipIfHovered(guiGraphics, mouseX, mouseY);
     }
 
-    protected void renderBaseItem(GuiGraphics guiGraphics, CustomColor color) {
+    protected void renderBaseItem(GuiGraphicsExtractor guiGraphics, CustomColor color) {
         RenderUtils.drawSprite(guiGraphics, Texture.HIGHLIGHT_WYNN, color, getX() - 6, getY() - 6);
         RenderUtils.renderItem(guiGraphics, itemStack, getX() + 2, getY() + 2);
     }
 
-    protected void renderFavoriteIcon(GuiGraphics guiGraphics) {
+    protected void renderFavoriteIcon(GuiGraphicsExtractor guiGraphics) {
         if (!Services.Favorites.isFavorite(itemName)) return;
 
         RenderUtils.drawScalingTexturedRect(
@@ -74,7 +74,7 @@ public abstract class GuideButton extends WynntilsButton {
     }
 
     protected void renderTextOverlay(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             String text,
             int minXOffset,
             int maxXOffset,
@@ -94,7 +94,7 @@ public abstract class GuideButton extends WynntilsButton {
                         TextShadow.OUTLINE);
     }
 
-    protected void renderTooltipIfHovered(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltipIfHovered(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (isHovered) {
             renderTooltip(guiGraphics, mouseX, mouseY);
         }
@@ -102,7 +102,7 @@ public abstract class GuideButton extends WynntilsButton {
 
     protected abstract CustomColor getColor();
 
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         itemStack.queueGuideTooltip(guiGraphics, mouseX, mouseY);
     }
 

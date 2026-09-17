@@ -44,7 +44,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -319,7 +319,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(guiGraphics);
         // region Backgrounds
         // background for widgets 1
@@ -351,11 +351,11 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         renderTooltips(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderBackgroundTexture(GuiGraphics guiGraphics) {
+    private void renderBackgroundTexture(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.BUILD_LOADOUTS_BACKGROUND, offsetX, offsetY);
     }
 
-    private void renderNewLoadoutMenu(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderNewLoadoutMenu(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
@@ -397,7 +397,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                         TextShadow.NONE);
     }
 
-    private void renderLoadoutMenu(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderLoadoutMenu(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // background for skillpoint, overview, and item widgets
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
@@ -408,7 +408,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                 78);
     }
 
-    private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderTooltips(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : children()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
                 guiGraphics.setTooltipForNextFrame(

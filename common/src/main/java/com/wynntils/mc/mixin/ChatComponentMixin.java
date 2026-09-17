@@ -14,7 +14,7 @@ import com.wynntils.mc.event.ChatScreenCreateEvent;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import net.minecraft.client.GuiMessage;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.screens.ChatScreen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -97,7 +97,7 @@ public abstract class ChatComponentMixin {
             int y2,
             int color,
             Operation<Void> original) {
-        GuiGraphics guiGraphics = null;
+        GuiGraphicsExtractor guiGraphics = null;
         if (access instanceof ChatComponent.DrawingBackgroundGraphicsAccess bg) {
             guiGraphics = bg.graphics;
         } else if (access instanceof ChatComponent.DrawingFocusedGraphicsAccess fg) {

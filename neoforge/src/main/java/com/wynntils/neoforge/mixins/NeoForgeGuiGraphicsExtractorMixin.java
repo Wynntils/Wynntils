@@ -14,7 +14,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
@@ -28,8 +28,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(GuiGraphics.class)
-public abstract class NeoForgeGuiGraphicsMixin {
+@Mixin(GuiGraphicsExtractor.class)
+public abstract class NeoForgeGuiGraphicsExtractorMixin {
     // Note: Call site 3 of 3 of ItemTooltipRenderEvent. Check the event class for more info.
     //       See FabricAbstractContainerScreenMixin#renderTooltipPre for the Fabric mixin.
     @WrapOperation(
@@ -42,7 +42,7 @@ public abstract class NeoForgeGuiGraphicsMixin {
                                     "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"),
             remap = false)
     private void setTooltipForNextFramePre(
-            GuiGraphics instance,
+            GuiGraphicsExtractor instance,
             Font font,
             List<Component> tooltipLines,
             Optional<TooltipComponent> visualTooltipComponent,
@@ -52,7 +52,7 @@ public abstract class NeoForgeGuiGraphicsMixin {
             Operation<Void> operation,
             @Local(argsOnly = true) ItemStack itemStack) {
         ItemTooltipRenderEvent.Pre event = new ItemTooltipRenderEvent.Pre(
-                (GuiGraphics) (Object) this,
+                (GuiGraphicsExtractor) (Object) this,
                 itemStack,
                 Screen.getTooltipFromItem(McUtils.mc(), itemStack),
                 mouseX,
@@ -84,7 +84,7 @@ public abstract class NeoForgeGuiGraphicsMixin {
             Identifier background,
             ItemStack tooltipStack,
             CallbackInfo ci) {
-        MixinHelper.post(new TooltipRenderEvent.Pre((GuiGraphics) (Object) this, components));
+        MixinHelper.post(new TooltipRenderEvent.Pre((GuiGraphicsExtractor) (Object) this, components));
     }
 
     @WrapOperation(
@@ -104,7 +104,7 @@ public abstract class NeoForgeGuiGraphicsMixin {
             int tooltipWidth,
             int tooltipHeight,
             Operation<Vector2ic> operation) {
-        TooltipRenderEvent.Position event = new TooltipRenderEvent.Position((GuiGraphics) (Object) this);
+        TooltipRenderEvent.Position event = new TooltipRenderEvent.Position((GuiGraphicsExtractor) (Object) this);
         MixinHelper.post(event);
 
         if (event.getPositioner() != null) {
@@ -128,6 +128,6 @@ public abstract class NeoForgeGuiGraphicsMixin {
             Identifier background,
             ItemStack tooltipStack,
             CallbackInfo ci) {
-        MixinHelper.post(new TooltipRenderEvent.Post((GuiGraphics) (Object) this));
+        MixinHelper.post(new TooltipRenderEvent.Post((GuiGraphicsExtractor) (Object) this));
     }
 }

@@ -25,7 +25,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
@@ -102,7 +102,7 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(guiGraphics);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.statistics.name"));
@@ -122,7 +122,7 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderDescription(GuiGraphics guiGraphics) {
+    private void renderDescription(GuiGraphicsExtractor guiGraphics) {
         if (highlightedStatisticKind == null) {
             FontRenderer.getInstance()
                     .renderText(
@@ -163,7 +163,8 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
         }
     }
 
-    private void renderCountStatistics(GuiGraphics guiGraphics, StatisticKind statisticKind, StatisticEntry entry) {
+    private void renderCountStatistics(
+            GuiGraphicsExtractor guiGraphics, StatisticKind statisticKind, StatisticEntry entry) {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
@@ -178,7 +179,8 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
                         TextShadow.NONE);
     }
 
-    private void renderAdvancedStatistics(GuiGraphics guiGraphics, StatisticKind statisticKind, StatisticEntry entry) {
+    private void renderAdvancedStatistics(
+            GuiGraphicsExtractor guiGraphics, StatisticKind statisticKind, StatisticEntry entry) {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,

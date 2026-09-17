@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -162,7 +162,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderMap(guiGraphics);
 
         RenderUtils.enableScissor(
@@ -356,7 +356,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         return selectedPoi;
     }
 
-    private void renderPois(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderPois(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         renderDestinations(
                 destinationPois,
                 guiGraphics,
@@ -368,7 +368,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
     private void renderDestinations(
             List<SeaskipperDestinationPoi> pois,
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             BoundingBox textureBoundingBox,
             float poiScale,
             int mouseX,
@@ -454,7 +454,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         return filteredPois;
     }
 
-    private void renderHoveredSeaskipperDestination(GuiGraphics guiGraphics) {
+    private void renderHoveredSeaskipperDestination(GuiGraphicsExtractor guiGraphics) {
         if (hoveredPoi == null) return;
 
         int xOffset = (int) (width - SCREEN_SIDE_OFFSET - 250);
@@ -586,7 +586,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                         TextShadow.OUTLINE);
     }
 
-    private void renderScrollButton(GuiGraphics guiGraphics) {
+    private void renderScrollButton(GuiGraphicsExtractor guiGraphics) {
         if (availablePois.size() <= MAX_DESTINATIONS) return;
 
         scrollButtonRenderY = (int) (departureBoardY + 4 * currentTextureScale * 0.933f)

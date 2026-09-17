@@ -15,7 +15,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class ManaBankBarOverlay extends ManaBarOverlay {
     public ManaBankBarOverlay() {
@@ -50,7 +50,7 @@ public class ManaBankBarOverlay extends ManaBarOverlay {
     }
 
     @Override
-    protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
+    protected void renderBar(GuiGraphicsExtractor guiGraphics, float renderY, float renderHeight, float progress) {
         int textureY1 = getTextureY1();
         int textureY2 = getTextureY2();
 

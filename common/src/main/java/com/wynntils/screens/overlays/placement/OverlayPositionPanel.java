@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.LockIconButton;
@@ -141,7 +141,7 @@ public final class OverlayPositionPanel {
         placementLockButton.setTooltip(Tooltip.create(lockLabel()));
     }
 
-    public void render(GuiGraphics graphics) {
+    public void render(GuiGraphicsExtractor graphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 graphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND, x, y, WIDTH, HEIGHT);
         FontRenderer.getInstance()
@@ -163,7 +163,7 @@ public final class OverlayPositionPanel {
         label(graphics, "alignment", x + 8, y + 100);
     }
 
-    private void label(GuiGraphics graphics, String key, int labelX, int labelY) {
+    private void label(GuiGraphicsExtractor graphics, String key, int labelX, int labelY) {
         FontRenderer.getInstance()
                 .renderText(
                         graphics,

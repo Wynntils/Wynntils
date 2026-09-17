@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -59,7 +59,7 @@ public class ItemSearchWidget extends SearchWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
 
         helperWidget.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -76,7 +76,7 @@ public class ItemSearchWidget extends SearchWidget {
 
     @Override
     protected void renderText(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,

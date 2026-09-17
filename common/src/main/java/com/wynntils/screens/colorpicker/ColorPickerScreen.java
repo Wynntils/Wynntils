@@ -17,7 +17,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -143,7 +143,7 @@ public final class ColorPickerScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.COLOR_PICKER_BACKGROUND, offsetX, offsetY);
 
         renderSelectedColor(guiGraphics, offsetX + 11, offsetY + 15);
@@ -214,7 +214,7 @@ public final class ColorPickerScreen extends WynntilsScreen {
         setColor(newColor);
     }
 
-    private void renderSelectedColor(GuiGraphics guiGraphics, int x, int y) {
+    private void renderSelectedColor(GuiGraphicsExtractor guiGraphics, int x, int y) {
         RenderUtils.drawRect(guiGraphics, color, x, y, 82, 66);
     }
 }

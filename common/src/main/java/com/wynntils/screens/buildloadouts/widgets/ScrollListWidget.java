@@ -9,7 +9,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -53,7 +53,7 @@ public abstract class ScrollListWidget extends AbstractWidget {
     protected abstract List<AbstractWidget> getWidgets();
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, x, y, this.width, this.height);
 
@@ -83,7 +83,7 @@ public abstract class ScrollListWidget extends AbstractWidget {
         }
     }
 
-    private void renderScroll(GuiGraphics guiGraphics) {
+    private void renderScroll(GuiGraphicsExtractor guiGraphics) {
         int maxScrollOffset = getMaxScrollOffset();
         scrollY = maxScrollOffset <= 0
                 ? getScrollTrackTop()

@@ -19,7 +19,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -61,7 +61,7 @@ public class SecretsScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SECRETS_BACKGROUND, offsetX, offsetY);
@@ -196,13 +196,13 @@ public class SecretsScreen extends WynntilsScreen {
         return (secretInputs.size() - WIDGETS_PER_PAGE) * 22;
     }
 
-    private void renderSecrets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderSecrets(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.enableScissor(guiGraphics, offsetX + 9, offsetY + 8, 322, 134);
         secretInputs.forEach(secretInput -> secretInput.render(guiGraphics, mouseX, mouseY, partialTick));
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    private void renderScroll(GuiGraphics guiGraphics) {
+    private void renderScroll(GuiGraphicsExtractor guiGraphics) {
         scrollY = offsetY
                 + 7
                 + MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, 135 - Texture.SCROLL_BUTTON.height());

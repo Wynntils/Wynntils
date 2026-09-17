@@ -9,7 +9,7 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public abstract class OverflowableBarOverlay extends BaseBarOverlay {
     protected OverflowableBarOverlay(OverlayPosition position, OverlaySize size, CustomColor textColor) {
@@ -17,7 +17,7 @@ public abstract class OverflowableBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
+    protected void renderBar(GuiGraphicsExtractor guiGraphics, float renderY, float renderHeight, float progress) {
         int textureY1 = getTextureY1();
         int textureY2 = getTextureY2();
 

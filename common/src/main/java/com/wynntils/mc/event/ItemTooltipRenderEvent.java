@@ -7,7 +7,7 @@ package com.wynntils.mc.event;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.Event;
@@ -22,19 +22,19 @@ import net.neoforged.bus.api.ICancellableEvent;
  * The third location is patched in by NeoForge, handled in {@link NeoForgeGuiGraphicsMixin}.
  */
 public abstract class ItemTooltipRenderEvent extends Event {
-    private final GuiGraphics guiGraphics;
+    private final GuiGraphicsExtractor guiGraphics;
     protected ItemStack itemStack;
     protected int mouseX;
     protected int mouseY;
 
-    protected ItemTooltipRenderEvent(GuiGraphics guiGraphics, ItemStack itemStack, int mouseX, int mouseY) {
+    protected ItemTooltipRenderEvent(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int mouseX, int mouseY) {
         this.guiGraphics = guiGraphics;
         this.itemStack = itemStack;
         this.mouseX = mouseX;
         this.mouseY = mouseY;
     }
 
-    public GuiGraphics getGuiGraphics() {
+    public GuiGraphicsExtractor getGuiGraphics() {
         return guiGraphics;
     }
 
@@ -53,7 +53,12 @@ public abstract class ItemTooltipRenderEvent extends Event {
     public static class Pre extends ItemTooltipRenderEvent implements ICancellableEvent {
         private List<Component> tooltips;
 
-        public Pre(GuiGraphics guiGraphics, ItemStack itemStack, List<Component> tooltips, int mouseX, int mouseY) {
+        public Pre(
+                GuiGraphicsExtractor guiGraphics,
+                ItemStack itemStack,
+                List<Component> tooltips,
+                int mouseX,
+                int mouseY) {
             super(guiGraphics, itemStack, mouseX, mouseY);
             setTooltips(tooltips);
         }
@@ -80,7 +85,7 @@ public abstract class ItemTooltipRenderEvent extends Event {
     }
 
     public static class Post extends ItemTooltipRenderEvent {
-        public Post(GuiGraphics guiGraphics, ItemStack itemStack, int mouseX, int mouseY) {
+        public Post(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int mouseX, int mouseY) {
             super(guiGraphics, itemStack, mouseX, mouseY);
         }
     }

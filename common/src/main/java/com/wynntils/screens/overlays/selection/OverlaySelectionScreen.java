@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -166,7 +166,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // When not rendering a preview of the selected overlay
         if (!renderPreview) {
             RenderUtils.drawTexturedRect(guiGraphics, Texture.OVERLAY_SELECTION_GUI, offsetX, offsetY);
@@ -265,14 +265,14 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    protected void renderBlurredBackground(GuiGraphics guiGraphics) {
+    protected void renderBlurredBackground(GuiGraphicsExtractor guiGraphics) {
         if (!renderPreview) {
             super.renderBlurredBackground(guiGraphics);
         }
     }
 
     @Override
-    protected void renderMenuBackground(GuiGraphics guiGraphics) {
+    protected void renderMenuBackground(GuiGraphicsExtractor guiGraphics) {
         if (!renderPreview) {
             this.renderMenuBackground(guiGraphics, 0, 0, this.width, this.height);
         }
@@ -964,7 +964,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         // endregion
     }
 
-    private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderWidgets(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (HoverableTexturedButton optionsButton : optionButtons) {
             optionsButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }
@@ -986,7 +986,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    private void renderOverlayScroll(GuiGraphics guiGraphics) {
+    private void renderOverlayScroll(GuiGraphicsExtractor guiGraphics) {
         overlayScrollY = 24
                 + offsetY
                 + MathUtils.map(
@@ -999,7 +999,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, 133 + offsetX, overlayScrollY);
     }
 
-    private void renderConfigScroll(GuiGraphics guiGraphics) {
+    private void renderConfigScroll(GuiGraphicsExtractor guiGraphics) {
         configScrollY = 24
                 + offsetY
                 + MathUtils.map(
@@ -1012,7 +1012,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, 344 + offsetX, configScrollY);
     }
 
-    private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderTooltips(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         // The option buttons have a slight bit rendered underneath the background, we don't want to render the tooltip
         // when hovering that bit.
         if (MathUtils.isInside(

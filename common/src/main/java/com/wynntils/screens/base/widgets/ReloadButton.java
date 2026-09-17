@@ -10,7 +10,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.RenderDirection;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
@@ -30,7 +30,7 @@ public class ReloadButton extends WynntilsButton implements TooltipProvider {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawScalingHoverableTexturedRect(
                 guiGraphics,
                 Texture.RELOAD_ICON_OFFSET,

@@ -8,7 +8,7 @@ import com.wynntils.screens.guides.widgets.GuideButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.HorizontalAlignment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class AugmentGuideButton extends GuideButton {
     private static final CustomColor TIER_COLOR = new CustomColor(0, 255, 255);
@@ -22,7 +22,7 @@ public class AugmentGuideButton extends GuideButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         CustomColor color = getColor();
         renderBaseItem(guiGraphics, color);
 

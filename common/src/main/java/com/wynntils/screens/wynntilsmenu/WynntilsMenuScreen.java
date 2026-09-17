@@ -42,7 +42,7 @@ import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -299,7 +299,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(guiGraphics);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsMenu.userProfile"));
@@ -316,7 +316,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     @Override
-    protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
+    protected void renderTitle(GuiGraphicsExtractor guiGraphics, String titleString) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.CONTENT_BOOK_TITLE, offsetX, 15 + offsetY);
 
         FontRenderer.getInstance()
@@ -332,7 +332,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         2f);
     }
 
-    private void renderPlayerInfo(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderPlayerInfo(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (!Models.Guild.getGuildName().isEmpty()) {
             String rank = Models.Guild.getGuildRank().getGuildDescription();
 
@@ -428,7 +428,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         }
     }
 
-    private void renderPlayer(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderPlayer(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         int posX = (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 50 + offsetX);
         int posY = (int) (Texture.CONTENT_BOOK_BACKGROUND.height() / 2f - 40 + offsetY);
 
@@ -459,7 +459,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         return true;
     }
 
-    private void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (this.hovered != null) {
             guiGraphics.setTooltipForNextFrame(
                     Lists.transform(
@@ -470,7 +470,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         }
     }
 
-    private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderWidgets(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
 
         for (WynntilsMenuButton button : buttons.stream().flatMap(List::stream).toList()) {

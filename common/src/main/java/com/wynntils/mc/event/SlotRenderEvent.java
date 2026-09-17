@@ -4,24 +4,24 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class SlotRenderEvent extends Event {
-    private final GuiGraphics guiGraphics;
+    private final GuiGraphicsExtractor guiGraphics;
     private final Screen screen;
     private final Slot slot;
 
-    protected SlotRenderEvent(GuiGraphics guiGraphics, Screen screen, Slot slot) {
+    protected SlotRenderEvent(GuiGraphicsExtractor guiGraphics, Screen screen, Slot slot) {
         this.guiGraphics = guiGraphics;
         this.screen = screen;
         this.slot = slot;
     }
 
-    public GuiGraphics getGuiGraphics() {
+    public GuiGraphicsExtractor getGuiGraphics() {
         return guiGraphics;
     }
 
@@ -34,19 +34,19 @@ public abstract class SlotRenderEvent extends Event {
     }
 
     public static class Pre extends SlotRenderEvent implements ICancellableEvent {
-        public Pre(GuiGraphics guiGraphics, Screen screen, Slot slot) {
+        public Pre(GuiGraphicsExtractor guiGraphics, Screen screen, Slot slot) {
             super(guiGraphics, screen, slot);
         }
     }
 
     public static class CountPre extends SlotRenderEvent {
-        public CountPre(GuiGraphics guiGraphics, Screen screen, Slot slot) {
+        public CountPre(GuiGraphicsExtractor guiGraphics, Screen screen, Slot slot) {
             super(guiGraphics, screen, slot);
         }
     }
 
     public static class Post extends SlotRenderEvent {
-        public Post(GuiGraphics guiGraphics, Screen screen, Slot slot) {
+        public Post(GuiGraphicsExtractor guiGraphics, Screen screen, Slot slot) {
             super(guiGraphics, screen, slot);
         }
     }

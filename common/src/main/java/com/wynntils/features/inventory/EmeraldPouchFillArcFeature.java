@@ -19,7 +19,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Optional;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -50,7 +50,7 @@ public class EmeraldPouchFillArcFeature extends Feature {
         drawFilledArc(e.getGuiGraphics(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y);
     }
 
-    private void drawFilledArc(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
+    private void drawFilledArc(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int slotX, int slotY) {
         Optional<EmeraldPouchItem> optionalItem = Models.Item.asWynnItem(itemStack, EmeraldPouchItem.class);
 
         if (optionalItem.isEmpty()) return;

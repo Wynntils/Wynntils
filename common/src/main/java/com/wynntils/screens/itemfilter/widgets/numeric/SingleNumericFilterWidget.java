@@ -11,7 +11,7 @@ import com.wynntils.screens.itemfilter.widgets.ProviderFilterListWidget;
 import com.wynntils.services.itemfilter.type.StatFilter;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import java.util.Optional;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -45,7 +45,7 @@ public abstract class SingleNumericFilterWidget<T> extends GeneralFilterWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         entryInput.render(guiGraphics, mouseX, mouseY, partialTick);
         removeButton.render(guiGraphics, mouseX, mouseY, partialTick);
     }

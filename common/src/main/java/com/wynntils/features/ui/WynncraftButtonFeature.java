@@ -32,7 +32,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.Locale;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -213,7 +213,7 @@ public class WynncraftButtonFeature extends Feature {
         }
 
         @Override
-        public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
             super.renderContents(guiGraphics, mouseX, mouseY, partialTicks);
             RenderUtils.drawScalingTexturedRect(
                     guiGraphics,

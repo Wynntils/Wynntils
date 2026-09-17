@@ -13,7 +13,7 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -38,7 +38,7 @@ public abstract class FabricAbstractContainerScreenMixin {
                             target =
                                     "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"))
     private void renderTooltipPre(
-            GuiGraphics instance,
+            GuiGraphicsExtractor instance,
             Font font,
             List<Component> tooltipLines,
             Optional<TooltipComponent> visualTooltipComponent,
@@ -70,7 +70,8 @@ public abstract class FabricAbstractContainerScreenMixin {
                             value = "INVOKE",
                             target =
                                     "Lnet/minecraft/client/gui/GuiGraphics;renderItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V"))
-    private void renderSlotPreCount(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
+    private void renderSlotPreCount(
+            GuiGraphicsExtractor guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
         MixinHelper.post(new SlotRenderEvent.CountPre(guiGraphics, (Screen) (Object) this, slot));
     }
 }

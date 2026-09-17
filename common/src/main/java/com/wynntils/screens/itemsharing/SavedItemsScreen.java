@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -165,12 +165,12 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphicsExtractor guiGraphics, float partialTick, int mouseX, int mouseY) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.ITEM_RECORD, this.leftPos, this.topPos);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderLabels(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         // We don't want a label
     }
 
@@ -203,7 +203,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
         if (!addingCategory && !editingCategory) {
@@ -378,7 +378,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         populateItems();
     }
 
-    private void renderScrollButton(GuiGraphics guiGraphics) {
+    private void renderScrollButton(GuiGraphicsExtractor guiGraphics) {
         float renderX = this.leftPos + 155;
         float renderY =
                 this.topPos + 18 + MathUtils.map(itemScrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT);

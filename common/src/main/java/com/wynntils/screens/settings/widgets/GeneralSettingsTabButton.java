@@ -9,7 +9,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.function.Consumer;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 
 public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
@@ -47,7 +47,7 @@ public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Don't count as hovered if mouse is hovering the book as the tags render
         // slightly underneath the book
         if (isHovered

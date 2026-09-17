@@ -10,7 +10,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.RenderDirection;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -44,7 +44,7 @@ public class PageSelectorButton extends WynntilsButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         Texture arrowTexture = this.forward ? Texture.FORWARD_ARROW_OFFSET : Texture.BACKWARD_ARROW_OFFSET;
 
         RenderUtils.drawHoverableTexturedRect(
@@ -52,7 +52,7 @@ public class PageSelectorButton extends WynntilsButton {
     }
 
     @Override
-    protected void handleCursor(GuiGraphics guiGraphics) {
+    protected void handleCursor(GuiGraphicsExtractor guiGraphics) {
         if (this.isHovered()) {
             guiGraphics.requestCursor(
                     this.isActive() && isValid() ? CursorTypes.POINTING_HAND : CursorTypes.NOT_ALLOWED);

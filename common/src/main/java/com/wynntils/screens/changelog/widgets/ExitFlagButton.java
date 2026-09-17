@@ -8,7 +8,7 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.RenderDirection;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
@@ -21,7 +21,7 @@ public class ExitFlagButton extends WynntilsButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawHoverableTexturedRect(
                 guiGraphics, Texture.EXIT_FLAG, this.getX(), this.getY(), isHovered, RenderDirection.VERTICAL);
     }

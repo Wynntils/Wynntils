@@ -1,7 +1,7 @@
 {
   "client": [
     "NeoForgeAbstractContainerScreenMixin",
-    "NeoForgeGuiGraphicsMixin",
+    "NeoForgeGuiGraphicsExtractorMixin",
     "NeoForgeLevelRendererMixin",
     "NeoForgeGuiMixin"
   ],

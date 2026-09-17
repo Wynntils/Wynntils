@@ -23,7 +23,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Arrays;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -102,7 +102,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
@@ -123,7 +123,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
         }
     }
 
-    private void renderPageInfo(GuiGraphics guiGraphics, int currentPage, int maxPage) {
+    private void renderPageInfo(GuiGraphicsExtractor guiGraphics, int currentPage, int maxPage) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,
@@ -137,7 +137,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
                         TextShadow.OUTLINE);
     }
 
-    private void renderScrollBar(GuiGraphics guiGraphics) {
+    private void renderScrollBar(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawRect(
                 guiGraphics,
                 CommonColors.LIGHT_GRAY,

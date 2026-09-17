@@ -27,7 +27,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.Objects;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Position;
@@ -104,7 +104,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (hovered instanceof LootrunPathButton lootrunPathButton) {
             List<Component> tooltipLines;
 
@@ -143,7 +143,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(guiGraphics);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.lootruns.name"));
@@ -163,7 +163,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderDescription(GuiGraphics guiGraphics) {
+    private void renderDescription(GuiGraphicsExtractor guiGraphics) {
         LootrunPathInstance currentLootrun = Services.LootrunPaths.getCurrentLootrun();
         if (currentLootrun != null) {
             FontRenderer.getInstance()

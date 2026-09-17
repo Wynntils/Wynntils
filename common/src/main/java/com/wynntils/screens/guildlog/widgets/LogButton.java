@@ -17,7 +17,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.function.Consumer;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 
 public class LogButton extends BasicTexturedButton {
@@ -30,7 +30,7 @@ public class LogButton extends BasicTexturedButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderContents(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawTexturedRect(guiGraphics, logType.getIcon(), getX() + 3, getY() + 3);

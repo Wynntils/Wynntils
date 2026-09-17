@@ -4,7 +4,7 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
@@ -15,9 +15,9 @@ public abstract class WynntilsButton extends AbstractButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int i, int j, float f) {
+    public void renderContents(GuiGraphicsExtractor guiGraphics, int i, int j, float f) {
         renderDefaultSprite(guiGraphics);
-        renderDefaultLabel(guiGraphics.textRendererForWidget(this, GuiGraphics.HoveredTextEffects.NONE));
+        renderDefaultLabel(guiGraphics.textRendererForWidget(this, GuiGraphicsExtractor.HoveredTextEffects.NONE));
     }
 
     @Override

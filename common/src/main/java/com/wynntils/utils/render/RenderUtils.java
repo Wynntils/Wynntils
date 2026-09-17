@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.render.state.GuiItemRenderState;
 import net.minecraft.client.gui.screens.Screen;
@@ -62,7 +62,7 @@ public final class RenderUtils {
     private static final int NAMETAG_COLOR = 0x80FFFFFF;
 
     public static void drawLine(
-            GuiGraphics guiGraphics, CustomColor color, float x1, float y1, float x2, float y2, float width) {
+            GuiGraphicsExtractor guiGraphics, CustomColor color, float x1, float y1, float x2, float y2, float width) {
         // Vertical or horizontal line
         if (x1 == x2 || y1 == y2) {
             float halfWidth = width / 2f;
@@ -91,12 +91,18 @@ public final class RenderUtils {
     }
 
     public static void drawRect(
-            GuiGraphics guiGraphics, CustomColor color, float x, float y, float width, float height) {
+            GuiGraphicsExtractor guiGraphics, CustomColor color, float x, float y, float width, float height) {
         fill(guiGraphics, color, x, y, x + width, y + height);
     }
 
     public static void drawRectBorders(
-            GuiGraphics guiGraphics, CustomColor color, float x1, float y1, float x2, float y2, float lineWidth) {
+            GuiGraphicsExtractor guiGraphics,
+            CustomColor color,
+            float x1,
+            float y1,
+            float x2,
+            float y2,
+            float lineWidth) {
         drawLine(guiGraphics, color, x1, y1, x2, y1, lineWidth);
         drawLine(guiGraphics, color, x2, y1, x2, y2, lineWidth);
         drawLine(guiGraphics, color, x2, y2, x1, y2, lineWidth);
@@ -104,7 +110,7 @@ public final class RenderUtils {
     }
 
     public static void drawRotatingBorderSegment(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             CustomColor color,
             float x1,
             float y1,
@@ -190,7 +196,8 @@ public final class RenderUtils {
         }
     }
 
-    public static void fill(GuiGraphics guiGraphics, CustomColor color, float x1, float y1, float x2, float y2) {
+    public static void fill(
+            GuiGraphicsExtractor guiGraphics, CustomColor color, float x1, float y1, float x2, float y2) {
         if (x1 > x2) {
             float t = x1;
             x1 = x2;
@@ -216,7 +223,7 @@ public final class RenderUtils {
     }
 
     public static void drawTexturedRect(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             RenderPipeline pipeline,
             Identifier identifier,
             CustomColor color,
@@ -248,7 +255,7 @@ public final class RenderUtils {
     }
 
     public static void drawTexturedRect(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Identifier identifier,
             CustomColor color,
             float x,
@@ -279,7 +286,7 @@ public final class RenderUtils {
     }
 
     public static void drawTexturedRect(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Texture texture,
             CustomColor color,
             float x,
@@ -309,7 +316,7 @@ public final class RenderUtils {
     }
 
     public static void drawTexturedRect(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Texture texture,
             float x,
             float y,
@@ -337,7 +344,7 @@ public final class RenderUtils {
                 textureHeight);
     }
 
-    public static void drawSprite(GuiGraphics guiGraphics, Texture texture, float x, float y) {
+    public static void drawSprite(GuiGraphicsExtractor guiGraphics, Texture texture, float x, float y) {
         drawSprite(
                 guiGraphics,
                 RenderPipelines.GUI_TEXTURED,
@@ -350,7 +357,8 @@ public final class RenderUtils {
                 texture.height());
     }
 
-    public static void drawSprite(GuiGraphics guiGraphics, Texture texture, CustomColor color, float x, float y) {
+    public static void drawSprite(
+            GuiGraphicsExtractor guiGraphics, Texture texture, CustomColor color, float x, float y) {
         drawSprite(
                 guiGraphics,
                 RenderPipelines.GUI_TEXTURED,
@@ -364,7 +372,7 @@ public final class RenderUtils {
     }
 
     public static void drawSprite(
-            GuiGraphics guiGraphics, Texture texture, float x, float y, float width, float height) {
+            GuiGraphicsExtractor guiGraphics, Texture texture, float x, float y, float width, float height) {
         drawSprite(
                 guiGraphics,
                 RenderPipelines.GUI_TEXTURED,
@@ -378,7 +386,13 @@ public final class RenderUtils {
     }
 
     public static void drawSprite(
-            GuiGraphics guiGraphics, Texture texture, CustomColor color, float x, float y, float width, float height) {
+            GuiGraphicsExtractor guiGraphics,
+            Texture texture,
+            CustomColor color,
+            float x,
+            float y,
+            float width,
+            float height) {
         drawSprite(
                 guiGraphics,
                 RenderPipelines.GUI_TEXTURED,
@@ -392,7 +406,7 @@ public final class RenderUtils {
     }
 
     public static void drawSprite(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             RenderPipeline pipeline,
             Identifier identifier,
             Identifier atlas,
@@ -421,7 +435,7 @@ public final class RenderUtils {
     }
 
     public static void drawTexturedRect(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Identifier identifier,
             float x,
             float y,
@@ -450,7 +464,7 @@ public final class RenderUtils {
     }
 
     public static void drawTexturedRect(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Texture texture,
             float x,
             float y,
@@ -474,7 +488,8 @@ public final class RenderUtils {
                 texture.height());
     }
 
-    public static void drawTexturedRect(GuiGraphics guiGraphics, Texture texture, CustomColor color, float x, float y) {
+    public static void drawTexturedRect(
+            GuiGraphicsExtractor guiGraphics, Texture texture, CustomColor color, float x, float y) {
         drawTexturedRect(
                 guiGraphics,
                 texture,
@@ -492,7 +507,7 @@ public final class RenderUtils {
     }
 
     public static void drawTexturedRect(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Identifier identifier,
             CustomColor color,
             float x,
@@ -517,12 +532,12 @@ public final class RenderUtils {
                 textureHeight);
     }
 
-    public static void drawTexturedRect(GuiGraphics guiGraphics, Texture texture, float x, float y) {
+    public static void drawTexturedRect(GuiGraphicsExtractor guiGraphics, Texture texture, float x, float y) {
         drawTexturedRect(guiGraphics, texture, CustomColor.NONE, x, y);
     }
 
     public static void drawScalingTexturedRect(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Identifier identifier,
             float x,
             float y,
@@ -547,19 +562,25 @@ public final class RenderUtils {
     }
 
     public static void drawScalingTexturedRect(
-            GuiGraphics guiGraphics, Texture texture, CustomColor color, float x, float y, float width, float height) {
+            GuiGraphicsExtractor guiGraphics,
+            Texture texture,
+            CustomColor color,
+            float x,
+            float y,
+            float width,
+            float height) {
         drawScalingTexturedRect(
                 guiGraphics, texture.identifier(), color, x, y, width, height, texture.width(), texture.height());
     }
 
     public static void drawScalingTexturedRect(
-            GuiGraphics guiGraphics, Texture texture, float x, float y, float width, float height) {
+            GuiGraphicsExtractor guiGraphics, Texture texture, float x, float y, float width, float height) {
         drawScalingTexturedRect(
                 guiGraphics, texture.identifier(), x, y, width, height, texture.width(), texture.height());
     }
 
     public static void drawScalingTexturedRect(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Identifier identifier,
             CustomColor color,
             float x,
@@ -586,7 +607,7 @@ public final class RenderUtils {
 
     // nine slice scalling
     public static void drawNineSliceScalingTexturedRect(
-            GuiGraphics guiGraphics, Texture texture, float x, float y, float width, float height) {
+            GuiGraphicsExtractor guiGraphics, Texture texture, float x, float y, float width, float height) {
         if (!texture.isNineSliced()) {
             WynntilsMod.warn("Tried to render non Nine Sliced Texture via drawNineSliceScalingTexturedRect.");
             return;
@@ -723,7 +744,7 @@ public final class RenderUtils {
     }
 
     public static void drawHoverableTexturedRect(
-            GuiGraphics guiGraphics, Texture texture, float x, float y, boolean hovered, RenderDirection dir) {
+            GuiGraphicsExtractor guiGraphics, Texture texture, float x, float y, boolean hovered, RenderDirection dir) {
         int textureWidth = texture.width();
         int textureHeight = texture.height();
 
@@ -750,7 +771,7 @@ public final class RenderUtils {
     }
 
     public static void drawScalingHoverableTexturedRect(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Texture texture,
             float x,
             float y,
@@ -783,7 +804,7 @@ public final class RenderUtils {
                 textureHeight);
     }
 
-    public static void renderVignetteOverlay(GuiGraphics guiGraphics, CustomColor color, float alpha) {
+    public static void renderVignetteOverlay(GuiGraphicsExtractor guiGraphics, CustomColor color, float alpha) {
         Window window = McUtils.window();
 
         drawTexturedRect(
@@ -803,7 +824,7 @@ public final class RenderUtils {
     }
 
     public static void fillGradient(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             float x1,
             float y1,
             float x2,
@@ -826,7 +847,7 @@ public final class RenderUtils {
     }
 
     public static void drawArc(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             CustomColor color,
             float x,
             float y,
@@ -837,7 +858,7 @@ public final class RenderUtils {
     }
 
     public static void drawArc(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             CustomColor color,
             float x,
             float y,
@@ -861,7 +882,7 @@ public final class RenderUtils {
     }
 
     public static void drawArc(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             CustomColor color,
             float x,
             float y,
@@ -886,7 +907,7 @@ public final class RenderUtils {
     }
 
     public static void drawRoundedRect(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             CustomColor fillColor,
             float x,
             float y,
@@ -923,7 +944,7 @@ public final class RenderUtils {
     }
 
     public static void drawRoundedRectWithBorder(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             CustomColor borderColor,
             CustomColor fillColor,
             float x,
@@ -973,7 +994,7 @@ public final class RenderUtils {
     }
 
     private static void drawRoundedCorner(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             CustomColor color,
             float x,
             float y,
@@ -1001,7 +1022,7 @@ public final class RenderUtils {
      * @param progress  progress of the bar, 0.0f to 1.0f is left to right and 0.0f to -1.0f is right to left
      */
     public static void drawColoredProgressBar(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Texture texture,
             CustomColor customColor,
             float x1,
@@ -1047,7 +1068,7 @@ public final class RenderUtils {
      * @param progress  progress of the bar, 0.0f to 1.0f is left to right and 0.0f to -1.0f is right to left
      */
     public static void drawProgressBar(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Texture texture,
             float x1,
             float y1,
@@ -1075,7 +1096,7 @@ public final class RenderUtils {
     }
 
     public static void drawProgressBarForeground(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Texture texture,
             float x1,
             float y1,
@@ -1132,7 +1153,7 @@ public final class RenderUtils {
     }
 
     private static void drawProgressBarForegroundWithColor(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Texture texture,
             CustomColor customColor,
             float x1,
@@ -1190,7 +1211,7 @@ public final class RenderUtils {
     }
 
     public static void drawProgressBarBackground(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Texture texture,
             float x1,
             float y1,
@@ -1217,11 +1238,11 @@ public final class RenderUtils {
                 texture.height());
     }
 
-    public static void enableScissor(GuiGraphics guiGraphics, int x, int y, int width, int height) {
+    public static void enableScissor(GuiGraphicsExtractor guiGraphics, int x, int y, int width, int height) {
         guiGraphics.enableScissor(x, y, x + width, y + height);
     }
 
-    public static void disableScissor(GuiGraphics guiGraphics) {
+    public static void disableScissor(GuiGraphicsExtractor guiGraphics) {
         if (guiGraphics.scissorStack.stack.isEmpty()) return;
 
         guiGraphics.disableScissor();
@@ -1233,12 +1254,12 @@ public final class RenderUtils {
         matrix3x2fStack.translate(-centerX, -centerZ);
     }
 
-    public static void renderItem(GuiGraphics guiGraphics, ItemStack itemStack, int x, int y) {
+    public static void renderItem(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int x, int y) {
         guiGraphics.renderItem(itemStack, x, y);
     }
 
     public static void renderScalingItem(
-            GuiGraphics guiGraphics, ItemStack itemStack, int x, int y, int width, int height) {
+            GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int x, int y, int width, int height) {
         if (itemStack.isEmpty()) return;
 
         TrackingItemStackRenderState renderState = new TrackingItemStackRenderState();
@@ -1270,12 +1291,13 @@ public final class RenderUtils {
         guiGraphics.pose().popMatrix();
     }
 
-    public static void renderTooltip(GuiGraphics guiGraphics, List<Component> tooltipLines, int mouseX, int mouseY) {
+    public static void renderTooltip(
+            GuiGraphicsExtractor guiGraphics, List<Component> tooltipLines, int mouseX, int mouseY) {
         renderTooltip(
                 guiGraphics, FontRenderer.getInstance().getFont(), tooltipLines, Optional.empty(), mouseX, mouseY);
     }
 
-    public static void renderTooltip(GuiGraphics guiGraphics, ItemStack itemStack, int mouseX, int mouseY) {
+    public static void renderTooltip(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int mouseX, int mouseY) {
         renderTooltip(
                 guiGraphics,
                 FontRenderer.getInstance().getFont(),
@@ -1287,7 +1309,7 @@ public final class RenderUtils {
     }
 
     public static void renderTooltip(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Font font,
             List<Component> tooltipLines,
             Optional<TooltipComponent> tooltipImage,
@@ -1297,7 +1319,7 @@ public final class RenderUtils {
     }
 
     public static void renderTooltip(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Font font,
             List<Component> tooltipLines,
             Optional<TooltipComponent> tooltipImage,
@@ -1407,7 +1429,7 @@ public final class RenderUtils {
     }
 
     public static void drawMulticoloredRectBorders(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             List<CustomColor> colors,
             float x,
             float y,
@@ -1453,7 +1475,7 @@ public final class RenderUtils {
     }
 
     public static void drawMulticoloredRect(
-            GuiGraphics guiGraphics, List<CustomColor> colors, float x, float y, float width, float height) {
+            GuiGraphicsExtractor guiGraphics, List<CustomColor> colors, float x, float y, float width, float height) {
         if (colors.size() == 1) {
             drawRect(guiGraphics, colors.getFirst(), x, y, width, height);
             return;
@@ -1473,7 +1495,7 @@ public final class RenderUtils {
     }
 
     public static void renderDebugGrid(
-            GuiGraphics guiGraphics, float gridDivisions, float dividedWidth, float dividedHeight) {
+            GuiGraphicsExtractor guiGraphics, float gridDivisions, float dividedWidth, float dividedHeight) {
         for (int i = 1; i <= gridDivisions - 1; i++) {
             double x = dividedWidth * i;
             double y = dividedHeight * i;
@@ -1504,7 +1526,7 @@ public final class RenderUtils {
     }
 
     public static void drawPolygon(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             CustomColor fillColor,
             CustomColor borderColor,
             float borderWidth,
@@ -1543,7 +1565,7 @@ public final class RenderUtils {
     }
 
     private static void drawTriangleFill(
-            GuiGraphics guiGraphics, CustomColor color, Vector2f v0, Vector2f v1, Vector2f v2) {
+            GuiGraphicsExtractor guiGraphics, CustomColor color, Vector2f v0, Vector2f v1, Vector2f v2) {
         // Approximate triangle fill by drawing horizontal lines (scanline fill)
         float minY = Math.min(v0.y(), Math.min(v1.y(), v2.y()));
         float maxY = Math.max(v0.y(), Math.max(v1.y(), v2.y()));

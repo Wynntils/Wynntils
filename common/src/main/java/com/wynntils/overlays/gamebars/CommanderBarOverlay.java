@@ -20,7 +20,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class CommanderBarOverlay extends BaseBarOverlay {
     @Persisted
@@ -59,7 +59,7 @@ public class CommanderBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
+    protected void renderBar(GuiGraphicsExtractor guiGraphics, float renderY, float renderHeight, float progress) {
         Texture universalBarTexture = Texture.UNIVERSAL_BAR;
 
         RenderUtils.drawColoredProgressBar(
@@ -78,7 +78,7 @@ public class CommanderBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    protected void renderText(GuiGraphics guiGraphics, float renderY, String text) {
+    protected void renderText(GuiGraphicsExtractor guiGraphics, float renderY, String text) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,

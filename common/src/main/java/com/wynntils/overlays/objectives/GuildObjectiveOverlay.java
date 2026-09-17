@@ -22,7 +22,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -61,14 +61,14 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         WynnObjective guildObjective = Models.Objectives.getGuildObjective();
         if (guildObjective == null) return;
         renderObjective(guiGraphics, guildObjective);
     }
 
     @Override
-    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         WynnObjective guildObjective = Models.Objectives.getGuildObjective();
         if (guildObjective == null) {
             guildObjective = WynnObjective.DEMO_GUILD;
@@ -76,7 +76,7 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
         renderObjective(guiGraphics, guildObjective);
     }
 
-    private void renderObjective(GuiGraphics guiGraphics, WynnObjective guildObjective) {
+    private void renderObjective(GuiGraphicsExtractor guiGraphics, WynnObjective guildObjective) {
         if (this.hideOnInactivity.get()) {
             final int maxInactivityMs = 3000;
             if (guildObjective.getUpdatedAt() + maxInactivityMs < System.currentTimeMillis()) {

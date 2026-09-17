@@ -9,7 +9,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class AspectGuideButton extends GuideButton {
     private static final CustomColor TIER_1_HIGHLIGHT_COLOR = CustomColor.fromChatFormatting(ChatFormatting.DARK_GRAY);
@@ -36,7 +36,7 @@ public class AspectGuideButton extends GuideButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBaseItem(guiGraphics, getColor());
 
         renderTextOverlay(
@@ -53,7 +53,7 @@ public class AspectGuideButton extends GuideButton {
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (!builtTooltip) {
             aspectItemStack.buildTooltip();
             builtTooltip = true;

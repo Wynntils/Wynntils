@@ -31,7 +31,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -101,7 +101,7 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.GUILD_LOG_BACKGROUND, offsetX, offsetY);
         FontRenderer.getInstance()
                 .renderText(
@@ -236,13 +236,13 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
         }
     }
 
-    private void renderLogs(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderLogs(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.enableScissor(guiGraphics, offsetX + 108, offsetY + 16, Texture.LOG_ENTRY_MIDDLE.width(), 139);
         logs.forEach(log -> log.render(guiGraphics, mouseX, mouseY, partialTick));
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    private void renderScroll(GuiGraphics guiGraphics) {
+    private void renderScroll(GuiGraphicsExtractor guiGraphics) {
         scrollY =
                 offsetY + 15 + MathUtils.map(scrollOffset, 0, maxScrollOffset, 0, 141 - Texture.SCROLL_BUTTON.height());
 

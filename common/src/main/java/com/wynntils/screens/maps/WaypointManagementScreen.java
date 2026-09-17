@@ -38,7 +38,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -379,7 +379,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
         renderScroll(guiGraphics);
 
@@ -463,7 +463,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawTexturedRect(
@@ -653,7 +653,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         return Collections.unmodifiableList(waypoints);
     }
 
-    private void renderScroll(GuiGraphics guiGraphics) {
+    private void renderScroll(GuiGraphicsExtractor guiGraphics) {
         if (waypoints.size() <= MAX_WIDGETS_PER_PAGE) return;
 
         scrollY = getTranslationY()

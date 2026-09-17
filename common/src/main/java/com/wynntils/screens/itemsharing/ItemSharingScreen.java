@@ -34,7 +34,7 @@ import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -91,7 +91,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
         FontRenderer.getInstance()
                 .renderText(
@@ -109,7 +109,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.ITEM_SHARING_BACKGROUND, backgroundX, backgroundY);
@@ -120,7 +120,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
         McUtils.setScreen(previousScreen);
     }
 
-    private void renderPreview(GuiGraphics guiGraphics) {
+    private void renderPreview(GuiGraphicsExtractor guiGraphics) {
         if (previewItemStack == null) return;
 
         RenderUtils.renderTooltip(

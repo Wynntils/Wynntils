@@ -38,7 +38,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -221,7 +221,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (holdingMapKey
                 && !Managers.Feature.getFeatureInstance(GuildMapFeature.class)
                         .openGuildMapKeybind
@@ -283,7 +283,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
     @Override
     protected void renderPois(
             List<Poi> pois,
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             BoundingBox textureBoundingBox,
             float poiScale,
             int mouseX,
@@ -356,7 +356,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         return super.doMouseClicked(event, isDoubleClick);
     }
 
-    private void renderHoveredTerritoryInfo(GuiGraphics guiGraphics) {
+    private void renderHoveredTerritoryInfo(GuiGraphicsExtractor guiGraphics) {
         if (!(hovered instanceof TerritoryPoi territoryPoi)) return;
 
         int xOffset = (int) (width - SCREEN_SIDE_OFFSET - 250);
@@ -369,7 +369,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         }
     }
 
-    private void renderPois(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderPois(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         List<TerritoryPoi> advancementPois = Models.Territory.getTerritoryPoisFromAdvancement().stream()
                 .filter(this::filterDefense)
                 .filter(this::filterTreasury)
@@ -450,7 +450,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     private static void renderTerritoryTooltip(
-            GuiGraphics guiGraphics, int xOffset, int yOffset, TerritoryPoi territoryPoi) {
+            GuiGraphicsExtractor guiGraphics, int xOffset, int yOffset, TerritoryPoi territoryPoi) {
         final TerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
         final TerritoryProfile territoryProfile = territoryPoi.getTerritoryProfile();
 
@@ -615,7 +615,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     private static void renderTerritoryTooltipWithFakeInfo(
-            GuiGraphics guiGraphics, int xOffset, int yOffset, TerritoryPoi territoryPoi) {
+            GuiGraphicsExtractor guiGraphics, int xOffset, int yOffset, TerritoryPoi territoryPoi) {
         final TerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
         final TerritoryProfile territoryProfile = territoryPoi.getTerritoryProfile();
 

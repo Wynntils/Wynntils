@@ -6,7 +6,7 @@ package com.wynntils.screens.partymanagement.widgets;
 
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.multiplayer.PlayerInfo;
@@ -28,7 +28,7 @@ public abstract class AbstractPlayerListEntryWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         PlayerInfo playerInfo =
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be Steves
         Identifier skin = (playerInfo == null)

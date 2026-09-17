@@ -28,7 +28,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
@@ -74,7 +74,7 @@ public class WynntilsGuideScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (WynntilsButton guideTypeButton : guideTypeButtons) {
             guideTypeButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }

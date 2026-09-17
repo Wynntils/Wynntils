@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -382,7 +382,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderMap(guiGraphics);
         RenderUtils.enableScissor(
                 guiGraphics,
@@ -520,7 +520,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         updateSaveStatus();
     }
 
-    private void renderIcons(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderIcons(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (IconButton iconButton : iconButtons) {
             iconButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }

@@ -29,7 +29,7 @@ import java.util.Comparator;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.PlayerTabOverlay;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -85,12 +85,12 @@ public class CustomPlayerListOverlay extends Overlay {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         renderPlayerList(guiGraphics, animationPercentage.getAnimation());
     }
 
     @Override
-    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         renderPlayerList(guiGraphics, 1);
     }
 
@@ -107,7 +107,7 @@ public class CustomPlayerListOverlay extends Overlay {
                 .toList();
     }
 
-    private void renderPlayerList(GuiGraphics guiGraphics, double animation) {
+    private void renderPlayerList(GuiGraphicsExtractor guiGraphics, double animation) {
         if (animation < 1) {
             RenderUtils.enableScissor(
                     guiGraphics,
@@ -133,7 +133,7 @@ public class CustomPlayerListOverlay extends Overlay {
                 Texture.PLAYER_LIST_OVERLAY.width() - ROLL_WIDTH);
     }
 
-    private void renderRoll(GuiGraphics guiGraphics, float xPos, int uOffset) {
+    private void renderRoll(GuiGraphicsExtractor guiGraphics, float xPos, int uOffset) {
         RenderUtils.drawTexturedRect(
                 guiGraphics,
                 Texture.PLAYER_LIST_OVERLAY.identifier(),
@@ -149,7 +149,7 @@ public class CustomPlayerListOverlay extends Overlay {
                 Texture.PLAYER_LIST_OVERLAY.height());
     }
 
-    private void renderPlayerNames(GuiGraphics guiGraphics, List<StyledText> players) {
+    private void renderPlayerNames(GuiGraphicsExtractor guiGraphics, List<StyledText> players) {
         for (int i = 0; i < players.size(); i++) {
             int x = i / 20;
             int y = i % 20;
@@ -176,7 +176,7 @@ public class CustomPlayerListOverlay extends Overlay {
         }
     }
 
-    private void renderBackground(GuiGraphics guiGraphics) {
+    private void renderBackground(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawTexturedRect(
                 guiGraphics,
                 Texture.PLAYER_LIST_OVERLAY.identifier(),

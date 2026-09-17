@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -47,7 +47,7 @@ public class GuideFilterPanel extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.GUIDE_BACKGROUND, getX(), getY(), getWidth(), getHeight());
 
@@ -111,7 +111,7 @@ public class GuideFilterPanel extends AbstractWidget {
                         getScrollAreaHeight() - Texture.SCROLL_BUTTON.height());
     }
 
-    private void renderScroll(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderScroll(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (getMaxScrollOffset() <= 0) return;
 
         updateScrollY();
@@ -125,7 +125,7 @@ public class GuideFilterPanel extends AbstractWidget {
         }
     }
 
-    private void renderCategoryShortcuts(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderCategoryShortcuts(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (getMaxScrollOffset() <= 0) return;
 
         boolean overScrollBar = isOverScrollBar(mouseX, mouseY);

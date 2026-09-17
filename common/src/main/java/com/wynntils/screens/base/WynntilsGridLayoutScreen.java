@@ -5,7 +5,7 @@
 package com.wynntils.screens.base;
 
 import com.wynntils.core.consumers.screens.WynntilsScreen;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 
 public abstract class WynntilsGridLayoutScreen extends WynntilsScreen {
@@ -45,7 +45,7 @@ public abstract class WynntilsGridLayoutScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
         //        RenderUtils.renderDebugGrid(guiGraphics, GRID_DIVISIONS, dividedWidth, dividedHeight);
     }

@@ -10,7 +10,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HealthTexture;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class HealthTexturedCustomBarOverlay extends CustomBarOverlayBase {
     @Persisted(i18nKey = "overlay.wynntils.healthBar.healthTexture")
@@ -31,7 +31,7 @@ public class HealthTexturedCustomBarOverlay extends CustomBarOverlayBase {
     }
 
     @Override
-    protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
+    protected void renderBar(GuiGraphicsExtractor guiGraphics, float renderY, float renderHeight, float progress) {
         RenderUtils.drawProgressBar(
                 guiGraphics,
                 Texture.HEALTH_BAR,

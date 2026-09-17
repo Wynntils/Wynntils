@@ -11,7 +11,7 @@ import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -47,7 +47,7 @@ public class BasicTexturedButton extends WynntilsButton implements TooltipProvid
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (scaleTexture) {
             RenderUtils.drawScalingTexturedRect(
                     guiGraphics,

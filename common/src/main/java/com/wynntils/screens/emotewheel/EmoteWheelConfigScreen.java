@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -100,7 +100,7 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.EMOTE_CONFIG_GUI, offsetX, offsetY);
@@ -134,7 +134,7 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
         }
     }
 
-    private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderWidgets(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (HoverableTexturedButton optionsButton : optionButtons) {
             optionsButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }
@@ -151,7 +151,7 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    private void renderScrollWheel(GuiGraphics guiGraphics) {
+    private void renderScrollWheel(GuiGraphicsExtractor guiGraphics) {
         scrollWheelY = 32
                 + offsetY
                 + MathUtils.map(
@@ -381,7 +381,7 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
         optionButtons.add(closeButton);
     }
 
-    private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderTooltips(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         // The option buttons have a slight bit rendered underneath the background,
         // we don't want to render the tooltip when hovering that bit.
         if (MathUtils.isInside(

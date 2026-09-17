@@ -21,7 +21,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -125,7 +125,7 @@ public class WaypointManagerWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderIcon(guiGraphics);
 
         FontRenderer.getInstance()
@@ -250,7 +250,7 @@ public class WaypointManagerWidget extends AbstractWidget {
         iconRenderY = (y + height / 2f) - iconHeight / 2f;
     }
 
-    private void renderIcon(GuiGraphics guiGraphics) {
+    private void renderIcon(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
                 poi.getIcon().identifier(),

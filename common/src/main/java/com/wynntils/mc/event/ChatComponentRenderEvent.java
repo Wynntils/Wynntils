@@ -6,7 +6,7 @@ package com.wynntils.mc.event;
 
 import net.minecraft.client.GuiMessage;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.neoforged.bus.api.Event;
 
@@ -40,19 +40,19 @@ public abstract class ChatComponentRenderEvent extends Event {
     }
 
     public static class Background extends ChatComponentRenderEvent {
-        private final GuiGraphics guiGraphics;
+        private final GuiGraphicsExtractor guiGraphics;
         private final int renderY;
         private final int lineHeight;
         private final float opacity;
 
-        public Background(GuiGraphics guiGraphics, int renderY, int lineHeight, float opacity) {
+        public Background(GuiGraphicsExtractor guiGraphics, int renderY, int lineHeight, float opacity) {
             this.guiGraphics = guiGraphics;
             this.renderY = renderY;
             this.lineHeight = lineHeight;
             this.opacity = opacity;
         }
 
-        public GuiGraphics getGuiGraphics() {
+        public GuiGraphicsExtractor getGuiGraphics() {
             return guiGraphics;
         }
 
@@ -70,13 +70,13 @@ public abstract class ChatComponentRenderEvent extends Event {
     }
 
     public static class Text extends ChatComponentRenderEvent {
-        private final GuiGraphics guiGraphics;
+        private final GuiGraphicsExtractor guiGraphics;
         private final GuiMessage.Line line;
         private final Font font;
         private final int renderY;
         private final int textOpacity;
 
-        public Text(GuiGraphics guiGraphics, GuiMessage.Line line, Font font, int renderY, int textOpacity) {
+        public Text(GuiGraphicsExtractor guiGraphics, GuiMessage.Line line, Font font, int renderY, int textOpacity) {
             this.guiGraphics = guiGraphics;
             this.line = line;
             this.font = font;
@@ -84,7 +84,7 @@ public abstract class ChatComponentRenderEvent extends Event {
             this.textOpacity = textOpacity;
         }
 
-        public GuiGraphics getGuiGraphics() {
+        public GuiGraphicsExtractor getGuiGraphics() {
             return guiGraphics;
         }
 

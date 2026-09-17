@@ -25,7 +25,7 @@ import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -105,7 +105,7 @@ public class EmoteWheelScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!emoteWheelFeature.openEmoteWheelKeybind.getKeyMapping().isDown() && canInteract) {
             onClose();
             return;
@@ -229,7 +229,7 @@ public class EmoteWheelScreen extends WynntilsScreen {
         return hoveredEmoji == index ? textHoverColor : textColor;
     }
 
-    private void renderWheelStyle(GuiGraphics guiGraphics, CustomColor color, int buttonNum) {
+    private void renderWheelStyle(GuiGraphicsExtractor guiGraphics, CustomColor color, int buttonNum) {
         float segmentFillPercent = ((float) 1 / numOfEmotes);
         double segmentAngleDegrees = (360.0 / numOfEmotes);
         int innerRadius = (int) ((DIST_FROM_CENTER - 5 - (double) BUTTON_SIZE / 2) * scale);
@@ -338,14 +338,14 @@ public class EmoteWheelScreen extends WynntilsScreen {
     }
 
     @Override
-    protected void renderBlurredBackground(GuiGraphics guiGraphics) {
+    protected void renderBlurredBackground(GuiGraphicsExtractor guiGraphics) {
         if (!canInteract) {
             super.renderBlurredBackground(guiGraphics);
         }
     }
 
     @Override
-    protected void renderMenuBackground(GuiGraphics partialTick) {
+    protected void renderMenuBackground(GuiGraphicsExtractor partialTick) {
         if (!canInteract) {
             super.renderMenuBackground(partialTick);
         }

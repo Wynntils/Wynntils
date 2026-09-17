@@ -45,7 +45,7 @@ import javax.imageio.ImageIO;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.render.GuiRenderer;
 import net.minecraft.client.gui.render.state.GuiRenderState;
 import net.minecraft.client.gui.screens.Screen;
@@ -190,7 +190,7 @@ public class ItemScreenshotFeature extends Feature {
                 mc.gameRenderer.getFeatureRenderDispatcher(),
                 List.of());
 
-        GuiGraphics guiGraphics = new GuiGraphics(mc, guiRenderState, 0, 0);
+        GuiGraphicsExtractor guiGraphics = new GuiGraphics(mc, guiRenderState, 0, 0);
 
         // calculate tooltip size to fit to framebuffer
         float scaleh = (float) screen.height / height;

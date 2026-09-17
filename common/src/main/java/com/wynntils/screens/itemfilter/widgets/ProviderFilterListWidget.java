@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -125,7 +125,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (addStringFilterButton != null) {
             addStringFilterButton.render(guiGraphics, mouseX, mouseY, partialTick);
         } else if (addNumericFilterButton != null) {
@@ -444,7 +444,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
         numericChoiceButton.setMessage(Component.literal(EnumUtils.toNiceString(numericChoice)));
     }
 
-    private void renderScrollBar(GuiGraphics guiGraphics) {
+    private void renderScrollBar(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawRect(
                 guiGraphics,
                 CommonColors.LIGHT_GRAY,

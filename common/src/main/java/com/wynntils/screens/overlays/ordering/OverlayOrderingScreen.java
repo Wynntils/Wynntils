@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -89,7 +89,7 @@ public class OverlayOrderingScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
         RenderUtils.drawTexturedRect(guiGraphics, Texture.OVERLAY_ORDERING_BACKGROUND, offsetX, offsetY);
 
@@ -135,7 +135,7 @@ public class OverlayOrderingScreen extends WynntilsScreen {
         }
     }
 
-    private void renderScroll(GuiGraphics guiGraphics) {
+    private void renderScroll(GuiGraphicsExtractor guiGraphics) {
         scrollY = 14
                 + offsetY
                 + MathUtils.map(

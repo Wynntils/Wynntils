@@ -9,7 +9,7 @@ import com.wynntils.screens.colorpicker.ColorPickerScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.RenderDirection;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -25,7 +25,7 @@ public class AlphaSlider extends AbstractSliderButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.fillGradient(
                 guiGraphics,
                 getX(),

@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
@@ -150,7 +150,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         updateHelpHover(mouseX, mouseY);
         renderScreenGuides(guiGraphics);
         if (selectionMode != SelectionMode.NONE) {
@@ -283,10 +283,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    protected void renderBlurredBackground(GuiGraphics guiGraphics) {}
+    protected void renderBlurredBackground(GuiGraphicsExtractor guiGraphics) {}
 
     @Override
-    protected void renderMenuBackground(GuiGraphics guiGraphics) {}
+    protected void renderMenuBackground(GuiGraphicsExtractor guiGraphics) {}
 
     @Override
     public void tick() {
@@ -944,12 +944,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                         maxY));
     }
 
-    private void renderScreenGuides(GuiGraphics guiGraphics) {
+    private void renderScreenGuides(GuiGraphicsExtractor guiGraphics) {
         verticalScreenGuides.forEach((x, color) -> RenderUtils.drawLine(guiGraphics, color, x, 0, x, this.height, 1));
         horizontalScreenGuides.forEach((y, color) -> RenderUtils.drawLine(guiGraphics, color, 0, y, this.width, y, 1));
     }
 
-    private void renderAlignmentLines(GuiGraphics guiGraphics) {
+    private void renderAlignmentLines(GuiGraphicsExtractor guiGraphics) {
         SnapTarget horizontalTarget = horizontalSnap.getTarget();
         if (horizontalTarget != null) {
             float x = horizontalTarget.position();

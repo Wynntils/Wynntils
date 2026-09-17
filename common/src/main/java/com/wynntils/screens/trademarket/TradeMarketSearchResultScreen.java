@@ -28,7 +28,7 @@ import com.wynntils.utils.render.Texture;
 import java.util.Arrays;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -158,7 +158,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         updateItems();
 
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
@@ -182,7 +182,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderLabels(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         guiGraphics.drawString(
                 FontRenderer.getInstance().getFont(),
                 this.currentState,
@@ -193,7 +193,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphicsExtractor guiGraphics, float partialTick, int mouseX, int mouseY) {
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
 
@@ -225,7 +225,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                 guiGraphics, Texture.CONTAINER_SIDEBAR, x - Texture.CONTAINER_SIDEBAR.width() + 7, y);
     }
 
-    private void renderScrollButton(GuiGraphics guiGraphics) {
+    private void renderScrollButton(GuiGraphicsExtractor guiGraphics) {
         float renderX =
                 (this.width - this.imageWidth) / 2 + this.imageWidth + Texture.SCROLLBAR_BACKGROUND.width() / 2 - 14;
         float renderY = (this.height - this.imageHeight) / 2

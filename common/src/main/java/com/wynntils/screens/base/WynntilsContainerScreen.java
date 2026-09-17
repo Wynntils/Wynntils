@@ -1,12 +1,12 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -38,7 +38,7 @@ public abstract class WynntilsContainerScreen<T extends AbstractContainerMenu> e
     }
 
     @Override
-    public final void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public final void render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         try {
             doRender(guiGraphics, mouseX, mouseY, partialTick);
         } catch (Throwable t) {
@@ -46,7 +46,7 @@ public abstract class WynntilsContainerScreen<T extends AbstractContainerMenu> e
         }
     }
 
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 }

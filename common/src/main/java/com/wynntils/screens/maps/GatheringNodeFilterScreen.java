@@ -29,7 +29,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -126,7 +126,7 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
         renderScroll(guiGraphics);
 
@@ -225,7 +225,7 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         RenderUtils.drawTexturedRect(
                 guiGraphics, Texture.WAYPOINT_MANAGER_BACKGROUND, getTranslationX(), getTranslationY());
@@ -311,7 +311,7 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
         Services.Poi.setAllGatheringNodeTypesVisible(visible);
     }
 
-    private void renderScroll(GuiGraphics guiGraphics) {
+    private void renderScroll(GuiGraphicsExtractor guiGraphics) {
         if (gatheringNodeTypes.size() <= MAX_WIDGETS_PER_PAGE) return;
 
         scrollY = getTranslationY()

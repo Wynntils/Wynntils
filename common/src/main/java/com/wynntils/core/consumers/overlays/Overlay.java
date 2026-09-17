@@ -25,7 +25,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
@@ -119,13 +119,13 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         return "Overlay";
     }
 
-    public abstract void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window);
+    public abstract void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window);
 
-    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         this.render(guiGraphics, deltaTracker, window);
     }
 
-    protected void renderOrErrorMessage(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    protected void renderOrErrorMessage(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (this.enabledTemplateCache != null && this.enabledTemplateCache.hasError()) {
             renderEnabledTemplateErrorMessage(guiGraphics);
         } else {
@@ -133,7 +133,7 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         }
     }
 
-    private void renderEnabledTemplateErrorMessage(GuiGraphics guiGraphics) {
+    private void renderEnabledTemplateErrorMessage(GuiGraphicsExtractor guiGraphics) {
         StyledText[] errorMessage = {
             StyledText.fromString(
                     "§c§l" + I18n.get("overlay.wynntils.overlay.enabledTemplate.error") + " " + getTranslatedName()),
