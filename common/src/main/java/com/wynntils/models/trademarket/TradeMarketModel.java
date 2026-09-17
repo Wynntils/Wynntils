@@ -28,6 +28,7 @@ import com.wynntils.models.containers.containers.trademarket.TradeMarketTradesCo
 import com.wynntils.models.containers.type.ContainerBounds;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.MaterialItem;
+import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.trademarket.event.TradeMarketChatInputEvent;
 import com.wynntils.models.trademarket.event.TradeMarketSellDialogueUpdatedEvent;
@@ -406,6 +407,10 @@ public final class TradeMarketModel extends Model {
                 Optional<CraftedItemProperty> craftedItemPropertyOpt =
                         Models.Item.asWynnItemProperty(itemStack, CraftedItemProperty.class);
                 if (craftedItemPropertyOpt.isPresent()) {
+                    shouldDisableSellButtons = true;
+                }
+                Optional<MountItem> mountItemOpt = Models.Item.asWynnItem(itemStack, MountItem.class);
+                if (mountItemOpt.isPresent()) {
                     shouldDisableSellButtons = true;
                 }
             }
