@@ -10,7 +10,7 @@ displayName = "Wynntils"
 authors = "Team Wynntils"
 description = "The best Wynncraft mod you'll probably find!"
 displayURL = "wynntils.com"
-logoFile = "assets/wynntils/logo.png"
+iconFile = "assets/wynntils/logo.png"
 
 [[dependencies.wynntils]]
 modId = "minecraft"
