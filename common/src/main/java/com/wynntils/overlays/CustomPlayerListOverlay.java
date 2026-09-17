@@ -95,7 +95,7 @@ public class CustomPlayerListOverlay extends Overlay {
     }
 
     private static List<StyledText> getAvailablePlayers() {
-        PlayerTabOverlay defaultTabList = McUtils.mc().gui.getTabList();
+        PlayerTabOverlay defaultTabList = McUtils.mc().gui.hud.getTabList();
 
         return McUtils.player().connection.getListedOnlinePlayers().stream()
                 .sorted(PLAYER_INFO_COMPARATOR)
