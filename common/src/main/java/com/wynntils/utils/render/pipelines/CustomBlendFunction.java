@@ -4,10 +4,10 @@
  */
 package com.wynntils.utils.render.pipelines;
 
-import com.mojang.blaze3d.platform.DestFactor;
-import com.mojang.blaze3d.platform.SourceFactor;
+import com.mojang.renderpearl.api.pipeline.BlendFactor;
+import com.mojang.renderpearl.api.pipeline.BlendFunction;
 
 public abstract class CustomBlendFunction {
     public static final BlendFunction SEMI_TRANSPARENT_BLEND_FUNCTION = new BlendFunction(
-            SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
+            BlendFactor.SRC_ALPHA, BlendFactor.ONE_MINUS_SRC_ALPHA, BlendFactor.ONE, BlendFactor.ZERO);
 }

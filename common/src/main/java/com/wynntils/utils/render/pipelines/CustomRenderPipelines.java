@@ -4,31 +4,41 @@
  */
 package com.wynntils.utils.render.pipelines;
 
-import com.mojang.blaze3d.platform.DepthTestFunction;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.renderpearl.api.pipeline.BlendFunction;
+import com.mojang.renderpearl.api.pipeline.ColorTargetState;
+import com.mojang.renderpearl.api.pipeline.CompareOp;
+import com.mojang.renderpearl.api.pipeline.DepthStencilState;
+import com.mojang.renderpearl.api.pipeline.PrimitiveTopology;
 import com.mojang.renderpearl.api.pipeline.RenderPipeline;
+import net.minecraft.client.renderer.BindGroupLayouts;
 import net.minecraft.client.renderer.RenderPipelines;
 
 public class CustomRenderPipelines extends RenderPipelines {
     private static final RenderPipeline.Snippet POSITION_COLOR_QUAD_SNIPPET = RenderPipeline.builder(
-                    MATRICES_PROJECTION_SNIPPET)
+                    RenderPipelines.GLOBALS_SNIPPET)
+            .withBindGroupLayout(BindGroupLayouts.PROJECTION)
+            .withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
             .withVertexShader("core/position_color")
             .withFragmentShader("core/position_color")
-            .withBlend(CustomBlendFunction.SEMI_TRANSPARENT_BLEND_FUNCTION)
-            .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS)
-            .withDepthWrite(false)
+            .withColorTargetState(new ColorTargetState(CustomBlendFunction.SEMI_TRANSPARENT_BLEND_FUNCTION))
+            .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
+            .withPrimitiveTopology(PrimitiveTopology.QUADS)
+            .withDepthStencilState(new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false))
             .buildSnippet();
 
     public static final RenderPipeline LOOTRUN_QUAD_PIPELINE =
-            register(RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+            register(RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
+                    .withBindGroupLayout(BindGroupLayouts.PROJECTION)
+                    .withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
                     .withLocation("pipeline/wynntils_lootrun_quad")
                     .withVertexShader("core/position_tex_color")
                     .withFragmentShader("core/position_tex_color")
-                    .withSampler("Sampler0")
-                    .withBlend(BlendFunction.TRANSLUCENT)
-                    .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
-                    .withDepthTestFunction(DepthTestFunction.LEQUAL_DEPTH_TEST)
+                    .withBindGroupLayout(BindGroupLayouts.SAMPLER0)
+                    .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+                    .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX_COLOR)
+                    .withPrimitiveTopology(PrimitiveTopology.QUADS)
+                    .withDepthStencilState(new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, true))
                     .withCull(false)
                     .build());
 
@@ -39,15 +49,17 @@ public class CustomRenderPipelines extends RenderPipelines {
                     .build());
 
     public static final RenderPipeline PROGRESS_BAR_PIPELINE =
-            register(RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
+            register(RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
+                    .withBindGroupLayout(BindGroupLayouts.PROJECTION)
+                    .withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
                     .withLocation("pipeline/wynntils_progress_bar")
                     .withVertexShader("core/position_tex_color")
                     .withFragmentShader("core/position_tex_color")
-                    .withSampler("Sampler0")
-                    .withBlend(BlendFunction.TRANSLUCENT)
-                    .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
-                    .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
-                    .withDepthWrite(false)
+                    .withBindGroupLayout(BindGroupLayouts.SAMPLER0)
+                    .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+                    .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX_COLOR)
+                    .withPrimitiveTopology(PrimitiveTopology.QUADS)
+                    .withDepthStencilState(new DepthStencilState(CompareOp.ALWAYS_PASS, false))
                     .withCull(false)
                     .build());
 }
