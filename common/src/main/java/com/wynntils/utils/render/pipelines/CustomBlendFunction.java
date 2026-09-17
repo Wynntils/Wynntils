@@ -4,7 +4,6 @@
  */
 package com.wynntils.utils.render.pipelines;
 
-import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.platform.DestFactor;
 import com.mojang.blaze3d.platform.SourceFactor;
 

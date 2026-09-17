@@ -4,10 +4,10 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraft.client.GuiMessage;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.client.multiplayer.chat.GuiMessage;
 import net.neoforged.bus.api.Event;
 
 public abstract class ChatComponentRenderEvent extends Event {
