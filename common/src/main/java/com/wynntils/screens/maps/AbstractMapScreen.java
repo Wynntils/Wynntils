@@ -49,7 +49,7 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLScancode;
 
 public abstract class AbstractMapScreen extends WynntilsScreen {
     protected List<MapButton> mapButtons = new ArrayList<>();
@@ -337,8 +337,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             adjustZoomLevel(2);
             return true;
         }
-        // InputConstants does not have a mapping for KEY_KP_SUBTRACT
-        if (event.key() == InputConstants.KEY_MINUS || event.key() == GLFW.GLFW_KEY_KP_SUBTRACT) {
+        // InputConstants does not have a mapping for SDL_SCANCODE_KP_MINUS
+        if (event.key() == InputConstants.KEY_MINUS || event.key() == SDLScancode.SDL_SCANCODE_KP_MINUS) {
             // Take steps of 2 to make it easier to zoom in and out
             adjustZoomLevel(-2);
             return true;
