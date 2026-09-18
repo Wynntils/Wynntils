@@ -389,8 +389,13 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             return false;
         }
 
+        boolean shiftMiddleClick = event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && KeyboardUtils.isShiftDown();
+        if (shiftMiddleClick && !isMouseHoveringOverlay(selectedOverlay, event.x(), event.y())) {
+            return false;
+        }
+
         editHistory.begin(selectedOverlay);
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && KeyboardUtils.isShiftDown()) {
+        if (shiftMiddleClick) {
             selectedOverlay.getConfigOptionFromString("position").ifPresent(Config::reset);
             selectedOverlay.getConfigOptionFromString("size").ifPresent(Config::reset);
             selectedOverlay
