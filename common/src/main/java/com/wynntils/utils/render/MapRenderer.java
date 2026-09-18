@@ -139,7 +139,7 @@ public final class MapRenderer {
             vertices.add(mask.point(endAngle));
         }
 
-        guiGraphics.guiRenderState.submitGuiElement(new ColoredTrianglesRenderState(
+        guiGraphics.guiRenderState.addGuiElement(new ColoredTrianglesRenderState(
                 CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
                 TextureSetup.noTexture(),
                 pose,
@@ -358,7 +358,7 @@ public final class MapRenderer {
         }
 
         if (!outlineVertices.isEmpty()) {
-            guiGraphics.guiRenderState.submitGuiElement(new ColoredTrianglesRenderState(
+            guiGraphics.guiRenderState.addGuiElement(new ColoredTrianglesRenderState(
                     CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
                     TextureSetup.noTexture(),
                     pose,
@@ -368,7 +368,7 @@ public final class MapRenderer {
         }
 
         if (!lootrunVertices.isEmpty()) {
-            guiGraphics.guiRenderState.submitGuiElement(new ColoredTrianglesRenderState(
+            guiGraphics.guiRenderState.addGuiElement(new ColoredTrianglesRenderState(
                     CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
                     TextureSetup.noTexture(),
                     pose,
@@ -565,7 +565,7 @@ public final class MapRenderer {
         List<Vertex> vertices = clipTexturedRectToCircle(pose, x1, y1, x2, y2, u1, u2, v1, v2, mask);
         if (vertices.isEmpty()) return;
 
-        guiGraphics.guiRenderState.submitGuiElement(new TexturedPolygonRenderState(
+        guiGraphics.guiRenderState.addGuiElement(new TexturedPolygonRenderState(
                 RenderPipelines.GUI_TEXTURED,
                 TextureSetup.singleTexture(texture.getTextureView(), texture.getSampler()),
                 pose,

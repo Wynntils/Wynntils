@@ -77,7 +77,7 @@ public final class RenderUtils {
         }
 
         // Diagonal line
-        guiGraphics.guiRenderState.submitGuiElement(new DiagonalColoredRectangleRenderState(
+        guiGraphics.guiRenderState.addGuiElement(new DiagonalColoredRectangleRenderState(
                 RenderPipelines.GUI,
                 TextureSetup.noTexture(),
                 new Matrix3x2f(guiGraphics.pose()),
@@ -209,7 +209,7 @@ public final class RenderUtils {
             y2 = t;
         }
 
-        guiGraphics.guiRenderState.submitGuiElement(new FloatColoredRectangleRenderState(
+        guiGraphics.guiRenderState.addGuiElement(new FloatColoredRectangleRenderState(
                 RenderPipelines.GUI,
                 TextureSetup.noTexture(),
                 new Matrix3x2f(guiGraphics.pose()),
@@ -238,7 +238,7 @@ public final class RenderUtils {
             int textureWidth,
             int textureHeight) {
         AbstractTexture abstractTexture = McUtils.mc().getTextureManager().getTexture(identifier);
-        guiGraphics.guiRenderState.submitGuiElement(new FloatBlitRenderState(
+        guiGraphics.guiRenderState.addGuiElement(new FloatBlitRenderState(
                 pipeline,
                 TextureSetup.singleTexture(abstractTexture.getTextureView(), abstractTexture.getSampler()),
                 new Matrix3x2f(guiGraphics.pose()),
@@ -418,7 +418,7 @@ public final class RenderUtils {
         Objects.requireNonNull(atlas, "texture must be an atlas texture; use drawTexturedRect for file-based textures");
         TextureAtlas textureAtlas = McUtils.mc().getAtlasManager().getAtlasOrThrow(atlas);
         TextureAtlasSprite sprite = textureAtlas.getSprite(identifier);
-        guiGraphics.guiRenderState.submitGuiElement(new FloatBlitRenderState(
+        guiGraphics.guiRenderState.addGuiElement(new FloatBlitRenderState(
                 pipeline,
                 TextureSetup.singleTexture(textureAtlas.getTextureView(), textureAtlas.getSampler()),
                 new Matrix3x2f(guiGraphics.pose()),
@@ -832,7 +832,7 @@ public final class RenderUtils {
             CustomColor colorA,
             CustomColor colorB,
             RenderDirection direction) {
-        guiGraphics.guiRenderState.submitGuiElement(new CustomRectangleRenderState(
+        guiGraphics.guiRenderState.addGuiElement(new CustomRectangleRenderState(
                 RenderPipelines.GUI,
                 TextureSetup.noTexture(),
                 new Matrix3x2f(guiGraphics.pose()),
@@ -866,7 +866,7 @@ public final class RenderUtils {
             int innerRadius,
             int outerRadius,
             float angleOffset) {
-        guiGraphics.guiRenderState.submitGuiElement(new ArcRenderState(
+        guiGraphics.guiRenderState.addGuiElement(new ArcRenderState(
                 RenderPipelines.GUI,
                 TextureSetup.noTexture(),
                 new Matrix3x2f(guiGraphics.pose()),
@@ -891,7 +891,7 @@ public final class RenderUtils {
             int outerRadius,
             float angleOffset,
             float maxSteps) {
-        guiGraphics.guiRenderState.submitGuiElement(new ArcRenderState(
+        guiGraphics.guiRenderState.addGuiElement(new ArcRenderState(
                 RenderPipelines.GUI,
                 TextureSetup.noTexture(),
                 new Matrix3x2f(guiGraphics.pose()),
@@ -1280,13 +1280,8 @@ public final class RenderUtils {
         guiGraphics.pose().translate(x, y);
         guiGraphics.pose().scale(scaleX, scaleY);
 
-        guiGraphics.guiRenderState.submitItem(new GuiItemRenderState(
-                itemStack.getItem().getName().toString(),
-                new Matrix3x2f(guiGraphics.pose()),
-                renderState,
-                0,
-                0,
-                guiGraphics.scissorStack.peek()));
+        guiGraphics.guiRenderState.addItem(new GuiItemRenderState(
+                new Matrix3x2f(guiGraphics.pose()), renderState, 0, 0, guiGraphics.scissorStack.peek()));
 
         guiGraphics.pose().popMatrix();
     }
@@ -1480,7 +1475,7 @@ public final class RenderUtils {
             return;
         }
 
-        guiGraphics.guiRenderState.submitGuiElement(new MulticoloredRectangleRenderState(
+        guiGraphics.guiRenderState.addGuiElement(new MulticoloredRectangleRenderState(
                 RenderPipelines.GUI,
                 TextureSetup.noTexture(),
                 new Matrix3x2f(guiGraphics.pose()),
