@@ -257,7 +257,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
         int renderWidth = Texture.PLAYER_VIEWER_BACKGROUND.width();
         int renderHeight = Texture.PLAYER_VIEWER_BACKGROUND.height();
 
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
+        InventoryScreen.extractEntityInInventoryFollowsMouse(
                 guiGraphics,
                 renderX,
                 renderY,

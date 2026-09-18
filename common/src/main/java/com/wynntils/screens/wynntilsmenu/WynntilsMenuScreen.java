@@ -435,7 +435,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         final int renderWidth = (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 100);
         final int renderHeight = 70;
 
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
+        InventoryScreen.extractEntityInInventoryFollowsMouse(
                 guiGraphics,
                 posX,
                 posY,
