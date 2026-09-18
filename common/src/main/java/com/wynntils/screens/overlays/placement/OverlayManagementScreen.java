@@ -65,6 +65,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private static final int BUTTON_HEIGHT = 20;
     private static final int MAX_CLICK_DISTANCE = 5;
     private static final int ANIMATION_LENGTH = 30;
+    private static final CustomColor LOCKED_OVERLAY_COLOR = new CustomColor(80, 180, 205, 255);
 
     private static final List<Component> HELP_TOOLTIP_LINES = List.of(
             Component.translatable("screens.wynntils.overlayManagement.helpTooltip1"),
@@ -760,6 +761,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     private CustomColor getOverlayColor(Overlay overlay) {
         if (overlay == selectedOverlay) return CommonColors.GREEN;
+        if (overlay.isPlacementLocked()) return LOCKED_OVERLAY_COLOR;
 
         return fixedSelection ? new CustomColor(200, 200, 200, 255) : CommonColors.LIGHT_BLUE;
     }

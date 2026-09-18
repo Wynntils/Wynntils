@@ -22,11 +22,13 @@ import java.util.function.Consumer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.LockIconButton;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
 public final class OverlayPositionPanel {
     private static final int WIDTH = 204;
-    private static final int HEIGHT = 164;
+    private static final int HEIGHT = 148;
 
     private final int x;
     private final int y;
@@ -36,7 +38,7 @@ public final class OverlayPositionPanel {
     private final List<Boolean> sizeInputs = new ArrayList<>();
     private final Button horizontalAlignmentButton;
     private final Button verticalAlignmentButton;
-    private final Button placementLockButton;
+    private final LockIconButton placementLockButton;
 
     public OverlayPositionPanel(
             Overlay overlay,
@@ -96,10 +98,9 @@ public final class OverlayPositionPanel {
                 .build();
         widgets.add(verticalAlignmentButton);
 
-        placementLockButton = Button.builder(
-                        lockLabel(), button -> placementLockChanged.accept(!overlay.isPlacementLocked()))
-                .bounds(x + 8, y + 140, WIDTH - 16, 20)
-                .build();
+        placementLockButton = new LockIconButton(
+                x + WIDTH - 24, y + 4, button -> placementLockChanged.accept(!overlay.isPlacementLocked()));
+        placementLockButton.setSize(16, 16);
         widgets.add(placementLockButton);
         setPlacementLocked(overlay.isPlacementLocked());
     }
@@ -130,6 +131,8 @@ public final class OverlayPositionPanel {
         horizontalAlignmentButton.active = !locked;
         verticalAlignmentButton.active = !locked;
         placementLockButton.setMessage(lockLabel());
+        placementLockButton.setLocked(locked);
+        placementLockButton.setTooltip(Tooltip.create(lockLabel()));
     }
 
     public void render(GuiGraphics graphics) {
@@ -137,7 +140,7 @@ public final class OverlayPositionPanel {
                 graphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND, x, y, WIDTH, HEIGHT);
         graphics.drawString(
                 McUtils.mc().font,
-                McUtils.mc().font.plainSubstrByWidth(overlay.getTranslatedName(), WIDTH - 16),
+                McUtils.mc().font.plainSubstrByWidth(overlay.getTranslatedName(), WIDTH - 36),
                 x + 8,
                 y + 7,
                 0xFF3E2418,
