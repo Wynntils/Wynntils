@@ -73,6 +73,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     Component.translatable("screens.wynntils.overlayManagement.helpTooltip3"),
                     Component.translatable("screens.wynntils.overlayManagement.helpTooltip4"),
                     Component.translatable("screens.wynntils.overlayManagement.helpTooltip5"),
+                    Component.translatable("screens.wynntils.overlayManagement.positionPanel.hint"),
                     Component.translatable("screens.wynntils.overlayManagement.helpTooltip6")
                             .withStyle(ChatFormatting.RED)),
             200);
@@ -98,6 +99,11 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private int animationLengthRemaining;
     private double snapOffsetX;
     private double snapOffsetY;
+
+    private OverlayPositionPanel positionPanel;
+    private boolean pendingPanelClick;
+    private double clickX;
+    private double clickY;
 
     private final Screen previousScreen;
 
@@ -129,6 +135,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
+        closePositionPanel();
         setupButtons();
         calculateAlignmentLinePositions();
     }
@@ -146,7 +153,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 .collect(Collectors.toSet());
 
         // We want to render the tooltip for what will actually be interacted with
-        boolean renderedTooltip = false;
+        boolean hoveringPanel = positionPanel != null && positionPanel.contains(mouseX, mouseY);
+        boolean renderedTooltip = hoveringPanel;
 
         // Buttons have the highest priority so check those first
         for (GuiEventListener listener : this.children) {
@@ -230,7 +238,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
             boolean hovering = isMouseHoveringOverlay(overlay, mouseX, mouseY);
 
-            if (hovering && selectionMode == SelectionMode.NONE) {
+            if (hovering && !hoveringPanel && selectionMode == SelectionMode.NONE) {
                 guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
             }
 
@@ -256,7 +264,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         // Render widgets
         for (Renderable renderable : this.renderables) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            if (positionPanel != null && positionPanel.getWidgets().contains(renderable)) continue;
+            renderable.render(guiGraphics, hoveringPanel ? -1 : mouseX, hoveringPanel ? -1 : mouseY, partialTick);
+        }
+        if (positionPanel != null) {
+            positionPanel.render(guiGraphics);
+            positionPanel.getWidgets().forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
         }
     }
 
@@ -284,6 +297,21 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (positionPanel != null) {
+            if (positionPanel.contains(event.x(), event.y())) {
+                setFocusedTextInput(null);
+                for (var widget : positionPanel.getWidgets()) {
+                    if (widget.mouseClicked(event, isDoubleClick)) {
+                        setFocused(widget);
+                        setDragging(event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT);
+                        break;
+                    }
+                }
+                return true;
+            }
+            closePositionPanel();
+        }
+
         // Let the buttons of the Screen have priority
         if (super.doMouseClicked(event, isDoubleClick)) return true;
 
@@ -333,6 +361,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         }
 
         Vec2 mousePos = new Vec2((float) event.x(), (float) event.y());
+
+        pendingPanelClick = event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT
+                && isMouseHoveringOverlay(selectedOverlay, event.x(), event.y());
+        clickX = event.x();
+        clickY = event.y();
+        calculateAlignmentLinePositions();
 
         for (Corner corner : Corner.values()) {
             float distance = selected.getCornerPoints(corner).distanceToSqr(mousePos);
@@ -400,6 +434,18 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         // Let the buttons of the Screen have priority
         if (super.mouseDragged(event, dragX, dragY)) return true;
 
+        if (positionPanel != null) return true;
+
+        if (pendingPanelClick) {
+            double totalX = event.x() - clickX;
+            double totalY = event.y() - clickY;
+            if (totalX * totalX + totalY * totalY <= 9) return true;
+
+            pendingPanelClick = false;
+            dragX = totalX;
+            dragY = totalY;
+        }
+
         if (selectedOverlay == null) return false;
 
         switch (selectionMode) {
@@ -414,17 +460,42 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
+        double releaseX = event.x() - clickX;
+        double releaseY = event.y() - clickY;
+        boolean openPanel = pendingPanelClick
+                && event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT
+                && releaseX * releaseX + releaseY * releaseY <= 9;
+        pendingPanelClick = false;
+
         // Let the buttons of the Screen have priority
-        if (super.mouseReleased(event)) return true;
+        boolean handled = super.mouseReleased(event);
 
         resetSelection();
-        return false;
+        if (openPanel && selectedOverlay != null) {
+            positionPanel =
+                    new OverlayPositionPanel(selectedOverlay, (int) event.x(), (int) event.y(), width, height, this);
+            positionPanel.getWidgets().forEach(this::addRenderableWidget);
+            return true;
+        }
+        return handled;
     }
 
     @Override
     public boolean keyPressed(KeyEvent event) {
         userInteracted = true;
         animationLengthRemaining = 0;
+
+        if (positionPanel != null) {
+            if (event.key() == GLFW.GLFW_KEY_ESCAPE || event.key() == GLFW.GLFW_KEY_ENTER) {
+                closePositionPanel();
+                return true;
+            }
+            if (getFocusedTextInput() != null || event.key() == GLFW.GLFW_KEY_TAB) {
+                super.keyPressed(event);
+                return true;
+            }
+            closePositionPanel();
+        }
 
         if (event.key() == GLFW.GLFW_KEY_ENTER) {
             Managers.Config.saveConfig();
@@ -869,9 +940,23 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void resetSelection() {
+        pendingPanelClick = false;
+        edgeAlignmentSnapMap.clear();
+        alignmentLinesToRender.clear();
+        snapOffsetX = 0;
+        snapOffsetY = 0;
         selectionMode = SelectionMode.NONE;
         selectedCorner = null;
         selectedEdge = null;
+    }
+
+    private void closePositionPanel() {
+        if (positionPanel == null) return;
+
+        positionPanel.getWidgets().forEach(this::removeWidget);
+        positionPanel = null;
+        setFocusedTextInput(null);
+        setFocused(null);
     }
 
     private enum SelectionMode {
