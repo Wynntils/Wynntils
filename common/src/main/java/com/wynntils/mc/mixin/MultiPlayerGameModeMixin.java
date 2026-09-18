@@ -8,6 +8,7 @@ import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.DestroyBlockEvent;
+import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
@@ -168,5 +169,14 @@ public abstract class MultiPlayerGameModeMixin {
                                     "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
     private void ensureHasSentCarriedItem(CallbackInfo ci) {
         MixinHelper.post(new ChangeCarriedItemEvent());
+    }
+
+    @Inject(method = "dropItem(Lnet/minecraft/client/player/LocalPlayer;Z)V", at = @At("HEAD"), cancellable = true)
+    private void onDropItemPre(LocalPlayer player, boolean all, CallbackInfo ci) {
+        DropHeldItemEvent event = new DropHeldItemEvent(all);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
     }
 }
