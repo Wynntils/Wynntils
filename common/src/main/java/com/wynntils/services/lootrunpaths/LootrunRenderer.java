@@ -56,16 +56,16 @@ public final class LootrunRenderer {
         Long2ObjectMap<List<ColoredPath>> points = lootrun.points();
         int renderDistance = McUtils.options().renderDistance().get();
         BlockPos pos = camera.blockPosition();
-        ChunkPos origin = new ChunkPos(pos);
+        ChunkPos origin = ChunkPos.containing(pos);
 
         for (int i = 0; i <= renderDistance; i++) {
             for (int j = 0; j <= renderDistance; j++) {
-                int x = j + origin.x - (renderDistance / 2);
-                int z = i + origin.z - (renderDistance / 2);
+                int x = j + origin.x() - (renderDistance / 2);
+                int z = i + origin.z() - (renderDistance / 2);
                 ChunkPos chunk = new ChunkPos(x, z);
-                if (!level.hasChunk(chunk.x, chunk.z)) continue;
+                if (!level.hasChunk(chunk.x(), chunk.z())) continue;
 
-                long chunkLong = chunk.toLong();
+                long chunkLong = chunk.pack();
 
                 if (points.containsKey(chunkLong)) {
                     renderPoints(poseStack, submitNodeStorage, points.get(chunkLong), level);
