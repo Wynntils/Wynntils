@@ -178,7 +178,7 @@ public class MinimapOverlay extends Overlay {
                     guiGraphics.pose(),
                     centerX,
                     centerZ,
-                    180 - McUtils.mc().gameRenderer.getMainCamera().yRot());
+                    180 - McUtils.mc().gameRenderer.mainCamera().yRot());
         }
 
         for (MapTexture map : maps) {
@@ -290,7 +290,7 @@ public class MinimapOverlay extends Overlay {
                 float dx = poiRenderX - centerX;
                 float dz = poiRenderZ - centerZ;
 
-                float yaw = McUtils.mc().gameRenderer.getMainCamera().yRot();
+                float yaw = McUtils.mc().gameRenderer.mainCamera().yRot();
                 float rot = (float) Math.toRadians(180 - yaw);
 
                 float sin = (float) Math.sin(rot);
@@ -332,7 +332,7 @@ public class MinimapOverlay extends Overlay {
                 float dx = poiRenderX - centerX;
                 float dz = poiRenderZ - centerZ;
 
-                float yaw = McUtils.mc().gameRenderer.getMainCamera().yRot();
+                float yaw = McUtils.mc().gameRenderer.mainCamera().yRot();
                 float rot = (float) Math.toRadians(180 - yaw);
 
                 float sin = (float) Math.sin(rot);
@@ -499,7 +499,7 @@ public class MinimapOverlay extends Overlay {
                 float dx = poiRenderX - centerX;
                 float dz = poiRenderZ - centerZ;
 
-                float yaw = McUtils.mc().gameRenderer.getMainCamera().yRot();
+                float yaw = McUtils.mc().gameRenderer.mainCamera().yRot();
                 float rot = (float) Math.toRadians(180 - yaw);
 
                 float sin = (float) Math.sin(rot);
@@ -573,7 +573,7 @@ public class MinimapOverlay extends Overlay {
 
         if (followPlayerRotation.get()) {
             float yawRadians = (float)
-                    Math.toRadians(McUtils.mc().gameRenderer.getMainCamera().yRot());
+                    Math.toRadians(McUtils.mc().gameRenderer.mainCamera().yRot());
             northDX = (float) StrictMath.sin(yawRadians);
             northDY = (float) StrictMath.cos(yawRadians);
 

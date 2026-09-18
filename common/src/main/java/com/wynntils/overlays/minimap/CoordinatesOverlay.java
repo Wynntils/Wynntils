@@ -110,7 +110,7 @@ public class CoordinatesOverlay extends Overlay {
     public void tick() {
         BlockPos currentPos = McUtils.player().blockPosition();
         CardinalDirection cardinalDirection = LocationUtils.getCardinalDirection(
-                McUtils.mc().gameRenderer.getMainCamera().yRot());
+                McUtils.mc().gameRenderer.mainCamera().yRot());
 
         if (currentPos.equals(lastBlockPos) && cardinalDirection == lastCardinalDirection) return;
 
