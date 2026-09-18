@@ -76,6 +76,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             Component.translatable("screens.wynntils.overlayManagement.historyTooltip"),
             Component.translatable("screens.wynntils.overlayManagement.openSettingsTooltip"),
             Component.translatable("screens.wynntils.overlayManagement.positionPanel.hint"),
+            Component.translatable("screens.wynntils.overlayManagement.lockPlacementTooltip"),
             Component.translatable("screens.wynntils.overlayManagement.helpTooltip6")
                     .withStyle(ChatFormatting.RED));
     private static final List<Component> LOCKED_TOOLTIP_LINES = ComponentUtils.wrapTooltips(
@@ -166,7 +167,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         // We want to render the tooltip for what will actually be interacted with
         boolean hoveringPanel = positionPanel != null && positionPanel.contains(mouseX, mouseY);
-        boolean renderedTooltip = hoveringPanel;
+        boolean renderedTooltip = positionPanel != null;
         Overlay hoveredHelpTooltip = null;
 
         // Buttons have the highest priority so check those first
@@ -400,6 +401,19 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         setupButtons();
 
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE
+                && !KeyboardUtils.isShiftDown()
+                && !KeyboardUtils.isControlDown()
+                && !KeyboardUtils.isAltDown()
+                && !KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SUPER)
+                && !KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SUPER)) {
+            if (!isMouseHoveringOverlay(selected, event.x(), event.y())) return false;
+
+            togglePlacementLock(!selected.isPlacementLocked());
+            resetHelpTooltip();
+            return true;
+        }
+
         if (selected.isPlacementLocked()) {
             pendingPanelClick = event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT
                     && isMouseHoveringOverlay(selected, event.x(), event.y());
@@ -427,6 +441,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             resetSelection();
             return true;
         }
+
+        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
 
         Vec2 mousePos = new Vec2((float) event.x(), (float) event.y());
 
@@ -582,7 +598,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         animationLengthRemaining = 0;
 
         if (KeyboardUtils.isControlDown() && event.key() == GLFW.GLFW_KEY_Z) {
-            restoreHistory(KeyboardUtils.isShiftDown());
+            if (!KeyboardUtils.isShiftDown()) restoreHistory(false);
             return true;
         }
         if (KeyboardUtils.isControlDown() && event.key() == GLFW.GLFW_KEY_Y) {
@@ -1165,7 +1181,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private Overlay getHoveredHelpTooltip(double mouseX, double mouseY) {
-        if (positionPanel != null && positionPanel.contains(mouseX, mouseY)) return null;
+        if (positionPanel != null) return null;
         for (GuiEventListener listener : this.children) {
             if (listener.isMouseOver(mouseX, mouseY)) return null;
         }
