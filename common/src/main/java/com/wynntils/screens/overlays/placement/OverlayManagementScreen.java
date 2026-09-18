@@ -388,8 +388,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 && !KeyboardUtils.isShiftDown()
                 && !KeyboardUtils.isControlDown()
                 && !KeyboardUtils.isAltDown()
-                && !KeyboardUtils.isKeyDown(InputConstants.KEY_LSUPER)
-                && !KeyboardUtils.isKeyDown(InputConstants.KEY_RSUPER)) {
+                && !KeyboardUtils.isKeyDown(InputConstants.KEY_LGUI)
+                && !KeyboardUtils.isKeyDown(InputConstants.KEY_RGUI)) {
             if (!isMouseHoveringOverlay(selected, event.x(), event.y())) return false;
 
             togglePlacementLock(!selected.isPlacementLocked());
