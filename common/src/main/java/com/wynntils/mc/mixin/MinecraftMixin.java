@@ -35,8 +35,8 @@ public abstract class MinecraftMixin {
         MixinHelper.post(new TickEvent());
     }
 
-    @Inject(method = "resizeDisplay()V", at = @At("RETURN"))
-    private void resizeDisplayPost(CallbackInfo ci) {
+    @Inject(method = "resizeGui()V", at = @At("RETURN"))
+    private void resizeGuiPost(CallbackInfo ci) {
         MixinHelper.postAlways(new DisplayResizeEvent());
     }
 
