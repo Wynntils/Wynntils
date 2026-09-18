@@ -33,8 +33,10 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
@@ -77,6 +79,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private final Set<SnapTarget> horizontalAlignmentLinePositions = new HashSet<>();
     private final Set<SnapTarget> verticalCenterLinePositions = new HashSet<>();
     private final Set<SnapTarget> horizontalCenterLinePositions = new HashSet<>();
+    private final Map<Float, CustomColor> verticalScreenGuides = new HashMap<>();
+    private final Map<Float, CustomColor> horizontalScreenGuides = new HashMap<>();
     private final OverlaySnapAxis horizontalSnap = new OverlaySnapAxis();
     private final OverlaySnapAxis verticalSnap = new OverlaySnapAxis();
 
@@ -130,10 +134,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        renderScreenGuides(guiGraphics);
         if (selectionMode != SelectionMode.NONE) {
             renderAlignmentLines(guiGraphics);
-        } else {
-            renderSections(guiGraphics);
         }
 
         Set<Overlay> overlays = Managers.Overlay.getOverlays().stream()
@@ -700,11 +703,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                         maxY));
     }
 
-    private void renderSections(GuiGraphics guiGraphics) {
-        for (SectionCoordinates section : Managers.Overlay.getSections()) {
-            RenderUtils.drawRectBorders(
-                    guiGraphics, CommonColors.WHITE, section.x1(), section.y1(), section.x2(), section.y2(), 1);
-        }
+    private void renderScreenGuides(GuiGraphics guiGraphics) {
+        verticalScreenGuides.forEach((x, color) -> RenderUtils.drawLine(guiGraphics, color, x, 0, x, this.height, 1));
+        horizontalScreenGuides.forEach((y, color) -> RenderUtils.drawLine(guiGraphics, color, 0, y, this.width, y, 1));
     }
 
     private void renderAlignmentLines(GuiGraphics guiGraphics) {
@@ -742,26 +743,28 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         verticalCenterLinePositions.add(new SnapTarget(this.width / 2f, true));
         horizontalCenterLinePositions.add(new SnapTarget(this.height / 2f, true));
 
-        verticalAlignmentLinePositions.add(new SnapTarget(0f, true));
-        horizontalAlignmentLinePositions.add(new SnapTarget(0f, true));
-        verticalAlignmentLinePositions.add(new SnapTarget((float) this.width, true));
-        horizontalAlignmentLinePositions.add(new SnapTarget((float) this.height, true));
-
-        // Use the same rounded coordinates as the visible thirds grid.
-        for (SectionCoordinates section : Managers.Overlay.getSections()) {
-            verticalAlignmentLinePositions.add(new SnapTarget((float) section.x1(), true));
-            verticalAlignmentLinePositions.add(new SnapTarget((float) section.x2(), true));
-            horizontalAlignmentLinePositions.add(new SnapTarget((float) section.y1(), true));
-            horizontalAlignmentLinePositions.add(new SnapTarget((float) section.y2(), true));
-        }
-
+        verticalScreenGuides.clear();
+        horizontalScreenGuides.clear();
+        CustomColor minorGuideColor = CommonColors.WHITE.withAlpha(0.25f);
         for (int i = 2; i <= ALIGNMENT_LINES_MAX_SECTIONS_PER_AXIS; i++) {
             if (i == 3) continue;
             for (int j = 1; j < i; j++) {
-                verticalAlignmentLinePositions.add(new SnapTarget((float) this.width * j / i, true));
-                horizontalAlignmentLinePositions.add(new SnapTarget((float) this.height * j / i, true));
+                verticalScreenGuides.put((float) this.width * j / i, minorGuideColor);
+                horizontalScreenGuides.put((float) this.height * j / i, minorGuideColor);
             }
         }
+
+        // Section boundaries take precedence where a minor guide shares their position.
+        for (SectionCoordinates section : Managers.Overlay.getSections()) {
+            verticalScreenGuides.put((float) section.x1(), CommonColors.WHITE);
+            verticalScreenGuides.put((float) section.x2(), CommonColors.WHITE);
+            horizontalScreenGuides.put((float) section.y1(), CommonColors.WHITE);
+            horizontalScreenGuides.put((float) section.y2(), CommonColors.WHITE);
+        }
+
+        // Rendering and snapping consume the exact same screen coordinates.
+        verticalScreenGuides.keySet().forEach(x -> verticalAlignmentLinePositions.add(new SnapTarget(x, true)));
+        horizontalScreenGuides.keySet().forEach(y -> horizontalAlignmentLinePositions.add(new SnapTarget(y, true)));
 
         for (Overlay overlay : Managers.Overlay.getOverlays().stream()
                 .filter(Managers.Overlay::isEnabled)

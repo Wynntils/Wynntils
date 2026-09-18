@@ -465,13 +465,11 @@ public final class OverlayManager extends Manager {
         int width = window.getGuiScaledWidth();
         int height = window.getGuiScaledHeight();
 
-        int wT = width / 3;
-        int hT = height / 3;
-
         sections.clear();
         for (int h = 0; h < 3; h++) {
             for (int w = 0; w < 3; w++) {
-                sections.add(new SectionCoordinates(w * wT, h * hT, (w + 1) * wT, (h + 1) * hT));
+                sections.add(new SectionCoordinates(
+                        w * width / 3, h * height / 3, (w + 1) * width / 3, (h + 1) * height / 3));
             }
         }
     }
