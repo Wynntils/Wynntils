@@ -46,14 +46,15 @@ public abstract class EntityRendererMixin<T extends Entity, S extends EntityRend
 
     @Inject(
             method =
-                    "submitNameTag(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V",
+                    "submitNameDisplay(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;I)V",
             at = @At("HEAD"),
             cancellable = true)
-    private void onNameTagSubmitPre(
+    private void onSubmitNameDisplayPre(
             S renderState,
             PoseStack poseStack,
             SubmitNodeCollector nodeCollector,
             CameraRenderState cameraRenderState,
+            int offset,
             CallbackInfo ci) {
         EntityNameTagRenderEvent event =
                 new EntityNameTagRenderEvent(renderState, poseStack, nodeCollector, cameraRenderState);
