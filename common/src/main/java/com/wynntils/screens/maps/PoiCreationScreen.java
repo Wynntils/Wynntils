@@ -382,7 +382,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderMap(guiGraphics);
         RenderUtils.enableScissor(
                 guiGraphics,
@@ -425,7 +425,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         RenderUtils.disableScissor(guiGraphics);
 
         renderMapBorder(guiGraphics);
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         FontRenderer.getInstance()
                 .renderText(

@@ -101,7 +101,7 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.GUILD_LOG_BACKGROUND, offsetX, offsetY);
         FontRenderer.getInstance()
                 .renderText(

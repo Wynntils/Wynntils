@@ -166,7 +166,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // When not rendering a preview of the selected overlay
         if (!renderPreview) {
             RenderUtils.drawTexturedRect(guiGraphics, Texture.OVERLAY_SELECTION_GUI, offsetX, offsetY);

@@ -105,7 +105,7 @@ public class EmoteWheelScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!emoteWheelFeature.openEmoteWheelKeybind.getKeyMapping().isDown() && canInteract) {
             onClose();
             return;

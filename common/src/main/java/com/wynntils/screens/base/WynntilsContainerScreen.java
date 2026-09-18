@@ -38,15 +38,15 @@ public abstract class WynntilsContainerScreen<T extends AbstractContainerMenu> e
     }
 
     @Override
-    public final void render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public final void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         try {
-            doRender(guiGraphics, mouseX, mouseY, partialTick);
+            doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         } catch (Throwable t) {
-            failure("render", t);
+            failure("extractRenderState", t);
         }
     }
 
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 }

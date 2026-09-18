@@ -332,7 +332,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         hovered = null;
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.ITEM_FILTER_BACKGROUND, offsetX, offsetY);

@@ -150,7 +150,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         updateHelpHover(mouseX, mouseY);
         renderScreenGuides(guiGraphics);
         if (selectionMode != SelectionMode.NONE) {

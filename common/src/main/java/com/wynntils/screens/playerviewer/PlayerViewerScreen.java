@@ -235,8 +235,8 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         renderPlayerModel(guiGraphics, mouseX, mouseY);
 

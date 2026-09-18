@@ -158,10 +158,10 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         updateItems();
 
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         renderScrollButton(guiGraphics);
 
         renderables.forEach(c -> c.render(guiGraphics, mouseX, mouseY, partialTick));

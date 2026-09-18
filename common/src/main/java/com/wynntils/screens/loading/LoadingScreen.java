@@ -81,7 +81,7 @@ public final class LoadingScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         int textureWidth = Texture.BACKGROUND_SPLASH.width();
         int textureHeight = Texture.BACKGROUND_SPLASH.height();
         float widthScaleFactor = (float) this.width / textureWidth;

@@ -239,7 +239,7 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (holdingMapKey
                 && !Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .openMapKeybind

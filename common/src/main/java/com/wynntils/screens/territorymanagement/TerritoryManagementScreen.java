@@ -462,7 +462,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     }
 
     @Override
-    public void doRender(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!this.mapMode) {
             renderListScreen(guiGraphics, mouseX, mouseY, partialTick);
         } else {
