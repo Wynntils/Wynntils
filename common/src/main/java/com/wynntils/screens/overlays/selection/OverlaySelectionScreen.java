@@ -265,16 +265,16 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    protected void renderBlurredBackground(GuiGraphicsExtractor guiGraphics) {
+    protected void extractBlurredBackground(GuiGraphicsExtractor guiGraphics) {
         if (!renderPreview) {
-            super.renderBlurredBackground(guiGraphics);
+            super.extractBlurredBackground(guiGraphics);
         }
     }
 
     @Override
-    protected void renderMenuBackground(GuiGraphicsExtractor guiGraphics) {
+    protected void extractMenuBackground(GuiGraphicsExtractor guiGraphics) {
         if (!renderPreview) {
-            this.renderMenuBackground(guiGraphics, 0, 0, this.width, this.height);
+            this.extractMenuBackground(guiGraphics, 0, 0, this.width, this.height);
         }
     }
 

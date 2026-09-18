@@ -286,10 +286,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    protected void renderBlurredBackground(GuiGraphicsExtractor guiGraphics) {}
+    protected void extractBlurredBackground(GuiGraphicsExtractor guiGraphics) {}
 
     @Override
-    protected void renderMenuBackground(GuiGraphicsExtractor guiGraphics) {}
+    protected void extractMenuBackground(GuiGraphicsExtractor guiGraphics) {}
 
     @Override
     public void tick() {
