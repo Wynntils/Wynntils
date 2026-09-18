@@ -97,4 +97,3 @@ mutable field net/minecraft/network/protocol/game/ClientboundBossEventPacket$Upd
 mutable field net/minecraft/world/scores/Scoreboard playerScores Ljava/util/Map;
 # For testing
 accessible method net/minecraft/client/resources/language/ClientLanguage <init> (Ljava/util/Map;Z)V
-accessible method net/minecraft/client/resources/language/I18n setLanguage (Lnet/minecraft/locale/Language;)V
