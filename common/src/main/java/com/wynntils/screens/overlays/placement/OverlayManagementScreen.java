@@ -388,6 +388,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         if (selectedOverlay == null) return false;
 
+        if (!isMouseHoveringOverlay(selectedOverlay, event.x(), event.y())
+                && (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT || selectedOverlay.isPlacementLocked())) {
+            clearActiveSelection();
+            return false;
+        }
+
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             if (!isMouseHoveringOverlay(selectedOverlay, event.x(), event.y())) return false;
 
@@ -510,7 +516,19 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             return false;
         }
 
+        clearActiveSelection();
         return false;
+    }
+
+    private void clearActiveSelection() {
+        if (fixedSelection) return;
+
+        resetSelection();
+        resetHelpTooltip();
+        selectedOverlay = null;
+        renderAllOverlays = true;
+        setupButtons();
+        calculateAlignmentLinePositions();
     }
 
     @Override
