@@ -72,6 +72,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     Component.translatable("screens.wynntils.overlayManagement.helpTooltip4"),
                     Component.translatable("screens.wynntils.overlayManagement.helpTooltip5"),
                     Component.translatable("screens.wynntils.overlayManagement.screenSnapTooltip"),
+                    Component.translatable("screens.wynntils.overlayManagement.historyTooltip"),
                     Component.translatable("screens.wynntils.overlayManagement.helpTooltip6")
                             .withStyle(ChatFormatting.RED)),
             200);
@@ -84,6 +85,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private final Map<Float, CustomColor> horizontalScreenGuides = new HashMap<>();
     private final OverlaySnapAxis horizontalSnap = new OverlaySnapAxis();
     private final OverlaySnapAxis verticalSnap = new OverlaySnapAxis();
+    private final OverlayEditHistory editHistory = new OverlayEditHistory();
+    private Button undoButton;
+    private Button redoButton;
 
     private SelectionMode selectionMode = SelectionMode.NONE;
     private Overlay selectedOverlay;
@@ -279,6 +283,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     @Override
     public void onClose() {
         resetSelection();
+        editHistory.clear();
         reloadConfigForOverlay();
     }
 
@@ -319,6 +324,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         setupButtons();
 
+        editHistory.begin(selectedOverlay);
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && KeyboardUtils.isShiftDown()) {
             selectedOverlay.getConfigOptionFromString("position").ifPresent(Config::reset);
             selectedOverlay.getConfigOptionFromString("size").ifPresent(Config::reset);
@@ -329,6 +335,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     .getConfigOptionFromString("verticalAlignmentOverride")
                     .ifPresent(Config::reset);
 
+            resetSelection();
             return true;
         }
 
@@ -427,6 +434,15 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         userInteracted = true;
         animationLengthRemaining = 0;
 
+        if (KeyboardUtils.isControlDown() && event.key() == GLFW.GLFW_KEY_Z) {
+            restoreHistory(KeyboardUtils.isShiftDown());
+            return true;
+        }
+        if (KeyboardUtils.isControlDown() && event.key() == GLFW.GLFW_KEY_Y) {
+            restoreHistory(true);
+            return true;
+        }
+
         if (event.key() == GLFW.GLFW_KEY_ENTER) {
             Managers.Config.saveConfig();
             onClose();
@@ -440,8 +456,17 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         if (selectedOverlay == null) return false;
 
-        // Shirt + Arrow keys change overlay alignment
-        if (KeyboardUtils.isShiftDown()) {
+        boolean arrowKey = event.key() == GLFW.GLFW_KEY_UP
+                || event.key() == GLFW.GLFW_KEY_DOWN
+                || event.key() == GLFW.GLFW_KEY_LEFT
+                || event.key() == GLFW.GLFW_KEY_RIGHT;
+        if (arrowKey) {
+            resetSelection();
+            editHistory.begin(selectedOverlay);
+        }
+
+        // Shift + Arrow keys change overlay alignment
+        if (arrowKey && KeyboardUtils.isShiftDown()) {
             if (event.key() == GLFW.GLFW_KEY_UP || event.key() == GLFW.GLFW_KEY_DOWN) {
                 int index = selectedOverlay.getRenderVerticalAlignment().ordinal();
 
@@ -476,7 +501,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                         .getConfigOptionFromString("horizontalAlignmentOverride")
                         .ifPresent(config -> ((Config<HorizontalAlignment>) config).setValue(values[finalIndex]));
             }
-        } else {
+        } else if (arrowKey) {
             // Arrow keys change overlay position
             int offsetX = 0;
             int offsetY = 0;
@@ -498,6 +523,13 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                                     selectedOverlay.getRenderY(),
                                     finalOffsetX,
                                     finalOffsetY)));
+        }
+
+        if (arrowKey) {
+            editHistory.finish();
+            updateHistoryButtons();
+            calculateAlignmentLinePositions();
+            return true;
         }
 
         if (event.key() == GLFW.GLFW_KEY_LEFT_SHIFT || event.key() == GLFW.GLFW_KEY_RIGHT_SHIFT) {
@@ -803,6 +835,20 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         // Determine if buttons should be at the top or bottom of the screen
         int yPos = buttonsAtBottom ? this.height - 25 : 5;
+        int historyY = buttonsAtBottom ? yPos - 24 : yPos + 24;
+        undoButton = this.addRenderableWidget(Button.builder(
+                        Component.translatable("screens.wynntils.overlayManagement.undo"),
+                        button -> restoreHistory(false))
+                .bounds(this.width / 2 - BUTTON_WIDTH - 2, historyY, BUTTON_WIDTH, BUTTON_HEIGHT)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.overlayManagement.undoTooltip")))
+                .build());
+        redoButton = this.addRenderableWidget(Button.builder(
+                        Component.translatable("screens.wynntils.overlayManagement.redo"),
+                        button -> restoreHistory(true))
+                .bounds(this.width / 2 + 2, historyY, BUTTON_WIDTH, BUTTON_HEIGHT)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.overlayManagement.redoTooltip")))
+                .build());
+        updateHistoryButtons();
 
         this.addRenderableWidget(new WynntilsCheckbox(
                 this.width / 2 - BUTTON_WIDTH - 23 - 100,
@@ -876,11 +922,35 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void resetSelection() {
+        editHistory.finish();
+        updateHistoryButtons();
         horizontalSnap.reset();
         verticalSnap.reset();
         selectionMode = SelectionMode.NONE;
         selectedCorner = null;
         selectedEdge = null;
+    }
+
+    private void restoreHistory(boolean redo) {
+        resetSelection();
+        Overlay restored = redo ? editHistory.redo() : editHistory.undo();
+        if (restored != null) {
+            selectedOverlay = restored;
+            userInteracted = true;
+            animationLengthRemaining = 0;
+            setupButtons();
+            calculateAlignmentLinePositions();
+        }
+        updateHistoryButtons();
+    }
+
+    private void updateHistoryButtons() {
+        if (undoButton != null) {
+            undoButton.active = editHistory.canUndo();
+        }
+        if (redoButton != null) {
+            redoButton.active = editHistory.canRedo();
+        }
     }
 
     private enum SelectionMode {
