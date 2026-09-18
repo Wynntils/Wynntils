@@ -34,12 +34,12 @@ public abstract class NeoForgeGuiGraphicsExtractorMixin {
     //       See FabricAbstractContainerScreenMixin#renderTooltipPre for the Fabric mixin.
     @WrapOperation(
             method =
-                    "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;Lnet/minecraft/world/item/ItemStack;IILnet/minecraft/resources/Identifier;)V",
+                    "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;Lnet/minecraft/world/item/ItemStack;IILnet/minecraft/resources/Identifier;Z)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"),
+                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;Z)V"),
             remap = false)
     private void setTooltipForNextFramePre(
             GuiGraphicsExtractor instance,
@@ -49,6 +49,7 @@ public abstract class NeoForgeGuiGraphicsExtractorMixin {
             int mouseX,
             int mouseY,
             Identifier backgroundTexture,
+            boolean extraSpaceAfterFirstLine,
             Operation<Void> operation,
             @Local(argsOnly = true) ItemStack itemStack) {
         ItemTooltipRenderEvent.Pre event = new ItemTooltipRenderEvent.Pre(
@@ -68,12 +69,13 @@ public abstract class NeoForgeGuiGraphicsExtractorMixin {
                 event.getItemStack().getTooltipImage(),
                 event.getMouseX(),
                 event.getMouseY(),
-                backgroundTexture);
+                backgroundTexture,
+                extraSpaceAfterFirstLine);
     }
 
     @Inject(
             method =
-                    "renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;Lnet/minecraft/world/item/ItemStack;)V",
+                    "tooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;ZLnet/minecraft/world/item/ItemStack;)V",
             at = @At("HEAD"))
     private void renderTooltipPre(
             Font font,
@@ -82,6 +84,7 @@ public abstract class NeoForgeGuiGraphicsExtractorMixin {
             int y,
             ClientTooltipPositioner positioner,
             Identifier background,
+            boolean extraSpaceAfterFirstLine,
             ItemStack tooltipStack,
             CallbackInfo ci) {
         MixinHelper.post(new TooltipRenderEvent.Pre((GuiGraphicsExtractor) (Object) this, components));
@@ -89,7 +92,7 @@ public abstract class NeoForgeGuiGraphicsExtractorMixin {
 
     @WrapOperation(
             method =
-                    "renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;Lnet/minecraft/world/item/ItemStack;)V",
+                    "tooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;ZLnet/minecraft/world/item/ItemStack;)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -117,7 +120,7 @@ public abstract class NeoForgeGuiGraphicsExtractorMixin {
 
     @Inject(
             method =
-                    "renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;Lnet/minecraft/world/item/ItemStack;)V",
+                    "tooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;ZLnet/minecraft/world/item/ItemStack;)V",
             at = @At("RETURN"))
     private void renderTooltipPost(
             Font font,
@@ -126,6 +129,7 @@ public abstract class NeoForgeGuiGraphicsExtractorMixin {
             int y,
             ClientTooltipPositioner positioner,
             Identifier background,
+            boolean extraSpaceAfterFirstLine,
             ItemStack tooltipStack,
             CallbackInfo ci) {
         MixinHelper.post(new TooltipRenderEvent.Post((GuiGraphicsExtractor) (Object) this));
