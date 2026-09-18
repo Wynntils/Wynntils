@@ -46,7 +46,6 @@ import com.wynntils.models.inventory.InventoryModel;
 import com.wynntils.models.items.ItemEncodingModel;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootrun.LootrunModel;
-import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.mount.MountModel;
 import com.wynntils.models.npc.NpcModel;
 import com.wynntils.models.objectives.ObjectivesModel;
@@ -87,15 +86,16 @@ public final class Models {
     public static final BeaconModel Beacon = new BeaconModel();
     public static final BombModel Bomb = new BombModel();
     public static final BonusTotemModel BonusTotem = new BonusTotemModel();
+    public static final CastedAbilityModel CastedAbility = new CastedAbilityModel();
     public static final CaveModel Cave = new CaveModel();
     public static final CharacterModel Character = new CharacterModel();
     public static final CharacterPhysicalModel CharacterPhysical = new CharacterPhysicalModel();
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final CharacterStatsModel CharacterStats = new CharacterStatsModel();
     public static final CombatModel Combat = new CombatModel();
-    public static final CutsceneModel Cutscene = new CutsceneModel();
     public static final CombatXpModel CombatXp = new CombatXpModel();
     public static final ContainerModel Container = new ContainerModel();
+    public static final CutsceneModel Cutscene = new CutsceneModel();
     public static final DialogueModel Dialogue = new DialogueModel();
     public static final DiscoveryModel Discovery = new DiscoveryModel();
     public static final ElementModel Element = new ElementModel();
@@ -104,6 +104,7 @@ public final class Models {
     public static final FriendsModel Friends = new FriendsModel();
     public static final GambitModel Gambit = new GambitModel();
     public static final GearModel Gear = new GearModel();
+    public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final GuildModel Guild = new GuildModel();
     public static final GuildWarTowerModel GuildWarTower = new GuildWarTowerModel();
     public static final HousingModel Housing = new HousingModel();
@@ -113,7 +114,7 @@ public final class Models {
     public static final ItemEncodingModel ItemEncoding = new ItemEncodingModel();
     public static final ItemModel Item = new ItemModel();
     public static final LootChestModel LootChest = new LootChestModel();
-    public static final MarkerModel Marker = new MarkerModel();
+    public static final LootrunModel Lootrun = new LootrunModel();
     public static final MountModel Mount = new MountModel();
     public static final NpcModel Npc = new NpcModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
@@ -129,11 +130,10 @@ public final class Models {
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();
     public static final ShamanSummonModel ShamanSummon = new ShamanSummonModel();
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel();
-    public static final CastedAbilityModel CastedAbility = new CastedAbilityModel();
     public static final ShinyModel Shiny = new ShinyModel();
     public static final SkillPointModel SkillPoint = new SkillPointModel();
-    public static final SpellModel Spell = new SpellModel();
     public static final SpellCasterModel SpellCaster = new SpellCasterModel();
+    public static final SpellModel Spell = new SpellModel();
     public static final StatModel Stat = new StatModel();
     public static final StatusEffectModel StatusEffect = new StatusEffectModel();
     public static final StoreModel Store = new StoreModel();
@@ -149,7 +149,5 @@ public final class Models {
     public static final WynnItemModel WynnItem = new WynnItemModel();
 
     // Models with constructor dependencies, ordered alphabetically as far as possible
-    public static final ActivityModel Activity = new ActivityModel(Marker);
-    public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel(Marker);
-    public static final LootrunModel Lootrun = new LootrunModel(Marker);
+    public static final ActivityModel Activity = new ActivityModel(Beacon);
 }

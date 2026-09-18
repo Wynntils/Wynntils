@@ -11,6 +11,7 @@ import com.wynntils.services.mapdata.attributes.impl.MapMarkerOptionsImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapPathAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapVisibilityImpl;
 import com.wynntils.services.mapdata.attributes.type.MapAreaAttributes;
+import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapPathAttributes;
 import com.wynntils.utils.colors.CustomColor;
@@ -33,6 +34,29 @@ public class MapAttributesBuilder {
     private CustomColor fillColor;
     private CustomColor borderColor;
     private Float borderWidth;
+
+    public MapAttributesBuilder from(MapAttributes attributes) {
+        if (attributes == null) return this;
+
+        this.priority = attributes.getPriority().orElse(null);
+        this.level = attributes.getLevel().orElse(null);
+        this.label = attributes.getLabel().orElse(null);
+        this.description = attributes.getDescription().orElse(null);
+        this.labelVisibility =
+                (MapVisibilityImpl) attributes.getLabelVisibility().orElse(null);
+        this.labelColor = attributes.getLabelColor().orElse(null);
+        this.labelShadow = attributes.getLabelShadow().orElse(null);
+        this.icon = attributes.getIconId().orElse(null);
+        this.iconVisibility = (MapVisibilityImpl) attributes.getIconVisibility().orElse(null);
+        this.iconColor = attributes.getIconColor().orElse(null);
+        this.hasMarker = attributes.getHasMarker().orElse(null);
+        this.markerOptions =
+                (MapMarkerOptionsImpl) attributes.getMarkerOptions().orElse(null);
+        this.fillColor = attributes.getFillColor().orElse(null);
+        this.borderColor = attributes.getBorderColor().orElse(null);
+        this.borderWidth = attributes.getBorderWidth().orElse(null);
+        return this;
+    }
 
     public MapAttributesBuilder setPriority(Integer priority) {
         this.priority = priority;
@@ -94,16 +118,19 @@ public class MapAttributesBuilder {
         return this;
     }
 
-    public void setFillColor(CustomColor fillColor) {
+    public MapAttributesBuilder setFillColor(CustomColor fillColor) {
         this.fillColor = fillColor;
+        return this;
     }
 
-    public void setBorderColor(CustomColor borderColor) {
+    public MapAttributesBuilder setBorderColor(CustomColor borderColor) {
         this.borderColor = borderColor;
+        return this;
     }
 
-    public void setBorderWidth(Float borderWidth) {
+    public MapAttributesBuilder setBorderWidth(Float borderWidth) {
         this.borderWidth = borderWidth;
+        return this;
     }
 
     public MapLocationAttributesBuilder asLocationAttributes() {
