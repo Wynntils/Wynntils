@@ -76,11 +76,11 @@ public final class LootrunCompiler {
         List<LootrunPath> result = new ArrayList<>();
         for (LootrunPath current : positions) {
             float distance = 0f;
-            CubicSpline.Builder<Float, BoundedFloatFunction<Float>> builderX =
+            CubicSpline.Builder<BoundedFloatFunction<Float>> builderX =
                     CubicSpline.builder(BoundedFloatFunction.IDENTITY);
-            CubicSpline.Builder<Float, BoundedFloatFunction<Float>> builderY =
+            CubicSpline.Builder<BoundedFloatFunction<Float>> builderY =
                     CubicSpline.builder(BoundedFloatFunction.IDENTITY);
-            CubicSpline.Builder<Float, BoundedFloatFunction<Float>> builderZ =
+            CubicSpline.Builder<BoundedFloatFunction<Float>> builderZ =
                     CubicSpline.builder(BoundedFloatFunction.IDENTITY);
             for (int i = 0; i < current.points().size(); i++) {
                 Vec3 position = current.points().get(i);
@@ -101,13 +101,18 @@ public final class LootrunCompiler {
                 builderY.addPoint(distance, (float) position.y, slopeY);
                 builderZ.addPoint(distance, (float) position.z, slopeZ);
             }
-            CubicSpline<Float, BoundedFloatFunction<Float>> splineX = builderX.build();
-            CubicSpline<Float, BoundedFloatFunction<Float>> splineY = builderY.build();
-            CubicSpline<Float, BoundedFloatFunction<Float>> splineZ = builderZ.build();
+            CubicSpline<BoundedFloatFunction<Float>> splineX = builderX.build();
+            CubicSpline<BoundedFloatFunction<Float>> splineY = builderY.build();
+            CubicSpline<BoundedFloatFunction<Float>> splineZ = builderZ.build();
 
             LootrunPath newResult = new LootrunPath(new ArrayList<>());
             for (float i = 0f; i < distance; i += (1f / sampleRate)) {
-                newResult.points().add(new Vec3(splineX.apply(i), splineY.apply(i), splineZ.apply(i)));
+                newResult
+                        .points()
+                        .add(new Vec3(
+                                CubicSpline.sample(splineX, i),
+                                CubicSpline.sample(splineY, i),
+                                CubicSpline.sample(splineZ, i)));
             }
             result.add(newResult);
         }
