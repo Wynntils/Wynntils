@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.seaskipper;
@@ -73,6 +73,7 @@ public final class SeaskipperModel extends Model {
             if (optionalItem.isEmpty()) continue;
 
             SeaskipperDestinationItem destinationItem = optionalItem.get();
+            if (!destinationItem.isAvailable()) continue;
 
             Optional<SeaskipperDestination> destinationOptional = allDestinations.stream()
                     .filter(profile -> profile.profile().destination().equals(destinationItem.getDestination()))
