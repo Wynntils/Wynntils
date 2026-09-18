@@ -242,7 +242,7 @@ public class WynntilsGuideScreen extends WynntilsScreen {
         CHARMS("charm.stone", CharmGuideContainerWidget::new),
         ASPECTS("abilityTree.aspectArcher", AspectGuideContainerWidget::new),
         MATERIALS("profession.ingotDernic", MaterialGuideContainerWidget::new),
-        POWDER(Items.GREEN_DYE, PowderGuideContainerWidget::new),
+        POWDER(Items.DYE.green(), PowderGuideContainerWidget::new),
         TOOLS("gatheringTool.pickaxe7", GatheringToolGuideContainerWidget::new),
         AUGMENTS("corkian_amplifier", AugmentGuideContainerWidget::new),
         WARDS("ward_pink", WardGuideContainerWidget::new),

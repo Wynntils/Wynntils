@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.elements.type;
@@ -12,17 +12,23 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 public enum Powder {
-    EARTH(Element.EARTH, Items.LIME_DYE, Items.GREEN_DYE, ChatFormatting.DARK_GREEN, ChatFormatting.GREEN, "Quake"),
+    EARTH(Element.EARTH, Items.DYE.lime(), Items.DYE.green(), ChatFormatting.DARK_GREEN, ChatFormatting.GREEN, "Quake"),
     THUNDER(
             Element.THUNDER,
-            Items.YELLOW_DYE,
-            Items.ORANGE_DYE,
+            Items.DYE.yellow(),
+            Items.DYE.orange(),
             ChatFormatting.YELLOW,
             ChatFormatting.GOLD,
             "Chain Lightning"),
-    WATER(Element.WATER, Items.LIGHT_BLUE_DYE, Items.CYAN_DYE, ChatFormatting.AQUA, ChatFormatting.DARK_AQUA, "Curse"),
-    FIRE(Element.FIRE, Items.PINK_DYE, Items.RED_DYE, ChatFormatting.RED, ChatFormatting.DARK_RED, "Courage"),
-    AIR(Element.AIR, Items.GRAY_DYE, Items.LIGHT_GRAY_DYE, ChatFormatting.WHITE, ChatFormatting.GRAY, "Wind Prison");
+    WATER(
+            Element.WATER,
+            Items.DYE.lightBlue(),
+            Items.DYE.cyan(),
+            ChatFormatting.AQUA,
+            ChatFormatting.DARK_AQUA,
+            "Curse"),
+    FIRE(Element.FIRE, Items.DYE.pink(), Items.DYE.red(), ChatFormatting.RED, ChatFormatting.DARK_RED, "Courage"),
+    AIR(Element.AIR, Items.DYE.gray(), Items.DYE.lightGray(), ChatFormatting.WHITE, ChatFormatting.GRAY, "Wind Prison");
 
     private final Element element;
     private final Item lowTierItem;
