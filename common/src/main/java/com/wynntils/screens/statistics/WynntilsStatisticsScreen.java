@@ -109,7 +109,7 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
 
         renderVersion(guiGraphics);
 
-        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
+        extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
 
         if (elements.isEmpty()) {
             renderNoElementsHelper(guiGraphics, I18n.get("screens.wynntils.statistics.noStatistics"));

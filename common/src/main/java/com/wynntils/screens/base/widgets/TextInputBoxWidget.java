@@ -93,7 +93,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         Pair<String, Integer> renderedTextDetails = getRenderedText(getMaxTextWidth());
         String renderedText = renderedTextDetails.a();
         int renderedTextStart = renderedTextDetails.b();
@@ -113,7 +113,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         int highlightedWidth = font.width(highlightedPortion);
         int lastWidth = font.width(lastPortion);
 
-        doRenderWidget(
+        doExtractWidgetRenderState(
                 guiGraphics,
                 renderedText,
                 renderedTextStart,
@@ -128,7 +128,7 @@ public class TextInputBoxWidget extends AbstractWidget {
                 mouseY);
     }
 
-    protected void doRenderWidget(
+    protected void doExtractWidgetRenderState(
             GuiGraphicsExtractor guiGraphics,
             String renderedText,
             int renderedTextStart,

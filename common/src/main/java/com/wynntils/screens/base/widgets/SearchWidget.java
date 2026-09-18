@@ -36,7 +36,7 @@ public class SearchWidget extends TextInputBoxWidget {
     }
 
     @Override
-    protected void doRenderWidget(
+    protected void doExtractWidgetRenderState(
             GuiGraphicsExtractor guiGraphics,
             String renderedText,
             int renderedTextStart,

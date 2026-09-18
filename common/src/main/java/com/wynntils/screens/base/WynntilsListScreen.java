@@ -69,7 +69,8 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 this);
     }
 
-    protected void renderWidgets(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderStates(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
         for (Renderable renderable : new ArrayList<>(this.renderables)) {
             renderable.render(guiGraphics, mouseX, mouseY, partialTick);

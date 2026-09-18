@@ -65,7 +65,7 @@ public class WynntilsCrowdSourcingSettingsScreen
 
         renderVersion(guiGraphics);
 
-        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
+        extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
 
         renderDescription(guiGraphics, I18n.get("screens.wynntils.wynntilsCrowdSourcing.screenDescription"), "");
 

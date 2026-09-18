@@ -25,7 +25,7 @@ public class HueSlider extends AbstractSliderButton {
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (int i = 0; i < width; i++) {
             float hue = (float) i / width;
             RenderUtils.drawRect(

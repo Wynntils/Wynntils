@@ -54,7 +54,8 @@ public class WynntilsMenuButton extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(
                 guiGraphics, isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR, getX(), getY(), width, height);
 

@@ -173,7 +173,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
             searchWidget.render(guiGraphics, mouseX, mouseY, partialTick);
 
-            renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
+            extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
 
             if (selectedOverlay != null) {
                 String textToRender = selectedOverlay.getTranslatedName();
@@ -964,7 +964,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         // endregion
     }
 
-    private void renderWidgets(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void extractWidgetRenderStates(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (HoverableTexturedButton optionsButton : optionButtons) {
             optionsButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }

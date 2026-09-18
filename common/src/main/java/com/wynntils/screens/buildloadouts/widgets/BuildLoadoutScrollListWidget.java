@@ -89,7 +89,8 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
                 Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND,
@@ -102,7 +103,7 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
         aspectsButton.render(guiGraphics, mouseX, mouseY, partialTick);
         tomesButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

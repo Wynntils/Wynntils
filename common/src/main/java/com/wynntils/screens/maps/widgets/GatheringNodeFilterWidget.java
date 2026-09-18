@@ -64,7 +64,7 @@ public class GatheringNodeFilterWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawScalingTexturedRect(guiGraphics, icon, getX() + 2, iconRenderY, iconWidth, iconHeight);
 
         CustomColor color =

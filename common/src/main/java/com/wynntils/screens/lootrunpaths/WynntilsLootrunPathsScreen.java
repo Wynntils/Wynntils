@@ -150,7 +150,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
 
         renderVersion(guiGraphics);
 
-        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
+        extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
 
         if (elements.isEmpty()) {
             renderNoElementsHelper(guiGraphics, I18n.get("screens.wynntils.lootruns.noLootruns"));

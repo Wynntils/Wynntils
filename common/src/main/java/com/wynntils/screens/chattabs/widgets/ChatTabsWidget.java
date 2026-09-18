@@ -68,7 +68,8 @@ public class ChatTabsWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (this.isMouseOver(mouseX, mouseY)) {
             RenderUtils.drawRect(
                     guiGraphics, CommonColors.GRAY.withAlpha(70), this.getX(), this.getY(), this.width, this.height);

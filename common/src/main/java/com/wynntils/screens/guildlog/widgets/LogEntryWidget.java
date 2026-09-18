@@ -46,7 +46,8 @@ public class LogEntryWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         int renderY = getY();
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.LOG_ENTRY_TOP, getX(), renderY);

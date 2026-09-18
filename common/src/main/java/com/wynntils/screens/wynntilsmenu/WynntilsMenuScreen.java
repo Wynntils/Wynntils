@@ -306,7 +306,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         renderVersion(guiGraphics);
 
-        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
+        extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
 
         renderPlayerInfo(guiGraphics, mouseX, mouseY);
 
@@ -470,7 +470,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         }
     }
 
-    private void renderWidgets(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void extractWidgetRenderStates(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
 
         for (WynntilsMenuButton button : buttons.stream().flatMap(List::stream).toList()) {

@@ -125,7 +125,7 @@ public class WaypointManagerWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderIcon(guiGraphics);
 
         FontRenderer.getInstance()

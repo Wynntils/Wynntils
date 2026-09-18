@@ -69,7 +69,8 @@ public class OverlayOrderWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.WIDGET_BACKGROUND_LONG, getX(), getY());
 
         textStyle = textStyle.withBold(isHovered);

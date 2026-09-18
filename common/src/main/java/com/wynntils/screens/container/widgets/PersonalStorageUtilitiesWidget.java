@@ -76,7 +76,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.BANK_PANEL, getX(), getY());
 
         if (!Models.Bank.isEditingMode()) {

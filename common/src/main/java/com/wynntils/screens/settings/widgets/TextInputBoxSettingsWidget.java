@@ -34,13 +34,13 @@ public class TextInputBoxSettingsWidget<T> extends TextInputBoxWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Don't want to display tooltip when the tile is outside the mask from the screen
         if (isHovered && (mouseY <= maskTopY || mouseY >= maskBottomY)) {
             isHovered = false;
         }
 
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

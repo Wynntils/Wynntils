@@ -108,7 +108,7 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
         searchWidget.render(guiGraphics, mouseX, mouseY, partialTick);
 
         checkForRecentRefresh();
-        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
+        extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
 
         // Add one because of the extra space at the top and bottom
         if (emoteList.size() + 1 > MAX_EMOTES_PER_PAGE) {
@@ -134,7 +134,8 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
         }
     }
 
-    private void renderWidgets(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void extractWidgetRenderStates(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (HoverableTexturedButton optionsButton : optionButtons) {
             optionsButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }

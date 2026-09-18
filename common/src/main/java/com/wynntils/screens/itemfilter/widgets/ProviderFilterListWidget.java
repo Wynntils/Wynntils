@@ -125,7 +125,8 @@ public class ProviderFilterListWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (addStringFilterButton != null) {
             addStringFilterButton.render(guiGraphics, mouseX, mouseY, partialTick);
         } else if (addNumericFilterButton != null) {

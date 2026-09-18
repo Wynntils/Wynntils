@@ -50,7 +50,8 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(guiGraphics, getRectColor().withAlpha(100), getX(), getY(), width - 18, height);
 
         RenderUtils.drawRectBorders(

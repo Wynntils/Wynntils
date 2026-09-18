@@ -38,7 +38,8 @@ public abstract class TerritoryQuickSortWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         boolean isHovered = this.isMouseOver(mouseX, mouseY);
 
         FontRenderer.getInstance()

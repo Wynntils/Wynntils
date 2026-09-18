@@ -59,7 +59,7 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
     }
 
     @Override
-    public void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(guiGraphics);
 
         editButtonHovered = isEditButtonHovered(mouseX, mouseY);
@@ -86,15 +86,15 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
                             TextShadow.NORMAL);
         } else {
             // Let TextInputBoxWidget calculate scrolling / highlighting,
-            // but it will invoke our overridden doRenderWidget (no background).
-            super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+            // but it will invoke our overridden doExtractWidgetRenderState (no background).
+            super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         renderEditButton(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
-    protected void doRenderWidget(
+    protected void doExtractWidgetRenderState(
             GuiGraphicsExtractor guiGraphics,
             String renderedText,
             int renderedTextStart,

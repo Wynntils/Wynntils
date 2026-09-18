@@ -38,7 +38,8 @@ public class BulkBuyWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.setX(originalX - (int) (getWidth() * animationPercentage.getAnimation()));
         // Prevent widget from rendering behind highlights
         RenderUtils.enableScissor(guiGraphics, originalX - getWidth(), getY(), getWidth(), getHeight());

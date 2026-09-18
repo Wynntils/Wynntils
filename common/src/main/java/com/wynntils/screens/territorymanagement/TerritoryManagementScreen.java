@@ -491,7 +491,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                         TextShadow.NONE);
 
         // Render the widgets
-        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
+        extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
 
         // Render scroll button
         renderScrollButton(guiGraphics);
@@ -544,7 +544,8 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         }
     }
 
-    private void renderWidgets(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void extractWidgetRenderStates(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Render territory widgets in the render area
         RenderUtils.enableScissor(
                 guiGraphics,

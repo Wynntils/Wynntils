@@ -34,7 +34,8 @@ public class TerritoryHighlightLegendWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Check if we should render the highlight legend
         if (!Managers.Feature.getFeatureInstance(CustomTerritoryManagementScreenFeature.class)
                 .screenHighlightLegend
