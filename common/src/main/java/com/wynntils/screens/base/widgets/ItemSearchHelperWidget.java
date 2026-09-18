@@ -46,7 +46,7 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
     }
 
     @Override
-    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
                 Texture.INFO,

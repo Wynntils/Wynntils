@@ -19,7 +19,7 @@ public class BasicHoverableButton extends BasicTexturedButton {
     }
 
     @Override
-    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawScalingHoverableTexturedRect(
                 guiGraphics, texture, getX(), getY(), getWidth(), getHeight(), isHovered, RenderDirection.VERTICAL);
     }

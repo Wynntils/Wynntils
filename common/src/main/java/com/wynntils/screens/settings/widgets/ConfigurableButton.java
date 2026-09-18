@@ -112,7 +112,7 @@ public class ConfigurableButton extends WynntilsButton {
     }
 
     @Override
-    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Don't want to display tooltip when the tile is outside the mask from the screen
         if (isHovered && (mouseY <= maskTopY || mouseY >= maskBottomY)) {
             isHovered = false;

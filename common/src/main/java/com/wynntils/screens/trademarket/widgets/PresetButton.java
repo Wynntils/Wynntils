@@ -33,7 +33,7 @@ public class PresetButton extends WynntilsButton implements TooltipProvider {
     }
 
     @Override
-    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         Texture itemTexture = isSavedPreset() ? Texture.SAVED_PRESET : Texture.PRESET;
 
         RenderUtils.drawTexturedRect(guiGraphics, itemTexture, this.getX(), this.getY());

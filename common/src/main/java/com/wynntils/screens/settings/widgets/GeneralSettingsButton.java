@@ -41,7 +41,7 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
     }
 
     @Override
-    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRoundedRectWithBorder(
                 guiGraphics,
                 CommonColors.BLACK,

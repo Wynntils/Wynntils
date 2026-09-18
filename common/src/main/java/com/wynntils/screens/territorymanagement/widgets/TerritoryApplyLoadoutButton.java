@@ -41,7 +41,7 @@ public class TerritoryApplyLoadoutButton extends WynntilsButton implements Toolt
     }
 
     @Override
-    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(guiGraphics, textureSupplier.get(), this.getX(), this.getY());
     }
 

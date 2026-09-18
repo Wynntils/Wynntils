@@ -95,7 +95,7 @@ public class WynntilsCheckbox extends AbstractButton {
     }
 
     @Override
-    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         Identifier identifier;
         if (this.selected) {
             identifier = this.isFocused() || this.isHovered()

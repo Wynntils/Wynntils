@@ -19,7 +19,7 @@ public class MapButton extends BasicTexturedButton {
     }
 
     @Override
-    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(
                 guiGraphics, texture, isHovered ? CommonColors.GRAY : CommonColors.WHITE, getX(), getY());
     }

@@ -47,7 +47,7 @@ public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
     }
 
     @Override
-    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Don't count as hovered if mouse is hovering the book as the tags render
         // slightly underneath the book
         if (isHovered

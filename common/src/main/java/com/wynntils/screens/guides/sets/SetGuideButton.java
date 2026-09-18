@@ -75,7 +75,7 @@ public class SetGuideButton extends GuideButton {
     }
 
     @Override
-    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(
                 guiGraphics,
                 isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR,

@@ -29,7 +29,7 @@ public class WynnAlphabetButton extends WynntilsButton {
     }
 
     @Override
-    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (wynnAlphabet == null) return;
 
         RenderUtils.drawRect(

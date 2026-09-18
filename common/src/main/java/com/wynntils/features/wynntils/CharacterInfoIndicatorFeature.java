@@ -104,8 +104,8 @@ public class CharacterInfoIndicatorFeature extends Feature {
         public void onPress(InputWithModifiers input) {}
 
         @Override
-        protected void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-            renderDefaultSprite(guiGraphics);
+        protected void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+            extractDefaultSprite(guiGraphics);
 
             FontRenderer.getInstance()
                     .renderText(

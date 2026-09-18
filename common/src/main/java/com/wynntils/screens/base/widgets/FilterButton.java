@@ -80,7 +80,7 @@ public class FilterButton extends WynntilsButton implements TooltipProvider {
     }
 
     @Override
-    public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(guiGraphics, getButtonColor(), getX(), getY(), width, height);
 
         if (!this.dynamicTexture) {

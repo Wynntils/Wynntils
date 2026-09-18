@@ -15,9 +15,9 @@ public abstract class WynntilsButton extends AbstractButton {
     }
 
     @Override
-    public void renderContents(GuiGraphicsExtractor guiGraphics, int i, int j, float f) {
-        renderDefaultSprite(guiGraphics);
-        renderDefaultLabel(guiGraphics.textRendererForWidget(this, GuiGraphicsExtractor.HoveredTextEffects.NONE));
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int i, int j, float f) {
+        extractDefaultSprite(guiGraphics);
+        extractDefaultLabel(guiGraphics.textRendererForWidget(this, GuiGraphicsExtractor.HoveredTextEffects.NONE));
     }
 
     @Override

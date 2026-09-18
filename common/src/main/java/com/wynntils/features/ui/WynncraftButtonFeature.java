@@ -213,8 +213,8 @@ public class WynncraftButtonFeature extends Feature {
         }
 
         @Override
-        public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
-            super.renderContents(guiGraphics, mouseX, mouseY, partialTicks);
+        public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+            super.extractContents(guiGraphics, mouseX, mouseY, partialTicks);
             RenderUtils.drawScalingTexturedRect(
                     guiGraphics,
                     BUTTON_ICON,
