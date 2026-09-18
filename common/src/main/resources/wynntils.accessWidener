@@ -91,6 +91,7 @@ extendable method net/minecraft/client/gui/screens/Screen init (II)V
 mutable field net/minecraft/client/gui/Hud chat Lnet/minecraft/client/gui/components/ChatComponent;
 mutable field net/minecraft/client/gui/components/ChatComponent allMessages Ljava/util/List;
 mutable field net/minecraft/client/gui/components/ChatComponent trimmedMessages Ljava/util/List;
+mutable field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen imageHeight I
 mutable field net/minecraft/network/protocol/game/ClientboundBossEventPacket$AddOperation name Lnet/minecraft/network/chat/Component;
 mutable field net/minecraft/network/protocol/game/ClientboundBossEventPacket$UpdateNameOperation name Lnet/minecraft/network/chat/Component;
 mutable field net/minecraft/world/scores/Scoreboard playerScores Ljava/util/Map;
