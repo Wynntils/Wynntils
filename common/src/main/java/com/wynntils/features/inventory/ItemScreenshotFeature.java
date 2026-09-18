@@ -198,7 +198,7 @@ public class ItemScreenshotFeature extends Feature {
 
         guiGraphics.pose().pushMatrix();
         guiGraphics.pose().scale(scalew, scaleh);
-        guiGraphics.renderTooltip(mc.font, tooltip, 0, 0, NO_POSITIONER, tooltipStyle);
+        guiGraphics.tooltip(mc.font, tooltip, 0, 0, NO_POSITIONER, tooltipStyle, false);
         guiGraphics.pose().popMatrix();
 
         bufferSource.endBatch();

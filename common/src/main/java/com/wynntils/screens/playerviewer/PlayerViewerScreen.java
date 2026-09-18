@@ -240,7 +240,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
 
         renderPlayerModel(guiGraphics, mouseX, mouseY);
 
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+        this.extractTooltip(guiGraphics, mouseX, mouseY);
 
         interactionButtons.forEach(button -> button.render(guiGraphics, mouseX, mouseY, partialTick));
         settingsButton.render(guiGraphics, mouseX, mouseY, partialTick);

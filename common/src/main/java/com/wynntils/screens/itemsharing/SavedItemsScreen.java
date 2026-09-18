@@ -235,7 +235,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
         renderScrollButton(guiGraphics);
 
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+        this.extractTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
