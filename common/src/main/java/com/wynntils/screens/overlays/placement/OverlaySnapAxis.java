@@ -4,20 +4,37 @@
  */
 package com.wynntils.screens.overlays.placement;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 final class OverlaySnapAxis {
     private static final double SNAP_DISTANCE = 1;
     private static final double RELEASE_DISTANCE = 6;
 
     private Float target;
-    private int snappedEdge;
+    private int snappedPoint;
     private double pointerOffset;
 
-    public double snap(double drag, double[] edges, Collection<Float> targets, double minDrag, double maxDrag) {
+    public double snap(
+            double drag,
+            double[] edges,
+            Collection<Float> targets,
+            Double center,
+            Collection<Float> centerTargets,
+            double minDrag,
+            double maxDrag) {
+        List<SnapPoint> points = new ArrayList<>();
+        for (double edge : edges) {
+            points.add(new SnapPoint(edge, targets));
+        }
+        if (center != null) {
+            points.add(new SnapPoint(center, centerTargets));
+        }
+
         double proposedDrag = Math.clamp(drag + pointerOffset, minDrag, maxDrag);
         if (target != null) {
-            double snappedDrag = target - edges[snappedEdge];
+            double snappedDrag = target - points.get(snappedPoint).position();
             if (Math.abs(proposedDrag - snappedDrag) <= RELEASE_DISTANCE
                     && snappedDrag >= minDrag
                     && snappedDrag <= maxDrag) {
@@ -34,9 +51,10 @@ final class OverlaySnapAxis {
 
         double nearestDistance = Double.POSITIVE_INFINITY;
         double result = proposedDrag;
-        for (int i = 0; i < edges.length; i++) {
-            for (float candidate : targets) {
-                double snappedDrag = candidate - edges[i];
+        for (int i = 0; i < points.size(); i++) {
+            SnapPoint point = points.get(i);
+            for (float candidate : point.targets()) {
+                double snappedDrag = candidate - point.position();
                 if (snappedDrag < minDrag || snappedDrag > maxDrag) continue;
 
                 double distance = Math.abs(snappedDrag - proposedDrag);
@@ -46,7 +64,7 @@ final class OverlaySnapAxis {
                     nearestDistance = distance;
                     result = snappedDrag;
                     target = candidate;
-                    snappedEdge = i;
+                    snappedPoint = i;
                 }
             }
         }
@@ -61,7 +79,9 @@ final class OverlaySnapAxis {
 
     public void reset() {
         target = null;
-        snappedEdge = 0;
+        snappedPoint = 0;
         pointerOffset = 0;
     }
+
+    private record SnapPoint(double position, Collection<Float> targets) {}
 }

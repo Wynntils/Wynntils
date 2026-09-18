@@ -74,6 +74,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     private final Set<Float> verticalAlignmentLinePositions = new HashSet<>();
     private final Set<Float> horizontalAlignmentLinePositions = new HashSet<>();
+    private final Set<Float> verticalCenterLinePositions = new HashSet<>();
+    private final Set<Float> horizontalCenterLinePositions = new HashSet<>();
     private final OverlaySnapAxis horizontalSnap = new OverlaySnapAxis();
     private final OverlaySnapAxis verticalSnap = new OverlaySnapAxis();
 
@@ -675,8 +677,26 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 .mapToDouble(edge -> edge.getEdgePos(selectedOverlay).a().y)
                 .toArray();
         return new Pair<>(
-                horizontalSnap.snap(dragX, horizontalEdges, verticalAlignmentLinePositions, minX, maxX),
-                verticalSnap.snap(dragY, verticalEdges, horizontalAlignmentLinePositions, minY, maxY));
+                horizontalSnap.snap(
+                        dragX,
+                        horizontalEdges,
+                        verticalAlignmentLinePositions,
+                        selectionMode == SelectionMode.AREA
+                                ? (double) (selectedOverlay.getRenderX() + selectedOverlay.getWidth() / 2f)
+                                : null,
+                        verticalCenterLinePositions,
+                        minX,
+                        maxX),
+                verticalSnap.snap(
+                        dragY,
+                        verticalEdges,
+                        horizontalAlignmentLinePositions,
+                        selectionMode == SelectionMode.AREA
+                                ? (double) (selectedOverlay.getRenderY() + selectedOverlay.getHeight() / 2f)
+                                : null,
+                        horizontalCenterLinePositions,
+                        minY,
+                        maxY));
     }
 
     private void renderSections(GuiGraphics guiGraphics) {
@@ -700,6 +720,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private void calculateAlignmentLinePositions() {
         verticalAlignmentLinePositions.clear();
         horizontalAlignmentLinePositions.clear();
+        verticalCenterLinePositions.clear();
+        horizontalCenterLinePositions.clear();
+        verticalCenterLinePositions.add(this.width / 2f);
+        horizontalCenterLinePositions.add(this.height / 2f);
 
         verticalAlignmentLinePositions.add(0f);
         horizontalAlignmentLinePositions.add(0f);
@@ -726,6 +750,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 .filter(Managers.Overlay::isEnabled)
                 .toList()) {
             if (overlay == selectedOverlay) continue;
+
+            verticalCenterLinePositions.add(overlay.getRenderX() + overlay.getWidth() / 2f);
+            horizontalCenterLinePositions.add(overlay.getRenderY() + overlay.getHeight() / 2f);
 
             for (Edge edge : Edge.values()) {
                 Pair<Vec2, Vec2> edgePos = edge.getEdgePos(overlay);
