@@ -32,10 +32,8 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
 import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
@@ -56,9 +54,6 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     // If the value is set to 4, alignment lines will render at 1/2, 1/3, 2/3, 1/4, 3/4
     // of the screen both vertically and horizontally.
     private static final int ALIGNMENT_LINES_MAX_SECTIONS_PER_AXIS = 4;
-    private static final int ALIGNMENT_SNAP_DISTANCE = 1;
-    // Bigger this value is, the harder it is to not align overlay to alignment line
-    private static final double ALIGNMENT_SNAP_HARDNESS = 6;
 
     private static final int BUTTON_WIDTH = 60;
     private static final int BUTTON_SHORT_WIDTH = 20;
@@ -79,8 +74,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     private final Set<Float> verticalAlignmentLinePositions = new HashSet<>();
     private final Set<Float> horizontalAlignmentLinePositions = new HashSet<>();
-    private final Map<Edge, Double> edgeAlignmentSnapMap = new EnumMap<>(Edge.class);
-    private final Map<Edge, Float> alignmentLinesToRender = new EnumMap<>(Edge.class);
+    private final OverlaySnapAxis horizontalSnap = new OverlaySnapAxis();
+    private final OverlaySnapAxis verticalSnap = new OverlaySnapAxis();
 
     private SelectionMode selectionMode = SelectionMode.NONE;
     private Overlay selectedOverlay;
@@ -92,12 +87,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private boolean renderAllOverlays;
     private boolean showPreview = true;
 
-    private boolean snappingEnabled = true;
-
     private boolean userInteracted = false;
     private int animationLengthRemaining;
-    private double snapOffsetX;
-    private double snapOffsetY;
 
     private final Screen previousScreen;
 
@@ -129,6 +120,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
+        resetSelection();
         setupButtons();
         calculateAlignmentLinePositions();
     }
@@ -279,6 +271,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     public void onClose() {
+        resetSelection();
         reloadConfigForOverlay();
     }
 
@@ -333,6 +326,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         }
 
         Vec2 mousePos = new Vec2((float) event.x(), (float) event.y());
+        calculateAlignmentLinePositions();
 
         for (Corner corner : Corner.values()) {
             float distance = selected.getCornerPoints(corner).distanceToSqr(mousePos);
@@ -414,10 +408,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
+        resetSelection();
         // Let the buttons of the Screen have priority
         if (super.mouseReleased(event)) return true;
 
-        resetSelection();
         return false;
     }
 
@@ -500,20 +494,11 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         }
 
         if (event.key() == GLFW.GLFW_KEY_LEFT_SHIFT || event.key() == GLFW.GLFW_KEY_RIGHT_SHIFT) {
-            snappingEnabled = false;
-            edgeAlignmentSnapMap.clear();
-            alignmentLinesToRender.clear();
+            horizontalSnap.reset();
+            verticalSnap.reset();
         }
 
         return false;
-    }
-
-    @Override
-    public boolean keyReleased(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_LEFT_SHIFT || event.key() == GLFW.GLFW_KEY_RIGHT_SHIFT) {
-            snappingEnabled = true;
-        }
-        return super.keyReleased(event);
     }
 
     public Overlay getSelectedOverlay() {
@@ -648,82 +633,50 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     // Pair<dragX, dragY>
     private Pair<Double, Double> calculateDragAfterSnapping(double dragX, double dragY) {
-        if (!snappingEnabled) {
+        if (KeyboardUtils.isShiftDown()) {
+            horizontalSnap.reset();
+            verticalSnap.reset();
             return new Pair<>(dragX, dragY);
         }
 
-        dragX += snapOffsetX;
-        dragY += snapOffsetY;
-        double originalDragX = dragX;
-        double originalDragY = dragY;
-
-        List<Edge> edgesToSnapTo =
-                switch (this.selectionMode) {
+        List<Edge> edges =
+                switch (selectionMode) {
                     case NONE -> List.of();
-                    case CORNER -> this.selectedCorner.getEdges();
-                    case EDGE -> List.of(this.selectedEdge);
+                    case CORNER -> selectedCorner.getEdges();
+                    case EDGE -> List.of(selectedEdge);
                     case AREA -> Arrays.stream(Edge.values()).toList();
                 };
 
-        double originalX = dragX;
-        double originalY = dragY;
-
-        for (Edge edge : edgesToSnapTo.stream()
-                .filter(edge -> !edgeAlignmentSnapMap.containsKey(edge))
-                .toList()) {
-            Pair<Vec2, Vec2> edgePos = edge.getEdgePos(selectedOverlay);
-
-            if (edge.isVerticalLine()) {
-                for (Float alignmentLinePosition : verticalAlignmentLinePositions) {
-                    if (Math.abs(this.width * alignmentLinePosition - edgePos.a().x) < ALIGNMENT_SNAP_DISTANCE) {
-                        edgeAlignmentSnapMap.put(edge, ALIGNMENT_SNAP_HARDNESS);
-                        alignmentLinesToRender.put(edge, alignmentLinePosition);
-                        break;
-                    }
-                }
-            } else {
-                for (Float alignmentLinePosition : horizontalAlignmentLinePositions) {
-                    if (Math.abs(this.height * alignmentLinePosition - edgePos.a().y) < ALIGNMENT_SNAP_DISTANCE) {
-                        edgeAlignmentSnapMap.put(edge, ALIGNMENT_SNAP_HARDNESS);
-                        alignmentLinesToRender.put(edge, alignmentLinePosition);
-                        break;
-                    }
-                }
+        double minX = Double.NEGATIVE_INFINITY;
+        double maxX = Double.POSITIVE_INFINITY;
+        double minY = Double.NEGATIVE_INFINITY;
+        double maxY = Double.POSITIVE_INFINITY;
+        if (selectionMode != SelectionMode.AREA) {
+            if (edges.contains(Edge.LEFT)) {
+                maxX = selectedOverlay.getWidth() - OverlaySize.MINIMUM_WIDTH;
+            }
+            if (edges.contains(Edge.RIGHT)) {
+                minX = OverlaySize.MINIMUM_WIDTH - selectedOverlay.getWidth();
+            }
+            if (edges.contains(Edge.TOP)) {
+                maxY = selectedOverlay.getHeight() - OverlaySize.MINIMUM_HEIGHT;
+            }
+            if (edges.contains(Edge.BOTTOM)) {
+                minY = OverlaySize.MINIMUM_HEIGHT - selectedOverlay.getHeight();
             }
         }
 
-        Set<Edge> toBeRemoved = new HashSet<>();
-
-        for (Map.Entry<Edge, Double> entry : edgeAlignmentSnapMap.entrySet()) {
-            double newSnapValue;
-            if (entry.getKey().isVerticalLine()) {
-                newSnapValue = entry.getValue() - Math.abs(dragX);
-                dragX = 0;
-            } else {
-                newSnapValue = entry.getValue() - Math.abs(dragY);
-                dragY = 0;
-            }
-
-            if (newSnapValue <= 0) {
-                toBeRemoved.add(entry.getKey());
-                if (entry.getKey().isVerticalLine()) {
-                    dragX = originalX;
-                } else {
-                    dragY = originalY;
-                }
-            } else {
-                edgeAlignmentSnapMap.put(entry.getKey(), newSnapValue);
-            }
-        }
-
-        for (Edge edge : toBeRemoved) {
-            edgeAlignmentSnapMap.remove(edge);
-            alignmentLinesToRender.remove(edge);
-        }
-
-        snapOffsetX = originalDragX - dragX;
-        snapOffsetY = originalDragY - dragY;
-        return new Pair<>(dragX, dragY);
+        double[] horizontalEdges = edges.stream()
+                .filter(Edge::isVerticalLine)
+                .mapToDouble(edge -> edge.getEdgePos(selectedOverlay).a().x)
+                .toArray();
+        double[] verticalEdges = edges.stream()
+                .filter(edge -> !edge.isVerticalLine())
+                .mapToDouble(edge -> edge.getEdgePos(selectedOverlay).a().y)
+                .toArray();
+        return new Pair<>(
+                horizontalSnap.snap(dragX, horizontalEdges, verticalAlignmentLinePositions, minX, maxX),
+                verticalSnap.snap(dragY, verticalEdges, horizontalAlignmentLinePositions, minY, maxY));
     }
 
     private void renderSections(GuiGraphics guiGraphics) {
@@ -734,26 +687,13 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void renderAlignmentLines(GuiGraphics guiGraphics) {
-        for (Map.Entry<Edge, Float> entry : alignmentLinesToRender.entrySet()) {
-            if (entry.getKey().isVerticalLine()) {
-                RenderUtils.drawLine(
-                        guiGraphics,
-                        CommonColors.ORANGE,
-                        this.width * entry.getValue(),
-                        0,
-                        this.width * entry.getValue(),
-                        this.height,
-                        1);
-            } else {
-                RenderUtils.drawLine(
-                        guiGraphics,
-                        CommonColors.ORANGE,
-                        0,
-                        this.height * entry.getValue(),
-                        this.width,
-                        this.height * entry.getValue(),
-                        1);
-            }
+        Float x = horizontalSnap.getTarget();
+        if (x != null) {
+            RenderUtils.drawLine(guiGraphics, CommonColors.ORANGE, x, 0, x, this.height, 1);
+        }
+        Float y = verticalSnap.getTarget();
+        if (y != null) {
+            RenderUtils.drawLine(guiGraphics, CommonColors.ORANGE, 0, y, this.width, y, 1);
         }
     }
 
@@ -763,13 +703,22 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         verticalAlignmentLinePositions.add(0f);
         horizontalAlignmentLinePositions.add(0f);
-        verticalAlignmentLinePositions.add(1f);
-        horizontalAlignmentLinePositions.add(1f);
+        verticalAlignmentLinePositions.add((float) this.width);
+        horizontalAlignmentLinePositions.add((float) this.height);
+
+        // Use the same rounded coordinates as the visible thirds grid.
+        for (SectionCoordinates section : Managers.Overlay.getSections()) {
+            verticalAlignmentLinePositions.add((float) section.x1());
+            verticalAlignmentLinePositions.add((float) section.x2());
+            horizontalAlignmentLinePositions.add((float) section.y1());
+            horizontalAlignmentLinePositions.add((float) section.y2());
+        }
 
         for (int i = 2; i <= ALIGNMENT_LINES_MAX_SECTIONS_PER_AXIS; i++) {
+            if (i == 3) continue;
             for (int j = 1; j < i; j++) {
-                verticalAlignmentLinePositions.add((float) j / i);
-                horizontalAlignmentLinePositions.add((float) j / i);
+                verticalAlignmentLinePositions.add((float) this.width * j / i);
+                horizontalAlignmentLinePositions.add((float) this.height * j / i);
             }
         }
 
@@ -782,9 +731,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 Pair<Vec2, Vec2> edgePos = edge.getEdgePos(overlay);
 
                 if (edge.isVerticalLine()) {
-                    verticalAlignmentLinePositions.add(edgePos.a().x / this.width);
+                    verticalAlignmentLinePositions.add(edgePos.a().x);
                 } else {
-                    horizontalAlignmentLinePositions.add(edgePos.a().y / this.height);
+                    horizontalAlignmentLinePositions.add(edgePos.a().y);
                 }
             }
         }
@@ -869,6 +818,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void resetSelection() {
+        horizontalSnap.reset();
+        verticalSnap.reset();
         selectionMode = SelectionMode.NONE;
         selectedCorner = null;
         selectedEdge = null;
