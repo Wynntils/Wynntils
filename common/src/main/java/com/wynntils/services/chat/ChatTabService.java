@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.multiplayer.chat.GuiMessage;
+import net.minecraft.client.multiplayer.chat.GuiMessageSource;
 import net.minecraft.client.multiplayer.chat.GuiMessageTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MessageSignature;
@@ -160,7 +161,7 @@ public final class ChatTabService extends Service {
 
             recipientTabs.forEach(tab -> {
                 Optional<ChatComponent> chatComponent = Services.ChatTab.getChatComponent(tab);
-                chatComponent.ifPresent(value -> value.addMessage(component));
+                chatComponent.ifPresent(value -> value.addClientSystemMessage(component));
             });
         });
 
@@ -200,9 +201,9 @@ public final class ChatTabService extends Service {
                 .forEach(chatTabData -> chatTabData.getChatComponent().clearMessages(clearSentMsgHistory));
     }
 
-    void addMessage(Component component, MessageSignature headerSignature, GuiMessageTag tag) {
+    void addMessage(Component component, MessageSignature headerSignature, GuiMessageSource source, GuiMessageTag tag) {
         try {
-            vanillaChatComponent.addMessage(component, headerSignature, tag);
+            vanillaChatComponent.addMessage(component, headerSignature, source, tag);
 
             StyledText styledText = StyledText.fromComponent(component);
             RecipientType recipientType = Handlers.Chat.getRecipientType(styledText);
@@ -210,7 +211,7 @@ public final class ChatTabService extends Service {
             List<ChatTab> recipientTabs = getRecipientTabs(recipientType, styledText);
             recipientTabs.forEach(tab -> {
                 Optional<ChatComponent> chatComponent = getChatComponent(tab);
-                chatComponent.ifPresent(value -> value.addMessage(component));
+                chatComponent.ifPresent(value -> value.addClientSystemMessage(component));
                 markAsNewMessages(tab);
             });
         } catch (Throwable t) {
@@ -222,15 +223,15 @@ public final class ChatTabService extends Service {
         MutableComponent warning = Component.literal(
                         "<< WARNING: A chat message was lost due to a crash in a mod other than Wynntils. See log for details. >>")
                 .withStyle(ChatFormatting.RED);
-        vanillaChatComponent.addMessage(warning);
+        vanillaChatComponent.addClientSystemMessage(warning);
         Optional<ChatComponent> chatComponent = Services.ChatTab.getChatComponent(focusedTab);
-        chatComponent.ifPresent(value -> value.addMessage(component));
+        chatComponent.ifPresent(value -> value.addClientSystemMessage(component));
 
         // We have seen many issues with badly written mods that inject into addMessage, and
         // throws exceptions. Instead of considering it a Wynntils crash, dump it to the log and
         // ignore it. We can't resend the message to the chat, since that could cause an infinite loop,
         // but the log should be fine.
-        WynntilsMod.warn("Another mod has caused an exception in ChatComponent.addMessage()");
+        WynntilsMod.warn("Another mod has caused an exception in ChatComponent.addClientSystemMessage()");
         WynntilsMod.warn("The message that could not be displayed is:"
                 + StyledText.fromComponent(component).getString());
         WynntilsMod.warn("This is not a Wynntils bug. Here is the exception that we caught.", t);

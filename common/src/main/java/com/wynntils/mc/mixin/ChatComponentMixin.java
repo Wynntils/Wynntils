@@ -39,7 +39,7 @@ public abstract class ChatComponentMixin {
     }
 
     @WrapOperation(
-            method = "addMessageToDisplayQueue(Lnet/minecraft/client/GuiMessage;)V",
+            method = "addMessageToDisplayQueue(Lnet/minecraft/client/multiplayer/chat/GuiMessage;)V",
             at = @At(value = "INVOKE", target = "Ljava/util/List;addFirst(Ljava/lang/Object;)V"))
     private void addMessageToDisplayQueue(
             List<GuiMessage.Line> instance,

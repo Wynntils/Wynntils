@@ -26,13 +26,13 @@ public abstract class ChatComponentTextMixin {
     @Unique
     private GuiMessage.Line currentLine;
 
-    @Inject(method = "accept(Lnet/minecraft/client/GuiMessage$Line;IF)V", at = @At("HEAD"))
+    @Inject(method = "accept(Lnet/minecraft/client/multiplayer/chat/GuiMessage$Line;IF)V", at = @At("HEAD"))
     private void captureLine(GuiMessage.Line line, int ix, float fx, CallbackInfo ci) {
         this.currentLine = line;
     }
 
     @WrapOperation(
-            method = "accept(Lnet/minecraft/client/GuiMessage$Line;IF)V",
+            method = "accept(Lnet/minecraft/client/multiplayer/chat/GuiMessage$Line;IF)V",
             at =
                     @At(
                             value = "INVOKE",

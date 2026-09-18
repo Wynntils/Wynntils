@@ -7,6 +7,7 @@ package com.wynntils.mc.mixin;
 import com.wynntils.mc.extension.GuiMessageExtension;
 import java.time.LocalDateTime;
 import net.minecraft.client.multiplayer.chat.GuiMessage;
+import net.minecraft.client.multiplayer.chat.GuiMessageSource;
 import net.minecraft.client.multiplayer.chat.GuiMessageTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MessageSignature;
@@ -23,7 +24,12 @@ public abstract class GuiMessageMixin implements GuiMessageExtension {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(
-            int addedTime, Component content, MessageSignature signature, GuiMessageTag tag, CallbackInfo ci) {
+            int addedTime,
+            Component content,
+            MessageSignature signature,
+            GuiMessageSource source,
+            GuiMessageTag tag,
+            CallbackInfo ci) {
         createdAt = LocalDateTime.now();
     }
 
