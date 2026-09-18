@@ -1375,7 +1375,7 @@ public final class RenderUtils {
                 entityState.nameTagAttachment.x,
                 entityState.nameTagAttachment.y + 0.35f + customOffset,
                 entityState.nameTagAttachment.z);
-        poseStack.mulPose(cameraState.orientation);
+        poseStack.rotate(cameraState.orientation);
         poseStack.scale(0.025f, -0.025f, 0.025f);
 
         float halfWidth = width / 2f;

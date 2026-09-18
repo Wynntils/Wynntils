@@ -101,7 +101,7 @@ public final class LootrunRenderer {
             Position position = note.position();
             poseStack.pushPose();
             poseStack.translate(position.x(), position.y() + 2, position.z());
-            poseStack.mulPose(McUtils.mc().gameRenderer.getMainCamera().rotation());
+            poseStack.rotate(McUtils.mc().gameRenderer.getMainCamera().rotation());
             poseStack.scale(0.025f, -0.025f, 0.025f);
             List<FormattedCharSequence> lines = font.split(note.component(), 200);
             int offsetY = -(font.lineHeight * lines.size()) / 2;

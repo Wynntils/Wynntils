@@ -34,7 +34,7 @@ public class CustomBeaconRenderer extends BeaconRenderer {
         float scroll = height < 0 ? animationTime : -animationTime;
         float texVOff = Mth.frac(scroll * 0.2F - Mth.floor(scroll * 0.1F));
         poseStack.pushPose();
-        poseStack.mulPose(Axis.YP.rotationDegrees(animationTime * 2.25F - 45.0F));
+        poseStack.rotate(Axis.YP.rotationDegrees(animationTime * 2.25F - 45.0F));
         float wsx = -solidBeamRadius;
         float esz = -solidBeamRadius;
         float vv2 = -1.0F + texVOff;
