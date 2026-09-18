@@ -114,31 +114,16 @@ public abstract class MultiPlayerGameModeMixin {
 
     @Inject(
             method =
-                    "interactAt(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/EntityHitResult;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void interactAt(
-            Player player,
-            Entity target,
-            EntityHitResult ray,
-            InteractionHand hand,
-            CallbackInfoReturnable<InteractionResult> cir) {
-        PlayerInteractEvent.InteractAt event = new PlayerInteractEvent.InteractAt(player, hand, target, ray);
-        MixinHelper.post(event);
-        if (event.isCanceled()) {
-            cir.setReturnValue(InteractionResult.FAIL);
-            cir.cancel();
-        }
-    }
-
-    @Inject(
-            method =
-                    "interact(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;",
+                    "interact(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/EntityHitResult;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;",
             at = @At("HEAD"),
             cancellable = true)
     private void interact(
-            Player player, Entity target, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-        PlayerInteractEvent.Interact event = new PlayerInteractEvent.Interact(player, hand, target);
+            Player player,
+            Entity entity,
+            EntityHitResult hit,
+            InteractionHand hand,
+            CallbackInfoReturnable<InteractionResult> cir) {
+        PlayerInteractEvent.Interact event = new PlayerInteractEvent.Interact(player, hand, entity);
         MixinHelper.post(event);
         if (event.isCanceled()) {
             cir.setReturnValue(InteractionResult.FAIL);

@@ -67,11 +67,11 @@ public class AutoAttackFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onInteract(PlayerInteractEvent.InteractAt event) {
+    public void onInteract(PlayerInteractEvent.Interact event) {
         if (Models.Character.getClassType() == ClassType.ARCHER && spellInputs == 0) return;
 
-        if (event.getEntityHitResult() != null) {
-            EntityType<?> entityType = event.getEntityHitResult().getEntity().getType();
+        if (event.getTarget() != null) {
+            EntityType<?> entityType = event.getTarget().getType();
             if (entityType == EntityTypes.INTERACTION) return;
         }
 

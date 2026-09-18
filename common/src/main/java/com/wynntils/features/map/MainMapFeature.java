@@ -163,10 +163,12 @@ public class MainMapFeature extends Feature implements ExternalConfigurationScre
     }
 
     @SubscribeEvent
-    public void onRightClick(PlayerInteractEvent.InteractAt event) {
+    public void onRightClick(PlayerInteractEvent.Interact event) {
         if (!autoWaypointChests.get()) return;
 
-        handleEntity(event.getEntityHitResult().getEntity());
+        if (event.getTarget() == null) return;
+
+        handleEntity(event.getTarget());
     }
 
     @SubscribeEvent

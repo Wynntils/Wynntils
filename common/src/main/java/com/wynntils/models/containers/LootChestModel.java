@@ -105,8 +105,8 @@ public final class LootChestModel extends Model {
     }
 
     @SubscribeEvent
-    public void onRightClick(PlayerInteractEvent.InteractAt event) {
-        Entity entity = event.getEntityHitResult().getEntity();
+    public void onRightClick(PlayerInteractEvent.Interact event) {
+        Entity entity = event.getTarget();
         if (entity != null && entity.getType() == EntityTypes.SLIME) {
             // We don't actually know if this is a chest, but it's a good enough guess.
             lastChestPos = entity.blockPosition();
