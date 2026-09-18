@@ -7,42 +7,36 @@ package com.wynntils.models.elements.type;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.Locale;
-import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 public enum Powder {
-    EARTH(Element.EARTH, Items.DYE.lime(), Items.DYE.green(), ChatFormatting.DARK_GREEN, ChatFormatting.GREEN, "Quake"),
+    EARTH(Element.EARTH, Items.DYE.lime(), Items.DYE.green(), TextColor.DARK_GREEN, TextColor.GREEN, "Quake"),
     THUNDER(
             Element.THUNDER,
             Items.DYE.yellow(),
             Items.DYE.orange(),
-            ChatFormatting.YELLOW,
-            ChatFormatting.GOLD,
+            TextColor.YELLOW,
+            TextColor.GOLD,
             "Chain Lightning"),
-    WATER(
-            Element.WATER,
-            Items.DYE.lightBlue(),
-            Items.DYE.cyan(),
-            ChatFormatting.AQUA,
-            ChatFormatting.DARK_AQUA,
-            "Curse"),
-    FIRE(Element.FIRE, Items.DYE.pink(), Items.DYE.red(), ChatFormatting.RED, ChatFormatting.DARK_RED, "Courage"),
-    AIR(Element.AIR, Items.DYE.gray(), Items.DYE.lightGray(), ChatFormatting.WHITE, ChatFormatting.GRAY, "Wind Prison");
+    WATER(Element.WATER, Items.DYE.lightBlue(), Items.DYE.cyan(), TextColor.AQUA, TextColor.DARK_AQUA, "Curse"),
+    FIRE(Element.FIRE, Items.DYE.pink(), Items.DYE.red(), TextColor.RED, TextColor.DARK_RED, "Courage"),
+    AIR(Element.AIR, Items.DYE.gray(), Items.DYE.lightGray(), TextColor.WHITE, TextColor.GRAY, "Wind Prison");
 
     private final Element element;
     private final Item lowTierItem;
     private final Item highTierItem;
-    private final ChatFormatting lightColor;
-    private final ChatFormatting darkColor;
+    private final TextColor lightColor;
+    private final TextColor darkColor;
     private final String specialName;
 
     Powder(
             Element element,
             Item lowTierItem,
             Item highTierItem,
-            ChatFormatting lightColor,
-            ChatFormatting darkColor,
+            TextColor lightColor,
+            TextColor darkColor,
             String specialName) {
         this.element = element;
         this.lowTierItem = lowTierItem;
@@ -75,7 +69,7 @@ public enum Powder {
     }
 
     public CustomColor getColor() {
-        return CustomColor.fromInt(this.lightColor.getColor()).withAlpha(255);
+        return CustomColor.fromTextColor(this.lightColor).withAlpha(255);
     }
 
     public Item getLowTierItem() {
@@ -86,11 +80,11 @@ public enum Powder {
         return highTierItem;
     }
 
-    public ChatFormatting getLightColor() {
+    public TextColor getLightColor() {
         return lightColor;
     }
 
-    public ChatFormatting getDarkColor() {
+    public TextColor getDarkColor() {
         return darkColor;
     }
 

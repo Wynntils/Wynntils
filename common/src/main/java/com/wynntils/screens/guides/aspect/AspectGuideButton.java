@@ -64,7 +64,7 @@ public class AspectGuideButton extends GuideButton {
 
     @Override
     protected CustomColor getColor() {
-        return CustomColor.fromChatFormatting(
-                aspectItemStack.getAspectInfo().gearTier().getChatFormatting());
+        return CustomColor.fromTextColor(
+                aspectItemStack.getAspectInfo().gearTier().getTextColor());
     }
 }

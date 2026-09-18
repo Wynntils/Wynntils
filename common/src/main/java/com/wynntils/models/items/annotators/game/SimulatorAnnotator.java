@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
@@ -11,7 +11,6 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.SimulatorItem;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 
 public class SimulatorAnnotator implements GameItemAnnotator {
@@ -22,8 +21,7 @@ public class SimulatorAnnotator implements GameItemAnnotator {
         Matcher matcher = name.getMatcher(SIMULATOR_PATTERN);
         if (!matcher.matches()) return null;
 
-        char colorChar = matcher.group(1).charAt(0);
-        GearTier gearTier = GearTier.fromChatFormatting(ChatFormatting.getByCode(colorChar));
+        GearTier gearTier = GearTier.fromStyledText(name);
 
         if (gearTier == null) return null;
 

@@ -18,13 +18,14 @@ import com.wynntils.models.guild.label.GuildSeasonLeaderboardLabelInfo;
 import com.wynntils.models.guild.profile.GuildProfile;
 import com.wynntils.models.guild.type.GuildLeaderboardInfo;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.colors.ColorChatFormatting;
+import com.wynntils.utils.colors.CustomColor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class ExtendedSeasonLeaderboardFeature extends Feature {
@@ -37,7 +38,7 @@ public class ExtendedSeasonLeaderboardFeature extends Feature {
     private final Config<Boolean> highlightOwnGuild = new Config<>(true);
 
     @Persisted
-    private final Config<ColorChatFormatting> guildHighlightColor = new Config<>(ColorChatFormatting.GREEN);
+    private final Config<CustomColor> guildHighlightColor = new Config<>(CustomColor.fromTextColor(TextColor.GREEN));
 
     public ExtendedSeasonLeaderboardFeature() {
         super(new ProfileDefault.Builder()
@@ -127,10 +128,10 @@ public class ExtendedSeasonLeaderboardFeature extends Feature {
             Optional<GuildProfile> guildProfile = Models.Guild.getGuildProfile(leaderboardPos.guildName());
             String prefix = "[" + guildProfile.map(GuildProfile::prefix).orElse("???") + "]";
 
-            ChatFormatting guildColor = ChatFormatting.AQUA;
+            CustomColor guildColor = CustomColor.fromTextColor(TextColor.AQUA);
 
             if (highlightOwnGuild.get() && leaderboardPos.guildName().equals(Models.Guild.getGuildName())) {
-                guildColor = guildHighlightColor.get().getChatFormatting();
+                guildColor = guildHighlightColor.get();
             }
 
             String scoreString;
@@ -160,7 +161,7 @@ public class ExtendedSeasonLeaderboardFeature extends Feature {
 
             // §<color><place>§7 - §b<guild name> [<guild tag>]§d (<formatted score> SR) §a(+<score diff to next>)
             newLabel.append(Component.literal(leaderboardPos.guildName() + " " + prefix)
-                            .withStyle(guildColor))
+                            .withColor(guildColor.asInt()))
                     .append(Component.literal(" " + scoreString).withStyle(ChatFormatting.LIGHT_PURPLE))
                     .append(Component.literal(ratingDifference).withStyle(ChatFormatting.GREEN))
                     .append("\n");

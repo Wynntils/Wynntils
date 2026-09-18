@@ -286,7 +286,7 @@ public class ChatItemFeature extends Feature {
         Style style = Style.EMPTY.applyFormat(ChatFormatting.UNDERLINE).withColor(ChatFormatting.GOLD);
 
         if (wynnItem instanceof GearTierItemProperty tierItemProperty) {
-            style = style.withColor(tierItemProperty.getGearTier().getChatFormatting());
+            style = style.withColor(tierItemProperty.getGearTier().getTextColor());
         }
 
         ItemStackTemplate itemStackTemplate = new ItemStackTemplate(Items.STONE);

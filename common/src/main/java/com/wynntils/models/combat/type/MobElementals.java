@@ -6,11 +6,11 @@ package com.wynntils.models.combat.type;
 
 import com.wynntils.models.elements.type.Element;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
 
 public record MobElementals(List<Element> weaknesses, List<Element> damages, List<Element> defenses) {
@@ -33,12 +33,12 @@ public record MobElementals(List<Element> weaknesses, List<Element> damages, Lis
             text.append(Component.literal(element.getSymbol())
                     .withStyle(Style.EMPTY
                             .withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("common")))
-                            .withColor(element.getColorCode())));
+                            .withColor(element.getTextColor())));
         }
 
         // The label uses the colour of the last element in the group, can't use the same style as the symbol uses
         // a different font
-        ChatFormatting lastColor = elements.getLast().getColorCode();
+        TextColor lastColor = elements.getLast().getTextColor();
         text.append(Component.literal(label + (addSpace ? " " : "")).withStyle(Style.EMPTY.withColor(lastColor)));
     }
 }

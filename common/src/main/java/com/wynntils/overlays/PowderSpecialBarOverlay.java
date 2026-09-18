@@ -109,7 +109,7 @@ public class PowderSpecialBarOverlay extends Overlay {
         } else {
             color = powderSpecialType.getColor();
             text = StyledText.fromComponent(Component.empty()
-                    .withStyle(powderSpecialType.getLightColor())
+                    .withColor(powderSpecialType.getLightColor())
                     .append(Component.literal(String.valueOf(powderSpecialType.getSymbol()))
                             .withStyle(Style.EMPTY.withFont(
                                     new FontDescription.Resource(Identifier.withDefaultNamespace("common")))))

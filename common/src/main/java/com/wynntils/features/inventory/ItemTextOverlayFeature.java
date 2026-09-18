@@ -558,7 +558,7 @@ public class ItemTextOverlayFeature extends Feature {
                     .withStyle(Style.EMPTY.withFont(
                             new FontDescription.Resource(Identifier.withDefaultNamespace("common")))));
             TextRenderSetting style = TextRenderSetting.DEFAULT
-                    .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
+                    .withCustomColor(CustomColor.fromTextColor(skill.getTextColor()))
                     .withTextShadow(skillIconShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
@@ -585,7 +585,7 @@ public class ItemTextOverlayFeature extends Feature {
                     .withStyle(Style.EMPTY.withFont(
                             new FontDescription.Resource(Identifier.withDefaultNamespace("common")))));
             TextRenderSetting style = TextRenderSetting.DEFAULT
-                    .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
+                    .withCustomColor(CustomColor.fromTextColor(skill.getTextColor()))
                     .withTextShadow(skillIconShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);

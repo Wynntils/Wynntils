@@ -160,7 +160,7 @@ public class GearTierFilterWidget extends GuideFilterWidget {
                             getX() + 18,
                             getY() + 8,
                             getWidth() - 20,
-                            CustomColor.fromChatFormatting(gearTier.getChatFormatting()),
+                            CustomColor.fromTextColor(gearTier.getTextColor()),
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);

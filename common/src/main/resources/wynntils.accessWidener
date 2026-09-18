@@ -47,6 +47,7 @@ accessible field net/minecraft/client/renderer/RenderPipelines GLOBALS_SNIPPET L
 accessible field net/minecraft/client/renderer/item/ItemStackRenderState displayContext Lnet/minecraft/world/item/ItemDisplayContext;
 accessible field net/minecraft/client/renderer/texture/AbstractTexture sampler Lcom/mojang/renderpearl/api/textures/GpuSampler;
 accessible field net/minecraft/network/chat/Style font Lnet/minecraft/network/chat/FontDescription;
+accessible field net/minecraft/network/chat/TextColor NAMED_COLORS Ljava/util/Map;
 accessible field net/minecraft/network/protocol/game/ClientboundBossEventPacket$AddOperation name Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/network/protocol/game/ClientboundBossEventPacket$UpdateNameOperation name Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/world/entity/Display$ItemDisplay DATA_ITEM_STACK_ID Lnet/minecraft/network/syncher/EntityDataAccessor;

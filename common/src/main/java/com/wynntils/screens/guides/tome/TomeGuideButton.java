@@ -45,6 +45,6 @@ public class TomeGuideButton extends GuideButton {
 
     @Override
     protected CustomColor getColor() {
-        return CustomColor.fromChatFormatting(tomeItemStack.getTomeInfo().tier().getChatFormatting());
+        return CustomColor.fromTextColor(tomeItemStack.getTomeInfo().tier().getTextColor());
     }
 }

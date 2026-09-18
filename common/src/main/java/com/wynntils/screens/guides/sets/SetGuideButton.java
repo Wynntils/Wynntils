@@ -140,7 +140,7 @@ public class SetGuideButton extends GuideButton {
             List<Pair<Component, Component>> linePairs = new ArrayList<>();
             MutableComponent setTitle = Component.empty()
                     .append(BannerBoxFont.buildMessage(
-                            "set", CustomColor.fromChatFormatting(setTier.getChatFormatting()), CommonColors.BLACK, ""))
+                            "set", CustomColor.fromTextColor(setTier.getTextColor()), CommonColors.BLACK, ""))
                     .append(BannerBoxFont.buildMessage(
                             setInfo.cleanName(), setTier.getSecondaryColor(), CommonColors.BLACK, ""));
 

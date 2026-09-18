@@ -53,64 +53,89 @@ public final class GuidePowderItemStack extends GuideItemStack {
     private List<Component> generateLore() {
         List<Component> itemLore = new ArrayList<>();
 
+        String elementName = element.getName();
+        Powder opposingElement = Models.Element.getOpposingElement(element);
+
         Component name = Component.empty()
                 .withStyle(Style.EMPTY.withColor(element.getLightColor()))
                 .append(Component.literal(String.valueOf(element.getSymbol()))
                         .withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT)))
-                .append(Component.literal(" " + element.getName() + " Powder " + MathUtils.toRoman(tier)));
+                .append(Component.literal(" " + elementName + " Powder " + MathUtils.toRoman(tier)));
         itemLore.add(name);
 
-        String tierStringBuilder = element.getDarkColor()
-                + "■".repeat(Math.max(0, tier))
-                + ChatFormatting.DARK_GRAY
-                + "■".repeat(Math.max(0, 6 - tier));
+        Component tierBar = Component.empty()
+                .append(Component.literal("■".repeat(Math.max(0, tier))).withColor(element.getDarkColor()))
+                .append(Component.literal("■".repeat(Math.max(0, 6 - tier))).withStyle(ChatFormatting.DARK_GRAY));
 
-        String elementName = element.getName();
-        Powder opposingElement = Models.Element.getOpposingElement(element);
+        Component tierLore = Component.empty()
+                .append(Component.literal("Tier " + tier + " [").withStyle(ChatFormatting.GRAY))
+                .append(tierBar)
+                .append(Component.literal("]").withStyle(ChatFormatting.GRAY));
+        itemLore.add(tierLore);
 
-        itemLore.add(Component.literal("Tier " + tier + " [")
-                .withStyle(ChatFormatting.GRAY)
-                .append(Component.literal(tierStringBuilder))
-                .append(Component.literal("]").withStyle(ChatFormatting.GRAY)));
         itemLore.add(Component.empty());
-        itemLore.add(Component.literal("Effect on Weapons:").withStyle(element.getDarkColor()));
-        itemLore.add(Component.empty()
-                .append(Component.literal(element.getDarkColor() + "- " + ChatFormatting.GRAY + "+"
-                        + powderTierInfo.min() + "-" + powderTierInfo.max() + " " + element.getLightColor()))
+        itemLore.add(Component.literal("Effect on Weapons:").withColor(element.getDarkColor()));
+
+        Component weaponDamage = Component.empty()
+                .append(Component.literal("- ").withColor(element.getDarkColor()))
+                .append(Component.literal("+" + powderTierInfo.min() + "-" + powderTierInfo.max() + " ")
+                        .withStyle(ChatFormatting.GRAY))
                 .append(Component.literal(String.valueOf(element.getSymbol()))
                         .withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT).withColor(element.getLightColor())))
-                .append(Component.literal(
-                        element.getLightColor() + " " + elementName + " " + ChatFormatting.GRAY + "Damage")));
-        itemLore.add(Component.empty()
-                .append(Component.literal(element.getDarkColor() + "- " + ChatFormatting.GRAY + "+"
-                        + powderTierInfo.convertedFromNeutral() + "% " + ChatFormatting.GOLD + "✣ Neutral"
-                        + ChatFormatting.GRAY + " to " + element.getLightColor()))
+                .append(Component.literal(" " + elementName + " ").withColor(element.getLightColor()))
+                .append(Component.literal("Damage").withStyle(ChatFormatting.GRAY));
+        itemLore.add(weaponDamage);
+
+        Component neutralConversion = Component.empty()
+                .append(Component.literal("- ").withColor(element.getDarkColor()))
+                .append(Component.literal("+" + powderTierInfo.convertedFromNeutral() + "% ")
+                        .withStyle(ChatFormatting.GRAY))
+                .append(Component.literal("✣ Neutral").withStyle(ChatFormatting.GOLD))
+                .append(Component.literal(" to ").withStyle(ChatFormatting.GRAY))
                 .append(Component.literal(String.valueOf(element.getSymbol()))
                         .withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT).withColor(element.getLightColor())))
-                .append(Component.literal(element.getLightColor() + " " + elementName)));
+                .append(Component.literal(" " + elementName).withColor(element.getLightColor()));
+        itemLore.add(neutralConversion);
+
         itemLore.add(Component.empty());
-        itemLore.add(Component.literal("Effect on Armour:").withStyle(element.getDarkColor()));
-        itemLore.add(Component.literal(
-                element.getDarkColor() + "- " + ChatFormatting.GRAY + "+" + powderTierInfo.health() + " Health"));
-        itemLore.add(Component.empty()
-                .append(Component.literal(element.getDarkColor() + "- " + ChatFormatting.GRAY + "+"
-                        + powderTierInfo.addedDefence() + " " + element.getLightColor()))
+        itemLore.add(Component.literal("Effect on Armour:").withColor(element.getDarkColor()));
+
+        Component health = Component.empty()
+                .append(Component.literal("- ").withColor(element.getDarkColor()))
+                .append(Component.literal("+" + powderTierInfo.health() + " Health")
+                        .withStyle(ChatFormatting.GRAY));
+        itemLore.add(health);
+
+        Component addedDefence = Component.empty()
+                .append(Component.literal("- ").withColor(element.getDarkColor()))
+                .append(Component.literal("+" + powderTierInfo.addedDefence() + " ")
+                        .withStyle(ChatFormatting.GRAY))
                 .append(Component.literal(String.valueOf(element.getSymbol()))
                         .withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT).withColor(element.getLightColor())))
-                .append(Component.literal(
-                        element.getLightColor() + " " + elementName + " " + ChatFormatting.GRAY + "Defence")));
-        itemLore.add(Component.empty()
-                .append(Component.literal(element.getDarkColor() + "- " + ChatFormatting.GRAY + "-"
-                        + powderTierInfo.removedDefence() + " " + opposingElement.getLightColor()))
+                .append(Component.literal(" " + elementName + " ").withColor(element.getLightColor()))
+                .append(Component.literal("Defence").withStyle(ChatFormatting.GRAY));
+        itemLore.add(addedDefence);
+
+        String opposingElementName =
+                StringUtils.capitalizeFirst(opposingElement.name().toLowerCase(Locale.ROOT));
+
+        Component removedDefence = Component.empty()
+                .append(Component.literal("- ").withColor(element.getDarkColor()))
+                .append(Component.literal("-" + powderTierInfo.removedDefence() + " ")
+                        .withStyle(ChatFormatting.GRAY))
                 .append(Component.literal(String.valueOf(opposingElement.getSymbol()))
                         .withStyle(Style.EMPTY
                                 .withFont(CommonFonts.COMMON_FONT)
                                 .withColor(opposingElement.getLightColor())))
-                .append(Component.literal(opposingElement.getLightColor() + " "
-                        + StringUtils.capitalizeFirst(opposingElement.name().toLowerCase(Locale.ROOT)) + " "
-                        + ChatFormatting.GRAY + "Defence")));
-        itemLore.add(
-                Component.literal(element.getDarkColor() + "Ingredient Effectiveness: " + ChatFormatting.GRAY + "50%"));
+                .append(Component.literal(" " + opposingElementName + " ").withColor(opposingElement.getLightColor()))
+                .append(Component.literal("Defence").withStyle(ChatFormatting.GRAY));
+        itemLore.add(removedDefence);
+
+        Component ingredientEffectiveness = Component.empty()
+                .append(Component.literal("Ingredient Effectiveness: ").withColor(element.getDarkColor()))
+                .append(Component.literal("50%").withStyle(ChatFormatting.GRAY));
+        itemLore.add(ingredientEffectiveness);
+
         itemLore.add(Component.empty());
         itemLore.add(Component.literal(
                         "Hold this and right-click on a piece of equipment to socket it or use it as an ingredient when crafting. Powders are refunded when removed.")

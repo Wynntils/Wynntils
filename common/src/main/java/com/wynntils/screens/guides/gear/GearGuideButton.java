@@ -53,6 +53,6 @@ public class GearGuideButton extends GuideButton {
 
     @Override
     protected CustomColor getColor() {
-        return CustomColor.fromChatFormatting(gearItemStack.getGearInfo().tier().getChatFormatting());
+        return CustomColor.fromTextColor(gearItemStack.getGearInfo().tier().getTextColor());
     }
 }

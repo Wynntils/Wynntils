@@ -46,6 +46,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 
 public final class CraftedTooltipBuilder extends TooltipBuilder {
@@ -141,10 +142,10 @@ public final class CraftedTooltipBuilder extends TooltipBuilder {
     }
 
     @Override
-    protected ChatFormatting getSourceColor() {
+    protected TextColor getSourceColor() {
         return craftedItem instanceof GearTierItemProperty tierItem
-                ? tierItem.getGearTier().getChatFormatting()
-                : ChatFormatting.WHITE;
+                ? tierItem.getGearTier().getTextColor()
+                : TextColor.WHITE;
     }
 
     @Override

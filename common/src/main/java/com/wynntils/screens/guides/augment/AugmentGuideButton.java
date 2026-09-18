@@ -43,6 +43,6 @@ public class AugmentGuideButton extends GuideButton {
 
     @Override
     protected CustomColor getColor() {
-        return CustomColor.fromChatFormatting(augmentItemStack.getGearTier().getChatFormatting());
+        return CustomColor.fromTextColor(augmentItemStack.getGearTier().getTextColor());
     }
 }
