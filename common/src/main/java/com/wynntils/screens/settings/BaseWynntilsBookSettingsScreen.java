@@ -500,9 +500,9 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (McUtils.mc().level == null) {
-            renderPanorama(guiGraphics, partialTick);
+            extractPanorama(guiGraphics, partialTick);
         }
 
         // Don't render the blurred background
