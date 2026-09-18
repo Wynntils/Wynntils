@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.aspects;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
@@ -16,6 +17,8 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.KeyInputEvent;
+import com.wynntils.mc.event.KeyMappingEvent;
 import com.wynntils.models.aspects.type.AspectInfo;
 import com.wynntils.models.aspects.type.SavableAspectSet;
 import com.wynntils.models.character.type.ClassType;
@@ -35,6 +38,10 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Options;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -43,6 +50,8 @@ public final class AspectModel extends Model {
     private static final Pattern NO_ASPECT_PATTERN = Pattern.compile("§8§l(?:Empty|Locked) Aspect Slot");
     private final AspectInfoRegistry aspectInfoRegistry = new AspectInfoRegistry();
     public static final AspectContainerQueries ASPECT_CONTAINER_QUERIES = new AspectContainerQueries();
+
+    private boolean disableMovementKeys = false;
 
     @Persisted
     private final Storage<Map<String, List<String>>> equippedAspects = new Storage<>(new TreeMap<>());
@@ -169,6 +178,23 @@ public final class AspectModel extends Model {
         }
     }
 
+    private void releaseKeys() {
+        Options options = McUtils.options();
+
+        for (KeyMapping keyMapping : options.keyMappings) {
+            KeyMapping.set(keyMapping.key, false);
+        }
+    }
+
+    @SubscribeEvent
+    public void onKey(KeyMappingEvent event) {
+        if (!disableMovementKeys) return;
+
+        if (event.getKey().getValue() != InputConstants.KEY_ESCAPE) {
+            event.setCanceled(true);
+        }
+    }
+
     public Stream<AspectInfo> getAllAspectInfos() {
         return aspectInfoRegistry.getAllAspectInfos();
     }
@@ -234,10 +260,20 @@ public final class AspectModel extends Model {
         ownedAspects.store(new TreeMap<>());
         ownedAspects.touched();
 
-        McUtils.player().closeContainer();
+        disableMovementKeys = true;
+        releaseKeys();
 
         Managers.TickScheduler.scheduleNextTick(
-                () -> ASPECT_CONTAINER_QUERIES.scanAspectPages(onStatus, onError, onComplete));
+                () -> ASPECT_CONTAINER_QUERIES.scanAspectPages(
+                        onStatus,
+                        (error) -> {
+                        onError.accept(error);
+                        disableMovementKeys = false;
+                        },
+                        (competed) -> {
+                            onComplete.accept(competed);
+                            disableMovementKeys = false;
+                        }));
     }
 
     public void saveCurrentAspectLoadout(

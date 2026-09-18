@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.abilitytree;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
@@ -16,6 +17,8 @@ import com.wynntils.core.text.type.StyleType;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.KeyInputEvent;
+import com.wynntils.mc.event.KeyMappingEvent;
 import com.wynntils.models.abilitytree.parser.AbilityTreeParser;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
@@ -47,6 +50,9 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Options;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -58,6 +64,8 @@ public final class AbilityTreeModel extends Model {
     public static final AbilityTreeParser ABILITY_TREE_PARSER = new AbilityTreeParser();
     public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
     private final AbilityTreeInfoRegistry abilityTreeInfoRegistry = new AbilityTreeInfoRegistry();
+
+    private boolean disableMovementKeys = false;
 
     @Persisted
     private final Storage<Map<String, List<String>>> unlockedAbilities = new Storage<>(new TreeMap<>());
@@ -250,6 +258,24 @@ public final class AbilityTreeModel extends Model {
         unlockedAbilities.touched();
     }
 
+    private void releaseKeys() {
+        Options options = McUtils.options();
+
+        for (KeyMapping keyMapping : options.keyMappings) {
+            KeyMapping.set(keyMapping.key, false);
+        }
+    }
+
+    @SubscribeEvent
+    public void onKey(KeyMappingEvent event) {
+        if (!disableMovementKeys) return;
+
+        if (event.getKey().getValue() != InputConstants.KEY_ESCAPE) {
+            event.setCanceled(true);
+        }
+    }
+
+
     public List<String> getUnlockedAbilities() {
         return unlockedAbilities.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
     }
@@ -283,12 +309,16 @@ public final class AbilityTreeModel extends Model {
         unlockedAbilities.store(allEquippedAbilities);
         unlockedAbilities.touched();
 
-        McUtils.player().closeContainer();
+        disableMovementKeys = true;
+        releaseKeys();
 
         Managers.TickScheduler.scheduleNextTick(() -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.dumpAbilityTree(
                 abilityTreeInfo -> {}, // we don't need to do anything with this because the container event reads it.
                 onStatus,
-                onError,
+                (error) -> {
+                    disableMovementKeys = false;
+                    onError.accept(error);
+                },
                 (complete) -> {
                     String characterId = Models.Character.getId();
                     List<String> scanned = unlockedAbilities.get().getOrDefault(characterId, List.of());
@@ -301,6 +331,8 @@ public final class AbilityTreeModel extends Model {
                             WynntilsMod.warn("Duplicate ability names still present after " + attempt
                                     + " rescans while clearing/rescanning: " + scanned);
                             onError.accept("Failed to scan ability tree correctly, please try again.");
+
+                            disableMovementKeys = false;
                             return;
                         }
 
@@ -313,6 +345,7 @@ public final class AbilityTreeModel extends Model {
                         return;
                     }
 
+                    disableMovementKeys = false;
                     onComplete.accept("Ability tree rescanned successfully.");
                 }));
     }

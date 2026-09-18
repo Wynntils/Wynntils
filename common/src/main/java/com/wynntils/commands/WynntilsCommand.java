@@ -4,6 +4,7 @@
  */
 package com.wynntils.commands;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.WynntilsMod;
@@ -14,6 +15,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.screens.maps.GuildMapScreen;
@@ -38,6 +40,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -46,6 +49,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public class WynntilsCommand extends Command {
     private static final Pattern STATUS_HEADING = Pattern.compile("<h1 class='status-page__title'>(.*)</h1>");
@@ -434,8 +438,6 @@ public class WynntilsCommand extends Command {
     private int rescan(CommandContext<CommandSourceStack> context) {
         McUtils.sendWynntilsPrefixMessage(
                 Component.translatable("command.wynntils.rescan.startText").withColor(CommonColors.YELLOW.asInt()));
-
-        McUtils.player().closeContainer();
 
         // This should probably be changed to a function interface if more were to be added to it.
         Managers.TickScheduler.scheduleNextTick(() -> {
