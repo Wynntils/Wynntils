@@ -51,7 +51,7 @@ public class SuggestionPlayerWidget extends AbstractPlayerListEntryWidget {
                         TextShadow.NORMAL);
 
         if (Models.Party.getPartyMembers().contains(playerName)) return;
-        inviteButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        inviteButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

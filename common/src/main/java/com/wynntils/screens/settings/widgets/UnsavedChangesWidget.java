@@ -65,8 +65,8 @@ public class UnsavedChangesWidget extends AbstractWidget {
                         TextShadow.NORMAL,
                         1.25f);
 
-        yesButton.render(guiGraphics, mouseX, mouseY, partialTick);
-        noButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        yesButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        noButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

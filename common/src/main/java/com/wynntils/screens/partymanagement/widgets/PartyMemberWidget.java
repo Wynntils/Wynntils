@@ -98,17 +98,17 @@ public class PartyMemberWidget extends AbstractPlayerListEntryWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        moveUpButton.render(guiGraphics, mouseX, mouseY, partialTick);
-        moveDownButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        moveUpButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        moveDownButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         // only leader can promote/kick
         if (!Models.Party.isPartyLeader(McUtils.playerName())) return;
 
         if (Models.Party.isPartyLeader(playerName)) {
-            disbandButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            disbandButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         } else {
-            promoteButton.render(guiGraphics, mouseX, mouseY, partialTick);
-            kickButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            promoteButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            kickButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 

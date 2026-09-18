@@ -119,7 +119,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
         renderPageInfo(guiGraphics, getCurrentPage() + 1, getMaxPage() + 1);
 
         for (Renderable renderable : this.renderables) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 

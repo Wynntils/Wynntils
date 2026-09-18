@@ -229,7 +229,7 @@ public class ConfigProfileScreen extends WynntilsScreen {
             int newX = (int) (startX + (targetX - startX) * cardAnimationPercentage.getAnimation());
             widget.setX(newX);
 
-            widget.render(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 

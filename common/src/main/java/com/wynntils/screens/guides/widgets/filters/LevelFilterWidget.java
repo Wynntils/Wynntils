@@ -60,8 +60,8 @@ public class LevelFilterWidget extends GuideFilterWidget {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        minLevelSlider.render(guiGraphics, mouseX, mouseY, partialTick);
-        maxLevelSlider.render(guiGraphics, mouseX, mouseY, partialTick);
+        minLevelSlider.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        maxLevelSlider.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

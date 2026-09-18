@@ -522,7 +522,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
     private void renderIcons(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (IconButton iconButton : iconButtons) {
-            iconButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            iconButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 

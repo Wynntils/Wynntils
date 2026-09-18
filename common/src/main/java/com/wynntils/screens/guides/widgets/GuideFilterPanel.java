@@ -54,7 +54,7 @@ public class GuideFilterPanel extends AbstractWidget {
 
         RenderUtils.enableScissor(guiGraphics, getX(), getScrollAreaStartY() + 2, 135, getScrollAreaHeight());
         for (AbstractWidget filterWidget : filterWidgets) {
-            filterWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+            filterWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
         RenderUtils.disableScissor(guiGraphics);
 

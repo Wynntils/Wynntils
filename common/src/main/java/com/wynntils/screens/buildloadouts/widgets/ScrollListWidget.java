@@ -72,7 +72,7 @@ public abstract class ScrollListWidget extends AbstractWidget {
                 this.y + widgetHeightEdgePadding,
                 this.width,
                 this.height - widgetHeightEdgePadding * 2);
-        getWidgets().forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        getWidgets().forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
         RenderUtils.disableScissor(guiGraphics);
 
         renderScroll(guiGraphics);

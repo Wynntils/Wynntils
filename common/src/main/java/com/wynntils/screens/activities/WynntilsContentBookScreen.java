@@ -164,12 +164,12 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
 
         contentBookWidgets
                 .get(currentPage)
-                .forEach(renderable -> renderable.render(guiGraphics, mouseX, mouseY, partialTick));
+                .forEach(renderable -> renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
         contentBookActionWidgets
                 .values()
-                .forEach(renderable -> renderable.render(guiGraphics, mouseX, mouseY, partialTick));
+                .forEach(renderable -> renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
 
-        renderables.forEach(renderable -> renderable.render(guiGraphics, mouseX, mouseY, partialTick));
+        renderables.forEach(renderable -> renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
 
         if (!Models.CombatXp.getCombatLevel().isAtCap()) {
             FontRenderer.getInstance()
@@ -232,7 +232,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
                                 TextShadow.NORMAL,
                                 0.9f);
 
-                trackedRewards.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+                trackedRewards.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
             }
         } else {
             FontRenderer.getInstance()

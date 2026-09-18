@@ -47,8 +47,8 @@ public abstract class SingleNumericFilterWidget<T> extends GeneralFilterWidget {
     @Override
     protected void extractWidgetRenderState(
             GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        entryInput.render(guiGraphics, mouseX, mouseY, partialTick);
-        removeButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        entryInput.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        removeButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

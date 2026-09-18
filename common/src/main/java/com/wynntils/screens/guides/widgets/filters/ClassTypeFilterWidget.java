@@ -55,7 +55,7 @@ public class ClassTypeFilterWidget extends GuideFilterWidget {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        classTypeButtons.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        classTypeButtons.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
     }
 
     @Override

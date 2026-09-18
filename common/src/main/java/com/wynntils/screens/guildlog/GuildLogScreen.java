@@ -126,7 +126,7 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
 
         renderScroll(guiGraphics);
 
-        renderables.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        renderables.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
     }
 
     @Override
@@ -238,7 +238,7 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
 
     private void renderLogs(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.enableScissor(guiGraphics, offsetX + 108, offsetY + 16, Texture.LOG_ENTRY_MIDDLE.width(), 139);
-        logs.forEach(log -> log.render(guiGraphics, mouseX, mouseY, partialTick));
+        logs.forEach(log -> log.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
         RenderUtils.disableScissor(guiGraphics);
     }
 

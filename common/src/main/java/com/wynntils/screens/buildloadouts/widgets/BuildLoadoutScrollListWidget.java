@@ -99,9 +99,9 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
                 this.width + 10,
                 this.height + 10 + 1 + 15);
 
-        abilityTreeButton.render(guiGraphics, mouseX, mouseY, partialTick);
-        aspectsButton.render(guiGraphics, mouseX, mouseY, partialTick);
-        tomesButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        abilityTreeButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        aspectsButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        tomesButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }

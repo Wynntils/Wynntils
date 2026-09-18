@@ -129,7 +129,7 @@ public class OverlayButton extends WynntilsButton {
                         1.0f);
 
         if (editInput != null) {
-            editInput.render(guiGraphics, mouseX, mouseY, partialTick);
+            editInput.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         // Don't want to display tooltip when the tile is outside the mask from the screen

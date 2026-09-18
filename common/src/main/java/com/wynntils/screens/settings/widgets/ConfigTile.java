@@ -78,7 +78,7 @@ public class ConfigTile extends WynntilsButton {
 
     @Override
     public void renderContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        resetButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        resetButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         renderDisplayName(guiGraphics);
 
@@ -91,7 +91,7 @@ public class ConfigTile extends WynntilsButton {
                 this.getY() + this.height,
                 1);
 
-        configOptionElement.render(guiGraphics, mouseX, mouseY, partialTick);
+        configOptionElement.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

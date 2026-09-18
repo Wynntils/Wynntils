@@ -238,7 +238,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                 WIDGETS_PER_PAGE * widgetHeight);
 
         for (Renderable renderable : downloadWidgets) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.disableScissor(guiGraphics);

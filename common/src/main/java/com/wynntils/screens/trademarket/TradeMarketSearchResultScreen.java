@@ -164,7 +164,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         renderScrollButton(guiGraphics);
 
-        renderables.forEach(c -> c.render(guiGraphics, mouseX, mouseY, partialTick));
+        renderables.forEach(c -> c.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
 
         // Render item tooltip
         super.extractTooltip(guiGraphics, mouseX, mouseY);

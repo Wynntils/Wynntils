@@ -96,7 +96,7 @@ public class OverlayOrderingScreen extends WynntilsScreen {
         renderScroll(guiGraphics);
 
         RenderUtils.enableScissor(guiGraphics, offsetX + 9, offsetY + 15, 200, 181);
-        widgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        widgets.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
         RenderUtils.disableScissor(guiGraphics);
 
         int helpWidth = this.width / 2 - Texture.OVERLAY_ORDERING_BACKGROUND.width() / 2 - 10;

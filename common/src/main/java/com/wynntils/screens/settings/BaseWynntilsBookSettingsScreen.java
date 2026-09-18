@@ -360,7 +360,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
     @Override
     public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (displayWarning) {
-            unsavedChangesWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+            unsavedChangesWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
             return;
         }
 
@@ -1082,7 +1082,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
 
     private void renderTags(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (Renderable renderable : renderables) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 
@@ -1092,7 +1092,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
         hoveredConfigurable = null;
 
         for (WynntilsButton configurable : configurables) {
-            configurable.render(guiGraphics, mouseX, mouseY, partialTick);
+            configurable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
             if (configurable.isHovered() && configurable instanceof ConfigurableButton configurableButton) {
                 if (selectedConfigurable != null) continue;
@@ -1140,7 +1140,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
                 CONFIGS_PER_PAGE * 46);
 
         for (WynntilsButton config : configs) {
-            config.render(guiGraphics, mouseX, mouseY, partialTick);
+            config.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.disableScissor(guiGraphics);
@@ -1155,7 +1155,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
                 CONFIGS_PER_PAGE * 46);
 
         for (WynntilsButton config : configurableMap.get(hoveredConfigurable)) {
-            config.render(guiGraphics, mouseX, mouseY, partialTick);
+            config.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.disableScissor(guiGraphics);

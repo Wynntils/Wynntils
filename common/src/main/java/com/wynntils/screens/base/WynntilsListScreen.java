@@ -73,7 +73,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
             GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
         for (Renderable renderable : new ArrayList<>(this.renderables)) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
             if (renderable instanceof WynntilsButton button) {
                 if (button.isMouseOver(mouseX, mouseY)) {

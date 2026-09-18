@@ -89,8 +89,8 @@ public class OverlayOrderWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        downButton.render(guiGraphics, mouseX, mouseY, partialTick);
-        upButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        downButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        upButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         if (this.isHovered) {
             List<Component> tooltipToRender = TOOLTIP;

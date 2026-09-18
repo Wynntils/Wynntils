@@ -171,7 +171,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         if (!renderPreview) {
             RenderUtils.drawTexturedRect(guiGraphics, Texture.OVERLAY_SELECTION_GUI, offsetX, offsetY);
 
-            searchWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+            searchWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
             extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -250,8 +250,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 return;
             }
 
-            renderOverlaysCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
-            exitPreviewButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderOverlaysCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            exitPreviewButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
             RenderUtils.drawRectBorders(
                     guiGraphics,
@@ -967,13 +967,13 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     private void extractWidgetRenderStates(
             GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (HoverableTexturedButton optionsButton : optionButtons) {
-            optionsButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            optionsButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.enableScissor(guiGraphics, 6 + offsetX, 28 + offsetY, 122, MAX_OVERLAYS_PER_PAGE * 21 + 2);
 
         for (AbstractWidget widget : overlays) {
-            widget.render(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.disableScissor(guiGraphics);
@@ -981,7 +981,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         RenderUtils.enableScissor(guiGraphics, 148 + offsetX, 28 + offsetY, 188, CONFIGS_PER_PAGE * 43 - 2);
 
         for (AbstractWidget widget : configs) {
-            widget.render(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.disableScissor(guiGraphics);

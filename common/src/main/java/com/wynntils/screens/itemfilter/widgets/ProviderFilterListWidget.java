@@ -128,10 +128,10 @@ public class ProviderFilterListWidget extends AbstractWidget {
     protected void extractWidgetRenderState(
             GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (addStringFilterButton != null) {
-            addStringFilterButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            addStringFilterButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         } else if (addNumericFilterButton != null) {
-            addNumericFilterButton.render(guiGraphics, mouseX, mouseY, partialTick);
-            numericChoiceButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            addNumericFilterButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            numericChoiceButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         if (widgets.isEmpty()) {
@@ -155,7 +155,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
         RenderUtils.enableScissor(guiGraphics, getX(), getY() - 2, getWidth(), (int) (getScrollbarHeight() + 5));
 
         for (GeneralFilterWidget widget : widgets) {
-            widget.render(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.disableScissor(guiGraphics);

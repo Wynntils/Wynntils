@@ -148,7 +148,7 @@ public final class ColorPickerScreen extends WynntilsScreen {
 
         renderSelectedColor(guiGraphics, offsetX + 11, offsetY + 15);
 
-        this.renderables.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        this.renderables.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
     }
 
     public void setSaturation(float saturation) {

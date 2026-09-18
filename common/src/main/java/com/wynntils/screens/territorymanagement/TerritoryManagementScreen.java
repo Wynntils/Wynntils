@@ -556,13 +556,13 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
         // Render the render main area widgets
         for (AbstractWidget widget : renderAreaWidgets) {
-            widget.render(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.disableScissor(guiGraphics);
 
         // Render normal widgets
-        renderables.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        renderables.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
     }
 
     private void renderScrollButton(GuiGraphicsExtractor guiGraphics) {
@@ -622,11 +622,11 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                         TextShadow.OUTLINE);
 
         for (TerritoryQuickFilterWidget quickFilter : quickFilters) {
-            quickFilter.render(guiGraphics, mouseX, mouseY, partialTick);
+            quickFilter.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         for (TerritoryQuickSortWidget quickSort : quickSorts) {
-            quickSort.render(guiGraphics, mouseX, mouseY, partialTick);
+            quickSort.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         if (draggingScroll) {

@@ -475,7 +475,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         this.hovered = null;
 
         for (WynntilsMenuButton button : buttons.stream().flatMap(List::stream).toList()) {
-            button.render(guiGraphics, mouseX, mouseY, partialTick);
+            button.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
             if (button.isMouseOver(mouseX, mouseY)) {
                 this.hovered = button;

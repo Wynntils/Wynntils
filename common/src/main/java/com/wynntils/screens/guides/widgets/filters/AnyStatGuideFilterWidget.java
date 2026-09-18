@@ -48,7 +48,7 @@ public class AnyStatGuideFilterWidget<T extends ItemStatProvider<String>> extend
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        checkbox.render(guiGraphics, mouseX, mouseY, partialTick);
+        checkbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

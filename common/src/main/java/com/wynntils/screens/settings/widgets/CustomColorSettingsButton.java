@@ -33,7 +33,7 @@ public class CustomColorSettingsButton extends TextInputBoxSettingsWidget<Custom
     public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
-        colorPickerWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+        colorPickerWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

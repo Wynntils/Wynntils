@@ -54,7 +54,7 @@ public class AttackSpeedFilterWidget extends GuideFilterWidget {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        attackSpeedCheckboxes.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        attackSpeedCheckboxes.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
     }
 
     @Override

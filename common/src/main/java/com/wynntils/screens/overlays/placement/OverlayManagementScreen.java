@@ -270,11 +270,14 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         // Render widgets
         for (Renderable renderable : this.renderables) {
             if (positionPanel != null && positionPanel.getWidgets().contains(renderable)) continue;
-            renderable.render(guiGraphics, hoveringPanel ? -1 : mouseX, hoveringPanel ? -1 : mouseY, partialTick);
+            renderable.extractRenderState(
+                    guiGraphics, hoveringPanel ? -1 : mouseX, hoveringPanel ? -1 : mouseY, partialTick);
         }
         if (positionPanel != null) {
             positionPanel.render(guiGraphics);
-            positionPanel.getWidgets().forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+            positionPanel
+                    .getWidgets()
+                    .forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
         }
 
         if (helpPanel != null) {

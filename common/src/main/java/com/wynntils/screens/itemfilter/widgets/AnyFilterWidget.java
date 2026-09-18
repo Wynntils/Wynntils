@@ -50,7 +50,7 @@ public class AnyFilterWidget extends GeneralFilterWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        removeButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        removeButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

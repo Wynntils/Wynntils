@@ -178,7 +178,7 @@ public class WaypointManagerWidget extends AbstractWidget {
 
         // In selection mode we don't want the edit/delete/move buttons
         if (selectionMode) {
-            selectButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            selectButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
             // Border to show selected waypoints, orange when selected, white if not
             RenderUtils.drawRectBorders(
@@ -190,10 +190,10 @@ public class WaypointManagerWidget extends AbstractWidget {
                     getY() + height - 1,
                     1f);
         } else {
-            editButton.render(guiGraphics, mouseX, mouseY, partialTick);
-            deleteButton.render(guiGraphics, mouseX, mouseY, partialTick);
-            upButton.render(guiGraphics, mouseX, mouseY, partialTick);
-            downButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            editButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            deleteButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            upButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            downButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         if (this.isHovered) {

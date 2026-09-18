@@ -133,7 +133,7 @@ public final class CompatibilityWarningScreen extends WynntilsScreen {
                         TextShadow.NORMAL);
 
         for (Renderable renderable : this.renderables) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 

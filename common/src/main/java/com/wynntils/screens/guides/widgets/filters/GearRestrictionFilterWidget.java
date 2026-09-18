@@ -54,7 +54,7 @@ public class GearRestrictionFilterWidget extends GuideFilterWidget {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        restrictionCheckboxes.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        restrictionCheckboxes.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
     }
 
     @Override

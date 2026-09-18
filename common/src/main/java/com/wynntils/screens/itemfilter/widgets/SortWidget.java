@@ -93,7 +93,7 @@ public class SortWidget extends AbstractWidget {
                         1.0f);
 
         for (Button button : buttons) {
-            button.render(guiGraphics, mouseX, mouseY, partialTick);
+            button.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 

@@ -137,13 +137,13 @@ public class IntegerStatFilterWidget<T extends ItemStatProvider<?>> extends Guid
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        enabledCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
+        enabledCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         if (!enabledCheckbox.selected) return;
 
-        modeButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        modeButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         if (filterMode == FilterMode.CUSTOM) {
-            minSlider.render(guiGraphics, mouseX, mouseY, partialTick);
-            maxSlider.render(guiGraphics, mouseX, mouseY, partialTick);
+            minSlider.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            maxSlider.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 

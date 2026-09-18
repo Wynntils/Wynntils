@@ -347,7 +347,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
             renderLoadoutMenu(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        renderables.forEach(renderable -> renderable.render(guiGraphics, mouseX, mouseY, partialTick));
+        renderables.forEach(renderable -> renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
         renderTooltips(guiGraphics, mouseX, mouseY);
     }
 

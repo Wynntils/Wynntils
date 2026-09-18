@@ -69,7 +69,7 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        professionTypeButtons.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        professionTypeButtons.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
     }
 
     @Override

@@ -393,7 +393,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
                         TextShadow.NORMAL);
 
         for (Renderable renderable : renderables) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
             if (renderable instanceof WynntilsButton wynntilsButton) {
                 if (wynntilsButton.isMouseOver(mouseX, mouseY)) {
@@ -420,7 +420,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
             RenderUtils.enableScissor(guiGraphics, 6 + offsetX, 28 + offsetY, 122, MAX_PROVIDERS_PER_PAGE * 21 + 2);
 
             for (Renderable renderable : providerButtons) {
-                renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+                renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
             }
 
             RenderUtils.disableScissor(guiGraphics);
@@ -429,13 +429,13 @@ public final class ItemFilterScreen extends WynntilsScreen {
         RenderUtils.enableScissor(guiGraphics, 149 + offsetX, 28 + offsetY, 172, MAX_SORTS_PER_PAGE * 21 + 2);
 
         for (Renderable renderable : sortButtons) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.disableScissor(guiGraphics);
 
         for (Renderable renderable : presetButtons) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
             if (renderable instanceof WynntilsButton wynntilsButton) {
                 if (wynntilsButton.isMouseOver(mouseX, mouseY)) {

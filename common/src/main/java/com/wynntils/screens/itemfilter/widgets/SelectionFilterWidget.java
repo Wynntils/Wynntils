@@ -70,7 +70,7 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
                         TextShadow.NORMAL,
                         1.0f);
 
-        usedCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
+        usedCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

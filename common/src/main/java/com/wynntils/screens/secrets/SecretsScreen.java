@@ -198,7 +198,7 @@ public class SecretsScreen extends WynntilsScreen {
 
     private void renderSecrets(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.enableScissor(guiGraphics, offsetX + 9, offsetY + 8, 322, 134);
-        secretInputs.forEach(secretInput -> secretInput.render(guiGraphics, mouseX, mouseY, partialTick));
+        secretInputs.forEach(secretInput -> secretInput.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
         RenderUtils.disableScissor(guiGraphics);
     }
 

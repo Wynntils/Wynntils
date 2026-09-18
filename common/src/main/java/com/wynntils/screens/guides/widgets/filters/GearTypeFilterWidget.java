@@ -56,7 +56,7 @@ public class GearTypeFilterWidget extends GuideFilterWidget {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        gearTypeButtons.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        gearTypeButtons.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
     }
 
     @Override

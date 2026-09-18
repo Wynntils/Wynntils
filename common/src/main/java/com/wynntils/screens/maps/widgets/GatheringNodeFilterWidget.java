@@ -95,7 +95,7 @@ public class GatheringNodeFilterWidget extends AbstractWidget {
                         TextShadow.NORMAL);
 
         toggleButton.setMessage(getToggleText());
-        toggleButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        toggleButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         if (this.isHovered) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);

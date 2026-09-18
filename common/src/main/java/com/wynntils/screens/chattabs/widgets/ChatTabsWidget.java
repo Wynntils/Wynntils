@@ -90,9 +90,9 @@ public class ChatTabsWidget extends AbstractWidget {
 
         handleCursor(guiGraphics);
 
-        deleteButton.render(guiGraphics, mouseX, mouseY, partialTick);
-        moveUpButton.render(guiGraphics, mouseX, mouseY, partialTick);
-        moveDownButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        deleteButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        moveUpButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        moveDownButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
