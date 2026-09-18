@@ -40,6 +40,7 @@
     "ItemStackLayerRenderStateMixin",
     "ItemStackMixin",
     "ItemStackRenderStateMixin",
+    "ItemStackTemplateMixin",
     "KeyboardHandlerMixin",
     "LevelRendererMixin",
     "LivingEntityMixin",

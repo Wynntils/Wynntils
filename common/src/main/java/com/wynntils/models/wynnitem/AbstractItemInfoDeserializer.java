@@ -72,7 +72,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         GearRestrictions restrictions = parseRestrictions(json);
         ItemMaterial material = parseMaterial(json);
 
-        if (material == null || material.itemStack().isEmpty()) {
+        if (material == null || material.itemStackTemplate() == null) {
             WynntilsMod.warn("Failed to parse material for " + json.get("name").getAsString());
             material = ItemMaterial.fromItemId("minecraft:air", 0);
         }

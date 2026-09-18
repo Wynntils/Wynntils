@@ -21,7 +21,7 @@ public class GuideEmeraldUnitItemStack extends GuideEmeraldItemStack {
     private final EmeraldUnits unit;
 
     public GuideEmeraldUnitItemStack(EmeraldUnits unit) {
-        super(unit.getItemStack(), new EmeraldItem(() -> 1, unit), unit.name());
+        super(unit.getItemStackTemplate().create(), new EmeraldItem(() -> 1, unit), unit.name());
         this.unit = unit;
     }
 
