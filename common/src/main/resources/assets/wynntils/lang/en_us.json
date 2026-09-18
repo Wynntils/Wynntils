@@ -3616,6 +3616,7 @@
   "screens.wynntils.overlayManagement.applyTooltip": "Click here to apply changes to current overlay.",
   "screens.wynntils.overlayManagement.close": "Close",
   "screens.wynntils.overlayManagement.closeTooltip": "Click here to stop editing and reset changes.",
+  "screens.wynntils.overlayManagement.helpTooltip.scrollHint": "Scroll to read more",
   "screens.wynntils.overlayManagement.helpTooltip1": "Resize the overlay by dragging the edges or corners.",
   "screens.wynntils.overlayManagement.helpTooltip2": "Move it by dragging the center of the overlay.",
   "screens.wynntils.overlayManagement.helpTooltip3": "By holding shift, you can disable alignment lines.",

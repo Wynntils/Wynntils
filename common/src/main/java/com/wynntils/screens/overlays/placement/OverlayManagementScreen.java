@@ -66,20 +66,18 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private static final int MAX_CLICK_DISTANCE = 5;
     private static final int ANIMATION_LENGTH = 30;
 
-    private static final List<Component> HELP_TOOLTIP_LINES = ComponentUtils.wrapTooltips(
-            List.of(
-                    Component.translatable("screens.wynntils.overlayManagement.helpTooltip1"),
-                    Component.translatable("screens.wynntils.overlayManagement.helpTooltip2"),
-                    Component.translatable("screens.wynntils.overlayManagement.helpTooltip3"),
-                    Component.translatable("screens.wynntils.overlayManagement.helpTooltip4"),
-                    Component.translatable("screens.wynntils.overlayManagement.helpTooltip5"),
-                    Component.translatable("screens.wynntils.overlayManagement.screenSnapTooltip"),
-                    Component.translatable("screens.wynntils.overlayManagement.historyTooltip"),
-                    Component.translatable("screens.wynntils.overlayManagement.openSettingsTooltip"),
-                    Component.translatable("screens.wynntils.overlayManagement.positionPanel.hint"),
-                    Component.translatable("screens.wynntils.overlayManagement.helpTooltip6")
-                            .withStyle(ChatFormatting.RED)),
-            200);
+    private static final List<Component> HELP_TOOLTIP_LINES = List.of(
+            Component.translatable("screens.wynntils.overlayManagement.helpTooltip1"),
+            Component.translatable("screens.wynntils.overlayManagement.helpTooltip2"),
+            Component.translatable("screens.wynntils.overlayManagement.helpTooltip3"),
+            Component.translatable("screens.wynntils.overlayManagement.helpTooltip4"),
+            Component.translatable("screens.wynntils.overlayManagement.helpTooltip5"),
+            Component.translatable("screens.wynntils.overlayManagement.screenSnapTooltip"),
+            Component.translatable("screens.wynntils.overlayManagement.historyTooltip"),
+            Component.translatable("screens.wynntils.overlayManagement.openSettingsTooltip"),
+            Component.translatable("screens.wynntils.overlayManagement.positionPanel.hint"),
+            Component.translatable("screens.wynntils.overlayManagement.helpTooltip6")
+                    .withStyle(ChatFormatting.RED));
     private static final List<Component> LOCKED_TOOLTIP_LINES = ComponentUtils.wrapTooltips(
             List.of(
                     Component.translatable("screens.wynntils.overlayManagement.placementLockedTooltip"),
@@ -95,6 +93,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private final OverlaySnapAxis horizontalSnap = new OverlaySnapAxis();
     private final OverlaySnapAxis verticalSnap = new OverlaySnapAxis();
     private final OverlayEditHistory editHistory = new OverlayEditHistory();
+    private final OverlayHelpTooltip helpTooltip = new OverlayHelpTooltip();
     private Button undoButton;
     private Button redoButton;
 
@@ -112,6 +111,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private int animationLengthRemaining;
 
     private OverlayPositionPanel positionPanel;
+    private Overlay helpTooltipTarget;
     private boolean pendingPanelClick;
     private double clickX;
     private double clickY;
@@ -146,6 +146,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
+        resetHelpTooltip();
         resetSelection();
         closePositionPanel();
         setupButtons();
@@ -166,6 +167,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         // We want to render the tooltip for what will actually be interacted with
         boolean hoveringPanel = positionPanel != null && positionPanel.contains(mouseX, mouseY);
         boolean renderedTooltip = hoveringPanel;
+        Overlay hoveredHelpTooltip = null;
 
         // Buttons have the highest priority so check those first
         for (GuiEventListener listener : this.children) {
@@ -174,6 +176,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 break;
             }
         }
+
+        Overlay helpTooltipOverlay = getHoveredHelpTooltip(mouseX, mouseY);
 
         if (selectionMode == SelectionMode.EDGE) {
             guiGraphics.requestCursor(selectedEdge.isVerticalLine() ? CursorTypes.RESIZE_EW : CursorTypes.RESIZE_NS);
@@ -271,12 +275,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     && overlay == selectedOverlay
                     && hovering
                     && selectionMode == SelectionMode.NONE) {
-                guiGraphics.setTooltipForNextFrame(
-                        Lists.transform(
-                                overlay.isPlacementLocked() ? LOCKED_TOOLTIP_LINES : HELP_TOOLTIP_LINES,
-                                Component::getVisualOrderText),
-                        mouseX,
-                        mouseY);
+                if (overlay.isPlacementLocked()) {
+                    guiGraphics.setTooltipForNextFrame(
+                            Lists.transform(LOCKED_TOOLTIP_LINES, Component::getVisualOrderText), mouseX, mouseY);
+                } else if (overlay == helpTooltipOverlay) {
+                    hoveredHelpTooltip = overlay;
+                }
                 renderedTooltip = true;
             }
         }
@@ -289,6 +293,20 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         if (positionPanel != null) {
             positionPanel.render(guiGraphics);
             positionPanel.getWidgets().forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        }
+
+        if (hoveredHelpTooltip == null) {
+            resetHelpTooltip();
+        } else {
+            setHelpTooltipTarget(hoveredHelpTooltip);
+            helpTooltip.render(
+                    guiGraphics,
+                    HELP_TOOLTIP_LINES,
+                    FontRenderer.getInstance().getFont(),
+                    width,
+                    height,
+                    mouseX,
+                    mouseY);
         }
     }
 
@@ -311,6 +329,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     public void onClose() {
+        resetHelpTooltip();
         closePositionPanel();
         resetSelection();
         editHistory.clear();
@@ -476,6 +495,18 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        Overlay hoveredOverlay = getHoveredHelpTooltip(mouseX, mouseY);
+        if (hoveredOverlay == null) {
+            resetHelpTooltip();
+            return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
+        }
+
+        setHelpTooltipTarget(hoveredOverlay);
+        return helpTooltip.scroll(HELP_TOOLTIP_LINES, FontRenderer.getInstance().getFont(), width, height, deltaY);
     }
 
     @Override
@@ -1131,6 +1162,46 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         if (redoButton != null) {
             redoButton.active = editHistory.canRedo();
         }
+    }
+
+    private Overlay getHoveredHelpTooltip(double mouseX, double mouseY) {
+        if (positionPanel != null && positionPanel.contains(mouseX, mouseY)) return null;
+        for (GuiEventListener listener : this.children) {
+            if (listener.isMouseOver(mouseX, mouseY)) return null;
+        }
+        if (selectedOverlay == null || selectionMode != SelectionMode.NONE) {
+            return null;
+        }
+
+        Set<Overlay> overlays = Managers.Overlay.getOverlays().stream()
+                .filter(Managers.Overlay::isEnabled)
+                .collect(Collectors.toSet());
+        for (Overlay overlay : overlays) {
+            if (!renderAllOverlays && overlay != selectedOverlay) continue;
+            if (!isMouseHoveringOverlay(overlay, mouseX, mouseY)) continue;
+
+            if (overlay != selectedOverlay) {
+                if (!fixedSelection && showPreview) return null;
+                continue;
+            }
+
+            if (!overlay.isPlacementLocked()) return overlay;
+            return null;
+        }
+
+        return null;
+    }
+
+    private void setHelpTooltipTarget(Overlay overlay) {
+        if (helpTooltipTarget == overlay) return;
+
+        helpTooltipTarget = overlay;
+        helpTooltip.reset();
+    }
+
+    private void resetHelpTooltip() {
+        helpTooltipTarget = null;
+        helpTooltip.reset();
     }
 
     private void closePositionPanel() {
