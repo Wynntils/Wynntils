@@ -68,20 +68,19 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     private static final List<Component> HELP_TOOLTIP_LINES = List.of(
             Component.translatable("screens.wynntils.overlayManagement.helpTooltip1"),
-            Component.translatable("screens.wynntils.overlayManagement.helpTooltip2"),
-            Component.translatable("screens.wynntils.overlayManagement.helpTooltip3"),
-            Component.translatable("screens.wynntils.overlayManagement.helpTooltip4"),
-            Component.translatable("screens.wynntils.overlayManagement.helpTooltip5"),
-            Component.translatable("screens.wynntils.overlayManagement.screenSnapTooltip"),
-            Component.translatable("screens.wynntils.overlayManagement.historyTooltip"),
-            Component.translatable("screens.wynntils.overlayManagement.openSettingsTooltip"),
             Component.translatable("screens.wynntils.overlayManagement.positionPanel.hint"),
+            Component.translatable("screens.wynntils.overlayManagement.openSettingsTooltip"),
             Component.translatable("screens.wynntils.overlayManagement.lockPlacementTooltip"),
+            Component.translatable("screens.wynntils.overlayManagement.helpTooltip4"),
+            Component.translatable("screens.wynntils.overlayManagement.helpTooltip3"),
+            Component.translatable("screens.wynntils.overlayManagement.screenSnapTooltip"),
             Component.translatable("screens.wynntils.overlayManagement.helpTooltip6")
                     .withStyle(ChatFormatting.RED));
     private static final List<Component> LOCKED_TOOLTIP_LINES = ComponentUtils.wrapTooltips(
             List.of(
                     Component.translatable("screens.wynntils.overlayManagement.placementLockedTooltip"),
+                    Component.translatable("screens.wynntils.overlayManagement.unlockPlacementTooltip"),
+                    Component.translatable("screens.wynntils.overlayManagement.openPositionPanelTooltip"),
                     Component.translatable("screens.wynntils.overlayManagement.openSettingsTooltip")),
             200);
 
