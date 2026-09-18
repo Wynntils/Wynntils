@@ -15,7 +15,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.HashedStack;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -65,7 +65,7 @@ public final class ContainerUtils {
                 transactionId,
                 (short) clickedSlot,
                 (byte) mouseButton,
-                ClickType.PICKUP,
+                ContainerInput.PICKUP,
                 changedSlots,
                 hashedItems.get(clickedSlot)));
     }
@@ -84,7 +84,7 @@ public final class ContainerUtils {
                 transactionId,
                 (short) clickedSlot,
                 (byte) mouseButton,
-                ClickType.QUICK_MOVE,
+                ContainerInput.QUICK_MOVE,
                 changedSlots,
                 hashedItems.get(clickedSlot)));
     }
@@ -103,7 +103,7 @@ public final class ContainerUtils {
                 transactionId,
                 (short) clickedSlot,
                 (byte) buttonNum,
-                ClickType.SWAP,
+                ContainerInput.SWAP,
                 changedSlots,
                 hashedItems.get(clickedSlot)));
     }

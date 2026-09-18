@@ -41,7 +41,7 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -292,7 +292,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     }
 
     @Override
-    protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type) {
+    protected void slotClicked(Slot slot, int slotId, int mouseButton, ContainerInput containerInput) {
         // do nothing here, because we don't want the user interacting with slots at all
     }
 
