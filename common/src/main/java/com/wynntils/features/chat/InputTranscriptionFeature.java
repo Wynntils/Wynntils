@@ -95,7 +95,7 @@ public class InputTranscriptionFeature extends Feature {
 
     @SubscribeEvent
     public void onChatScreenKeyTyped(ChatScreenKeyTypedEvent event) {
-        if (event.getKeyCode() != InputConstants.KEY_BACKSPACE) return;
+        if (event.getInput() != InputConstants.KEY_BACKSPACE) return;
         if (!(McUtils.screen() instanceof ChatScreen chatScreen)) return;
         if (!transcriptionButtons.get()) return;
         if (!chatScreen.input.getHighlighted().isBlank()) return;
