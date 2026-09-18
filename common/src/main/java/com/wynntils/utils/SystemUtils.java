@@ -4,14 +4,12 @@
  */
 package com.wynntils.utils;
 
-import com.mojang.blaze3d.opengl.GlDevice;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.renderpearl.api.GpuFormat;
 import com.mojang.renderpearl.api.buffers.GpuBuffer;
 import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
 import com.mojang.renderpearl.api.commands.CommandEncoder;
-import com.mojang.renderpearl.api.device.GpuDevice;
 import com.mojang.renderpearl.api.textures.GpuTexture;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -32,12 +30,6 @@ public final class SystemUtils {
         String waylandDisplay = System.getenv("WAYLAND_DISPLAY");
         String sessionType = System.getenv("XDG_SESSION_TYPE");
         return (waylandDisplay != null && !waylandDisplay.isEmpty()) || ("wayland".equalsIgnoreCase(sessionType));
-    }
-
-    public static boolean usingOpenGL() {
-        GpuDevice gpuDevice = RenderSystem.getDevice();
-
-        return gpuDevice instanceof GlDevice;
     }
 
     public static void copyImageToClipboard(BufferedImage bi) {
