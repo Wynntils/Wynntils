@@ -12,16 +12,16 @@ final class OverlaySnapAxis {
     private static final double SNAP_DISTANCE = 1;
     private static final double RELEASE_DISTANCE = 6;
 
-    private Float target;
+    private SnapTarget target;
     private int snappedPoint;
     private double pointerOffset;
 
     public double snap(
             double drag,
             double[] edges,
-            Collection<Float> targets,
+            Collection<SnapTarget> targets,
             Double center,
-            Collection<Float> centerTargets,
+            Collection<SnapTarget> centerTargets,
             double minDrag,
             double maxDrag) {
         List<SnapPoint> points = new ArrayList<>();
@@ -34,7 +34,7 @@ final class OverlaySnapAxis {
 
         double proposedDrag = Math.clamp(drag + pointerOffset, minDrag, maxDrag);
         if (target != null) {
-            double snappedDrag = target - points.get(snappedPoint).position();
+            double snappedDrag = target.position() - points.get(snappedPoint).position();
             if (Math.abs(proposedDrag - snappedDrag) <= RELEASE_DISTANCE
                     && snappedDrag >= minDrag
                     && snappedDrag <= maxDrag) {
@@ -53,14 +53,13 @@ final class OverlaySnapAxis {
         double result = proposedDrag;
         for (int i = 0; i < points.size(); i++) {
             SnapPoint point = points.get(i);
-            for (float candidate : point.targets()) {
-                double snappedDrag = candidate - point.position();
+            for (SnapTarget candidate : point.targets()) {
+                double snappedDrag = candidate.position() - point.position();
                 if (snappedDrag < minDrag || snappedDrag > maxDrag) continue;
 
                 double distance = Math.abs(snappedDrag - proposedDrag);
                 if (distance <= SNAP_DISTANCE
-                        && (distance < nearestDistance
-                                || (distance == nearestDistance && (target == null || candidate < target)))) {
+                        && (distance < nearestDistance || (distance == nearestDistance && preferTarget(candidate)))) {
                     nearestDistance = distance;
                     result = snappedDrag;
                     target = candidate;
@@ -73,7 +72,7 @@ final class OverlaySnapAxis {
         return result;
     }
 
-    public Float getTarget() {
+    public SnapTarget getTarget() {
         return target;
     }
 
@@ -83,5 +82,13 @@ final class OverlaySnapAxis {
         pointerOffset = 0;
     }
 
-    private record SnapPoint(double position, Collection<Float> targets) {}
+    private boolean preferTarget(SnapTarget candidate) {
+        if (target == null || candidate.position() < target.position()) return true;
+        // Prefer the screen guide when an overlay lies on exactly the same line.
+        return candidate.position() == target.position() && candidate.screen() && !target.screen();
+    }
+
+    record SnapTarget(float position, boolean screen) {}
+
+    private record SnapPoint(double position, Collection<SnapTarget> targets) {}
 }

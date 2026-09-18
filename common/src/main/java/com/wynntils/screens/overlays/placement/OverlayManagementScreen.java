@@ -19,6 +19,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.overlays.ordering.OverlayOrderingScreen;
+import com.wynntils.screens.overlays.placement.OverlaySnapAxis.SnapTarget;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -72,10 +73,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                             .withStyle(ChatFormatting.RED)),
             200);
 
-    private final Set<Float> verticalAlignmentLinePositions = new HashSet<>();
-    private final Set<Float> horizontalAlignmentLinePositions = new HashSet<>();
-    private final Set<Float> verticalCenterLinePositions = new HashSet<>();
-    private final Set<Float> horizontalCenterLinePositions = new HashSet<>();
+    private final Set<SnapTarget> verticalAlignmentLinePositions = new HashSet<>();
+    private final Set<SnapTarget> horizontalAlignmentLinePositions = new HashSet<>();
+    private final Set<SnapTarget> verticalCenterLinePositions = new HashSet<>();
+    private final Set<SnapTarget> horizontalCenterLinePositions = new HashSet<>();
     private final OverlaySnapAxis horizontalSnap = new OverlaySnapAxis();
     private final OverlaySnapAxis verticalSnap = new OverlaySnapAxis();
 
@@ -707,13 +708,29 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void renderAlignmentLines(GuiGraphics guiGraphics) {
-        Float x = horizontalSnap.getTarget();
-        if (x != null) {
-            RenderUtils.drawLine(guiGraphics, CommonColors.ORANGE, x, 0, x, this.height, 1);
+        SnapTarget horizontalTarget = horizontalSnap.getTarget();
+        if (horizontalTarget != null) {
+            float x = horizontalTarget.position();
+            RenderUtils.drawLine(
+                    guiGraphics,
+                    horizontalTarget.screen() ? CommonColors.GREEN : CommonColors.ORANGE,
+                    x,
+                    0,
+                    x,
+                    this.height,
+                    1);
         }
-        Float y = verticalSnap.getTarget();
-        if (y != null) {
-            RenderUtils.drawLine(guiGraphics, CommonColors.ORANGE, 0, y, this.width, y, 1);
+        SnapTarget verticalTarget = verticalSnap.getTarget();
+        if (verticalTarget != null) {
+            float y = verticalTarget.position();
+            RenderUtils.drawLine(
+                    guiGraphics,
+                    verticalTarget.screen() ? CommonColors.GREEN : CommonColors.ORANGE,
+                    0,
+                    y,
+                    this.width,
+                    y,
+                    1);
         }
     }
 
@@ -722,27 +739,27 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         horizontalAlignmentLinePositions.clear();
         verticalCenterLinePositions.clear();
         horizontalCenterLinePositions.clear();
-        verticalCenterLinePositions.add(this.width / 2f);
-        horizontalCenterLinePositions.add(this.height / 2f);
+        verticalCenterLinePositions.add(new SnapTarget(this.width / 2f, true));
+        horizontalCenterLinePositions.add(new SnapTarget(this.height / 2f, true));
 
-        verticalAlignmentLinePositions.add(0f);
-        horizontalAlignmentLinePositions.add(0f);
-        verticalAlignmentLinePositions.add((float) this.width);
-        horizontalAlignmentLinePositions.add((float) this.height);
+        verticalAlignmentLinePositions.add(new SnapTarget(0f, true));
+        horizontalAlignmentLinePositions.add(new SnapTarget(0f, true));
+        verticalAlignmentLinePositions.add(new SnapTarget((float) this.width, true));
+        horizontalAlignmentLinePositions.add(new SnapTarget((float) this.height, true));
 
         // Use the same rounded coordinates as the visible thirds grid.
         for (SectionCoordinates section : Managers.Overlay.getSections()) {
-            verticalAlignmentLinePositions.add((float) section.x1());
-            verticalAlignmentLinePositions.add((float) section.x2());
-            horizontalAlignmentLinePositions.add((float) section.y1());
-            horizontalAlignmentLinePositions.add((float) section.y2());
+            verticalAlignmentLinePositions.add(new SnapTarget((float) section.x1(), true));
+            verticalAlignmentLinePositions.add(new SnapTarget((float) section.x2(), true));
+            horizontalAlignmentLinePositions.add(new SnapTarget((float) section.y1(), true));
+            horizontalAlignmentLinePositions.add(new SnapTarget((float) section.y2(), true));
         }
 
         for (int i = 2; i <= ALIGNMENT_LINES_MAX_SECTIONS_PER_AXIS; i++) {
             if (i == 3) continue;
             for (int j = 1; j < i; j++) {
-                verticalAlignmentLinePositions.add((float) this.width * j / i);
-                horizontalAlignmentLinePositions.add((float) this.height * j / i);
+                verticalAlignmentLinePositions.add(new SnapTarget((float) this.width * j / i, true));
+                horizontalAlignmentLinePositions.add(new SnapTarget((float) this.height * j / i, true));
             }
         }
 
@@ -751,16 +768,16 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 .toList()) {
             if (overlay == selectedOverlay) continue;
 
-            verticalCenterLinePositions.add(overlay.getRenderX() + overlay.getWidth() / 2f);
-            horizontalCenterLinePositions.add(overlay.getRenderY() + overlay.getHeight() / 2f);
+            verticalCenterLinePositions.add(new SnapTarget(overlay.getRenderX() + overlay.getWidth() / 2f, false));
+            horizontalCenterLinePositions.add(new SnapTarget(overlay.getRenderY() + overlay.getHeight() / 2f, false));
 
             for (Edge edge : Edge.values()) {
                 Pair<Vec2, Vec2> edgePos = edge.getEdgePos(overlay);
 
                 if (edge.isVerticalLine()) {
-                    verticalAlignmentLinePositions.add(edgePos.a().x);
+                    verticalAlignmentLinePositions.add(new SnapTarget(edgePos.a().x, false));
                 } else {
-                    horizontalAlignmentLinePositions.add(edgePos.a().y);
+                    horizontalAlignmentLinePositions.add(new SnapTarget(edgePos.a().y, false));
                 }
             }
         }
