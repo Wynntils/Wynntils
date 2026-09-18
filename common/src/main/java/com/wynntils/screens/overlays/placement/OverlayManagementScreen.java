@@ -20,6 +20,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.overlays.ordering.OverlayOrderingScreen;
 import com.wynntils.screens.overlays.placement.OverlaySnapAxis.SnapTarget;
+import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -73,6 +74,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     Component.translatable("screens.wynntils.overlayManagement.helpTooltip5"),
                     Component.translatable("screens.wynntils.overlayManagement.screenSnapTooltip"),
                     Component.translatable("screens.wynntils.overlayManagement.historyTooltip"),
+                    Component.translatable("screens.wynntils.overlayManagement.openSettingsTooltip"),
                     Component.translatable("screens.wynntils.overlayManagement.helpTooltip6")
                             .withStyle(ChatFormatting.RED)),
             200);
@@ -319,6 +321,15 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         }
 
         if (selectedOverlay == null) return false;
+
+        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (!isMouseHoveringOverlay(selectedOverlay, event.x(), event.y())) return false;
+
+            Managers.Config.saveConfig();
+            onClose();
+            McUtils.setScreen(OverlaySelectionScreen.create(selectedOverlay));
+            return true;
+        }
 
         Overlay selected = selectedOverlay;
 

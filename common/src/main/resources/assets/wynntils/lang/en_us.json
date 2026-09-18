@@ -3624,6 +3624,7 @@
   "screens.wynntils.overlayManagement.moveButtonsDownTooltip": "Move the option buttons to the bottom of the screen.",
   "screens.wynntils.overlayManagement.moveButtonsUpTooltip": "Move the option buttons to the top of the screen.",
   "screens.wynntils.overlayManagement.name": "Overlay Management Screen",
+  "screens.wynntils.overlayManagement.openSettingsTooltip": "Right-click to save changes and open this overlay's settings.",
   "screens.wynntils.overlayManagement.orderTooltip": "Click to customize the rendering order of overlays",
   "screens.wynntils.overlayManagement.redo": "Redo",
   "screens.wynntils.overlayManagement.redoTooltip": "Redo the last undone edit (Ctrl+Y or Ctrl+Shift+Z).",
