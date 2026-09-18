@@ -78,8 +78,8 @@ public final class FontRenderer {
         guiGraphics.pose().scale(textScale, textScale);
 
         switch (shadow) {
-            case NONE -> guiGraphics.drawString(font, text.getComponent(), 0, 0, customColor.asInt(), false);
-            case NORMAL -> guiGraphics.drawString(font, text.getComponent(), 0, 0, customColor.asInt(), true);
+            case NONE -> guiGraphics.text(font, text.getComponent(), 0, 0, customColor.asInt(), false);
+            case NORMAL -> guiGraphics.text(font, text.getComponent(), 0, 0, customColor.asInt(), true);
             case OUTLINE -> {
                 int shadowColor = SHADOW_COLOR.withAlpha(customColor.a()).asInt();
                 Component strippedComponent = text.iterate((part, changes) -> {
@@ -89,11 +89,11 @@ public final class FontRenderer {
                         })
                         .getComponent();
 
-                guiGraphics.drawString(font, strippedComponent, -1, 0, shadowColor, false);
-                guiGraphics.drawString(font, strippedComponent, 1, 0, shadowColor, false);
-                guiGraphics.drawString(font, strippedComponent, 0, -1, shadowColor, false);
-                guiGraphics.drawString(font, strippedComponent, 0, 1, shadowColor, false);
-                guiGraphics.drawString(font, text.getComponent(), 0, 0, customColor.asInt(), false);
+                guiGraphics.text(font, strippedComponent, -1, 0, shadowColor, false);
+                guiGraphics.text(font, strippedComponent, 1, 0, shadowColor, false);
+                guiGraphics.text(font, strippedComponent, 0, -1, shadowColor, false);
+                guiGraphics.text(font, strippedComponent, 0, 1, shadowColor, false);
+                guiGraphics.text(font, text.getComponent(), 0, 0, customColor.asInt(), false);
             }
         }
 

@@ -183,7 +183,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
     @Override
     protected void renderLabels(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(
+        guiGraphics.text(
                 FontRenderer.getInstance().getFont(),
                 this.currentState,
                 this.titleLabelX,
