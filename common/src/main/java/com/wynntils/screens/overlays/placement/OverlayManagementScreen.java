@@ -740,8 +740,6 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         horizontalAlignmentLinePositions.clear();
         verticalCenterLinePositions.clear();
         horizontalCenterLinePositions.clear();
-        verticalCenterLinePositions.add(new SnapTarget(this.width / 2f, true));
-        horizontalCenterLinePositions.add(new SnapTarget(this.height / 2f, true));
 
         verticalScreenGuides.clear();
         horizontalScreenGuides.clear();
@@ -765,6 +763,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         // Rendering and snapping consume the exact same screen coordinates.
         verticalScreenGuides.keySet().forEach(x -> verticalAlignmentLinePositions.add(new SnapTarget(x, true)));
         horizontalScreenGuides.keySet().forEach(y -> horizontalAlignmentLinePositions.add(new SnapTarget(y, true)));
+
+        // Moving overlays can align their centers to any screen guide as well as their edges.
+        verticalCenterLinePositions.addAll(verticalAlignmentLinePositions);
+        horizontalCenterLinePositions.addAll(horizontalAlignmentLinePositions);
 
         for (Overlay overlay : Managers.Overlay.getOverlays().stream()
                 .filter(Managers.Overlay::isEnabled)
