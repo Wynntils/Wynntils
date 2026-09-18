@@ -18,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.component.SwingAnimation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -80,8 +81,9 @@ public abstract class MinecraftMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;)V"))
-    private boolean onAttack(LocalPlayer localPlayer, InteractionHand hand) {
+                                    "Lnet/minecraft/client/player/LocalPlayer;swing(Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/component/SwingAnimation;Z)Z"))
+    private boolean onAttack(
+            LocalPlayer localPlayer, InteractionHand hand, SwingAnimation animation, boolean sendToSwingingEntity) {
         ArmSwingEvent event = new ArmSwingEvent(ArmSwingEvent.ArmSwingContext.ATTACK_OR_START_BREAKING_BLOCK, hand);
         MixinHelper.post(event);
 
