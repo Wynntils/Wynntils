@@ -1870,7 +1870,7 @@
   "feature.wynntils.wynncraftButton.serverType.description": "Which server should the button and auto-connect join?",
   "feature.wynntils.wynncraftButton.serverType.name": "Server Type",
   "feature.wynntils.wynncraftButton.update": "Wynntils update available!",
-  "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "Class Selection",
+  "feature.wynntils.wynncraftPauseScreen.characterSelectionButton.name": "Character Selection",
   "feature.wynntils.wynncraftPauseScreen.description": "Adds a custom pause screen.",
   "feature.wynntils.wynncraftPauseScreen.hubButton.name": "Back to Hub",
   "feature.wynntils.wynncraftPauseScreen.name": "Wynntils Pause Screen",
