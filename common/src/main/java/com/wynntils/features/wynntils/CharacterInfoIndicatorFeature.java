@@ -19,7 +19,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.core.text.fonts.WynnFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
-import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.abilitytree.type.AbilityPointProgression;
@@ -79,7 +79,7 @@ public class CharacterInfoIndicatorFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onCharacterInfoScreenOpened(ScreenOpenedEvent.Post e) {
+    public void onCharacterInfoScreenInit(ScreenInitEvent.Post e) {
         if (!(e.getScreen() instanceof ContainerScreen screen)) return;
         if (!(Models.Container.getCurrentContainer() instanceof CharacterInfoContainer)) return;
 

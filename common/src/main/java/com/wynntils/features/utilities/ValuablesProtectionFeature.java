@@ -16,6 +16,7 @@ import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.TickEvent;
@@ -127,6 +128,18 @@ public class ValuablesProtectionFeature extends Feature {
     public void onSetSlot(SetSlotEvent.Post e) {
         if (!(McUtils.screen() instanceof ContainerScreen cs)) return;
 
+        updateWarnings(cs);
+    }
+
+    @SubscribeEvent
+    public void onScreenInit(ScreenInitEvent.Post event) {
+        if (event.isFirstInit()) return;
+        if (!(event.getScreen() instanceof ContainerScreen cs)) return;
+
+        updateWarnings(cs);
+    }
+
+    private void updateWarnings(ContainerScreen cs) {
         Container currentContainer = Models.Container.getCurrentContainer();
         if (currentContainer == null) return;
 
