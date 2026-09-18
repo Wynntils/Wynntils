@@ -484,8 +484,8 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     private void handleUpdateAdvancementsPacket(ClientboundUpdateAdvancementsPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        MixinHelper.post(new AdvancementUpdateEvent(
-                packet.shouldReset(), packet.getAdded(), packet.getRemoved(), packet.getProgress()));
+        MixinHelper.post(
+                new AdvancementUpdateEvent(packet.shouldReset(), packet.added(), packet.removed(), packet.progress()));
     }
 
     @Inject(
