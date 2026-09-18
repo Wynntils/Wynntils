@@ -71,6 +71,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     Component.translatable("screens.wynntils.overlayManagement.helpTooltip3"),
                     Component.translatable("screens.wynntils.overlayManagement.helpTooltip4"),
                     Component.translatable("screens.wynntils.overlayManagement.helpTooltip5"),
+                    Component.translatable("screens.wynntils.overlayManagement.screenSnapTooltip"),
                     Component.translatable("screens.wynntils.overlayManagement.helpTooltip6")
                             .withStyle(ChatFormatting.RED)),
             200);
@@ -504,6 +505,11 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             verticalSnap.reset();
         }
 
+        if (event.key() == GLFW.GLFW_KEY_LEFT_CONTROL || event.key() == GLFW.GLFW_KEY_RIGHT_CONTROL) {
+            horizontalSnap.restrictToScreenGuides();
+            verticalSnap.restrictToScreenGuides();
+        }
+
         return false;
     }
 
@@ -680,6 +686,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 .filter(edge -> !edge.isVerticalLine())
                 .mapToDouble(edge -> edge.getEdgePos(selectedOverlay).a().y)
                 .toArray();
+        boolean screenOnly = KeyboardUtils.isControlDown();
         return new Pair<>(
                 horizontalSnap.snap(
                         dragX,
@@ -689,6 +696,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                                 ? (double) (selectedOverlay.getRenderX() + selectedOverlay.getWidth() / 2f)
                                 : null,
                         verticalCenterLinePositions,
+                        screenOnly,
                         minX,
                         maxX),
                 verticalSnap.snap(
@@ -699,6 +707,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                                 ? (double) (selectedOverlay.getRenderY() + selectedOverlay.getHeight() / 2f)
                                 : null,
                         horizontalCenterLinePositions,
+                        screenOnly,
                         minY,
                         maxY));
     }

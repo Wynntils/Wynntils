@@ -3624,6 +3624,7 @@
   "screens.wynntils.overlayManagement.moveButtonsUpTooltip": "Move the option buttons to the top of the screen.",
   "screens.wynntils.overlayManagement.name": "Overlay Management Screen",
   "screens.wynntils.overlayManagement.orderTooltip": "Click to customize the rendering order of overlays",
+  "screens.wynntils.overlayManagement.screenSnapTooltip": "Hold Ctrl while dragging to snap only to screen guides. Shift disables all snapping.",
   "screens.wynntils.overlayManagement.showOthers": "Show other overlays",
   "screens.wynntils.overlayManagement.showOthersTooltip": "Show overlays other than the currently selected?",
   "screens.wynntils.overlayManagement.showPreview": "Show preview",

@@ -22,8 +22,13 @@ final class OverlaySnapAxis {
             Collection<SnapTarget> targets,
             Double center,
             Collection<SnapTarget> centerTargets,
+            boolean screenOnly,
             double minDrag,
             double maxDrag) {
+        if (screenOnly) {
+            restrictToScreenGuides();
+        }
+
         List<SnapPoint> points = new ArrayList<>();
         for (double edge : edges) {
             points.add(new SnapPoint(edge, targets));
@@ -54,6 +59,7 @@ final class OverlaySnapAxis {
         for (int i = 0; i < points.size(); i++) {
             SnapPoint point = points.get(i);
             for (SnapTarget candidate : point.targets()) {
+                if (screenOnly && !candidate.screen()) continue;
                 double snappedDrag = candidate.position() - point.position();
                 if (snappedDrag < minDrag || snappedDrag > maxDrag) continue;
 
@@ -74,6 +80,12 @@ final class OverlaySnapAxis {
 
     public SnapTarget getTarget() {
         return target;
+    }
+
+    public void restrictToScreenGuides() {
+        if (target != null && !target.screen()) {
+            reset();
+        }
     }
 
     public void reset() {
