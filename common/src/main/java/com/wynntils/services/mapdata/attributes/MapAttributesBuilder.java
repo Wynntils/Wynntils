@@ -16,7 +16,6 @@ import com.wynntils.services.mapdata.attributes.type.MapPathAttributes;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 import java.lang.reflect.Field;
-import java.util.List;
 
 public class MapAttributesBuilder {
     private Integer priority;
@@ -31,8 +30,8 @@ public class MapAttributesBuilder {
     private CustomColor iconColor;
     private Boolean hasMarker;
     private MapMarkerOptionsImpl markerOptions;
-    private List<CustomColor> fillColors;
-    private List<CustomColor> borderColors;
+    private CustomColor fillColor;
+    private CustomColor borderColor;
     private Float borderWidth;
 
     public MapAttributesBuilder setPriority(Integer priority) {
@@ -95,23 +94,13 @@ public class MapAttributesBuilder {
         return this;
     }
 
-    public MapAttributesBuilder setFillColors(List<CustomColor> fillColors) {
-        this.fillColors = fillColors;
-        return this;
-    }
-
     public MapAttributesBuilder setFillColor(CustomColor fillColor) {
-        this.fillColors = List.of(fillColor);
-        return this;
-    }
-
-    public MapAttributesBuilder setBorderColors(List<CustomColor> borderColors) {
-        this.borderColors = borderColors;
+        this.fillColor = fillColor;
         return this;
     }
 
     public MapAttributesBuilder setBorderColor(CustomColor borderColor) {
-        this.borderColors = List.of(borderColor);
+        this.borderColor = borderColor;
         return this;
     }
 
@@ -187,8 +176,8 @@ public class MapAttributesBuilder {
                     labelVisibility,
                     labelColor,
                     labelShadow,
-                    fillColors,
-                    borderColors,
+                    fillColor,
+                    borderColor,
                     borderWidth);
         }
     }
