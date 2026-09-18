@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.lootrunpaths.widgets;
 
+import com.mojang.blaze3d.Blaze3D;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -28,7 +29,6 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Util;
 
 public class LootrunPathButton extends WynntilsButton {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
@@ -85,7 +85,7 @@ public class LootrunPathButton extends WynntilsButton {
         }
 
         if (event.button() == InputConstants.MOUSE_BUTTON_MIDDLE) {
-            Util.getPlatform().openFile(Services.LootrunPaths.LOOTRUNS);
+            Blaze3D.openPath(Services.LootrunPaths.LOOTRUNS.toPath());
             return true;
         }
 
