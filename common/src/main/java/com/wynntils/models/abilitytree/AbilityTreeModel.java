@@ -17,8 +17,9 @@ import com.wynntils.core.text.type.StyleType;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
-import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.KeyMappingEvent;
+import com.wynntils.mc.event.MouseScrollEvent;
+import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.models.abilitytree.parser.AbilityTreeParser;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
@@ -32,6 +33,7 @@ import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.models.items.items.gui.AbilityTreeNodeItem;
 import com.wynntils.models.items.items.gui.AbilityTreeResetItem;
 import com.wynntils.models.statuseffects.type.StatusEffect;
+import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayDeque;
@@ -50,7 +52,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
 import net.minecraft.world.item.ItemStack;
@@ -65,7 +66,8 @@ public final class AbilityTreeModel extends Model {
     public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
     private final AbilityTreeInfoRegistry abilityTreeInfoRegistry = new AbilityTreeInfoRegistry();
 
-    private boolean disableMovementKeys = false;
+    private boolean disableKeys = false;
+    private boolean cancelScreenClosing = false;
 
     @Persisted
     private final Storage<Map<String, List<String>>> unlockedAbilities = new Storage<>(new TreeMap<>());
@@ -268,13 +270,25 @@ public final class AbilityTreeModel extends Model {
 
     @SubscribeEvent
     public void onKey(KeyMappingEvent event) {
-        if (!disableMovementKeys) return;
+        if (!disableKeys) return;
 
         if (event.getKey().getValue() != InputConstants.KEY_ESCAPE) {
             event.setCanceled(true);
         }
     }
 
+    @SubscribeEvent
+    public void onMouseScroll(MouseScrollEvent event) {
+        if (!disableKeys) return;
+
+        event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public void onScreenClose(ScreenClosedEvent.Pre e) {
+        if (!cancelScreenClosing || !(e.getScreen() instanceof BuildLoadoutsScreen)) return;
+        e.setCanceled(true);
+    }
 
     public List<String> getUnlockedAbilities() {
         return unlockedAbilities.get().getOrDefault(Models.Character.getId(), new ArrayList<>());
@@ -309,14 +323,14 @@ public final class AbilityTreeModel extends Model {
         unlockedAbilities.store(allEquippedAbilities);
         unlockedAbilities.touched();
 
-        disableMovementKeys = true;
+        disableKeys = true;
         releaseKeys();
 
         Managers.TickScheduler.scheduleNextTick(() -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.dumpAbilityTree(
                 abilityTreeInfo -> {}, // we don't need to do anything with this because the container event reads it.
                 onStatus,
                 (error) -> {
-                    disableMovementKeys = false;
+                    disableKeys = false;
                     onError.accept(error);
                 },
                 (complete) -> {
@@ -332,7 +346,7 @@ public final class AbilityTreeModel extends Model {
                                     + " rescans while clearing/rescanning: " + scanned);
                             onError.accept("Failed to scan ability tree correctly, please try again.");
 
-                            disableMovementKeys = false;
+                            disableKeys = false;
                             return;
                         }
 
@@ -345,7 +359,7 @@ public final class AbilityTreeModel extends Model {
                         return;
                     }
 
-                    disableMovementKeys = false;
+                    disableKeys = false;
                     onComplete.accept("Ability tree rescanned successfully.");
                 }));
     }
@@ -361,6 +375,8 @@ public final class AbilityTreeModel extends Model {
             Consumer<String> onError,
             Consumer<String> onComplete,
             int attempt) {
+        cancelScreenClosing = true;
+
         ABILITY_TREE_CONTAINER_QUERIES.getUnlockedAbilityTree(
                 treeInfo -> {
                     List<String> abilityNames = treeInfo.nodes().stream()
@@ -375,6 +391,8 @@ public final class AbilityTreeModel extends Model {
                             WynntilsMod.warn("Duplicate ability names still present after " + attempt
                                     + " rescans while saving loadout \"" + name + "\": " + abilityNames);
                             onError.accept("Failed to scan ability tree correctly, please try again.");
+
+                            cancelScreenClosing = false;
                             return;
                         }
 
@@ -393,8 +411,14 @@ public final class AbilityTreeModel extends Model {
                     WynntilsMod.info("Saved ability tree loadout: " + name);
                 },
                 onStatus,
-                onError,
-                onComplete);
+                (error) -> {
+                    onError.accept(error);
+                    cancelScreenClosing = false;
+                },
+                (completed) -> {
+                    onComplete.accept(completed);
+                    cancelScreenClosing = false;
+                });
     }
 
     public void loadAbilityTree(
@@ -414,7 +438,19 @@ public final class AbilityTreeModel extends Model {
 
         ContainerUtils.closeBackgroundContainer();
 
-        ABILITY_TREE_CONTAINER_QUERIES.applyAbilityTreeLoadout(ordered, onStatus, onError, onComplete);
+        cancelScreenClosing = true;
+
+        ABILITY_TREE_CONTAINER_QUERIES.applyAbilityTreeLoadout(
+                ordered,
+                onStatus,
+                (error) -> {
+                    onError.accept(error);
+                    cancelScreenClosing = false;
+                },
+                (completed) -> {
+                    onComplete.accept(completed);
+                    cancelScreenClosing = false;
+                });
     }
 
     private List<AbilityTreeSkillNode> getIdealApplicationOrder(

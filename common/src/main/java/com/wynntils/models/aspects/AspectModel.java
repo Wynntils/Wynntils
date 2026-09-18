@@ -17,8 +17,9 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
-import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.KeyMappingEvent;
+import com.wynntils.mc.event.MouseScrollEvent;
+import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.models.aspects.type.AspectInfo;
 import com.wynntils.models.aspects.type.SavableAspectSet;
 import com.wynntils.models.character.type.ClassType;
@@ -27,6 +28,7 @@ import com.wynntils.models.containers.containers.AspectsContainer;
 import com.wynntils.models.containers.containers.RaidRewardChestContainer;
 import com.wynntils.models.containers.containers.RaidRewardPreviewContainer;
 import com.wynntils.models.items.items.game.AspectItem;
+import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
@@ -38,10 +40,8 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
-import net.minecraft.client.input.KeyEvent;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -51,7 +51,8 @@ public final class AspectModel extends Model {
     private final AspectInfoRegistry aspectInfoRegistry = new AspectInfoRegistry();
     public static final AspectContainerQueries ASPECT_CONTAINER_QUERIES = new AspectContainerQueries();
 
-    private boolean disableMovementKeys = false;
+    private boolean disableKeys = false;
+    private boolean cancelScreenClosing = false;
 
     @Persisted
     private final Storage<Map<String, List<String>>> equippedAspects = new Storage<>(new TreeMap<>());
@@ -188,11 +189,24 @@ public final class AspectModel extends Model {
 
     @SubscribeEvent
     public void onKey(KeyMappingEvent event) {
-        if (!disableMovementKeys) return;
+        if (!disableKeys) return;
 
         if (event.getKey().getValue() != InputConstants.KEY_ESCAPE) {
             event.setCanceled(true);
         }
+    }
+
+    @SubscribeEvent
+    public void onMouseScroll(MouseScrollEvent event) {
+        if (!disableKeys) return;
+
+        event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public void onScreenClose(ScreenClosedEvent.Pre e) {
+        if (!cancelScreenClosing || !(e.getScreen() instanceof BuildLoadoutsScreen)) return;
+        e.setCanceled(true);
     }
 
     public Stream<AspectInfo> getAllAspectInfos() {
@@ -260,32 +274,39 @@ public final class AspectModel extends Model {
         ownedAspects.store(new TreeMap<>());
         ownedAspects.touched();
 
-        disableMovementKeys = true;
+        disableKeys = true;
         releaseKeys();
 
-        Managers.TickScheduler.scheduleNextTick(
-                () -> ASPECT_CONTAINER_QUERIES.scanAspectPages(
-                        onStatus,
-                        (error) -> {
-                        onError.accept(error);
-                        disableMovementKeys = false;
-                        },
-                        (competed) -> {
-                            onComplete.accept(competed);
-                            disableMovementKeys = false;
-                        }));
+        Managers.TickScheduler.scheduleNextTick(() -> ASPECT_CONTAINER_QUERIES.scanAspectPages(
+                onStatus,
+                (error) -> {
+                    onError.accept(error);
+                    disableKeys = false;
+                },
+                (competed) -> {
+                    onComplete.accept(competed);
+                    disableKeys = false;
+                }));
     }
 
     public void saveCurrentAspectLoadout(
             String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
+        cancelScreenClosing = true;
+
         ASPECT_CONTAINER_QUERIES.dumpAspectContainer(
                 loadout -> {
                     Services.loadout.saveAspectLoadout(name, loadout);
                     WynntilsMod.info("Saved aspect loadout: " + name);
                 },
                 onStatus,
-                onError,
-                onComplete);
+                (error) -> {
+                    onError.accept(error);
+                    cancelScreenClosing = false;
+                },
+                (completed) -> {
+                    onComplete.accept(completed);
+                    cancelScreenClosing = false;
+                });
     }
 
     public void loadAspectLoadout(
@@ -311,6 +332,18 @@ public final class AspectModel extends Model {
         // Close any open background container before starting the query
         ContainerUtils.closeBackgroundContainer();
 
-        ASPECT_CONTAINER_QUERIES.applyAspectLoadout(loadout.aspectNames(), onStatus, onError, onComplete);
+        cancelScreenClosing = true;
+
+        ASPECT_CONTAINER_QUERIES.applyAspectLoadout(
+                loadout.aspectNames(),
+                onStatus,
+                (error) -> {
+                    onError.accept(error);
+                    cancelScreenClosing = false;
+                },
+                (completed) -> {
+                    onComplete.accept(completed);
+                    cancelScreenClosing = false;
+                });
     }
 }
