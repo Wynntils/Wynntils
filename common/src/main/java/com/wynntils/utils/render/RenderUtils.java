@@ -1255,7 +1255,7 @@ public final class RenderUtils {
     }
 
     public static void renderItem(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int x, int y) {
-        guiGraphics.renderItem(itemStack, x, y);
+        guiGraphics.item(itemStack, x, y);
     }
 
     public static void renderScalingItem(

@@ -206,15 +206,15 @@ public class InventoryEmeraldCountFeature extends Feature {
             RenderUtils.drawScalingTexturedRect(
                     guiGraphics, Texture.EMERALD_COUNT_BACKGROUND, renderX, renderY, TEXTURE_SIZE, TEXTURE_SIZE);
 
-            guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
+            guiGraphics.item(EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
 
             if (EmeraldUnits.values()[i].getSymbol().equals("stx")) { // Make stx not look like normal LE
-                guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 3, renderY + 4);
-                guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
-                guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 9, renderY + 8);
+                guiGraphics.item(EmeraldUnits.values()[i].getItemStack(), renderX + 3, renderY + 4);
+                guiGraphics.item(EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
+                guiGraphics.item(EmeraldUnits.values()[i].getItemStack(), renderX + 9, renderY + 8);
             } else {
                 // This needs to be separate since Z levels are determined by order here
-                guiGraphics.renderItem(EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
+                guiGraphics.item(EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
             }
 
             FontRenderer.getInstance()

@@ -80,7 +80,7 @@ public class BulkBuyWidget extends AbstractWidget {
                             TextShadow.NORMAL);
 
             // X coordinate is center of widget (BULK_BUY_WIDGET_CENTER) minus half of the item icon width (8)
-            guiGraphics.renderItem(bulkBoughtItem.itemStack(), getX() + BULK_BUY_WIDGET_CENTER - 8, getY() + 34);
+            guiGraphics.item(bulkBoughtItem.itemStack(), getX() + BULK_BUY_WIDGET_CENTER - 8, getY() + 34);
 
             FontRenderer.getInstance()
                     .renderScrollingText(

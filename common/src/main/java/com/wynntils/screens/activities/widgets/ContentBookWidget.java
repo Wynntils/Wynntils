@@ -123,7 +123,7 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
                 gradientColor,
                 gradientColor.withAlpha(0),
                 RenderDirection.HORIZONTAL);
-        guiGraphics.renderItem(itemStack, getX(), getY());
+        guiGraphics.item(itemStack, getX(), getY());
 
         nameStyle = nameStyle.withBold(this.isHovered || activityInfo.trackingState() == ActivityTrackingState.TRACKED);
 

@@ -30,7 +30,7 @@ public class ContentBookActionWidget extends AbstractWidget implements TooltipPr
     @Override
     protected void extractWidgetRenderState(
             GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guiGraphics.renderItem(itemStack, getX(), getY());
+        guiGraphics.item(itemStack, getX(), getY());
 
         handleCursor(guiGraphics);
     }
