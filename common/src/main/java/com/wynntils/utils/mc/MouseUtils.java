@@ -4,9 +4,10 @@
  */
 package com.wynntils.utils.mc;
 
-import net.minecraft.network.protocol.game.ServerboundSwingPacket;
+import net.minecraft.network.protocol.game.ServerboundPunchPacket;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.component.SwingAnimation;
 
 public final class MouseUtils {
     public static void sendAttackInput(boolean reversed) {
@@ -17,13 +18,14 @@ public final class MouseUtils {
                     McUtils.player().getYRot(),
                     McUtils.player().getXRot()));
         } else {
-            // ServerboundSwingPacket does not do the swing animation
-            McUtils.player().swing(InteractionHand.MAIN_HAND);
+            SwingAnimation swingAnimation =
+                    McUtils.player().getItemInHand(InteractionHand.MAIN_HAND).getAttackAnimation();
+            McUtils.player().swing(InteractionHand.MAIN_HAND, swingAnimation, false);
         }
     }
 
     public static void sendLeftClickInput() {
-        McUtils.sendPacket(new ServerboundSwingPacket(InteractionHand.MAIN_HAND));
+        McUtils.sendPacket(new ServerboundPunchPacket());
     }
 
     public static void sendRightClickInput() {
