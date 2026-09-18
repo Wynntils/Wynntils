@@ -47,6 +47,7 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -78,6 +79,11 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     Component.translatable("screens.wynntils.overlayManagement.positionPanel.hint"),
                     Component.translatable("screens.wynntils.overlayManagement.helpTooltip6")
                             .withStyle(ChatFormatting.RED)),
+            200);
+    private static final List<Component> LOCKED_TOOLTIP_LINES = ComponentUtils.wrapTooltips(
+            List.of(
+                    Component.translatable("screens.wynntils.overlayManagement.placementLockedTooltip"),
+                    Component.translatable("screens.wynntils.overlayManagement.openSettingsTooltip")),
             200);
 
     private final Set<SnapTarget> verticalAlignmentLinePositions = new HashSet<>();
@@ -206,6 +212,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     overlayName = customNameProperty.getCustomName().get();
                 }
             }
+            if (overlay.isPlacementLocked()) {
+                overlayName += Component.translatable("screens.wynntils.overlayManagement.lockedSuffix")
+                        .getString();
+            }
 
             // Only display overlay name when not rendering preview of the overlay
             if (!showPreview) {
@@ -262,7 +272,11 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     && hovering
                     && selectionMode == SelectionMode.NONE) {
                 guiGraphics.setTooltipForNextFrame(
-                        Lists.transform(HELP_TOOLTIP_LINES, Component::getVisualOrderText), mouseX, mouseY);
+                        Lists.transform(
+                                overlay.isPlacementLocked() ? LOCKED_TOOLTIP_LINES : HELP_TOOLTIP_LINES,
+                                Component::getVisualOrderText),
+                        mouseX,
+                        mouseY);
                 renderedTooltip = true;
             }
         }
@@ -308,7 +322,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         if (positionPanel != null) {
             if (positionPanel.contains(event.x(), event.y())) {
                 setFocusedTextInput(null);
+                setFocused(null);
+                setDragging(false);
                 for (var widget : positionPanel.getWidgets()) {
+                    if (!widget.visible || !widget.active) continue;
                     if (widget.mouseClicked(event, isDoubleClick)) {
                         setFocused(widget);
                         setDragging(event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT);
@@ -363,6 +380,14 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         Overlay selected = selectedOverlay;
 
         setupButtons();
+
+        if (selected.isPlacementLocked()) {
+            pendingPanelClick = event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT
+                    && isMouseHoveringOverlay(selected, event.x(), event.y());
+            clickX = event.x();
+            clickY = event.y();
+            return false;
+        }
 
         editHistory.begin(selectedOverlay);
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && KeyboardUtils.isShiftDown()) {
@@ -450,10 +475,15 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        if (positionPanel != null) {
+            if (getFocusedTextInput() != null && getFocusedTextInput().visible && getFocusedTextInput().active) {
+                getFocusedTextInput().mouseDragged(event, dragX, dragY);
+            }
+            return true;
+        }
+
         // Let the buttons of the Screen have priority
         if (super.mouseDragged(event, dragX, dragY)) return true;
-
-        if (positionPanel != null) return true;
 
         if (pendingPanelClick) {
             double totalX = event.x() - clickX;
@@ -467,6 +497,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         if (selectedOverlay == null) return false;
 
+        if (selectedOverlay.isPlacementLocked()) return true;
+
         switch (selectionMode) {
             case CORNER -> handleOverlayCornerDrag(dragX, dragY);
             case EDGE -> handleOverlayEdgeDrag(dragX, dragY);
@@ -479,6 +511,14 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
+        if (positionPanel != null) {
+            if (getFocusedTextInput() != null && getFocusedTextInput().visible && getFocusedTextInput().active) {
+                getFocusedTextInput().mouseReleased(event);
+            }
+            setDragging(false);
+            return true;
+        }
+
         double releaseX = event.x() - clickX;
         double releaseY = event.y() - clickY;
         boolean openPanel = pendingPanelClick
@@ -491,8 +531,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         resetSelection();
         if (openPanel && selectedOverlay != null) {
-            positionPanel =
-                    new OverlayPositionPanel(selectedOverlay, (int) event.x(), (int) event.y(), width, height, this);
+            positionPanel = new OverlayPositionPanel(
+                    selectedOverlay, (int) event.x(), (int) event.y(), width, height, this, this::togglePlacementLock);
             positionPanel.getWidgets().forEach(this::addRenderableWidget);
             editHistory.begin(selectedOverlay);
             return true;
@@ -519,6 +559,13 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 closePositionPanel();
                 return true;
             }
+            if (getFocusedTextInput() != null && (!getFocusedTextInput().visible || !getFocusedTextInput().active)) {
+                setFocusedTextInput(null);
+                setFocused(null);
+            }
+            if (positionPanel.isPlacementLocked() && event.key() == GLFW.GLFW_KEY_TAB) {
+                return true;
+            }
             if (getFocusedTextInput() != null || event.key() == GLFW.GLFW_KEY_TAB) {
                 super.keyPressed(event);
                 return true;
@@ -538,6 +585,16 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         }
 
         if (selectedOverlay == null) return false;
+
+        if (selectedOverlay.isPlacementLocked()) {
+            if (event.key() == GLFW.GLFW_KEY_UP
+                    || event.key() == GLFW.GLFW_KEY_DOWN
+                    || event.key() == GLFW.GLFW_KEY_LEFT
+                    || event.key() == GLFW.GLFW_KEY_RIGHT) {
+                return true;
+            }
+            return false;
+        }
 
         boolean arrowKey = event.key() == GLFW.GLFW_KEY_UP
                 || event.key() == GLFW.GLFW_KEY_DOWN
@@ -628,6 +685,16 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         return false;
     }
 
+    @Override
+    public boolean charTyped(CharacterEvent event) {
+        if (positionPanel != null && positionPanel.isPlacementLocked()) {
+            setFocusedTextInput(null);
+            setFocused(null);
+            return true;
+        }
+        return super.charTyped(event);
+    }
+
     public Overlay getSelectedOverlay() {
         return selectedOverlay;
     }
@@ -658,7 +725,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void handleOverlayEdgeDrag(double dragX, double dragY) {
-        if (selectedEdge == null || selectedOverlay == null) {
+        if (selectedEdge == null || selectedOverlay == null || selectedOverlay.isPlacementLocked()) {
             return;
         }
 
@@ -699,7 +766,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void handleOverlayBodyDrag(double dragX, double dragY) {
-        if (selectedOverlay == null) {
+        if (selectedOverlay == null || selectedOverlay.isPlacementLocked()) {
             return;
         }
 
@@ -714,7 +781,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void handleOverlayCornerDrag(double dragX, double dragY) {
-        if (selectedCorner == null || selectedOverlay == null) {
+        if (selectedCorner == null || selectedOverlay == null || selectedOverlay.isPlacementLocked()) {
             return;
         }
 
@@ -1015,6 +1082,27 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         selectionMode = SelectionMode.NONE;
         selectedCorner = null;
         selectedEdge = null;
+    }
+
+    private void togglePlacementLock(boolean locked) {
+        if (selectedOverlay == null || selectedOverlay.isPlacementLocked() == locked) return;
+
+        // Keep the layout edits made before clicking the lock button as their own history step.
+        editHistory.finish();
+        editHistory.begin(selectedOverlay);
+        selectedOverlay.setPlacementLocked(locked);
+        editHistory.finish();
+
+        if (locked) {
+            setFocusedTextInput(null);
+            setFocused(null);
+        }
+        if (positionPanel != null) {
+            positionPanel.setPlacementLocked(locked);
+            editHistory.begin(selectedOverlay);
+        }
+        updateHistoryButtons();
+        calculateAlignmentLinePositions();
     }
 
     private void restoreHistory(boolean redo) {

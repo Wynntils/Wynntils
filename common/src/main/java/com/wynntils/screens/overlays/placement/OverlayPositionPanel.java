@@ -26,15 +26,26 @@ import net.minecraft.network.chat.Component;
 
 public final class OverlayPositionPanel {
     private static final int WIDTH = 204;
-    private static final int HEIGHT = 148;
+    private static final int HEIGHT = 164;
 
     private final int x;
     private final int y;
     private final Overlay overlay;
     private final List<AbstractWidget> widgets = new ArrayList<>();
+    private final List<TextInputBoxWidget> numberInputs = new ArrayList<>();
+    private final List<Boolean> sizeInputs = new ArrayList<>();
+    private final Button horizontalAlignmentButton;
+    private final Button verticalAlignmentButton;
+    private final Button placementLockButton;
 
     public OverlayPositionPanel(
-            Overlay overlay, int mouseX, int mouseY, int screenWidth, int screenHeight, TextboxScreen screen) {
+            Overlay overlay,
+            int mouseX,
+            int mouseY,
+            int screenWidth,
+            int screenHeight,
+            TextboxScreen screen,
+            Consumer<Boolean> placementLockChanged) {
         this.overlay = overlay;
         x = Math.max(0, Math.min(mouseX + 8, screenWidth - WIDTH));
         y = Math.max(0, Math.min(mouseY + 8, screenHeight - HEIGHT));
@@ -60,7 +71,8 @@ public final class OverlayPositionPanel {
                 true,
                 value -> resize(overlay.getWidth(), value));
 
-        widgets.add(Button.builder(horizontalLabel(), button -> {
+        horizontalAlignmentButton = Button.builder(horizontalLabel(), button -> {
+                    if (overlay.isPlacementLocked()) return;
                     HorizontalAlignment[] values = HorizontalAlignment.values();
                     HorizontalAlignment alignment =
                             values[(overlay.getRenderHorizontalAlignment().ordinal() + 1) % values.length];
@@ -69,8 +81,10 @@ public final class OverlayPositionPanel {
                     button.setMessage(horizontalLabel());
                 })
                 .bounds(x + 8, y + 116, 90, 20)
-                .build());
-        widgets.add(Button.builder(verticalLabel(), button -> {
+                .build();
+        widgets.add(horizontalAlignmentButton);
+        verticalAlignmentButton = Button.builder(verticalLabel(), button -> {
+                    if (overlay.isPlacementLocked()) return;
                     VerticalAlignment[] values = VerticalAlignment.values();
                     VerticalAlignment alignment =
                             values[(overlay.getRenderVerticalAlignment().ordinal() + 1) % values.length];
@@ -79,7 +93,15 @@ public final class OverlayPositionPanel {
                     button.setMessage(verticalLabel());
                 })
                 .bounds(x + 106, y + 116, 90, 20)
-                .build());
+                .build();
+        widgets.add(verticalAlignmentButton);
+
+        placementLockButton = Button.builder(
+                        lockLabel(), button -> placementLockChanged.accept(!overlay.isPlacementLocked()))
+                .bounds(x + 8, y + 140, WIDTH - 16, 20)
+                .build();
+        widgets.add(placementLockButton);
+        setPlacementLocked(overlay.isPlacementLocked());
     }
 
     public List<AbstractWidget> getWidgets() {
@@ -88,6 +110,26 @@ public final class OverlayPositionPanel {
 
     public boolean contains(double mouseX, double mouseY) {
         return mouseX >= x && mouseX < x + WIDTH && mouseY >= y && mouseY < y + HEIGHT;
+    }
+
+    public boolean isPlacementLocked() {
+        return overlay.isPlacementLocked();
+    }
+
+    public void setPlacementLocked(boolean locked) {
+        for (int i = 0; i < numberInputs.size(); i++) {
+            TextInputBoxWidget input = numberInputs.get(i);
+            input.active = !locked;
+            input.setRenderColor(
+                    locked
+                            ? CommonColors.GRAY
+                            : isValidNumber(input.getTextBoxInput(), sizeInputs.get(i))
+                                    ? CommonColors.WHITE
+                                    : CommonColors.RED);
+        }
+        horizontalAlignmentButton.active = !locked;
+        verticalAlignmentButton.active = !locked;
+        placementLockButton.setMessage(lockLabel());
     }
 
     public void render(GuiGraphics graphics) {
@@ -119,11 +161,16 @@ public final class OverlayPositionPanel {
         return text(overlay.getRenderVerticalAlignment().name().toLowerCase(Locale.ROOT));
     }
 
+    private Component lockLabel() {
+        return text(overlay.isPlacementLocked() ? "unlockPlacement" : "lockPlacement");
+    }
+
     private static Component text(String key) {
         return Component.translatable("screens.wynntils.overlayManagement.positionPanel." + key);
     }
 
     private void moveTo(float newX, float newY) {
+        if (overlay.isPlacementLocked()) return;
         overlay.setPosition(OverlayPosition.getBestPositionFor(
                 overlay,
                 overlay.getRenderX(),
@@ -133,11 +180,21 @@ public final class OverlayPositionPanel {
     }
 
     private void resize(float width, float height) {
+        if (overlay.isPlacementLocked()) return;
         float oldX = overlay.getRenderX();
         float oldY = overlay.getRenderY();
         overlay.setWidth(width);
         overlay.setHeight(height);
         moveTo(oldX, oldY);
+    }
+
+    private boolean isValidNumber(String value, boolean size) {
+        try {
+            float number = Float.parseFloat(value);
+            return Float.isFinite(number) && (!size || number >= 3);
+        } catch (NumberFormatException exception) {
+            return false;
+        }
     }
 
     private void addNumber(
@@ -157,6 +214,7 @@ public final class OverlayPositionPanel {
                     initialized = true;
                     return;
                 }
+                if (overlay.isPlacementLocked()) return;
                 try {
                     float number = Float.parseFloat(value);
                     if (!Float.isFinite(number) || (size && number < 3)) {
@@ -171,6 +229,8 @@ public final class OverlayPositionPanel {
             }
         };
         input.setTextBoxInput(Float.toString(initialValue));
+        numberInputs.add(input);
+        sizeInputs.add(size);
         widgets.add(input);
     }
 }

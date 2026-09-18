@@ -88,7 +88,8 @@ final class OverlayEditHistory {
             float width,
             float height,
             HorizontalAlignment horizontalOverride,
-            VerticalAlignment verticalOverride) {
+            VerticalAlignment verticalOverride,
+            boolean placementLocked) {
         static State capture(Overlay overlay) {
             OverlayPosition position = overlay.getPosition();
             return new State(
@@ -104,7 +105,8 @@ final class OverlayEditHistory {
                             .orElse(null),
                     (VerticalAlignment) overlay.getConfigOptionFromString("verticalAlignmentOverride")
                             .map(Config::get)
-                            .orElse(null));
+                            .orElse(null),
+                    overlay.isPlacementLocked());
         }
 
         void apply(Overlay overlay) {
@@ -115,6 +117,7 @@ final class OverlayEditHistory {
                     .ifPresent(config -> ((Config<HorizontalAlignment>) config).setValue(horizontalOverride));
             overlay.getConfigOptionFromString("verticalAlignmentOverride")
                     .ifPresent(config -> ((Config<VerticalAlignment>) config).setValue(verticalOverride));
+            overlay.setPlacementLocked(placementLocked);
         }
     }
 }
