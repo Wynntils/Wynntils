@@ -31,8 +31,8 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.RenderElementType;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.Camera;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.Position;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -104,14 +104,15 @@ public class WorldWaypointDistanceFeature extends Feature {
         for (MarkerInfo marker : markers) {
             Location location = marker.location();
             Matrix4f projection = new Matrix4f(event.getProjectionMatrix());
-            Camera camera = event.getCamera();
-            Position cameraPos = camera.position();
+            CameraRenderState cameraRenderState = event.getCameraRenderState();
+            Position cameraPos = cameraRenderState.pos;
 
             // apply camera rotation
             Vector3f xp = new Vector3f(1, 0, 0);
             Vector3f yp = new Vector3f(0, 1, 0);
-            Quaternionf xRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.xRot()), xp);
-            Quaternionf yRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.yRot() + 180f), yp);
+            Quaternionf xRotation = new Quaternionf().rotationAxis((float) Math.toRadians(cameraRenderState.xRot), xp);
+            Quaternionf yRotation =
+                    new Quaternionf().rotationAxis((float) Math.toRadians(cameraRenderState.yRot + 180f), yp);
             projection.mul(new Matrix4f().rotation(xRotation));
             projection.mul(new Matrix4f().rotation(yRotation));
 
