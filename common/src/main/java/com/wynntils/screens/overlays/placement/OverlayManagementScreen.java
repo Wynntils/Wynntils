@@ -75,7 +75,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             Component.translatable("screens.wynntils.overlayManagement.helpTooltip3"),
             Component.translatable("screens.wynntils.overlayManagement.screenSnapTooltip"),
             Component.translatable("screens.wynntils.overlayManagement.helpTooltip6")
-                    .withStyle(ChatFormatting.RED));
+                    .withStyle(ChatFormatting.DARK_RED));
 
     private final Set<SnapTarget> verticalAlignmentLinePositions = new HashSet<>();
     private final Set<SnapTarget> horizontalAlignmentLinePositions = new HashSet<>();
@@ -87,6 +87,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private final OverlaySnapAxis verticalSnap = new OverlaySnapAxis();
     private final OverlayEditHistory editHistory = new OverlayEditHistory();
     private OverlayHelpPanel helpPanel;
+    private Button helpButton;
+    private boolean helpPinned;
+    private boolean suppressHelpHover;
     private Button undoButton;
     private Button redoButton;
 
@@ -138,7 +141,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
-        helpPanel = null;
+        closeHelpPanel();
         resetSelection();
         closePositionPanel();
         setupButtons();
@@ -147,6 +150,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        updateHelpHover(mouseX, mouseY);
         renderScreenGuides(guiGraphics);
         if (selectionMode != SelectionMode.NONE) {
             renderAlignmentLines(guiGraphics);
@@ -296,7 +300,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     public void onClose() {
-        helpPanel = null;
+        closeHelpPanel();
         closePositionPanel();
         resetSelection();
         editHistory.clear();
@@ -327,7 +331,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         // Let the buttons of the Screen have priority
         if (super.doMouseClicked(event, isDoubleClick)) return true;
 
-        helpPanel = null;
+        closeHelpPanel();
 
         userInteracted = true;
         animationLengthRemaining = 0;
@@ -582,7 +586,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         if (helpPanel != null) {
             if (event.key() == InputConstants.KEY_ESCAPE || event.key() == InputConstants.KEY_RETURN) {
-                helpPanel = null;
+                closeHelpPanel();
             }
             return true;
         }
@@ -1025,38 +1029,39 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void setupButtons() {
-        helpPanel = null;
+        closeHelpPanel();
         // Remove previous buttons
         this.children.stream().toList().forEach(this::removeWidget);
 
         // Determine if buttons should be at the top or bottom of the screen
         int yPos = buttonsAtBottom ? this.height - 25 : 5;
         int historyY = buttonsAtBottom ? yPos - 24 : yPos + 24;
+        int historyButtonGap = 4;
+        int historyStartX = (this.width - (3 * BUTTON_WIDTH + 2 * historyButtonGap)) / 2;
         undoButton = this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.overlayManagement.undo"),
                         button -> restoreHistory(false))
-                .bounds(this.width / 2 - BUTTON_WIDTH - 2, historyY, BUTTON_WIDTH, BUTTON_HEIGHT)
+                .bounds(historyStartX, historyY, BUTTON_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.overlayManagement.undoTooltip")))
                 .build());
         redoButton = this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.overlayManagement.redo"),
                         button -> restoreHistory(true))
-                .bounds(this.width / 2 + 2, historyY, BUTTON_WIDTH, BUTTON_HEIGHT)
+                .bounds(historyStartX + BUTTON_WIDTH + historyButtonGap, historyY, BUTTON_WIDTH, BUTTON_HEIGHT)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.overlayManagement.redoTooltip")))
                 .build());
         updateHistoryButtons();
 
-        this.addRenderableWidget(Button.builder(
+        helpButton = this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.overlayManagement.help"), button -> {
-                            if (helpPanel != null) {
-                                helpPanel = null;
+                            if (helpPinned) {
+                                closeHelpPanel();
                                 return;
                             }
-                            closePositionPanel();
-                            resetSelection();
-                            helpPanel = new OverlayHelpPanel(HELP_TOOLTIP_LINES, width, height, buttonsAtBottom);
+                            openHelpPanel();
+                            helpPinned = true;
                         })
-                .bounds(this.width / 2 + BUTTON_WIDTH + 6, historyY, BUTTON_WIDTH, BUTTON_HEIGHT)
+                .bounds(historyStartX + 2 * (BUTTON_WIDTH + historyButtonGap), historyY, BUTTON_WIDTH, BUTTON_HEIGHT)
                 .build());
 
         this.addRenderableWidget(new WynntilsCheckbox(
@@ -1185,6 +1190,40 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         if (redoButton != null) {
             redoButton.active = editHistory.canRedo();
         }
+    }
+
+    private void updateHelpHover(double mouseX, double mouseY) {
+        boolean hoveringHelp = helpButton != null
+                && helpButton.isMouseOver(mouseX, mouseY)
+                && (positionPanel == null || !positionPanel.contains(mouseX, mouseY));
+        if (!hoveringHelp) {
+            suppressHelpHover = false;
+        }
+        if (helpPinned) {
+            return;
+        }
+
+        if (hoveringHelp && !suppressHelpHover && selectionMode == SelectionMode.NONE && !pendingPanelClick) {
+            openHelpPanel();
+        } else {
+            helpPanel = null;
+        }
+    }
+
+    private void openHelpPanel() {
+        if (helpPanel != null) {
+            return;
+        }
+
+        closePositionPanel();
+        resetSelection();
+        helpPanel = new OverlayHelpPanel(HELP_TOOLTIP_LINES, width, height, buttonsAtBottom);
+    }
+
+    private void closeHelpPanel() {
+        helpPanel = null;
+        helpPinned = false;
+        suppressHelpHover = true;
     }
 
     private void closePositionPanel() {
