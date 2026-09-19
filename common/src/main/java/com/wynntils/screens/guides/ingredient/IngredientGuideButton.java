@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.guides.ingredient;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Services;
 import com.wynntils.screens.guides.widgets.GuideButton;
 import com.wynntils.utils.colors.CustomColor;
@@ -12,7 +13,6 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.component.CustomModelData;
-import org.lwjgl.glfw.GLFW;
 
 public class IngredientGuideButton extends GuideButton {
     private static final CustomColor INGREDIENT_HIGHLIGHT_COLOR = CustomColor.fromInt(0x4EDF48);
@@ -29,10 +29,17 @@ public class IngredientGuideButton extends GuideButton {
         List<String> modelDataString =
                 List.of(PROFESSION_STAR_KEY + itemStack.getIngredientInfo().tier());
         CustomModelData oldCustomModelData = itemStack.get(DataComponents.CUSTOM_MODEL_DATA);
-        CustomModelData newCustomModelData = new CustomModelData(
-                oldCustomModelData.floats(), oldCustomModelData.flags(), modelDataString, oldCustomModelData.colors());
 
-        itemStack.set(DataComponents.CUSTOM_MODEL_DATA, newCustomModelData);
+        if (oldCustomModelData != null) {
+            CustomModelData newCustomModelData = new CustomModelData(
+                    oldCustomModelData.floats(),
+                    oldCustomModelData.flags(),
+                    modelDataString,
+                    oldCustomModelData.colors());
+
+            itemStack.set(DataComponents.CUSTOM_MODEL_DATA, newCustomModelData);
+        }
+
         itemStack.set(DataComponents.TOOLTIP_STYLE, TOOLTIP_STYLE);
     }
 
@@ -43,7 +50,7 @@ public class IngredientGuideButton extends GuideButton {
             return;
         }
 
-        if (input.input() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (input.input() == InputConstants.MOUSE_BUTTON_LEFT) {
             ingredientItemStack.changePage();
         }
     }

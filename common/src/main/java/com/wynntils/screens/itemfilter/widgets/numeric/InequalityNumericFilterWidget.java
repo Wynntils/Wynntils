@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.itemfilter.widgets.numeric;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
 import com.wynntils.screens.itemfilter.widgets.GeneralFilterWidget;
@@ -17,7 +18,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public abstract class InequalityNumericFilterWidget<T> extends GeneralFilterWidget {
     private final Button removeButton;
@@ -68,10 +68,10 @@ public abstract class InequalityNumericFilterWidget<T> extends GeneralFilterWidg
         } else if (removeButton.isMouseOver(event.x(), event.y())) {
             return removeButton.mouseClicked(event, isDoubleClick);
         } else if (inequalityButton.isMouseOver(event.x(), event.y())) {
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                 cycleInequality(1);
                 return true;
-            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 cycleInequality(-1);
                 return true;
             }

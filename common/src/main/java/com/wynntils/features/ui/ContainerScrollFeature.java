@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.ui;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -19,7 +20,6 @@ import java.util.Optional;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UI)
 public class ContainerScrollFeature extends Feature {
@@ -49,7 +49,7 @@ public class ContainerScrollFeature extends Feature {
             ContainerUtils.clickOnSlot(
                     slot.get(),
                     gui.getMenu().containerId,
-                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                    InputConstants.MOUSE_BUTTON_LEFT,
                     gui.getMenu().getItems());
         }
     }

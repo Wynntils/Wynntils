@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.character;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
@@ -45,7 +46,6 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 public final class SkillPointModel extends Model {
     private static final int[] SKILL_POINT_TOTAL_SLOTS = {11, 12, 13, 14, 15};
@@ -437,16 +437,16 @@ public final class SkillPointModel extends Model {
             int ones = diff % 5;
 
             for (int i = 0; i < fives; i++) {
-                actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_RIGHT, true));
+                actions.add(new ClickAction(slot, InputConstants.MOUSE_BUTTON_RIGHT, true));
                 if (!confirmationCompleted) {
-                    actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_RIGHT, true));
+                    actions.add(new ClickAction(slot, InputConstants.MOUSE_BUTTON_RIGHT, true));
                     confirmationCompleted = true;
                 }
             }
             for (int i = 0; i < ones; i++) {
-                actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_RIGHT, false));
+                actions.add(new ClickAction(slot, InputConstants.MOUSE_BUTTON_RIGHT, false));
                 if (!confirmationCompleted) {
-                    actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_RIGHT, false));
+                    actions.add(new ClickAction(slot, InputConstants.MOUSE_BUTTON_RIGHT, false));
                     confirmationCompleted = true;
                 }
             }
@@ -459,10 +459,10 @@ public final class SkillPointModel extends Model {
             int ones = diff % 5;
 
             for (int i = 0; i < fives; i++) {
-                actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_LEFT, true));
+                actions.add(new ClickAction(slot, InputConstants.MOUSE_BUTTON_LEFT, true));
             }
             for (int i = 0; i < ones; i++) {
-                actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_LEFT, false));
+                actions.add(new ClickAction(slot, InputConstants.MOUSE_BUTTON_LEFT, false));
             }
         }
 

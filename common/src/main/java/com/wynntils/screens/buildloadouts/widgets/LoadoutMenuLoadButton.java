@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.buildloadouts.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.fonts.WynnFont;
@@ -32,7 +33,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class LoadoutMenuLoadButton extends AbstractButton implements TooltipProvider {
     private final int x;
@@ -74,19 +74,19 @@ public class LoadoutMenuLoadButton extends AbstractButton implements TooltipProv
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
+        if (event.button() == InputConstants.MOUSE_BUTTON_MIDDLE) return false;
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
 
         if (parent.getCurrentCategory() == MenuCategory.BUILD_LOADOUT) {
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 loadType = loadType.next();
                 buildTooltip();
                 return true;
             }
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             Loadout loadout = parent.getSelectedLoadout();
             if (loadout == null) return true;
 

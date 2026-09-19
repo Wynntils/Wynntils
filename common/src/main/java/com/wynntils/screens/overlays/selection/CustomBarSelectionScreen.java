@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.overlays.selection;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
@@ -28,7 +29,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import org.lwjgl.glfw.GLFW;
 
 public final class CustomBarSelectionScreen extends WynntilsScreen {
     // The order of these matters, they must match that in CustomBarsOverlayFeature
@@ -128,11 +128,11 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
                 // Special case for the texture button to handle both
                 // left and right clicks
                 if (listener == textureButton) {
-                    if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                    if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                         scrollTextures(1);
                         McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
                         return true;
-                    } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                    } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
                         scrollTextures(-1);
                         McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
                         return true;

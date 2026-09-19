@@ -5,6 +5,7 @@
 package com.wynntils.screens.overlays.selection;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
@@ -57,7 +58,6 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public final class OverlaySelectionScreen extends WynntilsScreen {
     private static final float SCROLL_FACTOR = 10f;
@@ -416,7 +416,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+        if (event.key() == InputConstants.KEY_ESCAPE) {
             // If rendering a preview and esc is pressed, then return to the selection menu.
             // Otherwise, close the screen
             if (renderPreview) {

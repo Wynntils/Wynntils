@@ -32,7 +32,6 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import org.lwjgl.glfw.GLFW;
 
 public class EmoteWheelScreen extends WynntilsScreen {
     private static final List<Pair<Integer, Integer>> BUTTON_POSITIONS = new ArrayList<>();
@@ -286,9 +285,9 @@ public class EmoteWheelScreen extends WynntilsScreen {
 
         int emoteNum = -1;
 
-        if (event.key() >= GLFW.GLFW_KEY_1 && event.key() <= GLFW.GLFW_KEY_9) {
-            emoteNum = event.key() - GLFW.GLFW_KEY_1;
-        } else if (event.key() == GLFW.GLFW_KEY_0) {
+        if (event.key() >= InputConstants.KEY_1 && event.key() <= InputConstants.KEY_9) {
+            emoteNum = event.key() - InputConstants.KEY_1;
+        } else if (event.key() == InputConstants.KEY_0) {
             emoteNum = 9;
         }
 

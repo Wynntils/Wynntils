@@ -1806,6 +1806,8 @@
   "feature.wynntils.valuablesProtection.tomesWarning.name": "Consider Tomes as Valuables",
   "feature.wynntils.valuablesProtection.tradeMarketPriceThreshold.description": "What is the maximum %% of cheapest price to warn on trade market sells? Eg. If the cheapest price is 100, your price being 90 or below will trigger the warning. This does not work with crafteds.",
   "feature.wynntils.valuablesProtection.tradeMarketPriceThreshold.name": "Trade Market Price Threshold",
+  "feature.wynntils.valuablesProtection.wardsWarning.description": "Should ward pricing be checked in the trade market?",
+  "feature.wynntils.valuablesProtection.wardsWarning.name": "Consider Wards as Valuables",
   "feature.wynntils.warHorn.description": "Plays a war horn sound when a war is queued.",
   "feature.wynntils.warHorn.name": "War Horn",
   "feature.wynntils.warHorn.soundPitch.description": "How high should the sound pitch be played?",
