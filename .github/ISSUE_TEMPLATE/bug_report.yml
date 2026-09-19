@@ -1,0 +1,188 @@
+name: Bug report
+description: Report a reproducible crash, regression, or other broken behavior in Wynntils.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug.
+
+        Search existing issues first and use one report for one problem. Please remove private information from screenshots, logs, and videos before attaching them.
+
+        In-game, run `/wynntils bug` to copy system information, find your logs, and open this form with environment details filled in.
+        If the game cannot start, open the affected instance's game folder through your launcher and find the `logs` and `crash-reports` folders there.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and did not find a duplicate.
+          required: true
+        - label: I tested the latest available Wynntils version for my Minecraft version.
+          required: true
+        - label: This is a bug report, not a support request or feature suggestion.
+          required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Bug category
+      description: What best describes the problem?
+      options:
+        - Crash
+        - Incorrect behavior
+        - Performance
+        - Visual or user interface issue
+        - Compatibility issue
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: wynntils-version
+    attributes:
+      label: Wynntils version
+      description: Include the full version number, including beta or snapshot identifiers.
+      placeholder: "4.0.0-beta.1"
+    validations:
+      required: true
+
+  - type: input
+    id: minecraft-version
+    attributes:
+      label: Minecraft version
+      placeholder: "1.21.11"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mod-loader
+    attributes:
+      label: Mod loader
+      options:
+        - Fabric
+        - NeoForge
+        - Both Fabric and NeoForge
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: loader-version
+    attributes:
+      label: Mod loader version
+      description: Find this in your launcher or copy it from `/wynntils bug`.
+      placeholder: "0.18.4"
+    validations:
+      required: true
+
+  - type: input
+    id: operating-system
+    attributes:
+      label: Operating system
+      description: Include the OS version if you know it.
+      placeholder: "Windows 11 24H2, macOS 15.6, or Ubuntu 24.04"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mod-setup
+    attributes:
+      label: Mod setup
+      description: If possible, test with only Wynntils and any required dependencies. An installed mod list does not tell us whether you tested this.
+      options:
+        - Happens with only Wynntils and required dependencies
+        - Happens only when other mods are installed
+        - Other mods are installed, but I have not tested without them
+    validations:
+      required: true
+
+  - type: textarea
+    id: other-mods
+    attributes:
+      label: System information
+      description: Paste the output of Copy system information from `/wynntils bug`. If you cannot run the command, list other installed mods and their versions, or write "None" if there are no other mods.
+      placeholder: |
+        - Mod name 1 version
+        - Mod name 2 version
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Give clear steps that someone else can follow. Include any required world, character, item, quest, or screen details.
+      placeholder: |
+        1. Start Minecraft with ...
+        2. Join Wynncraft and ...
+        3. Open ...
+        4. Click ...
+    validations:
+      required: true
+
+  - type: input
+    id: reproduction-rate
+    attributes:
+      label: Reproduction rate
+      description: How often does the bug occur when you follow the steps?
+      placeholder: "100% (16/16 attempts)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: What did you expect Wynntils to do?
+      placeholder: The build should apply and the screen should remain open.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual behavior
+      description: What happened instead? Include what you saw in-game and any visible error message.
+      placeholder: The screen closes and Minecraft displays an error message.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error message or relevant logs
+      description: Paste the complete error message or the most relevant log section. If there is no error message or log, write "None". Redact account details, tokens, and other private information.
+      render: shell
+    validations:
+      required: true
+
+  - type: upload
+    id: log-files
+    attributes:
+      label: Full log and crash report
+      description: Attach logs/latest.log from the affected game instance. If you restarted, attach the archived .log.gz from the affected session instead. For a crash, also attach the matching file from crash-reports. Review files for private information first. If no log is available, explain why in the error message field above.
+    validations:
+      required: false
+      accept: ".log,.txt,.gz,.zip"
+
+  - type: upload
+    id: attachments
+    attributes:
+      label: Screenshots, videos, or other files
+      description: Upload screenshots, short videos, crash reports, or other files that help show the problem. Redact private information before uploading.
+    validations:
+      required: false
+      accept: ".png,.jpg,.jpeg,.gif,.webp,.mp4,.mov,.webm,.log,.txt,.json,.zip"
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Workaround
+      description: If you found a temporary workaround, describe it. Otherwise, write "None".
+      placeholder: Restarting Minecraft makes the issue go away until the next login.
+    validations:
+      required: false

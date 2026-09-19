@@ -56,6 +56,10 @@ You are free to create issues as long as you check whether you are using the lat
 
 ### What to include?
 
+Run `/wynntils bug` in-game to copy system information, open the current instance's logs folder, and open the bug report form with environment details filled in. Paste the copied information into the form and attach `logs/latest.log` from the affected session. If you restarted the game, use the archived log from that session instead. For a crash, also attach the matching file from `crash-reports`. Review these files for private information before uploading.
+
+If the game cannot start, open the instance's game folder through your launcher to find these files and fill in the environment details manually.
+
 When filing an issue, make sure to answer these seven questions. We should be able to reproduce your issue with this information.
 
 1. What version of the mod are you using? Please include a full version number.
