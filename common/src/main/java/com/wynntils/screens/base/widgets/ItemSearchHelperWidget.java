@@ -5,6 +5,7 @@
 package com.wynntils.screens.base.widgets;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Services;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemStatProvider;
@@ -21,7 +22,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class ItemSearchHelperWidget extends BasicTexturedButton {
     private static final int ELEMENTS_PER_PAGE = 4;
@@ -71,12 +71,12 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!isMouseOver(event.x(), event.y())) return false;
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             page = MathUtils.overflowInRange(page, -1, 0, tooltipPages.size() - 1);
             return true;
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             page = MathUtils.overflowInRange(page, +1, 0, tooltipPages.size() - 1);
             return true;
         }

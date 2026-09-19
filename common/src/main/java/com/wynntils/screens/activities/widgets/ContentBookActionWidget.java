@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.activities.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.List;
@@ -14,7 +15,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
 
 public class ContentBookActionWidget extends AbstractWidget implements TooltipProvider {
     private final Consumer<Integer> onClick;
@@ -36,7 +36,7 @@ public class ContentBookActionWidget extends AbstractWidget implements TooltipPr
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) return false;
+        if (event.button() == InputConstants.MOUSE_BUTTON_MIDDLE) return false;
 
         onClick.accept(event.button());
         return true;

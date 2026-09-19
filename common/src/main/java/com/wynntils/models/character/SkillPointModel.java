@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.character;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
@@ -14,6 +15,7 @@ import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
+import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.models.character.type.ClickAction;
 import com.wynntils.models.character.type.SavableGear;
 import com.wynntils.models.character.type.SavableSkillPointSet;
@@ -27,6 +29,7 @@ import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.models.stats.type.SkillStatType;
+import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.ErrorOr;
@@ -42,13 +45,15 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.lwjgl.glfw.GLFW;
+import net.neoforged.bus.api.SubscribeEvent;
 
 public final class SkillPointModel extends Model {
     private static final int[] SKILL_POINT_TOTAL_SLOTS = {11, 12, 13, 14, 15};
     private static final int SKILL_POINT_TOME_SLOT = 4;
     private static final int CONTENT_BOOK_SLOT = 62;
     private static final Pattern SANITIZE_PATTERN = Pattern.compile("[^a-zA-Z0-9'\\-.,!?\\s]");
+
+    private boolean cancelScreenClosing = false;
 
     private Map<Skill, Integer> totalSkillPoints = new EnumMap<>(Skill.class);
     private Map<Skill, Integer> gearSkillPoints = new EnumMap<>(Skill.class);
@@ -80,6 +85,12 @@ public final class SkillPointModel extends Model {
             getAssignedSkillPoints(Skill.DEFENCE),
             getAssignedSkillPoints(Skill.AGILITY)
         });
+    }
+
+    @SubscribeEvent
+    public void onScreenClose(ScreenClosedEvent.Pre e) {
+        if (!cancelScreenClosing || !(e.getScreen() instanceof BuildLoadoutsScreen)) return;
+        e.setCanceled(true);
     }
 
     /**
@@ -158,10 +169,15 @@ public final class SkillPointModel extends Model {
         List<ClickAction> clickActions = calculateClickActions(target.getSkillPointsAsArray());
         int batchSize = 5; // tune this if needed (5 clicks = 1 packet burst)
 
+        cancelScreenClosing = true;
+
         QueryBuilder builder = ScriptedContainerQuery.builder("Loading Skill Point Loadout Query")
                 .onError(msg -> {
                     WynntilsMod.warn("Failed to load skill point loadout: " + msg);
-                    if (onError != null) onError.accept(msg);
+                    if (onError != null) {
+                        onError.accept(msg);
+                    }
+                    cancelScreenClosing = false;
                 })
                 .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                         .expectContainer(CharacterInfoContainer.class)
@@ -193,7 +209,10 @@ public final class SkillPointModel extends Model {
             }
             calculateTotalSkillPoints();
 
-            if (onComplete != null) onComplete.run();
+            if (onComplete != null) {
+                onComplete.run();
+            }
+            cancelScreenClosing = false;
         });
 
         builder.build().executeQuery();
@@ -418,16 +437,16 @@ public final class SkillPointModel extends Model {
             int ones = diff % 5;
 
             for (int i = 0; i < fives; i++) {
-                actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_RIGHT, true));
+                actions.add(new ClickAction(slot, InputConstants.MOUSE_BUTTON_RIGHT, true));
                 if (!confirmationCompleted) {
-                    actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_RIGHT, true));
+                    actions.add(new ClickAction(slot, InputConstants.MOUSE_BUTTON_RIGHT, true));
                     confirmationCompleted = true;
                 }
             }
             for (int i = 0; i < ones; i++) {
-                actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_RIGHT, false));
+                actions.add(new ClickAction(slot, InputConstants.MOUSE_BUTTON_RIGHT, false));
                 if (!confirmationCompleted) {
-                    actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_RIGHT, false));
+                    actions.add(new ClickAction(slot, InputConstants.MOUSE_BUTTON_RIGHT, false));
                     confirmationCompleted = true;
                 }
             }
@@ -440,10 +459,10 @@ public final class SkillPointModel extends Model {
             int ones = diff % 5;
 
             for (int i = 0; i < fives; i++) {
-                actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_LEFT, true));
+                actions.add(new ClickAction(slot, InputConstants.MOUSE_BUTTON_LEFT, true));
             }
             for (int i = 0; i < ones; i++) {
-                actions.add(new ClickAction(slot, GLFW.GLFW_MOUSE_BUTTON_LEFT, false));
+                actions.add(new ClickAction(slot, InputConstants.MOUSE_BUTTON_LEFT, false));
             }
         }
 

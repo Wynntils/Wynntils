@@ -7,7 +7,6 @@ package com.wynntils.core.keybinds;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.KeyMapping;
-import org.lwjgl.glfw.GLFW;
 
 public final class WynntilsKeyMapping extends KeyMapping {
     private boolean blockedByScreen;
@@ -17,11 +16,11 @@ public final class WynntilsKeyMapping extends KeyMapping {
     }
 
     public void onInput(int action, boolean inScreen) {
-        if (action == GLFW.GLFW_RELEASE) {
+        if (action == InputConstants.RELEASE) {
             blockedByScreen = false;
         } else if (inScreen) {
             suppressScreenInput();
-        } else if (action == GLFW.GLFW_PRESS) {
+        } else if (action == InputConstants.PRESS) {
             blockedByScreen = false;
         }
     }

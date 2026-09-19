@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.itemfilter.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
@@ -29,7 +30,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class ProviderFilterListWidget extends AbstractWidget {
     private static final float SCROLL_FACTOR = 10f;
@@ -183,10 +183,10 @@ public class ProviderFilterListWidget extends AbstractWidget {
         } else if (addNumericFilterButton != null && addNumericFilterButton.isMouseOver(event.x(), event.y())) {
             return addNumericFilterButton.mouseClicked(event, isDoubleClick);
         } else if (numericChoiceButton != null && numericChoiceButton.isMouseOver(event.x(), event.y())) {
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                 cycleNumericChoice(1);
                 return true;
-            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 cycleNumericChoice(-1);
                 return true;
             }

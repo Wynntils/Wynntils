@@ -128,9 +128,9 @@ public final class ChatTabService extends Service {
         focusedChatTabData.setUnreadMessages(false);
 
         // Copy the focused tabs messages into the wrapping chat component for display
-        McUtils.mc().gui.chat.allMessages = focusedChatTabData.getChatComponent().allMessages;
-        McUtils.mc().gui.chat.trimmedMessages = focusedChatTabData.getChatComponent().trimmedMessages;
-        McUtils.mc().gui.chat.refreshTrimmedMessages();
+        McUtils.getChat().allMessages = focusedChatTabData.getChatComponent().allMessages;
+        McUtils.getChat().trimmedMessages = focusedChatTabData.getChatComponent().trimmedMessages;
+        McUtils.getChat().refreshTrimmedMessages();
     }
     // endregion
 
@@ -152,7 +152,7 @@ public final class ChatTabService extends Service {
                         chatTab, new ChatTabData(new ChatComponent(McUtils.mc()), false, chatTab.customRegexString())));
 
         // Pass the historic messages from the vanilla chat component to all the new tabs
-        McUtils.mc().gui.chat.allMessages.reversed().forEach(msg -> {
+        McUtils.getChat().allMessages.reversed().forEach(msg -> {
             Component component = msg.content();
             StyledText styledText = StyledText.fromComponent(component);
             RecipientType recipientType = Handlers.Chat.getRecipientType(styledText);
@@ -164,7 +164,7 @@ public final class ChatTabService extends Service {
             });
         });
 
-        vanillaChatComponent = McUtils.mc().gui.chat;
+        vanillaChatComponent = McUtils.getChat();
         McUtils.mc().gui.chat = new WrappingChatComponent(McUtils.mc());
 
         setFocusedTab(getChatTabs().getFirst());
@@ -288,7 +288,7 @@ public final class ChatTabService extends Service {
 
     public void modifyChatHistory(Consumer<List<GuiMessage>> allMessagesConsumer) {
         if (!isEnabled()) {
-            ChatComponent chatComponent = McUtils.mc().gui.chat;
+            ChatComponent chatComponent = McUtils.getChat();
 
             allMessagesConsumer.accept(chatComponent.allMessages);
             chatComponent.refreshTrimmedMessages();

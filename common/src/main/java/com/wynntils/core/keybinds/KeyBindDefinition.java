@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.world.inventory.Slot;
-import org.lwjgl.glfw.GLFW;
 
 public record KeyBindDefinition(
         String id,
@@ -57,7 +56,7 @@ public record KeyBindDefinition(
             "Relay Bomb to Party",
             Managers.KeyBind.CHAT_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
 
     public static final KeyBindDefinition BOMB_RELAY_GUILD = register(
@@ -65,7 +64,7 @@ public record KeyBindDefinition(
             "Relay Bomb to Guild",
             Managers.KeyBind.CHAT_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
 
     public static final KeyBindDefinition SHARE_ITEM = register(
@@ -73,7 +72,7 @@ public record KeyBindDefinition(
             "Share Item",
             Managers.KeyBind.CHAT_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_F5,
+            InputConstants.KEY_F5,
             true);
 
     public static final KeyBindDefinition SAVE_ITEM_TO_RECORD = register(
@@ -81,7 +80,7 @@ public record KeyBindDefinition(
             "Save Item to Item Record",
             Managers.KeyBind.CHAT_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_F6,
+            InputConstants.KEY_F6,
             true);
 
     public static final KeyBindDefinition OPEN_ITEM_RECORD = register(
@@ -89,7 +88,7 @@ public record KeyBindDefinition(
             "Open Item Record",
             Managers.KeyBind.CHAT_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
     // endregion
 
@@ -99,7 +98,7 @@ public record KeyBindDefinition(
             "Mount Horse",
             Managers.KeyBind.COMBAT_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_R,
+            InputConstants.KEY_R,
             true);
 
     public static final KeyBindDefinition CAST_FIRST_SPELL = register(
@@ -107,7 +106,7 @@ public record KeyBindDefinition(
             "Cast 1st Spell",
             Managers.KeyBind.COMBAT_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_Z,
+            InputConstants.KEY_Z,
             true);
 
     public static final KeyBindDefinition CAST_SECOND_SPELL = register(
@@ -115,7 +114,7 @@ public record KeyBindDefinition(
             "Cast 2nd Spell",
             Managers.KeyBind.COMBAT_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_X,
+            InputConstants.KEY_X,
             true);
 
     public static final KeyBindDefinition CAST_THIRD_SPELL = register(
@@ -123,7 +122,7 @@ public record KeyBindDefinition(
             "Cast 3rd Spell",
             Managers.KeyBind.COMBAT_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_C,
+            InputConstants.KEY_C,
             true);
 
     public static final KeyBindDefinition CAST_FOURTH_SPELL = register(
@@ -131,7 +130,7 @@ public record KeyBindDefinition(
             "Cast 4th Spell",
             Managers.KeyBind.COMBAT_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_V,
+            InputConstants.KEY_V,
             true);
 
     public static final KeyBindDefinition CAST_MELEE_ATTACK = register(
@@ -139,7 +138,7 @@ public record KeyBindDefinition(
             "Cast Melee Attack",
             Managers.KeyBind.COMBAT_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
     // endregion
 
@@ -149,7 +148,7 @@ public record KeyBindDefinition(
             "Execute 1st Custom Command Keybind",
             Managers.KeyBind.COMMANDS_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
 
     public static final KeyBindDefinition CUSTOM_COMMAND_TWO = register(
@@ -157,7 +156,7 @@ public record KeyBindDefinition(
             "Execute 2nd Custom Command Keybind",
             Managers.KeyBind.COMMANDS_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
 
     public static final KeyBindDefinition CUSTOM_COMMAND_THREE = register(
@@ -165,7 +164,7 @@ public record KeyBindDefinition(
             "Execute 3rd Custom Command Keybind",
             Managers.KeyBind.COMMANDS_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
 
     public static final KeyBindDefinition CUSTOM_COMMAND_FOUR = register(
@@ -173,7 +172,7 @@ public record KeyBindDefinition(
             "Execute 4th Custom Command Keybind",
             Managers.KeyBind.COMMANDS_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
 
     public static final KeyBindDefinition CUSTOM_COMMAND_FIVE = register(
@@ -181,7 +180,7 @@ public record KeyBindDefinition(
             "Execute 5th Custom Command Keybind",
             Managers.KeyBind.COMMANDS_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
 
     public static final KeyBindDefinition CUSTOM_COMMAND_SIX = register(
@@ -189,7 +188,7 @@ public record KeyBindDefinition(
             "Execute 6th Custom Command Keybind",
             Managers.KeyBind.COMMANDS_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
     // endregion
 
@@ -199,7 +198,7 @@ public record KeyBindDefinition(
             "Dump Content Book",
             Managers.KeyBind.DEBUG_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
 
     public static final KeyBindDefinition LOG_ITEM_INFO = register(
@@ -207,7 +206,7 @@ public record KeyBindDefinition(
             "Log Item Info",
             Managers.KeyBind.DEBUG_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
 
     public static final KeyBindDefinition TEXTURE_RECORDER = register(
@@ -215,7 +214,7 @@ public record KeyBindDefinition(
             "Texture Recorder",
             Managers.KeyBind.DEBUG_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
     // endregion
 
@@ -225,7 +224,7 @@ public record KeyBindDefinition(
             "Open Emerald Pouch",
             Managers.KeyBind.INVENTORY_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
 
     public static final KeyBindDefinition OPEN_GUILD_BANK = register(
@@ -233,7 +232,7 @@ public record KeyBindDefinition(
             "Open Guild Bank",
             Managers.KeyBind.INVENTORY_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_P,
+            InputConstants.KEY_P,
             true);
 
     public static final KeyBindDefinition OPEN_INGREDIENT_POUCH = register(
@@ -241,7 +240,7 @@ public record KeyBindDefinition(
             "Open Ingredient Pouch",
             Managers.KeyBind.INVENTORY_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
 
     public static final KeyBindDefinition TOGGLE_FAVORITE = register(
@@ -249,7 +248,7 @@ public record KeyBindDefinition(
             "Favorite/Unfavorite Item",
             Managers.KeyBind.INVENTORY_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
 
     public static final KeyBindDefinition LOCK_SLOT = register(
@@ -257,7 +256,7 @@ public record KeyBindDefinition(
             "Lock Slot",
             Managers.KeyBind.INVENTORY_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_H,
+            InputConstants.KEY_H,
             true);
 
     public static final KeyBindDefinition SCREENSHOT_ITEM = register(
@@ -265,7 +264,7 @@ public record KeyBindDefinition(
             "Screenshot Item",
             Managers.KeyBind.INVENTORY_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_F4,
+            InputConstants.KEY_F4,
             true);
     // endregion
 
@@ -275,7 +274,7 @@ public record KeyBindDefinition(
             "Open Guild Map",
             Managers.KeyBind.MAP_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_J,
+            InputConstants.KEY_J,
             true);
 
     public static final KeyBindDefinition OPEN_MAIN_MAP = register(
@@ -283,7 +282,7 @@ public record KeyBindDefinition(
             "Open Main Map",
             Managers.KeyBind.MAP_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_M,
+            InputConstants.KEY_M,
             true);
 
     public static final KeyBindDefinition NEW_WAYPOINT = register(
@@ -291,7 +290,7 @@ public record KeyBindDefinition(
             "New Waypoint",
             Managers.KeyBind.MAP_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_B,
+            InputConstants.KEY_B,
             true);
 
     public static final KeyBindDefinition MINIMAP_ZOOM_IN = register(
@@ -299,7 +298,7 @@ public record KeyBindDefinition(
             "Increase Minimap Zoom",
             Managers.KeyBind.MAP_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_EQUAL,
+            InputConstants.KEY_EQUALS,
             false);
 
     public static final KeyBindDefinition MINIMAP_ZOOM_OUT = register(
@@ -307,7 +306,7 @@ public record KeyBindDefinition(
             "Decrease Minimap Zoom",
             Managers.KeyBind.MAP_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_MINUS,
+            InputConstants.KEY_MINUS,
             false);
     // endregion
 
@@ -317,7 +316,7 @@ public record KeyBindDefinition(
             "Toggle Stopwatch",
             Managers.KeyBind.OVERLAYS_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_KP_0,
+            InputConstants.KEY_NUMPAD0,
             true);
 
     public static final KeyBindDefinition RESET_STOPWATCH = register(
@@ -325,7 +324,7 @@ public record KeyBindDefinition(
             "Reset Stopwatch",
             Managers.KeyBind.OVERLAYS_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_KP_DECIMAL,
+            InputConstants.KEY_NUMPADCOMMA,
             true);
     // endregion
 
@@ -335,7 +334,7 @@ public record KeyBindDefinition(
             "Open Party Management Screen",
             Managers.KeyBind.PLAYERS_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_O,
+            InputConstants.KEY_O,
             true);
 
     public static final KeyBindDefinition VIEW_PLAYER = register(
@@ -343,7 +342,7 @@ public record KeyBindDefinition(
             "View player's gear",
             Managers.KeyBind.PLAYERS_CATEGORY,
             InputConstants.Type.MOUSE,
-            GLFW.GLFW_MOUSE_BUTTON_MIDDLE,
+            InputConstants.MOUSE_BUTTON_MIDDLE,
             true);
     // endregion
 
@@ -353,7 +352,7 @@ public record KeyBindDefinition(
             "Hold to compare",
             Managers.KeyBind.TOOLTIPS_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_KP_ENTER,
+            InputConstants.KEY_NUMPADENTER,
             false);
 
     public static final KeyBindDefinition SELECT_FOR_COMPARING = register(
@@ -361,7 +360,7 @@ public record KeyBindDefinition(
             "Select for comparing",
             Managers.KeyBind.TOOLTIPS_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_KP_ADD,
+            InputConstants.KEY_ADD,
             true);
 
     public static final KeyBindDefinition SHOW_IDENTIFICATION_RANGE = register(
@@ -369,7 +368,7 @@ public record KeyBindDefinition(
             "Show identification range",
             Managers.KeyBind.TOOLTIPS_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_LEFT_SHIFT,
+            InputConstants.KEY_LSHIFT,
             false);
 
     public static final KeyBindDefinition SHOW_IDENTIFICATION_REROLL = register(
@@ -377,7 +376,7 @@ public record KeyBindDefinition(
             "Show identification reroll",
             Managers.KeyBind.TOOLTIPS_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_LEFT_CONTROL,
+            InputConstants.KEY_LCONTROL,
             false);
 
     public static final KeyBindDefinition SHOW_WEIGHT_DISTRIBUTION = register(
@@ -385,7 +384,7 @@ public record KeyBindDefinition(
             "Show weight distribution",
             Managers.KeyBind.TOOLTIPS_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_LEFT_SHIFT,
+            InputConstants.KEY_LSHIFT,
             false);
 
     public static final KeyBindDefinition SHOW_WEIGHT_CONTRIBUTION = register(
@@ -393,7 +392,7 @@ public record KeyBindDefinition(
             "Show weight contribution",
             Managers.KeyBind.TOOLTIPS_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_LEFT_CONTROL,
+            InputConstants.KEY_LCONTROL,
             false);
     // endregion
 
@@ -403,7 +402,7 @@ public record KeyBindDefinition(
             "Quick Search TM",
             Managers.KeyBind.TRADEMARKET_CATEGORY,
             InputConstants.Type.MOUSE,
-            GLFW.GLFW_MOUSE_BUTTON_MIDDLE,
+            InputConstants.MOUSE_BUTTON_MIDDLE,
             true);
     // endregion
 
@@ -413,7 +412,7 @@ public record KeyBindDefinition(
             "Open Territory Menu",
             Managers.KeyBind.UI_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_U,
+            InputConstants.KEY_U,
             true);
 
     public static final KeyBindDefinition OPEN_CONTENT_BOOK = register(
@@ -421,7 +420,7 @@ public record KeyBindDefinition(
             "Open Quest Book",
             Managers.KeyBind.UI_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_K,
+            InputConstants.KEY_K,
             true);
 
     public static final KeyBindDefinition OPEN_WYNNTILS_MENU = register(
@@ -429,7 +428,7 @@ public record KeyBindDefinition(
             "Open Wynntils Menu",
             Managers.KeyBind.UI_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_I,
+            InputConstants.KEY_I,
             true);
 
     public static final KeyBindDefinition OPEN_OVERLAY_MENU = register(
@@ -437,7 +436,7 @@ public record KeyBindDefinition(
             "Open Overlay Menu",
             Managers.KeyBind.UI_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
 
     public static final KeyBindDefinition OPEN_OVERLAY_FREE_MOVE = register(
@@ -445,7 +444,7 @@ public record KeyBindDefinition(
             "Open Overlay Free Move",
             Managers.KeyBind.UI_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
 
     public static final KeyBindDefinition OPEN_EMOTE_WHEEL = register(
@@ -453,7 +452,7 @@ public record KeyBindDefinition(
             "Emote Wheel",
             Managers.KeyBind.UI_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
 
     public static final KeyBindDefinition OPEN_GUIDES_LIST = register(
@@ -461,7 +460,7 @@ public record KeyBindDefinition(
             "Open Guides List",
             Managers.KeyBind.UI_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
     // endregion
 
@@ -471,7 +470,7 @@ public record KeyBindDefinition(
             "Gammabright",
             Managers.KeyBind.UTILITIES_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_G,
+            InputConstants.KEY_G,
             true);
 
     public static final KeyBindDefinition TOGGLE_SILENCER = register(
@@ -479,7 +478,7 @@ public record KeyBindDefinition(
             "Toggle Silencer",
             Managers.KeyBind.UTILITIES_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
 
     public static final KeyBindDefinition TOGGLE_DIALOGUE_AUTO_PROGRESS = register(
@@ -487,7 +486,7 @@ public record KeyBindDefinition(
             "Toggle Dialogue Auto Progress",
             Managers.KeyBind.UTILITIES_CATEGORY,
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            InputConstants.UNKNOWN.getValue(),
             true);
     // endregion
 

@@ -5,6 +5,7 @@
 package com.wynntils.screens.emotewheel;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
@@ -32,7 +33,6 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
     private static final int MAX_EMOTES_PER_PAGE = 8;
@@ -166,7 +166,7 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+        if (event.key() == InputConstants.KEY_ESCAPE) {
             onClose();
             McUtils.setScreen(previousScreen);
             return true;

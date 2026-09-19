@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -22,7 +23,6 @@ import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.DEBUG)
 public class ItemDebugTooltipsFeature extends Feature {
@@ -49,7 +49,7 @@ public class ItemDebugTooltipsFeature extends Feature {
                 StyledText.fromUnformattedString(wynnItem.toString()).replaceAll("§", "%");
         List<StyledText> wrappedDescription = Arrays.stream(RenderedStringUtils.wrapTextBySize(rawString, 150))
                 .toList();
-        if (!KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT) && wrappedDescription.size() > 4) {
+        if (!KeyboardUtils.isKeyDown(InputConstants.KEY_RSHIFT) && wrappedDescription.size() > 4) {
             wrappedDescription = new ArrayList<>(wrappedDescription.subList(0, 3));
             wrappedDescription.add(StyledText.fromString("..."));
             wrappedDescription.add(StyledText.fromString("Press Right Shift for all"));

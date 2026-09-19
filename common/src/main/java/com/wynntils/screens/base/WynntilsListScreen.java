@@ -5,6 +5,7 @@
 package com.wynntils.screens.base;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.ListSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
@@ -26,7 +27,6 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends WynntilsMenuScreenBase
         implements WynntilsPagedScreen {
@@ -156,7 +156,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
+        if (event.key() == InputConstants.KEY_ESCAPE && this.shouldCloseOnEsc()) {
             onClose();
             return true;
         }

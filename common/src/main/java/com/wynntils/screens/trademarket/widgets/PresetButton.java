@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.trademarket.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -20,7 +21,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class PresetButton extends WynntilsButton implements TooltipProvider {
     private final int presetId;
@@ -43,14 +43,14 @@ public class PresetButton extends WynntilsButton implements TooltipProvider {
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!isMouseOver(event.x(), event.y())) return false;
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             String lastSearchFilter =
                     tradeMarketSearchResultScreen.getSearchQuery().queryString();
             if (lastSearchFilter.isEmpty()) return true;
 
             Models.TradeMarket.setPresetFilter(presetId, lastSearchFilter);
             return true;
-        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             Optional<String> presetFilterOpt = Models.TradeMarket.getPresetFilter(presetId);
             if (presetFilterOpt.isEmpty()) return true;
 

@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.chattabs.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -21,7 +22,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class ChatTabButton extends WynntilsButton {
     private final ChatTab tab;
@@ -62,9 +62,9 @@ public class ChatTabButton extends WynntilsButton {
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!isMouseOver(event.x(), event.y())) return false;
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             Services.ChatTab.setFocusedTab(tab);
-        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             McUtils.setScreen(ChatTabEditingScreen.create(tab));
         }
 

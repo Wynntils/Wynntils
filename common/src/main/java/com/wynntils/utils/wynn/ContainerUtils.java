@@ -4,6 +4,7 @@
  */
 package com.wynntils.utils.wynn;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.utils.mc.McUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -17,7 +18,6 @@ import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.lwjgl.glfw.GLFW;
 
 public final class ContainerUtils {
     private static final int INVENTORY_SLOTS = 36;
@@ -40,7 +40,7 @@ public final class ContainerUtils {
 
         NonNullList<ItemStack> items = McUtils.containerMenu().getItems();
         // We need to offset the slot number so that it corresponds to the correct slot in the inventory
-        clickOnSlot(INVENTORY_SLOTS + slotNum, containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, items);
+        clickOnSlot(INVENTORY_SLOTS + slotNum, containerId, InputConstants.MOUSE_BUTTON_LEFT, items);
 
         return true;
     }
