@@ -299,12 +299,12 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             return true;
         }
 
-        if (event.button() == 0
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT
                 && event.x() >= renderX
                 && event.x() <= renderX + renderWidth
                 && event.y() >= renderY
                 && event.y() <= renderY + renderHeight) {
-            isPanning = event.button() == 0;
+            isPanning = true;
             updateMapCenter(
                     (float) (mapCenterX - dragX / zoomRenderScale), (float) (mapCenterZ - dragY / zoomRenderScale));
         }
