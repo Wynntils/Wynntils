@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.territorymanagement;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
@@ -44,7 +45,6 @@ import java.util.stream.Collectors;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryManagementScreen> {
     private static final String SELECT_TERRITORIES_TITLE = "Select Territories";
@@ -419,7 +419,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
             ContainerUtils.clickOnSlot(
                     NEXT_PAGE_SLOT,
                     wrappedScreen.getWrappedScreenInfo().containerId(),
-                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                    InputConstants.MOUSE_BUTTON_LEFT,
                     items);
             return;
         }
@@ -439,7 +439,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
             ContainerUtils.clickOnSlot(
                     PREVIOUS_PAGE_SLOT,
                     wrappedScreen.getWrappedScreenInfo().containerId(),
-                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                    InputConstants.MOUSE_BUTTON_LEFT,
                     items);
             return;
         }
@@ -515,7 +515,7 @@ public class TerritoryManagementHolder extends WrappedScreenHolder<TerritoryMana
         ContainerUtils.clickOnSlot(
                 slot,
                 wrappedScreen.getWrappedScreenInfo().containerId(),
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                InputConstants.MOUSE_BUTTON_LEFT,
                 wrappedScreen.getWrappedScreenInfo().containerMenu().getItems());
     }
 

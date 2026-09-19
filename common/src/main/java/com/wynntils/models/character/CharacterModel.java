@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.character;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
@@ -50,7 +51,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 /**
  * Tracks persistent metadata about the player's selected character, such as
@@ -150,7 +150,7 @@ public final class CharacterModel extends Model {
     @SubscribeEvent
     public void onContainerClick(ContainerClickEvent e) {
         if (Models.WorldState.getCurrentState() == WorldState.CHARACTER_SELECTION
-                && e.getMouseButton() != GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                && e.getMouseButton() != InputConstants.MOUSE_BUTTON_RIGHT) {
             handleSelectedCharacter(e.getItemStack());
         }
     }

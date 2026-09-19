@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.trademarket;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -22,7 +23,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ActionSpeed;
 import com.wynntils.utils.wynn.ContainerUtils;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketDefaultSortOrderFeature extends Feature {
@@ -84,7 +84,7 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
         ContainerUtils.clickOnSlot(
                 TradeMarketModel.SORT_ORDER_SLOT,
                 McUtils.containerMenu().containerId,
-                shouldRightClick ? GLFW.GLFW_MOUSE_BUTTON_RIGHT : GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                shouldRightClick ? InputConstants.MOUSE_BUTTON_RIGHT : InputConstants.MOUSE_BUTTON_LEFT,
                 McUtils.containerMenu().getItems());
 
         clickCountdown -= 1;

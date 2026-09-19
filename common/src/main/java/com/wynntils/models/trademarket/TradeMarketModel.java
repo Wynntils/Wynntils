@@ -16,6 +16,7 @@ import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.containers.trademarket.TradeMarketBuyContainer;
@@ -147,6 +148,16 @@ public final class TradeMarketModel extends Model {
         if (Models.Container.getCurrentContainer() != null) {
             updateStateFromContainer();
         }
+    }
+
+    @SubscribeEvent
+    public void onScreenInit(ScreenInitEvent.Post event) {
+        // on first open, we need to wait for the server to send the items
+        if (event.isFirstInit()) return;
+        if (!(event.getScreen() instanceof ContainerScreen)) return;
+        if (!(Models.Container.getCurrentContainer() instanceof TradeMarketSellContainer)) return;
+
+        handleSellDialogueUpdate();
     }
 
     @SubscribeEvent

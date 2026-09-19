@@ -102,8 +102,9 @@ public class TradeMarketPriceMatchFeature extends Feature {
 
         if (priceCheckInfo.ask() != -1) {
             int lowestAsk = priceCheckInfo.ask();
-            int taxedBid = (lowestAsk <= undercutBy.get()) ? 1 : lowestAsk - undercutBy.get();
-            int untaxedBid = Models.Emerald.getWithoutTax(taxedBid);
+            int taxedBid = (lowestAsk <= undercutBy.get()) ? 1 : lowestAsk;
+            int untaxedBid = Models.Emerald.getWithoutTax(taxedBid) - undercutBy.get();
+            int finalBid = Models.Emerald.getWithTax(untaxedBid);
 
             MutableComponent buttonTooltip = (undercutBy.get() == 0)
                     ? Component.translatable("feature.wynntils.tradeMarketPriceMatch.lowestSellOfferMatchesTooltip")
@@ -122,7 +123,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
                     .append(Component.literal("\n"))
                     .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.totalPrice")
                             .withStyle(ChatFormatting.GOLD))
-                    .append(getPriceComponent(taxedBid));
+                    .append(getPriceComponent(finalBid));
 
             PriceButton priceButton = new PriceButton(
                     rightPos,
