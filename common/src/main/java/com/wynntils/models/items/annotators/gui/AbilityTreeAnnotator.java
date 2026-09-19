@@ -35,13 +35,15 @@ public final class AbilityTreeAnnotator implements GuiItemAnnotator {
             Matcher matcher = LoreUtils.matchLoreLine(itemStack, 3, ABILITY_POINTS_PATTERN);
             if (!matcher.matches()) return null;
             int count = Integer.parseInt(matcher.group(1)); // available points
-            int totalPoints = Integer.parseInt(matcher.group(2)) + getLoanedAbilityPoints(itemStack);
-            return new AbilityTreeItem(count, totalPoints, false);
+            int totalPoints = Integer.parseInt(matcher.group(2));
+            int loanedPoints = getLoanedAbilityPoints(itemStack);
+            return new AbilityTreeItem(count, totalPoints, loanedPoints, false);
         } else if (name.equals(TREE_ABILITY_POINTS_NAME) || name.equals(TREE_ABILITY_POINTS_NAME_ALT)) {
             Matcher matcher = LoreUtils.matchLoreLine(itemStack, 3, ABILITY_POINTS_PATTERN);
             if (!matcher.matches()) return null;
             int count = Integer.parseInt(matcher.group(1));
-            int totalPoints = Integer.parseInt(matcher.group(2)) + getLoanedAbilityPoints(itemStack);
+            int totalPoints = Integer.parseInt(matcher.group(2));
+            int loanedPoints = getLoanedAbilityPoints(itemStack);
 
             boolean isReset = false;
             if (name.equals(TREE_ABILITY_POINTS_NAME_ALT)) {
@@ -49,7 +51,7 @@ public final class AbilityTreeAnnotator implements GuiItemAnnotator {
                 isReset = resetMatcher.matches();
             }
 
-            return new AbilityTreeItem(count, totalPoints, isReset);
+            return new AbilityTreeItem(count, totalPoints, loanedPoints, isReset);
         } else {
             return null;
         }

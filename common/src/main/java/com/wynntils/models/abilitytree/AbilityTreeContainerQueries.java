@@ -149,8 +149,8 @@ public class AbilityTreeContainerQueries {
                     if (abilityTreeItem.isEmpty()) {
                         needsAbilityTreeReset = false;
                     }
-                    abilityTreeItem.ifPresent(
-                            treeItem -> needsAbilityTreeReset = treeItem.getCount() < treeItem.getTotalPoints());
+                    abilityTreeItem.ifPresent(treeItem -> needsAbilityTreeReset =
+                            treeItem.getCount() < treeItem.getTotalPoints() + treeItem.getLoanedPoints());
 
                     int amount = 0;
 
