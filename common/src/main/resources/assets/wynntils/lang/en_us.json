@@ -48,6 +48,7 @@
   "command.wynntils.reauth.tryReauth": "Disconnecting from Hades, and trying to reauthenticate...",
   "command.wynntils.refetching": "Removing current data and fetching new data....",
   "command.wynntils.reloadCaches.reloading": "Reloading caches...",
+  "command.wynntils.rescan.abortText": "Rescan aborted because the player performed an action.",
   "command.wynntils.rescan.endText": "Finished refreshing character data, aspects, and ability tree.",
   "command.wynntils.rescan.startText": "Refreshing character data, aspects, and ability tree...",
   "command.wynntils.servers.description": "Show information about Wynncraft servers",
