@@ -7,13 +7,17 @@ package com.wynntils.screens.overlays.placement;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,7 @@ import net.minecraft.network.chat.Component;
 public final class OverlayPositionPanel {
     private static final int WIDTH = 204;
     private static final int HEIGHT = 148;
+    private static final CustomColor TEXT_COLOR = CustomColor.fromARGBInt(0xFF3E2418);
 
     private final int x;
     private final int y;
@@ -110,7 +115,8 @@ public final class OverlayPositionPanel {
     }
 
     public boolean contains(double mouseX, double mouseY) {
-        return mouseX >= x && mouseX < x + WIDTH && mouseY >= y && mouseY < y + HEIGHT;
+        return MathUtils.isInside(
+                (int) Math.floor(mouseX), (int) Math.floor(mouseY), x, x + WIDTH - 1, y, y + HEIGHT - 1);
     }
 
     public boolean isPlacementLocked() {
@@ -138,13 +144,18 @@ public final class OverlayPositionPanel {
     public void render(GuiGraphics graphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 graphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND, x, y, WIDTH, HEIGHT);
-        graphics.drawString(
-                McUtils.mc().font,
-                McUtils.mc().font.plainSubstrByWidth(overlay.getTranslatedName(), WIDTH - 36),
-                x + 8,
-                y + 7,
-                0xFF3E2418,
-                false);
+        FontRenderer.getInstance()
+                .renderText(
+                        graphics,
+                        StyledText.fromString(FontRenderer.getInstance()
+                                .getFont()
+                                .plainSubstrByWidth(overlay.getTranslatedName(), WIDTH - 36)),
+                        x + 8,
+                        y + 7,
+                        TEXT_COLOR,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        TextShadow.NONE);
         label(graphics, "x", x + 8, y + 22);
         label(graphics, "y", x + 106, y + 22);
         label(graphics, "width", x + 8, y + 58);
@@ -153,7 +164,16 @@ public final class OverlayPositionPanel {
     }
 
     private void label(GuiGraphics graphics, String key, int labelX, int labelY) {
-        graphics.drawString(McUtils.mc().font, text(key), labelX, labelY, 0xFF3E2418, false);
+        FontRenderer.getInstance()
+                .renderText(
+                        graphics,
+                        StyledText.fromComponent(text(key)),
+                        labelX,
+                        labelY,
+                        TEXT_COLOR,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        TextShadow.NONE);
     }
 
     private Component horizontalLabel() {

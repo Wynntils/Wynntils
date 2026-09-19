@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.overlays.placement;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.Corner;
@@ -51,7 +52,6 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec2;
-import org.lwjgl.glfw.GLFW;
 
 public final class OverlayManagementScreen extends WynntilsScreen {
     // This is used to calculate alignment lines
@@ -272,7 +272,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             positionPanel.getWidgets().forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
         }
 
-        if (helpPanel != null) helpPanel.render(guiGraphics);
+        if (helpPanel != null) {
+            helpPanel.render(guiGraphics);
+        }
     }
 
     @Override
@@ -313,7 +315,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     if (!widget.visible || !widget.active) continue;
                     if (widget.mouseClicked(event, isDoubleClick)) {
                         setFocused(widget);
-                        setDragging(event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT);
+                        setDragging(event.button() == InputConstants.MOUSE_BUTTON_LEFT);
                         break;
                     }
                 }
@@ -356,12 +358,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         if (selectedOverlay == null) return false;
 
         if (!isMouseHoveringOverlay(selectedOverlay, event.x(), event.y())
-                && (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT || selectedOverlay.isPlacementLocked())) {
+                && (event.button() != InputConstants.MOUSE_BUTTON_LEFT || selectedOverlay.isPlacementLocked())) {
             clearActiveSelection();
             return false;
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             if (!isMouseHoveringOverlay(selectedOverlay, event.x(), event.y())) return false;
 
             Managers.Config.saveConfig();
@@ -374,12 +376,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         setupButtons();
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE
+        if (event.button() == InputConstants.MOUSE_BUTTON_MIDDLE
                 && !KeyboardUtils.isShiftDown()
                 && !KeyboardUtils.isControlDown()
                 && !KeyboardUtils.isAltDown()
-                && !KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SUPER)
-                && !KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SUPER)) {
+                && !KeyboardUtils.isKeyDown(InputConstants.KEY_LSUPER)
+                && !KeyboardUtils.isKeyDown(InputConstants.KEY_RSUPER)) {
             if (!isMouseHoveringOverlay(selected, event.x(), event.y())) return false;
 
             togglePlacementLock(!selected.isPlacementLocked());
@@ -387,14 +389,14 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         }
 
         if (selected.isPlacementLocked()) {
-            pendingPanelClick = event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT
+            pendingPanelClick = event.button() == InputConstants.MOUSE_BUTTON_LEFT
                     && isMouseHoveringOverlay(selected, event.x(), event.y());
             clickX = event.x();
             clickY = event.y();
             return false;
         }
 
-        boolean shiftMiddleClick = event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && KeyboardUtils.isShiftDown();
+        boolean shiftMiddleClick = event.button() == InputConstants.MOUSE_BUTTON_MIDDLE && KeyboardUtils.isShiftDown();
         if (shiftMiddleClick && !isMouseHoveringOverlay(selectedOverlay, event.x(), event.y())) {
             return false;
         }
@@ -414,11 +416,11 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             return true;
         }
 
-        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
+        if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
 
         Vec2 mousePos = new Vec2((float) event.x(), (float) event.y());
 
-        pendingPanelClick = event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT
+        pendingPanelClick = event.button() == InputConstants.MOUSE_BUTTON_LEFT
                 && isMouseHoveringOverlay(selectedOverlay, event.x(), event.y());
         clickX = event.x();
         clickY = event.y();
@@ -555,7 +557,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         double releaseX = event.x() - clickX;
         double releaseY = event.y() - clickY;
         boolean openPanel = pendingPanelClick
-                && event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT
+                && event.button() == InputConstants.MOUSE_BUTTON_LEFT
                 && releaseX * releaseX + releaseY * releaseY <= 9;
         pendingPanelClick = false;
 
@@ -579,23 +581,25 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         animationLengthRemaining = 0;
 
         if (helpPanel != null) {
-            if (event.key() == GLFW.GLFW_KEY_ESCAPE || event.key() == GLFW.GLFW_KEY_ENTER) {
+            if (event.key() == InputConstants.KEY_ESCAPE || event.key() == InputConstants.KEY_RETURN) {
                 helpPanel = null;
             }
             return true;
         }
 
-        if (KeyboardUtils.isControlDown() && event.key() == GLFW.GLFW_KEY_Z) {
-            if (!KeyboardUtils.isShiftDown()) restoreHistory(false);
+        if (KeyboardUtils.isControlDown() && event.key() == InputConstants.KEY_Z) {
+            if (!KeyboardUtils.isShiftDown()) {
+                restoreHistory(false);
+            }
             return true;
         }
-        if (KeyboardUtils.isControlDown() && event.key() == GLFW.GLFW_KEY_Y) {
+        if (KeyboardUtils.isControlDown() && event.key() == InputConstants.KEY_Y) {
             restoreHistory(true);
             return true;
         }
 
         if (positionPanel != null) {
-            if (event.key() == GLFW.GLFW_KEY_ESCAPE || event.key() == GLFW.GLFW_KEY_ENTER) {
+            if (event.key() == InputConstants.KEY_ESCAPE || event.key() == InputConstants.KEY_RETURN) {
                 closePositionPanel();
                 return true;
             }
@@ -603,22 +607,22 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 setFocusedTextInput(null);
                 setFocused(null);
             }
-            if (positionPanel.isPlacementLocked() && event.key() == GLFW.GLFW_KEY_TAB) {
+            if (positionPanel.isPlacementLocked() && event.key() == InputConstants.KEY_TAB) {
                 return true;
             }
-            if (getFocusedTextInput() != null || event.key() == GLFW.GLFW_KEY_TAB) {
+            if (getFocusedTextInput() != null || event.key() == InputConstants.KEY_TAB) {
                 super.keyPressed(event);
                 return true;
             }
             closePositionPanel();
         }
 
-        if (event.key() == GLFW.GLFW_KEY_ENTER) {
+        if (event.key() == InputConstants.KEY_RETURN) {
             Managers.Config.saveConfig();
             onClose();
             McUtils.setScreen(previousScreen);
             return true;
-        } else if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+        } else if (event.key() == InputConstants.KEY_ESCAPE) {
             onClose();
             McUtils.setScreen(previousScreen);
             return true;
@@ -627,19 +631,19 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         if (selectedOverlay == null) return false;
 
         if (selectedOverlay.isPlacementLocked()) {
-            if (event.key() == GLFW.GLFW_KEY_UP
-                    || event.key() == GLFW.GLFW_KEY_DOWN
-                    || event.key() == GLFW.GLFW_KEY_LEFT
-                    || event.key() == GLFW.GLFW_KEY_RIGHT) {
+            if (event.key() == InputConstants.KEY_UP
+                    || event.key() == InputConstants.KEY_DOWN
+                    || event.key() == InputConstants.KEY_LEFT
+                    || event.key() == InputConstants.KEY_RIGHT) {
                 return true;
             }
             return false;
         }
 
-        boolean arrowKey = event.key() == GLFW.GLFW_KEY_UP
-                || event.key() == GLFW.GLFW_KEY_DOWN
-                || event.key() == GLFW.GLFW_KEY_LEFT
-                || event.key() == GLFW.GLFW_KEY_RIGHT;
+        boolean arrowKey = event.key() == InputConstants.KEY_UP
+                || event.key() == InputConstants.KEY_DOWN
+                || event.key() == InputConstants.KEY_LEFT
+                || event.key() == InputConstants.KEY_RIGHT;
         if (arrowKey) {
             resetSelection();
             editHistory.begin(selectedOverlay);
@@ -647,10 +651,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         // Shift + Arrow keys change overlay alignment
         if (arrowKey && KeyboardUtils.isShiftDown()) {
-            if (event.key() == GLFW.GLFW_KEY_UP || event.key() == GLFW.GLFW_KEY_DOWN) {
+            if (event.key() == InputConstants.KEY_UP || event.key() == InputConstants.KEY_DOWN) {
                 int index = selectedOverlay.getRenderVerticalAlignment().ordinal();
 
-                if (event.key() == GLFW.GLFW_KEY_DOWN) {
+                if (event.key() == InputConstants.KEY_DOWN) {
                     index += 1;
                 } else {
                     index -= 1;
@@ -664,10 +668,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                         .getConfigOptionFromString("verticalAlignmentOverride")
                         .ifPresent(config -> ((Config<VerticalAlignment>) config).setValue(values[finalIndex]));
 
-            } else if (event.key() == GLFW.GLFW_KEY_RIGHT || event.key() == GLFW.GLFW_KEY_LEFT) {
+            } else if (event.key() == InputConstants.KEY_RIGHT || event.key() == InputConstants.KEY_LEFT) {
                 int index = selectedOverlay.getRenderHorizontalAlignment().ordinal();
 
-                if (event.key() == GLFW.GLFW_KEY_RIGHT) {
+                if (event.key() == InputConstants.KEY_RIGHT) {
                     index += 1;
                 } else {
                     index -= 1;
@@ -686,10 +690,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             int offsetX = 0;
             int offsetY = 0;
 
-            if (event.key() == GLFW.GLFW_KEY_UP) offsetY = -1;
-            else if (event.key() == GLFW.GLFW_KEY_DOWN) offsetY = 1;
-            else if (event.key() == GLFW.GLFW_KEY_RIGHT) offsetX = 1;
-            else if (event.key() == GLFW.GLFW_KEY_LEFT) offsetX = -1;
+            if (event.key() == InputConstants.KEY_UP) offsetY = -1;
+            else if (event.key() == InputConstants.KEY_DOWN) offsetY = 1;
+            else if (event.key() == InputConstants.KEY_RIGHT) offsetX = 1;
+            else if (event.key() == InputConstants.KEY_LEFT) offsetX = -1;
 
             final int finalOffsetX = offsetX;
             final int finalOffsetY = offsetY;
@@ -712,12 +716,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             return true;
         }
 
-        if (event.key() == GLFW.GLFW_KEY_LEFT_SHIFT || event.key() == GLFW.GLFW_KEY_RIGHT_SHIFT) {
+        if (event.key() == InputConstants.KEY_LSHIFT || event.key() == InputConstants.KEY_RSHIFT) {
             horizontalSnap.reset();
             verticalSnap.reset();
         }
 
-        if (event.key() == GLFW.GLFW_KEY_LEFT_CONTROL || event.key() == GLFW.GLFW_KEY_RIGHT_CONTROL) {
+        if (event.key() == InputConstants.KEY_LCONTROL || event.key() == InputConstants.KEY_RCONTROL) {
             horizontalSnap.restrictToScreenGuides();
             verticalSnap.restrictToScreenGuides();
         }
