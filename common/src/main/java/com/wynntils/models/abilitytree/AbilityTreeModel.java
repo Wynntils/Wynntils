@@ -6,6 +6,7 @@ package com.wynntils.models.abilitytree;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
@@ -285,7 +286,7 @@ public final class AbilityTreeModel extends Model {
         if (!disableKeys) return;
 
         if (event.getKey().getValue() != InputConstants.KEY_ESCAPE) {
-            ContainerUtils.closeBackgroundContainer();
+            Handlers.ContainerQuery.endAllQueries();
 
             McUtils.sendWynntilsPrefixMessage(
                     Component.translatable("command.wynntils.rescan.abortText").withColor(CommonColors.RED.asInt()));
@@ -298,7 +299,7 @@ public final class AbilityTreeModel extends Model {
     public void onMouseScroll(MouseScrollEvent event) {
         if (!disableKeys) return;
 
-        ContainerUtils.closeBackgroundContainer();
+        Handlers.ContainerQuery.endAllQueries();
 
         McUtils.sendWynntilsPrefixMessage(
                 Component.translatable("command.wynntils.rescan.abortText").withColor(CommonColors.RED.asInt()));
