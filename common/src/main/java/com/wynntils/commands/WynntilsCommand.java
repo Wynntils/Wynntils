@@ -22,12 +22,10 @@ import com.wynntils.screens.playerviewer.GearSharingSettingsScreen;
 import com.wynntils.screens.secrets.SecretsScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.services.athena.type.UpdateResult;
-import com.wynntils.utils.BugReportUtils;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
@@ -48,7 +46,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.util.Util;
 
 public class WynntilsCommand extends Command {
     private static final Pattern STATUS_HEADING = Pattern.compile("<h1 class='status-page__title'>(.*)</h1>");
@@ -79,10 +76,7 @@ public class WynntilsCommand extends Command {
     @Override
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base, CommandBuildContext context) {
-        return base.then(Commands.literal("bug")
-                        .then(Commands.literal("logs").executes(this::openBugLogs))
-                        .executes(this::bugReport))
-                .then(Commands.literal("clearcaches")
+        return base.then(Commands.literal("clearcaches")
                         .then(Commands.literal("run").executes(this::doClearCaches))
                         .executes(this::clearCaches))
                 .then(Commands.literal("crowdsourcing").executes(this::openCrowdsourceMenu))
@@ -111,37 +105,6 @@ public class WynntilsCommand extends Command {
                 .then(Commands.literal("update").executes(this::update))
                 .then(Commands.literal("version").executes(this::version))
                 .executes(this::help);
-    }
-
-    private int bugReport(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendSuccess(() -> Component.translatable("command.wynntils.bug.instructions"), false);
-        sendBugAction(context, "logs", new ClickEvent.RunCommand("/wynntils bug logs"));
-        sendBugAction(context, "report", new ClickEvent.OpenUrl(BugReportUtils.reportUrl()));
-        sendBugAction(context, "copy", new ClickEvent.CopyToClipboard(BugReportUtils.collectSystemInformation()));
-        return 1;
-    }
-
-    private void sendBugAction(CommandContext<CommandSourceStack> context, String action, ClickEvent clickEvent) {
-        context.getSource()
-                .sendSuccess(
-                        () -> Component.translatable("command.wynntils.bug." + action)
-                                .withStyle(style -> style.withColor(ChatFormatting.AQUA)
-                                        .withUnderlined(true)
-                                        .withClickEvent(clickEvent)
-                                        .withHoverEvent(new HoverEvent.ShowText(
-                                                Component.translatable("command.wynntils.bug." + action + "Hint")))),
-                        false);
-    }
-
-    private int openBugLogs(CommandContext<CommandSourceStack> context) {
-        File logs = new File(McUtils.getGameDirectory(), "logs");
-        if (!logs.isDirectory()) {
-            context.getSource().sendFailure(Component.translatable("command.wynntils.bug.noLogs"));
-            return 0;
-        }
-        Util.getPlatform().openFile(logs);
-        context.getSource().sendSuccess(() -> Component.translatable("command.wynntils.bug.logInstructions"), false);
-        return 1;
     }
 
     private int profileReset(CommandContext<CommandSourceStack> context) {
@@ -498,7 +461,6 @@ public class WynntilsCommand extends Command {
                 .withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD));
 
         //        describeWynntilsSubcommand(text, "changelog", "Show the changelog of your installed version");
-        describeWynntilsSubcommand(text, "bug", "Collect system information and open the bug report form");
         describeWynntilsSubcommand(text, "clearcaches", "Clears all Wynntils caches and closes the game");
         describeWynntilsSubcommand(text, "debug", "Debug command for developers.");
         describeWynntilsSubcommand(text, "discord", "Provide an invite link to our Discord server");
