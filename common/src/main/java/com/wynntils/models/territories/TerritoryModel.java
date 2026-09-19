@@ -60,13 +60,12 @@ public final class TerritoryModel extends Model {
 
     private static final TerritoryProvider TERRITORY_PROVIDER = new TerritoryProvider();
     private static final ManageTerritoryProvider MANAGE_TERRITORY_PROVIDER = new ManageTerritoryProvider();
-  
+
     @Persisted
     public final Config<Boolean> lookupApiInfo = new Config<>(true);
 
     // This is the info gathered from the advancement from Wynncraft
     private final Map<String, TerritoryInfo> territoryInfoMap = new ConcurrentHashMap<>();
-
 
     // This is the profiles as downloaded from Athena
     private Map<String, TerritoryProfile> territoryProfileMap = new HashMap<>();

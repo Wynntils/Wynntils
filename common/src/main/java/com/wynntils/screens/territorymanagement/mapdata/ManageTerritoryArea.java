@@ -114,30 +114,22 @@ public final class ManageTerritoryArea implements MapArea {
             }
 
             @Override
-            public Optional<CustomColor> getFillColor() {
-                // FIXME: This should render the component colors separately, but at the moment this serves as a
-                //        replacement for multiple area color support in mapdata. Revisit once MapAreaAttributes
-                //        can express more than one fill/border color (see also GuildMapScreen:996).
-                return Optional.of(CustomColor.blend(getInfoColors()).withAlpha(80));
+            public Optional<List<CustomColor>> getFillColors() {
+                return Optional.of(
+                        getInfoColors().stream().map(x -> x.withAlpha(80)).toList());
             }
 
             @Override
-            public Optional<CustomColor> getBorderColor() {
-                // FIXME: This should render the component colors separately, but at the moment this serves as a
-                //        replacement for multiple area color support in mapdata. Revisit once MapAreaAttributes
-                //        can express more than one fill/border color (see also GuildMapScreen:996).
+            public Optional<List<CustomColor>> getBorderColors() {
                 if (holder.territoryConnections().get(getTerritoryItem()) == TerritoryConnectionType.UNCONNECTED) {
-                    return Optional.of(CommonColors.RED);
+                    return Optional.of(List.of(CommonColors.RED));
                 }
 
-                return Optional.of(CustomColor.blend(getInfoColors()));
+                return Optional.of(getInfoColors());
             }
 
             @Override
             public Optional<CustomColor> getLabelColor() {
-                // FIXME: This should render the component colors separately, but at the moment this serves as a
-                //        replacement for multiple area color support in mapdata. Revisit once MapAreaAttributes
-                //        can express more than one fill/border color (see also GuildMapScreen:996).
                 return Optional.of(CustomColor.blend(getInfoColors()));
             }
         });

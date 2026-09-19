@@ -10,6 +10,7 @@ import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractMapAttributes implements MapAttributes {
@@ -79,12 +80,12 @@ public abstract class AbstractMapAttributes implements MapAttributes {
     }
 
     @Override
-    public Optional<CustomColor> getFillColor() {
+    public Optional<List<CustomColor>> getFillColors() {
         return Optional.empty();
     }
 
     @Override
-    public Optional<CustomColor> getBorderColor() {
+    public Optional<List<CustomColor>> getBorderColors() {
         return Optional.empty();
     }
 

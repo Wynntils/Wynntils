@@ -106,13 +106,13 @@ public final class OverrideMapAttributes implements MapAttributes {
     }
 
     @Override
-    public Optional<CustomColor> getFillColor() {
-        return resolveAttribute(MapAttributes::getFillColor);
+    public Optional<List<CustomColor>> getFillColors() {
+        return resolveAttribute(MapAttributes::getFillColors);
     }
 
     @Override
-    public Optional<CustomColor> getBorderColor() {
-        return resolveAttribute(MapAttributes::getBorderColor);
+    public Optional<List<CustomColor>> getBorderColors() {
+        return resolveAttribute(MapAttributes::getBorderColors);
     }
 
     @Override
