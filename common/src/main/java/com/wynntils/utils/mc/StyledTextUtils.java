@@ -27,6 +27,7 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Mth;
 
 public final class StyledTextUtils {
     private static final Pattern COORDINATE_PATTERN =
@@ -296,7 +297,8 @@ public final class StyledTextUtils {
     public static StyledText prefixWrap(StyledText styledText, RecipientType recipientType) {
         Style prefixStyle = Style.EMPTY.withFont(CHAT_PREFIX_FONT).withColor(recipientType.getPrefixColor());
 
-        int maxWidth = McUtils.getChatWidth()
+        int maxWidth = Mth.floor(McUtils.getChatWidth()
+                        / McUtils.mc().options.chatScale().get())
                 - FontRenderer.getInstance()
                         .getFont()
                         .width(Component.literal(CHAT_PREFIX_LINE_PREFIX).setStyle(prefixStyle));
