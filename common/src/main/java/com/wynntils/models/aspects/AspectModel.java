@@ -298,8 +298,14 @@ public final class AspectModel extends Model {
                 },
                 onStatus,
                 (error) -> {
-                    rescanInProgress = false;
-                    pendingScanResult = null;
+                    // This needs to be delayed, because getCurrentContainer() in onContentSet returns the wrong
+                    // container after a ServerboundContainerClosePacket
+                    Managers.TickScheduler.scheduleLater(
+                            () -> {
+                                rescanInProgress = false;
+                                pendingScanResult = null;
+                            },
+                            5);
                     onError.accept(error);
                     disableKeys = false;
                 },
