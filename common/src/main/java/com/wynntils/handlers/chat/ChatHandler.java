@@ -89,15 +89,26 @@ public final class ChatHandler extends Handler {
     @SubscribeEvent
     public void onChatMessageAdded(ChatMessageAddedEvent event) {
         StyledText message = StyledText.fromComponent(event.getMessage());
-        RecipientType recipientType = getRecipientType(message);
+        RecipientType recipientType = getDisplayRecipientType(message);
         if (!recipientType.hasPrefix()) return;
 
         // use the previous visible message in this tab, after filtering and redirection
         boolean isContinuation = event.getPreviousMessage() != null
-                && getRecipientType(StyledText.fromComponent(event.getPreviousMessage())) == recipientType;
+                && getDisplayRecipientType(StyledText.fromComponent(event.getPreviousMessage())) == recipientType;
         StyledText content = StyledTextUtils.removeFirstPrefix(message, recipientType);
         event.setMessage(StyledTextUtils.addPrefix(content, recipientType, isContinuation)
                 .getComponent());
+    }
+
+    public RecipientType getDisplayRecipientType(StyledText message) {
+        // edits can change the body formatting, so only check the prefix here
+        for (RecipientType recipientType : RecipientType.values()) {
+            if (recipientType.hasPrefix() && message.matches(recipientType.getPrefixPattern())) {
+                return recipientType;
+            }
+        }
+
+        return getRecipientType(message);
     }
 
     public RecipientType getRecipientType(StyledText codedMessage) {

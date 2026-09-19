@@ -50,12 +50,14 @@ public enum RecipientType {
             "^§%s((\uDAFF\uDFFC%c\uDAFF\uDFFF\uE002\uDAFF\uDFFE)|(\uDAFF\uDFFC\uE001\uDB00\uDC06)) (?<content>%s)$";
 
     private final Pattern pattern;
+    private final Pattern prefixPattern;
     private final TextColor prefixColor;
     private final char prefixIcon;
     private final String name;
 
     RecipientType(String pattern, String name) {
         this.pattern = (pattern == null ? null : Pattern.compile(pattern, Pattern.DOTALL));
+        this.prefixPattern = null;
         this.prefixColor = null;
         this.prefixIcon = '\0';
         this.name = name;
@@ -65,6 +67,7 @@ public enum RecipientType {
         this.pattern = Pattern.compile(
                 PREFIX_PATTERN_FORMAT.formatted(color, icon, contentPattern == null ? ".*" : contentPattern),
                 Pattern.DOTALL);
+        this.prefixPattern = Pattern.compile(PREFIX_PATTERN_FORMAT.formatted(color, icon, ".*"), Pattern.DOTALL);
         if (color.charAt(0) == '#') {
             // ignore the alpha part of the color
             this.prefixColor = TextColor.fromRgb(Integer.parseInt(color.substring(1, 7), 16));
@@ -112,8 +115,8 @@ public enum RecipientType {
         return prefixColor != null;
     }
 
-    public Pattern getPattern() {
-        return pattern;
+    public Pattern getPrefixPattern() {
+        return prefixPattern;
     }
 
     public String getName() {

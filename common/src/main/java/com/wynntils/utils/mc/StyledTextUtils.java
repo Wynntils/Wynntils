@@ -268,7 +268,7 @@ public final class StyledTextUtils {
     public static StyledText removeFirstPrefix(StyledText styledText, RecipientType recipientType) {
         if (!recipientType.hasPrefix()) return styledText;
 
-        Matcher matcher = styledText.getMatcher(recipientType.getPattern());
+        Matcher matcher = styledText.getMatcher(recipientType.getPrefixPattern());
         if (!matcher.matches()) return styledText;
 
         // keep the body with its formatting and click/hover actions
