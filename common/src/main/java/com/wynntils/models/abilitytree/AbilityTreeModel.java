@@ -34,6 +34,7 @@ import com.wynntils.models.items.items.gui.AbilityTreeNodeItem;
 import com.wynntils.models.items.items.gui.AbilityTreeResetItem;
 import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayDeque;
@@ -54,6 +55,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -68,6 +70,8 @@ public final class AbilityTreeModel extends Model {
 
     private boolean disableKeys = false;
     private boolean cancelScreenClosing = false;
+    private boolean rescanInProgress = false;
+    private List<String> pendingScanResult = null;
 
     @Persisted
     private final Storage<Map<String, List<String>>> unlockedAbilities = new Storage<>(new TreeMap<>());
@@ -83,6 +87,8 @@ public final class AbilityTreeModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onContentSet(ContainerSetContentEvent.Pre event) {
+        if (rescanInProgress) return;
+
         Container currentContainer = Models.Container.getCurrentContainer();
 
         List<Integer> abilitySlots = new ArrayList<>();
@@ -135,6 +141,8 @@ public final class AbilityTreeModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
+        if (rescanInProgress) return;
+
         Container currentContainer = Models.Container.getCurrentContainer();
 
         List<Integer> abilitySlots = new ArrayList<>();
@@ -187,6 +195,8 @@ public final class AbilityTreeModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void handleAbilityTreeResetClick(ContainerClickEvent event) {
+        if (rescanInProgress) return;
+
         Container currentContainer = Models.Container.getCurrentContainer();
 
         if (currentContainer instanceof AbilityTreeContainer) {
@@ -223,6 +233,8 @@ public final class AbilityTreeModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void handleAbilityTreeEditClick(ContainerClickEvent event) {
+        if (rescanInProgress) return;
+
         Container currentContainer = Models.Container.getCurrentContainer();
 
         if (!(currentContainer instanceof AbilityTreeContainer)) return;
@@ -273,7 +285,12 @@ public final class AbilityTreeModel extends Model {
         if (!disableKeys) return;
 
         if (event.getKey().getValue() != InputConstants.KEY_ESCAPE) {
-            event.setCanceled(true);
+            ContainerUtils.closeBackgroundContainer();
+
+            McUtils.sendWynntilsPrefixMessage(
+                    Component.translatable("command.wynntils.rescan.abortText").withColor(CommonColors.RED.asInt()));
+
+            disableKeys = false;
         }
     }
 
@@ -281,7 +298,12 @@ public final class AbilityTreeModel extends Model {
     public void onMouseScroll(MouseScrollEvent event) {
         if (!disableKeys) return;
 
-        event.setCanceled(true);
+        ContainerUtils.closeBackgroundContainer();
+
+        McUtils.sendWynntilsPrefixMessage(
+                Component.translatable("command.wynntils.rescan.abortText").withColor(CommonColors.RED.asInt()));
+
+        disableKeys = false;
     }
 
     @SubscribeEvent
@@ -318,50 +340,66 @@ public final class AbilityTreeModel extends Model {
 
     private void clearUnlockedAbilitesAndRescan(
             Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete, int attempt) {
-        Map<String, List<String>> allEquippedAbilities = unlockedAbilities.get();
-        allEquippedAbilities.put(Models.Character.getId(), new ArrayList<>());
-        unlockedAbilities.store(allEquippedAbilities);
-        unlockedAbilities.touched();
+        rescanInProgress = true;
+        pendingScanResult = null;
 
         disableKeys = true;
         releaseKeys();
 
-        Managers.TickScheduler.scheduleNextTick(() -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.dumpAbilityTree(
-                abilityTreeInfo -> {}, // we don't need to do anything with this because the container event reads it.
-                onStatus,
-                (error) -> {
-                    disableKeys = false;
-                    onError.accept(error);
-                },
-                (complete) -> {
-                    String characterId = Models.Character.getId();
-                    List<String> scanned = unlockedAbilities.get().getOrDefault(characterId, List.of());
-
-                    Set<String> seen = new HashSet<>();
-                    boolean hasDuplicates = scanned.stream().anyMatch(n -> !seen.add(n));
-
-                    if (hasDuplicates) {
-                        if (attempt >= MAX_ABILITY_TREE_RESCAN_ATTEMPTS) {
-                            WynntilsMod.warn("Duplicate ability names still present after " + attempt
-                                    + " rescans while clearing/rescanning: " + scanned);
-                            onError.accept("Failed to scan ability tree correctly, please try again.");
-
+        Managers.TickScheduler.scheduleNextTick(() ->
+                Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.getUnlockedAbilityTree(
+                        treeInfo -> pendingScanResult = treeInfo.nodes().stream()
+                                .map(AbilityTreeSkillNode::name)
+                                .collect(Collectors.toCollection(ArrayList::new)),
+                        onStatus,
+                        (error) -> {
+                            rescanInProgress = false;
+                            pendingScanResult = null;
                             disableKeys = false;
-                            return;
-                        }
+                            onError.accept(error);
+                        },
+                        (complete) -> {
+                            if (pendingScanResult == null) {
+                                rescanInProgress = false;
+                                disableKeys = false;
+                                onError.accept("Failed to scan ability tree: no result produced.");
+                                return;
+                            }
 
-                        WynntilsMod.warn("Duplicate ability names found while rescanning (attempt " + (attempt + 1)
-                                + "), retrying: " + scanned);
-                        onStatus.accept("Detected a duplicate ability, retrying (" + (attempt + 1) + "/"
-                                + MAX_ABILITY_TREE_RESCAN_ATTEMPTS + ")...");
+                            Set<String> seen = new HashSet<>();
+                            boolean hasDuplicates = pendingScanResult.stream().anyMatch(n -> !seen.add(n));
 
-                        clearUnlockedAbilitesAndRescan(onStatus, onError, onComplete, attempt + 1);
-                        return;
-                    }
+                            if (hasDuplicates) {
+                                if (attempt >= MAX_ABILITY_TREE_RESCAN_ATTEMPTS) {
+                                    WynntilsMod.warn("Duplicate ability names still present after " + attempt
+                                            + " rescans while clearing/rescanning: " + pendingScanResult);
+                                    onError.accept("Failed to scan ability tree correctly, please try again.");
 
-                    disableKeys = false;
-                    onComplete.accept("Ability tree rescanned successfully.");
-                }));
+                                    rescanInProgress = false;
+                                    pendingScanResult = null;
+                                    disableKeys = false;
+                                    return;
+                                }
+
+                                WynntilsMod.warn("Duplicate ability names found while rescanning (attempt "
+                                        + (attempt + 1) + "), retrying: " + pendingScanResult);
+                                onStatus.accept("Detected a duplicate ability, retrying (" + (attempt + 1) + "/"
+                                        + MAX_ABILITY_TREE_RESCAN_ATTEMPTS + ")...");
+
+                                clearUnlockedAbilitesAndRescan(onStatus, onError, onComplete, attempt + 1);
+                                return;
+                            }
+
+                            Map<String, List<String>> updated = new TreeMap<>(unlockedAbilities.get());
+                            updated.put(Models.Character.getId(), new ArrayList<>(pendingScanResult));
+                            unlockedAbilities.store(updated);
+                            unlockedAbilities.touched();
+
+                            rescanInProgress = false;
+                            pendingScanResult = null;
+                            disableKeys = false;
+                            onComplete.accept("Ability tree rescanned successfully.");
+                        }));
     }
 
     public void saveCurrentAbilityTree(
@@ -415,8 +453,8 @@ public final class AbilityTreeModel extends Model {
                     onError.accept(error);
                     cancelScreenClosing = false;
                 },
-                (completed) -> {
-                    onComplete.accept(completed);
+                (complete) -> {
+                    onComplete.accept(complete);
                     cancelScreenClosing = false;
                 });
     }
@@ -447,8 +485,8 @@ public final class AbilityTreeModel extends Model {
                     onError.accept(error);
                     cancelScreenClosing = false;
                 },
-                (completed) -> {
-                    onComplete.accept(completed);
+                (complete) -> {
+                    onComplete.accept(complete);
                     cancelScreenClosing = false;
                 });
     }
