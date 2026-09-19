@@ -18,7 +18,6 @@ import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.mc.event.ContainerClickEvent;
-import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.SetLocalPlayerVehicleEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.models.character.event.CharacterDeathEvent;
