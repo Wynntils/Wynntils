@@ -29,6 +29,7 @@ import com.wynntils.models.containers.type.BoundedContainerProperty;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.TomeItem;
+import com.wynntils.models.items.items.game.WardItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
@@ -71,6 +72,9 @@ public class ValuablesProtectionFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> tomesWarning = new Config<>(false);
+
+    @Persisted
+    private final Config<Boolean> wardsWarning = new Config<>(true);
 
     @Persisted
     private final Config<Integer> craftedBlacksmithLevel = new Config<>(0);
@@ -230,10 +234,13 @@ public class ValuablesProtectionFeature extends Feature {
             if (optItem.isEmpty()) return;
             WynnItem item = optItem.get();
 
-            // set a single flag for all the checks, first do high roll
-            boolean warnableItem = highRollWarningNPCs.get().getContainers().contains(TradeMarketSellContainer.class)
+            boolean warnableItem = wardsWarning.get() && item instanceof WardItem;
+
+            if (highRollWarningNPCs.get().getContainers().contains(TradeMarketSellContainer.class)
                     && item instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty
-                    && identifiableItemProperty.getOverallPercentage() >= highRollThreshold.get();
+                    && identifiableItemProperty.getOverallPercentage() >= highRollThreshold.get()) {
+                warnableItem = true;
+            }
 
             if (item instanceof GearTierItemProperty gtip) {
                 if (mythicWarningNPCs.get().getContainers().contains(TradeMarketSellContainer.class)
