@@ -65,6 +65,10 @@ public class JsonOverrideProvider implements MapDataOverrideProvider, Comparable
         // no-op at the moment, json override providers are "final" classes that are recreated on change
     }
 
+    public MapAttributesImpl getAttributes() {
+        return attributes;
+    }
+
     @Override
     public int compareTo(JsonOverrideProvider jsonOverrideProvider) {
         return this.providerId.compareTo(jsonOverrideProvider.providerId);

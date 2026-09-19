@@ -85,7 +85,7 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
 
         MapAttributesBuilder builder = new MapAttributesBuilder();
         Optional.ofNullable(Services.MapData.getOverrideProvider(parent.getOverrideName(true)))
-                .ifPresent(provider -> builder.from(provider.getOverrideAttributes(null)));
+                .ifPresent(provider -> builder.from(provider.getAttributes()));
 
         applyOption(builder, parent.priorityOptionWidget, MapAttributesBuilder::setPriority);
         applyOption(builder, parent.levelOptionWidget, MapAttributesBuilder::setLevel);
@@ -96,8 +96,8 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
         applyOption(builder, parent.iconOptionWidget, MapAttributesBuilder::setIcon);
         applyOption(builder, parent.iconColorOptionWidget, MapAttributesBuilder::setIconColor);
         applyOption(builder, parent.hasMarkerOptionWidget, MapAttributesBuilder::setHasMarker);
-        applyOption(builder, parent.fillColorOptionWidget, MapAttributesBuilder::setFillColor);
-        applyOption(builder, parent.borderColorOptionWidget, MapAttributesBuilder::setBorderColor);
+        applyOption(builder, parent.fillColorOptionWidget, MapAttributesBuilder::setFillColors);
+        applyOption(builder, parent.borderColorOptionWidget, MapAttributesBuilder::setBorderColors);
         applyOption(builder, parent.borderWidthOptionWidget, MapAttributesBuilder::setBorderWidth);
 
         // labelVisibility

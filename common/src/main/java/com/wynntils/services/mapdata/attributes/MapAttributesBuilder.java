@@ -6,17 +6,18 @@ package com.wynntils.services.mapdata.attributes;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.services.mapdata.attributes.impl.MapAreaAttributesImpl;
+import com.wynntils.services.mapdata.attributes.impl.MapAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapMarkerOptionsImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapPathAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapVisibilityImpl;
 import com.wynntils.services.mapdata.attributes.type.MapAreaAttributes;
-import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapPathAttributes;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 import java.lang.reflect.Field;
+import java.util.List;
 
 public class MapAttributesBuilder {
     private Integer priority;
@@ -35,7 +36,7 @@ public class MapAttributesBuilder {
     private CustomColor borderColor;
     private Float borderWidth;
 
-    public MapAttributesBuilder from(MapAttributes attributes) {
+    public MapAttributesBuilder from(MapAttributesImpl attributes) {
         if (attributes == null) return this;
 
         this.priority = attributes.getPriority().orElse(null);
@@ -52,8 +53,8 @@ public class MapAttributesBuilder {
         this.hasMarker = attributes.getHasMarker().orElse(null);
         this.markerOptions =
                 (MapMarkerOptionsImpl) attributes.getMarkerOptions().orElse(null);
-        this.fillColor = attributes.getFillColor().orElse(null);
-        this.borderColor = attributes.getBorderColor().orElse(null);
+        this.fillColor = attributes.getFillColors().map(List::getFirst).orElse(null);
+        this.borderColor = attributes.getBorderColors().map(List::getFirst).orElse(null);
         this.borderWidth = attributes.getBorderWidth().orElse(null);
         return this;
     }
@@ -118,13 +119,13 @@ public class MapAttributesBuilder {
         return this;
     }
 
-    public MapAttributesBuilder setFillColor(CustomColor fillColor) {
-        this.fillColor = fillColor;
+    public MapAttributesBuilder setFillColors(CustomColor fillColors) {
+        this.fillColor = fillColors;
         return this;
     }
 
-    public MapAttributesBuilder setBorderColor(CustomColor borderColor) {
-        this.borderColor = borderColor;
+    public MapAttributesBuilder setBorderColors(CustomColor borderColors) {
+        this.borderColor = borderColors;
         return this;
     }
 
