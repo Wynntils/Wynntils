@@ -124,7 +124,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
                     .append(Component.literal("\n"))
                     .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.totalPrice")
                             .withStyle(ChatFormatting.GOLD))
-                    .append(getPriceComponent(taxedBid));
+                    .append(getPriceComponent(finalBid));
 
             PriceButton priceButton = new PriceButton(
                     rightPos,
