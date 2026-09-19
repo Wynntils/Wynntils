@@ -8,6 +8,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
+import com.wynntils.core.text.fonts.wynnfonts.TooltipIdentificationMeterFont;
 import com.wynntils.models.items.items.game.GatheringToolItem;
 import com.wynntils.models.profession.type.GatheringToolInfo;
 import com.wynntils.models.profession.type.ProfessionType;
@@ -22,17 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 
 public final class GuideGatheringToolItemStack extends GuideItemStack {
-    private static final FontDescription IDENTIFICATION_METER =
-            new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/identification/meter"));
     private static final String DEFAULT_SPACE = "\uDAFF\uDFA6\uDB00\uDC66";
 
     private List<Component> generatedTooltip;
@@ -107,15 +104,11 @@ public final class GuideGatheringToolItemStack extends GuideItemStack {
         tooltipLines.add(gatheringSpeedLine);
 
         MutableComponent durabilityLine = Component.empty()
-                .append(Component.literal("\uE023\uDAFF\uDFF7")
-                        .withStyle(Style.EMPTY.withFont(IDENTIFICATION_METER).withColor(ChatFormatting.DARK_GRAY))
-                        .withoutShadow())
-                .append(Component.literal("\uE023")
-                        .withStyle(Style.EMPTY
-                                .withFont(IDENTIFICATION_METER)
-                                .withColor(
-                                        toolInfo.gearTier().getSecondaryColor().asInt()))
-                        .withoutShadow())
+                .append(TooltipIdentificationMeterFont.buildCounterSingleLayerMeter(
+                        new CappedValue(toolInfo.durability(), toolInfo.durability()),
+                        toolInfo.gearTier().getSecondaryColor(),
+                        CustomColor.fromChatFormatting(ChatFormatting.DARK_GRAY),
+                        ""))
                 .append(Component.literal(" Durability " + toolInfo.durability() + "/" + toolInfo.durability())
                         .withStyle(Style.EMPTY
                                 .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)

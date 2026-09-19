@@ -314,4 +314,10 @@ public final class StringUtils {
 
         return abbreviation.toString();
     }
+
+    public static String toPossessive(String input) {
+        if (input == null || input.isEmpty()) return input;
+
+        return input + (input.toLowerCase(Locale.ROOT).endsWith("s") ? "'" : "'s");
+    }
 }

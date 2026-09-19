@@ -5,6 +5,7 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.google.common.collect.Lists;
+import com.wynntils.core.components.ConfigurableCoreComponent;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.ExternalConfigurationScreen;
@@ -16,7 +17,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.BasicHoverableButton;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
-import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
+import com.wynntils.screens.settings.BaseWynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -36,6 +37,7 @@ import net.minecraft.network.chat.Component;
 public class ConfigurableButton extends WynntilsButton {
     private final Configurable configurable;
     private final WynntilsCheckbox enabledCheckbox;
+    private final boolean showToggleCheckbox;
     private final Optional<BasicHoverableButton> ecsButton;
     private final int maskTopY;
     private final int maskBottomY;
@@ -43,7 +45,7 @@ public class ConfigurableButton extends WynntilsButton {
     private final List<Component> descriptionTooltip;
     private final List<Component> toggleTooltip;
     private final List<Component> ecsTooltip;
-    private final WynntilsBookSettingsScreen settingsScreen;
+    private final BaseWynntilsBookSettingsScreen settingsScreen;
 
     public ConfigurableButton(
             int x,
@@ -51,7 +53,7 @@ public class ConfigurableButton extends WynntilsButton {
             int width,
             int height,
             Configurable configurable,
-            WynntilsBookSettingsScreen screen,
+            BaseWynntilsBookSettingsScreen screen,
             int matchingConfigs) {
         super(x, y, width, height, Component.literal(configurable.getTranslatedName()));
         this.configurable = configurable;
@@ -64,12 +66,18 @@ public class ConfigurableButton extends WynntilsButton {
                     List.of(Component.translatable(
                             "screens.wynntils.settingsScreen.toggleFeature", configurable.getTranslatedName())),
                     150);
+            showToggleCheckbox = true;
+        } else if (configurable instanceof ConfigurableCoreComponent) {
+            descriptionTooltip = List.of();
+            toggleTooltip = List.of();
+            showToggleCheckbox = false;
         } else {
             descriptionTooltip = List.of();
             toggleTooltip = ComponentUtils.wrapTooltips(
                     List.of(Component.translatable(
                             "screens.wynntils.settingsScreen.toggleOverlay", configurable.getTranslatedName())),
                     150);
+            showToggleCheckbox = true;
         }
 
         boolean enabled = false;
@@ -112,7 +120,7 @@ public class ConfigurableButton extends WynntilsButton {
 
         CustomColor color = isHovered ? CommonColors.YELLOW : CommonColors.WHITE;
 
-        if (McUtils.screen() instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
+        if (McUtils.screen() instanceof BaseWynntilsBookSettingsScreen bookSettingsScreen) {
             if (bookSettingsScreen.getSelectedConfigurable() == configurable) {
                 color = CommonColors.GRAY;
             }
@@ -156,12 +164,14 @@ public class ConfigurableButton extends WynntilsButton {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL,
                         1f);
-        enabledCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
+        if (showToggleCheckbox) {
+            enabledCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
         ecsButton.ifPresent(
                 basicHoverableButton -> basicHoverableButton.render(guiGraphics, mouseX, mouseY, partialTick));
 
         if (isHovered) {
-            if (enabledCheckbox.isHovered()) {
+            if (showToggleCheckbox && enabledCheckbox.isHovered()) {
                 guiGraphics.setTooltipForNextFrame(
                         Lists.transform(toggleTooltip, Component::getVisualOrderText), mouseX, mouseY);
             } else if (ecsButton.isPresent() && ecsButton.get().isHovered()) {
@@ -180,7 +190,7 @@ public class ConfigurableButton extends WynntilsButton {
         if ((event.y() <= maskTopY || event.y() >= maskBottomY)) return false;
 
         // Toggle the enabled state of the configurable when toggling the checkbox
-        if (enabledCheckbox.isMouseOver(event.x(), event.y())) {
+        if (showToggleCheckbox && enabledCheckbox.isMouseOver(event.x(), event.y())) {
             if (configurable instanceof Feature feature) {
                 feature.setUserEnabled(!feature.userEnabled.get());
             } else if (configurable instanceof Overlay) {
@@ -195,7 +205,7 @@ public class ConfigurableButton extends WynntilsButton {
             }
 
             // Repopulate screen to update new enabled/disabled states
-            if (McUtils.screen() instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
+            if (McUtils.screen() instanceof BaseWynntilsBookSettingsScreen bookSettingsScreen) {
                 bookSettingsScreen.populateConfigurables();
                 bookSettingsScreen.changesMade();
             }
@@ -213,7 +223,7 @@ public class ConfigurableButton extends WynntilsButton {
 
     @Override
     public void onPress(InputWithModifiers input) {
-        if (McUtils.screen() instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
+        if (McUtils.screen() instanceof BaseWynntilsBookSettingsScreen bookSettingsScreen) {
             bookSettingsScreen.setSelectedConfigurable(configurable);
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.data;
@@ -48,12 +48,14 @@ public record IdentificationData(
                 return ErrorOr.error("No possible values for stat type: " + statType);
             }
 
-            int stars =
-                    StatCalculator.calculateStarsFromInternalRoll(statType, possibleValues.baseValue(), internalRoll);
             int value = StatCalculator.calculateStatValue(internalRoll, possibleValues);
+            RangedValue validInternalRolls =
+                    statType.getStatCalculationInfo(possibleValues.baseValue()).range();
+            int perfectRoll = possibleValues.baseValue() > 0 ? validInternalRolls.high() : validInternalRolls.low();
+            boolean perfectInternalRoll = internalRoll == perfectRoll;
 
-            identifications.add(
-                    new StatActualValue(statType, value, stars, RangedValue.of(internalRoll, internalRoll)));
+            identifications.add(new StatActualValue(
+                    statType, value, perfectInternalRoll, RangedValue.of(internalRoll, internalRoll)));
         }
 
         pendingCalculations.clear();

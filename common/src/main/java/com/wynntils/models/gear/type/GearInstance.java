@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear.type;
@@ -19,7 +19,7 @@ public record GearInstance(
         int rerolls,
         Optional<Float> overallQuality,
         Optional<ShinyStat> shinyStat,
-        boolean meetsRequirements,
+        GearInstanceRequirements gearInstanceRequirements,
         Optional<SetInstance> setInstance) {
     public static GearInstance create(
             GearInfo gearInfo,
@@ -27,7 +27,7 @@ public record GearInstance(
             List<Powder> powders,
             int rerolls,
             Optional<ShinyStat> shinyStat,
-            boolean meetsRequirements,
+            GearInstanceRequirements gearInstanceRequirements,
             Optional<SetInstance> setInstance) {
         return new GearInstance(
                 identifications,
@@ -36,7 +36,7 @@ public record GearInstance(
                 StatCalculator.calculateOverallQuality(
                         gearInfo.name(), gearInfo.getPossibleValueList(), identifications),
                 shinyStat,
-                meetsRequirements,
+                gearInstanceRequirements,
                 setInstance);
     }
 

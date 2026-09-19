@@ -11,6 +11,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.mod.TickSchedulerManager.ScheduledTask;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
@@ -90,6 +91,9 @@ public final class RaidModel extends Model {
             "§#d6401eff(?:\uE009\uE002|\uE001) §#fa7f63ff(?<player>.+?)§#d6401eff has been overtaken! Keep attacking §#ffc85fffThe Parasite§#d6401eff to save them!");
 
     @Persisted
+    public final Config<Boolean> trackRaids = new Config<>(true);
+
+    @Persisted
     private final Storage<Map<String, Long>> bestTimes = new Storage<>(new TreeMap<>());
 
     @Persisted
@@ -148,6 +152,8 @@ public final class RaidModel extends Model {
 
     @SubscribeEvent
     public void onTitle(TitleSetTextEvent event) {
+        if (!trackRaids.get()) return;
+
         Component component = event.getComponent();
         StyledText styledText = StyledText.fromComponent(component);
 
@@ -184,6 +190,8 @@ public final class RaidModel extends Model {
             expectedNumAspectPulls.store(Integer.parseInt(aspectPullMatcher.group(1)));
             return;
         }
+
+        if (!trackRaids.get()) return;
 
         StyledText unwrapped = StyledTextUtils.unwrap(styledText).stripAlignment();
 
@@ -234,7 +242,7 @@ public final class RaidModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (currentRaid == null || event.getNewState() != WorldState.WORLD) return;
+        if (!trackRaids.get() && (currentRaid == null || event.getNewState() != WorldState.WORLD)) return;
 
         awaitingRaidResume = true;
 

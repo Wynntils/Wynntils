@@ -21,6 +21,7 @@ import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.QueuedMeleeScheduler;
 import com.wynntils.utils.mc.McUtils;
+import java.util.List;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -33,7 +34,7 @@ public class AutoAttackFeature extends Feature {
     private int spellInputs = 0;
 
     public AutoAttackFeature() {
-        super(ProfileDefault.DISABLED);
+        super(ProfileDefault.DISABLED, List.of(ConfigDependency.functionality(Models.Raid.trackRaids)));
     }
 
     @SubscribeEvent

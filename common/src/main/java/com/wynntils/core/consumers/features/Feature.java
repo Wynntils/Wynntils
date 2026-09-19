@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2025.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.features;
@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.persisted.storage.Storageable;
+import java.util.List;
 
 /**
  * A single, modular feature that Wynntils provides that can be enabled or disabled. A feature
@@ -20,11 +21,18 @@ import com.wynntils.core.persisted.storage.Storageable;
  */
 public abstract class Feature extends AbstractConfigurable implements Storageable, Comparable<Feature> {
     private Category category = Category.UNCATEGORIZED;
+    private final List<ConfigDependency> configDependencies;
 
     @Persisted(i18nKey = "feature.wynntils.userFeature.userEnabled")
     public final Config<Boolean> userEnabled = new Config<>(true);
 
     protected Feature(ProfileDefault profileDefault) {
+        this(profileDefault, List.of());
+    }
+
+    protected Feature(ProfileDefault profileDefault, List<ConfigDependency> configDependencies) {
+        this.configDependencies = List.copyOf(configDependencies);
+
         for (ConfigProfile profile : ConfigProfile.values()) {
             boolean enabled = profileDefault.getDefault(profile);
             this.userEnabled.withDefault(profile, enabled);
@@ -116,5 +124,24 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
                 .compare(this.getCategory().toString(), other.getCategory().toString())
                 .compare(this.getTranslatedName(), other.getTranslatedName())
                 .result();
+    }
+
+    public List<ConfigDependency> getConfigDependencies() {
+        return configDependencies;
+    }
+
+    public record ConfigDependency(Config<?> config, DependencyType type) {
+        public static ConfigDependency customization(Config<?> config) {
+            return new ConfigDependency(config, DependencyType.CUSTOMIZATION);
+        }
+
+        public static ConfigDependency functionality(Config<?> config) {
+            return new ConfigDependency(config, DependencyType.FUNCTIONALITY);
+        }
+    }
+
+    public enum DependencyType {
+        CUSTOMIZATION,
+        FUNCTIONALITY
     }
 }

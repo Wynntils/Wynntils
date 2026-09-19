@@ -23,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextColor;
 
 public record CustomColor(int r, int g, int b, int a) {
     public static final CustomColor NONE = new CustomColor(-1, -1, -1, -1);
@@ -77,6 +78,10 @@ public record CustomColor(int r, int g, int b, int a) {
 
     public static CustomColor fromChatFormatting(ChatFormatting cf) {
         return fromInt(cf.getColor() | 0xFF000000);
+    }
+
+    public static CustomColor fromTextColor(TextColor tc) {
+        return fromInt(tc.getValue() | 0xFF000000);
     }
 
     /**

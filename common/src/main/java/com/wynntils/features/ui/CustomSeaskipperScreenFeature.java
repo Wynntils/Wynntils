@@ -18,6 +18,7 @@ import com.wynntils.screens.maps.CustomSeaskipperScreen;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.PointerType;
+import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -30,9 +31,13 @@ public class CustomSeaskipperScreenFeature extends Feature {
     public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
     public CustomSeaskipperScreenFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER, ConfigProfile.LITE)
+                        .build(),
+                List.of(
+                        ConfigDependency.functionality(Models.Emerald.countEmeralds),
+                        ConfigDependency.customization(Models.Emerald.recountInterval)));
     }
 
     @SubscribeEvent

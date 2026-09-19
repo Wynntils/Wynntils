@@ -5,10 +5,13 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.wynnfonts.TooltipIdentificationMeterFont;
 import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.items.items.game.MountItem;
+import com.wynntils.models.mount.type.MountColorInfo;
 import com.wynntils.models.mount.type.MountInfo;
 import com.wynntils.models.mount.type.MountStat;
 import com.wynntils.models.mount.type.MountType;
@@ -40,7 +43,7 @@ public final class MountAnnotator implements GameItemAnnotator {
                     + Arrays.stream(MountStat.values())
                             .map(s -> Pattern.quote(s.getName()))
                             .collect(Collectors.joining("|"))
-                    + ").+§#acfac6ff(?<current>\\d+)§7/(?<cap>\\d+)( §8\\((?<max>\\d+)\\))?(?:§f|§#acfac6ff) §8\uE023\uDAFF\uDFF7.+");
+                    + ").+§#acfac6ff(?<current>\\d+)§7/(?<cap>\\d+)( §8\\((?<max>\\d+)\\))?(?:§f|§#acfac6ff) §8\uE023\uDAFF\uDFF7§a(?<currentMeter>.)§7\uDAFF\uDFF7(\uDB00\uDC09|(?<maxMeter>.))?");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
@@ -67,10 +70,11 @@ public final class MountAnnotator implements GameItemAnnotator {
 
     private MountInfo parseMountInfo(List<StyledText> lore) {
         int potential = -1;
-        Optional<String> primaryColor = Optional.empty();
-        Optional<String> secondaryColor = Optional.empty();
+        MountColorInfo primaryColor = MountColorInfo.UNKNOWN;
+        MountColorInfo secondaryColor = MountColorInfo.UNKNOWN;
         CappedValue currentEnergy = CappedValue.EMPTY;
         Map<MountStat, CappedValue> stats = new EnumMap<>(MountStat.class);
+        boolean estimatedMaxStats = true;
         Map<MountStat, Integer> maxStats = new EnumMap<>(MountStat.class);
 
         for (StyledText line : lore) {
@@ -81,9 +85,9 @@ public final class MountAnnotator implements GameItemAnnotator {
             }
 
             matcher = line.getMatcher(COLOR_PATTERN);
-            if (primaryColor.isEmpty() && matcher.matches()) {
-                primaryColor = Optional.of(matcher.group("primaryColor"));
-                secondaryColor = Optional.of(matcher.group("secondaryColor"));
+            if (primaryColor == MountColorInfo.UNKNOWN && matcher.matches()) {
+                primaryColor = Models.Mount.getMountColor(matcher.group("primaryColor"));
+                secondaryColor = Models.Mount.getMountColor(matcher.group("secondaryColor"));
                 continue;
             }
 
@@ -101,13 +105,32 @@ public final class MountAnnotator implements GameItemAnnotator {
                     stats.put(stat.get(), parseCapped(matcher));
 
                     if (matcher.group("max") != null) {
+                        estimatedMaxStats = false;
                         maxStats.put(stat.get(), Integer.parseInt(matcher.group("max")));
+                    } else {
+                        String maxMeter = matcher.group("maxMeter");
+
+                        if (maxMeter == null) {
+                            maxStats.put(stat.get(), stats.get(stat.get()).max());
+                        } else {
+                            int estimatedMax = estimateMax(stats.get(stat.get()).max(), maxMeter.charAt(0));
+                            maxStats.put(stat.get(), estimatedMax);
+                        }
                     }
                 }
             }
         }
 
-        return new MountInfo(potential, primaryColor, secondaryColor, currentEnergy, stats, maxStats);
+        return new MountInfo(
+                potential, primaryColor, secondaryColor, currentEnergy, stats, estimatedMaxStats, maxStats);
+    }
+
+    private int estimateMax(int limit, char maxMeter) {
+        int stage = TooltipIdentificationMeterFont.meterStage(maxMeter);
+
+        if (stage == -1) return limit;
+
+        return Math.round(limit / (1f - (float) stage / TooltipIdentificationMeterFont.STAGES));
     }
 
     private CappedValue parseCapped(Matcher matcher) {

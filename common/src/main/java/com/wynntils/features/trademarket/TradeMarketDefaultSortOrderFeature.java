@@ -56,7 +56,7 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
         // Find the shortest path from current sort order to the one we want to apply
         // Math.abs(path) is path's length, path < 0 -> right click else left click
         final int path1 = defaultSortOrder.get().ordinal() - currentSortOrder.ordinal();
-        final int path2 = path1 + TradeMarketSortOrder.LENGTH * (path1 > 0 ? 1 : -1);
+        final int path2 = path1 + TradeMarketSortOrder.LENGTH * (path1 > 0 ? -1 : 1);
         if (Math.abs(path1) < Math.abs(path2)) {
             clickCountdown = Math.abs(path1);
             shouldRightClick = path1 < 0;

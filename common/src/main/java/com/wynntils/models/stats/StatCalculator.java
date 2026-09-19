@@ -22,6 +22,8 @@ public final class StatCalculator {
     // This constant is used to verify the calculated internal rolls
     // Enable this in development environments to check if the calculated internal rolls are correct
     private static final boolean VERIFY_CALCULATED_ROLLS = false;
+    private static final char EMPTY_VANILLA_METER = '\uE000';
+    private static final char FULL_VANILLA_METER = '\uE023';
 
     public static RangedValue calculatePossibleValuesRange(int baseValue, boolean preIdentified, StatType statType) {
         if (preIdentified) {
@@ -64,14 +66,23 @@ public final class StatCalculator {
         }
     }
 
-    public static RangedValue calculateInternalRollRange(StatPossibleValues possibleValues, int value, int stars) {
+    public static RangedValue calculateInternalRollRange(
+            StatPossibleValues possibleValues, int value, boolean perfectInternalRoll) {
+        return calculateInternalRollRange(possibleValues, value, perfectInternalRoll, !perfectInternalRoll);
+    }
+
+    private static RangedValue calculateInternalRollRange(
+            StatPossibleValues possibleValues,
+            int value,
+            boolean perfectInternalRoll,
+            boolean excludePerfectInternalRoll) {
         // This code finds the lowest possible and highest possible rolls that result in the current
         // value (inclusive).
         int baseValue = possibleValues.baseValue();
 
         // If the stat is calculated as inverted,
         // invert the base value and the actual value
-        // (this weird edge case was revealed by Wynn's star calculations)
+        // (this weird edge case was revealed by Wynn's internal-roll display calculations)
         if (possibleValues.statType().calculateAsInverted()) {
             baseValue = -baseValue;
             value = -value;
@@ -92,54 +103,31 @@ public final class StatCalculator {
             higherRawRollBound = temp;
         }
 
-        // We can further bound the possible rolls using the star count
-        int starMin = statCalculationInfo.range().low();
-        int starMax = statCalculationInfo.range().high();
-
-        // If present, use the starInternalRollRanges to further bound the possible rolls
-        // (negative stats do not have starInternalRollRanges, we do not need to check for them)
-        // (stars is -1 if we don't want stars to be taken into account)
-        if (stars != -1 && statCalculationInfo.starInternalRollRanges().size() > stars) {
-            RangedValue rangedValue =
-                    statCalculationInfo.starInternalRollRanges().get(stars);
-            starMin = rangedValue.low();
-            starMax = rangedValue.high();
+        int rollMin = statCalculationInfo.range().low();
+        int rollMax = statCalculationInfo.range().high();
+        if (perfectInternalRoll) {
+            int perfectRoll = possibleValues.baseValue() > 0 ? rollMax : rollMin;
+            rollMin = perfectRoll;
+            rollMax = perfectRoll;
+        } else if (excludePerfectInternalRoll && possibleValues.baseValue() > 0 && higherRawRollBound >= rollMax) {
+            int nonPerfectMax = rollMax - 1;
+            if (Math.ceil(lowerRawRollBound) <= nonPerfectMax) rollMax = nonPerfectMax;
+        } else if (excludePerfectInternalRoll && possibleValues.baseValue() < 0 && lowerRawRollBound <= rollMin) {
+            int nonPerfectMin = rollMin + 1;
+            if (Math.floor(higherRawRollBound) >= nonPerfectMin) rollMin = nonPerfectMin;
         }
 
-        int lowerRollBound = (int) Math.max(Math.ceil(lowerRawRollBound), starMin);
-        int higherRollBound = (int) Math.max(lowerRollBound, Math.min(Math.floor(higherRawRollBound), starMax));
+        int lowerRollBound = (int) Math.max(Math.ceil(lowerRawRollBound), rollMin);
+        int higherRollBound = (int) Math.max(lowerRollBound, Math.min(Math.floor(higherRawRollBound), rollMax));
 
         // This is a costly check and can fail sporadically if the API is not up-to-date,
         // so we only do it if the developer enables it
         if (VERIFY_CALCULATED_ROLLS) {
             verifyCalculatedInternalRoll(
-                    baseValue, statCalculationInfo, lowerRollBound, higherRollBound, starMin, starMax);
+                    baseValue, statCalculationInfo, lowerRollBound, higherRollBound, rollMin, rollMax);
         }
 
         return RangedValue.of(lowerRollBound, higherRollBound);
-    }
-
-    public static int calculateStarsFromInternalRoll(StatType statType, int baseValue, int internalRoll) {
-        // Star calculation reference, from salted:
-        // https://forums.wynncraft.com/threads/about-the-little-asterisks.147931/#post-1654183
-        StatCalculationInfo statCalculationInfo = statType.getStatCalculationInfo(baseValue);
-
-        // If the stat is treated as inverted, we need to invert the base value
-        // Note: This behavior could not be tested as of writing,
-        //       since no stat is treated as inverted with a negative base value
-        if (baseValue < 0 && statType.treatAsInverted()) {
-            statCalculationInfo = statType.getStatCalculationInfo(-baseValue);
-        }
-
-        for (int stars = 0; stars < statCalculationInfo.starInternalRollRanges().size(); stars++) {
-            RangedValue rangedValue =
-                    statCalculationInfo.starInternalRollRanges().get(stars);
-            if (rangedValue.inRange(internalRoll)) {
-                return stars;
-            }
-        }
-
-        return 0;
     }
 
     public static int calculateStatValue(int internalRoll, StatPossibleValues possibleValues) {
@@ -188,16 +176,35 @@ public final class StatCalculator {
     }
 
     public static float getPercentage(StatActualValue actualValue, StatPossibleValues possibleValues) {
+        return calculatePercentage(actualValue, possibleValues).value();
+    }
+
+    public static PercentageCalculation calculatePercentage(
+            StatActualValue actualValue, StatPossibleValues possibleValues) {
+        if (!possibleValues.range().inRange(actualValue.value())
+                && actualValue.vanillaMeter().isPresent()) {
+            return new PercentageCalculation(
+                    getPercentageFromVanillaMeter(actualValue.vanillaMeter().get()), true);
+        }
+
         int min = possibleValues.range().low();
         int max = possibleValues.range().high();
 
         if (actualValue.statType().treatAsInverted()) {
             // Inverted stats have the highest internal rolls when they have the worst effects
             // This is the opposite of normal stats, so we calculate the percentage by subtracting from the base range
-            return 100 - MathUtils.inverseLerp(min, max, actualValue.value()) * 100;
+            return new PercentageCalculation(100 - MathUtils.inverseLerp(min, max, actualValue.value()) * 100, false);
         }
 
-        return MathUtils.inverseLerp(min, max, actualValue.value()) * 100;
+        return new PercentageCalculation(MathUtils.inverseLerp(min, max, actualValue.value()) * 100, false);
+    }
+
+    public static float getPercentageFromVanillaMeter(char vanillaMeter) {
+        if (vanillaMeter < EMPTY_VANILLA_METER || vanillaMeter > FULL_VANILLA_METER) {
+            throw new IllegalArgumentException("Invalid vanilla identification meter: " + vanillaMeter);
+        }
+
+        return MathUtils.inverseLerp(EMPTY_VANILLA_METER, FULL_VANILLA_METER, vanillaMeter) * 100;
     }
 
     public static double getPerfectChance(StatPossibleValues possibleValues) {
@@ -207,10 +214,9 @@ public final class StatCalculator {
         int allCases =
                 statCalculationInfo.range().high() - statCalculationInfo.range().low() + 1;
 
-        // Internal roll range for maximum value
-        // Do not confuse this with a "3 star" roll, aka perfect internal roll
+        // Internal roll range for the maximum displayed value.
         RangedValue perfectInternalRollRange = calculateInternalRollRange(
-                possibleValues, possibleValues.range().high(), -1);
+                possibleValues, possibleValues.range().high(), false, false);
         int perfectCases = perfectInternalRollRange.high() - perfectInternalRollRange.low() + 1;
 
         return ((double) perfectCases) / allCases * 100;
@@ -286,13 +292,25 @@ public final class StatCalculator {
         return Optional.of((float) percents.getAverage());
     }
 
+    public static Optional<Float> calculateOverallQualityFromVanillaMeters(List<StatActualValue> identifications) {
+        DoubleSummaryStatistics percents = identifications.stream()
+                .mapToDouble(actualValue -> actualValue
+                        .vanillaMeter()
+                        .map(StatCalculator::getPercentageFromVanillaMeter)
+                        .orElse(0f))
+                .summaryStatistics();
+        if (percents.getCount() == 0) return Optional.empty();
+
+        return Optional.of((float) percents.getAverage());
+    }
+
     private static void verifyCalculatedInternalRoll(
             int baseValue,
             StatCalculationInfo statCalculationInfo,
             int lowerRollBound,
             int higherRollBound,
-            int starMin,
-            int starMax) {
+            int rollMin,
+            int rollMax) {
         // Check if the bounds are in the correct order
         assert lowerRollBound <= higherRollBound;
 
@@ -317,7 +335,7 @@ public final class StatCalculator {
                 .divide(BigDecimal.valueOf(100), statCalculationInfo.roundingMode())
                 .setScale(0, statCalculationInfo.roundingMode())
                 .longValue();
-        assert lowerRollBound == starMin || lowerValue != oneBelowLowerValue;
+        assert lowerRollBound == rollMin || lowerValue != oneBelowLowerValue;
 
         // Check if the highest bound is the actually highest possible roll
         long oneAboveHigherValue = new BigDecimal(baseValue)
@@ -325,6 +343,8 @@ public final class StatCalculator {
                 .divide(BigDecimal.valueOf(100), statCalculationInfo.roundingMode())
                 .setScale(0, statCalculationInfo.roundingMode())
                 .longValue();
-        assert higherRollBound == starMax || higherValue != oneAboveHigherValue;
+        assert higherRollBound == rollMax || higherValue != oneAboveHigherValue;
     }
+
+    public record PercentageCalculation(float value, boolean estimated) {}
 }

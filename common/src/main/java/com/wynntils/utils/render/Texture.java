@@ -178,6 +178,7 @@ public enum Texture {
     EXPORT_SETTINGS_ICON("icons/config_categories/export_settings_icon.png", 16, 16),
     IMPORT_SETTINGS_ICON("icons/config_categories/import_settings_icon.png", 16, 16),
     SETTINGS_PROFILES_ICON("icons/config_categories/settings_profiles_icon.png", 16, 16),
+    SETTINGS_TYPE_ICON("icons/config_categories/settings_type_icon.png", 16, 16),
     ENABLED_SETTINGS_ICON("icons/config_categories/enabled_icon.png", 16, 16),
     DISABLED_SETTINGS_ICON("icons/config_categories/disabled_icon.png", 16, 16),
     NEUTRAL_SETTINGS_ICON("icons/config_categories/neutral_icon.png", 16, 16),
@@ -361,6 +362,34 @@ public enum Texture {
     WOODCUTTING("icons/map/woodcutting.png", 16, 17),
     WOODWORKING_STATION("icons/map/woodworking_station.png", 17, 15),
 
+    // Category Management Screen
+    CATEGORY_MANAGER_ICON("map/managers/category_manager/category_manager_icon.png", 16, 16),
+    CATEGORY_MANAGER_OPTION_HEADER("map/managers/category_manager/category_manager_header.png", 70, 16, 4, 9, 8, 8),
+    CATEGORY_MANAGER_OPTION_HEADER_LINE(
+            "map/managers/category_manager/category_manager_header_line.png", 40, 16, 1, 10, 8, 8),
+
+    // Provider Management Screen
+    PROVIDER_MANAGER_ICON("map/managers/provider_manager/provider_manager_icon.png", 16, 16),
+
+    // Map Managers
+    MANAGER_BACKGROUND("map/managers/manager_background.png", 576, 320),
+    MANAGER_WIDGET_BORDER("map/managers/widget_border.png", 34, 19, 6, 6, 6, 6),
+    MANAGER_WIDGET_BACKGROUND("map/managers/widget_background.png", 34, 19, 6, 6, 6, 6),
+    MANAGER_WIDGET_BACKGROUND_RED("map/managers/widget_background_red.png", 34, 19, 6, 6, 6, 6),
+    MANAGER_WIDGET_BACKGROUND_GREEN("map/managers/widget_background_green.png", 34, 19, 6, 6, 6, 6),
+    MANAGER_SCROLL_BAR_VERTICAL("map/managers/scroll_bar_vertical.png", 9, 65, 5, 4, 13, 13),
+    MANAGER_SCROLL_BAR_HORIZONTAL("map/managers/scroll_bar_horizontal.png", 65, 9, 13, 13, 4, 5),
+    MANAGER_SCROLL_BAR_BUTTON("map/managers/scroll_bar_button.png", 9, 8, 4, 4, 4, 4),
+    MANAGER_FOLDER_ICON("map/managers/folder_icon.png", 12, 12),
+    MANAGER_FILE_ICON("map/managers/file_icon.png", 12, 12),
+    MANAGER_TEXT_BOX_BACKGROUND("map/managers/textbox_background.png", 20, 16, 3, 3, 3, 3),
+    MANAGER_SLIDER_FILLED("map/managers/filled_slider.png", 9, 6, 4, 1, 3, 3),
+    MANAGER_SLIDER_EMPTY("map/managers/empty_slider.png", 9, 6, 1, 4, 3, 3),
+    MANAGER_TOGGLE_BUTTON_OFF("map/managers/toggle_button_off.png", 38, 18),
+    MANAGER_TOGGLE_BUTTON_ON("map/managers/toggle_button_on.png", 38, 18),
+    MANAGER_QUESTION_MARK_ICON("map/managers/question_mark_icon.png", 12, 16),
+    MANAGER_SWATCH_BACKGROUND("map/managers/swatch_background.png", 14, 14),
+
     // Player Viewer
     DUEL_ICON("icons/player_viewer/duel_icon.png", 14, 14),
     FRIEND_ADD_ICON("icons/player_viewer/friend_add_icon.png", 14, 14),
@@ -495,6 +524,7 @@ public enum Texture {
     ITEM_FILTER_BACKGROUND("ui_components/item_filter_background.png", 358, 206),
     ITEM_SHARING_BACKGROUND("ui_components/item_sharing_background.png", 250, 100),
     LIST_SEARCH("ui_components/list_search.png", 133, 23),
+    MOUNT_JUMP_BAR("ui_components/mount_jump_bar.png", 179, 24),
     OVERLAY_ORDERING_BACKGROUND("ui_components/overlay_ordering_background.png", 234, 206),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 358, 206),
     PLAYER_VIEWER_BACKGROUND("ui_components/player_viewer_background.png", 126, 88),

@@ -4,9 +4,12 @@
  */
 package com.wynntils.screens.guides.charm;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.screens.guides.widgets.GuideButton;
 import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.InputWithModifiers;
+import org.lwjgl.glfw.GLFW;
 
 public class CharmGuideButton extends GuideButton {
     private final GuideCharmItemStack charmItemStack;
@@ -26,6 +29,18 @@ public class CharmGuideButton extends GuideButton {
         }
 
         itemStack.queueGuideTooltip(guiGraphics, mouseX, mouseY);
+    }
+
+    @Override
+    public void onPress(InputWithModifiers input) {
+        if (!itemName.isEmpty() && input.hasShiftDown()) {
+            Services.Favorites.toggleFavorite(itemName);
+            return;
+        }
+
+        if (input.input() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            charmItemStack.changePage();
+        }
     }
 
     @Override

@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
@@ -16,6 +17,8 @@ import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
+import com.wynntils.screens.maps.managers.CategoryManagementScreen;
+import com.wynntils.screens.maps.managers.ProviderManagementScreen;
 import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.map.type.TerritoryFilterType;
 import com.wynntils.services.mapdata.attributes.impl.AbstractMapAreaAttributes;
@@ -269,6 +272,28 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.GRAY))));
 
         addMapButton(new MapButton(
+                Texture.CATEGORY_MANAGER_ICON,
+                (b) -> McUtils.setScreen(CategoryManagementScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .append(Component.translatable("screens.wynntils.map.categoryManager.name"))
+                                .withStyle(ChatFormatting.AQUA),
+                        Component.translatable("screens.wynntils.map.categoryManager.description1")
+                                .withStyle(ChatFormatting.GRAY),
+                        Component.translatable("screens.wynntils.map.categoryManager.description2")
+                                .withStyle(ChatFormatting.GRAY))));
+
+        addMapButton(new MapButton(
+                Texture.PROVIDER_MANAGER_ICON,
+                (b) -> McUtils.setScreen(ProviderManagementScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .append(Component.translatable("screens.wynntils.map.providerManager.name"))
+                                .withStyle(ChatFormatting.RED),
+                        Component.translatable("screens.wynntils.map.providerManager.description1")
+                                .withStyle(ChatFormatting.GRAY))));
+
+        addMapButton(new MapButton(
                 Texture.HELP_ICON,
                 (b) -> {},
                 List.of(
@@ -355,6 +380,15 @@ public final class GuildMapScreen extends AbstractMapScreen {
         renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         renderHoveredTerritoryInfo(guiGraphics);
+
+        if (isPanning) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
+        } else if (holdingZoomHandle) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if ((this.hoveredFeature != null && !(this.hoveredFeature instanceof TerritoryArea))
+                || isMouseOverZoomHandle(mouseX, mouseY)) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }

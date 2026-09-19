@@ -238,21 +238,25 @@ public class ValuablesProtectionFeature extends Feature {
             slotsToWarn.add(TM_PRICE_SLOT);
 
             if (salePrice < lowestPrice * (tradeMarketPriceThreshold.get() / 100d)) {
-                ctrlHintTextWidget = new HintTextWidget(
-                        cs.width - cs.leftPos + 2,
-                        cs.height / 2,
-                        cs.leftPos,
-                        11,
-                        I18n.get(
-                                "feature.wynntils.valuablesProtection.ctrlClick",
-                                I18n.get("feature.wynntils.valuablesProtection.selling")),
-                        HorizontalAlignment.LEFT,
-                        CommonColors.WHITE);
-                cs.addRenderableOnly(ctrlHintTextWidget);
+                int hintTextY = cs.height / 2;
+                if (requireCtrlToSell.get()) {
+                    ctrlHintTextWidget = new HintTextWidget(
+                            cs.width - cs.leftPos + 2,
+                            hintTextY,
+                            cs.leftPos,
+                            11,
+                            I18n.get(
+                                    "feature.wynntils.valuablesProtection.ctrlClick",
+                                    I18n.get("feature.wynntils.valuablesProtection.selling")),
+                            HorizontalAlignment.LEFT,
+                            CommonColors.WHITE);
+                    cs.addRenderableOnly(ctrlHintTextWidget);
+                    hintTextY += 20;
+                }
 
                 tmHintTextWidgets.add(new HintTextWidget(
                         cs.width - cs.leftPos + 2,
-                        cs.height / 2 + 20,
+                        hintTextY,
                         cs.leftPos,
                         11,
                         I18n.get(
@@ -268,7 +272,7 @@ public class ValuablesProtectionFeature extends Feature {
                         CommonColors.LIGHT_GRAY));
                 tmHintTextWidgets.add(new HintTextWidget(
                         cs.width - cs.leftPos + 2,
-                        cs.height / 2 + 56,
+                        hintTextY + 36,
                         cs.leftPos,
                         11,
                         I18n.get("feature.wynntils.valuablesProtection.settingsHint"),

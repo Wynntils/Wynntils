@@ -4,11 +4,18 @@
  */
 package com.wynntils.screens.maps;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.features.debug.MappingProgressFeature;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
+import com.wynntils.screens.maps.managers.CategoryManagementScreen;
+import com.wynntils.screens.maps.managers.ProviderManagementScreen;
+import com.wynntils.screens.maps.waypoints.GatheringNodeFilterScreen;
+import com.wynntils.screens.maps.waypoints.WaypointCreationScreen;
+import com.wynntils.screens.maps.waypoints.WaypointManagementScreen;
 import com.wynntils.screens.maps.widgets.MapButton;
 import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
@@ -176,6 +183,28 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .withStyle(ChatFormatting.GRAY))));
 
         addMapButton(new MapButton(
+                Texture.CATEGORY_MANAGER_ICON,
+                (b) -> McUtils.setScreen(CategoryManagementScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .append(Component.translatable("screens.wynntils.map.categoryManager.name"))
+                                .withStyle(ChatFormatting.AQUA),
+                        Component.translatable("screens.wynntils.map.categoryManager.description1")
+                                .withStyle(ChatFormatting.GRAY),
+                        Component.translatable("screens.wynntils.map.categoryManager.description2")
+                                .withStyle(ChatFormatting.GRAY))));
+
+        addMapButton(new MapButton(
+                Texture.PROVIDER_MANAGER_ICON,
+                (b) -> McUtils.setScreen(ProviderManagementScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .append(Component.translatable("screens.wynntils.map.providerManager.name"))
+                                .withStyle(ChatFormatting.RED),
+                        Component.translatable("screens.wynntils.map.providerManager.description1")
+                                .withStyle(ChatFormatting.GRAY))));
+
+        addMapButton(new MapButton(
                 Texture.HELP_ICON,
                 (b) -> {},
                 List.of(
@@ -248,7 +277,9 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         renderMapFeatures(guiGraphics, mouseX, mouseY);
 
-        if (Managers.Feature.getFeatureInstance(MappingProgressFeature.class).isEnabled()) {
+        if (Models.WorldState.onWorld()
+                && Managers.Feature.getFeatureInstance(MappingProgressFeature.class)
+                        .isEnabled()) {
             renderChunkBorders(guiGraphics);
         }
 
@@ -293,6 +324,14 @@ public final class MainMapScreen extends AbstractMapScreen {
         renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
 
         renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
+
+        if (isPanning) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
+        } else if (holdingZoomHandle) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (this.hoveredFeature != null || isMouseOverZoomHandle(mouseX, mouseY)) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
 
         renderTooltip(guiGraphics, mouseX, mouseY);
     }

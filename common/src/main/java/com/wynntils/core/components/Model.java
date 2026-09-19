@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
@@ -14,7 +14,7 @@ import java.util.List;
  *
  * Models are created as singletons in the {@link Models} holding class.
  */
-public abstract class Model extends CoreComponent {
+public abstract class Model extends ConfigurableCoreComponent {
     protected Model(List<Model> dependencies) {
         // dependencies are technically not used, but only required
         // as a reminder for implementers to be wary about dependencies

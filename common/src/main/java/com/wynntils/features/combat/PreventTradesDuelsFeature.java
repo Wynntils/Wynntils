@@ -17,6 +17,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.utils.wynn.ItemUtils;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -36,9 +37,11 @@ public class PreventTradesDuelsFeature extends Feature {
     private final Config<Boolean> whenHoldingGatheringTool = new Config<>(false);
 
     public PreventTradesDuelsFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
+                        .build(),
+                List.of(ConfigDependency.functionality(Models.Combat.trackDamage)));
     }
 
     @SubscribeEvent

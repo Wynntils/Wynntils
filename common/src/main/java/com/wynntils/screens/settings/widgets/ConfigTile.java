@@ -4,6 +4,8 @@
  */
 package com.wynntils.screens.settings.widgets;
 
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -12,15 +14,18 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
-import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
+import com.wynntils.screens.settings.BaseWynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -42,7 +47,7 @@ public class ConfigTile extends WynntilsButton {
         super(x, y, width, height, Component.literal(config.getJsonName()));
         this.screen = screen;
 
-        if (screen instanceof WynntilsBookSettingsScreen settingsScreen) {
+        if (screen instanceof BaseWynntilsBookSettingsScreen settingsScreen) {
             maskTopY = settingsScreen.getMaskTopY();
             maskBottomY = settingsScreen.getConfigMaskBottomY();
             displayName = settingsScreen.configOptionContains(config)
@@ -112,7 +117,7 @@ public class ConfigTile extends WynntilsButton {
         // Prevent interaction when the tile is outside of the mask from the screen, same applies to drag and released
         if ((event.y() <= maskTopY || event.y() >= maskBottomY)) return false;
 
-        if (McUtils.screen() instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
+        if (McUtils.screen() instanceof BaseWynntilsBookSettingsScreen bookSettingsScreen) {
             bookSettingsScreen.changesMade();
         }
 
@@ -146,6 +151,32 @@ public class ConfigTile extends WynntilsButton {
         // noop
     }
 
+    private static List<Component> buildTooltip(Config<?> config) {
+        List<Component> lines = new ArrayList<>();
+        lines.add(Component.literal(config.getDescription()));
+
+        List<Feature> dependents = Managers.Feature.getEnabledDependents(config, Feature.DependencyType.FUNCTIONALITY);
+        if (!dependents.isEmpty()) {
+            lines.add(Component.empty());
+            lines.add(Component.translatable("screens.wynntils.settingsScreen.dependentFeatures")
+                    .withStyle(ChatFormatting.YELLOW));
+            dependents.forEach(feature -> lines.add(
+                    Component.literal("- " + feature.getTranslatedName()).withStyle(ChatFormatting.GRAY)));
+        }
+
+        List<Feature> customizationDependents =
+                Managers.Feature.getEnabledDependents(config, Feature.DependencyType.CUSTOMIZATION);
+        if (!customizationDependents.isEmpty()) {
+            lines.add(Component.empty());
+            lines.add(Component.translatable("screens.wynntils.settingsScreen.dependentCustomizations")
+                    .withStyle(ChatFormatting.GREEN));
+            customizationDependents.forEach(feature -> lines.add(
+                    Component.literal("- " + feature.getTranslatedName()).withStyle(ChatFormatting.GRAY)));
+        }
+
+        return ComponentUtils.wrapTooltips(lines, 250);
+    }
+
     private int getRenderY() {
         return this.getY() + 19;
     }
@@ -155,6 +186,8 @@ public class ConfigTile extends WynntilsButton {
     }
 
     private <E extends Enum<E>> AbstractWidget getWidgetFromConfig(Config<?> configOption) {
+        List<Component> tooltip = buildTooltip(configOption);
+
         // Prioritise overlay configs so that the alignment enum configs use the screen instead
         // of the normal enum widget
         if (overlay != null && screen != null) {
@@ -163,27 +196,28 @@ public class ConfigTile extends WynntilsButton {
                     || configOption.getType().equals(HorizontalAlignment.class)
                     || configOption.getType().equals(VerticalAlignment.class)) {
                 return new OverlaySettingsWidget(
-                        getRenderX(), getRenderY(), configOption, screen, maskTopY, maskBottomY, overlay);
+                        getRenderX(), getRenderY(), configOption, tooltip, screen, maskTopY, maskBottomY, overlay);
             }
         }
 
         if (configOption.getType().equals(Boolean.class)) {
             return new BooleanSettingsButton(
-                    getRenderX(), getRenderY(), (Config<Boolean>) configOption, maskTopY, maskBottomY);
+                    getRenderX(), getRenderY(), (Config<Boolean>) configOption, tooltip, maskTopY, maskBottomY);
         } else if (configOption.isEnum()) {
             return new EnumSettingsButton<>(
-                    getRenderX(), getRenderY(), (Config<E>) configOption, maskTopY, maskBottomY);
+                    getRenderX(), getRenderY(), (Config<E>) configOption, tooltip, maskTopY, maskBottomY);
         } else if (configOption.getType().equals(CustomColor.class)) {
             return new CustomColorSettingsButton(
                     getRenderX(),
                     getRenderY(),
                     (Config<CustomColor>) configOption,
+                    tooltip,
                     (TextboxScreen) screen,
                     maskTopY,
                     maskBottomY);
         }
 
         return new TextInputBoxSettingsWidget<>(
-                getRenderX(), getRenderY(), configOption, (TextboxScreen) screen, maskTopY, maskBottomY);
+                getRenderX(), getRenderY(), configOption, tooltip, (TextboxScreen) screen, maskTopY, maskBottomY);
     }
 }

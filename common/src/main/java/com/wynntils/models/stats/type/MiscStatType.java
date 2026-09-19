@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats.type;
@@ -7,7 +7,6 @@ package com.wynntils.models.stats.type;
 import com.wynntils.models.stats.builders.MiscStatKind;
 import com.wynntils.utils.type.RangedValue;
 import java.math.RoundingMode;
-import java.util.List;
 import java.util.Optional;
 
 public final class MiscStatType extends StatType {
@@ -37,8 +36,7 @@ public final class MiscStatType extends StatType {
                     RangedValue.of(80, 115),
                     calculateAsInverted() ? RoundingMode.HALF_DOWN : RoundingMode.HALF_UP,
                     Optional.of(1),
-                    Optional.empty(),
-                    List.of());
+                    Optional.empty());
         }
 
         return super.getStatCalculationInfo(baseValue);

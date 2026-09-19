@@ -78,7 +78,11 @@ public class BulkBuyFeature extends Feature {
     private ItemPrice bulkBoughtPrice = null; // Price of a single item
 
     public BulkBuyFeature() {
-        super(ProfileDefault.onlyDefault());
+        super(
+                ProfileDefault.onlyDefault(),
+                List.of(
+                        ConfigDependency.functionality(Models.Emerald.countEmeralds),
+                        ConfigDependency.customization(Models.Emerald.recountInterval)));
     }
 
     @SubscribeEvent

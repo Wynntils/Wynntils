@@ -119,7 +119,7 @@ allprojects {
              2. schemaVersion must be at the top or else Fabric will complain
              */
             targetExclude(
-                    "src/main/resources/assets/wynntils/font/*.json",
+                    "src/main/resources/assets/wynntils/font/**/*.json",
                     "src/main/resources/assets/wynntils/fontmaps/*.json",
                     "src/main/resources/fabric.mod.json")
             gson()

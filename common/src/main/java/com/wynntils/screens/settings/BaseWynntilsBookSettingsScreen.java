@@ -1,0 +1,1336 @@
+/*
+ * Copyright © Wynntils 2022-2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.screens.settings;
+
+import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.consumers.features.Configurable;
+import com.wynntils.core.consumers.overlays.CustomNameProperty;
+import com.wynntils.core.consumers.overlays.Overlay;
+import com.wynntils.core.consumers.screens.WynntilsScreen;
+import com.wynntils.core.persisted.Translatable;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.TooltipProvider;
+import com.wynntils.screens.base.widgets.SearchWidget;
+import com.wynntils.screens.base.widgets.TextInputBoxWidget;
+import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.settings.widgets.CategoryButton;
+import com.wynntils.screens.settings.widgets.ComponentTypeButton;
+import com.wynntils.screens.settings.widgets.ConfigTile;
+import com.wynntils.screens.settings.widgets.ConfigurableButton;
+import com.wynntils.screens.settings.widgets.SettingsCategoryTabButton;
+import com.wynntils.screens.settings.widgets.SettingsEnabledStateTabButton;
+import com.wynntils.screens.settings.widgets.SettingsPageTabButton;
+import com.wynntils.screens.settings.widgets.SettingsSearchWidget;
+import com.wynntils.screens.settings.widgets.SettingsSideTabButton;
+import com.wynntils.screens.settings.widgets.UnsavedChangesWidget;
+import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.RenderDirection;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import org.lwjgl.glfw.GLFW;
+
+public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
+    // Constants
+    private static final float SCROLL_FACTOR = 10f;
+    private static final int MASK_TOP_Y = 21;
+    private static final int CONFIG_MASK_BOTTOM_Y = 205;
+    private static final int CONFIGURABLE_MASK_BOTTOM_Y = 211;
+    private static final int CONFIGURABLES_PER_PAGE = 16;
+    private static final int CONFIGS_PER_PAGE = 4;
+    private static final int CONFIGURABLE_SCROLL_X = (int) (Texture.CONFIG_BOOK_BACKGROUND.width() / 2f - 12);
+    private static final int CONFIG_SCROLL_X = Texture.CONFIG_BOOK_BACKGROUND.width() - 23;
+    private static final int MAX_DISPLAYED_CATEGORIES = 9;
+    private static final int SCROLL_AREA_HEIGHT = 186;
+    private static final int SCROLL_START_Y = 21;
+
+    // Collections
+    private final List<Category> sortedCategories;
+    private final List<WynntilsButton> configurables = new ArrayList<>();
+    private final List<WynntilsButton> configs = new ArrayList<>();
+    private List<Configurable> configurableList;
+    private Map<Configurable, List<ConfigTile>> configurableMap = new HashMap<>();
+    private SettingsPageTabButton previousCategoryButton;
+    private SettingsPageTabButton nextCategoryButton;
+    private List<SettingsCategoryTabButton> categoryButtons = new ArrayList<>();
+
+    // Renderables
+    private final SearchWidget searchWidget;
+    private SettingsCategoryTabButton allCategoriesButton;
+    private SettingsCategoryTabButton selectedCategoryButton;
+    private SettingsEnabledStateTabButton enabledStateTabButton;
+    private TextInputBoxWidget focusedTextInput;
+    private UnsavedChangesWidget unsavedChangesWidget;
+
+    // UI size, positions, etc
+    private boolean draggingConfigurableScroll = false;
+    private boolean draggingConfigScroll = false;
+    private int categoriesScrollOffset = 0;
+    private int configurablesScrollOffset = 0;
+    private int configScrollOffset = 0;
+    private int offsetX;
+    private int offsetY;
+    private float configurableScrollRenderY;
+    private float configScrollRenderY;
+
+    // Settings display
+    private boolean unsavedChanges = false;
+    private boolean displayWarning = false;
+    private Category selectedCategory;
+    private Configurable selectedConfigurable = null;
+    private Configurable hoveredConfigurable = null;
+    private EnabledFilterType enabledFilterType = EnabledFilterType.ENABLED;
+
+    private final Screen previousScreen;
+
+    protected BaseWynntilsBookSettingsScreen(Screen previousScreen) {
+        super(Component.translatable("screens.wynntils.settingsScreen.name"));
+
+        this.previousScreen = previousScreen;
+        searchWidget = new SettingsSearchWidget(
+                55,
+                Texture.CONFIG_BOOK_BACKGROUND.height() + 6,
+                120,
+                20,
+                (s) -> {
+                    configurablesScrollOffset = 0;
+                    getFilteredConfigurables();
+                    populateConfigurables();
+                },
+                this);
+        setFocusedTextInput(searchWidget);
+
+        // Get all categories, sort a-z
+        sortedCategories = Arrays.asList(Category.values());
+        sortedCategories.sort(Comparator.comparing(Enum::name));
+    }
+
+    @Override
+    protected void doInit() {
+        // Render position for the book background
+        offsetX = (int) ((this.width - Texture.CONFIG_BOOK_BACKGROUND.width()) / 2f);
+        offsetY = (int) ((this.height - Texture.CONFIG_BOOK_BACKGROUND.height()) / 2f);
+        searchWidget.setX(55 + offsetX);
+        searchWidget.setY(Texture.CONFIG_BOOK_BACKGROUND.height() + 6 + offsetY);
+        populateCategories();
+        getFilteredConfigurables();
+        populateConfigurables();
+
+        int yPos = Texture.TAG_BLUE.height() / 2 + offsetY;
+
+        // region Side tags
+        this.addRenderableWidget(new SettingsSideTabButton(
+                (int) -(Texture.TAG_BLUE.width() * 0.75f) + offsetX,
+                yPos,
+                Texture.TAG_BLUE.width(),
+                Texture.TAG_BLUE.height(),
+                this::importSettings,
+                ComponentUtils.wrapTooltips(
+                        List.of(
+                                Component.translatable("screens.wynntils.settingsScreen.import")
+                                        .withStyle(ChatFormatting.YELLOW),
+                                Component.translatable("screens.wynntils.settingsScreen.import.all")
+                                        .withStyle(ChatFormatting.GRAY),
+                                Component.translatable("screens.wynntils.settingsScreen.import.selected")
+                                        .withStyle(ChatFormatting.GRAY)),
+                        150),
+                Texture.TAG_BLUE,
+                Texture.IMPORT_SETTINGS_ICON,
+                offsetX,
+                offsetY));
+
+        yPos += 15 + Texture.TAG_BLUE.height() / 2;
+
+        this.addRenderableWidget(new SettingsSideTabButton(
+                (int) -(Texture.TAG_BLUE.width() * 0.75f) + offsetX,
+                yPos,
+                Texture.TAG_BLUE.width(),
+                Texture.TAG_BLUE.height(),
+                this::exportSettings,
+                ComponentUtils.wrapTooltips(
+                        List.of(
+                                Component.translatable("screens.wynntils.settingsScreen.export")
+                                        .withStyle(ChatFormatting.BLUE),
+                                Component.translatable("screens.wynntils.settingsScreen.export.all")
+                                        .withStyle(ChatFormatting.GRAY),
+                                Component.translatable("screens.wynntils.settingsScreen.export.selected")
+                                        .withStyle(ChatFormatting.GRAY)),
+                        150),
+                Texture.TAG_BLUE,
+                Texture.EXPORT_SETTINGS_ICON,
+                offsetX,
+                offsetY));
+
+        yPos += 15 + Texture.TAG_BLUE.height() / 2;
+
+        this.addRenderableWidget(new SettingsSideTabButton(
+                (int) -(Texture.TAG_BLUE.width() * 0.75f) + offsetX,
+                yPos,
+                Texture.TAG_BLUE.width(),
+                Texture.TAG_BLUE.height(),
+                (b) -> {
+                    Managers.Config.saveConfig();
+                    unsavedChanges = false;
+                    displayWarning = false;
+                    unsavedChangesWidget.visible = false;
+                    onClose();
+                },
+                ComponentUtils.wrapTooltips(
+                        List.of(
+                                Component.translatable("screens.wynntils.settingsScreen.apply")
+                                        .withStyle(ChatFormatting.GREEN),
+                                Component.translatable("screens.wynntils.settingsScreen.apply.description")
+                                        .withStyle(ChatFormatting.GRAY)),
+                        150),
+                Texture.TAG_BLUE,
+                Texture.APPLY_SETTINGS_ICON,
+                offsetX,
+                offsetY));
+
+        yPos += 15 + Texture.TAG_BLUE.height() / 2;
+
+        this.addRenderableWidget(new SettingsSideTabButton(
+                (int) -(Texture.TAG_BLUE.width() * 0.75f) + offsetX,
+                yPos,
+                Texture.TAG_BLUE.width(),
+                Texture.TAG_BLUE.height(),
+                (b) -> {
+                    // This button is specifically for closing without saving so ignore unsaved changes
+                    unsavedChanges = false;
+                    displayWarning = false;
+                    unsavedChangesWidget.visible = false;
+                    onClose();
+                },
+                ComponentUtils.wrapTooltips(
+                        List.of(
+                                Component.translatable("screens.wynntils.settingsScreen.close")
+                                        .withStyle(ChatFormatting.RED),
+                                Component.translatable("screens.wynntils.settingsScreen.close.description")
+                                        .withStyle(ChatFormatting.GRAY)),
+                        150),
+                Texture.TAG_BLUE,
+                Texture.DISCARD_SETTINGS_ICON,
+                offsetX,
+                offsetY));
+        // endregion
+
+        // region Category tags
+        if (shouldShowCategoryControls()) {
+            int xPos = (int) (Texture.TAG_RED.width() * 0.85) + offsetX;
+
+            allCategoriesButton = this.addRenderableWidget(new SettingsCategoryTabButton(
+                    xPos,
+                    (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
+                    Texture.TAG_RED.width(),
+                    Texture.TAG_RED.height(),
+                    (b) -> changeCategory(null),
+                    List.of(Component.literal("All")),
+                    selectedCategory == null,
+                    offsetX,
+                    offsetY));
+
+            if (selectedCategory == null) {
+                selectedCategoryButton = allCategoriesButton;
+            }
+
+            xPos += Texture.TAG_RED.width() + 1;
+
+            enabledStateTabButton = this.addRenderableWidget(new SettingsEnabledStateTabButton(
+                    xPos,
+                    (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
+                    Texture.TAG_RED.width(),
+                    Texture.TAG_RED.height(),
+                    this::cycleEnabledState,
+                    List.of(Component.translatable("screens.wynntils.settingsScreen.cycleEnabled")),
+                    enabledFilterType.getIcon(),
+                    offsetX,
+                    offsetY));
+
+            xPos += Texture.TAG_RED.width() * 2 + 1;
+
+            previousCategoryButton = this.addRenderableWidget(new SettingsPageTabButton(
+                    xPos,
+                    (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
+                    Texture.TAG_RED.width(),
+                    Texture.TAG_RED.height(),
+                    (b) -> scrollCategories(-1),
+                    List.of(Component.translatable("screens.wynntils.settingsScreen.previous")),
+                    false,
+                    offsetX,
+                    offsetY));
+
+            xPos += (int) ((Texture.TAG_RED.width() * 1.25) * (MAX_DISPLAYED_CATEGORIES + 1)
+                    - Texture.TAG_RED.width() * 0.25);
+
+            nextCategoryButton = this.addRenderableWidget(new SettingsPageTabButton(
+                    xPos,
+                    (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
+                    Texture.TAG_RED.width(),
+                    Texture.TAG_RED.height(),
+                    (b) -> scrollCategories(1),
+                    List.of(Component.translatable("screens.wynntils.settingsScreen.next")),
+                    true,
+                    offsetX,
+                    offsetY));
+        }
+
+        this.addRenderableWidget(new SettingsSideTabButton(
+                (int) -(Texture.TAG_BLUE.width() * 0.75f) + offsetX,
+                offsetY + Texture.CONFIG_BOOK_BACKGROUND.height() - Texture.TAG_GREEN.height() - 20,
+                Texture.TAG_GREEN.width(),
+                Texture.TAG_GREEN.height(),
+                (b) -> switchSettingsView(),
+                ComponentUtils.wrapTooltips(
+                        List.of(
+                                Component.translatable(
+                                                "screens.wynntils.settingsScreen.swapView",
+                                                getSettingsViewSwitchTargetName())
+                                        .withStyle(ChatFormatting.WHITE),
+                                Component.translatable("screens.wynntils.settingsScreen.swapView.description")
+                                        .withStyle(ChatFormatting.GRAY)),
+                        150),
+                Texture.TAG_GREEN,
+                Texture.SETTINGS_TYPE_ICON,
+                offsetX,
+                offsetY));
+
+        this.addRenderableWidget(new SettingsSideTabButton(
+                (int) -(Texture.TAG_BLUE.width() * 0.75f) + offsetX,
+                offsetY + Texture.CONFIG_BOOK_BACKGROUND.height() - Texture.TAG_GREEN.height() - 45,
+                Texture.TAG_GREEN.width(),
+                Texture.TAG_GREEN.height(),
+                (b) -> McUtils.setScreen(ConfigProfileScreen.create(this, Managers.Config.getSelectedProfile())),
+                ComponentUtils.wrapTooltips(
+                        List.of(
+                                Component.translatable("screens.wynntils.settingsScreen.profiles")
+                                        .withStyle(ChatFormatting.WHITE),
+                                Component.translatable("screens.wynntils.settingsScreen.profiles.description")
+                                        .withStyle(ChatFormatting.GRAY)),
+                        150),
+                Texture.TAG_GREEN,
+                Texture.SETTINGS_PROFILES_ICON,
+                offsetX,
+                offsetY));
+
+        this.addRenderableWidget(searchWidget);
+
+        unsavedChangesWidget = new UnsavedChangesWidget(
+                (int) ((this.width - Texture.SETTINGS_WARNING_BACKGROUND.width()) / 2f),
+                (int) ((this.height - Texture.SETTINGS_WARNING_BACKGROUND.height()) / 2f),
+                this);
+        unsavedChangesWidget.visible = displayWarning;
+
+        this.addRenderableWidget(unsavedChangesWidget);
+    }
+
+    @Override
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        if (displayWarning) {
+            unsavedChangesWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+            return;
+        }
+
+        renderTags(guiGraphics, mouseX, mouseY, partialTick);
+
+        renderBg(guiGraphics);
+
+        String categoryName = getCategoryTitle(selectedCategory);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromString(categoryName),
+                        Texture.CONFIG_BOOK_BACKGROUND.width() * 0.25f + offsetX,
+                        McUtils.mc().font.lineHeight + 5 + offsetY,
+                        CommonColors.LIGHT_GRAY,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
+
+        RenderUtils.drawLine(
+                guiGraphics,
+                CommonColors.GRAY,
+                offsetX + 11,
+                offsetY + 19,
+                Texture.CONFIG_BOOK_BACKGROUND.width() / 2f - 6 + offsetX,
+                19 + offsetY,
+                1);
+
+        if (selectedConfigurable != null || hoveredConfigurable != null) {
+            Configurable configurable = hoveredConfigurable != null ? hoveredConfigurable : selectedConfigurable;
+            String textToRender = configurable.getTranslatedName();
+
+            // Show the custom name for info boxes/custom bars if given
+            if (configurable instanceof CustomNameProperty customNameProperty) {
+                if (!customNameProperty.getCustomName().get().isEmpty()) {
+                    textToRender = customNameProperty.getCustomName().get();
+                }
+            }
+
+            FontRenderer.getInstance()
+                    .renderText(
+                            guiGraphics,
+                            StyledText.fromString(textToRender),
+                            Texture.CONFIG_BOOK_BACKGROUND.width() * 0.75f + offsetX,
+                            McUtils.mc().font.lineHeight + 5 + offsetY,
+                            CommonColors.LIGHT_GRAY,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+
+            RenderUtils.drawLine(
+                    guiGraphics,
+                    CommonColors.GRAY,
+                    Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 6 + offsetX,
+                    19 + offsetY,
+                    Texture.CONFIG_BOOK_BACKGROUND.width() - 11 + offsetX,
+                    19 + offsetY,
+                    1);
+        } else {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            guiGraphics,
+                            StyledText.fromComponent(
+                                    Component.translatable("screens.wynntils.settingsScreen.unselectedConfig")),
+                            Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + offsetX,
+                            Texture.CONFIG_BOOK_BACKGROUND.width() + offsetX,
+                            Texture.CONFIG_BOOK_BACKGROUND.height() * 0.25f + offsetY,
+                            Texture.CONFIG_BOOK_BACKGROUND.height() * 0.75f + offsetY,
+                            Texture.CONFIG_BOOK_BACKGROUND.width() / 3f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.TOP,
+                            TextShadow.NORMAL,
+                            1.25f);
+        }
+
+        if (configurables.size() > CONFIGURABLES_PER_PAGE) {
+            renderConfigurableScroll(guiGraphics);
+        }
+
+        if (hoveredConfigurable == null && configs.size() > CONFIGS_PER_PAGE) {
+            renderSelectedConfigScroll(guiGraphics);
+        } else if (hoveredConfigurable != null
+                && configurableMap.get(hoveredConfigurable).size() > CONFIGS_PER_PAGE) {
+            renderHoveredConfigScroll(guiGraphics);
+        }
+
+        if (configurables.isEmpty()) {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            guiGraphics,
+                            StyledText.fromComponent(
+                                    Component.translatable("screens.wynntils.settingsScreen.noFeaturesFound")),
+                            offsetX,
+                            Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + offsetX,
+                            Texture.CONFIG_BOOK_BACKGROUND.height() * 0.25f + offsetY,
+                            Texture.CONFIG_BOOK_BACKGROUND.height() * 0.75f + offsetY,
+                            Texture.CONFIG_BOOK_BACKGROUND.width() / 3f,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.TOP,
+                            TextShadow.NORMAL,
+                            1.25f);
+        } else {
+            renderConfigurables(guiGraphics, mouseX, mouseY, partialTick);
+        }
+
+        if (hoveredConfigurable == null) {
+            renderSelectedConfigs(guiGraphics, mouseX, mouseY, partialTick);
+        } else {
+            renderHoveredConfigs(guiGraphics, mouseX, mouseY, partialTick);
+        }
+
+        if (draggingConfigScroll || draggingConfigurableScroll) {
+            guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
+        } else if (MathUtils.isInside(
+                mouseX,
+                mouseY,
+                CONFIGURABLE_SCROLL_X + offsetX,
+                CONFIGURABLE_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
+                (int) configurableScrollRenderY,
+                (int) (configurableScrollRenderY + Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f))) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        } else if ((configs.size() > CONFIGS_PER_PAGE)
+                && MathUtils.isInside(
+                        mouseX,
+                        mouseY,
+                        CONFIG_SCROLL_X + offsetX,
+                        CONFIG_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
+                        (int) configScrollRenderY,
+                        (int) (configScrollRenderY + Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f))) {
+            guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
+
+        renderTooltips(guiGraphics, mouseX, mouseY);
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        if (McUtils.mc().level == null) {
+            renderPanorama(guiGraphics, partialTick);
+        }
+
+        // Don't render the blurred background
+    }
+
+    @Override
+    public void added() {
+        searchWidget.opened();
+        super.added();
+    }
+
+    @Override
+    public void onClose() {
+        if (unsavedChanges) {
+            displayWarning = true;
+            unsavedChangesWidget.visible = true;
+            return;
+        }
+
+        Managers.Config.reloadConfiguration(true);
+
+        if (previousScreen != null) {
+            McUtils.setScreen(previousScreen);
+        } else {
+            super.onClose();
+        }
+    }
+
+    @Override
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (displayWarning) {
+            if (unsavedChangesWidget.isMouseOver(event.x(), event.y())) {
+                return unsavedChangesWidget.mouseClicked(event, isDoubleClick);
+            } else {
+                return false;
+            }
+        }
+
+        for (GuiEventListener listener : getWidgetsForIteration().toList()) {
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseClicked(event, isDoubleClick);
+            }
+        }
+
+        if (!draggingConfigurableScroll
+                && MathUtils.isInside(
+                        (int) event.x(),
+                        (int) event.y(),
+                        CONFIGURABLE_SCROLL_X + offsetX,
+                        CONFIGURABLE_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
+                        (int) configurableScrollRenderY,
+                        (int) (configurableScrollRenderY + Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f))) {
+            draggingConfigurableScroll = true;
+            return true;
+        }
+
+        if (!draggingConfigScroll
+                && (configs.size() > CONFIGS_PER_PAGE)
+                && MathUtils.isInside(
+                        (int) event.x(),
+                        (int) event.y(),
+                        CONFIG_SCROLL_X + offsetX,
+                        CONFIG_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
+                        (int) configScrollRenderY,
+                        (int) (configScrollRenderY + Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f))) {
+            draggingConfigScroll = true;
+            return true;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        if (displayWarning) {
+            if (unsavedChangesWidget.isMouseOver(event.x(), event.y())) {
+                return unsavedChangesWidget.mouseDragged(event, dragX, dragY);
+            } else {
+                return false;
+            }
+        }
+
+        if (draggingConfigurableScroll) {
+            int scrollAreaStartY = SCROLL_START_Y + 7 + offsetY;
+
+            int newOffset = Math.round(MathUtils.map(
+                    (float) event.y(),
+                    scrollAreaStartY,
+                    scrollAreaStartY + SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f,
+                    0,
+                    getMaxConfigurableScrollOffset()));
+
+            newOffset = Math.max(0, Math.min(newOffset, getMaxConfigurableScrollOffset()));
+
+            scrollConfigurables(newOffset);
+
+            return true;
+        }
+
+        if (draggingConfigScroll) {
+            int scrollAreaStartY = SCROLL_START_Y + 7 + offsetY;
+
+            int newOffset = Math.round(MathUtils.map(
+                    (float) event.y(),
+                    scrollAreaStartY,
+                    scrollAreaStartY + SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f,
+                    0,
+                    getMaxConfigScrollOffset()));
+
+            newOffset = Math.max(0, Math.min(newOffset, getMaxConfigScrollOffset()));
+
+            scrollConfigs(newOffset);
+
+            return true;
+        }
+
+        for (GuiEventListener listener : getWidgetsForIteration().toList()) {
+            if (listener.isMouseOver(event.x(), event.y())) {
+                return listener.mouseDragged(event, dragX, dragY);
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if (displayWarning) {
+            if (unsavedChangesWidget.isMouseOver(event.x(), event.y())) {
+                return unsavedChangesWidget.mouseReleased(event);
+            } else {
+                return false;
+            }
+        }
+
+        for (GuiEventListener listener : getWidgetsForIteration().toList()) {
+            listener.mouseReleased(event);
+        }
+
+        draggingConfigurableScroll = false;
+        draggingConfigScroll = false;
+
+        return true;
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        if (displayWarning) {
+            if (unsavedChangesWidget.isMouseOver(mouseX, mouseY)) {
+                return unsavedChangesWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
+            } else {
+                return false;
+            }
+        }
+
+        int scrollAmount = (int) (-deltaY * SCROLL_FACTOR);
+
+        // When mouse above the book, scroll the categories.
+        // When below top of book and left side scroll configurables
+        // Otherwise scroll configs
+        if (mouseY <= offsetY) {
+            scrollCategories((int) -Math.signum(deltaY));
+        } else if (mouseX <= Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + offsetX) {
+            int newOffset =
+                    Math.max(0, Math.min(configurablesScrollOffset + scrollAmount, getMaxConfigurableScrollOffset()));
+            scrollConfigurables(newOffset);
+        } else if (configs.size() > CONFIGS_PER_PAGE) {
+            int newOffset = Math.max(0, Math.min(configScrollOffset + scrollAmount, getMaxConfigScrollOffset()));
+            scrollConfigs(newOffset);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean charTyped(CharacterEvent event) {
+        return focusedTextInput != null && focusedTextInput.charTyped(event);
+    }
+
+    @Override
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+            this.onClose();
+            return true;
+        }
+
+        return focusedTextInput != null && focusedTextInput.keyPressed(event);
+    }
+
+    @Override
+    public TextInputBoxWidget getFocusedTextInput() {
+        return focusedTextInput;
+    }
+
+    @Override
+    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
+        this.focusedTextInput = focusedTextInput;
+    }
+
+    public void populateConfigurables() {
+        configurables.clear();
+
+        populateConfigurableEntries(configurables, configurableList, 21 + offsetY);
+
+        if (selectedConfigurable != null) {
+            Configurable newSelected = getSelectableConfigurables().stream()
+                    .filter(configurable -> configurable.getJsonName().equals(selectedConfigurable.getJsonName()))
+                    .findFirst()
+                    .orElse(null);
+
+            setSelectedConfigurable(newSelected);
+        }
+
+        scrollConfigurables(configurablesScrollOffset);
+
+        configurableMap = getConfigurableMapConfigurables().stream()
+                .collect(Collectors.toMap(
+                        configurable -> configurable, this::buildConfigTiles, (a, b) -> a, LinkedHashMap::new));
+    }
+
+    protected abstract int populateConfigurableEntries(
+            List<WynntilsButton> configurables, List<Configurable> configurableList, int renderY);
+
+    protected void addComponentTypeButton(List<WynntilsButton> configurables, int renderY, String coreType) {
+        ComponentTypeButton categoryButton = new ComponentTypeButton(12 + offsetX, renderY, 170, 12, coreType);
+        categoryButton.visible = isConfigurableEntryVisible(renderY);
+        configurables.add(categoryButton);
+    }
+
+    protected void addCategoryButton(List<WynntilsButton> configurables, int renderY, Category category) {
+        CategoryButton categoryButton = new CategoryButton(12 + offsetX, renderY, 170, 12, category);
+        categoryButton.visible = isConfigurableEntryVisible(renderY);
+        configurables.add(categoryButton);
+    }
+
+    protected void addConfigurableButton(List<WynntilsButton> configurables, int renderY, Configurable configurable) {
+        ConfigurableButton configurableButton = new ConfigurableButton(
+                12 + offsetX, renderY, 170, 12, configurable, this, countMatchingConfigs(configurable));
+        configurableButton.visible = isConfigurableEntryVisible(renderY);
+        configurables.add(configurableButton);
+    }
+
+    protected int countMatchingConfigs(Configurable configurable) {
+        int matchingConfigs = 0;
+
+        for (Config<?> config : configurable.getVisibleConfigOptions()) {
+            if (configOptionContains(config)) {
+                matchingConfigs++;
+            }
+        }
+
+        return matchingConfigs;
+    }
+
+    private boolean isConfigurableEntryVisible(int renderY) {
+        return renderY >= (21 - 12) && renderY <= (21 + (CONFIGURABLES_PER_PAGE + 1) * 11);
+    }
+
+    private void populateConfigs() {
+        configs.clear();
+
+        if (selectedConfigurable == null) return;
+
+        configs.addAll(buildConfigTiles(selectedConfigurable));
+
+        scrollConfigs(configScrollOffset);
+    }
+
+    public boolean configOptionContains(Config<?> config) {
+        return !searchWidget.getTextBoxInput().isEmpty()
+                && StringUtils.containsIgnoreCase(config.getDisplayName(), searchWidget.getTextBoxInput());
+    }
+
+    public void setSelectedConfigurable(Configurable selectedConfigurable) {
+        boolean skipScroll = true;
+
+        // Only reset offset when a new configurable is selected
+        if (this.selectedConfigurable != selectedConfigurable) {
+            configScrollOffset = 0;
+            skipScroll = false;
+        }
+
+        this.selectedConfigurable = selectedConfigurable;
+        populateConfigs();
+
+        // If we are already on this configurable, then we don't want to scroll to any matching configs
+        if (skipScroll) return;
+
+        // If there is a search query, scroll the configs list so that the matching config
+        // is found unless the configurable itself matches the search query
+        if (!searchWidget.getTextBoxInput().isEmpty()) {
+            if (!searchMatches(selectedConfigurable)) {
+                scrollToMatchingConfig();
+            }
+        }
+    }
+
+    public void changesMade() {
+        unsavedChanges = true;
+    }
+
+    public void handleSaveChoice(boolean save) {
+        if (save) {
+            Managers.Config.saveConfig();
+        }
+
+        unsavedChanges = false;
+        displayWarning = false;
+        unsavedChangesWidget.visible = false;
+        this.onClose();
+    }
+
+    public Configurable getSelectedConfigurable() {
+        return selectedConfigurable;
+    }
+
+    protected Category getSelectedCategory() {
+        return selectedCategory;
+    }
+
+    public int getMaskTopY() {
+        return offsetY + MASK_TOP_Y;
+    }
+
+    public int getConfigMaskBottomY() {
+        return offsetY + CONFIG_MASK_BOTTOM_Y;
+    }
+
+    public int getConfigurableMaskBottomY() {
+        return offsetY + CONFIGURABLE_MASK_BOTTOM_Y;
+    }
+
+    private void populateCategories() {
+        if (!shouldShowCategoryControls()) {
+            if (allCategoriesButton != null) {
+                allCategoriesButton.visible = false;
+            }
+            if (enabledStateTabButton != null) {
+                enabledStateTabButton.visible = false;
+            }
+            if (previousCategoryButton != null) {
+                previousCategoryButton.visible = false;
+            }
+            if (nextCategoryButton != null) {
+                nextCategoryButton.visible = false;
+            }
+
+            for (AbstractWidget widget : categoryButtons) {
+                widget.visible = false;
+            }
+            return;
+        }
+
+        if (allCategoriesButton != null) {
+            allCategoriesButton.visible = true;
+        }
+        if (enabledStateTabButton != null) {
+            enabledStateTabButton.visible = true;
+        }
+        if (previousCategoryButton != null) {
+            previousCategoryButton.visible = true;
+        }
+        if (nextCategoryButton != null) {
+            nextCategoryButton.visible = true;
+        }
+
+        for (AbstractWidget widget : categoryButtons) {
+            this.removeWidget(widget);
+        }
+
+        int xPos = (int) (Texture.TAG_RED.width() * 3.85 + 1) + offsetX;
+
+        categoryButtons = new ArrayList<>();
+
+        for (int i = 0; i < MAX_DISPLAYED_CATEGORIES; i++) {
+            xPos += (int) (Texture.TAG_RED.width() + Texture.TAG_RED.width() * 0.25);
+
+            int categoryIndex;
+
+            if (i + categoriesScrollOffset < 0) {
+                categoryIndex = (i + categoriesScrollOffset) + sortedCategories.size();
+            } else if (i + categoriesScrollOffset > sortedCategories.size() - 1) {
+                categoryIndex = (i + categoriesScrollOffset) - sortedCategories.size();
+            } else {
+                categoryIndex = (i + categoriesScrollOffset);
+            }
+
+            Category category = sortedCategories.get(categoryIndex);
+
+            categoryButtons.add(this.addRenderableWidget(new SettingsCategoryTabButton(
+                    xPos,
+                    (int) -(Texture.TAG_RED.height() * 0.75f) + offsetY,
+                    Texture.TAG_RED.width(),
+                    Texture.TAG_RED.height(),
+                    (b) -> changeCategory(category),
+                    List.of(Component.literal(I18n.get(category.toString()))),
+                    category,
+                    selectedCategory == category,
+                    offsetX,
+                    offsetY)));
+        }
+    }
+
+    private void getFilteredConfigurables() {
+        configurableList = getFilteredConfigurables(selectedCategory);
+    }
+
+    private List<ConfigTile> buildConfigTiles(Configurable configurable) {
+        List<Config<?>> configOptions = configurable.getVisibleConfigOptions().stream()
+                .sorted(Comparator.comparing(config -> !Objects.equals(config.getFieldName(), "userEnabled")))
+                .toList();
+
+        List<ConfigTile> configTiles = new ArrayList<>();
+        int renderY = 21 + offsetY;
+
+        for (Config<?> config : configOptions) {
+            Overlay overlay = configurable instanceof Overlay overlayInstance ? overlayInstance : null;
+
+            ConfigTile configTile = new ConfigTile(
+                    Texture.CONFIG_BOOK_BACKGROUND.width() / 2 + 10 + offsetX, renderY, 160, 45, this, config, overlay);
+
+            configTile.visible = renderY >= (21 + offsetY - 46) && renderY <= (21 + offsetY + CONFIGS_PER_PAGE * 45);
+
+            configTiles.add(configTile);
+            renderY += 46;
+        }
+
+        return configTiles;
+    }
+
+    private Stream<GuiEventListener> getWidgetsForIteration() {
+        return Stream.concat(children().stream(), Stream.concat(configurables.stream(), configs.stream()));
+    }
+
+    private void scrollConfigurables(int newOffset) {
+        configurablesScrollOffset = newOffset;
+
+        for (WynntilsButton configurable : configurables) {
+            int newY = 21 + offsetY + (configurables.indexOf(configurable) * 12) - configurablesScrollOffset;
+
+            configurable.setY(newY);
+            configurable.visible =
+                    newY >= (21 + offsetY - 12) && newY <= (21 + offsetY + (CONFIGURABLES_PER_PAGE + 1) * 11);
+        }
+    }
+
+    private int getMaxConfigurableScrollOffset() {
+        return (configurables.size() - CONFIGURABLES_PER_PAGE) * 12;
+    }
+
+    private void scrollConfigs(int newOffset) {
+        configScrollOffset = newOffset;
+
+        for (WynntilsButton config : configs) {
+            int newY = 21 + offsetY + (configs.indexOf(config) * 46) - configScrollOffset;
+
+            config.setY(newY);
+            config.visible = newY >= (21 + offsetY - 46) && newY <= (21 + offsetY + CONFIGS_PER_PAGE * 45);
+        }
+    }
+
+    private int getMaxConfigScrollOffset() {
+        return (configs.size() - CONFIGS_PER_PAGE) * 46;
+    }
+
+    private void scrollCategories(int direction) {
+        if (!shouldShowCategoryControls()) return;
+        if (Math.abs(categoriesScrollOffset + direction) == sortedCategories.size()) {
+            categoriesScrollOffset = 0;
+        } else {
+            categoriesScrollOffset = MathUtils.clamp(
+                    categoriesScrollOffset + direction, -(sortedCategories.size() - 1), (sortedCategories.size() - 1));
+        }
+
+        populateCategories();
+    }
+
+    private void cycleEnabledState(int button) {
+        int direction = button == GLFW.GLFW_MOUSE_BUTTON_LEFT ? 1 : -1;
+        EnabledFilterType[] values = EnabledFilterType.values();
+        int currentIndex = enabledFilterType.ordinal();
+        int newIndex = (currentIndex + direction + values.length) % values.length;
+
+        enabledFilterType = values[newIndex];
+        enabledStateTabButton.updateIcon(enabledFilterType.getIcon());
+
+        configurablesScrollOffset = 0;
+        getFilteredConfigurables();
+        populateConfigurables();
+    }
+
+    protected abstract List<Configurable> getCurrentRootConfigurables();
+
+    protected abstract List<Configurable> getFilteredConfigurables(Category selectedCategory);
+
+    protected abstract List<Configurable> getSelectableConfigurables();
+
+    protected abstract List<Configurable> getConfigurableMapConfigurables();
+
+    protected abstract boolean shouldShowCategoryControls();
+
+    protected abstract String getCategoryTitle(Category selectedCategory);
+
+    protected abstract Component getSettingsViewSwitchTargetName();
+
+    private void switchSettingsView() {
+        McUtils.mc().setScreen(createSettingsViewSwitchScreen(previousScreen));
+    }
+
+    protected abstract Screen createSettingsViewSwitchScreen(Screen previousScreen);
+
+    private void scrollToMatchingConfig() {
+        List<Config<?>> configsOptions = selectedConfigurable.getVisibleConfigOptions().stream()
+                .sorted(Comparator.comparing(config -> !Objects.equals(config.getFieldName(), "userEnabled")))
+                .toList();
+
+        // Find a config that matches current search query and get scroll offset to make that config visible
+        for (Config<?> config : configsOptions) {
+            if (StringUtils.containsIgnoreCase(config.getDisplayName(), searchWidget.getTextBoxInput())) {
+                int newOffset = Math.max(
+                        0,
+                        Math.min(
+                                (configsOptions.indexOf(config) - (CONFIGS_PER_PAGE - 1)) * 46,
+                                getMaxConfigScrollOffset()));
+                scrollConfigs(newOffset);
+                return;
+            }
+        }
+    }
+
+    private void changeCategory(Category category) {
+        if (!shouldShowCategoryControls()) return;
+        configurablesScrollOffset = 0;
+
+        // Deselect old category, reset texture to default
+        if (selectedCategoryButton != null) {
+            selectedCategoryButton.setSelectedCategory(false);
+        }
+
+        selectedCategory = category;
+
+        // If null, the all categories button was selected.
+        // Otherwise find which was selected and update that
+        if (category == null) {
+            selectedCategoryButton = allCategoriesButton;
+            allCategoriesButton.setSelectedCategory(true);
+        } else {
+            for (SettingsCategoryTabButton settingsTabButton : categoryButtons) {
+                if (settingsTabButton.getCategory() == selectedCategory) {
+                    selectedCategoryButton = settingsTabButton;
+                    settingsTabButton.setSelectedCategory(true);
+                    break;
+                }
+            }
+        }
+
+        getFilteredConfigurables();
+        populateConfigurables();
+        populateCategories();
+    }
+
+    protected boolean searchMatches(Translatable translatable) {
+        // For info boxes and custom bars, we want to search for their custom name if given
+        // if there is no match, then check the translated name
+        if (translatable instanceof CustomNameProperty customNameProperty) {
+            if (StringUtils.partialMatch(customNameProperty.getCustomName().get(), searchWidget.getTextBoxInput())) {
+                return true;
+            }
+        }
+
+        return StringUtils.partialMatch(translatable.getTranslatedName(), searchWidget.getTextBoxInput());
+    }
+
+    private void renderBg(GuiGraphics guiGraphics) {
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.CONFIG_BOOK_BACKGROUND, offsetX, offsetY);
+    }
+
+    private void renderTags(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        for (Renderable renderable : renderables) {
+            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
+    }
+
+    private void renderConfigurables(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.enableScissor(guiGraphics, 12 + offsetX, 21 + offsetY, 170, CONFIGURABLES_PER_PAGE * 12 - 3);
+
+        hoveredConfigurable = null;
+
+        for (WynntilsButton configurable : configurables) {
+            configurable.render(guiGraphics, mouseX, mouseY, partialTick);
+
+            if (configurable.isHovered() && configurable instanceof ConfigurableButton configurableButton) {
+                if (selectedConfigurable != null) continue;
+
+                hoveredConfigurable = configurableButton.getConfigurable();
+            }
+        }
+
+        RenderUtils.disableScissor(guiGraphics);
+    }
+
+    private void renderConfigurableScroll(GuiGraphics guiGraphics) {
+        RenderUtils.drawRect(
+                guiGraphics,
+                CommonColors.GRAY,
+                CONFIGURABLE_SCROLL_X + offsetX,
+                21 + offsetY,
+                Texture.CONFIG_BOOK_SCROLL_BUTTON.width(),
+                SCROLL_AREA_HEIGHT);
+
+        configurableScrollRenderY = SCROLL_START_Y
+                + offsetY
+                + MathUtils.map(
+                        configurablesScrollOffset,
+                        0,
+                        getMaxConfigurableScrollOffset(),
+                        0,
+                        SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f);
+
+        RenderUtils.drawHoverableTexturedRect(
+                guiGraphics,
+                Texture.CONFIG_BOOK_SCROLL_BUTTON,
+                CONFIGURABLE_SCROLL_X + offsetX,
+                configurableScrollRenderY,
+                draggingConfigurableScroll,
+                RenderDirection.VERTICAL);
+    }
+
+    private void renderSelectedConfigs(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.enableScissor(
+                guiGraphics,
+                (int) (Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 10 + offsetX),
+                21 + offsetY,
+                160,
+                CONFIGS_PER_PAGE * 46);
+
+        for (WynntilsButton config : configs) {
+            config.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
+
+        RenderUtils.disableScissor(guiGraphics);
+    }
+
+    private void renderHoveredConfigs(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.enableScissor(
+                guiGraphics,
+                (int) (Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 10 + offsetX),
+                21 + offsetY,
+                160,
+                CONFIGS_PER_PAGE * 46);
+
+        for (WynntilsButton config : configurableMap.get(hoveredConfigurable)) {
+            config.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
+
+        RenderUtils.disableScissor(guiGraphics);
+    }
+
+    private void renderSelectedConfigScroll(GuiGraphics guiGraphics) {
+        if (configs.size() <= CONFIGS_PER_PAGE) return;
+
+        RenderUtils.drawRect(
+                guiGraphics,
+                CommonColors.GRAY,
+                CONFIG_SCROLL_X + offsetX,
+                SCROLL_START_Y + offsetY,
+                Texture.CONFIG_BOOK_SCROLL_BUTTON.width(),
+                SCROLL_AREA_HEIGHT);
+
+        configScrollRenderY = SCROLL_START_Y
+                + offsetY
+                + MathUtils.map(
+                        configScrollOffset,
+                        0,
+                        getMaxConfigScrollOffset(),
+                        0,
+                        SCROLL_AREA_HEIGHT - Texture.CONFIG_BOOK_SCROLL_BUTTON.height() / 2f);
+
+        RenderUtils.drawHoverableTexturedRect(
+                guiGraphics,
+                Texture.CONFIG_BOOK_SCROLL_BUTTON,
+                CONFIG_SCROLL_X + offsetX,
+                configScrollRenderY,
+                draggingConfigScroll,
+                RenderDirection.VERTICAL);
+    }
+
+    private void renderHoveredConfigScroll(GuiGraphics guiGraphics) {
+        if (configurableMap.get(hoveredConfigurable).size() <= CONFIGS_PER_PAGE) return;
+
+        RenderUtils.drawRect(
+                guiGraphics,
+                CommonColors.GRAY,
+                CONFIG_SCROLL_X + offsetX,
+                SCROLL_START_Y + offsetY,
+                Texture.CONFIG_BOOK_SCROLL_BUTTON.width(),
+                SCROLL_AREA_HEIGHT);
+
+        RenderUtils.drawHoverableTexturedRect(
+                guiGraphics,
+                Texture.CONFIG_BOOK_SCROLL_BUTTON,
+                CONFIG_SCROLL_X + offsetX,
+                SCROLL_START_Y + offsetY,
+                draggingConfigScroll,
+                RenderDirection.VERTICAL);
+    }
+
+    private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        // The tags have a slight bit rendered underneath the book, we don't want to render the tooltip
+        // when hovering that bit.
+        if (mouseX >= offsetX && mouseY >= offsetY) return;
+
+        for (GuiEventListener child : children()) {
+            if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
+                guiGraphics.setTooltipForNextFrame(
+                        Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
+                        mouseX,
+                        mouseY);
+                break;
+            }
+        }
+    }
+
+    private void importSettings(int clicked) {
+        String clipboard = McUtils.mc().keyboardHandler.getClipboard();
+
+        if (clicked == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            List<Configurable> configsToImport = new ArrayList<>(getCurrentRootConfigurables());
+
+            if (shouldIncludeInactiveOverlaysInConfigList()) {
+                configsToImport.addAll(Managers.Overlay.getOverlays().stream()
+                        .filter(overlay -> !configsToImport.contains(Managers.Overlay.getOverlayParent(overlay)))
+                        .toList());
+            }
+
+            boolean imported = Managers.Config.importConfig(clipboard, configsToImport);
+
+            if (imported) {
+                McUtils.sendWynntilsPrefixMessage(Component.translatable("screens.wynntils.settingsScreen.importedAll")
+                        .withStyle(ChatFormatting.GREEN));
+            } else {
+                McUtils.sendWynntilsPrefixMessage(
+                        Component.translatable("screens.wynntils.settingsScreen.import.failed")
+                                .withStyle(ChatFormatting.RED));
+            }
+        } else if (clicked == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (selectedConfigurable != null) {
+                boolean imported = Managers.Config.importConfig(clipboard, List.of(selectedConfigurable));
+
+                if (imported) {
+                    McUtils.sendWynntilsPrefixMessage(Component.translatable(
+                                    "screens.wynntils.settingsScreen.imported",
+                                    selectedConfigurable.getTranslatedName())
+                            .withStyle(ChatFormatting.GREEN));
+                } else {
+                    McUtils.sendWynntilsPrefixMessage(
+                            Component.translatable("screens.wynntils.settingsScreen.import.failed")
+                                    .withStyle(ChatFormatting.RED));
+                }
+            } else {
+                McUtils.sendWynntilsPrefixMessage(Component.translatable("screens.wynntils.settingsScreen.needToSelect")
+                        .withStyle(ChatFormatting.RED));
+            }
+        }
+
+        // Repopulate the configurables after importing
+        populateConfigurables();
+    }
+
+    private void exportSettings(int clicked) {
+        String exportedSettings = "";
+
+        if (clicked == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            // Get all features and overlays into a list
+            List<Configurable> featuresToExport = new ArrayList<>(getCurrentRootConfigurables());
+
+            if (shouldIncludeInactiveOverlaysInConfigList()) {
+                featuresToExport.addAll(Managers.Overlay.getOverlays().stream()
+                        .filter(overlay -> !featuresToExport.contains(Managers.Overlay.getOverlayParent(overlay)))
+                        .toList());
+            }
+
+            exportedSettings = Managers.Config.exportConfig(featuresToExport);
+
+            McUtils.sendWynntilsPrefixMessage(Component.translatable("screens.wynntils.settingsScreen.exportedAll")
+                    .withStyle(ChatFormatting.GREEN));
+        } else if (clicked == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            if (selectedConfigurable != null) {
+                exportedSettings = Managers.Config.exportConfig(List.of(selectedConfigurable));
+
+                McUtils.sendWynntilsPrefixMessage(Component.translatable(
+                                "screens.wynntils.settingsScreen.exported", selectedConfigurable.getTranslatedName())
+                        .withStyle(ChatFormatting.GREEN));
+            } else {
+                McUtils.sendWynntilsPrefixMessage(Component.translatable("screens.wynntils.settingsScreen.needToSelect")
+                        .withStyle(ChatFormatting.RED));
+            }
+        }
+
+        // Save to clipboard
+        McUtils.mc().keyboardHandler.setClipboard(exportedSettings);
+    }
+
+    protected boolean shouldIncludeInactiveOverlaysInConfigList() {
+        return false;
+    }
+
+    protected String getSearchInput() {
+        return searchWidget.getTextBoxInput();
+    }
+
+    protected EnabledFilterType getEnabledFilterType() {
+        return enabledFilterType;
+    }
+
+    public enum EnabledFilterType {
+        ENABLED(Texture.ENABLED_SETTINGS_ICON),
+        DISABLED(Texture.DISABLED_SETTINGS_ICON),
+        NEUTRAL(Texture.NEUTRAL_SETTINGS_ICON);
+
+        private final Texture icon;
+
+        EnabledFilterType(Texture icon) {
+            this.icon = icon;
+        }
+
+        public Texture getIcon() {
+            return icon;
+        }
+    }
+}

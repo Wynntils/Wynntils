@@ -46,7 +46,6 @@ import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.stream.Collectors;
@@ -103,7 +102,7 @@ public class ContentBookDumpFeature extends Feature {
 
         Location currentTracker = spawnLocationOpt.get();
 
-        if (lastTrackedLocation != currentTracker) {
+        if (!currentTracker.equals(lastTrackedLocation)) {
             currentDump.remove(currentlyTracking);
 
             currentDump.add(new DumpableActivityInfo(
@@ -121,8 +120,6 @@ public class ContentBookDumpFeature extends Feature {
             WynntilsMod.info("Got location for " + currentlyTracking.name() + ": " + currentTracker);
 
             trackManually();
-        } else {
-            WynntilsMod.warn("Could not get updated location for " + currentlyTracking.name() + ": " + currentTracker);
         }
     }
 
@@ -139,9 +136,15 @@ public class ContentBookDumpFeature extends Feature {
                         .map(DumpableActivityInfo::fromActivityInfo)
                         .toList());
 
-                filterEntriesNeedingManualTracking();
+                Models.Activity.scanContentBook(ActivityType.WORLD_EVENT, (activityInfos3, progress3) -> {
+                    currentDump.addAll(activityInfos3.stream()
+                            .map(DumpableActivityInfo::fromActivityInfo)
+                            .toList());
 
-                trackManually();
+                    filterEntriesNeedingManualTracking();
+
+                    trackManually();
+                });
             });
         });
     }
@@ -152,10 +155,8 @@ public class ContentBookDumpFeature extends Feature {
         List<DumpableActivityInfo> trackingNeeded = new ArrayList<>();
 
         for (DumpableActivityInfo info : currentDump) {
-            // Tracking is bugged for this at the time of writing
-            if (Objects.equals(info.name(), "Galleon\u0027s Graveyard")) continue;
-
             switch (info.type()) {
+                // Boss altars currently cannot be tracked after completion, remove from this if necessary
                 case BOSS_ALTAR, LOOTRUN_CAMP, DUNGEON, RAID, MOUNT_ENCLOSURE -> trackingNeeded.add(info);
             }
         }

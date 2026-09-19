@@ -298,36 +298,10 @@ public final class GuideIngredientItemStack extends GuideItemStack {
             }
         }
 
-        Component footer = Component.empty()
-                .withoutShadow()
-                .append(Component.literal("\uDB00\uDC30")
-                        .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)))
-                .append(Component.literal("\uE001").withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_TOOLTIP)))
-                .append(Component.literal("\uDAFF\uDF98\uDB00\uDC4B")
-                        .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)))
-                .append(Component.literal("\uE000")
-                        .withStyle(Style.EMPTY
-                                .withColor((statsPage ? CURRENT_PAGE : INACTIVE_PAGE).asInt())
-                                .withFont(CommonFonts.TOOLTIP_PAGE_FONT)))
-                .append(Component.literal("\uDB00\uDC04")
-                        .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)))
-                .append(Component.literal("\uE000")
-                        .withStyle(Style.EMPTY
-                                .withColor((statsPage ? INACTIVE_PAGE : CURRENT_PAGE).asInt())
-                                .withFont(CommonFonts.TOOLTIP_PAGE_FONT)));
-
         int widestLine =
                 tooltipLines.stream().mapToInt(McUtils.mc().font::width).max().orElse(0);
 
-        int target = widestLine / 2;
-        int currentWidth = McUtils.mc().font.width(footer);
-        String spacing = Managers.Font.calculateOffset(currentWidth, target);
-        Component paddedFooter = Component.literal(spacing)
-                .withStyle(Style.EMPTY.withFont(CommonFonts.SPACE_FONT))
-                .append(footer);
-
-        tooltipLines.add(paddedFooter);
-        tooltipLines.add(Component.empty());
+        tooltipLines.addAll(buildPaginationLines(statsPage ? 0 : 1, 2, widestLine));
 
         return tooltipLines;
     }

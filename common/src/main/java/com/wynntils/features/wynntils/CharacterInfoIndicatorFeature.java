@@ -71,9 +71,11 @@ public class CharacterInfoIndicatorFeature extends Feature {
     private final Config<Boolean> rescanMessage = new Config<>(true);
 
     public CharacterInfoIndicatorFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL, ConfigProfile.BLANK_SLATE)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
+                        .build(),
+                List.of(ConfigDependency.functionality(Models.Account.queryRankInfoOnJoin)));
     }
 
     @SubscribeEvent
@@ -233,6 +235,8 @@ public class CharacterInfoIndicatorFeature extends Feature {
 
         if (!isMismatch) return;
         if (!rescanMessage.get()) return;
+        if (Models.Character.getId().equals("-")) return;
+        if (!Models.Account.hasScannedRankInfo()) return;
 
         Component clickableHere = Component.translatable(
                         "feature.wynntils.characterInfoIndicator.rescanMessage.message.clickHere")

@@ -28,6 +28,7 @@ import com.wynntils.models.containers.containers.GuildMemberListContainer;
 import com.wynntils.models.containers.containers.GuildTerritoriesContainer;
 import com.wynntils.models.containers.containers.HousingJukeboxContainer;
 import com.wynntils.models.containers.containers.HousingListContainer;
+import com.wynntils.models.containers.containers.HousingSongSelectContainer;
 import com.wynntils.models.containers.containers.IngredientPouchContainer;
 import com.wynntils.models.containers.containers.InventoryContainer;
 import com.wynntils.models.containers.containers.ItemIdentifierAugmentsContainer;
@@ -153,6 +154,7 @@ public final class ContainerModel extends Model {
         registerContainer(new GuildTerritoriesContainer());
         registerContainer(new HousingJukeboxContainer());
         registerContainer(new HousingListContainer());
+        registerContainer(new HousingSongSelectContainer());
         registerContainer(new IngredientBombRewardContainer());
         registerContainer(new IngredientPouchContainer());
         registerContainer(new InventoryContainer());

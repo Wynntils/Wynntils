@@ -33,6 +33,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ShiftBehavior;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
+import java.util.List;
 import java.util.regex.Pattern;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -43,7 +44,7 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
     private static final Pattern TERRITORY_MANAGE_ITEM_PATTERN = Pattern.compile("§e§lTerritories \\[.+\\]");
     private static final Pattern MANAGE_TITLE_PATTERN = Pattern.compile(".+: Manage");
     private static final Pattern BACK_BUTTON_PATTERN = Pattern.compile("§7§lBack");
-    private static final int COMPASS_INVENTORY_SLOT = 42;
+    private static final int COMPASS_INVENTORY_SLOT = 43;
     private static final int GUILD_MANAGEMENT_SLOT = 26;
     private static final int TERRITORY_MANAGEMENT_SLOT = 14;
 
@@ -68,9 +69,13 @@ public class CustomTerritoryManagementScreenFeature extends Feature {
     private boolean openTerritoryManagement = false;
 
     public CustomTerritoryManagementScreenFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
+                        .build(),
+                List.of(
+                        ConfigDependency.functionality(Models.Guild.queryGuildDiplomacyMenu),
+                        ConfigDependency.functionality(Models.Territory.lookupApiInfo)));
     }
 
     @SubscribeEvent

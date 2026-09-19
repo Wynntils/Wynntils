@@ -10,12 +10,17 @@ import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.properties.CraftedItemProperty;
+import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
+import com.wynntils.models.items.properties.ShinyItemProperty;
+import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import java.util.List;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -39,6 +44,11 @@ public class FakeItemStack extends ItemStack {
 
         if (wynnItem instanceof NamedItemProperty namedItemProperty) {
             Handlers.Item.updateItem(this, wynnItem, StyledText.fromString(namedItemProperty.getName()));
+        }
+        if (!useBackingTooltip && wynnItem instanceof GearTierItemProperty tierItem) {
+            boolean shiny = wynnItem instanceof ShinyItemProperty shinyItem
+                    && shinyItem.getShinyStat().isPresent();
+            this.set(DataComponents.TOOLTIP_STYLE, tierItem.getGearTier().getTooltipStyle(shiny));
         }
 
         this.wynnItem = wynnItem;
@@ -80,25 +90,37 @@ public class FakeItemStack extends ItemStack {
     @Override
     public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag isAdvanced) {
         try {
-            // 1. Firstly, cache a tooltip builder with the item's data
-            //    This will be used by TooltipUtils to generate the tooltip
+            // Firstly, cache a tooltip builder with the item's data.
+            // This will be used by TooltipUtils to generate the tooltip.
             TooltipBuilder tooltipBuilder = null;
 
             if (wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItem) {
+                if (useBackingTooltip && identifiableItem.getIdentifications().isEmpty()) {
+                    return LoreUtils.getTooltipLines(itemStack);
+                }
+
                 tooltipBuilder = wynnItem.getData()
                         .getOrCalculate(
                                 WynnItemData.TOOLTIP_KEY,
-                                () -> Handlers.Tooltip.buildNew(identifiableItem, false, true, source));
+                                () -> useBackingTooltip
+                                        ? Handlers.Tooltip.buildFromItemStack(itemStack, identifiableItem, source)
+                                        : Handlers.Tooltip.buildNew(identifiableItem, source));
 
             } else if (wynnItem instanceof CraftedItemProperty craftedItemProperty) {
                 tooltipBuilder = wynnItem.getData()
                         .getOrCalculate(
-                                WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(craftedItemProperty, source));
+                                WynnItemData.TOOLTIP_KEY,
+                                () -> useBackingTooltip
+                                        ? Handlers.Tooltip.fromParsedItemStack(itemStack, craftedItemProperty)
+                                        : Handlers.Tooltip.buildNew(craftedItemProperty, source));
+            } else if (wynnItem instanceof MountItem mountItem) {
+                tooltipBuilder = wynnItem.getData()
+                        .getOrCalculate(WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(mountItem, source));
             }
 
             if (tooltipBuilder == null) return List.of();
 
-            // 2. Now that the tooltip builder is cached, generate the tooltip
+            // Now that the tooltip builder is cached, generate the tooltip.
             return TooltipUtils.getWynnItemTooltip(this, wynnItem);
         } catch (Throwable t) {
             WynntilsMod.reportCrash(

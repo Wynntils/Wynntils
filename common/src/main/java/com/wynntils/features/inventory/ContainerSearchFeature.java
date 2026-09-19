@@ -31,6 +31,7 @@ import com.wynntils.models.containers.containers.GuildMemberListContainer;
 import com.wynntils.models.containers.containers.GuildTerritoriesContainer;
 import com.wynntils.models.containers.containers.HousingJukeboxContainer;
 import com.wynntils.models.containers.containers.HousingListContainer;
+import com.wynntils.models.containers.containers.HousingSongSelectContainer;
 import com.wynntils.models.containers.containers.JukeboxContainer;
 import com.wynntils.models.containers.containers.personal.AccountBankContainer;
 import com.wynntils.models.containers.containers.personal.BookshelfContainer;
@@ -106,6 +107,9 @@ public class ContainerSearchFeature extends Feature {
     private final Config<Boolean> filterInHousingList = new Config<>(true);
 
     @Persisted
+    private final Config<Boolean> filterInHousingSongSelect = new Config<>(true);
+
+    @Persisted
     private final Config<Boolean> filterInJukebox = new Config<>(true);
 
     @Persisted
@@ -123,6 +127,7 @@ public class ContainerSearchFeature extends Feature {
                     Map.entry(GuildTerritoriesContainer.class, filterInGuildTerritories::get),
                     Map.entry(HousingJukeboxContainer.class, filterInHousingJukebox::get),
                     Map.entry(HousingListContainer.class, filterInHousingList::get),
+                    Map.entry(HousingSongSelectContainer.class, filterInHousingSongSelect::get),
                     Map.entry(IslandBlockBankContainer.class, filterInBlockBank::get),
                     Map.entry(JukeboxContainer.class, filterInJukebox::get),
                     Map.entry(MiscBucketContainer.class, filterInMiscBucket::get),
