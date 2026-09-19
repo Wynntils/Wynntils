@@ -105,12 +105,12 @@ public class BulkBuyFeature extends Feature {
     }
 
     private void initBulkBuyWidget(Screen screen) {
-        // Neither event guarantees that they do not re-fire on the same screen
-        if (bulkBoughtSlotNumber != -1) return;
-
         if (!(screen instanceof ContainerScreen containerScreen)) return;
         if (!(containerScreen.getMenu() instanceof AbstractContainerMenu acm)) return;
         if (acm.getItems().size() != 90) return;
+
+        // resizing clears the widget, even while buying
+        if (containerScreen.renderables.contains(bulkBuyWidget)) return;
 
         StyledText title = StyledText.fromComponent(acm.getSlot(4).getItem().getHoverName());
         if (!title.startsWith(ChatFormatting.GREEN.toString()) || !title.endsWith(MERCHANT_TITLE_SUFFIX)) return;
@@ -121,6 +121,10 @@ public class BulkBuyFeature extends Feature {
                 Texture.BULK_BUY_PANEL.width(),
                 Texture.BULK_BUY_PANEL.height(),
                 250);
+        if (bulkBoughtSlotNumber != -1) {
+            updateBulkBuyWidget();
+        }
+
         // Using addRenderableWidget causes the widget's click box to cover the item slots
         // And we cannot change the Z level for widgets added like this
         // And since we don't need to handle clicks on the widget ever, this is fine
