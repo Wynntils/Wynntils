@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Feature suggestion
+    url: https://feedback.wynntils.com/
+    about: Suggest improvements or vote on existing ideas.
+  - name: Support
+    url: https://discord.gg/wynntils/
+    about: Get help using Wynntils.
