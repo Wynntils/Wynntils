@@ -12,9 +12,11 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.mc.event.ChatMessageAddedEvent;
 import com.wynntils.mc.event.SystemMessageEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import net.neoforged.bus.api.EventPriority;
@@ -75,7 +77,27 @@ public final class ChatHandler extends Handler {
 
         ChatMessageEvent.Edit rewriteEvent = new ChatMessageEvent.Edit(message, recipientType);
         WynntilsMod.postEvent(rewriteEvent);
-        return rewriteEvent.getMessage();
+        StyledText rewritten = rewriteEvent.getMessage();
+        if (!recipientType.hasPrefix() || rewritten.equals(message) || !rewriteEvent.isRewrapAllowed()) {
+            return rewritten;
+        }
+
+        StyledText content = StyledTextUtils.removeFirstPrefix(StyledTextUtils.unwrap(rewritten), recipientType);
+        return StyledTextUtils.addPrefix(StyledTextUtils.prefixWrap(content, recipientType), recipientType, false);
+    }
+
+    @SubscribeEvent
+    public void onChatMessageAdded(ChatMessageAddedEvent event) {
+        StyledText message = StyledText.fromComponent(event.getMessage());
+        RecipientType recipientType = getRecipientType(message);
+        if (!recipientType.hasPrefix()) return;
+
+        // use the previous visible message in this tab, after filtering and redirection
+        boolean isContinuation = event.getPreviousMessage() != null
+                && getRecipientType(StyledText.fromComponent(event.getPreviousMessage())) == recipientType;
+        StyledText content = StyledTextUtils.removeFirstPrefix(message, recipientType);
+        event.setMessage(StyledTextUtils.addPrefix(content, recipientType, isContinuation)
+                .getComponent());
     }
 
     public RecipientType getRecipientType(StyledText codedMessage) {

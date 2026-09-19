@@ -273,7 +273,7 @@ public final class ChatTabService extends Service {
     private boolean matchMessage(ChatTab chatTab, RecipientType recipientType, StyledText originalStyledText) {
         if (chatTab.filteredTypes() != null) {
             if (!chatTab.filteredTypes().isEmpty()) {
-                if (!chatTab.filteredTypes().contains(recipientType)) {
+                if (!chatTab.filteredTypes().contains(recipientType.getFilterType())) {
                     return false;
                 }
             }
