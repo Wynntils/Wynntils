@@ -87,4 +87,8 @@ public interface MapAttributes {
     Optional<Float> getBorderWidth();
 
     // endregion
+
+    static Optional<CustomColor> firstColor(Optional<List<CustomColor>> colors) {
+        return colors.flatMap(list -> list.stream().findFirst());
+    }
 }

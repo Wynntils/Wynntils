@@ -318,14 +318,14 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.managers.categoryManager.fillColor"),
                 Component.translatable("screens.wynntils.map.managers.categoryManager.fillColor.description"),
                 OptionCategory.AREA_BORDER,
-                MapAttributes::getFillColor,
+                attrs -> MapAttributes.firstColor(attrs.getFillColors()),
                 this);
 
         borderColorOptionWidget = new ColorOptionWidget(
                 Component.translatable("screens.wynntils.map.managers.categoryManager.borderColor"),
                 Component.translatable("screens.wynntils.map.managers.categoryManager.borderColor.description"),
                 OptionCategory.AREA_BORDER,
-                MapAttributes::getBorderColor,
+                attrs -> MapAttributes.firstColor(attrs.getBorderColors()),
                 this);
 
         borderWidthOptionWidget = new FloatSliderOptionWidget(
