@@ -18,7 +18,6 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.SearchWidget;
-import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.settings.widgets.CategoryButton;
 import com.wynntils.screens.settings.widgets.ComponentTypeButton;
@@ -93,7 +92,6 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
     private SettingsCategoryTabButton allCategoriesButton;
     private SettingsCategoryTabButton selectedCategoryButton;
     private SettingsEnabledStateTabButton enabledStateTabButton;
-    private TextInputBoxWidget focusedTextInput;
     private UnsavedChangesWidget unsavedChangesWidget;
 
     // UI size, positions, etc
@@ -679,7 +677,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
 
     @Override
     public boolean charTyped(CharacterEvent event) {
-        return focusedTextInput != null && focusedTextInput.charTyped(event);
+        return getFocusedTextInput() != null && getFocusedTextInput().charTyped(event);
     }
 
     @Override
@@ -689,17 +687,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
             return true;
         }
 
-        return focusedTextInput != null && focusedTextInput.keyPressed(event);
-    }
-
-    @Override
-    public TextInputBoxWidget getFocusedTextInput() {
-        return focusedTextInput;
-    }
-
-    @Override
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.focusedTextInput = focusedTextInput;
+        return getFocusedTextInput() != null && getFocusedTextInput().keyPressed(event);
     }
 
     public void populateConfigurables() {

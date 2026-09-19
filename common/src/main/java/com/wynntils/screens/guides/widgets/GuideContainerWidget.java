@@ -457,6 +457,8 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
 
     @Override
     public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
+        TextboxScreen.updateFocus(this.focusedTextInput, focusedTextInput);
+
         this.focusedTextInput = focusedTextInput;
     }
 

@@ -95,7 +95,22 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
 
     @Override
     public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
+        TextboxScreen.updateFocus(this.focusedTextInput, focusedTextInput);
+
         this.focusedTextInput = focusedTextInput;
+    }
+
+    @Override
+    protected void setInitialFocus() {
+        // Must go through the getter, subclasses are free to override it
+        TextInputBoxWidget focused = getFocusedTextInput();
+
+        if (focused != null) {
+            McUtils.mc().onTextInputFocusChange(focused, true);
+            return;
+        }
+
+        super.setInitialFocus();
     }
 
     @Override

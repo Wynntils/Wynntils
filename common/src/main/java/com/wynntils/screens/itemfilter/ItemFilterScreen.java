@@ -95,7 +95,6 @@ public final class ItemFilterScreen extends WynntilsScreen {
     private FilterOptionsButton unusedButton;
     private FilterOptionsButton selectedFilterButton;
     private ProviderFilterListWidget filterWidget;
-    private TextInputBoxWidget focusedTextInput;
     private TextInputBoxWidget presetNameInput;
     private WynntilsButton nextPresetButton;
     private WynntilsButton previousPresetButton;
@@ -625,7 +624,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
     @Override
     public boolean charTyped(CharacterEvent event) {
-        return focusedTextInput != null && focusedTextInput.charTyped(event);
+        return getFocusedTextInput() != null && getFocusedTextInput().charTyped(event);
     }
 
     @Override
@@ -638,17 +637,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
             applyButton.active = false;
         }
 
-        return focusedTextInput != null && focusedTextInput.keyPressed(event);
-    }
-
-    @Override
-    public TextInputBoxWidget getFocusedTextInput() {
-        return focusedTextInput;
-    }
-
-    @Override
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.focusedTextInput = focusedTextInput;
+        return getFocusedTextInput() != null && getFocusedTextInput().keyPressed(event);
     }
 
     public void setFiltersForProvider(ItemStatProvider<?> provider, List<StatProviderAndFilterPair> filterPairs) {

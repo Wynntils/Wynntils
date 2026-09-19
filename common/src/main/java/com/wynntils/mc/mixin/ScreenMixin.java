@@ -9,6 +9,7 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.mc.event.TitleScreenRebuildEvent;
 import com.wynntils.mc.extension.ScreenExtension;
+import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -92,6 +93,8 @@ public abstract class ScreenMixin implements ScreenExtension {
     @Override
     @Unique
     public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
+        TextboxScreen.updateFocus(this.wynntilsFocusedTextInput, focusedTextInput);
+
         this.wynntilsFocusedTextInput = focusedTextInput;
     }
 }

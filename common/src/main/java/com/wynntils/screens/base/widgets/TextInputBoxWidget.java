@@ -523,6 +523,13 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     @Override
+    public void setFocused(boolean focused) {
+        super.setFocused(focused);
+
+        McUtils.mc().onTextInputFocusChange(this, focused);
+    }
+
+    @Override
     public boolean isFocused() {
         return textboxScreen.getFocusedTextInput() == this;
     }

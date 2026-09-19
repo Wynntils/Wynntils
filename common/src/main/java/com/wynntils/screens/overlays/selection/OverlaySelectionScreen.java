@@ -24,7 +24,6 @@ import com.wynntils.overlays.infobox.InfoBoxOverlay;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.HoverableTexturedButton;
 import com.wynntils.screens.base.widgets.SearchWidget;
-import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
@@ -79,7 +78,6 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     private HoverableTexturedButton builtInButton;
     private HoverableTexturedButton customButton;
     private HoverableTexturedButton selectedFilterButton;
-    private TextInputBoxWidget focusedTextInput;
     private WynntilsCheckbox renderOverlaysCheckbox;
 
     // UI size, positions, etc
@@ -422,7 +420,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
     @Override
     public boolean charTyped(CharacterEvent event) {
-        return focusedTextInput != null && focusedTextInput.charTyped(event);
+        return getFocusedTextInput() != null && getFocusedTextInput().charTyped(event);
     }
 
     @Override
@@ -445,17 +443,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             }
         }
 
-        return focusedTextInput != null && focusedTextInput.keyPressed(event);
-    }
-
-    @Override
-    public TextInputBoxWidget getFocusedTextInput() {
-        return focusedTextInput;
-    }
-
-    @Override
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.focusedTextInput = focusedTextInput;
+        return getFocusedTextInput() != null && getFocusedTextInput().keyPressed(event);
     }
 
     public boolean configOptionContains(Config<?> config) {

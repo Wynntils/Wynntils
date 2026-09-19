@@ -11,7 +11,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.EmoteWheelFeature;
 import com.wynntils.screens.base.widgets.HoverableTexturedButton;
-import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.emotewheel.widgets.EmoteConfigButton;
 import com.wynntils.screens.emotewheel.widgets.EmoteSearchWidget;
 import com.wynntils.utils.MathUtils;
@@ -47,7 +46,6 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
 
     // Renderables
     private final EmoteSearchWidget searchWidget;
-    private TextInputBoxWidget focusedTextInput;
 
     // UI size, positions, etc
     private boolean draggingScrollWheel = false;
@@ -258,17 +256,7 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
 
     @Override
     public boolean charTyped(CharacterEvent event) {
-        return focusedTextInput != null && focusedTextInput.charTyped(event);
-    }
-
-    @Override
-    public TextInputBoxWidget getFocusedTextInput() {
-        return focusedTextInput;
-    }
-
-    @Override
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.focusedTextInput = focusedTextInput;
+        return getFocusedTextInput() != null && getFocusedTextInput().charTyped(event);
     }
 
     private Stream<GuiEventListener> getWidgetsForIteration() {
