@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.buildloadouts.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Services;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
@@ -20,7 +21,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class LoadoutMenuFavoriteButton extends AbstractWidget implements TooltipProvider {
     private final int x;
@@ -58,7 +58,7 @@ public class LoadoutMenuFavoriteButton extends AbstractWidget implements Tooltip
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
+        if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
 

@@ -275,8 +275,7 @@ public final class ConfigManager extends Manager {
             String i18nKey = migrationStatus == MigrationStatus.COMPLETED
                     ? "core.wynntils.config.migrationSuccess"
                     : "core.wynntils.config.migrationFailure";
-            McUtils.mc()
-                    .getToastManager()
+            McUtils.toastManager()
                     .addToast(new SystemToast(
                             new SystemToast.SystemToastId(10000L),
                             Component.translatable("core.wynntils.config.migrationToastTitle"),
@@ -287,8 +286,7 @@ public final class ConfigManager extends Manager {
         if (hasPromptedProfile.get()) return;
         if (!event.isFirstJoinWorld()) return;
 
-        McUtils.mc()
-                .getToastManager()
+        McUtils.toastManager()
                 .addToast(new SystemToast(
                         new SystemToast.SystemToastId(10000L),
                         Component.translatable("core.wynntils.profiles.toastTitle"),

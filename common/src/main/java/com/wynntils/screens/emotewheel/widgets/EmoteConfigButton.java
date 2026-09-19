@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.emotewheel.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -20,7 +21,6 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class EmoteConfigButton extends WynntilsButton {
     private static final CustomColor ENABLED_COLOR = new CustomColor(130, 101, 76, 255);
@@ -86,7 +86,7 @@ public class EmoteConfigButton extends WynntilsButton {
             return false;
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             Models.Emote.toggleFavorite(emote);
         }
 

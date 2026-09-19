@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.buildloadouts.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -32,7 +33,6 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class LoadoutMenuNameWidget extends TextInputBoxWidget implements TooltipProvider {
     private static final int MAX_VISIBLE_CHARARCTERS = 27;
@@ -199,7 +199,7 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
+        if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
 
         if (isEditButtonHovered(event.x(), event.y())) {
             this.playDownSound(Minecraft.getInstance().getSoundManager());
@@ -217,7 +217,7 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
                 && event.y() >= this.getY()
                 && event.y() <= this.getY() + this.height) {
             this.playDownSound(Minecraft.getInstance().getSoundManager());
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_2) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 setTextBoxInput("");
                 setCursorAndHighlightPositions(0);
             } else {
@@ -251,7 +251,7 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
     public boolean keyPressed(KeyEvent event) {
         if (!editing) return false;
 
-        if (event.key() == GLFW.GLFW_KEY_ENTER || event.key() == GLFW.GLFW_KEY_ESCAPE) {
+        if (event.key() == InputConstants.KEY_RETURN || event.key() == InputConstants.KEY_ESCAPE) {
             stopEditing();
             return true;
         }

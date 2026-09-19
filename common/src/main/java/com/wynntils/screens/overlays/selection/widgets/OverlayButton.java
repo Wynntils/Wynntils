@@ -6,6 +6,7 @@ package com.wynntils.screens.overlays.selection.widgets;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Streams;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -29,7 +30,6 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class OverlayButton extends WynntilsButton {
     private static final CustomColor ENABLED_COLOR = new CustomColor(0, 220, 0, 255);
@@ -176,7 +176,7 @@ public class OverlayButton extends WynntilsButton {
             return true;
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             if (isSelected() && editInput != null) {
                 editInput.visible = true;
                 selectionScreen.setFocusedTextInput(editInput);
@@ -207,7 +207,7 @@ public class OverlayButton extends WynntilsButton {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ENTER && editInput != null && editInput.visible) {
+        if (event.key() == InputConstants.KEY_RETURN && editInput != null && editInput.visible) {
             editInput.visible = false;
 
             if (overlay instanceof CustomNameProperty customNameOverlay) {

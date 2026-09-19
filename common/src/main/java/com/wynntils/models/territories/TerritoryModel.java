@@ -24,6 +24,7 @@ import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.TerritoryConnectionType;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
 import com.wynntils.services.map.pois.TerritoryPoi;
+import com.wynntils.utils.TaskUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -37,7 +38,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -68,7 +68,8 @@ public final class TerritoryModel extends Model {
     private Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
 
     private ScheduledFuture<?> scheduledFuture;
-    private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
+    private final ScheduledExecutorService timerExecutor =
+            TaskUtils.createSingleThreadScheduledExecutor("Wynntils-territory-%d");
     private long lastGuildUpdate = 0;
 
     // Use Athena by default for territories, but after 3 failures switch to the API

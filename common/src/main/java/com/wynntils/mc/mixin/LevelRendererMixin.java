@@ -13,7 +13,7 @@ import com.mojang.blaze3d.resource.ResourceHandle;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.RenderLevelEvent;
-import com.wynntils.mc.event.RenderTileLevelLastEvent;
+import com.wynntils.mc.event.SubmitCustomGeometryEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.mc.extension.EntityRenderStateExtension;
 import net.minecraft.client.Camera;
@@ -33,7 +33,6 @@ import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -51,9 +50,6 @@ public abstract class LevelRendererMixin {
     @Shadow
     @Final
     private LevelRenderState levelRenderState;
-
-    @Unique
-    private DeltaTracker lastDeltaTracker;
 
     @Inject(
             at = @At("TAIL"),
@@ -97,25 +93,6 @@ public abstract class LevelRendererMixin {
     }
 
     @Inject(
-            method =
-                    "renderLevel(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lorg/joml/Vector4f;Z)V",
-            at = @At("HEAD"))
-    private void captureDeltaTracker(
-            GraphicsResourceAllocator graphicsResourceAllocator,
-            DeltaTracker deltaTracker,
-            boolean renderBlockOutline,
-            Camera camera,
-            Matrix4f frustumMatrix,
-            Matrix4f projectionMatrix,
-            Matrix4f cullingProjectionMatrix,
-            GpuBufferSlice shaderFog,
-            Vector4f fogColor,
-            boolean renderSky,
-            CallbackInfo ci) {
-        this.lastDeltaTracker = deltaTracker;
-    }
-
-    @Inject(
             method = "method_62214", // framepass.executes lambda inside the addMainPass method
             at =
                     @At(
@@ -123,7 +100,7 @@ public abstract class LevelRendererMixin {
                             target =
                                     "Lnet/minecraft/client/renderer/LevelRenderer;checkPoseStack(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
                             ordinal = 1))
-    private void renderTilePost(
+    private void submitCustomGeometry(
             GpuBufferSlice shaderFog,
             LevelRenderState renderState,
             ProfilerFiller profiler,
@@ -135,12 +112,8 @@ public abstract class LevelRendererMixin {
             ResourceHandle<RenderTarget> entityOutlineResourceHandle,
             CallbackInfo ci,
             @Local PoseStack poseStack) {
-        MixinHelper.post(new RenderTileLevelLastEvent(
-                (LevelRenderer) (Object) this,
-                poseStack,
-                this.submitNodeStorage,
-                this.lastDeltaTracker,
-                this.levelRenderState.cameraRenderState));
+        MixinHelper.post(new SubmitCustomGeometryEvent(
+                levelRenderState, poseStack, submitNodeStorage, levelRenderState.cameraRenderState));
     }
 
     @WrapWithCondition(

@@ -5,6 +5,7 @@
 package com.wynntils.screens.container.widgets;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.render.RenderUtils;
@@ -15,7 +16,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class PersonalStorageEditModeButton extends WynntilsButton {
     private static final List<Component> CONFIRM_TOOLTIP = List.of(
@@ -62,7 +62,7 @@ public class PersonalStorageEditModeButton extends WynntilsButton {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             if (Models.Bank.isEditingMode()) {
                 parent.saveEditModeChanges();
                 parent.updatePageName();
@@ -70,7 +70,7 @@ public class PersonalStorageEditModeButton extends WynntilsButton {
             } else {
                 parent.toggleEditMode(true);
             }
-        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             if (Models.Bank.isEditingMode()) {
                 parent.toggleEditMode(false);
                 parent.updatePageIcons();

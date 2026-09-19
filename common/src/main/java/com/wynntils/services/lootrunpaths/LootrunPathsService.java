@@ -14,8 +14,8 @@ import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.mc.event.PlayerInteractEvent;
-import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.SubmitCustomGeometryEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.services.lootrunpaths.event.LootrunPathCacheRefreshEvent;
@@ -279,12 +279,12 @@ public final class LootrunPathsService extends Service {
     }
 
     @SubscribeEvent
-    public void onRenderLastLevel(RenderTileLevelLastEvent event) {
+    public void onSubmitCustomGeometry(SubmitCustomGeometryEvent event) {
         PoseStack poseStack = event.getPoseStack();
 
         LootrunRenderer.renderLootrun(
                 poseStack,
-                event.getSubmitNodeStorage(),
+                event.getSubmitNodeCollector(),
                 lootrun,
                 Managers.Feature.getFeatureInstance(LootrunFeature.class)
                         .activePathColor
@@ -292,7 +292,7 @@ public final class LootrunPathsService extends Service {
                         .asInt());
         LootrunRenderer.renderLootrun(
                 poseStack,
-                event.getSubmitNodeStorage(),
+                event.getSubmitNodeCollector(),
                 recordingCompiled,
                 Managers.Feature.getFeatureInstance(LootrunFeature.class)
                         .recordingPathColor

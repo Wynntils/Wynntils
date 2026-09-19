@@ -7,6 +7,7 @@ libs/
 classes/
 .gradle/
 .architectury-transformer/
+fabric/.fabric/processedMods
 
 # Data generated while running Minecraft or tests
 run/

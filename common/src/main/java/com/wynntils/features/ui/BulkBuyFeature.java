@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.ui;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -47,7 +48,6 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UI)
 public class BulkBuyFeature extends Feature {
@@ -177,7 +177,7 @@ public class BulkBuyFeature extends Feature {
         ContainerUtils.clickOnSlot(
                 bulkBoughtSlotNumber,
                 bulkBoughtContainer.containerId,
-                GLFW.GLFW_MOUSE_BUTTON_RIGHT,
+                InputConstants.MOUSE_BUTTON_RIGHT,
                 bulkBoughtContainer.getItems());
         --bulkBoughtAmount;
 

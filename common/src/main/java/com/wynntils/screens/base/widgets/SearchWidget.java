@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.base.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
@@ -21,7 +22,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import org.lwjgl.glfw.GLFW;
 
 public class SearchWidget extends TextInputBoxWidget {
     protected static final Component DEFAULT_TEXT =
@@ -158,7 +158,7 @@ public class SearchWidget extends TextInputBoxWidget {
                 && event.y() >= this.getY()
                 && event.y() <= this.getY() + this.height) {
             McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_2) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 setTextBoxInput("");
                 setCursorAndHighlightPositions(0);
             } else {
