@@ -215,15 +215,6 @@ public final class CharacterModel extends Model {
         WynntilsMod.info("Selected character " + getCharacterString());
     }
 
-    @SubscribeEvent
-    public void onKey(KeyInputEvent event) {
-        if (event.getAction() != GLFW.GLFW_PRESS) return;
-
-        if (event.getKey() == GLFW.GLFW_KEY_H) {
-            WynntilsMod.info("gamemodes: " + gamemodes);
-        }
-    }
-
     public boolean hasGamemode(CharacterGamemode gamemode) {
         return gamemodes.stream().anyMatch(gm -> gm == gamemode);
     }
