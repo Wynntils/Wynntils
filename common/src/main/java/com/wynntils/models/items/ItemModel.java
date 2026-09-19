@@ -46,6 +46,7 @@ import com.wynntils.models.items.annotators.gui.AbilityTreeResetAnnotator;
 import com.wynntils.models.items.annotators.gui.ActivityAnnotator;
 import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.CharacterAnnotator;
+import com.wynntils.models.items.annotators.gui.CharacterCreationAnnotator;
 import com.wynntils.models.items.annotators.gui.DailyRewardMultiplierAnnotator;
 import com.wynntils.models.items.annotators.gui.GambitAnnotator;
 import com.wynntils.models.items.annotators.gui.GuildLogAnnotator;
@@ -109,6 +110,7 @@ public final class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new ActivityAnnotator());
         Handlers.Item.registerAnnotator(new ArchetypeAbilitiesAnnotator());
         Handlers.Item.registerAnnotator(new CharacterAnnotator());
+        Handlers.Item.registerAnnotator(new CharacterCreationAnnotator());
         Handlers.Item.registerAnnotator(new DailyRewardMultiplierAnnotator());
         Handlers.Item.registerAnnotator(new GambitAnnotator());
         Handlers.Item.registerAnnotator(new GuildLogAnnotator());

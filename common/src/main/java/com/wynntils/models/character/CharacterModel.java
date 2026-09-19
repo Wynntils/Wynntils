@@ -10,6 +10,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
@@ -19,15 +20,21 @@ import com.wynntils.handlers.container.type.ContainerContentChangeType;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.SetLocalPlayerVehicleEvent;
 import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.models.character.event.CharacterDeathEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
+import com.wynntils.models.character.type.CharacterGamemode;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.character.type.SavableCharacterInfo;
 import com.wynntils.models.character.type.SavableTome;
 import com.wynntils.models.character.type.SavableTomeSet;
 import com.wynntils.models.character.type.VehicleType;
+import com.wynntils.models.containers.Container;
+import com.wynntils.models.containers.containers.CharacterCreationContainer;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.MasteryTomesContainer;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.TomeItem;
+import com.wynntils.models.items.items.gui.CharacterCreationItem;
 import com.wynntils.models.items.items.gui.CharacterItem;
 import com.wynntils.models.rewards.type.TomeType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -39,9 +46,12 @@ import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.wynn.InventoryUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.entity.Display;
@@ -73,6 +83,10 @@ public final class CharacterModel extends Model {
     @Persisted
     public final Config<Boolean> queryCharacterInfoMenu = new Config<>(true);
 
+    @Persisted
+    private final Storage<SavableCharacterInfo> savedCharacterInfo =
+            new Storage<>(new SavableCharacterInfo(ClassType.NONE, false, Collections.emptySet()));
+
     private List<TomeItem> equippedTomes = new ArrayList<>();
 
     private boolean hasCharacter;
@@ -80,6 +94,7 @@ public final class CharacterModel extends Model {
     private ClassType classType = ClassType.NONE;
     private boolean reskinned;
     private int level;
+    private Set<CharacterGamemode> gamemodes;
 
     // A hopefully unique string for each character ("class"). This is part of the
     // full character uuid, as presented by Wynncraft in the tooltip.
@@ -88,6 +103,8 @@ public final class CharacterModel extends Model {
     private String previousScanId = "";
     private boolean scanCharacterInfoPending;
     private boolean scanCharacterInfoAlreadyScanned;
+    private boolean classTypeKnownThisSession;
+    private boolean gamemodesKnownThisSession;
 
     private VehicleType vehicle = VehicleType.NONE;
 
@@ -125,6 +142,10 @@ public final class CharacterModel extends Model {
         return id;
     }
 
+    public Set<CharacterGamemode> getGamemodes() {
+        return Collections.unmodifiableSet(gamemodes);
+    }
+
     // FIXME: Remove if this is not needed, or fix it for 2.1
     public boolean isHuntedMode() {
         return false;
@@ -135,15 +156,25 @@ public final class CharacterModel extends Model {
         // Whenever we're leaving a world, clear the current character
         if (e.getOldState() == WorldState.WORLD) {
             hasCharacter = false;
+            classTypeKnownThisSession = false;
+            gamemodesKnownThisSession = false;
         }
 
         if (e.getNewState() == WorldState.WORLD) {
+            if (e.getOldState() == WorldState.INTERIM && e.isFirstJoinWorld()) {
+                restoreCharacterInfoFromStorage();
+            }
+
             scanCharacterInfoPending = true;
             scanCharacterInfoAlreadyScanned = false;
             scanCharacterInfo();
         } else {
             scanCharacterInfoPending = false;
             scanCharacterInfoAlreadyScanned = false;
+        }
+
+        if (e.getNewState() == WorldState.CHARACTER_SELECTION) {
+            gamemodes = Collections.emptySet();
         }
     }
 
@@ -155,15 +186,52 @@ public final class CharacterModel extends Model {
         }
     }
 
+    @SubscribeEvent
+    public void handleCreateCharacter(ContainerClickEvent event) {
+        Container currentContainer = Models.Container.getCurrentContainer();
+
+        if (!(currentContainer instanceof CharacterCreationContainer)) return;
+
+        ItemStack itemStack = event.getItemStack();
+        if (itemStack.isEmpty()) return;
+
+        Optional<CharacterCreationItem> characterCreationItemOpt =
+                Models.Item.asWynnItem(itemStack, CharacterCreationItem.class);
+        if (characterCreationItemOpt.isEmpty()) return;
+
+        CharacterCreationItem characterCreationItem = characterCreationItemOpt.get();
+
+        setSelectedCharacterFromCharacterSelection(
+                characterCreationItem.getClassType(),
+                characterCreationItem.isReskinned(),
+                1, // New character is always level 1
+                characterCreationItem.getGamemodes());
+    }
+
     public void handleSelectedCharacter(ItemStack itemStack) {
         if (!parseCharacter(itemStack)) return;
         hasCharacter = true;
         WynntilsMod.info("Selected character " + getCharacterString());
     }
 
-    public void setSelectedCharacterFromCharacterSelection(ClassType classType, boolean isReskinned, int level) {
+    public boolean hasGamemode(CharacterGamemode gamemode) {
+        return gamemodes.stream().anyMatch(gm -> gm == gamemode);
+    }
+
+    @SubscribeEvent
+    public void onCharacterDeath(CharacterDeathEvent e) {
+        if (!gamemodes.contains(CharacterGamemode.HARDCORE)) return;
+
+        gamemodes = EnumSet.copyOf(gamemodes);
+        gamemodes.remove(CharacterGamemode.HARDCORE);
+
+        savedCharacterInfo.store(new SavableCharacterInfo(classType, reskinned, gamemodes));
+    }
+
+    public void setSelectedCharacterFromCharacterSelection(
+            ClassType classType, boolean isReskinned, int level, Set<CharacterGamemode> gamemodes) {
         hasCharacter = true;
-        updateCharacterInfo(classType, isReskinned, level);
+        updateCharacterInfo(classType, isReskinned, level, gamemodes);
         WynntilsMod.info("Selected character " + getCharacterString());
     }
 
@@ -323,7 +391,8 @@ public final class CharacterModel extends Model {
         }
         ClassType foundClassType = ClassType.fromName(className);
 
-        updateCharacterInfo(foundClassType, foundClassType != null && ClassType.isReskinned(className), foundLevel);
+        updateCharacterInfo(
+                foundClassType, foundClassType != null && ClassType.isReskinned(className), foundLevel, null);
     }
 
     private boolean parseCharacter(ItemStack itemStack) {
@@ -332,14 +401,44 @@ public final class CharacterModel extends Model {
 
         CharacterItem characterItem = characterItemOpt.get();
 
-        updateCharacterInfo(characterItem.getClassType(), characterItem.isReskinned(), characterItem.getLevel());
+        updateCharacterInfo(
+                characterItem.getClassType(),
+                characterItem.isReskinned(),
+                characterItem.getLevel(),
+                characterItem.getGamemodes());
         return true;
     }
 
-    private void updateCharacterInfo(ClassType classType, boolean reskinned, int level) {
+    private void updateCharacterInfo(
+            ClassType classType, boolean reskinned, int level, Set<CharacterGamemode> gamemodes) {
         this.classType = classType;
         this.reskinned = reskinned;
         this.level = level;
+        classTypeKnownThisSession = true;
+
+        if (gamemodes != null) {
+            this.gamemodes = gamemodes;
+            gamemodesKnownThisSession = true;
+        }
+
+        savedCharacterInfo.store(new SavableCharacterInfo(classType, reskinned, gamemodes));
+    }
+
+    private void restoreCharacterInfoFromStorage() {
+        if (classTypeKnownThisSession && gamemodesKnownThisSession) return;
+
+        SavableCharacterInfo backup = savedCharacterInfo.get();
+
+        if (backup != null) {
+            if (!classTypeKnownThisSession) {
+                classType = backup.classType();
+                reskinned = backup.reskinned();
+            }
+            if (!gamemodesKnownThisSession) {
+                gamemodes = backup.gamemodes();
+            }
+            hasCharacter = true;
+        }
     }
 
     /**
