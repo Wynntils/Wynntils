@@ -73,6 +73,7 @@ public final class SeaskipperModel extends Model {
             if (optionalItem.isEmpty()) continue;
 
             SeaskipperDestinationItem destinationItem = optionalItem.get();
+            if (!destinationItem.isAvailable()) continue;
 
             Optional<SeaskipperDestination> destinationOptional = allDestinations.stream()
                     .filter(profile -> profile.profile().destination().equals(destinationItem.getDestination()))
