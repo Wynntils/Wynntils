@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.athena;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Service;
@@ -30,7 +31,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 public class CompatibilityService extends Service {
     private static final long TOAST_DISPLAY_TIME = 10000L;
@@ -75,7 +75,7 @@ public class CompatibilityService extends Service {
                         new SystemToast.SystemToastId(TOAST_DISPLAY_TIME),
                         Component.translatable("service.wynntils.compatibility.toastTitle"),
                         toastMessage);
-                McUtils.mc().getToastManager().addToast(warningToast);
+                McUtils.toastManager().addToast(warningToast);
                 toastExpire = System.currentTimeMillis() + TOAST_DISPLAY_TIME;
             }
         } else if (event.getNewState() == WorldState.NOT_CONNECTED) {
@@ -86,12 +86,12 @@ public class CompatibilityService extends Service {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_Y) && System.currentTimeMillis() <= toastExpire) {
+        if (KeyboardUtils.isKeyDown(InputConstants.KEY_Y) && System.currentTimeMillis() <= toastExpire) {
             warningToast.forceHide();
             toastExpire = 0L;
             warningToast = null;
 
-            McUtils.mc().setScreen(CompatibilityWarningScreen.create(compatibilityTier));
+            McUtils.setScreen(CompatibilityWarningScreen.create(compatibilityTier));
         }
     }
 
@@ -152,7 +152,7 @@ public class CompatibilityService extends Service {
 
         if (compatibilityTier.shouldScreenPrompt() && !isCompatible()) {
             // This has to be done on the main thread
-            McUtils.mc().execute(() -> McUtils.mc().setScreen(CompatibilityWarningScreen.create(compatibilityTier)));
+            McUtils.mc().execute(() -> McUtils.setScreen(CompatibilityWarningScreen.create(compatibilityTier)));
         }
     }
 }

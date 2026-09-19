@@ -21,6 +21,7 @@ import com.wynntils.mc.event.SetCameraEntityEvent;
 import com.wynntils.mc.event.TickAlwaysEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.extension.MinecraftExtension;
+import com.wynntils.utils.TaskUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
@@ -136,5 +137,10 @@ public abstract class MinecraftMixin implements MinecraftExtension {
     @Override
     public void setOverridenRenderTarget(RenderTarget renderTarget) {
         this.wynntils_overridenRenderTarget = renderTarget;
+    }
+
+    @Inject(method = "close()V", at = @At("HEAD"))
+    private void closePre(CallbackInfo callbackInfo) {
+        TaskUtils.close();
     }
 }

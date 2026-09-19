@@ -15,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.prediction.PredictiveAction;
@@ -90,6 +91,14 @@ public final class McUtils {
 
     public static void setScreen(Screen screen) {
         mc().setScreen(screen);
+    }
+
+    public static ChatComponent getChat() {
+        return mc().gui.getChat();
+    }
+
+    public static ToastManager toastManager() {
+        return mc().getToastManager();
     }
 
     public static void playSoundUI(SoundEvent sound) {
@@ -193,13 +202,11 @@ public final class McUtils {
                 keybindCommand.startsWith("/") ? ChatComponent.ChatMethod.COMMAND : ChatComponent.ChatMethod.MESSAGE;
 
         // Route through ChatComponent so the existing createScreen mixin can post ChatScreenCreateEvent.
-        mc().gui.getChat().saveAsDraft(keybindCommand);
-        mc().gui.getChat().openScreen(chatMethod, ChatScreen::new);
+        getChat().saveAsDraft(keybindCommand);
+        getChat().openScreen(chatMethod, ChatScreen::new);
     }
 
     public static void displayToast(Component title, Component message, long displayTimeMs) {
-        McUtils.mc()
-                .getToastManager()
-                .addToast(new SystemToast(new SystemToast.SystemToastId(displayTimeMs), title, message));
+        toastManager().addToast(new SystemToast(new SystemToast.SystemToastId(displayTimeMs), title, message));
     }
 }

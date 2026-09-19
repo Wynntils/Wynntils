@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.activities;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.wrappedscreen.WrappedScreenHolder;
@@ -26,7 +27,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 public class ContentBookHolder extends WrappedScreenHolder<WynntilsContentBookScreen> {
     private static final Pattern TITLE_PATTERN = Pattern.compile("§f\uDAFF\uDFEE\uE004");
@@ -142,13 +142,13 @@ public class ContentBookHolder extends WrappedScreenHolder<WynntilsContentBookSc
     }
 
     public void pressSlot(int slot) {
-        pressSlot(slot, GLFW.GLFW_MOUSE_BUTTON_LEFT);
+        pressSlot(slot, InputConstants.MOUSE_BUTTON_LEFT);
     }
 
     public void pressSlot(int slot, int mouseButton) {
         // Left clicking the progress or dialogue history slot will always send a SetContent event which we should
         // reset the "fake" page on, but not in these cases as the content is not changing
-        resetNextSetContent = mouseButton != GLFW.GLFW_MOUSE_BUTTON_LEFT
+        resetNextSetContent = mouseButton != InputConstants.MOUSE_BUTTON_LEFT
                 || (slot != PROGRESS_SLOTS.b() && slot != DIALOGUE_HISTORY_SLOTS.b());
 
         if (KeyboardUtils.isShiftDown()) {

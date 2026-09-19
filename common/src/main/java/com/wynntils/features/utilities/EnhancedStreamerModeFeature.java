@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.utilities;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -34,7 +35,6 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UTILITIES)
 public class EnhancedStreamerModeFeature extends Feature {
@@ -102,7 +102,7 @@ public class EnhancedStreamerModeFeature extends Feature {
     public void onRenderTooltip(ItemTooltipRenderEvent.Pre event) {
         if (!Models.StreamerMode.isInStream()) return;
         if (!hideGearTooltips.get()) return;
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_SPACE)) return;
+        if (KeyboardUtils.isKeyDown(InputConstants.KEY_SPACE)) return;
         if (!McUtils.inventory().contains(event.getItemStack())) return;
 
         Optional<GearTypeItemProperty> gearItemOpt =

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.storage;
@@ -14,6 +14,7 @@ import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.upfixers.UpfixerType;
+import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.lang.reflect.Field;
@@ -24,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -37,7 +37,8 @@ public final class StorageManager extends Manager {
     private static final String FILE_SUFFIX = ".data.json";
     private final File userStorageFile;
 
-    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService executor =
+            TaskUtils.createSingleThreadScheduledExecutor("Wynntils-storage-%d");
     private final Map<String, Storage<?>> storages = new TreeMap<>();
     private final Map<Storage<?>, Type> storageTypes = new HashMap<>();
     private final Map<Storage<?>, Storageable> storageOwner = new HashMap<>();

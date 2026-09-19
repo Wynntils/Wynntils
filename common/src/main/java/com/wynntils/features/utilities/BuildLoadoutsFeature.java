@@ -10,7 +10,7 @@ import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
-import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
@@ -32,7 +32,7 @@ public class BuildLoadoutsFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onCharacterInfoScreenOpened(ScreenOpenedEvent.Post e) {
+    public void onCharacterInfoScreenInit(ScreenInitEvent.Post e) {
         if (!(e.getScreen() instanceof ContainerScreen screen)) return;
         if (!(Models.Container.getCurrentContainer() instanceof CharacterInfoContainer)) return;
 
