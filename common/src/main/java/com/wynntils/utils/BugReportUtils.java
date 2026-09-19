@@ -32,14 +32,8 @@ public final class BugReportUtils {
     }
 
     public static URI reportUrl() {
-        // Keep the potentially large mod list out of the URL. Users paste it into the form.
         return URI.create("https://github.com/Hezaerd/Wynntils/issues/new?template=bug_report.yml"
-                + parameter("wynntils-version", WynntilsMod.getVersion())
-                + parameter(
-                        "minecraft-version", SharedConstants.getCurrentVersion().name())
-                + parameter("mod-loader", loaderName())
-                + parameter("loader-version", loaderVersion.get())
-                + parameter("operating-system", operatingSystem()));
+                + parameter("wynntils-version", WynntilsMod.getVersion()));
     }
 
     private static String loaderName() {

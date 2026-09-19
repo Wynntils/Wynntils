@@ -56,19 +56,11 @@ You are free to create issues as long as you check whether you are using the lat
 
 ### What to include?
 
-Run `/wynntils bug` in-game to copy system information, open the current instance's logs folder, and open the bug report form with environment details filled in. Paste the copied information into the form and attach `logs/latest.log` from the affected session. If you restarted the game, use the archived log from that session instead. For a crash, also attach the matching file from `crash-reports`. Review these files for private information before uploading.
+Run `/wynntils bug` in-game to find your logs and open the short bug report form with your version filled in. Attach `logs/latest.log` from the affected session and describe what happened. If you restarted, use that session's archived log instead. For a crash, also attach the matching file from `crash-reports`. Review files for private information before uploading. Copying system information is optional, useful if you cannot attach a log or a maintainer asks for it.
 
 If the game cannot start, open the instance's game folder through your launcher to find these files and fill in the environment details manually.
 
-When filing an issue, make sure to answer these seven questions. We should be able to reproduce your issue with this information.
-
-1. What version of the mod are you using? Please include a full version number.
-2. What mod loader did you use?
-3. Did you use any other mods?
-4. What operating system are you using?
-5. What did you do?
-6. What did you expect to see?
-7. What did you see instead?
+Include your Wynntils version, whether you tested with other mods, and the log from the affected session. Describe what happened, what you expected, and how to reproduce it if you know. You can still report a bug that only happened once.
 
 # How to suggest a feature or enhancement
 

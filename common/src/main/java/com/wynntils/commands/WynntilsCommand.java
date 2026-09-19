@@ -115,9 +115,9 @@ public class WynntilsCommand extends Command {
 
     private int bugReport(CommandContext<CommandSourceStack> context) {
         context.getSource().sendSuccess(() -> Component.translatable("command.wynntils.bug.instructions"), false);
-        sendBugAction(context, "copy", new ClickEvent.CopyToClipboard(BugReportUtils.collectSystemInformation()));
         sendBugAction(context, "logs", new ClickEvent.RunCommand("/wynntils bug logs"));
         sendBugAction(context, "report", new ClickEvent.OpenUrl(BugReportUtils.reportUrl()));
+        sendBugAction(context, "copy", new ClickEvent.CopyToClipboard(BugReportUtils.collectSystemInformation()));
         return 1;
     }
 
