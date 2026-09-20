@@ -86,7 +86,7 @@ public final class RaidModel extends Model {
     private static final Pattern RAID_CHOOSE_BUFF_PATTERN = Pattern.compile(
             "§#d6401eff(\\uE009\\uE002|\\uE001) §#fa7f63ff((§o)?(\\w+))§#d6401eff has chosen the §#fa7f63ff(\\w+ \\w+)§#d6401eff buff!");
 
-    private static final int RAID_RESUME_TIMEOUT_TICKS = 100;
+    private static final int RAID_RESUME_TIMEOUT_TICKS = 200;
 
     private static final ParasiteOvertakenBar PARASITE_OVERTAKEN_BAR = new ParasiteOvertakenBar();
     private static final Pattern PARASITE_OVERTAKEN_PATTERN = Pattern.compile(
@@ -255,11 +255,14 @@ public final class RaidModel extends Model {
     public void onWorldStateChange(WorldStateEvent event) {
         if (!trackRaids.get()) return;
 
-        if (event.getNewState() == WorldState.WORLD
-                && event.getOldState() == WorldState.INTERIM
-                && event.isFirstJoinWorld()
-                && currentRaid == null) {
-            tryRestoreRaidState();
+        if (event.getNewState() == WorldState.WORLD && event.isFirstJoinWorld()) {
+            if (event.getOldState() == WorldState.INTERIM) {
+                if (currentRaid == null) {
+                    tryRestoreRaidState();
+                }
+            } else {
+                savedRaidInfo.store(EMPTY_SAVABLE_RAID_INFO);
+            }
         }
 
         if (currentRaid == null) return;
