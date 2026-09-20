@@ -64,7 +64,7 @@ public final class ContainerUtils {
                 containerId,
                 transactionId,
                 (short) clickedSlot,
-                (byte) mouseButton,
+                getContainerClickButton(mouseButton),
                 ContainerInput.PICKUP,
                 changedSlots,
                 hashedItems.get(clickedSlot)));
@@ -83,7 +83,7 @@ public final class ContainerUtils {
                 containerId,
                 transactionId,
                 (short) clickedSlot,
-                (byte) mouseButton,
+                getContainerClickButton(mouseButton),
                 ContainerInput.QUICK_MOVE,
                 changedSlots,
                 hashedItems.get(clickedSlot)));
@@ -118,5 +118,13 @@ public final class ContainerUtils {
     public static void closeBackgroundContainer() {
         McUtils.sendPacket(new ServerboundContainerClosePacket(McUtils.player().containerMenu.containerId));
         McUtils.player().containerMenu = McUtils.player().inventoryMenu;
+    }
+
+    public static byte getContainerClickButton(int button) {
+        return switch (button) {
+            case 1 -> 0;
+            case 3 -> 1;
+            default -> (byte) button;
+        };
     }
 }
