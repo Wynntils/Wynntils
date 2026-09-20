@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.managers.widgets.options;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.fonts.WynnFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
@@ -35,7 +36,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
     private static final int TOP_ROW_HEIGHT = 20;
@@ -162,7 +162,7 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
             return true;
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             // Mode button
             if (isMouseOverButton(event.x(), event.y())) {
                 this.playDownSound(McUtils.mc().getSoundManager());
@@ -177,7 +177,7 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
                     }
                 }
             }
-        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             if (isExtended()) {
                 for (FloatSliderOptionWidget slider : sliders) {
                     if (slider.mouseClicked(event, isDoubleClick)) {

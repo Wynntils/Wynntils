@@ -16,7 +16,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
-import com.wynntils.mc.event.RenderTileLevelLastEvent;
+import com.wynntils.mc.event.SubmitCustomGeometryEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMarkerOptions;
@@ -129,7 +129,7 @@ public class WorldMarkersFeature extends Feature {
 
     // Beacon beam rendering happens here (world-space rendering)
     @SubscribeEvent
-    public void onRenderLevelLast(RenderTileLevelLastEvent event) {
+    public void onSubmitCustomGeometry(SubmitCustomGeometryEvent event) {
         if (renderedMapLocations.isEmpty()) return;
 
         PoseStack poseStack = event.getPoseStack();
@@ -175,13 +175,13 @@ public class WorldMarkersFeature extends Feature {
                 colorInt = color.withAlpha((float) visibility).asInt();
             }
 
-            float partial = event.getDeltaTracker().getGameTimeDeltaPartialTick(false);
-            long gameTime = McUtils.mc().level.getGameTime();
+            float partial = McUtils.mc().getDeltaTracker().getGameTimeDeltaPartialTick(false);
+            long gameTime = event.getLevelRenderState().gameTime;
             float animationTime = (gameTime % 40) + partial;
 
             CustomBeaconRenderer.submitBeaconBeam(
                     poseStack,
-                    event.getSubmitNodeStorage(),
+                    event.getSubmitNodeCollector(),
                     BeaconRenderer.BEAM_LOCATION,
                     partial,
                     animationTime,

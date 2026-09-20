@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.managers.widgets.options;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.managers.IconSelectionScreen;
@@ -27,7 +28,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class IconOptionWidget extends AbstractOptionWidget<String> {
     private static final int BUTTON_WIDTH = 100;
@@ -143,7 +143,7 @@ public class IconOptionWidget extends AbstractOptionWidget<String> {
             return true;
         }
 
-        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
+        if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
 
         if (isMouseOverIconButton(event.x(), event.y())) {
             this.playDownSound(McUtils.mc().getSoundManager());

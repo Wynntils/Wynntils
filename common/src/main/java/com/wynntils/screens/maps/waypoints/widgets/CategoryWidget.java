@@ -81,7 +81,7 @@ public class CategoryWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (McUtils.mc().screen instanceof WaypointCategoryScreen categoryScreen) {
+        if (McUtils.screen() instanceof WaypointCategoryScreen categoryScreen) {
             if (rootCategory) {
                 categoryScreen.selectPreviousCategory();
             } else {

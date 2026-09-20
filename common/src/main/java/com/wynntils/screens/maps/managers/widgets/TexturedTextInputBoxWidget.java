@@ -5,6 +5,7 @@
 package com.wynntils.screens.maps.managers.widgets;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
@@ -24,7 +25,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class TexturedTextInputBoxWidget extends TextInputBoxWidget {
     private static final Component DEFAULT_TEXT =
@@ -90,7 +90,7 @@ public class TexturedTextInputBoxWidget extends TextInputBoxWidget {
 
     private void enforceValidInput(String oldText, int oldCursor, int keyCode) {
         if (!isInputValid(getTextBoxInput())) {
-            if (mode == Mode.IDENTIFIER && keyCode == GLFW.GLFW_KEY_SPACE) {
+            if (mode == Mode.IDENTIFIER && keyCode == InputConstants.KEY_SPACE) {
                 super.setTextBoxInput(getTextBoxInput().replaceAll(" ", "-"));
                 setCursorAndHighlightPositions(oldCursor + 1);
                 return;

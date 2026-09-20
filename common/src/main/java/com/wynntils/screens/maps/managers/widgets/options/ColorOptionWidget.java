@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.managers.widgets.options;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.colorpicker.ColorPickerScreen;
@@ -27,7 +28,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class ColorOptionWidget extends AbstractOptionWidget<CustomColor> {
     // If you change the size of the swatch you have to edit Texture.MANAGER_SWATCH_BACKGROUND too.
@@ -119,7 +119,7 @@ public class ColorOptionWidget extends AbstractOptionWidget<CustomColor> {
             return true;
         }
 
-        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
+        if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
 
         if (isMouseOverEditButton(event.x(), event.y())) {
             this.playDownSound(McUtils.mc().getSoundManager());

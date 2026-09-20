@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.managers.widgets.options;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
@@ -22,7 +23,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class TextShadowOptionWidget extends AbstractOptionWidget<TextShadow> {
     private static final int BUTTON_WIDTH = 70;
@@ -77,7 +77,7 @@ public class TextShadowOptionWidget extends AbstractOptionWidget<TextShadow> {
             return true;
         }
 
-        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
+        if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
 
         if (isMouseOverButton(event.x(), event.y())) {
             this.playDownSound(McUtils.mc().getSoundManager());

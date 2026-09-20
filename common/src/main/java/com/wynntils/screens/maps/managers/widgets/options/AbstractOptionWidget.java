@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.managers.widgets.options;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.fonts.WynnFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
@@ -26,7 +27,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public abstract class AbstractOptionWidget<T> extends AbstractWidget {
     protected final OptionCategory category;
@@ -180,7 +180,7 @@ public abstract class AbstractOptionWidget<T> extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT && isMouseOverLabel(event.x(), event.y())) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && isMouseOverLabel(event.x(), event.y())) {
             resetToDefault();
             this.playDownSound(McUtils.mc().getSoundManager());
             return true;

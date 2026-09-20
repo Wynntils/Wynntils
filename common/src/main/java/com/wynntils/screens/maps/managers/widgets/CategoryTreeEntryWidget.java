@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.managers.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
@@ -26,7 +27,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.joml.Vector2f;
-import org.lwjgl.glfw.GLFW;
 
 public class CategoryTreeEntryWidget extends AbstractWidget {
     public static final int ROW_HEIGHT = 14;
@@ -210,7 +210,7 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
+        if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
         if (!isMouseOver(event.x(), event.y())) return false;
 
         // Arrow click (only for non-leaf nodes)

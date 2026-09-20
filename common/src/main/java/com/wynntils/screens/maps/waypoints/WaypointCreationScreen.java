@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.waypoints;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
@@ -50,7 +51,6 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public final class WaypointCreationScreen extends AbstractMapScreen {
     // Constants
@@ -243,11 +243,8 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         chooseIconButton = new Button.Builder(
                         Component.translatable("screens.wynntils.waypointCreation.chooseIcon"),
-                        (button) -> McUtils.mc()
-                                .setScreen(IconSelectionScreen.create(
-                                        this,
-                                        icon -> setIconId(icon == null ? MapIcon.NO_ICON_ID : icon.getIconId()),
-                                        iconId)))
+                        (button) -> McUtils.setScreen(IconSelectionScreen.create(
+                                this, icon -> setIconId(icon == null ? MapIcon.NO_ICON_ID : icon.getIconId()), iconId)))
                 .pos((int) dividedWidth, (int) (dividedHeight * 22))
                 .size((int) (dividedWidth * 8), 20)
                 .build();
@@ -257,7 +254,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         addCustomIconButton = new Button.Builder(
                         Component.translatable("screens.wynntils.waypointCreation.addCustomIcon"),
-                        (button) -> McUtils.mc().setScreen(IconCreationScreen.create(this, icon -> {
+                        (button) -> McUtils.setScreen(IconCreationScreen.create(this, icon -> {
                             if (icon != null) {
                                 setIconId(icon.getIconId());
                             }
@@ -403,7 +400,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         // region Visibility
         editLabelVisibilityButton = new Button.Builder(
                         Component.translatable("screens.wynntils.waypointCreation.editLabelVisibility"),
-                        (button) -> McUtils.mc().setScreen(WaypointVisibilityScreen.create(this, waypoint, true)))
+                        (button) -> McUtils.setScreen(WaypointVisibilityScreen.create(this, waypoint, true)))
                 .pos((int) (dividedWidth * 3), (int) (dividedHeight * 39))
                 .size((int) (dividedWidth * 12), 20)
                 .build();
@@ -411,7 +408,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
         editIconVisibilityButton = new Button.Builder(
                         Component.translatable("screens.wynntils.waypointCreation.editIconVisibility"),
-                        (button) -> McUtils.mc().setScreen(WaypointVisibilityScreen.create(this, waypoint, false)))
+                        (button) -> McUtils.setScreen(WaypointVisibilityScreen.create(this, waypoint, false)))
                 .pos((int) (dividedWidth * 17), (int) (dividedHeight * 39))
                 .size((int) (dividedWidth * 12), 20)
                 .build();
@@ -437,7 +434,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         // region Category
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.waypointCreation.changeCategory"),
-                        (button) -> McUtils.mc().setScreen(WaypointCategoryScreen.create(this, category)))
+                        (button) -> McUtils.setScreen(WaypointCategoryScreen.create(this, category)))
                 .pos((int) (dividedWidth * 18), (int) (dividedHeight * 48))
                 .size((int) (dividedWidth * 9), 20)
                 .build());
@@ -687,7 +684,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
 
     @Override
     public void onClose() {
-        McUtils.mc().setScreen(returnScreen);
+        McUtils.setScreen(returnScreen);
     }
 
     @Override
@@ -699,7 +696,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
             return true;
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_MIDDLE) {
             int gameX = (int) ((event.x() - centerX) / zoomRenderScale + mapCenterX);
             int gameZ = (int) ((event.y() - centerZ) / zoomRenderScale + mapCenterZ);
             xInput.setTextBoxInput(String.valueOf(gameX));
@@ -718,7 +715,7 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     @Override
     public boolean keyPressed(KeyEvent event) {
         // When tab is pressed, focus the next text box
-        if (event.key() == GLFW.GLFW_KEY_TAB) {
+        if (event.key() == InputConstants.KEY_TAB) {
             int index = focusedTextInput == null ? 0 : children().indexOf(focusedTextInput);
             int actualIndex = Math.max(index, 0) + 1;
 
@@ -851,9 +848,9 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         int index = labelShadow.ordinal();
         int numValues = TextShadow.values().length;
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (button == InputConstants.MOUSE_BUTTON_LEFT) {
             index = (index + 1) % numValues;
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (button == InputConstants.MOUSE_BUTTON_RIGHT) {
             index = (index - 1 + numValues) % numValues;
         }
 

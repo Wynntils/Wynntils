@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.managers;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
@@ -32,7 +33,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class IconSelectionScreen extends WynntilsScreen {
     private static final int GRID_COLUMNS = 7;
@@ -267,7 +267,7 @@ public class IconSelectionScreen extends WynntilsScreen {
 
         @Override
         public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-            if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
+            if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
             if (!this.isMouseOver(event.x(), event.y())) return false;
 
             int index = (int) ((event.x() - getX()) / CELL_SIZE);

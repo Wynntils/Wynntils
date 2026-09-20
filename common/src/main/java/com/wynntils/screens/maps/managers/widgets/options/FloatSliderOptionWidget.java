@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.managers.widgets.options;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
@@ -26,7 +27,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
     // Gap between the end of the label text and the start of the slider track.
@@ -151,7 +151,7 @@ public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
             return true;
         }
 
-        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
+        if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
 
         boolean overTextbox = valueTextBox.isMouseOver(event.x(), event.y());
         boolean textboxHandled = valueTextBox.mouseClicked(event, isDoubleClick);

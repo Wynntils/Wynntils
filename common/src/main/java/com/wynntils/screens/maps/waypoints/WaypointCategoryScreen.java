@@ -232,7 +232,7 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
 
     @Override
     public void onClose() {
-        McUtils.mc().setScreen(creationScreen);
+        McUtils.setScreen(creationScreen);
     }
 
     @Override
