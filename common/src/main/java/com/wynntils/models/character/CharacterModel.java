@@ -221,7 +221,7 @@ public final class CharacterModel extends Model {
 
     @SubscribeEvent
     public void onCharacterDeath(CharacterDeathEvent e) {
-        if (!gamemodes.contains(CharacterGamemode.HARDCORE)) return;
+        if (!gamemodes.contains(CharacterGamemode.HARDCORE) || !e.getHardcoreDeath()) return;
 
         gamemodes = EnumSet.copyOf(gamemodes);
         gamemodes.remove(CharacterGamemode.HARDCORE);
