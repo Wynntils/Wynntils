@@ -9,17 +9,17 @@ import java.util.List;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.extract.LevelExtractor;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(LevelRenderer.class)
-public abstract class NeoForgeLevelRendererMixin {
+@Mixin(LevelExtractor.class)
+public abstract class NeoForgeLevelExtractorMixin {
     // This reverts the patch made by NeoForge here: https://github.com/neoforged/NeoForge/pull/858
     // Wynncraft uses this behaviour to hide the local player in certain cases such as the character selection screen.
     @Redirect(

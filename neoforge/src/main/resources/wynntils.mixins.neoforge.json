@@ -3,7 +3,7 @@
     "NeoForgeAbstractContainerScreenMixin",
     "NeoForgeGuiGraphicsExtractorMixin",
     "NeoForgeHudMixin",
-    "NeoForgeLevelRendererMixin"
+    "NeoForgeLevelExtractorMixin"
   ],
   "compatibilityLevel": "JAVA_17",
   "injectors": {
