@@ -21,8 +21,10 @@ import net.minecraft.world.item.ItemStack;
 public class CharacterAnnotator implements GuiItemAnnotator {
     private static final String GAMEMODE_ICONS = "\uE027\uE083\uE026\uE029\uE028";
 
+    // \uDB00\uDCC8 = space font 200. Biggest location I have found is Aldorei Cliffside Waterfalls which is
+    // \uDB00\uDC54 = space font 84. Hopefully the range is big enough.
     private static final Pattern CHARACTER_MENU_NAME_PATTERN =
-            Pattern.compile("[\uDB00\uDC0B-\uDB00\uDC46]§6(§o)?(?<name>[A-Za-z0-9_ ]{1,20})");
+            Pattern.compile("[\uDB00\uDC0B-\uDB00\uDCC8]§6(§o)?(?<name>[A-Za-z0-9_ ]{1,20})");
 
     private static final Pattern CHARACTER_CREATION_NAME_PATTERN = Pattern.compile("§a§lConfirm and Create");
     private static final Pattern CHARACTER_CREATION_NICKNAME_PATTERN = Pattern.compile("§6- §7Nickname: §f(?<name>.+)");
