@@ -114,8 +114,7 @@ public class TestRaidModel {
         Assertions.assertFalse(flag("awaitingRaidResume"), "no resume wait should be started");
         Assertions.assertNull(resumeTask(), "no resume timeout should be scheduled");
         Assertions.assertTrue(
-                getSavedRaidInfo().raidName().isEmpty(),
-                "a non-reconnect join means the backup is stale and must be wiped");
+                getSavedRaidInfo().raidName().isEmpty(), "a normal join means the backup should be wiped");
     }
 
     @Test
@@ -214,7 +213,7 @@ public class TestRaidModel {
         Models.Raid.onWorldStateChange(new WorldStateEvent(WorldState.WORLD, WorldState.INTERIM, "NA1", true));
 
         Assertions.assertNotNull(getCurrentRaid());
-        Assertions.assertTrue(flag("completedCurrentChallenge"), "last room has an end time -> it was completed");
+        Assertions.assertTrue(flag("completedCurrentChallenge"), "last room doesn't have an end time");
     }
 
     @Test
