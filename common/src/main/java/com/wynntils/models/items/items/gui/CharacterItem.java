@@ -16,9 +16,15 @@ public class CharacterItem extends GuiItem {
     private final ClassType classType;
     private final boolean reskinned;
     private final Set<CharacterGamemode> gamemodes;
+    private final boolean fromCreation;
 
     public CharacterItem(
-            String className, int level, ClassType classType, boolean reskinned, Set<CharacterGamemode> gamemodes) {
+            String className,
+            int level,
+            ClassType classType,
+            boolean reskinned,
+            Set<CharacterGamemode> gamemodes,
+            boolean fromCreation) {
         this.className = className;
         this.level = level;
         this.classType = classType;
@@ -26,6 +32,7 @@ public class CharacterItem extends GuiItem {
         this.gamemodes = gamemodes == null || gamemodes.isEmpty()
                 ? Collections.emptySet()
                 : Collections.unmodifiableSet(EnumSet.copyOf(gamemodes));
+        this.fromCreation = fromCreation;
     }
 
     public String getClassName() {
@@ -48,6 +55,10 @@ public class CharacterItem extends GuiItem {
         return gamemodes;
     }
 
+    public boolean isFromCreation() {
+        return fromCreation;
+    }
+
     @Override
     public String toString() {
         return "CharacterItem{" + "className='"
@@ -55,6 +66,7 @@ public class CharacterItem extends GuiItem {
                 + level + ", classType="
                 + classType + ", reskinned="
                 + reskinned + ", gamemodes="
-                + gamemodes + '}';
+                + gamemodes + ", fromCreation="
+                + fromCreation + '}';
     }
 }

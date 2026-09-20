@@ -12,6 +12,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.items.items.gui.CharacterItem;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.EnumSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,6 +23,9 @@ public class CharacterAnnotator implements GuiItemAnnotator {
 
     private static final Pattern CHARACTER_MENU_NAME_PATTERN =
             Pattern.compile("[\uDB00\uDC0B-\uDB00\uDC46]§6(§o)?(?<name>[A-Za-z0-9_ ]{1,20})");
+
+    private static final Pattern CHARACTER_CREATION_NAME_PATTERN = Pattern.compile("§a§lConfirm and Create");
+    private static final Pattern CHARACTER_CREATION_NICKNAME_PATTERN = Pattern.compile("§6- §7Nickname: §f(?<name>.+)");
 
     // Test in CharacterAnnotator_CHARACTER_MENU_CLASS_PATTERN
     private static final Pattern CHARACTER_MENU_CLASS_PATTERN =
@@ -35,11 +39,25 @@ public class CharacterAnnotator implements GuiItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher matcher = StyledText.fromComponent(itemStack.getHoverName()).getMatcher(CHARACTER_MENU_NAME_PATTERN);
-        if (!matcher.matches()) return null;
+        StyledText hoverName = StyledText.fromComponent(itemStack.getHoverName());
 
-        String className = matcher.group("name");
+        Matcher menuNameMatcher = hoverName.getMatcher(CHARACTER_MENU_NAME_PATTERN);
+        Matcher creationNameMatcher = hoverName.getMatcher(CHARACTER_CREATION_NAME_PATTERN);
+
+        boolean fromCreation;
+        String className = null;
         int level = 0;
+
+        if (menuNameMatcher.matches()) {
+            fromCreation = false;
+            className = menuNameMatcher.group("name");
+        } else if (creationNameMatcher.matches()) {
+            fromCreation = true;
+            level = 1;
+        } else {
+            return null;
+        }
+
         ClassType classType = null;
         boolean reskinned = false;
         Set<CharacterGamemode> gamemodes = EnumSet.noneOf(CharacterGamemode.class);
@@ -52,15 +70,28 @@ public class CharacterAnnotator implements GuiItemAnnotator {
                 gamemodes = parseGamemodes(classMatcher.group("gamemodes"));
             }
 
-            Matcher levelMatcher = lore.getMatcher(CHARACTER_MENU_LEVEL_PATTERN);
-            if (levelMatcher.matches()) {
-                level = Integer.parseInt(levelMatcher.group(1));
+            if (fromCreation) {
+                Matcher nicknameMatcher = lore.getMatcher(CHARACTER_CREATION_NICKNAME_PATTERN);
+                if (nicknameMatcher.matches()) {
+                    String nickName = nicknameMatcher.group("name");
+
+                    if (Objects.equals(nickName, "Not Defined")) {
+                        className = classType.getActualName(reskinned);
+                    } else {
+                        className = nickName;
+                    }
+                }
+            } else {
+                Matcher levelMatcher = lore.getMatcher(CHARACTER_MENU_LEVEL_PATTERN);
+                if (levelMatcher.matches()) {
+                    level = Integer.parseInt(levelMatcher.group("level"));
+                }
             }
         }
 
         if (classType == null || classType == ClassType.NONE) return null;
 
-        return new CharacterItem(className, level, classType, reskinned, gamemodes);
+        return new CharacterItem(className, level, classType, reskinned, gamemodes, fromCreation);
     }
 
     private static Set<CharacterGamemode> parseGamemodes(String gamemodeText) {

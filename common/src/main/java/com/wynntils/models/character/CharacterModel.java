@@ -34,7 +34,6 @@ import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.MasteryTomesContainer;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.TomeItem;
-import com.wynntils.models.items.items.gui.CharacterCreationItem;
 import com.wynntils.models.items.items.gui.CharacterItem;
 import com.wynntils.models.rewards.type.TomeType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -195,17 +194,19 @@ public final class CharacterModel extends Model {
         ItemStack itemStack = event.getItemStack();
         if (itemStack.isEmpty()) return;
 
-        Optional<CharacterCreationItem> characterCreationItemOpt =
-                Models.Item.asWynnItem(itemStack, CharacterCreationItem.class);
+        Optional<CharacterItem> characterCreationItemOpt =
+                Models.Item.asWynnItem(itemStack, CharacterItem.class);
         if (characterCreationItemOpt.isEmpty()) return;
 
-        CharacterCreationItem characterCreationItem = characterCreationItemOpt.get();
+        CharacterItem characterCreationItem = characterCreationItemOpt.get();
 
-        setSelectedCharacterFromCharacterSelection(
-                characterCreationItem.getClassType(),
-                characterCreationItem.isReskinned(),
-                1, // New character is always level 1
-                characterCreationItem.getGamemodes());
+        if (characterCreationItem.isFromCreation()) {
+            setSelectedCharacterFromCharacterSelection(
+                    characterCreationItem.getClassType(),
+                    characterCreationItem.isReskinned(),
+                    characterCreationItem.getLevel(),
+                    characterCreationItem.getGamemodes());
+        }
     }
 
     public void handleSelectedCharacter(ItemStack itemStack) {
