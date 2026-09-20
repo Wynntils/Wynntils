@@ -387,7 +387,7 @@ public class WorldWaypointDistanceFeature extends Feature {
         return new Vec3(
                 (float) ((ndc.x + 1.0f) / 2.0f) * window.getGuiScaledWidth(),
                 (float) ((1.0f - ndc.y) / 2.0f) * window.getGuiScaledHeight(),
-                (float) ndc.z);
+                clipCoords.w());
     }
 
     // draw a line from screen center to the target's screenspace coordinate
@@ -409,7 +409,7 @@ public class WorldWaypointDistanceFeature extends Feature {
         Vec3 centerRelativePosition = position.subtract(centerPoint);
 
         // invert xy axis if target is behind camera
-        if (centerRelativePosition.z > 1) {
+        if (centerRelativePosition.z < 0) {
             centerRelativePosition = centerRelativePosition.multiply(-1, -1, 1);
         }
 
@@ -447,7 +447,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                 && position.x() < window.getGuiScaledWidth()
                 && position.y() > 0
                 && position.y() < window.getGuiScaledHeight()
-                && position.z() < 1;
+                && position.z() > 0;
     }
 
     // limit the bounding distance to prevent divided by zero in getBoundingIntersectPoint
