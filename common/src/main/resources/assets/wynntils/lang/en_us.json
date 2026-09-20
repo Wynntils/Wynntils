@@ -769,6 +769,8 @@
   "feature.wynntils.gammabright.description": "Adds the ability to change the gamma of the game to make it brighter.",
   "feature.wynntils.gammabright.gammabrightEnabled.description": "Should gamma be set to a really high value to achieve night-vision like effect?",
   "feature.wynntils.gammabright.gammabrightEnabled.name": "Gammabright",
+  "feature.wynntils.gammabright.gammabrightIntensity.description": "How intense should the gammabright effect be?",
+  "feature.wynntils.gammabright.gammabrightIntensity.name": "Gammabright Intensity",
   "feature.wynntils.gammabright.lastGamma.description": "Last gamma used by Minecraft",
   "feature.wynntils.gammabright.lastGamma.name": "Last Gamma",
   "feature.wynntils.gammabright.name": "Gammabright Keybind",
