@@ -84,7 +84,7 @@ public final class CharacterModel extends Model {
 
     @Persisted
     private final Storage<SavableCharacterInfo> savedCharacterInfo =
-            new Storage<>(new SavableCharacterInfo(ClassType.NONE, false, Collections.emptySet()));
+            new Storage<>(SavableCharacterInfo.EMPTY);
 
     private List<TomeItem> equippedTomes = new ArrayList<>();
 

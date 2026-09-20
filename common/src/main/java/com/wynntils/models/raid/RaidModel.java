@@ -92,8 +92,6 @@ public final class RaidModel extends Model {
     private static final Pattern PARASITE_OVERTAKEN_PATTERN = Pattern.compile(
             "§#d6401eff(?:\uE009\uE002|\uE001) §#fa7f63ff(?<player>.+?)§#d6401eff has been overtaken! Keep attacking §#ffc85fffThe Parasite§#d6401eff to save them!");
 
-    private static final SavableRaidInfo EMPTY_SAVABLE_RAID_INFO = new SavableRaidInfo("", -1L, Collections.emptyMap());
-
     @Persisted
     public final Config<Boolean> trackRaids = new Config<>(true);
 
@@ -122,7 +120,7 @@ public final class RaidModel extends Model {
     public final Storage<List<HistoricRaidInfo>> historicRaids = new Storage<>(new ArrayList<>());
 
     @Persisted
-    private final Storage<SavableRaidInfo> savedRaidInfo = new Storage<>(EMPTY_SAVABLE_RAID_INFO);
+    private final Storage<SavableRaidInfo> savedRaidInfo = new Storage<>(SavableRaidInfo.EMPTY);
 
     private static final List<RaidKind> RAIDS = new ArrayList<>();
     private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
@@ -261,7 +259,7 @@ public final class RaidModel extends Model {
                     tryRestoreRaidState();
                 }
             } else {
-                savedRaidInfo.store(EMPTY_SAVABLE_RAID_INFO);
+                savedRaidInfo.store(SavableRaidInfo.EMPTY);
             }
         }
 
@@ -309,7 +307,7 @@ public final class RaidModel extends Model {
 
         RaidInfo restored = fromSavableRaidInfo(backup);
         if (restored == null) {
-            savedRaidInfo.store(EMPTY_SAVABLE_RAID_INFO);
+            savedRaidInfo.store(SavableRaidInfo.EMPTY);
             return;
         }
 
@@ -825,7 +823,7 @@ public final class RaidModel extends Model {
 
         cancelPendingResume();
 
-        savedRaidInfo.store(EMPTY_SAVABLE_RAID_INFO);
+        savedRaidInfo.store(SavableRaidInfo.EMPTY);
     }
 
     private void cancelPendingResume() {

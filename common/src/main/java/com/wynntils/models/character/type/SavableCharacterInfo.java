@@ -4,6 +4,9 @@
  */
 package com.wynntils.models.character.type;
 
+import java.util.Collections;
 import java.util.Set;
 
-public record SavableCharacterInfo(ClassType classType, boolean reskinned, Set<CharacterGamemode> gamemodes) {}
+public record SavableCharacterInfo(ClassType classType, boolean reskinned, Set<CharacterGamemode> gamemodes) {
+    public static final SavableCharacterInfo EMPTY = new SavableCharacterInfo(ClassType.NONE, false, Collections.emptySet());
+}

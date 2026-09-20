@@ -4,6 +4,9 @@
  */
 package com.wynntils.models.raid.type;
 
+import java.util.Collections;
 import java.util.Map;
 
-public record SavableRaidInfo(String raidName, long raidStartTime, Map<Integer, SavableRaidRoomInfo> challenges) {}
+public record SavableRaidInfo(String raidName, long raidStartTime, Map<Integer, SavableRaidRoomInfo> challenges) {
+    public static final SavableRaidInfo EMPTY = new SavableRaidInfo("", -1L, Collections.emptyMap());
+}
