@@ -7,16 +7,18 @@ package com.wynntils.models.character;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
-import com.wynntils.mc.event.CommandSentEvent;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.bossbar.DeathScreenBar;
 import com.wynntils.models.character.event.CharacterDeathEvent;
 import com.wynntils.models.character.event.CharacterMovedEvent;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
-import java.util.Objects;
+import java.util.regex.Pattern;
 import net.minecraft.core.Position;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -27,6 +29,8 @@ import net.neoforged.bus.api.SubscribeEvent;
  */
 public final class CharacterPhysicalModel extends Model {
     private static final DeathScreenBar deathScreenBar = new DeathScreenBar();
+    private static final Pattern KILL_MESSAGE_PATTERN =
+            Pattern.compile("§e(?:\uE008\uE002|\uE001) Your character will die in 1 second\\.\\.\\.");
 
     private static final int MOVE_CHECK_FREQUENCY = 10;
     private int moveCheckTicks;
@@ -40,8 +44,10 @@ public final class CharacterPhysicalModel extends Model {
     }
 
     @SubscribeEvent
-    public void onCommandSent(CommandSentEvent e) {
-        if (Objects.equals(e.getCommand(), "kill")) {
+    public void onChatMessage(ChatMessageEvent.Match event) {
+        StyledText message = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
+
+        if (message.matches(KILL_MESSAGE_PATTERN)) {
             deathViaKillCommand = true;
         }
     }
