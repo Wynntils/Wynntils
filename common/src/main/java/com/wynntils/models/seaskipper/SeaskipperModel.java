@@ -13,6 +13,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
@@ -40,7 +41,6 @@ import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 public final class SeaskipperModel extends Model {
     private static final Gson GSON = new GsonBuilder()
@@ -150,7 +150,7 @@ public final class SeaskipperModel extends Model {
         ContainerUtils.clickOnSlot(
                 boatSlot,
                 containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                InputConstants.MOUSE_BUTTON_LEFT,
                 McUtils.containerMenu().getItems());
     }
 
@@ -160,7 +160,7 @@ public final class SeaskipperModel extends Model {
         ContainerUtils.clickOnSlot(
                 destination.slot(),
                 containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                InputConstants.MOUSE_BUTTON_LEFT,
                 McUtils.containerMenu().getItems());
     }
 

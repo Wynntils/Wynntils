@@ -4,6 +4,7 @@
  */
 package com.wynntils.handlers.container.scriptedquery;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ContainerQueryException;
@@ -18,7 +19,6 @@ import com.wynntils.models.containers.Container;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.function.Supplier;
 import net.minecraft.world.item.Item;
-import org.lwjgl.glfw.GLFW;
 
 public class QueryStep {
     // We should never get to MenuOpenedEvent
@@ -55,7 +55,7 @@ public class QueryStep {
     public static QueryStep clickOnSlot(int slotNum) {
         return new QueryStep(container -> {
             ContainerUtils.clickOnSlot(
-                    slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
+                    slotNum, container.containerId(), InputConstants.MOUSE_BUTTON_LEFT, container.items());
             return true;
         });
     }
@@ -63,7 +63,7 @@ public class QueryStep {
     public static QueryStep clickOnSlot(Supplier<Integer> slotSupplier) {
         return new QueryStep(container -> {
             ContainerUtils.clickOnSlot(
-                    slotSupplier.get(), container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
+                    slotSupplier.get(), container.containerId(), InputConstants.MOUSE_BUTTON_LEFT, container.items());
             return true;
         });
     }
@@ -81,7 +81,7 @@ public class QueryStep {
                 throw new ContainerQueryException("Cannot find matching slot");
 
             ContainerUtils.clickOnSlot(
-                    slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
+                    slotNum, container.containerId(), InputConstants.MOUSE_BUTTON_LEFT, container.items());
             return true;
         });
     }

@@ -64,6 +64,6 @@ public class ShamanMaskOverlay extends TextOverlay {
 
     @Override
     public String getPreviewTemplate() {
-        return ShamanMaskType.AWAKENED.getName() + " mask";
+        return ShamanMaskType.LUNATIC.getName() + " mask";
     }
 }

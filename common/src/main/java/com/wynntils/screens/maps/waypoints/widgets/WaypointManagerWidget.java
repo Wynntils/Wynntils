@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.waypoints.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.waypoints.WaypointCreationScreen;
@@ -27,7 +28,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import org.lwjgl.glfw.GLFW;
 
 public class WaypointManagerWidget extends AbstractWidget {
     private final Button editButton;
@@ -79,7 +79,7 @@ public class WaypointManagerWidget extends AbstractWidget {
 
         editButton = new Button.Builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.edit"),
-                        (button) -> McUtils.mc().setScreen(WaypointCreationScreen.create(managementScreen, waypoint)))
+                        (button) -> McUtils.setScreen(WaypointCreationScreen.create(managementScreen, waypoint)))
                 .pos(x + width - 20 - (40 * 2), y)
                 .size(40, 20)
                 .build();
@@ -237,11 +237,11 @@ public class WaypointManagerWidget extends AbstractWidget {
 
         if (!isMouseOver(mouseX, mouseY)) return false;
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        if (button == InputConstants.MOUSE_BUTTON_MIDDLE) {
             McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
             Services.UserMarker.addUserMarkedFeature(waypoint);
             return true;
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (button == InputConstants.MOUSE_BUTTON_RIGHT) {
             Services.UserMarker.removeUserMarkedFeature(waypoint);
             return true;
         }

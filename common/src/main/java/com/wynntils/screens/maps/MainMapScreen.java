@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -42,7 +43,6 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import org.lwjgl.glfw.GLFW;
 
 public final class MainMapScreen extends AbstractMapScreen {
     private MapLocation focusedMarker = null;
@@ -90,7 +90,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         addMapButton(new MapButton(
                 Texture.ADD_ICON,
-                (b) -> McUtils.mc().setScreen(WaypointCreationScreen.create(this)),
+                (b) -> McUtils.setScreen(WaypointCreationScreen.create(this)),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.DARK_GREEN)
@@ -101,12 +101,12 @@ public final class MainMapScreen extends AbstractMapScreen {
         addMapButton(new MapButton(
                 Texture.WAYPOINT_FOCUS_ICON,
                 (b) -> {
-                    if (KeyboardUtils.isShiftDown() && b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                    if (KeyboardUtils.isShiftDown() && b == InputConstants.MOUSE_BUTTON_LEFT) {
                         centerMapAroundPlayer();
                         return;
                     }
 
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                    if (b == InputConstants.MOUSE_BUTTON_RIGHT) {
                         updateMapCenter(MAP_CENTER_X, MAP_CENTER_Z);
                         return;
                     }
@@ -149,7 +149,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         addMapButton(new MapButton(
                 Texture.WAYPOINT_MANAGER_ICON,
-                (b) -> McUtils.mc().setScreen(WaypointManagementScreen.create(this)),
+                (b) -> McUtils.setScreen(WaypointManagementScreen.create(this)),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.RED)
@@ -159,7 +159,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         gatheringFilterButton = new MapButton(
                 Texture.TOOL,
-                (b) -> McUtils.mc().setScreen(GatheringNodeFilterScreen.create(this)),
+                (b) -> McUtils.setScreen(GatheringNodeFilterScreen.create(this)),
                 List.of(
                         Component.literal("[>] ")
                                 .append(Component.translatable("screens.wynntils.map.gatheringFilter.name"))
@@ -174,7 +174,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         addMapButton(new MapButton(
                 Texture.DEFENSE_FILTER_ICON,
-                (b) -> McUtils.mc().setScreen(GuildMapScreen.create(mapCenterX, mapCenterZ, zoomLevel)),
+                (b) -> McUtils.setScreen(GuildMapScreen.create(mapCenterX, mapCenterZ, zoomLevel)),
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.BLUE)
@@ -355,7 +355,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_LEFT_CONTROL) {
+        if (event.key() == InputConstants.KEY_LCONTROL) {
             if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                     .holdGuildMapOpen
                     .get()) {
@@ -370,7 +370,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     @Override
     public boolean keyReleased(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_LEFT_CONTROL) {
+        if (event.key() == InputConstants.KEY_LCONTROL) {
             if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                     .holdGuildMapOpen
                     .get()) {
@@ -391,14 +391,14 @@ public final class MainMapScreen extends AbstractMapScreen {
             }
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             if (KeyboardUtils.isShiftDown()) {
                 focusNextMarkedLocation();
                 return true;
             }
 
             centerMapAroundPlayer();
-        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        } else if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             if (hoveredFeature instanceof MapLocation hoveredLocation) {
                 McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
 
@@ -450,7 +450,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
                 return true;
             }
-        } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        } else if (event.button() == InputConstants.MOUSE_BUTTON_MIDDLE) {
             if (KeyboardUtils.isShiftDown()) {
                 if (hoveredFeature instanceof WaypointLocation location) {
                     McUtils.setScreen(WaypointCreationScreen.create(this, location));
@@ -474,7 +474,7 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     public void changeToGuildMap() {
-        McUtils.mc().setScreen(GuildMapScreen.create(mapCenterX, mapCenterZ, zoomLevel));
+        McUtils.setScreen(GuildMapScreen.create(mapCenterX, mapCenterZ, zoomLevel));
     }
 
     private void focusNextMarkedLocation() {
@@ -507,9 +507,9 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         String target = null;
 
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (button == InputConstants.MOUSE_BUTTON_LEFT) {
             target = "guild";
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        } else if (button == InputConstants.MOUSE_BUTTON_RIGHT) {
             target = "party";
         }
 

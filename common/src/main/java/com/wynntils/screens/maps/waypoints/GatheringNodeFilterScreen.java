@@ -123,7 +123,7 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
 
     @Override
     public void onClose() {
-        McUtils.mc().setScreen(oldMapScreen);
+        McUtils.setScreen(oldMapScreen);
     }
 
     @Override

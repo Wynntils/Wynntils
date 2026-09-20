@@ -5,6 +5,7 @@
 package com.wynntils.screens.territorymanagement;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -77,7 +78,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
-import org.lwjgl.glfw.GLFW;
 
 public class TerritoryManagementScreen extends AbstractMapScreen implements WrappedScreen {
     // Constants
@@ -400,9 +400,9 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         infoTypeButton = new MapButton(
                 Texture.OVERLAY_EXTRA_ICON,
                 (b) -> {
-                    if (b == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                    if (b == InputConstants.MOUSE_BUTTON_LEFT) {
                         setInfoType(infoType.getNext());
-                    } else if (b == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                    } else if (b == InputConstants.MOUSE_BUTTON_RIGHT) {
                         setInfoType(infoType.getPrevious());
                     }
                 },
@@ -918,7 +918,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                 }
             }
 
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT
+            if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT
                     && hoveredFeature instanceof ManageTerritoryArea manageTerritoryArea) {
                 holder.saveMapPos();
                 manageTerritoryArea.onClick();
@@ -968,11 +968,11 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     public boolean keyPressed(KeyEvent event) {
         if (mapMode) {
             switch (event.key()) {
-                case GLFW.GLFW_KEY_1 -> setInfoType(TerritoryInfoType.DEFENSE);
-                case GLFW.GLFW_KEY_2 -> setInfoType(TerritoryInfoType.PRODUCTION);
-                case GLFW.GLFW_KEY_3 -> setInfoType(TerritoryInfoType.TREASURY);
-                case GLFW.GLFW_KEY_4 -> setInfoType(TerritoryInfoType.SEEKING);
-                case GLFW.GLFW_KEY_H -> centerOnHeadquarters();
+                case InputConstants.KEY_1 -> setInfoType(TerritoryInfoType.DEFENSE);
+                case InputConstants.KEY_2 -> setInfoType(TerritoryInfoType.PRODUCTION);
+                case InputConstants.KEY_3 -> setInfoType(TerritoryInfoType.TREASURY);
+                case InputConstants.KEY_4 -> setInfoType(TerritoryInfoType.SEEKING);
+                case InputConstants.KEY_H -> centerOnHeadquarters();
             }
         }
 

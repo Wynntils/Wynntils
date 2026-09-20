@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.chattabs;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Services;
 import com.wynntils.screens.chattabs.widgets.ChatTabButton;
 import com.wynntils.screens.chattabs.widgets.ChatTabSettingsButton;
@@ -13,7 +14,6 @@ import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.input.KeyEvent;
-import org.lwjgl.glfw.GLFW;
 
 public class ChatTabsScreen extends ChatScreen {
     private final boolean oldTabHotkey;
@@ -40,7 +40,7 @@ public class ChatTabsScreen extends ChatScreen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_TAB) {
+        if (event.key() == InputConstants.KEY_TAB) {
             int newTab = -1;
             if (oldTabHotkey) {
                 if (KeyboardUtils.isShiftDown()) {
@@ -60,8 +60,10 @@ public class ChatTabsScreen extends ChatScreen {
             }
         }
 
-        if (KeyboardUtils.isControlDown() && event.key() >= GLFW.GLFW_KEY_1 && event.key() <= GLFW.GLFW_KEY_9) {
-            ChatTab newTab = Services.ChatTab.getTab(event.key() - GLFW.GLFW_KEY_1);
+        if (KeyboardUtils.isControlDown()
+                && event.key() >= InputConstants.KEY_1
+                && event.key() <= InputConstants.KEY_9) {
+            ChatTab newTab = Services.ChatTab.getTab(event.key() - InputConstants.KEY_1);
             if (newTab != null) {
                 Services.ChatTab.setFocusedTab(newTab);
             }

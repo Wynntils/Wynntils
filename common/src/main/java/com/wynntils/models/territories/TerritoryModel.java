@@ -28,6 +28,7 @@ import com.wynntils.models.territories.providers.TerritoryProvider;
 import com.wynntils.models.territories.type.TerritoryConnectionType;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
 import com.wynntils.screens.territorymanagement.mapdata.ManageTerritoryProvider;
+import com.wynntils.utils.TaskUtils;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Deque;
@@ -40,7 +41,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -60,19 +60,19 @@ public final class TerritoryModel extends Model {
 
     private static final TerritoryProvider TERRITORY_PROVIDER = new TerritoryProvider();
     private static final ManageTerritoryProvider MANAGE_TERRITORY_PROVIDER = new ManageTerritoryProvider();
-  
+
     @Persisted
     public final Config<Boolean> lookupApiInfo = new Config<>(true);
 
     // This is the info gathered from the advancement from Wynncraft
     private final Map<String, TerritoryInfo> territoryInfoMap = new ConcurrentHashMap<>();
 
-
     // This is the profiles as downloaded from Athena
     private Map<String, TerritoryProfile> territoryProfileMap = new HashMap<>();
 
     private ScheduledFuture<?> scheduledFuture;
-    private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
+    private final ScheduledExecutorService timerExecutor =
+            TaskUtils.createSingleThreadScheduledExecutor("Wynntils-territory-%d");
     private long lastGuildUpdate = 0;
 
     // Use Athena by default for territories, but after 3 failures switch to the API

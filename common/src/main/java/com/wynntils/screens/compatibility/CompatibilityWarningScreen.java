@@ -85,7 +85,7 @@ public final class CompatibilityWarningScreen extends WynntilsScreen {
 
         Button updateButton = new Button.Builder(
                         Component.translatable("screens.wynntils.compatibility.update"),
-                        (b) -> McUtils.mc().setScreen(UpdateScreen.create(this)))
+                        (b) -> McUtils.setScreen(UpdateScreen.create(this)))
                 .pos(offsetX + 160, offsetY + 150)
                 .size(80, 20)
                 .tooltip(Tooltip.create(updateTooltip))
