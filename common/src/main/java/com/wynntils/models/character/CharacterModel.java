@@ -83,8 +83,7 @@ public final class CharacterModel extends Model {
     public final Config<Boolean> queryCharacterInfoMenu = new Config<>(true);
 
     @Persisted
-    private final Storage<SavableCharacterInfo> savedCharacterInfo =
-            new Storage<>(SavableCharacterInfo.EMPTY);
+    private final Storage<SavableCharacterInfo> savedCharacterInfo = new Storage<>(SavableCharacterInfo.EMPTY);
 
     private List<TomeItem> equippedTomes = new ArrayList<>();
 
@@ -194,8 +193,7 @@ public final class CharacterModel extends Model {
         ItemStack itemStack = event.getItemStack();
         if (itemStack.isEmpty()) return;
 
-        Optional<CharacterItem> characterCreationItemOpt =
-                Models.Item.asWynnItem(itemStack, CharacterItem.class);
+        Optional<CharacterItem> characterCreationItemOpt = Models.Item.asWynnItem(itemStack, CharacterItem.class);
         if (characterCreationItemOpt.isEmpty()) return;
 
         CharacterItem characterCreationItem = characterCreationItemOpt.get();

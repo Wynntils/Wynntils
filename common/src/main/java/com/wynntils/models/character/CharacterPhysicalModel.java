@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.character;
@@ -7,9 +7,7 @@ package com.wynntils.models.character;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
-import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.bossbar.DeathScreenBar;
@@ -19,7 +17,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
 import java.util.Objects;
-
 import net.minecraft.core.Position;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -54,10 +51,12 @@ public final class CharacterPhysicalModel extends Model {
     public void onBossBarAdd(BossBarAddedEvent event) {
         if (event.getTrackedBar() == deathScreenBar) {
             if (deathViaKillCommand) {
-                WynntilsMod.postEvent(new CharacterDeathEvent(new Location(McUtils.player().blockPosition()), false));
+                WynntilsMod.postEvent(
+                        new CharacterDeathEvent(new Location(McUtils.player().blockPosition()), false));
                 deathViaKillCommand = false;
             } else {
-                WynntilsMod.postEvent(new CharacterDeathEvent(new Location(McUtils.player().blockPosition()), true));
+                WynntilsMod.postEvent(
+                        new CharacterDeathEvent(new Location(McUtils.player().blockPosition()), true));
             }
         }
     }
