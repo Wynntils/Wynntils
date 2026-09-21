@@ -29,7 +29,7 @@ public final class AbilityTreeAnnotator implements GuiItemAnnotator {
     private static final Pattern ABILITY_POINTS_PATTERN =
             Pattern.compile("§b✦ Available Points: §(?:#a0c84bff|f)(\\d+)§7\\/(\\d+)");
     private static final Pattern LOANED_ABILITY_POINTS_PATTERN =
-            Pattern.compile("§#a0c84bff(\\d+) early points from §..");
+            Pattern.compile("§#a0c84bff(\\d+) early points? from §..");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
