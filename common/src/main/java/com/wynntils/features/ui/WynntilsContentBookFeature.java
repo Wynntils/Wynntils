@@ -29,7 +29,6 @@ import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ShiftBehavior;
 import com.wynntils.utils.wynn.ContainerUtils;
-import com.wynntils.utils.wynn.InventoryUtils;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.ICancellableEvent;
@@ -40,8 +39,7 @@ public class WynntilsContentBookFeature extends Feature {
     private static final StyledText CONTENT_BOOK_NAME = StyledText.fromString("§dContent Book");
 
     @RegisterKeyBind
-    private final KeyBind openContentBook = KeyBindDefinition.OPEN_CONTENT_BOOK.create(
-            () -> ContainerUtils.openInventory(InventoryUtils.CONTENT_BOOK_SLOT_NUM));
+    private final KeyBind openContentBook = KeyBindDefinition.OPEN_CONTENT_BOOK.create(ContainerUtils::openContentBook);
 
     @RegisterKeyBind
     private final KeyBind openWynntilsMenu = KeyBindDefinition.OPEN_WYNNTILS_MENU.create(
@@ -126,6 +124,7 @@ public class WynntilsContentBookFeature extends Feature {
     }
 
     private void handleClick(ICancellableEvent cancellableEvent) {
+        if (cancellableEvent.isCanceled()) return;
         if (Models.WorldState.inCharacterWardrobe()) return;
 
         shiftClickedBookItem = McUtils.player().isShiftKeyDown();

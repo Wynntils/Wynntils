@@ -5,6 +5,8 @@
 package com.wynntils.utils.wynn;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.models.activities.event.ContentBookOpenEvent;
 import com.wynntils.utils.mc.McUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -29,6 +31,12 @@ public final class ContainerUtils {
 
         // Defensive programming, should not really happen
         return NonNullList.create();
+    }
+
+    /** Opens the content book for a user action, allowing features to block it. */
+    public static boolean openContentBook() {
+        if (WynntilsMod.postEvent(new ContentBookOpenEvent())) return false;
+        return openInventory(InventoryUtils.CONTENT_BOOK_SLOT_NUM);
     }
 
     public static boolean openInventory(int slotNum) {

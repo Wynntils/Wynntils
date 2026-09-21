@@ -22,9 +22,11 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import net.minecraft.core.Position;
 
 public final class MapService extends Service {
     private List<MapTexture> maps = new CopyOnWriteArrayList<>();
+    private volatile List<BoundingBox> mapBounds = List.of();
 
     public MapService() {
         super(List.of());
@@ -47,6 +49,15 @@ public final class MapService extends Service {
                 .toList();
     }
 
+    public boolean hasMapData() {
+        return !mapBounds.isEmpty();
+    }
+
+    /** Uses the same map bounds as the minimap, without depending on its zoom or visibility settings. */
+    public boolean isInMappedArea(Position position) {
+        return mapBounds.stream().anyMatch(box -> box.contains((float) position.x(), (float) position.z()));
+    }
+
     public boolean isPlayerInMappedArea(float width, float height, float scale) {
         BoundingCircle textureBoundingCircle = BoundingCircle.enclosingCircle(BoundingBox.centered(
                 (float) McUtils.player().getX(), (float) McUtils.player().getZ(), width * scale, height * scale));
@@ -58,6 +69,11 @@ public final class MapService extends Service {
         Type type = new TypeToken<List<MapPartProfile>>() {}.getType();
 
         List<MapPartProfile> mapPartList = WynntilsMod.GSON.fromJson(reader, type);
+        // Publish all bounds together before asynchronous texture downloads begin. Location checks
+        // must not mistake a map part whose image is still downloading for an unmapped area.
+        mapBounds = mapPartList.stream()
+                .map(part -> new BoundingBox(part.x1, part.z1, part.x2, part.z2))
+                .toList();
         List<MapTexture> newMaps = new CopyOnWriteArrayList<>();
         for (MapPartProfile mapPart : mapPartList) {
             String fileName = mapPart.md5 + ".png";
