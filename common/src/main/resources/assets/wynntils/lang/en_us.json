@@ -1150,6 +1150,7 @@
   "feature.wynntils.lockContentBook.lockInWar.name": "Lock in War",
   "feature.wynntils.lockContentBook.lockInWorldEvent.description": "Lock the content book while participating in a world event.",
   "feature.wynntils.lockContentBook.lockInWorldEvent.name": "Lock in World Event",
+  "feature.wynntils.lockContentBook.locked": "Content Book is locked during this activity.",
   "feature.wynntils.lockContentBook.name": "Lock Content Book",
   "feature.wynntils.logItemInfo.description": "Logs item info to the console and chat.",
   "feature.wynntils.logItemInfo.name": "Log Item Info",

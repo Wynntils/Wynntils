@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.utilities;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -19,6 +20,10 @@ import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.activities.event.ContentBookOpenEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
@@ -29,6 +34,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UTILITIES)
 public class LockContentBookFeature extends Feature {
     private static final StyledText CONTENT_BOOK_NAME = StyledText.fromString("§dContent Book");
+
+    private long nextLockNotificationTime;
 
     @Persisted
     private final Config<ForceUnlockAction> forceUnlockAction = new Config<>(ForceUnlockAction.NONE);
@@ -88,6 +95,7 @@ public class LockContentBookFeature extends Feature {
                 && slot.getContainerSlot() == InventoryUtils.CONTENT_BOOK_SLOT_NUM
                 && isContentBook(slot.getItem())) {
             event.setCanceled(true);
+            notifyLocked();
         }
     }
 
@@ -96,14 +104,28 @@ public class LockContentBookFeature extends Feature {
         // Keybinds and menu buttons are neither inventory clicks nor shift-right-clicks.
         if (isLocked()) {
             event.setCanceled(true);
+            notifyLocked();
         }
     }
 
     private boolean shouldBlockHeldBook(InteractionHand hand, boolean rightClick) {
         if (!isLocked() || !isContentBook(McUtils.player().getItemInHand(hand))) return false;
-        return !(rightClick
+        if (rightClick
                 && McUtils.player().isShiftKeyDown()
-                && forceUnlockAction.get().allowsShiftRightClick());
+                && forceUnlockAction.get().allowsShiftRightClick()) return false;
+
+        notifyLocked();
+        return true;
+    }
+
+    private void notifyLocked() {
+        long now = Util.getMillis();
+        if (now < nextLockNotificationTime) return;
+        nextLockNotificationTime = now + 1000;
+
+        Managers.Notification.queueMessage(Component.translatable("feature.wynntils.lockContentBook.locked")
+                .withStyle(ChatFormatting.RED));
+        McUtils.playSoundUI(SoundEvents.NOTE_BLOCK_PLING.value());
     }
 
     private boolean isLocked() {
