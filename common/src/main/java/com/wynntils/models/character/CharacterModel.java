@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
@@ -41,6 +42,7 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.wynn.InventoryUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
@@ -71,6 +73,8 @@ public final class CharacterModel extends Model {
     private static final Pattern CHARACTER_ID_PATTERN = Pattern.compile("^[a-z0-9]{8}$");
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §f(.+)");
     private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §f(\\d+)");
+    private static final Pattern DEIRON_MESSAGE_PATTERN = Pattern.compile("§fYou are no longer an Ironman");
+    private static final Pattern UIM_TO_IM_MESSAGE_PATTERN = Pattern.compile("§bUltimate Ironman§7 to §6Ironman");
 
     public static final int CHARACTER_INFO_SLOT = 7;
     private static final int PROFESSION_INFO_SLOT = 17;
@@ -144,6 +148,10 @@ public final class CharacterModel extends Model {
         return Collections.unmodifiableSet(gamemodes);
     }
 
+    public boolean hasGamemode(CharacterGamemode gamemode) {
+        return gamemodes.stream().anyMatch(gm -> gm == gamemode);
+    }
+
     // FIXME: Remove if this is not needed, or fix it for 2.1
     public boolean isHuntedMode() {
         return false;
@@ -213,10 +221,6 @@ public final class CharacterModel extends Model {
         WynntilsMod.info("Selected character " + getCharacterString());
     }
 
-    public boolean hasGamemode(CharacterGamemode gamemode) {
-        return gamemodes.stream().anyMatch(gm -> gm == gamemode);
-    }
-
     @SubscribeEvent
     public void onCharacterDeath(CharacterDeathEvent e) {
         if (!gamemodes.contains(CharacterGamemode.HARDCORE) || !e.getHardcoreDeath()) return;
@@ -225,6 +229,20 @@ public final class CharacterModel extends Model {
         gamemodes.remove(CharacterGamemode.HARDCORE);
 
         savedCharacterInfo.store(new SavableCharacterInfo(classType, reskinned, gamemodes));
+    }
+
+    @SubscribeEvent
+    public void onChatMessage(ChatMessageEvent.Match event) {
+        StyledText message = StyledTextUtils.unwrap(event.getMessage()).stripAlignment();
+
+        if (message.matches(DEIRON_MESSAGE_PATTERN)) {
+            gamemodes = EnumSet.copyOf(gamemodes);
+            gamemodes.remove(CharacterGamemode.IRONMAN);
+        } else if (message.matches(UIM_TO_IM_MESSAGE_PATTERN)) {
+            gamemodes = EnumSet.copyOf(gamemodes);
+            gamemodes.remove(CharacterGamemode.ULTIMATE_IRONMAN);
+            gamemodes.add(CharacterGamemode.IRONMAN);
+        }
     }
 
     public void setSelectedCharacterFromCharacterSelection(
