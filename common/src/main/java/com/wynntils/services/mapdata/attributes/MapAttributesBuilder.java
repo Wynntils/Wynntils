@@ -52,8 +52,9 @@ public class MapAttributesBuilder {
         this.hasMarker = attributes.getHasMarker().orElse(null);
         this.markerOptions =
                 (MapMarkerOptionsImpl) attributes.getMarkerOptions().orElse(null);
-        this.fillColor = attributes.getFillColor().orElse(null);
-        this.borderColor = attributes.getBorderColor().orElse(null);
+        this.fillColor = MapAttributes.firstColor(attributes.getFillColors()).orElse(null);
+        this.borderColor =
+                MapAttributes.firstColor(attributes.getBorderColors()).orElse(null);
         this.borderWidth = attributes.getBorderWidth().orElse(null);
         return this;
     }

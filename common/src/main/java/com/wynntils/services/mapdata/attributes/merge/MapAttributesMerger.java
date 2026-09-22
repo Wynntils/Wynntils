@@ -30,8 +30,9 @@ public final class MapAttributesMerger {
         CustomColor iconColor = getFirstOrNull(attributes, MapAttributes::getIconColor);
         Boolean hasMarker = getFirstOrNull(attributes, MapAttributes::getHasMarker);
         MapMarkerOptionsImpl markerOptions = mergeMarkerOptions(attributes);
-        CustomColor fillColor = getFirstOrNull(attributes, MapAttributes::getFillColor);
-        CustomColor borderColor = getFirstOrNull(attributes, MapAttributes::getBorderColor);
+        CustomColor fillColor = getFirstOrNull(attributes, attrs -> MapAttributes.firstColor(attrs.getFillColors()));
+        CustomColor borderColor =
+                getFirstOrNull(attributes, attrs -> MapAttributes.firstColor(attrs.getBorderColors()));
         Float borderWidth = getFirstOrNull(attributes, MapAttributes::getBorderWidth);
 
         return new MapAttributesImpl(
