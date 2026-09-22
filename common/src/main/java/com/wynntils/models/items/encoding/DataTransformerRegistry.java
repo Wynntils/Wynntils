@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding;
@@ -13,6 +13,12 @@ import com.wynntils.models.items.encoding.data.DurabilityData;
 import com.wynntils.models.items.encoding.data.EffectsData;
 import com.wynntils.models.items.encoding.data.EndData;
 import com.wynntils.models.items.encoding.data.IdentificationData;
+import com.wynntils.models.items.encoding.data.MountColorData;
+import com.wynntils.models.items.encoding.data.MountEnergyData;
+import com.wynntils.models.items.encoding.data.MountPotentialData;
+import com.wynntils.models.items.encoding.data.MountStatsData;
+import com.wynntils.models.items.encoding.data.MountStatsMaxData;
+import com.wynntils.models.items.encoding.data.MountTypeData;
 import com.wynntils.models.items.encoding.data.NameData;
 import com.wynntils.models.items.encoding.data.PowderData;
 import com.wynntils.models.items.encoding.data.RequirementsData;
@@ -30,6 +36,12 @@ import com.wynntils.models.items.encoding.impl.block.DurabilityDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.EffectsDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.EndDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.IdentificationDataTransformer;
+import com.wynntils.models.items.encoding.impl.block.MountColorDataTransformer;
+import com.wynntils.models.items.encoding.impl.block.MountEnergyDataTransformer;
+import com.wynntils.models.items.encoding.impl.block.MountPotentialDataTransformer;
+import com.wynntils.models.items.encoding.impl.block.MountStatsDataTransformer;
+import com.wynntils.models.items.encoding.impl.block.MountStatsMaxDataTransformer;
+import com.wynntils.models.items.encoding.impl.block.MountTypeDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.NameDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.PowderDataTransformer;
 import com.wynntils.models.items.encoding.impl.block.RequirementsDataTransformer;
@@ -165,6 +177,12 @@ public final class DataTransformerRegistry {
         registerDataTransformer(CustomConsumableTypeData.class, new CustomConsumableTypeDataTransformer());
         registerDataTransformer(UsesData.class, new UsesDataTransformer());
         registerDataTransformer(EffectsData.class, new EffectsDataTransformer());
+        registerDataTransformer(MountTypeData.class, new MountTypeDataTransformer());
+        registerDataTransformer(MountPotentialData.class, new MountPotentialDataTransformer());
+        registerDataTransformer(MountColorData.class, new MountColorDataTransformer());
+        registerDataTransformer(MountEnergyData.class, new MountEnergyDataTransformer());
+        registerDataTransformer(MountStatsData.class, new MountStatsDataTransformer());
+        registerDataTransformer(MountStatsMaxData.class, new MountStatsMaxDataTransformer());
 
         registerDataTransformer(EndData.class, new EndDataTransformer());
     }

@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.activities;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -33,7 +34,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.lwjgl.glfw.GLFW;
 
 public class ContentBookQueries {
     // A config in the future, turned off for performance for now
@@ -146,6 +146,10 @@ public class ContentBookQueries {
                                     c, NEXT_PAGE_SLOT, Items.POTION, SCROLL_DOWN_TEXT);
                         },
                         QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
+                                // Content book page changes arrive as individual slot updates rather than a
+                                // full container update. Wait for the batch so the next iteration sees the
+                                // complete page.
+                                .accumulateSetSlotChanges(2)
                                 .processIncomingContainer(c -> processContentBookPage(c, newActivity)))
 
                 // Restore filter to original value
@@ -153,9 +157,9 @@ public class ContentBookQueries {
                 .execute(() -> {
                     if (REVERSE_DIRECTION) {
                         // Inverse the filter change direction, if we are allowed to go in a reverse direction
-                        filterChangeDirection = filterChangeDirection == GLFW.GLFW_MOUSE_BUTTON_RIGHT
-                                ? GLFW.GLFW_MOUSE_BUTTON_LEFT
-                                : GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+                        filterChangeDirection = filterChangeDirection == InputConstants.MOUSE_BUTTON_RIGHT
+                                ? InputConstants.MOUSE_BUTTON_LEFT
+                                : InputConstants.MOUSE_BUTTON_RIGHT;
                     }
                 })
                 .repeat(
@@ -214,7 +218,7 @@ public class ContentBookQueries {
     private int getFilterChangeDirection(ItemStack itemStack, String targetFilter) {
         StyledText itemName = ItemUtils.getItemName(itemStack);
         if (!REVERSE_DIRECTION || !itemName.equals(StyledText.fromString(FILTER_ITEM_TITLE))) {
-            return GLFW.GLFW_MOUSE_BUTTON_LEFT;
+            return InputConstants.MOUSE_BUTTON_LEFT;
         }
 
         int activeFilterIndex = -1;
@@ -242,7 +246,7 @@ public class ContentBookQueries {
         }
 
         if (activeFilterIndex == -1 || targetFilterIndex == -1) {
-            return GLFW.GLFW_MOUSE_BUTTON_LEFT;
+            return InputConstants.MOUSE_BUTTON_LEFT;
         }
 
         // Calculate the direction for the shortest path, handle wrap-around
@@ -252,7 +256,7 @@ public class ContentBookQueries {
         if (forward < 0) forward += filterCount;
         if (backward < 0) backward += filterCount;
 
-        return forward < backward ? GLFW.GLFW_MOUSE_BUTTON_LEFT : GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+        return forward < backward ? InputConstants.MOUSE_BUTTON_LEFT : InputConstants.MOUSE_BUTTON_RIGHT;
     }
 
     private ContainerContentVerification getContentBookFilterChangeVerification() {
@@ -334,18 +338,22 @@ public class ContentBookQueries {
                             if (slot == -1) return true;
 
                             // Found it, now click it
-                            ContainerUtils.clickOnSlot(slot, c.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, c.items());
+                            ContainerUtils.clickOnSlot(
+                                    slot, c.containerId(), InputConstants.MOUSE_BUTTON_LEFT, c.items());
                             return false;
                         },
-                        QueryStep.clickOnMatchingSlot(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT))
+                        QueryStep.clickOnMatchingSlot(NEXT_PAGE_SLOT, Items.POTION, SCROLL_DOWN_TEXT)
+                                // Content book page changes arrive as individual slot updates rather than a
+                                // full container update. Wait for the batch before searching again.
+                                .accumulateSetSlotChanges(2))
 
                 // Restore filter to original value
                 .execute(() -> filterLoopCount = 0)
                 .execute(() -> {
                     // Inverse the filter change direction
-                    filterChangeDirection = filterChangeDirection == GLFW.GLFW_MOUSE_BUTTON_RIGHT
-                            ? GLFW.GLFW_MOUSE_BUTTON_LEFT
-                            : GLFW.GLFW_MOUSE_BUTTON_RIGHT;
+                    filterChangeDirection = filterChangeDirection == InputConstants.MOUSE_BUTTON_RIGHT
+                            ? InputConstants.MOUSE_BUTTON_LEFT
+                            : InputConstants.MOUSE_BUTTON_RIGHT;
                 })
                 .repeat(
                         c -> {

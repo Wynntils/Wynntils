@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.war;
@@ -8,6 +8,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.models.war.event.GuildWarEvent;
@@ -28,6 +29,9 @@ public final class WarModel extends Model {
             new WarScoreboardPart(); // This is basically a party scoreboard part, but for war members
 
     @Persisted
+    public final Config<Boolean> saveHistoricWarInfo = new Config<>(true);
+
+    @Persisted
     public final Storage<List<HistoricWarInfo>> historicWars = new Storage<>(new ArrayList<>());
 
     private List<HadesUser> hadesUsers = new ArrayList<>();
@@ -41,6 +45,8 @@ public final class WarModel extends Model {
 
     @SubscribeEvent
     public void onWarEnd(GuildWarEvent.Ended event) {
+        if (!saveHistoricWarInfo.get()) return;
+
         WarBattleInfo warBattleInfo = event.getWarBattleInfo();
 
         historicWars

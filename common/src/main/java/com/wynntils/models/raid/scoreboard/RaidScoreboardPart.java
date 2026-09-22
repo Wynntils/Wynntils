@@ -36,6 +36,8 @@ public class RaidScoreboardPart extends ScoreboardPart {
 
     @Override
     public void onSegmentChange(ScoreboardSegment newValue) {
+        if (!Models.Raid.trackRaids.get()) return;
+
         List<StyledText> content = newValue.getContent();
 
         if (content.isEmpty()) {

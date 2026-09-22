@@ -4,6 +4,8 @@
  */
 package com.wynntils.features.overlays;
 
+import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -13,6 +15,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.overlays.PartyMembersOverlay;
 import com.wynntils.utils.type.RenderElementType;
+import java.util.List;
 
 @ConfigCategory(Category.OVERLAYS)
 public class PartyMembersOverlayFeature extends Feature {
@@ -20,8 +23,12 @@ public class PartyMembersOverlayFeature extends Feature {
     private final Overlay partyMembersOverlay = new PartyMembersOverlay();
 
     public PartyMembersOverlayFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.NEW_PLAYER)
+                        .build(),
+                List.of(
+                        ConfigDependency.functionality(Models.Party.queryPartyMembers),
+                        ConfigDependency.functionality(Services.Hades.connectToHades)));
     }
 }

@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.inventory;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -31,6 +32,7 @@ import com.wynntils.models.containers.containers.GuildMemberListContainer;
 import com.wynntils.models.containers.containers.GuildTerritoriesContainer;
 import com.wynntils.models.containers.containers.HousingJukeboxContainer;
 import com.wynntils.models.containers.containers.HousingListContainer;
+import com.wynntils.models.containers.containers.HousingSongSelectContainer;
 import com.wynntils.models.containers.containers.JukeboxContainer;
 import com.wynntils.models.containers.containers.personal.AccountBankContainer;
 import com.wynntils.models.containers.containers.personal.BookshelfContainer;
@@ -65,7 +67,6 @@ import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ContainerSearchFeature extends Feature {
@@ -106,6 +107,9 @@ public class ContainerSearchFeature extends Feature {
     private final Config<Boolean> filterInHousingList = new Config<>(true);
 
     @Persisted
+    private final Config<Boolean> filterInHousingSongSelect = new Config<>(true);
+
+    @Persisted
     private final Config<Boolean> filterInJukebox = new Config<>(true);
 
     @Persisted
@@ -123,6 +127,7 @@ public class ContainerSearchFeature extends Feature {
                     Map.entry(GuildTerritoriesContainer.class, filterInGuildTerritories::get),
                     Map.entry(HousingJukeboxContainer.class, filterInHousingJukebox::get),
                     Map.entry(HousingListContainer.class, filterInHousingList::get),
+                    Map.entry(HousingSongSelectContainer.class, filterInHousingSongSelect::get),
                     Map.entry(IslandBlockBankContainer.class, filterInBlockBank::get),
                     Map.entry(JukeboxContainer.class, filterInJukebox::get),
                     Map.entry(MiscBucketContainer.class, filterInMiscBucket::get),
@@ -259,7 +264,7 @@ public class ContainerSearchFeature extends Feature {
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
         // Don't want to be able to search whilst the edit widget is open
-        if ((event.getKeyCode() == GLFW.GLFW_KEY_ENTER || event.getKeyCode() == GLFW.GLFW_KEY_KP_ENTER)
+        if ((event.getKeyCode() == InputConstants.KEY_RETURN || event.getKeyCode() == InputConstants.KEY_NUMPADENTER)
                 && !Models.Bank.isEditingMode()) {
             if (lastSearchWidget == null
                     || lastSearchWidget.getTextBoxInput().isEmpty()
@@ -341,7 +346,7 @@ public class ContainerSearchFeature extends Feature {
         ContainerUtils.clickOnSlot(
                 slot,
                 abstractContainerScreen.getMenu().containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                InputConstants.MOUSE_BUTTON_LEFT,
                 abstractContainerScreen.getMenu().getItems());
         awaitingAutoSearchUpdate = true;
     }

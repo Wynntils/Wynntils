@@ -5,6 +5,7 @@
 package com.wynntils.screens.wynntilsmenu;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
@@ -22,7 +23,7 @@ import com.wynntils.screens.lootrunpaths.WynntilsLootrunPathsScreen;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.WaypointManagementScreen;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
-import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
+import com.wynntils.screens.settings.WynntilsFeaturesSettingsScreen;
 import com.wynntils.screens.statistics.WynntilsStatisticsScreen;
 import com.wynntils.screens.wynntilsmenu.widgets.WynntilsMenuButton;
 import com.wynntils.utils.colors.CommonColors;
@@ -47,7 +48,6 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     private static final int BUTTON_SIZE = 30;
@@ -62,7 +62,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     // This makes sure we "save" our status on the settings & overlay screen, and we reopen it in the same state
     private static final Screen overlayScreenInstance = OverlaySelectionScreen.create();
-    private static final Screen settingsScreenInstance = WynntilsBookSettingsScreen.create(null);
+    private static final Screen settingsScreenInstance = WynntilsFeaturesSettingsScreen.create(null);
 
     private WynntilsMenuScreen() {
         super(Component.translatable("screens.wynntils.wynntilsMenu.name"));
@@ -452,7 +452,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (this.hovered == null) return false;
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             this.hovered.getClickAction().run();
         }
 

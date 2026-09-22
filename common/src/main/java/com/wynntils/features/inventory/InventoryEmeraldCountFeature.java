@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.inventory;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
@@ -32,12 +33,12 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
+import java.util.List;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class InventoryEmeraldCountFeature extends Feature {
@@ -65,7 +66,11 @@ public class InventoryEmeraldCountFeature extends Feature {
     private final Config<Boolean> smartEmeraldPouchRendering = new Config<>(true);
 
     public InventoryEmeraldCountFeature() {
-        super(ProfileDefault.onlyDefault());
+        super(
+                ProfileDefault.onlyDefault(),
+                List.of(
+                        ConfigDependency.functionality(Models.Emerald.countEmeralds),
+                        ConfigDependency.customization(Models.Emerald.recountInterval)));
     }
 
     @SubscribeEvent
@@ -164,7 +169,7 @@ public class InventoryEmeraldCountFeature extends Feature {
         final int emeraldTextOffsetX = textDisplaySide.get() == TextDisplaySide.LEFT ? 1 : -1;
 
         String emeraldText;
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+        if (KeyboardUtils.isKeyDown(InputConstants.KEY_LSHIFT)) {
             emeraldText = emeralds + EmeraldUnits.EMERALD.getSymbol();
         } else {
             emeraldText = Models.Emerald.getFormattedString(emeralds, showZerosInEmeraldCount.get());
@@ -234,7 +239,7 @@ public class InventoryEmeraldCountFeature extends Feature {
 
     private String[] getRenderableEmeraldAmounts(int emeralds) {
         String[] emeraldAmounts = new String[4];
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
+        if (KeyboardUtils.isKeyDown(InputConstants.KEY_LSHIFT)) {
             emeraldAmounts[0] = StringUtils.formatAmount(emeralds);
             emeraldAmounts[1] = StringUtils.formatAmount(emeralds / 64d);
             emeraldAmounts[2] = StringUtils.formatAmount(emeralds / 4096d);

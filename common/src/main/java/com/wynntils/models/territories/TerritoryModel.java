@@ -15,6 +15,8 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.models.items.items.gui.TerritoryItem;
@@ -22,6 +24,7 @@ import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.TerritoryConnectionType;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
 import com.wynntils.services.map.pois.TerritoryPoi;
+import com.wynntils.utils.TaskUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -35,7 +38,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -53,6 +55,9 @@ public final class TerritoryModel extends Model {
             .registerTypeHierarchyAdapter(TerritoryProfile.class, new TerritoryProfile.TerritoryDeserializer())
             .create();
 
+    @Persisted
+    public final Config<Boolean> lookupApiInfo = new Config<>(true);
+
     // This is territory POIs as returned by the advancement from Wynncraft
     private final Map<String, TerritoryPoi> territoryPoiMap = new ConcurrentHashMap<>();
 
@@ -63,7 +68,8 @@ public final class TerritoryModel extends Model {
     private Set<TerritoryPoi> allTerritoryPois = new HashSet<>();
 
     private ScheduledFuture<?> scheduledFuture;
-    private final ScheduledExecutorService timerExecutor = new ScheduledThreadPoolExecutor(1);
+    private final ScheduledExecutorService timerExecutor =
+            TaskUtils.createSingleThreadScheduledExecutor("Wynntils-territory-%d");
     private long lastGuildUpdate = 0;
 
     // Use Athena by default for territories, but after 3 failures switch to the API
@@ -230,6 +236,8 @@ public final class TerritoryModel extends Model {
     }
 
     private void updateTerritoryProfileMap() {
+        if (!lookupApiInfo.get()) return;
+
         // If the player is not in a guild, we don't need to update the territory data as often
         if (!Models.Guild.isInGuild() && System.currentTimeMillis() - lastGuildUpdate < NO_GUILD_TERRITORY_UPDATE_MS) {
             return;

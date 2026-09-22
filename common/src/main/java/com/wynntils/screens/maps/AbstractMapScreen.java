@@ -328,16 +328,17 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+        if (event.key() == InputConstants.KEY_ESCAPE) {
             this.onClose();
             return true;
         }
-        if (event.key() == GLFW.GLFW_KEY_EQUAL || event.key() == GLFW.GLFW_KEY_KP_ADD) {
+        if (event.key() == InputConstants.KEY_EQUALS || event.key() == InputConstants.KEY_ADD) {
             // Take steps of 2 to make it easier to zoom in and out
             adjustZoomLevel(2);
             return true;
         }
-        if (event.key() == GLFW.GLFW_KEY_MINUS || event.key() == GLFW.GLFW_KEY_KP_SUBTRACT) {
+        // InputConstants does not have a mapping for KEY_KP_SUBTRACT
+        if (event.key() == InputConstants.KEY_MINUS || event.key() == GLFW.GLFW_KEY_KP_SUBTRACT) {
             // Take steps of 2 to make it easier to zoom in and out
             adjustZoomLevel(-2);
             return true;
@@ -364,7 +365,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         if (previousScreen.isEmpty()) {
             super.onClose();
         } else {
-            McUtils.mc().setScreen(previousScreen.get());
+            McUtils.setScreen(previousScreen.get());
         }
     }
 
@@ -484,6 +485,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected void renderCursor(
             GuiGraphics guiGraphics, float pointerScale, CustomColor pointerColor, PointerType pointerType) {
+        if (McUtils.player() == null) return;
+
         double pX = McUtils.player().getX();
         double pZ = McUtils.player().getZ();
 
@@ -548,6 +551,11 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     protected void centerMapAroundPlayer() {
+        if (McUtils.player() == null) {
+            centerMapOnWorld();
+            return;
+        }
+
         updateMapCenter(
                 (float) McUtils.player().getX(), (float) McUtils.player().getZ());
     }
@@ -560,6 +568,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     protected boolean isPlayerInsideMainArea() {
+        if (McUtils.player() == null) return false;
+
         return MathUtils.isInside(
                 (int) McUtils.player().getX(), (int) McUtils.player().getZ(), MIN_X, MAX_X, MIN_Z, MAX_Z);
     }

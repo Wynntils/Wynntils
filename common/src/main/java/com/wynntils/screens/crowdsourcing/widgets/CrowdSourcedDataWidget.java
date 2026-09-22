@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.crowdsourcing.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.crowdsource.type.CrowdSourcedDataType;
 import com.wynntils.core.text.StyledText;
@@ -32,7 +33,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipProvider {
     private static final Pair<CustomColor, CustomColor> BUTTON_COLOR =
@@ -84,7 +84,7 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             if (Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType) == OptionalBoolean.TRUE) {
                 Managers.Feature.getFeatureInstance(DataCrowdSourcingFeature.class)
                         .crowdSourcedDataTypeEnabledMap
@@ -110,7 +110,7 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
             return true;
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             OptionalBoolean dataCollectionState =
                     Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType);
             if (dataCollectionState == OptionalBoolean.NULL) {

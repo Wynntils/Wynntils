@@ -20,6 +20,7 @@ import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.DestroyBlockEvent;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.type.ClassType;
@@ -123,6 +124,11 @@ public class QuickCastFeature extends Feature {
     public void onWorldChange(WorldStateEvent event) {
         clearInputSelectionState();
         Models.SpellCaster.clear();
+    }
+
+    @SubscribeEvent
+    public void onScreenInit(ScreenInitEvent.Pre event) {
+        clearInputSelectionState();
     }
 
     @SubscribeEvent

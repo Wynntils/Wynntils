@@ -10,11 +10,12 @@ import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
-import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
 import com.wynntils.utils.mc.McUtils;
+import java.util.List;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
@@ -23,13 +24,15 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.UTILITIES)
 public class BuildLoadoutsFeature extends Feature {
     public BuildLoadoutsFeature() {
-        super(new ProfileDefault.Builder()
-                .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
-                .build());
+        super(
+                new ProfileDefault.Builder()
+                        .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE, ConfigProfile.MINIMAL)
+                        .build(),
+                List.of(ConfigDependency.functionality(Models.Account.queryRankInfoOnJoin)));
     }
 
     @SubscribeEvent
-    public void onCharacterInfoScreenOpened(ScreenOpenedEvent.Post e) {
+    public void onCharacterInfoScreenInit(ScreenInitEvent.Post e) {
         if (!(e.getScreen() instanceof ContainerScreen screen)) return;
         if (!(Models.Container.getCurrentContainer() instanceof CharacterInfoContainer)) return;
 

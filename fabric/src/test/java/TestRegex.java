@@ -8,6 +8,7 @@ import com.wynntils.features.inventory.PersonalStorageUtilitiesFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.models.abilities.bossbars.MantraBar;
 import com.wynntils.models.abilities.bossbars.OphanimBar;
 import com.wynntils.models.abilities.label.ArcherCrowParser;
 import com.wynntils.models.abilities.label.ArcherHoundParser;
@@ -635,6 +636,17 @@ public class TestRegex {
     }
 
     @Test
+    public void MantraBar_MANTRA_BAR_PATTERN() {
+        PatternTester p = new PatternTester(MantraBar.class, "MANTRA_BAR_PATTERN");
+        p.shouldMatch(
+                "§#f4557dff\uE024 Lunatic §f+114%§8 | §#99e9ffff\uE022 Heretic §a+200%§8 | §#ffc251ff\uE023 Fanatic §f+58%");
+        p.shouldMatch(
+                "§#f4557dff\uE024 Lunatic §a+200%§8 | §#99e9ffff\uE022 Heretic §a+200%§8 | §#ffc251ff\uE023 Fanatic §f+12%");
+        p.shouldMatch(
+                "§#f4557dff\uE024 Lunatic §a+200%§8 | §#99e9ffff\uE022 Heretic §a+200%§8 | §#ffc251ff\uE023 Fanatic §c+0%");
+    }
+
+    @Test
     public void MessageFilterFeature_PARTY_FINDER() {
         PatternTester p = new PatternTester(MessageFilterFeature.class, "PARTY_FINDER");
         p.shouldMatch(
@@ -984,6 +996,19 @@ public class TestRegex {
         p.shouldMatch("§7 - §f8 §7x §f127§7² §8(1²½ 63²)");
         p.shouldMatch("§7 - §f308 §7x §f§m16§7§m²§b ✮ 15§3² §8(15²)");
         p.shouldMatch("§7 - §f308 §7x §f§m16§7§m²§b ✮ 15§3² §8(15²)");
+    }
+
+    @Test
+    public void TradeMarketModel_SELL_ITEM_NAME_PATTERN() {
+        PatternTester p = new PatternTester(TradeMarketModel.class, "SELL_ITEM_NAME_PATTERN");
+        // Regular items
+        p.shouldMatch("\uDAFC\uDC00§bTorrential Tide\uDAFC\uDC00");
+        p.shouldMatch("\uDAFC\uDC00§bX-PM4 Deadlock\uDAFC\uDC00");
+        // Items without ITEM_NAME_MARKER
+        p.shouldMatch("§#82eff4ffAbility Shard");
+        p.shouldMatch("§4Broken Galleon'sÀÀÀGraveyard Key");
+        // Items without color code
+        p.shouldMatch("\uDAFC\uDC00Wyvern Reins\uDAFC\uDC00");
     }
 
     @Test

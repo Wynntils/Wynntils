@@ -441,17 +441,15 @@ public class WynntilsCommand extends Command {
         McUtils.sendWynntilsPrefixMessage(
                 Component.translatable("command.wynntils.rescan.startText").withColor(CommonColors.YELLOW.asInt()));
 
-        McUtils.player().closeContainer();
-
         // This should probably be changed to a function interface if more were to be added to it.
         Managers.TickScheduler.scheduleNextTick(() -> {
             Models.Character.scanCharacterInfo(() -> {
                 Models.Account.scanRankInfo(true, () -> {
                     Models.Aspect.clearEquippedAspectsAndRescan(
-                            onStatus -> {},
+                            WynntilsMod::info,
                             McUtils::sendErrorToClient,
                             aspectComplete -> Models.AbilityTree.clearUnlockedAbilitesAndRescan(
-                                    onStatus -> {},
+                                    WynntilsMod::info,
                                     McUtils::sendErrorToClient,
                                     onComplete -> McUtils.sendWynntilsPrefixMessage(
                                             Component.translatable("command.wynntils.rescan.endText")

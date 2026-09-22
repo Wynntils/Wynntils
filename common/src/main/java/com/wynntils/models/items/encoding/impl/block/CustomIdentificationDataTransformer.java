@@ -10,6 +10,7 @@ import com.wynntils.models.items.encoding.data.CustomIdentificationsData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
 import com.wynntils.models.items.encoding.type.DataTransformerType;
 import com.wynntils.models.items.encoding.type.ItemTransformingVersion;
+import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.UnsignedByteUtils;
@@ -22,10 +23,17 @@ import java.util.List;
 import java.util.Optional;
 
 public class CustomIdentificationDataTransformer extends DataTransformer<CustomIdentificationsData> {
+    private static final int PERFECT_INTERNAL_ROLL_FLAG = 1;
+    private static final int ICON_PREFIX_FLAG = 1 << 1;
+    private static final int VANILLA_METER_FLAG = 1 << 2;
+    private static final char EMPTY_VANILLA_METER = '\uE000';
+    private static final char FULL_VANILLA_METER = '\uE023';
+
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, CustomIdentificationsData data) {
         return switch (version) {
             case VERSION_1, VERSION_2 -> encodeCustomIdentificationData(data);
+            case VERSION_3 -> encodeCustomIdentificationDataV3(data);
         };
     }
 
@@ -34,6 +42,7 @@ public class CustomIdentificationDataTransformer extends DataTransformer<CustomI
             ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
             case VERSION_1, VERSION_2 -> decodeCustomIdentificationData(byteReader);
+            case VERSION_3 -> decodeCustomIdentificationDataV3(byteReader);
         };
     }
 
@@ -97,5 +106,78 @@ public class CustomIdentificationDataTransformer extends DataTransformer<CustomI
         }
 
         return ErrorOr.of(new CustomIdentificationsData(possibleValues));
+    }
+
+    private ErrorOr<UnsignedByte[]> encodeCustomIdentificationDataV3(CustomIdentificationsData data) {
+        if (data.identifications().size() > 255) {
+            return ErrorOr.error("Cannot encode more than 255 crafted identifications!");
+        }
+
+        List<UnsignedByte> bytes = new ArrayList<>();
+        bytes.add(UnsignedByte.of((byte) data.identifications().size()));
+
+        for (StatActualValue identification : data.identifications()) {
+            Optional<Integer> idOpt = Models.Stat.getIdForStatType(identification.statType());
+            if (idOpt.isEmpty()) {
+                WynntilsMod.warn(
+                        "No ID found for stat type " + identification.statType().getApiName());
+                return ErrorOr.error("Unable to encode stat type: "
+                        + identification.statType().getDisplayName());
+            }
+
+            bytes.add(UnsignedByte.of((byte) idOpt.get().intValue()));
+            bytes.addAll(List.of(UnsignedByteUtils.encodeVariableSizedInteger(identification.value())));
+
+            int flags = 0;
+            if (identification.perfectInternalRoll()) flags |= PERFECT_INTERNAL_ROLL_FLAG;
+            if (identification.hasIconPrefix()) flags |= ICON_PREFIX_FLAG;
+            if (identification.vanillaMeter().isPresent()) flags |= VANILLA_METER_FLAG;
+            bytes.add(UnsignedByte.of((byte) flags));
+
+            if (identification.vanillaMeter().isPresent()) {
+                char vanillaMeter = identification.vanillaMeter().get();
+                if (vanillaMeter < EMPTY_VANILLA_METER || vanillaMeter > FULL_VANILLA_METER) {
+                    return ErrorOr.error("Invalid vanilla identification meter: " + vanillaMeter);
+                }
+                bytes.add(UnsignedByte.of((byte) (vanillaMeter - EMPTY_VANILLA_METER)));
+            }
+        }
+
+        return ErrorOr.of(bytes.toArray(new UnsignedByte[0]));
+    }
+
+    private ErrorOr<CustomIdentificationsData> decodeCustomIdentificationDataV3(ArrayReader<UnsignedByte> byteReader) {
+        int identificationCount = byteReader.read().value();
+        List<StatActualValue> identifications = new ArrayList<>();
+
+        for (int i = 0; i < identificationCount; i++) {
+            int id = byteReader.read().value();
+            Optional<StatType> statTypeOpt = Models.Stat.getStatTypeForId(id);
+            if (statTypeOpt.isEmpty()) {
+                WynntilsMod.warn("No stat found for id " + id);
+                return ErrorOr.error("Unable to decode stat with id " + id);
+            }
+
+            int value = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
+            int flags = byteReader.read().value();
+            Optional<Character> vanillaMeter = Optional.empty();
+            if ((flags & VANILLA_METER_FLAG) != 0) {
+                int meterOffset = byteReader.read().value();
+                if (meterOffset > FULL_VANILLA_METER - EMPTY_VANILLA_METER) {
+                    return ErrorOr.error("Invalid vanilla identification meter offset: " + meterOffset);
+                }
+                vanillaMeter = Optional.of((char) (EMPTY_VANILLA_METER + meterOffset));
+            }
+
+            identifications.add(new StatActualValue(
+                    statTypeOpt.get(),
+                    value,
+                    (flags & PERFECT_INTERNAL_ROLL_FLAG) != 0,
+                    RangedValue.NONE,
+                    (flags & ICON_PREFIX_FLAG) != 0,
+                    vanillaMeter));
+        }
+
+        return ErrorOr.of(new CustomIdentificationsData(List.of(), identifications));
     }
 }

@@ -16,6 +16,7 @@ import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.event.TickEvent;
@@ -28,6 +29,7 @@ import com.wynntils.models.containers.type.BoundedContainerProperty;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.TomeItem;
+import com.wynntils.models.items.items.game.WardItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
@@ -70,6 +72,9 @@ public class ValuablesProtectionFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> tomesWarning = new Config<>(false);
+
+    @Persisted
+    private final Config<Boolean> wardsWarning = new Config<>(true);
 
     @Persisted
     private final Config<Integer> craftedBlacksmithLevel = new Config<>(0);
@@ -127,6 +132,18 @@ public class ValuablesProtectionFeature extends Feature {
     public void onSetSlot(SetSlotEvent.Post e) {
         if (!(McUtils.screen() instanceof ContainerScreen cs)) return;
 
+        updateWarnings(cs);
+    }
+
+    @SubscribeEvent
+    public void onScreenInit(ScreenInitEvent.Post event) {
+        if (event.isFirstInit()) return;
+        if (!(event.getScreen() instanceof ContainerScreen cs)) return;
+
+        updateWarnings(cs);
+    }
+
+    private void updateWarnings(ContainerScreen cs) {
         Container currentContainer = Models.Container.getCurrentContainer();
         if (currentContainer == null) return;
 
@@ -217,10 +234,13 @@ public class ValuablesProtectionFeature extends Feature {
             if (optItem.isEmpty()) return;
             WynnItem item = optItem.get();
 
-            // set a single flag for all the checks, first do high roll
-            boolean warnableItem = highRollWarningNPCs.get().getContainers().contains(TradeMarketSellContainer.class)
+            boolean warnableItem = wardsWarning.get() && item instanceof WardItem;
+
+            if (highRollWarningNPCs.get().getContainers().contains(TradeMarketSellContainer.class)
                     && item instanceof IdentifiableItemProperty<?, ?> identifiableItemProperty
-                    && identifiableItemProperty.getOverallPercentage() >= highRollThreshold.get();
+                    && identifiableItemProperty.getOverallPercentage() >= highRollThreshold.get()) {
+                warnableItem = true;
+            }
 
             if (item instanceof GearTierItemProperty gtip) {
                 if (mythicWarningNPCs.get().getContainers().contains(TradeMarketSellContainer.class)
@@ -238,21 +258,25 @@ public class ValuablesProtectionFeature extends Feature {
             slotsToWarn.add(TM_PRICE_SLOT);
 
             if (salePrice < lowestPrice * (tradeMarketPriceThreshold.get() / 100d)) {
-                ctrlHintTextWidget = new HintTextWidget(
-                        cs.width - cs.leftPos + 2,
-                        cs.height / 2,
-                        cs.leftPos,
-                        11,
-                        I18n.get(
-                                "feature.wynntils.valuablesProtection.ctrlClick",
-                                I18n.get("feature.wynntils.valuablesProtection.selling")),
-                        HorizontalAlignment.LEFT,
-                        CommonColors.WHITE);
-                cs.addRenderableOnly(ctrlHintTextWidget);
+                int hintTextY = cs.height / 2;
+                if (requireCtrlToSell.get()) {
+                    ctrlHintTextWidget = new HintTextWidget(
+                            cs.width - cs.leftPos + 2,
+                            hintTextY,
+                            cs.leftPos,
+                            11,
+                            I18n.get(
+                                    "feature.wynntils.valuablesProtection.ctrlClick",
+                                    I18n.get("feature.wynntils.valuablesProtection.selling")),
+                            HorizontalAlignment.LEFT,
+                            CommonColors.WHITE);
+                    cs.addRenderableOnly(ctrlHintTextWidget);
+                    hintTextY += 20;
+                }
 
                 tmHintTextWidgets.add(new HintTextWidget(
                         cs.width - cs.leftPos + 2,
-                        cs.height / 2 + 20,
+                        hintTextY,
                         cs.leftPos,
                         11,
                         I18n.get(
@@ -268,7 +292,7 @@ public class ValuablesProtectionFeature extends Feature {
                         CommonColors.LIGHT_GRAY));
                 tmHintTextWidgets.add(new HintTextWidget(
                         cs.width - cs.leftPos + 2,
-                        cs.height / 2 + 56,
+                        hintTextY + 36,
                         cs.leftPos,
                         11,
                         I18n.get("feature.wynntils.valuablesProtection.settingsHint"),

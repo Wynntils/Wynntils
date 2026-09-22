@@ -22,6 +22,7 @@ import com.wynntils.models.trademarket.type.TradeMarketState;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -39,7 +40,9 @@ public class TradeMarketPriceMatchFeature extends Feature {
     private long priceToSend = 0;
 
     public TradeMarketPriceMatchFeature() {
-        super(ProfileDefault.onlyDefault());
+        super(
+                ProfileDefault.onlyDefault(),
+                List.of(ConfigDependency.functionality(Models.Account.queryRankInfoOnJoin)));
     }
 
     @SubscribeEvent
@@ -98,14 +101,16 @@ public class TradeMarketPriceMatchFeature extends Feature {
         }
 
         if (priceCheckInfo.ask() != -1) {
-            int lowestAsk = priceCheckInfo.ask();
-            int taxedBid = (lowestAsk <= undercutBy.get()) ? 1 : lowestAsk - undercutBy.get();
-            int untaxedBid = Models.Emerald.getWithoutTax(taxedBid);
+            int lowestAsk = (priceCheckInfo.ask() == 0) ? priceCheckInfo.recommendedPrice() : priceCheckInfo.ask();
+            int undercut = undercutBy.get();
+            int taxedBid = (lowestAsk <= undercut) ? 1 : Math.max(lowestAsk - undercut, 1);
+            int untaxedBid = Models.Emerald.getWithoutTax(taxedBid) - undercut;
+            int finalBid = Models.Emerald.getWithTax(untaxedBid);
 
-            MutableComponent buttonTooltip = (undercutBy.get() == 0)
+            MutableComponent buttonTooltip = (undercut == 0)
                     ? Component.translatable("feature.wynntils.tradeMarketPriceMatch.lowestSellOfferMatchesTooltip")
                     : Component.translatable(
-                            "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferUndercutTooltip", undercutBy.get());
+                            "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferUndercutTooltip", undercut);
             buttonTooltip
                     .append(Component.literal("\n\n"))
                     .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.recommendedPrice")
@@ -119,7 +124,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
                     .append(Component.literal("\n"))
                     .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.totalPrice")
                             .withStyle(ChatFormatting.GOLD))
-                    .append(getPriceComponent(taxedBid));
+                    .append(getPriceComponent(finalBid));
 
             PriceButton priceButton = new PriceButton(
                     rightPos,

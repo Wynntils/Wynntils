@@ -5,6 +5,7 @@
 package com.wynntils.screens.base.widgets;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
@@ -33,7 +34,6 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import org.lwjgl.glfw.GLFW;
 
 public class TextInputBoxWidget extends AbstractWidget {
     private static final Component DEFAULT_TEXT =
@@ -206,7 +206,7 @@ public class TextInputBoxWidget extends AbstractWidget {
                 VerticalAlignment.MIDDLE,
                 false);
 
-        if (isHovered && tooltip != null) {
+        if (isHovered && tooltip != null && !tooltip.isEmpty()) {
             guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
         }
 
@@ -289,7 +289,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (this.isHovered) {
             McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_2) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 setTextBoxInput("");
                 setCursorAndHighlightPositions(0);
             } else {
@@ -381,7 +381,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+        if (event.key() == InputConstants.KEY_ESCAPE) {
             removeFocus();
             return true;
         }
@@ -416,7 +416,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true;
         }
 
-        if (event.key() == GLFW.GLFW_KEY_BACKSPACE) {
+        if (event.key() == InputConstants.KEY_BACKSPACE) {
             if (textBoxInput.isEmpty()) {
                 return true;
             }
@@ -439,7 +439,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true;
         }
 
-        if (event.key() == GLFW.GLFW_KEY_DELETE) {
+        if (event.key() == InputConstants.KEY_DELETE) {
             if (textBoxInput.isEmpty()) {
                 return true;
             }
@@ -460,7 +460,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true;
         }
 
-        if (event.key() == GLFW.GLFW_KEY_LEFT) {
+        if (event.key() == InputConstants.KEY_LEFT) {
             if (hasHighlighted() && !event.hasShiftDown() && !event.hasControlDown()) {
                 setCursorAndHighlightPositions(Math.min(cursorPosition, highlightPosition));
                 return true;
@@ -487,7 +487,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true; // no need to call onUpdateConsumer here because we aren't changing the text
         }
 
-        if (event.key() == GLFW.GLFW_KEY_RIGHT) {
+        if (event.key() == InputConstants.KEY_RIGHT) {
             if (event.hasControlDown() && event.hasShiftDown()) {
                 // this should move the cursor all the way right and highlight everything
                 setCursorPosition(textBoxInput.length());
@@ -509,12 +509,12 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true; // no need to call onUpdateConsumer here because we aren't changing the text
         }
 
-        if (event.key() == GLFW.GLFW_KEY_HOME) {
+        if (event.key() == InputConstants.KEY_HOME) {
             setCursorAndHighlightPositions(0);
             return true;
         }
 
-        if (event.key() == GLFW.GLFW_KEY_END) {
+        if (event.key() == InputConstants.KEY_END) {
             setCursorAndHighlightPositions(textBoxInput.length());
             return true;
         }

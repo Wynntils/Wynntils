@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.trademarket;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -22,7 +23,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ActionSpeed;
 import com.wynntils.utils.wynn.ContainerUtils;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketDefaultSortOrderFeature extends Feature {
@@ -56,7 +56,7 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
         // Find the shortest path from current sort order to the one we want to apply
         // Math.abs(path) is path's length, path < 0 -> right click else left click
         final int path1 = defaultSortOrder.get().ordinal() - currentSortOrder.ordinal();
-        final int path2 = path1 + TradeMarketSortOrder.LENGTH * (path1 > 0 ? 1 : -1);
+        final int path2 = path1 + TradeMarketSortOrder.LENGTH * (path1 > 0 ? -1 : 1);
         if (Math.abs(path1) < Math.abs(path2)) {
             clickCountdown = Math.abs(path1);
             shouldRightClick = path1 < 0;
@@ -84,7 +84,7 @@ public class TradeMarketDefaultSortOrderFeature extends Feature {
         ContainerUtils.clickOnSlot(
                 TradeMarketModel.SORT_ORDER_SLOT,
                 McUtils.containerMenu().containerId,
-                shouldRightClick ? GLFW.GLFW_MOUSE_BUTTON_RIGHT : GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                shouldRightClick ? InputConstants.MOUSE_BUTTON_RIGHT : InputConstants.MOUSE_BUTTON_LEFT,
                 McUtils.containerMenu().getItems());
 
         clickCountdown -= 1;

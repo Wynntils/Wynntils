@@ -5,6 +5,7 @@
 package com.wynntils.screens.itemfilter.widgets;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.itemfilter.ItemFilterScreen;
@@ -29,7 +30,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class ProviderButton extends WynntilsButton {
     private static final CustomColor ENABLED_COLOR = new CustomColor(0, 220, 0, 255);
@@ -112,17 +112,17 @@ public class ProviderButton extends WynntilsButton {
         }
 
         if (filterScreen.inSortMode()) {
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                 filterScreen.addSort(new SortInfo(SortDirection.ASCENDING, provider));
-            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 filterScreen.removeSort(provider);
             }
         } else {
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                 filterScreen.setSelectedProvider(provider);
-            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 filterScreen.setFiltersForProvider(provider, null);
-            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            } else if (event.button() == InputConstants.MOUSE_BUTTON_MIDDLE) {
                 AnyStatFilters.AbstractAnyStatFilter anyFilter = ANY_MAP.getOrDefault(provider.getType(), null);
 
                 if (anyFilter != null) {

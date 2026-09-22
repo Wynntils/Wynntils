@@ -34,7 +34,7 @@ public abstract class FabricGuiGraphicsMixin {
             ClientTooltipPositioner positioner,
             Identifier background,
             CallbackInfo ci) {
-        MixinHelper.post(new TooltipRenderEvent.Pre((GuiGraphics) (Object) this));
+        MixinHelper.post(new TooltipRenderEvent.Pre((GuiGraphics) (Object) this, components));
     }
 
     @WrapOperation(

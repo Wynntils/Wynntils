@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.wynntils;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
@@ -32,15 +33,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.WYNNTILS)
 public class WynntilsTelemetryFeature extends Feature {
     private static final int TELEMETRY_PROMPT_DELAY_LAUNCHES = 3;
     private static final long TELEMETRY_PROMPT_DISPLAY_TIME = 15000L;
     private static final long TELEMETRY_CONFIRMATION_DISPLAY_TIME = 1000L;
-    private static final int TELEMETRY_ENABLE_KEY = GLFW.GLFW_KEY_LEFT_BRACKET;
-    private static final int TELEMETRY_DISABLE_KEY = GLFW.GLFW_KEY_RIGHT_BRACKET;
+    private static final int TELEMETRY_ENABLE_KEY = InputConstants.KEY_LBRACKET;
+    private static final int TELEMETRY_DISABLE_KEY = InputConstants.KEY_RBRACKET;
 
     @Persisted
     private final Config<OptionalBoolean> crashReports = new Config<>(OptionalBoolean.NULL);
@@ -109,13 +109,13 @@ public class WynntilsTelemetryFeature extends Feature {
                 new SystemToast.SystemToastId(TELEMETRY_PROMPT_DISPLAY_TIME),
                 Component.literal(this.getTranslatedName()),
                 toastMessage);
-        McUtils.mc().getToastManager().addToast(telemetryPromptToast);
+        McUtils.toastManager().addToast(telemetryPromptToast);
         promptExpire = System.currentTimeMillis() + TELEMETRY_PROMPT_DISPLAY_TIME;
     }
 
     @SubscribeEvent
     public void onKeyInput(KeyInputEvent event) {
-        if (event.getAction() != GLFW.GLFW_PRESS) return;
+        if (event.getAction() != InputConstants.PRESS) return;
         if (McUtils.screen() != null) return;
         if (crashReports.get() != OptionalBoolean.NULL) return;
         if (!isPromptActive()) return;

@@ -1,26 +1,17 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats.type;
 
 import com.wynntils.utils.type.RangedValue;
 import java.math.RoundingMode;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 // The key is strictly not necessary, but is internally useful
 // The "internalRollName" is what is used in the json lore of other player's items
 public abstract class StatType {
-    // These ranges are used everywhere, except charms
-    private static final List<RangedValue> STAR_INTERNAL_ROLL_RANGES = List.of(
-            RangedValue.of(30, 100), // 0 stars
-            RangedValue.of(101, 124), // 1 star
-            RangedValue.of(125, 129), // 2 stars
-            RangedValue.of(130, 130) // 3 stars
-            );
-
     private final String key;
     private final String displayName;
     private final String apiName;
@@ -81,14 +72,12 @@ public abstract class StatType {
                         RangedValue.of(30, 130),
                         calculateAsInverted() ? RoundingMode.HALF_DOWN : RoundingMode.HALF_UP,
                         Optional.of(1),
-                        Optional.empty(),
-                        treatAsInverted() ? List.of() : STAR_INTERNAL_ROLL_RANGES)
+                        Optional.empty())
                 : new StatCalculationInfo(
                         RangedValue.of(70, 130),
                         calculateAsInverted() ? RoundingMode.HALF_UP : RoundingMode.HALF_DOWN,
                         Optional.empty(),
-                        Optional.of(-1),
-                        List.of());
+                        Optional.of(-1));
     }
 
     /**

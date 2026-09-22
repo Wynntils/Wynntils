@@ -52,6 +52,14 @@ public class SilencerFeature extends Feature {
         super(ProfileDefault.onlyDefault());
     }
 
+    @Override
+    public void onDisable() {
+        if (isSilencerEnabled) {
+            restoreOriginalVolume();
+            isSilencerEnabled = false;
+        }
+    }
+
     @SubscribeEvent
     public void onDisconnect(WynncraftConnectionEvent.Disconnected event) {
         if (isSilencerEnabled) {

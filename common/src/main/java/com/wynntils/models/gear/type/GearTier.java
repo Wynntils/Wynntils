@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 public enum GearTier {
     NORMAL(ChatFormatting.WHITE, 0, 0.0f, CustomColor.fromInt(0xe0e0e0)),
@@ -91,6 +92,10 @@ public enum GearTier {
 
     public String getName() {
         return StringUtils.capitalizeFirst(name().toLowerCase(Locale.ROOT));
+    }
+
+    public Identifier getTooltipStyle(boolean shiny) {
+        return Identifier.withDefaultNamespace(apiName + (shiny ? "_shiny" : ""));
     }
 
     public String getApiName() {

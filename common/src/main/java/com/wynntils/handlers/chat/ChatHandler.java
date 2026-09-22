@@ -38,7 +38,7 @@ import net.neoforged.bus.api.SubscribeEvent;
  * stage).
  */
 public final class ChatHandler extends Handler {
-    private static final int TICKS_PER_EXECUTE = 100;
+    private static final int TICKS_PER_EXECUTE = 20;
 
     private final LinkedHashSet<QueuedMessage> chatQueue = new LinkedHashSet<>();
     private int chatQueueTicks = 0;

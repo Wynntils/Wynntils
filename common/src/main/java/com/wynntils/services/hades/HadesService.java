@@ -10,6 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
@@ -39,6 +40,7 @@ import com.wynntils.services.hades.event.HadesEvent;
 import com.wynntils.services.hades.type.GearShareOptions;
 import com.wynntils.services.hades.type.PlayerStatus;
 import com.wynntils.utils.EncodedByteBuffer;
+import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
@@ -51,7 +53,6 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
@@ -69,6 +70,9 @@ public final class HadesService extends Service {
     private static final int MS_PER_PING = 1000;
 
     private static final EncodingSettings HADES_ENCODING_SETTINGS = new EncodingSettings(false, false);
+
+    @Persisted
+    public final Config<Boolean> connectToHades = new Config<>(true);
 
     private final HadesUserRegistry userRegistry = new HadesUserRegistry();
 
@@ -113,6 +117,8 @@ public final class HadesService extends Service {
     }
 
     private synchronized void connect() {
+        if (!connectToHades.get()) return;
+
         // Try to log in to Hades, if we're not already connected or trying to connect
         if (!isConnected() && (connectionFuture == null || connectionFuture.isDone())) {
             connectionFuture = CompletableFuture.runAsync(this::tryCreateConnection);
@@ -152,7 +158,7 @@ public final class HadesService extends Service {
 
         WynntilsMod.info("Starting Hades Ping Scheduler Task");
 
-        pingScheduler = Executors.newSingleThreadScheduledExecutor();
+        pingScheduler = TaskUtils.createSingleThreadScheduledExecutor("Wynntils-hades-ping-%d");
         pingScheduler.scheduleAtFixedRate(this::sendPing, 0, MS_PER_PING, TimeUnit.MILLISECONDS);
     }
 
@@ -211,6 +217,8 @@ public final class HadesService extends Service {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
+        if (!connectToHades.get()) return;
+
         if (event.getNewState() != WorldState.NOT_CONNECTED && Services.WynntilsAccount.isLoggedIn()) {
             connect();
         }

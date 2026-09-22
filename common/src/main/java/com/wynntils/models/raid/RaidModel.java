@@ -11,6 +11,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.mod.TickSchedulerManager.ScheduledTask;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
@@ -42,6 +43,8 @@ import com.wynntils.models.raid.scoreboard.RaidScoreboardPart;
 import com.wynntils.models.raid.type.HistoricRaidInfo;
 import com.wynntils.models.raid.type.RaidInfo;
 import com.wynntils.models.raid.type.RaidRoomInfo;
+import com.wynntils.models.raid.type.SavableRaidInfo;
+import com.wynntils.models.raid.type.SavableRaidRoomInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.MathUtils;
@@ -83,11 +86,14 @@ public final class RaidModel extends Model {
     private static final Pattern RAID_CHOOSE_BUFF_PATTERN = Pattern.compile(
             "§#d6401eff(\\uE009\\uE002|\\uE001) §#fa7f63ff((§o)?(\\w+))§#d6401eff has chosen the §#fa7f63ff(\\w+ \\w+)§#d6401eff buff!");
 
-    private static final int RAID_RESUME_TIMEOUT_TICKS = 100;
+    private static final int RAID_RESUME_TIMEOUT_TICKS = 200;
 
     private static final ParasiteOvertakenBar PARASITE_OVERTAKEN_BAR = new ParasiteOvertakenBar();
     private static final Pattern PARASITE_OVERTAKEN_PATTERN = Pattern.compile(
             "§#d6401eff(?:\uE009\uE002|\uE001) §#fa7f63ff(?<player>.+?)§#d6401eff has been overtaken! Keep attacking §#ffc85fffThe Parasite§#d6401eff to save them!");
+
+    @Persisted
+    public final Config<Boolean> trackRaids = new Config<>(true);
 
     @Persisted
     private final Storage<Map<String, Long>> bestTimes = new Storage<>(new TreeMap<>());
@@ -112,6 +118,9 @@ public final class RaidModel extends Model {
 
     @Persisted
     public final Storage<List<HistoricRaidInfo>> historicRaids = new Storage<>(new ArrayList<>());
+
+    @Persisted
+    private final Storage<SavableRaidInfo> savedRaidInfo = new Storage<>(SavableRaidInfo.EMPTY);
 
     private static final List<RaidKind> RAIDS = new ArrayList<>();
     private static final RaidScoreboardPart RAID_SCOREBOARD_PART = new RaidScoreboardPart();
@@ -148,6 +157,8 @@ public final class RaidModel extends Model {
 
     @SubscribeEvent
     public void onTitle(TitleSetTextEvent event) {
+        if (!trackRaids.get()) return;
+
         Component component = event.getComponent();
         StyledText styledText = StyledText.fromComponent(component);
 
@@ -155,9 +166,13 @@ public final class RaidModel extends Model {
             RaidKind raidKind = getRaidFromTitle(styledText);
 
             if (raidKind != null) {
+                cancelPendingResume();
+
                 currentRaid = new RaidInfo(raidKind);
                 completedCurrentChallenge = false;
                 parasiteOvertaken = false;
+
+                persistRaidState();
 
                 WynntilsMod.postEvent(new RaidStartedEvent(raidKind));
             }
@@ -184,6 +199,8 @@ public final class RaidModel extends Model {
             expectedNumAspectPulls.store(Integer.parseInt(aspectPullMatcher.group(1)));
             return;
         }
+
+        if (!trackRaids.get()) return;
 
         StyledText unwrapped = StyledTextUtils.unwrap(styledText).stripAlignment();
 
@@ -234,7 +251,19 @@ public final class RaidModel extends Model {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (currentRaid == null || event.getNewState() != WorldState.WORLD) return;
+        if (!trackRaids.get()) return;
+
+        if (event.getNewState() == WorldState.WORLD && event.isFirstJoinWorld()) {
+            if (event.getOldState() == WorldState.INTERIM) {
+                if (currentRaid == null) {
+                    tryRestoreRaidState();
+                }
+            } else {
+                savedRaidInfo.store(SavableRaidInfo.EMPTY);
+            }
+        }
+
+        if (currentRaid == null) return;
 
         awaitingRaidResume = true;
 
@@ -265,16 +294,35 @@ public final class RaidModel extends Model {
     private void interruptRaid() {
         if (currentRaid == null) return;
 
-        currentRaid = null;
-        completedCurrentChallenge = false;
-        timeLeft = 0;
-        challenges = CappedValue.EMPTY;
-        partyRaidBuffs.clear();
-        parasiteOvertaken = false;
+        clearRaidState();
 
         McUtils.sendWynntilsPrefixMessage(Component.literal(
                         "Raid tracking has been interrupted, you will not be able to see progress for the current raid")
                 .withStyle(ChatFormatting.DARK_RED));
+    }
+
+    private void tryRestoreRaidState() {
+        SavableRaidInfo backup = savedRaidInfo.get();
+        if (backup.raidName().isEmpty()) return;
+
+        RaidInfo restored = fromSavableRaidInfo(backup);
+        if (restored == null) {
+            savedRaidInfo.store(SavableRaidInfo.EMPTY);
+            return;
+        }
+
+        currentRaid = restored;
+        inBuffRoom = false;
+        inIntermissionRoom = false;
+        parasiteOvertaken = false;
+
+        RaidRoomInfo currentRoom = restored.getCurrentRoom();
+        completedCurrentChallenge = currentRoom != null && currentRoom.getRoomEndTime() != -1L;
+
+        WynntilsMod.info(
+                "[RaidModel] Restored in-progress raid \"" + backup.raidName() + "\" from backup after rejoin.");
+
+        WynntilsMod.postEvent(new RaidStartedEvent(restored.getRaidKind()));
     }
 
     // Process raid rewards
@@ -446,15 +494,30 @@ public final class RaidModel extends Model {
     public void tryStartChallenge(StyledText challengeLine) {
         if (currentRaid == null) return;
 
-        int challengeNum = currentRaid.completedChallengeCount() + 1;
+        String line = challengeLine.getStringWithoutFormatting();
+        int totalRooms = currentRaid.getRaidKind().getChallengeCount()
+                + currentRaid.getRaidKind().getBossCount();
 
-        String roomName =
-                currentRaid.getRaidKind().getChallengeName(challengeNum, challengeLine.getStringWithoutFormatting());
+        int challengeNum = -1;
+        String roomName = null;
 
-        if (roomName.isEmpty()) return;
+        for (int n = 1; n <= totalRooms; n++) {
+            String candidate = currentRaid.getRaidKind().getChallengeName(n, line);
+            if (!candidate.isEmpty()) {
+                challengeNum = n;
+                roomName = candidate;
+                break;
+            }
+        }
+
+        if (challengeNum == -1) return;
+        if (currentRaid.getCurrentChallengeNum() == challengeNum) return;
 
         inIntermissionRoom = false;
+        completedCurrentChallenge = false;
         currentRaid.startChallenge(challengeNum, roomName);
+
+        persistRaidState();
 
         WynntilsMod.postEvent(new RaidChallengeEvent.Started(currentRaid));
     }
@@ -468,6 +531,8 @@ public final class RaidModel extends Model {
             currentRaid.completeCurrentChallenge();
 
             completedCurrentChallenge = true;
+
+            persistRaidState();
 
             WynntilsMod.postEvent(new RaidChallengeEvent.Completed(currentRaid));
         }
@@ -499,12 +564,7 @@ public final class RaidModel extends Model {
                         System.currentTimeMillis()));
         historicRaids.touched();
 
-        currentRaid = null;
-        completedCurrentChallenge = false;
-        timeLeft = 0;
-        challenges = CappedValue.EMPTY;
-        partyRaidBuffs.clear();
-        parasiteOvertaken = false;
+        clearRaidState();
     }
 
     public boolean isParasiteOvertaken() {
@@ -723,12 +783,7 @@ public final class RaidModel extends Model {
 
         checkForNewPersonalBest();
 
-        currentRaid = null;
-        completedCurrentChallenge = false;
-        timeLeft = 0;
-        challenges = CappedValue.EMPTY;
-        partyRaidBuffs.clear();
-        parasiteOvertaken = false;
+        clearRaidState();
     }
 
     private void checkForNewPersonalBest() {
@@ -754,6 +809,35 @@ public final class RaidModel extends Model {
                         new RaidNewBestTimeEvent(currentRaid.getRaidKind().getRaidName(), timeInRaid));
             }
         }
+    }
+
+    private void clearRaidState() {
+        currentRaid = null;
+        completedCurrentChallenge = false;
+        inBuffRoom = false;
+        inIntermissionRoom = false;
+        timeLeft = 0;
+        challenges = CappedValue.EMPTY;
+        partyRaidBuffs.clear();
+        parasiteOvertaken = false;
+
+        cancelPendingResume();
+
+        savedRaidInfo.store(SavableRaidInfo.EMPTY);
+    }
+
+    private void cancelPendingResume() {
+        awaitingRaidResume = false;
+        if (raidResumeTask != null) {
+            Managers.TickScheduler.cancel(raidResumeTask);
+            raidResumeTask = null;
+        }
+    }
+
+    private void persistRaidState() {
+        if (currentRaid == null) return;
+
+        savedRaidInfo.store(toSavableRaidInfo(currentRaid));
     }
 
     private void processAspectItemFind(ItemStack itemStack, int slotId) {
@@ -811,6 +895,47 @@ public final class RaidModel extends Model {
                 .filter(raid -> raid.getEntryTitle().equals(title))
                 .findFirst()
                 .orElse(null);
+    }
+
+    private RaidKind getRaidFromName(String raidName) {
+        return RAIDS.stream()
+                .filter(raid -> raid.getRaidName().equals(raidName))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private SavableRaidInfo toSavableRaidInfo(RaidInfo raidInfo) {
+        Map<Integer, SavableRaidRoomInfo> savableChallenges = new TreeMap<>();
+
+        for (Map.Entry<Integer, RaidRoomInfo> entry : raidInfo.getChallenges().entrySet()) {
+            RaidRoomInfo room = entry.getValue();
+
+            savableChallenges.put(
+                    entry.getKey(),
+                    new SavableRaidRoomInfo(
+                            room.getRoomName(), room.getRoomStartTime(), room.getRoomEndTime(), room.getRoomDamage()));
+        }
+
+        return new SavableRaidInfo(
+                raidInfo.getRaidKind().getRaidName(), raidInfo.getRaidStartTime(), savableChallenges);
+    }
+
+    private RaidInfo fromSavableRaidInfo(SavableRaidInfo savableRaidInfo) {
+        RaidKind raidKind = getRaidFromName(savableRaidInfo.raidName());
+        if (raidKind == null) return null;
+
+        Map<Integer, RaidRoomInfo> challenges = new TreeMap<>();
+
+        for (Map.Entry<Integer, SavableRaidRoomInfo> entry :
+                savableRaidInfo.challenges().entrySet()) {
+            SavableRaidRoomInfo room = entry.getValue();
+
+            challenges.put(
+                    entry.getKey(),
+                    new RaidRoomInfo(room.roomName(), room.roomStartTime(), room.roomEndTime(), room.roomDamage()));
+        }
+
+        return new RaidInfo(raidKind, savableRaidInfo.raidStartTime(), challenges);
     }
 
     private void registerRaids() {

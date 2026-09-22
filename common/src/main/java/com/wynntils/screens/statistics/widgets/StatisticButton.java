@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.statistics.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
@@ -28,7 +29,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class StatisticButton extends WynntilsButton implements TooltipProvider {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
@@ -75,7 +75,7 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             if (isSelected()) {
                 screen.setHighlightedStatisticKind(null);
             } else {
@@ -84,7 +84,7 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
             return true;
         }
 
-        if (KeyboardUtils.isShiftDown() && event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        if (KeyboardUtils.isShiftDown() && event.button() == InputConstants.MOUSE_BUTTON_MIDDLE) {
             if (Services.Statistics.screenOverallMode.get()) {
                 Services.Statistics.resetStatisticOverall(statistic);
             } else {

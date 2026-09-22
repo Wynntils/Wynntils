@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
@@ -8,6 +8,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearAttackSpeed;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
@@ -50,7 +51,7 @@ public class UnknownGearItem extends GameItem
     private final List<Pair<DamageType, RangedValue>> damages;
     private final List<Pair<Element, Integer>> defences;
     private final GearRequirements requirements;
-    private final boolean allRequirementsMet;
+    private final GearInstanceRequirements gearInstanceRequirements;
     private final List<StatActualValue> identifications;
     private final List<Powder> powders;
     private final int powderSlots;
@@ -69,7 +70,7 @@ public class UnknownGearItem extends GameItem
             List<Pair<DamageType, RangedValue>> damages,
             List<Pair<Element, Integer>> defences,
             GearRequirements requirements,
-            boolean allRequirementsMet,
+            GearInstanceRequirements gearInstanceRequirements,
             List<StatActualValue> identifications,
             List<Powder> powders,
             int powderSlots,
@@ -86,7 +87,7 @@ public class UnknownGearItem extends GameItem
         this.damages = damages;
         this.defences = defences;
         this.requirements = requirements;
-        this.allRequirementsMet = allRequirementsMet;
+        this.gearInstanceRequirements = gearInstanceRequirements;
         this.identifications = identifications;
         this.powders = powders;
         this.powderSlots = powderSlots;
@@ -159,7 +160,12 @@ public class UnknownGearItem extends GameItem
 
     @Override
     public boolean meetsActualRequirements() {
-        return allRequirementsMet;
+        return gearInstanceRequirements.meetsAllRequirements();
+    }
+
+    @Override
+    public GearInstanceRequirements getGearInstanceRequirements() {
+        return gearInstanceRequirements;
     }
 
     @Override
@@ -193,8 +199,8 @@ public class UnknownGearItem extends GameItem
                 + health + ", damages="
                 + damages + ", defences="
                 + defences + ", requirements="
-                + requirements + ", allRequirementsMet="
-                + allRequirementsMet + ", identifications="
+                + requirements + ", gearInstanceRequirements="
+                + gearInstanceRequirements + ", identifications="
                 + identifications + ", powders="
                 + powders + ", powderSlots="
                 + powderSlots + ", rerolls="

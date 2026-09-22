@@ -15,6 +15,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.utils.mc.McUtils;
+import java.util.List;
 import net.minecraft.sounds.SoundEvents;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -27,7 +28,11 @@ public class AutoJoinPartyFeature extends Feature {
     private final Config<Boolean> onlySameWorld = new Config<>(true);
 
     public AutoJoinPartyFeature() {
-        super(ProfileDefault.onlyDefault());
+        super(
+                ProfileDefault.onlyDefault(),
+                List.of(
+                        ConfigDependency.functionality(Models.Friends.queryFriendsList),
+                        ConfigDependency.functionality(Models.Party.queryPartyMembers)));
     }
 
     @SubscribeEvent
