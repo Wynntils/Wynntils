@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.raid.type;
@@ -15,6 +15,16 @@ public class RaidRoomInfo {
     public RaidRoomInfo(String roomName) {
         this.roomName = roomName;
         this.roomStartTime = System.currentTimeMillis();
+    }
+
+    public RaidRoomInfo(String roomName, long roomStartTime, long roomEndTime, long roomDamage) {
+        this.roomName = roomName;
+        this.roomStartTime = roomStartTime;
+        this.roomDamage = roomDamage;
+
+        if (roomEndTime != -1L) {
+            setRoomEndTime(roomEndTime);
+        }
     }
 
     public String getRoomName() {
@@ -33,6 +43,13 @@ public class RaidRoomInfo {
         this.roomEndTime = roomEndTime;
 
         setRoomTotalTime();
+    }
+
+    public void markAbandoned() {
+        if (roomEndTime != -1L) return;
+
+        roomEndTime = roomStartTime;
+        roomTotalTime = 0L;
     }
 
     public long getRoomTotalTime() {

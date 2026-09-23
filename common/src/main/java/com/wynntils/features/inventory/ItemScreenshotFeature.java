@@ -25,6 +25,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
+import com.wynntils.mc.event.TooltipRenderEvent;
 import com.wynntils.mc.extension.MinecraftExtension;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -80,6 +81,7 @@ public class ItemScreenshotFeature extends Feature {
     @Persisted
     private final Config<Boolean> saveToDisk = new Config<>(false);
 
+    private boolean changePositioner = false;
     private Slot screenshotSlot = null;
 
     public ItemScreenshotFeature() {
@@ -105,6 +107,14 @@ public class ItemScreenshotFeature extends Feature {
                 e.getTooltips(),
                 screenshotSlot.getItem().get(DataComponents.TOOLTIP_STYLE));
         screenshotSlot = null;
+    }
+
+    // Even though we render with this positioner we need to set it here so tooltip fitting doesn't replace it
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onTooltipRenderEvent(TooltipRenderEvent.Position event) {
+        if (!changePositioner) return;
+
+        event.setPositioner(NO_POSITIONER);
     }
 
     private void takeScreenshot(Screen screen, Slot hoveredSlot, List<Component> itemTooltip, Identifier tooltipStyle) {
@@ -140,7 +150,9 @@ public class ItemScreenshotFeature extends Feature {
                 .map(ClientTooltipComponent::create)
                 .toList();
 
+        changePositioner = true;
         screenshotTooltip(screen, tooltipToRender, tooltipStyle, width, height).whenComplete((nativeImage, err) -> {
+            changePositioner = false;
             if (err != null || nativeImage == null) {
                 WynntilsMod.error("Tooltip screenshot failed", err);
                 McUtils.sendErrorToClient(I18n.get("feature.wynntils.itemScreenshot.copy.error"));

@@ -199,7 +199,7 @@
   },
   {
     "id": "dataStaticIngredients",
-    "md5": "20633374220ec4ef070d9621fbc9cad5",
+    "md5": "b349281d84e9d166e33bc5bdbda0d02b",
     "path": "Reference/ingredients.json",
     "url": "https://cdn.wynntils.com/static/Reference/ingredients.json"
   },
@@ -331,7 +331,7 @@
   },
   {
     "id": "dataStaticSets",
-    "md5": "74c3a7896dbc3649eea626f76ce8cc0d",
+    "md5": "686198fe9182c6716cd13d35a054e7c1",
     "path": "Reference/sets.json",
     "url": "https://cdn.wynntils.com/static/Reference/sets.json"
   },
