@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.overlays.placement;
 
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
@@ -20,6 +19,8 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.overlays.ordering.OverlayOrderingScreen;
+import com.wynntils.screens.overlays.placement.OverlaySnapAxis.SnapTarget;
+import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -33,7 +34,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
 import java.util.Arrays;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -41,11 +42,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -56,31 +59,40 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     // If the value is set to 4, alignment lines will render at 1/2, 1/3, 2/3, 1/4, 3/4
     // of the screen both vertically and horizontally.
     private static final int ALIGNMENT_LINES_MAX_SECTIONS_PER_AXIS = 4;
-    private static final int ALIGNMENT_SNAP_DISTANCE = 1;
-    // Bigger this value is, the harder it is to not align overlay to alignment line
-    private static final double ALIGNMENT_SNAP_HARDNESS = 6;
 
     private static final int BUTTON_WIDTH = 60;
     private static final int BUTTON_SHORT_WIDTH = 20;
     private static final int BUTTON_HEIGHT = 20;
     private static final int MAX_CLICK_DISTANCE = 5;
     private static final int ANIMATION_LENGTH = 30;
+    private static final CustomColor LOCKED_OVERLAY_COLOR = new CustomColor(80, 180, 205, 255);
 
-    private static final List<Component> HELP_TOOLTIP_LINES = ComponentUtils.wrapTooltips(
-            List.of(
-                    Component.translatable("screens.wynntils.overlayManagement.helpTooltip1"),
-                    Component.translatable("screens.wynntils.overlayManagement.helpTooltip2"),
-                    Component.translatable("screens.wynntils.overlayManagement.helpTooltip3"),
-                    Component.translatable("screens.wynntils.overlayManagement.helpTooltip4"),
-                    Component.translatable("screens.wynntils.overlayManagement.helpTooltip5"),
-                    Component.translatable("screens.wynntils.overlayManagement.helpTooltip6")
-                            .withStyle(ChatFormatting.RED)),
-            200);
+    private static final List<Component> HELP_TOOLTIP_LINES = List.of(
+            Component.translatable("screens.wynntils.overlayManagement.helpTooltip1"),
+            Component.translatable("screens.wynntils.overlayManagement.positionPanel.hint"),
+            Component.translatable("screens.wynntils.overlayManagement.openSettingsTooltip"),
+            Component.translatable("screens.wynntils.overlayManagement.lockPlacementTooltip"),
+            Component.translatable("screens.wynntils.overlayManagement.helpTooltip4"),
+            Component.translatable("screens.wynntils.overlayManagement.helpTooltip3"),
+            Component.translatable("screens.wynntils.overlayManagement.screenSnapTooltip"),
+            Component.translatable("screens.wynntils.overlayManagement.helpTooltip6")
+                    .withStyle(ChatFormatting.DARK_RED));
 
-    private final Set<Float> verticalAlignmentLinePositions = new HashSet<>();
-    private final Set<Float> horizontalAlignmentLinePositions = new HashSet<>();
-    private final Map<Edge, Double> edgeAlignmentSnapMap = new EnumMap<>(Edge.class);
-    private final Map<Edge, Float> alignmentLinesToRender = new EnumMap<>(Edge.class);
+    private final Set<SnapTarget> verticalAlignmentLinePositions = new HashSet<>();
+    private final Set<SnapTarget> horizontalAlignmentLinePositions = new HashSet<>();
+    private final Set<SnapTarget> verticalCenterLinePositions = new HashSet<>();
+    private final Set<SnapTarget> horizontalCenterLinePositions = new HashSet<>();
+    private final Map<Float, CustomColor> verticalScreenGuides = new HashMap<>();
+    private final Map<Float, CustomColor> horizontalScreenGuides = new HashMap<>();
+    private final OverlaySnapAxis horizontalSnap = new OverlaySnapAxis();
+    private final OverlaySnapAxis verticalSnap = new OverlaySnapAxis();
+    private final OverlayEditHistory editHistory = new OverlayEditHistory();
+    private OverlayHelpPanel helpPanel;
+    private Button helpButton;
+    private boolean helpPinned;
+    private boolean suppressHelpHover;
+    private Button undoButton;
+    private Button redoButton;
 
     private SelectionMode selectionMode = SelectionMode.NONE;
     private Overlay selectedOverlay;
@@ -92,12 +104,13 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private boolean renderAllOverlays;
     private boolean showPreview = true;
 
-    private boolean snappingEnabled = true;
-
     private boolean userInteracted = false;
     private int animationLengthRemaining;
-    private double snapOffsetX;
-    private double snapOffsetY;
+
+    private OverlayPositionPanel positionPanel;
+    private boolean pendingPanelClick;
+    private double clickX;
+    private double clickY;
 
     private final Screen previousScreen;
 
@@ -129,16 +142,19 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
+        closeHelpPanel();
+        resetSelection();
+        closePositionPanel();
         setupButtons();
         calculateAlignmentLinePositions();
     }
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        updateHelpHover(mouseX, mouseY);
+        renderScreenGuides(guiGraphics);
         if (selectionMode != SelectionMode.NONE) {
             renderAlignmentLines(guiGraphics);
-        } else {
-            renderSections(guiGraphics);
         }
 
         Set<Overlay> overlays = Managers.Overlay.getOverlays().stream()
@@ -146,7 +162,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 .collect(Collectors.toSet());
 
         // We want to render the tooltip for what will actually be interacted with
-        boolean renderedTooltip = false;
+        boolean hoveringPanel = (positionPanel != null && positionPanel.contains(mouseX, mouseY))
+                || (helpPanel != null && helpPanel.contains(mouseX, mouseY));
+        boolean renderedTooltip = positionPanel != null || helpPanel != null || pendingPanelClick;
 
         // Buttons have the highest priority so check those first
         for (GuiEventListener listener : this.children) {
@@ -193,6 +211,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     overlayName = customNameProperty.getCustomName().get();
                 }
             }
+            if (overlay.isPlacementLocked()) {
+                overlayName += Component.translatable("screens.wynntils.overlayManagement.lockedSuffix")
+                        .getString();
+            }
 
             // Only display overlay name when not rendering preview of the overlay
             if (!showPreview) {
@@ -230,33 +252,33 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
             boolean hovering = isMouseHoveringOverlay(overlay, mouseX, mouseY);
 
-            if (hovering && selectionMode == SelectionMode.NONE) {
+            if (hovering && !hoveringPanel && selectionMode == SelectionMode.NONE) {
                 guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
             }
 
             // If tooltip has yet been rendered then we need to check
             // if an overlay is hovered and display the tooltip for that.
             if (!renderedTooltip
-                    && !fixedSelection
-                    && showPreview
-                    && overlay != selectedOverlay
                     && hovering
+                    && (!fixedSelection || overlay == selectedOverlay)
                     && selectionMode == SelectionMode.NONE) {
                 guiGraphics.setTooltipForNextFrame(Component.literal(overlayName), mouseX, mouseY);
-                renderedTooltip = true;
-            } else if (!renderedTooltip
-                    && overlay == selectedOverlay
-                    && hovering
-                    && selectionMode == SelectionMode.NONE) {
-                guiGraphics.setTooltipForNextFrame(
-                        Lists.transform(HELP_TOOLTIP_LINES, Component::getVisualOrderText), mouseX, mouseY);
                 renderedTooltip = true;
             }
         }
 
         // Render widgets
         for (Renderable renderable : this.renderables) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            if (positionPanel != null && positionPanel.getWidgets().contains(renderable)) continue;
+            renderable.render(guiGraphics, hoveringPanel ? -1 : mouseX, hoveringPanel ? -1 : mouseY, partialTick);
+        }
+        if (positionPanel != null) {
+            positionPanel.render(guiGraphics);
+            positionPanel.getWidgets().forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        }
+
+        if (helpPanel != null) {
+            helpPanel.render(guiGraphics);
         }
     }
 
@@ -279,13 +301,38 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     public void onClose() {
+        closeHelpPanel();
+        closePositionPanel();
+        resetSelection();
+        editHistory.clear();
         reloadConfigForOverlay();
     }
 
     @Override
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (helpPanel != null && helpPanel.contains(event.x(), event.y())) return true;
+        if (positionPanel != null) {
+            if (positionPanel.contains(event.x(), event.y())) {
+                setFocusedTextInput(null);
+                setFocused(null);
+                setDragging(false);
+                for (AbstractWidget widget : positionPanel.getWidgets()) {
+                    if (!widget.visible || !widget.active) continue;
+                    if (widget.mouseClicked(event, isDoubleClick)) {
+                        setFocused(widget);
+                        setDragging(event.button() == InputConstants.MOUSE_BUTTON_LEFT);
+                        break;
+                    }
+                }
+                return true;
+            }
+            closePositionPanel();
+        }
+
         // Let the buttons of the Screen have priority
         if (super.doMouseClicked(event, isDoubleClick)) return true;
+
+        closeHelpPanel();
 
         userInteracted = true;
         animationLengthRemaining = 0;
@@ -315,11 +362,52 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         if (selectedOverlay == null) return false;
 
+        if (!isMouseHoveringOverlay(selectedOverlay, event.x(), event.y())
+                && (event.button() != InputConstants.MOUSE_BUTTON_LEFT || selectedOverlay.isPlacementLocked())) {
+            clearActiveSelection();
+            return false;
+        }
+
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
+            if (!isMouseHoveringOverlay(selectedOverlay, event.x(), event.y())) return false;
+
+            Managers.Config.saveConfig();
+            onClose();
+            McUtils.setScreen(OverlaySelectionScreen.create(selectedOverlay));
+            return true;
+        }
+
         Overlay selected = selectedOverlay;
 
         setupButtons();
 
-        if (event.button() == InputConstants.MOUSE_BUTTON_MIDDLE && KeyboardUtils.isShiftDown()) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_MIDDLE
+                && !KeyboardUtils.isShiftDown()
+                && !KeyboardUtils.isControlDown()
+                && !KeyboardUtils.isAltDown()
+                && !KeyboardUtils.isKeyDown(InputConstants.KEY_LSUPER)
+                && !KeyboardUtils.isKeyDown(InputConstants.KEY_RSUPER)) {
+            if (!isMouseHoveringOverlay(selected, event.x(), event.y())) return false;
+
+            togglePlacementLock(!selected.isPlacementLocked());
+            return true;
+        }
+
+        if (selected.isPlacementLocked()) {
+            pendingPanelClick = event.button() == InputConstants.MOUSE_BUTTON_LEFT
+                    && isMouseHoveringOverlay(selected, event.x(), event.y());
+            clickX = event.x();
+            clickY = event.y();
+            return false;
+        }
+
+        boolean shiftMiddleClick = event.button() == InputConstants.MOUSE_BUTTON_MIDDLE && KeyboardUtils.isShiftDown();
+        if (shiftMiddleClick && !isMouseHoveringOverlay(selectedOverlay, event.x(), event.y())) {
+            return false;
+        }
+
+        editHistory.begin(selectedOverlay);
+        if (shiftMiddleClick) {
             selectedOverlay.getConfigOptionFromString("position").ifPresent(Config::reset);
             selectedOverlay.getConfigOptionFromString("size").ifPresent(Config::reset);
             selectedOverlay
@@ -329,10 +417,19 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     .getConfigOptionFromString("verticalAlignmentOverride")
                     .ifPresent(Config::reset);
 
+            resetSelection();
             return true;
         }
 
+        if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
+
         Vec2 mousePos = new Vec2((float) event.x(), (float) event.y());
+
+        pendingPanelClick = event.button() == InputConstants.MOUSE_BUTTON_LEFT
+                && isMouseHoveringOverlay(selectedOverlay, event.x(), event.y());
+        clickX = event.x();
+        clickY = event.y();
+        calculateAlignmentLinePositions();
 
         for (Corner corner : Corner.values()) {
             float distance = selected.getCornerPoints(corner).distanceToSqr(mousePos);
@@ -392,15 +489,55 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             return false;
         }
 
+        clearActiveSelection();
         return false;
+    }
+
+    private void clearActiveSelection() {
+        if (fixedSelection) return;
+
+        resetSelection();
+        selectedOverlay = null;
+        renderAllOverlays = true;
+        setupButtons();
+        calculateAlignmentLinePositions();
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
+        if (helpPanel != null && helpPanel.contains(mouseX, mouseY)) {
+            helpPanel.scroll(deltaY);
+            return true;
+        }
+        return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
     }
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        if (helpPanel != null) return true;
+        if (positionPanel != null) {
+            if (getFocusedTextInput() != null && getFocusedTextInput().visible && getFocusedTextInput().active) {
+                getFocusedTextInput().mouseDragged(event, dragX, dragY);
+            }
+            return true;
+        }
+
         // Let the buttons of the Screen have priority
         if (super.mouseDragged(event, dragX, dragY)) return true;
 
+        if (pendingPanelClick) {
+            double totalX = event.x() - clickX;
+            double totalY = event.y() - clickY;
+            if (totalX * totalX + totalY * totalY <= 9) return true;
+
+            pendingPanelClick = false;
+            dragX = totalX;
+            dragY = totalY;
+        }
+
         if (selectedOverlay == null) return false;
+
+        if (selectedOverlay.isPlacementLocked()) return true;
 
         switch (selectionMode) {
             case CORNER -> handleOverlayCornerDrag(dragX, dragY);
@@ -414,17 +551,76 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
+        if (positionPanel != null) {
+            if (getFocusedTextInput() != null && getFocusedTextInput().visible && getFocusedTextInput().active) {
+                getFocusedTextInput().mouseReleased(event);
+            }
+            setDragging(false);
+            return true;
+        }
+
+        double releaseX = event.x() - clickX;
+        double releaseY = event.y() - clickY;
+        boolean openPanel = pendingPanelClick
+                && event.button() == InputConstants.MOUSE_BUTTON_LEFT
+                && releaseX * releaseX + releaseY * releaseY <= 9;
+        pendingPanelClick = false;
+
         // Let the buttons of the Screen have priority
-        if (super.mouseReleased(event)) return true;
+        boolean handled = super.mouseReleased(event);
 
         resetSelection();
-        return false;
+        if (openPanel && selectedOverlay != null) {
+            positionPanel = new OverlayPositionPanel(
+                    selectedOverlay, (int) event.x(), (int) event.y(), width, height, this, this::togglePlacementLock);
+            positionPanel.getWidgets().forEach(this::addRenderableWidget);
+            editHistory.begin(selectedOverlay);
+            return true;
+        }
+        return handled;
     }
 
     @Override
     public boolean keyPressed(KeyEvent event) {
         userInteracted = true;
         animationLengthRemaining = 0;
+
+        if (helpPanel != null) {
+            if (event.key() == InputConstants.KEY_ESCAPE || event.key() == InputConstants.KEY_RETURN) {
+                closeHelpPanel();
+            }
+            return true;
+        }
+
+        if (KeyboardUtils.isControlDown() && event.key() == InputConstants.KEY_Z) {
+            if (!KeyboardUtils.isShiftDown()) {
+                restoreHistory(false);
+            }
+            return true;
+        }
+        if (KeyboardUtils.isControlDown() && event.key() == InputConstants.KEY_Y) {
+            restoreHistory(true);
+            return true;
+        }
+
+        if (positionPanel != null) {
+            if (event.key() == InputConstants.KEY_ESCAPE || event.key() == InputConstants.KEY_RETURN) {
+                closePositionPanel();
+                return true;
+            }
+            if (getFocusedTextInput() != null && (!getFocusedTextInput().visible || !getFocusedTextInput().active)) {
+                setFocusedTextInput(null);
+                setFocused(null);
+            }
+            if (positionPanel.isPlacementLocked() && event.key() == InputConstants.KEY_TAB) {
+                return true;
+            }
+            if (getFocusedTextInput() != null || event.key() == InputConstants.KEY_TAB) {
+                super.keyPressed(event);
+                return true;
+            }
+            closePositionPanel();
+        }
 
         if (event.key() == InputConstants.KEY_RETURN) {
             Managers.Config.saveConfig();
@@ -439,8 +635,27 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         if (selectedOverlay == null) return false;
 
-        // Shirt + Arrow keys change overlay alignment
-        if (KeyboardUtils.isShiftDown()) {
+        if (selectedOverlay.isPlacementLocked()) {
+            if (event.key() == InputConstants.KEY_UP
+                    || event.key() == InputConstants.KEY_DOWN
+                    || event.key() == InputConstants.KEY_LEFT
+                    || event.key() == InputConstants.KEY_RIGHT) {
+                return true;
+            }
+            return false;
+        }
+
+        boolean arrowKey = event.key() == InputConstants.KEY_UP
+                || event.key() == InputConstants.KEY_DOWN
+                || event.key() == InputConstants.KEY_LEFT
+                || event.key() == InputConstants.KEY_RIGHT;
+        if (arrowKey) {
+            resetSelection();
+            editHistory.begin(selectedOverlay);
+        }
+
+        // Shift + Arrow keys change overlay alignment
+        if (arrowKey && KeyboardUtils.isShiftDown()) {
             if (event.key() == InputConstants.KEY_UP || event.key() == InputConstants.KEY_DOWN) {
                 int index = selectedOverlay.getRenderVerticalAlignment().ordinal();
 
@@ -475,7 +690,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                         .getConfigOptionFromString("horizontalAlignmentOverride")
                         .ifPresent(config -> ((Config<HorizontalAlignment>) config).setValue(values[finalIndex]));
             }
-        } else {
+        } else if (arrowKey) {
             // Arrow keys change overlay position
             int offsetX = 0;
             int offsetY = 0;
@@ -499,21 +714,34 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                                     finalOffsetY)));
         }
 
+        if (arrowKey) {
+            editHistory.finish();
+            updateHistoryButtons();
+            calculateAlignmentLinePositions();
+            return true;
+        }
+
         if (event.key() == InputConstants.KEY_LSHIFT || event.key() == InputConstants.KEY_RSHIFT) {
-            snappingEnabled = false;
-            edgeAlignmentSnapMap.clear();
-            alignmentLinesToRender.clear();
+            horizontalSnap.reset();
+            verticalSnap.reset();
+        }
+
+        if (event.key() == InputConstants.KEY_LCONTROL || event.key() == InputConstants.KEY_RCONTROL) {
+            horizontalSnap.restrictToScreenGuides();
+            verticalSnap.restrictToScreenGuides();
         }
 
         return false;
     }
 
     @Override
-    public boolean keyReleased(KeyEvent event) {
-        if (event.key() == InputConstants.KEY_LSHIFT || event.key() == InputConstants.KEY_RSHIFT) {
-            snappingEnabled = true;
+    public boolean charTyped(CharacterEvent event) {
+        if (positionPanel != null && positionPanel.isPlacementLocked()) {
+            setFocusedTextInput(null);
+            setFocused(null);
+            return true;
         }
-        return super.keyReleased(event);
+        return super.charTyped(event);
     }
 
     public Overlay getSelectedOverlay() {
@@ -530,6 +758,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     private CustomColor getOverlayColor(Overlay overlay) {
         if (overlay == selectedOverlay) return CommonColors.GREEN;
+        if (overlay.isPlacementLocked()) return LOCKED_OVERLAY_COLOR;
 
         return fixedSelection ? new CustomColor(200, 200, 200, 255) : CommonColors.LIGHT_BLUE;
     }
@@ -546,7 +775,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void handleOverlayEdgeDrag(double dragX, double dragY) {
-        if (selectedEdge == null || selectedOverlay == null) {
+        if (selectedEdge == null || selectedOverlay == null || selectedOverlay.isPlacementLocked()) {
             return;
         }
 
@@ -587,7 +816,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void handleOverlayBodyDrag(double dragX, double dragY) {
-        if (selectedOverlay == null) {
+        if (selectedOverlay == null || selectedOverlay.isPlacementLocked()) {
             return;
         }
 
@@ -602,7 +831,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void handleOverlayCornerDrag(double dragX, double dragY) {
-        if (selectedCorner == null || selectedOverlay == null) {
+        if (selectedCorner == null || selectedOverlay == null || selectedOverlay.isPlacementLocked()) {
             return;
         }
 
@@ -648,154 +877,193 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     // Pair<dragX, dragY>
     private Pair<Double, Double> calculateDragAfterSnapping(double dragX, double dragY) {
-        if (!snappingEnabled) {
+        if (KeyboardUtils.isShiftDown()) {
+            horizontalSnap.reset();
+            verticalSnap.reset();
             return new Pair<>(dragX, dragY);
         }
 
-        dragX += snapOffsetX;
-        dragY += snapOffsetY;
-        double originalDragX = dragX;
-        double originalDragY = dragY;
-
-        List<Edge> edgesToSnapTo =
-                switch (this.selectionMode) {
+        List<Edge> edges =
+                switch (selectionMode) {
                     case NONE -> List.of();
-                    case CORNER -> this.selectedCorner.getEdges();
-                    case EDGE -> List.of(this.selectedEdge);
+                    case CORNER -> selectedCorner.getEdges();
+                    case EDGE -> List.of(selectedEdge);
                     case AREA -> Arrays.stream(Edge.values()).toList();
                 };
 
-        double originalX = dragX;
-        double originalY = dragY;
-
-        for (Edge edge : edgesToSnapTo.stream()
-                .filter(edge -> !edgeAlignmentSnapMap.containsKey(edge))
-                .toList()) {
-            Pair<Vec2, Vec2> edgePos = edge.getEdgePos(selectedOverlay);
-
-            if (edge.isVerticalLine()) {
-                for (Float alignmentLinePosition : verticalAlignmentLinePositions) {
-                    if (Math.abs(this.width * alignmentLinePosition - edgePos.a().x) < ALIGNMENT_SNAP_DISTANCE) {
-                        edgeAlignmentSnapMap.put(edge, ALIGNMENT_SNAP_HARDNESS);
-                        alignmentLinesToRender.put(edge, alignmentLinePosition);
-                        break;
-                    }
-                }
-            } else {
-                for (Float alignmentLinePosition : horizontalAlignmentLinePositions) {
-                    if (Math.abs(this.height * alignmentLinePosition - edgePos.a().y) < ALIGNMENT_SNAP_DISTANCE) {
-                        edgeAlignmentSnapMap.put(edge, ALIGNMENT_SNAP_HARDNESS);
-                        alignmentLinesToRender.put(edge, alignmentLinePosition);
-                        break;
-                    }
-                }
+        double minX = Double.NEGATIVE_INFINITY;
+        double maxX = Double.POSITIVE_INFINITY;
+        double minY = Double.NEGATIVE_INFINITY;
+        double maxY = Double.POSITIVE_INFINITY;
+        if (selectionMode != SelectionMode.AREA) {
+            if (edges.contains(Edge.LEFT)) {
+                maxX = selectedOverlay.getWidth() - OverlaySize.MINIMUM_WIDTH;
+            }
+            if (edges.contains(Edge.RIGHT)) {
+                minX = OverlaySize.MINIMUM_WIDTH - selectedOverlay.getWidth();
+            }
+            if (edges.contains(Edge.TOP)) {
+                maxY = selectedOverlay.getHeight() - OverlaySize.MINIMUM_HEIGHT;
+            }
+            if (edges.contains(Edge.BOTTOM)) {
+                minY = OverlaySize.MINIMUM_HEIGHT - selectedOverlay.getHeight();
             }
         }
 
-        Set<Edge> toBeRemoved = new HashSet<>();
-
-        for (Map.Entry<Edge, Double> entry : edgeAlignmentSnapMap.entrySet()) {
-            double newSnapValue;
-            if (entry.getKey().isVerticalLine()) {
-                newSnapValue = entry.getValue() - Math.abs(dragX);
-                dragX = 0;
-            } else {
-                newSnapValue = entry.getValue() - Math.abs(dragY);
-                dragY = 0;
-            }
-
-            if (newSnapValue <= 0) {
-                toBeRemoved.add(entry.getKey());
-                if (entry.getKey().isVerticalLine()) {
-                    dragX = originalX;
-                } else {
-                    dragY = originalY;
-                }
-            } else {
-                edgeAlignmentSnapMap.put(entry.getKey(), newSnapValue);
-            }
-        }
-
-        for (Edge edge : toBeRemoved) {
-            edgeAlignmentSnapMap.remove(edge);
-            alignmentLinesToRender.remove(edge);
-        }
-
-        snapOffsetX = originalDragX - dragX;
-        snapOffsetY = originalDragY - dragY;
-        return new Pair<>(dragX, dragY);
+        double[] horizontalEdges = edges.stream()
+                .filter(Edge::isVerticalLine)
+                .mapToDouble(edge -> edge.getEdgePos(selectedOverlay).a().x)
+                .toArray();
+        double[] verticalEdges = edges.stream()
+                .filter(edge -> !edge.isVerticalLine())
+                .mapToDouble(edge -> edge.getEdgePos(selectedOverlay).a().y)
+                .toArray();
+        boolean screenOnly = KeyboardUtils.isControlDown();
+        return new Pair<>(
+                horizontalSnap.snap(
+                        dragX,
+                        horizontalEdges,
+                        verticalAlignmentLinePositions,
+                        selectionMode == SelectionMode.AREA
+                                ? (double) (selectedOverlay.getRenderX() + selectedOverlay.getWidth() / 2f)
+                                : null,
+                        verticalCenterLinePositions,
+                        screenOnly,
+                        minX,
+                        maxX),
+                verticalSnap.snap(
+                        dragY,
+                        verticalEdges,
+                        horizontalAlignmentLinePositions,
+                        selectionMode == SelectionMode.AREA
+                                ? (double) (selectedOverlay.getRenderY() + selectedOverlay.getHeight() / 2f)
+                                : null,
+                        horizontalCenterLinePositions,
+                        screenOnly,
+                        minY,
+                        maxY));
     }
 
-    private void renderSections(GuiGraphics guiGraphics) {
-        for (SectionCoordinates section : Managers.Overlay.getSections()) {
-            RenderUtils.drawRectBorders(
-                    guiGraphics, CommonColors.WHITE, section.x1(), section.y1(), section.x2(), section.y2(), 1);
-        }
+    private void renderScreenGuides(GuiGraphics guiGraphics) {
+        verticalScreenGuides.forEach((x, color) -> RenderUtils.drawLine(guiGraphics, color, x, 0, x, this.height, 1));
+        horizontalScreenGuides.forEach((y, color) -> RenderUtils.drawLine(guiGraphics, color, 0, y, this.width, y, 1));
     }
 
     private void renderAlignmentLines(GuiGraphics guiGraphics) {
-        for (Map.Entry<Edge, Float> entry : alignmentLinesToRender.entrySet()) {
-            if (entry.getKey().isVerticalLine()) {
-                RenderUtils.drawLine(
-                        guiGraphics,
-                        CommonColors.ORANGE,
-                        this.width * entry.getValue(),
-                        0,
-                        this.width * entry.getValue(),
-                        this.height,
-                        1);
-            } else {
-                RenderUtils.drawLine(
-                        guiGraphics,
-                        CommonColors.ORANGE,
-                        0,
-                        this.height * entry.getValue(),
-                        this.width,
-                        this.height * entry.getValue(),
-                        1);
-            }
+        SnapTarget horizontalTarget = horizontalSnap.getTarget();
+        if (horizontalTarget != null) {
+            float x = horizontalTarget.position();
+            RenderUtils.drawLine(
+                    guiGraphics,
+                    horizontalTarget.screen() ? CommonColors.GREEN : CommonColors.ORANGE,
+                    x,
+                    0,
+                    x,
+                    this.height,
+                    1);
+        }
+        SnapTarget verticalTarget = verticalSnap.getTarget();
+        if (verticalTarget != null) {
+            float y = verticalTarget.position();
+            RenderUtils.drawLine(
+                    guiGraphics,
+                    verticalTarget.screen() ? CommonColors.GREEN : CommonColors.ORANGE,
+                    0,
+                    y,
+                    this.width,
+                    y,
+                    1);
         }
     }
 
     private void calculateAlignmentLinePositions() {
         verticalAlignmentLinePositions.clear();
         horizontalAlignmentLinePositions.clear();
+        verticalCenterLinePositions.clear();
+        horizontalCenterLinePositions.clear();
 
-        verticalAlignmentLinePositions.add(0f);
-        horizontalAlignmentLinePositions.add(0f);
-        verticalAlignmentLinePositions.add(1f);
-        horizontalAlignmentLinePositions.add(1f);
-
+        verticalScreenGuides.clear();
+        horizontalScreenGuides.clear();
+        CustomColor minorGuideColor = CommonColors.WHITE.withAlpha(0.25f);
         for (int i = 2; i <= ALIGNMENT_LINES_MAX_SECTIONS_PER_AXIS; i++) {
+            if (i == 3) continue;
             for (int j = 1; j < i; j++) {
-                verticalAlignmentLinePositions.add((float) j / i);
-                horizontalAlignmentLinePositions.add((float) j / i);
+                verticalScreenGuides.put((float) this.width * j / i, minorGuideColor);
+                horizontalScreenGuides.put((float) this.height * j / i, minorGuideColor);
             }
         }
+
+        // Section boundaries take precedence where a minor guide shares their position.
+        for (SectionCoordinates section : Managers.Overlay.getSections()) {
+            verticalScreenGuides.put((float) section.x1(), CommonColors.WHITE);
+            verticalScreenGuides.put((float) section.x2(), CommonColors.WHITE);
+            horizontalScreenGuides.put((float) section.y1(), CommonColors.WHITE);
+            horizontalScreenGuides.put((float) section.y2(), CommonColors.WHITE);
+        }
+
+        // Rendering and snapping consume the exact same screen coordinates.
+        verticalScreenGuides.keySet().forEach(x -> verticalAlignmentLinePositions.add(new SnapTarget(x, true)));
+        horizontalScreenGuides.keySet().forEach(y -> horizontalAlignmentLinePositions.add(new SnapTarget(y, true)));
+
+        // Moving overlays can align their centers to any screen guide as well as their edges.
+        verticalCenterLinePositions.addAll(verticalAlignmentLinePositions);
+        horizontalCenterLinePositions.addAll(horizontalAlignmentLinePositions);
 
         for (Overlay overlay : Managers.Overlay.getOverlays().stream()
                 .filter(Managers.Overlay::isEnabled)
                 .toList()) {
             if (overlay == selectedOverlay) continue;
 
+            verticalCenterLinePositions.add(new SnapTarget(overlay.getRenderX() + overlay.getWidth() / 2f, false));
+            horizontalCenterLinePositions.add(new SnapTarget(overlay.getRenderY() + overlay.getHeight() / 2f, false));
+
             for (Edge edge : Edge.values()) {
                 Pair<Vec2, Vec2> edgePos = edge.getEdgePos(overlay);
 
                 if (edge.isVerticalLine()) {
-                    verticalAlignmentLinePositions.add(edgePos.a().x / this.width);
+                    verticalAlignmentLinePositions.add(new SnapTarget(edgePos.a().x, false));
                 } else {
-                    horizontalAlignmentLinePositions.add(edgePos.a().y / this.height);
+                    horizontalAlignmentLinePositions.add(new SnapTarget(edgePos.a().y, false));
                 }
             }
         }
     }
 
     private void setupButtons() {
+        closeHelpPanel();
         // Remove previous buttons
         this.children.stream().toList().forEach(this::removeWidget);
 
         // Determine if buttons should be at the top or bottom of the screen
         int yPos = buttonsAtBottom ? this.height - 25 : 5;
+        int historyY = buttonsAtBottom ? yPos - 24 : yPos + 24;
+        int historyButtonGap = 4;
+        int historyStartX = (this.width - (3 * BUTTON_WIDTH + 2 * historyButtonGap)) / 2;
+        undoButton = this.addRenderableWidget(Button.builder(
+                        Component.translatable("screens.wynntils.overlayManagement.undo"),
+                        button -> restoreHistory(false))
+                .bounds(historyStartX, historyY, BUTTON_WIDTH, BUTTON_HEIGHT)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.overlayManagement.undoTooltip")))
+                .build());
+        redoButton = this.addRenderableWidget(Button.builder(
+                        Component.translatable("screens.wynntils.overlayManagement.redo"),
+                        button -> restoreHistory(true))
+                .bounds(historyStartX + BUTTON_WIDTH + historyButtonGap, historyY, BUTTON_WIDTH, BUTTON_HEIGHT)
+                .tooltip(Tooltip.create(Component.translatable("screens.wynntils.overlayManagement.redoTooltip")))
+                .build());
+        updateHistoryButtons();
+
+        helpButton = this.addRenderableWidget(Button.builder(
+                        Component.translatable("screens.wynntils.overlayManagement.help"), button -> {
+                            if (helpPinned) {
+                                closeHelpPanel();
+                                return;
+                            }
+                            openHelpPanel();
+                            helpPinned = true;
+                        })
+                .bounds(historyStartX + 2 * (BUTTON_WIDTH + historyButtonGap), historyY, BUTTON_WIDTH, BUTTON_HEIGHT)
+                .build());
 
         this.addRenderableWidget(new WynntilsCheckbox(
                 this.width / 2 - BUTTON_WIDTH - 23 - 100,
@@ -869,9 +1137,106 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void resetSelection() {
+        if (positionPanel == null) {
+            editHistory.finish();
+        }
+        updateHistoryButtons();
+        horizontalSnap.reset();
+        verticalSnap.reset();
+        pendingPanelClick = false;
         selectionMode = SelectionMode.NONE;
         selectedCorner = null;
         selectedEdge = null;
+    }
+
+    private void togglePlacementLock(boolean locked) {
+        if (selectedOverlay == null || selectedOverlay.isPlacementLocked() == locked) return;
+
+        // Keep the layout edits made before clicking the lock button as their own history step.
+        editHistory.finish();
+        editHistory.begin(selectedOverlay);
+        selectedOverlay.setPlacementLocked(locked);
+        editHistory.finish();
+
+        if (locked) {
+            setFocusedTextInput(null);
+            setFocused(null);
+        }
+        if (positionPanel != null) {
+            positionPanel.setPlacementLocked(locked);
+            editHistory.begin(selectedOverlay);
+        }
+        updateHistoryButtons();
+        calculateAlignmentLinePositions();
+    }
+
+    private void restoreHistory(boolean redo) {
+        closePositionPanel();
+        resetSelection();
+        Overlay restored = redo ? editHistory.redo() : editHistory.undo();
+        if (restored != null) {
+            selectedOverlay = restored;
+            userInteracted = true;
+            animationLengthRemaining = 0;
+            setupButtons();
+            calculateAlignmentLinePositions();
+        }
+        updateHistoryButtons();
+    }
+
+    private void updateHistoryButtons() {
+        if (undoButton != null) {
+            undoButton.active = editHistory.canUndo();
+        }
+        if (redoButton != null) {
+            redoButton.active = editHistory.canRedo();
+        }
+    }
+
+    private void updateHelpHover(double mouseX, double mouseY) {
+        boolean hoveringHelp = helpButton != null
+                && helpButton.isMouseOver(mouseX, mouseY)
+                && (positionPanel == null || !positionPanel.contains(mouseX, mouseY));
+        if (!hoveringHelp) {
+            suppressHelpHover = false;
+        }
+        if (helpPinned) {
+            return;
+        }
+
+        if (hoveringHelp && !suppressHelpHover && selectionMode == SelectionMode.NONE && !pendingPanelClick) {
+            openHelpPanel();
+        } else {
+            helpPanel = null;
+        }
+    }
+
+    private void openHelpPanel() {
+        if (helpPanel != null) {
+            return;
+        }
+
+        closePositionPanel();
+        resetSelection();
+        helpPanel = new OverlayHelpPanel(HELP_TOOLTIP_LINES, width, height, buttonsAtBottom);
+    }
+
+    private void closeHelpPanel() {
+        helpPanel = null;
+        helpPinned = false;
+        suppressHelpHover = true;
+    }
+
+    private void closePositionPanel() {
+        if (positionPanel == null) return;
+
+        positionPanel.getWidgets().forEach(this::removeWidget);
+        positionPanel = null;
+        setFocusedTextInput(null);
+        setFocused(null);
+        editHistory.finish();
+        updateHistoryButtons();
+        calculateAlignmentLinePositions();
     }
 
     private enum SelectionMode {
