@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.character;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
@@ -13,12 +14,15 @@ import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.models.character.actionbar.matchers.CharacterCreationSegmentMatcher;
 import com.wynntils.models.character.actionbar.matchers.CharacterSelectionClassSegmentMatcher;
+import com.wynntils.models.character.actionbar.matchers.CharacterSelectionGamemodesSegmentMatcher;
 import com.wynntils.models.character.actionbar.matchers.CharacterSelectionLevelSegmentMatcher;
 import com.wynntils.models.character.actionbar.matchers.CharacterSelectionSegmentMatcher;
 import com.wynntils.models.character.actionbar.segments.CharacterCreationSegment;
 import com.wynntils.models.character.actionbar.segments.CharacterSelectionClassSegment;
+import com.wynntils.models.character.actionbar.segments.CharacterSelectionGamemodesSegment;
 import com.wynntils.models.character.actionbar.segments.CharacterSelectionLevelSegment;
 import com.wynntils.models.character.actionbar.segments.CharacterSelectionSegment;
+import com.wynntils.models.character.type.CharacterGamemode;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.containers.containers.CharacterSelectionContainer;
 import com.wynntils.models.worlds.type.WorldState;
@@ -26,11 +30,12 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 public final class CharacterSelectionModel extends Model {
     private static final List<Integer> CHARACTER_SLOTS =
@@ -39,6 +44,7 @@ public final class CharacterSelectionModel extends Model {
     private List<Integer> validCharacterSlots = new ArrayList<>();
     private List<ItemStack> selectionScreenItems = new ArrayList<>();
     private ClassType currentCharacterClass = ClassType.NONE;
+    private Set<CharacterGamemode> gamemodes = EnumSet.noneOf(CharacterGamemode.class);
     private boolean isReskinned = false;
     private int currentCharacterLevel = 1;
     private boolean isCreatingCharacter = false;
@@ -50,6 +56,7 @@ public final class CharacterSelectionModel extends Model {
         Handlers.ActionBar.registerSegment(new CharacterSelectionSegmentMatcher());
         Handlers.ActionBar.registerSegment(new CharacterSelectionClassSegmentMatcher());
         Handlers.ActionBar.registerSegment(new CharacterSelectionLevelSegmentMatcher());
+        Handlers.ActionBar.registerSegment(new CharacterSelectionGamemodesSegmentMatcher());
     }
 
     @SubscribeEvent
@@ -75,6 +82,7 @@ public final class CharacterSelectionModel extends Model {
         event.runIfPresent(CharacterSelectionLevelSegment.class, this::updateCurrentCharacterLevel);
         event.runIfPresent(CharacterCreationSegment.class, this::setCreatingCharacter);
         event.runIfPresent(CharacterSelectionSegment.class, this::setSelectingCharacter);
+        event.runIfPresent(CharacterSelectionGamemodesSegment.class, this::updateCurrentCharacterGamemodes);
     }
 
     @SubscribeEvent
@@ -85,7 +93,7 @@ public final class CharacterSelectionModel extends Model {
         if (Models.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) return;
 
         Models.Character.setSelectedCharacterFromCharacterSelection(
-                currentCharacterClass, isReskinned, currentCharacterLevel);
+                currentCharacterClass, isReskinned, currentCharacterLevel, gamemodes);
     }
 
     public void playWithCharacter(int slot) {
@@ -94,7 +102,7 @@ public final class CharacterSelectionModel extends Model {
         // ContainerClickEvent will get the air item and not parse the character properly so pass it the correct item
         Models.Character.handleSelectedCharacter(selectionScreenItems.get(slot));
         ContainerUtils.clickOnSlot(
-                slot, characterContainer.getContainerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, selectionScreenItems);
+                slot, characterContainer.getContainerId(), InputConstants.MOUSE_BUTTON_LEFT, selectionScreenItems);
     }
 
     public List<Integer> getValidCharacterSlots() {
@@ -108,6 +116,11 @@ public final class CharacterSelectionModel extends Model {
 
     private void updateCurrentCharacterLevel(CharacterSelectionLevelSegment characterSelectionLevelSegment) {
         currentCharacterLevel = characterSelectionLevelSegment.getLevel();
+    }
+
+    private void updateCurrentCharacterGamemodes(
+            CharacterSelectionGamemodesSegment characterSelectionGamemodesSegment) {
+        gamemodes = characterSelectionGamemodesSegment.getGamemodes();
     }
 
     private void setCreatingCharacter(CharacterCreationSegment characterCreationSegment) {

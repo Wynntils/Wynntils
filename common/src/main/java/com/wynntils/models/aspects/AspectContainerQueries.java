@@ -12,6 +12,7 @@ import com.wynntils.handlers.container.scriptedquery.QueryBuilder;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.models.aspects.type.AspectDump;
 import com.wynntils.models.aspects.type.AspectInfo;
 import com.wynntils.models.aspects.type.SavableAspectSet;
 import com.wynntils.models.character.type.ClassType;
@@ -28,7 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -38,6 +41,7 @@ public class AspectContainerQueries {
     private static final int ASPECTS_BUTTON_SLOT = 86;
     private static final int PREVIOUS_PAGE_SLOT = 57;
     private static final int NEXT_PAGE_SLOT = 59;
+    private static final Pattern NO_ASPECT_PATTERN = Pattern.compile("§8§l(?:Empty|Locked) Aspect Slot");
     private static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
     private static final StyledText PREVIOUS_PAGE_ITEM_NAME = StyledText.fromString("§7Previous Page");
     private int currentPage;
@@ -97,7 +101,13 @@ public class AspectContainerQueries {
         builder.build().executeQuery();
     }
 
-    public void scanAspectPages(Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
+    public void scanAspectPages(
+            Consumer<AspectDump> supplier,
+            Consumer<String> onStatus,
+            Consumer<String> onError,
+            Consumer<String> onComplete) {
+        AspectPageScanner scanner = new AspectPageScanner();
+
         QueryBuilder builder = ScriptedContainerQuery.builder("Aspect Page Scanner")
                 .onError(msg -> {
                     onError.accept(msg);
@@ -115,8 +125,6 @@ public class AspectContainerQueries {
                 .reprocess(container -> {
                     ItemStack aspectItem = container.items().get(ASPECTS_BUTTON_SLOT);
                     if (aspectItem.equals(ItemStack.EMPTY)) {
-                        // This is inside the scan for the /wynntils rescan command, so we need to run the onComplete,
-                        // otherwise the ability tree does not get scanned.
                         onComplete.accept("You do not have aspects unlocked, continuing scan...");
                         throw new ContainerQueryException("You do not have aspects unlocked, continuing scan...");
                     }
@@ -138,15 +146,24 @@ public class AspectContainerQueries {
                                 .accumulateSetSlotChanges(2)
                                 .processIncomingContainer(c -> onStatus.accept("Moving to first page")))
 
-                // Click through every page to the last (last aspect slot is air once there are no more pages)
+                // Process page 1
+                .reprocess(scanner::processPage)
+
+                // Click through every page to the last
                 .repeat(
                         c -> !c.items().get(LAST_POSSIBLE_ASPECT_SLOT).isEmpty(),
                         QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
                                 .expectContainer(AspectsContainer.class)
                                 .accumulateSetSlotChanges(2)
-                                .processIncomingContainer(c -> onStatus.accept("Scanning next page")));
+                                .processIncomingContainer(c -> {
+                                    onStatus.accept("Scanning next page");
+                                    scanner.processPage(c);
+                                }));
 
-        builder.execute(() -> onComplete.accept("Finished scanning aspect pages"));
+        builder.execute(() -> {
+            supplier.accept(scanner.getResult());
+            onComplete.accept("Finished scanning aspect pages");
+        });
         builder.build().executeQuery();
     }
 
@@ -410,6 +427,51 @@ public class AspectContainerQueries {
             }
 
             supplier.accept(new SavableAspectSet(currentAspects, classType));
+        }
+    }
+
+    private static class AspectPageScanner {
+        private final Map<String, Integer> ownedAspects = new TreeMap<>();
+        private List<String> equippedAspects = null;
+
+        public void processPage(ContainerContent content) {
+            List<ItemStack> items = content.items();
+
+            if (equippedAspects == null) {
+                List<String> equipped = new ArrayList<>();
+
+                List<Integer> equippedSlots = Models.Container.getCurrentContainer() instanceof AspectsContainer c
+                        ? c.getEquippedSlots()
+                        : EQUIPPED_SLOTS;
+
+                for (int slot : equippedSlots) {
+                    if (slot >= items.size()) continue;
+                    ItemStack stack = items.get(slot);
+                    if (stack.isEmpty()) continue;
+
+                    StyledText itemName = StyledText.fromComponent(stack.getHoverName());
+                    if (itemName.matches(NO_ASPECT_PATTERN)) continue;
+
+                    Models.Item.asWynnItem(stack, AspectItem.class).ifPresent(aspect -> equipped.add(aspect.getName()));
+                }
+
+                if (!equipped.isEmpty()) {
+                    this.equippedAspects = equipped;
+                }
+            }
+
+            for (int slot : ASPECT_INVENTORY_SLOTS) {
+                if (slot >= items.size()) continue;
+                ItemStack stack = items.get(slot);
+                if (stack.isEmpty()) continue;
+
+                Models.Item.asWynnItem(stack, AspectItem.class)
+                        .ifPresent(aspect -> ownedAspects.put(aspect.getName(), aspect.getTier()));
+            }
+        }
+
+        public AspectDump getResult() {
+            return new AspectDump(ownedAspects, equippedAspects != null ? equippedAspects : List.of());
         }
     }
 }

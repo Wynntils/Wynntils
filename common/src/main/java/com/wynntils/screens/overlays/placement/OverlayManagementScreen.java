@@ -42,6 +42,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
@@ -315,7 +316,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 setFocusedTextInput(null);
                 setFocused(null);
                 setDragging(false);
-                for (var widget : positionPanel.getWidgets()) {
+                for (AbstractWidget widget : positionPanel.getWidgets()) {
                     if (!widget.visible || !widget.active) continue;
                     if (widget.mouseClicked(event, isDoubleClick)) {
                         setFocused(widget);

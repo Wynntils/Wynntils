@@ -5,6 +5,7 @@
 package com.wynntils.models.abilitytree.type;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.models.character.type.CharacterGamemode;
 
 // If this needs update look at:
 // https://wynncraft.wiki.gg/wiki/Ability_Tree#Ability_Points
@@ -62,6 +63,11 @@ public final class AbilityPointProgression {
     }
 
     private static int getLoanedPoints() {
+        if (Models.Character.hasGamemode(CharacterGamemode.IRONMAN)
+                || Models.Character.hasGamemode(CharacterGamemode.ULTIMATE_IRONMAN)) {
+            return 0;
+        }
+
         return switch (Models.Account.getSupporterRank()) {
             case VIP_PLUS -> 2;
             case HERO, HERO_PLUS, CHAMPION -> 4;

@@ -5,6 +5,7 @@
 package com.wynntils.screens.guides.sets;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
@@ -39,7 +40,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
-import org.lwjgl.glfw.GLFW;
 
 public class SetGuideButton extends GuideButton {
     private static final CustomColor BUTTON_COLOR = new CustomColor(116, 108, 132);
@@ -107,12 +107,12 @@ public class SetGuideButton extends GuideButton {
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (statsPage) {
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                 equippedCount = Math.min(equippedCount + 1, setInfo.bonuses().size());
                 saveState();
                 cachedTooltip = null;
                 return true;
-            } else if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+            } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 equippedCount = Math.max(1, equippedCount - 1);
                 saveState();
                 cachedTooltip = null;
@@ -120,7 +120,7 @@ public class SetGuideButton extends GuideButton {
             }
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_MIDDLE) {
             statsPage = !statsPage;
             saveState();
             cachedTooltip = null;

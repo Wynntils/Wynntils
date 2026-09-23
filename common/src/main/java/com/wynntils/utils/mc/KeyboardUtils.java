@@ -4,22 +4,22 @@
  */
 package com.wynntils.utils.mc;
 
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.InputConstants;
 
 public final class KeyboardUtils {
     public static boolean isKeyDown(int keyCode) {
-        return GLFW.glfwGetKey(McUtils.window().handle(), keyCode) == 1;
+        return InputConstants.isKeyDown(McUtils.window(), keyCode);
     }
 
     public static boolean isShiftDown() {
-        return isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT) || isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT);
+        return isKeyDown(InputConstants.KEY_LSHIFT) || isKeyDown(InputConstants.KEY_RSHIFT);
     }
 
     public static boolean isControlDown() {
-        return isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) || isKeyDown(GLFW.GLFW_KEY_RIGHT_CONTROL);
+        return isKeyDown(InputConstants.KEY_LCONTROL) || isKeyDown(InputConstants.KEY_RCONTROL);
     }
 
     public static boolean isAltDown() {
-        return isKeyDown(GLFW.GLFW_KEY_LEFT_ALT) || isKeyDown(GLFW.GLFW_KEY_RIGHT_ALT);
+        return isKeyDown(InputConstants.KEY_LALT) || isKeyDown(InputConstants.KEY_RALT);
     }
 }

@@ -4,7 +4,9 @@
  */
 package com.wynntils.models.aspects;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
@@ -16,6 +18,10 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.KeyMappingEvent;
+import com.wynntils.mc.event.MouseScrollEvent;
+import com.wynntils.mc.event.ScreenClosedEvent;
+import com.wynntils.models.aspects.type.AspectDump;
 import com.wynntils.models.aspects.type.AspectInfo;
 import com.wynntils.models.aspects.type.SavableAspectSet;
 import com.wynntils.models.character.type.ClassType;
@@ -24,6 +30,8 @@ import com.wynntils.models.containers.containers.AspectsContainer;
 import com.wynntils.models.containers.containers.RaidRewardChestContainer;
 import com.wynntils.models.containers.containers.RaidRewardPreviewContainer;
 import com.wynntils.models.items.items.game.AspectItem;
+import com.wynntils.screens.buildloadouts.BuildLoadoutsScreen;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
@@ -35,6 +43,9 @@ import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Options;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -43,6 +54,11 @@ public final class AspectModel extends Model {
     private static final Pattern NO_ASPECT_PATTERN = Pattern.compile("§8§l(?:Empty|Locked) Aspect Slot");
     private final AspectInfoRegistry aspectInfoRegistry = new AspectInfoRegistry();
     public static final AspectContainerQueries ASPECT_CONTAINER_QUERIES = new AspectContainerQueries();
+
+    private boolean disableKeys = false;
+    private boolean cancelScreenClosing = false;
+    private boolean rescanInProgress = false;
+    private AspectDump pendingScanResult = null;
 
     @Persisted
     private final Storage<Map<String, List<String>>> equippedAspects = new Storage<>(new TreeMap<>());
@@ -61,6 +77,8 @@ public final class AspectModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onContentSet(ContainerSetContentEvent.Pre event) {
+        if (rescanInProgress) return;
+
         Container currentContainer = Models.Container.getCurrentContainer();
 
         List<Integer> equippedSlots = new ArrayList<>();
@@ -115,6 +133,8 @@ public final class AspectModel extends Model {
     // Handles right clicking adding/removing aspects, and paging through owned aspects
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
+        if (rescanInProgress) return;
+
         Container currentContainer = Models.Container.getCurrentContainer();
 
         List<Integer> equippedSlots = currentContainer instanceof AspectsContainer aspectsContainer
@@ -167,6 +187,46 @@ public final class AspectModel extends Model {
             equippedAspects.store(currentEquippedAspects);
             equippedAspects.touched();
         }
+    }
+
+    private void releaseKeys() {
+        Options options = McUtils.options();
+
+        for (KeyMapping keyMapping : options.keyMappings) {
+            KeyMapping.set(keyMapping.key, false);
+        }
+    }
+
+    @SubscribeEvent
+    public void onKey(KeyMappingEvent event) {
+        if (!disableKeys) return;
+
+        if (event.getKey().getValue() != InputConstants.KEY_ESCAPE) {
+            Handlers.ContainerQuery.endAllQueries();
+
+            McUtils.sendWynntilsPrefixMessage(
+                    Component.translatable("command.wynntils.rescan.abortText").withColor(CommonColors.RED.asInt()));
+
+            disableKeys = false;
+        }
+    }
+
+    @SubscribeEvent
+    public void onMouseScroll(MouseScrollEvent event) {
+        if (!disableKeys) return;
+
+        Handlers.ContainerQuery.endAllQueries();
+
+        McUtils.sendWynntilsPrefixMessage(
+                Component.translatable("command.wynntils.rescan.abortText").withColor(CommonColors.RED.asInt()));
+
+        disableKeys = false;
+    }
+
+    @SubscribeEvent
+    public void onScreenClose(ScreenClosedEvent.Pre e) {
+        if (!cancelScreenClosing || !(e.getScreen() instanceof BuildLoadoutsScreen)) return;
+        e.setCanceled(true);
     }
 
     public Stream<AspectInfo> getAllAspectInfos() {
@@ -226,30 +286,76 @@ public final class AspectModel extends Model {
 
     public void clearEquippedAspectsAndRescan(
             Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
-        Map<String, List<String>> currentEquippedAspects = equippedAspects.get();
-        currentEquippedAspects.put(Models.Character.getId(), new ArrayList<>());
-        equippedAspects.store(currentEquippedAspects);
-        equippedAspects.touched();
+        rescanInProgress = true;
+        pendingScanResult = null;
 
-        ownedAspects.store(new TreeMap<>());
-        ownedAspects.touched();
+        disableKeys = true;
+        releaseKeys();
 
-        McUtils.player().closeContainer();
+        Managers.TickScheduler.scheduleNextTick(() -> ASPECT_CONTAINER_QUERIES.scanAspectPages(
+                (result) -> {
+                    pendingScanResult = result;
+                },
+                onStatus,
+                (error) -> {
+                    // This needs to be delayed, because getCurrentContainer() in onContentSet returns the wrong
+                    // container after a ServerboundContainerClosePacket
+                    Managers.TickScheduler.scheduleLater(
+                            () -> {
+                                rescanInProgress = false;
+                                pendingScanResult = null;
+                            },
+                            5);
+                    onError.accept(error);
+                    disableKeys = false;
+                },
+                (complete) -> {
+                    if (pendingScanResult == null) {
+                        rescanInProgress = false;
+                        disableKeys = false;
+                        onComplete.accept(complete);
+                        return;
+                    }
 
-        Managers.TickScheduler.scheduleNextTick(
-                () -> ASPECT_CONTAINER_QUERIES.scanAspectPages(onStatus, onError, onComplete));
+                    Map<String, List<String>> updatedEquipped = new TreeMap<>(equippedAspects.get());
+                    updatedEquipped.put(Models.Character.getId(), new ArrayList<>(pendingScanResult.equippedAspects()));
+                    equippedAspects.store(updatedEquipped);
+                    equippedAspects.touched();
+
+                    ownedAspects.store(new TreeMap<>(pendingScanResult.ownedAspects()));
+                    ownedAspects.touched();
+
+                    // This needs to be delayed, because getCurrentContainer() in onContentSet returns the wrong
+                    // container after a ServerboundContainerClosePacket
+                    Managers.TickScheduler.scheduleLater(
+                            () -> {
+                                rescanInProgress = false;
+                                pendingScanResult = null;
+                            },
+                            5);
+                    disableKeys = false;
+                    onComplete.accept(complete);
+                }));
     }
 
     public void saveCurrentAspectLoadout(
             String name, Consumer<String> onStatus, Consumer<String> onError, Consumer<String> onComplete) {
+        cancelScreenClosing = true;
+
         ASPECT_CONTAINER_QUERIES.dumpAspectContainer(
                 loadout -> {
                     Services.loadout.saveAspectLoadout(name, loadout);
                     WynntilsMod.info("Saved aspect loadout: " + name);
                 },
                 onStatus,
-                onError,
-                onComplete);
+                (error) -> {
+                    onError.accept(error);
+                    cancelScreenClosing = false;
+                },
+                (complete) -> {
+                    onComplete.accept(complete);
+                    cancelScreenClosing = false;
+                });
     }
 
     public void loadAspectLoadout(
@@ -275,6 +381,18 @@ public final class AspectModel extends Model {
         // Close any open background container before starting the query
         ContainerUtils.closeBackgroundContainer();
 
-        ASPECT_CONTAINER_QUERIES.applyAspectLoadout(loadout.aspectNames(), onStatus, onError, onComplete);
+        cancelScreenClosing = true;
+
+        ASPECT_CONTAINER_QUERIES.applyAspectLoadout(
+                loadout.aspectNames(),
+                onStatus,
+                (error) -> {
+                    onError.accept(error);
+                    cancelScreenClosing = false;
+                },
+                (complete) -> {
+                    onComplete.accept(complete);
+                    cancelScreenClosing = false;
+                });
     }
 }
