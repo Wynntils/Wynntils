@@ -8,7 +8,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Services;
 import com.wynntils.screens.guides.widgets.GuideButton;
 import com.wynntils.utils.colors.CustomColor;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 
 public class TomeGuideButton extends GuideButton {
@@ -22,7 +22,7 @@ public class TomeGuideButton extends GuideButton {
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (!builtTooltip) {
             tomeItemStack.buildTooltip();
             builtTooltip = true;
@@ -45,6 +45,6 @@ public class TomeGuideButton extends GuideButton {
 
     @Override
     protected CustomColor getColor() {
-        return CustomColor.fromChatFormatting(tomeItemStack.getTomeInfo().tier().getChatFormatting());
+        return CustomColor.fromTextColor(tomeItemStack.getTomeInfo().tier().getTextColor());
     }
 }

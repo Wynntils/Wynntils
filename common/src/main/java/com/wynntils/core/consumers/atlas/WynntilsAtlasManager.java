@@ -7,7 +7,7 @@ package com.wynntils.core.consumers.atlas;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import java.util.List;
-import net.minecraft.client.resources.model.AtlasManager;
+import net.minecraft.client.resources.model.sprite.AtlasManager;
 import net.minecraft.resources.Identifier;
 
 public final class WynntilsAtlasManager extends Manager {

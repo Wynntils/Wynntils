@@ -23,7 +23,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.type.RenderElementType;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.neoforged.bus.api.EventPriority;
@@ -103,7 +103,7 @@ public class TowerEffectOverlayFeature extends Feature {
         }
     }
 
-    private void renderAuraVignette(GuiGraphics guiGraphics) {
+    private void renderAuraVignette(GuiGraphicsExtractor guiGraphics) {
         long remainingTimeUntilAura = Models.GuildWarTower.getRemainingTimeUntilAura();
         if (remainingTimeUntilAura <= 0) return;
 
@@ -118,7 +118,7 @@ public class TowerEffectOverlayFeature extends Feature {
                         auraVignetteIntensity.get()));
     }
 
-    private void renderVolleyVignette(GuiGraphics guiGraphics) {
+    private void renderVolleyVignette(GuiGraphicsExtractor guiGraphics) {
         long remainingTimeUntilVolley = Models.GuildWarTower.getRemainingTimeUntilVolley();
         if (remainingTimeUntilVolley <= 0) return;
 

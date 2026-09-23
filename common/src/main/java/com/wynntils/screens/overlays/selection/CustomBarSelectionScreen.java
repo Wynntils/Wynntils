@@ -21,7 +21,7 @@ import com.wynntils.utils.render.type.UniversalTexture;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -98,8 +98,8 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         // Draw the custom bar centered in the screen with 50% progress
         RenderUtils.drawProgressBar(

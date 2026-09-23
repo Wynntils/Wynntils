@@ -8,6 +8,7 @@ import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.DestroyBlockEvent;
+import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
@@ -20,7 +21,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import org.spongepowered.asm.mixin.Mixin;
@@ -59,14 +60,19 @@ public abstract class MultiPlayerGameModeMixin {
 
     @Inject(
             method =
-                    "handleInventoryMouseClick(IIILnet/minecraft/world/inventory/ClickType;Lnet/minecraft/world/entity/player/Player;)V",
+                    "handleContainerInput(IIILnet/minecraft/world/inventory/ContainerInput;Lnet/minecraft/world/entity/player/Player;)V",
             at = @At("HEAD"),
             cancellable = true)
-    private void handleInventoryMouseClickPre(
-            int containerId, int slotId, int mouseButton, ClickType clickType, Player player, CallbackInfo ci) {
+    private void handleContainerInputPre(
+            int containerId,
+            int slotId,
+            int mouseButton,
+            ContainerInput containerInput,
+            Player player,
+            CallbackInfo ci) {
         if (containerId != player.containerMenu.containerId) return;
 
-        ContainerClickEvent event = new ContainerClickEvent(player.containerMenu, slotId, clickType, mouseButton);
+        ContainerClickEvent event = new ContainerClickEvent(player.containerMenu, slotId, containerInput, mouseButton);
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
@@ -108,31 +114,16 @@ public abstract class MultiPlayerGameModeMixin {
 
     @Inject(
             method =
-                    "interactAt(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/EntityHitResult;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void interactAt(
-            Player player,
-            Entity target,
-            EntityHitResult ray,
-            InteractionHand hand,
-            CallbackInfoReturnable<InteractionResult> cir) {
-        PlayerInteractEvent.InteractAt event = new PlayerInteractEvent.InteractAt(player, hand, target, ray);
-        MixinHelper.post(event);
-        if (event.isCanceled()) {
-            cir.setReturnValue(InteractionResult.FAIL);
-            cir.cancel();
-        }
-    }
-
-    @Inject(
-            method =
-                    "interact(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;",
+                    "interact(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/EntityHitResult;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;",
             at = @At("HEAD"),
             cancellable = true)
     private void interact(
-            Player player, Entity target, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-        PlayerInteractEvent.Interact event = new PlayerInteractEvent.Interact(player, hand, target);
+            Player player,
+            Entity entity,
+            EntityHitResult hit,
+            InteractionHand hand,
+            CallbackInfoReturnable<InteractionResult> cir) {
+        PlayerInteractEvent.Interact event = new PlayerInteractEvent.Interact(player, hand, entity);
         MixinHelper.post(event);
         if (event.isCanceled()) {
             cir.setReturnValue(InteractionResult.FAIL);
@@ -163,5 +154,14 @@ public abstract class MultiPlayerGameModeMixin {
                                     "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
     private void ensureHasSentCarriedItem(CallbackInfo ci) {
         MixinHelper.post(new ChangeCarriedItemEvent());
+    }
+
+    @Inject(method = "dropItem(Lnet/minecraft/client/player/LocalPlayer;Z)V", at = @At("HEAD"), cancellable = true)
+    private void onDropItemPre(LocalPlayer player, boolean all, CallbackInfo ci) {
+        DropHeldItemEvent event = new DropHeldItemEvent(all);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
     }
 }

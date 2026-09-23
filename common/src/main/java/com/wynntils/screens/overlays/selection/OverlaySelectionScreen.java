@@ -24,7 +24,6 @@ import com.wynntils.overlays.infobox.InfoBoxOverlay;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.HoverableTexturedButton;
 import com.wynntils.screens.base.widgets.SearchWidget;
-import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
@@ -48,7 +47,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -79,7 +78,6 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     private HoverableTexturedButton builtInButton;
     private HoverableTexturedButton customButton;
     private HoverableTexturedButton selectedFilterButton;
-    private TextInputBoxWidget focusedTextInput;
     private WynntilsCheckbox renderOverlaysCheckbox;
 
     // UI size, positions, etc
@@ -166,14 +164,14 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // When not rendering a preview of the selected overlay
         if (!renderPreview) {
             RenderUtils.drawTexturedRect(guiGraphics, Texture.OVERLAY_SELECTION_GUI, offsetX, offsetY);
 
-            searchWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+            searchWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
-            renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
+            extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
 
             if (selectedOverlay != null) {
                 String textToRender = selectedOverlay.getTranslatedName();
@@ -250,8 +248,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                 return;
             }
 
-            renderOverlaysCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
-            exitPreviewButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderOverlaysCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            exitPreviewButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
             RenderUtils.drawRectBorders(
                     guiGraphics,
@@ -265,16 +263,16 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    protected void renderBlurredBackground(GuiGraphics guiGraphics) {
+    protected void extractBlurredBackground(GuiGraphicsExtractor guiGraphics) {
         if (!renderPreview) {
-            super.renderBlurredBackground(guiGraphics);
+            super.extractBlurredBackground(guiGraphics);
         }
     }
 
     @Override
-    protected void renderMenuBackground(GuiGraphics guiGraphics) {
+    protected void extractMenuBackground(GuiGraphicsExtractor guiGraphics) {
         if (!renderPreview) {
-            this.renderMenuBackground(guiGraphics, 0, 0, this.width, this.height);
+            this.extractMenuBackground(guiGraphics, 0, 0, this.width, this.height);
         }
     }
 
@@ -422,7 +420,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
 
     @Override
     public boolean charTyped(CharacterEvent event) {
-        return focusedTextInput != null && focusedTextInput.charTyped(event);
+        return getFocusedTextInput() != null && getFocusedTextInput().charTyped(event);
     }
 
     @Override
@@ -445,17 +443,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
             }
         }
 
-        return focusedTextInput != null && focusedTextInput.keyPressed(event);
-    }
-
-    @Override
-    public TextInputBoxWidget getFocusedTextInput() {
-        return focusedTextInput;
-    }
-
-    @Override
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.focusedTextInput = focusedTextInput;
+        return getFocusedTextInput() != null && getFocusedTextInput().keyPressed(event);
     }
 
     public boolean configOptionContains(Config<?> config) {
@@ -964,15 +952,16 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         // endregion
     }
 
-    private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void extractWidgetRenderStates(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (HoverableTexturedButton optionsButton : optionButtons) {
-            optionsButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            optionsButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.enableScissor(guiGraphics, 6 + offsetX, 28 + offsetY, 122, MAX_OVERLAYS_PER_PAGE * 21 + 2);
 
         for (AbstractWidget widget : overlays) {
-            widget.render(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.disableScissor(guiGraphics);
@@ -980,13 +969,13 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         RenderUtils.enableScissor(guiGraphics, 148 + offsetX, 28 + offsetY, 188, CONFIGS_PER_PAGE * 43 - 2);
 
         for (AbstractWidget widget : configs) {
-            widget.render(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    private void renderOverlayScroll(GuiGraphics guiGraphics) {
+    private void renderOverlayScroll(GuiGraphicsExtractor guiGraphics) {
         overlayScrollY = 24
                 + offsetY
                 + MathUtils.map(
@@ -999,7 +988,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, 133 + offsetX, overlayScrollY);
     }
 
-    private void renderConfigScroll(GuiGraphics guiGraphics) {
+    private void renderConfigScroll(GuiGraphicsExtractor guiGraphics) {
         configScrollY = 24
                 + offsetY
                 + MathUtils.map(
@@ -1012,7 +1001,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, 344 + offsetX, configScrollY);
     }
 
-    private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderTooltips(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         // The option buttons have a slight bit rendered underneath the background, we don't want to render the tooltip
         // when hovering that bit.
         if (MathUtils.isInside(

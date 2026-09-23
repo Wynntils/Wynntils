@@ -13,7 +13,7 @@ import net.minecraft.network.HashedStack;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.ItemStack;
 
 public final class InventoryUtils {
@@ -38,7 +38,7 @@ public final class InventoryUtils {
                 McUtils.inventoryMenu().getStateId(),
                 (short) slotNumber,
                 (byte) mouseButton.ordinal(),
-                ClickType.PICKUP,
+                ContainerInput.PICKUP,
                 changedSlots,
                 HashedStack.EMPTY));
     }

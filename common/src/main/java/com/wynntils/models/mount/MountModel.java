@@ -78,11 +78,6 @@ public final class MountModel extends Model {
     }
 
     @SubscribeEvent
-    public void onInteract(PlayerInteractEvent.InteractAt event) {
-        handleMountItemUse();
-    }
-
-    @SubscribeEvent
     public void onUseItemOn(PlayerInteractEvent.RightClickBlock event) {
         handleMountItemUse();
     }

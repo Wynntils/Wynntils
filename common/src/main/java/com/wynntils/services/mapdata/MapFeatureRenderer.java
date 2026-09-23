@@ -25,7 +25,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingPolygon;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
@@ -38,7 +38,7 @@ public final class MapFeatureRenderer {
     private static final float MINIMUM_RENDER_ALPHA = 0.1f;
 
     public static void renderMapFeature(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             MapFeature feature,
             ResolvedMapAttributes attributes,
             Vector2f mapCenter,
@@ -83,7 +83,7 @@ public final class MapFeatureRenderer {
     }
 
     public static void renderMapLocation(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             MapLocation location,
             ResolvedMapAttributes attributes,
             Vector2f mapCenter,
@@ -193,7 +193,7 @@ public final class MapFeatureRenderer {
     }
 
     private static void renderMapArea(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             MapArea area,
             ResolvedMapAttributes attributes,
             Vector2f mapCenter,

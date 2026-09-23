@@ -13,10 +13,10 @@ import com.wynntils.mc.event.ChatComponentRenderEvent;
 import com.wynntils.mc.event.ChatScreenCreateEvent;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import net.minecraft.client.GuiMessage;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.multiplayer.chat.GuiMessage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -39,7 +39,7 @@ public abstract class ChatComponentMixin {
     }
 
     @WrapOperation(
-            method = "addMessageToDisplayQueue(Lnet/minecraft/client/GuiMessage;)V",
+            method = "addMessageToDisplayQueue(Lnet/minecraft/client/multiplayer/chat/GuiMessage;)V",
             at = @At(value = "INVOKE", target = "Ljava/util/List;addFirst(Ljava/lang/Object;)V"))
     private void addMessageToDisplayQueue(
             List<GuiMessage.Line> instance,
@@ -52,22 +52,23 @@ public abstract class ChatComponentMixin {
     }
 
     @Inject(
-            method = "render(Lnet/minecraft/client/gui/components/ChatComponent$ChatGraphicsAccess;IIZ)V",
+            method =
+                    "extractRenderState(Lnet/minecraft/client/gui/components/ChatComponent$ChatGraphicsAccess;IILnet/minecraft/client/gui/components/ChatComponent$DisplayMode;)V",
             at =
                     @At(
                             value = "INVOKE",
                             target = "Lnet/minecraft/util/profiling/ProfilerFiller;push(Ljava/lang/String;)V"))
-    private void setupRender(
-            ChatComponent.ChatGraphicsAccess chatGraphicsAccess,
-            int mouseX,
-            int mouseY,
-            boolean focused,
+    private void setupExtractRenderState(
+            ChatComponent.ChatGraphicsAccess graphics,
+            int screenHeight,
+            int ticks,
+            ChatComponent.DisplayMode displayMode,
             CallbackInfo ci) {
         MixinHelper.post(new ChatComponentRenderEvent.Pre((ChatComponent) (Object) this));
     }
 
     @ModifyArg(
-            method = "method_75801", // updatePose lambda in render
+            method = "lambda$extractRenderState$0", // updatePose lambda
             at =
                     @At(
                             value = "INVOKE",
@@ -83,7 +84,7 @@ public abstract class ChatComponentMixin {
     }
 
     @WrapOperation(
-            method = "method_75802", // forEachLine in render
+            method = "lambda$extractRenderState$1", // forEachLine lambda
             at =
                     @At(
                             value = "INVOKE",
@@ -97,7 +98,7 @@ public abstract class ChatComponentMixin {
             int y2,
             int color,
             Operation<Void> original) {
-        GuiGraphics guiGraphics = null;
+        GuiGraphicsExtractor guiGraphics = null;
         if (access instanceof ChatComponent.DrawingBackgroundGraphicsAccess bg) {
             guiGraphics = bg.graphics;
         } else if (access instanceof ChatComponent.DrawingFocusedGraphicsAccess fg) {

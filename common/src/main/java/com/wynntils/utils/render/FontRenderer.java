@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
@@ -47,7 +47,7 @@ public final class FontRenderer {
     }
 
     public void renderText(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             StyledText text,
             float x,
             float y,
@@ -78,8 +78,8 @@ public final class FontRenderer {
         guiGraphics.pose().scale(textScale, textScale);
 
         switch (shadow) {
-            case NONE -> guiGraphics.drawString(font, text.getComponent(), 0, 0, customColor.asInt(), false);
-            case NORMAL -> guiGraphics.drawString(font, text.getComponent(), 0, 0, customColor.asInt(), true);
+            case NONE -> guiGraphics.text(font, text.getComponent(), 0, 0, customColor.asInt(), false);
+            case NORMAL -> guiGraphics.text(font, text.getComponent(), 0, 0, customColor.asInt(), true);
             case OUTLINE -> {
                 int shadowColor = SHADOW_COLOR.withAlpha(customColor.a()).asInt();
                 Component strippedComponent = text.iterate((part, changes) -> {
@@ -89,11 +89,11 @@ public final class FontRenderer {
                         })
                         .getComponent();
 
-                guiGraphics.drawString(font, strippedComponent, -1, 0, shadowColor, false);
-                guiGraphics.drawString(font, strippedComponent, 1, 0, shadowColor, false);
-                guiGraphics.drawString(font, strippedComponent, 0, -1, shadowColor, false);
-                guiGraphics.drawString(font, strippedComponent, 0, 1, shadowColor, false);
-                guiGraphics.drawString(font, text.getComponent(), 0, 0, customColor.asInt(), false);
+                guiGraphics.text(font, strippedComponent, -1, 0, shadowColor, false);
+                guiGraphics.text(font, strippedComponent, 1, 0, shadowColor, false);
+                guiGraphics.text(font, strippedComponent, 0, -1, shadowColor, false);
+                guiGraphics.text(font, strippedComponent, 0, 1, shadowColor, false);
+                guiGraphics.text(font, text.getComponent(), 0, 0, customColor.asInt(), false);
             }
         }
 
@@ -101,7 +101,7 @@ public final class FontRenderer {
     }
 
     public void renderText(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             StyledText text,
             float x,
             float y,
@@ -113,7 +113,7 @@ public final class FontRenderer {
     }
 
     public void renderAlignedTextInBox(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             List<StyledText> adjustedLines,
             float x1,
             float x2,
@@ -157,7 +157,7 @@ public final class FontRenderer {
     }
 
     public void renderAlignedTextInBox(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             StyledText[] lines,
             float x1,
             float x2,
@@ -203,7 +203,7 @@ public final class FontRenderer {
     }
 
     public void renderAlignedTextInBox(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             StyledText text,
             float x1,
             float x2,
@@ -231,7 +231,7 @@ public final class FontRenderer {
     }
 
     public void renderAlignedTextInBox(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             StyledText text,
             float x1,
             float x2,
@@ -258,7 +258,7 @@ public final class FontRenderer {
     }
 
     public void renderAlignedHighlightedTextInBox(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             StyledText text,
             float x1,
             float x2,
@@ -314,7 +314,7 @@ public final class FontRenderer {
     }
 
     public void renderAlignedHighlightedTextInBox(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             StyledText[] lines,
             float x1,
             float x2,
@@ -398,7 +398,7 @@ public final class FontRenderer {
     }
 
     public void renderAlignedTextInBox(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             StyledText text,
             float x1,
             float x2,
@@ -423,7 +423,7 @@ public final class FontRenderer {
     }
 
     public void renderAlignedTextInBox(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             StyledText text,
             float x,
             float y1,
@@ -448,7 +448,7 @@ public final class FontRenderer {
     }
 
     public void renderAlignedTextInBox(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             StyledText text,
             float x,
             float y1,
@@ -474,7 +474,7 @@ public final class FontRenderer {
     }
 
     public void renderText(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             StyledText text,
             float x,
             float y,
@@ -517,7 +517,7 @@ public final class FontRenderer {
     }
 
     public void renderText(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             StyledText text,
             float x,
             float y,
@@ -530,7 +530,7 @@ public final class FontRenderer {
     }
 
     public void renderScrollingText(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             StyledText styledText,
             float x,
             float y,
@@ -606,7 +606,7 @@ public final class FontRenderer {
     }
 
     public void renderScrollingText(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             StyledText styledText,
             float x,
             float y,
@@ -629,7 +629,7 @@ public final class FontRenderer {
     }
 
     public void renderScrollingAlignedTextInBox(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             StyledText text,
             float x1,
             float x2,
@@ -669,7 +669,7 @@ public final class FontRenderer {
     }
 
     public void renderScrollingAlignedTextInBox(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             StyledText text,
             float x1,
             float x2,
@@ -695,7 +695,7 @@ public final class FontRenderer {
                 1f);
     }
 
-    public void renderText(GuiGraphics guiGraphics, float x, float y, TextRenderTask line) {
+    public void renderText(GuiGraphicsExtractor guiGraphics, float x, float y, TextRenderTask line) {
         renderText(
                 guiGraphics,
                 line.getText(),
@@ -708,7 +708,8 @@ public final class FontRenderer {
                 line.getSetting().shadow());
     }
 
-    private void renderTexts(GuiGraphics guiGraphics, float x, float y, List<TextRenderTask> lines, float textScale) {
+    private void renderTexts(
+            GuiGraphicsExtractor guiGraphics, float x, float y, List<TextRenderTask> lines, float textScale) {
         float currentY = y;
         for (TextRenderTask line : lines) {
             renderText(guiGraphics, x, currentY, line, textScale);
@@ -716,7 +717,7 @@ public final class FontRenderer {
         }
     }
 
-    private void renderText(GuiGraphics guiGraphics, float x, float y, TextRenderTask line, float textScale) {
+    private void renderText(GuiGraphicsExtractor guiGraphics, float x, float y, TextRenderTask line, float textScale) {
         renderText(
                 guiGraphics,
                 line.getText(),
@@ -730,12 +731,12 @@ public final class FontRenderer {
                 textScale);
     }
 
-    public void renderTexts(GuiGraphics guiGraphics, float x, float y, List<TextRenderTask> lines) {
+    public void renderTexts(GuiGraphicsExtractor guiGraphics, float x, float y, List<TextRenderTask> lines) {
         renderTexts(guiGraphics, x, y, lines, 1f);
     }
 
     public void renderTextsWithAlignment(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             float x,
             float y,
             List<TextRenderTask> toRender,
@@ -761,7 +762,7 @@ public final class FontRenderer {
     }
 
     public void renderTextsWithAlignment(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             float x,
             float y,
             List<TextRenderTask> toRender,
@@ -788,7 +789,7 @@ public final class FontRenderer {
     }
 
     public void renderTextWithAlignment(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             float renderX,
             float renderY,
             TextRenderTask toRender,

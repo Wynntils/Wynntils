@@ -12,7 +12,6 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.models.token.event.TokenGatekeeperEvent;
-import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -20,7 +19,8 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.UniversalTexture;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.network.chat.TextColor;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class TokenBarsOverlay extends ContainerOverlay<TokenBarsOverlay.TokenBarOverlay> {
@@ -58,7 +58,7 @@ public class TokenBarsOverlay extends ContainerOverlay<TokenBarsOverlay.TokenBar
 
     protected static final class TokenBarOverlay extends BarOverlay {
         @Persisted
-        protected final Config<ColorChatFormatting> color = new Config<>(ColorChatFormatting.GOLD);
+        protected final Config<CustomColor> color = new Config<>(CustomColor.fromTextColor(TextColor.GOLD));
 
         @Persisted
         protected final Config<UniversalTexture> barTexture = new Config<>(UniversalTexture.A);
@@ -72,17 +72,17 @@ public class TokenBarsOverlay extends ContainerOverlay<TokenBarsOverlay.TokenBar
         @Override
         public BarOverlayTemplatePair getTemplate() {
             return new BarOverlayTemplatePair(
-                    color.get().getChatFormatting() + "{token_type(" + getId() + ")}: {token(" + getId() + ")}",
+                    "§" + color.get().toHexString() + "{token_type(" + getId() + ")}: {token(" + getId() + ")}",
                     "token(" + getId() + ")");
         }
 
         @Override
         public BarOverlayTemplatePair getPreviewTemplate() {
-            return new BarOverlayTemplatePair(color.get().getChatFormatting() + "Tokens: 3/10", "capped(3; 10)");
+            return new BarOverlayTemplatePair("§" + color.get().toHexString() + "Tokens: 3/10", "capped(3; 10)");
         }
 
         @Override
-        protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
+        protected void renderBar(GuiGraphicsExtractor guiGraphics, float renderY, float renderHeight, float progress) {
             RenderUtils.drawColoredProgressBar(
                     guiGraphics,
                     Texture.UNIVERSAL_BAR,
@@ -100,7 +100,7 @@ public class TokenBarsOverlay extends ContainerOverlay<TokenBarsOverlay.TokenBar
 
         @Override
         public CustomColor getRenderColor() {
-            return CustomColor.fromChatFormatting(color.get().getChatFormatting());
+            return color.get();
         }
 
         @Override

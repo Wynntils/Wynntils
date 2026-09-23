@@ -16,7 +16,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Optional;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
@@ -50,7 +50,8 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(guiGraphics, getRectColor().withAlpha(100), getX(), getY(), width - 18, height);
 
         RenderUtils.drawRectBorders(
@@ -69,7 +70,7 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
                         TextShadow.NORMAL,
                         1.0f);
 
-        usedCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
+        usedCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

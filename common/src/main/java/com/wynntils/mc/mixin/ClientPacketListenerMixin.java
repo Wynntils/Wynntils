@@ -484,8 +484,8 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     private void handleUpdateAdvancementsPacket(ClientboundUpdateAdvancementsPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        MixinHelper.post(new AdvancementUpdateEvent(
-                packet.shouldReset(), packet.getAdded(), packet.getRemoved(), packet.getProgress()));
+        MixinHelper.post(
+                new AdvancementUpdateEvent(packet.shouldReset(), packet.added(), packet.removed(), packet.progress()));
     }
 
     @Inject(
@@ -539,7 +539,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         Entity entity = McUtils.mc().level.getEntity(packet.id());
         if (entity == null) return;
 
-        MixinHelper.post(new EntityPositionSyncEvent(entity, packet.values().position()));
+        MixinHelper.post(new EntityPositionSyncEvent(entity, packet.position().endPosition()));
     }
 
     @ModifyArg(
@@ -601,8 +601,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     private void handleLevelChunkWithLight(ClientboundLevelChunkWithLightPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        MixinHelper.post(
-                new ChunkReceivedEvent(packet.getX(), packet.getZ(), packet.getChunkData(), packet.getLightData()));
+        MixinHelper.post(new ChunkReceivedEvent(packet.x(), packet.z(), packet.chunkData(), packet.lightData()));
     }
 
     @Inject(method = "handleLogin(Lnet/minecraft/network/protocol/game/ClientboundLoginPacket;)V", at = @At("RETURN"))

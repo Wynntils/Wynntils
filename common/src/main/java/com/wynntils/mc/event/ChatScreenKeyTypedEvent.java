@@ -19,12 +19,12 @@ public class ChatScreenKeyTypedEvent extends Event implements ICancellableEvent 
         return keyEvent;
     }
 
-    public int getKeyCode() {
+    public int getInput() {
         return keyEvent.input();
     }
 
-    public int getScanCode() {
-        return keyEvent.scancode();
+    public int getKeyCode() {
+        return keyEvent.keycode();
     }
 
     public int getModifiers() {

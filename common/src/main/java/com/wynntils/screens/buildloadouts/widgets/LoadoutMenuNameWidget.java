@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -59,7 +59,7 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(guiGraphics);
 
         editButtonHovered = isEditButtonHovered(mouseX, mouseY);
@@ -86,16 +86,16 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
                             TextShadow.NORMAL);
         } else {
             // Let TextInputBoxWidget calculate scrolling / highlighting,
-            // but it will invoke our overridden doRenderWidget (no background).
-            super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+            // but it will invoke our overridden doExtractWidgetRenderState (no background).
+            super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         renderEditButton(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
-    protected void doRenderWidget(
-            GuiGraphics guiGraphics,
+    protected void doExtractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -168,7 +168,7 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
                 false);
     }
 
-    private void renderEditButton(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderEditButton(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         int btnX = this.getX() + this.width - EDIT_BUTTON_WIDTH;
         int btnY = this.getY() + (this.height - EDIT_BUTTON_HEIGHT) / 2;
 
@@ -179,7 +179,7 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
         }
     }
 
-    protected void renderBackground(GuiGraphics guiGraphics) {
+    protected void renderBackground(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
                 Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND,

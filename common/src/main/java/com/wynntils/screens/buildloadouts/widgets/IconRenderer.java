@@ -6,7 +6,7 @@ package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 
 public interface IconRenderer {
@@ -18,7 +18,7 @@ public interface IconRenderer {
     int SPACING = 12;
     int STAGGER = 6;
 
-    default void renderSkillIcons(GuiGraphics guiGraphics, float baseX, float baseY, int[] elements) {
+    default void renderSkillIcons(GuiGraphicsExtractor guiGraphics, float baseX, float baseY, int[] elements) {
         if (elements.length == 0) return;
 
         int min = Math.min(elements.length, 3);
@@ -31,7 +31,7 @@ public interface IconRenderer {
         }
     }
 
-    default void renderSkillIcon(GuiGraphics guiGraphics, float x, float y, int index) {
+    default void renderSkillIcon(GuiGraphicsExtractor guiGraphics, float x, float y, int index) {
         RenderUtils.drawTexturedRect(
                 guiGraphics,
                 BANNER_TEXTURE,
@@ -48,7 +48,7 @@ public interface IconRenderer {
     }
 
     default void renderAspect(
-            GuiGraphics guiGraphics, Texture aspectTexture, Texture aspectFlameTexture, float x, float y) {
+            GuiGraphicsExtractor guiGraphics, Texture aspectTexture, Texture aspectFlameTexture, float x, float y) {
         RenderUtils.drawSprite(
                 guiGraphics,
                 aspectFlameTexture,

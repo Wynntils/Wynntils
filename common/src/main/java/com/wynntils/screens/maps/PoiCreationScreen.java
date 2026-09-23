@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -58,7 +58,6 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     private TextInputBoxWidget yInput;
     private TextInputBoxWidget zInput;
     private TextInputBoxWidget colorInput;
-    private TextInputBoxWidget focusedTextInput;
 
     // UI Size, positions etc
     private float dividedWidth;
@@ -382,7 +381,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderMap(guiGraphics);
         RenderUtils.enableScissor(
                 guiGraphics,
@@ -425,7 +424,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         RenderUtils.disableScissor(guiGraphics);
 
         renderMapBorder(guiGraphics);
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -520,9 +519,9 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         updateSaveStatus();
     }
 
-    private void renderIcons(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderIcons(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (IconButton iconButton : iconButtons) {
-            iconButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            iconButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 
@@ -546,14 +545,14 @@ public final class PoiCreationScreen extends AbstractMapScreen {
 
     @Override
     public boolean charTyped(CharacterEvent event) {
-        return (focusedTextInput != null && focusedTextInput.charTyped(event)) || super.charTyped(event);
+        return (getFocusedTextInput() != null && getFocusedTextInput().charTyped(event)) || super.charTyped(event);
     }
 
     @Override
     public boolean keyPressed(KeyEvent event) {
         // When tab is pressed, focus the next text box
         if (event.key() == InputConstants.KEY_TAB) {
-            int index = focusedTextInput == null ? 0 : children().indexOf(focusedTextInput);
+            int index = getFocusedTextInput() == null ? 0 : children().indexOf(getFocusedTextInput());
             int actualIndex = Math.max(index, 0) + 1;
 
             // Try to find next text input
@@ -574,17 +573,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             }
         }
 
-        return (focusedTextInput != null && focusedTextInput.keyPressed(event)) || super.keyPressed(event);
-    }
-
-    @Override
-    public TextInputBoxWidget getFocusedTextInput() {
-        return focusedTextInput;
-    }
-
-    @Override
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.focusedTextInput = focusedTextInput;
+        return (getFocusedTextInput() != null && getFocusedTextInput().keyPressed(event)) || super.keyPressed(event);
     }
 
     @Override

@@ -15,7 +15,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 
 final class OverlayHelpPanel {
@@ -49,7 +49,7 @@ final class OverlayHelpPanel {
         scrollOffset = Math.max(0, Math.min(lines.size() - visibleLines, scrollOffset - (int) Math.signum(delta)));
     }
 
-    void render(GuiGraphics graphics) {
+    void render(GuiGraphicsExtractor graphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 graphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND, x, y, width, height);
         FontRenderer.getInstance()

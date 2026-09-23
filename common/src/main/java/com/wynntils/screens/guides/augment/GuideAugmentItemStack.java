@@ -37,7 +37,7 @@ public abstract class GuideAugmentItemStack extends GuideItemStack {
             tooltip.addAll(generateLore());
             tooltip.add(Component.empty());
             tooltip.add(
-                    Component.literal(gearTier.getName() + " Corkian Augment").withStyle(gearTier.getChatFormatting()));
+                    Component.literal(gearTier.getName() + " Corkian Augment").withColor(gearTier.getTextColor()));
             tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.augments.footer")
                     .withStyle(ChatFormatting.DARK_GRAY));
 

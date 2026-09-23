@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
@@ -9,8 +9,7 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.type.Pair;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import net.minecraft.client.GuiMessage;
-import net.minecraft.client.GuiMessageTag;
+import net.minecraft.client.multiplayer.chat.GuiMessage;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,8 +27,7 @@ public abstract class GuiMessageLineMixin implements GuiMessageLineExtension {
     private Optional<Pair<Component, Integer>> timestamp;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void init(
-            int addedTime, FormattedCharSequence content, GuiMessageTag tag, boolean endOfEntry, CallbackInfo ci) {
+    private void init(GuiMessage parent, FormattedCharSequence content, boolean endOfEntry, CallbackInfo ci) {
         timestamp = Optional.empty();
     }
 

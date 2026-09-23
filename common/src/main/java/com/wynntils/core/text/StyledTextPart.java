@@ -25,6 +25,7 @@ import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.component.ResolvableProfile;
 
@@ -135,7 +136,7 @@ public final class StyledTextPart {
                 }
 
                 // Color formatting resets the style
-                if (formatting.isColor()) {
+                if (TextColor.fromLegacyFormat(formatting) != null) {
                     currentStyle = Style.EMPTY.withColor(formatting);
 
                     // But we keep the inherited font

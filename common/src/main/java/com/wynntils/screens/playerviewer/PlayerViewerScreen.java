@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -41,7 +41,7 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -235,29 +235,29 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         renderPlayerModel(guiGraphics, mouseX, mouseY);
 
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+        this.extractTooltip(guiGraphics, mouseX, mouseY);
 
-        interactionButtons.forEach(button -> button.render(guiGraphics, mouseX, mouseY, partialTick));
-        settingsButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        interactionButtons.forEach(button -> button.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        settingsButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         if (infoButton == null) return;
 
-        infoButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        infoButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
-    private void renderPlayerModel(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderPlayerModel(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         int renderX = (this.width - Texture.PLAYER_VIEWER_BACKGROUND.width()) / 2 + 13;
         int renderY = (this.height - Texture.PLAYER_VIEWER_BACKGROUND.height()) / 2 - 4;
 
         int renderWidth = Texture.PLAYER_VIEWER_BACKGROUND.width();
         int renderHeight = Texture.PLAYER_VIEWER_BACKGROUND.height();
 
-        InventoryScreen.renderEntityInInventoryFollowsMouse(
+        InventoryScreen.extractEntityInInventoryFollowsMouse(
                 guiGraphics,
                 renderX,
                 renderY,
@@ -271,12 +271,12 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.PLAYER_VIEWER_BACKGROUND, this.leftPos, this.topPos);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void extractLabels(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         // we don't want to draw any labels
     }
 
@@ -292,7 +292,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     }
 
     @Override
-    protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type) {
+    protected void slotClicked(Slot slot, int slotId, int mouseButton, ContainerInput containerInput) {
         // do nothing here, because we don't want the user interacting with slots at all
     }
 

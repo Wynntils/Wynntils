@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
@@ -239,7 +239,7 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (holdingMapKey
                 && !Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .openMapKeybind
@@ -323,7 +323,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         McUtils.setScreen(GuildMapScreen.create(mapCenterX, mapCenterZ, zoomLevel));
     }
 
-    private void renderPois(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderPois(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         Stream<? extends Poi> pois = Services.Poi.getServicePois();
 
         pois = Stream.concat(pois, Services.Poi.getCombatPois());

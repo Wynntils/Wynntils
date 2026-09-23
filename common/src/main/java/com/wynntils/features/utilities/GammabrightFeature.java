@@ -13,13 +13,16 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.mc.event.DimensionAmbientLightEvent;
+import com.wynntils.mc.event.LightmapBrightnessEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
 public class GammabrightFeature extends Feature {
     @Persisted
     private final Config<Boolean> gammabrightEnabled = new Config<>(false);
+
+    @Persisted
+    private final Config<Float> gammabrightIntensity = new Config<>(10f);
 
     @RegisterKeyBind
     private final KeyBind gammabrightKeyBind = KeyBindDefinition.TOGGLE_GAMMABRIGHT.create(this::toggleGammaBright);
@@ -29,8 +32,10 @@ public class GammabrightFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onGetDimensionAmbientLight(DimensionAmbientLightEvent event) {
-        event.setCanceled(gammabrightEnabled.get());
+    public void onGetDimensionAmbientLight(LightmapBrightnessEvent event) {
+        if (!gammabrightEnabled.get()) return;
+
+        event.setBrightnes(gammabrightIntensity.get());
     }
 
     private void toggleGammaBright() {

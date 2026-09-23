@@ -10,7 +10,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import java.util.function.Consumer;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class EmoteSearchWidget extends SearchWidget {
     private static final CustomColor BORDER_COLOR = new CustomColor(80, 53, 45, 255);
@@ -22,7 +22,7 @@ public class EmoteSearchWidget extends SearchWidget {
     }
 
     @Override
-    protected void renderBackground(GuiGraphics guiGraphics) {
+    protected void renderBackground(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawRect(guiGraphics, FILL_COLOR, this.getX(), this.getY(), this.width, this.height);
         RenderUtils.drawRectBorders(
                 guiGraphics,

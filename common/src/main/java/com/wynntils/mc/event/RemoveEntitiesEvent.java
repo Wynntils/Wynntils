@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
@@ -12,7 +12,7 @@ public class RemoveEntitiesEvent extends Event {
     private final List<Integer> entityIds;
 
     public RemoveEntitiesEvent(ClientboundRemoveEntitiesPacket packet) {
-        this.entityIds = packet.getEntityIds();
+        this.entityIds = packet.entityIds();
     }
 
     public List<Integer> getEntityIds() {

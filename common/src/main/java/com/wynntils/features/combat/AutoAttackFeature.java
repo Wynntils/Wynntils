@@ -23,6 +23,7 @@ import com.wynntils.models.spells.QueuedMeleeScheduler;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
@@ -66,12 +67,12 @@ public class AutoAttackFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onInteract(PlayerInteractEvent.InteractAt event) {
+    public void onInteract(PlayerInteractEvent.Interact event) {
         if (Models.Character.getClassType() == ClassType.ARCHER && spellInputs == 0) return;
 
-        if (event.getEntityHitResult() != null) {
-            EntityType<?> entityType = event.getEntityHitResult().getEntity().getType();
-            if (entityType == EntityType.INTERACTION) return;
+        if (event.getTarget() != null) {
+            EntityType<?> entityType = event.getTarget().getType();
+            if (entityType == EntityTypes.INTERACTION) return;
         }
 
         handleInput(true);

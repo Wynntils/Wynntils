@@ -24,7 +24,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -92,7 +92,7 @@ public class HeldItemNameOverlay extends Overlay {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (messageTimer <= 0 || itemText.isEmpty()) return;
 
         int alpha = (int) Math.min((float) messageTimer * 256.0F / 10.0F, 255.0F);
@@ -115,7 +115,7 @@ public class HeldItemNameOverlay extends Overlay {
     }
 
     @Override
-    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,

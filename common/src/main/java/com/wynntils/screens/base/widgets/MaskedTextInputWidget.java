@@ -7,7 +7,7 @@ package com.wynntils.screens.base.widgets;
 import com.wynntils.screens.base.TextboxScreen;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -49,10 +49,10 @@ public class MaskedTextInputWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        maskedTextInputBoxWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        maskedTextInputBoxWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
-        toggleMaskButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        toggleMaskButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
@@ -110,8 +110,8 @@ public class MaskedTextInputWidget extends AbstractWidget {
         }
 
         @Override
-        protected void doRenderWidget(
-                GuiGraphics guiGraphics,
+        protected void doExtractWidgetRenderState(
+                GuiGraphicsExtractor guiGraphics,
                 String renderedText,
                 int renderedTextStart,
                 String firstPortion,
@@ -123,7 +123,7 @@ public class MaskedTextInputWidget extends AbstractWidget {
                 int lastWidth,
                 int mouseX,
                 int mouseY) {
-            super.doRenderWidget(
+            super.doExtractWidgetRenderState(
                     guiGraphics,
                     masked ? "*".repeat(renderedText.length()) : renderedText,
                     renderedTextStart,

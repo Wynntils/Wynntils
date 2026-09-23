@@ -9,7 +9,7 @@ import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.List;
 import java.util.function.Consumer;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -28,8 +28,9 @@ public class ContentBookActionWidget extends AbstractWidget implements TooltipPr
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guiGraphics.renderItem(itemStack, getX(), getY());
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        guiGraphics.item(itemStack, getX(), getY());
 
         handleCursor(guiGraphics);
     }

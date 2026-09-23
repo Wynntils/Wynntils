@@ -26,8 +26,6 @@ public class ClientCommandSourceStack extends CommandSourceStack {
                 player.getRotationVector(),
                 null,
                 PermissionSet.NO_PERMISSIONS,
-                player.getDisplayName().toString(),
-                player.getName(),
                 null,
                 player);
     }

@@ -31,13 +31,16 @@ public final class MantraBar extends TrackedBar {
 
         overloadCappedMap.put(
                 ShamanMaskType.LUNATIC,
-                match.group("lunaticCap").equals(String.valueOf(ChatFormatting.GREEN.getChar())));
+                match.group("lunaticCap")
+                        .equals(String.valueOf(ChatFormatting.GREEN.toString().charAt(1))));
         overloadCappedMap.put(
                 ShamanMaskType.HERETIC,
-                match.group("hereticCap").equals(String.valueOf(ChatFormatting.GREEN.getChar())));
+                match.group("hereticCap")
+                        .equals(String.valueOf(ChatFormatting.GREEN.toString().charAt(1))));
         overloadCappedMap.put(
                 ShamanMaskType.FANATIC,
-                match.group("fanaticCap").equals(String.valueOf(ChatFormatting.GREEN.getChar())));
+                match.group("fanaticCap")
+                        .equals(String.valueOf(ChatFormatting.GREEN.toString().charAt(1))));
     }
 
     @Override

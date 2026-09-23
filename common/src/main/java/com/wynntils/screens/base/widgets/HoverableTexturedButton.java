@@ -16,7 +16,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.function.Consumer;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 
 public class HoverableTexturedButton extends BasicTexturedButton {
@@ -52,7 +52,7 @@ public class HoverableTexturedButton extends BasicTexturedButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Only count as hovered if the mouse is outside of the background area as a slight bit
         // of the button is often rendered underneath the background
         if (isHovered

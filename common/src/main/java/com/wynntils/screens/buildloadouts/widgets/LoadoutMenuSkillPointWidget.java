@@ -16,7 +16,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -35,7 +35,8 @@ public class LoadoutMenuSkillPointWidget extends AbstractWidget implements IconR
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, x, y, this.width, this.height);
 
@@ -53,8 +54,7 @@ public class LoadoutMenuSkillPointWidget extends AbstractWidget implements IconR
                                 StyledText.fromString(String.valueOf(points)),
                                 this.x + 30,
                                 this.y + startY,
-                                CustomColor.fromInt(
-                                        Skill.values()[i].getColorCode().getColor()),
+                                CustomColor.fromTextColor(Skill.values()[i].getTextColor()),
                                 HorizontalAlignment.LEFT,
                                 VerticalAlignment.MIDDLE,
                                 TextShadow.NORMAL);

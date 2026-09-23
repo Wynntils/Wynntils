@@ -26,7 +26,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -112,7 +112,8 @@ public class EnhancedStreamerModeFeature extends Feature {
         event.setTooltips(List.of(Component.translatable("feature.wynntils.enhancedStreamerMode.tooltipHidden")));
     }
 
-    private void handleWeapon(ICancellableEvent event, ItemStack itemStack, GuiGraphics guiGraphics, int x, int y) {
+    private void handleWeapon(
+            ICancellableEvent event, ItemStack itemStack, GuiGraphicsExtractor guiGraphics, int x, int y) {
         Optional<GearTypeItemProperty> gearItemOpt =
                 Models.Item.asWynnItemProperty(itemStack, GearTypeItemProperty.class);
         if (gearItemOpt.isEmpty()) return;

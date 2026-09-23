@@ -15,7 +15,7 @@ import com.wynntils.mc.event.TooltipRenderEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.neoforged.bus.api.EventPriority;
@@ -69,7 +69,7 @@ public class TooltipFittingFeature extends Feature {
         if (lastScaleFactor == 1f || event.getPositioner() != null) return;
 
         // push pose before scaling, so we can pop it afterwards
-        GuiGraphics guiGraphics = event.getGuiGraphics();
+        GuiGraphicsExtractor guiGraphics = event.getGuiGraphics();
         guiGraphics.pose().pushMatrix();
         guiGraphics.pose().scale(lastScaleFactor, lastScaleFactor);
 

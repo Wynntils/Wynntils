@@ -52,13 +52,6 @@ public class HealthPotionBlockerFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onPotionUseOn(PlayerInteractEvent.InteractAt event) {
-        if (checkPotionUse()) {
-            event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent
     public void onPotionUseOn(PlayerInteractEvent.RightClickBlock event) {
         if (checkPotionUse()) {
             event.setCanceled(true);
