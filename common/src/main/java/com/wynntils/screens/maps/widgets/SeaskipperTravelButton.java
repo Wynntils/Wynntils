@@ -44,7 +44,7 @@ public class SeaskipperTravelButton extends WynntilsButton {
         if (isHovered && seaskipperScreen.getSelectedDestination() != null) {
             List<Component> tooltip = List.of(Component.translatable(
                             "screens.wynntils.customSeaskipperScreen.travelToDestination",
-                            seaskipperScreen.getSelectedDestination().getName())
+                            seaskipperScreen.getSelectedDestination().profile().destination())
                     .withStyle(ChatFormatting.GRAY));
 
             guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
