@@ -4,12 +4,15 @@
  */
 package com.wynntils.commands;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
+import com.wynntils.features.map.MapFogOfWarFeature;
 import com.wynntils.services.mapdata.MapDataService;
 import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.utils.mc.McUtils;
@@ -70,7 +73,48 @@ public class MapCommand extends Command {
                                         .suggests(PROVIDER_SUGGESTION_PROVIDER)
                                         .executes(this::toggleProvider)))
                         .then(Commands.literal("reload").executes(this::reloadProviders))
-                        .then(Commands.literal("list").executes(this::listProviders)));
+                        .then(Commands.literal("list").executes(this::listProviders)))
+                .then(Commands.literal("fog")
+                        .then(Commands.literal("reset").executes(this::resetFogOfWar))
+                        .then(Commands.literal("reveal")
+                                .then(Commands.literal("all").executes(this::revealAllFogOfWar))
+                                .then(Commands.argument("radius", IntegerArgumentType.integer(1, 64))
+                                        .executes(this::revealFogOfWarAround))));
+    }
+
+    private int resetFogOfWar(CommandContext<CommandSourceStack> context) {
+        return fogOfWarCommand(
+                context,
+                Managers.Feature.getFeatureInstance(MapFogOfWarFeature.class).resetCurrentRecord(),
+                "command.wynntils.map.fogReset");
+    }
+
+    private int revealAllFogOfWar(CommandContext<CommandSourceStack> context) {
+        return fogOfWarCommand(
+                context,
+                Managers.Feature.getFeatureInstance(MapFogOfWarFeature.class).revealAll(),
+                "command.wynntils.map.fogRevealedAll");
+    }
+
+    private int revealFogOfWarAround(CommandContext<CommandSourceStack> context) {
+        int radius = context.getArgument("radius", Integer.class);
+        return fogOfWarCommand(
+                context,
+                Managers.Feature.getFeatureInstance(MapFogOfWarFeature.class).revealAround(radius),
+                "command.wynntils.map.fogRevealedAround");
+    }
+
+    private int fogOfWarCommand(CommandContext<CommandSourceStack> context, boolean applied, String successKey) {
+        if (!applied) {
+            context.getSource()
+                    .sendFailure(Component.translatable("command.wynntils.map.fogUnavailable")
+                            .withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        context.getSource()
+                .sendSuccess(() -> Component.translatable(successKey).withStyle(ChatFormatting.GREEN), false);
+        return 1;
     }
 
     private int reloadProviders(CommandContext<CommandSourceStack> context) {
