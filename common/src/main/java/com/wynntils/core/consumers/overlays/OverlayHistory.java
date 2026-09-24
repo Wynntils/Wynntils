@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 /** Client-lifetime editor history. Capture happens at interaction boundaries, never while rendering. */
 public final class OverlayHistory {
     private static final int MAX_EDITS = 100;
+    private static final int TOOLTIP_EDITS = 5;
     private static final Set<String> PLACEMENT = Set.of(
             "position",
             "size",
@@ -120,16 +122,29 @@ public final class OverlayHistory {
         return history.next(true, Edit::available) != null;
     }
 
-    public Component description(boolean forward) {
+    public Component tooltip(boolean forward) {
+        List<Component> descriptions = new ArrayList<>(TOOLTIP_EDITS);
         if (!forward && !pending.isEmpty()) {
             Overlay overlay =
                     Managers.Overlay.findOverlay(pending.keySet().iterator().next());
             if (overlay != null)
-                return Component.translatable(
-                        "screens.wynntils.overlaySettings.history.edit", overlay.getTranslatedName());
+                descriptions.add(Component.translatable(
+                        "screens.wynntils.overlaySettings.history.edit", overlay.getTranslatedName()));
         }
-        Edit edit = history.next(forward, Edit::available);
-        return edit == null ? Component.empty() : edit.description();
+        for (Edit edit : history.upcoming(forward, Edit::available, TOOLTIP_EDITS - descriptions.size())) {
+            descriptions.add(edit.description());
+        }
+        MutableComponent tooltip =
+                Component.translatable("screens.wynntils.overlaySettings.history." + (forward ? "redo" : "undo"));
+        if (descriptions.isEmpty()) {
+            tooltip.append("\n")
+                    .append(Component.translatable(
+                            "screens.wynntils.overlaySettings.history." + (forward ? "emptyRedo" : "emptyUndo")));
+        }
+        for (int i = 0; i < descriptions.size(); i++) {
+            tooltip.append("\n" + (i + 1) + ". ").append(descriptions.get(i));
+        }
+        return tooltip;
     }
 
     public boolean restoreConfig(Config<?> config, boolean forward) {

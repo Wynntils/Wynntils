@@ -38,6 +38,16 @@ final class HistoryStack<T> {
         return null;
     }
 
+    List<T> upcoming(boolean forward, Predicate<T> available, int count) {
+        List<T> source = forward ? redo : undo;
+        List<T> result = new ArrayList<>(count);
+        for (int i = source.size() - 1; i >= 0 && result.size() < count; i--) {
+            T edit = source.get(i);
+            if (available.test(edit)) result.add(edit);
+        }
+        return result;
+    }
+
     T restore(boolean forward, Predicate<T> available, Consumer<T> apply) {
         T edit = next(forward, available);
         if (edit == null) return null;

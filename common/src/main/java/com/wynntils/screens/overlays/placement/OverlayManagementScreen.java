@@ -1195,13 +1195,11 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private void updateHistoryButtons() {
         if (undoButton != null) {
             undoButton.active = editHistory.canUndo();
-            undoButton.setTooltip(Tooltip.create(Component.translatable(
-                    "screens.wynntils.overlaySettings.history.undo", editHistory.description(false))));
+            undoButton.setTooltip(Tooltip.create(editHistory.tooltip(false)));
         }
         if (redoButton != null) {
             redoButton.active = editHistory.canRedo();
-            redoButton.setTooltip(Tooltip.create(Component.translatable(
-                    "screens.wynntils.overlaySettings.history.redo", editHistory.description(true))));
+            redoButton.setTooltip(Tooltip.create(editHistory.tooltip(true)));
         }
     }
 

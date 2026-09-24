@@ -526,12 +526,8 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
         redoButton.visible = !renderPreview;
         undoButton.active = Managers.Overlay.getSettingsHistory().canUndo()
                 || Managers.Overlay.getSettingsHistory().isPending();
-        undoButton.setTooltip(List.of(Component.translatable(
-                "screens.wynntils.overlaySettings.history.undo",
-                Managers.Overlay.getSettingsHistory().description(false))));
-        redoButton.setTooltip(List.of(Component.translatable(
-                "screens.wynntils.overlaySettings.history.redo",
-                Managers.Overlay.getSettingsHistory().description(true))));
+        undoButton.setTooltip(List.of(Managers.Overlay.getSettingsHistory().tooltip(false)));
+        redoButton.setTooltip(List.of(Managers.Overlay.getSettingsHistory().tooltip(true)));
         redoButton.active = Managers.Overlay.getSettingsHistory().canRedo();
     }
 
