@@ -21,11 +21,19 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class ContentTrackerOverlay extends TextOverlay {
+    private static final String GATHER_PROGRESS_TEMPLATE = """
+            §r{if_string(eq(cap(gather_miniquest_progress);-1);"";concat("Progress: ";
+            if_string(gte(current(gather_miniquest_progress);cap(gather_miniquest_progress));"§a";"§4");format_capped(gather_miniquest_progress)))}
+            """;
+
     @Persisted
     private final Config<Boolean> disableTrackerOnScoreboard = new Config<>(true);
 
     @Persisted
     private final Config<Style> displayStyle = new Config<>(Style.MODERN);
+
+    @Persisted
+    private final Config<Boolean> showGatherMiniquestProgress = new Config<>(true);
 
     public ContentTrackerOverlay() {
         super(
@@ -51,7 +59,12 @@ public class ContentTrackerOverlay extends TextOverlay {
 
     @Override
     protected String getTemplate() {
-        return displayStyle.get().template;
+        String base = displayStyle.get().template;
+        if (showGatherMiniquestProgress.get()) {
+            base += "\n";
+            base += GATHER_PROGRESS_TEMPLATE;
+        }
+        return base;
     }
 
     @Override
