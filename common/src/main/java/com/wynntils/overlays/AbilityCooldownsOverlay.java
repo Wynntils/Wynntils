@@ -5,17 +5,14 @@
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.ContainerOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
-import com.wynntils.core.notifications.type.RedirectAction;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.abilities.event.AbilityCooldownRefreshedEvent;
 import com.wynntils.models.abilities.event.AbilityCooldownsUpdatedEvent;
 import com.wynntils.models.abilities.type.AbilityCooldown;
 import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
@@ -31,15 +28,11 @@ import java.util.List;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOverlay.AbilityCooldownOverlay> {
     @Persisted
     private final Config<Boolean> removeStatusEffect = new Config<>(true);
-
-    @Persisted
-    private final Config<RedirectAction> redirectRefreshedMessages = new Config<>(RedirectAction.HIDE);
 
     @Persisted
     private final Config<Boolean> interpolateTime = new Config<>(true);
@@ -90,17 +83,6 @@ public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOv
                     event.removeStatusEffect(statusEffect);
                 }
             }
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onAbilityCooldownRefreshed(AbilityCooldownRefreshedEvent event) {
-        if (redirectRefreshedMessages.get() == RedirectAction.KEEP) return;
-
-        event.setCancelMessage(true);
-
-        if (redirectRefreshedMessages.get() == RedirectAction.REDIRECT) {
-            Managers.Notification.queueMessage(event.getMessage());
         }
     }
 
