@@ -20,7 +20,7 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
-import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
+import com.wynntils.screens.overlays.selection.OverlaySettingsScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.type.RenderElementType;
@@ -377,7 +377,7 @@ public final class OverlayManager extends Manager {
             showPreview = screen.showPreview();
             renderNonSelected = screen.shouldRenderAllOverlays();
             selectedOverlay = screen.getSelectedOverlay();
-        } else if (McUtils.screen() instanceof OverlaySelectionScreen screen) {
+        } else if (McUtils.screen() instanceof OverlaySettingsScreen screen) {
             if (screen.renderingPreview()) {
                 showPreview = true;
                 renderNonSelected = screen.shouldShowOverlays();

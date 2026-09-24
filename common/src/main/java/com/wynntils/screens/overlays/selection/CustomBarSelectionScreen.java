@@ -39,7 +39,7 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
             Pair.of(Texture.EXPERIENCE_BAR, List.of(ObjectivesTextures.values())),
             Pair.of(Texture.BUBBLE_BAR, List.of(ObjectivesTextures.values())));
 
-    private final OverlaySelectionScreen previousScreen;
+    private final OverlaySettingsScreen previousScreen;
 
     private Button textureButton;
     private float barX;
@@ -47,13 +47,13 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
     private int barTextureIndex = 0;
     private int barTypeIndex = 0;
 
-    private CustomBarSelectionScreen(OverlaySelectionScreen previousScreen) {
+    private CustomBarSelectionScreen(OverlaySettingsScreen previousScreen) {
         super(Component.translatable("screens.wynntils.customBarSelection.name"));
 
         this.previousScreen = previousScreen;
     }
 
-    public static Screen create(OverlaySelectionScreen previousScreen) {
+    public static Screen create(OverlaySettingsScreen previousScreen) {
         return new CustomBarSelectionScreen(previousScreen);
     }
 
@@ -227,7 +227,7 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
         previousScreen.selectOverlay(barGroup.getOverlays().getLast());
 
         McUtils.sendWynntilsPrefixMessage(Component.translatable(
-                        "screens.wynntils.overlaySelection.createdOverlay",
+                        "screens.wynntils.overlaySettings.createdOverlay",
                         barGroup.getOverlayClass().getSimpleName(),
                         barGroup.getFieldName(),
                         id)
