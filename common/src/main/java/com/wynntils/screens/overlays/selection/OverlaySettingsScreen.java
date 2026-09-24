@@ -11,7 +11,9 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.CustomNameProperty;
+import com.wynntils.core.consumers.overlays.DynamicOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.OverlayHistory;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.persisted.Translatable;
 import com.wynntils.core.persisted.config.Config;
@@ -34,6 +36,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -75,6 +78,8 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
     // Renderables
     private final SearchWidget searchWidget;
     private Button exitPreviewButton;
+    private HoverableTexturedButton undoButton;
+    private HoverableTexturedButton redoButton;
     private HoverableTexturedButton allButton;
     private HoverableTexturedButton builtInButton;
     private HoverableTexturedButton customButton;
@@ -127,6 +132,10 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
+        Managers.Overlay.finishHistory();
+        setFocusedTextInput(null);
+        if (selectedOverlay != null)
+            selectedOverlay = Managers.Overlay.findOverlay(Managers.Overlay.getOverlayKey(selectedOverlay));
         offsetX = (int) ((this.width - Texture.OVERLAY_SELECTION_GUI.width()) / 2f);
         offsetY = (int) ((this.height - Texture.OVERLAY_SELECTION_GUI.height()) / 2f);
         searchWidget.setX(7 + offsetX);
@@ -162,6 +171,7 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
         }
 
         this.addRenderableWidget(searchWidget);
+        updateHistoryButtons();
     }
 
     @Override
@@ -285,6 +295,8 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
 
     @Override
     public void onClose() {
+        Managers.Overlay.finishHistory();
+        Managers.Config.reloadEditorConfiguration(true);
         super.onClose();
 
         renderPreview = false;
@@ -292,6 +304,9 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
 
     @Override
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        Managers.Overlay.finishHistory();
+        updateHistoryButtons();
+        setFocusedTextInput(null);
         if (!renderPreview) {
             if (!draggingOverlayScroll && overlayList.size() > MAX_OVERLAYS_PER_PAGE) {
                 if (MathUtils.isInside(
@@ -396,7 +411,8 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
 
         draggingOverlayScroll = false;
         draggingConfigScroll = false;
-
+        if (focusedTextInput == null || focusedTextInput == searchWidget) Managers.Overlay.finishHistory();
+        updateHistoryButtons();
         return true;
     }
 
@@ -426,6 +442,13 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
+        if (KeyboardUtils.isControlDown()
+                && (event.key() == InputConstants.KEY_Z || event.key() == InputConstants.KEY_Y)) {
+            if (focusedTextInput != null && focusedTextInput != searchWidget && focusedTextInput.visible)
+                return focusedTextInput.keyPressed(event);
+            restoreHistory(event.key() == InputConstants.KEY_Y || KeyboardUtils.isShiftDown());
+            return true;
+        }
         if (event.key() == InputConstants.KEY_ESCAPE) {
             // If rendering a preview and esc is pressed, then return to the selection menu.
             // Otherwise, close the screen
@@ -440,10 +463,19 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
 
         for (OverlayButton overlayButton : overlays) {
             if (overlayButton.keyPressed(event)) {
+                Managers.Overlay.finishHistory();
+                setFocusedTextInput(null);
+                updateHistoryButtons();
                 return true;
             }
         }
 
+        if (event.key() == InputConstants.KEY_RETURN) {
+            Managers.Overlay.finishHistory();
+            setFocusedTextInput(null);
+            updateHistoryButtons();
+            return true;
+        }
         return focusedTextInput != null && focusedTextInput.keyPressed(event);
     }
 
@@ -454,7 +486,53 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
 
     @Override
     public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
+        if (this.focusedTextInput != focusedTextInput) Managers.Overlay.finishHistory();
         this.focusedTextInput = focusedTextInput;
+    }
+
+    @Override
+    public void removed() {
+        Managers.Overlay.finishHistory();
+        super.removed();
+    }
+
+    public void beginSettingEdit(Overlay overlay, Config<?> config) {
+        OverlayHistory history = OverlayHistory.isPlacement(config)
+                ? Managers.Overlay.getPlacementHistory()
+                : Managers.Overlay.getSettingsHistory();
+        if (!history.isPending()) {
+            history.begin(overlay);
+            updateHistoryButtons();
+        }
+    }
+
+    private void restoreHistory(boolean redo) {
+        Managers.Overlay.finishHistory();
+        setFocusedTextInput(null);
+        OverlayHistory history = Managers.Overlay.getSettingsHistory();
+        Overlay restored = redo ? history.redo() : history.undo();
+        if (restored != null) selectedOverlay = restored;
+        else if (selectedOverlay != null)
+            selectedOverlay = Managers.Overlay.findOverlay(Managers.Overlay.getOverlayKey(selectedOverlay));
+        populateOverlays();
+        populateConfigs();
+        addOptionButtons();
+        updateHistoryButtons();
+    }
+
+    public void updateHistoryButtons() {
+        if (undoButton == null || redoButton == null) return;
+        undoButton.visible = !renderPreview;
+        redoButton.visible = !renderPreview;
+        undoButton.active = Managers.Overlay.getSettingsHistory().canUndo()
+                || Managers.Overlay.getSettingsHistory().isPending();
+        undoButton.setTooltip(List.of(Component.translatable(
+                "screens.wynntils.overlaySettings.history.undo",
+                Managers.Overlay.getSettingsHistory().description(false))));
+        redoButton.setTooltip(List.of(Component.translatable(
+                "screens.wynntils.overlaySettings.history.redo",
+                Managers.Overlay.getSettingsHistory().description(true))));
+        redoButton.active = Managers.Overlay.getSettingsHistory().canRedo();
     }
 
     public boolean configOptionContains(Config<?> config) {
@@ -561,13 +639,8 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
             return;
         }
 
-        // Delete the overlay
-        Managers.Overlay.removeIdFromOverlayGroup(overlayGroupHolder, overlayId);
-
-        // Reload config
-        Managers.Config.reloadConfiguration(false);
+        Managers.Overlay.getSettingsHistory().delete(overlayGroupHolder, selectedOverlay);
         Managers.Config.saveConfig();
-        Managers.Config.reloadConfiguration(true);
 
         selectedOverlay = null;
         populateConfigs();
@@ -639,6 +712,7 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
         if (selectedOverlay == null && enabled) return;
 
         renderPreview = enabled;
+        updateHistoryButtons();
 
         // Toggle visibility of buttons
         for (HoverableTexturedButton optionsButton : optionButtons) {
@@ -699,12 +773,10 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
             // If the parent feature of the group is the info box feature
             if (group.getParent() == infoBoxFeature) {
                 // Get the ID of the new info box
-                int id = Managers.Overlay.extendOverlayGroup(group);
-
-                // Reload config
-                Managers.Config.reloadConfiguration(false);
+                Overlay overlay = Managers.Overlay.addSingleOverlay(group);
+                int id = ((DynamicOverlay) overlay).getId();
+                Managers.Overlay.getSettingsHistory().created(group, overlay);
                 Managers.Config.saveConfig();
-                Managers.Config.reloadConfiguration(true);
 
                 // Repopulate overlay list
                 populateOverlays();
@@ -856,10 +928,19 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
         }
         // endregion
 
+        int sidebarButtonHeight = Texture.BUTTON_LEFT.height() / 2;
+        int redoY = offsetY + Texture.OVERLAY_SELECTION_GUI.height() - 8 - sidebarButtonHeight;
+        int undoY = redoY - sidebarButtonHeight - 4;
+        undoButton = createHistoryButton(undoY, false);
+        redoButton = createHistoryButton(redoY, true);
+        optionButtons.add(undoButton);
+        optionButtons.add(redoButton);
+        updateHistoryButtons();
+
         // region Delete overlay button
         HoverableTexturedButton deleteButton = new HoverableTexturedButton(
                 -(Texture.BUTTON_LEFT.width()) + 4 + offsetX,
-                (int) (28 + (Texture.BUTTON_LEFT.height() / 2f) * 5 + offsetY),
+                undoY - sidebarButtonHeight - 4,
                 Texture.BUTTON_LEFT.width(),
                 Texture.BUTTON_LEFT.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySettings.delete")),
@@ -961,6 +1042,23 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
                     offsetY));
         }
         // endregion
+    }
+
+    private HoverableTexturedButton createHistoryButton(int y, boolean redo) {
+        return new HoverableTexturedButton(
+                offsetX - Texture.BUTTON_LEFT.width() + 4,
+                y,
+                Texture.BUTTON_LEFT.width(),
+                Texture.BUTTON_LEFT.height() / 2,
+                StyledText.fromComponent(
+                        Component.translatable("screens.wynntils.overlayManagement." + (redo ? "redo" : "undo"))),
+                button -> restoreHistory(redo),
+                List.of(),
+                Texture.BUTTON_LEFT,
+                Texture.OVERLAY_SELECTION_GUI,
+                false,
+                offsetX,
+                offsetY);
     }
 
     private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
