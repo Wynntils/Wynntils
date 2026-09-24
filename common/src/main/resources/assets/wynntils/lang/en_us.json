@@ -104,6 +104,8 @@
   "feature.wynntils.abbreviateMobHealth.name": "Abbreviate Mob Health",
   "feature.wynntils.abilityCooldownsOverlay.description": "Adds overlays to show ability cooldowns.",
   "feature.wynntils.abilityCooldownsOverlay.name": "Ability Cooldowns Overlay",
+  "feature.wynntils.abilityCooldownsOverlay.overlay.abilityCooldowns.ignoredCooldowns.description": "Blacklist of cooldowns you don't want to see, they will also no longer be removed from the status effects list. Separate multiple cooldowns by adding , between them",
+  "feature.wynntils.abilityCooldownsOverlay.overlay.abilityCooldowns.ignoredCooldowns.name": "Ignored Cooldowns",
   "feature.wynntils.abilityCooldownsOverlay.overlay.abilityCooldowns.interpolateTime.description": "Should the timer be interpolated to be more precise or show the time given by the server?",
   "feature.wynntils.abilityCooldownsOverlay.overlay.abilityCooldowns.interpolateTime.name": "Interpolate Time",
   "feature.wynntils.abilityCooldownsOverlay.overlay.abilityCooldowns.name": "Ability Cooldowns",

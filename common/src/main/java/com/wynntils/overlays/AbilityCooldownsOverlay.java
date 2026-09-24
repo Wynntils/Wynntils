@@ -24,6 +24,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.Arrays;
 import java.util.List;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
@@ -39,6 +40,9 @@ public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOv
 
     @Persisted
     private final Config<Boolean> showTimer = new Config<>(true);
+
+    @Persisted
+    private final Config<String> ignoredCooldowns = new Config<>("");
 
     @Persisted
     private final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
@@ -68,7 +72,9 @@ public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOv
     public void onAbilityCooldownsUpdate(AbilityCooldownsUpdatedEvent event) {
         this.clearChildren();
         for (AbilityCooldown cooldown : event.getCooldowns()) {
-            this.addChild(new AbilityCooldownOverlay(cooldown));
+            if (!isIgnoredCooldown(cooldown.getName())) {
+                this.addChild(new AbilityCooldownOverlay(cooldown));
+            }
         }
     }
 
@@ -78,12 +84,20 @@ public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOv
 
         for (StatusEffect statusEffect : event.getOriginalStatusEffects()) {
             if (statusEffect.getPrefix().getString().equals(Models.Ability.COOLDOWN_PREFIX)) {
-                // Make sure the overlay will be displaying a cooldown before we remove it from the list
-                if (AbilityCooldown.fromStatusEffect(statusEffect) != null) {
+                AbilityCooldown cooldown = AbilityCooldown.fromStatusEffect(statusEffect);
+
+                if (cooldown != null && !isIgnoredCooldown(cooldown.getName())) {
                     event.removeStatusEffect(statusEffect);
                 }
             }
         }
+    }
+
+    private boolean isIgnoredCooldown(String cooldownName) {
+        String ignored = ignoredCooldowns.get();
+        if (ignored.isEmpty()) return false;
+
+        return Arrays.stream(ignored.split(",")).map(String::trim).anyMatch(cooldownName::equalsIgnoreCase);
     }
 
     public final class AbilityCooldownOverlay extends Overlay {
