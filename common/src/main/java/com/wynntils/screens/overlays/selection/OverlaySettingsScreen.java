@@ -444,9 +444,10 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
     public boolean keyPressed(KeyEvent event) {
         if (KeyboardUtils.isControlDown()
                 && (event.key() == InputConstants.KEY_Z || event.key() == InputConstants.KEY_Y)) {
+            if (event.key() == InputConstants.KEY_Z && KeyboardUtils.isShiftDown()) return true;
             if (focusedTextInput != null && focusedTextInput != searchWidget && focusedTextInput.visible)
                 return focusedTextInput.keyPressed(event);
-            restoreHistory(event.key() == InputConstants.KEY_Y || KeyboardUtils.isShiftDown());
+            restoreHistory(event.key() == InputConstants.KEY_Y);
             return true;
         }
         if (event.key() == InputConstants.KEY_ESCAPE) {

@@ -55,10 +55,11 @@ public class TextInputBoxSettingsWidget<T> extends TextInputBoxWidget {
         if (textboxScreen instanceof OverlaySettingsScreen settings
                 && KeyboardUtils.isControlDown()
                 && (event.key() == InputConstants.KEY_Z || event.key() == InputConstants.KEY_Y)) {
+            if (event.key() == InputConstants.KEY_Z && KeyboardUtils.isShiftDown()) return true;
             OverlayHistory history = OverlayHistory.isPlacement(config)
                     ? Managers.Overlay.getPlacementHistory()
                     : Managers.Overlay.getSettingsHistory();
-            if (history.restoreConfig(config, event.key() == InputConstants.KEY_Y || KeyboardUtils.isShiftDown())) {
+            if (history.restoreConfig(config, event.key() == InputConstants.KEY_Y)) {
                 setTextBoxInput(config.get().toString());
                 settings.updateHistoryButtons();
             }

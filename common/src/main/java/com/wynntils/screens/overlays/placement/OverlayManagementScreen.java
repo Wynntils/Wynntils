@@ -603,7 +603,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         }
 
         if (KeyboardUtils.isControlDown() && event.key() == InputConstants.KEY_Z) {
-            restoreHistory(KeyboardUtils.isShiftDown());
+            if (!KeyboardUtils.isShiftDown()) restoreHistory(false);
             return true;
         }
         if (KeyboardUtils.isControlDown() && event.key() == InputConstants.KEY_Y) {
