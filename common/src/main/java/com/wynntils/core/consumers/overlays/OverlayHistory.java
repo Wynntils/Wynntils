@@ -8,11 +8,14 @@ import com.google.gson.JsonElement;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.OverlayGroupHolder;
+import com.wynntils.core.text.fonts.WynnFont;
+import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -123,6 +126,15 @@ public final class OverlayHistory {
     }
 
     public Component tooltip(boolean forward) {
+        return Component.empty()
+                .append(Component.translatable(
+                                "screens.wynntils.overlaySettings.history." + (forward ? "redo" : "undo"))
+                        .withStyle(ChatFormatting.GOLD))
+                .append("\n\n")
+                .append(actionList(forward));
+    }
+
+    private Component actionList(boolean forward) {
         List<Component> descriptions = new ArrayList<>(TOOLTIP_EDITS);
         if (!forward && !pending.isEmpty()) {
             Overlay overlay =
@@ -134,17 +146,35 @@ public final class OverlayHistory {
         for (Edit edit : history.upcoming(forward, Edit::available, TOOLTIP_EDITS - descriptions.size())) {
             descriptions.add(edit.description());
         }
-        MutableComponent tooltip =
-                Component.translatable("screens.wynntils.overlaySettings.history." + (forward ? "redo" : "undo"));
+        MutableComponent tooltip = Component.empty();
         if (descriptions.isEmpty()) {
-            tooltip.append("\n")
-                    .append(Component.translatable(
-                            "screens.wynntils.overlaySettings.history." + (forward ? "emptyRedo" : "emptyUndo")));
+            tooltip.append(Component.translatable(
+                            "screens.wynntils.overlaySettings.history." + (forward ? "emptyRedo" : "emptyUndo"))
+                    .withStyle(ChatFormatting.GRAY));
         }
         for (int i = 0; i < descriptions.size(); i++) {
-            tooltip.append("\n" + (i + 1) + ". ").append(descriptions.get(i));
+            if (i > 0) tooltip.append("\n");
+            tooltip.append(descriptions.get(i).copy().withStyle(i == 0 ? ChatFormatting.WHITE : ChatFormatting.GRAY));
         }
         return tooltip;
+    }
+
+    public Component tooltip() {
+        return Component.empty()
+                .append(Component.translatable("screens.wynntils.overlaySettings.history.title")
+                        .withStyle(ChatFormatting.GOLD))
+                .append("\n\n")
+                .append(actionList(false))
+                .append("\n\n")
+                .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class))
+                .append(" ")
+                .append(Component.translatable("screens.wynntils.overlaySettings.history.leftClick")
+                        .withStyle(ChatFormatting.GREEN))
+                .append("\n")
+                .append(WynnFont.asFont("right_click", WynncraftKeybindsFont.class))
+                .append(" ")
+                .append(Component.translatable("screens.wynntils.overlaySettings.history.rightClick")
+                        .withStyle(ChatFormatting.GREEN));
     }
 
     public boolean restoreConfig(Config<?> config, boolean forward) {

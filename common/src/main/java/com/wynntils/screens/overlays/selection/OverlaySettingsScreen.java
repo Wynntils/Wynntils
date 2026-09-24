@@ -78,8 +78,7 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
     // Renderables
     private final SearchWidget searchWidget;
     private Button exitPreviewButton;
-    private HoverableTexturedButton undoButton;
-    private HoverableTexturedButton redoButton;
+    private HoverableTexturedButton historyButton;
     private HoverableTexturedButton allButton;
     private HoverableTexturedButton builtInButton;
     private HoverableTexturedButton customButton;
@@ -522,14 +521,11 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
     }
 
     public void updateHistoryButtons() {
-        if (undoButton == null || redoButton == null) return;
-        undoButton.visible = !renderPreview;
-        redoButton.visible = !renderPreview;
-        undoButton.active = Managers.Overlay.getSettingsHistory().canUndo()
-                || Managers.Overlay.getSettingsHistory().isPending();
-        undoButton.setTooltip(List.of(Managers.Overlay.getSettingsHistory().tooltip(false)));
-        redoButton.setTooltip(List.of(Managers.Overlay.getSettingsHistory().tooltip(true)));
-        redoButton.active = Managers.Overlay.getSettingsHistory().canRedo();
+        if (historyButton == null) return;
+        historyButton.visible = !renderPreview;
+        OverlayHistory history = Managers.Overlay.getSettingsHistory();
+        historyButton.active = history.canUndo() || history.canRedo() || history.isPending();
+        historyButton.setTooltip(List.of(history.tooltip()));
     }
 
     public boolean configOptionContains(Config<?> config) {
@@ -926,18 +922,16 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
         // endregion
 
         int sidebarButtonHeight = Texture.BUTTON_LEFT.height() / 2;
-        int redoY = offsetY + Texture.OVERLAY_SELECTION_GUI.height() - 8 - sidebarButtonHeight;
-        int undoY = redoY - sidebarButtonHeight - 4;
-        undoButton = createHistoryButton(undoY, false);
-        redoButton = createHistoryButton(redoY, true);
-        optionButtons.add(undoButton);
-        optionButtons.add(redoButton);
+        int deleteY = offsetY + Texture.OVERLAY_SELECTION_GUI.height() - 8 - sidebarButtonHeight;
+        int historyY = deleteY - sidebarButtonHeight - 4;
+        historyButton = createHistoryButton(historyY);
+        optionButtons.add(historyButton);
         updateHistoryButtons();
 
         // region Delete overlay button
         HoverableTexturedButton deleteButton = new HoverableTexturedButton(
                 -(Texture.BUTTON_LEFT.width()) + 4 + offsetX,
-                undoY - sidebarButtonHeight - 4,
+                deleteY,
                 Texture.BUTTON_LEFT.width(),
                 Texture.BUTTON_LEFT.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySettings.delete")),
@@ -1041,15 +1035,17 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
         // endregion
     }
 
-    private HoverableTexturedButton createHistoryButton(int y, boolean redo) {
+    private HoverableTexturedButton createHistoryButton(int y) {
         return new HoverableTexturedButton(
                 offsetX - Texture.BUTTON_LEFT.width() + 4,
                 y,
                 Texture.BUTTON_LEFT.width(),
                 Texture.BUTTON_LEFT.height() / 2,
-                StyledText.fromComponent(
-                        Component.translatable("screens.wynntils.overlayManagement." + (redo ? "redo" : "undo"))),
-                button -> restoreHistory(redo),
+                StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySettings.history.title")),
+                button -> {
+                    if (button == InputConstants.MOUSE_BUTTON_LEFT) restoreHistory(false);
+                    else if (button == InputConstants.MOUSE_BUTTON_RIGHT) restoreHistory(true);
+                },
                 List.of(),
                 Texture.BUTTON_LEFT,
                 Texture.OVERLAY_SELECTION_GUI,
