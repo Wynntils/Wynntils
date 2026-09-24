@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import net.minecraft.network.chat.Component;
 
-/** Connection-scoped editor history. Capture happens at interaction boundaries, never while rendering. */
+/** Client-lifetime editor history. Capture happens at interaction boundaries, never while rendering. */
 public final class OverlayHistory {
     private static final int MAX_EDITS = 100;
     private static final Set<String> PLACEMENT = Set.of(

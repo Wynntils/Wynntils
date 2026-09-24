@@ -12,7 +12,6 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.annotations.OverlayGroup;
 import com.wynntils.core.consumers.overlays.annotations.RegisterOverlay;
 import com.wynntils.core.mod.CrashReportManager;
-import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.OverlayGroupHolder;
@@ -118,12 +117,6 @@ public final class OverlayManager extends Manager {
     public void clearHistory() {
         settingsHistory.clear();
         placementHistory.clear();
-    }
-
-    @SubscribeEvent
-    public void onDisconnected(WynncraftConnectionEvent.Disconnected event) {
-        // The connection manager filters server transfers; character/world changes keep their history.
-        clearHistory();
     }
 
     private final List<SectionCoordinates> sections = new ArrayList<>(9);
