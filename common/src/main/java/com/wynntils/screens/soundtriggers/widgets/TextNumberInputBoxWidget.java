@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.soundtriggers.widgets;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.mc.McUtils;
@@ -21,8 +20,6 @@ class TextNumberInputBoxWidget extends TextInputBoxWidget {
 
     @Override
     public boolean charTyped(CharacterEvent event) {
-        WynntilsMod.error(String.valueOf(event.codepoint()));
-        WynntilsMod.warn(event.codepointAsString());
         if (!(event.codepoint() >= 48 && event.codepoint() <= 57)) return false;
         return super.charTyped(event);
     }
