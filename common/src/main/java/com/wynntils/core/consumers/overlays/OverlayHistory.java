@@ -217,11 +217,21 @@ public final class OverlayHistory {
         finish();
         Edit edit = history.next(forward, Edit::available);
 
-        if (!(Managers.Persisted.getMetadata(config).owner() instanceof Overlay overlay)
-                || !(edit instanceof SettingsEdit settings)
-                || settings.changes().stream()
-                        .noneMatch(change -> change.overlay().equals(Managers.Overlay.getOverlayKey(overlay))
-                                && change.field().equals(config.getFieldName()))) {
+        if (!(Managers.Persisted.getMetadata(config).owner() instanceof Overlay overlay)) {
+            return false;
+        }
+
+        if (!(edit instanceof SettingsEdit settings)) {
+            return false;
+        }
+
+        String overlayKey = Managers.Overlay.getOverlayKey(overlay);
+        String fieldName = config.getFieldName();
+        boolean affectsConfig = settings.changes().stream()
+                .anyMatch(change ->
+                        change.overlay().equals(overlayKey) && change.field().equals(fieldName));
+
+        if (!affectsConfig) {
             return false;
         }
 
