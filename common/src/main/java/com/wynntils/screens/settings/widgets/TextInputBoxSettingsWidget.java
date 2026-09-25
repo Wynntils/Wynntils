@@ -55,16 +55,22 @@ public class TextInputBoxSettingsWidget<T> extends TextInputBoxWidget {
         if (textboxScreen instanceof OverlaySettingsScreen settings
                 && KeyboardUtils.isControlDown()
                 && (event.key() == InputConstants.KEY_Z || event.key() == InputConstants.KEY_Y)) {
-            if (event.key() == InputConstants.KEY_Z && KeyboardUtils.isShiftDown()) return true;
+            if (event.key() == InputConstants.KEY_Z && KeyboardUtils.isShiftDown()) {
+                return true;
+            }
+
             OverlayHistory history = OverlayHistory.isPlacement(config)
                     ? Managers.Overlay.getPlacementHistory()
                     : Managers.Overlay.getSettingsHistory();
+
             if (history.restoreConfig(config, event.key() == InputConstants.KEY_Y)) {
                 setTextBoxInput(config.get().toString());
                 settings.updateHistoryButtons();
             }
+
             return true;
         }
+
         return super.keyPressed(event);
     }
 
@@ -77,6 +83,7 @@ public class TextInputBoxSettingsWidget<T> extends TextInputBoxWidget {
                         && Managers.Persisted.getMetadata(config).owner() instanceof Overlay overlay) {
                     settings.beginSettingEdit(overlay, config);
                 }
+
                 config.setValue(parsedValue);
             }
 

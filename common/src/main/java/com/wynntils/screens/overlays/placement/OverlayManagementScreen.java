@@ -146,6 +146,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         if (selectedOverlay != null) {
             selectedOverlay = Managers.Overlay.findOverlay(Managers.Overlay.getOverlayKey(selectedOverlay));
         }
+
         closeHelpPanel();
         resetSelection();
         closePositionPanel();
@@ -603,7 +604,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         }
 
         if (KeyboardUtils.isControlDown() && event.key() == InputConstants.KEY_Z) {
-            if (!KeyboardUtils.isShiftDown()) restoreHistory(false);
+            if (!KeyboardUtils.isShiftDown()) {
+                restoreHistory(false);
+            }
             return true;
         }
         if (KeyboardUtils.isControlDown() && event.key() == InputConstants.KEY_Y) {

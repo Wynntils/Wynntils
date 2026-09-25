@@ -133,8 +133,11 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
     protected void doInit() {
         Managers.Overlay.finishHistory();
         setFocusedTextInput(null);
-        if (selectedOverlay != null)
+
+        if (selectedOverlay != null) {
             selectedOverlay = Managers.Overlay.findOverlay(Managers.Overlay.getOverlayKey(selectedOverlay));
+        }
+
         offsetX = (int) ((this.width - Texture.OVERLAY_SELECTION_GUI.width()) / 2f);
         offsetY = (int) ((this.height - Texture.OVERLAY_SELECTION_GUI.height()) / 2f);
         searchWidget.setX(7 + offsetX);
@@ -410,7 +413,11 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
 
         draggingOverlayScroll = false;
         draggingConfigScroll = false;
-        if (focusedTextInput == null || focusedTextInput == searchWidget) Managers.Overlay.finishHistory();
+
+        if (focusedTextInput == null || focusedTextInput == searchWidget) {
+            Managers.Overlay.finishHistory();
+        }
+
         updateHistoryButtons();
         return true;
     }
@@ -443,12 +450,19 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
     public boolean keyPressed(KeyEvent event) {
         if (KeyboardUtils.isControlDown()
                 && (event.key() == InputConstants.KEY_Z || event.key() == InputConstants.KEY_Y)) {
-            if (event.key() == InputConstants.KEY_Z && KeyboardUtils.isShiftDown()) return true;
-            if (focusedTextInput != null && focusedTextInput != searchWidget && focusedTextInput.visible)
+            if (event.key() == InputConstants.KEY_Z && KeyboardUtils.isShiftDown()) {
+                return true;
+            }
+
+            if (focusedTextInput != null && focusedTextInput != searchWidget && focusedTextInput.visible) {
                 return focusedTextInput.keyPressed(event);
+            }
+
             restoreHistory(event.key() == InputConstants.KEY_Y);
+
             return true;
         }
+
         if (event.key() == InputConstants.KEY_ESCAPE) {
             // If rendering a preview and esc is pressed, then return to the selection menu.
             // Otherwise, close the screen
@@ -474,8 +488,10 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
             Managers.Overlay.finishHistory();
             setFocusedTextInput(null);
             updateHistoryButtons();
+
             return true;
         }
+
         return focusedTextInput != null && focusedTextInput.keyPressed(event);
     }
 
@@ -486,7 +502,10 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
 
     @Override
     public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        if (this.focusedTextInput != focusedTextInput) Managers.Overlay.finishHistory();
+        if (this.focusedTextInput != focusedTextInput) {
+            Managers.Overlay.finishHistory();
+        }
+
         this.focusedTextInput = focusedTextInput;
     }
 
@@ -500,6 +519,7 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
         OverlayHistory history = OverlayHistory.isPlacement(config)
                 ? Managers.Overlay.getPlacementHistory()
                 : Managers.Overlay.getSettingsHistory();
+
         if (!history.isPending()) {
             history.begin(overlay);
             updateHistoryButtons();
@@ -511,9 +531,13 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
         setFocusedTextInput(null);
         OverlayHistory history = Managers.Overlay.getSettingsHistory();
         Overlay restored = redo ? history.redo() : history.undo();
-        if (restored != null) selectedOverlay = restored;
-        else if (selectedOverlay != null)
+
+        if (restored != null) {
+            selectedOverlay = restored;
+        } else if (selectedOverlay != null) {
             selectedOverlay = Managers.Overlay.findOverlay(Managers.Overlay.getOverlayKey(selectedOverlay));
+        }
+
         populateOverlays();
         populateConfigs();
         addOptionButtons();
@@ -521,7 +545,10 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
     }
 
     public void updateHistoryButtons() {
-        if (historyButton == null) return;
+        if (historyButton == null) {
+            return;
+        }
+
         historyButton.visible = !renderPreview;
         OverlayHistory history = Managers.Overlay.getSettingsHistory();
         historyButton.active = history.canUndo() || history.canRedo() || history.isPending();
@@ -1043,8 +1070,11 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
                 Texture.BUTTON_LEFT.height() / 2,
                 StyledText.fromComponent(Component.translatable("screens.wynntils.overlaySettings.history.title")),
                 button -> {
-                    if (button == InputConstants.MOUSE_BUTTON_LEFT) restoreHistory(false);
-                    else if (button == InputConstants.MOUSE_BUTTON_RIGHT) restoreHistory(true);
+                    if (button == InputConstants.MOUSE_BUTTON_LEFT) {
+                        restoreHistory(false);
+                    } else if (button == InputConstants.MOUSE_BUTTON_RIGHT) {
+                        restoreHistory(true);
+                    }
                 },
                 List.of(),
                 Texture.BUTTON_LEFT,

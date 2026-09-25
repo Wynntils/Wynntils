@@ -62,6 +62,7 @@ public final class OverlayManager extends Manager {
             action.run();
         } finally {
             updateDepth--;
+
             if (updateDepth == 0 && renderOrderDirty) {
                 renderOrderDirty = false;
                 rebuildAndNormalizeRenderOrder();
@@ -78,8 +79,10 @@ public final class OverlayManager extends Manager {
                     other.setRenderOrder(other.getRenderOrder() + 1);
                 }
             }
+
             overlay.setRenderOrder(order);
         }
+
         rebuildAndNormalizeRenderOrder();
     }
 
@@ -236,6 +239,7 @@ public final class OverlayManager extends Manager {
             renderOrderDirty = true;
             return;
         }
+
         Map<RenderElementType, List<Overlay>> newRenderMap = new HashMap<>();
 
         for (RenderElementType elementType : RenderElementType.values()) {
@@ -279,6 +283,7 @@ public final class OverlayManager extends Manager {
             renderOrderDirty = true;
             return;
         }
+
         rebuildRenderOrder();
         normalizeRenderOrders();
     }
@@ -366,6 +371,7 @@ public final class OverlayManager extends Manager {
                         .orElse(0)
                 + 1;
         int id = Math.max(minimum, nextOverlayIds.getOrDefault(holder.getConfigKey(), 1));
+
         return addSingleOverlay(holder, id);
     }
 
@@ -373,6 +379,7 @@ public final class OverlayManager extends Manager {
         if (holder.getOverlays().stream().anyMatch(overlay -> ((DynamicOverlay) overlay).getId() == id)) {
             throw new IllegalArgumentException("Overlay ID already exists: " + id);
         }
+
         Overlay overlay;
         try {
             overlay =
@@ -380,6 +387,7 @@ public final class OverlayManager extends Manager {
         } catch (ReflectiveOperationException e) {
             throw new IllegalStateException("Cannot create overlay " + holder.getConfigKey(), e);
         }
+
         List<Overlay> overlays = new ArrayList<>(holder.getOverlays());
         overlays.add(overlay);
         holder.setOverlays(overlays);
@@ -391,6 +399,7 @@ public final class OverlayManager extends Manager {
             enableOverlay(overlay);
         });
         nextOverlayIds.merge(holder.getConfigKey(), id + 1, Math::max);
+
         return overlay;
     }
 

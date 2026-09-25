@@ -26,43 +26,68 @@ final class HistoryStack<T> {
     void record(T edit) {
         dirty = true;
         undo.add(edit);
-        if (undo.size() > limit) undo.removeFirst();
+
+        if (undo.size() > limit) {
+            undo.removeFirst();
+        }
+
         redo.clear();
     }
 
     T next(boolean forward, Predicate<T> available) {
         List<T> source = forward ? redo : undo;
+
         for (int i = source.size() - 1; i >= 0; i--) {
-            if (available.test(source.get(i))) return source.get(i);
+            if (available.test(source.get(i))) {
+                return source.get(i);
+            }
         }
+
         return null;
     }
 
     List<T> upcoming(boolean forward, Predicate<T> available, int count) {
         List<T> source = forward ? redo : undo;
         List<T> result = new ArrayList<>(count);
+
         for (int i = source.size() - 1; i >= 0 && result.size() < count; i--) {
             T edit = source.get(i);
-            if (available.test(edit)) result.add(edit);
+
+            if (available.test(edit)) {
+                result.add(edit);
+            }
         }
+
         return result;
     }
 
     T restore(boolean forward, Predicate<T> available, Consumer<T> apply) {
         T edit = next(forward, available);
-        if (edit == null) return null;
+
+        if (edit == null) {
+            return null;
+        }
+
         List<T> source = forward ? redo : undo;
         int index = source.size() - 1;
-        while (source.get(index) != edit) index--;
+
+        while (source.get(index) != edit) {
+            index--;
+        }
+
         apply.accept(edit);
         source.remove(index);
         (forward ? undo : redo).add(edit);
         dirty = true;
+
         return edit;
     }
 
     void saved(UnaryOperator<T> copy) {
-        if (!dirty) return;
+        if (!dirty) {
+            return;
+        }
+
         savedUndo = undo.stream().map(copy).toList();
         savedRedo = redo.stream().map(copy).toList();
         dirty = false;

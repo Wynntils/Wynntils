@@ -50,7 +50,10 @@ public final class OverlayHistory {
     }
 
     public void include(Overlay overlay) {
-        if (overlay == null) return;
+        if (overlay == null) {
+            return;
+        }
+
         String key = Managers.Overlay.getOverlayKey(overlay);
         pending.computeIfAbsent(key, ignored -> capture(overlay, placement));
     }
@@ -60,25 +63,46 @@ public final class OverlayHistory {
     }
 
     public void finish() {
-        if (pending.isEmpty()) return;
+        if (pending.isEmpty()) {
+            return;
+        }
+
         List<Change> changes = new ArrayList<>();
         pending.forEach((key, before) -> {
             Overlay overlay = Managers.Overlay.findOverlay(key);
-            if (overlay == null) return;
+
+            if (overlay == null) {
+                return;
+            }
+
             boolean enabledChanged = before.containsKey("userEnabled")
                     && overlay.getConfigOptionFromString("userEnabled")
                             .map(config -> !before.get("userEnabled").equals(Value.capture(config)))
                             .orElse(false);
+
             for (Config<?> config : overlay.getConfigOptions()) {
-                if (!placement && config.getFieldName().equals("renderOrder") && !enabledChanged) continue;
+                if (!placement && config.getFieldName().equals("renderOrder") && !enabledChanged) {
+                    continue;
+                }
+
                 Value value = before.get(config.getFieldName());
-                if (value == null) continue;
+
+                if (value == null) {
+                    continue;
+                }
+
                 Value after = Value.capture(config);
-                if (!value.equals(after)) changes.add(new Change(key, config.getFieldName(), value, after));
+
+                if (!value.equals(after)) {
+                    changes.add(new Change(key, config.getFieldName(), value, after));
+                }
             }
         });
         pending.clear();
-        if (!changes.isEmpty()) record(new SettingsEdit(List.copyOf(changes), placement));
+
+        if (!changes.isEmpty()) {
+            record(new SettingsEdit(List.copyOf(changes), placement));
+        }
     }
 
     public void created(OverlayGroupHolder group, Overlay overlay) {
@@ -114,6 +138,7 @@ public final class OverlayHistory {
                 forward,
                 Edit::available,
                 edit -> Managers.Overlay.batchOverlayUpdates(() -> result[0] = edit.apply(forward)));
+
         return result[0];
     }
 
@@ -136,26 +161,37 @@ public final class OverlayHistory {
 
     private Component actionList(boolean forward) {
         List<Component> descriptions = new ArrayList<>(TOOLTIP_EDITS);
+
         if (!forward && !pending.isEmpty()) {
             Overlay overlay =
                     Managers.Overlay.findOverlay(pending.keySet().iterator().next());
-            if (overlay != null)
+
+            if (overlay != null) {
                 descriptions.add(Component.translatable(
                         "screens.wynntils.overlaySettings.history.edit", overlay.getTranslatedName()));
+            }
         }
+
         for (Edit edit : history.upcoming(forward, Edit::available, TOOLTIP_EDITS - descriptions.size())) {
             descriptions.add(edit.description());
         }
+
         MutableComponent tooltip = Component.empty();
+
         if (descriptions.isEmpty()) {
             tooltip.append(Component.translatable(
                             "screens.wynntils.overlaySettings.history." + (forward ? "emptyRedo" : "emptyUndo"))
                     .withStyle(ChatFormatting.GRAY));
         }
+
         for (int i = 0; i < descriptions.size(); i++) {
-            if (i > 0) tooltip.append("\n");
+            if (i > 0) {
+                tooltip.append("\n");
+            }
+
             tooltip.append(descriptions.get(i).copy().withStyle(i == 0 ? ChatFormatting.WHITE : ChatFormatting.GRAY));
         }
+
         return tooltip;
     }
 
@@ -180,12 +216,17 @@ public final class OverlayHistory {
     public boolean restoreConfig(Config<?> config, boolean forward) {
         finish();
         Edit edit = history.next(forward, Edit::available);
+
         if (!(Managers.Persisted.getMetadata(config).owner() instanceof Overlay overlay)
                 || !(edit instanceof SettingsEdit settings)
                 || settings.changes().stream()
                         .noneMatch(change -> change.overlay().equals(Managers.Overlay.getOverlayKey(overlay))
-                                && change.field().equals(config.getFieldName()))) return false;
+                                && change.field().equals(config.getFieldName()))) {
+            return false;
+        }
+
         restore(forward);
+
         return true;
     }
 
@@ -206,6 +247,7 @@ public final class OverlayHistory {
 
     private static Map<String, Value> capture(Overlay overlay, Boolean placement) {
         Map<String, Value> values = new LinkedHashMap<>();
+
         for (Config<?> config : overlay.getConfigOptions()) {
             if (placement == null
                     || isPlacement(config) == placement
@@ -213,6 +255,7 @@ public final class OverlayHistory {
                 values.put(config.getFieldName(), Value.capture(config));
             }
         }
+
         return values;
     }
 
@@ -248,6 +291,7 @@ public final class OverlayHistory {
             String setting = overlay.getConfigOptionFromString(change.field())
                     .map(Config::getDisplayName)
                     .orElse(change.field());
+
             return Component.translatable(
                     "screens.wynntils.overlaySettings.history.change", overlay.getTranslatedName(), setting);
         }
@@ -260,26 +304,40 @@ public final class OverlayHistory {
         @Override
         public Overlay apply(boolean forward) {
             boolean renderOrder = false;
+
             for (Change change : changes) {
-                if (change.field().equals("renderOrder")) continue;
+                if (change.field().equals("renderOrder")) {
+                    continue;
+                }
+
                 Overlay overlay = Managers.Overlay.findOverlay(change.overlay());
                 overlay.getConfigOptionFromString(change.field())
                         .ifPresent(config -> (forward ? change.after() : change.before()).apply(config));
                 renderOrder |=
                         change.field().equals("renderOrder") || change.field().equals("renderElement");
             }
+
             for (Change change : changes) {
-                if (!change.field().equals("renderOrder")) continue;
+                if (!change.field().equals("renderOrder")) {
+                    continue;
+                }
+
                 Managers.Overlay.findOverlay(change.overlay())
                         .getConfigOptionFromString(change.field())
                         .ifPresent(config -> (forward ? change.after() : change.before()).apply(config));
+
                 if (!placement) {
                     Overlay overlay = Managers.Overlay.findOverlay(change.overlay());
                     Managers.Overlay.restoreOverlayOrder(overlay, overlay.getRenderOrder());
                 }
+
                 renderOrder = true;
             }
-            if (renderOrder) Managers.Overlay.rebuildAndNormalizeRenderOrder();
+
+            if (renderOrder) {
+                Managers.Overlay.rebuildAndNormalizeRenderOrder();
+            }
+
             return Managers.Overlay.findOverlay(changes.getFirst().overlay());
         }
     }
@@ -323,18 +381,22 @@ public final class OverlayHistory {
         @Override
         public Overlay apply(boolean forward) {
             OverlayGroupHolder group = group();
+
             if (forward == created) {
                 Overlay overlay = Managers.Overlay.addSingleOverlay(group, id);
                 values.forEach((field, value) -> {
-                    if (!field.equals("renderOrder"))
+                    if (!field.equals("renderOrder")) {
                         overlay.getConfigOptionFromString(field).ifPresent(value::apply);
+                    }
                 });
                 // Enabling can assign a default order, so restore the saved order last.
                 overlay.getConfigOptionFromString("renderOrder")
                         .ifPresent(config -> values.get("renderOrder").apply(config));
                 Managers.Overlay.restoreOverlayOrder(overlay, overlay.getRenderOrder());
+
                 return overlay;
             }
+
             Overlay overlay = group.getOverlays().stream()
                     .filter(candidate -> ((DynamicOverlay) candidate).getId() == id)
                     .findFirst()
@@ -342,6 +404,7 @@ public final class OverlayHistory {
             // Preserve intervening placement edits when undoing creation or redoing deletion.
             values = capture(overlay, null);
             Managers.Overlay.removeSingleOverlay(group, id);
+
             return null;
         }
     }

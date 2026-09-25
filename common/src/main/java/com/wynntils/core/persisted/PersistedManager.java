@@ -66,7 +66,11 @@ public final class PersistedManager extends Manager {
     public void unregisterOwner(PersistedOwner owner) {
         // Remove from the sorted set while metadata needed by compareTo is still available.
         List<PersistedValue<?>> values = valuesByOwner.remove(owner);
-        if (values == null) return;
+
+        if (values == null) {
+            return;
+        }
+
         values.forEach(persisteds::remove);
         values.forEach(metadatas::remove);
     }
