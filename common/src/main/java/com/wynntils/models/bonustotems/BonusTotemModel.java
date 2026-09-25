@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.bonustotems;
@@ -70,6 +70,22 @@ public final class BonusTotemModel extends Model {
         return bonusTotems.getOrDefault(type, new LinkedHashMap<>()).values().stream()
                 .sorted(Comparator.comparing(BonusTotem::getOwner))
                 .toList();
+    }
+
+    /** Returns the one-based owner-sorted number of the closest totem, or zero if none exist. */
+    public int getClosestBonusTotemNumber(BonusTotemType type) {
+        List<BonusTotem> totems = getBonusTotemsByType(type);
+        int closestNumber = 0;
+        double closestDistance = Double.POSITIVE_INFINITY;
+        for (int i = 0; i < totems.size(); i++) {
+            double distance = totems.get(i).getDistanceToPlayer();
+            // Keep the first totem in owner order when distances are equal.
+            if (distance < closestDistance) {
+                closestNumber = i + 1;
+                closestDistance = distance;
+            }
+        }
+        return closestNumber;
     }
 
     public BonusTotem getBonusTotem(BonusTotemType type, int index) {

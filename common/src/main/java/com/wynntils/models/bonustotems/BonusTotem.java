@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.bonustotems;
@@ -39,6 +39,17 @@ public class BonusTotem {
 
     public void setTimerString(String timerString) {
         this.timerString = timerString;
+    }
+
+    public int getSecondsLeft() {
+        if (timerString == null) return 0;
+
+        // Labels contain either "Ns" or "Nm Ns", as validated by BonusTotemLabelParser.
+        int minuteEnd = timerString.indexOf("m ");
+        int minutes = minuteEnd < 0 ? 0 : Integer.parseInt(timerString.substring(0, minuteEnd));
+        int secondsStart = minuteEnd < 0 ? 0 : minuteEnd + 2;
+        int seconds = Integer.parseInt(timerString.substring(secondsStart, timerString.length() - 1));
+        return minutes * 60 + seconds;
     }
 
     public double getDistanceToPlayer() {

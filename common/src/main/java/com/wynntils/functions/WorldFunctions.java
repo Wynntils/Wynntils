@@ -284,6 +284,28 @@ public class WorldFunctions {
         }
     }
 
+    public static class ClosestMobTotemNumberFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.BonusTotem.getClosestBonusTotemNumber(BonusTotemType.MOB);
+        }
+    }
+
+    public static class MobTotemSecondsLeftFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            BonusTotem bonusTotem = Models.BonusTotem.getBonusTotem(
+                    BonusTotemType.MOB, arguments.getArgument("totemNumber").getIntegerValue() - 1);
+            return bonusTotem == null ? 0 : bonusTotem.getSecondsLeft();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
+
     public static class MobTotemCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
