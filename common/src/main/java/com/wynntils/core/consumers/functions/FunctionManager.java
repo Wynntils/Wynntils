@@ -827,6 +827,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.CurrentTerritoryOwnerFunction());
         registerFunction(new WorldFunctions.CurrentWorldFunction());
         registerFunction(new WorldFunctions.GatheringTotemCountFunction());
+        registerFunction(new WorldFunctions.ClosestGatheringTotemNumberFunction());
+        registerFunction(new WorldFunctions.GatheringTotemSecondsLeftFunction());
         registerFunction(new WorldFunctions.GatheringTotemDistanceFunction());
         registerFunction(new WorldFunctions.GatheringTotemFunction());
         registerFunction(new WorldFunctions.GatheringTotemOwnerFunction());
