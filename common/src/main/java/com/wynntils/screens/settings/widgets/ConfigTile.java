@@ -13,7 +13,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
+import com.wynntils.screens.overlays.selection.OverlaySettingsScreen;
 import com.wynntils.screens.settings.BaseWynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -41,6 +41,7 @@ public class ConfigTile extends WynntilsButton {
     private final GeneralSettingsButton resetButton;
     private final StyledText displayName;
     private final Overlay overlay;
+    private final Config<?> config;
     private AbstractWidget configOptionElement;
 
     public ConfigTile(int x, int y, int width, int height, Screen screen, Config<?> config, Overlay overlay) {
@@ -53,10 +54,10 @@ public class ConfigTile extends WynntilsButton {
             displayName = settingsScreen.configOptionContains(config)
                     ? StyledText.fromString(ChatFormatting.UNDERLINE + config.getDisplayName())
                     : StyledText.fromString(config.getDisplayName());
-        } else if (screen instanceof OverlaySelectionScreen overlaySelectionScreen) {
-            maskTopY = overlaySelectionScreen.getConfigMaskTopY();
-            maskBottomY = overlaySelectionScreen.getConfigMaskBottomY();
-            displayName = overlaySelectionScreen.configOptionContains(config)
+        } else if (screen instanceof OverlaySettingsScreen overlaySettingsScreen) {
+            maskTopY = overlaySettingsScreen.getConfigMaskTopY();
+            maskBottomY = overlaySettingsScreen.getConfigMaskBottomY();
+            displayName = overlaySettingsScreen.configOptionContains(config)
                     ? StyledText.fromString(ChatFormatting.UNDERLINE + config.getDisplayName())
                     : StyledText.fromString(config.getDisplayName());
         } else {
@@ -66,6 +67,7 @@ public class ConfigTile extends WynntilsButton {
         }
 
         this.overlay = overlay;
+        this.config = config;
         this.configOptionElement = getWidgetFromConfig(config);
         this.resetButton = new ResetButton(
                 config,
@@ -116,6 +118,10 @@ public class ConfigTile extends WynntilsButton {
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         // Prevent interaction when the tile is outside of the mask from the screen, same applies to drag and released
         if ((event.y() <= maskTopY || event.y() >= maskBottomY)) return false;
+
+        if (screen instanceof OverlaySettingsScreen settings && overlay != null) {
+            settings.beginSettingEdit(overlay, config);
+        }
 
         if (McUtils.screen() instanceof BaseWynntilsBookSettingsScreen bookSettingsScreen) {
             bookSettingsScreen.changesMade();

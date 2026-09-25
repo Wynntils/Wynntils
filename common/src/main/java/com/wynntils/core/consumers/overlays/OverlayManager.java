@@ -20,7 +20,7 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
-import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
+import com.wynntils.screens.overlays.selection.OverlaySettingsScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.type.RenderElementType;
@@ -49,6 +49,78 @@ public final class OverlayManager extends Manager {
     private final Set<Overlay> enabledOverlays = new HashSet<>();
     private Map<RenderElementType, List<Overlay>> renderMap = new HashMap<>();
     private boolean renderOrdersInitialized = false;
+    private final Map<String, Overlay> overlaysByKey = new HashMap<>();
+    private final Map<String, Integer> nextOverlayIds = new HashMap<>();
+    private final OverlayHistory settingsHistory = new OverlayHistory(false);
+    private final OverlayHistory placementHistory = new OverlayHistory(true);
+    private int updateDepth;
+    private boolean renderOrderDirty;
+
+    public void batchOverlayUpdates(Runnable action) {
+        updateDepth++;
+        try {
+            action.run();
+        } finally {
+            updateDepth--;
+
+            if (updateDepth == 0 && renderOrderDirty) {
+                renderOrderDirty = false;
+                rebuildAndNormalizeRenderOrder();
+            }
+        }
+    }
+
+    public void restoreOverlayOrder(Overlay overlay, int order) {
+        if (isEnabled(overlay) && order >= 0) {
+            for (Overlay other : enabledOverlays) {
+                if (other != overlay
+                        && other.getRenderElementType() == overlay.getRenderElementType()
+                        && other.getRenderOrder() >= order) {
+                    other.setRenderOrder(other.getRenderOrder() + 1);
+                }
+            }
+
+            overlay.setRenderOrder(order);
+        }
+
+        rebuildAndNormalizeRenderOrder();
+    }
+
+    public OverlayHistory getSettingsHistory() {
+        return settingsHistory;
+    }
+
+    public OverlayHistory getPlacementHistory() {
+        return placementHistory;
+    }
+
+    public String getOverlayKey(Overlay overlay) {
+        return overlay.getDeclaringFeatureClassName() + "." + overlay.getJsonName();
+    }
+
+    public Overlay findOverlay(String key) {
+        return overlaysByKey.get(key);
+    }
+
+    public void finishHistory() {
+        settingsHistory.finish();
+        placementHistory.finish();
+    }
+
+    public void saveHistory() {
+        settingsHistory.saved();
+        placementHistory.saved();
+    }
+
+    public void discardUnsavedHistory() {
+        settingsHistory.discardUnsaved();
+        placementHistory.discardUnsaved();
+    }
+
+    public void clearHistory() {
+        settingsHistory.clear();
+        placementHistory.clear();
+    }
 
     private final List<SectionCoordinates> sections = new ArrayList<>(9);
     private final Map<Class<?>, Integer> profilingTimes = new HashMap<>();
@@ -64,14 +136,18 @@ public final class OverlayManager extends Manager {
 
     private void registerOverlay(
             Overlay overlay, Feature parent, RenderElementType elementType, boolean enabledByDefault) {
+        overlay.setDeclaringFeatureClassName(parent.getClass().getSimpleName());
         overlayParentMap.putIfAbsent(parent, new LinkedList<>());
         overlayParentMap.get(parent).add(overlay);
 
         overlay.renderElement.store(elementType);
         overlayInfoMap.put(overlay, new OverlayInfoContainer(parent, enabledByDefault));
+        overlaysByKey.put(getOverlayKey(overlay), overlay);
     }
 
     private void unregisterOverlay(Overlay overlay) {
+        overlaysByKey.remove(getOverlayKey(overlay));
+        Managers.Persisted.unregisterOwner(overlay);
         overlayParentMap.get(overlayInfoMap.get(overlay).parent()).remove(overlay);
 
         WynntilsMod.unregisterEventListener(overlay);
@@ -159,6 +235,11 @@ public final class OverlayManager extends Manager {
     }
 
     public void rebuildRenderOrder() {
+        if (updateDepth > 0) {
+            renderOrderDirty = true;
+            return;
+        }
+
         Map<RenderElementType, List<Overlay>> newRenderMap = new HashMap<>();
 
         for (RenderElementType elementType : RenderElementType.values()) {
@@ -198,6 +279,11 @@ public final class OverlayManager extends Manager {
     }
 
     public void rebuildAndNormalizeRenderOrder() {
+        if (updateDepth > 0) {
+            renderOrderDirty = true;
+            return;
+        }
+
         rebuildRenderOrder();
         normalizeRenderOrders();
     }
@@ -277,6 +363,57 @@ public final class OverlayManager extends Manager {
     // endregion
 
     // region Overlay Groups
+
+    public Overlay addSingleOverlay(OverlayGroupHolder holder) {
+        int minimum = holder.getOverlays().stream()
+                        .mapToInt(overlay -> ((DynamicOverlay) overlay).getId())
+                        .max()
+                        .orElse(0)
+                + 1;
+        int id = Math.max(minimum, nextOverlayIds.getOrDefault(holder.getConfigKey(), 1));
+
+        return addSingleOverlay(holder, id);
+    }
+
+    public Overlay addSingleOverlay(OverlayGroupHolder holder, int id) {
+        if (holder.getOverlays().stream().anyMatch(overlay -> ((DynamicOverlay) overlay).getId() == id)) {
+            throw new IllegalArgumentException("Overlay ID already exists: " + id);
+        }
+
+        Overlay overlay;
+        try {
+            overlay =
+                    (Overlay) holder.getOverlayClass().getConstructor(int.class).newInstance(id);
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("Cannot create overlay " + holder.getConfigKey(), e);
+        }
+
+        List<Overlay> overlays = new ArrayList<>(holder.getOverlays());
+        overlays.add(overlay);
+        holder.setOverlays(overlays);
+        registerOverlay(overlay, holder.getParent(), holder.getElementType(), true);
+        Managers.Persisted.registerOwner(overlay);
+        overlay.addConfigOptions(Managers.Config.getConfigOptions(overlay));
+        batchOverlayUpdates(() -> {
+            overlay.getConfigOptions().forEach(Config::reset);
+            enableOverlay(overlay);
+        });
+        nextOverlayIds.merge(holder.getConfigKey(), id + 1, Math::max);
+
+        return overlay;
+    }
+
+    public void removeSingleOverlay(OverlayGroupHolder holder, int id) {
+        List<Overlay> overlays = new ArrayList<>(holder.getOverlays());
+        Overlay overlay = overlays.stream()
+                .filter(candidate -> ((DynamicOverlay) candidate).getId() == id)
+                .findFirst()
+                .orElseThrow();
+        overlays.remove(overlay);
+        unregisterOverlay(overlay);
+        holder.setOverlays(overlays);
+        rebuildAndNormalizeRenderOrder();
+    }
 
     public void createOverlayGroupWithDefaults(OverlayGroupHolder holder) {
         recreateGroupOverlaysWithIds(
@@ -377,7 +514,7 @@ public final class OverlayManager extends Manager {
             showPreview = screen.showPreview();
             renderNonSelected = screen.shouldRenderAllOverlays();
             selectedOverlay = screen.getSelectedOverlay();
-        } else if (McUtils.screen() instanceof OverlaySelectionScreen screen) {
+        } else if (McUtils.screen() instanceof OverlaySettingsScreen screen) {
             if (screen.renderingPreview()) {
                 showPreview = true;
                 renderNonSelected = screen.shouldShowOverlays();

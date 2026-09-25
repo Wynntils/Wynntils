@@ -11,6 +11,7 @@ import com.wynntils.core.consumers.overlays.Corner;
 import com.wynntils.core.consumers.overlays.CustomNameProperty;
 import com.wynntils.core.consumers.overlays.Edge;
 import com.wynntils.core.consumers.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.OverlayHistory;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.SectionCoordinates;
@@ -20,7 +21,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.overlays.ordering.OverlayOrderingScreen;
 import com.wynntils.screens.overlays.placement.OverlaySnapAxis.SnapTarget;
-import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
+import com.wynntils.screens.overlays.selection.OverlaySettingsScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -86,7 +87,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private final Map<Float, CustomColor> horizontalScreenGuides = new HashMap<>();
     private final OverlaySnapAxis horizontalSnap = new OverlaySnapAxis();
     private final OverlaySnapAxis verticalSnap = new OverlaySnapAxis();
-    private final OverlayEditHistory editHistory = new OverlayEditHistory();
+    private final OverlayHistory editHistory = Managers.Overlay.getPlacementHistory();
     private OverlayHelpPanel helpPanel;
     private Button helpButton;
     private boolean helpPinned;
@@ -142,6 +143,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
+        if (selectedOverlay != null) {
+            selectedOverlay = Managers.Overlay.findOverlay(Managers.Overlay.getOverlayKey(selectedOverlay));
+        }
+
         closeHelpPanel();
         resetSelection();
         closePositionPanel();
@@ -304,8 +309,14 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         closeHelpPanel();
         closePositionPanel();
         resetSelection();
-        editHistory.clear();
         reloadConfigForOverlay();
+    }
+
+    @Override
+    public void removed() {
+        closePositionPanel();
+        editHistory.finish();
+        super.removed();
     }
 
     @Override
@@ -373,7 +384,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
             Managers.Config.saveConfig();
             onClose();
-            McUtils.setScreen(OverlaySelectionScreen.create(selectedOverlay));
+            McUtils.setScreen(OverlaySettingsScreen.create(selectedOverlay));
             return true;
         }
 
@@ -771,7 +782,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void reloadConfigForOverlay() {
-        Managers.Config.reloadConfiguration(true);
+        Managers.Config.reloadEditorConfiguration(true);
     }
 
     private void handleOverlayEdgeDrag(double dragX, double dragY) {
@@ -1187,9 +1198,11 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private void updateHistoryButtons() {
         if (undoButton != null) {
             undoButton.active = editHistory.canUndo();
+            undoButton.setTooltip(Tooltip.create(editHistory.tooltip(false)));
         }
         if (redoButton != null) {
             redoButton.active = editHistory.canRedo();
+            redoButton.setTooltip(Tooltip.create(editHistory.tooltip(true)));
         }
     }
 

@@ -4,11 +4,13 @@
  */
 package com.wynntils.screens.settings.widgets;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class OverlaySettingsWidget extends ScreenSettingsButton {
@@ -25,7 +27,13 @@ public class OverlaySettingsWidget extends ScreenSettingsButton {
     }
 
     @Override
+    public void onPress(InputWithModifiers input) {
+        Managers.Config.saveConfig();
+        super.onPress(input);
+    }
+
+    @Override
     public Component getMessage() {
-        return Component.translatable("screens.wynntils.overlaySelection.edit");
+        return Component.translatable("screens.wynntils.overlaySettings.edit");
     }
 }

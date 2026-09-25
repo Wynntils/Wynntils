@@ -7,6 +7,8 @@ package com.wynntils.screens.overlays.selection;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.overlays.DynamicOverlay;
+import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.persisted.config.OverlayGroupHolder;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
@@ -39,7 +41,7 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
             Pair.of(Texture.EXPERIENCE_BAR, List.of(ObjectivesTextures.values())),
             Pair.of(Texture.BUBBLE_BAR, List.of(ObjectivesTextures.values())));
 
-    private final OverlaySelectionScreen previousScreen;
+    private final OverlaySettingsScreen previousScreen;
 
     private Button textureButton;
     private float barX;
@@ -47,13 +49,13 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
     private int barTextureIndex = 0;
     private int barTypeIndex = 0;
 
-    private CustomBarSelectionScreen(OverlaySelectionScreen previousScreen) {
+    private CustomBarSelectionScreen(OverlaySettingsScreen previousScreen) {
         super(Component.translatable("screens.wynntils.customBarSelection.name"));
 
         this.previousScreen = previousScreen;
     }
 
-    public static Screen create(OverlaySelectionScreen previousScreen) {
+    public static Screen create(OverlaySettingsScreen previousScreen) {
         return new CustomBarSelectionScreen(previousScreen);
     }
 
@@ -214,11 +216,10 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
         OverlayGroupHolder barGroup = groupHolders.get(barTypeIndex);
 
         // Add the new custom bar
-        int id = Managers.Overlay.extendOverlayGroup(barGroup);
-
-        Managers.Config.reloadConfiguration(false);
+        Overlay overlay = Managers.Overlay.addSingleOverlay(barGroup);
+        int id = ((DynamicOverlay) overlay).getId();
+        Managers.Overlay.getSettingsHistory().created(barGroup, overlay);
         Managers.Config.saveConfig();
-        Managers.Config.reloadConfiguration(true);
 
         // Repopulate the overlays on selection screen
         previousScreen.populateOverlays();
@@ -227,7 +228,7 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
         previousScreen.selectOverlay(barGroup.getOverlays().getLast());
 
         McUtils.sendWynntilsPrefixMessage(Component.translatable(
-                        "screens.wynntils.overlaySelection.createdOverlay",
+                        "screens.wynntils.overlaySettings.createdOverlay",
                         barGroup.getOverlayClass().getSimpleName(),
                         barGroup.getFieldName(),
                         id)

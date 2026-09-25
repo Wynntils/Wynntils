@@ -30,6 +30,13 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Comparable<Overlay> {
+    // Retain the identity, not the parent instance: screens can outlive a configuration reload.
+    private String declaringFeatureClassName;
+
+    final void setDeclaringFeatureClassName(String name) {
+        declaringFeatureClassName = name;
+    }
+
     @Persisted(i18nKey = "overlay.wynntils.overlay.enabledTemplate")
     protected final Config<String> enabledTemplate = new Config<>("");
 
@@ -223,7 +230,7 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     }
 
     public String getDeclaringFeatureClassName() {
-        return Managers.Overlay.getOverlayParent(this).getClass().getSimpleName();
+        return declaringFeatureClassName;
     }
 
     private String getTranslationFeatureKeyName() {
