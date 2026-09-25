@@ -8,10 +8,13 @@ import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.mc.McUtils;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 
 class TextNumberInputBoxWidget extends TextInputBoxWidget {
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d");
+
     TextNumberInputBoxWidget(
             int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
         super(x, y, width, height, onUpdateConsumer, textboxScreen);
@@ -20,7 +23,7 @@ class TextNumberInputBoxWidget extends TextInputBoxWidget {
 
     @Override
     public boolean charTyped(CharacterEvent event) {
-        if (!(event.codepoint() >= 48 && event.codepoint() <= 57)) return false;
+        if (!(NUMBER_PATTERN.matcher(event.codepointAsString()).matches())) return false;
         return super.charTyped(event);
     }
 
