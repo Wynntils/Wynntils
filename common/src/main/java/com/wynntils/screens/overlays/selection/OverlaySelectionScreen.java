@@ -119,6 +119,12 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         return new OverlaySelectionScreen();
     }
 
+    public static Screen create(Overlay overlay) {
+        OverlaySelectionScreen screen = new OverlaySelectionScreen();
+        screen.selectedOverlay = overlay;
+        return screen;
+    }
+
     @Override
     protected void doInit() {
         offsetX = (int) ((this.width - Texture.OVERLAY_SELECTION_GUI.width()) / 2f);
@@ -150,6 +156,11 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         // endregion
 
         togglePreview(renderPreview);
+
+        if (selectedOverlay != null && !renderPreview) {
+            scrollOverlays(
+                    Math.max(0, Math.min(overlayList.indexOf(selectedOverlay) * 21, getMaxOverlayScrollOffset())));
+        }
 
         this.addRenderableWidget(searchWidget);
     }
