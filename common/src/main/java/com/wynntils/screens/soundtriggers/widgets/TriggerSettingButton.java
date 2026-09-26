@@ -97,7 +97,7 @@ public class TriggerSettingButton extends WynntilsButton {
                 this.height / 2f,
                 1,
                 3,
-                3);
+                4);
 
         FontRenderer.getInstance()
                 .renderScrollingAlignedTextInBox(
