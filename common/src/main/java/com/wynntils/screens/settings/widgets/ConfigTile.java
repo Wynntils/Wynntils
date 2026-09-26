@@ -13,7 +13,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
+import com.wynntils.screens.overlays.selection.OverlaySettingsScreen;
 import com.wynntils.screens.settings.BaseWynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -53,10 +53,10 @@ public class ConfigTile extends WynntilsButton {
             displayName = settingsScreen.configOptionContains(config)
                     ? StyledText.fromString(ChatFormatting.UNDERLINE + config.getDisplayName())
                     : StyledText.fromString(config.getDisplayName());
-        } else if (screen instanceof OverlaySelectionScreen overlaySelectionScreen) {
-            maskTopY = overlaySelectionScreen.getConfigMaskTopY();
-            maskBottomY = overlaySelectionScreen.getConfigMaskBottomY();
-            displayName = overlaySelectionScreen.configOptionContains(config)
+        } else if (screen instanceof OverlaySettingsScreen overlaySettingsScreen) {
+            maskTopY = overlaySettingsScreen.getConfigMaskTopY();
+            maskBottomY = overlaySettingsScreen.getConfigMaskBottomY();
+            displayName = overlaySettingsScreen.configOptionContains(config)
                     ? StyledText.fromString(ChatFormatting.UNDERLINE + config.getDisplayName())
                     : StyledText.fromString(config.getDisplayName());
         } else {
