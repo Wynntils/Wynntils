@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.bonustotems.label;
@@ -13,7 +13,7 @@ import net.minecraft.world.entity.Entity;
 public class BonusTotemLabelInfo extends LabelInfo {
     private final BonusTotemType bonusTotemType;
     private final String user;
-    private final String timerString;
+    private final int secondsLeft;
 
     public BonusTotemLabelInfo(
             StyledText label,
@@ -21,12 +21,12 @@ public class BonusTotemLabelInfo extends LabelInfo {
             Entity entity,
             BonusTotemType bonusTotemType,
             String user,
-            String timerString) {
+            int secondsLeft) {
         super(label, location, entity);
 
         this.bonusTotemType = bonusTotemType;
         this.user = user;
-        this.timerString = timerString;
+        this.secondsLeft = secondsLeft;
     }
 
     public BonusTotemType getBonusTotemType() {
@@ -37,7 +37,7 @@ public class BonusTotemLabelInfo extends LabelInfo {
         return user;
     }
 
-    public String getTimerString() {
-        return timerString;
+    public int getSecondsLeft() {
+        return secondsLeft;
     }
 }
