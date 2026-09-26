@@ -13,7 +13,7 @@ public class BonusTotem {
     private final BonusTotemType bonusTotemType;
     private final Position position;
     private final String owner;
-    private String timerString;
+    private int secondsLeft;
 
     public BonusTotem(BonusTotemType bonusTotemType, Position position, String owner) {
         this.bonusTotemType = bonusTotemType;
@@ -34,22 +34,17 @@ public class BonusTotem {
     }
 
     public String getTimerString() {
-        return timerString;
+        if (secondsLeft < 60) return secondsLeft + "s";
+
+        return secondsLeft / 60 + "m " + secondsLeft % 60 + "s";
     }
 
-    public void setTimerString(String timerString) {
-        this.timerString = timerString;
+    public void setSecondsLeft(int secondsLeft) {
+        this.secondsLeft = secondsLeft;
     }
 
     public int getSecondsLeft() {
-        if (timerString == null) return 0;
-
-        // Labels contain either "Ns" or "Nm Ns", as validated by BonusTotemLabelParser.
-        int minuteEnd = timerString.indexOf("m ");
-        int minutes = minuteEnd < 0 ? 0 : Integer.parseInt(timerString.substring(0, minuteEnd));
-        int secondsStart = minuteEnd < 0 ? 0 : minuteEnd + 2;
-        int seconds = Integer.parseInt(timerString.substring(secondsStart, timerString.length() - 1));
-        return minutes * 60 + seconds;
+        return secondsLeft;
     }
 
     public double getDistanceToPlayer() {

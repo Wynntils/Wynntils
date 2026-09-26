@@ -47,7 +47,7 @@ public final class BonusTotemModel extends Model {
                         bonusTotemLabelInfo.getUser()));
         bonusTotemMap
                 .get(event.getLabelInfo().getEntity().getId())
-                .setTimerString(bonusTotemLabelInfo.getTimerString());
+                .setSecondsLeft(bonusTotemLabelInfo.getSecondsLeft());
 
         bonusTotems.put(bonusTotemLabelInfo.getBonusTotemType(), bonusTotemMap);
     }
