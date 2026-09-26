@@ -436,7 +436,7 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
 
     @Override
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (selectedTrigger != null
+        if (getSelectedButton() != null
                 && getFocusedTextInput() != null
                 && !getFocusedTextInput().isHovered()) {
             getSelectedButton().hideEditInput();
@@ -482,6 +482,13 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
             scrollTriggers(newOffset);
 
             return true;
+        }
+
+        for (GuiEventListener listener : getAllWidgets()) {
+            if (listener.isMouseOver(event.x(), event.y())) {
+                listener.mouseDragged(event, mouseX, mouseY);
+                return true;
+            }
         }
 
         return super.mouseDragged(event, mouseX, mouseY);
@@ -596,8 +603,8 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
         list.add(saveButton);
         list.add(discardButton);
         list.add(deleteButton);
-        if (selectedTrigger != null) {
-            list.addAll(children());
+        if (getSelectedButton() != null) {
+            list.add(getSelectedButton());
         }
         return list;
     }
@@ -643,7 +650,7 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
     public void setSelectedTrigger(SoundTrigger selectedTrigger) {
         if (this.selectedTrigger == selectedTrigger) return;
 
-        if (this.selectedTrigger != null) {
+        if (this.getSelectedButton() != null) {
             getSelectedButton().hideEditInput();
         }
         this.selectedTrigger = selectedTrigger;

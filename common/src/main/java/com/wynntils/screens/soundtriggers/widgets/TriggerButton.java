@@ -123,6 +123,14 @@ public class TriggerButton extends WynntilsButton {
     }
 
     @Override
+    public boolean mouseDragged(MouseButtonEvent event, double mouseX, double mouseY) {
+        if (editInput.visible) {
+            return editInput.mouseDragged(event, mouseX, mouseY);
+        }
+        return super.mouseDragged(event, mouseX, mouseY);
+    }
+
+    @Override
     public boolean keyPressed(KeyEvent event) {
         if (editInput.visible
                 && (event.key() == InputConstants.KEY_ESCAPE
