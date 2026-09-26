@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.soundtriggers.widgets;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -21,7 +22,6 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class TriggerButton extends WynntilsButton {
     private final SoundTrigger trigger;
@@ -96,7 +96,7 @@ public class TriggerButton extends WynntilsButton {
             return true;
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             if (parentScreen.getSelectedTrigger() == trigger) {
                 editInput.visible = true;
                 parentScreen.setFocusedTextInput(editInput);
@@ -125,9 +125,9 @@ public class TriggerButton extends WynntilsButton {
     @Override
     public boolean keyPressed(KeyEvent event) {
         if (editInput.visible
-                && (event.key() == GLFW.GLFW_KEY_ESCAPE
-                        || event.key() == GLFW.GLFW_KEY_ENTER
-                        || event.key() == GLFW.GLFW_KEY_KP_ENTER)) {
+                && (event.key() == InputConstants.KEY_ESCAPE
+                        || event.key() == InputConstants.KEY_RETURN
+                        || event.key() == InputConstants.KEY_NUMPADENTER)) {
             editInput.visible = false;
             parentScreen.setFocusedTextInput(null);
         }

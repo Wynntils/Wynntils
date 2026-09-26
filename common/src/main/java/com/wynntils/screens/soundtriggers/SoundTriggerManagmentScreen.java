@@ -5,6 +5,7 @@
 package com.wynntils.screens.soundtriggers;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
@@ -40,7 +41,6 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public final class SoundTriggerManagmentScreen extends WynntilsScreen {
     // region Render Details
@@ -513,7 +513,7 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
     @Override
     public boolean keyPressed(KeyEvent event) {
         if ((getFocusedTextInput() == searchWidget || getFocusedTextInput() == null)
-                && event.key() == GLFW.GLFW_KEY_ESCAPE) {
+                && event.key() == InputConstants.KEY_ESCAPE) {
             this.onClose();
             return true;
         }
