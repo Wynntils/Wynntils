@@ -171,6 +171,7 @@ import com.wynntils.features.utilities.GammabrightFeature;
 import com.wynntils.features.utilities.HighlightGatheringNodesFeature;
 import com.wynntils.features.utilities.PerCharacterGuildContributionFeature;
 import com.wynntils.features.utilities.SilencerFeature;
+import com.wynntils.features.utilities.SoundTriggersFeature;
 import com.wynntils.features.utilities.TranscribeMessagesFeature;
 import com.wynntils.features.utilities.ValuablesProtectionFeature;
 import com.wynntils.features.utilities.XpGainMessageFeature;
@@ -431,6 +432,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new HighlightGatheringNodesFeature());
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
+        registerFeature(new SoundTriggersFeature());
         registerFeature(new TranscribeMessagesFeature());
         registerFeature(new ValuablesProtectionFeature());
         registerFeature(new XpGainMessageFeature());
