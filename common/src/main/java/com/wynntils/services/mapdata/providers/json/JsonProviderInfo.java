@@ -23,6 +23,17 @@ public record JsonProviderInfo(
         return new JsonProviderInfo(providerId, JsonProviderType.REMOTE, null, null, providerUrl);
     }
 
+    /**
+     * @return The id this provider is registered under in {@link com.wynntils.services.mapdata.MapDataService}
+     */
+    public String completeId() {
+        return switch (providerType) {
+            case BUNDLED -> "bundled:" + providerId;
+            case LOCAL -> "local:" + providerId;
+            case REMOTE -> "online:" + providerId;
+        };
+    }
+
     public String path() {
         return switch (providerType) {
             case BUNDLED -> providerFilename;

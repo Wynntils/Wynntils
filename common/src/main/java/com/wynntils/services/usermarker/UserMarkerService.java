@@ -48,7 +48,7 @@ public class UserMarkerService extends Service {
     @SubscribeEvent
     public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
         Services.MapData.registerOverrideProvider(MARKED_OVERRIDE_PROVIDER_ID, userMarkedOverrideProvider);
-        Services.MapData.registerBuiltInProvider(USER_MARKER_PROVIDER);
+        Services.MapData.registerBuiltInProvider(USER_MARKER_PROVIDER, this, true);
     }
 
     public void addMarkerAtLocation(Location location, String name) {

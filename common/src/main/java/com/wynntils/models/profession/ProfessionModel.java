@@ -127,7 +127,7 @@ public final class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
-        Services.MapData.registerBuiltInProvider(GATHERING_NODE_PROVIDER);
+        Services.MapData.registerBuiltInProvider(GATHERING_NODE_PROVIDER, this, true);
     }
 
     @Override

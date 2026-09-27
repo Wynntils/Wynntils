@@ -98,8 +98,8 @@ public final class TerritoryModel extends Model {
 
     @SubscribeEvent
     public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
-        Services.MapData.registerBuiltInProvider(TERRITORY_PROVIDER);
-        Services.MapData.registerBuiltInProvider(MANAGE_TERRITORY_PROVIDER);
+        Services.MapData.registerBuiltInProvider(TERRITORY_PROVIDER, this, true);
+        Services.MapData.registerBuiltInProvider(MANAGE_TERRITORY_PROVIDER, this, true);
     }
 
     public Collection<TerritoryProfile> getTerritoryProfiles() {

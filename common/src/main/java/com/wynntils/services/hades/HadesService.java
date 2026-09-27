@@ -109,7 +109,7 @@ public final class HadesService extends Service {
 
     @SubscribeEvent
     public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
-        Services.MapData.registerBuiltInProvider(PLAYER_PROVIDER);
+        Services.MapData.registerBuiltInProvider(PLAYER_PROVIDER, this, true);
     }
 
     public Stream<HadesUser> getHadesUsers() {

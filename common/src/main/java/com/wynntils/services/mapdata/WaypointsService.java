@@ -54,7 +54,7 @@ public class WaypointsService extends Service {
 
     @SubscribeEvent
     public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
-        Services.MapData.registerBuiltInProvider(WAYPOINTS_PROVIDER);
+        Services.MapData.registerBuiltInProvider(WAYPOINTS_PROVIDER, this, true);
     }
 
     @Override
