@@ -24,7 +24,7 @@ import com.wynntils.screens.activities.WynntilsContentBookScreen;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
-import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
+import com.wynntils.screens.overlays.selection.OverlaySettingsScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ShiftBehavior;
@@ -49,7 +49,7 @@ public class WynntilsContentBookFeature extends Feature {
 
     @RegisterKeyBind
     private final KeyBind openOverlayMenu =
-            KeyBindDefinition.OPEN_OVERLAY_MENU.create(() -> McUtils.setScreen(OverlaySelectionScreen.create()));
+            KeyBindDefinition.OPEN_OVERLAY_MENU.create(() -> McUtils.setScreen(OverlaySettingsScreen.create()));
 
     @RegisterKeyBind
     private final KeyBind openOverlayFreeMove = KeyBindDefinition.OPEN_OVERLAY_FREE_MOVE.create(
