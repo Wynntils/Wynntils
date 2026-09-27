@@ -16,6 +16,8 @@ import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.utils.mc.McUtils;
 import java.net.URI;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -171,8 +173,79 @@ public class MapCommand extends Command {
         MutableComponent message =
                 Component.translatable("command.wynntils.map.providersHeader").withStyle(ChatFormatting.YELLOW);
 
+        List<Map.Entry<String, MapDataProviderInfo>> builtInProviders = new ArrayList<>();
+        List<Map.Entry<String, MapDataProviderInfo>> bundledProviders = new ArrayList<>();
+        List<Map.Entry<String, MapDataProviderInfo>> localProviders = new ArrayList<>();
+        List<Map.Entry<String, MapDataProviderInfo>> remoteProviders = new ArrayList<>();
+
         for (Map.Entry<String, MapDataProviderInfo> entry :
                 Services.MapData.getProviderInfos().entrySet()) {
+            Optional<JsonProviderInfo> jsonProviderInfo =
+                    Services.MapData.getJsonProviderInfoByCompleteId(entry.getKey());
+
+            if (jsonProviderInfo.isEmpty()) {
+                builtInProviders.add(entry);
+                continue;
+            }
+
+            switch (jsonProviderInfo.get().providerType()) {
+                case BUNDLED -> bundledProviders.add(entry);
+                case LOCAL -> localProviders.add(entry);
+                case REMOTE -> remoteProviders.add(entry);
+            }
+        }
+
+        boolean firstSection = true;
+
+        if (!builtInProviders.isEmpty()) {
+            if (appendProviderSection(
+                            context, message, "command.wynntils.map.builtInHeader", builtInProviders, firstSection)
+                    == 0) {
+                return 0;
+            }
+            firstSection = false;
+        }
+        if (!bundledProviders.isEmpty()) {
+            if (appendProviderSection(
+                            context, message, "command.wynntils.map.bundledHeader", bundledProviders, firstSection)
+                    == 0) {
+                return 0;
+            }
+            firstSection = false;
+        }
+        if (!localProviders.isEmpty()) {
+            if (appendProviderSection(
+                            context, message, "command.wynntils.map.localHeader", localProviders, firstSection)
+                    == 0) {
+                return 0;
+            }
+            firstSection = false;
+        }
+        if (!remoteProviders.isEmpty()) {
+            if (appendProviderSection(
+                            context, message, "command.wynntils.map.remoteHeader", remoteProviders, firstSection)
+                    == 0) {
+                return 0;
+            }
+        }
+
+        context.getSource().sendSuccess(() -> message, false);
+        return 1;
+    }
+
+    private int appendProviderSection(
+            CommandContext<CommandSourceStack> context,
+            MutableComponent message,
+            String headerKey,
+            List<Map.Entry<String, MapDataProviderInfo>> entries,
+            boolean firstSection) {
+        if (!firstSection) {
+            message.append("\n");
+        }
+
+        message.append("\n").append(Component.translatable(headerKey).withStyle(ChatFormatting.YELLOW));
+
+        for (Map.Entry<String, MapDataProviderInfo> entry : entries) {
             String providerId = entry.getKey();
             MapDataProviderInfo providerInfo = entry.getValue();
 
@@ -181,14 +254,15 @@ public class MapCommand extends Command {
             String statusKey = enabled ? "command.wynntils.map.enabled" : "command.wynntils.map.disabled";
 
             message.append("\n")
-                    .append(Component.literal(providerId).withStyle(ChatFormatting.GOLD))
+                    .append(Component.literal(providerId)
+                            .withStyle(Style.EMPTY
+                                    .withColor(ChatFormatting.GOLD)
+                                    .withHoverEvent(new HoverEvent.ShowText(Component.translatable(
+                                                    "command.wynntils.map.ownedBy", providerInfo.getOwnerName())
+                                            .withStyle(ChatFormatting.AQUA)))))
                     .append(Component.literal(" (").withStyle(statusColor))
                     .append(Component.translatable(statusKey).withStyle(statusColor))
-                    .append(Component.literal(")").withStyle(statusColor))
-                    .append(Component.literal(" [")
-                            .append(Component.translatable("command.wynntils.map.ownedBy", providerInfo.getOwnerName()))
-                            .append("]")
-                            .withStyle(ChatFormatting.AQUA));
+                    .append(Component.literal(")").withStyle(statusColor));
 
             if (!providerInfo.toggleable()) {
                 message.append(Component.literal(" [")
@@ -212,7 +286,6 @@ public class MapCommand extends Command {
                     .append(pathComponent.get());
         }
 
-        context.getSource().sendSuccess(() -> message, false);
         return 1;
     }
 
