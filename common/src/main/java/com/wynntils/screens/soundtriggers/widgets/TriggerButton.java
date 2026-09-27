@@ -136,8 +136,7 @@ public class TriggerButton extends WynntilsButton {
                 && (event.key() == InputConstants.KEY_ESCAPE
                         || event.key() == InputConstants.KEY_RETURN
                         || event.key() == InputConstants.KEY_NUMPADENTER)) {
-            editInput.visible = false;
-            parentScreen.setFocusedTextInput(null);
+            hideEditInput();
         }
         return super.keyPressed(event);
     }
