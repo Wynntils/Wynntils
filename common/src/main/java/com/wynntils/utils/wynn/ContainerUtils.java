@@ -33,7 +33,6 @@ public final class ContainerUtils {
         return NonNullList.create();
     }
 
-    /** Opens the content book for a user action, allowing features to block it. */
     public static boolean openContentBook() {
         if (WynntilsMod.postEvent(new ContentBookOpenEvent())) return false;
         return openInventory(InventoryUtils.CONTENT_BOOK_SLOT_NUM);

@@ -1152,6 +1152,7 @@
   "feature.wynntils.lockContentBook.lockInWorldEvent.name": "Lock in World Event",
   "feature.wynntils.lockContentBook.locked": "Content Book is locked during this activity.",
   "feature.wynntils.lockContentBook.name": "Lock Content Book",
+  "feature.wynntils.lockContentBook.unlocked": "Content Book is unlocked.",
   "feature.wynntils.logItemInfo.description": "Logs item info to the console and chat.",
   "feature.wynntils.logItemInfo.name": "Log Item Info",
   "feature.wynntils.lootchestText.description": "Adds the ability to see chests opened and dry chest count (or anything else with functions).",

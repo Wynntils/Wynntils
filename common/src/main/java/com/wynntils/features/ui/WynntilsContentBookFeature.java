@@ -15,11 +15,9 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.wrappedscreen.event.WrappedScreenOpenEvent;
-import com.wynntils.mc.event.ArmSwingEvent;
-import com.wynntils.mc.event.PlayerInteractEvent;
-import com.wynntils.mc.event.UseItemEvent;
+import com.wynntils.models.activities.event.ContentBookOpenEvent;
+import com.wynntils.models.activities.event.ContentBookOpenEvent.OpenAction;
 import com.wynntils.screens.activities.WynntilsContentBookScreen;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
@@ -29,15 +27,10 @@ import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.ShiftBehavior;
 import com.wynntils.utils.wynn.ContainerUtils;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class WynntilsContentBookFeature extends Feature {
-    private static final StyledText CONTENT_BOOK_NAME = StyledText.fromString("§dContent Book");
-
     @RegisterKeyBind
     private final KeyBind openContentBook = KeyBindDefinition.OPEN_CONTENT_BOOK.create(ContainerUtils::openContentBook);
 
@@ -75,23 +68,20 @@ public class WynntilsContentBookFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onSwing(ArmSwingEvent event) {
-        handleClick(event);
-    }
+    public void onContentBookOpen(ContentBookOpenEvent event) {
+        if (event.isCanceled()) return;
+        shiftClickedBookItem = event.getAction().isShift();
 
-    @SubscribeEvent
-    public void onUseItem(UseItemEvent event) {
-        handleClick(event);
-    }
+        if (event.getAction() == OpenAction.PROGRAMMATIC
+                || event.getAction() == OpenAction.INVENTORY_CLICK
+                || event.getAction() == OpenAction.SHIFT_INVENTORY_CLICK) return;
 
-    @SubscribeEvent
-    public void onUseItemOn(PlayerInteractEvent.RightClickBlock event) {
-        handleClick(event);
-    }
-
-    @SubscribeEvent
-    public void onInteract(PlayerInteractEvent.Interact event) {
-        handleClick(event);
+        if (openWynntilsMenuInstead.get()) {
+            event.setCanceled(true);
+            if (!(McUtils.screen() instanceof WynntilsMenuScreen)) {
+                WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create());
+            }
+        }
     }
 
     @SubscribeEvent
@@ -120,20 +110,6 @@ public class WynntilsContentBookFeature extends Feature {
         if (shouldOpen) {
             event.setOpenScreen(true);
             shiftClickedBookItem = false;
-        }
-    }
-
-    private void handleClick(ICancellableEvent cancellableEvent) {
-        if (cancellableEvent.isCanceled()) return;
-        if (Models.WorldState.inCharacterWardrobe()) return;
-
-        shiftClickedBookItem = McUtils.player().isShiftKeyDown();
-
-        ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
-        if (openWynntilsMenuInstead.get()
-                && StyledText.fromComponent(itemInHand.getHoverName()).equals(CONTENT_BOOK_NAME)) {
-            cancellableEvent.setCanceled(true);
-            WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create());
         }
     }
 }
