@@ -497,8 +497,9 @@ public final class SoundTriggerManagmentScreen extends WynntilsScreen {
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         int scrollAmount = (int) (-scrollY * 10f);
-
-        scrollTriggers(Math.clamp(this.scrollOffset + scrollAmount, 0, getMaxTriggerScrollOffset()));
+        if (getMaxTriggerScrollOffset() > 0) {
+            scrollTriggers(Math.clamp(this.scrollOffset + scrollAmount, 0, getMaxTriggerScrollOffset()));
+        }
 
         return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
