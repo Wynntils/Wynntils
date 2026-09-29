@@ -252,7 +252,7 @@ public final class LootrunModel extends Model {
 
     @SubscribeEvent
     public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
-        Services.MapData.registerBuiltInProvider(LOOTRUN_LOCATION_PROVIDER);
+        Services.MapData.registerBuiltInProvider(LOOTRUN_LOCATION_PROVIDER, this, true);
     }
 
     private void handleLootrunTaskLocations(Reader reader) {

@@ -74,7 +74,7 @@ public final class GuildAttackTimerModel extends Model {
 
     @SubscribeEvent
     public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
-        Services.MapData.registerBuiltInProvider(GUILD_ATTACK_LOCATION_PROVIDER);
+        Services.MapData.registerBuiltInProvider(GUILD_ATTACK_LOCATION_PROVIDER, this, true);
     }
 
     @SubscribeEvent

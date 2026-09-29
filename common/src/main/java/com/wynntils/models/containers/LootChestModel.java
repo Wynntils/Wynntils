@@ -98,7 +98,7 @@ public final class LootChestModel extends Model {
 
     @SubscribeEvent
     public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
-        Services.MapData.registerBuiltInProvider(LOOT_CHESTS_PROVIDER);
+        Services.MapData.registerBuiltInProvider(LOOT_CHESTS_PROVIDER, this, true);
     }
 
     @Override

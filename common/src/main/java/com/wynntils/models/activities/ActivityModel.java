@@ -118,7 +118,7 @@ public final class ActivityModel extends Model {
 
     @SubscribeEvent
     public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
-        Services.MapData.registerBuiltInProvider(ACTIVITY_PROVIDER);
+        Services.MapData.registerBuiltInProvider(ACTIVITY_PROVIDER, this, true);
     }
 
     @SubscribeEvent

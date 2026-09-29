@@ -63,7 +63,7 @@ public final class SeaskipperModel extends Model {
 
     @SubscribeEvent
     public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
-        Services.MapData.registerBuiltInProvider(SEASKIPPER_DESTINATION_AREA_PROVIDER);
+        Services.MapData.registerBuiltInProvider(SEASKIPPER_DESTINATION_AREA_PROVIDER, this, true);
     }
 
     @Override
