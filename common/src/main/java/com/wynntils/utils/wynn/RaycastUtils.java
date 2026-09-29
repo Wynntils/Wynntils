@@ -13,6 +13,7 @@ import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -106,24 +107,112 @@ public final class RaycastUtils {
         return Optional.ofNullable(best);
     }
 
-    public static Optional<BlockPos> getTargetedBlockPosition(double maxDistance, boolean colliderOnly) {
+    public static Optional<BlockHitResult> getTargetedBlockHitResult(
+            double maxDistance, boolean colliderOnly, boolean ignoreBarriers) {
         LocalPlayer player = McUtils.player();
 
         if (player.level() == null) return Optional.empty();
 
         Vec3 start = player.getEyePosition(1f);
         Vec3 look = player.getLookAngle();
-        Vec3 end = start.add(look.x * maxDistance, look.y * maxDistance, look.z * maxDistance);
+        Vec3 end = start.add(look.scale(maxDistance));
 
         ClipContext.Block blockType = colliderOnly ? ClipContext.Block.COLLIDER : ClipContext.Block.OUTLINE;
 
-        BlockHitResult hitResult =
-                player.level().clip(new ClipContext(start, end, blockType, ClipContext.Fluid.NONE, player));
+        if (!ignoreBarriers) {
+            BlockHitResult hitResult =
+                    player.level().clip(new ClipContext(start, end, blockType, ClipContext.Fluid.NONE, player));
 
-        if (hitResult.getType() == HitResult.Type.BLOCK) {
-            return Optional.of(hitResult.getBlockPos());
+            return hitResult.getType() == HitResult.Type.BLOCK ? Optional.of(hitResult) : Optional.empty();
+        }
+
+        Vec3 rayStart = start;
+
+        while (rayStart.distanceToSqr(start) < start.distanceToSqr(end)) {
+            BlockHitResult hitResult =
+                    player.level().clip(new ClipContext(rayStart, end, blockType, ClipContext.Fluid.NONE, player));
+
+            if (hitResult.getType() != HitResult.Type.BLOCK) return Optional.empty();
+
+            if (!player.level().getBlockState(hitResult.getBlockPos()).is(Blocks.BARRIER)) {
+                return Optional.of(hitResult);
+            }
+
+            rayStart = hitResult.getLocation().add(look.scale(0.0001));
         }
 
         return Optional.empty();
+    }
+
+    public static Optional<HitResult> getTargetedHitResult(
+            double maxDistance, boolean colliderOnly, boolean ignoreBarriers) {
+        LocalPlayer player = McUtils.player();
+
+        if (player.level() == null) return Optional.empty();
+
+        Vec3 start = player.getEyePosition(1f);
+        Vec3 look = player.getLookAngle();
+        Vec3 end = start.add(look.scale(maxDistance));
+
+        ClipContext.Block blockType = colliderOnly ? ClipContext.Block.COLLIDER : ClipContext.Block.OUTLINE;
+
+        BlockHitResult blockHitResult;
+
+        if (ignoreBarriers) {
+            blockHitResult = getFirstNonBarrierBlockHit(player, start, end, look, blockType);
+        } else {
+            BlockHitResult hitResult =
+                    player.level().clip(new ClipContext(start, end, blockType, ClipContext.Fluid.NONE, player));
+
+            blockHitResult = hitResult.getType() == HitResult.Type.BLOCK ? hitResult : null;
+        }
+
+        double entityRange = blockHitResult == null ? maxDistance : start.distanceTo(blockHitResult.getLocation());
+
+        EntityHitResult entityHitResult = getEntityHitResult(player, start, look, entityRange);
+
+        if (entityHitResult != null) return Optional.of(entityHitResult);
+
+        return Optional.ofNullable(blockHitResult);
+    }
+
+    private static BlockHitResult getFirstNonBarrierBlockHit(
+            LocalPlayer player, Vec3 start, Vec3 end, Vec3 look, ClipContext.Block blockType) {
+        Vec3 rayStart = start;
+
+        while (rayStart.distanceToSqr(start) < start.distanceToSqr(end)) {
+            BlockHitResult hitResult =
+                    player.level().clip(new ClipContext(rayStart, end, blockType, ClipContext.Fluid.NONE, player));
+
+            if (hitResult.getType() != HitResult.Type.BLOCK) return null;
+
+            if (!player.level().getBlockState(hitResult.getBlockPos()).is(Blocks.BARRIER)) {
+                return hitResult;
+            }
+
+            rayStart = hitResult.getLocation().add(look.scale(0.0001));
+        }
+
+        return null;
+    }
+
+    private static EntityHitResult getEntityHitResult(LocalPlayer player, Vec3 start, Vec3 look, double maxDistance) {
+        Vec3 end = start.add(look.scale(maxDistance));
+
+        AABB boundingBox =
+                player.getBoundingBox().expandTowards(look.scale(maxDistance)).inflate(1.0d);
+
+        return ProjectileUtil.getEntityHitResult(
+                player.level(),
+                player,
+                start,
+                end,
+                boundingBox,
+                entity -> entity.isPickable() && !entity.isSpectator(),
+                ProjectileUtil.computeMargin(player));
+    }
+
+    public static Optional<BlockPos> getTargetedBlockPosition(double maxDistance, boolean colliderOnly) {
+        return getTargetedBlockHitResult(maxDistance, colliderOnly, false).map(BlockHitResult::getBlockPos);
     }
 }

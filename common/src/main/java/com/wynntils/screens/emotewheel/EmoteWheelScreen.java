@@ -17,10 +17,10 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.type.EmoteWheelButton;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.render.type.WheelButtonStyle;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class EmoteWheelScreen extends WynntilsScreen {
     private final List<String> emotes;
     private final double scale;
     private final float buttonSize;
-    private final EmoteWheelButton buttonStyle;
+    private final WheelButtonStyle buttonStyle;
     private final int buttonRadius;
     private final boolean canInteract;
 
@@ -86,7 +86,7 @@ public class EmoteWheelScreen extends WynntilsScreen {
         double buttonAngle = (360.0 / numOfEmotes);
         int distFromCenter = DIST_FROM_CENTER;
 
-        if (buttonStyle == EmoteWheelButton.WHEEL) {
+        if (buttonStyle == WheelButtonStyle.WHEEL) {
             distFromCenter += buttonRadius;
         }
 
@@ -125,7 +125,7 @@ public class EmoteWheelScreen extends WynntilsScreen {
                 RenderUtils.drawScalingTexturedRect(
                         guiGraphics, buttonTexture, color, buttonX, buttonY, buttonSize, buttonSize);
             } else {
-                if (buttonStyle == EmoteWheelButton.WHEEL) {
+                if (buttonStyle == WheelButtonStyle.WHEEL) {
                     renderWheelStyle(guiGraphics, color, i);
                 } else {
                     RenderUtils.drawRoundedRect(guiGraphics, color, buttonX, buttonY, buttonSize, buttonSize, 0, (int)
@@ -195,7 +195,7 @@ public class EmoteWheelScreen extends WynntilsScreen {
         return Math.round(position) % numOfEmotes;
     }
 
-    private Texture getButtonTexture(int index, EmoteWheelButton buttonStyle) {
+    private Texture getButtonTexture(int index, WheelButtonStyle buttonStyle) {
         switch (buttonStyle) {
             case TOOLTIP -> {
                 return hoveredEmoji == index
@@ -213,8 +213,8 @@ public class EmoteWheelScreen extends WynntilsScreen {
         }
     }
 
-    private CustomColor getButtonColor(int index, EmoteWheelButton buttonStyle) {
-        if (buttonStyle == EmoteWheelButton.BUTTON) {
+    private CustomColor getButtonColor(int index, WheelButtonStyle buttonStyle) {
+        if (buttonStyle == WheelButtonStyle.BUTTON) {
             return CustomColor.NONE;
         }
 

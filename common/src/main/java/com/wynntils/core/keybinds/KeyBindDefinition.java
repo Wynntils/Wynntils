@@ -329,20 +329,20 @@ public record KeyBindDefinition(
     // endregion
 
     // region Players
+    public static final KeyBindDefinition HADES_INTERACTION_WHEEL = register(
+            "viewPlayer",
+            "View player's gear",
+            Managers.KeyBind.PLAYERS_CATEGORY,
+            InputConstants.Type.MOUSE,
+            InputConstants.MOUSE_BUTTON_MIDDLE,
+            true);
+
     public static final KeyBindDefinition OPEN_PARTY_MANAGEMENT = register(
             "openPartyManagement",
             "Open Party Management Screen",
             Managers.KeyBind.PLAYERS_CATEGORY,
             InputConstants.Type.KEYSYM,
             InputConstants.KEY_O,
-            true);
-
-    public static final KeyBindDefinition VIEW_PLAYER = register(
-            "viewPlayer",
-            "View player's gear",
-            Managers.KeyBind.PLAYERS_CATEGORY,
-            InputConstants.Type.MOUSE,
-            InputConstants.MOUSE_BUTTON_MIDDLE,
             true);
     // endregion
 
