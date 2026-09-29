@@ -18,13 +18,11 @@ import com.wynntils.utils.mc.McUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Util;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
 public class LockContentBookFeature extends Feature {
-    private long nextLockNotificationTime;
     private boolean activityLocked;
     private TickSchedulerManager.ScheduledTask lockStateTask;
 
@@ -53,7 +51,6 @@ public class LockContentBookFeature extends Feature {
     @Override
     public void onEnable() {
         activityLocked = false;
-        nextLockNotificationTime = 0;
         lockStateTask = Managers.TickScheduler.scheduleNextTick(this::checkLockState);
     }
 
@@ -67,7 +64,6 @@ public class LockContentBookFeature extends Feature {
             notifyLockState(false);
         }
         activityLocked = false;
-        nextLockNotificationTime = 0;
     }
 
     private void checkLockState() {
@@ -88,6 +84,7 @@ public class LockContentBookFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onContentBookOpen(ContentBookOpenEvent event) {
+        boolean previouslyLocked = activityLocked;
         if (!updateLockState()) return;
         if ((event.getAction() == ContentBookOpenEvent.OpenAction.INVENTORY_CLICK
                         || event.getAction() == ContentBookOpenEvent.OpenAction.SHIFT_INVENTORY_CLICK)
@@ -96,23 +93,18 @@ public class LockContentBookFeature extends Feature {
                 && forceUnlockAction.get().allowsShiftRightClick()) return;
 
         event.setCanceled(true);
-        notifyLocked();
-    }
-
-    private void notifyLocked() {
-        long now = Util.getMillis();
-        if (now < nextLockNotificationTime) return;
-        notifyLockState(true);
+        if (previouslyLocked) {
+            notifyLockState(true);
+        }
     }
 
     private void notifyLockState(boolean locked) {
-        nextLockNotificationTime = locked ? Util.getMillis() + 1000 : 0;
         Managers.Notification.queueMessage(Component.translatable(
                         locked
                                 ? "feature.wynntils.lockContentBook.locked"
                                 : "feature.wynntils.lockContentBook.unlocked")
                 .withStyle(locked ? ChatFormatting.RED : ChatFormatting.GREEN));
-        McUtils.playSoundUI(SoundEvents.NOTE_BLOCK_PLING.value());
+        McUtils.playSoundUI(SoundEvents.ANVIL_LAND);
     }
 
     private boolean isLocked() {
