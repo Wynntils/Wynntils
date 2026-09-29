@@ -1144,6 +1144,8 @@
   "feature.wynntils.lockContentBook.forceUnlockAction.name": "Force Unlock Action",
   "feature.wynntils.lockContentBook.lockInDungeon.description": "Lock the content book while inside a dungeon.",
   "feature.wynntils.lockContentBook.lockInDungeon.name": "Lock in Dungeon",
+  "feature.wynntils.lockContentBook.lockInLootrun.description": "Lock the content book while a lootrun is active.",
+  "feature.wynntils.lockContentBook.lockInLootrun.name": "Lock in Lootrun",
   "feature.wynntils.lockContentBook.lockInRaid.description": "Lock the content book while a raid is active.",
   "feature.wynntils.lockContentBook.lockInRaid.name": "Lock in Raid",
   "feature.wynntils.lockContentBook.lockInWar.description": "Lock the content book while a guild war is active.",

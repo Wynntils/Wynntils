@@ -38,6 +38,9 @@ public class LockContentBookFeature extends Feature {
     private final Config<Boolean> lockInDungeon = new Config<>(true);
 
     @Persisted
+    private final Config<Boolean> lockInLootrun = new Config<>(true);
+
+    @Persisted
     private final Config<Boolean> lockInWorldEvent = new Config<>(true);
 
     @Persisted
@@ -117,6 +120,7 @@ public class LockContentBookFeature extends Feature {
 
         return (lockInRaid.get() && Models.Raid.getCurrentRaid() != null)
                 || (lockInDungeon.get() && Models.Dungeon.isInDungeon())
+                || (lockInLootrun.get() && Models.Lootrun.getState().isRunning())
                 || (lockInWorldEvent.get() && Models.WorldEvent.getCurrentWorldEvent() != null)
                 || (lockInWar.get() && Models.War.isWarActive());
     }
