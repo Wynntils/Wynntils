@@ -297,13 +297,11 @@ public class TextInputBoxWidget extends AbstractWidget {
             }
             isDragging = true;
             textboxScreen.setFocusedTextInput(this);
-            this.setFocused(true);
             return true;
         }
         if (isFocused()) {
             McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
             setCursorAndHighlightPositions(cursorPosition); // remove highlights when clicking off
-            this.setFocused(false);
             textboxScreen.setFocusedTextInput(null);
         }
 

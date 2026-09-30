@@ -225,11 +225,10 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
             }
             isDragging = true;
             textboxScreen.setFocusedTextInput(this);
-            this.setFocused(true);
             return true;
         } else {
             textboxScreen.setFocusedTextInput(null);
-            this.setFocused(false);
+
         }
 
         return false;
@@ -289,7 +288,6 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
         editing = true;
         setTextBoxInput(parent.getSelectedLoadout().name());
         textboxScreen.setFocusedTextInput(this);
-        this.setFocused(true);
         setCursorPosition(textBoxInput.length());
         buildTooltip();
     }
@@ -297,7 +295,6 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
     private void stopEditing() {
         editing = false;
         textboxScreen.setFocusedTextInput(null);
-        this.setFocused(false);
 
         Loadout selected = parent.getSelectedLoadout();
         if (selected == null) return;
@@ -331,7 +328,6 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
 
         editing = false;
         textboxScreen.setFocusedTextInput(null);
-        this.setFocused(false);
 
         Loadout selected = parent.getSelectedLoadout();
         if (selected != null) {
