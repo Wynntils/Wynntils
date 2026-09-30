@@ -104,7 +104,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
             int lowestAsk = (priceCheckInfo.ask() == 0) ? priceCheckInfo.recommendedPrice() : priceCheckInfo.ask();
             int undercut = undercutBy.get();
             int taxedBid = (lowestAsk <= undercut) ? 1 : Math.max(lowestAsk - undercut, 1);
-            int untaxedBid = Models.Emerald.getWithoutTax(taxedBid) - undercut;
+            int untaxedBid = Math.max(Models.Emerald.getWithoutTax(taxedBid) - undercut, 1);
             int finalBid = Models.Emerald.getWithTax(untaxedBid);
 
             MutableComponent buttonTooltip = (undercut == 0)

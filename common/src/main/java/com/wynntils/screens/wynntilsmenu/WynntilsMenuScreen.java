@@ -22,7 +22,7 @@ import com.wynntils.screens.itemsharing.SavedItemsScreen;
 import com.wynntils.screens.lootrunpaths.WynntilsLootrunPathsScreen;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.WaypointManagementScreen;
-import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
+import com.wynntils.screens.overlays.selection.OverlaySettingsScreen;
 import com.wynntils.screens.settings.WynntilsFeaturesSettingsScreen;
 import com.wynntils.screens.statistics.WynntilsStatisticsScreen;
 import com.wynntils.screens.wynntilsmenu.widgets.WynntilsMenuButton;
@@ -61,7 +61,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     private WynntilsMenuButton hovered = null;
 
     // This makes sure we "save" our status on the settings & overlay screen, and we reopen it in the same state
-    private static final Screen overlayScreenInstance = OverlaySelectionScreen.create();
+    private static final Screen overlayScreenInstance = OverlaySettingsScreen.create();
     private static final Screen settingsScreenInstance = WynntilsFeaturesSettingsScreen.create(null);
 
     private WynntilsMenuScreen() {
