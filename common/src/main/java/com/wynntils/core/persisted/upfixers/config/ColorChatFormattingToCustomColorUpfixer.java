@@ -37,10 +37,10 @@ public class ColorChatFormattingToCustomColorUpfixer implements Upfixer {
             "transcribeMessagesFeature.wynnicColor",
             "extendedSeasonLeaderboardFeature.guildHighlightColor",
             "chatMentionFeature.mentionColor",
-            "shamanTotemTimerOverlay.firstTotemTextColor",
-            "shamanTotemTimerOverlay.secondTotemTextColor",
-            "shamanTotemTimerOverlay.thirdTotemTextColor",
-            "shamanTotemTimerOverlay.fourthTotemTextColor");
+            "shamanTotemTimerOverlayFeature.shamanTotemTimerOverlay1.firstTotemTextColor",
+            "shamanTotemTimerOverlayFeature.shamanTotemTimerOverlay1.secondTotemTextColor",
+            "shamanTotemTimerOverlayFeature.shamanTotemTimerOverlay1.thirdTotemTextColor",
+            "shamanTotemTimerOverlayFeature.shamanTotemTimerOverlay1.fourthTotemTextColor");
 
     @Override
     public boolean apply(JsonObject configObject, Set<PersistedValue<?>> persisteds) {
