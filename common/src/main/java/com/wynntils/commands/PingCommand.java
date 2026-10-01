@@ -61,10 +61,10 @@ public class PingCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        () -> Component.literal("Pings from ")
+                        () -> Component.translatable("command.wynntils.ping.add1")
                                 .withStyle(ChatFormatting.GRAY)
                                 .append(Component.literal(username).withStyle(ChatFormatting.AQUA))
-                                .append(Component.literal(" will now be ignored.")
+                                .append(Component.translatable("command.wynntils.ping.add2")
                                         .withStyle(ChatFormatting.GRAY)),
                         false);
 
@@ -76,7 +76,7 @@ public class PingCommand extends Command {
 
         if (!Services.Hades.getIgnoredPingUsers().contains(username)) {
             context.getSource()
-                    .sendFailure(Component.literal("Player is not currently ignored.")
+                    .sendFailure(Component.translatable("command.wynntils.ping.notCurrentlyIgnored")
                             .withStyle(ChatFormatting.RED));
             return 0;
         }
@@ -85,10 +85,10 @@ public class PingCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        () -> Component.literal("Pings from ")
+                        () -> Component.translatable("command.wynntils.ping.remove1")
                                 .withStyle(ChatFormatting.GRAY)
                                 .append(Component.literal(username).withStyle(ChatFormatting.AQUA))
-                                .append(Component.literal(" will no longer be ignored.")
+                                .append(Component.translatable("command.wynntils.ping.remove2")
                                         .withStyle(ChatFormatting.GRAY)),
                         false);
 
@@ -100,7 +100,7 @@ public class PingCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        () -> Component.literal("Removed all players from ignored pings.")
+                        () -> Component.translatable("command.wynntils.ping.removedAll")
                                 .withStyle(ChatFormatting.GRAY),
                         false);
 
@@ -113,13 +113,14 @@ public class PingCommand extends Command {
         if (ignoredUsers.isEmpty()) {
             context.getSource()
                     .sendSuccess(
-                            () -> Component.literal("No players are being ignored.")
+                            () -> Component.translatable("command.wynntils.ping.noIgnored")
                                     .withStyle(ChatFormatting.GRAY),
                             false);
             return 1;
         }
 
-        Component response = Component.literal("Ignored ping users: ").withStyle(ChatFormatting.GRAY);
+        Component response =
+                Component.translatable("command.wynntils.ping.ignoredUsers").withStyle(ChatFormatting.GRAY);
 
         for (int i = 0; i < ignoredUsers.size(); i++) {
             if (i > 0) {
