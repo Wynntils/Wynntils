@@ -99,11 +99,6 @@ public enum GearTier {
         return apiName;
     }
 
-    // This should be used instead of values() in almost all places as to not include the SET tier
-    public static GearTier[] validValues() {
-        return new GearTier[] {NORMAL, UNIQUE, RARE, LEGENDARY, FABLED, MYTHIC, CRAFTED};
-    }
-
     @Override
     public String toString() {
         return getName();

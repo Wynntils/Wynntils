@@ -30,7 +30,7 @@ public class RarityStatProvider extends ItemStatProvider<String> {
 
     @Override
     public List<String> getValidInputs() {
-        return Arrays.stream(GearTier.validValues()).map(GearTier::getName).collect(Collectors.toList());
+        return Arrays.stream(GearTier.values()).map(GearTier::getName).collect(Collectors.toList());
     }
 
     @Override
