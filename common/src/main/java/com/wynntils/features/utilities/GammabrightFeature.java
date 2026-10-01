@@ -14,6 +14,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.LightmapBrightnessEvent;
+import com.wynntils.utils.MathUtils;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
@@ -35,7 +36,7 @@ public class GammabrightFeature extends Feature {
     public void onGetDimensionAmbientLight(LightmapBrightnessEvent event) {
         if (!gammabrightEnabled.get()) return;
 
-        event.setBrightness(gammabrightIntensity.get());
+        event.setBrightness(MathUtils.clamp(gammabrightIntensity.get(), 0f, 100f));
     }
 
     private void toggleGammaBright() {
