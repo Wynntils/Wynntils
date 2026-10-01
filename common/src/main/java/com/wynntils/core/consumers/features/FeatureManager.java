@@ -169,6 +169,7 @@ import com.wynntils.features.utilities.EnhancedStreamerModeFeature;
 import com.wynntils.features.utilities.FixCrosshairPositionFeature;
 import com.wynntils.features.utilities.GammabrightFeature;
 import com.wynntils.features.utilities.HighlightGatheringNodesFeature;
+import com.wynntils.features.utilities.LockContentBookFeature;
 import com.wynntils.features.utilities.PerCharacterGuildContributionFeature;
 import com.wynntils.features.utilities.SilencerFeature;
 import com.wynntils.features.utilities.TranscribeMessagesFeature;
@@ -429,6 +430,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new GammabrightFeature());
         registerFeature(new HideCrosshairInCutscenesFeature());
         registerFeature(new HighlightGatheringNodesFeature());
+        registerFeature(new LockContentBookFeature());
         registerFeature(new PerCharacterGuildContributionFeature());
         registerFeature(new SilencerFeature());
         registerFeature(new TranscribeMessagesFeature());
