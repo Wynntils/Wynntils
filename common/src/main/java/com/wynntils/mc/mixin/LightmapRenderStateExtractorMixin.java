@@ -20,6 +20,6 @@ public class LightmapRenderStateExtractorMixin {
         LightmapBrightnessEvent lightmapBrightnessEvent = new LightmapBrightnessEvent(brightness);
         MixinHelper.post(lightmapBrightnessEvent);
 
-        return lightmapBrightnessEvent.getBrightnes();
+        return lightmapBrightnessEvent.getBrightness();
     }
 }

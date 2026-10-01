@@ -7,17 +7,17 @@ package com.wynntils.mc.event;
 import net.neoforged.bus.api.Event;
 
 public class LightmapBrightnessEvent extends Event {
-    private float brightnes;
+    private float brightness;
 
-    public LightmapBrightnessEvent(float brightnes) {
-        this.brightnes = brightnes;
+    public LightmapBrightnessEvent(float brightness) {
+        this.brightness = brightness;
     }
 
-    public float getBrightnes() {
-        return brightnes;
+    public float getBrightness() {
+        return brightness;
     }
 
-    public void setBrightnes(float brightnes) {
-        this.brightnes = brightnes;
+    public void setBrightness(float brightness) {
+        this.brightness = brightness;
     }
 }
