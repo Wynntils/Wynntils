@@ -70,7 +70,7 @@ public enum GearTier {
 
     public static GearTier fromTextColor(TextColor textColor) {
         return Arrays.stream(GearTier.values())
-                .filter(t -> t.getTextColor() == textColor)
+                .filter(t -> t.getTextColor().equals(textColor))
                 .findFirst()
                 .orElse(null);
     }
