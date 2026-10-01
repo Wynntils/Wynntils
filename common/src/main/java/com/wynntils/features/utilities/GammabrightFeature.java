@@ -33,7 +33,7 @@ public class GammabrightFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onGetDimensionAmbientLight(LightmapBrightnessEvent event) {
+    public void onLightmapBrightness(LightmapBrightnessEvent event) {
         if (!gammabrightEnabled.get()) return;
 
         event.setBrightness(MathUtils.clamp(gammabrightIntensity.get(), 0f, 100f));
