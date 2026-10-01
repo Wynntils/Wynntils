@@ -287,8 +287,7 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
                             CommonColors.WHITE,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL,
-                            0.8f);
+                            TextShadow.NORMAL);
 
             if (selected) {
                 FontRenderer.getInstance()
@@ -301,8 +300,7 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
                                 CommonColors.WHITE,
                                 HorizontalAlignment.LEFT,
                                 VerticalAlignment.MIDDLE,
-                                TextShadow.NONE,
-                                1f);
+                                TextShadow.NONE);
             }
         }
     }
