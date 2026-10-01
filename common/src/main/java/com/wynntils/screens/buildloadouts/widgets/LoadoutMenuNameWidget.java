@@ -228,7 +228,6 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
             return true;
         } else {
             textboxScreen.setFocusedTextInput(null);
-
         }
 
         return false;
