@@ -89,8 +89,8 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
         MutableComponent selectMessage = Component.empty()
                 .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class)
                         .withStyle(Style::withoutShadow))
-                .append(Component.literal(" to select an option")
-                        .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)));
+                .append(Component.translatable("screens.wynntils.hadesInteractionWheel.toSelectAnOption")
+                        .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)));
 
         FontRenderer.getInstance()
                 .renderText(
@@ -107,8 +107,8 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
         MutableComponent closeMessage = Component.empty()
                 .append(WynnFont.asFont("right_click", WynncraftKeybindsFont.class)
                         .withStyle(Style::withoutShadow))
-                .append(Component.literal(" to close")
-                        .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)));
+                .append(Component.translatable("screens.wynntils.hadesInteractionWheel.toClose")
+                        .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)));
 
         FontRenderer.getInstance()
                 .renderText(
@@ -144,7 +144,7 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
                     .renderAlignedTextInBox(
                             guiGraphics,
                             StyledText.fromComponent(Component.literal(option.label())
-                                    .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                                    .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                             buttonX + 4,
                             buttonX + BUTTON_SIZE - 4,
                             buttonY + 4,
@@ -246,8 +246,9 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromComponent(Component.literal("Scroll to select player")
-                                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                        StyledText.fromComponent(
+                                Component.translatable("screens.wynntils.hadesInteractionWheel.scrollToSelect")
+                                        .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                         widgetX + PARTY_MEMBER_WIDGET_WIDTH / 2f,
                         widgetY - 5,
                         CommonColors.WHITE,
@@ -277,7 +278,7 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
                     .renderAlignedTextInBox(
                             guiGraphics,
                             StyledText.fromComponent(Component.literal(target)
-                                    .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                                    .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                             textX,
                             widgetX + PARTY_MEMBER_WIDGET_WIDTH - 4,
                             y,
