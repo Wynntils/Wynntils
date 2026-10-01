@@ -329,6 +329,7 @@ public record KeyBindDefinition(
     // endregion
 
     // region Players
+    // Keep the viewPlayer ID as that is used in the Minecraft options file, the i18n uses the new name
     public static final KeyBindDefinition HADES_INTERACTION_WHEEL = register(
             "viewPlayer",
             "View player's gear",
