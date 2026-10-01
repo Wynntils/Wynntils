@@ -53,6 +53,9 @@ public class PlayerPingFeature extends Feature {
     private final Config<MarkerStyle> markerStyle = new Config<>(MarkerStyle.FLOATING_ICON);
 
     @Persisted
+    private final Config<Float> markerScale = new Config<>(1f);
+
+    @Persisted
     private final Config<Boolean> showOwnPings = new Config<>(true);
 
     @Persisted
@@ -180,12 +183,51 @@ public class PlayerPingFeature extends Feature {
                     event.getPoseStack(),
                     worldPosition,
                     direction,
+                    markerScale.get(),
                     pingTarget,
                     pingType,
                     event.getLevelRenderState().gameTime,
                     color);
         } else {
-            Gizmos.cuboid(new AABB(BlockPos.containing(worldPosition)), GizmoStyle.stroke(color));
+            BlockPos pos = BlockPos.containing(worldPosition);
+            float scale = markerScale.get();
+            double expansion = (scale - 1.0) / 2.0;
+
+            double minX = pos.getX() - expansion;
+            double maxX = pos.getX() + 1.0 + expansion;
+            double minY = pos.getY() - expansion;
+            double maxY = pos.getY() + 1.0 + expansion;
+            double minZ = pos.getZ() - expansion;
+            double maxZ = pos.getZ() + 1.0 + expansion;
+
+            switch (direction) {
+                case UP -> {
+                    minY = pos.getY();
+                    maxY = pos.getY() + scale;
+                }
+                case DOWN -> {
+                    minY = pos.getY() + 1.0 - scale;
+                    maxY = pos.getY() + 1.0;
+                }
+                case NORTH -> {
+                    minZ = pos.getZ() + 1.0 - scale;
+                    maxZ = pos.getZ() + 1.0;
+                }
+                case SOUTH -> {
+                    minZ = pos.getZ();
+                    maxZ = pos.getZ() + scale;
+                }
+                case WEST -> {
+                    minX = pos.getX() + 1.0 - scale;
+                    maxX = pos.getX() + 1.0;
+                }
+                case EAST -> {
+                    minX = pos.getX();
+                    maxX = pos.getX() + scale;
+                }
+            }
+
+            Gizmos.cuboid(new AABB(minX, minY, minZ, maxX, maxY, maxZ), GizmoStyle.stroke(color));
             PlayerPingRenderer.submitTargetText(
                     event.getSubmitNodeCollector(),
                     event.getCameraRenderState().pos,

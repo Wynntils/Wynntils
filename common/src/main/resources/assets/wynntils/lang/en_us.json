@@ -1413,6 +1413,8 @@
   "feature.wynntils.playerPing.buttonStyle.description": "What should the buttons look like?",
   "feature.wynntils.playerPing.buttonStyle.name": "Button Style",
   "feature.wynntils.playerPing.description": "Adds the ability to send pings and view pings sent by other players.",
+  "feature.wynntils.playerPing.markerScale.description": "How big should the marker be?",
+  "feature.wynntils.playerPing.markerScale.name": "Marker Scale",
   "feature.wynntils.playerPing.markerStyle.description": "How should the markers for pings look?",
   "feature.wynntils.playerPing.markerStyle.name": "Marker Style",
   "feature.wynntils.playerPing.name": "Player Ping",

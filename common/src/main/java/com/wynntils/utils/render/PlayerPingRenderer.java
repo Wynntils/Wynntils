@@ -58,6 +58,7 @@ public final class PlayerPingRenderer {
             PoseStack poseStack,
             Vec3 worldPosition,
             Direction direction,
+            float markerScale,
             String targetName,
             PlayerPingType pingType,
             long gameTime,
@@ -73,6 +74,7 @@ public final class PlayerPingRenderer {
 
         poseStack.pushPose();
         poseStack.mulPose(direction.getRotation());
+        poseStack.scale(markerScale, markerScale, markerScale);
 
         submitNodeCollector.submitCustomGeometry(
                 poseStack,
