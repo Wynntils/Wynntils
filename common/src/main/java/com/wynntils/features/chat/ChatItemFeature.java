@@ -161,7 +161,6 @@ public class ChatItemFeature extends Feature {
         if (modified.equals(unwrapped)) return;
 
         // If the message had any chat items, we use our unwrapped version
-        // FIXME: This edited message could be re-wrapped if it is too long, to match the original message's style
         e.setMessage(modified);
     }
 

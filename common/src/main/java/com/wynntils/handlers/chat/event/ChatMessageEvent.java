@@ -51,6 +51,7 @@ public abstract class ChatMessageEvent extends Event {
      */
     public static class Edit extends ChatMessageEvent {
         private StyledText editedMessage = null;
+        private boolean allowRewrap = true;
 
         public Edit(StyledText message, RecipientType recipientType) {
             super(message, recipientType);
@@ -62,6 +63,14 @@ public abstract class ChatMessageEvent extends Event {
 
         public void setMessage(StyledText message) {
             this.editedMessage = message;
+        }
+
+        public void disableRewrap() {
+            allowRewrap = false;
+        }
+
+        public boolean isRewrapAllowed() {
+            return allowRewrap;
         }
     }
 }
