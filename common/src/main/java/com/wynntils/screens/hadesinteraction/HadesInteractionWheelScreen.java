@@ -14,6 +14,7 @@ import com.wynntils.core.text.fonts.WynnFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.features.players.HadesFeature;
 import com.wynntils.features.players.PlayerPingFeature;
+import com.wynntils.features.players.PlayerViewerFeature;
 import com.wynntils.hades.protocol.enums.PlayerPingType;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -55,6 +56,7 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
 
     private final HadesFeature hadesFeature;
     private final PlayerPingFeature playerPingFeature;
+    private final PlayerViewerFeature playerViewerFeature;
     private final List<WheelOption> options = new ArrayList<>();
     private final List<Pair<Integer, Integer>> buttonPositions = new ArrayList<>();
     private final List<String> pingTargets = new ArrayList<>();
@@ -66,14 +68,17 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
 
     private String pingTarget = "";
 
-    private HadesInteractionWheelScreen(HadesFeature hadesFeature, PlayerPingFeature playerPingFeature) {
+    private HadesInteractionWheelScreen(
+            HadesFeature hadesFeature, PlayerPingFeature playerPingFeature, PlayerViewerFeature playerViewerFeature) {
         super(Component.literal("Hades Interaction Wheel"));
         this.hadesFeature = hadesFeature;
+        this.playerViewerFeature = playerViewerFeature;
         this.playerPingFeature = playerPingFeature;
     }
 
-    public static Screen create(HadesFeature hadesFeature, PlayerPingFeature playerPingFeature) {
-        return new HadesInteractionWheelScreen(hadesFeature, playerPingFeature);
+    public static Screen create(
+            HadesFeature hadesFeature, PlayerPingFeature playerPingFeature, PlayerViewerFeature playerViewerFeature) {
+        return new HadesInteractionWheelScreen(hadesFeature, playerPingFeature, playerViewerFeature);
     }
 
     @Override
@@ -213,7 +218,7 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
 
     private void createOptions() {
         options.clear();
-        if (RaycastUtils.getHoveredPlayer().isPresent()) {
+        if (RaycastUtils.getHoveredPlayer().isPresent() && playerViewerFeature.isEnabled()) {
             options.add(new WheelOption("View Player", null));
         }
 
@@ -408,10 +413,10 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
 
         WheelOption option = options.get(optionIndex);
         onClose();
-        if (option.pingType() == null) {
-            hadesFeature.tryOpenPlayerViewer();
-        } else {
+        if (option.pingType() != null) {
             Services.Hades.sendPlayerPing(option.pingType(), pingTarget);
+        } else if (playerViewerFeature.isEnabled()) {
+            hadesFeature.tryOpenPlayerViewer();
         }
     }
 

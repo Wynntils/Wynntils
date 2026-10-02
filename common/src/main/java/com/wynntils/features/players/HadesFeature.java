@@ -123,11 +123,11 @@ public class HadesFeature extends Feature implements ExternalConfigurationScreen
             }
         }
 
-        if (!hadesUsingPartyMembers.isEmpty()) {
+        if (!hadesUsingPartyMembers.isEmpty() && playerPing.isEnabled()) {
             if (McUtils.screen() == null) {
-                McUtils.setScreen(HadesInteractionWheelScreen.create(this, playerPing));
+                McUtils.setScreen(HadesInteractionWheelScreen.create(this, playerPing, playerViewer));
             }
-        } else {
+        } else if (playerViewer.isEnabled()) {
             tryOpenPlayerViewer();
         }
     }
