@@ -204,18 +204,6 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
         return false;
     }
 
-    @Override
-    public boolean keyReleased(KeyEvent event) {
-        if (event.key()
-                == hadesFeature.openInteractionWheelKeybind.getKeyMapping().key.getValue()) {
-            executeOption(hoveredOption);
-        }
-
-        InputConstants.Key key = InputConstants.getKey(event);
-        KeyMapping.set(key, false);
-        return false;
-    }
-
     private void createOptions() {
         options.clear();
         if (RaycastUtils.getHoveredPlayer().isPresent() && playerViewerFeature.isEnabled()) {
