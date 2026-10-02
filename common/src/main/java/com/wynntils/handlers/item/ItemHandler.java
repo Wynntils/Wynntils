@@ -9,10 +9,12 @@ import com.wynntils.core.components.Handler;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
+import com.wynntils.handlers.item.ItemLoreProfiler.UpdateReason;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.mc.event.TickAlwaysEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
@@ -29,6 +31,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
@@ -36,6 +39,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemLore;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -50,6 +54,8 @@ public final class ItemHandler extends Handler {
     // Keep this as a field just of performance reasons to skip a new allocation in annotate()
     private final List<ItemAnnotator> crashedAnnotators = new ArrayList<>();
     private final List<Pattern> simplifiablePatterns = new ArrayList<>();
+
+    private ItemLoreProfiler loreProfiler;
 
     public void addSimplifiablePatterns(Pattern... patterns) {
         Collections.addAll(simplifiablePatterns, patterns);
@@ -91,6 +97,7 @@ public final class ItemHandler extends Handler {
             existingItems = McUtils.containerMenu().getItems();
         } else {
             // No matching container found. Annotate anyways.
+            recordLoreUpdate(UpdateReason.UNTRACKED_CONTAINER);
             annotate(event.getItemStack());
             return;
         }
@@ -114,6 +121,7 @@ public final class ItemHandler extends Handler {
             List<ItemStack> newItems = event.getItems();
 
             for (ItemStack newItem : newItems) {
+                recordLoreUpdate(UpdateReason.UNTRACKED_CONTAINER);
                 annotate(newItem);
             }
 
@@ -154,10 +162,14 @@ public final class ItemHandler extends Handler {
 
     private void onItemStackUpdate(ItemStack existingItem, ItemStack newItem) {
         // For e.g. FakeItemStacks we will already have an annotation
-        if (((ItemStackExtension) newItem).getAnnotation() != null) return;
+        if (((ItemStackExtension) newItem).getAnnotation() != null) {
+            recordLoreUpdate(UpdateReason.ALREADY_ANNOTATED);
+            return;
+        }
 
         ItemAnnotation annotation = ((ItemStackExtension) existingItem).getAnnotation();
         if (annotation == null) {
+            recordLoreUpdate(UpdateReason.NO_EXISTING_ANNOTATION);
             annotate(newItem);
             return;
         }
@@ -165,6 +177,7 @@ public final class ItemHandler extends Handler {
         // Check if item type, damage and count matches; if not, it's definitely a new item
         // Wildcard items are exempt from this check due to the possibility of gear skins
         if (!similarStack(existingItem, newItem) && !isWildcardItem(existingItem) && !isWildcardItem(newItem)) {
+            recordLoreUpdate(UpdateReason.STACK_CHANGED);
             annotate(newItem);
             return;
         }
@@ -176,6 +189,7 @@ public final class ItemHandler extends Handler {
         StyledText newName = StyledText.fromComponent(newItem.getHoverName()).getNormalized();
 
         if (newName.equals(existingName)) {
+            recordLoreUpdate(UpdateReason.LORE_COMPARISON);
             // The name is identical to the existing stack; now check the lore
             if (isLoreSoftMatching(existingItem, newItem, annotation)) {
                 // This is exactly the same item, so copy existing annotation
@@ -187,6 +201,7 @@ public final class ItemHandler extends Handler {
                 annotate(newItem);
             }
         } else {
+            recordLoreUpdate(UpdateReason.NAME_CHANGED);
             // The name is different, and it is not a know special name. This means it could be a
             // completely new item, or it could be the same item slightly changed (e.g. durability
             // has decreased). In any case, we need to reparse the complete item.
@@ -217,7 +232,19 @@ public final class ItemHandler extends Handler {
      * This checks if the lore of the second item contains the entirety of the first item's lore, or vice versa.
      * It might have additional lines added, but these are not checked.
      */
-    private boolean isLoreSoftMatching(ItemStack firstItem, ItemStack secondItem, ItemAnnotation firstItemAnnotation) {
+    private boolean compareLore(
+            ItemStack firstItem, ItemStack secondItem, ItemAnnotation firstItemAnnotation, boolean allowFastPath) {
+        // Equal components do not need conversion to StyledText. Paged items must still
+        // synchronize their annotation below, even when the components are identical.
+        if (allowFastPath && !(firstItemAnnotation instanceof PagedItemProperty)) {
+            ItemLore firstLore = firstItem.getOrDefault(DataComponents.LORE, ItemLore.EMPTY);
+            ItemLore secondLore = secondItem.getOrDefault(DataComponents.LORE, ItemLore.EMPTY);
+            if (firstLore.lines().equals(secondLore.lines())) {
+                if (loreProfiler != null) loreProfiler.recordFastPath();
+                return true;
+            }
+        }
+
         List<StyledText> firstLoreLines = LoreUtils.getLore(firstItem);
         List<StyledText> secondLoreLines = LoreUtils.getLore(secondItem);
 
@@ -338,11 +365,50 @@ public final class ItemHandler extends Handler {
     }
 
     private void annotate(ItemStack itemStack) {
+        if (loreProfiler != null) loreProfiler.recordAnnotation();
         StyledText name = StyledText.fromComponent(itemStack.getHoverName()).getNormalized();
         ItemAnnotation annotation = calculateAnnotation(itemStack, name);
         if (annotation == null) return;
 
         updateItem(itemStack, annotation, name);
+    }
+
+    public List<ItemAnnotator> getAnnotators() {
+        return Collections.unmodifiableList(annotators);
+    }
+
+    // region Profiling
+
+    public void startLoreProfiling(ItemLoreProfiler.Mode mode, int seconds) {
+        if (loreProfiler != null) throw new IllegalStateException("An item lore capture is already running");
+        loreProfiler = new ItemLoreProfiler(mode, seconds, this::compareLore);
+    }
+
+    public ItemLoreProfiler getLoreProfiler() {
+        return loreProfiler;
+    }
+
+    public ItemLoreProfiler.Report stopLoreProfiling() {
+        if (loreProfiler == null) throw new IllegalStateException("No item lore capture is running");
+        ItemLoreProfiler finished = loreProfiler;
+        loreProfiler = null;
+        return finished.snapshot();
+    }
+
+    @SubscribeEvent
+    public void onLoreProfileTick(TickAlwaysEvent event) {
+        if (loreProfiler == null) return;
+        loreProfiler.sampleHeap();
+        if (loreProfiler.hasExpired()) ItemLoreProfiler.publish(stopLoreProfiling());
+    }
+
+    private boolean isLoreSoftMatching(ItemStack firstItem, ItemStack secondItem, ItemAnnotation firstItemAnnotation) {
+        if (loreProfiler != null) return loreProfiler.compare(firstItem, secondItem, firstItemAnnotation);
+        return compareLore(firstItem, secondItem, firstItemAnnotation, true);
+    }
+
+    private void recordLoreUpdate(UpdateReason reason) {
+        if (loreProfiler != null) loreProfiler.recordUpdate(reason);
     }
 
     private void logProfilingData(long startTime, ItemAnnotation annotation) {
@@ -368,7 +434,5 @@ public final class ItemHandler extends Handler {
         profilingCounts.clear();
     }
 
-    public List<ItemAnnotator> getAnnotators() {
-        return Collections.unmodifiableList(annotators);
-    }
+    // endregion
 }
