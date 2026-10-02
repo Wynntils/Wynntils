@@ -94,9 +94,7 @@ public class PlayerPingFeature extends Feature {
                         .enabledFor(ConfigProfile.DEFAULT, ConfigProfile.LITE)
                         .build(),
                 List.of(
-                        ConfigDependency.functionality(Models.Friends.queryFriendsList),
                         ConfigDependency.functionality(Models.Party.queryPartyMembers),
-                        ConfigDependency.functionality(Models.Guild.requestGuildMembers),
                         ConfigDependency.functionality(Services.Hades.connectToHades)));
     }
 
