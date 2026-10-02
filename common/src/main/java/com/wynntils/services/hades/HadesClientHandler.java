@@ -16,10 +16,13 @@ import com.wynntils.hades.protocol.packets.server.HSPacketAuthenticationResponse
 import com.wynntils.hades.protocol.packets.server.HSPacketClearMutual;
 import com.wynntils.hades.protocol.packets.server.HSPacketDisconnect;
 import com.wynntils.hades.protocol.packets.server.HSPacketDiscordLobbyServer;
+import com.wynntils.hades.protocol.packets.server.HSPacketPlayerPing;
 import com.wynntils.hades.protocol.packets.server.HSPacketPong;
 import com.wynntils.hades.protocol.packets.server.HSPacketUpdateMutual;
 import com.wynntils.services.hades.event.HadesEvent;
+import com.wynntils.services.hades.event.HadesPlayerPingEvent;
 import com.wynntils.services.hades.event.HadesUserEvent;
+import com.wynntils.services.hades.type.PlayerPingData;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -53,7 +56,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
         }
 
         hadesConnection.sendPacketAndFlush(
-                new HCPacketAuthenticate(Services.WynntilsAccount.getToken(), HadesVersion.VERSION_0_6_3));
+                new HCPacketAuthenticate(Services.WynntilsAccount.getToken(), HadesVersion.VERSION_0_7_0));
     }
 
     @Override
@@ -120,6 +123,15 @@ public class HadesClientHandler implements IHadesClientAdapter {
             HadesUser hadesUser = new HadesUser(packet);
             userRegistry.putUser(packet.getUser(), hadesUser);
             WynntilsMod.postEventOnMainThread(new HadesUserEvent.Added(hadesUser));
+        }
+    }
+
+    @Override
+    public void handlePlayerPing(HSPacketPlayerPing packet) {
+        if (packet.getUsername().equals(McUtils.playerName())) {
+            WynntilsMod.postEventOnMainThread(new HadesPlayerPingEvent.Self(PlayerPingData.fromPacket(packet)));
+        } else if (!Services.Hades.shouldIgnorePing(packet.getUsername())) {
+            WynntilsMod.postEventOnMainThread(new HadesPlayerPingEvent.Other(PlayerPingData.fromPacket(packet)));
         }
     }
 

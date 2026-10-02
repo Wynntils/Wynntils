@@ -19,4 +19,8 @@ public class CustomRenderTypes {
             "wynntils_position_color_quad",
             RenderSetup.builder(CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE)
                     .createRenderSetup());
+
+    public static final RenderType PLAYER_PING_QUAD = RenderType.create(
+            "wynntils_player_ping_quad",
+            RenderSetup.builder(CustomRenderPipelines.PLAYER_PING_QUAD_PIPELINE).createRenderSetup());
 }
