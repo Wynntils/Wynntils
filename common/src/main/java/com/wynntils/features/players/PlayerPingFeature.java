@@ -232,6 +232,7 @@ public class PlayerPingFeature extends Feature {
                     event.getPoseStack(),
                     worldPosition,
                     direction,
+                    markerScale.get(),
                     pingTarget,
                     color);
         }

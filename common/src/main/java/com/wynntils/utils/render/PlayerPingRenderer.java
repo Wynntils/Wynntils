@@ -85,7 +85,12 @@ public final class PlayerPingRenderer {
         if (targetName != null && !targetName.isBlank()) {
             // Render the label after the marker so its see-through glyphs cannot be overwritten by the marker.
             submitTargetLabel(
-                    submitNodeCollector.order(TARGET_TEXT_RENDER_ORDER), poseStack, direction, targetName, color);
+                    submitNodeCollector.order(TARGET_TEXT_RENDER_ORDER),
+                    poseStack,
+                    direction,
+                    markerScale,
+                    targetName,
+                    color);
         }
 
         poseStack.popPose();
@@ -97,6 +102,7 @@ public final class PlayerPingRenderer {
             PoseStack poseStack,
             Vec3 worldPosition,
             Direction direction,
+            float markerScale,
             String targetName,
             int color) {
         if (targetName == null || targetName.isBlank()) return;
@@ -107,7 +113,13 @@ public final class PlayerPingRenderer {
         poseStack.translate(
                 faceCenter.x - cameraPosition.x, faceCenter.y - cameraPosition.y, faceCenter.z - cameraPosition.z);
 
-        submitTargetLabel(submitNodeCollector.order(TARGET_TEXT_RENDER_ORDER), poseStack, direction, targetName, color);
+        submitTargetLabel(
+                submitNodeCollector.order(TARGET_TEXT_RENDER_ORDER),
+                poseStack,
+                direction,
+                markerScale,
+                targetName,
+                color);
 
         poseStack.popPose();
     }
@@ -734,16 +746,19 @@ public final class PlayerPingRenderer {
             OrderedSubmitNodeCollector submitNodeCollector,
             PoseStack poseStack,
             Direction direction,
+            float markerScale,
             String targetName,
             int color) {
         Font font = McUtils.mc().font;
 
         poseStack.pushPose();
 
+        float labelDistance = LABEL_DISTANCE * markerScale;
+
         poseStack.translate(
-                direction.getStepX() * LABEL_DISTANCE,
-                direction.getStepY() * LABEL_DISTANCE,
-                direction.getStepZ() * LABEL_DISTANCE);
+                direction.getStepX() * labelDistance,
+                direction.getStepY() * labelDistance,
+                direction.getStepZ() * labelDistance);
 
         poseStack.mulPose(McUtils.mc().gameRenderer.getMainCamera().rotation());
         poseStack.scale(0.025f, -0.025f, 0.025f);
