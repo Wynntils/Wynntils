@@ -234,10 +234,56 @@ public final class RenderUtils {
             float v,
             int textureWidth,
             int textureHeight) {
-        AbstractTexture abstractTexture = McUtils.mc().getTextureManager().getTexture(identifier);
+        drawTexturedRect(
+                guiGraphics,
+                pipeline,
+                singleTextureSetup(identifier),
+                color,
+                x,
+                y,
+                width,
+                height,
+                uOffset,
+                vOffset,
+                u,
+                v,
+                textureWidth,
+                textureHeight);
+    }
+
+    public static TextureSetup singleTextureSetup(Identifier identifier) {
+        AbstractTexture texture = McUtils.mc().getTextureManager().getTexture(identifier);
+        return TextureSetup.singleTexture(texture.getTextureView(), texture.getSampler());
+    }
+
+    public static TextureSetup doubleTextureSetup(Identifier first, Identifier second) {
+        AbstractTexture firstTexture = McUtils.mc().getTextureManager().getTexture(first);
+        AbstractTexture secondTexture = McUtils.mc().getTextureManager().getTexture(second);
+        return TextureSetup.doubleTexture(
+                firstTexture.getTextureView(),
+                firstTexture.getSampler(),
+                secondTexture.getTextureView(),
+                secondTexture.getSampler());
+    }
+
+    public static void drawTexturedRect(
+            GuiGraphics guiGraphics,
+            RenderPipeline pipeline,
+            TextureSetup textureSetup,
+            CustomColor color,
+            float x,
+            float y,
+            float width,
+            float height,
+            float uOffset,
+            float vOffset,
+            float u,
+            float v,
+            int textureWidth,
+            int textureHeight) {
         guiGraphics.guiRenderState.submitGuiElement(new FloatBlitRenderState(
                 pipeline,
-                TextureSetup.singleTexture(abstractTexture.getTextureView(), abstractTexture.getSampler()),
+                textureSetup,
                 new Matrix3x2f(guiGraphics.pose()),
                 x,
                 y,

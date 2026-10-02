@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.features.ExternalConfigurationScreen;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
+import com.wynntils.core.consumers.features.properties.RegisterSubFeature;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindDefinition;
 import com.wynntils.core.persisted.Persisted;
@@ -61,6 +62,9 @@ public class MainMapFeature extends Feature implements ExternalConfigurationScre
 
     @Persisted
     public final Config<Boolean> holdGuildMapOpen = new Config<>(true);
+
+    @RegisterSubFeature
+    private final Feature fogOfWar = new MapFogOfWarFeature();
 
     @RegisterKeyBind
     public final KeyBind openMapKeybind = KeyBindDefinition.OPEN_MAIN_MAP.create(this::openMainMap);

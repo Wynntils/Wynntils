@@ -5,6 +5,7 @@
 package com.wynntils.overlays.minimap;
 
 import com.mojang.blaze3d.platform.Window;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
@@ -12,6 +13,7 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.map.MapFogOfWarFeature;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
 import com.wynntils.services.hades.providers.PlayerProvider;
 import com.wynntils.services.hades.type.PlayerRelation;
@@ -22,6 +24,7 @@ import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.features.type.MapLocation;
+import com.wynntils.services.mapdata.fog.FogOverlay;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
@@ -191,6 +194,8 @@ public class MinimapOverlay extends Overlay {
                     180 - McUtils.mc().gameRenderer.getMainCamera().yRot());
         }
 
+        MapFogOfWarFeature fogOfWar = Managers.Feature.getFeatureInstance(MapFogOfWarFeature.class);
+
         for (MapTexture map : maps) {
             if (maskType.get() == MapMaskType.RECTANGULAR) {
                 MapRenderer.renderMapTile(
@@ -206,6 +211,38 @@ public class MinimapOverlay extends Overlay {
                 MapRenderer.renderCircularMapTile(
                         guiGraphics,
                         map,
+                        (float) playerX,
+                        (float) playerZ,
+                        centerX,
+                        centerZ,
+                        zoomRenderScale,
+                        visibleWorldBox,
+                        renderX,
+                        renderY,
+                        width,
+                        height);
+            }
+
+            if (!fogOfWar.fogMinimap.get()) continue;
+            Optional<FogOverlay> fog = fogOfWar.fogOverlay(map);
+            if (fog.isEmpty()) continue;
+
+            if (maskType.get() == MapMaskType.RECTANGULAR) {
+                MapRenderer.renderFogOverlay(
+                        guiGraphics,
+                        map,
+                        fog.get(),
+                        (float) playerX,
+                        (float) playerZ,
+                        centerX,
+                        centerZ,
+                        zoomRenderScale,
+                        visibleWorldBox);
+            } else {
+                MapRenderer.renderCircularFogOverlay(
+                        guiGraphics,
+                        map,
+                        fog.get(),
                         (float) playerX,
                         (float) playerZ,
                         centerX,
@@ -287,8 +324,12 @@ public class MinimapOverlay extends Overlay {
         float currentZoom = 1f / zoomRenderScale;
 
         // Get all MapData features
-        Stream<Pair<MapFeature, ResolvedMapAttributes>> mapFeatures = Services.MapData.getFeatures()
-                .filter(feature -> feature.isVisible(visibleWorldBox))
+        MapFogOfWarFeature fogOfWar = Managers.Feature.getFeatureInstance(MapFogOfWarFeature.class);
+        Stream<MapFeature> visibleFeatures =
+                Services.MapData.getFeatures().filter(feature -> feature.isVisible(visibleWorldBox));
+        Stream<Pair<MapFeature, ResolvedMapAttributes>> mapFeatures = (fogOfWar.fogMinimap.get()
+                        ? fogOfWar.withoutUndiscovered(visibleFeatures)
+                        : visibleFeatures)
                 .filter(feature -> !(feature instanceof TerritoryArea) || renderTerritories.get())
                 .filter(feature -> !(feature instanceof SeaskipperDestinationArea))
                 .map(feature -> Pair.of(feature, Services.MapData.resolveMapAttributes(feature)))
