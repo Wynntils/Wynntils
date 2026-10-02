@@ -56,9 +56,9 @@ import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
@@ -102,7 +102,7 @@ public final class HadesService extends Service {
     private final Storage<Map<String, GearShareOptions>> characterGearShareOptions = new Storage<>(new TreeMap<>());
 
     @Persisted
-    private final Storage<Set<String>> ignoredPingUsers = new Storage<>(new TreeSet<>());
+    private final Storage<Set<String>> ignoredPingUsers = new Storage<>(ConcurrentHashMap.newKeySet());
 
     // Original WynnItem cache to avoid unnecessary encoding
     private NavigableMap<InventoryArmor, WynnItem> armorCache = new TreeMap<>();
@@ -451,14 +451,17 @@ public final class HadesService extends Service {
 
     public void addIgnoredPingUser(String username) {
         ignoredPingUsers.get().add(username);
+        ignoredPingUsers.touched();
     }
 
     public void removeIgnoredPingUser(String username) {
         ignoredPingUsers.get().remove(username);
+        ignoredPingUsers.touched();
     }
 
     public void clearIgnoredPingUsers() {
         ignoredPingUsers.get().clear();
+        ignoredPingUsers.touched();
     }
 
     public Set<String> getIgnoredPingUsers() {
