@@ -29,13 +29,17 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.profiling.Profiler;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemLore;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -217,7 +221,19 @@ public final class ItemHandler extends Handler {
      * This checks if the lore of the second item contains the entirety of the first item's lore, or vice versa.
      * It might have additional lines added, but these are not checked.
      */
-    private boolean isLoreSoftMatching(ItemStack firstItem, ItemStack secondItem, ItemAnnotation firstItemAnnotation) {
+    private boolean compareLore(
+            ItemStack firstItem, ItemStack secondItem, ItemAnnotation firstItemAnnotation, ProfilerFiller profiler) {
+        // Equal components do not need conversion to StyledText. Paged items must still
+        // synchronize their annotation below, even when the components are identical.
+        if (!(firstItemAnnotation instanceof PagedItemProperty)) {
+            ItemLore firstLore = firstItem.getOrDefault(DataComponents.LORE, ItemLore.EMPTY);
+            ItemLore secondLore = secondItem.getOrDefault(DataComponents.LORE, ItemLore.EMPTY);
+            if (firstLore.lines().equals(secondLore.lines())) {
+                profiler.incrementCounter("fastReturns");
+                return true;
+            }
+        }
+
         List<StyledText> firstLoreLines = LoreUtils.getLore(firstItem);
         List<StyledText> secondLoreLines = LoreUtils.getLore(secondItem);
 
@@ -345,6 +361,22 @@ public final class ItemHandler extends Handler {
         updateItem(itemStack, annotation, name);
     }
 
+    public List<ItemAnnotator> getAnnotators() {
+        return Collections.unmodifiableList(annotators);
+    }
+
+    // region Profiling
+
+    private boolean isLoreSoftMatching(ItemStack firstItem, ItemStack secondItem, ItemAnnotation firstItemAnnotation) {
+        ProfilerFiller profiler = Profiler.get();
+        profiler.push("itemLoreComparison");
+        try {
+            return compareLore(firstItem, secondItem, firstItemAnnotation, profiler);
+        } finally {
+            profiler.pop();
+        }
+    }
+
     private void logProfilingData(long startTime, ItemAnnotation annotation) {
         long endTime = System.currentTimeMillis();
         int timeSpent = (int) (endTime - startTime);
@@ -368,7 +400,5 @@ public final class ItemHandler extends Handler {
         profilingCounts.clear();
     }
 
-    public List<ItemAnnotator> getAnnotators() {
-        return Collections.unmodifiableList(annotators);
-    }
+    // endregion
 }
