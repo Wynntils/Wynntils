@@ -23,6 +23,7 @@ import com.wynntils.screens.hadesinteraction.HadesInteractionWheelScreen;
 import com.wynntils.screens.playerviewer.GearSharingSettingsScreen;
 import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.mc.McUtils;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 
@@ -109,9 +110,9 @@ public class HadesFeature extends Feature implements ExternalConfigurationScreen
         List<HadesUser> hadesUsers = Services.Hades.getHadesUsers().toList();
         List<String> partyMembers = Models.Party.getPartyMembers();
 
-        List<HadesUser> hadesUsingPartyMembers = hadesUsers.stream()
+        List<HadesUser> hadesUsingPartyMembers = new ArrayList<>(hadesUsers.stream()
                 .filter(hadesUser -> partyMembers.contains(hadesUser.getName()))
-                .toList();
+                .toList());
 
         List<HadesUser> warUsers = Models.War.getHadesUsers();
 
