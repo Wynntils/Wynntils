@@ -23,7 +23,6 @@ import com.wynntils.screens.hadesinteraction.HadesInteractionWheelScreen;
 import com.wynntils.screens.playerviewer.GearSharingSettingsScreen;
 import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.mc.McUtils;
-import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 
@@ -107,21 +106,7 @@ public class HadesFeature extends Feature implements ExternalConfigurationScreen
     }
 
     private void openInteractionWheel() {
-        List<HadesUser> hadesUsers = Services.Hades.getHadesUsers().toList();
-        List<String> partyMembers = Models.Party.getPartyMembers();
-
-        List<HadesUser> hadesUsingPartyMembers = new ArrayList<>(hadesUsers.stream()
-                .filter(hadesUser -> partyMembers.contains(hadesUser.getName()))
-                .toList());
-
-        List<HadesUser> warUsers = Models.War.getHadesUsers();
-
-        for (HadesUser warUser : warUsers) {
-            if (hadesUsingPartyMembers.stream()
-                    .noneMatch(partyUser -> partyUser.getUuid().equals(warUser.getUuid()))) {
-                hadesUsingPartyMembers.add(warUser);
-            }
-        }
+        List<HadesUser> hadesUsingPartyMembers = Services.Hades.getPingEligibleHadesUsers();
 
         if (!hadesUsingPartyMembers.isEmpty() && playerPing.isEnabled()) {
             if (McUtils.screen() == null) {

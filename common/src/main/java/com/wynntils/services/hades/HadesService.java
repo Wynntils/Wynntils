@@ -50,6 +50,7 @@ import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.wynn.RaycastUtils;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -119,6 +120,26 @@ public final class HadesService extends Service {
 
     public Stream<HadesUser> getHadesUsers() {
         return userRegistry.getHadesUserMap().values().stream();
+    }
+
+    public List<HadesUser> getPingEligibleHadesUsers() {
+        List<HadesUser> hadesUsers = getHadesUsers().toList();
+        List<String> partyMembers = Models.Party.getPartyMembers();
+
+        List<HadesUser> hadesUsingPartyMembers = new ArrayList<>(hadesUsers.stream()
+                .filter(hadesUser -> partyMembers.contains(hadesUser.getName()))
+                .toList());
+
+        List<HadesUser> warUsers = Models.War.getHadesUsers();
+
+        for (HadesUser warUser : warUsers) {
+            if (hadesUsingPartyMembers.stream()
+                    .noneMatch(partyUser -> partyUser.getUuid().equals(warUser.getUuid()))) {
+                hadesUsingPartyMembers.add(warUser);
+            }
+        }
+
+        return hadesUsingPartyMembers;
     }
 
     public Optional<HadesUser> getHadesUser(UUID uuid) {

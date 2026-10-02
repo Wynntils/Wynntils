@@ -5,7 +5,6 @@
 package com.wynntils.screens.hadesinteraction;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
@@ -16,6 +15,7 @@ import com.wynntils.features.players.HadesFeature;
 import com.wynntils.features.players.PlayerPingFeature;
 import com.wynntils.features.players.PlayerViewerFeature;
 import com.wynntils.hades.protocol.enums.PlayerPingType;
+import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -230,10 +230,13 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
     private void createPingTargets() {
         pingTargets.clear();
         pingTargets.add("All");
-        for (String partyMember : Models.Party.getPartyMembers()) {
-            if (partyMember.equals(McUtils.playerName())) continue;
 
-            pingTargets.add(partyMember);
+        List<HadesUser> hadesUsingPartyMembers = Services.Hades.getPingEligibleHadesUsers();
+
+        for (HadesUser partyMember : hadesUsingPartyMembers) {
+            if (partyMember.getName().equals(McUtils.playerName())) continue;
+
+            pingTargets.add(partyMember.getName());
         }
 
         selectedPingTarget = 0;
