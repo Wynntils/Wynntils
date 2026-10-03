@@ -454,8 +454,8 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                     ((dividedHeight * WIDGET_TOP_Y) + (downloadWidgets.indexOf(widget) * widgetHeight) - scrollOffset);
 
             widget.setY(newY);
-            widget.visible = newY >= ((dividedHeight * WIDGET_TOP_Y) - widgetHeight)
-                    && newY <= ((dividedHeight * WIDGET_TOP_Y) + (WIDGETS_PER_PAGE + 1) * widgetHeight);
+            widget.setVisible(newY >= ((dividedHeight * WIDGET_TOP_Y) - widgetHeight)
+                    && newY <= ((dividedHeight * WIDGET_TOP_Y) + (WIDGETS_PER_PAGE + 1) * widgetHeight));
         }
     }
 

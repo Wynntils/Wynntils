@@ -187,7 +187,7 @@ public class SecretsScreen extends WynntilsScreen {
         for (AbstractWidget widget : secretInputs) {
             int newY = currentY - scrollOffset;
             widget.setY(newY);
-            widget.visible = (newY <= offsetY + 10 + 135) && (newY + widget.getHeight() >= offsetY + 10);
+            widget.setVisible((newY <= offsetY + 10 + 135) && (newY + widget.getHeight() >= offsetY + 10));
             currentY += 22;
         }
     }

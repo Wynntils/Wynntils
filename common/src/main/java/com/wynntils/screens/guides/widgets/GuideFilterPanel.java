@@ -77,7 +77,8 @@ public class GuideFilterPanel extends AbstractWidget {
 
         for (AbstractWidget filterWidget : filterWidgets) {
             filterWidget.setPosition(widgetX, currentY);
-            filterWidget.visible = currentY + filterWidget.getHeight() >= scrollAreaStartY && currentY < scrollAreaEndY;
+            filterWidget.setVisible(
+                    currentY + filterWidget.getHeight() >= scrollAreaStartY && currentY < scrollAreaEndY);
 
             Optional<String> category = getWidgetCategory(filterWidget);
             if (category.isPresent()) {
@@ -169,7 +170,7 @@ public class GuideFilterPanel extends AbstractWidget {
         }
 
         for (AbstractWidget filterWidget : filterWidgets) {
-            if (filterWidget.visible && filterWidget.isMouseOver(event.x(), event.y())) {
+            if (filterWidget.isVisible() && filterWidget.isMouseOver(event.x(), event.y())) {
                 int oldHeight = filterWidget.getHeight();
                 boolean clicked = filterWidget.mouseClicked(event, isDoubleClick);
 
@@ -189,7 +190,7 @@ public class GuideFilterPanel extends AbstractWidget {
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (!draggingScroll) {
             for (AbstractWidget filterWidget : filterWidgets) {
-                if (filterWidget.visible && filterWidget.isMouseOver(event.x(), event.y())) {
+                if (filterWidget.isVisible() && filterWidget.isMouseOver(event.x(), event.y())) {
                     return filterWidget.mouseDragged(event, dragX, dragY);
                 }
             }

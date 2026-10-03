@@ -320,7 +320,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 setFocused(null);
                 setDragging(false);
                 for (AbstractWidget widget : positionPanel.getWidgets()) {
-                    if (!widget.visible || !widget.active) continue;
+                    if (!widget.isVisible() || !widget.active) continue;
                     if (widget.mouseClicked(event, isDoubleClick)) {
                         setFocused(widget);
                         setDragging(event.button() == InputConstants.MOUSE_BUTTON_LEFT);
@@ -519,7 +519,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (helpPanel != null) return true;
         if (positionPanel != null) {
-            if (getFocusedTextInput() != null && getFocusedTextInput().visible && getFocusedTextInput().active) {
+            if (getFocusedTextInput() != null && getFocusedTextInput().isVisible() && getFocusedTextInput().active) {
                 getFocusedTextInput().mouseDragged(event, dragX, dragY);
             }
             return true;
@@ -555,7 +555,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
         if (positionPanel != null) {
-            if (getFocusedTextInput() != null && getFocusedTextInput().visible && getFocusedTextInput().active) {
+            if (getFocusedTextInput() != null && getFocusedTextInput().isVisible() && getFocusedTextInput().active) {
                 getFocusedTextInput().mouseReleased(event);
             }
             setDragging(false);
@@ -611,7 +611,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 closePositionPanel();
                 return true;
             }
-            if (getFocusedTextInput() != null && (!getFocusedTextInput().visible || !getFocusedTextInput().active)) {
+            if (getFocusedTextInput() != null
+                    && (!getFocusedTextInput().isVisible() || !getFocusedTextInput().active)) {
                 setFocusedTextInput(null);
                 setFocused(null);
             }

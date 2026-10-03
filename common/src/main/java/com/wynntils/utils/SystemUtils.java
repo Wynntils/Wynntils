@@ -9,7 +9,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.renderpearl.api.GpuFormat;
 import com.mojang.renderpearl.api.buffers.GpuBuffer;
 import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
-import com.mojang.renderpearl.api.commands.CommandEncoder;
 import com.mojang.renderpearl.api.textures.GpuTexture;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -52,37 +51,29 @@ public final class SystemUtils {
                         () -> "Wynntils SystemUtils#createImage buffer",
                         GpuBuffer.USAGE_MAP_READ | GpuBuffer.USAGE_COPY_DST,
                         4 * textureWidth * textureHeight);
-        CommandEncoder commandEncoder = RenderSystem.getDevice().createCommandEncoder();
-        RenderSystem.getDevice()
-                .createCommandEncoder()
-                .copyTextureToBuffer(
-                        texture,
-                        gpuBuffer,
-                        0,
-                        () -> {
-                            try (GpuBufferSlice.MappedView mappedView = gpuBuffer.map(true, false)) {
-                                NativeImage nativeImage =
-                                        new NativeImage(NativeImage.Format.RGBA, textureWidth, textureHeight, false);
+        RenderSystem.getDevice().createCommandEncoder().copyTextureToBuffer(texture, gpuBuffer, 0, 0);
+        RenderSystem.queueFencedTask(() -> {
+            try (GpuBufferSlice.MappedView mappedView = gpuBuffer.map(true, false)) {
+                NativeImage nativeImage = new NativeImage(NativeImage.Format.RGBA, textureWidth, textureHeight, false);
 
-                                long stride = 4L * textureWidth;
-                                long srcBuf = MemoryUtil.memAddress(mappedView.data());
-                                long dstBuf = nativeImage.getPointer();
+                long stride = 4L * textureWidth;
+                long srcBuf = MemoryUtil.memAddress(mappedView.data());
+                long dstBuf = nativeImage.getPointer();
 
-                                long src = srcBuf;
-                                long dst = dstBuf + stride * (textureHeight - 1);
+                long src = srcBuf;
+                long dst = dstBuf + stride * (textureHeight - 1);
 
-                                for (int y = 0; y < textureHeight; y++) {
-                                    MemoryUtil.memCopy(src, dst, stride);
-                                    src += stride;
-                                    dst -= stride;
-                                }
+                for (int y = 0; y < textureHeight; y++) {
+                    MemoryUtil.memCopy(src, dst, stride);
+                    src += stride;
+                    dst -= stride;
+                }
 
-                                future.complete(nativeImage);
-                            }
+                future.complete(nativeImage);
+            }
 
-                            gpuBuffer.close();
-                        },
-                        0);
+            gpuBuffer.close();
+        });
 
         return future;
     }

@@ -266,7 +266,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                 .size(20, 20)
                 .build();
 
-        upButton.visible = false;
+        upButton.setVisible(false);
 
         this.addRenderableWidget(upButton);
 
@@ -275,7 +275,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                 .size(20, 20)
                 .build();
 
-        downButton.visible = false;
+        downButton.setVisible(false);
 
         this.addRenderableWidget(downButton);
         // endregion
@@ -360,12 +360,12 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                 .get();
 
         if (waypoints.isEmpty()) {
-            searchInput.visible = false;
-            iconSortButton.visible = false;
-            nameSortButton.visible = false;
-            xSortButton.visible = false;
-            ySortButton.visible = false;
-            zSortButton.visible = false;
+            searchInput.setVisible(false);
+            iconSortButton.setVisible(false);
+            nameSortButton.setVisible(false);
+            xSortButton.setVisible(false);
+            ySortButton.setVisible(false);
+            zSortButton.setVisible(false);
             exportButton.active = false;
         }
 
@@ -551,8 +551,8 @@ public final class WaypointManagementScreen extends WynntilsScreen {
             setMarkersButton.active = addedWaypoint;
             removeMarkersButton.active = addedWaypoint;
 
-            upButton.visible = addedWaypoint;
-            downButton.visible = addedWaypoint;
+            upButton.setVisible(addedWaypoint);
+            downButton.setVisible(addedWaypoint);
 
             // Export tooltip should display how many of the waypoints will be exported
             Component tooltip = addedWaypoint
@@ -596,12 +596,12 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         undoDeleteButton.active = true;
 
         if (customPois.get().isEmpty()) {
-            searchInput.visible = false;
-            iconSortButton.visible = false;
-            nameSortButton.visible = false;
-            xSortButton.visible = false;
-            ySortButton.visible = false;
-            zSortButton.visible = false;
+            searchInput.setVisible(false);
+            iconSortButton.setVisible(false);
+            nameSortButton.setVisible(false);
+            xSortButton.setVisible(false);
+            ySortButton.setVisible(false);
+            zSortButton.setVisible(false);
             selectAllButton.active = false;
             exportButton.active = false;
         }
@@ -672,7 +672,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         for (AbstractWidget widget : waypointManagerWidgets) {
             int newY = currentY - waypointsScrollOffset;
             widget.setY(newY);
-            widget.visible = (newY <= getTranslationY() + 16 + 179) && (newY + 20 >= getTranslationY() + 16);
+            widget.setVisible((newY <= getTranslationY() + 16 + 179) && (newY + 20 >= getTranslationY() + 16));
             currentY += 20;
         }
     }
@@ -700,11 +700,11 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                 .collect(Collectors.toList());
 
         // Hide buttons if no filtered waypoints
-        iconSortButton.visible = !waypoints.isEmpty();
-        nameSortButton.visible = !waypoints.isEmpty();
-        xSortButton.visible = !waypoints.isEmpty();
-        ySortButton.visible = !waypoints.isEmpty();
-        zSortButton.visible = !waypoints.isEmpty();
+        iconSortButton.setVisible(!waypoints.isEmpty());
+        nameSortButton.setVisible(!waypoints.isEmpty());
+        xSortButton.setVisible(!waypoints.isEmpty());
+        ySortButton.setVisible(!waypoints.isEmpty());
+        zSortButton.setVisible(!waypoints.isEmpty());
         exportButton.active = !waypoints.isEmpty();
         selectAllButton.active = !waypoints.isEmpty();
         deselectAllButton.active = !selectedWaypoints.isEmpty();
@@ -717,7 +717,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
                 .customPois
                 .get()
                 .isEmpty()) {
-            searchInput.visible = false;
+            searchInput.setVisible(false);
         }
 
         // No filtered waypoints
@@ -735,7 +735,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
             WaypointManagerWidget waypointManagerWidget = new WaypointManagerWidget(
                     renderX, renderY, 320, 20, waypoint, this, selectionMode, selectedWaypoints.contains(waypoint));
 
-            waypointManagerWidget.visible = renderY <= getTranslationY() + 16 + 179;
+            waypointManagerWidget.setVisible(renderY <= getTranslationY() + 16 + 179);
 
             waypointManagerWidgets.add(waypointManagerWidget);
             renderY += 20;
@@ -785,8 +785,8 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     private void toggleSelectAll(boolean select) {
         selectionMode = select;
 
-        upButton.visible = select;
-        downButton.visible = select;
+        upButton.setVisible(select);
+        downButton.setVisible(select);
         deleteSelectedButton.active = select;
 
         Component tooltip;
@@ -973,11 +973,11 @@ public final class WaypointManagementScreen extends WynntilsScreen {
 
         if (customPois.get().isEmpty()) {
             selectAllButton.active = false;
-            iconSortButton.visible = false;
-            nameSortButton.visible = false;
-            xSortButton.visible = false;
-            ySortButton.visible = false;
-            zSortButton.visible = false;
+            iconSortButton.setVisible(false);
+            nameSortButton.setVisible(false);
+            xSortButton.setVisible(false);
+            ySortButton.setVisible(false);
+            zSortButton.setVisible(false);
         }
 
         // If any waypoint widgets were selected, deselect them all as they were deleted
@@ -1016,7 +1016,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
 
         // Enable search and filter after importing new pois
         if (!customPoiConfig.get().isEmpty()) {
-            searchInput.visible = true;
+            searchInput.setVisible(true);
         }
 
         updateAllUsedIcons();

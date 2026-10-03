@@ -281,10 +281,10 @@ public class ProviderFilterListWidget extends AbstractWidget {
                     widgets.add(new AnyFilterWidget(getX(), getY(), this));
 
                     if (addStringFilterButton != null) {
-                        addStringFilterButton.visible = false;
+                        addStringFilterButton.setVisible(false);
                     } else if (addNumericFilterButton != null) {
-                        addNumericFilterButton.visible = false;
-                        numericChoiceButton.visible = false;
+                        addNumericFilterButton.setVisible(false);
+                        numericChoiceButton.setVisible(false);
                     }
 
                     return;
@@ -342,12 +342,12 @@ public class ProviderFilterListWidget extends AbstractWidget {
         }
 
         if (provider.getType().equals(String.class)) {
-            addStringFilterButton.visible = true;
+            addStringFilterButton.setVisible(true);
             addStringFilterButton.active = true;
         } else if (!provider.getType().equals(Boolean.class)) {
-            addNumericFilterButton.visible = true;
+            addNumericFilterButton.setVisible(true);
             addNumericFilterButton.active = true;
-            numericChoiceButton.visible = true;
+            numericChoiceButton.setVisible(true);
             numericChoiceButton.active = true;
         }
 
@@ -473,7 +473,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
             int newY = getY() + 2 + (widgets.indexOf(filterWidget) * 24) - scrollOffset;
 
             filterWidget.updateY(newY);
-            filterWidget.visible = newY >= (getY() + 2 - 24) && newY <= (getY() + 2 + (getScrollbarHeight()));
+            filterWidget.setVisible(newY >= (getY() + 2 - 24) && newY <= (getY() + 2 + (getScrollbarHeight())));
         }
     }
 

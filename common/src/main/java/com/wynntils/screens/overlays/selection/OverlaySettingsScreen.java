@@ -630,10 +630,10 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
 
         // Toggle visibility of buttons
         for (HoverableTexturedButton optionsButton : optionButtons) {
-            optionsButton.visible = !enabled;
+            optionsButton.setVisible(!enabled);
         }
 
-        exitPreviewButton.visible = enabled;
+        exitPreviewButton.setVisible(enabled);
 
         // Either clear or repopulate the overlay/config lists
         if (enabled) {
@@ -652,7 +652,7 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
             int newY = 31 + offsetY + (overlays.indexOf(overlay) * 21) - overlayScrollOffset;
 
             overlay.setY(newY);
-            overlay.visible = newY >= (31 + offsetY - 21) && newY <= (31 + offsetY + (MAX_OVERLAYS_PER_PAGE) * 21);
+            overlay.setVisible(newY >= (31 + offsetY - 21) && newY <= (31 + offsetY + (MAX_OVERLAYS_PER_PAGE) * 21));
         }
     }
 
@@ -667,7 +667,7 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
             int newY = 31 + offsetY + (configs.indexOf(config) * 43) - configScrollOffset;
 
             config.setY(newY);
-            config.visible = newY >= (31 + offsetY - 43) && newY <= (31 + offsetY + (CONFIGS_PER_PAGE + 1) * 43);
+            config.setVisible(newY >= (31 + offsetY - 43) && newY <= (31 + offsetY + (CONFIGS_PER_PAGE + 1) * 43));
         }
     }
 
@@ -860,8 +860,8 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
                 offsetY);
 
         optionButtons.add(deleteButton);
-        deleteButton.visible = selectedOverlay != null
-                && (selectedOverlay instanceof InfoBoxOverlay || selectedOverlay instanceof CustomBarOverlayBase);
+        deleteButton.setVisible(selectedOverlay != null
+                && (selectedOverlay instanceof InfoBoxOverlay || selectedOverlay instanceof CustomBarOverlayBase));
         // endregion
 
         // region Edit buttons

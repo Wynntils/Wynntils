@@ -95,7 +95,7 @@ public class OverlayButton extends WynntilsButton {
         if (overlay instanceof CustomNameProperty customNameOverlay) {
             editInput = new TextInputBoxWidget(x, y, width, height, null, settingsScreen);
 
-            editInput.visible = false;
+            editInput.setVisible(false);
             String currentName = customNameOverlay.getCustomName().get();
 
             if (currentName.isEmpty()) {
@@ -156,7 +156,7 @@ public class OverlayButton extends WynntilsButton {
             } else {
                 guiGraphics.setTooltipForNextFrame(
                         Lists.transform(
-                                (editInput != null && editInput.visible) ? SAVE_NAME_TOOLTIP : descriptionTooltip,
+                                (editInput != null && editInput.isVisible()) ? SAVE_NAME_TOOLTIP : descriptionTooltip,
                                 Component::getVisualOrderText),
                         mouseX,
                         mouseY);
@@ -171,13 +171,13 @@ public class OverlayButton extends WynntilsButton {
             return false;
         }
 
-        if (editInput != null && editInput.visible && editInput.mouseClicked(event, isDoubleClick)) {
+        if (editInput != null && editInput.isVisible() && editInput.mouseClicked(event, isDoubleClick)) {
             return true;
         }
 
         if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             if (isSelected() && editInput != null) {
-                editInput.visible = true;
+                editInput.setVisible(true);
                 settingsScreen.setFocusedTextInput(editInput);
             } else {
                 settingsScreen.selectOverlay(overlay);
@@ -206,8 +206,8 @@ public class OverlayButton extends WynntilsButton {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == InputConstants.KEY_RETURN && editInput != null && editInput.visible) {
-            editInput.visible = false;
+        if (event.key() == InputConstants.KEY_RETURN && editInput != null && editInput.isVisible()) {
+            editInput.setVisible(false);
 
             if (overlay instanceof CustomNameProperty customNameOverlay) {
                 customNameOverlay.setCustomName(editInput.getTextBoxInput());
@@ -240,7 +240,7 @@ public class OverlayButton extends WynntilsButton {
 
     public void hideEditInput() {
         if (editInput != null) {
-            editInput.visible = false;
+            editInput.setVisible(false);
         }
     }
 

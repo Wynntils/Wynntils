@@ -144,7 +144,7 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
 
             filterPanel =
                     new GuideFilterPanel(getX() + getWidth() - 146, getY() + 28, 146, getHeight() - 28, filterWidgets);
-            filterPanel.visible = true;
+            filterPanel.setVisible(true);
         }
 
         int searchRight =
@@ -335,7 +335,7 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
             return searchWidget.mouseClicked(event, isDoubleClick);
         }
 
-        if (filterPanel != null && filterPanel.visible && filterPanel.isMouseOver(event.x(), event.y())) {
+        if (filterPanel != null && filterPanel.isVisible() && filterPanel.isMouseOver(event.x(), event.y())) {
             return filterPanel.mouseClicked(event, isDoubleClick);
         }
 
@@ -473,7 +473,7 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
 
             int newY = currentY - scrollOffset;
             widget.setY(newY);
-            widget.visible = newY + 20 >= getY() + 40 && newY < getY() + getHeight();
+            widget.setVisible(newY + 20 >= getY() + 40 && newY < getY() + getHeight());
 
             if ((i + 1) % buttonsPerRow == 0) {
                 currentY += 22;
@@ -534,7 +534,7 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
 
         for (T item : getGuideItems()) {
             GuideButton guideButton = createGuideButton(renderX, renderY, item);
-            guideButton.visible = renderY > getY() && renderY < getY() + getHeight();
+            guideButton.setVisible(renderY > getY() && renderY < getY() + getHeight());
 
             guideButtons.add(guideButton);
 

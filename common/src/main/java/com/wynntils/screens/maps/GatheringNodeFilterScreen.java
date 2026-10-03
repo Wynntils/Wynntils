@@ -330,7 +330,7 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
         for (GatheringNodeFilterWidget widget : gatheringNodeFilterWidgets) {
             int newY = currentY - gatheringNodesScrollOffset;
             widget.updateRenderY(newY);
-            widget.visible = (newY <= getTranslationY() + 16 + 179) && (newY + 20 >= getTranslationY() + 16);
+            widget.setVisible((newY <= getTranslationY() + 16 + 179) && (newY + 20 >= getTranslationY() + 16));
             currentY += 20;
         }
     }
@@ -354,7 +354,7 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
             GatheringNodeFilterWidget gatheringNodeFilterWidget =
                     new GatheringNodeFilterWidget(renderX, renderY, 320, 20, this, gatheringNodeType);
 
-            gatheringNodeFilterWidget.visible = renderY <= getTranslationY() + 16 + 179;
+            gatheringNodeFilterWidget.setVisible(renderY <= getTranslationY() + 16 + 179);
             gatheringNodeFilterWidgets.add(gatheringNodeFilterWidget);
             renderY += 20;
         }

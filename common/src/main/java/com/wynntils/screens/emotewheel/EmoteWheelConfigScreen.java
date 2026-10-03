@@ -320,8 +320,8 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
             int newY = 42 + offsetY + (emoteButtons.indexOf(overlay) * EMOTE_BUTTON_SIZE) - scrollOffset;
 
             overlay.setY(newY);
-            overlay.visible = newY >= (42 + offsetY - EMOTE_BUTTON_SIZE)
-                    && newY <= (42 + offsetY + (MAX_EMOTES_PER_PAGE) * EMOTE_BUTTON_SIZE);
+            overlay.setVisible(newY >= (42 + offsetY - EMOTE_BUTTON_SIZE)
+                    && newY <= (42 + offsetY + (MAX_EMOTES_PER_PAGE) * EMOTE_BUTTON_SIZE));
         }
     }
 

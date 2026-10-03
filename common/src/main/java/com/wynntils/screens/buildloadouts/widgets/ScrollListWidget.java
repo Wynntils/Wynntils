@@ -155,8 +155,8 @@ public abstract class ScrollListWidget extends AbstractWidget {
         for (AbstractWidget widget : getWidgets()) {
             int newY = currentY - scrollOffset;
             widget.setY(newY);
-            widget.visible = (newY <= this.y + this.height + widgetHeight + widgetHeightPadding)
-                    && (newY >= this.y - widgetHeight - widgetHeightPadding);
+            widget.setVisible((newY <= this.y + this.height + widgetHeight + widgetHeightPadding)
+                    && (newY >= this.y - widgetHeight - widgetHeightPadding));
             currentY += widgetHeight + widgetHeightPadding;
         }
     }

@@ -201,7 +201,7 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
                 LogDateWidget dateWidget = new LogDateWidget(renderX, renderY, logInstant);
                 logs.add(dateWidget);
 
-                dateWidget.visible = renderY <= offsetY + 17 + 139;
+                dateWidget.setVisible(renderY <= offsetY + 17 + 139);
 
                 renderY += 21;
                 maxScrollOffset += 21;
@@ -215,7 +215,7 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
                     new LogEntryWidget(renderX, renderY, widgetHeight, logItem.getLogInfo(), logInstant);
             logs.add(entryWidget);
 
-            entryWidget.visible = renderY <= offsetY + 17 + 139;
+            entryWidget.setVisible(renderY <= offsetY + 17 + 139);
 
             renderY += widgetHeight + 1;
             maxScrollOffset += widgetHeight + 1;
@@ -231,7 +231,7 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
         for (AbstractWidget widget : logs) {
             int newY = currentY - scrollOffset;
             widget.setY(newY);
-            widget.visible = (newY <= offsetY + 17 + 139) && (newY + widget.getHeight() >= offsetY + 17);
+            widget.setVisible((newY <= offsetY + 17 + 139) && (newY + widget.getHeight() >= offsetY + 17));
             currentY += widget.getHeight() + 1;
         }
     }

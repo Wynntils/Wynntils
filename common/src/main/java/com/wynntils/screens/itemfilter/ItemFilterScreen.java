@@ -266,8 +266,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 offsetY));
 
         if (presets.size() <= MAX_PRESETS) {
-            previousPresetButton.visible = false;
-            nextPresetButton.visible = false;
+            previousPresetButton.setVisible(false);
+            nextPresetButton.setVisible(false);
         }
         // endregion
 
@@ -913,8 +913,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
             int newY = 31 + offsetY + (providerButtons.indexOf(provider) * 21) - providersScrollOffset;
 
             provider.setY(newY);
-            provider.visible =
-                    newY >= (31 + offsetY - 21) && newY <= (31 + offsetY + (MAX_PROVIDERS_PER_PAGE + 1) * 21);
+            provider.setVisible(
+                    newY >= (31 + offsetY - 21) && newY <= (31 + offsetY + (MAX_PROVIDERS_PER_PAGE + 1) * 21));
         }
     }
 
@@ -925,7 +925,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
             int newY = 31 + offsetY + (sortButtons.indexOf(sort) * 21) - sortScrollOffset;
 
             sort.setY(newY);
-            sort.visible = newY >= (31 + offsetY - 21) && newY <= (31 + offsetY + (MAX_SORTS_PER_PAGE + 1) * 21);
+            sort.setVisible(newY >= (31 + offsetY - 21) && newY <= (31 + offsetY + (MAX_SORTS_PER_PAGE + 1) * 21));
         }
     }
 
@@ -990,8 +990,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 updatePresetWidgets();
 
                 if (presets.size() <= MAX_PRESETS) {
-                    nextPresetButton.visible = false;
-                    previousPresetButton.visible = false;
+                    nextPresetButton.setVisible(false);
+                    previousPresetButton.setVisible(false);
                 }
             }
         }
@@ -1006,8 +1006,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
         presetNameInput.setTextBoxInput("");
 
         if (presets.size() > MAX_PRESETS) {
-            nextPresetButton.visible = true;
-            previousPresetButton.visible = true;
+            nextPresetButton.setVisible(true);
+            previousPresetButton.setVisible(true);
         }
 
         updatePresetWidgets();
@@ -1023,7 +1023,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
     private void toggleSortMode() {
         sortMode = !sortMode;
 
-        itemNameInput.visible = !sortMode;
+        itemNameInput.setVisible(sortMode);
 
         if (sortMode) {
             if (filterWidget != null) {

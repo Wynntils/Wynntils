@@ -249,7 +249,7 @@ public class OverlayOrderingScreen extends WynntilsScreen {
         for (AbstractWidget widget : widgets) {
             int newY = 16 + offsetY + (widgets.indexOf(widget) * 20) - scrollOffset;
             widget.setY(newY);
-            widget.visible = (newY <= offsetY + 15 + 181) && (newY + 20 >= offsetY + 15);
+            widget.setVisible((newY <= offsetY + 15 + 181) && (newY + 20 >= offsetY + 15));
         }
     }
 

@@ -438,58 +438,58 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
     private void updateMenu() {
         // new loadout
-        newLoadoutInputWidget.visible = false;
-        newBuildLoadoutButton.visible = false;
-        newAbilityTreeLoadoutButton.visible = false;
-        newSkillPointLoadoutButton.visible = false;
-        newAspectLoadoutButton.visible = false;
-        newLoadoutInfoWidget.visible = false;
-        makeNewLoadoutButton.visible = false;
+        newLoadoutInputWidget.setVisible(false);
+        newBuildLoadoutButton.setVisible(false);
+        newAbilityTreeLoadoutButton.setVisible(false);
+        newSkillPointLoadoutButton.setVisible(false);
+        newAspectLoadoutButton.setVisible(false);
+        newLoadoutInfoWidget.setVisible(false);
+        makeNewLoadoutButton.setVisible(false);
 
         // loadouts
-        loadoutMenuNameWidget.visible = false;
-        loadoutMenuFavoriteButton.visible = false;
-        loadoutMenuLoadButton.visible = false;
-        loadoutMenuUpdateButton.visible = false;
-        loadoutMenuDeleteButton.visible = false;
-        loadoutMenuSkillPointWidget.visible = false;
-        loadoutMenuOverviewWidget.visible = false;
-        loadoutMenuItemWidget.visible = false;
-        loadoutMenuScrollListWidget.visible = false;
+        loadoutMenuNameWidget.setVisible(false);
+        loadoutMenuFavoriteButton.setVisible(false);
+        loadoutMenuLoadButton.setVisible(false);
+        loadoutMenuUpdateButton.setVisible(false);
+        loadoutMenuDeleteButton.setVisible(false);
+        loadoutMenuSkillPointWidget.setVisible(false);
+        loadoutMenuOverviewWidget.setVisible(false);
+        loadoutMenuItemWidget.setVisible(false);
+        loadoutMenuScrollListWidget.setVisible(false);
 
         // build loadouts
-        buildLoadoutScrollListWidget.visible = false;
+        buildLoadoutScrollListWidget.setVisible(false);
 
         if (getCurrentCategory() == MenuCategory.NEW_LOADOUT) {
-            newLoadoutInputWidget.visible = true;
-            newBuildLoadoutButton.visible = true;
-            newAbilityTreeLoadoutButton.visible = true;
-            newSkillPointLoadoutButton.visible = true;
-            newAspectLoadoutButton.visible = true;
-            newLoadoutInfoWidget.visible = true;
-            makeNewLoadoutButton.visible = true;
+            newLoadoutInputWidget.setVisible(true);
+            newBuildLoadoutButton.setVisible(true);
+            newAbilityTreeLoadoutButton.setVisible(true);
+            newSkillPointLoadoutButton.setVisible(true);
+            newAspectLoadoutButton.setVisible(true);
+            newLoadoutInfoWidget.setVisible(true);
+            makeNewLoadoutButton.setVisible(true);
         }
 
         if (getCurrentCategory() != MenuCategory.NEW_LOADOUT && getSelectedLoadout() != null) {
-            loadoutMenuNameWidget.visible = true;
-            loadoutMenuFavoriteButton.visible = true;
-            loadoutMenuLoadButton.visible = true;
-            loadoutMenuUpdateButton.visible = true;
-            loadoutMenuDeleteButton.visible = true;
-            loadoutMenuSkillPointWidget.visible = true;
-            loadoutMenuOverviewWidget.visible = true;
-            loadoutMenuItemWidget.visible = true;
+            loadoutMenuNameWidget.setVisible(true);
+            loadoutMenuFavoriteButton.setVisible(true);
+            loadoutMenuLoadButton.setVisible(true);
+            loadoutMenuUpdateButton.setVisible(true);
+            loadoutMenuDeleteButton.setVisible(true);
+            loadoutMenuSkillPointWidget.setVisible(true);
+            loadoutMenuOverviewWidget.setVisible(true);
+            loadoutMenuItemWidget.setVisible(true);
         }
 
         if (getCurrentCategory() != MenuCategory.BUILD_LOADOUT
                 && getCurrentCategory() != MenuCategory.NEW_LOADOUT
                 && getSelectedLoadout() != null) {
-            loadoutMenuScrollListWidget.visible = true;
+            loadoutMenuScrollListWidget.setVisible(true);
             loadoutMenuScrollListWidget.populateWidgets();
         }
 
         if (getCurrentCategory() == MenuCategory.BUILD_LOADOUT && getSelectedLoadout() != null) {
-            buildLoadoutScrollListWidget.visible = true;
+            buildLoadoutScrollListWidget.setVisible(true);
             buildLoadoutScrollListWidget.populateWidgets();
         }
     }

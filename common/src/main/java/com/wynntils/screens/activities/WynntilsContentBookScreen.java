@@ -449,8 +449,8 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
     }
 
     private void updateScrollButtonsVisibility() {
-        scrollUpButton.visible = scrollUpActive || currentPage != 0;
-        scrollDownButton.visible = scrollDownActive || currentPage < contentBookWidgets.size() - 1;
+        scrollUpButton.setVisible(scrollUpActive || currentPage != 0);
+        scrollDownButton.setVisible(scrollDownActive || currentPage < contentBookWidgets.size() - 1);
     }
 
     private void renderBackgroundTexture(GuiGraphicsExtractor guiGraphics) {
