@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.CharacterEvent;
@@ -93,7 +93,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         Pair<String, Integer> renderedTextDetails = getRenderedText(getMaxTextWidth());
         String renderedText = renderedTextDetails.a();
         int renderedTextStart = renderedTextDetails.b();
@@ -113,7 +113,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         int highlightedWidth = font.width(highlightedPortion);
         int lastWidth = font.width(lastPortion);
 
-        doRenderWidget(
+        doExtractWidgetRenderState(
                 guiGraphics,
                 renderedText,
                 renderedTextStart,
@@ -128,8 +128,8 @@ public class TextInputBoxWidget extends AbstractWidget {
                 mouseY);
     }
 
-    protected void doRenderWidget(
-            GuiGraphics guiGraphics,
+    protected void doExtractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -297,13 +297,11 @@ public class TextInputBoxWidget extends AbstractWidget {
             }
             isDragging = true;
             textboxScreen.setFocusedTextInput(this);
-            this.setFocused(true);
             return true;
         }
         if (isFocused()) {
             McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
             setCursorAndHighlightPositions(cursorPosition); // remove highlights when clicking off
-            this.setFocused(false);
             textboxScreen.setFocusedTextInput(null);
         }
 
@@ -523,6 +521,13 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     @Override
+    public void setFocused(boolean focused) {
+        super.setFocused(focused);
+
+        McUtils.mc().onTextInputFocusChange(this, focused);
+    }
+
+    @Override
     public boolean isFocused() {
         return textboxScreen.getFocusedTextInput() == this;
     }
@@ -550,7 +555,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     protected void drawCursor(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             float x,
             float y,
             VerticalAlignment verticalAlignment,

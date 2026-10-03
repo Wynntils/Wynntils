@@ -130,7 +130,7 @@ public class PersonalStorageUtilitiesFeature extends Feature {
 
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
-        if (event.getKeyCode() != InputConstants.KEY_RETURN) return;
+        if (event.getKey() != InputConstants.KEY_RETURN) return;
         if (!Models.Bank.isEditingMode()) return;
 
         this.saveEditModeChanges();

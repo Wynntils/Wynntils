@@ -20,7 +20,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.resources.language.I18n;
 
 public class InfoBoxOverlay extends TextOverlay implements CustomNameProperty {
@@ -54,7 +54,7 @@ public class InfoBoxOverlay extends TextOverlay implements CustomNameProperty {
     }
 
     @Override
-    protected void renderOrErrorMessage(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    protected void renderOrErrorMessage(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (colorCache.hasError()) {
             StyledText[] errorMessage = {
                 StyledText.fromString("§c§l"

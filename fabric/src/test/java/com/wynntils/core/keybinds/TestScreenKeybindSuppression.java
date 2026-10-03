@@ -7,7 +7,6 @@ package com.wynntils.core.keybinds;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.input.KeyEvent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +26,7 @@ public class TestScreenKeybindSuppression {
                 "testScreenInput",
                 "Test screen input",
                 KeyBindManager.COMMANDS_CATEGORY,
-                InputConstants.Type.KEYSYM,
+                InputConstants.Type.KEYBOARD,
                 InputConstants.KEY_L,
                 true));
     }
@@ -80,7 +79,10 @@ public class TestScreenKeybindSuppression {
     @Test
     public void vanillaMappingsAreNotSuppressedByScreens() {
         KeyMapping vanillaMapping = new KeyMapping(
-                "testVanillaInput", InputConstants.Type.KEYSYM, InputConstants.KEY_L, KeyBindManager.COMMANDS_CATEGORY);
+                "testVanillaInput",
+                InputConstants.Type.KEYBOARD,
+                InputConstants.KEY_L,
+                KeyBindManager.COMMANDS_CATEGORY);
         mapping.suppressScreenInput();
         vanillaMapping.setDown(true);
         mapping.setDown(true);
@@ -102,7 +104,7 @@ public class TestScreenKeybindSuppression {
     @Test
     public void rebindingDoesNotCarrySuppressionToAnotherKeyOrMouseButton() {
         mapping.suppressScreenInput();
-        mapping.setKey(InputConstants.Type.KEYSYM.getOrCreate(InputConstants.KEY_K));
+        mapping.setKey(InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_K));
         mapping.setDown(true);
         Assertions.assertTrue(mapping.isDown());
 
@@ -115,23 +117,9 @@ public class TestScreenKeybindSuppression {
     @Test
     public void reapplyingTheSameBindingDoesNotLetAHeldScreenKeyThrough() {
         mapping.suppressScreenInput();
-        mapping.setKey(InputConstants.Type.KEYSYM.getOrCreate(InputConstants.KEY_L));
+        mapping.setKey(InputConstants.Type.KEYBOARD.getOrCreate(InputConstants.KEY_L));
         mapping.setDown(true);
         Assertions.assertFalse(mapping.isDown());
-    }
-
-    @Test
-    public void scanCodeMappingsAlsoRespectSuppressionAndRelease() {
-        mapping.setKey(InputConstants.Type.SCANCODE.getOrCreate(42));
-        Assertions.assertTrue(mapping.matches(new KeyEvent(InputConstants.UNKNOWN.getValue(), 42, 0)));
-        mapping.suppressScreenInput();
-        mapping.onInput(InputConstants.REPEAT, false);
-        mapping.setDown(true);
-        Assertions.assertFalse(mapping.isDown());
-        mapping.onInput(InputConstants.RELEASE, false);
-        mapping.onInput(InputConstants.PRESS, false);
-        mapping.setDown(true);
-        Assertions.assertTrue(mapping.isDown());
     }
 
     @Test

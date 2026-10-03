@@ -32,12 +32,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -163,23 +163,23 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.ITEM_RECORD, this.leftPos, this.topPos);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void extractLabels(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         // We don't want a label
     }
 
     @Override
-    protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type) {
+    protected void slotClicked(Slot slot, int slotId, int mouseButton, ContainerInput containerInput) {
         // Saved items are handled directly by mouseClicked; ignore inventory keyboard actions.
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         if (!addingCategory && !editingCategory) {
             FontRenderer.getInstance()
@@ -210,7 +210,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
         renderScrollButton(guiGraphics);
 
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+        this.extractTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
@@ -365,7 +365,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         populateItems();
     }
 
-    private void renderScrollButton(GuiGraphics guiGraphics) {
+    private void renderScrollButton(GuiGraphicsExtractor guiGraphics) {
         float renderX = this.leftPos + 155;
         float renderY =
                 this.topPos + 18 + MathUtils.map(itemScrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT);

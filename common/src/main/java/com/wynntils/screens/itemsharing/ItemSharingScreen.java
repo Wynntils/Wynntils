@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.itemsharing;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
@@ -37,7 +38,7 @@ import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -126,8 +127,8 @@ public final class ItemSharingScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
@@ -144,8 +145,8 @@ public final class ItemSharingScreen extends WynntilsScreen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.ITEM_SHARING_BACKGROUND, backgroundX, backgroundY);
     }
@@ -157,7 +158,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
     @Override
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() == 0
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT
                 && !isInsideOptionsPanel(event.x(), event.y())
                 && previewItemStack instanceof FakeItemStack fakeItemStack
                 && fakeItemStack.cyclePage()) {
@@ -173,7 +174,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
                 && y < backgroundY + Texture.ITEM_SHARING_BACKGROUND.height();
     }
 
-    private void renderPreview(GuiGraphics guiGraphics) {
+    private void renderPreview(GuiGraphicsExtractor guiGraphics) {
         int centerY = backgroundY + Texture.ITEM_SHARING_BACKGROUND.height() / 2;
         if (parsingMessage != null) {
             FontRenderer.getInstance()
@@ -191,7 +192,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
         }
         if (previewItemStack == null) return;
 
-        guiGraphics.renderTooltip(
+        guiGraphics.tooltip(
                 McUtils.mc().font,
                 TooltipUtils.getClientTooltipComponent(LoreUtils.getTooltipLines(previewItemStack)),
                 tooltipX,
@@ -199,7 +200,8 @@ public final class ItemSharingScreen extends WynntilsScreen {
                 (screenWidth, screenHeight, x, y, actualWidth, actualHeight) -> new Vector2i(
                         Math.max(4, Math.min(x, screenWidth - actualWidth - 4)),
                         Math.max(4, Math.min(y - actualHeight / 2, screenHeight - actualHeight - 4))),
-                previewItemStack.get(DataComponents.TOOLTIP_STYLE));
+                previewItemStack.get(DataComponents.TOOLTIP_STYLE),
+                false);
     }
 
     private void refreshPreview() {

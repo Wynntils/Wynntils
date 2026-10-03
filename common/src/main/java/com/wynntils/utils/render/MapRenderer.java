@@ -21,7 +21,7 @@ import com.wynntils.utils.type.BoundingBox;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -78,7 +78,7 @@ public final class MapRenderer {
     }
 
     public static void renderMapTile(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             MapTexture map,
             float mapCenterX,
             float mapCenterZ,
@@ -125,7 +125,7 @@ public final class MapRenderer {
     }
 
     public static void renderCircularBackground(
-            GuiGraphics guiGraphics, CustomColor color, float x, float y, float width, float height) {
+            GuiGraphicsExtractor guiGraphics, CustomColor color, float x, float y, float width, float height) {
         Matrix3x2f pose = new Matrix3x2f(guiGraphics.pose());
         CircleMask mask = CircleMask.fromBounds(x, y, width, height);
         List<Vector2f> vertices = new ArrayList<>(CIRCLE_MASK_SEGMENTS * 3);
@@ -139,7 +139,7 @@ public final class MapRenderer {
             vertices.add(mask.point(endAngle));
         }
 
-        guiGraphics.guiRenderState.submitGuiElement(new ColoredTrianglesRenderState(
+        guiGraphics.guiRenderState.addGuiElement(new ColoredTrianglesRenderState(
                 CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
                 TextureSetup.noTexture(),
                 pose,
@@ -149,7 +149,7 @@ public final class MapRenderer {
     }
 
     public static void renderCircularMapTile(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             MapTexture map,
             float mapCenterX,
             float mapCenterZ,
@@ -199,7 +199,7 @@ public final class MapRenderer {
     }
 
     public static void renderCursor(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             float renderX,
             float renderY,
             float pointerScale,
@@ -209,7 +209,7 @@ public final class MapRenderer {
         float rotationAngle;
         if (followPlayerRotation) {
             rotationAngle = McUtils.player().getYRot()
-                    - McUtils.mc().gameRenderer.getMainCamera().yRot();
+                    - McUtils.mc().gameRenderer.mainCamera().yRot();
         } else {
             rotationAngle = 180 + McUtils.player().getYRot();
         }
@@ -239,7 +239,7 @@ public final class MapRenderer {
     }
 
     public static void renderChunks(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             BoundingBox renderedWorldBoundingBox,
             Set<Long> mappedChunks,
             float mapCenterX,
@@ -247,14 +247,14 @@ public final class MapRenderer {
             float mapCenterZ,
             float centerZ,
             float zoomRenderScale) {
-        ChunkPos topLeft =
-                new ChunkPos(new BlockPos((int) renderedWorldBoundingBox.x1(), 0, (int) renderedWorldBoundingBox.z1()));
-        ChunkPos bottomRight =
-                new ChunkPos(new BlockPos((int) renderedWorldBoundingBox.x2(), 0, (int) renderedWorldBoundingBox.z2()));
+        ChunkPos topLeft = ChunkPos.containing(
+                new BlockPos((int) renderedWorldBoundingBox.x1(), 0, (int) renderedWorldBoundingBox.z1()));
+        ChunkPos bottomRight = ChunkPos.containing(
+                new BlockPos((int) renderedWorldBoundingBox.x2(), 0, (int) renderedWorldBoundingBox.z2()));
 
         // Render the chunk grid, with a 1px border around each chunk.
-        for (int x = topLeft.x; x <= bottomRight.x; x++) {
-            for (int z = topLeft.z; z <= bottomRight.z; z++) {
+        for (int x = topLeft.x(); x <= bottomRight.x(); x++) {
+            for (int z = topLeft.z(); z <= bottomRight.z(); z++) {
                 ChunkPos chunkPos = new ChunkPos(x, z);
 
                 float worldX1 = chunkPos.getMinBlockX() - 1;
@@ -268,31 +268,31 @@ public final class MapRenderer {
                 float z2 = getRenderZ((int) worldZ2, mapCenterZ, centerZ, zoomRenderScale);
 
                 CustomColor renderColor =
-                        mappedChunks.contains(chunkPos.toLong()) ? CommonColors.GREEN : CommonColors.RED;
+                        mappedChunks.contains(chunkPos.pack()) ? CommonColors.GREEN : CommonColors.RED;
 
                 CustomColor topRenderColor =
-                        mappedChunks.contains(new ChunkPos(x, z - 1).toLong()) ? CommonColors.GREEN : renderColor;
+                        mappedChunks.contains(new ChunkPos(x, z - 1).pack()) ? CommonColors.GREEN : renderColor;
                 CustomColor leftRenderColor =
-                        mappedChunks.contains(new ChunkPos(x - 1, z).toLong()) ? CommonColors.GREEN : renderColor;
+                        mappedChunks.contains(new ChunkPos(x - 1, z).pack()) ? CommonColors.GREEN : renderColor;
 
                 // Render the top and left borders of the chunk
                 RenderUtils.drawLine(guiGraphics, topRenderColor, x1, z1, x2, z1, CHUNK_LINE_WIDTH);
                 RenderUtils.drawLine(guiGraphics, leftRenderColor, x1, z1, x1, z2, CHUNK_LINE_WIDTH);
 
                 // Render the right border, if the chunk is the rightmost chunk
-                if (x == bottomRight.x) {
+                if (x == bottomRight.x()) {
                     // Check if the chunk on the right is mapped, if it is, render with the correct color
                     CustomColor rightRenderColor =
-                            mappedChunks.contains(new ChunkPos(x + 1, z).toLong()) ? CommonColors.GREEN : renderColor;
+                            mappedChunks.contains(new ChunkPos(x + 1, z).pack()) ? CommonColors.GREEN : renderColor;
 
                     RenderUtils.drawLine(guiGraphics, rightRenderColor, x2, z1, x2, z2, CHUNK_LINE_WIDTH);
                 }
 
                 // Render the bottom border, if the chunk is the bottommost chunk
-                if (z == bottomRight.z) {
+                if (z == bottomRight.z()) {
                     // Check if the chunk on the top is mapped, if it is, render with the correct color
                     CustomColor bottomRenderColor =
-                            mappedChunks.contains(new ChunkPos(x, z + 1).toLong()) ? CommonColors.GREEN : renderColor;
+                            mappedChunks.contains(new ChunkPos(x, z + 1).pack()) ? CommonColors.GREEN : renderColor;
 
                     RenderUtils.drawLine(guiGraphics, bottomRenderColor, x1, z2, x2, z2, CHUNK_LINE_WIDTH);
                 }
@@ -301,7 +301,7 @@ public final class MapRenderer {
     }
 
     public static void renderLootrunLine(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             LootrunPathInstance lootrun,
             float lootrunWidth,
             float outlineWidth,
@@ -358,7 +358,7 @@ public final class MapRenderer {
         }
 
         if (!outlineVertices.isEmpty()) {
-            guiGraphics.guiRenderState.submitGuiElement(new ColoredTrianglesRenderState(
+            guiGraphics.guiRenderState.addGuiElement(new ColoredTrianglesRenderState(
                     CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
                     TextureSetup.noTexture(),
                     pose,
@@ -368,7 +368,7 @@ public final class MapRenderer {
         }
 
         if (!lootrunVertices.isEmpty()) {
-            guiGraphics.guiRenderState.submitGuiElement(new ColoredTrianglesRenderState(
+            guiGraphics.guiRenderState.addGuiElement(new ColoredTrianglesRenderState(
                     CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
                     TextureSetup.noTexture(),
                     pose,
@@ -548,7 +548,7 @@ public final class MapRenderer {
     }
 
     private static void renderCircleMaskedTexturedRect(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Identifier identifier,
             CustomColor color,
             float x1,
@@ -565,7 +565,7 @@ public final class MapRenderer {
         List<Vertex> vertices = clipTexturedRectToCircle(pose, x1, y1, x2, y2, u1, u2, v1, v2, mask);
         if (vertices.isEmpty()) return;
 
-        guiGraphics.guiRenderState.submitGuiElement(new TexturedPolygonRenderState(
+        guiGraphics.guiRenderState.addGuiElement(new TexturedPolygonRenderState(
                 RenderPipelines.GUI_TEXTURED,
                 TextureSetup.singleTexture(texture.getTextureView(), texture.getSampler()),
                 pose,

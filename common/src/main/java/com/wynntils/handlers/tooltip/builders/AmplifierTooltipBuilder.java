@@ -23,7 +23,7 @@ public class AmplifierTooltipBuilder extends AugmentTooltipBuilder {
     private AmplifierTooltipBuilder(AmplifierInfo amplifierInfo, ItemSourceType sourceType, String source) {
         super(
                 Component.literal("Corkian Amplifier " + MathUtils.toRoman(amplifierInfo.tier()))
-                        .withStyle(GearTier.LEGENDARY.getChatFormatting()),
+                        .withColor(GearTier.LEGENDARY.getTextColor()),
                 GearTier.LEGENDARY,
                 sourceType,
                 source);

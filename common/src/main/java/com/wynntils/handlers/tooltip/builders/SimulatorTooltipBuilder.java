@@ -17,11 +17,7 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class SimulatorTooltipBuilder extends AugmentTooltipBuilder {
     private SimulatorTooltipBuilder(GearTier gearTier, ItemSourceType sourceType, String source) {
-        super(
-                Component.literal("Corkian Simulator").withStyle(gearTier.getChatFormatting()),
-                gearTier,
-                sourceType,
-                source);
+        super(Component.literal("Corkian Simulator").withColor(gearTier.getTextColor()), gearTier, sourceType, source);
     }
 
     public static SimulatorTooltipBuilder buildNewItem(GearTier gearTier, ItemSourceType sourceType, String source) {

@@ -17,7 +17,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -29,8 +29,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(GuiGraphics.class)
-public abstract class GuiGraphicsMixin {
+@Mixin(GuiGraphicsExtractor.class)
+public abstract class GuiGraphicsExtractorMixin {
     // Note: Call site 1 of 3 of ItemTooltipRenderEvent. Check the event class for more info.
     //       This mixin works on Fabric, and on NeoForge as well.
     @WrapOperation(
@@ -39,19 +39,20 @@ public abstract class GuiGraphicsMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;)V"))
+                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;Z)V"))
     private void setTooltipForNextFramePre(
-            GuiGraphics instance,
+            GuiGraphicsExtractor instance,
             Font font,
             List<Component> tooltipLines,
             Optional<TooltipComponent> visualTooltipComponent,
             int mouseX,
             int mouseY,
             Identifier backgroundTexture,
+            boolean extraSpaceAfterFirstLine,
             Operation<Void> operation,
             @Local(argsOnly = true) ItemStack itemStack) {
         ItemTooltipRenderEvent.Pre event = new ItemTooltipRenderEvent.Pre(
-                (GuiGraphics) (Object) this,
+                (GuiGraphicsExtractor) (Object) this,
                 itemStack,
                 Screen.getTooltipFromItem(McUtils.mc(), itemStack),
                 mouseX,
@@ -67,16 +68,17 @@ public abstract class GuiGraphicsMixin {
                 event.getItemStack().getTooltipImage(),
                 event.getMouseX(),
                 event.getMouseY(),
-                backgroundTexture);
+                backgroundTexture,
+                extraSpaceAfterFirstLine);
     }
 
     @ModifyVariable(
             method =
-                    "renderItemCount(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
+                    "itemCount(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
             at = @At("HEAD"),
             ordinal = 0,
             argsOnly = true)
-    private String renderItemCount(
+    private String itemCountPre(
             String text,
             Font font,
             ItemStack itemStack,
@@ -100,14 +102,14 @@ public abstract class GuiGraphicsMixin {
     }
 
     @Inject(
-            method = "renderItemCooldown(Lnet/minecraft/world/item/ItemStack;II)V",
+            method = "itemCooldown(Lnet/minecraft/world/item/ItemStack;II)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;fill(Lcom/mojang/blaze3d/pipeline/RenderPipeline;IIIII)V"),
+                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;fill(Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;IIIII)V"),
             cancellable = true)
-    private void renderItemCooldown(ItemStack stack, int x, int y, CallbackInfo ci) {
+    private void itemCooldownPre(ItemStack stack, int x, int y, CallbackInfo ci) {
         ItemCooldownRenderEvent event = new ItemCooldownRenderEvent(stack);
         MixinHelper.post(event);
 
@@ -118,14 +120,14 @@ public abstract class GuiGraphicsMixin {
 
     @WrapOperation(
             method =
-                    "renderItemCount(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
+                    "itemCount(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)V"))
+                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)V"))
     private void changeCountOverlayColor(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             Font font,
             String text,
             int x,

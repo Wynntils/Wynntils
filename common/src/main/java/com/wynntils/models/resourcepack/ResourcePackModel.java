@@ -283,7 +283,7 @@ public final class ResourcePackModel extends Model {
         }
 
         return Optional.of(new MultiPackResourceManager(
-                PackType.CLIENT_RESOURCES, List.of(wynncraftPack.get().open())));
+                PackType.CLIENT_RESOURCES, wynncraftPack.get().open().toList()));
     }
 
     private int[] getPixels(NativeImage image) {

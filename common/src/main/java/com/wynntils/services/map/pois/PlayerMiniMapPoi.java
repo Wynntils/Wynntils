@@ -9,7 +9,7 @@ import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.render.RenderUtils;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 
 public class PlayerMiniMapPoi extends PlayerPoiBase {
@@ -24,7 +24,7 @@ public class PlayerMiniMapPoi extends PlayerPoiBase {
 
     @Override
     public void renderAt(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             float renderX,
             float renderY,
             boolean hovered,

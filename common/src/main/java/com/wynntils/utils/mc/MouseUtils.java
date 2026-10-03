@@ -4,16 +4,17 @@
  */
 package com.wynntils.utils.mc;
 
-import net.minecraft.network.protocol.game.ServerboundSwingPacket;
+import net.minecraft.network.protocol.game.ServerboundPunchPacket;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.component.SwingAnimation;
 
 public final class MouseUtils {
     public static void sendLeftClickInput(boolean weaponSwing) {
         if (weaponSwing) {
-            McUtils.player().swing(InteractionHand.MAIN_HAND);
+            McUtils.player().swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, false);
         } else {
-            McUtils.sendPacket(new ServerboundSwingPacket(InteractionHand.MAIN_HAND));
+            McUtils.sendPacket(new ServerboundPunchPacket());
         }
     }
 

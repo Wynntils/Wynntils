@@ -15,7 +15,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Optional;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class LabelPoi implements Poi {
     private static final CustomColor AQUA = new CustomColor(0f, 0.8f, 0.8f);
@@ -93,7 +93,7 @@ public class LabelPoi implements Poi {
 
     @Override
     public void renderAt(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             float renderX,
             float renderY,
             boolean hovered,

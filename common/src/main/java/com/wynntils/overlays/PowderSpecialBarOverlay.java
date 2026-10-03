@@ -29,7 +29,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.wynn.ItemUtils;
 import java.util.Optional;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 
@@ -64,7 +64,7 @@ public class PowderSpecialBarOverlay extends Overlay {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         Optional<PowderSpecialInfo> powderSpecialInfoOpt = Models.CharacterStats.getPowderSpecialInfo();
         if (this.hideIfNoCharge.get() && powderSpecialInfoOpt.isEmpty()) return;
 
@@ -78,7 +78,7 @@ public class PowderSpecialBarOverlay extends Overlay {
     }
 
     @Override
-    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         renderWithSpecificSpecial(guiGraphics, 40, Powder.THUNDER);
     }
 
@@ -88,7 +88,7 @@ public class PowderSpecialBarOverlay extends Overlay {
     }
 
     private void renderWithSpecificSpecial(
-            GuiGraphics guiGraphics, float powderSpecialCharge, Powder powderSpecialType) {
+            GuiGraphicsExtractor guiGraphics, float powderSpecialCharge, Powder powderSpecialType) {
         Texture universalBarTexture = Texture.UNIVERSAL_BAR;
 
         final float renderedHeight = barTexture.get().getHeight() * (this.getWidth() / 81);
@@ -108,7 +108,7 @@ public class PowderSpecialBarOverlay extends Overlay {
         } else {
             color = powderSpecialType.getColor();
             text = StyledText.fromComponent(Component.empty()
-                    .withStyle(powderSpecialType.getLightColor())
+                    .withColor(powderSpecialType.getLightColor())
                     .append(Component.literal(String.valueOf(powderSpecialType.getSymbol()))
                             .withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT)))
                     .append(Component.literal(" " + (int) powderSpecialCharge + "%")));

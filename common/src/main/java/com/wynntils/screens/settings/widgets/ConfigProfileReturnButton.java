@@ -15,7 +15,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
@@ -36,7 +36,7 @@ public class ConfigProfileReturnButton extends WynntilsButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,

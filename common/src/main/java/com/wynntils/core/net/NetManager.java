@@ -5,6 +5,7 @@
 package com.wynntils.core.net;
 
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.Blaze3D;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
@@ -23,7 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.SharedConstants;
-import net.minecraft.util.Util;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public final class NetManager extends Manager {
@@ -120,7 +120,7 @@ public final class NetManager extends Manager {
     }
 
     public void openLink(URI url) {
-        Util.getPlatform().openUri(url);
+        Blaze3D.openUri(url);
     }
 
     public void openLink(UrlId urlId, Map<String, String> arguments) {

@@ -135,7 +135,8 @@ public final class NotificationManager extends Manager {
         if (oldMessage != null) {
             McUtils.removeMessageFromChat(oldMessage);
         }
-        McUtils.getChat().addMessage(msgContainer.getRenderTask().getText().getComponent());
+        McUtils.getChat()
+                .addClientSystemMessage(msgContainer.getRenderTask().getText().getComponent());
     }
 
     private static boolean shouldSendToChat() {

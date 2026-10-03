@@ -26,16 +26,17 @@ import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
@@ -102,14 +103,14 @@ public class ItemLockFeature extends Feature {
             event.setCanceled(true);
             return;
         }
-        if (!blockAllActionsOnLockedItems.get() && event.getClickType() != ClickType.THROW) return;
+        if (!blockAllActionsOnLockedItems.get() && event.getContainerInput() != ContainerInput.THROW) return;
         if (Models.Housing.isInEditMode()) return;
 
-        if (event.getClickType() == ClickType.SWAP
+        if (event.getContainerInput() == ContainerInput.SWAP
                 && Models.Item.asWynnItemProperty(event.getItemStack(), GearTypeItemProperty.class)
                         .isPresent()) {
             return;
-        } else if (event.getClickType() == ClickType.PICKUP) {
+        } else if (event.getContainerInput() == ContainerInput.PICKUP) {
             CustomModelData modelData = event.getItemStack().get(DataComponents.CUSTOM_MODEL_DATA);
 
             if (modelData != null && modelData.strings().contains(INTERACT_MODEL_DATA_KEY)) return;
@@ -127,7 +128,7 @@ public class ItemLockFeature extends Feature {
         // We want to allow opening emerald pouches and deleting potions even if locked
         // Right click is used to perform these actions, left click picks them up
         // So only allow right click actions
-        if (event.getMouseButton() == InputConstants.MOUSE_BUTTON_RIGHT) {
+        if (event.getMouseButton() == ContainerUtils.getContainerClickButton(InputConstants.MOUSE_BUTTON_RIGHT)) {
             if (allowClickOnEmeraldPouchInBlockingMode.get()
                     && Models.Emerald.isEmeraldPouch(slotOptional.get().getItem())) {
                 return;
@@ -166,7 +167,7 @@ public class ItemLockFeature extends Feature {
     }
 
     private void renderLockedSlot(
-            GuiGraphics guiGraphics, AbstractContainerScreen<?> containerScreen, Slot lockedSlot) {
+            GuiGraphicsExtractor guiGraphics, AbstractContainerScreen<?> containerScreen, Slot lockedSlot) {
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
                 Texture.ITEM_LOCK.identifier(),

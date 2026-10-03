@@ -14,7 +14,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -68,8 +68,8 @@ public class PartyMemberWidget extends AbstractPlayerListEntryWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         // name rendering
         CustomColor color = CommonColors.WHITE;
@@ -98,17 +98,17 @@ public class PartyMemberWidget extends AbstractPlayerListEntryWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        moveUpButton.render(guiGraphics, mouseX, mouseY, partialTick);
-        moveDownButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        moveUpButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        moveDownButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         // only leader can promote/kick
         if (!Models.Party.isPartyLeader(McUtils.playerName())) return;
 
         if (Models.Party.isPartyLeader(playerName)) {
-            disbandButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            disbandButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         } else {
-            promoteButton.render(guiGraphics, mouseX, mouseY, partialTick);
-            kickButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            promoteButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            kickButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 

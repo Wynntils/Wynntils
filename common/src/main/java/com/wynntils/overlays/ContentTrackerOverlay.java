@@ -16,7 +16,7 @@ import com.wynntils.models.activities.ActivityTrackerScoreboardPart;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -64,7 +64,7 @@ public class ContentTrackerOverlay extends TextOverlay {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         super.render(guiGraphics, deltaTracker, window);
     }
 

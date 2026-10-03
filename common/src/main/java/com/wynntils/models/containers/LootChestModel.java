@@ -42,7 +42,7 @@ import java.util.TreeMap;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -112,8 +112,8 @@ public final class LootChestModel extends Model {
     }
 
     @SubscribeEvent
-    public void onRightClick(PlayerInteractEvent.InteractAt event) {
-        handleEntity(event.getEntityHitResult().getEntity());
+    public void onRightClick(PlayerInteractEvent.Interact event) {
+        handleEntity(event.getTarget());
     }
 
     @SubscribeEvent
@@ -260,7 +260,7 @@ public final class LootChestModel extends Model {
     }
 
     private void handleEntity(Entity entity) {
-        if (entity != null && entity.getType() == EntityType.INTERACTION) {
+        if (entity != null && entity.getType() == EntityTypes.INTERACTION) {
             // We don't actually know if this is a chest, but it's a good enough guess.
             lastChestPos = entity.blockPosition();
             WynntilsMod.postEvent(new LootChestOpenedEvent(entity.blockPosition()));

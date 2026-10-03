@@ -14,7 +14,7 @@ public final class KeyboardUtils {
     }
 
     public static boolean isKeyDown(int keyCode) {
-        return InputConstants.isKeyDown(McUtils.window(), keyCode);
+        return InputConstants.isKeyDown(keyCode);
     }
 
     public static boolean isShiftDown() {

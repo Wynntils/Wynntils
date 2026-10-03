@@ -21,7 +21,7 @@ import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.resources.language.I18n;
 
 public abstract class BarOverlay extends DynamicOverlay {
@@ -52,7 +52,7 @@ public abstract class BarOverlay extends DynamicOverlay {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         BarOverlayTemplatePair template = getTemplate();
 
         if (templateCache == null) {
@@ -62,7 +62,7 @@ public abstract class BarOverlay extends DynamicOverlay {
     }
 
     @Override
-    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         BarOverlayTemplatePair previewTemplate = getPreviewTemplate();
         Pair<StyledText, ErrorOr<CappedValue>> calculatedTemplate = calculateTemplate(previewTemplate);
 
@@ -79,7 +79,7 @@ public abstract class BarOverlay extends DynamicOverlay {
     }
 
     @Override
-    protected void renderOrErrorMessage(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    protected void renderOrErrorMessage(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (templateCache == null) return;
         if (templateCache.b().hasError()) {
             StyledText[] errorMessage = {
@@ -107,7 +107,7 @@ public abstract class BarOverlay extends DynamicOverlay {
         }
     }
 
-    private void render(GuiGraphics guiGraphics, float renderedProgress, StyledText textValue) {
+    private void render(GuiGraphicsExtractor guiGraphics, float renderedProgress, StyledText textValue) {
         float barHeight = getTextureHeight() * heightModifier.get();
         float renderY = getModifiedRenderY(barHeight + 10);
 
@@ -147,7 +147,7 @@ public abstract class BarOverlay extends DynamicOverlay {
 
     protected abstract float getTextureHeight();
 
-    protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
+    protected void renderBar(GuiGraphicsExtractor guiGraphics, float renderY, float renderHeight, float progress) {
         Texture texture = getTexture();
 
         if (getRenderColor() == CommonColors.WHITE) {
@@ -180,7 +180,7 @@ public abstract class BarOverlay extends DynamicOverlay {
         }
     }
 
-    private void renderText(GuiGraphics guiGraphics, float renderY, StyledText text) {
+    private void renderText(GuiGraphicsExtractor guiGraphics, float renderY, StyledText text) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,

@@ -17,11 +17,7 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class InsulatorTooltipBuilder extends AugmentTooltipBuilder {
     private InsulatorTooltipBuilder(GearTier gearTier, ItemSourceType sourceType, String source) {
-        super(
-                Component.literal("Corkian Insulator").withStyle(gearTier.getChatFormatting()),
-                gearTier,
-                sourceType,
-                source);
+        super(Component.literal("Corkian Insulator").withColor(gearTier.getTextColor()), gearTier, sourceType, source);
     }
 
     public static InsulatorTooltipBuilder buildNewItem(GearTier gearTier, ItemSourceType sourceType, String source) {

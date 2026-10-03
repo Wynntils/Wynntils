@@ -6,7 +6,7 @@ package com.wynntils.services.map.pois;
 
 import com.wynntils.services.map.type.DisplayPriority;
 import com.wynntils.utils.mc.type.PoiLocation;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public interface Poi {
     PoiLocation getLocation();
@@ -20,7 +20,7 @@ public interface Poi {
     boolean hasStaticLocation();
 
     void renderAt(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             float renderX,
             float renderY,
             boolean hovered,

@@ -7,24 +7,24 @@ package com.wynntils.models.elements.type;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.Locale;
-import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 public enum Powder {
-    EARTH(Element.EARTH, Items.LIME_DYE, Items.GREEN_DYE, ChatFormatting.DARK_GREEN, ChatFormatting.GREEN),
-    THUNDER(Element.THUNDER, Items.YELLOW_DYE, Items.ORANGE_DYE, ChatFormatting.YELLOW, ChatFormatting.GOLD),
-    WATER(Element.WATER, Items.LIGHT_BLUE_DYE, Items.CYAN_DYE, ChatFormatting.AQUA, ChatFormatting.DARK_AQUA),
-    FIRE(Element.FIRE, Items.PINK_DYE, Items.RED_DYE, ChatFormatting.RED, ChatFormatting.DARK_RED),
-    AIR(Element.AIR, Items.GRAY_DYE, Items.LIGHT_GRAY_DYE, ChatFormatting.WHITE, ChatFormatting.GRAY);
+    EARTH(Element.EARTH, Items.DYE.lime(), Items.DYE.green(), TextColor.DARK_GREEN, TextColor.GREEN),
+    THUNDER(Element.THUNDER, Items.DYE.yellow(), Items.DYE.orange(), TextColor.YELLOW, TextColor.GOLD),
+    WATER(Element.WATER, Items.DYE.lightBlue(), Items.DYE.cyan(), TextColor.AQUA, TextColor.DARK_AQUA),
+    FIRE(Element.FIRE, Items.DYE.pink(), Items.DYE.red(), TextColor.RED, TextColor.DARK_RED),
+    AIR(Element.AIR, Items.DYE.gray(), Items.DYE.lightGray(), TextColor.WHITE, TextColor.GRAY);
 
     private final Element element;
     private final Item lowTierItem;
     private final Item highTierItem;
-    private final ChatFormatting lightColor;
-    private final ChatFormatting darkColor;
+    private final TextColor lightColor;
+    private final TextColor darkColor;
 
-    Powder(Element element, Item lowTierItem, Item highTierItem, ChatFormatting lightColor, ChatFormatting darkColor) {
+    Powder(Element element, Item lowTierItem, Item highTierItem, TextColor lightColor, TextColor darkColor) {
         this.element = element;
         this.lowTierItem = lowTierItem;
         this.highTierItem = highTierItem;
@@ -64,7 +64,7 @@ public enum Powder {
     }
 
     public CustomColor getColor() {
-        return CustomColor.fromInt(this.lightColor.getColor()).withAlpha(255);
+        return CustomColor.fromTextColor(this.lightColor).withAlpha(255);
     }
 
     public Item getLowTierItem() {
@@ -75,11 +75,11 @@ public enum Powder {
         return highTierItem;
     }
 
-    public ChatFormatting getLightColor() {
+    public TextColor getLightColor() {
         return lightColor;
     }
 
-    public ChatFormatting getDarkColor() {
+    public TextColor getDarkColor() {
         return darkColor;
     }
 

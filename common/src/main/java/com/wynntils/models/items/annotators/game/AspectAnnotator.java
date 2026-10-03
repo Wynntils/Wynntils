@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.game;
@@ -17,7 +17,6 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 
 public class AspectAnnotator implements GameItemAnnotator {
@@ -60,8 +59,7 @@ public class AspectAnnotator implements GameItemAnnotator {
         }
 
         // Unknown aspects
-        char colorChar = matcher.group(1).charAt(0);
-        GearTier gearTier = GearTier.fromChatFormatting(ChatFormatting.getByCode(colorChar));
+        GearTier gearTier = GearTier.fromStyledText(name);
 
         if (gearTier == null) {
             WynntilsMod.warn("Failed to get GearTier from aspect: " + name);

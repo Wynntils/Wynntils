@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.Event;
@@ -12,14 +12,14 @@ import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class ContainerLabelRenderEvent extends Event implements ICancellableEvent {
     private final AbstractContainerScreen<?> screen;
-    private final GuiGraphics guiGraphics;
+    private final GuiGraphicsExtractor guiGraphics;
     private final float x;
     private final float y;
 
     private int color;
 
     protected ContainerLabelRenderEvent(
-            AbstractContainerScreen<?> screen, GuiGraphics guiGraphics, float x, float y, int color) {
+            AbstractContainerScreen<?> screen, GuiGraphicsExtractor guiGraphics, float x, float y, int color) {
         this.screen = screen;
         this.guiGraphics = guiGraphics;
         this.x = x;
@@ -32,7 +32,7 @@ public abstract class ContainerLabelRenderEvent extends Event implements ICancel
         return screen;
     }
 
-    public GuiGraphics getGuiGraphics() {
+    public GuiGraphicsExtractor getGuiGraphics() {
         return guiGraphics;
     }
 
@@ -57,7 +57,7 @@ public abstract class ContainerLabelRenderEvent extends Event implements ICancel
 
         public ContainerLabel(
                 AbstractContainerScreen<?> screen,
-                GuiGraphics guiGraphics,
+                GuiGraphicsExtractor guiGraphics,
                 int color,
                 float x,
                 float y,
@@ -80,7 +80,7 @@ public abstract class ContainerLabelRenderEvent extends Event implements ICancel
 
         public InventoryLabel(
                 AbstractContainerScreen<?> screen,
-                GuiGraphics guiGraphics,
+                GuiGraphicsExtractor guiGraphics,
                 int color,
                 float x,
                 float y,

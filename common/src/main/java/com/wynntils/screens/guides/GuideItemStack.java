@@ -11,7 +11,7 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +23,7 @@ public abstract class GuideItemStack extends ItemStack {
         Handlers.Item.updateItem(this, annotation, StyledText.fromString(baseName));
     }
 
-    public void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    public void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         List<Component> tooltipLines = new ArrayList<>(LoreUtils.getTooltipLines(this));
 
         guiGraphics.setTooltipForNextFrame(

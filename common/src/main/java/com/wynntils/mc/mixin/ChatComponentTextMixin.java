@@ -9,9 +9,9 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ChatComponentRenderEvent;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.client.GuiMessage;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.client.multiplayer.chat.GuiMessage;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.FormattedCharSequence;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,13 +26,13 @@ public abstract class ChatComponentTextMixin {
     @Unique
     private GuiMessage.Line currentLine;
 
-    @Inject(method = "accept(Lnet/minecraft/client/GuiMessage$Line;IF)V", at = @At("HEAD"))
+    @Inject(method = "accept(Lnet/minecraft/client/multiplayer/chat/GuiMessage$Line;IF)V", at = @At("HEAD"))
     private void captureLine(GuiMessage.Line line, int ix, float fx, CallbackInfo ci) {
         this.currentLine = line;
     }
 
     @WrapOperation(
-            method = "accept(Lnet/minecraft/client/GuiMessage$Line;IF)V",
+            method = "accept(Lnet/minecraft/client/multiplayer/chat/GuiMessage$Line;IF)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -44,7 +44,7 @@ public abstract class ChatComponentTextMixin {
             float opacity,
             FormattedCharSequence text,
             Operation<Boolean> original) {
-        GuiGraphics graphics = null;
+        GuiGraphicsExtractor graphics = null;
 
         if (access instanceof ChatComponent.DrawingBackgroundGraphicsAccess bg) {
             graphics = bg.graphics;

@@ -87,9 +87,16 @@ public final class RenderedStringUtils {
 
         if (maxFitting.contains("[") && !maxFitting.contains("]")) { // Detail line did not appear to fit, force break
             String color = "";
+            String str = line.getString();
 
-            if (line.startsWith("§")) {
-                color = line.getString().substring(0, 2);
+            if (str.startsWith("§")) {
+                if (str.length() >= 10 && str.charAt(1) == '#') {
+                    // Hex format: §#RRGGBBAA
+                    color = str.substring(0, 10);
+                } else if (str.length() >= 2) {
+                    // Legacy format: §a
+                    color = str.substring(0, 2);
+                }
             }
 
             return StyledText.fromString(
@@ -97,9 +104,16 @@ public final class RenderedStringUtils {
         } else if (maxFitting.contains("(")
                 && !maxFitting.contains(")")) { // Detail line did not appear to fit, force break
             String color = "";
+            String str = line.getString();
 
-            if (line.startsWith("§")) {
-                color = line.getString().substring(0, 2);
+            if (str.startsWith("§")) {
+                if (str.length() >= 10 && str.charAt(1) == '#') {
+                    // Hex format: §#RRGGBBAA
+                    color = str.substring(0, 10);
+                } else if (str.length() >= 2) {
+                    // Legacy format: §a
+                    color = str.substring(0, 2);
+                }
             }
 
             return StyledText.fromString(

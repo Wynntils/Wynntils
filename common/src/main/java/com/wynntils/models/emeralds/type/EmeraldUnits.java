@@ -5,7 +5,7 @@
 package com.wynntils.models.emeralds.type;
 
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 
 public enum EmeraldUnits {
@@ -15,14 +15,14 @@ public enum EmeraldUnits {
     LIQUID_EMERALD_STX(Items.EXPERIENCE_BOTTLE, "Stack of Liquid Emeralds", "stx", 64 * 64 * 64);
 
     private final Item itemType;
-    private final ItemStack itemStack;
+    private final ItemStackTemplate itemStackTemplate;
     private final String displayName;
     private final String symbol;
     private final int multiplier;
 
     EmeraldUnits(Item itemType, String displayName, String symbol, int multiplier) {
         this.itemType = itemType;
-        this.itemStack = new ItemStack(itemType);
+        this.itemStackTemplate = new ItemStackTemplate(itemType);
         this.displayName = displayName;
         this.symbol = symbol;
         this.multiplier = multiplier;
@@ -32,8 +32,8 @@ public enum EmeraldUnits {
         return itemType;
     }
 
-    public ItemStack getItemStack() {
-        return itemStack;
+    public ItemStackTemplate getItemStackTemplate() {
+        return itemStackTemplate;
     }
 
     public String getSymbol() {

@@ -5,7 +5,7 @@
 package com.wynntils.mc.event;
 
 import com.wynntils.core.events.EventThread;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.neoforged.bus.api.Event;
 
 @EventThread(EventThread.Type.ANY)
@@ -13,13 +13,13 @@ public class ContainerClickSentEvent extends Event {
     private final int containerId;
     private final int slotNum;
     private final int mouseButton;
-    private final ClickType clickType;
+    private final ContainerInput containerInput;
 
-    public ContainerClickSentEvent(int containerId, int slotNum, int mouseButton, ClickType clickType) {
+    public ContainerClickSentEvent(int containerId, int slotNum, int mouseButton, ContainerInput containerInput) {
         this.containerId = containerId;
         this.slotNum = slotNum;
         this.mouseButton = mouseButton;
-        this.clickType = clickType;
+        this.containerInput = containerInput;
     }
 
     public int getContainerId() {
@@ -34,7 +34,7 @@ public class ContainerClickSentEvent extends Event {
         return mouseButton;
     }
 
-    public ClickType getClickType() {
-        return clickType;
+    public ContainerInput getContainerInput() {
+        return containerInput;
     }
 }

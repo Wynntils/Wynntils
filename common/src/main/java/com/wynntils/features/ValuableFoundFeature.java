@@ -27,6 +27,7 @@ import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
@@ -104,7 +105,7 @@ public class ValuableFoundFeature extends Feature {
 
                         StyledText itemName = buildItemName(
                                 event.getItem().getHoverName().getString(),
-                                gearBoxItem.get().getGearTier().getChatFormatting());
+                                gearBoxItem.get().getGearTier().getTextColor());
                         sendNormalDryStreakMessage(itemName);
                     }
                     return;
@@ -137,22 +138,22 @@ public class ValuableFoundFeature extends Feature {
                 && (showDryStreakMessage.get() || lootrunSound.get() != ValuableFoundSound.NONE)) {
             boolean validLootrunMythic = false;
             Optional<GearItem> gearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
-            ChatFormatting color = ChatFormatting.DARK_PURPLE;
+            TextColor color = TextColor.DARK_PURPLE;
             if (gearItem.isPresent()) {
                 validLootrunMythic = true;
-                color = gearItem.get().getGearTier().getChatFormatting();
+                color = gearItem.get().getGearTier().getTextColor();
             }
 
             Optional<InsulatorItem> insulatorItem = Models.Item.asWynnItem(itemStack, InsulatorItem.class);
             if (insulatorItem.isPresent()) {
                 validLootrunMythic = true;
-                color = insulatorItem.get().getGearTier().getChatFormatting();
+                color = insulatorItem.get().getGearTier().getTextColor();
             }
 
             Optional<SimulatorItem> simulatorItem = Models.Item.asWynnItem(itemStack, SimulatorItem.class);
             if (simulatorItem.isPresent()) {
                 validLootrunMythic = true;
-                color = simulatorItem.get().getGearTier().getChatFormatting();
+                color = simulatorItem.get().getGearTier().getTextColor();
             }
 
             if (validLootrunMythic) {
@@ -195,7 +196,7 @@ public class ValuableFoundFeature extends Feature {
                     if (showTomeDryStreakMessage.get()) {
                         StyledText itemName = buildItemName(
                                 event.getItem().getHoverName().getString(),
-                                tomeItem.get().getGearTier().getChatFormatting());
+                                tomeItem.get().getGearTier().getTextColor());
                         sendTomeDryStreakMessage(itemName);
                     }
                     return;
@@ -307,9 +308,9 @@ public class ValuableFoundFeature extends Feature {
                 .withStyle(ChatFormatting.LIGHT_PURPLE));
     }
 
-    private static StyledText buildItemName(String itemName, ChatFormatting chatFormatting) {
+    private static StyledText buildItemName(String itemName, TextColor textColor) {
         MutableComponent nameComponent =
-                Component.empty().withStyle(chatFormatting).append(WynnUtils.stripItemNameMarkers(itemName));
+                Component.empty().withColor(textColor).append(WynnUtils.stripItemNameMarkers(itemName));
 
         return StyledText.fromComponent(nameComponent);
     }

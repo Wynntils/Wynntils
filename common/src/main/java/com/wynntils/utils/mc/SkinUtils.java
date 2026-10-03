@@ -15,13 +15,13 @@ import java.util.UUID;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ResolvableProfile;
 
 public final class SkinUtils {
-    public static void setPlayerHeadFromUUID(ItemStack itemStack, String uuid) {
+    public static DataComponentPatch createPlayerHeadFromUUID(String uuid) {
         JsonObject skinObject = new JsonObject();
         skinObject.addProperty("url", "https://textures.minecraft.net/texture/" + uuid);
 
@@ -35,10 +35,10 @@ public final class SkinUtils {
         String textureString =
                 Base64.getEncoder().encodeToString(jsonObject.toString().getBytes(Charset.defaultCharset()));
 
-        setPlayerHeadSkin(itemStack, textureString);
+        return createPlayerHeadSkin(textureString);
     }
 
-    public static void setPlayerHeadSkin(ItemStack itemStack, String textureString) {
+    public static DataComponentPatch createPlayerHeadSkin(String textureString) {
         ImmutableMultimap<String, Property> props =
                 ImmutableMultimap.of("textures", new Property("textures", textureString));
 
@@ -49,7 +49,9 @@ public final class SkinUtils {
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "");
         gameProfile = new GameProfile(gameProfile.id(), gameProfile.name(), propertyMap);
 
-        itemStack.set(DataComponents.PROFILE, ResolvableProfile.createResolved(gameProfile));
+        return DataComponentPatch.builder()
+                .set(DataComponents.PROFILE, ResolvableProfile.createResolved(gameProfile))
+                .build();
     }
 
     public static Identifier getSkin(UUID uuid) {

@@ -25,7 +25,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -47,7 +47,7 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         CustomColor backgroundColor = getButtonBackgroundColor();
         RenderUtils.drawRect(guiGraphics, backgroundColor, this.getX(), this.getY(), this.width, this.height);
 
