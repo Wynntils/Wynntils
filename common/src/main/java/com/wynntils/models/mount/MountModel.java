@@ -37,11 +37,14 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -50,6 +53,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class MountModel extends Model {
     // How long we wait before assuming mount failure
     private static final int MOUNT_TIME_TICKS = 10;
+
+    public static final NavigableMap<Integer, TextColor> POTENTIAL_COLOR_MAP = new TreeMap<>(Map.of(
+            240, TextColor.fromLegacyFormat(ChatFormatting.RED),
+            555, TextColor.fromLegacyFormat(ChatFormatting.GOLD),
+            870, TextColor.fromLegacyFormat(ChatFormatting.YELLOW),
+            1185, TextColor.fromLegacyFormat(ChatFormatting.GREEN),
+            1500, TextColor.fromLegacyFormat(ChatFormatting.AQUA)));
 
     private Map<String, MountColorInfo> mountColors = new HashMap<>();
 
