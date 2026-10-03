@@ -71,8 +71,8 @@ public final class GuideGatheringToolItemStack extends GuideItemStack {
                 .append(Component.literal(toolInfo.name())
                         .withStyle(Style.EMPTY
                                 .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
-                                .withColor(CustomColor.fromChatFormatting(
-                                                toolInfo.gearTier().getChatFormatting())
+                                .withColor(CustomColor.fromTextColor(
+                                                toolInfo.gearTier().getTextColor())
                                         .asInt())));
         tooltipLines.add(emblemLine);
 
@@ -80,7 +80,7 @@ public final class GuideGatheringToolItemStack extends GuideItemStack {
                 .append(Component.literal("\uDB00\uDC26").withStyle(Style.EMPTY.withFont(CommonFonts.SPACE_FONT)))
                 .append(BannerBoxFont.buildMessage(
                         toolInfo.gearTier().getName(),
-                        CustomColor.fromChatFormatting(toolInfo.gearTier().getChatFormatting()),
+                        CustomColor.fromTextColor(toolInfo.gearTier().getTextColor()),
                         CommonColors.BLACK,
                         "\uDB00\uDC03"))
                 .append(BannerBoxFont.buildMessage(

@@ -170,14 +170,6 @@ public class QuickCastFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onInteractAt(PlayerInteractEvent.InteractAt event) {
-        if (shouldSuppressMainHandInput(
-                Models.SpellCaster.isSendingInputs(), shouldSuppressNormalUseTriggerInput(), event.getHand())) {
-            event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent
     public void onUseItemOnBlock(PlayerInteractEvent.RightClickBlock event) {
         if (shouldSuppressMainHandInput(
                 Models.SpellCaster.isSendingInputs(), shouldSuppressNormalUseTriggerInput(), event.getHand())) {

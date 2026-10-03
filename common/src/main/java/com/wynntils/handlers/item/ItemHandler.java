@@ -280,7 +280,7 @@ public final class ItemHandler extends Handler {
 
                 WynntilsMod.warn("Problematic item:" + itemStack);
                 WynntilsMod.warn("Problematic item name:" + StyledText.fromComponent(itemStack.getHoverName()));
-                WynntilsMod.warn("Problematic item tags:" + itemStack.getTags());
+                WynntilsMod.warn("Problematic item tags:" + itemStack.tags());
 
                 McUtils.sendErrorToClient("Not all items will be properly parsed.");
             }

@@ -44,7 +44,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
@@ -159,17 +159,17 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(guiGraphics);
 
         contentBookWidgets
                 .get(currentPage)
-                .forEach(renderable -> renderable.render(guiGraphics, mouseX, mouseY, partialTick));
+                .forEach(renderable -> renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
         contentBookActionWidgets
                 .values()
-                .forEach(renderable -> renderable.render(guiGraphics, mouseX, mouseY, partialTick));
+                .forEach(renderable -> renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
 
-        renderables.forEach(renderable -> renderable.render(guiGraphics, mouseX, mouseY, partialTick));
+        renderables.forEach(renderable -> renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
 
         if (!Models.CombatXp.getCombatLevel().isAtCap()) {
             FontRenderer.getInstance()
@@ -232,7 +232,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
                                 TextShadow.NORMAL,
                                 0.9f);
 
-                trackedRewards.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+                trackedRewards.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
             }
         } else {
             FontRenderer.getInstance()
@@ -453,11 +453,11 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
         scrollDownButton.visible = scrollDownActive || currentPage < contentBookWidgets.size() - 1;
     }
 
-    private void renderBackgroundTexture(GuiGraphics guiGraphics) {
+    private void renderBackgroundTexture(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.CUSTOM_CONTENT_BOOK_BACKGROUND, offsetX, offsetY);
     }
 
-    private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderTooltips(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : getWidgetsForIteration().toList()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
                 guiGraphics.setTooltipForNextFrame(

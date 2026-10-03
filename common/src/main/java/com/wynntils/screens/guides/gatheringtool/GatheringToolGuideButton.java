@@ -27,7 +27,7 @@ public class GatheringToolGuideButton extends GuideButton {
     // FIXME: This should be painted by ItemHighlightFeature instead...
     @Override
     protected CustomColor getColor() {
-        return CustomColor.fromChatFormatting(
-                toolItemStack.getGatheringToolInfo().gearTier().getChatFormatting());
+        return CustomColor.fromTextColor(
+                toolItemStack.getGatheringToolInfo().gearTier().getTextColor());
     }
 }

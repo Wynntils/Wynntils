@@ -8,7 +8,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Services;
 import com.wynntils.screens.guides.widgets.GuideButton;
 import com.wynntils.utils.colors.CustomColor;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
@@ -30,7 +30,7 @@ public class GearGuideButton extends GuideButton {
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (!builtTooltip) {
             gearItemStack.buildTooltip();
             builtTooltip = true;
@@ -53,6 +53,6 @@ public class GearGuideButton extends GuideButton {
 
     @Override
     protected CustomColor getColor() {
-        return CustomColor.fromChatFormatting(gearItemStack.getGearInfo().tier().getChatFormatting());
+        return CustomColor.fromTextColor(gearItemStack.getGearInfo().tier().getTextColor());
     }
 }

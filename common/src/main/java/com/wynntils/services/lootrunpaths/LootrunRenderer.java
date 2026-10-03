@@ -50,22 +50,22 @@ public final class LootrunRenderer {
 
         poseStack.pushPose();
 
-        Camera camera = McUtils.mc().gameRenderer.getMainCamera();
+        Camera camera = McUtils.mc().gameRenderer.mainCamera();
         poseStack.translate(-camera.position().x, -camera.position().y, -camera.position().z);
 
         Long2ObjectMap<List<ColoredPath>> points = lootrun.points();
         int renderDistance = McUtils.options().renderDistance().get();
         BlockPos pos = camera.blockPosition();
-        ChunkPos origin = new ChunkPos(pos);
+        ChunkPos origin = ChunkPos.containing(pos);
 
         for (int i = 0; i <= renderDistance; i++) {
             for (int j = 0; j <= renderDistance; j++) {
-                int x = j + origin.x - (renderDistance / 2);
-                int z = i + origin.z - (renderDistance / 2);
+                int x = j + origin.x() - (renderDistance / 2);
+                int z = i + origin.z() - (renderDistance / 2);
                 ChunkPos chunk = new ChunkPos(x, z);
-                if (!level.hasChunk(chunk.x, chunk.z)) continue;
+                if (!level.hasChunk(chunk.x(), chunk.z())) continue;
 
-                long chunkLong = chunk.toLong();
+                long chunkLong = chunk.pack();
 
                 if (points.containsKey(chunkLong)) {
                     renderPoints(poseStack, submitNodeStorage, points.get(chunkLong), level);
@@ -101,7 +101,7 @@ public final class LootrunRenderer {
             Position position = note.position();
             poseStack.pushPose();
             poseStack.translate(position.x(), position.y() + 2, position.z());
-            poseStack.mulPose(McUtils.mc().gameRenderer.getMainCamera().rotation());
+            poseStack.rotate(McUtils.mc().gameRenderer.mainCamera().rotation());
             poseStack.scale(0.025f, -0.025f, 0.025f);
             List<FormattedCharSequence> lines = font.split(note.component(), 200);
             int offsetY = -(font.lineHeight * lines.size()) / 2;
@@ -188,7 +188,7 @@ public final class LootrunRenderer {
             List<ColoredPath> locations,
             Level level,
             RenderType renderType) {
-        Camera camera = McUtils.mc().gameRenderer.getMainCamera();
+        Camera camera = McUtils.mc().gameRenderer.mainCamera();
 
         poseStack.pushPose();
         poseStack.translate(camera.position().x, camera.position().y, camera.position().z);
@@ -241,7 +241,7 @@ public final class LootrunRenderer {
 
     private static void renderTexturedPoint(
             ColoredPosition start, ColoredPosition end, PoseStack poseStack, VertexConsumer vertexConsumer) {
-        Vector3f camPos = McUtils.mc().gameRenderer.getMainCamera().position().toVector3f();
+        Vector3f camPos = McUtils.mc().gameRenderer.mainCamera().position().toVector3f();
         Vector3f startVec = start.position().toVector3f();
         Vector3f endVec = end.position().toVector3f();
         int color = start.color();

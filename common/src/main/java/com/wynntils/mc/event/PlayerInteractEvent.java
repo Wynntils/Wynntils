@@ -13,7 +13,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class PlayerInteractEvent extends PlayerEvent {
@@ -74,19 +73,6 @@ public abstract class PlayerInteractEvent extends PlayerEvent {
 
         public Entity getTarget() {
             return target;
-        }
-    }
-
-    public static class InteractAt extends Interact {
-        private final EntityHitResult entityHitResult;
-
-        public InteractAt(Player player, InteractionHand hand, Entity target, EntityHitResult entityHitResult) {
-            super(player, hand, target);
-            this.entityHitResult = entityHitResult;
-        }
-
-        public EntityHitResult getEntityHitResult() {
-            return entityHitResult;
         }
     }
 }

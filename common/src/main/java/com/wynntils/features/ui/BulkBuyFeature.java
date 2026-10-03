@@ -44,7 +44,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -133,7 +133,7 @@ public class BulkBuyFeature extends Feature {
 
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
-        if (!KeyboardUtils.isShiftDown() || e.getClickType() != ClickType.QUICK_MOVE) return;
+        if (!KeyboardUtils.isShiftDown() || e.getContainerInput() != ContainerInput.QUICK_MOVE) return;
 
         AbstractContainerMenu container = e.getContainerMenu();
         ItemStack itemStack = e.getItemStack();

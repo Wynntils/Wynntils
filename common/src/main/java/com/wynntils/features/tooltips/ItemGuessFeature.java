@@ -69,7 +69,7 @@ public class ItemGuessFeature extends Feature {
         for (GearInfo gearInfo : possibleGear) {
             int level = (gearInfo != null) ? gearInfo.requirements().level() : -1;
 
-            MutableComponent itemDesc = Component.literal(gearInfo.name()).withStyle(gearTier.getChatFormatting());
+            MutableComponent itemDesc = Component.literal(gearInfo.name()).withColor(gearTier.getTextColor());
 
             if (Services.Favorites.isFavorite(gearInfo.name())) {
                 itemDesc.withStyle(ChatFormatting.UNDERLINE);

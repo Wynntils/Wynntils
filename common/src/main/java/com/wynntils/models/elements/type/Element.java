@@ -5,25 +5,25 @@
 package com.wynntils.models.elements.type;
 
 import com.wynntils.utils.StringUtils;
-import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextColor;
 
 public enum Element {
-    EARTH("\uE001", "\uE000", ChatFormatting.DARK_GREEN, 0),
-    THUNDER("\uE003", "\uE001", ChatFormatting.YELLOW, 1),
-    WATER("\uE004", "\uE002", ChatFormatting.AQUA, 2),
-    FIRE("\uE002", "\uE003", ChatFormatting.RED, 3),
-    AIR("\uE000", "\uE004", ChatFormatting.WHITE, 4);
+    EARTH("\uE001", "\uE000", TextColor.DARK_GREEN, 0),
+    THUNDER("\uE003", "\uE001", TextColor.YELLOW, 1),
+    WATER("\uE004", "\uE002", TextColor.AQUA, 2),
+    FIRE("\uE002", "\uE003", TextColor.RED, 3),
+    AIR("\uE000", "\uE004", TextColor.WHITE, 4);
 
     private final String symbol;
     private final String tooltipSprite;
-    private final ChatFormatting colorCode;
+    private final TextColor textColor;
     private final String displayName;
     private final int encodingId;
 
-    Element(String symbol, String tooltipSprite, ChatFormatting colorCode, int encodingId) {
+    Element(String symbol, String tooltipSprite, TextColor textColor, int encodingId) {
         this.symbol = symbol;
         this.tooltipSprite = tooltipSprite;
-        this.colorCode = colorCode;
+        this.textColor = textColor;
         this.encodingId = encodingId;
         this.displayName = StringUtils.capitalized(this.name());
     }
@@ -63,8 +63,8 @@ public enum Element {
         return symbol;
     }
 
-    public ChatFormatting getColorCode() {
-        return colorCode;
+    public TextColor getTextColor() {
+        return textColor;
     }
 
     public String getTooltipSprite() {

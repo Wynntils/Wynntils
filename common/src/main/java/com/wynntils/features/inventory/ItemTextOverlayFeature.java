@@ -43,7 +43,7 @@ import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
@@ -170,7 +170,8 @@ public class ItemTextOverlayFeature extends Feature {
         drawTextOverlay(e.getGuiGraphics(), e.getItemStack(), e.getX(), e.getY(), true);
     }
 
-    private void drawTextOverlay(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
+    private void drawTextOverlay(
+            GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int slotX, int slotY, boolean hotbar) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
 
@@ -557,7 +558,7 @@ public class ItemTextOverlayFeature extends Feature {
                     .withStyle(Style.EMPTY.withFont(
                             new FontDescription.Resource(Identifier.withDefaultNamespace("common")))));
             TextRenderSetting style = TextRenderSetting.DEFAULT
-                    .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
+                    .withCustomColor(CustomColor.fromTextColor(skill.getTextColor()))
                     .withTextShadow(skillIconShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);
@@ -584,7 +585,7 @@ public class ItemTextOverlayFeature extends Feature {
                     .withStyle(Style.EMPTY.withFont(
                             new FontDescription.Resource(Identifier.withDefaultNamespace("common")))));
             TextRenderSetting style = TextRenderSetting.DEFAULT
-                    .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
+                    .withCustomColor(CustomColor.fromTextColor(skill.getTextColor()))
                     .withTextShadow(skillIconShadow.get());
 
             return new TextOverlay(new TextRenderTask(text, style), -1, 1, 0.9f);

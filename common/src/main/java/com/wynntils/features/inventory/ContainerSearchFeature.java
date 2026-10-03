@@ -264,7 +264,7 @@ public class ContainerSearchFeature extends Feature {
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
         // Don't want to be able to search whilst the edit widget is open
-        if ((event.getKeyCode() == InputConstants.KEY_RETURN || event.getKeyCode() == InputConstants.KEY_NUMPADENTER)
+        if ((event.getKey() == InputConstants.KEY_RETURN || event.getKey() == InputConstants.KEY_NUMPADENTER)
                 && !Models.Bank.isEditingMode()) {
             if (lastSearchWidget == null
                     || lastSearchWidget.getTextBoxInput().isEmpty()

@@ -28,6 +28,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 
 public abstract class TooltipBuilder {
     private static final TooltipStyle DEFAULT_TOOLTIP_STYLE =
@@ -90,7 +91,7 @@ public abstract class TooltipBuilder {
         return Component.empty()
                 .withStyle(Style.EMPTY
                         .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
-                        .applyFormat(getSourceColor()))
+                        .withColor(getSourceColor()))
                 .append(Component.literal("\uE004").withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_TOOLTIP_ICONS)))
                 .append(Component.literal("\uDB00\uDC02"))
                 .append(Component.literal(source)
@@ -119,8 +120,8 @@ public abstract class TooltipBuilder {
         return List.of(new TooltipLine.Centered(paginator), new TooltipLine.Fixed(Component.empty()));
     }
 
-    protected ChatFormatting getSourceColor() {
-        return ChatFormatting.WHITE;
+    protected TextColor getSourceColor() {
+        return TextColor.WHITE;
     }
 
     protected List<Component> prependSource(List<Component> lines) {

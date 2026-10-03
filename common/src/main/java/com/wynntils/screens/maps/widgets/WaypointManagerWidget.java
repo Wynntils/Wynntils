@@ -21,7 +21,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -125,7 +125,7 @@ public class WaypointManagerWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderIcon(guiGraphics);
 
         FontRenderer.getInstance()
@@ -178,7 +178,7 @@ public class WaypointManagerWidget extends AbstractWidget {
 
         // In selection mode we don't want the edit/delete/move buttons
         if (selectionMode) {
-            selectButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            selectButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
             // Border to show selected waypoints, orange when selected, white if not
             RenderUtils.drawRectBorders(
@@ -190,10 +190,10 @@ public class WaypointManagerWidget extends AbstractWidget {
                     getY() + height - 1,
                     1f);
         } else {
-            editButton.render(guiGraphics, mouseX, mouseY, partialTick);
-            deleteButton.render(guiGraphics, mouseX, mouseY, partialTick);
-            upButton.render(guiGraphics, mouseX, mouseY, partialTick);
-            downButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            editButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            deleteButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            upButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            downButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         if (this.isHovered) {
@@ -250,7 +250,7 @@ public class WaypointManagerWidget extends AbstractWidget {
         iconRenderY = (y + height / 2f) - iconHeight / 2f;
     }
 
-    private void renderIcon(GuiGraphics guiGraphics) {
+    private void renderIcon(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
                 poi.getIcon().identifier(),

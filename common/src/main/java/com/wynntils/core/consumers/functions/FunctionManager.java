@@ -827,6 +827,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.CurrentTerritoryOwnerFunction());
         registerFunction(new WorldFunctions.CurrentWorldFunction());
         registerFunction(new WorldFunctions.GatheringTotemCountFunction());
+        registerFunction(new WorldFunctions.ClosestGatheringTotemNumberFunction());
+        registerFunction(new WorldFunctions.GatheringTotemSecondsLeftFunction());
         registerFunction(new WorldFunctions.GatheringTotemDistanceFunction());
         registerFunction(new WorldFunctions.GatheringTotemFunction());
         registerFunction(new WorldFunctions.GatheringTotemOwnerFunction());
@@ -834,6 +836,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.InMappedAreaFunction());
         registerFunction(new WorldFunctions.InStreamFunction());
         registerFunction(new WorldFunctions.MobTotemCountFunction());
+        registerFunction(new WorldFunctions.ClosestMobTotemNumberFunction());
+        registerFunction(new WorldFunctions.MobTotemSecondsLeftFunction());
         registerFunction(new WorldFunctions.MobTotemDistanceFunction());
         registerFunction(new WorldFunctions.MobTotemFunction());
         registerFunction(new WorldFunctions.MobTotemOwnerFunction());

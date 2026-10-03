@@ -70,11 +70,11 @@ jobs:
         with:
           name: build
 
-      - name: Set up JDK 21
+      - name: Set up JDK 25
         uses: actions/setup-java@v5
         with:
           distribution: "temurin"
-          java-version: 21
+          java-version: 25
           cache: "gradle"
 
       - name: Set up Gradle
@@ -266,9 +266,9 @@ jobs:
           name: Wynntils (${{ matrix.modloader }}) ${{ needs.set-version.outputs.tag }}
           version: ${{ needs.set-version.outputs.tag }}
           version-type: release
-          game-versions: 1.21.11
+          game-versions: 26.3
           environment: client
           changelog: ${{ steps.changelog.outputs.raw }}
 
           loaders: ${{ matrix.modloader }}
-          java: 21
+          java: 25

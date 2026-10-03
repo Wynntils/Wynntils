@@ -9,7 +9,7 @@ import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.function.Consumer;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class SettingsSearchWidget extends SearchWidget {
     public SettingsSearchWidget(
@@ -18,7 +18,7 @@ public class SettingsSearchWidget extends SearchWidget {
     }
 
     @Override
-    protected void renderBackground(GuiGraphics guiGraphics) {
+    protected void renderBackground(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.TAG_SEARCH, getX() - 25, getY() - 9);
     }
 }

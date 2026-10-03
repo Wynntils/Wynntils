@@ -24,7 +24,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
@@ -108,7 +108,7 @@ public class SpellInputsOverlay extends Overlay {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         if (spellText.isEmpty()) return;
 
         FontRenderer.getInstance()
@@ -128,7 +128,7 @@ public class SpellInputsOverlay extends Overlay {
     }
 
     @Override
-    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,

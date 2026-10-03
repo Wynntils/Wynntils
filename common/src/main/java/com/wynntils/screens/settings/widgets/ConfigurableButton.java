@@ -29,7 +29,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -112,7 +112,7 @@ public class ConfigurableButton extends WynntilsButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Don't want to display tooltip when the tile is outside the mask from the screen
         if (isHovered && (mouseY <= maskTopY || mouseY >= maskBottomY)) {
             isHovered = false;
@@ -165,10 +165,10 @@ public class ConfigurableButton extends WynntilsButton {
                         TextShadow.NORMAL,
                         1f);
         if (showToggleCheckbox) {
-            enabledCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
+            enabledCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
-        ecsButton.ifPresent(
-                basicHoverableButton -> basicHoverableButton.render(guiGraphics, mouseX, mouseY, partialTick));
+        ecsButton.ifPresent(basicHoverableButton ->
+                basicHoverableButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
 
         if (isHovered) {
             if (showToggleCheckbox && enabledCheckbox.isHovered()) {

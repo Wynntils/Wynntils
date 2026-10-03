@@ -21,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.GuiMessage;
+import net.minecraft.client.multiplayer.chat.GuiMessage;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -119,7 +119,7 @@ public class ChatTimestampFeature extends Feature {
         event.getGuiGraphics().pose().translate(-(extension.getTimestamp().get().b() + 4f), 0f);
 
         event.getGuiGraphics()
-                .drawString(
+                .text(
                         event.getFont(),
                         extension.getTimestamp().get().a(),
                         0,

@@ -34,7 +34,7 @@ public class GuideAmplifierItemStack extends GuideAugmentItemStack {
     @Override
     public Component getHoverName() {
         return Component.literal("Corkian Amplifier " + MathUtils.toRoman(amplifierInfo.tier()))
-                .withStyle(getGearTier().getChatFormatting());
+                .withColor(getGearTier().getTextColor());
     }
 
     @Override

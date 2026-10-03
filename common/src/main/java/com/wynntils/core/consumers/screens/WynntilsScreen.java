@@ -15,7 +15,7 @@ import com.wynntils.utils.mc.McUtils;
 import net.minecraft.CrashReport;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
@@ -57,16 +57,16 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
     }
 
     @Override
-    public final void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public final void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         try {
-            doRender(guiGraphics, mouseX, mouseY, partialTick);
+            doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         } catch (Throwable t) {
-            failure("render", t);
+            failure("extractRenderState", t);
         }
     }
 
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
@@ -95,7 +95,22 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
 
     @Override
     public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
+        TextboxScreen.updateFocus(this.focusedTextInput, focusedTextInput);
+
         this.focusedTextInput = focusedTextInput;
+    }
+
+    @Override
+    protected void setInitialFocus() {
+        // Must go through the getter, subclasses are free to override it
+        TextInputBoxWidget focused = getFocusedTextInput();
+
+        if (focused != null) {
+            McUtils.mc().onTextInputFocusChange(focused, true);
+            return;
+        }
+
+        super.setInitialFocus();
     }
 
     @Override

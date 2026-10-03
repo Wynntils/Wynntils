@@ -31,8 +31,8 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.RenderElementType;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.Camera;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.Position;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -104,14 +104,15 @@ public class WorldWaypointDistanceFeature extends Feature {
         for (MarkerInfo marker : markers) {
             Location location = marker.location();
             Matrix4f projection = new Matrix4f(event.getProjectionMatrix());
-            Camera camera = event.getCamera();
-            Position cameraPos = camera.position();
+            CameraRenderState cameraRenderState = event.getCameraRenderState();
+            Position cameraPos = cameraRenderState.pos;
 
             // apply camera rotation
             Vector3f xp = new Vector3f(1, 0, 0);
             Vector3f yp = new Vector3f(0, 1, 0);
-            Quaternionf xRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.xRot()), xp);
-            Quaternionf yRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.yRot() + 180f), yp);
+            Quaternionf xRotation = new Quaternionf().rotationAxis((float) Math.toRadians(cameraRenderState.xRot), xp);
+            Quaternionf yRotation =
+                    new Quaternionf().rotationAxis((float) Math.toRadians(cameraRenderState.yRot + 180f), yp);
             projection.mul(new Matrix4f().rotation(xRotation));
             projection.mul(new Matrix4f().rotation(yRotation));
 
@@ -335,7 +336,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                         icon.height());
 
                 // apply rotation
-                GuiGraphics guiGraphics = event.getGuiGraphics();
+                GuiGraphicsExtractor guiGraphics = event.getGuiGraphics();
                 guiGraphics.pose().pushMatrix();
                 guiGraphics.pose().translate(pointerDisplayPositionX, pointerDisplayPositionY);
                 guiGraphics.pose().mul(new Matrix3x2f().rotation((float) Math.toRadians(angle)));
@@ -386,7 +387,7 @@ public class WorldWaypointDistanceFeature extends Feature {
         return new Vec3(
                 (float) ((ndc.x + 1.0f) / 2.0f) * window.getGuiScaledWidth(),
                 (float) ((1.0f - ndc.y) / 2.0f) * window.getGuiScaledHeight(),
-                (float) ndc.z);
+                clipCoords.w());
     }
 
     // draw a line from screen center to the target's screenspace coordinate
@@ -408,7 +409,7 @@ public class WorldWaypointDistanceFeature extends Feature {
         Vec3 centerRelativePosition = position.subtract(centerPoint);
 
         // invert xy axis if target is behind camera
-        if (centerRelativePosition.z > 1) {
+        if (centerRelativePosition.z < 0) {
             centerRelativePosition = centerRelativePosition.multiply(-1, -1, 1);
         }
 
@@ -446,7 +447,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                 && position.x() < window.getGuiScaledWidth()
                 && position.y() > 0
                 && position.y() < window.getGuiScaledHeight()
-                && position.z() < 1;
+                && position.z() > 0;
     }
 
     // limit the bounding distance to prevent divided by zero in getBoundingIntersectPoint

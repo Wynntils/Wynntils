@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ItemStackLayerRenderStateMixin {
     @Shadow
     @Final
-    private ItemStackRenderState field_55345;
+    private ItemStackRenderState this$0;
 
     @Inject(
             method =
@@ -30,18 +30,18 @@ public abstract class ItemStackLayerRenderStateMixin {
             at =
                     @At(
                             target =
-                                    "Lnet/minecraft/client/renderer/block/model/ItemTransform;apply(ZLcom/mojang/blaze3d/vertex/PoseStack$Pose;)V",
+                                    "Lnet/minecraft/client/renderer/item/ItemStackRenderState$LayerRenderState;applyTransform(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;)V",
                             value = "INVOKE"))
-    private void onRenderItem(
+    private void onSubmitItem(
             PoseStack poseStack,
             SubmitNodeCollector nodeCollector,
             int packedLight,
             int packedOverlay,
             int outlineColor,
             CallbackInfo ci) {
-        if (field_55345.displayContext != ItemDisplayContext.GROUND) return;
+        if (this$0.displayContext != ItemDisplayContext.GROUND) return;
 
-        if (field_55345 instanceof ItemStackRenderStateExtension extension) {
+        if (this$0 instanceof ItemStackRenderStateExtension extension) {
             if (extension.getItemStack() == null) return;
 
             MixinHelper.post(new GroundItemEntityTransformEvent(poseStack, extension.getItemStack()));

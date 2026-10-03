@@ -4,7 +4,7 @@
  */
 package com.wynntils.services.mapdata.attributes.type;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 // Allow dynamic map features to arbitrarily extend the rendering
 public interface MapDecoration {
@@ -15,10 +15,10 @@ public interface MapDecoration {
         }
 
         @Override
-        public void render(GuiGraphics guiGraphics, boolean hovered, boolean fullscreenMap, float zoomLevel) {}
+        public void render(GuiGraphicsExtractor guiGraphics, boolean hovered, boolean fullscreenMap, float zoomLevel) {}
     };
 
     boolean isVisible();
 
-    void render(GuiGraphics guiGraphics, boolean hovered, boolean fullscreenMap, float zoomLevel);
+    void render(GuiGraphicsExtractor guiGraphics, boolean hovered, boolean fullscreenMap, float zoomLevel);
 }

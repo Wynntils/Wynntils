@@ -13,7 +13,7 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
+import com.wynntils.screens.overlays.selection.OverlaySettingsScreen;
 import com.wynntils.screens.settings.BaseWynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -27,7 +27,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.InputWithModifiers;
@@ -53,10 +53,10 @@ public class ConfigTile extends WynntilsButton {
             displayName = settingsScreen.configOptionContains(config)
                     ? StyledText.fromString(ChatFormatting.UNDERLINE + config.getDisplayName())
                     : StyledText.fromString(config.getDisplayName());
-        } else if (screen instanceof OverlaySelectionScreen overlaySelectionScreen) {
-            maskTopY = overlaySelectionScreen.getConfigMaskTopY();
-            maskBottomY = overlaySelectionScreen.getConfigMaskBottomY();
-            displayName = overlaySelectionScreen.configOptionContains(config)
+        } else if (screen instanceof OverlaySettingsScreen overlaySettingsScreen) {
+            maskTopY = overlaySettingsScreen.getConfigMaskTopY();
+            maskBottomY = overlaySettingsScreen.getConfigMaskBottomY();
+            displayName = overlaySettingsScreen.configOptionContains(config)
                     ? StyledText.fromString(ChatFormatting.UNDERLINE + config.getDisplayName())
                     : StyledText.fromString(config.getDisplayName());
         } else {
@@ -77,8 +77,8 @@ public class ConfigTile extends WynntilsButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        resetButton.render(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        resetButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         renderDisplayName(guiGraphics);
 
@@ -91,13 +91,13 @@ public class ConfigTile extends WynntilsButton {
                 this.getY() + this.height,
                 1);
 
-        configOptionElement.render(guiGraphics, mouseX, mouseY, partialTick);
+        configOptionElement.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
-    protected void handleCursor(GuiGraphics guiGraphics) {}
+    protected void handleCursor(GuiGraphicsExtractor guiGraphics) {}
 
-    private void renderDisplayName(GuiGraphics guiGraphics) {
+    private void renderDisplayName(GuiGraphicsExtractor guiGraphics) {
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics,

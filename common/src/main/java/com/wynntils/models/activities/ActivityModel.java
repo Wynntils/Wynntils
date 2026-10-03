@@ -488,7 +488,8 @@ public final class ActivityModel extends Model {
 
     private boolean isFulfilled(Matcher colorCodeMatcher) {
         // Check if the requirement is colored green
-        return colorCodeMatcher.group(1).charAt(0) == ChatFormatting.GREEN.getChar();
+        return colorCodeMatcher.group(1).charAt(0)
+                == ChatFormatting.GREEN.toString().charAt(1);
     }
 
     public CappedValue getOverallProgress() {

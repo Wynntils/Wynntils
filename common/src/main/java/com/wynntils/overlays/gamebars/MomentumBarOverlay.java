@@ -20,7 +20,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
@@ -58,7 +58,7 @@ public class MomentumBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    protected void renderBar(GuiGraphics guiGraphics, float renderY, float renderHeight, float progress) {
+    protected void renderBar(GuiGraphicsExtractor guiGraphics, float renderY, float renderHeight, float progress) {
         RenderUtils.drawColoredProgressBar(
                 guiGraphics,
                 Texture.UNIVERSAL_BAR,
@@ -75,7 +75,7 @@ public class MomentumBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    protected void renderText(GuiGraphics guiGraphics, float renderY, String text) {
+    protected void renderText(GuiGraphicsExtractor guiGraphics, float renderY, String text) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,

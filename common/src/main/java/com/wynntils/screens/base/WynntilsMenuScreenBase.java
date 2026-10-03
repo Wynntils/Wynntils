@@ -15,7 +15,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -45,11 +45,11 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
         McUtils.playSoundUI(BOOK_OPEN_SOUND);
     }
 
-    protected void renderBackgroundTexture(GuiGraphics guiGraphics) {
+    protected void renderBackgroundTexture(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.CONTENT_BOOK_BACKGROUND, offsetX, offsetY);
     }
 
-    protected void renderVersion(GuiGraphics guiGraphics) {
+    protected void renderVersion(GuiGraphicsExtractor guiGraphics) {
         String version = WynntilsMod.isDevelopmentBuild() ? "Development Build" : WynntilsMod.getVersion();
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -67,7 +67,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                         0.7f);
     }
 
-    protected void renderTitle(GuiGraphics guiGraphics, String titleString) {
+    protected void renderTitle(GuiGraphicsExtractor guiGraphics, String titleString) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.CONTENT_BOOK_TITLE, offsetX, 30 + offsetY);
 
         FontRenderer.getInstance()
@@ -83,7 +83,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                         2f);
     }
 
-    protected void renderDescription(GuiGraphics guiGraphics, String description, String filterHelper) {
+    protected void renderDescription(GuiGraphicsExtractor guiGraphics, String description, String filterHelper) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,

@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.guides.widgets.filters;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.fonts.CommonFonts;
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -122,7 +123,8 @@ public class IntegerStatFilterWidget<T extends ItemStatProvider<?>> extends Guid
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics,
@@ -136,13 +138,13 @@ public class IntegerStatFilterWidget<T extends ItemStatProvider<?>> extends Guid
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        enabledCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
+        enabledCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         if (!enabledCheckbox.selected) return;
 
-        modeButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        modeButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         if (filterMode == FilterMode.CUSTOM) {
-            minSlider.render(guiGraphics, mouseX, mouseY, partialTick);
-            maxSlider.render(guiGraphics, mouseX, mouseY, partialTick);
+            minSlider.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            maxSlider.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 
@@ -340,7 +342,8 @@ public class IntegerStatFilterWidget<T extends ItemStatProvider<?>> extends Guid
         }
 
         @Override
-        protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        protected void extractWidgetRenderState(
+                GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
             RenderUtils.drawRect(
                     guiGraphics,
                     (isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY).withAlpha(0.5f),
@@ -367,9 +370,9 @@ public class IntegerStatFilterWidget<T extends ItemStatProvider<?>> extends Guid
 
         @Override
         public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-            if (event.button() == 0) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                 filterMode = nextMode(filterMode);
-            } else if (event.button() == 1) {
+            } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 filterMode = previousMode(filterMode);
             }
 

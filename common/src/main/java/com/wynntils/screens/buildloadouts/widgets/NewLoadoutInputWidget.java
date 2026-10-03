@@ -16,7 +16,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 
 public class NewLoadoutInputWidget extends SearchWidget {
@@ -29,14 +29,14 @@ public class NewLoadoutInputWidget extends SearchWidget {
     }
 
     @Override
-    protected void renderBackground(GuiGraphics guiGraphics) {
+    protected void renderBackground(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.BUILD_LOADOUTS_TEXT_INPUT_BOX, getX(), getY(), this.width, this.height);
     }
 
     @Override
     protected void renderText(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,

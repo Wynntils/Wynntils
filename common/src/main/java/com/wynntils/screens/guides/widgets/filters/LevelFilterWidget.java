@@ -22,7 +22,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -46,7 +46,8 @@ public class LevelFilterWidget extends GuideFilterWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
@@ -59,8 +60,8 @@ public class LevelFilterWidget extends GuideFilterWidget {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        minLevelSlider.render(guiGraphics, mouseX, mouseY, partialTick);
-        maxLevelSlider.render(guiGraphics, mouseX, mouseY, partialTick);
+        minLevelSlider.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        maxLevelSlider.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

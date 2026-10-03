@@ -33,7 +33,7 @@ import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -61,7 +61,8 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, x, y, this.width, this.height);
 
@@ -116,7 +117,8 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
         return new int[] {bx, by};
     }
 
-    private void renderBoxItem(GuiGraphics guiGraphics, List<ItemStack> boxItemStacks, int index, int bx, int by) {
+    private void renderBoxItem(
+            GuiGraphicsExtractor guiGraphics, List<ItemStack> boxItemStacks, int index, int bx, int by) {
         ItemStack itemStack = index < boxItemStacks.size() ? boxItemStacks.get(index) : ItemStack.EMPTY;
 
         if (itemStack.isEmpty()) {
@@ -129,7 +131,7 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
     }
 
     @Override
-    public void renderHoveredItemTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    public void renderHoveredItemTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         List<ItemStack> boxItemStacks = getBoxItemStacks();
 
         int hoveredIndex = getHoveredBoxIndex(mouseX, mouseY);

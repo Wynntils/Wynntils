@@ -66,7 +66,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.input.KeyEvent;
@@ -462,7 +462,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!this.mapMode) {
             renderListScreen(guiGraphics, mouseX, mouseY, partialTick);
         } else {
@@ -473,7 +473,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
-    private void renderListScreen(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderListScreen(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Screen background
         RenderUtils.drawTexturedRect(guiGraphics, Texture.TERRITORY_MANAGEMENT_BACKGROUND, getRenderX(), getRenderY());
         RenderUtils.drawTexturedRect(guiGraphics, Texture.TERRITORY_SIDEBAR, getRenderX() - 22, getRenderY());
@@ -491,7 +491,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                         TextShadow.NONE);
 
         // Render the widgets
-        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
+        extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
 
         // Render scroll button
         renderScrollButton(guiGraphics);
@@ -500,7 +500,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         renderQuickFiltersAndSorts(guiGraphics, mouseX, mouseY, partialTick);
     }
 
-    private void renderMapScreen(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderMapScreen(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderMap(guiGraphics);
 
         RenderUtils.enableScissor(
@@ -544,7 +544,8 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         }
     }
 
-    private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void extractWidgetRenderStates(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Render territory widgets in the render area
         RenderUtils.enableScissor(
                 guiGraphics,
@@ -555,16 +556,16 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
         // Render the render main area widgets
         for (AbstractWidget widget : renderAreaWidgets) {
-            widget.render(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.disableScissor(guiGraphics);
 
         // Render normal widgets
-        renderables.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        renderables.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
     }
 
-    private void renderScrollButton(GuiGraphics guiGraphics) {
+    private void renderScrollButton(GuiGraphicsExtractor guiGraphics) {
         float renderY = MathUtils.map(
                 scrollOffset,
                 0,
@@ -582,7 +583,8 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                 renderY - Texture.SCROLLBAR_BUTTON.height() / 2f);
     }
 
-    private void renderQuickFiltersAndSorts(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderQuickFiltersAndSorts(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         int xOffset = getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5;
 
         RenderUtils.drawRect(
@@ -620,11 +622,11 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                         TextShadow.OUTLINE);
 
         for (TerritoryQuickFilterWidget quickFilter : quickFilters) {
-            quickFilter.render(guiGraphics, mouseX, mouseY, partialTick);
+            quickFilter.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         for (TerritoryQuickSortWidget quickSort : quickSorts) {
-            quickSort.render(guiGraphics, mouseX, mouseY, partialTick);
+            quickSort.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         if (draggingScroll) {
@@ -651,7 +653,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         AbstractWidget hoveredWidget = getHoveredWidget(mouseX, mouseY);
         if (hoveredWidget == null) return;
         if (!(hoveredWidget instanceof TooltipProvider tooltipProvider)) return;
@@ -666,7 +668,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     @Override
     protected void renderPois(
             List<Poi> pois,
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             BoundingBox textureBoundingBox,
             float poiScale,
             int mouseX,
@@ -909,7 +911,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         scrollAreaWidgets(scrollOffset);
     }
 
-    private void renderHoveredTerritoryInfo(GuiGraphics guiGraphics) {
+    private void renderHoveredTerritoryInfo(GuiGraphicsExtractor guiGraphics) {
         if (!(hovered instanceof ManageTerritoryPoi territoryPoi)) return;
 
         int xOffset = (int) (width - SCREEN_SIDE_OFFSET - 250);
@@ -918,7 +920,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         renderTerritoryTooltip(guiGraphics, xOffset, yOffset, territoryPoi);
     }
 
-    private void renderPois(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderPois(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         List<Poi> renderedPois = new ArrayList<>();
 
         renderedPois.addAll(territoryPois);
@@ -935,7 +937,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     }
 
     private void renderTerritoryTooltip(
-            GuiGraphics guiGraphics, int xOffset, int yOffset, ManageTerritoryPoi territoryPoi) {
+            GuiGraphicsExtractor guiGraphics, int xOffset, int yOffset, ManageTerritoryPoi territoryPoi) {
         final TerritoryItem item = territoryPoi.getTerritoryItem();
 
         final List<Component> tooltipLines = new ArrayList<>();

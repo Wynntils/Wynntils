@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -89,14 +89,14 @@ public class OverlayOrderingScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         RenderUtils.drawTexturedRect(guiGraphics, Texture.OVERLAY_ORDERING_BACKGROUND, offsetX, offsetY);
 
         renderScroll(guiGraphics);
 
         RenderUtils.enableScissor(guiGraphics, offsetX + 9, offsetY + 15, 200, 181);
-        widgets.forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+        widgets.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
         RenderUtils.disableScissor(guiGraphics);
 
         int helpWidth = this.width / 2 - Texture.OVERLAY_ORDERING_BACKGROUND.width() / 2 - 10;
@@ -135,7 +135,7 @@ public class OverlayOrderingScreen extends WynntilsScreen {
         }
     }
 
-    private void renderScroll(GuiGraphics guiGraphics) {
+    private void renderScroll(GuiGraphicsExtractor guiGraphics) {
         scrollY = 14
                 + offsetY
                 + MathUtils.map(

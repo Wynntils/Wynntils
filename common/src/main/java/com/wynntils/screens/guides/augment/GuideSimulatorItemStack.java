@@ -23,7 +23,7 @@ public class GuideSimulatorItemStack extends GuideAugmentItemStack {
 
     @Override
     public Component getHoverName() {
-        return Component.literal("Corkian Simulator").withStyle(getGearTier().getChatFormatting());
+        return Component.literal("Corkian Simulator").withColor(getGearTier().getTextColor());
     }
 
     @Override

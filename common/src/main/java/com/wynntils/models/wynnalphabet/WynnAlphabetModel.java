@@ -12,6 +12,7 @@ import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.models.wynnalphabet.type.TranscribeCondition;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +21,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
@@ -70,7 +70,7 @@ public final class WynnAlphabetModel extends Model {
             StyledTextPart originalPart,
             WynnAlphabet alphabet,
             boolean useColors,
-            ChatFormatting colorToUse,
+            CustomColor colorToUse,
             boolean originalTextAsTooltip) {
         String originalString = originalPart.getString(null, StyleType.NONE);
         StringBuilder transcriptedStringBuilder = new StringBuilder(originalString.length());

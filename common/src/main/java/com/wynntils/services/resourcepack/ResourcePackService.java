@@ -12,7 +12,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.mc.event.ServerResourcePackEvent;
-import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
@@ -43,8 +42,6 @@ public final class ResourcePackService extends Service {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onServerResourcePackLoad(ServerResourcePackEvent.Load event) {
-        if (!SystemUtils.usingOpenGL()) return;
-
         Pack preloadedPack = getPreloadedPack();
 
         // 1. We have no preloaded pack
@@ -82,8 +79,6 @@ public final class ResourcePackService extends Service {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onServerResourcePackClear(ServerResourcePackEvent.Clear event) {
-        if (!SystemUtils.usingOpenGL()) return;
-
         PackRepository resourcePackRepository = McUtils.mc().getResourcePackRepository();
 
         Pack preloadedPack = getPreloadedPack();
@@ -123,8 +118,6 @@ public final class ResourcePackService extends Service {
 
     @SubscribeEvent
     public void onConnect(ConnectionEvent.ConnectingEvent event) {
-        if (!SystemUtils.usingOpenGL()) return;
-
         // Reset the flag, as we are connecting to a new server
         serverHasResourcePack = false;
 
@@ -148,8 +141,6 @@ public final class ResourcePackService extends Service {
     }
 
     public boolean preloadResourcePack() {
-        if (!SystemUtils.usingOpenGL()) return false;
-
         PackRepository resourcePackRepository = McUtils.mc().getResourcePackRepository();
 
         // Remove all preloaded packs from the selected list

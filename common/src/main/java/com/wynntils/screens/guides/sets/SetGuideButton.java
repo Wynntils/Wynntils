@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -75,7 +75,7 @@ public class SetGuideButton extends GuideButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(
                 guiGraphics,
                 isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR,
@@ -135,12 +135,12 @@ public class SetGuideButton extends GuideButton {
     }
 
     @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         if (cachedTooltip == null) {
             List<Pair<Component, Component>> linePairs = new ArrayList<>();
             MutableComponent setTitle = Component.empty()
                     .append(BannerBoxFont.buildMessage(
-                            "set", CustomColor.fromChatFormatting(setTier.getChatFormatting()), CommonColors.BLACK, ""))
+                            "set", CustomColor.fromTextColor(setTier.getTextColor()), CommonColors.BLACK, ""))
                     .append(BannerBoxFont.buildMessage(
                             setInfo.cleanName(), setTier.getSecondaryColor(), CommonColors.BLACK, ""));
 

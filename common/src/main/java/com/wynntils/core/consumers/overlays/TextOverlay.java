@@ -16,7 +16,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 /**
  * An overlay, which main purpose is to display function templates.
@@ -69,16 +69,16 @@ public abstract class TextOverlay extends DynamicOverlay {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         renderTemplate(guiGraphics, cachedLines, getTextScale());
     }
 
     @Override
-    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         renderTemplate(guiGraphics, calculateTemplateValue(getPreviewTemplate()), getTextScale());
     }
 
-    protected void renderTemplate(GuiGraphics guiGraphics, StyledText[] lines, float textScale) {
+    protected void renderTemplate(GuiGraphicsExtractor guiGraphics, StyledText[] lines, float textScale) {
         float renderX = this.getRenderX();
         float renderY = this.getRenderY();
         FontRenderer.getInstance()

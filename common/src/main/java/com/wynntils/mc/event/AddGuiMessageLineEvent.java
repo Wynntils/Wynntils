@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraft.client.GuiMessage;
+import net.minecraft.client.multiplayer.chat.GuiMessage;
 import net.neoforged.bus.api.Event;
 
 public class AddGuiMessageLineEvent extends Event {

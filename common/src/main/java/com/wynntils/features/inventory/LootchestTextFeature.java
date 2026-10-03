@@ -22,7 +22,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Matrix3x2fStack;
 
@@ -61,7 +61,7 @@ public class LootchestTextFeature extends Feature {
         matrixStack.popMatrix();
     }
 
-    private void renderTitleTemplate(GuiGraphics guiGraphics, int x, int y) {
+    private void renderTitleTemplate(GuiGraphicsExtractor guiGraphics, int x, int y) {
         String titleTemplateResult = Arrays.stream(Managers.Function.doFormatLines(titleTextTemplate.get()))
                 .map(StyledText::getString)
                 .collect(Collectors.joining(" "));
@@ -79,7 +79,7 @@ public class LootchestTextFeature extends Feature {
                         TextShadow.NONE);
     }
 
-    private void renderInventoryTemplate(GuiGraphics guiGraphics, int x, int y) {
+    private void renderInventoryTemplate(GuiGraphicsExtractor guiGraphics, int x, int y) {
         String inventoryTemplateResult = Arrays.stream(Managers.Function.doFormatLines(inventoryTextTemplate.get()))
                 .map(StyledText::getString)
                 .collect(Collectors.joining(" "));

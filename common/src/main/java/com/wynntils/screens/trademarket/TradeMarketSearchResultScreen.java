@@ -28,7 +28,7 @@ import com.wynntils.utils.render.Texture;
 import java.util.Arrays;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -158,16 +158,16 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         updateItems();
 
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         renderScrollButton(guiGraphics);
 
-        renderables.forEach(c -> c.render(guiGraphics, mouseX, mouseY, partialTick));
+        renderables.forEach(c -> c.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
 
         // Render item tooltip
-        super.renderTooltip(guiGraphics, mouseX, mouseY);
+        super.extractTooltip(guiGraphics, mouseX, mouseY);
 
         // Render tooltip for hovered widget
         for (GuiEventListener child : children()) {
@@ -182,8 +182,8 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(
+    protected void extractLabels(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+        guiGraphics.text(
                 FontRenderer.getInstance().getFont(),
                 this.currentState,
                 this.titleLabelX,
@@ -193,7 +193,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
 
@@ -225,7 +225,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                 guiGraphics, Texture.CONTAINER_SIDEBAR, x - Texture.CONTAINER_SIDEBAR.width() + 7, y);
     }
 
-    private void renderScrollButton(GuiGraphics guiGraphics) {
+    private void renderScrollButton(GuiGraphicsExtractor guiGraphics) {
         float renderX =
                 (this.width - this.imageWidth) / 2 + this.imageWidth + Texture.SCROLLBAR_BACKGROUND.width() / 2 - 14;
         float renderY = (this.height - this.imageHeight) / 2

@@ -62,7 +62,7 @@ public final class WynntilsElytraLayer extends WynntilsLayer {
 
         RenderType renderType = translucentCheckEvent.getTranslucence() == 1.0f
                 ? RenderTypes.armorCutoutNoCull(texture)
-                : RenderTypes.armorTranslucent(texture);
+                : RenderTypes.wolfArmorCracks(texture);
 
         nodeCollector.submitModel(
                 elytraModel,
@@ -75,8 +75,7 @@ public final class WynntilsElytraLayer extends WynntilsLayer {
                         .withAlpha(translucentCheckEvent.getTranslucence())
                         .asInt(),
                 null,
-                renderState.outlineColor,
-                null);
+                renderState.outlineColor);
 
         poseStack.popPose();
     }

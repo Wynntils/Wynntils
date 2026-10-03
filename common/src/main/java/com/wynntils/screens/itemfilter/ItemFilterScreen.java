@@ -50,7 +50,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
@@ -95,7 +95,6 @@ public final class ItemFilterScreen extends WynntilsScreen {
     private FilterOptionsButton unusedButton;
     private FilterOptionsButton selectedFilterButton;
     private ProviderFilterListWidget filterWidget;
-    private TextInputBoxWidget focusedTextInput;
     private TextInputBoxWidget presetNameInput;
     private WynntilsButton nextPresetButton;
     private WynntilsButton previousPresetButton;
@@ -332,7 +331,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         hovered = null;
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.ITEM_FILTER_BACKGROUND, offsetX, offsetY);
@@ -393,7 +392,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
                         TextShadow.NORMAL);
 
         for (Renderable renderable : renderables) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
             if (renderable instanceof WynntilsButton wynntilsButton) {
                 if (wynntilsButton.isMouseOver(mouseX, mouseY)) {
@@ -420,7 +419,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
             RenderUtils.enableScissor(guiGraphics, 6 + offsetX, 28 + offsetY, 122, MAX_PROVIDERS_PER_PAGE * 21 + 2);
 
             for (Renderable renderable : providerButtons) {
-                renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+                renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
             }
 
             RenderUtils.disableScissor(guiGraphics);
@@ -429,13 +428,13 @@ public final class ItemFilterScreen extends WynntilsScreen {
         RenderUtils.enableScissor(guiGraphics, 149 + offsetX, 28 + offsetY, 172, MAX_SORTS_PER_PAGE * 21 + 2);
 
         for (Renderable renderable : sortButtons) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.disableScissor(guiGraphics);
 
         for (Renderable renderable : presetButtons) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
             if (renderable instanceof WynntilsButton wynntilsButton) {
                 if (wynntilsButton.isMouseOver(mouseX, mouseY)) {
@@ -625,7 +624,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
     @Override
     public boolean charTyped(CharacterEvent event) {
-        return focusedTextInput != null && focusedTextInput.charTyped(event);
+        return getFocusedTextInput() != null && getFocusedTextInput().charTyped(event);
     }
 
     @Override
@@ -638,17 +637,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
             applyButton.active = false;
         }
 
-        return focusedTextInput != null && focusedTextInput.keyPressed(event);
-    }
-
-    @Override
-    public TextInputBoxWidget getFocusedTextInput() {
-        return focusedTextInput;
-    }
-
-    @Override
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.focusedTextInput = focusedTextInput;
+        return getFocusedTextInput() != null && getFocusedTextInput().keyPressed(event);
     }
 
     public void setFiltersForProvider(ItemStatProvider<?> provider, List<StatProviderAndFilterPair> filterPairs) {
@@ -1093,7 +1082,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 && !itemSearchWidget.getTextBoxInput().isEmpty();
     }
 
-    private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderTooltips(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         // Preset and filter buttons have a small bit rendered underneath the background, that shouldn't show tooltip
         if (hovered instanceof PresetButton || hovered instanceof FilterOptionsButton) {
             if (MathUtils.isInside(
@@ -1119,7 +1108,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 Lists.transform(tooltipLines, Component::getVisualOrderText), mouseX, mouseY);
     }
 
-    private void renderProvidersScroll(GuiGraphics guiGraphics) {
+    private void renderProvidersScroll(GuiGraphicsExtractor guiGraphics) {
         providerScrollY = 24
                 + offsetY
                 + MathUtils.map(
@@ -1132,7 +1121,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BUTTON, 133 + offsetX, providerScrollY);
     }
 
-    private void renderSortScroll(GuiGraphics guiGraphics) {
+    private void renderSortScroll(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawRect(
                 guiGraphics, CommonColors.LIGHT_GRAY, 330 + offsetX, 30 + offsetY, 6, MAX_SORTS_PER_PAGE * 21);
 

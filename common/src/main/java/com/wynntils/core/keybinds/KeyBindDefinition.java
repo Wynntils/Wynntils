@@ -55,7 +55,7 @@ public record KeyBindDefinition(
             "relayBombToParty",
             "Relay Bomb to Party",
             Managers.KeyBind.CHAT_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
 
@@ -63,7 +63,7 @@ public record KeyBindDefinition(
             "relayBombToGuild",
             "Relay Bomb to Guild",
             Managers.KeyBind.CHAT_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
 
@@ -71,7 +71,7 @@ public record KeyBindDefinition(
             "shareItem",
             "Share Item",
             Managers.KeyBind.CHAT_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_F5,
             true);
 
@@ -79,7 +79,7 @@ public record KeyBindDefinition(
             "saveItemToRecord",
             "Save Item to Item Record",
             Managers.KeyBind.CHAT_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_F6,
             true);
 
@@ -87,7 +87,7 @@ public record KeyBindDefinition(
             "openItemRecord",
             "Open Item Record",
             Managers.KeyBind.CHAT_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
     // endregion
@@ -97,7 +97,7 @@ public record KeyBindDefinition(
             "mountHorse",
             "Mount Horse",
             Managers.KeyBind.COMBAT_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_R,
             true);
 
@@ -105,7 +105,7 @@ public record KeyBindDefinition(
             "castFirstSpell",
             "Cast 1st Spell",
             Managers.KeyBind.COMBAT_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_Z,
             true);
 
@@ -113,7 +113,7 @@ public record KeyBindDefinition(
             "castSecondSpell",
             "Cast 2nd Spell",
             Managers.KeyBind.COMBAT_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_X,
             true);
 
@@ -121,7 +121,7 @@ public record KeyBindDefinition(
             "castThirdSpell",
             "Cast 3rd Spell",
             Managers.KeyBind.COMBAT_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_C,
             true);
 
@@ -129,7 +129,7 @@ public record KeyBindDefinition(
             "castFourthSpell",
             "Cast 4th Spell",
             Managers.KeyBind.COMBAT_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_V,
             true);
 
@@ -137,7 +137,7 @@ public record KeyBindDefinition(
             "castMeleeAttack",
             "Cast Melee Attack",
             Managers.KeyBind.COMBAT_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
     // endregion
@@ -147,7 +147,7 @@ public record KeyBindDefinition(
             "customCommandOne",
             "Execute 1st Custom Command Keybind",
             Managers.KeyBind.COMMANDS_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
 
@@ -155,7 +155,7 @@ public record KeyBindDefinition(
             "customCommandTwo",
             "Execute 2nd Custom Command Keybind",
             Managers.KeyBind.COMMANDS_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
 
@@ -163,7 +163,7 @@ public record KeyBindDefinition(
             "customCommandThree",
             "Execute 3rd Custom Command Keybind",
             Managers.KeyBind.COMMANDS_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
 
@@ -171,7 +171,7 @@ public record KeyBindDefinition(
             "customCommandFour",
             "Execute 4th Custom Command Keybind",
             Managers.KeyBind.COMMANDS_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
 
@@ -179,7 +179,7 @@ public record KeyBindDefinition(
             "customCommandFive",
             "Execute 5th Custom Command Keybind",
             Managers.KeyBind.COMMANDS_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
 
@@ -187,7 +187,7 @@ public record KeyBindDefinition(
             "customCommandSix",
             "Execute 6th Custom Command Keybind",
             Managers.KeyBind.COMMANDS_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
     // endregion
@@ -197,7 +197,7 @@ public record KeyBindDefinition(
             "dumpContentBook",
             "Dump Content Book",
             Managers.KeyBind.DEBUG_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
 
@@ -205,7 +205,7 @@ public record KeyBindDefinition(
             "logItemInfo",
             "Log Item Info",
             Managers.KeyBind.DEBUG_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
 
@@ -213,7 +213,7 @@ public record KeyBindDefinition(
             "textureRecorder",
             "Texture Recorder",
             Managers.KeyBind.DEBUG_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
     // endregion
@@ -223,7 +223,7 @@ public record KeyBindDefinition(
             "openEmeraldPouch",
             "Open Emerald Pouch",
             Managers.KeyBind.INVENTORY_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
 
@@ -231,7 +231,7 @@ public record KeyBindDefinition(
             "openGuildBank",
             "Open Guild Bank",
             Managers.KeyBind.INVENTORY_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_P,
             true);
 
@@ -239,7 +239,7 @@ public record KeyBindDefinition(
             "openIngredientPouch",
             "Open Ingredient Pouch",
             Managers.KeyBind.INVENTORY_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
 
@@ -247,7 +247,7 @@ public record KeyBindDefinition(
             "toggleFavorite",
             "Favorite/Unfavorite Item",
             Managers.KeyBind.INVENTORY_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
 
@@ -255,7 +255,7 @@ public record KeyBindDefinition(
             "lockSlot",
             "Lock Slot",
             Managers.KeyBind.INVENTORY_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_H,
             true);
 
@@ -263,7 +263,7 @@ public record KeyBindDefinition(
             "screenshotItem",
             "Screenshot Item",
             Managers.KeyBind.INVENTORY_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_F4,
             true);
     // endregion
@@ -273,7 +273,7 @@ public record KeyBindDefinition(
             "openGuildMap",
             "Open Guild Map",
             Managers.KeyBind.MAP_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_J,
             true);
 
@@ -281,7 +281,7 @@ public record KeyBindDefinition(
             "openMainMap",
             "Open Main Map",
             Managers.KeyBind.MAP_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_M,
             true);
 
@@ -289,7 +289,7 @@ public record KeyBindDefinition(
             "newWaypoint",
             "New Waypoint",
             Managers.KeyBind.MAP_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_B,
             true);
 
@@ -297,7 +297,7 @@ public record KeyBindDefinition(
             "minimapZoomIn",
             "Increase Minimap Zoom",
             Managers.KeyBind.MAP_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_EQUALS,
             false);
 
@@ -305,7 +305,7 @@ public record KeyBindDefinition(
             "minimapZoomOut",
             "Decrease Minimap Zoom",
             Managers.KeyBind.MAP_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_MINUS,
             false);
     // endregion
@@ -315,7 +315,7 @@ public record KeyBindDefinition(
             "toggleStopwatch",
             "Toggle Stopwatch",
             Managers.KeyBind.OVERLAYS_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_NUMPAD0,
             true);
 
@@ -323,7 +323,7 @@ public record KeyBindDefinition(
             "resetStopwatch",
             "Reset Stopwatch",
             Managers.KeyBind.OVERLAYS_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_NUMPADCOMMA,
             true);
     // endregion
@@ -333,7 +333,7 @@ public record KeyBindDefinition(
             "openPartyManagement",
             "Open Party Management Screen",
             Managers.KeyBind.PLAYERS_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_O,
             true);
 
@@ -351,7 +351,7 @@ public record KeyBindDefinition(
             "holdToCompare",
             "Hold to compare",
             Managers.KeyBind.TOOLTIPS_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_NUMPADENTER,
             false);
 
@@ -359,7 +359,7 @@ public record KeyBindDefinition(
             "selectForComparing",
             "Select for comparing",
             Managers.KeyBind.TOOLTIPS_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_ADD,
             true);
 
@@ -367,7 +367,7 @@ public record KeyBindDefinition(
             "showIdentificationRange",
             "Show identification range",
             Managers.KeyBind.TOOLTIPS_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_LSHIFT,
             false);
 
@@ -375,7 +375,7 @@ public record KeyBindDefinition(
             "showIdentificationReroll",
             "Show identification reroll",
             Managers.KeyBind.TOOLTIPS_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_LCONTROL,
             false);
 
@@ -383,7 +383,7 @@ public record KeyBindDefinition(
             "showWeightDistribution",
             "Show weight distribution",
             Managers.KeyBind.TOOLTIPS_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_LSHIFT,
             false);
 
@@ -391,7 +391,7 @@ public record KeyBindDefinition(
             "showWeightContribution",
             "Show weight contribution",
             Managers.KeyBind.TOOLTIPS_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_LCONTROL,
             false);
     // endregion
@@ -411,7 +411,7 @@ public record KeyBindDefinition(
             "openTerritoryMenu",
             "Open Territory Menu",
             Managers.KeyBind.UI_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_U,
             true);
 
@@ -419,7 +419,7 @@ public record KeyBindDefinition(
             "openContentBook",
             "Open Quest Book",
             Managers.KeyBind.UI_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_K,
             true);
 
@@ -427,7 +427,7 @@ public record KeyBindDefinition(
             "openWynntilsMenu",
             "Open Wynntils Menu",
             Managers.KeyBind.UI_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_I,
             true);
 
@@ -435,7 +435,7 @@ public record KeyBindDefinition(
             "openOverlayMenu",
             "Open Overlay Menu",
             Managers.KeyBind.UI_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
 
@@ -443,7 +443,7 @@ public record KeyBindDefinition(
             "openOverlayFreeMove",
             "Open Overlay Free Move",
             Managers.KeyBind.UI_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
 
@@ -451,7 +451,7 @@ public record KeyBindDefinition(
             "emoteWheel",
             "Emote Wheel",
             Managers.KeyBind.UI_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
 
@@ -459,7 +459,7 @@ public record KeyBindDefinition(
             "openGuidesList",
             "Open Guides List",
             Managers.KeyBind.UI_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
     // endregion
@@ -469,7 +469,7 @@ public record KeyBindDefinition(
             "gammabright",
             "Gammabright",
             Managers.KeyBind.UTILITIES_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.KEY_G,
             true);
 
@@ -477,7 +477,7 @@ public record KeyBindDefinition(
             "toggleSilencer",
             "Toggle Silencer",
             Managers.KeyBind.UTILITIES_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
 
@@ -485,7 +485,7 @@ public record KeyBindDefinition(
             "toggleDialogueAutoProgress",
             "Toggle Dialogue Auto Progress",
             Managers.KeyBind.UTILITIES_CATEGORY,
-            InputConstants.Type.KEYSYM,
+            InputConstants.Type.KEYBOARD,
             InputConstants.UNKNOWN.getValue(),
             true);
     // endregion

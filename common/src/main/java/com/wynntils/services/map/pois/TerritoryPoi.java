@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class TerritoryPoi implements Poi {
     private final Supplier<TerritoryProfile> territoryProfileSupplier;
@@ -71,7 +71,7 @@ public class TerritoryPoi implements Poi {
 
     @Override
     public void renderAt(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             float renderX,
             float renderY,
             boolean hovered,

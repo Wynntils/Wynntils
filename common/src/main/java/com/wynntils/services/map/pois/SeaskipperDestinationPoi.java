@@ -19,7 +19,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class SeaskipperDestinationPoi implements Poi {
     private final SeaskipperDestination destination;
@@ -65,7 +65,7 @@ public class SeaskipperDestinationPoi implements Poi {
 
     @Override
     public void renderAt(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             float renderX,
             float renderY,
             boolean hovered,
@@ -76,12 +76,12 @@ public class SeaskipperDestinationPoi implements Poi {
         renderPoi(guiGraphics, renderX, renderY, zoomRenderScale, true);
     }
 
-    public void renderAtWithoutBorders(GuiGraphics guiGraphics, float renderX, float renderY, float mapZoom) {
+    public void renderAtWithoutBorders(GuiGraphicsExtractor guiGraphics, float renderX, float renderY, float mapZoom) {
         renderPoi(guiGraphics, renderX, renderY, mapZoom, false);
     }
 
     private void renderPoi(
-            GuiGraphics guiGraphics, float renderX, float renderY, float mapZoom, boolean renderBorders) {
+            GuiGraphicsExtractor guiGraphics, float renderX, float renderY, float mapZoom, boolean renderBorders) {
         final float renderWidth = width * mapZoom;
         final float renderHeight = height * mapZoom;
         final float actualRenderX = renderX - renderWidth / 2f;

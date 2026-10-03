@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
@@ -49,7 +49,7 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLScancode;
 
 public abstract class AbstractMapScreen extends WynntilsScreen {
     protected List<MapButton> mapButtons = new ArrayList<>();
@@ -172,7 +172,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         // endregion
     }
 
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         List<GuiEventListener> widgets =
                 Streams.concat(children.stream(), mapButtons.stream()).toList();
         for (GuiEventListener child : widgets) {
@@ -186,7 +186,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         }
     }
 
-    protected void renderMapBorder(GuiGraphics guiGraphics) {
+    protected void renderMapBorder(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
                 Texture.FULLSCREEN_MAP_BORDER.identifier(),
@@ -200,7 +200,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected void renderPois(
             List<Poi> pois,
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             BoundingBox textureBoundingBox,
             float poiScale,
             int mouseX,
@@ -299,12 +299,12 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             return true;
         }
 
-        if (event.button() == 0
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT
                 && event.x() >= renderX
                 && event.x() <= renderX + renderWidth
                 && event.y() >= renderY
                 && event.y() <= renderY + renderHeight) {
-            isPanning = event.button() == 0;
+            isPanning = true;
             updateMapCenter(
                     (float) (mapCenterX - dragX / zoomRenderScale), (float) (mapCenterZ - dragY / zoomRenderScale));
         }
@@ -337,8 +337,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             adjustZoomLevel(2);
             return true;
         }
-        // InputConstants does not have a mapping for KEY_KP_SUBTRACT
-        if (event.key() == InputConstants.KEY_MINUS || event.key() == GLFW.GLFW_KEY_KP_SUBTRACT) {
+        // InputConstants does not have a mapping for SDL_SCANCODE_KP_MINUS
+        if (event.key() == InputConstants.KEY_MINUS || event.key() == SDLScancode.SDL_SCANCODE_KP_MINUS) {
             // Take steps of 2 to make it easier to zoom in and out
             adjustZoomLevel(-2);
             return true;
@@ -373,7 +373,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         return super.keyPressed(event);
     }
 
-    protected void renderCoordinates(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderCoordinates(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
         int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
 
@@ -389,7 +389,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                         TextShadow.OUTLINE);
     }
 
-    protected void renderZoomText(GuiGraphics guiGraphics) {
+    protected void renderZoomText(GuiGraphicsExtractor guiGraphics) {
         if (!KeyboardUtils.isShiftDown()) return;
 
         FontRenderer.getInstance()
@@ -404,7 +404,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                         TextShadow.OUTLINE);
     }
 
-    protected void renderZoomWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    protected void renderZoomWidgets(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
                 Texture.ZOOM_BAR,
@@ -422,7 +422,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.ZOOM_HANDLE, zoomHandleRenderX, zoomHandleRenderY);
 
         for (Renderable renderable : this.renderables) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTicks);
+            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
         }
     }
 
@@ -446,7 +446,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         }
     }
 
-    protected void renderMapButtons(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    protected void renderMapButtons(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         int buttonBackgroundX;
         int buttonBackgroundY =
                 (int) (this.renderHeight - this.renderedBorderYOffset - Texture.MAP_BUTTONS_BACKGROUND_MIDDLE.height());
@@ -477,14 +477,14 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             RenderUtils.drawTexturedRect(
                     guiGraphics, Texture.MAP_BUTTONS_BACKGROUND_MIDDLE, buttonBackgroundX, buttonBackgroundY);
 
-            mapButtons.get(i).render(guiGraphics, mouseX, mouseY, partialTicks);
+            mapButtons.get(i).extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
 
             buttonBackgroundX += Texture.MAP_BUTTONS_BACKGROUND_MIDDLE.width();
         }
     }
 
     protected void renderCursor(
-            GuiGraphics guiGraphics, float pointerScale, CustomColor pointerColor, PointerType pointerType) {
+            GuiGraphicsExtractor guiGraphics, float pointerScale, CustomColor pointerColor, PointerType pointerType) {
         if (McUtils.player() == null) return;
 
         double pX = McUtils.player().getX();
@@ -499,7 +499,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         MapRenderer.renderCursor(guiGraphics, cursorX, cursorZ, pointerScale, pointerColor, pointerType, false);
     }
 
-    protected void renderMap(GuiGraphics guiGraphics) {
+    protected void renderMap(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.enableScissor(
                 guiGraphics,
                 (int) (renderX + renderedBorderXOffset),
@@ -527,7 +527,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    protected void renderChunkBorders(GuiGraphics guiGraphics) {
+    protected void renderChunkBorders(GuiGraphicsExtractor guiGraphics) {
         BoundingBox textureBoundingBox =
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale);
 

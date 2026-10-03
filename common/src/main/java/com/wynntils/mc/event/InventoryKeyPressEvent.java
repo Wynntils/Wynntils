@@ -22,12 +22,12 @@ public class InventoryKeyPressEvent extends Event implements ICancellableEvent {
         return keyEvent;
     }
 
-    public int getKeyCode() {
+    public int getKey() {
         return keyEvent.key();
     }
 
-    public int getScanCode() {
-        return keyEvent.scancode();
+    public int getKeyCode() {
+        return keyEvent.keycode();
     }
 
     public int getModifiers() {

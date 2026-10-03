@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.resources.language.ClientLanguage;
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.locale.Language;
 import net.minecraft.server.Bootstrap;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
@@ -259,7 +259,7 @@ public final class WynntilsMod {
             throw new RuntimeException("Failed to load " + langFile, e);
         }
         ClientLanguage language = new ClientLanguage(langMap, false);
-        I18n.setLanguage(language);
+        Language.inject(language);
     }
 
     private static void registerComponents(Class<?> registryClass, Class<? extends CoreComponent> componentClass) {

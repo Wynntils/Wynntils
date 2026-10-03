@@ -8,7 +8,7 @@ import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.services.itemfilter.filters.BooleanStatFilter;
 import com.wynntils.services.itemfilter.type.StatProviderAndFilterPair;
 import com.wynntils.utils.type.OptionalBoolean;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
@@ -61,9 +61,10 @@ public class BooleanFilterWidget extends GeneralFilterWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        trueCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
-        falseCheckbox.render(guiGraphics, mouseX, mouseY, partialTick);
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        trueCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        falseCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

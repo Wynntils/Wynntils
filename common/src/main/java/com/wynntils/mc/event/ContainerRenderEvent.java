@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.bus.api.Event;
@@ -12,7 +12,7 @@ import net.neoforged.bus.api.Event;
 /** Fired on inventory render */
 public class ContainerRenderEvent extends Event {
     private final AbstractContainerScreen<?> screen;
-    private final GuiGraphics guiGraphics;
+    private final GuiGraphicsExtractor guiGraphics;
     private final int mouseX;
     private final int mouseY;
     private final float partialTicks;
@@ -20,7 +20,7 @@ public class ContainerRenderEvent extends Event {
 
     public ContainerRenderEvent(
             AbstractContainerScreen<?> screen,
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             int mouseX,
             int mouseY,
             float partialTicks,
@@ -37,7 +37,7 @@ public class ContainerRenderEvent extends Event {
         return screen;
     }
 
-    public GuiGraphics getGuiGraphics() {
+    public GuiGraphicsExtractor getGuiGraphics() {
         return guiGraphics;
     }
 

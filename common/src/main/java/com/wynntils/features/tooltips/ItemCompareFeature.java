@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
@@ -216,7 +216,7 @@ public class ItemCompareFeature extends Feature {
         if (itemsToCompare.isEmpty()) return;
 
         Window window = McUtils.mc().getWindow();
-        GuiGraphics guiGraphics = event.getGuiGraphics();
+        GuiGraphicsExtractor guiGraphics = event.getGuiGraphics();
         Font font = FontRenderer.getInstance().getFont();
         float universalScale = Managers.Feature.getFeatureInstance(TooltipFittingFeature.class)
                 .universalScale
@@ -416,7 +416,7 @@ public class ItemCompareFeature extends Feature {
         return I18n.get(key);
     }
 
-    private void drawSelectionArc(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
+    private void drawSelectionArc(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int slotX, int slotY) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
         if (isItemStackSelected(itemStack)) {

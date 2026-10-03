@@ -33,7 +33,7 @@ public class KeyInputEvent extends Event implements ICancellableEvent {
         return this.keyEvent.modifiers();
     }
 
-    public int getScanCode() {
-        return this.keyEvent.scancode();
+    public int getKeyCode() {
+        return this.keyEvent.keycode();
     }
 }

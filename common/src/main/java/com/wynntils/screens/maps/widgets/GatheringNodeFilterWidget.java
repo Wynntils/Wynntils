@@ -17,7 +17,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -64,7 +64,7 @@ public class GatheringNodeFilterWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawScalingTexturedRect(guiGraphics, icon, getX() + 2, iconRenderY, iconWidth, iconHeight);
 
         CustomColor color =
@@ -95,7 +95,7 @@ public class GatheringNodeFilterWidget extends AbstractWidget {
                         TextShadow.NORMAL);
 
         toggleButton.setMessage(getToggleText());
-        toggleButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        toggleButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         if (this.isHovered) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);

@@ -42,10 +42,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.core.Position;
+import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class TerritoryModel extends Model {
@@ -139,13 +139,13 @@ public final class TerritoryModel extends Model {
     public void onAdvancementUpdate(AdvancementUpdateEvent event) {
         Map<String, TerritoryInfo> tempMap = new HashMap<>();
 
-        for (AdvancementHolder added : event.getAdded()) {
-            Advancement advancement = added.value();
+        for (ClientboundUpdateAdvancementsPacket.PositionedAdvancement added : event.getAdded()) {
+            Advancement advancement = added.advancement().value();
 
             if (advancement.display().isEmpty()) continue;
 
             DisplayInfo displayInfo = advancement.display().get();
-            String territoryName = StyledText.fromComponent(displayInfo.getTitle())
+            String territoryName = StyledText.fromComponent(displayInfo.title())
                     .replaceAll("\\[", "")
                     .replaceAll("\\]", "")
                     .trim()
@@ -158,10 +158,10 @@ public final class TerritoryModel extends Model {
             if (territoryName.isEmpty()) continue;
 
             // headquarters frame is challenge
-            boolean headquarters = displayInfo.getType() == AdvancementType.CHALLENGE;
+            boolean headquarters = displayInfo.type() == AdvancementType.CHALLENGE;
 
             // description is a raw string with \n, so we have to split
-            StyledText description = StyledText.fromComponent(displayInfo.getDescription());
+            StyledText description = StyledText.fromComponent(displayInfo.description());
             StyledText[] colored = description.split("\n");
             String[] raw = description.getStringWithoutFormatting().split("\n");
 

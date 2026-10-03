@@ -11,7 +11,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.EmoteWheelFeature;
 import com.wynntils.screens.base.widgets.HoverableTexturedButton;
-import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.emotewheel.widgets.EmoteConfigButton;
 import com.wynntils.screens.emotewheel.widgets.EmoteSearchWidget;
 import com.wynntils.utils.MathUtils;
@@ -25,7 +24,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -47,7 +46,6 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
 
     // Renderables
     private final EmoteSearchWidget searchWidget;
-    private TextInputBoxWidget focusedTextInput;
 
     // UI size, positions, etc
     private boolean draggingScrollWheel = false;
@@ -100,15 +98,15 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.EMOTE_CONFIG_GUI, offsetX, offsetY);
 
-        searchWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+        searchWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         checkForRecentRefresh();
-        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
+        extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
 
         // Add one because of the extra space at the top and bottom
         if (emoteList.size() + 1 > MAX_EMOTES_PER_PAGE) {
@@ -134,9 +132,10 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
         }
     }
 
-    private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void extractWidgetRenderStates(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (HoverableTexturedButton optionsButton : optionButtons) {
-            optionsButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            optionsButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         scissorTopY = 37 + offsetY;
@@ -145,13 +144,13 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
         RenderUtils.enableScissor(guiGraphics, 9 + offsetX, scissorTopY, 122, scissorHeight);
 
         for (AbstractWidget widget : emoteButtons) {
-            widget.render(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    private void renderScrollWheel(GuiGraphics guiGraphics) {
+    private void renderScrollWheel(GuiGraphicsExtractor guiGraphics) {
         scrollWheelY = 32
                 + offsetY
                 + MathUtils.map(
@@ -257,17 +256,7 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
 
     @Override
     public boolean charTyped(CharacterEvent event) {
-        return focusedTextInput != null && focusedTextInput.charTyped(event);
-    }
-
-    @Override
-    public TextInputBoxWidget getFocusedTextInput() {
-        return focusedTextInput;
-    }
-
-    @Override
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.focusedTextInput = focusedTextInput;
+        return getFocusedTextInput() != null && getFocusedTextInput().charTyped(event);
     }
 
     private Stream<GuiEventListener> getWidgetsForIteration() {
@@ -381,7 +370,7 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
         optionButtons.add(closeButton);
     }
 
-    private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderTooltips(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         // The option buttons have a slight bit rendered underneath the background,
         // we don't want to render the tooltip when hovering that bit.
         if (MathUtils.isInside(
