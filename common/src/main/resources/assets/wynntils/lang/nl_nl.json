@@ -1282,7 +1282,6 @@
   "feature.wynntils.wynncraftButton.name": "Wynncraft Knop",
   "feature.wynntils.wynncraftButton.serverType.description": "Met welke server moet de knop en automatisch verbinden?",
   "feature.wynntils.wynncraftButton.serverType.name": "Server Type",
-  "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "Klasse Selectie",
   "feature.wynntils.wynncraftPauseScreen.description": "Voegt een aangepast pauzescherm toe.",
   "feature.wynntils.wynncraftPauseScreen.hubButton.name": "Terug naar Hub",
   "feature.wynntils.wynncraftPauseScreen.name": "Wynntils Pauzescherm",

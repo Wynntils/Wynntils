@@ -1599,7 +1599,6 @@
   "feature.wynntils.wynncraftButton.serverType.description": "К какому серверу должна подключаться кнопка и автоподключение?",
   "feature.wynntils.wynncraftButton.serverType.name": "Тип сервера",
   "feature.wynntils.wynncraftButton.update": "Доступно обновление Wynntils!",
-  "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "Выбор класса",
   "feature.wynntils.wynncraftPauseScreen.description": "Добавляет настраиваемый экран паузы.",
   "feature.wynntils.wynncraftPauseScreen.hubButton.name": "Вернуться в хаб",
   "feature.wynntils.wynncraftPauseScreen.name": "Экран паузы Wynntils",

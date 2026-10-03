@@ -1472,7 +1472,6 @@
   "feature.wynntils.wynncraftButton.serverType.description": "자동 접속을 어떤 서버에 시도할까요?",
   "feature.wynntils.wynncraftButton.serverType.name": "서버 종류",
   "feature.wynntils.wynncraftButton.update": "Wynntils 업데이트가 가능합니다!",
-  "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "클래스 선택",
   "feature.wynntils.wynncraftPauseScreen.description": "ESC 메뉴를 커스텀 화면으로 출력합니다.",
   "feature.wynntils.wynncraftPauseScreen.hubButton.name": "로비로 이동",
   "feature.wynntils.wynncraftPauseScreen.name": "Wynntils ESC 메뉴",

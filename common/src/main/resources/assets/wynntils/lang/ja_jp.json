@@ -1282,7 +1282,6 @@
   "feature.wynntils.wynncraftButton.name": "Wynncraftボタン",
   "feature.wynntils.wynncraftButton.serverType.description": "ボタンと自動接続はどのサーバーに接続しますか？",
   "feature.wynntils.wynncraftButton.serverType.name": "サーバータイプ",
-  "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "クラス選択",
   "feature.wynntils.wynncraftPauseScreen.description": "カスタムポーズ画面を追加します。",
   "feature.wynntils.wynncraftPauseScreen.hubButton.name": "ハブに戻る",
   "feature.wynntils.wynncraftPauseScreen.name": "Wynntilsポーズ画面",

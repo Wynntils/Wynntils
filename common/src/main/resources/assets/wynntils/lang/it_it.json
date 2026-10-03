@@ -1282,7 +1282,6 @@
   "feature.wynntils.wynncraftButton.name": "Pulsante di Wynncraft",
   "feature.wynntils.wynncraftButton.serverType.description": "A quale server dovrebbe unirsi il pulsante e la connessione automatica?",
   "feature.wynntils.wynncraftButton.serverType.name": "Tipo di Server",
-  "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "Selezione Classe",
   "feature.wynntils.wynncraftPauseScreen.description": "Aggiunge una schermata di pausa personalizzata.",
   "feature.wynntils.wynncraftPauseScreen.hubButton.name": "Torna al Hub",
   "feature.wynntils.wynncraftPauseScreen.name": "Schermata di Pausa Wynntils",

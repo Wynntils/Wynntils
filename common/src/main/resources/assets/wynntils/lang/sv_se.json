@@ -1300,7 +1300,6 @@
   "feature.wynntils.wynncraftButton.name": "Wynncraft-knapp",
   "feature.wynntils.wynncraftButton.serverType.description": "Vilken server ska knappen och autoanslutningen gå med i?",
   "feature.wynntils.wynncraftButton.serverType.name": "Servertyp",
-  "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "Klassval",
   "feature.wynntils.wynncraftPauseScreen.description": "Lägger till en anpassad pausmeny.",
   "feature.wynntils.wynncraftPauseScreen.hubButton.name": "Tillbaka till Hubben",
   "feature.wynntils.wynncraftPauseScreen.name": "Wynntils Pausmeny",

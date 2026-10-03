@@ -1285,7 +1285,6 @@
   "feature.wynntils.wynncraftButton.name": "Wynncraft-Button",
   "feature.wynntils.wynncraftButton.serverType.description": "Welchem Server soll der Button und die automatische Verbindung beitreten?",
   "feature.wynntils.wynncraftButton.serverType.name": "Servertyp",
-  "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "Klassenwahl",
   "feature.wynntils.wynncraftPauseScreen.description": "Fügt einen benutzerdefinierten Pausenbildschirm hinzu.",
   "feature.wynntils.wynncraftPauseScreen.hubButton.name": "Zurück zum Hub",
   "feature.wynntils.wynncraftPauseScreen.name": "Wynntils-Pausenbildschirm",

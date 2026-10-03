@@ -1282,7 +1282,6 @@
   "feature.wynntils.wynncraftButton.name": "Wynncraft Gomb",
   "feature.wynntils.wynncraftButton.serverType.description": "Melyik szerverhez csatlakozzon a gomb és az automatikus csatlakozás?",
   "feature.wynntils.wynncraftButton.serverType.name": "Szerver Típus",
-  "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "Osztály Kiválasztása",
   "feature.wynntils.wynncraftPauseScreen.description": "Egyedi szünet képernyőt ad hozzá.",
   "feature.wynntils.wynncraftPauseScreen.hubButton.name": "Vissza a Központba",
   "feature.wynntils.wynncraftPauseScreen.name": "Wynntils Szünet Képernyő",

@@ -1282,7 +1282,6 @@
   "feature.wynntils.wynncraftButton.name": "Przycisk Wynncraft",
   "feature.wynntils.wynncraftButton.serverType.description": "Do którego serwera powinien dołączyć przycisk i automatyczne łączenie?",
   "feature.wynntils.wynncraftButton.serverType.name": "Typ Serwera",
-  "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "Wybór Klasy",
   "feature.wynntils.wynncraftPauseScreen.description": "Dodaje niestandardowy ekran pauzy.",
   "feature.wynntils.wynncraftPauseScreen.hubButton.name": "Powrót do Centrum",
   "feature.wynntils.wynncraftPauseScreen.name": "Ekran Pauzy Wynntils",

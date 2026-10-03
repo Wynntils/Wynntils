@@ -1282,7 +1282,6 @@
   "feature.wynntils.wynncraftButton.name": "Wynncraft按鈕",
   "feature.wynntils.wynncraftButton.serverType.description": "按鈕和自動連接應該加入哪個伺服器？",
   "feature.wynntils.wynncraftButton.serverType.name": "伺服器類型",
-  "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "職業選擇",
   "feature.wynntils.wynncraftPauseScreen.description": "添加自訂暫停畫面。",
   "feature.wynntils.wynncraftPauseScreen.hubButton.name": "返回中心",
   "feature.wynntils.wynncraftPauseScreen.name": "Wynntils暫停畫面",

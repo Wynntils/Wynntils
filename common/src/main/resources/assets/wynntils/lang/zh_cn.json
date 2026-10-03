@@ -1282,7 +1282,6 @@
   "feature.wynntils.wynncraftButton.name": "Wynncraft按钮",
   "feature.wynntils.wynncraftButton.serverType.description": "按钮和自动连接应该加入哪个服务器？",
   "feature.wynntils.wynncraftButton.serverType.name": "服务器类型",
-  "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "职业选择",
   "feature.wynntils.wynncraftPauseScreen.description": "添加自定义暂停屏幕。",
   "feature.wynntils.wynncraftPauseScreen.hubButton.name": "返回中心",
   "feature.wynntils.wynncraftPauseScreen.name": "Wynntils暂停屏幕",

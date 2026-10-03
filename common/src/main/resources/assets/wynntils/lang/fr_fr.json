@@ -1282,7 +1282,6 @@
   "feature.wynntils.wynncraftButton.name": "Bouton Wynncraft",
   "feature.wynntils.wynncraftButton.serverType.description": "À quel serveur le bouton et la connexion automatique doivent-ils se connecter ?",
   "feature.wynntils.wynncraftButton.serverType.name": "Type de Serveur",
-  "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "Sélection de Classe",
   "feature.wynntils.wynncraftPauseScreen.description": "Ajoute un écran de pause personnalisé.",
   "feature.wynntils.wynncraftPauseScreen.hubButton.name": "Retour au Hub",
   "feature.wynntils.wynncraftPauseScreen.name": "Écran de Pause Wynntils",
