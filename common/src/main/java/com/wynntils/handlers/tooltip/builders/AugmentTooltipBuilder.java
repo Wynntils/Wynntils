@@ -36,7 +36,7 @@ public abstract class AugmentTooltipBuilder extends TooltipBuilder {
         lines.addAll(buildAugmentDetails());
         lines.add(TooltipLine.empty());
         lines.add(TooltipLine.left(
-                Component.literal(gearTier.getName() + " Corkian Augment").withStyle(gearTier.getChatFormatting())));
+                Component.literal(gearTier.getName() + " Corkian Augment").withColor(gearTier.getTextColor())));
         lines.add(TooltipWrappedText.left(Component.translatable("screens.wynntils.wynntilsGuides.augments.footer")
                 .withStyle(ChatFormatting.DARK_GRAY)));
 

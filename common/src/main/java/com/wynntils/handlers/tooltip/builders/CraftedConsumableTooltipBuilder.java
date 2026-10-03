@@ -39,6 +39,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 
 public class CraftedConsumableTooltipBuilder extends TooltipBuilder {
@@ -88,7 +89,7 @@ public class CraftedConsumableTooltipBuilder extends TooltipBuilder {
                 itemName,
                 Style.EMPTY
                         .withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)
-                        .withColor(GearTier.CRAFTED.getChatFormatting()));
+                        .withColor(GearTier.CRAFTED.getTextColor()));
 
         lines.addAll(buildHeader(
                 ITEM_EMBLEM,
@@ -96,7 +97,7 @@ public class CraftedConsumableTooltipBuilder extends TooltipBuilder {
                 nameComponent,
                 BannerBoxFont.buildMessage(
                         GearTier.CRAFTED.getApiName(),
-                        CustomColor.fromChatFormatting(GearTier.CRAFTED.getChatFormatting()),
+                        CustomColor.fromTextColor(GearTier.CRAFTED.getTextColor()),
                         CommonColors.BLACK,
                         ""),
                 BannerBoxFont.buildMessage(
@@ -279,8 +280,8 @@ public class CraftedConsumableTooltipBuilder extends TooltipBuilder {
     }
 
     @Override
-    protected ChatFormatting getSourceColor() {
-        return GearTier.CRAFTED.getChatFormatting();
+    protected TextColor getSourceColor() {
+        return GearTier.CRAFTED.getTextColor();
     }
 
     @Override

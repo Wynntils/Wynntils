@@ -4,6 +4,7 @@
  */
 package com.wynntils.commands;
 
+import com.mojang.blaze3d.Blaze3D;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -35,7 +36,6 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.util.Util;
 import net.minecraft.world.entity.Entity;
 
 public class LootrunCommand extends Command {
@@ -376,7 +376,7 @@ public class LootrunCommand extends Command {
     }
 
     private int folderLootrun(CommandContext<CommandSourceStack> context) {
-        Util.getPlatform().openFile(Services.LootrunPaths.LOOTRUNS);
+        Blaze3D.openPath(Services.LootrunPaths.LOOTRUNS.toPath());
         return 1;
     }
 

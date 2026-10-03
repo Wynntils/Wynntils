@@ -54,6 +54,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 
 public final class WynnItemParser {
@@ -214,7 +215,7 @@ public final class WynnItemParser {
                     String chatColor = tierMatcher.group(1);
                     if (chatColor != null) {
                         ChatFormatting chatFormatting = ChatFormatting.getByCode(chatColor.charAt(0));
-                        tier = GearTier.fromChatFormatting(chatFormatting);
+                        tier = GearTier.fromTextColor(TextColor.fromLegacyFormat(chatFormatting));
                     } else {
                         tier = GearTier.NORMAL;
                     }

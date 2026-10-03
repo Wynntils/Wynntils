@@ -17,7 +17,7 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 
@@ -50,7 +50,7 @@ public class OnTheBrinkBarOverlay extends BaseBarOverlay {
     }
 
     @Override
-    protected void renderText(GuiGraphics guiGraphics, float renderY, String text) {
+    protected void renderText(GuiGraphicsExtractor guiGraphics, float renderY, String text) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,

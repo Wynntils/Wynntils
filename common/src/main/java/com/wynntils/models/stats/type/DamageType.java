@@ -8,25 +8,25 @@ import com.wynntils.models.elements.type.Element;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextColor;
 
 public enum DamageType {
-    ALL("", "❤", ChatFormatting.DARK_RED),
-    NEUTRAL("Neutral", "\uE005", ChatFormatting.GOLD, 5),
+    ALL("", "❤", TextColor.DARK_RED),
+    NEUTRAL("Neutral", "\uE005", TextColor.GOLD, 5),
     FIRE(Element.FIRE),
     WATER(Element.WATER),
     AIR(Element.AIR),
     THUNDER(Element.THUNDER),
     EARTH(Element.EARTH),
     RAINBOW("Elemental"),
-    POISON("Poison", "☠", ChatFormatting.DARK_PURPLE);
+    POISON("Poison", "☠", TextColor.DARK_PURPLE);
 
     private final Element element;
     private final String displayName;
     private final String apiName;
     private final String symbol;
     private final String tooltipSprite;
-    private final ChatFormatting colorCode;
+    private final TextColor textColor;
     private final int encodingId;
 
     DamageType(String name) {
@@ -36,11 +36,11 @@ public enum DamageType {
         this.apiName = name;
         this.symbol = "";
         this.tooltipSprite = "";
-        this.colorCode = null;
+        this.textColor = null;
         this.encodingId = -1;
     }
 
-    DamageType(String name, String symbol, ChatFormatting colorCode) {
+    DamageType(String name, String symbol, TextColor textColor) {
         this.element = null;
         // displayName needs padding if non-empty
         this.displayName = name.isEmpty() ? "" : name + " ";
@@ -48,11 +48,11 @@ public enum DamageType {
 
         this.symbol = symbol;
         this.tooltipSprite = "";
-        this.colorCode = colorCode;
+        this.textColor = textColor;
         this.encodingId = -1;
     }
 
-    DamageType(String name, String symbol, ChatFormatting colorCode, int encodingId) {
+    DamageType(String name, String symbol, TextColor textColor, int encodingId) {
         this.element = null;
         // displayName needs padding if non-empty
         this.displayName = name.isEmpty() ? "" : name + " ";
@@ -60,7 +60,7 @@ public enum DamageType {
 
         this.symbol = symbol;
         this.tooltipSprite = symbol;
-        this.colorCode = colorCode;
+        this.textColor = textColor;
         this.encodingId = encodingId;
     }
 
@@ -71,7 +71,7 @@ public enum DamageType {
         this.apiName = element.getDisplayName();
         this.symbol = element.getSymbol();
         this.tooltipSprite = element.getTooltipSprite();
-        this.colorCode = element.getColorCode();
+        this.textColor = element.getTextColor();
 
         // Encoding id is the element id
         this.encodingId = element.getEncodingId();
@@ -132,8 +132,8 @@ public enum DamageType {
         return tooltipSprite;
     }
 
-    public ChatFormatting getColorCode() {
-        return colorCode;
+    public TextColor getTextColor() {
+        return textColor;
     }
 
     public int getEncodingId() {

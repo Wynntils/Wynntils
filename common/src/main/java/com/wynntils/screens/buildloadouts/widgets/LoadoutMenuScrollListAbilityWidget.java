@@ -16,7 +16,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -52,7 +52,8 @@ public class LoadoutMenuScrollListAbilityWidget extends AbstractWidget implement
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         handleCursor(guiGraphics);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
@@ -82,7 +83,7 @@ public class LoadoutMenuScrollListAbilityWidget extends AbstractWidget implement
     }
 
     @Override
-    public void renderHoveredItemTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    public void renderHoveredItemTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         RenderUtils.renderTooltip(guiGraphics, abilityItemStack, mouseX, mouseY);
     }
 

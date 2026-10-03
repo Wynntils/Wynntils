@@ -17,7 +17,7 @@ import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.models.wynnalphabet.WynnAlphabet;
 import com.wynntils.models.wynnalphabet.type.TranscribeCondition;
-import com.wynntils.utils.colors.ColorChatFormatting;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +25,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -43,10 +44,10 @@ public class TranscribeMessagesFeature extends Feature {
     private final Config<Boolean> coloredTranscriptions = new Config<>(true);
 
     @Persisted
-    private final Config<ColorChatFormatting> gavellianColor = new Config<>(ColorChatFormatting.LIGHT_PURPLE);
+    private final Config<CustomColor> gavellianColor = new Config<>(CustomColor.fromTextColor(TextColor.LIGHT_PURPLE));
 
     @Persisted
-    private final Config<ColorChatFormatting> wynnicColor = new Config<>(ColorChatFormatting.DARK_GREEN);
+    private final Config<CustomColor> wynnicColor = new Config<>(CustomColor.fromTextColor(TextColor.DARK_GREEN));
 
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*:\\s?");
 
@@ -89,7 +90,7 @@ public class TranscribeMessagesFeature extends Feature {
                             partToBeTranslated,
                             WynnAlphabet.WYNNIC,
                             coloredTranscriptions.get(),
-                            wynnicColor.get().getChatFormatting(),
+                            wynnicColor.get(),
                             !npcDialogue && showTooltip.get()));
 
             // Wynnic characters are transcribed second
@@ -100,7 +101,7 @@ public class TranscribeMessagesFeature extends Feature {
                             partToBeTranslated,
                             WynnAlphabet.WYNNIC,
                             coloredTranscriptions.get(),
-                            wynnicColor.get().getChatFormatting(),
+                            wynnicColor.get(),
                             !npcDialogue && showTooltip.get()));
         }
 
@@ -113,7 +114,7 @@ public class TranscribeMessagesFeature extends Feature {
                             partToBeTranslated,
                             WynnAlphabet.GAVELLIAN,
                             coloredTranscriptions.get(),
-                            gavellianColor.get().getChatFormatting(),
+                            gavellianColor.get(),
                             !npcDialogue && showTooltip.get()));
         }
 

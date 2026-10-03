@@ -5,8 +5,6 @@
 package com.wynntils.utils.render.pipelines;
 
 import com.wynntils.utils.render.Texture;
-import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 
@@ -15,9 +13,5 @@ public class CustomRenderTypes {
 
     public static final RenderType RANGE_QUAD = RenderTypes.beaconBeam(Texture.WHITE_PIXEL.identifier(), true);
 
-    public static final RenderType PLAYER_PING_QUAD = RenderType.create(
-            "wynntils_player_ping_quad",
-            RenderSetup.builder(RenderPipelines.TEXT_BACKGROUND_SEE_THROUGH)
-                    .useLightmap()
-                    .createRenderSetup());
+    public static final RenderType PLAYER_PING_QUAD = RenderTypes.textSeeThrough(Texture.WHITE_PIXEL.identifier());
 }

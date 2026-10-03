@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class StatusEffectsOverlay extends Overlay {
@@ -89,7 +89,7 @@ public class StatusEffectsOverlay extends Overlay {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         FontRenderer.getInstance()
                 .renderTextsWithAlignment(
                         guiGraphics,
@@ -104,7 +104,7 @@ public class StatusEffectsOverlay extends Overlay {
     }
 
     @Override
-    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         FontRenderer.getInstance()
                 .renderTextsWithAlignment(
                         guiGraphics,

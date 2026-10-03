@@ -264,7 +264,7 @@ public final class RequirementsLineBuilder {
     }
 
     private static String skillFrame(GearTier tier) {
-        GearTier[] tiers = GearTier.validValues();
+        GearTier[] tiers = GearTier.values();
         for (int i = 0; i < tiers.length; i++) {
             if (tiers[i] == tier) {
                 return String.valueOf((char) ('\uE000' + i));

@@ -1,11 +1,11 @@
 /*
- * Copyright © Wynntils 2021-2024.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
@@ -14,13 +14,14 @@ import net.neoforged.bus.api.ICancellableEvent;
 public class ContainerClickEvent extends Event implements ICancellableEvent {
     private final AbstractContainerMenu containerMenu;
     private final int slotNum;
-    private final ClickType clickType;
+    private final ContainerInput containerInput;
     private final int mouseButton;
 
-    public ContainerClickEvent(AbstractContainerMenu containerMenu, int slotNum, ClickType clickType, int mouseButton) {
+    public ContainerClickEvent(
+            AbstractContainerMenu containerMenu, int slotNum, ContainerInput containerInput, int mouseButton) {
         this.containerMenu = containerMenu;
         this.slotNum = slotNum;
-        this.clickType = clickType;
+        this.containerInput = containerInput;
         this.mouseButton = mouseButton;
     }
 
@@ -32,8 +33,8 @@ public class ContainerClickEvent extends Event implements ICancellableEvent {
         return slotNum;
     }
 
-    public ClickType getClickType() {
-        return clickType;
+    public ContainerInput getContainerInput() {
+        return containerInput;
     }
 
     public int getMouseButton() {

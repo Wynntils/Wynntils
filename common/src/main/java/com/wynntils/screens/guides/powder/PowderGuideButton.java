@@ -8,7 +8,7 @@ import com.wynntils.screens.guides.widgets.GuideButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.HorizontalAlignment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class PowderGuideButton extends GuideButton {
     private final GuidePowderItemStack powderItemStack;
@@ -20,7 +20,7 @@ public class PowderGuideButton extends GuideButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         CustomColor color = getColor();
         renderBaseItem(guiGraphics, color);
 

@@ -115,7 +115,7 @@ public abstract class ConnectionMixin {
                     clickPacket.containerId(),
                     clickPacket.slotNum(),
                     clickPacket.buttonNum(),
-                    clickPacket.clickType()));
+                    clickPacket.containerInput()));
         }
     }
 }

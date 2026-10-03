@@ -67,7 +67,7 @@ public class PowderTooltipBuilder extends TooltipBuilder {
 
         lines.add(TooltipLine.empty());
 
-        lines.add(TooltipLine.left(Component.literal("Effect on Weapons:").withStyle(element.getDarkColor())));
+        lines.add(TooltipLine.left(Component.literal("Effect on Weapons:").withColor(element.getDarkColor())));
         lines.add(TooltipLine.left(Component.empty()
                 .append(Component.literal(element.getDarkColor() + "- " + ChatFormatting.GRAY + "+"
                         + powderTierInfo.min() + "-" + powderTierInfo.max() + " " + element.getLightColor()))
@@ -85,7 +85,7 @@ public class PowderTooltipBuilder extends TooltipBuilder {
 
         lines.add(TooltipLine.empty());
 
-        lines.add(TooltipLine.left(Component.literal("Effect on Armour:").withStyle(element.getDarkColor())));
+        lines.add(TooltipLine.left(Component.literal("Effect on Armour:").withColor(element.getDarkColor())));
         lines.add(TooltipLine.left(Component.literal(
                 element.getDarkColor() + "- " + ChatFormatting.GRAY + "+" + powderTierInfo.health() + " Health")));
         lines.add(TooltipLine.left(Component.empty()

@@ -84,6 +84,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 
 public class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
@@ -430,7 +431,7 @@ public class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             MutableComponent shinyStatValue = Component.literal(String.format("%,d", shinyStat.value()))
                     .withStyle(CommonStyles.WHITE_LANGUAGE_WYNNCRAFT);
 
-            if (shinyStat.shinyRerolls() >= 1) {
+            if (shinyStat.shinyRerolls() > 1) {
                 shinyStatValue
                         .append(Component.literal(" "))
                         .append(BannerBoxFont.buildMessage(
@@ -848,7 +849,7 @@ public class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
     }
 
     private CustomColor getRarityColor() {
-        return CustomColor.fromChatFormatting(getGearTier().getChatFormatting());
+        return CustomColor.fromTextColor(getGearTier().getTextColor());
     }
 
     private TooltipBannerIcon getRestrictionIcon() {
@@ -971,8 +972,8 @@ public class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
     }
 
     @Override
-    protected ChatFormatting getSourceColor() {
-        return getGearTier().getChatFormatting();
+    protected TextColor getSourceColor() {
+        return getGearTier().getTextColor();
     }
 
     @Override

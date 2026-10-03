@@ -17,7 +17,7 @@ public abstract class RemoveEntitiesEvent extends Event {
 
         public Pre(ClientboundRemoveEntitiesPacket packet) {
             this.entities = new ArrayList<>();
-            for (int id : packet.getEntityIds()) {
+            for (int id : packet.entityIds()) {
                 this.entities.add(McUtils.mc().level.getEntity(id));
             }
         }
@@ -31,7 +31,7 @@ public abstract class RemoveEntitiesEvent extends Event {
         private final List<Integer> entityIds;
 
         public Post(ClientboundRemoveEntitiesPacket packet) {
-            this.entityIds = packet.getEntityIds();
+            this.entityIds = packet.entityIds();
         }
 
         public List<Integer> getEntityIds() {

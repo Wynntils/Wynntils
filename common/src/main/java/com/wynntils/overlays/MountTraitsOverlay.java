@@ -23,7 +23,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 
 public class MountTraitsOverlay extends Overlay {
@@ -66,16 +66,16 @@ public class MountTraitsOverlay extends Overlay {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         renderTraits(guiGraphics, energyFrame, toughnessFrame);
     }
 
     @Override
-    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         renderTraits(guiGraphics, 16, 31);
     }
 
-    private void renderTraits(GuiGraphics guiGraphics, int energyFrame, int toughnessFrame) {
+    private void renderTraits(GuiGraphicsExtractor guiGraphics, int energyFrame, int toughnessFrame) {
         float renderX = this.getRenderX();
         renderBar(guiGraphics, ENERGY_TEXTURE_IDENTIFIER, renderX, energyFrame);
         renderBar(guiGraphics, TOUGHNESS_TEXTURE_IDENTIFIER, renderX + FRAME_WIDTH + BAR_GAP, toughnessFrame);
@@ -83,7 +83,7 @@ public class MountTraitsOverlay extends Overlay {
         renderIcon(guiGraphics, "toughness", renderX + FRAME_WIDTH + BAR_GAP + FRAME_WIDTH / 2f + 1);
     }
 
-    private void renderIcon(GuiGraphics guiGraphics, String glyph, float centerX) {
+    private void renderIcon(GuiGraphicsExtractor guiGraphics, String glyph, float centerX) {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
@@ -96,7 +96,7 @@ public class MountTraitsOverlay extends Overlay {
                         TextShadow.NONE);
     }
 
-    private void renderBar(GuiGraphics guiGraphics, Identifier texture, float x, int frame) {
+    private void renderBar(GuiGraphicsExtractor guiGraphics, Identifier texture, float x, int frame) {
         RenderUtils.drawTexturedRect(
                 guiGraphics,
                 texture,

@@ -41,6 +41,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 
 public abstract class TooltipBuilder {
     protected static final CustomColor RESTRICTION_BACKGROUND_COLOR = CustomColor.fromInt(0xff4242);
@@ -51,7 +52,6 @@ public abstract class TooltipBuilder {
     private static final CustomColor FABLED_DIVIDER_COLOR = CustomColor.fromInt(0xf2c2c2);
     private static final CustomColor MYTHIC_DIVIDER_COLOR = CustomColor.fromInt(0xe0b3e6);
     private static final CustomColor CRAFTED_DIVIDER_COLOR = CustomColor.fromInt(0xe0b3e6);
-    private static final CustomColor DEFAULT_DIVIDER_COLOR = CustomColor.fromInt(0xaed4d4);
 
     protected final ItemSourceType sourceType;
     protected final String source;
@@ -127,7 +127,6 @@ public abstract class TooltipBuilder {
             case FABLED -> FABLED_DIVIDER_COLOR;
             case MYTHIC -> MYTHIC_DIVIDER_COLOR;
             case CRAFTED -> CRAFTED_DIVIDER_COLOR;
-            default -> DEFAULT_DIVIDER_COLOR;
         };
     }
 
@@ -290,7 +289,7 @@ public abstract class TooltipBuilder {
         Component sourceLine = Component.empty()
                 .withStyle(Style.EMPTY
                         .withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)
-                        .applyFormat(getSourceColor()))
+                        .withColor(getSourceColor()))
                 .append(Component.literal("\uE004").withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_TOOLTIP_ICONS)))
                 .append(Component.literal("\uDB00\uDC02"))
                 .append(Component.literal(source)
@@ -300,8 +299,8 @@ public abstract class TooltipBuilder {
         return TooltipLine.left(sourceLine);
     }
 
-    protected ChatFormatting getSourceColor() {
-        return ChatFormatting.WHITE;
+    protected TextColor getSourceColor() {
+        return TextColor.WHITE;
     }
 
     protected static List<Component> extractHeader(List<Component> tooltips) {

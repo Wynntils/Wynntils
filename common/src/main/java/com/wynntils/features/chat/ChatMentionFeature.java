@@ -16,7 +16,7 @@ import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.utils.colors.ColorChatFormatting;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.sounds.SoundEvents;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -42,7 +43,7 @@ public class ChatMentionFeature extends Feature {
     private final Config<Boolean> dingMention = new Config<>(true);
 
     @Persisted
-    private final Config<ColorChatFormatting> mentionColor = new Config<>(ColorChatFormatting.YELLOW);
+    private final Config<CustomColor> mentionColor = new Config<>(CustomColor.fromTextColor(TextColor.YELLOW));
 
     @Persisted
     private final Config<String> aliases = new Config<>("");
@@ -118,7 +119,7 @@ public class ChatMentionFeature extends Feature {
                     StyledTextPart first = new StyledTextPart(firstPart, partStyle.getStyle(), null, Style.EMPTY);
                     StyledTextPart mention = new StyledTextPart(
                             mentionPart,
-                            partStyle.getStyle().withColor(mentionColor.get().getChatFormatting()),
+                            partStyle.getStyle().withColor(mentionColor.get().asInt()),
                             null,
                             first.getPartStyle().getStyle());
                     StyledTextPart last = new StyledTextPart(lastPart, partStyle.getStyle(), null, Style.EMPTY);

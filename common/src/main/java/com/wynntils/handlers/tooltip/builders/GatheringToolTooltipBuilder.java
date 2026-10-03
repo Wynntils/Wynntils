@@ -52,12 +52,12 @@ public class GatheringToolTooltipBuilder extends TooltipBuilder {
                 Component.literal(toolInfo.name())
                         .withStyle(Style.EMPTY
                                 .withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)
-                                .withColor(CustomColor.fromChatFormatting(
-                                                toolInfo.gearTier().getChatFormatting())
+                                .withColor(CustomColor.fromTextColor(
+                                                toolInfo.gearTier().getTextColor())
                                         .asInt())),
                 BannerBoxFont.buildMessage(
                         toolInfo.gearTier().getName(),
-                        CustomColor.fromChatFormatting(toolInfo.gearTier().getChatFormatting()),
+                        CustomColor.fromTextColor(toolInfo.gearTier().getTextColor()),
                         CommonColors.BLACK,
                         ""),
                 BannerBoxFont.buildMessage(

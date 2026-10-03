@@ -26,6 +26,7 @@ import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 
 public final class PowderLineBuilder {
     private static final int POWDER_GRID_COLUMNS = 2;
@@ -114,8 +115,7 @@ public final class PowderLineBuilder {
                         .append(Component.literal(" " + label)
                                 .withStyle(Style.EMPTY
                                         .withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)
-                                        .withColor(
-                                                powder == null ? ChatFormatting.DARK_GRAY : powder.getLightColor())));
+                                        .withColor(powder == null ? TextColor.DARK_GRAY : powder.getLightColor())));
                 if (slot % POWDER_GRID_COLUMNS != 0) {
                     cell = Component.literal(" ")
                             .withStyle(CommonStyles.WHITE_LANGUAGE_WYNNCRAFT)

@@ -28,7 +28,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
@@ -74,12 +74,12 @@ public class WynntilsGuideScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (WynntilsButton guideTypeButton : guideTypeButtons) {
-            guideTypeButton.render(guiGraphics, mouseX, mouseY, partialTick);
+            guideTypeButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
         }
 
-        guideContainerWidget.render(guiGraphics, mouseX, mouseY, partialTick);
+        guideContainerWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
@@ -242,7 +242,7 @@ public class WynntilsGuideScreen extends WynntilsScreen {
         CHARMS("charm.stone", CharmGuideContainerWidget::new),
         ASPECTS("abilityTree.aspectArcher", AspectGuideContainerWidget::new),
         MATERIALS("profession.ingotDernic", MaterialGuideContainerWidget::new),
-        POWDER(Items.GREEN_DYE, PowderGuideContainerWidget::new),
+        POWDER(Items.DYE.green(), PowderGuideContainerWidget::new),
         TOOLS("gatheringTool.pickaxe7", GatheringToolGuideContainerWidget::new),
         AUGMENTS("corkian_amplifier", AugmentGuideContainerWidget::new),
         WARDS("ward_pink", WardGuideContainerWidget::new),

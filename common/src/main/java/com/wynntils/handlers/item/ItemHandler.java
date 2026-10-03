@@ -45,7 +45,7 @@ import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -99,7 +99,7 @@ public final class ItemHandler extends Handler {
 
         ItemAnnotation targetAnnotation = ((ItemStackExtension) event.getItemStack()).getAnnotation();
         if (event.getMouseButton() == 1
-                && event.getClickType() == ClickType.PICKUP
+                && event.getContainerInput() == ContainerInput.PICKUP
                 && targetAnnotation instanceof PagedItemProperty
                 && targetAnnotation instanceof PowderedItemProperty) {
             pendingPowderTarget = new PendingPowderTarget(
@@ -238,7 +238,7 @@ public final class ItemHandler extends Handler {
             return;
         }
 
-        if (event.getClickType() == ClickType.SWAP && event.getMouseButton() == 40) {
+        if (event.getContainerInput() == ContainerInput.SWAP && event.getMouseButton() == 40) {
             pagedUpdates.pageChangeRequested(menu.containerId, System.nanoTime());
             return;
         }
@@ -341,7 +341,7 @@ public final class ItemHandler extends Handler {
 
     private boolean isTooltipPlaceholder(ItemStack itemStack) {
         return !itemStack.has(DataComponents.CUSTOM_NAME)
-                && itemStack.getComponentsPatch().get(DataComponents.ITEM_NAME) == null
+                && itemStack.get(DataComponents.ITEM_NAME) == null
                 && LoreUtils.getLore(itemStack).isEmpty();
     }
 
@@ -487,7 +487,7 @@ public final class ItemHandler extends Handler {
 
                 WynntilsMod.warn("Problematic item:" + itemStack);
                 WynntilsMod.warn("Problematic item name:" + StyledText.fromComponent(itemStack.getHoverName()));
-                WynntilsMod.warn("Problematic item tags:" + itemStack.getTags());
+                WynntilsMod.warn("Problematic item tags:" + itemStack.tags());
 
                 McUtils.sendErrorToClient("Not all items will be properly parsed.");
             }

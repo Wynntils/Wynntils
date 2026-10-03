@@ -18,7 +18,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Objects;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -36,8 +36,8 @@ public class SearchWidget extends TextInputBoxWidget {
     }
 
     @Override
-    protected void doRenderWidget(
-            GuiGraphics guiGraphics,
+    protected void doExtractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -72,7 +72,7 @@ public class SearchWidget extends TextInputBoxWidget {
     }
 
     protected void renderText(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             String renderedText,
             int renderedTextStart,
             String firstPortion,
@@ -134,7 +134,7 @@ public class SearchWidget extends TextInputBoxWidget {
                 false);
     }
 
-    protected void renderBackground(GuiGraphics guiGraphics) {
+    protected void renderBackground(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawRect(guiGraphics, CommonColors.BLACK, this.getX(), this.getY(), this.width, this.height);
         RenderUtils.drawRectBorders(
                 guiGraphics,

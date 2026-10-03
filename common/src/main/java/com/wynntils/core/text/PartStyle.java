@@ -23,10 +23,14 @@ public final class PartStyle {
     private static final String STYLE_PREFIX = "§";
     private static final Int2ObjectMap<ChatFormatting> INTEGER_TO_CHATFORMATTING_MAP = Arrays.stream(
                     ChatFormatting.values())
-            .filter(ChatFormatting::isColor)
             .collect(
-                    () -> new Int2ObjectOpenHashMap<>(ChatFormatting.values().length),
-                    (map, cf) -> map.put(cf.getColor() | 0xFF000000, cf),
+                    Int2ObjectOpenHashMap::new,
+                    (map, fmt) -> {
+                        TextColor tc = TextColor.fromLegacyFormat(fmt);
+                        if (tc != null) {
+                            map.put(tc.getValue() | 0xFF000000, fmt);
+                        }
+                    },
                     Int2ObjectMap::putAll);
 
     private final StyledTextPart owner;
@@ -149,7 +153,7 @@ public final class PartStyle {
                 styleString.append(differenceString);
                 skipFormatting = true;
             } else {
-                styleString.append(STYLE_PREFIX).append(ChatFormatting.RESET.getChar());
+                styleString.append(ChatFormatting.RESET);
             }
         }
 
@@ -159,7 +163,7 @@ public final class PartStyle {
                 ChatFormatting chatFormatting = INTEGER_TO_CHATFORMATTING_MAP.get(color.asInt());
 
                 if (chatFormatting != null) {
-                    styleString.append(STYLE_PREFIX).append(chatFormatting.getChar());
+                    styleString.append(chatFormatting);
                 } else {
                     styleString.append(STYLE_PREFIX).append(color.toHexString());
                 }
@@ -174,19 +178,19 @@ public final class PartStyle {
 
             // 2. Formatting
             if (obfuscated) {
-                styleString.append(STYLE_PREFIX).append(ChatFormatting.OBFUSCATED.getChar());
+                styleString.append(ChatFormatting.OBFUSCATED);
             }
             if (bold) {
-                styleString.append(STYLE_PREFIX).append(ChatFormatting.BOLD.getChar());
+                styleString.append(ChatFormatting.BOLD);
             }
             if (strikethrough) {
-                styleString.append(STYLE_PREFIX).append(ChatFormatting.STRIKETHROUGH.getChar());
+                styleString.append(ChatFormatting.STRIKETHROUGH);
             }
             if (underlined) {
-                styleString.append(STYLE_PREFIX).append(ChatFormatting.UNDERLINE.getChar());
+                styleString.append(ChatFormatting.UNDERLINE);
             }
             if (italic) {
-                styleString.append(STYLE_PREFIX).append(ChatFormatting.ITALIC.getChar());
+                styleString.append(ChatFormatting.ITALIC);
             }
             if (type.includeFonts()) {
                 if (font != null) {
@@ -263,11 +267,16 @@ public final class PartStyle {
     }
 
     public PartStyle withColor(ChatFormatting color) {
-        if (!color.isColor()) {
+        TextColor textColor = TextColor.fromLegacyFormat(color);
+        if (textColor == null) {
             throw new IllegalArgumentException("ChatFormatting " + color + " is not a color!");
         }
 
-        CustomColor newColor = CustomColor.fromInt(color.getColor() | 0xFF000000);
+        return withColor(textColor);
+    }
+
+    public PartStyle withColor(TextColor color) {
+        CustomColor newColor = CustomColor.fromInt(color.getValue() | 0xFF000000);
 
         return new PartStyle(
                 owner,
@@ -482,7 +491,10 @@ public final class PartStyle {
         if (oldColorInt == -1) {
             if (newColorInt != -1) {
                 Arrays.stream(ChatFormatting.values())
-                        .filter(c -> c.isColor() && newColorInt == (c.getColor() | 0xFF000000))
+                        .filter(c -> {
+                            TextColor tc = TextColor.fromLegacyFormat(c);
+                            return tc != null && newColorInt == (tc.getValue() | 0xFF000000);
+                        })
                         .findFirst()
                         .ifPresent(add::append);
             }
@@ -497,7 +509,10 @@ public final class PartStyle {
             if (oldShadowColorInt == -1) {
                 if (newColorInt != -1) {
                     Arrays.stream(ChatFormatting.values())
-                            .filter(c -> c.isColor() && newShadowColorInt == (c.getColor()))
+                            .filter(c -> {
+                                TextColor tc = TextColor.fromLegacyFormat(c);
+                                return tc != null && newShadowColorInt == (tc.getValue());
+                            })
                             .findFirst()
                             .ifPresent(add::append);
                 }

@@ -35,10 +35,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 
 public class CraftedGearTooltipBuilder extends TooltipBuilder {
@@ -87,7 +87,7 @@ public class CraftedGearTooltipBuilder extends TooltipBuilder {
                 itemName,
                 Style.EMPTY
                         .withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)
-                        .withColor(GearTier.CRAFTED.getChatFormatting()));
+                        .withColor(GearTier.CRAFTED.getTextColor()));
 
         lines.addAll(buildHeader(
                 ItemEmblem.fromCraftedItem(item.getGearType()),
@@ -95,7 +95,7 @@ public class CraftedGearTooltipBuilder extends TooltipBuilder {
                 nameComponent,
                 BannerBoxFont.buildMessage(
                         GearTier.CRAFTED.getApiName(),
-                        CustomColor.fromChatFormatting(GearTier.CRAFTED.getChatFormatting()),
+                        CustomColor.fromTextColor(GearTier.CRAFTED.getTextColor()),
                         CommonColors.BLACK,
                         ""),
                 BannerBoxFont.buildMessage(
@@ -312,8 +312,8 @@ public class CraftedGearTooltipBuilder extends TooltipBuilder {
     }
 
     @Override
-    protected ChatFormatting getSourceColor() {
-        return GearTier.CRAFTED.getChatFormatting();
+    protected TextColor getSourceColor() {
+        return GearTier.CRAFTED.getTextColor();
     }
 
     @Override

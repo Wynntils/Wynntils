@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
@@ -150,7 +150,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         updateHelpHover(mouseX, mouseY);
         renderScreenGuides(guiGraphics);
         if (selectionMode != SelectionMode.NONE) {
@@ -270,11 +270,14 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         // Render widgets
         for (Renderable renderable : this.renderables) {
             if (positionPanel != null && positionPanel.getWidgets().contains(renderable)) continue;
-            renderable.render(guiGraphics, hoveringPanel ? -1 : mouseX, hoveringPanel ? -1 : mouseY, partialTick);
+            renderable.extractRenderState(
+                    guiGraphics, hoveringPanel ? -1 : mouseX, hoveringPanel ? -1 : mouseY, partialTick);
         }
         if (positionPanel != null) {
             positionPanel.render(guiGraphics);
-            positionPanel.getWidgets().forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
+            positionPanel
+                    .getWidgets()
+                    .forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
         }
 
         if (helpPanel != null) {
@@ -283,10 +286,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    protected void renderBlurredBackground(GuiGraphics guiGraphics) {}
+    protected void extractBlurredBackground(GuiGraphicsExtractor guiGraphics) {}
 
     @Override
-    protected void renderMenuBackground(GuiGraphics guiGraphics) {}
+    protected void extractMenuBackground(GuiGraphicsExtractor guiGraphics) {}
 
     @Override
     public void tick() {
@@ -385,8 +388,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 && !KeyboardUtils.isShiftDown()
                 && !KeyboardUtils.isControlDown()
                 && !KeyboardUtils.isAltDown()
-                && !KeyboardUtils.isKeyDown(InputConstants.KEY_LSUPER)
-                && !KeyboardUtils.isKeyDown(InputConstants.KEY_RSUPER)) {
+                && !KeyboardUtils.isKeyDown(InputConstants.KEY_LGUI)
+                && !KeyboardUtils.isKeyDown(InputConstants.KEY_RGUI)) {
             if (!isMouseHoveringOverlay(selected, event.x(), event.y())) return false;
 
             togglePlacementLock(!selected.isPlacementLocked());
@@ -944,12 +947,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                         maxY));
     }
 
-    private void renderScreenGuides(GuiGraphics guiGraphics) {
+    private void renderScreenGuides(GuiGraphicsExtractor guiGraphics) {
         verticalScreenGuides.forEach((x, color) -> RenderUtils.drawLine(guiGraphics, color, x, 0, x, this.height, 1));
         horizontalScreenGuides.forEach((y, color) -> RenderUtils.drawLine(guiGraphics, color, 0, y, this.width, y, 1));
     }
 
-    private void renderAlignmentLines(GuiGraphics guiGraphics) {
+    private void renderAlignmentLines(GuiGraphicsExtractor guiGraphics) {
         SnapTarget horizontalTarget = horizontalSnap.getTarget();
         if (horizontalTarget != null) {
             float x = horizontalTarget.position();

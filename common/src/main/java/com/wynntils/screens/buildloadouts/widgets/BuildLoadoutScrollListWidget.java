@@ -21,7 +21,7 @@ import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -90,7 +90,8 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
                 Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND,
@@ -99,11 +100,11 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
                 this.width + 10,
                 this.height + 10 + 1 + 15);
 
-        abilityTreeButton.render(guiGraphics, mouseX, mouseY, partialTick);
-        aspectsButton.render(guiGraphics, mouseX, mouseY, partialTick);
-        tomesButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        abilityTreeButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        aspectsButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        tomesButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
@@ -128,7 +129,7 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
     }
 
     @Override
-    public void renderHoveredItemTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    public void renderHoveredItemTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         for (AbstractWidget widget : getWidgets()) {
             if (widget instanceof ItemTooltipProvider itemTooltipProvider && widget.isMouseOver(mouseX, mouseY)) {
                 itemTooltipProvider.renderHoveredItemTooltip(guiGraphics, mouseX, mouseY);

@@ -25,7 +25,7 @@ public final class SetBonusLineBuilder {
         return Component.empty()
                 .append(BannerBoxFont.buildMessage(
                         "set",
-                        CustomColor.fromChatFormatting(tier.getChatFormatting()),
+                        CustomColor.fromTextColor(tier.getTextColor()),
                         CommonColors.BLACK,
                         "\uDB00\uDC02\uDAFF\uDFFF"))
                 .append(BannerBoxFont.buildMessage(name, tier.getSecondaryColor(), CommonColors.BLACK, ""));

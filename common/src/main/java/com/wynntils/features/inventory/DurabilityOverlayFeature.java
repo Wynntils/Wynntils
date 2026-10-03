@@ -26,7 +26,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Optional;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -91,7 +91,7 @@ public class DurabilityOverlayFeature extends Feature {
         drawDurability(event.getGuiGraphics(), slot.getItem(), slot.x, slot.y);
     }
 
-    private void drawDurability(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
+    private void drawDurability(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int slotX, int slotY) {
         switch (durabilityRenderMode.get()) {
             case ARC -> drawDurabilityArc(guiGraphics, itemStack, slotX, slotY);
             case BAR -> drawDurabilityBar(guiGraphics, itemStack, slotX, slotY);
@@ -99,7 +99,7 @@ public class DurabilityOverlayFeature extends Feature {
         }
     }
 
-    private void drawDurabilityArc(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
+    private void drawDurabilityArc(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int slotX, int slotY) {
         Optional<DurableItemProperty> durableItemOpt =
                 Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemOpt.isEmpty()) return;
@@ -111,7 +111,7 @@ public class DurabilityOverlayFeature extends Feature {
                 guiGraphics, getColor(durability).withAlpha(160), slotX, slotY, (float) durability.getProgress(), 6, 8);
     }
 
-    private void drawDurabilityBar(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
+    private void drawDurabilityBar(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int slotX, int slotY) {
         Optional<DurableItemProperty> durableItemProperty =
                 Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemProperty.isEmpty()) return;
@@ -134,7 +134,7 @@ public class DurabilityOverlayFeature extends Feature {
     }
 
     // Inspiration taken from https://github.com/GTNewHorizons/DuraDisplay
-    private void drawDurabilityPercentage(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY) {
+    private void drawDurabilityPercentage(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int slotX, int slotY) {
         Optional<DurableItemProperty> durableItemOpt =
                 Models.Item.asWynnItemProperty(itemStack, DurableItemProperty.class);
         if (durableItemOpt.isEmpty()) return;

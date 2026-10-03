@@ -16,7 +16,7 @@ import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 
 public class PlayerMainMapPoi extends PlayerPoiBase {
@@ -26,7 +26,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
 
     @Override
     public void renderAt(
-            GuiGraphics guiGraphics,
+            GuiGraphicsExtractor guiGraphics,
             float renderX,
             float renderY,
             boolean hovered,

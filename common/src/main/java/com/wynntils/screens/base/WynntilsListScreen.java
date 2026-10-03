@@ -20,7 +20,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.input.CharacterEvent;
@@ -69,10 +69,11 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 this);
     }
 
-    protected void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderStates(
+            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
         for (Renderable renderable : new ArrayList<>(this.renderables)) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
             if (renderable instanceof WynntilsButton button) {
                 if (button.isMouseOver(mouseX, mouseY)) {
@@ -82,7 +83,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
         }
     }
 
-    protected void renderPageInfo(GuiGraphics guiGraphics, int currentPage, int maxPage) {
+    protected void renderPageInfo(GuiGraphicsExtractor guiGraphics, int currentPage, int maxPage) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,
@@ -96,7 +97,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                         TextShadow.NONE);
     }
 
-    protected void renderNoElementsHelper(GuiGraphics guiGraphics, String key) {
+    protected void renderNoElementsHelper(GuiGraphicsExtractor guiGraphics, String key) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,
@@ -112,7 +113,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                         TextShadow.NONE);
     }
 
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         List<Component> tooltipLines = List.of();
 
         if (this.hovered instanceof TooltipProvider tooltipWidget) {

@@ -12,7 +12,7 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -44,8 +44,8 @@ public class SuggestionPlayerWidget extends AbstractPlayerListEntryWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         // name rendering
         FontRenderer.getInstance()
@@ -62,7 +62,7 @@ public class SuggestionPlayerWidget extends AbstractPlayerListEntryWidget {
                         TextShadow.NORMAL);
 
         if (Models.Party.getPartyMembers().contains(playerName)) return;
-        inviteButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        inviteButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override

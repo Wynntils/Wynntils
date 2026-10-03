@@ -20,7 +20,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.RenderElementType;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.Mth;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -43,7 +43,7 @@ public class MountJumpBarFeature extends Feature {
             return;
         }
 
-        GuiGraphics guiGraphics = event.getGuiGraphics();
+        GuiGraphicsExtractor guiGraphics = event.getGuiGraphics();
         int renderX = this.getRenderX(McUtils.window());
         int renderY = this.getRenderY(McUtils.window());
 

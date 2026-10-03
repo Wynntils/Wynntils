@@ -33,7 +33,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -89,7 +89,7 @@ public class UnidentifiedItemIconFeature extends Feature {
         drawIcon(e.getGuiGraphics(), e.getItemStack(), e.getX(), e.getY(), 200);
     }
 
-    private void drawIcon(GuiGraphics guiGraphics, ItemStack itemStack, int slotX, int slotY, int z) {
+    private void drawIcon(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int slotX, int slotY, int z) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
 
@@ -121,7 +121,12 @@ public class UnidentifiedItemIconFeature extends Feature {
     @FunctionalInterface
     private interface IconRenderer {
         void renderIcon(
-                GuiGraphics guiGraphics, int x, int y, int z, GearType gearType, Optional<CustomColor> textColor);
+                GuiGraphicsExtractor guiGraphics,
+                int x,
+                int y,
+                int z,
+                GearType gearType,
+                Optional<CustomColor> textColor);
 
         static IconRenderer forSpriteSheet(Texture texture, int yOffset, int padding) {
             int paddedDims = 16 - padding - padding;

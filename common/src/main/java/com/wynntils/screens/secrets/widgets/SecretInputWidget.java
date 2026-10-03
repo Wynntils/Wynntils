@@ -16,7 +16,7 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -52,7 +52,7 @@ public class SecretInputWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics,
@@ -65,8 +65,8 @@ public class SecretInputWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        maskedTextInputWidget.render(guiGraphics, mouseX, mouseY, partialTick);
-        openLinkButton.render(guiGraphics, mouseX, mouseY, partialTick);
+        maskedTextInputWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        openLinkButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
 
         if (isHovered && !openLinkButton.isHovered()) {
             guiGraphics.setTooltipForNextFrame(

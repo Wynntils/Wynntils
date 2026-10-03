@@ -95,8 +95,7 @@ public final class WynntilsCapeLayer extends WynntilsLayer {
                             .withAlpha(translucentCheckEvent.getTranslucence())
                             .asInt(),
                     null,
-                    renderState.outlineColor,
-                    null);
+                    renderState.outlineColor);
             poseStack.popPose();
         }
     }

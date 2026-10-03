@@ -15,6 +15,7 @@ import com.wynntils.utils.type.RangedValue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -36,7 +37,7 @@ public final class GearBoxAnnotator implements GameItemAnnotator {
         ChatFormatting chatFormatting =
                 ChatFormatting.getByCode(matcher.group(1).charAt(0));
 
-        GearTier gearTier = GearTier.fromChatFormatting(chatFormatting);
+        GearTier gearTier = GearTier.fromTextColor(TextColor.fromLegacyFormat(chatFormatting));
         RangedValue levelRange = getLevelRange(itemStack);
 
         if (gearTier == null || levelRange == null) return null;

@@ -9,7 +9,7 @@ import com.wynntils.mc.event.ItemSwapHandsEvent;
 import com.wynntils.mc.event.SetCarriedItemEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,11 +23,12 @@ public class AbstractContainerMenuMixin {
     private ItemStack carried;
 
     @Inject(
-            method = "doClick(IILnet/minecraft/world/inventory/ClickType;Lnet/minecraft/world/entity/player/Player;)V",
+            method =
+                    "doClick(IILnet/minecraft/world/inventory/ContainerInput;Lnet/minecraft/world/entity/player/Player;)V",
             at = @At("HEAD"),
             cancellable = true)
-    private void doClickPre(int slotId, int button, ClickType clickType, Player player, CallbackInfo ci) {
-        if (clickType == ClickType.SWAP) {
+    private void doClickPre(int slotId, int button, ContainerInput containerInput, Player player, CallbackInfo ci) {
+        if (containerInput == ContainerInput.SWAP) {
             ItemSwapHandsEvent event = new ItemSwapHandsEvent();
             MixinHelper.post(event);
             if (event.isCanceled()) {

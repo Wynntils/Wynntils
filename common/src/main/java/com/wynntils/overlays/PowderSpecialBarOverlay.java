@@ -19,7 +19,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Optional;
 import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 
 public class PowderSpecialBarOverlay extends Overlay {
@@ -49,7 +49,7 @@ public class PowderSpecialBarOverlay extends Overlay {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         Optional<PowderSpecialInfo> powderSpecialInfoOpt = Models.CharacterStats.getPowderSpecialInfo();
         if (powderSpecialInfoOpt.isEmpty()) return;
 
@@ -60,7 +60,7 @@ public class PowderSpecialBarOverlay extends Overlay {
     }
 
     @Override
-    public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
         renderWithSpecificSpecial(guiGraphics, 4, Powder.THUNDER);
     }
 
@@ -70,7 +70,7 @@ public class PowderSpecialBarOverlay extends Overlay {
     }
 
     private void renderWithSpecificSpecial(
-            GuiGraphics guiGraphics, float powderSpecialCharge, Powder powderSpecialType) {
+            GuiGraphicsExtractor guiGraphics, float powderSpecialCharge, Powder powderSpecialType) {
         RenderUtils.drawTexturedRect(
                 guiGraphics,
                 POWDER_SPECIAL_BAR_TEXTURE,

@@ -16,7 +16,6 @@ import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.layers.CapeLayer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -62,7 +61,7 @@ public abstract class CapeLayerMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"))
+                                    "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;III)V"))
     private RenderType setTranslucenceCapeRenderType(
             RenderType original, @Local(argsOnly = true) AvatarRenderState avatarRenderState) {
         // Always set default translucence value to 1.0f, because cape layer doesn't rendered same as ghost player.
@@ -86,7 +85,7 @@ public abstract class CapeLayerMixin {
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;IIILnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"))
+                                    "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitModel(Lnet/minecraft/client/model/Model;Ljava/lang/Object;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/rendertype/RenderType;III)V"))
     private void setTranslucenceCapeRenderType(
             SubmitNodeCollector instance,
             Model model,
@@ -96,20 +95,11 @@ public abstract class CapeLayerMixin {
             int packedLight,
             int packedOverlay,
             int outlineColor,
-            ModelFeatureRenderer.CrumblingOverlay crumblingOverlay,
             Operation<Void> original) {
         // If translucence is 1.0f, then call original method
         if (wynntilsTranslucence == 1f) {
             original.call(
-                    instance,
-                    model,
-                    renderState,
-                    poseStack,
-                    renderType,
-                    packedLight,
-                    packedOverlay,
-                    outlineColor,
-                    crumblingOverlay);
+                    instance, model, renderState, poseStack, renderType, packedLight, packedOverlay, outlineColor);
             return;
         }
 
@@ -123,7 +113,6 @@ public abstract class CapeLayerMixin {
                 packedOverlay,
                 CommonColors.WHITE.withAlpha(wynntilsTranslucence).asInt(),
                 null,
-                outlineColor,
-                crumblingOverlay);
+                outlineColor);
     }
 }

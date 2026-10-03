@@ -29,6 +29,7 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.mc.extension.ItemStackTemplateExtension;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
@@ -72,6 +73,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -344,8 +347,8 @@ public class ChatItemFeature extends Feature {
         if (!(clicked.getClickEvent() instanceof ClickEvent.Custom click)
                 || !click.id().equals(CHANGE_ITEM_PAGE)) return;
 
-        if (clicked.getHoverEvent() instanceof HoverEvent.ShowItem(ItemStack item)
-                && item instanceof FakeItemStack itemStack) {
+        if (clicked.getHoverEvent() instanceof HoverEvent.ShowItem(ItemStackTemplate item)) {
+            FakeItemStack itemStack = ((ItemStackTemplateExtension) (Object) item).getFakeItemStack();
             itemStack.cyclePage();
             event.setCanceled(true);
         }
@@ -429,11 +432,14 @@ public class ChatItemFeature extends Feature {
         Style style = Style.EMPTY.applyFormat(ChatFormatting.UNDERLINE).withColor(ChatFormatting.GOLD);
 
         if (wynnItem instanceof GearTierItemProperty tierItemProperty) {
-            style = style.withColor(tierItemProperty.getGearTier().getChatFormatting());
+            style = style.withColor(tierItemProperty.getGearTier().getTextColor());
         }
 
+        ItemStackTemplate itemStackTemplate = new ItemStackTemplate(Items.STONE);
+        ItemStackTemplateExtension itemStackTemplateExtension = (ItemStackTemplateExtension) (Object) itemStackTemplate;
         FakeItemStack itemStack = new FakeItemStack(wynnItem, ItemSourceType.ENCODED, "From chat");
-        style = style.withHoverEvent(new HoverEvent.ShowItem(itemStack));
+        itemStackTemplateExtension.setFakeItemStack(itemStack);
+        style = style.withHoverEvent(new HoverEvent.ShowItem(itemStackTemplate));
         if (itemStack.hasTooltipPages()) {
             style = style.withClickEvent(new ClickEvent.Custom(CHANGE_ITEM_PAGE, Optional.empty()));
         }

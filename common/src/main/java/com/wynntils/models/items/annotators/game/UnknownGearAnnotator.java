@@ -14,6 +14,7 @@ import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 
 public final class UnknownGearAnnotator implements GameItemAnnotator {
@@ -31,7 +32,7 @@ public final class UnknownGearAnnotator implements GameItemAnnotator {
         String rarity = matcher.group("rarity");
 
         GearTier gearTier = rarity != null && rarity.length() == 2
-                ? GearTier.fromChatFormatting(ChatFormatting.getByCode(rarity.charAt(1)))
+                ? GearTier.fromTextColor(TextColor.fromLegacyFormat(ChatFormatting.getByCode(rarity.charAt(1))))
                 : null;
 
         if (gearTier == null) {
