@@ -106,18 +106,31 @@ public class ItemGuessFeature extends Feature {
 
             guesses.append(StyledText.fromString("§7: ").getComponent());
 
-            MutableComponent itemsComponent = Component.empty();
-            itemsComponent.append(itemsForLevel.getFirst());
-            itemsForLevel.stream()
-                    .skip(1)
-                    .forEach(i -> itemsComponent
-                            .append(Component.literal(", ").withStyle(ChatFormatting.GRAY))
-                            .append(i));
+            MutableComponent itemsLine = Component.empty().append(guesses);
+
+            int lineCharacters = 0;
+            for (int i = 0; i< itemsForLevel.size(); i++) {
+                if (i == 0) {
+                    itemsLine.append(itemsForLevel.getFirst());
+                    lineCharacters += itemsForLevel.getFirst().getString().length();
+                    continue;
+                }
+                lineCharacters += itemsForLevel.get(i).getString().length();
+                if (lineCharacters > 20) {
+                    //guesses.append(itemsLine);
+                    itemsLine.append(",");
+                    addon.add(itemsLine);
+                    itemsLine = Component.empty().append("        ").append(itemsForLevel.get(i));
+                    lineCharacters = 0;
+                    continue;
+                }
+                itemsLine.append(", ").append(itemsForLevel.get(i));
+            }
 
             if (!itemsForLevel.isEmpty()) {
-                guesses.append(itemsComponent);
+                //guesses.append(itemsLine);
 
-                addon.add(guesses);
+                addon.add(itemsLine);
             }
         }
 
