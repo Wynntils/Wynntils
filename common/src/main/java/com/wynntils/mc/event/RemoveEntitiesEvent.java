@@ -11,18 +11,8 @@ import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.bus.api.Event;
 
-public class RemoveEntitiesEvent extends Event {
-    private final List<Integer> entityIds;
-
-    public RemoveEntitiesEvent(ClientboundRemoveEntitiesPacket packet) {
-        this.entityIds = packet.getEntityIds();
-    }
-
-    public List<Integer> getEntityIds() {
-        return entityIds;
-    }
-
-    public static class Pre extends Event {
+public abstract class RemoveEntitiesEvent extends Event {
+    public static class Pre extends RemoveEntitiesEvent {
         private final List<Entity> entities;
 
         public Pre(ClientboundRemoveEntitiesPacket packet) {
@@ -34,6 +24,18 @@ public class RemoveEntitiesEvent extends Event {
 
         public List<Entity> getEntities() {
             return entities;
+        }
+    }
+
+    public static class Post extends RemoveEntitiesEvent {
+        private final List<Integer> entityIds;
+
+        public Post(ClientboundRemoveEntitiesPacket packet) {
+            this.entityIds = packet.getEntityIds();
+        }
+
+        public List<Integer> getEntityIds() {
+            return entityIds;
         }
     }
 }

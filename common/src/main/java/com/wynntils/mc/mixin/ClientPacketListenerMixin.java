@@ -575,7 +575,7 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     private void handleRemoveEntities(ClientboundRemoveEntitiesPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        MixinHelper.post(new RemoveEntitiesEvent(packet));
+        MixinHelper.post(new RemoveEntitiesEvent.Post(packet));
     }
 
     @Inject(
