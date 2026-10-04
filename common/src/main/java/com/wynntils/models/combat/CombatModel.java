@@ -145,10 +145,6 @@ public final class CombatModel extends Model {
 
     @SubscribeEvent
     public void onTextDisplayChanged(TextDisplayChangedEvent.Text event) {
-        if (!trackKills.get()) {
-            return;
-        }
-
         int id = event.getTextDisplay().getId();
         Optional<LabelInfo> labelInfo = event.getLabelInfo();
 
@@ -178,6 +174,10 @@ public final class CombatModel extends Model {
 
     @SubscribeEvent
     public void onEntityRemoveEvent(RemoveEntitiesEvent.Pre event) {
+        if (!trackKills.get()) {
+            return;
+        }
+
         for (Entity entity : event.getEntities()) {
             if (entity == null) {
                 return;
