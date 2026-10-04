@@ -106,29 +106,58 @@ public class ItemGuessFeature extends Feature {
 
             guessLine.append(StyledText.fromString("§7: ").getComponent());
 
-            int lineCharacters = 0;
+            // In the tooltip, there is enough space for
+            // approximatly 26 'W' characters
+
+            int lineCharacters = 23;
             for (int i = 0; i < itemsForLevel.size(); i++) {
-                if (i == 0) {
-                    guessLine.append(itemsForLevel.getFirst());
-                    lineCharacters += itemsForLevel.getFirst().getString().length();
+                if (itemsForLevel.get(i).getString().length() > 25) {
+                    if (i != 0) {
+                        guessLine.append(",");
+                    }
+                    addon.add(guessLine);
+                    guessLine = Component.empty();
+                    String[] nameWords = itemsForLevel.get(i).getString().split(" ");
+
+                    if (nameWords.length == 1) {
+                        guessLine.append(itemsForLevel.get(i));
+                    }
+
+                    StringBuilder line = new StringBuilder("        ");
+
+                    for (String word : nameWords) {
+                        if (line.length() + word.length() + 1 < 25) {
+                            if (line.length() > 8) {
+                                line.append(' ');
+                            }
+                            line.append(word);
+                            continue;
+                        }
+                        if (line.length() > 8) {
+                            addon.add(Component.literal(line.toString())
+                                    .withStyle(itemsForLevel.get(i).getStyle()));
+                        }
+                        line = new StringBuilder("        ").append(word);
+                    }
+                    guessLine.append(Component.literal(line.toString())
+                            .withStyle(itemsForLevel.get(i).getStyle()));
+                    lineCharacters = guessLine.getString().length();
                     continue;
                 }
 
-                lineCharacters += itemsForLevel.get(i).getString().length();
-
-                if (lineCharacters > 20) {
-                    guessLine.append(",");
+                lineCharacters += itemsForLevel.get(i).getString().length() + 2;
+                if (lineCharacters > 25) {
+                    if (i != 0) {
+                        guessLine.append(",");
+                    }
                     addon.add(guessLine);
                     guessLine = Component.empty().append("        ").append(itemsForLevel.get(i));
-                    lineCharacters = 0;
+                    lineCharacters = 8 + itemsForLevel.get(i).getString().length();
                     continue;
                 }
                 guessLine.append(", ").append(itemsForLevel.get(i));
             }
-
-            if (!itemsForLevel.isEmpty()) {
-                addon.add(guessLine);
-            }
+            addon.add(guessLine);
         }
 
         return addon;
