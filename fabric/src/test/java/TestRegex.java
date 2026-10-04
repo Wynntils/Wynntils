@@ -366,11 +366,15 @@ public class TestRegex {
     public void GatheringNodeHarvestLabelParser_HARVEST_PATTERN() {
         PatternTester p = new PatternTester(GatheringNodeHarvestLabelParser.class, "HARVEST_PATTERN");
 
-        p.shouldMatch("§f+1 §7Sky Wood§6 [§e✫§8✫✫§6]");
-        p.shouldMatch("§f+1 §7Starfish Oil§6 [§e✫§8✫✫§6]");
-        p.shouldMatch("§f+1 §7Hemp String§6 [§e✫§8✫✫§6]");
-        p.shouldMatch("§f+1 §7Diamond Ingot§6 [§e✫§8✫✫§6]");
-        p.shouldMatch("§#ffd750ff[§#a0c84bffx2§#ffd750ff] §#a0c84bff+2 §7Sky Wood§6 [§e✫§8✫✫§6]");
+        p.shouldMatch("§f+1 §#3cb0e6ffHemp String");
+        p.shouldMatch("§f+1 §#3cb0e6ffHemp Grains");
+        p.shouldMatch("§f+1 §#3cb0e6ffSky Plank");
+        p.shouldMatch("§f+1 §#3cb0e6ffSky Paper");
+        p.shouldMatch("§f+1 §#3cb0e6ffStarfish Oil");
+        p.shouldMatch("§f+1 §#3cb0e6ffStarfish Meat");
+        p.shouldMatch("§f+1 §#3cb0e6ffVoidstone Ingot");
+        p.shouldMatch("§f+1 §#3cb0e6ffVoidstone Gem");
+        p.shouldMatch("§#ffd750ff[§#a0c84bffx2§#ffd750ff] §#a0c84bff+2 §#3cb0e6ffOak Plank");
     }
 
     @Test
