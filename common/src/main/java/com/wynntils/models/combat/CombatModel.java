@@ -135,9 +135,6 @@ public final class CombatModel extends Model {
             killSet.put(killLabelInfo.getKillCredit());
             recentKillSet.put(new Pair<>(killLabelInfo.getEntity().position(), killLabelInfo.getKillCredit()));
 
-            WynntilsMod.getLogger()
-                    .info("Kill logged: {}", killLabelInfo.getEntity().position());
-
             if (killLabelInfo.getKillCredit() == KillCreditType.SELF) {
                 lastSelfKillTimestamp = System.currentTimeMillis();
             } else if (killLabelInfo.getKillCredit() == KillCreditType.SHARED) {
