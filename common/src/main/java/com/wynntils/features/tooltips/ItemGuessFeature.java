@@ -88,15 +88,15 @@ public class ItemGuessFeature extends Feature {
                 continue;
             }
 
-            MutableComponent guesses = Component.literal("    ");
+            MutableComponent guessLine = Component.literal("    ");
 
-            guesses.append(Component.literal("- ")
+            guessLine.append(Component.literal("- ")
                     .withStyle(ChatFormatting.GREEN)
                     .append(Component.translatable("feature.wynntils.itemGuess.levelLine", level == -1 ? "?" : level)
                             .withStyle(ChatFormatting.GRAY)));
 
             if (showGuessesPrice.get() && level != -1) {
-                guesses.append(Component.literal(" [")
+                guessLine.append(Component.literal(" [")
                         .append(Component.literal((gearTier.getGearIdentificationCost(level) + " "
                                         + EmeraldUnits.EMERALD.getSymbol()))
                                 .withStyle(ChatFormatting.GREEN))
@@ -104,33 +104,30 @@ public class ItemGuessFeature extends Feature {
                         .withStyle(ChatFormatting.GRAY));
             }
 
-            guesses.append(StyledText.fromString("§7: ").getComponent());
-
-            MutableComponent itemsLine = Component.empty().append(guesses);
+            guessLine.append(StyledText.fromString("§7: ").getComponent());
 
             int lineCharacters = 0;
-            for (int i = 0; i< itemsForLevel.size(); i++) {
+            for (int i = 0; i < itemsForLevel.size(); i++) {
                 if (i == 0) {
-                    itemsLine.append(itemsForLevel.getFirst());
+                    guessLine.append(itemsForLevel.getFirst());
                     lineCharacters += itemsForLevel.getFirst().getString().length();
                     continue;
                 }
+
                 lineCharacters += itemsForLevel.get(i).getString().length();
+
                 if (lineCharacters > 20) {
-                    //guesses.append(itemsLine);
-                    itemsLine.append(",");
-                    addon.add(itemsLine);
-                    itemsLine = Component.empty().append("        ").append(itemsForLevel.get(i));
+                    guessLine.append(",");
+                    addon.add(guessLine);
+                    guessLine = Component.empty().append("        ").append(itemsForLevel.get(i));
                     lineCharacters = 0;
                     continue;
                 }
-                itemsLine.append(", ").append(itemsForLevel.get(i));
+                guessLine.append(", ").append(itemsForLevel.get(i));
             }
 
             if (!itemsForLevel.isEmpty()) {
-                //guesses.append(itemsLine);
-
-                addon.add(itemsLine);
+                addon.add(guessLine);
             }
         }
 
