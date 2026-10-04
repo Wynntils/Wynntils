@@ -162,6 +162,7 @@ public final class CharacterModel extends Model {
         // Whenever we're leaving a world, clear the current character
         if (e.getOldState() == WorldState.WORLD) {
             hasCharacter = false;
+            id = "-";
             classTypeKnownThisSession = false;
             gamemodesKnownThisSession = false;
         }
@@ -380,11 +381,7 @@ public final class CharacterModel extends Model {
     }
 
     private String getCharacterString() {
-        return "CharacterInfo{" + "classType="
-                + classType + ", reskinned="
-                + reskinned + ", level="
-                + level + ", id="
-                + id + '}';
+        return "CharacterInfo{" + "classType=" + classType + ", reskinned=" + reskinned + ", level=" + level + '}';
     }
 
     private void parseCharacterFromCharacterMenu(ItemStack characterInfoItem) {
