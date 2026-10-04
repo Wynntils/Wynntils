@@ -562,6 +562,15 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
 
     @Inject(
             method = "handleRemoveEntities(Lnet/minecraft/network/protocol/game/ClientboundRemoveEntitiesPacket;)V",
+            at = @At("HEAD"))
+    private void handleRemoveEntitiesPre(ClientboundRemoveEntitiesPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+
+        MixinHelper.post(new RemoveEntitiesEvent.Pre(packet));
+    }
+
+    @Inject(
+            method = "handleRemoveEntities(Lnet/minecraft/network/protocol/game/ClientboundRemoveEntitiesPacket;)V",
             at = @At("RETURN"))
     private void handleRemoveEntities(ClientboundRemoveEntitiesPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
