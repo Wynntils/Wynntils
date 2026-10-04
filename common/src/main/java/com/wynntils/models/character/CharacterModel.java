@@ -381,11 +381,7 @@ public final class CharacterModel extends Model {
     }
 
     private String getCharacterString() {
-        return "CharacterInfo{" + "classType="
-                + classType + ", reskinned="
-                + reskinned + ", level="
-                + level + ", id="
-                + id + '}';
+        return "CharacterInfo{" + "classType=" + classType + ", reskinned=" + reskinned + ", level=" + level + '}';
     }
 
     private void parseCharacterFromCharacterMenu(ItemStack characterInfoItem) {
