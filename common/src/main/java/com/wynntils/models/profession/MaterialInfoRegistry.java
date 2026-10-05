@@ -109,7 +109,7 @@ public class MaterialInfoRegistry {
                 resourceType.getMaterialType(), new SourceMaterial(sourceMaterialName, materialInfo.level())));
     }
 
-    private ResourceType getResourceType(MaterialInfo materialInfo) {
+    public ResourceType getResourceType(MaterialInfo materialInfo) {
         for (ResourceType resourceType : ResourceType.values()) {
             if (materialInfo.name().endsWith(" " + capitalized(resourceType.name()))) {
                 return resourceType;
