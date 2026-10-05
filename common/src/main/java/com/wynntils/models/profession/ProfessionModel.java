@@ -27,6 +27,7 @@ import com.wynntils.models.profession.type.MaterialType;
 import com.wynntils.models.profession.type.MiscGatheringType;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
+import com.wynntils.models.profession.type.ResourceType;
 import com.wynntils.models.profession.type.SourceMaterial;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -277,6 +278,10 @@ public final class ProfessionModel extends Model {
         if (materialType == null) return Optional.empty();
 
         return Optional.of(new Pair<>(materialType, new SourceMaterial(name, miscGatheringType.getLevel())));
+    }
+
+    public Optional<ResourceType> getResourceTypeFromMaterialInfo(MaterialInfo materialInfo) {
+        return Optional.ofNullable(materialInfoRegistry.getResourceType(materialInfo));
     }
 
     private void updateLevel(ProfessionType type, int newLevel) {
