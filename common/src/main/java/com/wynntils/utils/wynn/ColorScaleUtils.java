@@ -68,6 +68,16 @@ public final class ColorScaleUtils {
                 .copy();
     }
 
+    public static TextColor getPotentialColor(NavigableMap<Integer, TextColor> colorMap, int potential) {
+        Map.Entry<Integer, TextColor> entry = colorMap.floorEntry(potential);
+
+        if (entry == null) {
+            return colorMap.firstEntry().getValue();
+        }
+
+        return entry.getValue();
+    }
+
     private static TextColor getPercentageColor(NavigableMap<Float, TextColor> colorMap, float percentage) {
         Map.Entry<Float, TextColor> lowerEntry = colorMap.floorEntry(percentage);
         Map.Entry<Float, TextColor> higherEntry = colorMap.ceilingEntry(percentage);
