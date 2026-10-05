@@ -58,8 +58,10 @@ public final class MountModel extends Model {
 
     private boolean hideMountEnergy = false;
     private int summonTick = -1;
+    private int dismountTick = -1;
     private MountType expectedMountType = null;
     private Optional<MountType> currentMountType = Optional.empty();
+    private Optional<MountType> previousMountType = Optional.empty();
 
     public MountModel() {
         super(List.of());
@@ -102,6 +104,10 @@ public final class MountModel extends Model {
             summonTick = -1;
             expectedMountType = null;
         }
+
+        if (dismountTick != -1 && currentTick > dismountTick) {
+            dismountTick = -1;
+        }
     }
 
     @SubscribeEvent
@@ -109,12 +115,18 @@ public final class MountModel extends Model {
         if (!Models.WorldState.onWorld()) return;
 
         if (event.getVehicle() == null && currentMountType.isPresent()) {
+            previousMountType = currentMountType;
             currentMountType = Optional.empty();
             WynntilsMod.postEvent(new MountEvent.Dismount());
+            dismountTick = McUtils.player().tickCount;
         } else if (summonTick != -1) {
             currentMountType = Optional.of(expectedMountType);
             expectedMountType = null;
-            WynntilsMod.postEvent(new MountEvent.Mount(currentMountType.get()));
+            WynntilsMod.postEvent(new MountEvent.Mount(currentMountType.get(), true));
+        } else if (McUtils.player().tickCount == dismountTick && previousMountType.isPresent()) {
+            currentMountType = previousMountType;
+            previousMountType = Optional.empty();
+            WynntilsMod.postEvent(new MountEvent.Mount(currentMountType.get(), false));
         }
     }
 
