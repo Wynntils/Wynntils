@@ -21,6 +21,7 @@ import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,13 +47,17 @@ public class ItemGuessFeature extends Feature {
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(event.getItemStack(), GearBoxItem.class);
         if (gearBoxItemOpt.isEmpty()) return;
+        int maxWidth = 0;
+        for (Component line : event.getTooltips()) {
+            maxWidth = Math.max(maxWidth, McUtils.mc().font.width(line));
+        }
 
         List<Component> tooltips = LoreUtils.appendTooltip(
-                event.getItemStack(), event.getTooltips(), getTooltipAddon(gearBoxItemOpt.get()));
+                event.getItemStack(), event.getTooltips(), getTooltipAddon(gearBoxItemOpt.get(), maxWidth));
         event.setTooltips(tooltips);
     }
 
-    private List<Component> getTooltipAddon(GearBoxItem gearBoxItem) {
+    private List<Component> getTooltipAddon(GearBoxItem gearBoxItem, int maxWidth) {
         List<Component> addon = new ArrayList<>();
         List<GearInfo> possibleGear = Models.Gear.getPossibleGears(gearBoxItem);
         GearTier gearTier = gearBoxItem.getGearTier();
@@ -65,7 +70,6 @@ public class ItemGuessFeature extends Feature {
                         .withStyle(ChatFormatting.GRAY)));
 
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
-
         for (GearInfo gearInfo : possibleGear) {
             int level = (gearInfo != null) ? gearInfo.requirements().level() : -1;
 
@@ -106,12 +110,9 @@ public class ItemGuessFeature extends Feature {
 
             guessLine.append(StyledText.fromString("§7: ").getComponent());
 
-            // In the tooltip, there is enough space for
-            // approximatly 26 'W' characters
-
-            int lineCharacters = 23;
+            int lineWidth = McUtils.mc().font.width(guessLine);
             for (int i = 0; i < itemsForLevel.size(); i++) {
-                if (itemsForLevel.get(i).getString().length() > 25) {
+                if (McUtils.mc().font.width(itemsForLevel.get(i)) > maxWidth) {
                     if (i != 0) {
                         guessLine.append(",");
                     }
@@ -120,13 +121,15 @@ public class ItemGuessFeature extends Feature {
                     String[] nameWords = itemsForLevel.get(i).getString().split(" ");
 
                     if (nameWords.length == 1) {
-                        guessLine.append(itemsForLevel.get(i));
+                        guessLine.append(Component.literal("        ")).append(itemsForLevel.get(i));
+                        lineWidth = McUtils.mc().font.width(guessLine);
+                        continue;
                     }
 
                     StringBuilder line = new StringBuilder("        ");
 
                     for (String word : nameWords) {
-                        if (line.length() + word.length() + 1 < 25) {
+                        if (McUtils.mc().font.width(line.toString() + ' ' + word) < maxWidth) {
                             if (line.length() > 8) {
                                 line.append(' ');
                             }
@@ -141,18 +144,18 @@ public class ItemGuessFeature extends Feature {
                     }
                     guessLine.append(Component.literal(line.toString())
                             .withStyle(itemsForLevel.get(i).getStyle()));
-                    lineCharacters = guessLine.getString().length();
+                    lineWidth = McUtils.mc().font.width(guessLine);
                     continue;
                 }
 
-                lineCharacters += itemsForLevel.get(i).getString().length() + 2;
-                if (lineCharacters > 25) {
+                lineWidth += McUtils.mc().font.width(Component.literal(", ").append(itemsForLevel.get(i)));
+                if (lineWidth > maxWidth) {
                     if (i != 0) {
                         guessLine.append(",");
                     }
                     addon.add(guessLine);
                     guessLine = Component.empty().append("        ").append(itemsForLevel.get(i));
-                    lineCharacters = 8 + itemsForLevel.get(i).getString().length();
+                    lineWidth = McUtils.mc().font.width(guessLine);
                     continue;
                 }
                 guessLine.append(", ").append(itemsForLevel.get(i));
