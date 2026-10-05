@@ -58,7 +58,7 @@ public final class CombatModel extends Model {
     private static final double KILL_ATTRIBUTION_DISTANCE_SQR = 0.25d;
 
     private static final Pattern MOB_KILL_NAME_PATTERN =
-            Pattern.compile("^((?:[a-zA-Z0-9\\-']|(?: (?=[a-zA-Z0-9\\-'])))+)(?= )");
+            Pattern.compile("^(?:§k)?((?:[a-zA-Z0-9,\\-']|(?: (?=[a-zA-Z0-9\\-'])))+)(?= )");
 
     private final DamageBar damageBar = new DamageBar();
 
